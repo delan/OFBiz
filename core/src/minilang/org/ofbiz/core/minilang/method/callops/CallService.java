@@ -126,11 +126,9 @@ public class CallService extends MethodOperation {
             Iterator iter = resultToRequestElements.iterator();
             while (iter.hasNext()) {
                 Element resultToRequestElement = (Element) iter.next();
-                String reqName = resultToRequestElement.getAttribute("request-name");
-
-                if (reqName == null || reqName.length() == 0)
-                    reqName = resultToRequestElement.getAttribute("result-name");
-                resultToRequest.put(reqName, resultToRequestElement.getAttribute("result-name"));
+                ServletAccessor reqAcsr = new ServletAccessor(resultToRequestElement.getAttribute("request-name"), resultToRequestElement.getAttribute("result-name"));
+                ContextAccessor resultAcsr = new ContextAccessor(resultToRequestElement.getAttribute("result-name"));
+                resultToRequest.put(reqAcsr, resultAcsr);
             }
         }
 
@@ -139,11 +137,9 @@ public class CallService extends MethodOperation {
             Iterator iter = resultToSessionElements.iterator();
             while (iter.hasNext()) {
                 Element resultToSessionElement = (Element) iter.next();
-                String sesName = resultToSessionElement.getAttribute("session-name");
-
-                if (sesName == null || sesName.length() == 0)
-                    sesName = resultToSessionElement.getAttribute("result-name");
-                resultToSession.put(sesName, resultToSessionElement.getAttribute("result-name"));
+                ServletAccessor sesAcsr = new ServletAccessor(resultToSessionElement.getAttribute("session-name"), resultToSessionElement.getAttribute("result-name"));
+                ContextAccessor resultAcsr = new ContextAccessor(resultToSessionElement.getAttribute("result-name"));
+                resultToSession.put(sesAcsr, resultAcsr);
             }
         }
 
@@ -152,11 +148,9 @@ public class CallService extends MethodOperation {
             Iterator iter = resultToResultElements.iterator();
             while (iter.hasNext()) {
                 Element resultToResultElement = (Element) iter.next();
-                String serResName = resultToResultElement.getAttribute("service-result-name");
-
-                if (serResName == null || serResName.length() == 0)
-                    serResName = resultToResultElement.getAttribute("result-name");
-                resultToResult.put(serResName, resultToResultElement.getAttribute("result-name"));
+                ContextAccessor serResAcsr = new ContextAccessor(resultToResultElement.getAttribute("service-result-name"), resultToResultElement.getAttribute("result-name"));
+                ContextAccessor resultAcsr = new ContextAccessor(resultToResultElement.getAttribute("result-name"));
+                resultToResult.put(serResAcsr, resultAcsr);
             }
         }
     }
@@ -251,22 +245,19 @@ public class CallService extends MethodOperation {
                 Iterator iter = resultToRequest.entrySet().iterator();
                 while (iter.hasNext()) {
                     Map.Entry entry = (Map.Entry) iter.next();
-                    String requestName = methodContext.expandString((String) entry.getKey());
-                    String resultName = methodContext.expandString((String) entry.getValue());
-                    methodContext.getRequest().setAttribute(requestName, resultName);
+                    ServletAccessor requestAcsr = (ServletAccessor) entry.getKey();
+                    ContextAccessor resultAcsr = (ContextAccessor) entry.getValue();
+                    requestAcsr.put(methodContext.getRequest(), resultAcsr.get(result, methodContext), methodContext);
                 }
             }
-        }
 
-        // only run this if it is in an EVENT context
-        if (methodContext.getMethodType() == MethodContext.EVENT) {
             if (resultToSession.size() > 0) {
                 Iterator iter = resultToSession.entrySet().iterator();
                 while (iter.hasNext()) {
                     Map.Entry entry = (Map.Entry) iter.next();
-                    String sessionName = methodContext.expandString((String) entry.getKey());
-                    String resultName = methodContext.expandString((String) entry.getValue());
-                    methodContext.getRequest().getSession().setAttribute(sessionName, resultName);
+                    ServletAccessor sessionAcsr = (ServletAccessor) entry.getKey();
+                    ContextAccessor resultAcsr = (ContextAccessor) entry.getValue();
+                    sessionAcsr.put(methodContext.getRequest().getSession(), resultAcsr.get(result, methodContext), methodContext);
                 }
             }
         }
@@ -277,9 +268,9 @@ public class CallService extends MethodOperation {
                 Iterator iter = resultToResult.entrySet().iterator();
                 while (iter.hasNext()) {
                     Map.Entry entry = (Map.Entry) iter.next();
-                    String fromName = methodContext.expandString((String) entry.getKey());
-                    String resultName = methodContext.expandString((String) entry.getValue());
-                    methodContext.putResult(fromName, resultName);
+                    ContextAccessor fromAcsr = (ContextAccessor) entry.getKey();
+                    ContextAccessor resultAcsr = (ContextAccessor) entry.getValue();
+                    fromAcsr.put(methodContext.getResults(), resultAcsr.get(result, methodContext), methodContext);
                 }
             }
         }
