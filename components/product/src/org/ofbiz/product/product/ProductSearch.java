@@ -1,5 +1,5 @@
 /*
- * $Id: ProductSearch.java,v 1.14 2003/10/24 11:15:20 jonesde Exp $
+ * $Id: ProductSearch.java,v 1.15 2003/10/24 20:32:59 jonesde Exp $
  *
  *  Copyright (c) 2001 The Open For Business Project (www.ofbiz.org)
  *  Permission is hereby granted, free of charge, to any person obtaining a
@@ -36,6 +36,7 @@ import java.sql.Timestamp;
 
 import javax.servlet.ServletRequest;
 import javax.servlet.http.HttpSession;
+import javax.servlet.http.HttpServletRequest;
 
 import org.ofbiz.base.util.Debug;
 import org.ofbiz.base.util.UtilCache;
@@ -61,12 +62,13 @@ import org.ofbiz.entity.model.ModelKeyMap;
 import org.ofbiz.entity.model.ModelViewEntity.ComplexAlias;
 import org.ofbiz.entity.model.ModelViewEntity.ComplexAliasField;
 import org.ofbiz.product.product.KeywordSearch;
+import org.ofbiz.product.catalog.CatalogWorker;
 
 /**
  *  Utilities for product search based on various constraints including categories, features and keywords.
  *
  * @author <a href="mailto:jonesde@ofbiz.org">David E. Jones</a>
- * @version    $Revision: 1.14 $
+ * @version    $Revision: 1.15 $
  * @since      3.0
  */
 public class ProductSearch {
@@ -79,12 +81,27 @@ public class ProductSearch {
     public static final String PRODUCT_SEARCH_CONSTRAINT_LIST = "_PRODUCT_SEARCH_CONSTRAINT_LIST_";
     public static final String PRODUCT_SEARCH_SORT_ORDER = "_PRODUCT_SEARCH_SORT_ORDER_";
     
-    public static ArrayList searchDo(HttpSession session, GenericDelegator delegator) {
+    public static ArrayList searchDo(HttpServletRequest request, GenericDelegator delegator) {
+        HttpSession session = request.getSession();
         String visitId = VisitHandler.getVisitId(session);
         List productSearchConstraintList = (List) session.getAttribute(ProductSearch.PRODUCT_SEARCH_CONSTRAINT_LIST);
         if (productSearchConstraintList == null || productSearchConstraintList.size() == 0) {
+            // no constraints, don't do a search...
             return new ArrayList();
         }
+        
+        // make sure the view allow category is included
+        String prodCatalogId = CatalogWorker.getCurrentCatalogId(request);
+        String viewProductCategoryId = CatalogWorker.getCatalogViewAllowCategoryId(delegator, prodCatalogId);
+        if (UtilValidate.isNotEmpty(viewProductCategoryId)) {
+            ProductSearchConstraint viewAllowConstraint = new ProductSearch.CategoryConstraint(viewProductCategoryId, true);
+            if (!productSearchConstraintList.contains(viewAllowConstraint)) {
+                // don't add to same list, will modify the one in the session, create new list
+                productSearchConstraintList = new ArrayList(productSearchConstraintList);
+                productSearchConstraintList.add(viewAllowConstraint);
+            }
+        }
+        
         ResultSortOrder resultSortOrder = (ResultSortOrder) session.getAttribute(ProductSearch.PRODUCT_SEARCH_SORT_ORDER);
         if (resultSortOrder == null) {
             resultSortOrder = new ProductSearch.SortKeywordRelevancy();
