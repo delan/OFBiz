@@ -22,7 +22,7 @@
  *@author     Andy Zeneski (jaz@ofbiz.org)
  *@author     David E. Jones (jonesde@ofbiz.org)
  *@author     Olivier Heintz (olivier.heintz@nereide.biz)
- *@version    $Rev:$
+ *@version    $Rev$
  *@since      2.1
 -->
 <#assign uiLabelMap = requestAttributes.uiLabelMap>
@@ -73,7 +73,19 @@ ${pages.get("/billingaccount/BillingAccountTabBar.ftl")}
     <tr>
       <td width='26%' align='right' valign='top'><div class="tabletext">${uiLabelMap.PartyPartyId}</div></td>
       <td width="5">&nbsp;</td>
-      <td width="74%"><input type="text" class="inputBox" size="25" name="partyId" value="">*</td>
+      <td width="74%">
+        <input type="text" class="inputBox" size="25" name="partyId" value="">*
+        <span class='tabletext'>
+          <a href="javascript:call_fieldlookup2(document.billingform.partyId,'LookupPartyGroup');">
+            <img src='/images/fieldlookup.gif' width='15' height='14' border='0' alt='Click here For Party Group Lookup'>
+          </a> 
+        </span>
+        <span class='tabletext'>
+          <a href="javascript:call_fieldlookup2(document.billingform.partyId,'LookupPerson');">
+            <img src='/images/fieldlookup.gif' width='15' height='14' border='0' alt='Click here For Person Lookup'>
+          </a> 
+        </span>
+      </td>
     </tr>  
     <tr>
       <td width='26%' align='right' valign='top'><div class="tabletext">${uiLabelMap.PartyRoleTypeId}</div></td>
