@@ -26,7 +26,7 @@
  *
  * @author     David E. Jones (jonesde@ofbiz.org)
  * @author     Andy Zeneski (jaz@ofbiz.org)
- * @version    $Revision: 1.36 $
+ * @version    $Revision: 1.37 $
  */
 -->
 
@@ -1354,8 +1354,7 @@
       <alias entity-alias="SR" name="lastModifiedDate"/>
       <alias entity-alias="SR" name="referenceId"/>
       <alias entity-alias="SR" name="generalFeedback"/>
-      <alias entity-alias="SR" name="orderId"/>
-      <alias entity-alias="SR" name="thruDate"/>
+      <alias entity-alias="SR" name="orderId"/>      
       <alias entity-alias="SR" name="orderItemSeqId"/>
       <alias entity-alias="RA" name="surveyQuestionId"/>
       <alias entity-alias="RA" name="booleanResponse"/>
