@@ -142,12 +142,13 @@ ${pages.get("/product/ProductTabBar.ftl")}
             </td>
             <td>&nbsp;</td>
             <td width="80%" colspan="4" valign=top>
-            <input type="text" class="inputBox" name="smallImageUrl" value="${(product.smallImageUrl)?if_exists}" size="60" maxlength="255">
+            <input type="text" class="inputBox" name="smallImageUrl" value="${(product.smallImageUrl)?default(imageNameSmall + '.jpg')}" size="60" maxlength="255">
             <#if productId?has_content>
                 <div>
                 <span class="tabletext">${uiLabelMap.ProductInsertDefaultImageUrl}: </span>
                 <a href="javascript:document.productForm.smallImageUrl.value='${imageNameSmall}.jpg';" class="buttontext">[.jpg]</a>
                 <a href="javascript:document.productForm.smallImageUrl.value='${imageNameSmall}.gif';" class="buttontext">[.gif]</a>
+                <a href="javascript:document.productForm.smallImageUrl.value='';" class="buttontext">[clear]</a>
                 </div>
             </#if>
             </td>
@@ -161,12 +162,13 @@ ${pages.get("/product/ProductTabBar.ftl")}
             </td>
             <td>&nbsp;</td>
             <td width="80%" colspan="4" valign=top>
-            <input type="text" class="inputBox" name="mediumImageUrl" value="${(product.mediumImageUrl)?if_exists}" size="60" maxlength="255">
+            <input type="text" class="inputBox" name="mediumImageUrl" value="${(product.mediumImageUrl)?default(imageNameMedium + '.jpg')}" size="60" maxlength="255">
             <#if productId?has_content>
                 <div>
                 <span class="tabletext">${uiLabelMap.ProductInsertDefaultImageUrl}: </span>
                 <a href="javascript:document.productForm.mediumImageUrl.value='${imageNameMedium}.jpg';" class="buttontext">[.jpg]</a>
                 <a href="javascript:document.productForm.mediumImageUrl.value='${imageNameMedium}.gif';" class="buttontext">[.gif]</a>
+                <a href="javascript:document.productForm.mediumImageUrl.value='';" class="buttontext">[clear]</a>
                 </div>
             </#if>
             </td>
@@ -180,12 +182,13 @@ ${pages.get("/product/ProductTabBar.ftl")}
             </td>
             <td>&nbsp;</td>
             <td width="80%" colspan="4" valign=top>
-            <input type="text" class="inputBox" name="largeImageUrl" value="${(product.largeImageUrl)?if_exists}" size="60" maxlength="255">
+            <input type="text" class="inputBox" name="largeImageUrl" value="${(product.largeImageUrl)?default(imageNameLarge + '.jpg')}" size="60" maxlength="255">
             <#if productId?has_content>
                 <div>
                 <span class="tabletext">${uiLabelMap.ProductInsertDefaultImageUrl}: </span>
                 <a href="javascript:document.productForm.largeImageUrl.value='${imageNameLarge}.jpg';" class="buttontext">[.jpg]</a>
                 <a href="javascript:document.productForm.largeImageUrl.value='${imageNameLarge}.gif';" class="buttontext">[.gif]</a>
+                <a href="javascript:document.productForm.largeImageUrl.value='';" class="buttontext">[clear]</a>
                 </div>
             </#if>
             </td>
@@ -199,12 +202,13 @@ ${pages.get("/product/ProductTabBar.ftl")}
             </td>
             <td>&nbsp;</td>
             <td width="80%" colspan="4" valign=top>
-            <input type="text" class="inputBox" name="detailImageUrl" value="${(product.detailImageUrl)?if_exists}" size="60" maxlength="255">
+            <input type="text" class="inputBox" name="detailImageUrl" value="${(product.detailImageUrl)?default(imageNameDetail + '.jpg')}" size="60" maxlength="255">
             <#if productId?has_content>
                 <div>
                 <span class="tabletext">${uiLabelMap.ProductInsertDefaultImageUrl}: </span>
                 <a href="javascript:document.productForm.detailImageUrl.value='${imageNameDetail}.jpg';" class="buttontext">[.jpg]</a>
                 <a href="javascript:document.productForm.detailImageUrl.value='${imageNameDetail}.gif';" class="buttontext">[.gif]</a>
+                <a href="javascript:document.productForm.detailImageUrl.value='';" class="buttontext">[clear]</a>
                 </div>
             </#if>
             </td>
