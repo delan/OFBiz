@@ -240,7 +240,7 @@ access. For a detailed description see the core/docs/entityconfig.html file.
         <sql-load-path path="ecommerce/etc" prepend-env="ofbiz.home"/>
         <inline-jdbc
                 jdbc-driver="org.ofbiz.jdbc.sqlserver.SQLServerDriver"
-                jdbc-uri="jdbc:microsoft:sqlserver://localhost:1433;DatabaseName=ofbiz"
+                jdbc-uri="jdbc:microsoft:sqlserver://localhost:1433;DatabaseName=ofbiz;SelectMethod=Cursor"
                 jdbc-username="ofbiz"
                 jdbc-password="ofbiz"
                 isolation-level="Serializable"/>
