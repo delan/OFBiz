@@ -87,6 +87,13 @@ public class ControlServlet extends HttpServlet {
     }
 
     public void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
+        //setup chararcter encoding and content type, do before so that view can override
+        String charset = getServletContext().getInitParameter("charset");
+        if (charset == null || charset.length() == 0) charset = request.getCharacterEncoding();
+        if (charset == null || charset.length() == 0) charset = "UTF-8";
+        request.setCharacterEncoding(charset);
+        response.setContentType("text/html; charset=" + charset);
+
         long requestStartTime = System.currentTimeMillis();
         HttpSession session = request.getSession();
         GenericValue userLogin = (GenericValue) request.getSession().getAttribute(SiteDefs.USER_LOGIN);
@@ -177,13 +184,6 @@ public class ControlServlet extends HttpServlet {
         StringBuffer serverRootUrl = UtilMisc.getServerRootUrl(request);
         request.setAttribute(SiteDefs.SERVER_ROOT_URL, serverRootUrl.toString());
 
-        //setup chararcter encoding and content type, do before so that view can override
-        String charset = getServletContext().getInitParameter("charset");
-        if (charset == null || charset.length() == 0) charset = request.getCharacterEncoding();
-        if (charset == null || charset.length() == 0) charset = "UTF-8";
-        request.setCharacterEncoding(charset);
-        response.setContentType("text/html; charset=" + charset);
-        
         if (Debug.timingOn()) timer.timerString("[" + rname + "] Setup done, doing Event(s) and View(s)", module);
 
         String errorPage = null;
