@@ -530,7 +530,7 @@ public class ModelFormField {
         if ((Boolean.TRUE.equals(isError) && !Boolean.FALSE.equals(useRequestParameters)) || (Boolean.TRUE.equals(useRequestParameters))) {
             //Debug.logInfo("Getting entry, isError true so getting from parameters for field " + this.getName() + " of form " + this.modelForm.getName());
             Map parameters = (Map) context.get("parameters");
-            if (parameters != null) {
+            if (parameters != null && parameters.get(this.getParameterName(context)) != null) {
                 return (String) parameters.get(this.getParameterName(context));
             } else {
                 return defaultValue;
