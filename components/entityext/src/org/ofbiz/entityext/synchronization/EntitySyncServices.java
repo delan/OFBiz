@@ -242,7 +242,7 @@ public class EntitySyncServices {
      *@return Map with the result of the service, the output parameters
      */
     public static Map runPullEntitySync(DispatchContext dctx, Map context) {
-        Debug.logInfo("Running cleanSyncRemoveInfo", module);
+        Debug.logInfo("Running runPullEntitySync", module);
         GenericDelegator delegator = dctx.getDelegator();
         LocalDispatcher dispatcher = dctx.getDispatcher();
         
