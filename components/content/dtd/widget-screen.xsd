@@ -840,26 +840,6 @@
             </xs:simpleType>
         </xs:attribute>
     </xs:attributeGroup>
-    <xs:element name="sub-content" substitutionGroup="AllWidgets">
-        <xs:complexType>
-            <xs:attributeGroup ref="attlist.sub-content"/>
-        </xs:complexType>
-    </xs:element>
-    <xs:attributeGroup name="attlist.sub-content">
-        <xs:attribute type="xs:string" name="content-id" use="required"/>
-        <xs:attribute type="xs:string" name="assoc-name" use="required"/>
-        <xs:attribute type="xs:string" name="edit-request"/>
-        <xs:attribute type="xs:string" name="edit-container-style"/>
-        <xs:attribute name="xml-escape" default="false">
-            <xs:simpleType>
-                <xs:restriction base="xs:token">
-                    <xs:enumeration value="true"/>
-                    <xs:enumeration value="false"/>
-                </xs:restriction>
-            </xs:simpleType>
-        </xs:attribute>
-    </xs:attributeGroup>
-
     <xs:element name="iterate-section" substitutionGroup="AllWidgets">
         <xs:complexType>
             <xs:sequence>
@@ -875,6 +855,25 @@
         <xs:attribute type="xs:string" name="view-size" />
         <xs:attribute type="xs:string" name="paginate-target" />
         <xs:attribute name="paginate" default="true">
+            <xs:simpleType>
+                <xs:restriction base="xs:token">
+                    <xs:enumeration value="true"/>
+                    <xs:enumeration value="false"/>
+                </xs:restriction>
+            </xs:simpleType>
+        </xs:attribute>
+    </xs:attributeGroup>
+    <xs:element name="sub-content" substitutionGroup="AllWidgets">
+        <xs:complexType>
+            <xs:attributeGroup ref="attlist.sub-content"/>
+        </xs:complexType>
+    </xs:element>
+    <xs:attributeGroup name="attlist.sub-content">
+        <xs:attribute type="xs:string" name="content-id" use="required"/>
+        <xs:attribute type="xs:string" name="assoc-name" use="required"/>
+        <xs:attribute type="xs:string" name="edit-request"/>
+        <xs:attribute type="xs:string" name="edit-container-style"/>
+        <xs:attribute name="xml-escape" default="false">
             <xs:simpleType>
                 <xs:restriction base="xs:token">
                     <xs:enumeration value="true"/>
