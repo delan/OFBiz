@@ -20,7 +20,7 @@
  *  THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  *
  *@author     Andy Zeneski (jaz@ofbiz.org)
- *@version    $Revision: 1.7 $
+ *@version    $Revision: 1.8 $
  *@since      2.1.1
  */
  
@@ -36,7 +36,10 @@ dispatcher = request.getAttribute("dispatcher");
 userLogin = session.getAttribute("userLogin");
 prodCatalogId = CatalogWorker.getCurrentCatalogId(request);
 webSiteId = CatalogWorker.getWebSiteId(request);
- 
+currencyUomId = UtilHttp.getCurrencyUom(request);
+
+context.put("currencyUomId", currencyUomId);
+
 // get the top level shopping lists for the logged in user
 allShoppingLists = delegator.findByAnd("ShoppingList", UtilMisc.toMap("partyId", userLogin.getString("partyId")), UtilMisc.toList("listName"));
 shoppingLists = EntityUtil.filterByAnd(allShoppingLists, UtilMisc.toMap("parentShoppingListId", null));
@@ -80,7 +83,7 @@ if (shoppingListId != null) {
 
                 product = shoppingListItem.getRelatedOneCache("Product");
 
-                calcPriceInMap = UtilMisc.toMap("product", product, "quantity", shoppingListItem.get("quantity"), "prodCatalogId", prodCatalogId, "webSiteId", webSiteId, "currencyUomId", UtilHttp.getCurrencyUom(session), "userLogin", userLogin);
+                calcPriceInMap = UtilMisc.toMap("product", product, "quantity", shoppingListItem.get("quantity"), "prodCatalogId", prodCatalogId, "webSiteId", webSiteId, "currencyUomId", currencyUomId, "userLogin", userLogin);
                 calcPriceOutMap = dispatcher.runSync("calculateProductPrice", calcPriceInMap);
                 price = calcPriceOutMap.get("price");
                 totalPrice = price * shoppingListItem.getDouble("quantity");
@@ -114,7 +117,7 @@ if (shoppingListId != null) {
                 childShoppingList = childShoppingListIter.next();
                 childShoppingListData = new HashMap();
 
-                calcListPriceInMap = UtilMisc.toMap("shoppingListId", childShoppingList.get("shoppingListId"), "prodCatalogId", prodCatalogId, "webSiteId", webSiteId, "userLogin", userLogin);
+                calcListPriceInMap = UtilMisc.toMap("shoppingListId", childShoppingList.get("shoppingListId"), "prodCatalogId", prodCatalogId, "webSiteId", webSiteId, "userLogin", userLogin, "currencyUomId", currencyUomId);
                 childShoppingListPriceMap = dispatcher.runSync("calculateShoppingListDeepTotalPrice", calcListPriceInMap);
                 totalPrice = childShoppingListPriceMap.get("totalPrice");
                 shoppingListChildTotal += totalPrice;

@@ -22,7 +22,7 @@
  *@author     Andy Zeneski (jaz@ofbiz.org)
  *@author     David E. Jones (jonesde@ofbiz.org)
  *@author     Olivier Heintz (olivier.heintz@nereide.biz)
- *@version    $Revision: 1.4 $
+ *@version    $Revision: 1.5 $
  *@since      2.1
 -->
 <#assign uiLabelMap = requestAttributes.uiLabelMap>
@@ -35,6 +35,7 @@
   <tr>
     <td><div class="tableheadtext">${uiLabelMap.AccountingAccountId}</div></td>
     <td><div class="tableheadtext">${uiLabelMap.AccountingAccountLimit}</div></td>
+    <td><div class="tableheadtext">Account Currency</div></td>
     <#if billingAccountRolesByParty?has_content>
       <#assign colSpan = "4">
       <td><div class="tableheadtext">${uiLabelMap.PartyRoleTypeId}</div></td>
@@ -50,7 +51,8 @@
       <#assign roleType = role.getRelatedOne("RoleType")>
       <tr>
         <td><div class="tabletext">${billingAccount.billingAccountId}</div></td>
-        <td><div class="tabletext">${billingAccount.accountLimit?default(0)?string.currency}</div></td>
+        <td><div class="tabletext">${billingAccount.accountLimit?default(0)?string}</div></td>
+        <td><div class="tabletext">${billingAccount.accountCurrencyUomId?if_exists}</div></td>
         <td><div class="tabletext">${roleType.description}</div></td>
         <td align="right">
           <a href="<@ofbizUrl>/EditBillingAccount?billingAccountId=${billingAccount.billingAccountId}</@ofbizUrl>" class="buttontext">[${uiLabelMap.CommonEdit}]</a>
