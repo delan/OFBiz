@@ -62,10 +62,10 @@
                     <div class="tabletext">
                       <a href="/partymgr/control/viewprofile?party_id=${partyId}${externalKeyParam?if_exists}" target="partymgr" class="buttontext">${partyId}</a>
                       <#if partyMap.person?exists>
-                        ${person.firstName?if_exists}&nbsp;${person.lastName?if_exists}
+                        ${partyMap.person.firstName?if_exists}&nbsp;${partyMap.person.lastName?if_exists}
                       </#if>
                       <#if partyMap.partyGroup?exists>
-                        ${partyGroup.groupName?if_exists}
+                        ${partyMap.partyGroup.groupName?if_exists}
                       </#if>
                     </div>
                   </td>
