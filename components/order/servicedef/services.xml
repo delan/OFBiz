@@ -710,7 +710,7 @@
         <attribute name="statusString" type="String" mode="OUT"/>
     </service>
 
-    <service name="getOrderHeaderInformation" engine="java"
+    <service name="getOrderHeaderInformation" engine="java" validate="false"
             location="org.ofbiz.order.order.OrderServices" invoke="getOrderHeaderInformation">
         <description>Get basic order header information.</description>
         <auto-attributes entity-name="OrderHeader" include="pk" mode="INOUT" optional="false"/>

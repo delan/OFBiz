@@ -80,6 +80,13 @@
         <action service="sendReturnAcceptNotification" mode="async" persist="true"/>
     </eca>
     <eca service="updateReturnHeader" event="commit">
+        <condition field-name="statusId" operator="equals" value="RETURN_RECEIVED"/>
+        <condition field-name="currentStatusId" operator="not-equals" value="RETURN_RECEIVED"/>
+        <action service="processReplacementReturn" mode="sync"/>
+        <action service="processCreditReturn" mode="sync"/>
+        <action service="processRefundReturn" mode="sync"/>
+    </eca>
+    <eca service="updateReturnHeader" event="commit">
         <condition field-name="statusId" operator="equals" value="RETURN_COMPLETED"/>
         <condition field-name="currentStatusId" operator="not-equals" value="RETURN_COMPLETED"/>
         <action service="sendReturnCompleteNotification" mode="async" persist="true"/>
@@ -95,13 +102,13 @@
         <action service="processCreditReturn" mode="sync"/>
         <action service="processRefundReturn" mode="sync"/>
     </eca>
-    <eca service="processReplacementReturn" event="commit">
+    <eca service="processReplacementReturn" event="return">
         <action service="checkReturnComplete" mode="sync"/>
     </eca>
-    <eca service="processCreditReturn" event="commit">
+    <eca service="processCreditReturn" event="return">
         <action service="checkReturnComplete" mode="sync"/>
     </eca>
-    <eca service="processRefundReturn" event="commit">
+    <eca service="processRefundReturn" event="return">
         <action service="checkReturnComplete" mode="sync"/>
     </eca>
 
