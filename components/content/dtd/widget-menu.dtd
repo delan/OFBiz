@@ -161,5 +161,4 @@
         field-name CDATA #REQUIRED
     >
 
-    <!ELEMENT fail-widgets ( (%AllWidgets;)* )>
 
