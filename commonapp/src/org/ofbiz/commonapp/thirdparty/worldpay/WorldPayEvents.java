@@ -147,7 +147,8 @@ public class WorldPayEvents {
         String configString = null;
         try {
             GenericValue webSitePayment = delegator.findByPrimaryKey("WebSitePaymentSetting", UtilMisc.toMap("webSiteId", webSiteId, "paymentMethodTypeId", "EXT_WORLDPAY"));
-            configString = webSitePayment.getString("paymentConfiguration");
+            if (webSitePayment != null)
+                configString = webSitePayment.getString("paymentConfiguration");
         } catch (GenericEntityException e) {
             Debug.logWarning(e, "Cannot find webSitePayment Settings", module);
         }
