@@ -1,4 +1,4 @@
-<!-- Version 0.5 -->
+<!-- Version 0.6 -->
 <!-- NOTE: THIS DTD IS ONLY A GUIDE. IT MAY NOT BE CORRECT. -->
 <!-- DON'T TRUST IT. -->
 
@@ -7,7 +7,7 @@
 <!-- Color is stored as "red;green;blue;alpha". Each component is an -->
 <!-- integer from 0 to 255. -->
 
-<!ELEMENT report	(database query parameters? formulas? usercols?
+<!ELEMENT report	(source parameters? formulas? usercols?
 			 headers? footers? page? groups? details)
 >
 
@@ -26,7 +26,9 @@
 <!ATTLIST paper		name		CDATA	#REQUIRED>
 <!ATTLIST paper		orientation	(portrait|landscape)>
 
-<!ELEMENT database>
+<!ELEMENT source	(database | charsep)>
+
+<!ELEMENT database	query>
 <!ATTLIST database	driverClassName	CDATA	#REQUIRED
 			connInfo	CDATA	#REQUIRED
 			name		CDATA	#REQUIRED
@@ -47,6 +49,16 @@
 <!ELEMENT sort>
 <!ATTLIST sort		column		CDATA	#REQUIRED
 			order		(ascending|descending)	ascending
+>
+
+<!ELEMENT charsep	column*>
+<!ATTLIST charsep	sep-char	CDATA	#IMPLIED
+>
+
+<!ELEMENT column>
+<!ATTLIST column	name		CDATA	#REQUIRED
+			type		(string | number | date)
+			date-format	CDATA
 >
 
 <!ELEMENT parameters	parameter*>

@@ -2,6 +2,16 @@
     Bugs
 ================================================================
 
+* Edit database connection. Click "OK" to save (without making any
+  changes). Run report. java.sql.SQLException: ERROR: Table name "jobs"
+  specified more than once.
+
+* Swing layout engine eating up memory, even between reports. "Using -in
+  the above application jws- the swing layout on different reports after
+  some time I get a java.lang.OutOfMemory exception. I tried gc, weak
+  referencing etc but nothing works? Can you help?" Kleandros
+  Stogiannopoulos, <kstogian@logicdis.gr>
+
 * What happens when you remove a field that has subtotals? See
   Report.getSubtotalFieldsFor().
 
@@ -24,14 +34,6 @@
 
     ** Pasting needs to re-fit sections (and on undo, un-re-fit them).
 
-* While using report from within a JSP or servlet, Qaiser writes: "i do the
-  same thing which you said , i initilized the total report in init method.
-  then in doGet i create a new parameter file attach this paarmeter file
-  with report , then i create a new Layoutengine in doGet method attach
-  this wioth report and run the report in the same method. but i not always
-  get the latest result , even you cannot write some thing on the
-  Printwrtiter which i attached with layout engine in doGet method."
-
 * When run command in field picker, what should happen to undo/redo?
 
 * HTML layout engine doesn't handle vertical placement of fields within a
@@ -48,8 +50,13 @@
 
 * LaTeX:
 
+-- LaTeX page footer bug: no page number on A4 paper when the LaTeX is run
+   through pdflatex (the data is there in the LaTeX file). Output has one
+   more row and footer off of bottom of paper. When run pdflatex, PDF
+   MediaBox for both US Letter and A4 has same size (but it's A4 size!).
+
 -- Underline always at same height (currently gets pushed down by '#' in
-  'Job #') (use baseline?)
+   'Job #') (use baseline?)
 
 -- Limit text to box
 
@@ -57,15 +64,82 @@
     To Do 
 ================================================================
 
-* usage (-f)
-* datavision.java
-* popup for export
-* docs (cmd line, list of le, le.html)
+* Documentation: all h3 tags should have X.Y.Z numbers and appear in the
+  TOC.
+
+* Disable "Delete Selected" button from join dialog when there are no
+  entries in the list.
+
+* I'd like to see each parameter object have a isSet flag in it. isSet
+  would default to false, then when Parameter.setValue() gets called isSet
+  is made true. Then when Report.runReport() is called if all the
+  Parameters have isSet == true then it doesn't run askForParameters(). --
+  Brian Johnson <bmj@camfour.com>
+
+* Info for sections: height, number of fields.
+
+* Warning if section height totals (page headers plus details, at least)
+  are greater than page height.
+
+* Translations
+
+  * tu_TR (Turkish, Turkey) from Ismail Cansiz <icansiz@haysoft.com>
+  * Chinese from Liangw <liangw-tek@21.com>
+  * Possible Dutch from Nils Ottevanger <N.Ottevanger@hetnet.nl>
+
+  * -q flag translation received for 0.6.0:
+	de_DE
+	it_ID
+
+  * language updates received for 0.6.0:
+	de_DE
+	es_MX
+	it_IT
+	pt_BR
+	ru_RU
+
+  * language updates received for 0.5.5:
+	bg_BG
+	de_DE
+	es_MX
+	it_IT
+	ru_RU
+
+* Add getValue() to all things (columns) for which we now call
+  report.columnValue().
+
+* PDF layout engine:
+    * Underline
+    * Images
+    * Borders
+    * Lines
+
+* XML data source. "row-end-tag" attribute defines end of detail row. Do we
+  need a new column attribute that defines an xml element attribute that
+  use used as part of the column name? For example, the XML fragment
+
+    <my-col name="col1">value one</my-col>
+    <my-col name="col2">123</my-col>
+
+  couldn't distinguish between what are two different columns. How about
+  <column name="my-col" name-attr="name" />?
+
+* Need a way to bind different shortcut and accel keys to menu items.
+
+* Let text column fields expand based on data.
+
+* Even/odd page distinction (sections print even only/odd only/both). Idea
+  by Oleg <oleg_vn@users.sourceforge.net>.
+
+* Allow user columns for group values. Zed A. Shaw <zed.shaw@ubc.ca>. Make
+  column a Value object. Note: can't add anything else (formula, etc.)
+  because (a) only user cols are guaranteed to have their values defined
+  and (b) we can't sort by any of the others anyway.
 
 * Optionally repeat group header at top of every page (dinesh).
 
 * If a usercolumn uses a COUNT, SUM, MIN, MAX one have to do a GROUP BY on
-  all the columns used. I have added a check to see if a usercolumn uses
+  all the columns used. I have to a check to see if a usercolumn uses
   the above and automatically adds the GROUP BY before the ORDER BY.
   (Eddie)
 
@@ -119,17 +193,14 @@
   groups and you insert a "rec # in group" special field, how will you know
   which group's count is being displayed?
 
-* Incorporate and test DB2 changes by Stefan Hansel
-  (thestefan@users.sourceforge.net). See file "jimm.datavision.sql to work
-  with DB/2.txt" in ../datavision-other.
+* Remove code in images that turns file paths into URL. As of version
+  0.6.0, we only use URLs and change file paths into "file:" URLs.
 
 * Paste into drag targets (code windows, report).
 
 * Lazily instantiate tables and their columns.
 
 * Add copyright to source files.
-
-* Need a way to bind different shortcut and accel keys to menu items.
 
 * New duplicate command? Necessary?
 
@@ -141,13 +212,9 @@
 
 * All layout engines: take file object instead of writer?
 
-* Fix relative path names of images in generated HTML and in other layout
-  engines. Copy images to report destination folder and output file name
-  only? What if two different images have the same file name?
-  Append/prepend file id number to file name.
-
 * Allow creation images using any file. That way, eps, tiff, and png files
-  can be included in HTML or LaTeX exports, for example.
+  can be included in HTML or LaTeX exports, for example. Display an icon
+  representing the image.
 
 * Binary data: see if can convert into a string?
 
@@ -170,8 +237,6 @@
 * Comments in SortedListModel.java.
 
 * Comments in new Swing classes.
-
-* PDF layout engine.
 
 * When placing a text widget, let ESC key cancel operation.
 
@@ -222,8 +287,6 @@
 * Cataloging/searching reports (XML files).
 
 * Arrow keys nudge selected fields a pixel at a time.
-
-* Separate data layer just like layout engine layer.
 
 * When trying to log in, notify user of error messages. Perhaps quit after
   three or five times instead of looping indefinitely.
@@ -329,11 +392,8 @@
 
 * Design window toolbar (make it optional).
 
-* Suggestions from Tony: images, combos, areas, checkbox, background,
-  working borders, line, rectangles.
-
-* Add math functions to expressions (sin, cos, ln, min, max). If we switch
-  to embedded Ruby, it will be taken care of.
+* Suggestions from Tony: combos, areas, checkbox, background, working
+  borders, line, rectangles.
 
 * Add if-then-else and booleans to formula expressions: &, |, &&, ||, <, >,
   <=, >=, =, ==, !=, <>. Will need booleans for suppression procs, anyway.

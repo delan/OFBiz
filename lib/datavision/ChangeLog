@@ -1,4 +1,237 @@
+2003-01-02  Jim Menard  <jimm@io.com>
+
+	* jimm/datavision/source/Query.java (writeXML): escape attributes
+	values.
+
+	* jimm/datavision/Join.java (writeXML): escape attributes values.
+
+	* jimm/datavision/Group.java (writeXML): escape attributes values.
+
+	* jimm/datavision/Format.java (writeXML): escape format string
+	attribute values.
+
+	* jimm/datavision/Field.java (writeXML): escape attribute values.
+
+2002-12-30  Jim Menard  <jimm@io.com>
+
+	* jimm/datavision/source/sql/Database.java (doWriteXML): escape
+	attribute values.
+
+2002-12-29  Jim Menard  <jimm@io.com>
+
+	* jimm/datavision/source/sql/SQLQuery.java (queryAsString): add
+	space after join relations.
+
+2002-12-24  Jim Menard  <jimm@io.com>
+
+	* jimm/datavision/source/Table.java (findColumn): search for
+	columns case-(in)sensitively depending upon the value of
+	Report.caseSensitiveDatabaseNames().
+
+	* jimm/datavision/source/sql/Database.java
+	(loadTablesUsingSchemaNameAndTypes): don't make table names
+	lower case when using them as keys to store tables.
+
+	* jimm/datavision/Report.java (caseSensitiveDatabaseNames): created.
+	(setCaseSensitiveDatabaseNames): created.
+
+	* jimm/datavision/DataVision.java: handle new -q flag by calling
+	Report.doNotQuoteNames().
+
+2002-12-23  Jim Menard  <jimm@io.com>
+
+	* jimm/datavision/source/sql/Database.java: added new methods
+	storesLowerCaseIdentifiers and storesUpperCaseIdentifiers, which
+	tell the query how the JDBC driver stores identifiers.
+
+	* jimm/datavision/source/sql/SQLQuery.java: now responsible for
+	quoting table and column names, instead of the columns and tables
+	themselves.
+
+2002-12-21  Jim Menard  <jimm@io.com>
+
+	* jimm/datavision/gui/EditFieldLayout.java (addTextArea): put a
+	scroll area around the text area.
+
+2002-12-20  Jim Menard  <jimm@io.com>
+
+	* jimm/datavision/source/Row.java (getObject): check for null row
+	data because when (a) a query returns zero rows and (b) a header
+	or footer contains a column value, this method gets called before
+	curRowData is ever set.
+
+2002-12-19  Jim Menard  <jimm@io.com>
+
+	* jimm/datavision/PaperFormat.java (static constructor): read
+	latex paper name strings.
+	(getLaTeXPaperSizeString): created.
+
+	* jimm/datavision/layout/LaTeXLE.java (putField): fixed page
+	footer y coord bug.
+	(paperSizeString): created.
+	(doStart): added a few newlines before the comment lines. Fixed
+	text width and height to reflect actual page size, not hard-coded
+	8.5x11. Use PaperFormat.getLaTeXPaperSizeString() for
+	documentclass paper size option.
+
+2002-12-18  Jim Menard  <jimm@io.com>
+
+	* jimm/datavision/layout/pdf/FontObj.java: created.
+
+	* jimm/datavision/layout/pdf/FontTracker.java: created.
+
+	* jimm/datavision/layout/pdf/PDFLE.java: use font tracker.
+
+	* jimm/datavision/layout/pdf/Page.java: use font tracker and font
+	objects.
+
+2002-12-17  Jim Menard  <jimm@io.com>
+
+	* jimm/datavision/ImageField.java: use URL instead of file.
+
+	* jimm/datavision/gui/cmd/NewImageFieldCommand.java: take image
+	URL string instead of file name.
+
+	* jimm/datavision/gui/Designer.java (createImageField): ask for
+	URL string instead of file.
+
+	* jimm/datavision/layout/HTMLLE.java: removed useless constant.
+	(doOutputImage): output file name for image alt attribute.
+
+	* jimm/datavision/Report.java (read): simplified throws clauses of
+	all the read() versions.
+
+	* jimm/datavision/layout/pdf/PDFLE.java (boundsOfField): created.
+	(doOutputField) call boundsOfField.
+
+	* jimm/datavision/layout/pdf/Page.java (addText): start text at
+	top of bounding box.
+
+2002-12-15  Jim Menard  <jimm@io.com>
+
+	* jimm/datavision/gui/FieldWidget.java (mousePressReleaseCommon):
+	created from code common to mousePressed and mouseReleased. This
+	also fixes a Windows popup menu bug.
+
+2002-12-14  Jim Menard  <jimm@io.com>
+
+	* jimm/datavision/gui/applet/DVApplet.java: created.
+
+	* jimm/datavision/gui/applet/DesignApplet.java: created.
+
+2002-12-13  Jim Menard  <jimm@io.com>
+
+	* jimm/datavision/gui/Designer.java: created from code factored
+	out of DesignWin.
+
+	* jimm/datavision/gui/DesignWin.java: now a subclass of Designer.
+
+	* Massive changes to support new Designer superclass.
+
+	* jimm/datavision/gui/CodeEditorWin.java (buildWindow): add scroll
+	bars and improve layout.
+
+	* jimm/datavision/Report.java (updateGroups): don't pass in
+	group's value; let the group get it.
+
+	* jimm/datavision/Group.java (setValue): let me get my value;
+	don't make report pass it to me.
+
+	* jimm/datavision/source/ColumnIterator.java: moved into this new
+	class from Database.
+
+	* jimm/datavision/source/sql/Database.java: moved ColumnIterator
+	to its own class.
+
+	* jimm/datavision/layout/pdf/Page.java: moved splitIntoLines into
+	jimm/datavision/Utils.java.
+
+	* jimm/datavision/Utils.java (splitIntoLines): moved here from
+	jimm/datavision/layout/pdf/Page.java.
+
+2002-12-12  Jim Menard  <jimm@io.com>
+
+	* jimm/datavision/layout/pdf/Page.java (splitIntoLines): fixed
+	code so \r\n handled properly.
+
+2002-12-10  Jim Menard  <jimm@io.com>
+
+	* jimm/datavision/Format.java: added DEFAULT_FONT_FAMILY_NAME.
+	(getFontFamilyName): changed name from getFont.
+	(getFont): created.
+
+	* jimm/datavision/layout/pdf/Page.java (addText): accept bounding
+	rectangle instead of x and y.
+	(alignedX): created.
+
+	* jimm/datavision/layout/swing/SwingTextField.java: use new
+	Format.DEFAULT_FONT_FAMILY_NAME.
+
+	* jimm/datavision/layout/pdf/PDFLE.java (doOutputField): pass
+	bounding box to Page.addText.
+
+	* jimm/datavision/source/Column.java: implements Writeable.
+
+2002-12-07  Jim Menard  <jimm@io.com>
+
+	* jimm/datavision/source/sql/SQLColumn.java (toString): put quotes
+	around name components that contain spaces.
+
+	* jimm/datavision/Utils.java (split): created.
+
+2002-12-04  Jim Menard  <jimm@io.com>
+
+	* jimm/datavision/source/sql/SQLTable.java (loadColumns): use
+	schema names if they're there.
+
+	* jimm/datavision/source/sql/Database.java
+	(loadTablesUsingSchemaNameAndTypes): add schema name to table
+	name.
+
+	* jimm/datavision/UserColumn.java (ctor): was generating new ids
+	incorrectly.
+
+2002-12-03  Jim Menard  <jimm@io.com>
+
+	* jimm/datavision/Expression.java (startObservingContents): use
+	new replaceDelimited method in Utils.
+	(columnsUsed): ditto.
+	(useColumnsUsed): double ditto.
+
+	* jimm/datavision/Formula.java (eval): use new replaceDelimited
+	method in Utils.
+
+	* jimm/datavision/Utils.java (replaceDelimited): created.
+
+	* jimm/datavision/Replacer.java: created.
+
+	* jimm/datavision/layout/pdf/Page.java (addText): only output font
+	when necessary. Output leading.
+	(stringIntoContents): created.
+	(splitIntoLines): created.
+
+2002-11-26  Jim Menard  <jimm@io.com>
+
+	* Massive changes to support data source abstraction. New
+	jimm/datavision/source directory created, some files from
+	jimm/datavision moved there. jimm/datavision/sql moved to
+	jimm/datavision/source/sql. jimm/datavision/source/charsep
+	created. Lots and lots of files changed.
+
+2002-11-25  Jim Menard  <jimm@io.com>
+
+	* examples/datavision.jsp: created.
+
+	* jimm/datavision/DataVision.java (main): call Report.runReport,
+	not Report.run. Sheesh; after all the time I spend explaining that
+	in the docs...
+
 2002-11-23  Jim Menard  <jimm@io.com>
+
+	* jimm/datavision/gui/cmd/ParamEditCommand.java (editParam): date
+	values don't store default values, so don't throw an exception.
+
+	* Version 0.5.4 released.
 
 	* jimm/datavision/Query.java (findColumnsUsed): find user columns
 	contained within formulas.

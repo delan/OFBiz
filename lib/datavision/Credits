@@ -1,6 +1,7 @@
 DavaVision is currently owned and developed by Jim Menard, jimm@io.com. The
-following people have kindly submitted bug reports, bug fixes, and
-suggestions for improvement. Many thanks to all of them.
+following people have kindly provided string translations and submitted bug
+reports, bug fixes, and suggestions for improvement. Many thanks to all of
+them.
 
 ================================================================
 
@@ -52,7 +53,7 @@ TonyTomov <ttomov@abs.bg>
     values were not properly converted). Found database column title
     creation bug. Found many, many more bugs.
 
-Achim Weﬂling <Achim.Wessling@gt-net.de>
+Achim We√üling <Achim.Wessling@gt-net.de>
 
     Found Informix driver issues. Found field widget selection bug.
 
@@ -106,7 +107,9 @@ Miguel Angel Rojas Aquino <mrojas_aquino@mail.flashmail.com>
 
     Suggested code to look for table names without grabbing system tables.
     Pointed out Oracle date/timestamp issues. Found fixes that greatly
-    improved print quality and layout. Found format dialog crash bug.
+    improved print quality and layout. Found format dialog crash bug. Found
+    Windows field popup menu bug. Found bug with columns in headers when
+    the query returns zero rows.
 
 William Colls <bcolls@cbnlottery.com>
 
@@ -162,13 +165,15 @@ Stefan Hansel <thestefan@users.sourceforge.net>
 
     Reported group footer output bug: when a group footer is output, make
     sure all of the footers before (above) it are also output. Offered code
-    to fix. Reported subtotal bug created when previous bug fixed.
+    to fix. Reported subtotal bug created when previous bug fixed. Wrote
+    code to handle DB2 schema names.
 
 Eddie Carpenter <ecarpenter@itex.co.za>
 
     User Column bug report and page break ideas. Negative field dimensions
     bug report. Realized we don't need to select the join's columns. Found
-    bugs with formulas containing user columns.
+    bugs with formulas containing user columns. Found date parameter edit
+    bug.
 
 Ertan Oezdil <eoezdil@javacoders.de>
 
@@ -181,3 +186,29 @@ Gene Coldwell <coldwell@csptexas.com>
 Dinesh Rajagopalan <dinesh_rajagopalan@rediffmail.com>
 
     Found forumla string expression bug.
+
+Brian Johnson <mastermnd@users.sourceforge.net>
+
+    Found PDF layout engine newline bug. Found user column id generation
+    bug. Pointed out missing FLOAT constant in Column.isNumeric(). Found
+    bug in PDF line splitting code.
+
+Russell V. Toone <russ@redcon.com>
+
+    Found a bug in Database$ColumnIterator.
+
+Don Wickelgren <dtwickelgren@users.sourceforge.net>
+
+    Reported lack of scroll bars and code pane growth in code edit windows.
+
+Bouska Seznam (Ludek) <bouska@seznam.cz>
+
+    Reported LaTeX page size and other bugs.
+
+Pete Fowler <pfowler@tempo.com.au>
+
+    Reported bad report summary dialog box behavior.
+
+Thorsten Wenzlaff <wenzlaff@users.sourceforge.net>
+
+    Discussions about table and column name case sensitivity.
