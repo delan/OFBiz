@@ -433,6 +433,11 @@ public class PosTransaction {
         LocalDispatcher dispatcher = session.getDispatcher();
         String expMonth = expDate.substring(0, 2);
         String expYear = expDate.substring(2);
+        // two digit year check -- may want to re-think this
+        if (expYear.length() == 2) {
+            expYear = "20" + expYear;
+        }
+
         Map svcCtx = new HashMap();
         svcCtx.put("userLogin", session.getUserLogin());
         svcCtx.put("partyId", partyId);
