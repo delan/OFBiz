@@ -212,7 +212,7 @@ public class InventoryServices {
         GenericDelegator delegator = dctx.getDelegator();
         LocalDispatcher dispatcher = dctx.getDispatcher();        
                
-        Map ordersToNotify = new HashMap();
+        Map ordersToUpdate = new HashMap();
         Map ordersToCancel = new HashMap();       
         
         // find all inventory items w/ a negative ATP
@@ -276,8 +276,13 @@ public class InventoryServices {
                 String orderId = reservation.getString("orderId");
                 String orderItemSeqId = reservation.getString("orderItemSeqId");
                 Timestamp promisedDate = reservation.getTimestamp("promisedDatetime");
+                Timestamp currentPromiseDate = reservation.getTimestamp("currentPromisedDate");
+                Timestamp actualPromiseDate = currentPromiseDate;
+                if (actualPromiseDate == null) {
+                    actualPromiseDate = promisedDate;
+                }
                 
-                Debug.log("Promised Date: " + promisedDate, module);
+                Debug.log("Promised Date: " + actualPromiseDate, module);
                                                                
                 // find the next possible ship date
                 Timestamp nextShipDate = null;
@@ -293,10 +298,10 @@ public class InventoryServices {
                 }
                 
                 Debug.log("Next Ship Date: " + nextShipDate, module);
-                
+                                                
                 // create a modified promise date (promise date - 1 day)
                 Calendar pCal = Calendar.getInstance();
-                pCal.setTimeInMillis(promisedDate.getTime());
+                pCal.setTimeInMillis(actualPromiseDate.getTime());
                 pCal.add(Calendar.DAY_OF_YEAR, -1);
                 Timestamp modifiedPromisedDate = new Timestamp(pCal.getTimeInMillis());
                 Timestamp now = UtilDateTime.nowTimestamp();
@@ -305,35 +310,56 @@ public class InventoryServices {
                 Debug.log("Now: " + now, module);
                              
                 // check the promised date vs the next ship date
-                if (nextShipDate == null || nextShipDate.after(promisedDate)) {
+                if (nextShipDate == null || nextShipDate.after(actualPromiseDate)) {
                     if (nextShipDate == null && modifiedPromisedDate.after(now)) {
                         // do nothing; we are okay to assume it will be shipped on time
                         Debug.log("No ship date known yet, but promised date hasn't approached, assuming it will be here on time", module);
                     } else {                    
                         // we cannot ship by the promised date; need to notify the customer
                         Debug.log("We won't ship on time, getting notification info", module);
-                        Map notifyItems = (Map) ordersToNotify.get(orderId);
+                        Map notifyItems = (Map) ordersToUpdate.get(orderId);
                         if (notifyItems == null) {
                             notifyItems = new HashMap();
                         }
                         notifyItems.put(orderItemSeqId, nextShipDate);
-                        ordersToNotify.put(orderId, notifyItems);
+                        ordersToUpdate.put(orderId, notifyItems);
                         
                         // need to know if nextShipDate is more then 30 days after promised
                         Calendar sCal = Calendar.getInstance();
-                        sCal.setTimeInMillis(promisedDate.getTime());
+                        sCal.setTimeInMillis(actualPromiseDate.getTime());
                         sCal.add(Calendar.DAY_OF_YEAR, 30);
                         Timestamp farPastPromised = new Timestamp(sCal.getTimeInMillis());
-                                               
+                        
+                        // check to see if this is >30 days or second run, if so flag to cancel
+                        boolean needToCancel = false;                       
                         if (nextShipDate == null || nextShipDate.after(farPastPromised)) {
-                            // queue the item to be cancelled
+                            // we cannot ship until >30 days after promised; using cancel rule
                             Debug.log("Ship date is >30 past the promised date", module);
+                            needToCancel = true;
+                        }
+                        if (currentPromiseDate != null && actualPromiseDate.equals(currentPromiseDate)) {
+                            // this is the second notification; using cancel rule
+                            needToCancel = true;
+                        }
+                        
+                        // add the info to the cancel map if we need to schedule a cancel
+                        if (needToCancel) {                        
+                            // queue the item to be cancelled
+                            Debug.log("Flagging the item to auto-cancel", module);
                             Map cancelItems = (Map) ordersToCancel.get(orderId);
                             if (cancelItems == null) {
                                 cancelItems = new HashMap();
                             }
                             cancelItems.put(orderItemSeqId, farPastPromised);
                             ordersToCancel.put(orderId, cancelItems);
+                        }
+                        
+                        // store the updated promiseDate as the nextShipDate
+                        try {
+                            reservation.set("currentPromisedDate", nextShipDate);
+                            reservation.store();
+                        } catch (GenericEntityException e) {
+                            Debug.logError(e, "Problem storing reservation : " + reservation, module);
                         }
                     }                    
                 }
@@ -344,13 +370,14 @@ public class InventoryServices {
         }
                                         
         // all items to cancel will also be in the notify list so start with that
-        Set orderSet = ordersToNotify.keySet();
+        List ordersToNotify = new ArrayList();
+        Set orderSet = ordersToUpdate.keySet();
         Iterator orderIter = orderSet.iterator();
         while (orderIter.hasNext()) {
             String orderId = (String) orderIter.next();
-            Map backOrderedItems = (Map) ordersToNotify.get(orderId);
+            Map backOrderedItems = (Map) ordersToUpdate.get(orderId);
             Map cancelItems = (Map) ordersToCancel.get(orderId);
-            
+                                    
             GenericValue orderShipPref = null;
             List orderItems = null;
             try {
@@ -388,15 +415,23 @@ public class InventoryServices {
                     String orderItemSeqId = orderItem.getString("orderItemSeqId");
                     Timestamp shipDate = (Timestamp) backOrderedItems.get(orderItemSeqId);
                     Timestamp cancelDate = (Timestamp) cancelItems.get(orderItemSeqId);
-                    if (shipDate != null) {
+                    Timestamp currentCancelDate = (Timestamp) orderItem.getTimestamp("autoCancelDate");
+                    
+                    if (backOrderedItems.containsKey(orderItemSeqId)) {
                         orderItem.set("estimatedShipDate", shipDate);
                     
-                        if (cancelAll || cancelDate != null) {
-                            if (cancelAllTime != null) {
-                                orderItem.set("autoCancelDate", cancelAllTime);
-                            } else {
-                                orderItem.set("autoCancelDate", cancelDate);
+                        if (currentCancelDate == null) {                        
+                            if (cancelAll || cancelDate != null) {
+                                if (orderItem.get("dontCancelSetUserLogin") == null && orderItem.get("dontCancelSetDate") == null) {                            
+                                    if (cancelAllTime != null) {
+                                        orderItem.set("autoCancelDate", cancelAllTime);
+                                    } else {
+                                        orderItem.set("autoCancelDate", cancelDate);
+                                    }
+                                }
                             }
+                            // only notify orders which have not already sent the final notice
+                            ordersToNotify.add(orderId);                        
                         }
                         toBeStored.add(orderItem);                        
                     }
@@ -411,12 +446,10 @@ public class InventoryServices {
             }
         }
         
-        // send off a notification for each order
-        Set orderNotifySet = ordersToNotify.keySet();
-        Iterator orderNotifyIter = orderNotifySet.iterator();
+        // send off a notification for each order        
+        Iterator orderNotifyIter = ordersToNotify.iterator();
         while (orderNotifyIter.hasNext()) {                       
-            String orderId = (String) orderNotifyIter.next();
-            Map backOrderedItems = (Map) ordersToNotify.get(orderId);                       
+            String orderId = (String) orderNotifyIter.next();                                  
                        
             try {
                 dispatcher.runAsync("sendOrderBackorderNotification", UtilMisc.toMap("orderId", orderId));
