@@ -55,7 +55,7 @@ import org.ofbiz.service.ServiceAuthException;
  * ServiceMultiEventHandler - Event handler for running a service multiple times; for bulk forms
  *
  * @author     <a href="mailto:jaz@ofbiz.org">Andy Zeneski</a>
- * @version    $Rev:$
+ * @version    $Rev$
  * @since      2.2
  */
 public class ServiceMultiEventHandler implements EventHandler {
@@ -150,11 +150,8 @@ public class ServiceMultiEventHandler implements EventHandler {
         // some default message settings        
         String errorPrefixStr = UtilProperties.getMessage("DefaultMessages", "service.error.prefix", locale);
         String errorSuffixStr = UtilProperties.getMessage("DefaultMessages", "service.error.suffix", locale);
-        String successPrefixStr = UtilProperties.getMessage("DefaultMessages", "service.success.prefix", locale);
-        String successSuffixStr = UtilProperties.getMessage("DefaultMessages", "service.success.suffix", locale);
         String messagePrefixStr = UtilProperties.getMessage("DefaultMessages", "service.message.prefix", locale);
-        String messageSuffixStr = UtilProperties.getMessage("DefaultMessages", "service.message.suffix", locale);
-        String defaultMessageStr = UtilProperties.getMessage("DefaultMessages", "service.default.message", locale);
+        String messageSuffixStr = UtilProperties.getMessage("DefaultMessages", "service.message.suffix", locale);        
                 
         // prepare the error message list
         List errorMessages = new ArrayList();

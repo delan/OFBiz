@@ -35,6 +35,7 @@ import org.ofbiz.base.util.UtilHttp;
 import org.ofbiz.base.util.UtilProperties;
 import org.ofbiz.base.util.UtilValidate;
 import org.ofbiz.entity.GenericValue;
+import org.ofbiz.entity.util.ByteWrapper;
 import org.ofbiz.service.DispatchContext;
 import org.ofbiz.service.GenericServiceException;
 import org.ofbiz.service.LocalDispatcher;
@@ -44,12 +45,17 @@ import org.ofbiz.service.ServiceUtil;
 import org.ofbiz.service.ServiceValidationException;
 import org.ofbiz.service.ServiceAuthException;
 
+import org.apache.commons.fileupload.DiskFileUpload;
+import org.apache.commons.fileupload.FileUploadException;
+import org.apache.commons.fileupload.FileItem;
+import org.apache.commons.fileupload.FileUpload;
+
 /**
  * ServiceEventHandler - Service Event Handler
  *
  * @author     <a href="mailto:jaz@ofbiz.org">Andy Zeneski</a>
  * @author     <a href="mailto:jonesde@ofbiz.org">David E. Jones</a>
- * @version    $Rev:$
+ * @version    $Rev$
  * @since      2.0
  */
 public class ServiceEventHandler implements EventHandler {
@@ -111,6 +117,44 @@ public class ServiceEventHandler implements EventHandler {
         if (Debug.verboseOn()) Debug.logVerbose("[Processing]: SERVICE Event", module);
         if (Debug.verboseOn()) Debug.logVerbose("[Using delegator]: " + dispatcher.getDelegator().getDelegatorName(), module);
 
+        // get the http upload configuration
+        String maxSizeStr = UtilProperties.getPropertyValue("general.properties", "http.upload.max.size", "-1");
+        long maxUploadSize = -1;
+        try {
+            maxUploadSize = Long.parseLong(maxSizeStr);
+        } catch (NumberFormatException e) {
+            Debug.logError(e, "Unable to obtain the max upload size from general.properties; using default -1", module);
+            maxUploadSize = -1;
+        }
+
+        // check for multipart content types which may have uploaded items
+        boolean isMultiPart = FileUpload.isMultipartContent(request);
+        Map multiPartMap = new HashMap();
+        if (isMultiPart) {
+            DiskFileUpload upload = new DiskFileUpload();
+            upload.setSizeMax(maxUploadSize);
+            
+            List uploadedItems = null;
+            try {
+                uploadedItems = upload.parseRequest(request);
+            } catch (FileUploadException e) {
+                throw new EventHandlerException("Problems reading uploaded data", e);
+            }
+            if (uploadedItems != null) {
+                Iterator i = uploadedItems.iterator();
+                while (i.hasNext()) {
+                    FileItem item = (FileItem) i.next();
+                    Object obj = null;
+                    if (item.isFormField()) {
+                        obj = item.getString();
+                    } else {
+                        obj = new ByteWrapper(item.get());
+                    }
+                    multiPartMap.put(item.getFieldName(), obj);
+                }
+            }
+        }
+
         // we have a service and the model; build the context
         Map serviceContext = new HashMap();
         Iterator modelParmInIter = model.getInModelParamList().iterator();
@@ -132,15 +176,25 @@ public class ServiceEventHandler implements EventHandler {
                 List paramList = UtilHttp.makeParamListWithSuffix(request, modelParam.stringListSuffix, null);
                 value = paramList;
             } else {
-                value = request.getParameter(name);
+                // first check the multi-part map
+                value = multiPartMap.get(name);
 
-                // if the parameter wasn't passed and no other value found, don't pass on the null
+                // check the request parameters
+                if (value == null) {
+                    value = request.getParameter(name);
+                }
+
+                // next check attributes
                 if (value == null) {
                     value = request.getAttribute(name);
                 }
+
+                // then session
                 if (value == null) {
                     value = request.getSession().getAttribute(name);
                 }
+
+                // no field found
                 if (value == null) {
                     //still null, give up for this one
                     continue;
