@@ -64,7 +64,7 @@
       <table width='100%' border='0' cellpadding='<%=boxBottomPadding%>' cellspacing='0' bgcolor='<%=boxBottomColor%>'>
         <tr>
           <td>
-            <ofbiz:if name="canView" type="Boolean">
+            <ofbiz:if name="canView">
               <ofbiz:if name="workEffort">
                 <form action="<ofbiz:url>/updateevent</ofbiz:url>" method=POST style='margin: 0;'>
                 <table border='0' cellpadding='2' cellspacing='0'>
@@ -171,7 +171,7 @@
               </table>
               </form>
             </ofbiz:if>
-            <ofbiz:unless name="canView" type="Boolean">
+            <ofbiz:unless name="canView">
               <DIV class='tabletext'>ERROR: You do not have permission to view this Event. This event must belong to you, or you must be an administrator.</DIV>
             </ofbiz:unless>
           </td>
