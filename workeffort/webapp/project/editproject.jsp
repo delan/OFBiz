@@ -241,3 +241,8 @@ function insertNowTimestampStart() {
     </TD>
   </TR>
 </TABLE>
+<script language="JavaScript">
+<!--
+  document.projectForm.workEffortName.focus();
+//-->
+</script>

@@ -66,7 +66,7 @@ session.putValue("phaseWorkEffortId", phaseWorkEffortId);
       <table width='100%' border='0' cellspacing='0' cellpadding='0' class='boxbottom'>
         <tr>
           <td>
-            <ofbiz:if name="canView" type="Boolean">
+<%--            <ofbiz:if name="canView" type="Boolean">--%>
               <ofbiz:if name="workEffort">
                 <form name='taskForm' action="<ofbiz:url>/updatephasetask</ofbiz:url>" method=POST style='margin: 0;'>
                 <table border='0' cellpadding='2' cellspacing='0'>
@@ -185,10 +185,10 @@ function insertNowTimestampStart() {
                 </tr>
               </table>
               </form>
-            </ofbiz:if>
+<%--            </ofbiz:if>
             <ofbiz:unless name="canView" type="Boolean">
               <DIV class='tabletext'>ERROR: You do not have permission to view this Event. This project must belong to you, or you must be an administrator.</DIV>
-            </ofbiz:unless>
+            </ofbiz:unless>--%>
           </td>
         </tr>
       </table>
@@ -232,3 +232,8 @@ function insertNowTimestampStart() {
     </TD>
   </TR>
 </TABLE>
+<script language="JavaScript">
+<!--
+  document.taskForm.workEffortName.focus();
+//-->
+</script>

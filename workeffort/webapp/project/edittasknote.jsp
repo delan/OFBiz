@@ -84,3 +84,8 @@
     </TD>
   </TR>
 </TABLE>
+<script language="JavaScript">
+<!--
+  document.noteForm.noteInfo.focus();
+//-->
+</script>
