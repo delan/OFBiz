@@ -211,8 +211,9 @@
   <!-- org.ofbiz.commonapp.content.data -->
   <!-- ========================================================= -->
 
+    <entity-group group="org.ofbiz.commonapp" entity="CharacterSet" />
     <entity-group group="org.ofbiz.commonapp" entity="DataCategory" />
-    <entity-group group="org.ofbiz.commonapp" entity="DataMetaData" />
+    <entity-group group="org.ofbiz.commonapp" entity="DataResourceMetaData" />
     <entity-group group="org.ofbiz.commonapp" entity="DataResource" />
     <entity-group group="org.ofbiz.commonapp" entity="DataResourceAttribute" />
     <entity-group group="org.ofbiz.commonapp" entity="DataResourcePurpose" />
@@ -221,8 +222,10 @@
     <entity-group group="org.ofbiz.commonapp" entity="DataResourceType" />
     <entity-group group="org.ofbiz.commonapp" entity="DataResourceTypeAttr" />
     <entity-group group="org.ofbiz.commonapp" entity="ElectronicText" />
+    <entity-group group="org.ofbiz.commonapp" entity="FileExtension" />
     <entity-group group="org.ofbiz.commonapp" entity="ImageDataResource" />
     <entity-group group="org.ofbiz.commonapp" entity="MetaDataPredicate" />
+    <entity-group group="org.ofbiz.commonapp" entity="MimeType" />
     <entity-group group="org.ofbiz.commonapp" entity="OtherDataResource" />
 
   <!-- ========================================================= -->
