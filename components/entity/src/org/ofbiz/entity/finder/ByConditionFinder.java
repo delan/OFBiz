@@ -47,6 +47,7 @@ import org.ofbiz.entity.finder.EntityFinderUtil.LimitRange;
 import org.ofbiz.entity.finder.EntityFinderUtil.LimitView;
 import org.ofbiz.entity.finder.EntityFinderUtil.OutputHandler;
 import org.ofbiz.entity.finder.EntityFinderUtil.UseIterator;
+import org.ofbiz.entity.transaction.TransactionUtil;
 import org.ofbiz.entity.util.EntityFindOptions;
 import org.ofbiz.entity.util.EntityListIterator;
 import org.w3c.dom.Element;
@@ -202,11 +203,38 @@ public class ByConditionFinder {
                 List results = delegator.findByConditionCache(entityName, whereEntityCondition, fieldsToSelect, orderByFields);
                 this.outputHandler.handleOutput(results, context, listAcsr);
             } else {
+                boolean useTransaction = true;
+                if (this.outputHandler instanceof UseIterator && !TransactionUtil.isTransactionInPlace()) {
+                    Exception newE = new Exception("Stack Trace");
+                    Debug.logError(newE, "ERROR: Cannot do a by condition find that returns an EntityListIterator with no transaction in place. Wrap this call in a transaction.", module);
+                    useTransaction = false;
+                }
+                
                 EntityFindOptions options = new EntityFindOptions();
                 options.setDistinct(distinct);
                 options.setResultSetType(resultSetType);
-                EntityListIterator eli = delegator.findListIteratorByCondition(entityName, whereEntityCondition, havingEntityCondition, fieldsToSelect, orderByFields, options);
-                this.outputHandler.handleOutput(eli, context, listAcsr);
+                boolean beganTransaction = false;
+                try {
+                    if (useTransaction) {
+                        beganTransaction = TransactionUtil.begin();
+                    }
+
+                    EntityListIterator eli = delegator.findListIteratorByCondition(entityName, whereEntityCondition, havingEntityCondition, fieldsToSelect, orderByFields, options);
+                    this.outputHandler.handleOutput(eli, context, listAcsr);
+                } catch (GenericEntityException e) {
+                    Debug.logError(e, "Failure in operation, rolling back transaction", module);
+                    try {
+                        // only rollback the transaction if we started one...
+                        TransactionUtil.rollback(beganTransaction);
+                    } catch (GenericEntityException e2) {
+                        Debug.logError(e2, "Could not rollback transaction: " + e2.toString(), module);
+                    }
+                    // after rolling back, rethrow the exception
+                    throw e;
+                } finally {
+                    // only commit the transaction if we started one... this will throw an exception if it fails
+                    TransactionUtil.commit(beganTransaction);
+                }
             }
         } catch (GenericEntityException e) {
             String errMsg = "Error doing find by condition: " + e.toString();
