@@ -1,6 +1,9 @@
 /*
  * $Id$
  * $Log$
+ * Revision 1.6  2002/01/30 10:07:25  jonesde
+ * Added order by sequenceNum
+ *
  * Revision 1.5  2002/01/30 06:11:25  jonesde
  * Formatting changes only, in preparation for other changes
  *
@@ -246,7 +249,7 @@ public class CategoryWorker {
         GenericDelegator delegator = (GenericDelegator) pageContext.getServletContext().getAttribute("delegator");
         Collection rollups = null;
         try {
-            rollups = delegator.findByAndCache("ProductCategoryRollup",UtilMisc.toMap("parentProductCategoryId",parentId), null);
+            rollups = delegator.findByAndCache("ProductCategoryRollup", UtilMisc.toMap("parentProductCategoryId",parentId), UtilMisc.toList("sequenceNum"));
         } catch (GenericEntityException e) {
             Debug.logWarning(e.getMessage());
             rollups = null;
