@@ -29,17 +29,16 @@ import freemarker.template.SimpleHash;
 
 /**
  * DataServices Class
- *
- * @author     <a href="mailto:byersa@automationgroups.com">Al Byers</a>
- * @version    $Revision: 1.6 $
- * @since      3.0
- *
  * 
+ * @author <a href="mailto:byersa@automationgroups.com">Al Byers</a>
+ * @version $Revision: 1.7 $
+ * @since 3.0
+ * 
+ *  
  */
 public class DataServices {
 
     public static final String module = DataServices.class.getName();
-
 
     /**
      * A top-level service for creating a DataResource and ElectronicText together.
@@ -53,22 +52,21 @@ public class DataServices {
         targetOperations.add("CREATE_CONTENT");
         context.put("targetOperationList", targetOperations);
         context.put("skipPermissionCheck", null);
-        String permissionStatus = DataResourceWorker.callDataResourcePermissionCheck( delegator, dispatcher,
-                                      context);
-        if (permissionStatus != null && permissionStatus.equalsIgnoreCase("granted") ) {
+        String permissionStatus = DataResourceWorker.callDataResourcePermissionCheck(delegator, dispatcher, context);
+        if (permissionStatus != null && permissionStatus.equalsIgnoreCase("granted")) {
             context.put("skipPermissionCheck", "granted");
-            Map thisResult = createDataResourceMethod(dctx, context );
+            Map thisResult = createDataResourceMethod(dctx, context);
             if (thisResult.get(ModelService.RESPONSE_MESSAGE) != null) {
-                return ServiceUtil.returnError((String)thisResult.get(ModelService.ERROR_MESSAGE));
+                return ServiceUtil.returnError((String) thisResult.get(ModelService.ERROR_MESSAGE));
             }
             result.put("dataResourceId", thisResult.get("dataResourceId"));
             context.put("dataResourceId", thisResult.get("dataResourceId"));
 
-            String dataResourceTypeId = (String)context.get("dataResourceTypeId");
-            if (dataResourceTypeId != null && dataResourceTypeId.equals("ELECTRONIC_TEXT") ) {
-                thisResult = createElectronicText(dctx, context );
+            String dataResourceTypeId = (String) context.get("dataResourceTypeId");
+            if (dataResourceTypeId != null && dataResourceTypeId.equals("ELECTRONIC_TEXT")) {
+                thisResult = createElectronicText(dctx, context);
                 if (thisResult.get(ModelService.RESPONSE_MESSAGE) != null) {
-                    return ServiceUtil.returnError((String)thisResult.get(ModelService.ERROR_MESSAGE));
+                    return ServiceUtil.returnError((String) thisResult.get(ModelService.ERROR_MESSAGE));
                 }
             }
         }
@@ -77,8 +75,7 @@ public class DataServices {
     }
 
     /**
-     * A service wrapper for the createDataResourceMethod method.
-     * Forces permissions to be checked.
+     * A service wrapper for the createDataResourceMethod method. Forces permissions to be checked.
      */
     public static Map createDataResource(DispatchContext dctx, Map context) {
         context.put("entityOperation", "_CREATE");
@@ -94,22 +91,20 @@ public class DataServices {
         Map result = new HashMap();
         GenericDelegator delegator = dctx.getDelegator();
         LocalDispatcher dispatcher = dctx.getDispatcher();
-        String permissionStatus = DataResourceWorker.callDataResourcePermissionCheck( delegator, dispatcher,
-                                      context);
-        if (permissionStatus != null && permissionStatus.equalsIgnoreCase("granted") ) {
-            GenericValue userLogin = (GenericValue) context.get("userLogin"); 
-            String userLoginId = (String)userLogin.get("userLoginId");
+        String permissionStatus = DataResourceWorker.callDataResourcePermissionCheck(delegator, dispatcher, context);
+        if (permissionStatus != null && permissionStatus.equalsIgnoreCase("granted")) {
+            GenericValue userLogin = (GenericValue) context.get("userLogin");
+            String userLoginId = (String) userLogin.get("userLoginId");
             String createdByUserLogin = userLoginId;
             String lastModifiedByUserLogin = userLoginId;
             Timestamp createdDate = UtilDateTime.nowTimestamp();
             Timestamp lastModifiedDate = UtilDateTime.nowTimestamp();
-    
+
             // If textData exists, then create DataResource and return dataResourceId
-            String dataResourceId = (String)context.get("dataResourceId");
-            String dataResourceTypeId = (String)context.get("dataResourceTypeId");
-            if (dataResourceId == null) dataResourceId = delegator.getNextSeqId("DataResource").toString();
-            GenericValue dataResource = delegator.makeValue("DataResource", 
-                                    UtilMisc.toMap("dataResourceId", dataResourceId));
+            String dataResourceId = (String) context.get("dataResourceId");
+            if (dataResourceId == null)
+                dataResourceId = delegator.getNextSeqId("DataResource").toString();
+            GenericValue dataResource = delegator.makeValue("DataResource", UtilMisc.toMap("dataResourceId", dataResourceId));
             dataResource.setNonPKFields(context);
             dataResource.put("createdByUserLogin", createdByUserLogin);
             dataResource.put("lastModifiedByUserLogin", lastModifiedByUserLogin);
@@ -117,7 +112,7 @@ public class DataServices {
             dataResource.put("lastModifiedDate", lastModifiedDate);
             try {
                 dataResource.create();
-            } catch(GenericEntityException e) {
+            } catch (GenericEntityException e) {
                 return ServiceUtil.returnError(e.getMessage());
             }
             result.put("dataResourceId", dataResourceId);
@@ -127,8 +122,7 @@ public class DataServices {
     }
 
     /**
-     * A service wrapper for the createElectronicTextMethod method.
-     * Forces permissions to be checked.
+     * A service wrapper for the createElectronicTextMethod method. Forces permissions to be checked.
      */
     public static Map createElectronicText(DispatchContext dctx, Map context) {
         context.put("entityOperation", "_CREATE");
@@ -144,31 +138,27 @@ public class DataServices {
         HashMap result = new HashMap();
         GenericDelegator delegator = dctx.getDelegator();
         LocalDispatcher dispatcher = dctx.getDispatcher();
-Debug.logInfo("in create ETextMethod context:" + context, null);
-        String permissionStatus = DataResourceWorker.callDataResourcePermissionCheck( delegator, dispatcher,
-                                      context );
-Debug.logInfo("in create ETextMethod permissionStatus:" + permissionStatus, null);
-        if (permissionStatus != null && permissionStatus.equalsIgnoreCase("granted") ) {
-            String dataResourceId = (String)context.get("dataResourceId");
-            String textData = (String)context.get("textData");
-            if (textData != null && textData.length() > 0 ) {
-                GenericValue electronicText = delegator.makeValue("ElectronicText", 
-                       UtilMisc.toMap("dataResourceId", dataResourceId, "textData", textData));
+        //Debug.logInfo("in create ETextMethod context:" + context, null);
+        String permissionStatus = DataResourceWorker.callDataResourcePermissionCheck(delegator, dispatcher, context);
+        //Debug.logInfo("in create ETextMethod permissionStatus:" + permissionStatus, null);
+        if (permissionStatus != null && permissionStatus.equalsIgnoreCase("granted")) {
+            String dataResourceId = (String) context.get("dataResourceId");
+            String textData = (String) context.get("textData");
+            if (textData != null && textData.length() > 0) {
+                GenericValue electronicText = delegator.makeValue("ElectronicText", UtilMisc.toMap("dataResourceId", dataResourceId, "textData", textData));
                 try {
                     electronicText.create();
-                    result.put("dataResourceId", dataResourceId);
-                } catch(GenericEntityException e) {
+                } catch (GenericEntityException e) {
                     return ServiceUtil.returnError(e.getMessage());
                 }
             }
         }
-        
+
         return result;
     }
 
     /**
-     * A service wrapper for the createFileMethod method.
-     * Forces permissions to be checked.
+     * A service wrapper for the createFileMethod method. Forces permissions to be checked.
      */
     public static Map createFile(DispatchContext dctx, Map context) {
         context.put("entityOperation", "_CREATE");
@@ -179,7 +169,7 @@ Debug.logInfo("in create ETextMethod permissionStatus:" + permissionStatus, null
         Map result = null;
         try {
             result = createFileMethod(dctx, context);
-        } catch(GenericServiceException e) {
+        } catch (GenericServiceException e) {
             return ServiceUtil.returnError(e.getMessage());
         }
         return result;
@@ -189,60 +179,55 @@ Debug.logInfo("in create ETextMethod permissionStatus:" + permissionStatus, null
         HashMap result = new HashMap();
         GenericDelegator delegator = dctx.getDelegator();
         LocalDispatcher dispatcher = dctx.getDispatcher();
-Debug.logInfo("in create FileMethod context:" + context, null);
-        String permissionStatus = DataResourceWorker.callDataResourcePermissionCheck( delegator, dispatcher,
-                                      context );
-Debug.logInfo("in create FileMethod permissionStatus:" + permissionStatus, null);
-        if (permissionStatus != null && permissionStatus.equalsIgnoreCase("granted") ) {
-            GenericValue dataResource = (GenericValue)context.get("dataResource");
-            String dataResourceId = (String)dataResource.get("dataResourceId");
-            String dataResourceTypeId = (String)dataResource.get("dataResourceTypeId");
-            String objectInfo = (String)dataResource.get("objectInfo");
-            String textData = (String)context.get("textData");
+        //Debug.logInfo("in create FileMethod context:" + context, module);
+        String permissionStatus = DataResourceWorker.callDataResourcePermissionCheck(delegator, dispatcher, context);
+        //Debug.logInfo("in create FileMethod permissionStatus:" + permissionStatus, module);
+        if (permissionStatus != null && permissionStatus.equalsIgnoreCase("granted")) {
+            GenericValue dataResource = (GenericValue) context.get("dataResource");
+            String dataResourceId = (String) dataResource.get("dataResourceId");
+            String dataResourceTypeId = (String) dataResource.get("dataResourceTypeId");
+            String objectInfo = (String) dataResource.get("objectInfo");
+            String textData = (String) context.get("textData");
             String prefix = "";
             File file = null;
-            if (textData != null && textData.length() > 0 ) {
+            if (textData != null && textData.length() > 0) {
                 String fileName = "";
                 String sep = "";
                 try {
                     if (UtilValidate.isEmpty(dataResourceTypeId) || dataResourceTypeId.equals("LOCAL_FILE")) {
-                        file = new File(objectInfo );
-Debug.logInfo("in create FileMethod file:" + file, null);
+                        file = new File(objectInfo);
+                        //Debug.logInfo("in create FileMethod file:" + file, module);
                         if (!file.isAbsolute()) {
                             throw new GenericServiceException("File: " + file + " is not absolute");
                         }
                     } else if (dataResourceTypeId.equals("OFBIZ_FILE")) {
                         prefix = System.getProperty("ofbiz.home");
-                        if ( objectInfo.indexOf("/") != 0 
-                               && prefix.lastIndexOf("/") != (prefix.length() -1)) {
+                        if (objectInfo.indexOf("/") != 0 && prefix.lastIndexOf("/") != (prefix.length() - 1)) {
                             sep = "/";
                         }
-                        file = new File(prefix + sep + objectInfo );
+                        file = new File(prefix + sep + objectInfo);
                     } else if (dataResourceTypeId.equals("CONTEXT_FILE")) {
-                        prefix = (String)context.get( "rootDir");
-                        if ( objectInfo.indexOf("/") != 0 
-                               && prefix.lastIndexOf("/") != (prefix.length() -1)) {
+                        prefix = (String) context.get("rootDir");
+                        if (objectInfo.indexOf("/") != 0 && prefix.lastIndexOf("/") != (prefix.length() - 1)) {
                             sep = "/";
                         }
-                        file = new File(prefix + sep + objectInfo );
+                        file = new File(prefix + sep + objectInfo);
                     }
                     if (file == null) {
                         throw new IOException("File: " + file + " is null");
                     }
-                    FileWriter out = new FileWriter( file);
+                    FileWriter out = new FileWriter(file);
                     out.write(textData);
                     out.close();
-                } catch(IOException e) {
+                } catch (IOException e) {
                     Debug.logWarning(e, module);
                     throw new GenericServiceException(e.getMessage());
                 }
             }
         }
-        
+
         return result;
     }
-
-
 
     /**
      * A top-level service for updating a DataResource and ElectronicText together.
@@ -256,21 +241,20 @@ Debug.logInfo("in create FileMethod file:" + file, null);
         targetOperations.add("UPDATE_CONTENT");
         context.put("targetOperationList", targetOperations);
         context.put("skipPermissionCheck", null);
-        String permissionStatus = DataResourceWorker.callDataResourcePermissionCheck( delegator, dispatcher,
-                                      context);
-        if (permissionStatus != null && permissionStatus.equalsIgnoreCase("granted") ) {
+        String permissionStatus = DataResourceWorker.callDataResourcePermissionCheck(delegator, dispatcher, context);
+        if (permissionStatus != null && permissionStatus.equalsIgnoreCase("granted")) {
             context.put("skipPermissionCheck", "granted");
-            Map thisResult = updateDataResourceMethod(dctx, context );
+            Map thisResult = updateDataResourceMethod(dctx, context);
             if (thisResult.get(ModelService.RESPONSE_MESSAGE) != null) {
-                return ServiceUtil.returnError((String)thisResult.get(ModelService.ERROR_MESSAGE));
+                return ServiceUtil.returnError((String) thisResult.get(ModelService.ERROR_MESSAGE));
             }
             context.put("dataResourceId", thisResult.get("dataResourceId"));
 
-            String dataResourceTypeId = (String)context.get("dataResourceTypeId");
-            if (dataResourceTypeId != null && dataResourceTypeId.equals("ELECTRONIC_TEXT") ) {
-                thisResult = updateElectronicText(dctx, context );
+            String dataResourceTypeId = (String) context.get("dataResourceTypeId");
+            if (dataResourceTypeId != null && dataResourceTypeId.equals("ELECTRONIC_TEXT")) {
+                thisResult = updateElectronicText(dctx, context);
                 if (thisResult.get(ModelService.RESPONSE_MESSAGE) != null) {
-                    return ServiceUtil.returnError((String)thisResult.get(ModelService.ERROR_MESSAGE));
+                    return ServiceUtil.returnError((String) thisResult.get(ModelService.ERROR_MESSAGE));
                 }
             }
         }
@@ -278,10 +262,8 @@ Debug.logInfo("in create FileMethod file:" + file, null);
         return result;
     }
 
-
     /**
-     * A service wrapper for the updateDataResourceMethod method.
-     * Forces permissions to be checked.
+     * A service wrapper for the updateDataResourceMethod method. Forces permissions to be checked.
      */
     public static Map updateDataResource(DispatchContext dctx, Map context) {
         context.put("entityOperation", "_CREATE");
@@ -298,23 +280,21 @@ Debug.logInfo("in create FileMethod file:" + file, null);
         GenericDelegator delegator = dctx.getDelegator();
         LocalDispatcher dispatcher = dctx.getDispatcher();
         GenericValue dataResource = null;
-        Locale locale = (Locale)context.get("locale");
-        String permissionStatus = DataResourceWorker.callDataResourcePermissionCheck( delegator, dispatcher,
-                                      context);
-        if (permissionStatus != null && permissionStatus.equalsIgnoreCase("granted") ) {
-            GenericValue userLogin = (GenericValue) context.get("userLogin"); 
-            String userLoginId = (String)userLogin.get("userLoginId");
+        Locale locale = (Locale) context.get("locale");
+        String permissionStatus = DataResourceWorker.callDataResourcePermissionCheck(delegator, dispatcher, context);
+        if (permissionStatus != null && permissionStatus.equalsIgnoreCase("granted")) {
+            GenericValue userLogin = (GenericValue) context.get("userLogin");
+            String userLoginId = (String) userLogin.get("userLoginId");
             String lastModifiedByUserLogin = userLoginId;
             Timestamp lastModifiedDate = UtilDateTime.nowTimestamp();
-    
+
             // If textData exists, then create DataResource and return dataResourceId
-            String dataResourceId = (String)context.get("dataResourceId");
+            String dataResourceId = (String) context.get("dataResourceId");
             try {
-                dataResource = delegator.findByPrimaryKey("DataResource", 
-                                       UtilMisc.toMap("dataResourceId", dataResourceId));
+                dataResource = delegator.findByPrimaryKey("DataResource", UtilMisc.toMap("dataResourceId", dataResourceId));
             } catch (GenericEntityException e) {
                 Debug.logWarning(e, module);
-                return ServiceUtil.returnError( "dataResource.update.read_failure" + e.getMessage());
+                return ServiceUtil.returnError("dataResource.update.read_failure" + e.getMessage());
             }
 
             dataResource.setNonPKFields(context);
@@ -322,7 +302,7 @@ Debug.logInfo("in create FileMethod file:" + file, null);
             dataResource.put("lastModifiedDate", lastModifiedDate);
             try {
                 dataResource.store();
-            } catch(GenericEntityException e) {
+            } catch (GenericEntityException e) {
                 return ServiceUtil.returnError(e.getMessage());
             }
         }
@@ -331,8 +311,7 @@ Debug.logInfo("in create FileMethod file:" + file, null);
     }
 
     /**
-     * A service wrapper for the updateElectronicTextMethod method.
-     * Forces permissions to be checked.
+     * A service wrapper for the updateElectronicTextMethod method. Forces permissions to be checked.
      */
     public static Map updateElectronicText(DispatchContext dctx, Map context) {
         context.put("entityOperation", "_UPDATE");
@@ -349,32 +328,28 @@ Debug.logInfo("in create FileMethod file:" + file, null);
         GenericDelegator delegator = dctx.getDelegator();
         LocalDispatcher dispatcher = dctx.getDispatcher();
         GenericValue electronicText = null;
-        Locale locale = (Locale)context.get("locale");
-        String permissionStatus = DataResourceWorker.callDataResourcePermissionCheck( delegator, dispatcher,
-                                      context );
-        if (permissionStatus != null && permissionStatus.equalsIgnoreCase("granted") ) {
-            String dataResourceId = (String)context.get("dataResourceId");
-            String textData = (String)context.get("textData");
-            if (textData != null && textData.length() > 0 ) {
+        Locale locale = (Locale) context.get("locale");
+        String permissionStatus = DataResourceWorker.callDataResourcePermissionCheck(delegator, dispatcher, context);
+        if (permissionStatus != null && permissionStatus.equalsIgnoreCase("granted")) {
+            String dataResourceId = (String) context.get("dataResourceId");
+            String textData = (String) context.get("textData");
+            if (textData != null && textData.length() > 0) {
                 try {
-                    electronicText = delegator.findByPrimaryKey("ElectronicText", 
-                                       UtilMisc.toMap("dataResourceId", dataResourceId));
+                    electronicText = delegator.findByPrimaryKey("ElectronicText", UtilMisc.toMap("dataResourceId", dataResourceId));
                     electronicText.put("textData", textData);
                     electronicText.store();
                 } catch (GenericEntityException e) {
                     Debug.logWarning(e, module);
-                    return ServiceUtil.returnError( "electronicText.update.read_failure" + e.getMessage());
+                    return ServiceUtil.returnError("electronicText.update.read_failure" + e.getMessage());
                 }
             }
         }
-        
+
         return result;
     }
 
-
     /**
-     * A service wrapper for the updateFileMethod method.
-     * Forces permissions to be checked.
+     * A service wrapper for the updateFileMethod method. Forces permissions to be checked.
      */
     public static Map updateFile(DispatchContext dctx, Map context) {
         context.put("entityOperation", "_UPDATE");
@@ -385,7 +360,7 @@ Debug.logInfo("in create FileMethod file:" + file, null);
         Map result = null;
         try {
             result = updateFileMethod(dctx, context);
-        } catch(GenericServiceException e) {
+        } catch (GenericServiceException e) {
             return ServiceUtil.returnError(e.getMessage());
         }
         return result;
@@ -396,22 +371,21 @@ Debug.logInfo("in create FileMethod file:" + file, null);
         GenericDelegator delegator = dctx.getDelegator();
         LocalDispatcher dispatcher = dctx.getDispatcher();
         GenericValue fileText = null;
-        Locale locale = (Locale)context.get("locale");
-        String permissionStatus = DataResourceWorker.callDataResourcePermissionCheck( delegator, dispatcher,
-                                      context );
-        if (permissionStatus != null && permissionStatus.equalsIgnoreCase("granted") ) {
-            GenericValue dataResource = (GenericValue)context.get("dataResource");
-            String dataResourceId = (String)dataResource.get("dataResourceId");
-            String dataResourceTypeId = (String)dataResource.get("dataResourceTypeId");
-            String objectInfo = (String)dataResource.get("objectInfo");
-            String textData = (String)context.get("textData");
+        Locale locale = (Locale) context.get("locale");
+        String permissionStatus = DataResourceWorker.callDataResourcePermissionCheck(delegator, dispatcher, context);
+        if (permissionStatus != null && permissionStatus.equalsIgnoreCase("granted")) {
+            GenericValue dataResource = (GenericValue) context.get("dataResource");
+            String dataResourceId = (String) dataResource.get("dataResourceId");
+            String dataResourceTypeId = (String) dataResource.get("dataResourceTypeId");
+            String objectInfo = (String) dataResource.get("objectInfo");
+            String textData = (String) context.get("textData");
             String prefix = "";
             File file = null;
             String fileName = "";
             String sep = "";
             try {
                 if (UtilValidate.isEmpty(dataResourceTypeId) || dataResourceTypeId.equals("LOCAL_FILE")) {
-                    fileName = prefix + sep + objectInfo; 
+                    fileName = prefix + sep + objectInfo;
                     file = new File(fileName);
                     if (file == null) {
                         throw new GenericServiceException("File: " + fileName + " is null.");
@@ -421,31 +395,29 @@ Debug.logInfo("in create FileMethod file:" + file, null);
                     }
                 } else if (dataResourceTypeId.equals("OFBIZ_FILE")) {
                     prefix = System.getProperty("ofbiz.home");
-                    if ( objectInfo.indexOf("/") != 0 
-                           && prefix.lastIndexOf("/") != (prefix.length() -1)) {
+                    if (objectInfo.indexOf("/") != 0 && prefix.lastIndexOf("/") != (prefix.length() - 1)) {
                         sep = "/";
                     }
-                    file = new File(prefix + sep + objectInfo );
+                    file = new File(prefix + sep + objectInfo);
                 } else if (dataResourceTypeId.equals("CONTEXT_FILE")) {
-                    prefix = (String)context.get( "rootDir");
-                    if ( objectInfo.indexOf("/") != 0 
-                           && prefix.lastIndexOf("/") != (prefix.length() -1)) {
+                    prefix = (String) context.get("rootDir");
+                    if (objectInfo.indexOf("/") != 0 && prefix.lastIndexOf("/") != (prefix.length() - 1)) {
                         sep = "/";
                     }
-                    file = new File(prefix + sep + objectInfo );
+                    file = new File(prefix + sep + objectInfo);
                 }
                 if (file == null) {
                     throw new IOException("File: " + file + " is null");
                 }
-                FileWriter out = new FileWriter( file);
+                FileWriter out = new FileWriter(file);
                 out.write(textData);
                 out.close();
-            } catch(IOException e) {
+            } catch (IOException e) {
                 Debug.logWarning(e, module);
                 throw new GenericServiceException(e.getMessage());
             }
         }
-        
+
         return result;
     }
 
@@ -454,26 +426,25 @@ Debug.logInfo("in create FileMethod file:" + file, null);
         Map results = new HashMap();
         GenericDelegator delegator = dctx.getDelegator();
         LocalDispatcher dispatcher = dctx.getDispatcher();
-        Writer out = (Writer) context.get("outWriter"); 
-        SimpleHash templateContext = (SimpleHash) context.get("templateContext"); 
-        GenericValue userLogin = (GenericValue)context.get("userLogin");
-        String dataResourceId = (String) context.get("dataResourceId"); 
+        Writer out = (Writer) context.get("outWriter");
+        SimpleHash templateContext = (SimpleHash) context.get("templateContext");
+        GenericValue userLogin = (GenericValue) context.get("userLogin");
+        String dataResourceId = (String) context.get("dataResourceId");
         if (templateContext != null && UtilValidate.isEmpty(dataResourceId)) {
-            dataResourceId = (String)FreeMarkerWorker.get(templateContext, "dataResourceId");
+            dataResourceId = (String) FreeMarkerWorker.get(templateContext, "dataResourceId");
         }
-        String mimeTypeId = (String) context.get("mimeTypeId"); 
+        String mimeTypeId = (String) context.get("mimeTypeId");
         if (templateContext != null && UtilValidate.isEmpty(mimeTypeId)) {
-            mimeTypeId = (String)FreeMarkerWorker.get(templateContext, "mimeTypeId");
+            mimeTypeId = (String) FreeMarkerWorker.get(templateContext, "mimeTypeId");
         }
 
-        Locale locale = (Locale) context.get("locale"); 
+        Locale locale = (Locale) context.get("locale");
 
         if (templateContext == null)
             templateContext = new SimpleHash();
 
-        GenericValue view = (GenericValue)context.get("subContentDataResourceView");
-        DataResourceWorker.renderDataResourceAsText(delegator, dataResourceId, out, 
-                          templateContext, view, locale, mimeTypeId);
+        GenericValue view = (GenericValue) context.get("subContentDataResourceView");
+        DataResourceWorker.renderDataResourceAsText(delegator, dataResourceId, out, templateContext, view, locale, mimeTypeId);
         return;
 
     }
@@ -483,26 +454,25 @@ Debug.logInfo("in create FileMethod file:" + file, null);
         Map results = new HashMap();
         GenericDelegator delegator = dctx.getDelegator();
         LocalDispatcher dispatcher = dctx.getDispatcher();
-        Writer out = (Writer) context.get("outWriter"); 
-        SimpleHash templateContext = (SimpleHash) context.get("templateContext"); 
-        GenericValue userLogin = (GenericValue)context.get("userLogin");
-        String dataResourceId = (String) context.get("dataResourceId"); 
+        Writer out = (Writer) context.get("outWriter");
+        SimpleHash templateContext = (SimpleHash) context.get("templateContext");
+        GenericValue userLogin = (GenericValue) context.get("userLogin");
+        String dataResourceId = (String) context.get("dataResourceId");
         if (templateContext != null && UtilValidate.isEmpty(dataResourceId)) {
-            dataResourceId = (String)FreeMarkerWorker.get(templateContext, "dataResourceId");
+            dataResourceId = (String) FreeMarkerWorker.get(templateContext, "dataResourceId");
         }
-        String mimeTypeId = (String) context.get("mimeTypeId"); 
+        String mimeTypeId = (String) context.get("mimeTypeId");
         if (templateContext != null && UtilValidate.isEmpty(mimeTypeId)) {
-            mimeTypeId = (String)FreeMarkerWorker.get(templateContext, "mimeTypeId");
+            mimeTypeId = (String) FreeMarkerWorker.get(templateContext, "mimeTypeId");
         }
 
-        Locale locale = (Locale) context.get("locale"); 
+        Locale locale = (Locale) context.get("locale");
 
         if (templateContext == null)
             templateContext = new SimpleHash();
 
-        GenericValue view = (GenericValue)context.get("subContentDataResourceView");
-        DataResourceWorker.renderDataResourceAsHtml(delegator, dataResourceId, out, 
-                          templateContext, view, locale, mimeTypeId);
+        GenericValue view = (GenericValue) context.get("subContentDataResourceView");
+        DataResourceWorker.renderDataResourceAsHtml(delegator, dataResourceId, out, templateContext, view, locale, mimeTypeId);
         return;
 
     }
