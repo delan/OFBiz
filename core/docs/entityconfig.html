@@ -23,13 +23,13 @@ $Id$ <br>
 <ul>
   <li><a href="#Related_Documents">Related Documents</a>
   <li><a href="#Introduction">Introduction</a>
-  <li><a href="#Properties">Properties File Extensions</a>
-  <li><a href="#JTA_Properties">JTA Properties</a>
-  <li><a href="#Delegator_Properties">Delegator Properties</a>
+  <li><a href="#Resource_JNDI">Resource Loaders and JNDI Servers</a>
+  <li><a href="#JTA_Elements">JTA Elements</a>
+  <li><a href="#Delegator_Elements">Delegator Elements</a>
   <li><a href="#Entity_Model">Entity Model XML Files</a>
   <li><a href="#Entity_Group">Entity Group XML Files</a>
   <li><a href="#Field_Type">Field Type XML Files</a>
-  <li><a href="#JDBC_Helper">JDBC Helper Properties</a>
+  <li><a href="#Datasource">Data Source Elements</a>
 </ul>
 
 <hr>
@@ -47,33 +47,34 @@ $Id$ <br>
 
 <p>This document describes the configuration of the Entity Engine. It starts
 with an introduction to general ideas and then goes through each part of the
-entityengine.xml file and explains the available properties and their 
+entityengine.xml file and explains the available elements and their 
 usage. The entityengine.xml file used for the OFBiz applications has
 examples of a number of different options and is located in <b><code>ofbiz/commonapp/etc/entityengine.xml</code></b>.</p>
 
-<p>The configuration of the Entity Engine is done through a simple properties
+<p>The configuration of the Entity Engine is done through a simple XML
 file called <b><code>entityengine.xml</code></b> that must exist somewhere on the classpath. This
-properties file is used to define parameters for persistence servers such as EJB
+file is used to define parameters for persistence servers such as EJB
 server parameters or JDBC server parameters. It is also used to specify which
-XML entity, entity group, and field type model files will be used for that server.
+XML entity model, entity group, and field type model files will be used for that server.
 The default file for the OFBiz distribution can be found in <b><code>ofbiz/commonapp/etc/entityengine.xml</code></b>.</p>
 
 <p>Each application that uses the Entity Engine does so through a <b><code>GenericDelegator</code></b>
 instance. The delegator name must be passed to the static factory method which
 is then passed to the constructor if a new instance is needed. This delegator
 name is used to look up settings for that delegator in the <b><code>entityengine.xml</code></b>
-file. Each delegator uses an entity model XML file and an entity group XML file
+file. Each delegator uses an entity model reader and an entity group reader
 which specifies a group name for each named entity in the entity model file. The
 <b><code>entityengine.xml</code></b> file contains the settings which map each group name
 to a <b><code>GenericHelper</code></b> for that group. <b><code>GenericHelper</code></b> is an interface
 that must be implemented for each type of data source (ie: JDBC, EJB, SOAP,
 HTTP, et cetera).&nbsp;</p>
 
-<p>The settings for each named <b><code>GenericHelper</code></b> are specified in the <b><code>entityengine.xml</code></b>
+<p>The settings for each named <b><code>GenericHelper</code></b> are specified 
+<b<code>datsource</code></b> elements in the <b><code>entityengine.xml</code></b>
 file. For a JDBC helper these would include database connection parameters such
 as either the JNDI data source parameters or the JDBC parameters including the driver
 name, the JDBC URI, and the username and password for the database. An EJB
-helper would contain the context provider URL, the initial context factory, and
+helper would contain JNDI parameters such as the context provider URL, the initial context factory, and
 the URL package prefixes.</p>
 
 <p>The <b><code>GenericDelegator</code></b> is the primary access method for Entity Engine
@@ -83,32 +84,89 @@ entity specified in the entity group XML file and the helper for that group
 specified in the <b><code>entityengine.xml</code></b> file. The default entity group XML
 file for the OFBiz entity model can be found in <b><code>ofbiz/commonapp/entitydef/entitygroup.xml</code></b>.</p>
 
+    <resource-loader name="mainfile" class="org.ofbiz.core.entity.config.FileLoader" 
+            prepend-env="ofbiz.home" prefix="/commonapp/entitydef/"/>
 <hr>
-<h3><a name="Properties">Properties File Extensions</a></h3>
+<h3><a name="Resource_JNDI">Resource Loaders and JNDI Servers</a></h3>
 <hr>
-<p>The OFBiz UtilProperties class uses the OFBiz FlexibleProperties to read
-and parse properties files with a few extensions. The FlexibleProperties class
-is an extension of the standard Java Properties class.</p>
+<p>The <b><code>resource-loader</code></b> tag is used to configure a named resource loader
+that can be used elsewhere to load XML and other resources. It has the following
+attributes.</p>
+<table cellpadding='2' cellspacing='0' border='1'>
+<tr>
+    <td><b>Attribute&nbsp;Name</b></td>
+    <td><b>Required?</b></td>
+    <td><b>Description</b></td>
+</tr>
+<tr>
+    <td>name</td><td>Y</td>
+    <td>The name of the resource loader. Used in other tags in the 'loader' attribute.</td>
+</tr>
+<tr>
+    <td>class</td><td>Y</td>
+    <td>The class to use that extends the abstract class org.ofbiz.core.entity.config.ResourceLoader.
+    Available classes include FileLoader, UrlLoader, and ClasspathLoader, all in the
+    same package as the ResourceLoader class.</td>
+</tr>
+<tr>
+    <td>prepend-env</td><td>N</td>
+    <td>The name of a Java environment property to put at the very beginning of 
+    the full location, before the prefix. This is optional.</td>
+</tr>
+<tr>
+    <td>prefix</td><td>N</td>
+    <td>A string to put before the location when making the full location. This is optional.
+    If used will go after the prepended environment property and before the location
+    specified for each resource.</td>
+</tr>
+</table>
 
-<p>The extensions included allow the value of a property to be substituted into
-the value of another property by simply using the ${property.name} syntax. Another
-extension is that if a "env." precedes a property.name inside the ${ and } 
-delimiters then the named property will be looked up in the system environment
-instead of in the current properties file.</p>
-
-<p>For example the ofbiz.home system
-property is added using the -D parameter on the java command line and is used
-in the entityengine.xml and other properties files with <b><code>${env.ofbiz.home}</code></b>.</p>
-
+<p>The <b><code>jndi-server</code></b> tag is used to configure JNDI servers
+that will be used for JTA objects, JDBC objects, and other JNDI resources used
+by the Entity Engine.</p>
+<table cellpadding='2' cellspacing='0' border='1'>
+<tr>
+    <td><b>Attribute&nbsp;Name</b></td>
+    <td><b>Required?</b></td>
+    <td><b>Description</b></td>
+</tr>
+<tr>
+    <td>name</td><td>Y</td>
+    <td>The name of the JNDI Server. Used in other tags in the 'jndi-server-name' 
+    attribute. This is the only required attribute. The others can be left out
+    to use the default constructor of the InitialContext class, which will
+    load the JNDI parameters from the jndi.properties file, which most app servers include.</td>
+</tr>
+<tr>
+    <td>context-provider-url</td><td>N</td>
+    <td>Example: rmi://127.0.0.1:1099</td>
+</tr>
+<tr>
+    <td>initial-context-factory</td><td>N</td>
+    <td>Example: com.sun.jndi.rmi.registry.RegistryContextFactory</td>
+</tr>
+<tr>
+    <td>url-pkg-prefixes</td><td>N</td>
+    <td>Example: java.naming.rmi.security.manager</td>
+</tr>
+<tr>
+    <td>security-principal</td><td>N</td>
+    <td>JNDI Username</td>
+</tr>
+<tr>
+    <td>security-credentials</td><td>N</td>
+    <td>JNDI Password</td>
+</tr>
+</table>
+<br>
 <hr>
-<h3><a name="JTA_Properties">JTA Properties</a></h3>
+<h3><a name="JTA_Elements">JTA Elements</a></h3>
 <hr>
 <p>For JTA support the Entity Engine needs access to the <b><code>javax.transaction.UserTransaction</code></b> and 
 optionally the <b><code>javax.transaction.TransactionManager</code></b> interface implementations for the TX Manager
 being used. These are retreived through the <b><code>org.ofbiz.core.entity.TransactionFactory</code></b> class. 
-This class uses the class specified with the <b><code>transaction.factory.class</code></b> property. This
-class may change depending on which application server or transaction manager is being
-used by OFBiz.</p>
+This class uses the class specified with the <b><code>class</code></b> attribute of the <b><code>transaction-factory</code></b>. This
+class may be changed depending on which application server or transaction manager is being used by OFBiz.</p>
 
 <p>The default TX Manager is Tyrex from Exolab (www.exolab.org) and
 the factory class for Tyrex is <b><code>org.ofbiz.core.entity.transaction.TyrexFactory</code></b>.
@@ -118,150 +176,223 @@ with weblogic.jar on the classpath.</p>
 
 <p>The most widely useful transaction factory class is the 
 <b><code>org.ofbiz.core.entity.transaction.JNDIFactory</code></b> class. This class uses
-some additional properties from the entityengine.xml file to locate
+some additional elements from the entityengine.xml file to locate
 the UserTransaction and TransactionManager objects in JNDI.</p>
 
-<p>The <b><code>transaction.factory.UserTransaction.jndi.name</code></b> (ex: java:comp/UserTransaction) and
-<b><code>transaction.factory.TransactionManager.jndi.name</code></b> (ex: java:comp/TransactionManager) and
-properties are used to specify the object names in JNDI. The JNDI factory parameters
-follow the pattern used for the JNDI parameters in the JDBC Helper definitions. 
-These include: </p>
-<ul>
-    <li><b><code>transaction.factory.context.provider.url</code></b> (ex: rmi://127.0.0.1:1099)
-    <li><b><code>transaction.factory.initial.context.factory</code></b> (ex: com.sun.jndi.rmi.registry.RegistryContextFactory)
-    <li><b><code>transaction.factory.url.pkg.prefixes</code></b> (ex: java.naming.rmi.security.manager) - optional
-    <li><b><code>transaction.factory.security.principal</code></b> (JNDI username) - optional
-    <li><b><code>transaction.factory.security.credentials</code></b> (JNDI password) - optional
-</ul>
+<p>The <b><code>user-transaction-jndi</code></b> and <b><code>transaction-manager-jndi</code></b> 
+tags are used to specify the object names in JNDI and the name of the JNDI Server to use, 
+as configured above. Both tags have two required attributes: 
+<b><code>jndi-server-name</code></b> and <b><code>jndi-name</code></b>. An example
+jndi-name for the UserTransaction object is <b><code>java:comp/UserTransaction</code></b> and
+for the TransactionManager object is <b><code>java:comp/TransactionManager</code></b>.</p>
 
 <hr>
-<h3><a name="Delegator_Properties">Delegator Properties</a></h3>
+<h3><a name="Delegator_Elements">Delegator Elements</a></h3>
 <hr>
 <p>The GenericDelagator is created through a factory method that takes a String
-argument containing the delegator name. This delegator name is used as the prefix
-for a number of properties in the entityengine.xml file.</p>
+argument containing the delegator name. This delegator name is used to look up
+a <b><code>delegator</code></b> tag in the entityengine.xml file.</p>
 
-<p>The first property is <b><code>{delegator-name}.model.reader={entity-model-xml-prefix}</code></b> and it specifies the prefix for 
-the property that contains a list of Entity Model XML files and is the name of
-the ModelReader instance that encapsulates them.</p>
+<table cellpadding='2' cellspacing='0' border='1'>
+<tr>
+    <td><b>Attribute&nbsp;Name</b></td>
+    <td><b>Required?</b></td>
+    <td><b>Description</b></td>
+</tr>
+<tr>
+    <td>name</td><td>Y</td>
+    <td>The name of the Delegator. Used to look up this tag by delegator name.</td>
+</tr>
+<tr>
+    <td>entity-model-reader</td><td>Y</td>
+    <td>The name of the entity-model-reader to use for this delegator.</td>
+</tr>
+<tr>
+    <td>entity-group-reader</td><td>Y</td>
+    <td>The name of the entity-group-reader to use for this delegator.</td>
+</tr>
+</table>
 
-<p>The next property is <b><code>{delegator-name}.model.group.reader={entity-group-xml-prefix}</code></b> and it specifies the prefix for 
-the property that the location of the Entity Group XML file for the delegator and is the name of
-the ModelGroupReader instance that encapsulates the file.</p>
-
-<p>Next follows one or more properties specifying a Helper to use for each group
-of entities that the delegator will know about. This file is used by the delegator
+<p>The delegator tag must contain one or more <b><code>group-map</code></b> tags 
+specifying a datasource to use for each group of entities that the delegator will know about
+from the entity-group-reader. This file is used by the delegator
 to assign a group to each entity and then when an operation on an entity is
-performed it looks up the group and then the Helper that corresponds to the group
+performed it looks up the group and then the datasource helper that corresponds to the group
 and then uses that Helper to perform lower level Data Source operations. With this
-technique the application does not have to know at run time which Helper is responsible
+technique the application does not have to know when written which Helper is responsible
 for a given entity, and can therefore handle an entity or groups of entities 
 assigned to different Data Sources.</p>
-
-<p>The format for these properties is as follows: <b><code>{delegator-name}.group.{group-name}={helper-name}</code></b></p>
 
 <hr>
 <h3><a name="Entity_Model">Entity Model XML Files</a></h3>
 <hr>
-<p>There is only one property for each list of entity model XML files and the value of the property
-is a semicolon separated list of full paths to XML files containing entity model
-definitions. The property is formatted like this: <b><code>{entity-model-xml-prefix}.xml.entity=path1/entitymodel1.xml;path2/entitymodel2.xml</code></b></p>
+<p>The <b><code>entity-model-reader</code></b> tag is used to configure each named
+entity model reader. The tag has a <b><code>name</code></b> attribute used to specify the entity model
+reader's name. Each reader may load from multiple resources which are specified
+with as many <b><code>resource</code></b> tags as desired. inside the main tag.</p>
+
+<p>Each <b><code>resource</code></b> tag has two required attributes: 
+<b><code>loader</code></b> which specifies which resource-loader to use and
+<b><code>location</code></b> which specifies the location that the resource-loader
+will use inside itself to load the resource.</p>
 
 <hr>
 <h3><a name="Entity_Group">Entity Group XML File</a></h3>
 <hr>
-<p>There is only one property for each entity group XML file and the value of the property
-is the full path to an XML file containing the entity group mappings.
-The property is formatted like this: <b><code>{entity-group-xml-prefix}.xml.group=path/entitygroup.xml</code></b></p>
+<p>The <b><code>entity-group-reader</code></b> tag is used to configure each named
+entity group reader. The tag has a <b><code>name</code></b> attribute used to specify the entity group
+reader's name. The group reader uses a single XML file to get the entity-group mappings.</p>
+<p>The tag has two required attributes: 
+<b><code>loader</code></b> which specifies which resource-loader to use and
+<b><code>location</code></b> which specifies the location that the resource-loader
+will use inside itself to load the resource.</p>
 
 <hr>
 <h3><a name="Field_Type">Field Type XML File</a></h3>
 <hr>
-<p>There is only one property for each field type XML file and the value of the property
-is the full path to an XML file containing field type definitions.
-The property is formatted like this: <b><code>{field-type-xml-prefix}.xml.field.type=path/fieldtypexxx.xml</code></b></p>
+<p>The <b><code>field-type</code></b> tag is used to configure each named
+field type. The tag has a <b><code>name</code></b> attribute used to specify the field type's
+name. The group reader uses a single XML file to get the field type information.</p>
+<p>The tag has two required attributes: 
+<b><code>loader</code></b> which specifies which resource-loader to use and
+<b><code>location</code></b> which specifies the location that the resource-loader
+will use inside itself to load the resource.</p>
 
 <hr>
-<h3><a name="JDBC_Helper">JDBC Helper Properties</a></h3>
+<h3><a name="Datasource">Data Source Elements</a></h3>
 <hr>
-<p>While there can be many types of helpers the main one used is the JDBC/DAO 
-helper. You can code you own helpers and use them by implementing the 
-<b><code>org.ofbiz.core.entity.GenericHelper</code></b> interface. The class used for a given helper
-is specified with the <b><code>{helper-name}.helper.class</code></b> property. For JDBC/DAO 
-helpers the value of this property will be <b><code>org.ofbiz.core.entity.GenericHelperDAO</code></b>
-which implements the GenericHelper interface.</p>
+<p>Many datasources can be configured with one <b><code>datasource</code></b> 
+tag each. This tag has the following attributes, and may contain the following
+sub-elements:</p>
+<table cellpadding='2' cellspacing='0' border='1'>
+<tr>
+    <td><b>Attribute&nbsp;Name</b></td>
+    <td><b>Required?</b></td>
+    <td><b>Description</b></td>
+</tr>
+<tr>
+    <td>name</td><td>Y</td>
+    <td>That name of the datasource.</td>
+</tr>
+<tr>
+    <td>helper-class</td><td>Y</td>
+    <td>There can be many types of datasource helpers the main one used is the JDBC/DAO 
+    helper. You can code you own helpers and use them by implementing the 
+    <b><code>org.ofbiz.core.entity.GenericHelper</code></b> interface. For JDBC/DAO 
+    helpers the class will be <b><code>org.ofbiz.core.entity.GenericHelperDAO</code></b>.</td>
+</tr>
+<tr>
+    <td>field-type-name</td><td>Y</td>
+    <td>The name of the field-type to use. Must match the name of an existing 
+    field-type tag as defined above.</td>
+</tr>
+<tr>
+    <td>check-on-start</td><td>N</td>
+    <td>Check the datasource on startup? Must be true or false, defaults to true.</td>
+</tr>
+<tr>
+    <td>add-missing-on-start</td><td>N</td>
+    <td>Add missing entities and fields to the datasource on startup when checking
+    is done? Must be true or false, defaults to false.</td>
+</tr>
+</table>
+<br>
+<table cellpadding='2' cellspacing='0' border='1'>
+<tr>
+    <td><b>Sub-Element&nbsp;Name</b></td>
+    <td><b>How&nbsp;Many</b></td>
+    <td><b>Description</b></td>
+</tr>
+<tr>
+    <td>sql-load-path</td><td>0 to many</td>
+    <td>Used to specify a list of full paths to directories that will be searched for XML and SQL files to import
+    into the data source by the <b><code>install</code></b> page in the WebTools webapp.
+    Each tag has two attributes: path for the path location, and prepend-env to optionally specify
+    a Java environment property to prepedd to the specified path.</td>
+</tr>
+<tr>
+    <td>inline-jdbc</td><td>0 or 1</td>
+    <td>Used to specify the JDBC parameters to be used either by Tyrex or if Tyrex
+    is not available then by directly loading the driver (very slow). You must specify
+    either inline-jdbc or jndi-jdbc, but not both, for the DAOHelper.</td>
+</tr>
+<tr>
+    <td>jndi-jdbc</td><td>0 or 1</td>
+    <td>Used to specify the jndi-server and jndi-name to get a Connection or XAConnection
+    from JNDI. You must specify either inline-jdbc or jndi-jdbc, but not both, for the DAOHelper.</td>
+</tr>
+<tr>
+    <td>ANY</td><td>0 or 1</td>
+    <td>Any tag may go inside the datasource tag to specify parameters for other
+    GenericHelper implementations. These will not be checked at load time unless
+    the DTD is modified to describe them.</td>
+</tr>
+</table>
 
-<p>There is a group of properties used to configure all JDBC Helpers and then a 
-few optional groups to configure direct or JNDI data sources.</p>
+<p>The <b><code>inline-jdbc</code></b> tag has the following attributes:</p>
+<table cellpadding='2' cellspacing='0' border='1'>
+<tr>
+    <td><b>Attribute&nbsp;Name</b></td>
+    <td><b>Required?</b></td>
+    <td><b>Description</b></td>
+</tr>
+<tr>
+    <td>jdbc-driver</td><td>Y</td>
+    <td>The JDBC driver class for the database.</td>
+</tr>
+<tr>
+    <td>jdbc-uri</td><td>Y</td>
+    <td>The URI used to specify the type and location of the database.</td>
+</tr>
+<tr>
+    <td>jdbc-username</td><td>Y</td>
+    <td>The username to connect to the database as.</td>
+</tr>
+<tr>
+    <td>jdbc-password</td><td>Y</td>
+    <td>The username's password.</td>
+</tr>
+<tr>
+    <td>isolation-level</td><td>N</td>
+    <td>This is used by Tyrex to specify the transaction isolation level. 
+    The standard JDBC transaction isolation levels are available:<br>
+    <ul>
+        <li>'ReadCommitted'
+        <li>'ReadUncommitted'
+        <li>'RepeatableRead'
+        <li>'Serializable' (default)
+    </ul>
+    </td>
+</tr>
+</table>
 
-<p>The <b><code>{helper-name}.field.type.reader={field-type-xml-prefix}</code></b> property 
-is used to specify a field-type-xml-prefix which will be looked as described in 
-the Field Type XML File section.</p>
-
-<p>The <b><code>{helper-name}.datasource.check.on.start</code></b> property can be either
-'true' or 'false' and specifies whether the data source should be checked when
-the Entity Engine is started. Checking the data source for JDBC Helpers gets
-a list of all tables and columns in the data source for the helper and compares
-them with the defined entities and fields that in the group assigned to the
-helper in the delegator that uses the helper.</p>
-
-<p>If the <b><code>{helper-name}.datasource.add.missing.on.start</code></b> property is set to 'true'
-then any missing tables or columns will be added automatically to the database.
-Other differences such as tables/columns that do not correspond to any known
-entity/field or column types that differ from the type specified on the 
-corresponding field will cause warnings to be printed. These warning will be
-printed whether or not the add missing feature is enabled.</p>
-
-<p>The <b><code>{helper-name}.sql.load.paths</code></b> property is used to specify a list of
-full paths to directories that will be searched for XML and SQL files to import
-into the data source by the <b><code>install</code></b> page in the WebTools webapp.</p>
-
-<p>When trying to determine where to get a database connection the Entity Engine
-tries three different options:</p>
-<ol>
-    <li> JNDI Datasource IF jdbc.jndi.name, context.provider, etc are specified
-    <li> Tyrex if available (uses jdbc.driver, jdbc.uri, jdbc.username, jdbc.password, isolation.level)
-    <li> Direct to manually laoded JDBC driver (uses jdbc.driver, jdbc.uri, jdbc.username, jdbc.password)
-</ol>
-
-<p>To use a JNDI data source specify the following properties:</p>
-<ul>
-    <li><b><code>{helper-name}.jdbc.jndi.name</code></b> (ex: java:/MyDataSource)
-    <li><b><code>{helper-name}.context.provider.url</code></b> (ex: rmi://127.0.0.1:1099)
-    <li><b><code>{helper-name}.initial.context.factory</code></b> (ex: com.sun.jndi.rmi.registry.RegistryContextFactory)
-    <li><b><code>{helper-name}.url.pkg.prefixes</code></b> (ex: java.naming.rmi.security.manager) - optional
-    <li><b><code>{helper-name}.security.principal</code></b> (JNDI username) - optional
-    <li><b><code>{helper-name}.security.credentials</code></b> (JNDI password) - optional
-</ul>
+<p>The <b><code>jndi-jdbc</code></b> tag has the following attributes:</p>
+<table cellpadding='2' cellspacing='0' border='1'>
+<tr>
+    <td><b>Attribute&nbsp;Name</b></td>
+    <td><b>Required?</b></td>
+    <td><b>Description</b></td>
+</tr>
+<tr>
+    <td>jndi-server-name</td><td>Y</td>
+    <td>The name of the JNDI Server to use as configured in this file
+    with the jndi-server tag, described above.</td>
+</tr>
+<tr>
+    <td>jndi-name</td><td>Y</td>
+    <td>The name of the Connection or XAConnection object in JNDI.</td>
+</tr>
+</table>
 
 <p>The data source retreived
 from JNDI should be pooled and transactional, with connections already enlisted
 if a JTA transaction has been started. It can be either a DataSource or an XADataSource object.</p>
 
-<p>If the JNDI properties are not specified the ConnectionFactory will get the
+<p>If the JNDI elements are not specified the ConnectionFactory will get the
 JDBC parameters from entityengine.xml file and try to use Tyrex for the
 transaction manager and connection pool. If Tyrex is not available the Entity
 Engine will hobble along creating a JDBC connection manually each time one is
 requested. A warning will be printed when this happens.</p>
-
-<p>The JDBC properties are the standard ones used to create any JDBC connection
-and are named as follows:</p>
-<ul>
-    <li><b><code>{helper-name}.jdbc.driver</code></b>
-    <li><b><code>{helper-name}.jdbc.uri</code></b>
-    <li><b><code>{helper-name}.jdbc.username</code></b>
-    <li><b><code>{helper-name}.jdbc.password</code></b>
-</ul>
-
-<p>If Tyrex is being used the <b><code>{helper-name}.isolation.level</code></b> property can 
-be used to specify the transaction isolation level. The standard JDBC transaction
-isolation levels are available:</p>
-<ul>
-    <li>'ReadCommitted'
-    <li>'ReadUncommitted'
-    <li>'RepeatableRead'
-    <li>'Serializable' (default)
-</ul>
 
 </body>
 </html>
