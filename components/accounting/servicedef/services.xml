@@ -625,6 +625,28 @@
         <description>Gift Card Payment Processing</description>
         <implements service="itemFulfillmentInterface"/>
     </service>
+    <service name="createVLFulFillmentRecord" engine="java" require-new-transaction="true" use-transaction="true"
+            location="org.ofbiz.accounting.thirdparty.valuelink.ValueLinkServices" invoke="createFulfillmentRecord" auth="true">
+        <description>Creates the fulfillment log</description>
+        <attribute name="typeEnumId" type="String" mode="IN" optional="false"/>
+        <attribute name="merchantId" type="String" mode="IN" optional="false"/>
+        <attribute name="partyId" type="String" mode="IN" optional="true"/>
+        <attribute name="orderId" type="String" mode="IN" optional="true"/>
+        <attribute name="orderItemSeqId" type="String" mode="IN" optional="true"/>
+        <attribute name="surveyResponseId" type="String" mode="IN" optional="true"/>
+        <attribute name="cardNumber" type="String" mode="IN" optional="true"/>
+        <attribute name="pinNumber" type="String" mode="IN" optional="true"/>
+        <attribute name="amount" type="Double" mode="IN" optional="true"/>
+        <attribute name="responseCode" type="String" mode="IN" optional="true"/>
+        <attribute name="referenceNum" type="String" mode="IN" optional="true"/>
+        <attribute name="authCode" type="String" mode="IN" optional="true"/>
+    </service>
+    <service name="refundVLReload" engine="java" require-new-transaction="true" use-transaction="true"
+            location="org.ofbiz.accounting.thirdparty.valuelink.ValueLinkServices" invoke="refundReload" auth="true">
+        <description>Creates return for reload on failure</description>
+        <attribute name="orderItem" type="GenericValue" mode="IN" optional="false"/>
+        <attribute name="partyId" type="String" mode="IN" optional="false"/>
+    </service>
 
     <!-- ValueLink Transaction Services -->
     <service name="assignWorkingKey" engine="java"

@@ -1,5 +1,5 @@
 /*
- * $Id: OrderServices.java,v 1.25 2003/12/05 02:25:47 ajzeneski Exp $
+ * $Id: OrderServices.java,v 1.26 2003/12/06 23:57:46 ajzeneski Exp $
  *
  *  Copyright (c) 2001, 2002 The Open For Business Project - www.ofbiz.org
  *
@@ -52,7 +52,7 @@ import org.ofbiz.workflow.WfUtil;
  * @author     <a href="mailto:jaz@ofbiz.org">Andy Zeneski</a>
  * @author     <a href="mailto:cnelson@einnovation.com">Chris Nelson</a>
  * @author     <a href="mailto:jonesde@ofbiz.org">David E. Jones</a>
- * @version    $Revision: 1.25 $
+ * @version    $Revision: 1.26 $
  * @since      2.0
  */
 
@@ -2750,7 +2750,7 @@ public class OrderServices {
                         statusCtx.put("statusId", "ITEM_COMPLETED");
                         statusCtx.put("userLogin", userLogin);
                         try {
-                            Map svcResult = dispatcher.runSync("changeOrderItemStatus", statusCtx);
+                            dispatcher.runSyncIgnore("changeOrderItemStatus", statusCtx);
                         } catch (GenericServiceException e) {
                             Debug.logError(e, "ERROR: Problem setting the status to COMPLETED : " + item, module);
                         }
@@ -2762,13 +2762,16 @@ public class OrderServices {
             Map fulfillContext = UtilMisc.toMap("orderId", orderId, "orderItems", digitalItems, "userLogin", userLogin);
             Map fulfillResult = null;
             try {
-                fulfillResult = dispatcher.runSync("fulfillDigitalItems", fulfillContext);
+                // will be running in an isolated transaction to prevent rollbacks
+                fulfillResult = dispatcher.runSync("fulfillDigitalItems", fulfillContext, 300, true);
             } catch (GenericServiceException e) {
                 Debug.logError(e, "ERROR: Unable to fulfill digital items", module);
-                return ServiceUtil.returnError("Problem with fulfillment; digital items not fulfilled.");
             }
             if (ModelService.RESPOND_ERROR.equals((String)fulfillResult.get(ModelService.RESPONSE_MESSAGE))) {
-                return ServiceUtil.returnError((String)fulfillResult.get(ModelService.ERROR_MESSAGE));
+                // this service cannot return error at this point or we will roll back the invoice
+                // since payments are already captured; errors should have been logged already.
+                // the response message here will be passed as an error to the user.
+                return ServiceUtil.returnSuccess((String)fulfillResult.get(ModelService.ERROR_MESSAGE));
             }
         }
 
@@ -2827,7 +2830,7 @@ public class OrderServices {
                         }
 
                         String fulfillmentType = productContentItem.getString("productContentTypeId");
-                        if ("FULFILLMENT_EXTERNAL".equals(fulfillmentType)) {
+                        if ("FULFILLMENT_EXTASYNC".equals(fulfillmentType) || "FULFILLMENT_EXTSYNC".equals(fulfillmentType)) {
                             // enternal service fulfillment
                             String fulfillmentService = (String) content.get("serviceName");
                             if (fulfillmentService == null) {
@@ -2837,7 +2840,14 @@ public class OrderServices {
                             serviceCtx.putAll(productContentItem.getPrimaryKey());
                             try {
                                 Debug.logInfo("Running external fulfillment '" + fulfillmentService + "'", module);
-                                dispatcher.runAsync(fulfillmentService, serviceCtx, true);
+                                if ("FULFILLMENT_EXTASYNC".equals(fulfillmentType)) {
+                                    dispatcher.runAsync(fulfillmentService, serviceCtx, true);
+                                } else if ("FULFILLMENT_EXTSYNC".equals(fulfillmentType)) {
+                                    Map resp = dispatcher.runSync(fulfillmentService, serviceCtx);
+                                    if (ServiceUtil.isError(resp)) {
+                                        return ServiceUtil.returnError(ServiceUtil.getErrorMessage(resp));
+                                    }
+                                }
                             } catch (GenericServiceException e) {
                                 Debug.logError(e, "ERROR: Could not run external fulfillment service '" + fulfillmentService + "'; " + e.getMessage(), module);
                             }
