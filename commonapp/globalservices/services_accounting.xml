@@ -271,7 +271,8 @@
     <service name="captureOrderPayments" engine="java"
             location="org.ofbiz.commonapp.accounting.payment.PaymentGatewayServices" invoke="captureOrderPayments" auth="true">
         <description>Captures (settles) pre-authorized order payments</description>       
-        <attribute name="orderId" type="String" mode="IN" optional="false"/>      
+        <attribute name="orderId" type="String" mode="IN" optional="false"/> 
+        <attribute name="invoiceId" type="String" mode="IN" optional="true"/>     
         <attribute name="processResult" type="String" mode="OUT" optional="false"/>        
     </service>
 
