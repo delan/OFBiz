@@ -28,10 +28,10 @@
 <simple-methods>
     <simple-method method-name="createProduct" short-description="Create an Product">
         <check-permission permission="CATALOG" action="_CREATE">
-        	<alt-permission permission="CATALOG_ROLE" action="_CREATE"/>
-        	<fail-message message="Security Error: to run createProduct you must have the CATALOG_CREATE or CATALOG_ADMIN permission, or the limited CATALOG_ROLE_CREATE permission"/>
+            <alt-permission permission="CATALOG_ROLE" action="_CREATE"/>
+            <fail-message message="Security Error: to run createProduct you must have the CATALOG_CREATE or CATALOG_ADMIN permission, or the limited CATALOG_ROLE_CREATE permission"/>
         </check-permission>
-		<check-id field-name="productId" map-name="parameters"/>
+            <check-id field-name="productId" map-name="parameters"/>
         <check-errors/>
 
         <make-value value-name="newEntity" entity-name="Product"/>
@@ -62,8 +62,8 @@
         <if>
             <condition>
             	<or>
-			        <if-empty field-name="autoCreateKeywords" map-name="newEntity"/>
-		            <if-compare field-name="autoCreateKeywords" map-name="newEntity" operator="equals" value="Y"/>
+                    <if-empty field-name="autoCreateKeywords" map-name="newEntity"/>
+                    <if-compare field-name="autoCreateKeywords" map-name="newEntity" operator="equals" value="Y"/>
             	</or>
             </condition>
             <then>
@@ -73,23 +73,23 @@
         
         <!-- if the user has the role limited position, add this product to the limit category/ies -->
         <if-has-permission permission="CATALOG_ROLE" action="_CREATE">
-        	<field-to-field field-name="partyId" map-name="userLogin" to-map-name="lookupCategoryRolesMap"/>
-        	<string-to-field string="LTD_ADMIN" field-name="roleTypeId" map-name="lookupCategoryRolesMap"/>
-        	<find-by-and entity-name="ProductCategoryRole" map-name="lookupCategoryRolesMap" list-name="productCategoryRoles"/>
-        	<filter-list-by-date list-name="productCategoryRoles" valid-date-name="nowTimestamp"/>
-        	<iterate entry-name="productCategoryRole" list-name="productCategoryRoles">
-        		<!-- add this new product to the category -->
-		        <make-value value-name="newLimitMember" entity-name="ProductCategoryMember"/>
-        		<field-to-field field-name="productId" map-name="newEntity" to-map-name="newLimitMember"/>
-        		<field-to-field field-name="productCategoryId" map-name="productCategoryRole" to-map-name="newLimitMember"/>
-		        <env-to-field env-name="nowTimestamp" field-name="fromDate" map-name="newLimitMember"/>
-		        <create-value value-name="newLimitMember"/>
-        	</iterate>
+            <field-to-field field-name="partyId" map-name="userLogin" to-map-name="lookupCategoryRolesMap"/>
+            <string-to-field string="LTD_ADMIN" field-name="roleTypeId" map-name="lookupCategoryRolesMap"/>
+            <find-by-and entity-name="ProductCategoryRole" map-name="lookupCategoryRolesMap" list-name="productCategoryRoles"/>
+            <filter-list-by-date list-name="productCategoryRoles" valid-date-name="nowTimestamp"/>
+            <iterate entry-name="productCategoryRole" list-name="productCategoryRoles">
+                <!-- add this new product to the category -->
+                <make-value value-name="newLimitMember" entity-name="ProductCategoryMember"/>
+                <field-to-field field-name="productId" map-name="newEntity" to-map-name="newLimitMember"/>
+                <field-to-field field-name="productCategoryId" map-name="productCategoryRole" to-map-name="newLimitMember"/>
+                <env-to-field env-name="nowTimestamp" field-name="fromDate" map-name="newLimitMember"/>
+                <create-value value-name="newLimitMember"/>
+            </iterate>
         </if-has-permission>
     </simple-method>
     <simple-method method-name="updateProduct" short-description="Update an Product">
-		<string-to-field string="updateProduct" field-name="callingMethodName"/>
-		<string-to-field string="UPDATE" field-name="checkAction"/>
+        <string-to-field string="updateProduct" field-name="callingMethodName"/>
+        <string-to-field string="UPDATE" field-name="checkAction"/>
     	<call-simple-method method-name="checkProductRelatedPermission"/>
         <check-errors/>
 
@@ -122,8 +122,8 @@
         <if>
             <condition>
             	<or>
-			        <if-empty field-name="autoCreateKeywords" map-name="lookedUpValue"/>
-		            <if-compare field-name="autoCreateKeywords" map-name="lookedUpValue" operator="equals" value="Y"/>
+                    <if-empty field-name="autoCreateKeywords" map-name="lookedUpValue"/>
+                    <if-compare field-name="autoCreateKeywords" map-name="lookedUpValue" operator="equals" value="Y"/>
             	</or>
             </condition>
             <then>
@@ -133,10 +133,10 @@
     </simple-method>
     
     <simple-method method-name="duplicateProduct" short-description="Duplicate a Product">
-		<string-to-field string="duplicateProduct" field-name="callingMethodName"/>
-		<string-to-field string="CREATE" field-name="checkAction"/>
+        <string-to-field string="duplicateProduct" field-name="callingMethodName"/>
+        <string-to-field string="CREATE" field-name="checkAction"/>
     	<call-simple-method method-name="checkProductRelatedPermission"/>
-		<string-to-field string="DELETE" field-name="checkAction"/>
+        <string-to-field string="DELETE" field-name="checkAction"/>
     	<call-simple-method method-name="checkProductRelatedPermission"/>
         <check-errors/>
 
@@ -153,8 +153,8 @@
         <if>
             <condition>
             	<or>
-			        <if-empty field-name="autoCreateKeywords" map-name="newEntity"/>
-		            <if-compare field-name="autoCreateKeywords" map-name="newEntity" operator="equals" value="Y"/>
+                    <if-empty field-name="autoCreateKeywords" map-name="newEntity"/>
+                    <if-compare field-name="autoCreateKeywords" map-name="newEntity" operator="equals" value="Y"/>
             	</or>
             </condition>
             <then>
@@ -264,8 +264,8 @@
 
     <!-- GoodIdentification methods -->
     <simple-method method-name="createGoodIdentification" short-description="Create an GoodIdentification">
-		<string-to-field string="createGoodIdentification" field-name="callingMethodName"/>
-		<string-to-field string="CREATE" field-name="checkAction"/>
+        <string-to-field string="createGoodIdentification" field-name="callingMethodName"/>
+        <string-to-field string="CREATE" field-name="checkAction"/>
     	<call-simple-method method-name="checkProductRelatedPermission"/>
         <check-errors/>
 
@@ -275,8 +275,8 @@
         <create-value value-name="newEntity"/>
     </simple-method>
     <simple-method method-name="updateGoodIdentification" short-description="Update an GoodIdentification">
-		<string-to-field string="updateGoodIdentification" field-name="callingMethodName"/>
-		<string-to-field string="UPDATE" field-name="checkAction"/>
+        <string-to-field string="updateGoodIdentification" field-name="callingMethodName"/>
+        <string-to-field string="UPDATE" field-name="checkAction"/>
     	<call-simple-method method-name="checkProductRelatedPermission"/>
         <check-errors/>
 
@@ -287,8 +287,8 @@
         <store-value value-name="lookedUpValue"/>
     </simple-method>
     <simple-method method-name="deleteGoodIdentification" short-description="Delete an GoodIdentification">
-		<string-to-field string="deleteGoodIdentification" field-name="callingMethodName"/>
-		<string-to-field string="DELETE" field-name="checkAction"/>
+        <string-to-field string="deleteGoodIdentification" field-name="callingMethodName"/>
+        <string-to-field string="DELETE" field-name="checkAction"/>
     	<call-simple-method method-name="checkProductRelatedPermission"/>
         <check-errors/>
 
@@ -300,8 +300,8 @@
 
     <!-- ProductGlAccount methods -->
     <simple-method method-name="createProductGlAccount" short-description="Create an ProductGlAccount">
-		<string-to-field string="createProductGlAccount" field-name="callingMethodName"/>
-		<string-to-field string="CREATE" field-name="checkAction"/>
+        <string-to-field string="createProductGlAccount" field-name="callingMethodName"/>
+        <string-to-field string="CREATE" field-name="checkAction"/>
     	<call-simple-method method-name="checkProductRelatedPermission"/>
         <check-errors/>
 
@@ -311,8 +311,8 @@
         <create-value value-name="newEntity"/>
     </simple-method>
     <simple-method method-name="updateProductGlAccount" short-description="Update an ProductGlAccount">
-		<string-to-field string="updateProductGlAccount" field-name="callingMethodName"/>
-		<string-to-field string="UPDATE" field-name="checkAction"/>
+        <string-to-field string="updateProductGlAccount" field-name="callingMethodName"/>
+        <string-to-field string="UPDATE" field-name="checkAction"/>
     	<call-simple-method method-name="checkProductRelatedPermission"/>
         <check-errors/>
 
@@ -323,8 +323,8 @@
         <store-value value-name="lookedUpValue"/>
     </simple-method>
     <simple-method method-name="deleteProductGlAccount" short-description="Delete an ProductGlAccount">
-		<string-to-field string="deleteProductGlAccount" field-name="callingMethodName"/>
-		<string-to-field string="DELETE" field-name="checkAction"/>
+        <string-to-field string="deleteProductGlAccount" field-name="callingMethodName"/>
+        <string-to-field string="DELETE" field-name="checkAction"/>
     	<call-simple-method method-name="checkProductRelatedPermission"/>
         <check-errors/>
 
@@ -338,45 +338,45 @@
 		call-simple-method, and the checkAction and callingMethodName attributes should be in the method context -->
     <simple-method method-name="checkProductRelatedPermission" short-description="Check Product Related Permission">
     	<if-empty field-name="callingMethodName">
-    		<string-to-field string="this operation" field-name="callingMethodName"/>
+            <string-to-field string="this operation" field-name="callingMethodName"/>
     	</if-empty>
     	<if-empty field-name="checkAction">
-    		<string-to-field string="UPDATE" field-name="checkAction"/>
+            <string-to-field string="UPDATE" field-name="checkAction"/>
     	</if-empty>
     
     	<!-- find all role-categories that this product is a member of -->
     	<if>
-    		<condition>
-    			<not><if-has-permission permission="CATALOG" action="_${checkAction}"/></not>
-    		</condition>
-    		<then>
-		    	<field-to-field field-name="productId" map-name="parameters" to-map-name="lookupRoleCategoriesMap"/>
-		    	<field-to-field field-name="partyId" map-name="userLogin" to-map-name="lookupRoleCategoriesMap"/>
-		    	<string-to-field string="LTD_ADMIN" field-name="roleTypeId" map-name="lookupRoleCategoriesMap"/>
-		    	<find-by-and entity-name="ProductCategoryMemberAndRole" map-name="lookupRoleCategoriesMap" list-name="roleCategories"/>
-		    	<filter-list-by-date list-name="roleCategories" valid-date-name="nowTimestamp"/>
-		    	<filter-list-by-date list-name="roleCategories" valid-date-name="nowTimestamp" from-field-name="roleFromDate" thru-field-name="roleThruDate"/>
-    		</then>
+            <condition>
+                <not><if-has-permission permission="CATALOG" action="_${checkAction}"/></not>
+            </condition>
+            <then>
+                <field-to-field field-name="productId" map-name="parameters" to-map-name="lookupRoleCategoriesMap"/>
+                <field-to-field field-name="partyId" map-name="userLogin" to-map-name="lookupRoleCategoriesMap"/>
+                <string-to-field string="LTD_ADMIN" field-name="roleTypeId" map-name="lookupRoleCategoriesMap"/>
+                <find-by-and entity-name="ProductCategoryMemberAndRole" map-name="lookupRoleCategoriesMap" list-name="roleCategories"/>
+                <filter-list-by-date list-name="roleCategories" valid-date-name="nowTimestamp"/>
+                <filter-list-by-date list-name="roleCategories" valid-date-name="nowTimestamp" from-field-name="roleFromDate" thru-field-name="roleThruDate"/>
+            </then>
         </if>
     	<if>
-    		<condition>
-    			<not>
-    				<or>
-    					<if-has-permission permission="CATALOG" action="_${checkAction}"/>
-    					<and>
-    						<if-has-permission permission="CATALOG_ROLE" action="_${checkAction}"/>
-    						<not><if-empty field-name="roleCategories"/></not>
-    					</and>
-    					<and>
-    						<not><if-empty field-name="alternatePermissionRoot"/></not>
-    						<if-has-permission permission="${alternatePermissionRoot}" action="_${checkAction}"/>
-    					</and>
-    				</or>
-    			</not>
-    		</condition>
-    		<then>
-    			<add-error><fail-message message="Security Error: to run ${callingMethodName} you must have the CATALOG_${checkAction} or CATALOG_ADMIN permission or have the CATALOG_ROLE_${checkAction} permission and be associated with a category containing this product."/></add-error>
-    		</then>
+            <condition>
+                <not>
+                    <or>
+                        <if-has-permission permission="CATALOG" action="_${checkAction}"/>
+                        <and>
+                            <if-has-permission permission="CATALOG_ROLE" action="_${checkAction}"/>
+                            <not><if-empty field-name="roleCategories"/></not>
+                        </and>
+                        <and>
+                            <not><if-empty field-name="alternatePermissionRoot"/></not>
+                            <if-has-permission permission="${alternatePermissionRoot}" action="_${checkAction}"/>
+                        </and>
+                    </or>
+                </not>
+            </condition>
+            <then>
+                <add-error><fail-message message="Security Error: to run ${callingMethodName} you must have the CATALOG_${checkAction} or CATALOG_ADMIN permission or have the CATALOG_ROLE_${checkAction} permission and be associated with a category containing this product."/></add-error>
+            </then>
         </if>
     </simple-method>
 </simple-methods>

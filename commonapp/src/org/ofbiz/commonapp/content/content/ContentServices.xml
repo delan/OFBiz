@@ -26,7 +26,7 @@
  * Created on April 2, 2002
  -->
 <simple-methods>
-	<!-- Methods for Content -->
+    <!-- Methods for Content -->
     <simple-method method-name="createContent" short-description="Create a Content">
         <check-permission permission="CONTENT" action="_CREATE"><fail-message message="Security Error: to run createContent you must have the CONTENT_CREATE or CONTENT_ADMIN permission"/></check-permission>
         <check-errors/>
@@ -57,9 +57,9 @@
         <remove-value value-name="lookedUpValue"/>
     </simple-method>
     
-	<!-- Methods for ContentAssoc -->
+    <!-- Methods for ContentAssoc -->
     <simple-method method-name="createContentAssoc" short-description="Create an Content Assoc">
-        <check-permission permission="CONTENT" action="_CREATE"><fail-message message="Security Error: to run createContentAssoc you must have the CONTENT_CREATE or PROC_ADMIN permission"/></check-permission>
+        <check-permission permission="CONTENT" action="_CREATE"><fail-message message="Security Error: to run createContentAssoc you must have the CONTENT_CREATE or CONTENT_ADMIN permission"/></check-permission>
         <check-errors/>
 
         <make-value value-name="newEntity" entity-name="ContentAssoc"/>
@@ -88,7 +88,7 @@
         <remove-value value-name="lookedUpValue"/>
     </simple-method>    
     
-	<!-- Methods for ContentMetaData -->
+    <!-- Methods for ContentMetaData -->
     <simple-method method-name="createContentMetaData" short-description="Create Content Meta Data">
         <check-permission permission="CONTENT" action="_CREATE"><fail-message message="Security Error: to run createContentMetaData you must have the CONTENT_CREATE or PROC_ADMIN permission"/></check-permission>
         <check-errors/>
@@ -118,7 +118,7 @@
         <remove-value value-name="lookedUpValue"/>
     </simple-method>    
     
-	<!-- Methods for ContentRole -->
+    <!-- Methods for ContentRole -->
     <simple-method method-name="createContentRole" short-description="Create Content Role">
         <check-permission permission="CONTENT" action="_CREATE"><fail-message message="Security Error: to run createContentRole you must have the CONTENT_CREATE or PROC_ADMIN permission"/></check-permission>
         <check-errors/>

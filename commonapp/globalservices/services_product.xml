@@ -964,6 +964,31 @@
         <attribute name="sequenceNum" type="Long" mode="IN" optional="true"/>
     </service>
 
+    <!-- ProductFeatureCategoryAppl Services -->
+    <service name="createProductFeatureCategoryAppl" engine="simple"
+                location="org/ofbiz/commonapp/product/feature/ProductFeatureServices.xml" invoke="createProductFeatureCategoryAppl" auth="true">
+        <description>Create a ProductFeatureCategory to ProductCategory Application</description>
+        <attribute name="productCategoryId" type="String" mode="IN" optional="false"/>
+        <attribute name="productFeatureCategoryId" type="String" mode="IN" optional="false"/>
+        <attribute name="fromDate" type="java.sql.Timestamp" mode="IN" optional="true"/>
+        <attribute name="thruDate" type="java.sql.Timestamp" mode="IN" optional="true"/>
+    </service>
+    <service name="updateProductFeatureCategoryAppl" engine="simple"
+                location="org/ofbiz/commonapp/product/feature/ProductFeatureServices.xml" invoke="updateProductFeatureCategoryAppl" auth="true">
+        <description>Update a ProductFeatureCategory to ProductCategory Application</description>
+        <attribute name="productCategoryId" type="String" mode="IN" optional="false"/>
+        <attribute name="productFeatureCategoryId" type="String" mode="IN" optional="false"/>
+        <attribute name="fromDate" type="java.sql.Timestamp" mode="IN" optional="false"/>
+        <attribute name="thruDate" type="java.sql.Timestamp" mode="IN" optional="true"/>
+    </service>
+    <service name="removeProductFeatureCategoryAppl" engine="simple"
+                location="org/ofbiz/commonapp/product/feature/ProductFeatureServices.xml" invoke="removeProductFeatureCategoryAppl" auth="true">
+        <description>Remove a ProductFeatureCategory to ProductCategory Application</description>
+        <attribute name="productCategoryId" type="String" mode="IN" optional="false"/>
+        <attribute name="productFeatureCategoryId" type="String" mode="IN" optional="false"/>
+        <attribute name="fromDate" type="java.sql.Timestamp" mode="IN" optional="false"/>
+    </service>
+
     <!-- Product Storage Services -->
     <service name="createFacility" engine="simple"
                 location="org/ofbiz/commonapp/product/storage/StorageServices.xml" invoke="createFacility" auth="true">
