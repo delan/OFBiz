@@ -47,6 +47,22 @@ public class EntityExprList extends EntityCondition {
         this.operator = operator;
     }
 
+    public EntityOperator getOperator() {
+        return this.operator;
+    }
+
+    public EntityExpr getExpr(int index) {
+        return (EntityExpr) this.exprList.get(index);
+    }
+    
+    public int getExprListSize() {
+        return this.exprList.size();
+    }
+    
+    public Iterator getExprIterator() {
+        return this.exprList.iterator();
+    }
+    
     public String makeWhereString(ModelEntity modelEntity, List entityConditionParams) {
         // if (Debug.verboseOn()) Debug.logVerbose("makeWhereString for entity " + modelEntity.getEntityName());
         StringBuffer whereStringBuffer = new StringBuffer();

@@ -47,6 +47,22 @@ public class EntityConditionList extends EntityCondition {
         this.operator = operator;
     }
 
+    public EntityOperator getOperator() {
+        return this.operator;
+    }
+
+    public EntityCondition getCondition(int index) {
+        return (EntityCondition) this.conditionList.get(index);
+    }
+    
+    public int getConditionListSize() {
+        return this.conditionList.size();
+    }
+    
+    public Iterator getConditionIterator() {
+        return this.conditionList.iterator();
+    }
+    
     public String makeWhereString(ModelEntity modelEntity, List entityConditionParams) {
         // if (Debug.verboseOn()) Debug.logVerbose("makeWhereString for entity " + modelEntity.getEntityName());
         StringBuffer whereStringBuffer = new StringBuffer();

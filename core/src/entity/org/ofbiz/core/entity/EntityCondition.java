@@ -34,6 +34,7 @@ import org.ofbiz.core.entity.model.*;
  * Represents the conditions to be used to constrain a query
  * <br>An EntityCondition can represent various type of constraints, including:
  * <ul>
+ *  <li>EntityConditionList: a list of EntityConditions, combined with the operator specified
  *  <li>EntityExpr: for simple expressions or expressions that combine EntityConditions
  *  <li>EntityExprList: a list of EntityExprs, combined with the operator specified
  *  <li>EntityFieldMap: a map of fields where the field (key) equals the value, combined with the operator specified

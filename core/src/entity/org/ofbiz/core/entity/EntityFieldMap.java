@@ -48,6 +48,26 @@ public class EntityFieldMap extends EntityCondition {
         this.operator = operator;
     }
 
+    public EntityOperator getOperator() {
+        return this.operator;
+    }
+
+    public Object getField(String name) {
+        return this.fieldMap.get(name);
+    }
+    
+    public boolean containsField(String name) {
+        return this.fieldMap.containsKey(name);
+    }
+    
+    public Iterator getFieldKeyIterator() {
+        return this.fieldMap.keySet().iterator();
+    }
+    
+    public Iterator getFieldEntryIterator() {
+        return this.fieldMap.entrySet().iterator();
+    }
+    
     public String makeWhereString(ModelEntity modelEntity, List entityConditionParams) {
         // if (Debug.verboseOn()) Debug.logVerbose("makeWhereString for entity " + modelEntity.getEntityName());
         List whereFields = new ArrayList();
