@@ -69,7 +69,6 @@ if (true) {
     if (lookupErrorMessage == null) {        
         roleType = request.getParameter("roleTypeId");
         // orderType = request.getParameter("orderTypeId");
-        orderType = "SALES_ORDER";
         orderStatus = request.getParameter("orderStatusId");
         webSiteId = request.getParameter("webSiteId");
         createdBy = request.getParameter("createdBy");
@@ -86,10 +85,10 @@ if (true) {
             entityName = "OrderHeaderAndRoles";
             andExprs.add(new EntityExpr("roleTypeId", EntityOperator.EQUALS, roleType));
         }        
-        paramList = paramList + "&orderTypeId=" + orderType;        
-        if (!"ANY".equals(orderType)) {            
-            andExprs.add(new EntityExpr("orderTypeId", EntityOperator.EQUALS, orderType));
-        }
+        // paramList = paramList + "&orderTypeId=" + orderType;        
+        // if (!"ANY".equals(orderType)) {            
+        //     andExprs.add(new EntityExpr("orderTypeId", EntityOperator.EQUALS, orderType));
+        // }
         paramList = paramList + "&orderStatusId=" + orderStatus;
         if (!"ANY". equals(orderStatus)) {            
             andExprs.add(new EntityExpr("statusId", EntityOperator.EQUALS, orderStatus));
@@ -115,7 +114,10 @@ if (true) {
             andExprs.add(new EntityExpr("orderDate", EntityOperator.LESS_THAN_EQUAL_TO, ObjectType.simpleTypeConvert(maxDate, "Timestamp", null, null)));
         }
                 
-        if (andExprs.size() > 0) mainCond = new EntityConditionList(andExprs, EntityOperator.AND);        
+        if (andExprs.size() > 0) {
+            andExprs.add(new EntityExpr("orderTypeId", EntityOperator.EQUALS, "SALES_ORDER"));
+        	mainCond = new EntityConditionList(andExprs, EntityOperator.AND);
+        }
                                                        
     }
     
