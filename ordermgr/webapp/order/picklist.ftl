@@ -154,7 +154,7 @@
               <#assign orderItemInventoryResList = orderItemInfo.orderItemInventoryResList>
               <tr class="${rowClass}">
                 <td valign="top">
-                  <div class="tabletext">${orderItem.orderId}:${orderItem.orderItemSeqId}</div>
+                  <div class="tabletext"><b>${orderHeaderInfo_index+1}</b>-${orderItem.orderId}:${orderItem.orderItemSeqId}</div>
                 </td>
                 <td valign="top">
                   <#if product?has_content>
