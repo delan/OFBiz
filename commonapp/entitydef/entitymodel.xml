@@ -133,7 +133,7 @@
             title="Geographic Boundary Entity">
       <field name="geoId" type="id-ne"></field>
       <field name="geoTypeId" type="id"></field>
-      <field name="name" type="name"></field>
+      <field name="geoName" type="name"></field>
       <field name="geoCode" type="short-varchar"></field>
       <field name="abbreviation" type="short-varchar"></field>	
       <prim-key field="geoId" />
@@ -372,15 +372,15 @@
             package-name="org.ofbiz.commonapp.content.content"
             title="Content Attribute Entity">
       <field name="contentId" type="id-ne"></field>
-      <field name="name" type="id-long-ne"></field>
+      <field name="attrName" type="id-long-ne"></field>
       <field name="value" type="value"></field>	
       <prim-key field="contentId" />	
-      <prim-key field="name" />
+      <prim-key field="attrName" />
       <relation type="one" rel-entity-name="Content">
         <key-map field-name="contentId" />
       </relation>
       <relation type="many" rel-entity-name="ContentTypeAttr">
-        <key-map field-name="name" />
+        <key-map field-name="attrName" />
       </relation>
     </entity>	
     <entity entity-name="ContentCategory" 
@@ -472,14 +472,14 @@
             package-name="org.ofbiz.commonapp.content.content"
             title="Content Type Attribute Entity">
       <field name="contentTypeId" type="id-ne"></field>
-      <field name="name" type="id-long-ne"></field>	
+      <field name="attrName" type="id-long-ne"></field>	
       <prim-key field="contentTypeId" />	
-      <prim-key field="name" />
+      <prim-key field="attrName" />
       <relation type="one" rel-entity-name="ContentType">
         <key-map field-name="contentTypeId" />
       </relation>
       <relation type="many" rel-entity-name="ContentAttribute">
-        <key-map field-name="name" />
+        <key-map field-name="attrName" />
       </relation>
       <relation type="many" rel-entity-name="Content">
         <key-map field-name="contentTypeId" />
@@ -529,15 +529,15 @@
             package-name="org.ofbiz.commonapp.content.content"
             title="Data Object Attribute Entity">
       <field name="dataObjectId" type="id-ne"></field>
-      <field name="name" type="id-long-ne"></field>
+      <field name="attrName" type="id-long-ne"></field>
       <field name="value" type="value"></field>	
       <prim-key field="dataObjectId" />	
-      <prim-key field="name" />
+      <prim-key field="attrName" />
       <relation type="one" rel-entity-name="DataObject">
         <key-map field-name="dataObjectId" />
       </relation>
       <relation type="many" rel-entity-name="DataObjectTypeAttr">
-        <key-map field-name="name" />
+        <key-map field-name="attrName" />
       </relation>
     </entity>	
     <entity entity-name="DataObjectPurpose" 
@@ -589,14 +589,14 @@
             package-name="org.ofbiz.commonapp.content.content"
             title="Data Object Type Attribute Entity">
       <field name="dataObjectTypeId" type="id-ne"></field>
-      <field name="name" type="id-long-ne"></field>	
+      <field name="attrName" type="id-long-ne"></field>	
       <prim-key field="dataObjectTypeId" />	
-      <prim-key field="name" />
+      <prim-key field="attrName" />
       <relation type="one" rel-entity-name="DataObjectType">
         <key-map field-name="dataObjectTypeId" />
       </relation>
       <relation type="many" rel-entity-name="DataObjectAttribute">
-        <key-map field-name="name" />
+        <key-map field-name="attrName" />
       </relation>
       <relation type="many" rel-entity-name="DataObject">
         <key-map field-name="dataObjectTypeId" />
@@ -606,7 +606,7 @@
             package-name="org.ofbiz.commonapp.content.content"
             title="Electronic Text Entity">
       <field name="dataObjectId" type="id-ne"></field>
-      <field name="text" type="very-long"></field>	
+      <field name="textData" type="very-long"></field>	
       <prim-key field="dataObjectId" />
       <relation type="one" rel-entity-name="DataObject">
         <key-map field-name="dataObjectId" />
@@ -623,7 +623,7 @@
             package-name="org.ofbiz.commonapp.content.content"
             title="Image Data Object Entity">
       <field name="dataObjectId" type="id-ne"></field>
-      <field name="image" type="blob"></field>	
+      <field name="imageData" type="blob"></field>	
       <prim-key field="dataObjectId" />
       <relation type="one" rel-entity-name="DataObject">
         <key-map field-name="dataObjectId" />
@@ -650,10 +650,10 @@
       <field name="documentId" type="id-ne"></field>
       <field name="documentTypeId" type="id"></field>
       <field name="dateCreated" type="date-time"></field>
-      <field name="comment" type="comment"></field>
+      <field name="comments" type="comment"></field>
       <field name="documentLocation" type="long-varchar"></field>
       <field name="documentText" type="long-varchar"></field>
-      <field name="image" type="blob"></field>	
+      <field name="imageData" type="blob"></field>	
       <prim-key field="documentId" />
       <relation type="one" rel-entity-name="DocumentType">
         <key-map field-name="documentTypeId" />
@@ -669,15 +669,15 @@
             package-name="org.ofbiz.commonapp.content.document"
             title="Document Attribute Entity">
       <field name="documentId" type="id-ne"></field>
-      <field name="name" type="id-long-ne"></field>
+      <field name="attrName" type="id-long-ne"></field>
       <field name="value" type="value"></field>	
       <prim-key field="documentId" />	
-      <prim-key field="name" />
+      <prim-key field="attrName" />
       <relation type="one" rel-entity-name="Document">
         <key-map field-name="documentId" />
       </relation>
       <relation type="many" rel-entity-name="DocumentTypeAttr">
-        <key-map field-name="name" />
+        <key-map field-name="attrName" />
       </relation>
     </entity>	
     <entity entity-name="DocumentType" 
@@ -705,14 +705,14 @@
             package-name="org.ofbiz.commonapp.content.document"
             title="Document Type Attribute Entity">
       <field name="documentTypeId" type="id-ne"></field>
-      <field name="name" type="id-long-ne"></field>	
+      <field name="attrName" type="id-long-ne"></field>	
       <prim-key field="documentTypeId" />	
-      <prim-key field="name" />
+      <prim-key field="attrName" />
       <relation type="one" rel-entity-name="DocumentType">
         <key-map field-name="documentTypeId" />
       </relation>
       <relation type="many" rel-entity-name="DocumentAttribute">
-        <key-map field-name="name" />
+        <key-map field-name="attrName" />
       </relation>
       <relation type="many" rel-entity-name="Document">
         <key-map field-name="documentTypeId" />
@@ -832,7 +832,7 @@
             package-name="org.ofbiz.commonapp.content.subscription"
             title="Subscription Activity Entity">
       <field name="subscriptionActivityId" type="id-ne"></field>
-      <field name="comment" type="comment"></field>
+      <field name="comments" type="comment"></field>
       <field name="dateSent" type="date-time"></field>	
       <prim-key field="subscriptionActivityId" />
       <relation type="many" rel-entity-name="SubscriptionFulfillmentPiece">
@@ -843,15 +843,15 @@
             package-name="org.ofbiz.commonapp.content.subscription"
             title="Subscription Attribute Entity">
       <field name="subscriptionId" type="id-ne"></field>
-      <field name="name" type="id-long-ne"></field>
+      <field name="attrName" type="id-long-ne"></field>
       <field name="value" type="value"></field>	
       <prim-key field="subscriptionId" />	
-      <prim-key field="name" />
+      <prim-key field="attrName" />
       <relation type="one" rel-entity-name="Subscription">
         <key-map field-name="subscriptionId" />
       </relation>
       <relation type="many" rel-entity-name="SubscriptionTypeAttr">
-        <key-map field-name="name" />
+        <key-map field-name="attrName" />
       </relation>
     </entity>	
     <entity entity-name="SubscriptionFulfillmentPiece" 
@@ -893,14 +893,14 @@
             package-name="org.ofbiz.commonapp.content.subscription"
             title="Subscription Type Attribute Entity">
       <field name="subscriptionTypeId" type="id-ne"></field>
-      <field name="name" type="id-long-ne"></field>	
+      <field name="attrName" type="id-long-ne"></field>	
       <prim-key field="subscriptionTypeId" />	
-      <prim-key field="name" />
+      <prim-key field="attrName" />
       <relation type="one" rel-entity-name="SubscriptionType">
         <key-map field-name="subscriptionTypeId" />
       </relation>
       <relation type="many" rel-entity-name="SubscriptionAttribute">
-        <key-map field-name="name" />
+        <key-map field-name="attrName" />
       </relation>
       <relation type="many" rel-entity-name="Subscription">
         <key-map field-name="subscriptionTypeId" />
@@ -915,8 +915,8 @@
             package-name="org.ofbiz.commonapp.content.visit"
             title="Browser Type Entity">
       <field name="browserTypeId" type="id-ne"></field>
-      <field name="name" type="name"></field>
-      <field name="version" type="very-short"></field>	
+      <field name="browserName" type="name"></field>
+      <field name="browserVersion" type="very-short"></field>	
       <prim-key field="browserTypeId" />
       <relation type="many" rel-entity-name="UserAgent">
         <key-map field-name="browserTypeId" />
@@ -926,8 +926,8 @@
             package-name="org.ofbiz.commonapp.content.visit"
             title="Platform Type Entity">
       <field name="platformTypeId" type="id-ne"></field>
-      <field name="name" type="name"></field>
-      <field name="version" type="very-short"></field>	
+      <field name="platformName" type="name"></field>
+      <field name="platformVersion" type="very-short"></field>	
       <prim-key field="platformTypeId" />
       <relation type="many" rel-entity-name="UserAgent">
         <key-map field-name="platformTypeId" />
@@ -937,7 +937,7 @@
             package-name="org.ofbiz.commonapp.content.visit"
             title="Protocol Type Entity">
       <field name="protocolTypeId" type="id-ne"></field>
-      <field name="name" type="name"></field>	
+      <field name="protocolName" type="name"></field>	
       <prim-key field="protocolTypeId" />
       <relation type="many" rel-entity-name="UserAgent">
         <key-map field-name="protocolTypeId" />
@@ -1094,7 +1094,7 @@
       <field name="thruDate" type="date-time"></field>
       <field name="partyId" type="id"></field>
       <field name="referrerUrl" type="url"></field>
-      <field name="password" type="short-varchar"></field>	
+      <field name="passwordUsed" type="short-varchar"></field>	
       <prim-key field="userLoginId" />	
       <prim-key field="fromDate" />
       <relation type="one" rel-entity-name="UserLogin">

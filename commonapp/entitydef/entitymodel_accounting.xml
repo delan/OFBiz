@@ -127,7 +127,7 @@
       <field name="budgetId" type="id-ne"></field>
       <field name="budgetTypeId" type="id"></field>
       <field name="standardTimePeriodId" type="id"></field>
-      <field name="comment" type="comment"></field>	
+      <field name="comments" type="comment"></field>	
       <prim-key field="budgetId" />
       <relation type="one" rel-entity-name="BudgetType">
         <key-map field-name="budgetTypeId" />
@@ -143,15 +143,15 @@
             package-name="org.ofbiz.commonapp.accounting.budget"
             title="Budget Attribute Entity">
       <field name="budgetId" type="id-ne"></field>
-      <field name="name" type="id-long-ne"></field>
+      <field name="attrName" type="id-long-ne"></field>
       <field name="value" type="value"></field>	
       <prim-key field="budgetId" />	
-      <prim-key field="name" />
+      <prim-key field="attrName" />
       <relation type="one" rel-entity-name="Budget">
         <key-map field-name="budgetId" />
       </relation>
       <relation type="many" rel-entity-name="BudgetTypeAttr">
-        <key-map field-name="name" />
+        <key-map field-name="attrName" />
       </relation>
     </entity>	
     <entity entity-name="BudgetItem" 
@@ -181,17 +181,17 @@
             title="Budget Item Attribute Entity">
       <field name="budgetId" type="id-ne"></field>
       <field name="budgetItemSeqId" type="id-ne"></field>
-      <field name="name" type="id-long-ne"></field>
+      <field name="attrName" type="id-long-ne"></field>
       <field name="value" type="value"></field>	
       <prim-key field="budgetId" />	
       <prim-key field="budgetItemSeqId" />	
-      <prim-key field="name" />
+      <prim-key field="attrName" />
       <relation type="one" rel-entity-name="BudgetItem">
         <key-map field-name="budgetId" />
         <key-map field-name="budgetItemSeqId" />
       </relation>
       <relation type="many" rel-entity-name="BudgetItemTypeAttr">
-        <key-map field-name="name" />
+        <key-map field-name="attrName" />
       </relation>
     </entity>	
     <entity entity-name="BudgetItemType" 
@@ -219,14 +219,14 @@
             package-name="org.ofbiz.commonapp.accounting.budget"
             title="Budget Item Type Attribute Entity">
       <field name="budgetItemTypeId" type="id-ne"></field>
-      <field name="name" type="id-long-ne"></field>	
+      <field name="attrName" type="id-long-ne"></field>	
       <prim-key field="budgetItemTypeId" />	
-      <prim-key field="name" />
+      <prim-key field="attrName" />
       <relation type="one" rel-entity-name="BudgetItemType">
         <key-map field-name="budgetItemTypeId" />
       </relation>
       <relation type="many" rel-entity-name="BudgetItemAttribute">
-        <key-map field-name="name" />
+        <key-map field-name="attrName" />
       </relation>
       <relation type="many" rel-entity-name="BudgetItem">
         <key-map field-name="budgetItemTypeId" />
@@ -250,7 +250,7 @@
             title="Budget Review Result Type Entity">
       <field name="budgetReviewResultTypeId" type="id-ne"></field>
       <field name="description" type="description"></field>
-      <field name="comment" type="comment"></field>	
+      <field name="comments" type="comment"></field>	
       <prim-key field="budgetReviewResultTypeId" />
     </entity>	
     <entity entity-name="BudgetRevision" 
@@ -320,7 +320,7 @@
       <field name="budgetId" type="id-ne"></field>
       <field name="statusId" type="id-ne"></field>
       <field name="statusDate" type="date-time"></field>
-      <field name="comment" type="comment"></field>	
+      <field name="comments" type="comment"></field>	
       <prim-key field="budgetId" />	
       <prim-key field="statusId" />
     </entity>	
@@ -349,14 +349,14 @@
             package-name="org.ofbiz.commonapp.accounting.budget"
             title="Budget Type Attribute Entity">
       <field name="budgetTypeId" type="id-ne"></field>
-      <field name="name" type="id-long-ne"></field>	
+      <field name="attrName" type="id-long-ne"></field>	
       <prim-key field="budgetTypeId" />	
-      <prim-key field="name" />
+      <prim-key field="attrName" />
       <relation type="one" rel-entity-name="BudgetType">
         <key-map field-name="budgetTypeId" />
       </relation>
       <relation type="many" rel-entity-name="BudgetAttribute">
-        <key-map field-name="name" />
+        <key-map field-name="attrName" />
       </relation>
       <relation type="many" rel-entity-name="Budget">
         <key-map field-name="budgetTypeId" />
@@ -391,7 +391,7 @@
       <field name="partyId" type="id"></field>
       <field name="roleTypeId" type="id"></field>
       <field name="uomId" type="id"></field>
-      <field name="name" type="name"></field>
+      <field name="fixedAssetName" type="name"></field>
       <field name="dateAcquired" type="date-time"></field>
       <field name="dateLastServiced" type="date-time"></field>
       <field name="dateNextService" type="date-time"></field>
@@ -411,15 +411,15 @@
             package-name="org.ofbiz.commonapp.accounting.fixedasset"
             title="Fixed Asset Attribute Entity">
       <field name="fixedAssetId" type="id-ne"></field>
-      <field name="name" type="id-long-ne"></field>
+      <field name="attrName" type="id-long-ne"></field>
       <field name="value" type="value"></field>	
       <prim-key field="fixedAssetId" />	
-      <prim-key field="name" />
+      <prim-key field="attrName" />
       <relation type="one" rel-entity-name="FixedAsset">
         <key-map field-name="fixedAssetId" />
       </relation>
       <relation type="many" rel-entity-name="FixedAssetTypeAttr">
-        <key-map field-name="name" />
+        <key-map field-name="attrName" />
       </relation>
     </entity>	
     <entity entity-name="FixedAssetDepMethod" 
@@ -457,14 +457,14 @@
             package-name="org.ofbiz.commonapp.accounting.fixedasset"
             title="Fixed Asset Type Attribute Entity">
       <field name="fixedAssetTypeId" type="id-ne"></field>
-      <field name="name" type="id-long-ne"></field>	
+      <field name="attrName" type="id-long-ne"></field>	
       <prim-key field="fixedAssetTypeId" />	
-      <prim-key field="name" />
+      <prim-key field="attrName" />
       <relation type="one" rel-entity-name="FixedAssetType">
         <key-map field-name="fixedAssetTypeId" />
       </relation>
       <relation type="many" rel-entity-name="FixedAssetAttribute">
-        <key-map field-name="name" />
+        <key-map field-name="attrName" />
       </relation>
       <relation type="many" rel-entity-name="FixedAsset">
         <key-map field-name="fixedAssetTypeId" />
@@ -479,7 +479,7 @@
       <field name="fromDate" type="date-time"></field>
       <field name="thruDate" type="date-time"></field>
       <field name="allocatedDate" type="date-time"></field>
-      <field name="comment" type="comment"></field>	
+      <field name="comments" type="comment"></field>	
       <prim-key field="partyId" />	
       <prim-key field="fixedAssetId" />	
       <prim-key field="statusId" />	
@@ -501,7 +501,7 @@
       <field name="billingAccountId" type="id"></field>
       <field name="contactMechId" type="id"></field>
       <field name="invoiceDate" type="date-time"></field>
-      <field name="message" type="long-varchar"></field>
+      <field name="invoiceMessage" type="long-varchar"></field>
       <field name="description" type="description"></field>	
       <prim-key field="invoiceId" />
       <relation type="one" rel-entity-name="InvoiceType">
@@ -521,15 +521,15 @@
             package-name="org.ofbiz.commonapp.accounting.invoice"
             title="Invoice Attribute Entity">
       <field name="invoiceId" type="id-ne"></field>
-      <field name="name" type="id-long-ne"></field>
+      <field name="attrName" type="id-long-ne"></field>
       <field name="value" type="value"></field>	
       <prim-key field="invoiceId" />	
-      <prim-key field="name" />
+      <prim-key field="attrName" />
       <relation type="one" rel-entity-name="Invoice">
         <key-map field-name="invoiceId" />
       </relation>
       <relation type="many" rel-entity-name="InvoiceTypeAttr">
-        <key-map field-name="name" />
+        <key-map field-name="attrName" />
       </relation>
     </entity>	
     <entity entity-name="InvoiceItem" 
@@ -568,17 +568,17 @@
             title="Invoice Item Attribute Entity">
       <field name="invoiceId" type="id-ne"></field>
       <field name="invoiceItemSeqId" type="id-ne"></field>
-      <field name="name" type="id-long-ne"></field>
+      <field name="attrName" type="id-long-ne"></field>
       <field name="value" type="value"></field>	
       <prim-key field="invoiceId" />	
       <prim-key field="invoiceItemSeqId" />	
-      <prim-key field="name" />
+      <prim-key field="attrName" />
       <relation type="one" rel-entity-name="InvoiceItem">
         <key-map field-name="invoiceId" />
         <key-map field-name="invoiceItemSeqId" />
       </relation>
       <relation type="many" rel-entity-name="InvoiceItemTypeAttr">
-        <key-map field-name="name" />
+        <key-map field-name="attrName" />
       </relation>
     </entity>	
     <entity entity-name="InvoiceItemType" 
@@ -606,14 +606,14 @@
             package-name="org.ofbiz.commonapp.accounting.invoice"
             title="Invoice Item Type Attribute Entity">
       <field name="invoiceItemTypeId" type="id-ne"></field>
-      <field name="name" type="id-long-ne"></field>	
+      <field name="attrName" type="id-long-ne"></field>	
       <prim-key field="invoiceItemTypeId" />	
-      <prim-key field="name" />
+      <prim-key field="attrName" />
       <relation type="one" rel-entity-name="InvoiceItemType">
         <key-map field-name="invoiceItemTypeId" />
       </relation>
       <relation type="many" rel-entity-name="InvoiceItemAttribute">
-        <key-map field-name="name" />
+        <key-map field-name="attrName" />
       </relation>
       <relation type="many" rel-entity-name="InvoiceItem">
         <key-map field-name="invoiceItemTypeId" />
@@ -655,15 +655,15 @@
             package-name="org.ofbiz.commonapp.accounting.invoice"
             title="Invoice Term Attribute Entity">
       <field name="invoiceTermId" type="id-ne"></field>
-      <field name="name" type="id-long-ne"></field>
+      <field name="attrName" type="id-long-ne"></field>
       <field name="value" type="value"></field>	
       <prim-key field="invoiceTermId" />	
-      <prim-key field="name" />
+      <prim-key field="attrName" />
       <relation type="one" rel-entity-name="InvoiceTerm">
         <key-map field-name="invoiceTermId" />
       </relation>
       <relation type="many" rel-entity-name="TermTypeAttr">
-        <key-map field-name="name" />
+        <key-map field-name="attrName" />
       </relation>
     </entity>	
     <entity entity-name="InvoiceType" 
@@ -691,14 +691,14 @@
             package-name="org.ofbiz.commonapp.accounting.invoice"
             title="Invoice Type Attribute Entity">
       <field name="invoiceTypeId" type="id-ne"></field>
-      <field name="name" type="id-long-ne"></field>	
+      <field name="attrName" type="id-long-ne"></field>	
       <prim-key field="invoiceTypeId" />	
-      <prim-key field="name" />
+      <prim-key field="attrName" />
       <relation type="one" rel-entity-name="InvoiceType">
         <key-map field-name="invoiceTypeId" />
       </relation>
       <relation type="many" rel-entity-name="InvoiceAttribute">
-        <key-map field-name="name" />
+        <key-map field-name="attrName" />
       </relation>
       <relation type="many" rel-entity-name="Invoice">
         <key-map field-name="invoiceTypeId" />
@@ -759,15 +759,15 @@
             package-name="org.ofbiz.commonapp.accounting.ledger"
             title="Accounting Transaction Attribute Entity">
       <field name="acctgTransId" type="id-ne"></field>
-      <field name="name" type="id-long-ne"></field>
+      <field name="attrName" type="id-long-ne"></field>
       <field name="value" type="value"></field>	
       <prim-key field="acctgTransId" />	
-      <prim-key field="name" />
+      <prim-key field="attrName" />
       <relation type="one" rel-entity-name="AcctgTrans">
         <key-map field-name="acctgTransId" />
       </relation>
       <relation type="many" rel-entity-name="AcctgTransTypeAttr">
-        <key-map field-name="name" />
+        <key-map field-name="attrName" />
       </relation>
     </entity>	
     <entity entity-name="AcctgTransDetail" 
@@ -808,14 +808,14 @@
             package-name="org.ofbiz.commonapp.accounting.ledger"
             title="Accounting Transaction Type Attribute Entity">
       <field name="acctgTransTypeId" type="id-ne"></field>
-      <field name="name" type="id-long-ne"></field>	
+      <field name="attrName" type="id-long-ne"></field>	
       <prim-key field="acctgTransTypeId" />	
-      <prim-key field="name" />
+      <prim-key field="attrName" />
       <relation type="one" rel-entity-name="AcctgTransType">
         <key-map field-name="acctgTransTypeId" />
       </relation>
       <relation type="many" rel-entity-name="AcctgTransAttribute">
-        <key-map field-name="name" />
+        <key-map field-name="attrName" />
       </relation>
       <relation type="many" rel-entity-name="AcctgTrans">
         <key-map field-name="acctgTransTypeId" />
@@ -837,7 +837,7 @@
             title="General Ledger Account Entity">
       <field name="generalLedgerAccountId" type="id-ne"></field>
       <field name="generalLedgerAccountTypeId" type="id"></field>
-      <field name="name" type="name"></field>
+      <field name="accountName" type="name"></field>
       <field name="description" type="description"></field>	
       <prim-key field="generalLedgerAccountId" />
     </entity>	
@@ -995,15 +995,15 @@
             package-name="org.ofbiz.commonapp.accounting.payment"
             title="Financial Account Attribute Entity">
       <field name="finAccountId" type="id-ne"></field>
-      <field name="name" type="id-long-ne"></field>
+      <field name="attrName" type="id-long-ne"></field>
       <field name="value" type="value"></field>	
       <prim-key field="finAccountId" />	
-      <prim-key field="name" />
+      <prim-key field="attrName" />
       <relation type="one" rel-entity-name="FinAccount">
         <key-map field-name="finAccountId" />
       </relation>
       <relation type="many" rel-entity-name="FinAccountTypeAttr">
-        <key-map field-name="name" />
+        <key-map field-name="attrName" />
       </relation>
     </entity>	
     <entity entity-name="FinAccountRole" 
@@ -1043,15 +1043,15 @@
             package-name="org.ofbiz.commonapp.accounting.payment"
             title="Financial Account Transaction Attribute Entity">
       <field name="finAccountTransId" type="id-ne"></field>
-      <field name="name" type="id-long-ne"></field>
+      <field name="attrName" type="id-long-ne"></field>
       <field name="value" type="value"></field>	
       <prim-key field="finAccountTransId" />	
-      <prim-key field="name" />
+      <prim-key field="attrName" />
       <relation type="one" rel-entity-name="FinAccountTrans">
         <key-map field-name="finAccountTransId" />
       </relation>
       <relation type="many" rel-entity-name="FinAccountTransTypeAttr">
-        <key-map field-name="name" />
+        <key-map field-name="attrName" />
       </relation>
     </entity>	
     <entity entity-name="FinAccountTransType" 
@@ -1079,14 +1079,14 @@
             package-name="org.ofbiz.commonapp.accounting.payment"
             title="Financial Account Transaction Type Attribute Entity">
       <field name="finAccountTransTypeId" type="id-ne"></field>
-      <field name="name" type="id-long-ne"></field>	
+      <field name="attrName" type="id-long-ne"></field>	
       <prim-key field="finAccountTransTypeId" />	
-      <prim-key field="name" />
+      <prim-key field="attrName" />
       <relation type="one" rel-entity-name="FinAccountTransType">
         <key-map field-name="finAccountTransTypeId" />
       </relation>
       <relation type="many" rel-entity-name="FinAccountTransAttribute">
-        <key-map field-name="name" />
+        <key-map field-name="attrName" />
       </relation>
       <relation type="many" rel-entity-name="FinAccountTrans">
         <key-map field-name="finAccountTransTypeId" />
@@ -1117,14 +1117,14 @@
             package-name="org.ofbiz.commonapp.accounting.payment"
             title="Financial Account Type Attribute Entity">
       <field name="finAccountTypeId" type="id-ne"></field>
-      <field name="name" type="id-long-ne"></field>	
+      <field name="attrName" type="id-long-ne"></field>	
       <prim-key field="finAccountTypeId" />	
-      <prim-key field="name" />
+      <prim-key field="attrName" />
       <relation type="one" rel-entity-name="FinAccountType">
         <key-map field-name="finAccountTypeId" />
       </relation>
       <relation type="many" rel-entity-name="FinAccountAttribute">
-        <key-map field-name="name" />
+        <key-map field-name="attrName" />
       </relation>
       <relation type="many" rel-entity-name="FinAccount">
         <key-map field-name="finAccountTypeId" />
@@ -1141,7 +1141,7 @@
       <field name="effectiveDate" type="date-time"></field>
       <field name="paymentRefNum" type="short-varchar"></field>
       <field name="amount" type="currency-amount"></field>
-      <field name="comment" type="comment"></field>	
+      <field name="comments" type="comment"></field>	
       <prim-key field="paymentId" />
       <relation type="one" rel-entity-name="PaymentType">
         <key-map field-name="paymentTypeId" />
@@ -1179,15 +1179,15 @@
             package-name="org.ofbiz.commonapp.accounting.payment"
             title="Payment Attribute Entity">
       <field name="paymentId" type="id-ne"></field>
-      <field name="name" type="id-long-ne"></field>
+      <field name="attrName" type="id-long-ne"></field>
       <field name="value" type="value"></field>	
       <prim-key field="paymentId" />	
-      <prim-key field="name" />
+      <prim-key field="attrName" />
       <relation type="one" rel-entity-name="Payment">
         <key-map field-name="paymentId" />
       </relation>
       <relation type="many" rel-entity-name="PaymentTypeAttr">
-        <key-map field-name="name" />
+        <key-map field-name="attrName" />
       </relation>
     </entity>	
     <entity entity-name="PaymentBudgetAllocation" 
@@ -1236,14 +1236,14 @@
             package-name="org.ofbiz.commonapp.accounting.payment"
             title="Payment Type Attribute Entity">
       <field name="paymentTypeId" type="id-ne"></field>
-      <field name="name" type="id-long-ne"></field>	
+      <field name="attrName" type="id-long-ne"></field>	
       <prim-key field="paymentTypeId" />	
-      <prim-key field="name" />
+      <prim-key field="attrName" />
       <relation type="one" rel-entity-name="PaymentType">
         <key-map field-name="paymentTypeId" />
       </relation>
       <relation type="many" rel-entity-name="PaymentAttribute">
-        <key-map field-name="name" />
+        <key-map field-name="attrName" />
       </relation>
       <relation type="many" rel-entity-name="Payment">
         <key-map field-name="paymentTypeId" />

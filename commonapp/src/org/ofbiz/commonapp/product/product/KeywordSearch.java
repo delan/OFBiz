@@ -1,6 +1,9 @@
 /*
  * $Id$
  * $Log$
+ * Revision 1.6  2001/09/28 21:51:21  jonesde
+ * Big update for fromDate PK use, organization stuff
+ *
  * Revision 1.5  2001/09/26 05:08:43  jonesde
  * Fixed keyword stuff to work minimally with group name
  *
@@ -196,8 +199,8 @@ public class KeywordSearch {
     keywords.add(product.getString("productId").toLowerCase());
     
     Collection strings = new ArrayList();
-    if(product.getString("name") != null) strings.add(product.getString("name"));
-    if(product.getString("comment") != null) strings.add(product.getString("comment"));
+    if(product.getString("productName") != null) strings.add(product.getString("productName"));
+    if(product.getString("comments") != null) strings.add(product.getString("comments"));
     if(product.getString("description") != null) strings.add(product.getString("description"));
     if(product.getString("longDescription") != null) strings.add(product.getString("longDescription"));
     

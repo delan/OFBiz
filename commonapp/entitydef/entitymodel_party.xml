@@ -153,7 +153,7 @@
       <field name="fromDate" type="date-time"></field>
       <field name="thruDate" type="date-time"></field>
       <field name="description" type="description"></field>
-      <field name="text" type="long-varchar"></field>	
+      <field name="textData" type="long-varchar"></field>	
       <prim-key field="agreementId" />
       <relation type="one" rel-entity-name="Product">
         <key-map field-name="productId" />
@@ -204,15 +204,15 @@
             package-name="org.ofbiz.commonapp.party.agreement"
             title="Agreement Attribute Entity">
       <field name="agreementId" type="id-ne"></field>
-      <field name="name" type="id-long-ne"></field>
+      <field name="attrName" type="id-long-ne"></field>
       <field name="value" type="value"></field>	
       <prim-key field="agreementId" />	
-      <prim-key field="name" />
+      <prim-key field="attrName" />
       <relation type="one" rel-entity-name="Agreement">
         <key-map field-name="agreementId" />
       </relation>
       <relation type="many" rel-entity-name="AgreementTypeAttr">
-        <key-map field-name="name" />
+        <key-map field-name="attrName" />
       </relation>
     </entity>	
     <entity entity-name="AgreementGeographicalApplic" 
@@ -258,17 +258,17 @@
             title="Agreement Item Attribute Entity">
       <field name="agreementId" type="id-ne"></field>
       <field name="agreementItemSeqId" type="id-ne"></field>
-      <field name="name" type="id-long-ne"></field>
+      <field name="attrName" type="id-long-ne"></field>
       <field name="value" type="value"></field>	
       <prim-key field="agreementId" />	
       <prim-key field="agreementItemSeqId" />	
-      <prim-key field="name" />
+      <prim-key field="attrName" />
       <relation type="one" rel-entity-name="AgreementItem">
         <key-map field-name="agreementId" />
         <key-map field-name="agreementItemSeqId" />
       </relation>
       <relation type="many" rel-entity-name="AgreementItemTypeAttr">
-        <key-map field-name="name" />
+        <key-map field-name="attrName" />
       </relation>
     </entity>	
     <entity entity-name="AgreementItemType" 
@@ -296,14 +296,14 @@
             package-name="org.ofbiz.commonapp.party.agreement"
             title="Agreement Item Type Attribute Entity">
       <field name="agreementItemTypeId" type="id-ne"></field>
-      <field name="name" type="id-long-ne"></field>	
+      <field name="attrName" type="id-long-ne"></field>	
       <prim-key field="agreementItemTypeId" />	
-      <prim-key field="name" />
+      <prim-key field="attrName" />
       <relation type="one" rel-entity-name="AgreementItemType">
         <key-map field-name="agreementItemTypeId" />
       </relation>
       <relation type="many" rel-entity-name="AgreementItemAttribute">
-        <key-map field-name="name" />
+        <key-map field-name="attrName" />
       </relation>
       <relation type="many" rel-entity-name="AgreementItem">
         <key-map field-name="agreementItemTypeId" />
@@ -355,15 +355,15 @@
             package-name="org.ofbiz.commonapp.party.agreement"
             title="Agreement Term Attribute Entity">
       <field name="agreementTermId" type="id-ne"></field>
-      <field name="name" type="id-long-ne"></field>
+      <field name="attrName" type="id-long-ne"></field>
       <field name="value" type="value"></field>	
       <prim-key field="agreementTermId" />	
-      <prim-key field="name" />
+      <prim-key field="attrName" />
       <relation type="one" rel-entity-name="AgreementTerm">
         <key-map field-name="agreementTermId" />
       </relation>
       <relation type="many" rel-entity-name="TermTypeAttr">
-        <key-map field-name="name" />
+        <key-map field-name="attrName" />
       </relation>
     </entity>	
     <entity entity-name="AgreementType" 
@@ -391,14 +391,14 @@
             package-name="org.ofbiz.commonapp.party.agreement"
             title="Agreement Type Attribute Entity">
       <field name="agreementTypeId" type="id-ne"></field>
-      <field name="name" type="id-long-ne"></field>	
+      <field name="attrName" type="id-long-ne"></field>	
       <prim-key field="agreementTypeId" />	
-      <prim-key field="name" />
+      <prim-key field="attrName" />
       <relation type="one" rel-entity-name="AgreementType">
         <key-map field-name="agreementTypeId" />
       </relation>
       <relation type="many" rel-entity-name="AgreementAttribute">
-        <key-map field-name="name" />
+        <key-map field-name="attrName" />
       </relation>
       <relation type="many" rel-entity-name="Agreement">
         <key-map field-name="agreementTypeId" />
@@ -438,32 +438,32 @@
             package-name="org.ofbiz.commonapp.party.agreement"
             title="Term Type Attribute Entity">
       <field name="termTypeId" type="id-ne"></field>
-      <field name="name" type="id-long-ne"></field>	
+      <field name="attrName" type="id-long-ne"></field>	
       <prim-key field="termTypeId" />	
-      <prim-key field="name" />
+      <prim-key field="attrName" />
       <relation type="one" rel-entity-name="TermType">
         <key-map field-name="termTypeId" />
       </relation>
       <relation type="many" rel-entity-name="AgreementTermAttribute">
-        <key-map field-name="name" />
+        <key-map field-name="attrName" />
       </relation>
       <relation type="many" rel-entity-name="AgreementTerm">
         <key-map field-name="termTypeId" />
       </relation>
       <relation type="many" rel-entity-name="OrderTermAttribute">
-        <key-map field-name="name" />
+        <key-map field-name="attrName" />
       </relation>
       <relation type="many" rel-entity-name="OrderTerm">
         <key-map field-name="termTypeId" />
       </relation>
       <relation type="many" rel-entity-name="QuoteTermAttribute">
-        <key-map field-name="name" />
+        <key-map field-name="attrName" />
       </relation>
       <relation type="many" rel-entity-name="QuoteTerm">
         <key-map field-name="termTypeId" />
       </relation>
       <relation type="many" rel-entity-name="InvoiceTermAttribute">
-        <key-map field-name="name" />
+        <key-map field-name="attrName" />
       </relation>
       <relation type="many" rel-entity-name="InvoiceTerm">
         <key-map field-name="termTypeId" />
@@ -628,15 +628,15 @@
             package-name="org.ofbiz.commonapp.party.contact"
             title="Contact Mechanism Attribute Entity">
       <field name="contactMechId" type="id-ne"></field>
-      <field name="name" type="id-long-ne"></field>
+      <field name="attrName" type="id-long-ne"></field>
       <field name="value" type="value"></field>	
       <prim-key field="contactMechId" />	
-      <prim-key field="name" />
+      <prim-key field="attrName" />
       <relation type="one" rel-entity-name="ContactMech">
         <key-map field-name="contactMechId" />
       </relation>
       <relation type="many" rel-entity-name="ContactMechTypeAttr">
-        <key-map field-name="name" />
+        <key-map field-name="attrName" />
       </relation>
     </entity>	
     <entity entity-name="ContactMechLink" 
@@ -703,14 +703,14 @@
             package-name="org.ofbiz.commonapp.party.contact"
             title="Contact Mechanism Type Attribute Entity">
       <field name="contactMechTypeId" type="id-ne"></field>
-      <field name="name" type="id-long-ne"></field>	
+      <field name="attrName" type="id-long-ne"></field>	
       <prim-key field="contactMechTypeId" />	
-      <prim-key field="name" />
+      <prim-key field="attrName" />
       <relation type="one" rel-entity-name="ContactMechType">
         <key-map field-name="contactMechTypeId" />
       </relation>
       <relation type="many" rel-entity-name="ContactMechAttribute">
-        <key-map field-name="name" />
+        <key-map field-name="attrName" />
       </relation>
       <relation type="many" rel-entity-name="ContactMech">
         <key-map field-name="contactMechTypeId" />
@@ -769,7 +769,7 @@
       <field name="roleTypeId" type="id"></field>
       <field name="allowSolicitation" type="indicator"></field>
       <field name="extension" type="very-short"></field>
-      <field name="comment" type="comment"></field>	
+      <field name="comments" type="comment"></field>	
       <prim-key field="partyId" />	
       <prim-key field="contactMechId" />	
       <prim-key field="fromDate" />
@@ -996,15 +996,15 @@
             package-name="org.ofbiz.commonapp.party.party"
             title="Party Attribute Entity">
       <field name="partyId" type="id-ne"></field>
-      <field name="name" type="id-long-ne"></field>
+      <field name="attrName" type="id-long-ne"></field>
       <field name="value" type="value"></field>	
       <prim-key field="partyId" />	
-      <prim-key field="name" />
+      <prim-key field="attrName" />
       <relation type="one" rel-entity-name="Party">
         <key-map field-name="partyId" />
       </relation>
       <relation type="many" rel-entity-name="PartyTypeAttr">
-        <key-map field-name="name" />
+        <key-map field-name="attrName" />
       </relation>
     </entity>	
     <entity entity-name="PartyClassification" 
@@ -1078,7 +1078,7 @@
       <field name="statusId" type="id"></field>
       <field name="priorityTypeId" type="id"></field>
       <field name="partyRelationshipTypeId" type="id"></field>
-      <field name="comment" type="comment"></field>	
+      <field name="comments" type="comment"></field>	
       <prim-key field="partyIdFrom" />	
       <prim-key field="partyIdTo" />	
       <prim-key field="roleTypeIdFrom" />	
@@ -1117,7 +1117,7 @@
       <field name="roleTypeIdValidFrom" type="id"></field>
       <field name="roleTypeIdValidTo" type="id"></field>
       <field name="description" type="description"></field>
-      <field name="name" type="name"></field>	
+      <field name="partyRelationshipName" type="name"></field>	
       <prim-key field="partyRelationshipTypeId" />
       <relation type="one" title="Parent" rel-entity-name="PartyRelationshipType">
         <key-map field-name="parentTypeId" rel-field-name="partyRelationshipTypeId" />
@@ -1218,14 +1218,14 @@
             package-name="org.ofbiz.commonapp.party.party"
             title="Party Type Attribute Entity">
       <field name="partyTypeId" type="id-ne"></field>
-      <field name="name" type="id-long-ne"></field>	
+      <field name="attrName" type="id-long-ne"></field>	
       <prim-key field="partyTypeId" />	
-      <prim-key field="name" />
+      <prim-key field="attrName" />
       <relation type="one" rel-entity-name="PartyType">
         <key-map field-name="partyTypeId" />
       </relation>
       <relation type="many" rel-entity-name="PartyAttribute">
-        <key-map field-name="name" />
+        <key-map field-name="attrName" />
       </relation>
       <relation type="many" rel-entity-name="PartyClassification">
         <key-map field-name="partyTypeId" />
@@ -1251,7 +1251,7 @@
       <field name="passportNumber" type="short-varchar"></field>
       <field name="passportExpireDate" type="date"></field>
       <field name="totalYearsWorkExperience" type="floating-point"></field>
-      <field name="comment" type="comment"></field>	
+      <field name="comments" type="comment"></field>	
       <prim-key field="partyId" />
       <relation type="one" rel-entity-name="Party">
         <key-map field-name="partyId" />
@@ -1301,14 +1301,14 @@
             package-name="org.ofbiz.commonapp.party.party"
             title="Role Type Attribute Entity">
       <field name="roleTypeId" type="id-ne"></field>
-      <field name="name" type="id-long-ne"></field>	
+      <field name="attrName" type="id-long-ne"></field>	
       <prim-key field="roleTypeId" />	
-      <prim-key field="name" />
+      <prim-key field="attrName" />
       <relation type="one" rel-entity-name="RoleType">
         <key-map field-name="roleTypeId" />
       </relation>
       <relation type="many" rel-entity-name="PartyAttribute">
-        <key-map field-name="name" />
+        <key-map field-name="attrName" />
       </relation>
       <relation type="many" rel-entity-name="PartyRole">
         <key-map field-name="roleTypeId" />

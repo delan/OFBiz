@@ -136,7 +136,7 @@
       <field name="payHistoryFromDate" type="date-time"></field>
       <field name="fromDate" type="date-time"></field>
       <field name="thruDate" type="date-time"></field>
-      <field name="comment" type="comment"></field>	
+      <field name="comments" type="comment"></field>	
       <prim-key field="employeePartyId" />	
       <prim-key field="employeeRoleTypeId" />	
       <prim-key field="perfReviewId" />
@@ -207,7 +207,7 @@
       <field name="fromDate" type="date-time"></field>
       <field name="thruDate" type="date-time"></field>
       <field name="communicationDate" type="date-time"></field>
-      <field name="comment" type="comment"></field>	
+      <field name="comments" type="comment"></field>	
       <prim-key field="partyId" />	
       <prim-key field="roleTypeId" />	
       <prim-key field="fromDate" />
@@ -221,7 +221,7 @@
       <field name="perfReviewSeqId" type="id-ne"></field>
       <field name="perfRatingTypeId" type="id"></field>
       <field name="perfReviewItemTypeId" type="id"></field>
-      <field name="comment" type="comment"></field>	
+      <field name="comments" type="comment"></field>	
       <prim-key field="employeePartyId" />	
       <prim-key field="employeeRoleTypeId" />	
       <prim-key field="perfReviewId" />	
@@ -245,7 +245,7 @@
       <field name="description" type="description"></field>	
       <prim-key field="responsibilityTypeId" />
     </entity>	
-    <entity entity-name="Resume" 
+    <entity entity-name="PartyResume" 
             package-name="org.ofbiz.commonapp.humanres.ability"
             title="Resume Entity">
       <field name="resumeId" type="id-ne"></field>
@@ -278,7 +278,7 @@
             package-name="org.ofbiz.commonapp.humanres.employment"
             title="Benefit Type Entity">
       <field name="benefitTypeId" type="id-ne"></field>
-      <field name="name" type="name"></field>
+      <field name="benefitName" type="name"></field>
       <field name="description" type="description"></field>
       <field name="employerPaidPercentage" type="floating-point"></field>	
       <prim-key field="benefitTypeId" />
@@ -352,8 +352,8 @@
             package-name="org.ofbiz.commonapp.humanres.employment"
             title="Pay Grade Entity">
       <field name="payGradeId" type="id-ne"></field>
-      <field name="name" type="name"></field>
-      <field name="comment" type="comment"></field>	
+      <field name="payGradeName" type="name"></field>
+      <field name="comments" type="comment"></field>	
       <prim-key field="payGradeId" />
     </entity>	
     <entity entity-name="PayHistory" 
@@ -369,7 +369,7 @@
       <field name="payGradeId" type="id"></field>
       <field name="periodTypeId" type="id"></field>
       <field name="amount" type="currency-amount"></field>
-      <field name="comment" type="comment"></field>	
+      <field name="comments" type="comment"></field>	
       <prim-key field="roleTypeIdFrom" />	
       <prim-key field="roleTypeIdTo" />	
       <prim-key field="partyIdFrom" />	
@@ -479,7 +479,7 @@
       <field name="partyId" type="id-ne"></field>
       <field name="fromDate" type="date-time"></field>
       <field name="thruDate" type="date-time"></field>
-      <field name="comment" type="comment"></field>	
+      <field name="comments" type="comment"></field>	
       <prim-key field="positionId" />	
       <prim-key field="partyId" />	
       <prim-key field="fromDate" />
@@ -491,7 +491,7 @@
       <field name="positionIdManagedBy" type="id-ne"></field>
       <field name="fromDate" type="date-time"></field>
       <field name="thruDate" type="date-time"></field>
-      <field name="comment" type="comment"></field>
+      <field name="comments" type="comment"></field>
       <field name="primaryFlag" type="indicator"></field>	
       <prim-key field="positionIdReportingTo" />	
       <prim-key field="positionIdManagedBy" />	
@@ -504,7 +504,7 @@
       <field name="responsibilityTypeId" type="id-ne"></field>
       <field name="fromDate" type="date-time"></field>
       <field name="thruDate" type="date-time"></field>
-      <field name="comment" type="comment"></field>	
+      <field name="comments" type="comment"></field>	
       <prim-key field="positionId" />	
       <prim-key field="responsibilityTypeId" />	
       <prim-key field="fromDate" />
@@ -537,7 +537,7 @@
       <field name="responsibilityTypeId" type="id-ne"></field>
       <field name="fromDate" type="date-time"></field>
       <field name="thruDate" type="date-time"></field>
-      <field name="comment" type="comment"></field>	
+      <field name="comments" type="comment"></field>	
       <prim-key field="positionTypeId" />	
       <prim-key field="responsibilityTypeId" />	
       <prim-key field="fromDate" />

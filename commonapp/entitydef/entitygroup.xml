@@ -258,7 +258,7 @@
     <entity-group group="org.ofbiz.commonapp" entity="PerformanceReviewItem" />	
     <entity-group group="org.ofbiz.commonapp" entity="PersonTraining" />	
     <entity-group group="org.ofbiz.commonapp" entity="ResponsibilityType" />	
-    <entity-group group="org.ofbiz.commonapp" entity="Resume" />	
+    <entity-group group="org.ofbiz.commonapp" entity="PartyResume" />	
     <entity-group group="org.ofbiz.commonapp" entity="SkillType" />	
     <entity-group group="org.ofbiz.commonapp" entity="TrainingClassType" />
 

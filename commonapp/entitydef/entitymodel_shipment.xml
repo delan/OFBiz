@@ -270,15 +270,15 @@
             package-name="org.ofbiz.commonapp.shipment.shipment"
             title="Shipment Attribute Entity">
       <field name="shipmentId" type="id-ne"></field>
-      <field name="name" type="id-long-ne"></field>
+      <field name="attrName" type="id-long-ne"></field>
       <field name="value" type="value"></field>	
       <prim-key field="shipmentId" />	
-      <prim-key field="name" />
+      <prim-key field="attrName" />
       <relation type="one" rel-entity-name="Shipment">
         <key-map field-name="shipmentId" />
       </relation>
       <relation type="many" rel-entity-name="ShipmentTypeAttr">
-        <key-map field-name="name" />
+        <key-map field-name="attrName" />
       </relation>
     </entity>	
     <entity entity-name="ShipmentCostEstimate" 
@@ -424,14 +424,14 @@
             package-name="org.ofbiz.commonapp.shipment.shipment"
             title="Shipment Type Attribute Entity">
       <field name="shipmentTypeId" type="id-ne"></field>
-      <field name="name" type="id-long-ne"></field>	
+      <field name="attrName" type="id-long-ne"></field>	
       <prim-key field="shipmentTypeId" />	
-      <prim-key field="name" />
+      <prim-key field="attrName" />
       <relation type="one" rel-entity-name="ShipmentType">
         <key-map field-name="shipmentTypeId" />
       </relation>
       <relation type="many" rel-entity-name="ShipmentAttribute">
-        <key-map field-name="name" />
+        <key-map field-name="attrName" />
       </relation>
       <relation type="many" rel-entity-name="Shipment">
         <key-map field-name="shipmentTypeId" />

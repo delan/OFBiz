@@ -150,7 +150,7 @@
       <field name="workEffortId" type="id"></field>
       <field name="timesheetId" type="id"></field>
       <field name="hours" type="floating-point"></field>
-      <field name="comment" type="comment"></field>	
+      <field name="comments" type="comment"></field>	
       <prim-key field="timeEntryId" />
     </entity>	
     <entity entity-name="TimeEntryBilling" 
@@ -171,7 +171,7 @@
       <field name="roleTypeId" type="id"></field>
       <field name="fromDate" type="date-time"></field>
       <field name="thruDate" type="date-time"></field>
-      <field name="comment" type="comment"></field>	
+      <field name="comments" type="comment"></field>	
       <prim-key field="timesheetId" />
     </entity>	
     <entity entity-name="TimesheetRole" 
@@ -219,7 +219,7 @@
             title="Deliverable Entity">
       <field name="deliverableId" type="id-ne"></field>
       <field name="deliverableTypeId" type="id"></field>
-      <field name="name" type="name"></field>
+      <field name="deliverableName" type="name"></field>
       <field name="description" type="description"></field>	
       <prim-key field="deliverableId" />
     </entity>	
@@ -287,17 +287,17 @@
             title="Work Effort Association Attribute Entity">
       <field name="workEffortIdFrom" type="id-ne"></field>
       <field name="workEffortIdTo" type="id-ne"></field>
-      <field name="name" type="id-long-ne"></field>
+      <field name="attrName" type="id-long-ne"></field>
       <field name="value" type="value"></field>	
       <prim-key field="workEffortIdFrom" />	
       <prim-key field="workEffortIdTo" />	
-      <prim-key field="name" />
+      <prim-key field="attrName" />
       <relation type="one" rel-entity-name="WorkEffortAssoc">
         <key-map field-name="workEffortIdFrom" />
         <key-map field-name="workEffortIdTo" />
       </relation>
       <relation type="many" rel-entity-name="WorkEffortAssocTypeAttr">
-        <key-map field-name="name" />
+        <key-map field-name="attrName" />
       </relation>
     </entity>	
     <entity entity-name="WorkEffortAssocType" 
@@ -328,17 +328,17 @@
             package-name="org.ofbiz.commonapp.workeffort.workeffort"
             title="Work Effort Association Type Attribute Entity">
       <field name="workEffortAssocTypeId" type="id-ne"></field>
-      <field name="name" type="id-long-ne"></field>	
+      <field name="attrName" type="id-long-ne"></field>	
       <prim-key field="workEffortAssocTypeId" />	
-      <prim-key field="name" />
+      <prim-key field="attrName" />
       <relation type="one" rel-entity-name="WorkEffortAssocType">
         <key-map field-name="workEffortAssocTypeId" />
       </relation>
       <relation type="many" rel-entity-name="WorkEffortAssocAttribute">
-        <key-map field-name="name" />
+        <key-map field-name="attrName" />
       </relation>
       <relation type="many" rel-entity-name="WorkEffortDefAssocAttr">
-        <key-map field-name="name" />
+        <key-map field-name="attrName" />
       </relation>
       <relation type="many" rel-entity-name="WorkEffortAssoc">
         <key-map field-name="workEffortAssocTypeId" />
@@ -351,15 +351,15 @@
             package-name="org.ofbiz.commonapp.workeffort.workeffort"
             title="Work Effort Attribute Entity">
       <field name="workEffortId" type="id-ne"></field>
-      <field name="name" type="id-long-ne"></field>
+      <field name="attrName" type="id-long-ne"></field>
       <field name="value" type="value"></field>	
       <prim-key field="workEffortId" />	
-      <prim-key field="name" />
+      <prim-key field="attrName" />
       <relation type="one" rel-entity-name="WorkEffort">
         <key-map field-name="workEffortId" />
       </relation>
       <relation type="many" rel-entity-name="WorkEffortTypeAttr">
-        <key-map field-name="name" />
+        <key-map field-name="attrName" />
       </relation>
     </entity>	
     <entity entity-name="WorkEffortBilling" 
@@ -418,32 +418,32 @@
             title="Work Effort Definition Association Attribute Entity">
       <field name="workEffortDefIdFrom" type="id-ne"></field>
       <field name="workEffortDefIdTo" type="id-ne"></field>
-      <field name="name" type="id-long-ne"></field>
+      <field name="attrName" type="id-long-ne"></field>
       <field name="value" type="value"></field>	
       <prim-key field="workEffortDefIdFrom" />	
       <prim-key field="workEffortDefIdTo" />	
-      <prim-key field="name" />
+      <prim-key field="attrName" />
       <relation type="one" rel-entity-name="WorkEffortDefAssoc">
         <key-map field-name="workEffortDefIdFrom" />
         <key-map field-name="workEffortDefIdTo" />
       </relation>
       <relation type="many" rel-entity-name="WorkEffortAssocTypeAttr">
-        <key-map field-name="name" />
+        <key-map field-name="attrName" />
       </relation>
     </entity>	
     <entity entity-name="WorkEffortDefAttribute" 
             package-name="org.ofbiz.commonapp.workeffort.workeffort"
             title="Work Effort Definition Attribute Entity">
       <field name="workEffortDefId" type="id-ne"></field>
-      <field name="name" type="id-long-ne"></field>
+      <field name="attrName" type="id-long-ne"></field>
       <field name="value" type="value"></field>	
       <prim-key field="workEffortDefId" />	
-      <prim-key field="name" />
+      <prim-key field="attrName" />
       <relation type="one" rel-entity-name="WorkEffortDef">
         <key-map field-name="workEffortDefId" />
       </relation>
       <relation type="many" rel-entity-name="WorkEffortTypeAttr">
-        <key-map field-name="name" />
+        <key-map field-name="attrName" />
       </relation>
     </entity>	
     <entity entity-name="WorkEffortDeliverableProd" 
@@ -463,7 +463,7 @@
       <field name="fromDate" type="date-time"></field>
       <field name="thruDate" type="date-time"></field>
       <field name="allocatedCost" type="currency-amount"></field>
-      <field name="comment" type="comment"></field>	
+      <field name="comments" type="comment"></field>	
       <prim-key field="workEffortId" />	
       <prim-key field="fixedAssetId" />	
       <prim-key field="fromDate" />
@@ -515,7 +515,7 @@
       <field name="fromDate" type="date-time"></field>
       <field name="thruDate" type="date-time"></field>
       <field name="facilityId" type="id"></field>
-      <field name="comment" type="comment"></field>	
+      <field name="comments" type="comment"></field>	
       <prim-key field="workEffortId" />	
       <prim-key field="partyId" />	
       <prim-key field="roleTypeId" />	
@@ -569,17 +569,17 @@
             package-name="org.ofbiz.commonapp.workeffort.workeffort"
             title="Work Effort Type Attribute Entity">
       <field name="workEffortTypeId" type="id-ne"></field>
-      <field name="name" type="id-long-ne"></field>	
+      <field name="attrName" type="id-long-ne"></field>	
       <prim-key field="workEffortTypeId" />	
-      <prim-key field="name" />
+      <prim-key field="attrName" />
       <relation type="one" rel-entity-name="WorkEffortType">
         <key-map field-name="workEffortTypeId" />
       </relation>
       <relation type="many" rel-entity-name="WorkEffortAttribute">
-        <key-map field-name="name" />
+        <key-map field-name="attrName" />
       </relation>
       <relation type="many" rel-entity-name="WorkEffortDefAttribute">
-        <key-map field-name="name" />
+        <key-map field-name="attrName" />
       </relation>
       <relation type="many" rel-entity-name="WorkEffort">
         <key-map field-name="workEffortTypeId" />

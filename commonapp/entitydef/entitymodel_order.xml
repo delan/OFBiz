@@ -151,15 +151,15 @@
             package-name="org.ofbiz.commonapp.order.order"
             title="Order Adjustment Attribute Entity">
       <field name="orderAdjustmentId" type="id-ne"></field>
-      <field name="name" type="id-long-ne"></field>
+      <field name="attrName" type="id-long-ne"></field>
       <field name="value" type="value"></field>	
       <prim-key field="orderAdjustmentId" />	
-      <prim-key field="name" />
+      <prim-key field="attrName" />
       <relation type="one" rel-entity-name="OrderAdjustment">
         <key-map field-name="orderAdjustmentId" />
       </relation>
       <relation type="many" rel-entity-name="OrderAdjustmentTypeAttr">
-        <key-map field-name="name" />
+        <key-map field-name="attrName" />
       </relation>
     </entity>	
     <entity entity-name="OrderAdjustmentType" 
@@ -187,14 +187,14 @@
             package-name="org.ofbiz.commonapp.order.order"
             title="Order Adjustment Type Attribute Entity">
       <field name="orderAdjustmentTypeId" type="id-ne"></field>
-      <field name="name" type="id-long-ne"></field>	
+      <field name="attrName" type="id-long-ne"></field>	
       <prim-key field="orderAdjustmentTypeId" />	
-      <prim-key field="name" />
+      <prim-key field="attrName" />
       <relation type="one" rel-entity-name="OrderAdjustmentType">
         <key-map field-name="orderAdjustmentTypeId" />
       </relation>
       <relation type="many" rel-entity-name="OrderAdjustmentAttribute">
-        <key-map field-name="name" />
+        <key-map field-name="attrName" />
       </relation>
       <relation type="many" rel-entity-name="OrderAdjustment">
         <key-map field-name="orderAdjustmentTypeId" />
@@ -204,15 +204,15 @@
             package-name="org.ofbiz.commonapp.order.order"
             title="Order Attribute Entity">
       <field name="orderId" type="id-ne"></field>
-      <field name="name" type="id-long-ne"></field>
+      <field name="attrName" type="id-long-ne"></field>
       <field name="value" type="value"></field>	
       <prim-key field="orderId" />	
-      <prim-key field="name" />
+      <prim-key field="attrName" />
       <relation type="one" rel-entity-name="OrderHeader">
         <key-map field-name="orderId" />
       </relation>
       <relation type="many" rel-entity-name="OrderTypeAttr">
-        <key-map field-name="name" />
+        <key-map field-name="attrName" />
       </relation>
     </entity>	
     <entity entity-name="OrderContactMech" 
@@ -324,7 +324,7 @@
       <field name="unitPrice" type="currency-amount"></field>
       <field name="estimatedDeliveryDate" type="date-time"></field>
       <field name="itemDescription" type="description"></field>
-      <field name="comment" type="comment"></field>
+      <field name="comments" type="comment"></field>
       <field name="correspondingPoId" type="id"></field>
       <field name="statusId" type="id"></field>	
       <prim-key field="orderId" />	
@@ -425,17 +425,17 @@
             title="Order Item Attribute Entity">
       <field name="orderId" type="id-ne"></field>
       <field name="orderItemSeqId" type="id-ne"></field>
-      <field name="name" type="id-long-ne"></field>
+      <field name="attrName" type="id-long-ne"></field>
       <field name="value" type="value"></field>	
       <prim-key field="orderId" />	
       <prim-key field="orderItemSeqId" />	
-      <prim-key field="name" />
+      <prim-key field="attrName" />
       <relation type="one" rel-entity-name="OrderItem">
         <key-map field-name="orderId" />
         <key-map field-name="orderItemSeqId" />
       </relation>
       <relation type="many" rel-entity-name="OrderItemTypeAttr">
-        <key-map field-name="name" />
+        <key-map field-name="attrName" />
       </relation>
     </entity>	
     <entity entity-name="OrderItemBilling" 
@@ -545,14 +545,14 @@
             package-name="org.ofbiz.commonapp.order.order"
             title="Order Item Type Attribute Entity">
       <field name="orderItemTypeId" type="id-ne"></field>
-      <field name="name" type="id-long-ne"></field>	
+      <field name="attrName" type="id-long-ne"></field>	
       <prim-key field="orderItemTypeId" />	
-      <prim-key field="name" />
+      <prim-key field="attrName" />
       <relation type="one" rel-entity-name="OrderItemType">
         <key-map field-name="orderItemTypeId" />
       </relation>
       <relation type="many" rel-entity-name="OrderItemAttribute">
-        <key-map field-name="name" />
+        <key-map field-name="attrName" />
       </relation>
       <relation type="many" rel-entity-name="OrderItem">
         <key-map field-name="orderItemTypeId" />
@@ -709,15 +709,15 @@
             package-name="org.ofbiz.commonapp.order.order"
             title="Order Term Attribute Entity">
       <field name="orderTermId" type="id-ne"></field>
-      <field name="name" type="id-long-ne"></field>
+      <field name="attrName" type="id-long-ne"></field>
       <field name="value" type="value"></field>	
       <prim-key field="orderTermId" />	
-      <prim-key field="name" />
+      <prim-key field="attrName" />
       <relation type="one" rel-entity-name="OrderTerm">
         <key-map field-name="orderTermId" />
       </relation>
       <relation type="many" rel-entity-name="TermTypeAttr">
-        <key-map field-name="name" />
+        <key-map field-name="attrName" />
       </relation>
     </entity>	
     <entity entity-name="OrderType" 
@@ -745,14 +745,14 @@
             package-name="org.ofbiz.commonapp.order.order"
             title="Order Type Attribute Entity">
       <field name="orderTypeId" type="id-ne"></field>
-      <field name="name" type="id-long-ne"></field>	
+      <field name="attrName" type="id-long-ne"></field>	
       <prim-key field="orderTypeId" />	
-      <prim-key field="name" />
+      <prim-key field="attrName" />
       <relation type="one" rel-entity-name="OrderType">
         <key-map field-name="orderTypeId" />
       </relation>
       <relation type="many" rel-entity-name="OrderAttribute">
-        <key-map field-name="name" />
+        <key-map field-name="attrName" />
       </relation>
       <relation type="many" rel-entity-name="OrderHeader">
         <key-map field-name="orderTypeId" />
@@ -878,15 +878,15 @@
             package-name="org.ofbiz.commonapp.order.quote"
             title="Quote Attribute Entity">
       <field name="quoteId" type="id-ne"></field>
-      <field name="name" type="id-long-ne"></field>
+      <field name="attrName" type="id-long-ne"></field>
       <field name="value" type="value"></field>	
       <prim-key field="quoteId" />	
-      <prim-key field="name" />
+      <prim-key field="attrName" />
       <relation type="one" rel-entity-name="Quote">
         <key-map field-name="quoteId" />
       </relation>
       <relation type="many" rel-entity-name="QuoteTypeAttr">
-        <key-map field-name="name" />
+        <key-map field-name="attrName" />
       </relation>
     </entity>	
     <entity entity-name="QuoteItem" 
@@ -905,7 +905,7 @@
       <field name="quantity" type="floating-point"></field>
       <field name="quoteUnitPrice" type="currency-amount"></field>
       <field name="estimatedDeliveryDate" type="date-time"></field>
-      <field name="comment" type="comment"></field>	
+      <field name="comments" type="comment"></field>	
       <prim-key field="quoteId" />	
       <prim-key field="quoteItemSeqId" />
     </entity>	
@@ -933,15 +933,15 @@
             package-name="org.ofbiz.commonapp.order.quote"
             title="Quote Term Attribute Entity">
       <field name="quoteTermId" type="id-ne"></field>
-      <field name="name" type="id-long-ne"></field>
+      <field name="attrName" type="id-long-ne"></field>
       <field name="value" type="value"></field>	
       <prim-key field="quoteTermId" />	
-      <prim-key field="name" />
+      <prim-key field="attrName" />
       <relation type="one" rel-entity-name="QuoteTerm">
         <key-map field-name="quoteTermId" />
       </relation>
       <relation type="many" rel-entity-name="TermTypeAttr">
-        <key-map field-name="name" />
+        <key-map field-name="attrName" />
       </relation>
     </entity>	
     <entity entity-name="QuoteType" 
@@ -969,14 +969,14 @@
             package-name="org.ofbiz.commonapp.order.quote"
             title="Quote Type Attribute Entity">
       <field name="quoteTypeId" type="id-ne"></field>
-      <field name="name" type="id-long-ne"></field>	
+      <field name="attrName" type="id-long-ne"></field>	
       <prim-key field="quoteTypeId" />	
-      <prim-key field="name" />
+      <prim-key field="attrName" />
       <relation type="one" rel-entity-name="QuoteType">
         <key-map field-name="quoteTypeId" />
       </relation>
       <relation type="many" rel-entity-name="QuoteAttribute">
-        <key-map field-name="name" />
+        <key-map field-name="attrName" />
       </relation>
       <relation type="many" rel-entity-name="Quote">
         <key-map field-name="quoteTypeId" />
@@ -1010,15 +1010,15 @@
             package-name="org.ofbiz.commonapp.order.request"
             title="Customer Request Attribute Entity">
       <field name="custRequestId" type="id-ne"></field>
-      <field name="name" type="id-long-ne"></field>
+      <field name="attrName" type="id-long-ne"></field>
       <field name="value" type="value"></field>	
       <prim-key field="custRequestId" />	
-      <prim-key field="name" />
+      <prim-key field="attrName" />
       <relation type="one" rel-entity-name="CustRequest">
         <key-map field-name="custRequestId" />
       </relation>
       <relation type="many" rel-entity-name="CustRequestTypeAttr">
-        <key-map field-name="name" />
+        <key-map field-name="attrName" />
       </relation>
     </entity>	
     <entity entity-name="CustRequestItem" 
@@ -1068,14 +1068,14 @@
             package-name="org.ofbiz.commonapp.order.request"
             title="Customer Request Type Attribute Entity">
       <field name="custRequestTypeId" type="id-ne"></field>
-      <field name="name" type="id-long-ne"></field>	
+      <field name="attrName" type="id-long-ne"></field>	
       <prim-key field="custRequestTypeId" />	
-      <prim-key field="name" />
+      <prim-key field="attrName" />
       <relation type="one" rel-entity-name="CustRequestType">
         <key-map field-name="custRequestTypeId" />
       </relation>
       <relation type="many" rel-entity-name="CustRequestAttribute">
-        <key-map field-name="name" />
+        <key-map field-name="attrName" />
       </relation>
       <relation type="many" rel-entity-name="CustRequest">
         <key-map field-name="custRequestTypeId" />
@@ -1129,15 +1129,15 @@
             package-name="org.ofbiz.commonapp.order.request"
             title="Requirement Attribute Entity">
       <field name="requirementId" type="id-ne"></field>
-      <field name="name" type="id-long-ne"></field>
+      <field name="attrName" type="id-long-ne"></field>
       <field name="value" type="value"></field>	
       <prim-key field="requirementId" />	
-      <prim-key field="name" />
+      <prim-key field="attrName" />
       <relation type="one" rel-entity-name="Requirement">
         <key-map field-name="requirementId" />
       </relation>
       <relation type="many" rel-entity-name="RequirementTypeAttr">
-        <key-map field-name="name" />
+        <key-map field-name="attrName" />
       </relation>
     </entity>	
     <entity entity-name="RequirementBudgetAllocation" 
@@ -1208,14 +1208,14 @@
             package-name="org.ofbiz.commonapp.order.request"
             title="Requirement Type Attribute Entity">
       <field name="requirementTypeId" type="id-ne"></field>
-      <field name="name" type="id-long-ne"></field>	
+      <field name="attrName" type="id-long-ne"></field>	
       <prim-key field="requirementTypeId" />	
-      <prim-key field="name" />
+      <prim-key field="attrName" />
       <relation type="one" rel-entity-name="RequirementType">
         <key-map field-name="requirementTypeId" />
       </relation>
       <relation type="many" rel-entity-name="RequirementAttribute">
-        <key-map field-name="name" />
+        <key-map field-name="attrName" />
       </relation>
       <relation type="many" rel-entity-name="Requirement">
         <key-map field-name="requirementTypeId" />
@@ -1262,7 +1262,7 @@
       <field name="shoppingListTypeId" type="id"></field>
       <field name="parentShoppingListId" type="id"></field>
       <field name="partyId" type="id"></field>
-      <field name="name" type="name"></field>
+      <field name="listName" type="name"></field>
       <field name="description" type="description"></field>	
       <prim-key field="shoppingListId" />
       <relation type="one" title="Parent" rel-entity-name="ShoppingList">
