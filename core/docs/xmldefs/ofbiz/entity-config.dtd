@@ -107,6 +107,7 @@
     constraint-name-clip-length CDATA "30"
     fk-style ( name_constraint | name_fk ) "name_constraint"
     use-fk-initially-deferred ( true | false ) "true"
+    join-style ( ansi | theta-oracle | theta-mssql ) "ansi"
 >
     <!ELEMENT sql-load-path EMPTY>
     <!ATTLIST sql-load-path

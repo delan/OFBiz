@@ -69,7 +69,8 @@
     <!ELEMENT member-entity EMPTY>
     <!ATTLIST member-entity
 	entity-alias CDATA #REQUIRED
-	entity-name CDATA #REQUIRED >
+	entity-name CDATA #REQUIRED
+	optional ( true | false ) "false" >
     <!ELEMENT alias EMPTY>
     <!ATTLIST alias
 	entity-alias CDATA #REQUIRED
@@ -104,4 +105,3 @@
 	field-name CDATA #REQUIRED >
     <!ATTLIST key-map
 	rel-field-name CDATA #IMPLIED >
-

@@ -55,8 +55,7 @@ public class SqlJdbcUtil {
             ModelViewEntity modelViewEntity = (ModelViewEntity) modelEntity;
             
             sql.append(" FROM ");
-            Iterator meIter = modelViewEntity.getMemberEntityNames().entrySet().iterator();
-            
+            Iterator meIter = modelViewEntity.getMemberModelMemberEntities().entrySet().iterator();
             while (meIter.hasNext()) {
                 Map.Entry entry = (Map.Entry) meIter.next();
                 ModelEntity fromEntity = modelViewEntity.getMemberModelEntity((String) entry.getKey());

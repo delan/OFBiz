@@ -277,6 +277,7 @@ public class EntityConfigUtil {
         public int constraintNameClipLength = 30;
         public String fkStyle = null;
         public boolean useFkInitiallyDeferred = true;
+        public String joinStyle = null;
 
         public DatasourceInfo(Element element) {
             this.name = element.getAttribute("name");
@@ -297,6 +298,7 @@ public class EntityConfigUtil {
                 Debug.logWarning("datasource def not found with name " + this.name + ", using default for constraint-name-clip-length (30)");
                 Debug.logWarning("datasource def not found with name " + this.name + ", using default for fk-style (name_constraint)");
                 Debug.logWarning("datasource def not found with name " + this.name + ", using default for use-fk-initially-deferred (true)");
+                Debug.logWarning("datasource def not found with name " + this.name + ", using default for join-style (ansi)");
             } else {
                 //anything but false is true
                 checkOnStart = !"false".equals(datasourceElement.getAttribute("check-on-start"));
@@ -320,10 +322,10 @@ public class EntityConfigUtil {
                 fkStyle = datasourceElement.getAttribute("fk-style");
                 //anything but true is false
                 useFkInitiallyDeferred = "true".equals(datasourceElement.getAttribute("use-fk-initially-deferred"));
+                joinStyle = datasourceElement.getAttribute("join-style");
             }
-            if (fkStyle == null || fkStyle.length() == 0) {
-                fkStyle = "name_constraint";
-            }
+            if (fkStyle == null || fkStyle.length() == 0) fkStyle = "name_constraint";
+            if (joinStyle == null || joinStyle.length() == 0) joinStyle = "ansi";
             
             Element jndiJdbcElement = UtilXml.firstChildElement(datasourceElement, "jndi-jdbc");
             Element tyrexDataSourceElement = UtilXml.firstChildElement(datasourceElement, "tyrex-dataSource");
@@ -342,7 +344,6 @@ public class EntityConfigUtil {
                 datasourceType = this.TYPE_OTHER;
                 datasourceTypeElement = null;
             }
-            
         }
     }
 }

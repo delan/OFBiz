@@ -295,11 +295,12 @@ public class GenericDAO {
         ModelEntity memberModelEntity = null;
 
         // Construct insert/update for each model entity
-        Iterator meIter = modelViewEntity.getMemberEntityNames().entrySet().iterator();
+        Iterator meIter = modelViewEntity.getMemberModelMemberEntities().entrySet().iterator();
         while (meIter != null && meIter.hasNext()) {
             Map.Entry meMapEntry = (Map.Entry) meIter.next();
-            String meName = (String) meMapEntry.getValue();
-            String meAlias = (String) meMapEntry.getKey();
+            ModelViewEntity.ModelMemberEntity modelMemberEntity = (ModelViewEntity.ModelMemberEntity) meMapEntry.getValue();
+            String meName = modelMemberEntity.getEntityName();
+            String meAlias = modelMemberEntity.getEntityAlias();
 
             if (Debug.infoOn()) Debug.logInfo("[singleUpdateView]: Processing MemberEntity " + meName + " with Alias " + meAlias);
             try {
