@@ -1,5 +1,5 @@
 /*
- * $Id: CatalinaContainer.java,v 1.10 2004/06/22 19:00:46 ajzeneski Exp $
+ * $Id: CatalinaContainer.java,v 1.11 2004/07/03 15:56:37 ajzeneski Exp $
  *
  */
 package org.ofbiz.catalina.container;
@@ -100,7 +100,7 @@ import org.xml.sax.SAXException;
  *
  * 
  * @author     <a href="mailto:jaz@ofbiz.org">Andy Zeneski</a>
- * @version    $Revision: 1.10 $
+ * @version    $Revision: 1.11 $
  * @since      3.1
  */
 public class CatalinaContainer implements Container {
@@ -166,7 +166,7 @@ public class CatalinaContainer implements Container {
         // create the connectors
         List connectorProps = cc.getPropertiesWithValue("connector");
         if (connectorProps == null && connectorProps.size() == 0) {
-            throw new ContainerException("Cannot load CatalinaContainer; no engines defined!");
+            throw new ContainerException("Cannot load CatalinaContainer; no connectors defined!");
         }
         Iterator ci = connectorProps.iterator();
         while (ci.hasNext()) {
