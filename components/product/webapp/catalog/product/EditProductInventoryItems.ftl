@@ -21,7 +21,7 @@
  *
  *@author     David E. Jones (jonesde@ofbiz.org)
  *@author     Brad Steiner (bsteiner@thehungersite.com)
- *@version    $Revision: 1.1 $
+ *@version    $Revision: 1.2 $
  *@since      2.2
 -->
 
@@ -39,7 +39,7 @@ ${pages.get("/product/ProductTabBar.ftl")}
     </#if>
     <br>
         
-    <#if product?exists && product.isVirtual.equals("Y")>
+    <#if (product.isVirtual)?if_exists == "Y">
         <div class="head3">WARNING: This is a Virtual product and generally should not have inventory items associated with it.</div>
     </#if>
     

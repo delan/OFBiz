@@ -21,7 +21,7 @@
  *
  *@author     David E. Jones (jonesde@ofbiz.org)
  *@author     Brad Steiner (bsteiner@thehungersite.com)
- *@version    $Revision: 1.1 $
+ *@version    $Revision: 1.2 $
  *@since      2.2
 -->
 
@@ -31,7 +31,7 @@ ${pages.get("/product/ProductTabBar.ftl")}
     
     <div class="head1">Quick Add Variants <span class="head2">for ${(product.productName)?if_exists} [ID:${productId?if_exists}]</span></div>
     
-    <#if product?exists && !(product.isVirtual.equals("Y"))>
+    <#if (product.isVirtual)?if_exists != "Y">
         WARNING: This product is not a virtual product, variants will not generally be used.
     </#if>
     
