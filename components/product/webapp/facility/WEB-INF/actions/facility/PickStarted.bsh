@@ -36,6 +36,6 @@ facilityId = request.getParameter("facilityId");
 context.put("facilityId", facilityId);
 
 condition = new EntityExpr(new EntityExpr("pickStartDate", EntityOperator.NOT_EQUAL, null), EntityOperator.AND, new EntityExpr("facilityId", EntityOperator.EQUALS, facilityId));
-orderItemShipGrpInvResAndItemList = delegator.findByCondition("OrderItemShipGrpInvResAndItem", condition, null, UtilMisc.toList("pickStartDate", "orderId", "shipGroupSeqId, "orderItemSeqId", "inventoryItemId"));
+orderItemShipGrpInvResAndItemList = delegator.findByCondition("OrderItemShipGrpInvResAndItem", condition, null, UtilMisc.toList("pickStartDate", "orderId", "shipGroupSeqId", "orderItemSeqId", "inventoryItemId"));
 context.put("orderItemShipGrpInvResAndItemList", orderItemShipGrpInvResAndItemList);
 
