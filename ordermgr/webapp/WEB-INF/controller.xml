@@ -455,7 +455,7 @@
     <view-map name="orderview" type="region"/>   
     <view-map name="ordertasklist" type="jpublish" page="/task/ordertasklist.ftl"/>    
     <view-map name="createnewnote" type="jpublish" page="/order/newnote.ftl"/>
-    <view-map name="receivepayment" type="region"/>
+    <view-map name="receivepayment" type="jpublish" page="/order/receivepayment.ftl"/>
     
     <view-map name="orderentry" type="jpublish" page="/entry/showcart.ftl"/>
     <view-map name="keywordsearch" type="jpublish" page="/entry/catalog/keywordsearch.ftl"/>
