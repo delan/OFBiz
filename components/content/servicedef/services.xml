@@ -47,10 +47,10 @@
         <description>Remove WebSite Role</description>
         <auto-attributes entity-name="WebSiteRole" include="pk" mode="IN" optional="false"/>
     </service>
-            
+
     <!--Contentservices.-->
     <service name="createContent" default-entity-name="Content" engine="java"
-            location="org.ofbiz.content.content.ContentServices" 
+            location="org.ofbiz.content.content.ContentServices"
             invoke="createContent"
             auth="true" >
         <description>Create a Content</description>
@@ -107,7 +107,7 @@
         <attribute mode="OUT" name="contentList" optional="false" type="java.util.List"/>
     </service>
 
-    
+
     <!--Content Assoc services.-->
     <service name="checkAssocPermission"
         auth="true" engine="java" invoke="checkAssocPermission"
@@ -116,7 +116,7 @@
         <attribute mode="IN" name="targetOperationList" optional="true" type="java.util.List"/>
         <attribute mode="IN" name="contentPurposeList" optional="true" type="java.util.List"/>
         <attribute mode="INOUT" name="roleTypeList" optional="true" type="java.util.List"/>
-        <attribute mode="IN" name="userLogin" optional="true" 
+        <attribute mode="IN" name="userLogin" optional="true"
                                      type="org.ofbiz.core.entity.GenericValue"/>
         <attribute mode="IN" name="contentIdTo" optional="true" type="String"/>
         <attribute mode="IN" name="contentIdFrom" optional="true" type="String"/>
@@ -135,7 +135,7 @@
         <attribute mode="IN" name="targetOperationList" optional="true" type="java.util.List"/>
         <attribute mode="IN" name="contentPurposeList" optional="true" type="java.util.List"/>
         <attribute mode="INOUT" name="roleTypeList" optional="true" type="java.util.List"/>
-        <attribute mode="IN" name="userLogin" optional="true" 
+        <attribute mode="IN" name="userLogin" optional="true"
                                      type="org.ofbiz.core.entity.GenericValue"/>
         <attribute mode="IN" name="contentIdTo" optional="true" type="String"/>
         <attribute mode="IN" name="contentIdFrom" optional="true" type="String"/>
@@ -145,7 +145,7 @@
         <attribute mode="IN" name="entityOperation" optional="true" type="String"/>
         <attribute mode="IN" name="contentAssocTypeId" optional="false" type="String"/>
     </service>
-    
+
     <service name="createContentAssoc" default-entity-name="ContentAssoc" engine="java"
         location="org.ofbiz.content.content.ContentServices" invoke="createContentAssoc" auth="true">
         <description>Create a ContentAssoc</description>
@@ -163,7 +163,7 @@
         <description>Remove ContentAssoc</description>
         <auto-attributes include="pk" mode="IN" optional="false"/>
     </service>
-    
+
     <!--ContentType services.-->
     <service name="createContentType" engine="simple" default-entity-name="ContentType"
         location="org/ofbiz/content/content/ContentServices.xml"
@@ -183,7 +183,7 @@
         <description>Remove ContentType</description>
         <auto-attributes include="pk" mode="IN" optional="false"/>
     </service>
-    
+
     <!--ContentAssocType services.-->
     <service name="createContentAssocType" engine="simple" default-entity-name="ContentAssocType"
         location="org/ofbiz/content/content/ContentServices.xml"
@@ -205,7 +205,7 @@
         <description>Remove ContentAssocType</description>
         <auto-attributes include="pk" mode="IN" optional="false"/>
     </service>
-    
+
     <!--ContentTypeAttr services.-->
     <service name="createContentTypeAttr" engine="simple" invoke="createContentTypeAttr"
         location="org/ofbiz/content/content/ContentServices.xml"
@@ -219,7 +219,7 @@
         <description>Remove ContentTypeAttr</description>
         <auto-attributes entity-name="ContentTypeAttr" include="pk" mode="IN" optional="false"/>
     </service>
-    
+
     <!--ContentRole services.-->
     <service name="createContentRole" engine="simple" invoke="createContentRole"
         location="org/ofbiz/content/content/ContentServices.xml"
@@ -241,7 +241,7 @@
         <description>Remove ContentRole</description>
         <auto-attributes entity-name="ContentRole" include="pk" mode="IN" optional="false"/>
     </service>
-    
+
     <!--ContentAssocPredicate services.-->
     <service name="createContentAssocPredicate" engine="simple"
         location="org/ofbiz/content/content/ContentServices.xml"
@@ -266,7 +266,7 @@
         <description>Remove ContentAssocPredicate</description>
         <auto-attributes entity-name="ContentAssocPredicate" include="pk" mode="IN" optional="false"/>
     </service>
-    
+
     <!--ContentPurposeType services.-->
     <service name="createContentPurposeType" engine="simple" default-entity-name="ContentPurposeType"
         location="org/ofbiz/content/content/ContentServices.xml"
@@ -290,7 +290,7 @@
         <description>Remove ContentPurposeType</description>
         <auto-attributes include="pk" mode="IN" optional="false"/>
     </service>
-    
+
     <!--CharacterSet services.-->
     <service name="createCharacterSet" engine="simple"
         location="org/ofbiz/content/content/ContentServices.xml"
@@ -315,10 +315,10 @@
         <description>Remove CharacterSet</description>
         <auto-attributes include="pk" mode="IN" optional="false"/>
     </service>
-    
+
     <!--DataResource services.-->
-    <service name="createDataResource" engine="java"  
-            location="org.ofbiz.content.data.DataServices" 
+    <service name="createDataResource" engine="java"
+            location="org.ofbiz.content.data.DataServices"
             invoke="createDataResource"
             default-entity-name="DataResource" auth="true" >
         <description>Create a DataResource</description>
@@ -328,13 +328,13 @@
         <attribute mode="IN" name="targetOperationList" optional="true" type="java.util.List"/>
         <attribute mode="IN" name="contentPurposeList" optional="true" type="java.util.List"/>
     </service>
-    <service name="updateDataResource" engine="java"  
-            location="org.ofbiz.content.data.DataServices" 
+    <service name="updateDataResource" engine="java"
+            location="org.ofbiz.content.data.DataServices"
             invoke="updateDataResource"
             default-entity-name="DataResource" auth="true" >
         <description>Update a DataResource</description>
-        <attribute mode="IN" name="dataResourceId" optional="false" type="String"/>
         <auto-attributes include="nonpk" mode="IN" optional="true"/>
+        <attribute mode="IN" name="dataResourceId" optional="false" type="String"/>
         <attribute mode="IN" name="userLogin" optional="true" type="org.ofbiz.entity.GenericValue"/>
         <attribute mode="IN" name="targetOperationList" optional="true" type="java.util.List"/>
         <attribute mode="IN" name="contentPurposeList" optional="true" type="java.util.List"/>
@@ -349,8 +349,8 @@
         <attribute mode="IN" name="targetOperationList" optional="true" type="java.util.List"/>
         <attribute mode="IN" name="contentPurposeList" optional="true" type="java.util.List"/>
     </service>
-    <service name="createDataResourceAndText" engine="java"  
-            location="org.ofbiz.content.data.DataServices" 
+    <service name="createDataResourceAndText" engine="java"
+            location="org.ofbiz.content.data.DataServices"
             invoke="createDataResourceAndText"
             default-entity-name="DataResource" auth="true" >
         <description>Create a DataResource and, possibly, ElectronicText or ImageDataResource</description>
@@ -361,8 +361,8 @@
         <attribute mode="IN" name="targetOperationList" optional="true" type="java.util.List"/>
         <attribute mode="IN" name="contentPurposeList" optional="true" type="java.util.List"/>
     </service>
-    <service name="updateDataResourceAndText" engine="java"  
-            location="org.ofbiz.content.data.DataServices" 
+    <service name="updateDataResourceAndText" engine="java"
+            location="org.ofbiz.content.data.DataServices"
             invoke="updateDataResourceAndText"
             default-entity-name="DataResource" auth="true" >
         <description>Create a DataResource and, possibly, ElectronicText or ImageDataResource</description>
@@ -373,7 +373,7 @@
         <attribute mode="IN" name="targetOperationList" optional="true" type="java.util.List"/>
         <attribute mode="IN" name="contentPurposeList" optional="true" type="java.util.List"/>
     </service>
-    
+
     <!--DataResourceType services.-->
     <service name="createDataResourceType" engine="simple"
         location="org/ofbiz/content/data/DataServices.xml"
@@ -398,8 +398,8 @@
         <description>Remove DataResourceType</description>
         <auto-attributes include="pk" mode="IN" optional="false"/>
     </service>
-    
-    
+
+
     <!--DataResourceTypeAttr services.-->
     <service name="createDataResourceTypeAttr" engine="simple"
         location="org/ofbiz/content/data/DataServices.xml"
@@ -424,8 +424,8 @@
         <description>Remove DataResourceTypeAttr</description>
         <auto-attributes include="pk" mode="IN" optional="false"/>
     </service>
-    
-    
+
+
     <!--FileExtension services.-->
     <service name="createFileExtension" engine="simple"
         location="org/ofbiz/content/data/DataServices.xml"
@@ -450,9 +450,9 @@
         <description>Remove FileExtension</description>
         <auto-attributes include="pk" mode="IN" optional="false"/>
     </service>
-    
-    
-    
+
+
+
     <!--MetaDataPredicate services.-->
     <service name="createMetaDataPredicate" engine="simple"
         location="org/ofbiz/content/data/DataServices.xml"
@@ -477,9 +477,9 @@
         <description>Remove MetaDataPredicate</description>
         <auto-attributes include="pk" mode="IN" optional="false"/>
     </service>
-    
-    
-    
+
+
+
     <!--MimeType services.-->
     <service name="createMimeType" engine="simple"
         location="org/ofbiz/content/data/DataServices.xml"
@@ -504,8 +504,8 @@
         <description>Remove MimeType</description>
         <auto-attributes include="pk" mode="IN" optional="false"/>
     </service>
-    
-    
+
+
     <!--DataCategory services.-->
     <service name="createDataCategory" engine="simple"
         location="org/ofbiz/content/data/DataServices.xml"
@@ -530,8 +530,8 @@
         <description>Remove DataCategory</description>
         <auto-attributes include="pk" mode="IN" optional="false"/>
     </service>
-    
-    
+
+
     <!--ContentOperation services.-->
     <service name="createContentOperation" engine="simple"
         location="org/ofbiz/content/content/ContentServices.xml"
@@ -556,8 +556,8 @@
         <description>Remove ContentOperation</description>
         <auto-attributes include="pk" mode="IN" optional="false"/>
     </service>
-    
-    
+
+
     <!--ContentPurpose services.-->
     <service name="createContentPurpose" engine="simple"
         location="org/ofbiz/content/content/ContentServices.xml"
@@ -582,7 +582,7 @@
         <description>Remove ContentPurpose</description>
         <auto-attributes include="pk" mode="IN" optional="false"/>
     </service>
-    
+
     <!--ContentPurposeOperation services.-->
     <service name="createContentPurposeOperation" engine="simple"
         location="org/ofbiz/content/content/ContentServices.xml"
@@ -607,8 +607,8 @@
         <description>Remove ContentPurposeOperation</description>
         <auto-attributes include="pk" mode="IN" optional="false"/>
     </service>
-    
-    
+
+
     <!--ContentAttribute services.-->
     <service name="createContentAttribute" engine="simple"
         location="org/ofbiz/content/content/ContentServices.xml"
@@ -633,8 +633,8 @@
         <description>Remove ContentAttribute</description>
         <auto-attributes include="pk" mode="IN" optional="false"/>
     </service>
-    
-    
+
+
     <!--ContentMetaData services.-->
     <service name="createContentMetaData" engine="simple"
         location="org/ofbiz/content/content/ContentServices.xml"
@@ -659,8 +659,8 @@
         <description>Remove ContentMetaData</description>
         <auto-attributes include="pk" mode="IN" optional="false"/>
     </service>
-    
-    
+
+
     <!--DataResourceAttribute services.-->
     <service name="createDataResourceAttribute" engine="simple"
         location="org/ofbiz/content/data/DataServices.xml"
@@ -685,8 +685,8 @@
         <description>Remove DataResourceAttribute</description>
         <auto-attributes include="pk" mode="IN" optional="false"/>
     </service>
-    
-    
+
+
     <!--DataResourceRole services.-->
     <service name="createDataResourceRole" engine="simple"
         location="org/ofbiz/content/data/DataServices.xml"
@@ -711,7 +711,7 @@
         <description>Remove DataResourceRole</description>
         <auto-attributes include="pk" mode="IN" optional="false"/>
     </service>
-        
+
     <!--ElectronicText services.-->
     <service name="createElectronicText" engine="java"
         location="org.ofbiz.content.data.DataServices"
@@ -726,8 +726,8 @@
         invoke="updateElectronicText"
         default-entity-name="ElectronicText" auth="true">
         <description>Update a ElectronicText</description>
-        <attribute mode="IN" name="dataResourceId" optional="false" type="String"/>
         <auto-attributes include="nonpk" mode="IN" optional="true"/>
+        <attribute mode="IN" name="dataResourceId" optional="false" type="String"/>
     </service>
     <service name="removeElectronicText" engine="simple"
         location="org/ofbiz/content/data/DataServices.xml"
@@ -818,7 +818,7 @@
         <description>Delete SurveyQuestion</description>
         <auto-attributes include="pk" mode="IN" optional="false"/>
     </service>
-    
+
     <!-- SurveyQuestionAppl Services -->
     <service name="createSurveyQuestionAppl" default-entity-name="SurveyQuestionAppl" auth="true" engine="simple"
         location="org/ofbiz/content/survey/SurveyServices.xml" invoke="createSurveyQuestionAppl">
@@ -837,7 +837,7 @@
         <description>Delete SurveyQuestionAppl</description>
         <auto-attributes include="pk" mode="IN" optional="false"/>
     </service>
-    
+
     <!-- SurveyQuestionCategory Services -->
     <service name="createSurveyQuestionCategory" default-entity-name="SurveyQuestionCategory" auth="true" engine="simple"
         location="org/ofbiz/content/survey/SurveyServices.xml" invoke="createSurveyQuestionCategory">
@@ -856,7 +856,7 @@
         <description>Delete SurveyQuestionCategory</description>
         <auto-attributes include="pk" mode="IN" optional="false"/>
     </service>
-    
+
     <!-- SurveyQuestionType Services -->
     <service name="createSurveyQuestionType" default-entity-name="SurveyQuestionType" auth="true" engine="simple"
         location="org/ofbiz/content/survey/SurveyServices.xml" invoke="createSurveyQuestionType">
@@ -874,8 +874,8 @@
         location="org/ofbiz/content/survey/SurveyServices.xml" invoke="deleteSurveyQuestionType">
         <description>Delete SurveyQuestionType</description>
         <auto-attributes include="pk" mode="IN" optional="false"/>
-    </service> 
-   
+    </service>
+
     <!-- SurveyTrigger Services -->
     <service name="createSurveyTrigger" default-entity-name="SurveyTrigger" auth="true" engine="simple"
         location="org/ofbiz/content/survey/SurveyServices.xml" invoke="createSurveyTrigger">
@@ -894,7 +894,7 @@
         <description>Delete SurveyTrigger</description>
         <auto-attributes include="pk" mode="IN" optional="false"/>
     </service>
-    
+
     <!-- Util -->
     <service name="findAssocContent" engine="simple"
         location="org/ofbiz/content/content/ContentServices.xml" invoke="findAssocContent" auth="true">
@@ -940,12 +940,12 @@
         <attribute name="text" type="String" mode="IN" optional="true"/>
     </service>
 
-    <!-- 
-        getElectronicText: 
+    <!--
+        getElectronicText:
         Can pass either content value or contentId.
     -->
-    <service name="getElectronicText" engine="simple"  
-            location="org/ofbiz/content/data/DataServices.xml" 
+    <service name="getElectronicText" engine="simple"
+            location="org/ofbiz/content/data/DataServices.xml"
             invoke="getElectronicText"
             default-entity-name="ElectronicText" auth="false" >
         <description>Get a ElectronicText</description>
@@ -955,7 +955,7 @@
     </service>
     <!--Complex Contentservices.-->
     <service name="createContentAndAssoc" default-entity-name="Content" engine="java"
-            location="org.ofbiz.content.content.ContentServicesComplex" 
+            location="org.ofbiz.content.content.ContentServicesComplex"
             invoke="createContentAndAssoc" auth="true">
         <description>Create a Content, DataResource and/or ContentAssoc</description>
         <auto-attributes entity-name="Content" include="all" mode="IN" optional="true">
@@ -985,7 +985,7 @@
         <attribute mode="INOUT" name="roleTypeList" optional="true" type="java.util.List"/>
     </service>
 
-    <service name="traverseContent" 
+    <service name="traverseContent"
         auth="false" engine="java" invoke="traverseContent"
         location="org.ofbiz.content.content.ContentServices" >
         <description>Follow a content and return descendants</description>
