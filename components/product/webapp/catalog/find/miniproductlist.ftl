@@ -21,7 +21,7 @@
  *
  *@author     David E. Jones (jonesde@ofbiz.org)
  *@author     Catherine.Heintz@nereide.biz (migration to UiLabel)
- *@version    $Revision: 1.4 $
+ *@version    $Revision: 1.5 $
  *@since      2.1
 -->
 <#assign uiLabelMap = requestAttributes.uiLabelMap>
@@ -60,7 +60,7 @@
                     <tr>
                       <td>
                         <a href='<@ofbizUrl>/EditProduct?productId=${product.productId}</@ofbizUrl>' class='buttontext'>
-                          ${product.internalName?if_exists}
+                          ${product.internalName?default("No Internal Name")}
                         </a>
                         <div class='tabletext'>
                           <b>${product.productId}</b>
