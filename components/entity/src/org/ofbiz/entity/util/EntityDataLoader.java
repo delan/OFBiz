@@ -191,6 +191,10 @@ public class EntityDataLoader {
     }
 
     public static int loadData(URL dataUrl, String helperName, GenericDelegator delegator, List errorMessages, int txTimeout) throws GenericEntityException {
+        return loadData(dataUrl, helperName, delegator, errorMessages, txTimeout, false);
+    }
+
+    public static int loadData(URL dataUrl, String helperName, GenericDelegator delegator, List errorMessages, int txTimeout, boolean dummyFks) throws GenericEntityException {
         int rowsChanged = 0;
         
         if (dataUrl == null) {
@@ -215,6 +219,7 @@ public class EntityDataLoader {
             } else {
                 reader = new EntitySaxReader(delegator);
             }
+            reader.setCreateDummyFks(dummyFks);
             rowsChanged += reader.parse(dataUrl);
         } catch (Exception e) {
             String xmlError = "[install.loadData]: Error loading XML Resource \"" + dataUrl.toExternalForm() + "\"; Error was: " + e.getMessage();
