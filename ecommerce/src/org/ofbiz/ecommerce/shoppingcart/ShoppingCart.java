@@ -386,11 +386,12 @@ public class ShoppingCart implements java.io.Serializable {
         if (orderAdjustmentTypeId == null) return;
         List adjs = this.getAdjustments();
         if (adjs != null) {
-            Iterator adjsIter = adjs.iterator();
-            while (adjsIter.hasNext()) {
-                GenericValue orderAdjustment = (GenericValue) adjsIter.next();
+            for (int i = 0; i < adjs.size(); ) {
+                GenericValue orderAdjustment = (GenericValue) adjs.get(i);
                 if (orderAdjustmentTypeId.equals(orderAdjustment.getString("orderAdjustmentTypeId"))) {
-                    adjs.remove(orderAdjustment);
+                    adjs.remove(i);
+                } else {
+                    i++;
                 }
             }
         }
