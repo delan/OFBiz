@@ -145,7 +145,7 @@ public class EntityClause {
 	outputBuffer.append("[secondModelEntity," + (secondModelEntity==null ? "null" : (secondModelEntity.getEntityName()==null ? "null" : secondModelEntity.getEntityName())) + "]");
 	outputBuffer.append("[interFieldOperation," + (interFieldOperation==null ? "null" : (interFieldOperation.getCode()==null ? "null" : interFieldOperation.getCode())) + "]");
 	outputBuffer.append("[intraFieldOperation," + (intraFieldOperation==null ? "null" : (intraFieldOperation.getCode()==null ? "null" : intraFieldOperation.getCode())) + "]");
-	outputBuffer.append("[value," + ((String)value==null ? "null" : (String)value) + "]");
+    outputBuffer.append("[value," + (getValue().toString()==null ? "null" : getValue().toString()) + "]");
 	return outputBuffer.toString();
   }
 
