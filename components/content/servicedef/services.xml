@@ -149,6 +149,8 @@
         <attribute mode="IN" name="thruDate" optional="true" type="String"/>
         <!-- NOTE: entityOperation should be "_VIEW", "_ADMIN", etc. -->
         <attribute mode="IN" name="entityOperation" optional="true" type="String"/>
+        <attribute mode="IN" name="statusId" optional="true" type="String"/>
+        <attribute mode="IN" name="privilegeEnumId" optional="true" type="String"/>
         <attribute mode="OUT" name="permissionStatus" optional="true" type="String"/>
     </service>
     <service name="findRelatedContent" default-entity-name="Content" engine="java"
@@ -1177,6 +1179,7 @@
         <attribute mode="IN" name="targetOperationList" optional="true" type="List"/>
         <attribute mode="IN" name="contentPurposeList" optional="true" type="List"/>
         <attribute mode="IN" name="userLogin" optional="true" type="GenericValue"/>
+        <attribute mode="IN" name="imageData" optional="true" type="org.ofbiz.entity.util.ByteWrapper"/>
         <attribute mode="INOUT" name="roleTypeList" optional="true" type="List"/>
     </service>
     <service name="deactivateAssocs" engine="java"
