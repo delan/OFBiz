@@ -62,7 +62,7 @@ public class ListToList extends MethodOperation {
         if (toList == null) {
             if (Debug.verboseOn()) Debug.logVerbose("List not found with name " + toListAcsr + ", creating new list");
             toList = new LinkedList();
-            listAcsr.put(methodContext, toList);
+            toListAcsr.put(methodContext, toList);
         }
 
         toList.addAll(fromList);
