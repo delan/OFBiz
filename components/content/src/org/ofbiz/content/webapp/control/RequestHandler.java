@@ -1,5 +1,5 @@
 /*
- * $Id: RequestHandler.java,v 1.15 2004/07/28 03:40:38 jonesde Exp $
+ * $Id: RequestHandler.java,v 1.16 2004/07/30 02:11:16 jonesde Exp $
  *
  * Copyright (c) 2001-2003 The Open For Business Project - www.ofbiz.org
  *
@@ -63,7 +63,7 @@ import org.ofbiz.entity.GenericValue;
  * @author     <a href="mailto:jaz@ofbiz.org">Andy Zeneski</a>
  * @author     <a href="mailto:jonesde@ofbiz.org">David E. Jones</a>
  * @author     Dustin Caldwell
- * @version    $Revision: 1.15 $
+ * @version    $Revision: 1.16 $
  * @since      2.0
  */
 public class RequestHandler implements Serializable {
@@ -593,7 +593,6 @@ public class RequestHandler implements Serializable {
         // create the path the the control servlet
         String controlPath = (String) request.getAttribute("_CONTROL_PATH_");              
         
-        
         String requestUri = RequestHandler.getRequestUri(url);
         StringBuffer newURL = new StringBuffer();
 
@@ -625,6 +624,9 @@ public class RequestHandler implements Serializable {
         }
                 
         newURL.append(controlPath);
+        if (!url.startsWith("/")) {
+            newURL.append("/");
+        }
         newURL.append(url);
         String encodedUrl = null;
         if (response != null && !encode) {

@@ -1,5 +1,5 @@
 /*
- * $Id: IfHasPermission.java,v 1.1 2003/08/17 06:06:13 ajzeneski Exp $
+ * $Id: IfHasPermission.java,v 1.2 2004/07/30 02:11:19 jonesde Exp $
  *
  *  Copyright (c) 2001, 2002 The Open For Business Project - www.ofbiz.org
  *
@@ -27,6 +27,7 @@ import java.util.LinkedList;
 import java.util.List;
 
 import org.ofbiz.base.util.UtilXml;
+import org.ofbiz.base.util.string.FlexibleStringExpander;
 import org.ofbiz.entity.GenericValue;
 import org.ofbiz.minilang.SimpleMethod;
 import org.ofbiz.minilang.method.MethodContext;
@@ -39,21 +40,21 @@ import org.w3c.dom.Element;
  * process else operations if specified.
  *
  * @author     <a href="mailto:jonesde@ofbiz.org">David E. Jones</a>
- * @version    $Revision: 1.1 $
+ * @version    $Revision: 1.2 $
  * @since      2.0
  */
 public class IfHasPermission extends MethodOperation {
 
-    List subOps = new LinkedList();
-    List elseSubOps = null;
+    protected List subOps = new LinkedList();
+    protected List elseSubOps = null;
 
-    String permission;
-    String action;
+    protected FlexibleStringExpander permissionExdr;
+    protected FlexibleStringExpander actionExdr;
 
     public IfHasPermission(Element element, SimpleMethod simpleMethod) {
         super(element, simpleMethod);
-        this.permission = element.getAttribute("permission");
-        this.action = element.getAttribute("action");
+        this.permissionExdr = new FlexibleStringExpander(element.getAttribute("permission"));
+        this.actionExdr = new FlexibleStringExpander(element.getAttribute("action"));
 
         SimpleMethod.readOperations(element, subOps, simpleMethod);
 
@@ -75,8 +76,8 @@ public class IfHasPermission extends MethodOperation {
         // if no user is logged in, treat as if the user does not have permission: do not run subops
         GenericValue userLogin = methodContext.getUserLogin();
         if (userLogin != null) {
-            String permission = methodContext.expandString(this.permission);
-            String action = methodContext.expandString(this.action);
+            String permission = methodContext.expandString(permissionExdr);
+            String action = methodContext.expandString(actionExdr);
             
             Security security = methodContext.getSecurity();
             if (action != null && action.length() > 0) {

@@ -1,5 +1,5 @@
 /*
- * $Id: ScreenWidgetViewHandler.java,v 1.3 2004/07/28 03:40:38 jonesde Exp $
+ * $Id: ScreenWidgetViewHandler.java,v 1.4 2004/07/30 02:11:16 jonesde Exp $
  *
  * Copyright (c) 2003 The Open For Business Project - www.ofbiz.org
  *
@@ -62,7 +62,7 @@ import freemarker.ext.servlet.HttpSessionHashModel;
  * Handles view rendering for the Screen Widget
  *
  * @author     <a href="mailto:jonesde@ofbiz.org">David E. Jones</a>
- * @version    $Revision: 1.3 $
+ * @version    $Revision: 1.4 $
  * @since      3.1
  */
 public class ScreenWidgetViewHandler implements ViewHandler {
@@ -168,6 +168,7 @@ public class ScreenWidgetViewHandler implements ViewHandler {
             context.put("checkLoginUrl", LoginWorker.makeLoginUrl(request, "checkLogin"));
             String externalLoginKey = LoginWorker.getExternalLoginKey(request);
             String externalKeyParam = externalLoginKey == null ? "" : "&externalLoginKey=" + externalLoginKey;
+            context.put("externalLoginKey", externalLoginKey);
             context.put("externalKeyParam", externalKeyParam);
             
             // setup message lists

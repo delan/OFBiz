@@ -1,5 +1,5 @@
 /*
- * $Id: IfNotEmpty.java,v 1.1 2003/08/17 06:06:12 ajzeneski Exp $
+ * $Id: IfNotEmpty.java,v 1.2 2004/07/30 02:11:19 jonesde Exp $
  *
  *  Copyright (c) 2001, 2002 The Open For Business Project - www.ofbiz.org
  *
@@ -34,7 +34,7 @@ import org.ofbiz.minilang.method.*;
  * Iff the specified field is not empty process sub-operations
  *
  * @author     <a href="mailto:jonesde@ofbiz.org">David E. Jones</a>
- * @version    $Revision: 1.1 $
+ * @version    $Revision: 1.2 $
  * @since      2.0
  */
 public class IfNotEmpty extends MethodOperation {
@@ -86,30 +86,7 @@ public class IfNotEmpty extends MethodOperation {
         }
 
         // only run subOps if element is not empty/null
-        boolean runSubOps = false;
-        if (fieldVal != null) {
-            if (fieldVal instanceof String) {
-                String fieldStr = (String) fieldVal;
-
-                if (fieldStr.length() > 0) {
-                    runSubOps = true;
-                }
-            } else if (fieldVal instanceof Collection) {
-                Collection fieldCol = (Collection) fieldVal;
-
-                if (fieldCol.size() > 0) {
-                    runSubOps = true;
-                }
-            } else if (fieldVal instanceof Map) {
-                Map fieldMap = (Map) fieldVal;
-
-                if (fieldMap.size() > 0) {
-                    runSubOps = true;
-                }
-            } else {
-                runSubOps = true;
-            }
-        }
+        boolean runSubOps = !ObjectType.isEmpty(fieldVal);
 
         if (runSubOps) {
             // if (Debug.verboseOn()) Debug.logVerbose("IfNotEmpty: Running if operations mapAcsr=" + mapAcsr + " fieldAcsr=" + fieldAcsr, module);

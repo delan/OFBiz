@@ -1,5 +1,5 @@
 /*
- * $Id: IfEmpty.java,v 1.1 2003/08/17 06:06:13 ajzeneski Exp $
+ * $Id: IfEmpty.java,v 1.2 2004/07/30 02:11:18 jonesde Exp $
  *
  *  Copyright (c) 2001, 2002 The Open For Business Project - www.ofbiz.org
  *
@@ -34,7 +34,7 @@ import org.ofbiz.minilang.method.*;
  * Iff the specified field is not empty process sub-operations
  *
  * @author     <a href="mailto:jonesde@ofbiz.org">David E. Jones</a>
- * @version    $Revision: 1.1 $
+ * @version    $Revision: 1.2 $
  * @since      2.0
  */
 public class IfEmpty extends MethodOperation {
@@ -81,30 +81,8 @@ public class IfEmpty extends MethodOperation {
             // no map name, try the env
             fieldVal = fieldAcsr.get(methodContext);
         }
-
-        if (fieldVal == null) {
-            runSubOps = true;
-        } else {
-            if (fieldVal instanceof String) {
-                String fieldStr = (String) fieldVal;
-
-                if (fieldStr.length() == 0) {
-                    runSubOps = true;
-                }
-            } else if (fieldVal instanceof Collection) {
-                Collection fieldCol = (Collection) fieldVal;
-
-                if (fieldCol.size() == 0) {
-                    runSubOps = true;
-                }
-            } else if (fieldVal instanceof Map) {
-                Map fieldMap = (Map) fieldVal;
-
-                if (fieldMap.size() == 0) {
-                    runSubOps = true;
-                }
-            }
-        }
+        
+        runSubOps = ObjectType.isEmpty(fieldVal);
 
         if (runSubOps) {
             return SimpleMethod.runSubOps(subOps, methodContext);

@@ -1,5 +1,5 @@
 /*
- * $Id: ModelScreenWidget.java,v 1.7 2004/07/28 00:03:49 byersa Exp $
+ * $Id: ModelScreenWidget.java,v 1.8 2004/07/30 02:11:17 jonesde Exp $
  *
  * Copyright (c) 2004 The Open For Business Project - www.ofbiz.org
  *
@@ -70,7 +70,7 @@ import org.xml.sax.SAXException;
  * Widget Library - Screen model class
  *
  * @author     <a href="mailto:jonesde@ofbiz.org">David E. Jones</a>
- * @version    $Revision: 1.7 $
+ * @version    $Revision: 1.8 $
  * @since      3.1
  */
 public abstract class ModelScreenWidget {
@@ -85,10 +85,9 @@ public abstract class ModelScreenWidget {
     
     public abstract void renderWidgetString(Writer writer, Map context, ScreenStringRenderer screenStringRenderer);
     
-    public static List readSubWidgets(ModelScreen modelScreen, Element widgetElement) {
+    public static List readSubWidgets(ModelScreen modelScreen, List subElementList) {
         List subWidgets = new LinkedList();
         
-        List subElementList = UtilXml.childElementList(widgetElement);
         Iterator subElementIter = subElementList.iterator();
         while (subElementIter.hasNext()) {
             Element subElement = (Element) subElementIter.next();
@@ -166,30 +165,83 @@ public abstract class ModelScreenWidget {
 
     public static class Section extends ModelScreenWidget {
         protected String name;
+        protected ModelScreenCondition condition;
+        protected List actions;
         protected List subWidgets;
+        protected List failWidgets;
         
         public Section(ModelScreen modelScreen, Element sectionElement) {
             super(modelScreen, sectionElement);
             this.name = sectionElement.getAttribute("name");
+
+            // read condition under the "condition" element
+            Element conditionElement = UtilXml.firstChildElement(sectionElement, "condition");
+            if (conditionElement != null) {
+                this.condition = new ModelScreenCondition(modelScreen, conditionElement);
+            }
+
+            // read all actions under the "actions" element
+            Element actionsElement = UtilXml.firstChildElement(sectionElement, "actions");
+            if (actionsElement != null) {
+                this.actions = ModelScreenAction.readSubActions(modelScreen, actionsElement);
+            }
             
             // read sub-widgets
-            this.subWidgets = ModelScreenWidget.readSubWidgets(this.modelScreen, sectionElement);
+            Element widgetsElement = UtilXml.firstChildElement(sectionElement, "widgets");
+            List subElementList = UtilXml.childElementList(widgetsElement);
+            this.subWidgets = ModelScreenWidget.readSubWidgets(this.modelScreen, subElementList);
+
+            // read fail-widgets
+            Element failWidgetsElement = UtilXml.firstChildElement(sectionElement, "fail-widgets");
+            if (failWidgetsElement != null) {
+                List failElementList = UtilXml.childElementList(failWidgetsElement);
+                this.failWidgets = ModelScreenWidget.readSubWidgets(this.modelScreen, failElementList);
+            }
         }
 
         public void renderWidgetString(Writer writer, Map context, ScreenStringRenderer screenStringRenderer) {
-            try {
-                // section by definition do not themselves do anything, so this method will generally do nothing, but we'll call it anyway
-                screenStringRenderer.renderSectionBegin(writer, context, this);
-                
-                // render sub-widgets
-                renderSubWidgetsString(this.subWidgets, writer, context, screenStringRenderer);
-
-                screenStringRenderer.renderSectionEnd(writer, context, this);
-            } catch (IOException e) {
-                String errMsg = "Error rendering label in screen named [" + this.modelScreen.getName() + "]: " + e.toString();
-                Debug.logError(e, errMsg, module);
-                throw new RuntimeException(errMsg);
+            // check the condition, if there is one
+            boolean condTrue = true;
+            if (this.condition != null) {
+                if (!this.condition.eval(context)) {
+                    condTrue = false;
+                }
             }
+            
+            // if condition does not exist or evals to true run actions and render widgets, otherwise render fail-widgets
+            if (condTrue) {
+                // run the actions only if true
+                ModelScreenAction.runSubActions(this.actions, context);
+                
+                try {
+                    // section by definition do not themselves do anything, so this method will generally do nothing, but we'll call it anyway
+                    screenStringRenderer.renderSectionBegin(writer, context, this);
+                    
+                    // render sub-widgets
+                    renderSubWidgetsString(this.subWidgets, writer, context, screenStringRenderer);
+
+                    screenStringRenderer.renderSectionEnd(writer, context, this);
+                } catch (IOException e) {
+                    String errMsg = "Error rendering widgets section [" + this.getName() + "] in screen named [" + this.modelScreen.getName() + "]: " + e.toString();
+                    Debug.logError(e, errMsg, module);
+                    throw new RuntimeException(errMsg);
+                }
+            } else {
+                try {
+                    // section by definition do not themselves do anything, so this method will generally do nothing, but we'll call it anyway
+                    screenStringRenderer.renderSectionBegin(writer, context, this);
+                    
+                    // render sub-widgets
+                    renderSubWidgetsString(this.failWidgets, writer, context, screenStringRenderer);
+
+                    screenStringRenderer.renderSectionEnd(writer, context, this);
+                } catch (IOException e) {
+                    String errMsg = "Error rendering fail-widgets section [" + this.getName() + "] in screen named [" + this.modelScreen.getName() + "]: " + e.toString();
+                    Debug.logError(e, errMsg, module);
+                    throw new RuntimeException(errMsg);
+                }
+            }
+            
         }
         
         public String getName() {
@@ -202,13 +254,14 @@ public abstract class ModelScreenWidget {
         protected FlexibleStringExpander styleExdr;
         protected List subWidgets;
         
-        public Container(ModelScreen modelScreen, Element sectionElement) {
-            super(modelScreen, sectionElement);
-            this.idExdr = new FlexibleStringExpander(sectionElement.getAttribute("id"));
-            this.styleExdr = new FlexibleStringExpander(sectionElement.getAttribute("style"));
+        public Container(ModelScreen modelScreen, Element containerElement) {
+            super(modelScreen, containerElement);
+            this.idExdr = new FlexibleStringExpander(containerElement.getAttribute("id"));
+            this.styleExdr = new FlexibleStringExpander(containerElement.getAttribute("style"));
             
             // read sub-widgets
-            this.subWidgets = ModelScreenWidget.readSubWidgets(this.modelScreen, sectionElement);
+            List subElementList = UtilXml.childElementList(containerElement);
+            this.subWidgets = ModelScreenWidget.readSubWidgets(this.modelScreen, subElementList);
         }
 
         public void renderWidgetString(Writer writer, Map context, ScreenStringRenderer screenStringRenderer) {
@@ -220,7 +273,7 @@ public abstract class ModelScreenWidget {
 
                 screenStringRenderer.renderContainerEnd(writer, context, this);
             } catch (IOException e) {
-                String errMsg = "Error rendering label in screen named [" + this.modelScreen.getName() + "]: " + e.toString();
+                String errMsg = "Error rendering container in screen named [" + this.modelScreen.getName() + "]: " + e.toString();
                 Debug.logError(e, errMsg, module);
                 throw new RuntimeException(errMsg);
             }
@@ -260,6 +313,11 @@ public abstract class ModelScreenWidget {
             // dont need the renderer here, will just pass this on down to another screen call; screenStringRenderer.renderContainerBegin(writer, context, this);
             String name = this.getName(context);
             String location = this.getLocation(context);
+            
+            if (UtilValidate.isEmpty(name)) {
+                Debug.logInfo("In the include-screen tag the screen name was empty, ignoring include; in screen [" + this.modelScreen.getName() + "]", module);
+                return;
+            }
             
             ModelScreen modelScreen = null;
             if (UtilValidate.isNotEmpty(location)) {
@@ -384,7 +442,8 @@ public abstract class ModelScreenWidget {
             super(modelScreen, decoratorSectionElement);
             this.name = decoratorSectionElement.getAttribute("name");
             // read sub-widgets
-            this.subWidgets = ModelScreenWidget.readSubWidgets(this.modelScreen, decoratorSectionElement);
+            List subElementList = UtilXml.childElementList(decoratorSectionElement);
+            this.subWidgets = ModelScreenWidget.readSubWidgets(this.modelScreen, subElementList);
         }
 
         public void renderWidgetString(Writer writer, Map context, ScreenStringRenderer screenStringRenderer) {
@@ -519,7 +578,6 @@ public abstract class ModelScreenWidget {
         }
     }
 
-
     public static class Tree extends ModelScreenWidget {
         protected FlexibleStringExpander nameExdr;
         protected FlexibleStringExpander locationExdr;
@@ -644,7 +702,6 @@ public abstract class ModelScreenWidget {
         }
         
     }
-
 
     public static class SubContent extends ModelScreenWidget {
         
@@ -994,6 +1051,5 @@ public abstract class ModelScreenWidget {
         }
             
     }
-
 }
 
