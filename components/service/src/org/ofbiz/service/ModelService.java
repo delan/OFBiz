@@ -1,5 +1,5 @@
 /*
- * $Id: ModelService.java,v 1.2 2003/08/25 19:32:33 jonesde Exp $
+ * $Id: ModelService.java,v 1.3 2003/12/04 02:42:00 ajzeneski Exp $
  *
  * Copyright (c) 2001, 2002 The Open For Business Project - www.ofbiz.org
  *
@@ -47,7 +47,7 @@ import org.ofbiz.base.util.OrderedSet;
  *
  * @author     <a href="mailto:jaz@ofbiz.org">Andy Zeneski</a>
  * @author     <a href="mailto:jonesde@ofbiz.org">David E. Jones</a>
- * @version    $Revision: 1.2 $
+ * @version    $Revision: 1.3 $
  * @since      2.0
  */
 public class ModelService {
@@ -169,9 +169,18 @@ public class ModelService {
         buf.append(inheritedParameters + "::");        
         return buf.toString();
     }
-    
+
+    public String debugInfo() {
+        if (debug || Debug.verboseOn()) {
+            return " [" + this.toString() + "]";
+        }
+        return "";
+    }
+
     /**
-     * Test if we have already inherited our interface parameters     * @return boolean     */
+     * Test if we have already inherited our interface parameters
+     * @return boolean
+     */
     public boolean inheritedParameters() {
         return this.inheritedParameters;
     }
@@ -267,7 +276,6 @@ public class ModelService {
      * Validates a Map against the IN or OUT parameter information
      * @param test The Map object to test
      * @param mode Test either mode IN or mode OUT
-     * @return true if the validation is successful
      */
     public void validate(Map test, String mode) throws ServiceValidationException {        
         Map requiredInfo = new HashMap();
@@ -368,7 +376,6 @@ public class ModelService {
      * @param info The map of name, object types
      * @param test The map to test its value types.
      * @param reverse Test the maps in reverse.
-     * @returns true if validation is successful
      */
     public static void validate(Map info, Map test, boolean reverse, String serviceName) throws ServiceValidationException {
         if (info == null || test == null) {
@@ -472,7 +479,6 @@ public class ModelService {
      * Tries to convert parameters to required type.
      * @param source The source map
      * @param mode The mode which to build the new map
-     * @returns Map a new Map of only valid parameters
      */
     public Map makeValid(Map source, String mode) {
         return makeValid(source, mode, true);
@@ -484,7 +490,6 @@ public class ModelService {
      * @param source The source map
      * @param mode The mode which to build the new map
      * @param includeInternal When false will exclude internal fields
-     * @returns Map a new Map of only valid parameters
      */    
     public Map makeValid(Map source, String mode, boolean includeInternal) {        
         Map target = new HashMap();
@@ -585,7 +590,6 @@ public class ModelService {
     /**
      * Run the interface update and inherit all interface parameters
      * @param dctx The DispatchContext to use for service lookups
-     * @return ModelService object with inherited parameters
      */
     public synchronized void interfaceUpdate(DispatchContext dctx) throws GenericServiceException {                       
         if (!inheritedParameters) {            
