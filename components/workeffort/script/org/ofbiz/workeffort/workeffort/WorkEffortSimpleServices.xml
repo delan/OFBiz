@@ -23,7 +23,7 @@
  *  THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  *
  * @author     David E. Jones (jonesde@ofbiz.org)
- * @version    $Rev:$
+ * @version    $Rev$
  * @since      2.0
 -->
 
@@ -505,5 +505,12 @@
         <if-not-empty map-name="lookedUpValue" field-name="workEffortId">
             <remove-value value-name="lookedUpValue"/>
         </if-not-empty>
+    </simple-method>
+    <simple-method method-name="createWorkEffortInventoryAssign" short-description="Create WorkEffortInventoryAssign">
+        <string-to-field string="Create WorkEffortInventoryAssign" field-name="operationName"/>
+        <make-value value-name="newEntity" entity-name="WorkEffortInventoryAssign"/>
+        <set-pk-fields map-name="parameters" value-name="newEntity"/>
+        <set-nonpk-fields map-name="parameters" value-name="newEntity"/>
+        <create-value value-name="newEntity"/>
     </simple-method>
 </simple-methods>

@@ -26,7 +26,7 @@
  *
  *@author     David E. Jones (jonesde@ofbiz.org)
  *@author     Andy Zeneski (jaz@ofbiz.org)
- *@version    $Rev:$
+ *@version    $Rev$
  */
 -->
 
@@ -80,5 +80,9 @@
     <entity-group group="org.ofbiz" entity="WorkEffortTransBox" />
     <entity-group group="org.ofbiz" entity="WorkEffortType" />
     <entity-group group="org.ofbiz" entity="WorkEffortTypeAttr" />
+    
+    <entity-group group="org.ofbiz" entity="WorkEffortAndGoods" />
+    <entity-group group="org.ofbiz" entity="WorkEffortAndInventoryAssign" />
+    <entity-group group="org.ofbiz" entity="WorkEffortAndInventoryProduced" />
 </entitygroup>
 
