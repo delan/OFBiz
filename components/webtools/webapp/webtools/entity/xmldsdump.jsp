@@ -26,7 +26,7 @@
 <%@ page import="java.util.*, java.io.*, java.net.*" %>
 <%@ page import="org.w3c.dom.*" %>
 <%@ page import="org.ofbiz.security.*, org.ofbiz.entity.*, org.ofbiz.base.util.*, org.ofbiz.content.webapp.pseudotag.*" %>
-<%@ page import="org.ofbiz.entity.model.*, org.ofbiz.entity.util.*, org.ofbiz.entity.condition.*" %>
+<%@ page import="org.ofbiz.entity.model.*, org.ofbiz.entity.util.*, org.ofbiz.entity.transaction.*, org.ofbiz.entity.condition.*" %>
 
 <%@ taglib uri="ofbizTags" prefix="ofbiz" %>
 
@@ -73,15 +73,22 @@
 
     Iterator i = passedEntityNames.iterator();
     while(i.hasNext()) { 
-        String curEntityName = (String)i.next();
-        EntityListIterator values = delegator.findListIteratorByCondition(curEntityName, null, null, null);
+        boolean beganTransaction = TransactionUtil.begin(3600);
+        try {
+            String curEntityName = (String)i.next();
+            EntityListIterator values = delegator.findListIteratorByCondition(curEntityName, null, null, null);
 
-        GenericValue value = null;
-        while ((value = (GenericValue) values.next()) != null) {
-            value.writeXmlText(writer, "");
-            numberWritten++;
+            GenericValue value = null;
+            while ((value = (GenericValue) values.next()) != null) {
+                value.writeXmlText(writer, "");
+                numberWritten++;
+            }
+            values.close();
+            TransactionUtil.commit(beganTransaction);
+        } catch (Exception e) {
+            Debug.logError(e, "Error reading data for XML export:", "JSP");
+            TransactionUtil.rollback(beganTransaction);
         }
-        values.close();
     }
     writer.println("</entity-engine-xml>");
     writer.close();
