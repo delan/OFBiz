@@ -330,9 +330,9 @@ public class UtilFormatOut {
      */
     public static String encodeXmlValue(String inString) {
         String retString = inString;
+        retString = StringUtil.replaceString(retString, "&", "&amp;");
         retString = StringUtil.replaceString(retString, "<", "&lt;");
         retString = StringUtil.replaceString(retString, ">", "&gt;");
-        retString = StringUtil.replaceString(retString, "&", "&amp;");
         retString = StringUtil.replaceString(retString, "\"", "&quot;");
         retString = StringUtil.replaceString(retString, "'", "&apos;");
         return retString;
