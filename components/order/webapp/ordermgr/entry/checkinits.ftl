@@ -20,9 +20,37 @@
  *  THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  *
  *@author     Andy Zeneski (jaz@ofbiz.org)
- *@version    $Revision: 1.2 $
+ *@version    $Revision: 1.3 $
  *@since      2.2
 -->
+
+<script language="JavaScript">
+<!--
+var defaultText = "!";
+var defaultValue = "!";
+function setStore(disable) {
+    var selectBox = document.entryform.productStoreId;
+    if (disable) {
+        if (defaultText == "!") {
+            defaultText = selectBox.options[selectBox.selectedIndex].text;
+        }
+        if (defaultValue == "!") {
+            defaultValue = selectBox.options[selectBox.selectedIndex].value;
+        }
+        selectBox.options[selectBox.selectedIndex].text = "Not Used For Purchase Orders";
+        selectBox.options[selectBox.selectedIndex].value = "";
+    } else {
+        if (defaultText != "!") {
+            selectBox.options[selectBox.selectedIndex].text = defaultText;
+        }
+        if (defaultValue != "!") {
+            selectBox.options[selectBox.selectedIndex].value = defaultValue;
+        }
+    }
+    selectBox.disabled = disable;
+}
+//-->
+</script>
 
 <table border=0 width='100%' cellspacing='0' cellpadding='0' class='boxoutside'>
   <tr>
@@ -50,7 +78,7 @@
           <td width='6%'>&nbsp;</td>
           <td width='74%' valign='middle'>
             <div class='tabletext' valign='top'>
-              <input type='radio' name='orderMode' value='SALES_ORDER'<#if sessionAttributes.orderMode?default("") == "SALES_ORDER"> checked</#if><#if sessionAttributes.orderMode?exists> disabled</#if>>&nbsp;Sales Order&nbsp;<input type='radio' name='orderMode' value='PURCHASE_ORDER'<#if sessionAttributes.orderMode?default("") == "PURCHASE_ORDER"> checked</#if><#if sessionAttributes.orderMode?exists> disabled</#if>>&nbsp;Purchase Order&nbsp;
+              <input type='radio' name='orderMode' onChange="javascript:setStore(false)" value='SALES_ORDER'<#if sessionAttributes.orderMode?default("") == "SALES_ORDER"> checked</#if><#if sessionAttributes.orderMode?exists> disabled</#if>>&nbsp;Sales Order&nbsp;<input type='radio' name='orderMode' onChange="javascript:setStore(true)" value='PURCHASE_ORDER'<#if sessionAttributes.orderMode?default("") == "PURCHASE_ORDER"> checked</#if><#if sessionAttributes.orderMode?exists> disabled</#if>>&nbsp;Purchase Order&nbsp;
               <#if !sessionAttributes.orderMode?exists>*<font color='red'>required</font><#else>(cannot be changed without clearing order.)</#if>
             </div>
           </td>
@@ -64,7 +92,6 @@
             <div class='tabletext' valign='top'>
               <select class="selectBox" name="productStoreId"<#if sessionAttributes.orderMode?exists> disabled</#if>>
                 <#assign currentStore = shoppingCart.getProductStoreId()?default("NA")>
-                <option value="">Not Applicable</option>
                 <#list productStores as productStore>
                   <option value="${productStore.productStoreId}"<#if productStore.productStoreId == currentStore> checked</#if>>${productStore.storeName}</option>
                 </#list>
