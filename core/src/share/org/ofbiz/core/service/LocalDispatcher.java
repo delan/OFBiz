@@ -56,8 +56,8 @@ public class LocalDispatcher {
                 loader = this.getClass().getClassLoader();
             }
         }
-        ctx = new DispatchContext(name,root,readerURLs,loader,this);
-        init(name, delegator, ctx);        
+        DispatchContext dc = new DispatchContext(name,root,readerURLs,loader,null);
+        init(name, delegator, dc);        
     }
     
     public LocalDispatcher(String name, GenericDelegator delegator, DispatchContext ctx) {
@@ -66,6 +66,8 @@ public class LocalDispatcher {
     
     private void init(String name, GenericDelegator delegator, DispatchContext ctx) {
         this.name = name;
+        this.ctx = ctx;
+        ctx.setDispatcher(this);
         dispatcher = ServiceDispatcher.getInstance(name, ctx, delegator);
         Debug.logInfo("[LocalDispatcher] : Created Dispatcher for: " + name);
     }

@@ -58,7 +58,13 @@ public class ServiceEventHandler implements EventHandler {
     public String invoke(HttpServletRequest request, HttpServletResponse response) throws EventHandlerException {
         HttpSession session = request.getSession();
         ServletContext context = session.getServletContext();
-        LocalDispatcher dispatcher = (LocalDispatcher) context.getAttribute("dispatcher");
+        LocalDispatcher dispatcher = (LocalDispatcher) context.getAttribute("dispatcher");        
+        if ( dispatcher == null ) 
+            throw new EventHandlerException("The local service dispatcher is null");
+        
+        DispatchContext dctx = dispatcher.getDispatchContext();
+        if ( dctx == null )
+            throw new EventHandlerException("Dispatch context cannot be found");
         
         if ( serviceName == null )
             throw new EventHandlerException("Service name (eventMethod) cannot be null");
@@ -66,7 +72,7 @@ public class ServiceEventHandler implements EventHandler {
         // get the service model to generate context
         ModelService model = null;
         try {
-            model = dispatcher.getDispatchContext().getModelService(serviceName);
+            model = dctx.getModelService(serviceName);
         }
         catch ( GenericServiceException e ) {
             throw new EventHandlerException("Problems getting the service model",e);
@@ -76,6 +82,7 @@ public class ServiceEventHandler implements EventHandler {
             throw new EventHandlerException("Problems getting the service model");
         
         Debug.logInfo("[EventHandler] : Processing SERVICE event");
+        Debug.logInfo("[EventHandler] : Using delegator - " + dispatcher.getDelegator().getDelegatorName());
         
         // we have a service and the model; build the context
         Map serviceContext = new HashMap();

@@ -93,6 +93,13 @@ public class DispatchContext {
         return this.loader;
     }
     
+    /** Gets the collection of readers associated with this context
+     *@return Collection of reader URLs
+     */
+    public Collection getReaders() {
+        return readers;
+    }
+    
     /** Gets the name of the local dispatcher
      *@return String name of the LocalDispatcher object
      */
@@ -163,6 +170,13 @@ public class DispatchContext {
      */
     public LocalDispatcher getDispatcher() {
         return this.dispatcher;
+    }
+    
+    /** Sets the LocalDispatcher used with this context
+     *@param dispatcher The LocalDispatcher to re-assign to this context
+     */
+    public void setDispatcher(LocalDispatcher dispatcher) {
+        this.dispatcher = dispatcher;
     }
     
     /** Gets the GenericDelegator associated with this context/dispatcher

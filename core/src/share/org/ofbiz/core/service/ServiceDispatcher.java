@@ -93,6 +93,7 @@ public class ServiceDispatcher {
      *@param loader the classloader of the local dispatcher
      */
     public void register(String name, DispatchContext context) {
+        Debug.logInfo("[ServiceDispatcher.register] : Registered dispatcher: " + context.getName());
         this.localContext.put(name,context);
     }
     

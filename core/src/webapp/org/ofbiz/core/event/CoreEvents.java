@@ -54,12 +54,56 @@ public class CoreEvents {
         
         GenericDelegator delegator = GenericDelegator.getGenericDelegator(delegatorName);
         if ( delegator == null ) {
-            request.setAttribute(SiteDefs.ERROR_MESSAGE,"<li>Invalid delegator.");
+            request.setAttribute(SiteDefs.ERROR_MESSAGE,"<li>No delegator defined by that name.");
             return "error";
         }
-        application.setAttribute("delegator",delegator);
+                
+        // now change the dispatcher to use this delegator
+        LocalDispatcher dispatcher = (LocalDispatcher) application.getAttribute("dispatcher");
+        DispatchContext dctx = dispatcher.getDispatchContext();
+        String dispatcherName = dispatcher.getName();
+        
+        if ( dispatcherName == null ) {
+            request.setAttribute(SiteDefs.ERROR_MESSAGE,"<li>Dispatcher name is null.");
+            return "error";
+        }
+        if ( dctx == null ) {
+            request.setAttribute(SiteDefs.ERROR_MESSAGE,"<li>Dispatch context is null.");
+            return "error";
+        }
+            
+        ServiceDispatcher sd = ServiceDispatcher.getInstance(dispatcherName,delegator);
+        
+        if ( sd == null ) 
+            dispatcher = new LocalDispatcher(dispatcherName,delegator,dctx);                    
+        else 
+            dispatcher = sd.getLocalContext(dispatcherName).getDispatcher();        
+        
+        application.setAttribute("delegator",delegator);                
+        application.setAttribute("dispatcher",dispatcher);
+        
         return "success";
     }
+    
+    public static String changeDispatcher(HttpServletRequest request, HttpServletResponse response) {
+        ServletContext application = request.getSession().getServletContext();        
+        String dispatcherName = request.getParameter("dispatcher");
+        if ( dispatcherName == null ) {
+            request.setAttribute(SiteDefs.ERROR_MESSAGE,"<li>Required parameter 'dispatcher' not passed.");
+            return "error";
+        }
+        
+        GenericDelegator delegator = (GenericDelegator) application.getAttribute("delegator");
+        ServiceDispatcher sd = ServiceDispatcher.getInstance(dispatcherName,delegator);
+        if ( sd == null ) {
+            request.setAttribute(SiteDefs.ERROR_MESSAGE,"<li>No dispatcher with that name has been registered.");
+            return "error";
+        }
+        LocalDispatcher dispatcher = sd.getLocalContext(dispatcherName).getDispatcher();
+        application.setAttribute("dispatcher",dispatcher);
+        return "success";
+    }
+        
     
 }
 
