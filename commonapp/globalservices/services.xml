@@ -161,4 +161,9 @@
         <description>Update a DataSource record</description>
         <implements service="interfaceDataSource"/>
     </service>
+    <service name="deleteDataSource" engine="simple"
+            location="org/ofbiz/commonapp/common/datasource/DataSourceServices.xml" invoke="deleteDataSource" auth="true">
+        <description>Delete a DataSource record</description>
+        <attribute name="dataSourceId" type="String" mode="IN" optional="false"/>
+    </service>
 </services>

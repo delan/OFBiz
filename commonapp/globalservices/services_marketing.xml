@@ -118,12 +118,12 @@
         <attribute name="subgroupId" type="String" mode="IN" optional="true"/>
     </service>
     <service name="createTrackingCode" engine="simple"
-            location="org/ofbiz/commonapp/marketing/trackingcode/TrackingCodeServices.xml" invoke="createTrackingCode" auth="true">
+            location="org/ofbiz/commonapp/marketing/tracking/TrackingCodeServices.xml" invoke="createTrackingCode" auth="true">
         <description>Create a TrackingCode record</description>
         <implements service="interfaceTrackingCode"/>
     </service>
     <service name="updateTrackingCode" engine="simple"
-            location="org/ofbiz/commonapp/marketing/trackingcode/TrackingCodeServices.xml" invoke="updateTrackingCode" auth="true">
+            location="org/ofbiz/commonapp/marketing/tracking/TrackingCodeServices.xml" invoke="updateTrackingCode" auth="true">
         <description>Update a TrackingCode record</description>
         <implements service="interfaceTrackingCode"/>
     </service>
