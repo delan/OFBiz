@@ -24,7 +24,7 @@
  *
  * @author     David E. Jones (jonesde@ofbiz.org)
  * @author     Andy Zeneski (jaz@ofbiz.org)
- * @version    $Revision: 1.6 $
+ * @version    $Revision: 1.7 $
  * @since      2.0
  -->
 
@@ -97,9 +97,8 @@
         <field-to-field field-name="primaryProductCategoryId" map-name="lookedUpValue" to-map-name="saveIdMap"/>
         <set-nonpk-fields map-name="parameters" value-name="lookedUpValue"/>
 
-        <now-timestamp-to-env env-name="nowTimestamp"/>
-        <env-to-env env-name="nowTimestamp" to-env-name="newEntity.lastModifiedDate"/>
-        <env-to-env env-name="userLogin.userLoginId" to-env-name="newEntity.lastModifiedByUserLogin"/>
+        <now-timestamp-to-env env-name="lookedUpValue.lastModifiedDate"/>
+        <env-to-env env-name="userLogin.userLoginId" to-env-name="lookedUpValue.lastModifiedByUserLogin"/>
 
         <store-value value-name="lookedUpValue"/>
 
@@ -110,8 +109,7 @@
                 <make-value entity-name="ProductCategoryMember" value-name="newMember"/>
                 <field-to-field field-name="productId" map-name="newEntity" to-field-name="productId" to-map-name="newMember"/>
                 <field-to-field field-name="primaryProductCategoryId" map-name="newEntity" to-field-name="productCategoryId" to-map-name="newMember"/>
-                <now-timestamp-to-env env-name="nowStamp"/>
-                <env-to-field env-name="nowStamp" field-name="fromDate" map-name="newMember"/>
+                <now-timestamp-to-env env-name="newMember.fromDate"/>
                 <create-value value-name="newMember"/>
             </if-compare-field>
         </if-not-empty>
