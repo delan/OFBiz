@@ -12,8 +12,9 @@
 <ul>
 <%
 
-    String params = "defFileName=" + defFileName;
-    if(ejbName != null && ejbName.length() > 0) params = params + "&ejbName=" + ejbName;
+    HashMap params = new HashMap();
+    params.put("defFileName", defFileName);
+    if(ejbName != null && ejbName.length() > 0) params.put("ejbName", ejbName);
 
     String sep = File.separator;
     String filePath = outPathName;

@@ -1,7 +1,7 @@
 package org.ofbiz.entitygen;
 
-import net.matuschek.http.*;
 import java.io.*;
+import java.util.*;
 import org.ofbiz.core.util.*;
 
 /**
@@ -110,15 +110,18 @@ public class GenUtil
    * @param params Any parameters (optional) to pass to the page.
    * @return The content of the page in a String
    */
-  public static String getCodeFromUrl(java.net.URL url, String params)
+  public static String getCodeFromUrl(java.net.URL url, HashMap params)
   {
     try
     {
-      HttpTool httpTool = new HttpTool();
-      HttpDoc httpDoc = httpTool.retrieveDocument(url, HttpConstants.GET, params);
-      return new String(httpDoc.getContent());
+      HttpClient httpClient = new HttpClient(url, params);
+      return httpClient.get();
+      //This is the old code for the net.matuschek.http stuff... now replaced by our own HttpClient class
+      //HttpTool httpTool = new HttpTool();
+      //HttpDoc httpDoc = httpTool.retrieveDocument(url, HttpConstants.GET, params);
+      //return new String(httpDoc.getContent());
     }
-    catch(Exception e) {e.printStackTrace();}
+    catch(Exception e) { Debug.logError(e); }
     return null;
   }
   

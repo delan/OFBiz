@@ -16,7 +16,9 @@
   //if(classNamesIterator != null && classNamesIterator.hasNext())
   { 
     Entity entity = DefReader.getEntity(defFileName,(String)classNamesIterator.next());
-    String params = "defFileName=" + defFileName + "&ejbName=" + entity.ejbName;
+    HashMap params = new HashMap();
+    params.put("defFileName", defFileName);
+    params.put("ejbName", entity.ejbName);
 
     String sep = File.separator;
     String filePath = outPathName;
