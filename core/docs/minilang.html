@@ -187,19 +187,31 @@ is specified in the parameter-map-name attribute of the simple-event tag. The de
 map-name is "parameters".</p>
 
 <p><b><u>simple-map-processor</u></b></p>
-<p></p>
+<p>The simple-map-processor tag invokes a simple map processor from an existing 
+map, creating a new map or adding to an existing one if the named out-map already
+exists. Resulting messages are added to the named list, and a new list is
+created if a list with the given name does not yet exist. Note that all lists 
+and maps exist in the same context and must have unique names.</p>
 
 <p><b><u>check-errors</u></b></p>
-<p></p>
+<p>The message lists from invoking are not checked until the check-errors tag
+is used. The named list is checked and if it contains any messages they are 
+put in the servlet request object and the specified error code is returned to
+the control servlet.</p>
 
 <p><b><u>service</u></b></p>
-<p></p>
+<p>The service tag invokes a service through the Service Engine. If the
+specified error code is returned from the service, the event is aborted
+and the transaction in the current thread is rolled back. Otherwise, the
+remaining operations are invoked.</p>
 
 <p><b><u>field-to-request</u></b></p>
-<p></p>
+<p>The field-to-request tag copies a field from a map to the specified request
+attribute.</p>
 
 <p><b><u>field-to-session</u></b></p>
-<p></p>
+<p>The field-to-request tag copies a field from a map to the specified session
+attribute.</p>
 
 <p><b><u>Example</u></b></p>
 <pre>
