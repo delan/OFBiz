@@ -1,5 +1,5 @@
 /*
- * $Id: EntityCacheServices.java,v 1.1 2003/08/17 06:44:25 jonesde Exp $
+ * $Id: EntityCacheServices.java,v 1.2 2004/07/07 09:31:03 jonesde Exp $
  *
  * Copyright (c) 2001, 2002 The Open For Business Project - www.ofbiz.org
  *
@@ -33,6 +33,7 @@ import org.ofbiz.entity.GenericEntity;
 import org.ofbiz.entity.GenericEntityException;
 import org.ofbiz.entity.GenericPK;
 import org.ofbiz.entity.GenericValue;
+import org.ofbiz.entity.condition.EntityCondition;
 import org.ofbiz.entity.util.DistributedCacheClear;
 import org.ofbiz.entityext.EntityServiceFactory;
 import org.ofbiz.service.DispatchContext;
@@ -44,7 +45,7 @@ import org.ofbiz.service.ServiceUtil;
  * Entity Engine Cache Services
  *
  * @author     <a href="mailto:jonesde@ofbiz.org">David E. Jones</a> 
- * @version    $Revision: 1.1 $
+ * @version    $Revision: 1.2 $
  * @since      2.0
  */
 public class EntityCacheServices implements DistributedCacheClear {
@@ -113,6 +114,10 @@ public class EntityCacheServices implements DistributedCacheClear {
         }
     }
 
+    public void distributedClearCacheLineByCondition(String entityName, EntityCondition condition) {
+        // TODO: implement distributedClearCacheLineByCondition
+    }
+    
     public void distributedClearCacheLine(GenericPK primaryKey) {
         // Debug.logInfo("running distributedClearCacheLine for primaryKey: " + primaryKey, module);
         if (this.dispatcher == null) {
