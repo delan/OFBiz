@@ -40,6 +40,8 @@ public abstract class GenericHelperAbstract implements GenericHelper
   UtilCache andCache = null;
 
   String serverName;
+
+  SequenceUtil sequencer = null;
   
   /** Gets the name of the server configuration that corresponds to this helper
    *@return server configuration name
@@ -152,5 +154,16 @@ public abstract class GenericHelperAbstract implements GenericHelper
     if ((col == null) || col.size() == 0) { return null; } 
     else if (col.size() == 1) { return (GenericValue) col.iterator().next(); } 
     else { throw new IllegalArgumentException("[GenericHelperAbstract.getRelatedOne] got multiple results for relationName: " + relationName + " for value " + value); }
+  }
+
+  /** Get the next guaranteed unique seq id from the sequence with the given sequence name; if the named sequence doesn't exist, it will be created
+   *@param seqName The name of the sequence to get the next seq id from
+   *@return Long with the next seq id for the given sequence name
+   */
+  public Long getNextSeqId(String seqName)
+  {
+    if(sequencer == null)
+      synchronized(this) { if(sequencer == null) sequencer = new SequenceUtil(serverName); }
+    return sequencer.getNextSeqId(seqName);
   }
 }

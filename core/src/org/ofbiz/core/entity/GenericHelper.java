@@ -152,4 +152,10 @@ public interface GenericHelper
    *@param value GenericValue instance containing the entity
    */
   public void removeRelated(String relationName, GenericValue value);
+
+  /** Get the next guaranteed unique seq id from the sequence with the given sequence name; if the named sequence doesn't exist, it will be created
+   *@param seqName The name of the sequence to get the next seq id from
+   *@return Long with the next seq id for the given sequence name
+   */
+  public Long getNextSeqId(String seqName);
 }
