@@ -45,10 +45,11 @@ public abstract class WfExecutionObjectImpl implements WfExecutionObject {
     protected GenericValue valueObject;
     protected GenericValue runtimeData;
         
-    // Attributes of this object
+    // Runtime Attributes of this object
     protected Map context;               
     protected List history;       
-    protected LocalDispatcher dispatcher;
+    protected String serviceLoader;
+    protected ServiceDispatcher dispatcher;    
     
     /**
      * Creates new WfExecutionObjectImpl
@@ -60,6 +61,7 @@ public abstract class WfExecutionObjectImpl implements WfExecutionObject {
         
         // set the local dispatcher
         dispatcher = null;
+        serviceLoader = null;
         
         // set the history
         history = null;
@@ -398,7 +400,7 @@ public abstract class WfExecutionObjectImpl implements WfExecutionObject {
    * @return LocalDispatcher for this workflow
    * @throws WfException
    */
-  public LocalDispatcher getDispatcher() throws WfException {
+  public ServiceDispatcher getDispatcher() throws WfException {
       if ( dispatcher == null )
           throw new WfException("No dispacher set.");
       return dispatcher;
@@ -406,10 +408,12 @@ public abstract class WfExecutionObjectImpl implements WfExecutionObject {
   
   /**
    * Sets the LocalDispatcher for this workflow
-   * @param dispatcher The LocalDispatcher to be used with this workflow
+   * @param dispatcher The ServiceDispatcher to be used with this workflow
+   * @param loader The name of the LocalDispatcher to use for the DispatchContext.
    * @throws WfException
    */
-  public void setDispatcher(LocalDispatcher dispatcher) throws WfException {
+  public void setDispatcher(ServiceDispatcher dispatcher, String loader) throws WfException {
+      this.serviceLoader = loader;
       this.dispatcher = dispatcher;
   }
   

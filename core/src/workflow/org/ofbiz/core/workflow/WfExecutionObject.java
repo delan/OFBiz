@@ -9,7 +9,7 @@ import java.util.Iterator;
 import java.util.Map;
 import java.util.List;
 import org.ofbiz.core.entity.GenericDelegator;
-import org.ofbiz.core.service.LocalDispatcher;
+import org.ofbiz.core.service.ServiceDispatcher;
 
 /**
  * <p><b>Title:</b> WfExecutionObject
@@ -240,14 +240,15 @@ public interface WfExecutionObject  {
      * @return LocalDispatcher for this workflow
      * @throws WfException
      */
-    public LocalDispatcher getDispatcher() throws WfException;
+    public ServiceDispatcher getDispatcher() throws WfException;
     
     /**
      * Sets the LocalDispatcher for this workflow
      * @param dispatcher The LocalDispatcher to be used with this workflow
+     * @param loader The name of the LocalDispatcher to use for the DispatchContext.
      * @throws WfException
      */
-    public void setDispatcher(LocalDispatcher dispatcher) throws WfException;
+    public void setDispatcher(ServiceDispatcher dispatcher, String loader) throws WfException;
     
 } // interface WfExecutionObjectOperations
 

@@ -87,9 +87,14 @@ public class WorkflowEngine implements GenericEngine {
             throw new GenericServiceException("Context does not match expected requirements.");
         
         // Build the requester / process manager
-        WfRequester req = WfFactory.newWfRequester();
-        // TODO: pass the valid parameters
-        WfProcessMgr mgr = WfFactory.newWfProcessMgr("name", "description", "category", "version");
+        WfRequester req = WfFactory.newWfRequester();        
+        WfProcessMgr mgr = null;
+        try {
+            mgr = WfFactory.newWfProcessMgr(dispatcher.getDelegator(),modelService.name);
+        }
+        catch ( WfException e ) {
+            throw new GenericServiceException(e.getMessage(),e);
+        }
         
         // Create the process
         WfProcess process = null;
@@ -109,6 +114,14 @@ public class WorkflowEngine implements GenericEngine {
             throw new GenericServiceException(wfe.getMessage(),wfe);
         }
         
+        // Set the service dispatcher for the workflow
+        try {
+            process.setDispatcher(dispatcher,loader);
+        }
+        catch ( WfException e ) {
+            throw new GenericServiceException(e.getMessage(),e);
+        }
+    
         // Register the process
         try {
             req.registerProcess(process,context,requester);
