@@ -56,7 +56,7 @@ public class PayPalEvents {
         GenericValue userLogin = (GenericValue) request.getSession().getAttribute(SiteDefs.USER_LOGIN); 
                 
         // get the orderId
-        String orderId = request.getParameter("invoice");
+        String orderId = (String) request.getAttribute("order_id");
         
         // get the order header
         GenericValue orderHeader = null;
