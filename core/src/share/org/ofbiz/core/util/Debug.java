@@ -58,6 +58,8 @@ public final class Debug {
     public static final String[] levelProps = {"", "print.verbose", "print.timing", "print.info", "print.important", "print.warning", "print.error", "print.fatal"};
     public static final Priority[] levelObjs = {Priority.INFO, Priority.DEBUG, Priority.DEBUG, Priority.INFO, Priority.INFO, Priority.WARN, Priority.ERROR, Priority.FATAL};
 
+    protected static Map levelStringMap = new HashMap();
+    
     protected static PrintStream printStream = System.out;
     protected static PrintWriter printWriter = new PrintWriter(printStream);
 
@@ -65,6 +67,15 @@ public final class Debug {
     protected static final boolean useLevelOnCache = true;
 
     static {
+        levelStringMap.put("verbose", new Integer(Debug.VERBOSE));
+        levelStringMap.put("timing", new Integer(Debug.TIMING));
+        levelStringMap.put("info", new Integer(Debug.INFO));
+        levelStringMap.put("important", new Integer(Debug.IMPORTANT));
+        levelStringMap.put("warning", new Integer(Debug.WARNING));
+        levelStringMap.put("error", new Integer(Debug.ERROR));
+        levelStringMap.put("fatal", new Integer(Debug.FATAL));
+        levelStringMap.put("always", new Integer(Debug.ALWAYS));
+        
         // initialize Log4J
         PropertyConfigurator.configure(FlexibleProperties.makeFlexibleProperties(UtilURL.fromResource("debug")));
 
@@ -97,6 +108,22 @@ public final class Debug {
         }
     }
 
+    /** Gets an Integer representing the level number from a String representing the level name; will return null if not found */
+    public static Integer getLevelFromString(String levelName) {
+        if (levelName == null) return null;
+        return (Integer) levelStringMap.get(levelName.toLowerCase());
+    }
+    
+    /** Gets an int representing the level number from a String representing the level name; if level not found defaults to Debug.INFO */
+    public static int getLevelFromStringWithDefault(String levelName) {
+        Integer levelInt = getLevelFromString(levelName);
+        if (levelInt == null) {
+            return Debug.INFO;
+        } else {
+            return levelInt.intValue();
+        }
+    }
+    
     public static void log(int level, Throwable t, String msg, String module) {
         log(level, t, msg, module, "org.ofbiz.core.util.Debug");
     }
