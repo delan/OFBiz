@@ -1,10 +1,8 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <XPage>
     <Components>
-        <!-- when used as a PosDialog the x/y will be set to center of screen -->
-        <Panel name="errorPanel" x="0" y="0" w="400" h="200" style="errorpanel" border="1">
-            <Label x="0" y="0" w="400" h="50" name="testLabel" style="error" content="INVALID CARD NUMBER" alignment="Center"/>
-            <Button name="closeBtn" x="0" y="70" w="400" h="60" style="error" content="OK" alignment="Center"/>
+        <Panel name="errorPanel" x="0" y="0" w="400" h="200" style="errorpanel" border="0" alignment="Center">
+            <Button w="400" h="200" name="closeBtn" style="error" content="&lt;html&gt;&lt;center&gt;INVALID CARD NUMBER&lt;/center&gt;&lt;/html&gt;" alignment="Center"/>
         </Panel>
     </Components>
 </XPage>

@@ -134,13 +134,15 @@ public class PosScreen extends NavigationHelper implements Runnable, DialogCallb
     public void pageDeactivated() {
         super.pageDeactivated();
 
-        Debug.log("App Frame :", module);
-        Debug.log("name    - " + appFrame.getName(), module);
-        Debug.log("title   - " + appFrame.getTitle(), module);
-        Debug.log("active  - " + appFrame.isActive(), module);
-        Debug.log("enabled - " + appFrame.isEnabled(), module);
-        Debug.log("visible - " + appFrame.isVisible(), module);
-        Debug.log("opaque  - " + appFrame.isOpaque(), module);
+        if (Debug.verboseOn()) {
+            Debug.log("App Frame :", module);
+            Debug.log("name    - " + appFrame.getName(), module);
+            Debug.log("title   - " + appFrame.getTitle(), module);
+            Debug.log("active  - " + appFrame.isActive(), module);
+            Debug.log("enabled - " + appFrame.isEnabled(), module);
+            Debug.log("visible - " + appFrame.isVisible(), module);
+            Debug.log("opaque  - " + appFrame.isOpaque(), module);
+        }
     }
 
     public void refresh() {
@@ -255,7 +257,7 @@ public class PosScreen extends NavigationHelper implements Runnable, DialogCallb
 
     public PosDialog showDialog(String pageName, DialogCallback cb, String text) {
         XPage dialogPage = XProjectManager.getPageManager().loadPage(pageName);        
-        PosDialog dialog = PosDialog.getInstance(dialogPage);
+        PosDialog dialog = PosDialog.getInstance(dialogPage, true, 0);
         dialog.showDialog(this, cb, text);
         return dialog;
     }

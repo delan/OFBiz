@@ -56,7 +56,8 @@ public class SecurityEvents {
         XuiSession session = pos.getSession();
         trans.voidSale();
         session.logout();
-        pos.setLock(true);
+        pos.showPage("main/pospanel");
+        PosScreen.currentScreen.setLock(true);
     }
 
     public static void mgrLogin(PosScreen pos) {
