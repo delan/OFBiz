@@ -1,0 +1,711 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<!DOCTYPE jrun-jms PUBLIC "-//Macromedia Inc.//DTD jrun-jms 4.0//EN" "http://jrun.macromedia.com/dtds/jrun-jms.dtd">
+
+<jrun-jms>
+
+<!-- ====================================================== -->
+<!-- This file contains configuration information for the   -->
+<!-- built-in JMS Provider supplied as part of JRun.        -->
+<!-- ====================================================== -->
+
+
+  <!-- ================================================================= -->
+  <!-- These entries control aspects of the peristent mechanism.         -->
+  <!-- ================================================================= -->
+  <persistence-manager>
+
+        <!-- This selects which persistent adapter type (below) is active. Must correspond to -->
+        <!-- a following <adapter> entry. Determines how/where JMS persistent data is stored. -->
+        <active-adapter-type>file</active-adapter-type>
+
+        <!-- File-based persistent adapter config. -->
+        <persistence-adapter>
+            <adapter-type>file</adapter-type>
+
+            <!-- (Required) Java class name of adapter -->
+            <adapter-class-name>jrun.jms.core.persistence.FilePersistentAdapter</adapter-class-name>
+
+            <!-- (Required) Adapter configuration info varies depending on adapter-type -->
+            <adapter-config>
+
+                  <!-- (Optional) Absolute path to directory where dir-name will be created -->
+                  <!-- By default this will be "<SERVER-HOME>/SERVER-INF/jms/db"            -->
+                  <dir-path></dir-path>
+
+                  <!-- (Required) Subdirectory of dir-path where data will actually be stored -->
+                  <dir-name>coremq</dir-name>
+
+                  <!-- (Optional) Toggle in-memory caching of persistent data. Default is TRUE. -->
+                  <cache>false</cache>
+
+                  <!-- (Optional) Toggle use of transactions for persistent operations. Default is FALSE. -->
+                  <transact>false</transact>
+            </adapter-config>
+        </persistence-adapter>
+
+        <!-- RDBM-based persistent adapter config. -->
+        <persistence-adapter>
+            <adapter-type>rdbm</adapter-type>
+
+            <!-- (Required) Java class name of adapter -->
+            <adapter-class-name>jrun.jms.core.persistence.RDBMPersistentAdapter</adapter-class-name>
+
+            <!-- (Required) Adapter configuration info varies depending on adapter-type -->
+            <adapter-config>
+
+                <!-- (Required) JDBC datasource in which data will be stored -->
+                <data-source>
+                    <dbname>jmsdb</dbname>
+                    <jndi-name>datasources/jms/core/jndi-jmsdb</jndi-name>
+                    <!-- Use Pointbase -->
+                    <driver>com.pointbase.jdbc.jdbcUniversalDriver</driver>
+                    <url>jdbc:pointbase:server://localhost:9492/jms_private</url>
+                    <username>PBPUBLIC</username>
+                    <password>PBPUBLIC</password>
+                    <!-- Use MS SqlServer -->
+                    <!--
+                    <driver>macromedia.jdbc.MacromediaDriver</driver>
+                    <url>jdbc:macromedia:sqlserver://127.0.0.1:1433;selectMethod=cursor;databaseName=jms_local_db</url>
+                    <username>sa</username>
+                    <password></password> -->
+
+                    <!-- Use Sprinata MS SqlServer driver -->
+                    <!--
+                    <driver>com.inet.tds.TdsDriver</driver>
+                    <url>jdbc:inetdae:127.0.0.1:1433?database=jms_local_db&amp;sql7=true</url>
+                    <username>sa</username>
+                    <password></password>
+                    -->
+
+                    <native-results>false</native-results>
+                    <transaction-domain>PrivateJmsDomain</transaction-domain>
+                    <initial-connections>2</initial-connections>
+                    <minimum-size>0</minimum-size>
+                    <maximum-size>10</maximum-size>
+                    <maximum-soft>true</maximum-soft>
+                    <connection-timeout>2400</connection-timeout>
+                    <user-timeout>2400</user-timeout>
+                    <skimmer-frequency>0</skimmer-frequency>
+                    <shrink-by>10</shrink-by>
+                    <validation-query></validation-query>
+                    <debugging>false</debugging>
+                    <cache-enabled>false</cache-enabled>
+                    <cache-size>10</cache-size>
+                    <cache-refresh-interval>20</cache-refresh-interval>
+                    <remove-on-exceptions>false</remove-on-exceptions>
+                    <pool-statements>false</pool-statements>
+                </data-source>
+
+                <!-- (Required) SQL used to perform database operations -->
+                <message-sql>
+                   <jdbc-mapping>
+                     <name>create</name>
+                     <statement>
+                       <action>INSERT INTO "messages"( "dbkey", "id", "destId", "type", "priority", "acceptTime", "expireTime", "processedFlag", "message" ) VALUES( ?, ?, ?, ?, ?, ?, ?, ?, ? )</action>
+                       <source>datasources/jms/core/jndi-jmsdb</source>
+                       <params>
+                         <param><name>key</name>            <type>BIGINT</type></param>
+                         <param><name>id</name>             <type>BIGINT</type></param>
+                         <param><name>destId</name>         <type>BIGINT</type></param>
+                         <param><name>type</name>           <type>VARCHAR</type></param>
+                         <param><name>priority</name>       <type>BIGINT</type></param>
+                         <param><name>acceptTime</name>     <type>BIGINT</type></param>
+                         <param><name>expireTime</name>     <type>BIGINT</type></param>
+                         <param><name>processedFlag</name>  <type>BIT</type></param>
+                         <param><name>message</name>        <type>LONGVARBINARY</type></param>
+                       </params>
+                     </statement>
+                   </jdbc-mapping>
+                   <jdbc-mapping>
+                     <name>remove</name>
+                     <statement>
+                       <action>DELETE FROM "messages" WHERE "dbkey" = ?</action>
+                       <source>datasources/jms/core/jndi-jmsdb</source>
+                       <params>
+                         <param><name>key</name>   <type>BIGINT</type></param>
+                       </params>
+                     </statement>
+                   </jdbc-mapping>
+                   <jdbc-mapping>
+                     <name>load</name>
+                     <statement>
+                       <action>SELECT * FROM "messages" WHERE "dbkey" = ?</action>
+                       <source>datasources/jms/core/jndi-jmsdb</source>
+                       <params>
+                         <param><name>key</name>   <type>BIGINT</type></param>
+                       </params>
+                       <fields>
+                         <field>key</field>
+                         <field>id</field>
+                         <field>destId</field>
+                         <field>type</field>
+                         <field>priority</field>
+                         <field>acceptTime</field>
+                         <field>expireTime</field>
+                         <field>processedFlag</field>
+                         <field>message</field>
+                       </fields>
+                     </statement>
+                   </jdbc-mapping>
+                   <jdbc-mapping>
+                     <name>store</name>
+                     <statement>
+                       <action>UPDATE "messages" SET "dbkey" = ?, "destId" = ?, "type" = ?, "priority" = ?, "acceptTime" = ?, "expireTime" = ?, "processedFlag" = ?, "message" = ? WHERE "dbkey" = ?</action>
+                       <source>datasources/jms/core/jndi-jmsdb</source>
+                       <params>
+                         <param><name>key</name>            <type>BIGINT</type></param>
+                         <param><name>destId</name>         <type>BIGINT</type></param>
+                         <param><name>type</name>           <type>VARCHAR</type></param>
+                         <param><name>priority</name>       <type>BIGINT</type></param>
+                         <param><name>acceptTime</name>     <type>BIGINT</type></param>
+                         <param><name>expireTime</name>     <type>BIGINT</type></param>
+                         <param><name>processedFlag</name>  <type>BIT</type></param>
+                         <param><name>message</name>        <type>LONGVARBINARY</type></param>
+                         <param><name>key</name>            <type>BIGINT</type></param>
+                       </params>
+                     </statement>
+                   </jdbc-mapping>
+                   <jdbc-mapping>
+                     <name>findByPrimaryKey</name>
+                     <statement>
+                       <action>SELECT "dbkey" FROM "messages" WHERE "dbkey" = ?</action>
+                       <source>datasources/jms/core/jndi-jmsdb</source>
+                       <params>
+                         <param><name>key</name>   <type>BIGINT</type></param>
+                       </params>
+                       <fields>
+                         <field>key</field>
+                       </fields>
+                     </statement>
+                   </jdbc-mapping>
+                   <jdbc-mapping>
+                     <name>findAll</name>
+                     <statement>
+                       <action>SELECT "dbkey" FROM "messages"</action>
+                       <source>datasources/jms/core/jndi-jmsdb</source>
+                       <fields>
+                        <field>key</field>
+                       </fields>
+                     </statement>
+                   </jdbc-mapping>
+                   <jdbc-mapping>
+                     <name>findByMessageId</name>
+                     <statement>
+                       <action>SELECT "dbkey" FROM "messages" WHERE "id" = ?1</action>
+                       <source>datasources/jms/core/jndi-jmsdb</source>
+                       <params>
+                         <param><name>id</name>   <type>BIGINT</type></param>
+                       </params>
+                       <fields>
+                         <field>key</field>
+                       </fields>
+                     </statement>
+                   </jdbc-mapping>
+                   <jdbc-mapping>
+                     <name>findExpired</name>
+                     <statement>
+                       <action>SELECT "dbkey" FROM "messages" WHERE "expireTime" &lt;&gt; 0 AND "expireTime" &lt; ?1</action>
+                       <source>datasources/jms/core/jndi-jmsdb</source>
+                       <params>
+                         <param><name>expireTime</name>   <type>BIGINT</type></param>
+                       </params>
+                       <fields>
+                         <field>key</field>
+                       </fields>
+                     </statement>
+                   </jdbc-mapping>
+                   <jdbc-mapping>
+                     <name>findNonExpiredByDestination</name>
+                     <statement>
+                       <action>SELECT "dbkey" FROM "messages" WHERE ("expireTime" = 0 OR "expireTime" &gt; ?1) AND "destId" = ?2</action>
+                       <source>datasources/jms/core/jndi-jmsdb</source>
+                       <params>
+                         <param><name>expireTime</name>   <type>BIGINT</type></param>
+                         <param><name>destId</name>       <type>BIGINT</type></param>
+                       </params>
+                       <fields>
+                         <field>key</field>
+                       </fields>
+                     </statement>
+                   </jdbc-mapping>
+                   <jdbc-mapping>
+                     <name>findSuccessiveMessages</name>
+                     <statement>
+                       <action>SELECT "dbkey" FROM "messages" WHERE "priority" = ?1 AND "acceptTime" &gt;= ?2 ORDER BY "acceptTime" ASC</action>
+                       <source>datasources/jms/core/jndi-jmsdb</source>
+                       <params>
+                         <param><name>priority</name>   <type>BIGINT</type></param>
+                         <param><name>acceptTime</name> <type>BIGINT</type></param>
+                       </params>
+                       <fields>
+                         <field>key</field>
+                       </fields>
+                     </statement>
+                   </jdbc-mapping>
+                   <jdbc-mapping>
+                     <name>findSuccessiveMessagesByDestination</name>
+                     <statement>
+                       <action>SELECT "dbkey" FROM "messages" WHERE "priority" = ?1 AND "acceptTime" &gt;= ?2 AND "destId" = ?3 ORDER BY "acceptTime" ASC</action>
+                       <source>datasources/jms/core/jndi-jmsdb</source>
+                       <params>
+                         <param><name>priority</name>     <type>BIGINT</type></param>
+                         <param><name>acceptTime</name>   <type>BIGINT</type></param>
+                         <param><name>destId</name>       <type>BIGINT</type></param>
+                       </params>
+                       <fields>
+                         <field>key</field>
+                       </fields>
+                     </statement>
+                   </jdbc-mapping>
+                   <jdbc-mapping>
+                     <name>findUnprocessedMessages</name>
+                     <statement>
+                       <action>SELECT "dbkey" FROM "messages" WHERE "processedFlag" = 0</action>
+                       <source>datasources/jms/core/jndi-jmsdb</source>
+                       <fields>
+                        <field>key</field>
+                       </fields>
+                     </statement>
+                   </jdbc-mapping>
+                </message-sql>
+
+                <handle-sql>
+                   <jdbc-mapping>
+                     <name>create</name>
+                     <statement>
+                       <action>INSERT INTO "handles"( "dbkey", "msgId", "consumerId", "destId", "deliveredFlag", "expireTime", "handle" ) VALUES( ?, ?, ?, ?, ?, ?, ? )</action>
+                       <source>datasources/jms/core/jndi-jmsdb</source>
+                       <params>
+                         <param><name>key</name>            <type>BIGINT</type></param>
+                         <param><name>msgId</name>          <type>BIGINT</type></param>
+                         <param><name>consumerId</name>     <type>BIGINT</type></param>
+                         <param><name>destId</name>         <type>BIGINT</type></param>
+                         <param><name>deliveredFlag</name>  <type>BIT</type></param>
+                         <param><name>expireTime</name>     <type>BIGINT</type></param>
+                         <param><name>handle</name>         <type>LONGVARBINARY</type></param>
+                       </params>
+                     </statement>
+                   </jdbc-mapping><jdbc-mapping>
+                     <name>store</name>
+                     <statement>
+                       <action>UPDATE "handles" SET "dbkey" = ?, "msgId" = ?, "consumerId" = ?, "destId" = ?, "deliveredFlag" = ?, "expireTime" = ?, "handle" = ? WHERE "dbkey" = ?</action>
+                       <source>datasources/jms/core/jndi-jmsdb</source>
+                       <params>
+                         <param><name>key</name>            <type>BIGINT</type></param>
+                         <param><name>msgId</name>          <type>BIGINT</type></param>
+                         <param><name>consumerId</name>     <type>BIGINT</type></param>
+                         <param><name>destId</name>         <type>BIGINT</type></param>
+                         <param><name>deliveredFlag</name>  <type>BIT</type></param>
+                         <param><name>expireTime</name>     <type>BIGINT</type></param>
+                         <param><name>handle</name>         <type>LONGVARBINARY</type></param>
+                         <param><name>key</name>            <type>BIGINT</type></param>
+                       </params>
+                     </statement>
+                   </jdbc-mapping>
+                   <jdbc-mapping>
+                     <name>load</name>
+                     <statement>
+                       <action>SELECT * FROM "handles" WHERE "dbkey" = ?</action>
+                       <source>datasources/jms/core/jndi-jmsdb</source>
+                       <params>
+                         <param><name>key</name>   <type>BIGINT</type></param>
+                       </params>
+                       <fields>
+                         <field>key</field>
+                         <field>msgId</field>
+                         <field>consumerId</field>
+                         <field>destId</field>
+                         <field>deliveredFlag</field>
+                         <field>expireTime</field>
+                         <field>handle</field>
+                       </fields>
+                     </statement>
+                   </jdbc-mapping>
+                   <jdbc-mapping>
+                     <name>remove</name>
+                     <statement>
+                       <action>DELETE FROM "handles" WHERE "dbkey" = ?</action>
+                       <source>datasources/jms/core/jndi-jmsdb</source>
+                       <params>
+                         <param><name>key</name>   <type>BIGINT</type></param>
+                       </params>
+                     </statement>
+                   </jdbc-mapping>
+                   <jdbc-mapping>
+                     <name>findByPrimaryKey</name>
+                     <statement>
+                       <action>SELECT "dbkey" FROM "handles" WHERE "dbkey" = ?</action>
+                       <source>datasources/jms/core/jndi-jmsdb</source>
+                       <params>
+                         <param><name>key</name>   <type>BIGINT</type></param>
+                       </params>
+                       <fields>
+                         <field>key</field>
+                       </fields>
+                     </statement>
+                   </jdbc-mapping>
+                   <jdbc-mapping>
+                     <name>findAll</name>
+                     <statement>
+                       <action>SELECT "dbkey" FROM "handles"</action>
+                       <source>datasources/jms/core/jndi-jmsdb</source>
+                       <fields>
+                         <field>key</field>
+                       </fields>
+                     </statement>
+                   </jdbc-mapping>
+                   <jdbc-mapping>
+                     <name>findByMessageConsumerDestIds</name>
+                     <statement>
+                       <action>SELECT "dbkey" FROM "handles" WHERE "msgId" = ?1 AND "consumerId" = ?2 AND "destId" = ?3</action>
+                       <source>datasources/jms/core/jndi-jmsdb</source>
+                       <params>
+                         <param><name>msgId</name>        <type>BIGINT</type></param>
+                         <param><name>consumerId</name>   <type>BIGINT</type></param>
+                         <param><name>destId</name>       <type>BIGINT</type></param>
+                       </params>
+                       <fields>
+                         <field>key</field>
+                       </fields>
+                     </statement>
+                   </jdbc-mapping>
+                   <jdbc-mapping>
+                     <name>findByConsumerDestIds</name>
+                     <statement>
+                       <action>SELECT "dbkey" FROM "handles" WHERE "consumerId" = ?1 AND "destId" = ?2</action>
+                       <source>datasources/jms/core/jndi-jmsdb</source>
+                       <params>
+                         <param><name>consumerId</name>   <type>BIGINT</type></param>
+                         <param><name>destId</name>       <type>BIGINT</type></param>
+                       </params>
+                       <fields>
+                         <field>key</field>
+                       </fields>
+                     </statement>
+                   </jdbc-mapping>
+                   <jdbc-mapping>
+                     <name>findByDestId</name>
+                     <statement>
+                       <action>SELECT "dbkey" FROM "handles" WHERE "destId" = ?1</action>
+                       <source>datasources/jms/core/jndi-jmsdb</source>
+                       <params>
+                         <param><name>destId</name>   <type>BIGINT</type></param>
+                       </params>
+                       <fields>
+                         <field>key</field>
+                       </fields>
+                     </statement>
+                   </jdbc-mapping>
+                   <jdbc-mapping>
+                     <name>findByMessageId</name>
+                     <statement>
+                       <action>SELECT "dbkey" FROM "handles" WHERE "msgId" = ?1</action>
+                       <source>datasources/jms/core/jndi-jmsdb</source>
+                       <params>
+                         <param><name>msgId</name>   <type>BIGINT</type></param>
+                       </params>
+                       <fields>
+                         <field>key</field>
+                       </fields>
+                     </statement>
+                   </jdbc-mapping>
+                   <jdbc-mapping>
+                     <name>findExpiredByDest</name>
+                     <statement>
+                       <action>SELECT "dbkey" FROM "handles" WHERE "destId" = ?1 AND "expireTime" &lt;&gt; 0 AND "expireTime" &lt; ?2</action>
+                       <source>datasources/jms/core/jndi-jmsdb</source>
+                       <params>
+                         <param><name>destId</name>       <type>BIGINT</type></param>
+                         <param><name>expireTime</name>   <type>BIGINT</type></param>
+                       </params>
+                       <fields>
+                         <field>key</field>
+                       </fields>
+                     </statement>
+                   </jdbc-mapping>
+                </handle-sql>
+
+                <consumer-sql>
+                   <jdbc-mapping>
+                     <name>create</name>
+                     <statement>
+                       <action>INSERT INTO "consumers"( "dbkey", "name", "topic" ) VALUES( ?, ?, ? )</action>
+                       <source>datasources/jms/core/jndi-jmsdb</source>
+                       <params>
+                         <param><name>key</name>     <type>BIGINT</type></param>
+                         <param><name>name</name>    <type>VARCHAR</type></param>
+                         <param><name>topic</name>   <type>VARCHAR</type></param>
+                       </params>
+                     </statement>
+                   </jdbc-mapping>
+                   <jdbc-mapping>
+                     <name>remove</name>
+                     <statement>
+                       <action>DELETE FROM "consumers" WHERE "dbkey" = ?</action>
+                       <source>datasources/jms/core/jndi-jmsdb</source>
+                       <params>
+                         <param><name>key</name>   <type>BIGINT</type></param>
+                       </params>
+                     </statement>
+                   </jdbc-mapping>
+                   <jdbc-mapping>
+                     <name>load</name>
+                     <statement>
+                       <action>SELECT * FROM "consumers" WHERE "dbkey" = ?</action>
+                       <source>datasources/jms/core/jndi-jmsdb</source>
+                       <params>
+                         <param><name>key</name>   <type>BIGINT</type></param>
+                       </params>
+                       <fields>
+                         <field>key</field>
+                         <field>name</field>
+                         <field>topic</field>
+                       </fields>
+                     </statement>
+                   </jdbc-mapping>
+                   <jdbc-mapping>
+                     <name>findByPrimaryKey</name>
+                     <statement>
+                       <action>SELECT "dbkey" FROM "consumers" WHERE "dbkey" = ?</action>
+                       <source>datasources/jms/core/jndi-jmsdb</source>
+                       <params>
+                         <param><name>key</name>   <type>BIGINT</type></param>
+                       </params>
+                       <fields>
+                         <field>key</field>
+                       </fields>
+                     </statement>
+                   </jdbc-mapping>
+                   <jdbc-mapping>
+                     <name>findByName</name>
+                     <statement>
+                       <action>SELECT "dbkey" FROM "consumers" WHERE "name" = ?1</action>
+                       <source>datasources/jms/core/jndi-jmsdb</source>
+                       <params>
+                         <param><name>name</name>   <type>VARCHAR</type></param>
+                       </params>
+                       <fields>
+                         <field>key</field>
+                       </fields>
+                     </statement>
+                   </jdbc-mapping>
+                   <jdbc-mapping>
+                     <name>findByTopic</name>
+                     <statement>
+                       <action>SELECT "dbkey" FROM "consumers" WHERE "topic" = ?1</action>
+                       <source>datasources/jms/core/jndi-jmsdb</source>
+                       <params>
+                         <param><name>topic</name>   <type>VARCHAR</type></param>
+                       </params>
+                       <fields>
+                         <field>key</field>
+                       </fields>
+                     </statement>
+                   </jdbc-mapping>
+                   <jdbc-mapping>
+                     <name>findAll</name>
+                     <statement>
+                       <action>SELECT "dbkey" FROM "consumers"</action>
+                       <source>datasources/jms/core/jndi-jmsdb</source>
+                       <fields>
+                         <field>key</field>
+                       </fields>
+                     </statement>
+                   </jdbc-mapping>
+                </consumer-sql>
+
+                <destination-sql>
+                   <jdbc-mapping>
+                     <name>create</name>
+                     <statement>
+                       <action>INSERT INTO "destinations"( "dbkey", "name", "isQueue", "destination" ) VALUES( ?, ?, ?, ? )</action>
+                       <source>datasources/jms/core/jndi-jmsdb</source>
+                       <params>
+                         <param><name>key</name>            <type>BIGINT</type></param>
+                         <param><name>name</name>           <type>VARCHAR</type></param>
+                         <param><name>isQueue</name>        <type>BIT</type></param>
+                         <param><name>destination</name>    <type>LONGVARBINARY</type></param>
+                       </params>
+                     </statement>
+                   </jdbc-mapping>
+                   <jdbc-mapping>
+                     <name>load</name>
+                     <statement>
+                       <action>SELECT * FROM "destinations" WHERE "dbkey" = ?</action>
+                       <source>datasources/jms/core/jndi-jmsdb</source>
+                       <params>
+                         <param><name>key</name>   <type>BIGINT</type></param>
+                       </params>
+                       <fields>
+                         <field>key</field>
+                         <field>name</field>
+                         <field>isQueue</field>
+                         <field>destination</field>
+                       </fields>
+                     </statement>
+                   </jdbc-mapping>
+                   <jdbc-mapping>
+                     <name>remove</name>
+                     <statement>
+                       <action>DELETE FROM "destinations" WHERE "dbkey" = ?</action>
+                       <source>datasources/jms/core/jndi-jmsdb</source>
+                       <params>
+                         <param><name>key</name>   <type>BIGINT</type></param>
+                       </params>
+                     </statement>
+                   </jdbc-mapping>
+                   <jdbc-mapping>
+                     <name>findByPrimaryKey</name>
+                     <statement>
+                       <action>SELECT "dbkey" FROM "destinations" WHERE "dbkey" = ?</action>
+                       <source>datasources/jms/core/jndi-jmsdb</source>
+                       <params>
+                         <param><name>key</name>   <type>BIGINT</type></param>
+                       </params>
+                       <fields>
+                         <field>key</field>
+                       </fields>
+                     </statement>
+                   </jdbc-mapping>
+                   <jdbc-mapping>
+                     <name>findAll</name>
+                     <statement>
+                       <action>SELECT "dbkey" FROM "destinations"</action>
+                       <source>datasources/jms/core/jndi-jmsdb</source>
+                       <fields>
+                         <field>key</field>
+                       </fields>
+                     </statement>
+                   </jdbc-mapping>
+                   <jdbc-mapping>
+                     <name>findByName</name>
+                     <statement>
+                       <action>SELECT "dbkey" FROM "destinations" WHERE "name" = ?1</action>
+                       <source>datasources/jms/core/jndi-jmsdb</source>
+                       <params>
+                         <param><name>name</name>   <type>VARCHAR</type></param>
+                       </params>
+                       <fields>
+                         <field>key</field>
+                       </fields>
+                     </statement>
+                   </jdbc-mapping>
+                </destination-sql>
+
+                <!-- (Optional) Toggle use of transactions for persistent operations. Default is TRUE. -->
+                <transact>false</transact>
+
+                <!-- (Optional) Toggle automatic creation of DB tables if they don't exist. Default is TRUE. -->
+                <auto-table-creation>true</auto-table-creation>
+
+            </adapter-config>
+        </persistence-adapter>
+
+  </persistence-manager>
+
+  <!-- ================================================================= -->
+  <!-- These control the server itself. Its transport mechanism, etc.    -->
+  <!-- ================================================================= -->
+  <server>
+
+    <server-address>127.0.0.1</server-address>
+    <server-name>JRUN_JMS</server-name>
+    <admin-server-name>JRUN_JMS_ADMIN</admin-server-name>
+    <client-ping-interval>0</client-ping-interval>
+
+    <transport>
+      <layer>RMI</layer>
+      <server-class-name>jrun.jms.core.server.rmi.RmiJmsServer</server-class-name>
+      <server-client-class-name>jrun.jms.core.client.rmi.RmiJmsServerStub</server-client-class-name>
+      <port>0</port>
+    </transport>
+
+    <transport>
+      <layer>INTRAVM</layer>
+      <server-class-name>jrun.jms.core.server.intravm.IntravmJmsServer</server-class-name>
+      <server-client-class-name>jrun.jms.core.client.intravm.IntravmJmsServerStub</server-client-class-name>
+      <port>-1</port>
+    </transport>
+
+    <transport>
+      <layer>TCPIP</layer>
+      <server-class-name>jrun.jms.core.server.mipc.IpcJmsServer</server-class-name>
+      <server-client-class-name>jrun.jms.core.client.rmi.IpcJmsServerStub</server-client-class-name>
+      <port>2522</port>
+    </transport>
+
+
+    <connection-factory>
+      <connection-factory-class>jrun.jms.core.client.JmsTopicConnectionFactory</connection-factory-class>
+      <connection-factory-type>TOPIC_CONNECTION_FACTORY</connection-factory-type>
+      <jndi-name>TopicConnectionFactory</jndi-name>
+    </connection-factory>
+
+    <connection-factory>
+      <connection-factory-class>jrun.jms.core.client.JmsQueueConnectionFactory</connection-factory-class>
+      <connection-factory-type>QUEUE_CONNECTION_FACTORY</connection-factory-type>
+      <jndi-name>QueueConnectionFactory</jndi-name>
+    </connection-factory>
+
+  </server>
+
+  <!-- ================================================================= -->
+  <!-- These control the scheduler.                                      -->
+  <!-- ================================================================= -->
+  <scheduler>
+
+    <sleep-interval>300</sleep-interval>
+
+  </scheduler>
+
+  <!-- ================================================================= -->
+  <!-- These control characteristics of the message.                     -->
+  <!-- ================================================================= -->
+  <message-manager>
+
+    <destination-cache-size>1000</destination-cache-size>
+    <max-thread-number>5</max-thread-number>
+    <allow-dynamic-dest>true</allow-dynamic-dest>
+    <max-message-queue-size-mb>50</max-message-queue-size-mb>
+    <max-message-queue-size-test-fail-silently>false</max-message-queue-size-test-fail-silently>
+
+  </message-manager>
+
+  <!-- ================================================================= -->
+  <!-- These control characteristics of the message.                     -->
+  <!-- ================================================================= -->
+  <garbage-collection>
+
+    <garbage-collection-interval>8</garbage-collection-interval>
+    <garbage-collection-thread-priority>3</garbage-collection-thread-priority>
+    <low-threshold>25</low-threshold>
+    <memory-check-interval>60</memory-check-interval>
+
+  </garbage-collection>
+
+  <!-- ================================================================= -->
+  <!-- These list known destinations.                                    -->
+  <!-- =======================================================+========= -->
+  <destinations>
+  </destinations>
+
+  <!-- ================================================================= -->
+  <!-- These control JMS access to JNDI.                                 -->
+  <!-- ================================================================= -->
+  <client-jndi>
+
+    <initial-context-factory>jrun.naming.JRunContextFactory</initial-context-factory>
+    <url-pkg-prefixes>jrun.naming</url-pkg-prefixes>
+    <provider-url>127.0.0.1:2908</provider-url>
+
+  </client-jndi>
+
+  <!-- ================================================================= -->
+  <!-- Debug settings. (Operational only in-house.)                      -->
+  <!-- ================================================================= -->
+  <mode>normal</mode>
+
+</jrun-jms>
+
+

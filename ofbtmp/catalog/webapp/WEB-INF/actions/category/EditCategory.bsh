@@ -1,0 +1,74 @@
+/*
+ *  Copyright (c) 2003 The Open For Business Project - www.ofbiz.org
+ *
+ *  Permission is hereby granted, free of charge, to any person obtaining a 
+ *  copy of this software and associated documentation files (the "Software"), 
+ *  to deal in the Software without restriction, including without limitation 
+ *  the rights to use, copy, modify, merge, publish, distribute, sublicense, 
+ *  and/or sell copies of the Software, and to permit persons to whom the 
+ *  Software is furnished to do so, subject to the following conditions:
+ *
+ *  The above copyright notice and this permission notice shall be included 
+ *  in all copies or substantial portions of the Software.
+ *
+ *  THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS 
+ *  OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF 
+ *  MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. 
+ *  IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY 
+ *  CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT 
+ *  OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR 
+ *  THE USE OR OTHER DEALINGS IN THE SOFTWARE.
+ *
+ *@author     David E. Jones
+ *@author     Brad Steiner
+ *@version    $Revision$
+ *@since      2.2
+ */
+
+import org.ofbiz.core.util.*;
+import org.ofbiz.core.entity.*;
+
+security = request.getAttribute("security");
+delegator = request.getAttribute("delegator");
+
+if(security.hasEntityPermission("CATALOG", "_VIEW", session)) {
+    context.put("hasPermission", Boolean.TRUE);
+} else {
+    context.put("hasPermission", Boolean.FALSE);
+}
+
+    URL catalogPropertiesURL = application.getResource("/WEB-INF/catalog.properties");
+
+    boolean useValues = true;
+    if(request.getAttribute(SiteDefs.ERROR_MESSAGE) != null) useValues = false;
+
+    String productCategoryId = request.getParameter("productCategoryId");
+    if (productCategoryId == null || productCategoryId.length() == 0) productCategoryId = (String) request.getAttribute("productCategoryId");
+    GenericValue productCategory = delegator.findByPrimaryKey("ProductCategory", UtilMisc.toMap("productCategoryId", productCategoryId));
+    GenericValue productCategoryType = null;
+    if (productCategory == null) {
+        useValues = false;
+    } else {
+	context.put("productCategory", productCategory);
+        productCategoryType = productCategory.getRelatedOne("ProductCategoryType");
+        if (productCategoryType != null) 
+	   context.put("productCategoryType", productCategoryType);
+    }
+
+    Collection categoryCol = delegator.findAll("ProductCategory", UtilMisc.toList("description"));
+
+    GenericValue primaryParentCategory = null;
+    String primParentCatIdParam = request.getParameter("primaryParentCategoryId");
+    if(productCategory != null && useValues)  {
+        primaryParentCategory = productCategory.getRelatedOne("PrimaryParentProductCategory");
+    } else if(primParentCatIdParam != null && primParentCatIdParam.length() > 0) {
+        primaryParentCategory = delegator.findByPrimaryKey("ProductCategory", UtilMisc.toMap("productCategoryId", primParentCatIdParam));
+    }
+
+    //ProductCategoryTypes
+    Collection productCategoryTypes = delegator.findAll("ProductCategoryType");
+    if (productCategoryTypes != null) 
+	context.put("productCategoryTypes", productCategoryTypes);
+
+context.put("productCategoryId", productCategoryId);
+context.put("productCategory", productCategory);

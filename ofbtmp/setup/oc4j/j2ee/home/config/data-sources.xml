@@ -1,0 +1,43 @@
+<?xml version="1.0" standalone='yes'?>
+<!DOCTYPE data-sources PUBLIC "Orion data-sources" "http://xmlns.oracle.com/ias/dtds/data-sources.dtd">
+
+<data-sources>
+	<!--
+		An example/default DataSource that uses
+		Oracle JDBC-driver to create the connections. 
+		This tag creates all the needed kinds
+		of data-sources, transactional, pooled and EJB-aware sources.
+		The source generally used in application code is the "EJB"
+		one - it provides transactional safety and connection
+		pooling. Oracle thin driver could be used as well,
+		like below.
+		url="jdbc:oracle:thin:@host:port:sid"
+	-->
+        <!--
+	<data-source
+		class="com.evermind.sql.DriverManagerDataSource"
+		name="OracleDS"
+		location="jdbc/OracleCoreDS"
+		xa-location="jdbc/xa/OracleXADS"
+		ejb-location="jdbc/OracleDS"
+		connection-driver="oracle.jdbc.driver.OracleDriver"
+		username="scott"
+		password="tiger"
+		url="jdbc:oracle:thin:@localhost:5521:oracle"
+		inactivity-timeout="30"
+	/>
+        -->
+
+	<data-source
+		class="com.evermind.sql.DriverManagerDataSource"
+		name="localsapdb"
+		location="comp/env/jdbc/localsapdb"
+		xa-location="comp/env/jdbc/xa/localsapdb"
+		ejb-location="comp/env/jdbc/ejb/localsapdb"
+		connection-driver="com.sap.dbtech.jdbc.DriverSapDB"
+		username="ofbiz"
+		password="ofbiz"
+		url="jdbc:sapdb://localhost/OFBIZ"
+		inactivity-timeout="30"
+	/>
+</data-sources>

@@ -1,0 +1,210 @@
+/*
+ *  Copyright (c) 2003 The Open For Business Project - www.ofbiz.org
+ *
+ *  Permission is hereby granted, free of charge, to any person obtaining a 
+ *  copy of this software and associated documentation files (the "Software"), 
+ *  to deal in the Software without restriction, including without limitation 
+ *  the rights to use, copy, modify, merge, publish, distribute, sublicense, 
+ *  and/or sell copies of the Software, and to permit persons to whom the 
+ *  Software is furnished to do so, subject to the following conditions:
+ *
+ *  The above copyright notice and this permission notice shall be included 
+ *  in all copies or substantial portions of the Software.
+ *
+ *  THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS 
+ *  OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF 
+ *  MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. 
+ *  IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY 
+ *  CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT 
+ *  OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR 
+ *  THE USE OR OTHER DEALINGS IN THE SOFTWARE.
+ *
+ *@author     Johan Isacsson
+ *@author     Andy Zeneski
+ *@author     David E. Jones
+ *@version    $Revision$
+ *@since      2.2
+ */
+
+import java.util.*;
+import org.ofbiz.core.entity.*;
+import org.ofbiz.core.util.*;
+import org.ofbiz.commonapp.security.login.*;
+import org.ofbiz.commonapp.common.*;
+
+String externalLoginKey = LoginEvents.getExternalLoginKey(request);
+String externalKeyParam = externalLoginKey == null ? "" : "&externalLoginKey=" + externalLoginKey;
+context.put("externalKeyParam",externalKeyParam);
+
+delegator = request.getAttribute("delegator");
+
+String firstName = request.getParameter("first_name");
+String lastName = request.getParameter("last_name");
+String groupName = request.getParameter("group_name");
+String email = request.getParameter("email");
+String userLoginId = request.getParameter("userlogin_id");
+
+boolean findAll = false;
+String searchString = "";
+if (firstName != null || lastName != null) {
+    searchString += "first_name=" + firstName + "&last_name=" + lastName;
+}
+if (groupName != null) {
+    if (searchString.length() > 0) searchString += "&";
+    searchString += "group_name=" + groupName;
+}
+if (email != null) {
+    if (searchString.length() > 0) searchString += "&";
+    searchString += "email=" + email;
+}
+if (userLoginId != null) {
+    if (searchString.length() > 0) searchString += "&";
+    searchString += "userlogin_id=" + userLoginId;
+}
+if (request.getParameter("findAll") != null) {
+    String findAllParties = request.getParameter("findAll");
+    if (findAllParties != null && findAllParties.equalsIgnoreCase("true"))
+        findAll = true;
+    if (searchString.length() > 0) searchString += "&";
+    searchString += "findAll=" + request.getParameter("findAll");
+}
+
+Collection parties = null;
+
+//cache by the search string
+session = request.getSession(true);
+
+String lastSearchString = (String) session.getAttribute("LAST_SEARCH_STRING");
+Collection lastParties = (Collection) session.getAttribute("LAST_SEARCH_VALUES");
+
+if (lastParties != null && searchString.equals(lastSearchString)) {
+    parties = lastParties;
+    context.put("parties", parties);    
+} else {
+    
+    Iterator partyIter = null;
+      
+    if (findAll) {
+        parties = delegator.findAll("Party");
+        partyIter = parties.iterator();        
+    } else {
+        
+        dispatcher = request.getAttribute("dispatcher");
+        Map serviceCtx = null;
+        String serviceName = null;
+        
+        if(firstName != null || lastName != null) {
+            serviceName = "getPartyFromName";
+            serviceCtx = UtilMisc.toMap("firstName", firstName, "lastName", lastName);
+        } else if(groupName != null) {
+            serviceName = "getPartyFromGroupName";
+            serviceCtx = UtilMisc.toMap("groupName", groupName);
+        } else if(email != null) {
+            serviceName = "getPartyFromEmail";
+            serviceCtx = UtilMisc.toMap("email", email);
+        } else if(userLoginId != null) {
+            serviceName = "getPartyFromUserLogin";
+            serviceCtx = UtilMisc.toMap("userLoginId", userLoginId);
+        }
+        
+        if(serviceName != null) {        
+            Map result = dispatcher.runSync(serviceName, serviceCtx);
+            parties = (Collection) result.get("parties");            
+        }
+        
+        if (parties != null) {
+            session.setAttribute("LAST_SEARCH_STRING", searchString);            
+            partyIter = parties.iterator();
+        }
+        
+        
+    }
+    
+    List partyList = new LinkedList();
+    if(partyIter != null) { 
+        GenericValue party = null; 
+        while (partyIter.hasNext()) {
+            Map serviceMap = null;
+            if(findAll)
+                party = (GenericValue) partyIter.next();
+            else {                
+                serviceMap = (Map) partyIter.next();
+                party = (GenericValue) serviceMap.get("party");
+            }
+               
+            if(party == null) continue;
+          
+            
+            GenericValue curPartyType = party.getRelatedOneCache("PartyType");
+            GenericValue partyPersonType = delegator.findByPrimaryKeyCache("PartyType", UtilMisc.toMap("partyTypeId", "PERSON"));
+            
+            GenericValue person = null;
+            GenericValue partyGroup = null;
+            
+            
+            
+            if (EntityTypeUtil.isType(curPartyType, partyPersonType)) {
+                if(firstName != null || lastName != null)  person = (GenericValue) serviceMap.get("person"); 
+                else person = party.getRelatedOne("Person");
+            } else {
+                GenericValue partyGroupType = delegator.findByPrimaryKeyCache("PartyType", UtilMisc.toMap("partyTypeId", "PARTY_GROUP"));
+                if (EntityTypeUtil.isType(curPartyType, partyGroupType)) {
+                    partyGroup = party.getRelatedOne("PartyGroup");
+                }
+            }
+             
+            List userLogins = null;
+            if (party != null) {
+                userLogins = (List) delegator.findByAnd("UserLogin", UtilMisc.toMap("partyId", party.getString("partyId")));
+            }
+            StringBuffer sb = new StringBuffer();
+            Iterator uli = UtilMisc.toIterator(userLogins);
+            while (uli != null && uli.hasNext()) {
+                GenericValue curUserLogin = (GenericValue) uli.next();
+                sb.append(curUserLogin.getString("userLoginId"));
+                if (uli.hasNext()) {
+                    sb.append(", ");
+                }
+            }
+            String userLoginString = sb.toString();
+                           
+            partyList.add(UtilMisc.toMap("party", party, "person", person, "group", partyGroup, "userLogins", userLoginString));
+        }
+    }            
+    context.put("parties", partyList); 
+    session.setAttribute("LAST_SEARCH_VALUES", partyList); 
+    
+}  
+  
+int viewIndex = 0;
+int viewSize = 10;
+int highIndex = 0;
+int lowIndex = 0;
+int listSize = 0;
+
+try {
+    viewIndex = Integer.valueOf((String) request.getParameter("VIEW_INDEX")).intValue();
+} catch (Exception e) {
+    viewIndex = 0;
+}
+try {
+    viewSize = Integer.valueOf((String) request.getParameter("VIEW_SIZE")).intValue();
+} catch (Exception e) {
+    viewSize = 10;
+}
+if (parties != null) {
+    listSize = parties.size();
+}
+lowIndex = viewIndex * viewSize;
+highIndex = (viewIndex + 1) * viewSize;
+if (listSize < highIndex) {
+    highIndex = listSize;
+}
+
+context.put("viewIndex", new Integer(viewIndex));
+context.put("viewSize", new Integer(viewSize));
+context.put("highIndex", new Integer(highIndex));
+context.put("lowIndex", new Integer(lowIndex));
+context.put("searchString", searchString);
+context.put("listSize", new Integer(listSize));
+

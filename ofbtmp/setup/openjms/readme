@@ -1,0 +1,10 @@
+
+Setup OpenJMS as external JMS provider for OFBiz:
+
+1) Download openjms-0.7.2
+2) Extract openjms in work directory
+3) Copy ofbiz/setup/openjms/config/ofb_jms.xml to $OPENJMS_HOME/config
+4) Run $OPENJMS_HOME/bin/startjms.sh -config $OPENJMS_HOME/config/ofb_jms.xml
+
+Be sure to configure serviceengine.xml to use the OpenJMS JNDI provider.
+

@@ -1,0 +1,20 @@
+
+This configuration is for Oracle 9i AS (OC4J) version 9.0.3.0.0, but may work 
+with other versions.
+
+This configuration simply requires that you copy the ofbiz.sh and config/*.xml
+files to the oc4j/j2ee/home and oc4j/j2ee/home/config directories respectively.
+
+It refers to the OFBiz files in place without modification needed as long as the
+oc4j directory is a sibling of the ofbiz root directory that contains all of the
+modules.
+
+This configuration has some fairly serious problems with transaction management
+and connection handling. It can't find the java:comp/UserTransaction object in
+JNDI. So, some work is still needed to make it useful.
+
+Good luck!
+
+-David E. Jones
+
+

@@ -1,0 +1,23 @@
+
+This is the sample OFBiz configuration for Jetty from Mort Bay Consulting. 
+
+Jetty is an open source JSP/Servlet container very similar to Tomcat. This
+configuration if for Jetty version 4, since that is the first version 
+supporting Servlet 2.3 and JSP 1.2.
+
+To run Jetty simply get the current Jetty 4 distro, put it in a directory
+that is a sibling of the OFBIZ_HOME directory. You can put it in a 
+different directory, but then you will have to set the OFBIZ_HOME env
+variable. Copy the files from the setup directory the jetty directory
+in their respective paths (bin/ofbiz.sh and etc/ofbiz.xml).
+
+With the files in place just go into the jetty/bin directory and run
+"ofbiz.sh start". To stop Jetty just run "ofbiz.sh stop".
+
+It's really pretty simple.
+
+Hope that helps.
+
+-David Jones
+jonesde@ofbiz.org
+

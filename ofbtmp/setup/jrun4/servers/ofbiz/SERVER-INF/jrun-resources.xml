@@ -1,0 +1,173 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<!DOCTYPE jrun-resources PUBLIC "-//Macromedia Inc.//DTD jrun-resources 4.0//EN" "http://jrun.macromedia.com/dtds/jrun-resources.dtd">
+
+<jrun-resources>
+
+<!-- ====================================================== -->
+<!-- This file contains configuration information for all   -->
+<!-- J2EE Resource Factories: JDBC, JMS, Mail, and URL.     -->
+<!-- Custom pools of objects can also be added here.        -->
+<!-- ====================================================== -->
+
+  <!-- ============================================================================ -->
+  <!-- These entries are an example of JMS destination configuration.               -->
+  <!-- To specify a destination, include factory name  type and jndiName            -->
+  <!-- ============================================================================ -->
+  <jms-destination>
+	<jndi-name>jms/queue/testQueue</jndi-name>
+	<destination-name>testQueue</destination-name>
+	<destination-type>javax.jms.Queue</destination-type>
+  </jms-destination>
+
+  <!-- ============================================================================ -->
+  <!-- These entries are an example of JMS Connection Factory configuration.        -->
+  <!-- To specify a connection factory, include factory name or type and transport  -->
+  <!-- ============================================================================ -->
+  <jms-connection-factory>
+
+    <!-- jms provider factory name. Optional-->
+    <factory-name>QueueConnectionFactory</factory-name>
+    
+    <!-- jndi name - name under wich this connection factory will be available -->
+    <!-- to client in jndi. Required. -->
+    <jndi-name>jms/jndi-QueueConnectionFactory</jndi-name>
+
+    <!-- connection factory type (required ifno         -->
+    <!-- can be one of the        			            -->
+    <!-- following:                                     -->
+    <!-- javax.jms.QueueConnectionFactory,              -->
+    <!-- javax.jms.XAQueueConnectionFactory,            -->
+    <!-- javax.jms.TopicConnectionFactory               -->
+    <!-- javax.jms.XATopicConnectionFactory             -->
+    <type>javax.jms.QueueConnectionFactory</type>
+
+    <!-- jms transport (rmi, tcpip, rmiiiopi, intravm). -->
+    <!-- Required if no factory name was specified.     -->
+    <transport>RMI</transport>
+
+    <!-- userName and password required if seamless authorization will be used       -->
+    <!-- (can be specified and updated, upon application deployment via resorce-ref) -->
+    <username>guest</username>
+    <password>guest</password>
+
+  </jms-connection-factory>
+  
+  <!-- MDB specifc connection factory - utilizes intra vm connection, cannot be used by remote client -->
+  <jms-connection-factory>
+
+    <!-- jms provider factory name. Optional-->
+    <factory-name>MDBQueueConnectionFactory</factory-name>
+    
+    <!-- jndi name - name under wich this connection factory will be available -->
+    <!-- to client in jndi. Required. -->
+    <jndi-name>jms/jndi-MDBQueueConnectionFactory</jndi-name>
+
+    <!-- connection factory type (required ifno         -->
+    <!-- can be one of the        			            -->
+    <!-- following:                                     -->
+    <!-- javax.jms.QueueConnectionFactory,              -->
+    <!-- javax.jms.XAQueueConnectionFactory,            -->
+    <!-- javax.jms.TopicConnectionFactory               -->
+    <!-- javax.jms.XATopicConnectionFactory             -->
+    <type>javax.jms.QueueConnectionFactory</type>
+
+    <!-- jms transport (rmi, tcpip, rmiiiopi, intravm). -->
+    <!-- Required if no factory name was specified.     -->
+    <transport>INTRAVM</transport>
+
+    <!-- username and password required if seamless authorization will be used       -->
+    <!-- (can be specified and updated, upon application deployment via resorce-ref) -->
+    <username>guest</username>
+    <password>guest</password>
+
+  </jms-connection-factory>
+
+  <!-- ========================================================== -->
+  <!-- These entries are an example of JDBC Connection pooling.   -->
+  <!-- ========================================================== -->
+  <!--
+  <data-source>
+    <dbname>DB1</dbname>
+    <jndi-name>jdbc/DB1</jndi-name>
+    <driver>COM.cloudscape.core.JDBCDriver</driver>
+    <url>jdbc:cloudscape:default;create=true</url>
+    <username>cts1</username>
+    <password>cts1</password>
+    <isolation-level>READ_UNCOMMITTED</isolation-level>
+    <native-results>true</native-results>
+    <initial-connections>1</initial-connections>
+    <minimum-size>1</minimum-size>
+    <maximum-size>70</maximum-size>
+    <connection-timeout>60</connection-timeout>
+    <user-timeout>120</user-timeout>
+    <skimmer-frequency>1800</skimmer-frequency>
+    <shrink-by>10</shrink-by>
+    <debugging>true</debugging>
+    <transaction-timeout>10</transaction-timeout>
+    <cache-enabled>false</cache-enabled>
+    <cache-size>10</cache-size>
+    <cache-refresh-interval>20</cache-refresh-interval>
+    <remove-on-exceptions>false</remove-on-exceptions>
+  </data-source>
+  -->
+  <data-source>
+    <dbname>localsapdb</dbname>
+    <jndi-name>jdbc/localsapdb</jndi-name>
+    <driver>com.sap.dbtech.jdbc.DriverSapDB</driver>
+    <url>jdbc:sapdb://localhost/OFBIZ</url>
+    <username>ofbiz</username>
+    <password>ofbiz</password>
+    <isolation-level>READ_COMMITTED</isolation-level>
+    <native-results>false</native-results>
+    <initial-connections>5</initial-connections>
+    <minimum-size>5</minimum-size>
+    <maximum-size>70</maximum-size>
+    <connection-timeout>60</connection-timeout>
+    <user-timeout>120</user-timeout>
+    <skimmer-frequency>1800</skimmer-frequency>
+    <shrink-by>10</shrink-by>
+    <debugging>true</debugging>
+    <transaction-timeout>120</transaction-timeout>
+    <cache-enabled>false</cache-enabled>
+    <cache-size>10</cache-size>
+    <cache-refresh-interval>20</cache-refresh-interval>
+    <remove-on-exceptions>false</remove-on-exceptions>
+  </data-source>
+
+  <!-- ========================================================== -->
+  <!-- These entries are an example of a JavaMail Session         -->
+  <!-- ========================================================== -->
+
+  <mail-session>
+      <!-- JNDI name for this mail session -->
+      <jndi-name>mail/ExampleMailSession_1</jndi-name>
+      <!--  JavaMail session description  -->
+      <description>An example of a JavaMail session entry</description>
+       <!--  JavaMail store protocol (pop or imap) -->
+      <store-protocol>imap</store-protocol>
+      <!-- JavaMail transport protocol (smtp)  -->
+      <transport-protocol>smtp</transport-protocol>
+      <!-- Default mail server host name -->
+      <host></host>
+      <!-- Default username -->
+      <user></user>
+      <!-- Default smtp mail server name  -->
+      <smtp-host>allaire.com</smtp-host>
+      <!-- Default smtp user name -->
+      <smtp-user>anonymous@yahoo.com</smtp-user>
+      <!-- Default imap mail server name -->
+      <imap-host>S0001EXC0006.allaire.com</imap-host>
+      <!-- Default imap user name -->
+      <imap-user>jnobody@allaire.com</imap-user>
+      <!-- Default pop3 mail server name -->
+      <pop3-host></pop3-host>
+      <!-- Default pop3 user name -->
+      <pop3-user></pop3-user>
+      <!-- Default sender email addresss -->
+      <from>anonymous@yahoo.com</from>
+      <!-- Enable debug messages (true or false) -->
+      <debug>false</debug>
+  </mail-session>
+
+</jrun-resources>

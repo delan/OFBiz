@@ -1,0 +1,1131 @@
+<?xml version="1.0"?>
+
+<!--
+ *  Copyright (c) 2001-2003 The Open For Business Project and respected authors.
+ *
+ *  Permission is hereby granted, free of charge, to any person obtaining a
+ *  copy of this software and associated documentation files (the "Software"),
+ *  to deal in the Software without restriction, including without limitation
+ *  the rights to use, copy, modify, merge, publish, distribute, sublicense,
+ *  and/or sell copies of the Software, and to permit persons to whom the
+ *  Software is furnished to do so, subject to the following conditions:
+ *
+ *  The above copyright notice and this permission notice shall be included
+ *  in all copies or substantial portions of the Software.
+ *
+ *  THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS
+ *  OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF
+ *  MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT.
+ *  IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY
+ *  CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT
+ *  OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR
+ *  THE USE OR OTHER DEALINGS IN THE SOFTWARE.
+ *
+ *  This is the  Open for Business CORE component build script.
+ *  $Id$
+-->
+
+<project name="Open For Business Main Build" default="deploy" basedir=".">
+
+
+    <!-- ================================================================== -->
+    <!-- Initialization of all property settings                            -->
+    <!-- ================================================================== -->
+
+    <target name="ofbiz-init">
+        <!-- Allow any user specific values to override the defaults -->
+        <property file="${user.home}/build.properties"/>
+        <!-- Allow module-level defaults for this build -->
+        <property file="build.properties"/>
+
+		<!-- set this to "war" to build war files, or "jar-deploy" to just build jars and prepare for running outside a war -->
+        <property name="sub.project.target" value="jar-deploy"/>
+        <property name="ofbiz.version" value=""/>
+        <property name="ofbcore-webapp.jar" value="core/lib/ofbcore-webapp${ofbiz.version}.jar" />
+
+        <property environment="env" />
+        <property name="home.dir" value="${env.OFBIZ_HOME}" />
+    </target>
+
+    <target name="catalina-init">
+        <!-- Allow any user specific values to override the defaults -->
+        <property file="${user.home}/build.properties"/>
+        <!-- Allow module-level defaults for this build -->
+        <property file="build.properties"/>
+
+        <property name="ofbiz.version" value=""/>
+
+        <property environment="env" />
+        <property name="catalina.dir" value="${env.CATALINA_HOME}" />
+        <property name="home.dir" value="${env.OFBIZ_HOME}" />
+
+        <property name="classes.dir" value="${catalina.dir}/classes" />
+        <property name="lib.dir" value="${catalina.dir}/lib" />
+        <property name="j2eedeploy.dir" value="${catalina.dir}/webapps" />
+    </target>
+
+    <target name="catalina41-init">
+        <!-- Allow any user specific values to override the defaults -->
+        <property file="${user.home}/build.properties"/>
+        <!-- Allow module-level defaults for this build -->
+        <property file="build.properties"/>
+
+        <property name="ofbiz.version" value=""/>
+
+        <property environment="env" />
+        <property name="catalina.dir" value="${env.CATALINA_HOME}" />
+        <property name="home.dir" value="${env.OFBIZ_HOME}" />
+
+        <property name="classes.dir" value="${catalina.dir}/shared/classes" />
+        <property name="lib.dir" value="${catalina.dir}/shared/lib" />
+        <property name="j2eedeploy.dir" value="${catalina.dir}/webapps" />
+    </target>
+    
+    <!-- ================================================================== -->
+    <!-- Install OFBIZ Components in JBoss & Tomcat                         -->
+    <!-- ================================================================== -->
+
+    <target name="install" depends="install-catalina41">
+    </target>
+
+    <target name="install-catalina">
+        <!-- Allow any user specific values to override the defaults -->
+        <property file="${user.home}/build.properties"/>
+        <!-- Allow module-level defaults for this build -->
+        <property file="build.properties"/>
+
+        <property name="ofbiz.version" value=""/>
+
+        <property environment="env" />
+        <property name="catalina.dir" value="${env.CATALINA_HOME}" />
+
+        <!-- only backup server.xml if server.orig.xml does not exist -->
+        <condition property="catalina.server.orig.xml.needed">
+            <not><available file="${catalina.dir}/conf/server.orig.xml" type="file"/></not>
+        </condition>
+        <antcall target="catalina-serverxml-backup" />
+        
+        <copy file="setup/catalina/conf/server.xml" toDir="${catalina.dir}/conf" />
+
+        <copy file="setup/catalina/bin/ofbiz.sh" toDir="${catalina.dir}/bin" />
+        <copy file="setup/catalina/bin/ofbiz.bat" toDir="${catalina.dir}/bin" />
+
+        <copy file="lib/common/hsqldb.jar" toDir="${catalina.dir}/common/lib"/>
+        <copy file="lib/common/postgresql.jar" toDir="${catalina.dir}/common/lib"/>
+        <copy file="lib/common/sapdbc.jar" toDir="${catalina.dir}/common/lib"/>
+        <copy file="lib/common/log4j.jar" toDir="${catalina.dir}/common/lib"/>
+        <copy file="lib/common/mm.mysql-2.0.14-bin.jar" toDir="${catalina.dir}/common/lib"/>
+
+        <copy file="lib/common/jms_1.0.2a.jar" toDir="${catalina.dir}/common/lib"/>
+        <copy file="lib/common/ots-jts_1.0.jar" toDir="${catalina.dir}/common/lib"/>
+
+        <copy file="lib/common/commons-beanutils.jar" toDir="${catalina.dir}/common/lib"/>
+        <copy file="lib/common/commons-collections.jar" toDir="${catalina.dir}/common/lib"/>
+        <copy file="lib/common/commons-digester.jar" toDir="${catalina.dir}/common/lib"/>
+        <copy file="lib/common/commons-discovery.jar" toDir="${catalina.dir}/common/lib"/>
+        <copy file="lib/common/commons-fileupload.jar" toDir="${catalina.dir}/common/lib"/>
+        <copy file="lib/common/commons-logging.jar" toDir="${catalina.dir}/common/lib"/>
+        <copy file="lib/common/commons-httpclient.jar" toDir="${catalina.dir}/common/lib"/>
+        <copy file="lib/common/commons-vfs.jar" toDir="${catalina.dir}/common/lib"/>
+
+        <copy toDir="${catalina.dir}/lib">
+            <fileset dir="lib/share" includes="*.jar"/>
+            <fileset dir="lib/scripting" includes="*.jar"/>
+            <fileset dir="lib/datavision" includes="*.jar"/>
+            <fileset dir="lib/jasperreports" includes="*.jar"/>
+            <fileset dir="lib/weka" includes="*.jar"/>           
+            <fileset dir="lib/jotm" includes="*.jar"/>
+            <!-- <fileset dir="lib/tyrex" includes="*.jar"/> -->
+        </copy>
+
+        <delete file="${catalina.dir}/common/lib/tyrex-0.9.7.0.jar"/>
+    </target>
+
+    <target name="install-catalina41">
+        <!-- Allow any user specific values to override the defaults -->
+        <property file="${user.home}/build.properties"/>
+        <!-- Allow module-level defaults for this build -->
+        <property file="build.properties"/>
+
+        <property name="ofbiz.version" value=""/>
+
+        <property environment="env" />
+        <property name="catalina.dir" value="${env.CATALINA_HOME}" />
+
+        <!-- only backup server.xml if server.orig.xml does not exist -->
+        <condition property="catalina.server.orig.xml.needed">
+            <not><available file="${catalina.dir}/conf/server.orig.xml" type="file"/></not>
+        </condition>
+        <antcall target="catalina-serverxml-backup" />
+        
+        <copy file="setup/catalina41/conf/server.xml" toDir="${catalina.dir}/conf" />
+
+        <copy file="setup/catalina41/bin/ofbiz.sh" toDir="${catalina.dir}/bin" />
+        <copy file="setup/catalina41/bin/ofbiz.bat" toDir="${catalina.dir}/bin" />
+
+        <copy file="lib/common/hsqldb.jar" toDir="${catalina.dir}/shared/lib"/>
+        <copy file="lib/common/postgresql.jar" toDir="${catalina.dir}/shared/lib"/>
+        <copy file="lib/common/sapdbc.jar" toDir="${catalina.dir}/shared/lib"/>
+        <copy file="lib/common/log4j.jar" toDir="${catalina.dir}/shared/lib"/>
+        <copy file="lib/common/mm.mysql-2.0.14-bin.jar" toDir="${catalina.dir}/shared/lib"/>
+
+        <copy file="lib/common/jms_1.0.2a.jar" toDir="${catalina.dir}/shared/lib"/>
+        <copy file="lib/common/ots-jts_1.0.jar" toDir="${catalina.dir}/shared/lib"/>
+
+        <!--
+        <copy file="lib/common/commons-collections.jar" toDir="${catalina.dir}/shared/lib"/>
+        <copy file="lib/common/commons-logging.jar" toDir="${catalina.dir}/shared/lib"/>
+        -->
+        <copy file="lib/common/commons-httpclient.jar" toDir="${catalina.dir}/shared/lib"/>
+        <copy file="lib/common/commons-digester.jar" toDir="${catalina.dir}/shared/lib"/>
+        <copy file="lib/common/commons-discovery.jar" toDir="${catalina.dir}/shared/lib"/>
+        <copy file="lib/common/commons-fileupload.jar" toDir="${catalina.dir}/shared/lib"/>
+        <copy file="lib/common/commons-beanutils.jar" toDir="${catalina.dir}/shared/lib"/>
+        <copy file="lib/common/commons-vfs.jar" toDir="${catalina.dir}/shared/lib"/>
+
+        <copy toDir="${catalina.dir}/shared/lib">
+            <fileset dir="lib/share" includes="*.jar"/>
+            <fileset dir="lib/scripting" includes="*.jar"/>
+            <fileset dir="lib/datavision" includes="*.jar"/>
+            <fileset dir="lib/jasperreports" includes="*.jar"/>
+            <fileset dir="lib/weka" includes="*.jar"/>            
+            <fileset dir="lib/jotm" includes="*.jar"/>
+            <!-- <fileset dir="lib/tyrex" includes="*.jar"/> -->
+        </copy>
+    </target>
+
+    <target name="catalina-serverxml-backup" depends="" if="catalina.server.orig.xml.needed">
+        <copy file="${catalina.dir}/conf/server.xml" toFile="${catalina.dir}/conf/server.orig.xml"/>
+    </target>
+    
+    <!-- ================================================================== -->
+    <!-- Removes all created files and directories                          -->
+    <!-- ================================================================== -->
+
+    <target name="clean" depends="sub-clean,catalina-clean">
+        <delete>
+            <fileset dir="logs" includes="*"/>
+        </delete>
+    </target>
+
+    <target name="catalina-clean" depends="catalina41-init">
+        <delete file="${classes.dir}/serverstats.properties" />
+        <delete file="${classes.dir}/entityengine.xml" />
+        <delete file="${classes.dir}/security.properties" />
+        <delete file="${classes.dir}/security.xml" />
+        <delete file="${classes.dir}/carol.properties" />
+        <delete file="${classes.dir}/debug.properties" />
+        <delete file="${classes.dir}/jsse.properties" />
+        <delete file="${classes.dir}/jsse.properties" />
+        <delete file="${classes.dir}/cache.properties" />
+        <delete file="${classes.dir}/general.properties" />
+        <delete file="${classes.dir}/payment.properties" />
+        <delete file="${classes.dir}/prodsearch.properties" />
+        <delete file="${classes.dir}/localdtds.properties" />
+        <delete file="${classes.dir}/serviceengine.xml" />
+        <delete file="${classes.dir}/tyrexdomain.xml" />
+        <delete file="${classes.dir}/url.properties" />
+        <delete file="${classes.dir}/taxware.properties" />
+        <delete file="${classes.dir}/jndiservers.xml" />
+        <delete file="${classes.dir}/inventoryalerts.properties" />
+
+        <delete dir="${classes.dir}/org/ofbiz/commonapp" />
+
+        <delete file="${lib.dir}/ofbcore-share${ofbiz.version}.jar" />
+        <delete file="${lib.dir}/ofbcore-entity${ofbiz.version}.jar" />
+        <delete file="${lib.dir}/ofbcore-service${ofbiz.version}.jar" />
+        <delete file="${lib.dir}/ofbcore-extutil${ofbiz.version}.jar" />
+        <delete file="${lib.dir}/ofbcore-extentity${ofbiz.version}.jar" />
+        <delete file="${lib.dir}/ofbcore-workflow${ofbiz.version}.jar" />
+        <delete file="${lib.dir}/ofbcore-rules${ofbiz.version}.jar" />
+        <delete file="${lib.dir}/ofbcore-datafile${ofbiz.version}.jar" />
+        <delete file="${lib.dir}/ofbcore-minilang${ofbiz.version}.jar" />
+        <delete file="${lib.dir}/ofbcore-widget${ofbiz.version}.jar" />
+        <delete file="${lib.dir}/ofbcore-webapp${ofbiz.version}.jar" />
+
+        <delete file="${lib.dir}/commonapp.jar" />
+
+        <delete file="${j2eedeploy.dir}/ofbcore-ejb${ofbiz.version}.jar" />
+    </target>
+
+    <target name="ofbiz-clean" depends="ofbiz-init,sub-clean">
+        <delete dir="${classes.dir}" />
+        <delete dir="${lib.dir}" />
+        <delete dir="${j2eedeploy.dir}" />
+    </target>
+
+    <target name="sub-clean" depends="">
+        <echo message="[clean] ===== Cleaning core =====" />
+        <ant dir="core" target="clean" inheritAll="false" />
+        <echo message="[clean] ===== Cleaning commonapp =====" />
+        <ant dir="commonapp" target="clean" inheritAll="false" />
+        <echo message="[clean] ===== Cleaning ecommerce =====" />
+        <ant dir="ecommerce" target="clean" inheritAll="false" />
+        <echo message="[clean] ===== Cleaning catalog =====" />
+        <ant dir="catalog" target="clean" inheritAll="false" />
+        <echo message="[clean] ===== Cleaning partymgr =====" />
+        <ant dir="partymgr" target="clean" inheritAll="false" />
+        <echo message="[clean] ===== Cleaning ordermgr =====" />
+        <ant dir="ordermgr" target="clean" inheritAll="false" />
+        <echo message="[clean] ===== Cleaning webtools =====" />
+        <ant dir="webtools" target="clean" inheritAll="false" />
+        <echo message="[clean] ===== Cleaning workeffort =====" />
+        <ant dir="workeffort" target="clean" inheritAll="false" />
+        <echo message="[clean] ===== Cleaning accounting =====" />
+        <ant dir="accounting" target="clean" inheritAll="false" />
+        <echo message="[clean] ===== Cleaning facility =====" />
+        <ant dir="facility" target="clean" inheritAll="false" />
+        <echo message="[clean] ===== Cleaning marketing =====" />
+        <ant dir="marketing" target="clean" inheritAll="false" />
+        <echo message="[clean] ===== Cleaning content =====" />
+        <ant dir="content" target="clean" inheritAll="false" />
+
+        <echo message="[clean] ===== Done Cleaning =====" />
+    </target>
+
+    <!-- ================================================================== -->
+    <!-- Build Modules                                                     -->
+    <!-- ================================================================== -->
+
+    <target name="build" depends="ofbiz-init">
+        <echo message="[build]" />
+        <echo message="[build] ===================================" />
+        <echo message="[build] ========== Building core ==========" />
+        <echo message="[build] ===================================" />
+        <ant dir="core" inheritAll="false" />
+        
+        <echo message="[build]" />
+        <echo message="[build] ========================================" />
+        <echo message="[build] ========== Building commonapp ==========" />
+        <echo message="[build] ========================================" />
+        <ant dir="commonapp" target="${sub.project.target}" inheritAll="false" />
+        
+        <echo message="[build]" />
+        <echo message="[build] ========================================" />
+        <echo message="[build] ========== Building ecommerce ==========" />
+        <echo message="[build] ========================================" />
+        <ant dir="ecommerce" target="${sub.project.target}" inheritAll="false" />
+        
+        <echo message="[build]" />
+        <echo message="[build] ======================================" />
+        <echo message="[build] ========== Building catalog ==========" />
+        <echo message="[build] ======================================" />
+        <ant dir="catalog" target="${sub.project.target}" inheritAll="false" />
+        
+        <echo message="[build]" />
+        <echo message="[build] =======================================" />
+        <echo message="[build] ========== Building partymgr ==========" />
+        <echo message="[build] =======================================" />
+        <ant dir="partymgr" target="${sub.project.target}" inheritAll="false" />
+        
+        <echo message="[build]" />
+        <echo message="[build] =======================================" />
+        <echo message="[build] ========== Building ordermgr ==========" />
+        <echo message="[build] =======================================" />
+        <ant dir="ordermgr" target="${sub.project.target}" inheritAll="false" />
+        
+        <echo message="[build]" />
+        <echo message="[build] =======================================" />
+        <echo message="[build] ========== Building webtools ==========" />
+        <echo message="[build] =======================================" />
+        <ant dir="webtools" target="${sub.project.target}" inheritAll="false" />
+        
+        <echo message="[build]" />
+        <echo message="[build] =========================================" />
+        <echo message="[build] ========== Building workeffort ==========" />
+        <echo message="[build] =========================================" />
+        <ant dir="workeffort" target="${sub.project.target}" inheritAll="false" />
+        
+        <echo message="[build]" />
+        <echo message="[build] =========================================" />
+        <echo message="[build] ========== Building accounting ==========" />
+        <echo message="[build] =========================================" />
+        <ant dir="accounting" target="${sub.project.target}" inheritAll="false" />
+        
+        <echo message="[build]" />
+        <echo message="[build] =======================================" />
+        <echo message="[build] ========== Building facility ==========" />
+        <echo message="[build] =======================================" />
+        <ant dir="facility" target="${sub.project.target}" inheritAll="false" />
+        
+        <echo message="[build]" />
+        <echo message="[build] ========================================" />
+        <echo message="[build] ========== Building marketing ==========" />
+        <echo message="[build] ========================================" />
+        <ant dir="marketing" target="${sub.project.target}" inheritAll="false" />
+
+        <echo message="[build]" />
+        <echo message="[build] =======================================" />
+        <echo message="[build] ========== Building content ==========" />
+        <echo message="[build] =======================================" />
+        <ant dir="content" target="${sub.project.target}" inheritAll="false" />
+        
+        <echo message="[build] ===== Done Building (Compile) =====" />
+    </target>
+
+    <!--  nocore target for building entire system without core.
+          useful when using an IDE (netbeans) that will not let go of core jar files -->
+    <target name="nocore" depends="ofbiz-init">
+<!--        <echo message="[build] ===== Building core =====" />
+        <ant dir="core" inheritAll="false" />-->
+        <echo message="[build] ===== Building commonapp =====" />
+        <ant dir="commonapp" inheritAll="false" />
+        <echo message="[build] ===== Building ecommerce =====" />
+        <ant dir="ecommerce" inheritAll="false" />
+        <echo message="[build] ===== Building catalog =====" />
+        <ant dir="catalog" inheritAll="false" />
+        <echo message="[build] ===== Building partymgr =====" />
+        <ant dir="partymgr" inheritAll="false" />
+        <echo message="[build] ===== Building ordermgr =====" />
+        <ant dir="ordermgr" inheritAll="false" />
+        <echo message="[build] ===== Building webtools =====" />
+        <ant dir="webtools" inheritAll="false" />
+        <echo message="[build] ===== Building workeffort =====" />
+        <ant dir="workeffort" inheritAll="false" />
+        <echo message="[build] ===== Building accounting =====" />
+        <ant dir="accounting" inheritAll="false" />
+        <echo message="[build] ===== Building facility =====" />
+        <ant dir="facility" inheritAll="false" />
+        <echo message="[build] ===== Building marketing =====" />
+        <ant dir="marketing" inheritAll="false" />
+        <echo message="[build] ===== Building content =====" />
+        <ant dir="content" inheritAll="false" />
+
+        <echo message="[build] ===== Done Building (Compile), Ignored Core =====" />
+    </target>
+
+    <target name="war" depends="build">
+        <echo message="[war] ===== Building commonapp =====" />
+        <ant dir="commonapp" target="war" inheritAll="false" />
+        <echo message="[war] ===== Building ecommerce =====" />
+        <ant dir="ecommerce" target="war" inheritAll="false" />
+        <echo message="[war] ===== Building catalog =====" />
+        <ant dir="catalog" target="war" inheritAll="false" />
+        <echo message="[war] ===== Building partymgr =====" />
+        <ant dir="partymgr" target="war" inheritAll="false" />
+        <echo message="[war] ===== Building ordermgr =====" />
+        <ant dir="ordermgr" target="war" inheritAll="false" />
+        <echo message="[war] ===== Building webtools =====" />
+        <ant dir="webtools" target="war" inheritAll="false" />
+        <echo message="[war] ===== Building workeffort =====" />
+        <ant dir="workeffort" target="war" inheritAll="false" />
+        <echo message="[war] ===== Building accounting =====" />
+        <ant dir="accounting" target="war" inheritAll="false" />
+        <echo message="[war] ===== Building facility =====" />
+        <ant dir="facility" target="war" inheritAll="false" />
+        <echo message="[war] ===== Building marketing =====" />
+        <ant dir="marketing" target="war" inheritAll="false" />
+        <echo message="[war] ===== Building content =====" />
+        <ant dir="content" target="war" inheritAll="false" />
+
+        <echo message="[build] ===== Done Building (WAR) =====" />
+    </target>
+
+    <!-- ================================================================== -->
+    <!-- Build JavaDocs                                                     -->
+    <!-- ================================================================== -->
+
+    <target name="docs" depends="">
+        <echo message="[docs] ===== Javadoc core =====" />
+        <ant dir="core" target="docs" />
+        <echo message="[docs] ===== Javadoc commonapp =====" />
+        <ant dir="commonapp" target="docs" />
+        <echo message="[docs] ===== Javadoc ecommerce =====" />
+        <ant dir="ecommerce" target="docs" />
+        <echo message="[docs] ===== Javadoc catalog =====" />
+        <ant dir="catalog" target="docs" />
+        <echo message="[docs] ===== Javadoc partymgr - skipping =====" />
+        <!-- <ant dir="partymgr" target="docs" /> -->
+        <echo message="[docs] ===== Javadoc ordermgr - skipping =====" />
+        <!-- <ant dir="ordermgr" target="docs" /> -->
+        <echo message="[docs] ===== Javadoc workeffort - skipping =====" />
+        <!-- <ant dir="workeffort" target="docs" /> -->
+        <echo message="[docs] ===== Javadoc accounting - skipping =====" />
+        <!-- <ant dir="accounting" target="docs" /> -->
+        <echo message="[docs] ===== Javadoc facility - skipping =====" />
+        <!-- <ant dir="facility" target="docs" /> -->
+        <echo message="[docs] ===== Javadoc marketing - skipping =====" />
+        <!-- <ant dir="marketing" target="docs" /> -->
+        <echo message="[docs] ===== Javadoc content - skipping =====" />
+        <!-- <ant dir="content" target="docs" /> -->
+
+        <echo message="[docs] ===== Done Building (Docs) =====" />
+    </target>
+
+    <!-- ================================================================== -->
+    <!-- Update the apps conf files                                         -->
+    <!-- ================================================================== -->
+
+    <target name="copy-tld" depends="">
+        <echo message="[tld] ===== Copy TLD ====="/>
+        <copy file="core/etc/ofbiz.tld" toDir="webtools/webapp/WEB-INF"/>
+        <copy file="core/etc/ofbiz.tld" toDir="commonapp/webapp/WEB-INF"/>
+        <copy file="core/etc/ofbiz.tld" toDir="commonapp/empty_webapp/WEB-INF"/>
+        <copy file="core/etc/ofbiz.tld" toDir="ecommerce/webapp/WEB-INF"/>
+        <copy file="core/etc/ofbiz.tld" toDir="catalog/webapp/WEB-INF"/>
+        <copy file="core/etc/ofbiz.tld" toDir="ordermgr/webapp/WEB-INF"/>
+        <copy file="core/etc/ofbiz.tld" toDir="partymgr/webapp/WEB-INF"/>
+        <copy file="core/etc/ofbiz.tld" toDir="workeffort/webapp/WEB-INF"/>
+        <copy file="core/etc/ofbiz.tld" toDir="accounting/webapp/WEB-INF"/>
+        <copy file="core/etc/ofbiz.tld" toDir="facility/webapp/WEB-INF"/>
+        <copy file="core/etc/ofbiz.tld" toDir="marketing/webapp/WEB-INF"/>
+        <copy file="core/etc/ofbiz.tld" toDir="content/webapp/WEB-INF"/>
+        <copy file="core/etc/regions.tld" toDir="webtools/webapp/WEB-INF"/>
+        <copy file="core/etc/regions.tld" toDir="commonapp/webapp/WEB-INF"/>
+        <copy file="core/etc/regions.tld" toDir="commonapp/empty_webapp/WEB-INF"/>
+        <copy file="core/etc/regions.tld" toDir="ecommerce/webapp/WEB-INF"/>
+        <copy file="core/etc/regions.tld" toDir="catalog/webapp/WEB-INF"/>
+        <copy file="core/etc/regions.tld" toDir="ordermgr/webapp/WEB-INF"/>
+        <copy file="core/etc/regions.tld" toDir="partymgr/webapp/WEB-INF"/>
+        <copy file="core/etc/regions.tld" toDir="workeffort/webapp/WEB-INF"/>
+        <copy file="core/etc/regions.tld" toDir="accounting/webapp/WEB-INF"/>
+        <copy file="core/etc/regions.tld" toDir="facility/webapp/WEB-INF"/>
+        <copy file="core/etc/regions.tld" toDir="marketing/webapp/WEB-INF"/>
+        <copy file="core/etc/regions.tld" toDir="content/webapp/WEB-INF"/>
+        <echo message="[tld] ===== Done Copying ====="/>
+    </target>
+    <target name="update-apps" depends="copy-tld"/>
+
+    <!-- ================================================================== -->
+    <!-- Deploy the app                                                     -->
+    <!-- ================================================================== -->
+
+    <target name="deploy" depends="build, catalina41-deploy"></target>
+
+    <target name="deploy-ext" depends="build, catalina-deploy-ext"/>
+
+    <target name="ofbiz-deploy" depends="build, ofbiz-init">
+        <antcall target="int-deploy" />
+    </target>
+
+    <target name="ofbiz-deploy-ext" depends="build, ofbiz-init, war">
+        <antcall target="int-deploy" />
+        <antcall target="int-deploy-ext" />
+    </target>
+
+    <target name="catalina-deploy" depends="catalina-init">
+        <antcall target="int-deploy" />
+    </target>
+
+    <target name="catalina41-deploy" depends="catalina41-init">
+        <antcall target="int-deploy" />
+    </target>
+
+    <target name="catalina-deploy-ext" depends="catalina-init, war">
+        <antcall target="int-deploy" />
+        <antcall target="int-deploy-ext" />
+    </target>
+
+    <!-- Copy all files necessary for running IN PLACE (ie: OFBIZ_HOME == .) -->
+    <target name="int-deploy" depends="">
+        <condition property="copy.dirs.exist">
+            <and>
+                <available file="${classes.dir}" type="dir"/>
+                <available file="${lib.dir}" type="dir"/>
+            </and>
+        </condition>
+        <antcall target="deploy-copy" />
+        <antcall target="warn-deploy-copy" />
+    </target>
+    <target name="warn-deploy-copy" depends="" unless="copy.dirs.exist">
+        <echo message="NOTE: Not deploying to target because no target classes and lib directories (usually under CATALINA_HOME) are set."/>
+    </target>
+
+    <target name="deploy-copy" depends="" if="copy.dirs.exist">
+        <copy file="commonapp/etc/cache.properties" toDir="${classes.dir}" />
+        <copy file="commonapp/etc/carol.properties" toDir="${classes.dir}" />
+        <copy file="commonapp/etc/debug.properties" toDir="${classes.dir}" />
+        <copy file="commonapp/etc/jsse.properties" toDir="${classes.dir}" />        
+        <copy file="commonapp/etc/entityengine.xml" toDir="${classes.dir}" />
+        <copy file="commonapp/etc/general.properties" toDir="${classes.dir}" />
+        <copy file="commonapp/etc/inventoryalerts.properties" toDir="${classes.dir}" />
+        <copy file="commonapp/etc/jndiservers.xml" toDir="${classes.dir}" />
+        <copy file="commonapp/etc/localdtds.properties" toDir="${classes.dir}" />
+        <copy file="commonapp/etc/payment.properties" toDir="${classes.dir}" />
+        <copy file="commonapp/etc/prodsearch.properties" toDir="${classes.dir}" />
+        <copy file="commonapp/etc/security.properties" toDir="${classes.dir}" />
+        <copy file="commonapp/etc/security.xml" toDir="${classes.dir}" />
+        <copy file="commonapp/etc/serverstats.properties" toDir="${classes.dir}" />
+        <copy file="commonapp/etc/serviceengine.xml" toDir="${classes.dir}" />
+        <copy file="commonapp/etc/taxware.properties" toDir="${classes.dir}" />
+        <copy file="commonapp/etc/tyrexdomain.xml" toDir="${classes.dir}" />
+        <copy file="commonapp/etc/url.properties" toDir="${classes.dir}" />
+
+        <copy file="core/lib/ofbcore-share${ofbiz.version}.jar" toDir="${lib.dir}" />
+        <copy file="core/lib/ofbcore-entity${ofbiz.version}.jar" toDir="${lib.dir}" />
+        <copy file="core/lib/ofbcore-service${ofbiz.version}.jar" toDir="${lib.dir}" />
+        <copy file="core/lib/ofbcore-extutil${ofbiz.version}.jar" toDir="${lib.dir}" />
+        <copy file="core/lib/ofbcore-extentity${ofbiz.version}.jar" toDir="${lib.dir}" />
+        <copy file="core/lib/ofbcore-workflow${ofbiz.version}.jar" toDir="${lib.dir}" />
+        <copy file="core/lib/ofbcore-rules${ofbiz.version}.jar" toDir="${lib.dir}" />
+        <copy file="core/lib/ofbcore-datafile${ofbiz.version}.jar" toDir="${lib.dir}" />
+        <copy file="core/lib/ofbcore-minilang${ofbiz.version}.jar" toDir="${lib.dir}" />
+        <copy file="core/lib/ofbcore-widget${ofbiz.version}.jar" toDir="${lib.dir}" />
+        <copy file="core/lib/ofbcore-webapp${ofbiz.version}.jar" toDir="${lib.dir}" />
+
+        <copy file="commonapp/lib/commonapp.jar" toFile="${lib.dir}/commonapp.jar" />
+    </target>
+
+    <target name="ejbdeploy" depends="deploy">
+        <copy file="core/lib/ofbcore-ejb${ofbiz.version}.jar"
+            toDir="${j2eedeploy.dir}" />
+    </target>
+
+    <!-- Copy all files necessary for EXTERNAL running -->
+    <target name="int-deploy-ext" depends="">
+        <mkdir dir="${home.dir}/commonapp/entitydef" />
+        <copy file="commonapp/entitydef/entitymodel.xml" toDir="${home.dir}/commonapp/entitydef" />
+        <copy file="commonapp/entitydef/fieldtypecloudscape.xml" toDir="${home.dir}/commonapp/entitydef" />
+        <copy file="commonapp/entitydef/fieldtypehsql.xml" toDir="${home.dir}/commonapp/entitydef" />
+        <copy file="commonapp/entitydef/fieldtypemysql.xml" toDir="${home.dir}/commonapp/entitydef" />
+        <copy file="commonapp/entitydef/fieldtypeoracle.xml" toDir="${home.dir}/commonapp/entitydef" />
+        <copy file="commonapp/entitydef/fieldtypepostgres.xml" toDir="${home.dir}/commonapp/entitydef" />
+        <copy file="commonapp/entitydef/fieldtypepostgres72.xml" toDir="${home.dir}/commonapp/entitydef" />
+        <copy file="commonapp/entitydef/fieldtypesapdb.xml" toDir="${home.dir}/commonapp/entitydef" />
+
+        <copy file="ecommerce/lib/ecommerce-ext.war" toDir="${j2eedeploy.dir}" />
+
+        <copy file="catalog/lib/catalog-ext.war" toDir="${j2eedeploy.dir}" />
+        <copy file="partymgr/lib/partymgr-ext.war" toDir="${j2eedeploy.dir}" />
+        <copy file="ordermgr/lib/ordermgr-ext.war" toDir="${j2eedeploy.dir}" />
+        <copy file="workeffort/lib/workeffort-ext.war" toDir="${j2eedeploy.dir}" />
+        <copy file="accounting/lib/accounting-ext.war" toDir="${j2eedeploy.dir}" />
+        <copy file="facility/lib/facility-ext.war" toDir="${j2eedeploy.dir}" />
+        <copy file="marketing/lib/marketing-ext.war" toDir="${j2eedeploy.dir}" />
+        <copy file="content/lib/content-ext.war" toDir="${j2eedeploy.dir}" />
+    </target>
+
+    <!-- ================================================================== -->
+    <!-- Deploy the app (External)                                          -->
+    <!-- ================================================================== -->
+
+    <target name="ext" depends="war">
+        <property name="ext-build.dir" value="ext-build"/>
+        <property name="ext.dir" value="${ext-build.dir}/ofbiz"/>
+        <mkdir dir="${ext.dir}/commonapp/globalservices"/>
+        <mkdir dir="${ext.dir}/commonapp/entitydef"/>
+        <mkdir dir="${ext.dir}/commonapp/db"/>
+        <mkdir dir="${ext.dir}/lib/ext"/>
+        <mkdir dir="${ext.dir}/etc"/>
+        <mkdir dir="${ext.dir}/webapps"/>
+
+        <copy file="lib/common/commons-beanutils.jar" toDir="${ext.dir}/lib/ext"/>
+        <copy file="lib/common/commons-collections.jar" toDir="${ext.dir}/lib/ext"/>
+        <copy file="lib/common/commons-digester.jar" toDir="${ext.dir}/lib/ext"/>
+        <copy file="lib/common/commons-logging.jar" toDir="${ext.dir}/lib/ext"/>
+        <copy file="lib/common/commons-httpclient.jar" toDir="${ext.dir}/lib/ext"/>
+        <copy file="lib/common/hsqldb.jar" toDir="${ext.dir}/lib/ext"/>
+        <copy file="lib/common/postgresql.jar" toDir="${ext.dir}/lib/ext"/>
+        <copy file="lib/common/log4j.jar" toDir="${ext.dir}/lib/ext"/>
+        <copy file="lib/common/mm.mysql-2.0.14-bin.jar" toDir="${ext.dir}/lib/ext"/>
+        <copy file="lib/common/ots-jts_1.0.jar" toDir="${ext.dir}/lib/ext"/>
+
+        <copy file="lib/compile/jdbc2_0-stdext.jar" toDir="${ext.dir}/lib/ext"/>
+        <copy file="lib/compile/activation.jar" toDir="${ext.dir}/lib/ext"/>
+        <copy file="lib/compile/mail.jar" toDir="${ext.dir}/lib/ext"/>
+        <copy file="lib/compile/xerces.jar" toDir="${ext.dir}/lib/ext"/>
+
+        <copy toDir="${ext.dir}/lib/ext">
+            <fileset dir="lib/share" includes="*.jar"/>
+            <fileset dir="lib/scripting" includes="*.jar"/>
+            <fileset dir="lib/datavision" includes="*.jar"/>
+            <fileset dir="lib/jasperreports" includes="*.jar"/>
+            <fileset dir="lib/weka" includes="*.jar"/>          
+            <fileset dir="lib/jotm" includes="*.jar"/>
+        </copy>
+        
+        <copy file="core/lib/ofbcore-share${ofbiz.version}.jar" toDir="${ext.dir}/lib"/>
+        <copy file="core/lib/ofbcore-entity${ofbiz.version}.jar" toDir="${ext.dir}/lib"/>
+        <copy file="core/lib/ofbcore-service${ofbiz.version}.jar" toDir="${ext.dir}/lib"/>
+        <copy file="core/lib/ofbcore-extutil${ofbiz.version}.jar" toDir="${ext.dir}/lib"/>
+        <copy file="core/lib/ofbcore-extentity${ofbiz.version}.jar" toDir="${ext.dir}/lib"/>
+        <copy file="core/lib/ofbcore-workflow${ofbiz.version}.jar" toDir="${ext.dir}/lib"/>
+        <copy file="core/lib/ofbcore-rules${ofbiz.version}.jar" toDir="${ext.dir}/lib"/>
+        <copy file="core/lib/ofbcore-datafile${ofbiz.version}.jar" toDir="${ext.dir}/lib"/>
+        <copy file="core/lib/ofbcore-minilang${ofbiz.version}.jar" toDir="${ext.dir}/lib"/>
+        <copy file="core/lib/ofbcore-widget${ofbiz.version}.jar" toDir="${ext.dir}/lib"/>
+        <copy file="core/lib/ofbcore-webapp${ofbiz.version}.jar" toDir="${ext.dir}/lib"/>
+        <copy file="commonapp/lib/commonapp${ofbiz.version}.jar" toDir="${ext.dir}/lib"/>
+
+        <copy file="webtools/lib/webtools.war" toDir="${ext.dir}/webapps"/>
+        <copy file="commonapp/lib/commonapp.war" toDir="${ext.dir}/webapps"/>
+        <copy file="ecommerce/lib/ecommerce.war" toDir="${ext.dir}/webapps"/>
+        <copy file="ecommerce/lib/images.war" toDir="${ext.dir}/webapps"/>
+        <copy file="catalog/lib/catalog.war" toDir="${ext.dir}/webapps"/>
+        <copy file="partymgr/lib/partymgr.war" toDir="${ext.dir}/webapps"/>
+        <copy file="ordermgr/lib/ordermgr.war" toDir="${ext.dir}/webapps"/>
+        <copy file="workeffort/lib/workeffort.war" toDir="${ext.dir}/webapps"/>
+        <copy file="accounting/lib/accounting.war" toDir="${ext.dir}/webapps"/>
+        <copy file="facility/lib/facility.war" toDir="${ext.dir}/webapps"/>
+        <copy file="marketing/lib/marketing.war" toDir="${ext.dir}/webapps"/>
+        <copy file="content/lib/content.war" toDir="${ext.dir}/webapps"/>
+
+        <copy file="commonapp/etc/serverstats.properties" toDir="${ext.dir}/etc"/>
+        <copy file="commonapp/etc/serverstats.xml" toDir="${ext.dir}/etc"/>
+        <copy file="commonapp/etc/entityengine.xml" toDir="${ext.dir}/etc"/>
+        <copy file="commonapp/etc/security.properties" toDir="${ext.dir}/etc"/>
+        <copy file="commonapp/etc/debug.properties" toDir="${ext.dir}/etc"/>
+        <copy file="commonapp/etc/jsse.properties" toDir="${ext.dir}/etc"/>        
+        <copy file="commonapp/etc/cache.properties" toDir="${ext.dir}/etc"/>
+        <copy file="commonapp/etc/general.properties" toDir="${ext.dir}/etc"/>
+        <copy file="commonapp/etc/prodsearch.properties" toDir="${ext.dir}/etc"/>
+        <copy file="commonapp/etc/localdtds.properties" toDir="${ext.dir}/etc"/>
+        <copy file="commonapp/etc/serviceengine.xml" toDir="${ext.dir}/etc"/>
+        <copy file="commonapp/etc/tyrexdomain.xml" toDir="${ext.dir}/etc"/>
+        <copy file="commonapp/etc/url.properties" toDir="${ext.dir}/etc"/>
+        <copy file="commonapp/etc/payment.properties" toDir="${ext.dir}/etc"/>
+        <copy file="commonapp/etc/taxware.properties" toDir="${ext.dir}/etc"/>
+
+        <copy toDir="${ext.dir}/commonapp/entitydef">
+          <fileset dir="commonapp/entitydef"/>
+        </copy>
+
+        <copy toDir="${ext.dir}/commonapp/globalservices">
+          <fileset dir="commonapp/globalservices"/>
+        </copy>
+
+        <copy toDir="${ext.dir}/commonapp/db">
+          <fileset dir="commonapp/db"/>
+        </copy>
+
+        <jar jarfile="ofbext.jar" basedir="${ext-build.dir}"/>
+        <delete dir="${ext-build.dir}"/>
+    </target>
+
+    <target name="ear" depends="war">
+        <property name="eartemp.dir" value="eartemp" />
+        <mkdir dir="${eartemp.dir}/META-INF" />
+        <copy file="commonapp/earetc/application.xml"
+            toFile="${eartemp.dir}/META-INF/application.xml" />
+
+        <copy file="webtools/lib/webtools.war" toDir="${eartemp.dir}" />
+        <copy file="commonapp/lib/commonapp.war" toDir="${eartemp.dir}" />
+
+        <copy file="ecommerce/lib/ecommerce.war" toDir="${eartemp.dir}" />
+        <copy file="ecommerce/lib/images.war" toDir="${eartemp.dir}" />
+
+        <copy file="catalog/lib/catalog.war" toDir="${eartemp.dir}" />
+        <copy file="partymgr/lib/partymgr.war" toDir="${eartemp.dir}" />
+        <copy file="ordermgr/lib/ordermgr.war" toDir="${eartemp.dir}" />
+        <copy file="workeffort/lib/workeffort.war" toDir="${eartemp.dir}" />
+        <copy file="accounting/lib/accounting.war" toDir="${eartemp.dir}" />
+        <copy file="facility/lib/facility.war" toDir="${eartemp.dir}" />
+        <copy file="marketing/lib/marketing.war" toDir="${eartemp.dir}" />
+        <copy file="content/lib/content.war" toDir="${eartemp.dir}" />
+
+        <jar jarfile="./ofbiz.ear" basedir="${eartemp.dir}" />
+        <delete dir="${eartemp.dir}" />
+    </target>
+
+    <target name="distro-docs" depends="">
+        <!-- This is meant to be copied to the website and release as a documentation set -->
+        <property name="docstemp.dir" value="../docstemp" />
+        <property name="docsdest.dir" value="${docstemp.dir}/ofbiz/site" />
+        
+        <antcall target="build-docs-site" />
+        
+        <!-- make the archive -->
+        <delete file="../ofbiz-docs.zip" />
+        <zip destfile="../ofbiz-docs.zip" basedir="${docstemp.dir}" />
+        <delete dir="${docstemp.dir}" />        
+    </target>
+    
+    <target name="build-site" depends="">
+        <!-- build just a website -->
+        <property name="docsdest.dir" value="./site" />
+        <antcall target="build-docs-site" />
+    </target>
+    
+    <target name="build-docs-site" depends="">
+        <!-- meant to be called from another target which sets ${docsdest.dir} -->
+        <antcall target="deploy" />
+        <antcall target="docs" />
+            
+        <delete dir="${docstemp.dir}" />        
+        <mkdir dir="${docsdest.dir}" />
+        
+        <copy toDir="${docsdest.dir}"><fileset dir="website"/></copy>
+
+        <mkdir dir="${docsdest.dir}/setup" />
+        <copy file="setup/setup.html" toDir="${docsdest.dir}/setup" />
+
+        <mkdir dir="${docsdest.dir}/core/docs" />
+        <copy toDir="${docsdest.dir}/core/docs"><fileset dir="core/docs"/></copy>
+        <mkdir dir="${docsdest.dir}/commonapp/docs" />
+        <copy toDir="${docsdest.dir}/commonapp/docs"><fileset dir="commonapp/docs"/></copy>
+        <mkdir dir="${docsdest.dir}/webtools/docs" />
+        <copy toDir="${docsdest.dir}/webtools/docs"><fileset dir="webtools/docs"/></copy>
+        <mkdir dir="${docsdest.dir}/content/docs" />
+        <!-- <copy toDir="${docsdest.dir}/content/docs"><fileset dir="content/docs"/></copy> -->
+        <mkdir dir="${docsdest.dir}/catalog/docs" />
+        <copy toDir="${docsdest.dir}/catalog/docs"><fileset dir="catalog/docs"/></copy>
+        <mkdir dir="${docsdest.dir}/facility/docs" />
+        <!-- <copy toDir="${docsdest.dir}/facility/docs"><fileset dir="facility/docs"/></copy> -->
+        <mkdir dir="${docsdest.dir}/partymgr/docs" />
+        <!-- <copy toDir="${docsdest.dir}/partymgr/docs"><fileset dir="partymgr/docs"/></copy> -->
+        <mkdir dir="${docsdest.dir}/ordermgr/docs" />
+        <!-- <copy toDir="${docsdest.dir}/ordermgr/docs"><fileset dir="ordermgr/docs"/></copy> -->
+        <mkdir dir="${docsdest.dir}/workeffort/docs" />
+        <!-- <copy toDir="${docsdest.dir}/workeffort/docs"><fileset dir="workeffort/docs"/></copy> -->
+        <mkdir dir="${docsdest.dir}/accounting/docs" />
+        <!-- <copy toDir="${docsdest.dir}/accounting/docs"><fileset dir="accounting/docs"/></copy> -->
+        <mkdir dir="${docsdest.dir}/marketing/docs" />
+        <!-- <copy toDir="${docsdest.dir}/marketing/docs"><fileset dir="marketing/docs"/></copy> -->
+        <mkdir dir="${docsdest.dir}/ecommerce/docs" />
+        <copy toDir="${docsdest.dir}/ecommerce/docs"><fileset dir="ecommerce/docs"/></copy>
+        
+        <mkdir dir="${docsdest.dir}/dtds" />
+        <copy toDir="${docsdest.dir}/dtds"><fileset dir="core/docs/xmldefs/ofbiz"/></copy>
+        <copy toDir="${docsdest.dir}/dtds"><fileset dir="core/docs/xmldefs/itext"/></copy>
+        <copy toDir="${docsdest.dir}/dtds"><fileset dir="core/docs/xmldefs/wfmc"/></copy>
+    </target>
+
+    <target name="cleanextras" depends="">
+        <delete><fileset dir="." includes="**/.nbattrs,**/*~,**/*.#*" /></delete>
+    </target>
+    
+    <target name="distro-apps" depends="distro-apps-jetty-embedded"/>
+    
+    <target name="distro-apps-jetty-embedded" depends="">
+        <antcall target="clean" />
+        <antcall target="cleanextras" />
+        <antcall target="deploy" />
+
+        <property name="distro.temp.dir" value="../distrotemp" />
+        
+        <echo message="[distro] -=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-" />
+        <echo message="[distro] NOTE before running this: manually remove data directory contents, start the server &amp; load data, stop server" />
+        <echo message="[distro] -=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-" />
+
+        <delete dir="${distro.temp.dir}" />
+        <mkdir dir="${distro.temp.dir}" />
+        <mkdir dir="${distro.temp.dir}/ofbiz" />
+        
+        <copy toDir="${distro.temp.dir}/ofbiz"><fileset dir="."/></copy>
+        <copy toDir="${distro.temp.dir}/ofbiz"><fileset dir="${distro.temp.dir}/ofbiz/setup/ofbiz"/></copy>
+        
+        <!-- don't want the CVS directories in there -->
+        <delete><fileset dir="${distro.temp.dir}/ofbiz" includes="**/CVS" /></delete>
+
+        <!-- don't need the war file in there -->
+        <delete><fileset dir="${distro.temp.dir}/ofbiz" includes="**/*.war" /></delete>
+
+        <!-- the build directories aren't really needed to run and can save some space -->
+        <delete dir="${distro.temp.dir}/ofbiz/core/build" />
+        <delete dir="${distro.temp.dir}/ofbiz/commonapp/build" />
+        <delete dir="${distro.temp.dir}/ofbiz/webtools/build" />
+        <delete dir="${distro.temp.dir}/ofbiz/content/build" />
+        <delete dir="${distro.temp.dir}/ofbiz/catalog/build" />
+        <delete dir="${distro.temp.dir}/ofbiz/facility/build" />
+        <delete dir="${distro.temp.dir}/ofbiz/partymgr/build" />
+        <delete dir="${distro.temp.dir}/ofbiz/ordermgr/build" />
+        <delete dir="${distro.temp.dir}/ofbiz/workeffort/build" />
+        <delete dir="${distro.temp.dir}/ofbiz/accounting/build" />
+        <delete dir="${distro.temp.dir}/ofbiz/marketing/build" />
+        <delete dir="${distro.temp.dir}/ofbiz/ecommerce/build" />
+        
+        <!-- the bin directories aren't really needed to run and can save some space -->
+        <delete dir="${distro.temp.dir}/ofbiz/core/bin" />
+        <delete dir="${distro.temp.dir}/ofbiz/commonapp/bin" />
+        <delete dir="${distro.temp.dir}/ofbiz/webtools/bin" />
+        <delete dir="${distro.temp.dir}/ofbiz/content/bin" />
+        <delete dir="${distro.temp.dir}/ofbiz/catalog/bin" />
+        <delete dir="${distro.temp.dir}/ofbiz/facility/bin" />
+        <delete dir="${distro.temp.dir}/ofbiz/partymgr/bin" />
+        <delete dir="${distro.temp.dir}/ofbiz/ordermgr/bin" />
+        <delete dir="${distro.temp.dir}/ofbiz/workeffort/bin" />
+        <delete dir="${distro.temp.dir}/ofbiz/accounting/bin" />
+        <delete dir="${distro.temp.dir}/ofbiz/marketing/bin" />
+        <delete dir="${distro.temp.dir}/ofbiz/ecommerce/bin" />
+        
+        <!-- temporary work & log files -->
+        <delete><fileset dir="${distro.temp.dir}/ofbiz/logs" includes="*" /></delete>
+
+        <!-- since there is a separate docs distro, remove all docs directories here -->
+        <delete dir="${distro.temp.dir}/ofbiz/commonapp/docs" />
+        <delete dir="${distro.temp.dir}/ofbiz/webtools/docs" />
+        <delete dir="${distro.temp.dir}/ofbiz/content/docs" />
+        <delete dir="${distro.temp.dir}/ofbiz/catalog/docs" />
+        <delete dir="${distro.temp.dir}/ofbiz/facility/docs" />
+        <delete dir="${distro.temp.dir}/ofbiz/partymgr/docs" />
+        <delete dir="${distro.temp.dir}/ofbiz/ordermgr/docs" />
+        <delete dir="${distro.temp.dir}/ofbiz/workeffort/docs" />
+        <delete dir="${distro.temp.dir}/ofbiz/accounting/docs" />
+        <delete dir="${distro.temp.dir}/ofbiz/marketing/docs" />
+        <delete dir="${distro.temp.dir}/ofbiz/ecommerce/docs" />
+
+        <!-- can't delete core/docs, need some of the xmldefs for building -->
+        <delete><fileset dir="${distro.temp.dir}/ofbiz/core/docs" includes="*" /></delete>
+        <delete dir="${distro.temp.dir}/ofbiz/core/docs/examples" />
+        <delete dir="${distro.temp.dir}/ofbiz/core/docs/xmldefs/oagis" />
+        <delete dir="${distro.temp.dir}/ofbiz/core/docs/xmldefs/intuit" />
+                             
+        <!-- also since there is a separate docs distro, remove the website directory here -->
+        <delete dir="${distro.temp.dir}/ofbiz/website" />
+                                   
+        <!-- okay, build the archive -->
+        <delete file="../ofbiz-apps.zip" />
+        <zip destfile="../ofbiz-apps.zip" basedir="${distro.temp.dir}" />
+
+        <delete dir="${distro.temp.dir}" />
+
+        <!-- clean at the end again to leave everything in a "raw" state -->
+        <antcall target="clean" />
+    </target>
+
+    <target name="distro-apps-jetty" depends="">
+        <antcall target="clean" />
+        <antcall target="cleanextras" />
+        <antcall target="deploy" />
+
+        <property name="distro.temp.dir" value="../distrotemp" />
+        
+        <echo message="[distro] -=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-" />
+        <echo message="[distro] NOTE before running this: manually remove data directory contents, start the server &amp; load data, stop server" />
+        <echo message="[distro] -=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-" />
+
+        <delete dir="${distro.temp.dir}" />
+        <mkdir dir="${distro.temp.dir}" />
+        <mkdir dir="${distro.temp.dir}/ofbiz" />
+        <mkdir dir="${distro.temp.dir}/jetty" />
+        <mkdir dir="${distro.temp.dir}/data" />
+        
+        <copy toDir="${distro.temp.dir}/ofbiz"><fileset dir="."/></copy>
+        <copy toDir="${distro.temp.dir}/jetty"><fileset dir="../jetty"/></copy>
+        <copy toDir="${distro.temp.dir}/data"><fileset dir="../data"/></copy>
+
+        <copy toDir="${distro.temp.dir}/ofbiz"><fileset dir="${distro.temp.dir}/ofbiz/setup/ofbiz"/></copy>
+        
+        <!-- don't want the CVS directories in there -->
+        <delete><fileset dir="${distro.temp.dir}/ofbiz" includes="**/CVS" /></delete>
+
+        <!-- don't need the war file in there -->
+        <delete><fileset dir="${distro.temp.dir}/ofbiz" includes="**/*.war" /></delete>
+
+        <!-- the build directories aren't really needed to run and can save some space -->
+        <delete dir="${distro.temp.dir}/ofbiz/core/build" />
+        <delete dir="${distro.temp.dir}/ofbiz/commonapp/build" />
+        <delete dir="${distro.temp.dir}/ofbiz/webtools/build" />
+        <delete dir="${distro.temp.dir}/ofbiz/content/build" />
+        <delete dir="${distro.temp.dir}/ofbiz/catalog/build" />
+        <delete dir="${distro.temp.dir}/ofbiz/facility/build" />
+        <delete dir="${distro.temp.dir}/ofbiz/partymgr/build" />
+        <delete dir="${distro.temp.dir}/ofbiz/ordermgr/build" />
+        <delete dir="${distro.temp.dir}/ofbiz/workeffort/build" />
+        <delete dir="${distro.temp.dir}/ofbiz/accounting/build" />
+        <delete dir="${distro.temp.dir}/ofbiz/marketing/build" />
+        <delete dir="${distro.temp.dir}/ofbiz/ecommerce/build" />
+        
+        <!-- the bin directories aren't really needed to run and can save some space -->
+        <delete dir="${distro.temp.dir}/ofbiz/core/bin" />
+        <delete dir="${distro.temp.dir}/ofbiz/commonapp/bin" />
+        <delete dir="${distro.temp.dir}/ofbiz/webtools/bin" />
+        <delete dir="${distro.temp.dir}/ofbiz/content/bin" />
+        <delete dir="${distro.temp.dir}/ofbiz/catalog/bin" />
+        <delete dir="${distro.temp.dir}/ofbiz/facility/bin" />
+        <delete dir="${distro.temp.dir}/ofbiz/partymgr/bin" />
+        <delete dir="${distro.temp.dir}/ofbiz/ordermgr/bin" />
+        <delete dir="${distro.temp.dir}/ofbiz/workeffort/bin" />
+        <delete dir="${distro.temp.dir}/ofbiz/accounting/bin" />
+        <delete dir="${distro.temp.dir}/ofbiz/marketing/bin" />
+        <delete dir="${distro.temp.dir}/ofbiz/ecommerce/bin" />
+        
+        <!-- jetty files not needed -->
+        <delete dir="${distro.temp.dir}/jetty/javadoc" />
+        <delete dir="${distro.temp.dir}/jetty/contrib" />
+        <delete dir="${distro.temp.dir}/jetty/demo" />
+        <delete dir="${distro.temp.dir}/jetty/src" />
+        <delete dir="${distro.temp.dir}/jetty/src1.4" />
+        <delete dir="${distro.temp.dir}/jetty/test" />
+        <delete dir="${distro.temp.dir}/jetty/testdocs" />
+        <delete dir="${distro.temp.dir}/jetty/win32" />
+        
+        <!-- temporary work & log files -->
+        <delete><fileset dir="${distro.temp.dir}/jetty/logs" includes="*" /></delete>
+
+        <!-- since there is a separate docs distro, remove all docs directories here -->
+        <delete dir="${distro.temp.dir}/ofbiz/commonapp/docs" />
+        <delete dir="${distro.temp.dir}/ofbiz/webtools/docs" />
+        <delete dir="${distro.temp.dir}/ofbiz/content/docs" />
+        <delete dir="${distro.temp.dir}/ofbiz/catalog/docs" />
+        <delete dir="${distro.temp.dir}/ofbiz/facility/docs" />
+        <delete dir="${distro.temp.dir}/ofbiz/partymgr/docs" />
+        <delete dir="${distro.temp.dir}/ofbiz/ordermgr/docs" />
+        <delete dir="${distro.temp.dir}/ofbiz/workeffort/docs" />
+        <delete dir="${distro.temp.dir}/ofbiz/accounting/docs" />
+        <delete dir="${distro.temp.dir}/ofbiz/marketing/docs" />
+        <delete dir="${distro.temp.dir}/ofbiz/ecommerce/docs" />
+
+        <!-- can't delete core/docs, need some of the xmldefs for building -->
+        <delete><fileset dir="${distro.temp.dir}/ofbiz/core/docs" includes="*" /></delete>
+        <delete dir="${distro.temp.dir}/ofbiz/core/docs/examples" />
+        <delete dir="${distro.temp.dir}/ofbiz/core/docs/xmldefs/oagis" />
+        <delete dir="${distro.temp.dir}/ofbiz/core/docs/xmldefs/intuit" />
+                             
+        <!-- also since there is a separate docs distro, remove the website directory here -->
+        <delete dir="${distro.temp.dir}/ofbiz/website" />
+                                   
+        <!-- okay, build the archive -->
+        <delete file="../ofbiz-apps.zip" />
+        <zip destfile="../ofbiz-apps.zip" basedir="${distro.temp.dir}" />
+
+        <delete dir="${distro.temp.dir}" />
+
+        <!-- clean at the end again to leave everything in a "raw" state -->
+        <antcall target="clean" />
+    </target>
+
+    
+    <target name="distro-apps-catalina" depends="">
+        <antcall target="clean" />
+        <antcall target="cleanextras" />
+        <antcall target="install" />
+        <antcall target="deploy" />
+
+        <property name="distro.temp.dir" value="../distrotemp" />
+        
+        <echo message="[distro] -=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-" />
+        <echo message="[distro] NOTE before running this: manually remove data directory contents, start the server &amp; load data, stop server" />
+        <echo message="[distro] -=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-" />
+
+        <delete dir="${distro.temp.dir}" />
+        <mkdir dir="${distro.temp.dir}" />
+        <mkdir dir="${distro.temp.dir}/ofbiz" />
+        <mkdir dir="${distro.temp.dir}/catalina" />
+        <mkdir dir="${distro.temp.dir}/data" />
+        
+        <copy toDir="${distro.temp.dir}/ofbiz"><fileset dir="."/></copy>
+        <copy toDir="${distro.temp.dir}/catalina"><fileset dir="../catalina"/></copy>
+        <copy toDir="${distro.temp.dir}/data"><fileset dir="../data"/></copy>
+
+        <copy toDir="${distro.temp.dir}/ofbiz"><fileset dir="${distro.temp.dir}/ofbiz/setup/ofbiz"/></copy>
+        
+        <!-- don't want the CVS directories in there -->
+        <delete><fileset dir="${distro.temp.dir}/ofbiz" includes="**/CVS" /></delete>
+
+        <!-- don't need the war file in there -->
+        <delete><fileset dir="${distro.temp.dir}/ofbiz" includes="**/*.war" /></delete>
+
+        <!-- the build directories aren't really needed to run and can save some space -->
+        <delete dir="${distro.temp.dir}/ofbiz/core/build" />
+        <delete dir="${distro.temp.dir}/ofbiz/commonapp/build" />
+        <delete dir="${distro.temp.dir}/ofbiz/webtools/build" />
+        <delete dir="${distro.temp.dir}/ofbiz/content/build" />
+        <delete dir="${distro.temp.dir}/ofbiz/catalog/build" />
+        <delete dir="${distro.temp.dir}/ofbiz/facility/build" />
+        <delete dir="${distro.temp.dir}/ofbiz/partymgr/build" />
+        <delete dir="${distro.temp.dir}/ofbiz/ordermgr/build" />
+        <delete dir="${distro.temp.dir}/ofbiz/workeffort/build" />
+        <delete dir="${distro.temp.dir}/ofbiz/accounting/build" />
+        <delete dir="${distro.temp.dir}/ofbiz/marketing/build" />
+        <delete dir="${distro.temp.dir}/ofbiz/ecommerce/build" />
+        
+        <!-- the bin directories aren't really needed to run and can save some space -->
+        <delete dir="${distro.temp.dir}/ofbiz/core/bin" />
+        <delete dir="${distro.temp.dir}/ofbiz/commonapp/bin" />
+        <delete dir="${distro.temp.dir}/ofbiz/webtools/bin" />
+        <delete dir="${distro.temp.dir}/ofbiz/content/bin" />
+        <delete dir="${distro.temp.dir}/ofbiz/catalog/bin" />
+        <delete dir="${distro.temp.dir}/ofbiz/facility/bin" />
+        <delete dir="${distro.temp.dir}/ofbiz/partymgr/bin" />
+        <delete dir="${distro.temp.dir}/ofbiz/ordermgr/bin" />
+        <delete dir="${distro.temp.dir}/ofbiz/workeffort/bin" />
+        <delete dir="${distro.temp.dir}/ofbiz/accounting/bin" />
+        <delete dir="${distro.temp.dir}/ofbiz/marketing/bin" />
+        <delete dir="${distro.temp.dir}/ofbiz/ecommerce/bin" />
+        
+        <!-- === some other misc things to savce space === -->
+
+        <!-- temporary work & log files -->
+        <delete dir="${distro.temp.dir}/catalina/work/Standalone/localhost" />
+        <delete><fileset dir="${distro.temp.dir}/catalina/logs" includes="*" /></delete>
+
+        <!-- since there is a separate docs distro, remove all docs directories here -->
+        <delete dir="${distro.temp.dir}/ofbiz/commonapp/docs" />
+        <delete dir="${distro.temp.dir}/ofbiz/webtools/docs" />
+        <delete dir="${distro.temp.dir}/ofbiz/content/docs" />
+        <delete dir="${distro.temp.dir}/ofbiz/catalog/docs" />
+        <delete dir="${distro.temp.dir}/ofbiz/facility/docs" />
+        <delete dir="${distro.temp.dir}/ofbiz/partymgr/docs" />
+        <delete dir="${distro.temp.dir}/ofbiz/ordermgr/docs" />
+        <delete dir="${distro.temp.dir}/ofbiz/workeffort/docs" />
+        <delete dir="${distro.temp.dir}/ofbiz/accounting/docs" />
+        <delete dir="${distro.temp.dir}/ofbiz/marketing/docs" />
+        <delete dir="${distro.temp.dir}/ofbiz/ecommerce/docs" />
+
+        <!-- can't delete core/docs, need some of the xmldefs for building -->
+        <delete><fileset dir="${distro.temp.dir}/ofbiz/core/docs" includes="*" /></delete>
+        <delete dir="${distro.temp.dir}/ofbiz/core/docs/examples" />
+        <delete dir="${distro.temp.dir}/ofbiz/core/docs/xmldefs/oagis" />
+        <delete dir="${distro.temp.dir}/ofbiz/core/docs/xmldefs/intuit" />
+                
+        <!-- the diagrams are just too big, and don't compress very well -->
+        <!-- not needed, all of website gone now: <delete dir="${distro.temp.dir}/ofbiz/website/diagrams" /> -->
+
+        <!-- also since there is a separate docs distro, remove the website directory here -->
+        <delete dir="${distro.temp.dir}/ofbiz/website" />
+                
+        <!-- if we aren't including our own docs, no sense doing the tomcat ones -->
+        <delete dir="${distro.temp.dir}/catalina/webapps/examples" />
+        <delete dir="${distro.temp.dir}/catalina/webapps/tomcat-docs" />
+
+        <!-- okay, build the archive -->
+        <delete file="../ofbiz-apps.zip" />
+        <zip destfile="../ofbiz-apps.zip" basedir="${distro.temp.dir}" />
+
+        <delete dir="${distro.temp.dir}" />
+
+        <!-- clean at the end again to leave everything in a "raw" state -->
+        <antcall target="clean" />
+    </target>
+    
+    <target name="ofbiz-nightly-build" depends="">
+        <antcall target="clean" />
+        <antcall target="cleanextras" />
+        <antcall target="deploy" />
+
+        <tstamp/>
+        <property name="distro.temp.dir" value="../distrotemp" />
+        <property name="ofbiz.dir" value="${distro.temp.dir}/ofbiz.${DSTAMP}"/>
+               
+        <delete dir="${distro.temp.dir}" />
+        <mkdir dir="${distro.temp.dir}" />
+        <mkdir dir="${ofbiz.dir}" />     
+        
+        <copy toDir="${ofbiz.dir}"><fileset dir="."/></copy>              
+        <copy toDir="${ofbiz.dir}"><fileset dir="${ofbiz.dir}/setup/ofbiz"/></copy>
+        
+        <!-- don't want the CVS directories in there -->
+        <delete><fileset dir="${ofbiz.dir}" includes="**/CVS" /></delete>
+
+        <!-- don't need the war file in there -->
+        <delete><fileset dir="${ofbiz.dir}" includes="**/*.war" /></delete>
+
+        <!-- the build directories aren't really needed to run and can save some space -->
+        <delete dir="${ofbiz.dir}/core/build" />
+        <delete dir="${ofbiz.dir}/commonapp/build" />
+        <delete dir="${ofbiz.dir}/webtools/build" />
+        <delete dir="${ofbiz.dir}/content/build" />
+        <delete dir="${ofbiz.dir}/catalog/build" />
+        <delete dir="${ofbiz.dir}/facility/build" />
+        <delete dir="${ofbiz.dir}/partymgr/build" />
+        <delete dir="${ofbiz.dir}/ordermgr/build" />
+        <delete dir="${ofbiz.dir}/workeffort/build" />
+        <delete dir="${ofbiz.dir}/accounting/build" />
+        <delete dir="${ofbiz.dir}/marketing/build" />
+        <delete dir="${ofbiz.dir}/ecommerce/build" />
+                                       
+        <!-- if we aren't including our own docs, no sense doing the tomcat ones -->
+        <delete dir="${distro.temp.dir}/catalina/webapps/examples" />
+        <delete dir="${distro.temp.dir}/catalina/webapps/tomcat-docs" />
+             
+        <!-- okay, build the archive -->
+        <delete file="../ofbiz-nightly.zip" />
+        <zip destfile="../ofbiz-nightly.zip" basedir="${distro.temp.dir}" />
+
+        <delete dir="${distro.temp.dir}" />
+
+        <!-- clean at the end again to leave everything in a "raw" state -->
+        <antcall target="clean" />
+    </target>
+</project>

@@ -1,0 +1,20 @@
+<?xml version="1.0"?>
+<!DOCTYPE application PUBLIC "-//Sun Microsystems, Inc.//DTD J2EE Application 1.3//EN" "http://java.sun.com/dtd/application_1_3.dtd">
+
+<application>
+    <display-name>OFBiz</display-name>
+    <description>Deployed Applications of the Open For Business Project</description>
+
+    <!-- <module><ejb>ofbcore-ejb.jar</ejb></module> -->
+
+    <!-- <module><java>ofbcore-share.jar</java></module> -->
+
+    <module><web><web-uri>webtools.war</web-uri><context-root>/webtools</context-root></web></module>
+    <module><web><web-uri>commonapp.war</web-uri><context-root>/commonapp</context-root></web></module>
+    <module><web><web-uri>ecommerce.war</web-uri><context-root>/ecommerce</context-root></web></module>
+    <module><web><web-uri>images.war</web-uri><context-root>/images</context-root></web></module>
+    <module><web><web-uri>catalog.war</web-uri><context-root>/catalog</context-root></web></module>
+    <module><web><web-uri>partymgr.war</web-uri><context-root>/partymgr</context-root></web></module>
+    <module><web><web-uri>ordermgr.war</web-uri><context-root>/ordermgr</context-root></web></module>
+    <module><web><web-uri>workeffort.war</web-uri><context-root>/workeffort</context-root></web></module>
+</application>

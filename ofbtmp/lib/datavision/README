@@ -1,0 +1,56 @@
+Introduction
+============
+
+DataVision is an Open Source reporting tool similar to Crystal Reports.
+Reports can be designed using a drag-and-drop GUI. They may be run, viewed,
+and printed from the application or exported as HTML, XML, PDF, LaTeX2e,
+DocBook, or tab- or comma-delimited text files. The output files produced
+by LaTeX2e and DocBook can in turn be used to produce PDF, text, HTML,
+PostScript, and more.
+
+DataVision is written in Java and runs almost anywhere. It can generate
+reports from databases or text data files. Any database with an available
+JDBC driver should work: Oracle, PostgreSQL, MySQL, Informix, hsqldb,
+Microsoft Access, and more. Columns read from text files can be separated
+by any character.
+
+Report descriptions are stored as XML files. This means you can not only
+use the DataVision GUI but you may also edit reports using your favorite
+text editor.
+
+DataVision is developed and maintained by Jim Menard (jimm@io.com). The
+latest version of DataVision can be found on the DataVision Web page at
+http://datavision.sourceforge.net. New releases are also announced on
+Freshmeat (http://freshmeat.net) and on the DataVision mailing list
+(http://sourceforge.net/mail/?group_id=33343).
+
+Documentation
+=============
+
+For quick-and-dirty installation instructions, see the file INSTALL.
+
+For complete documentation, see the docs directory. The User's Manual
+starts at docs/DataVision/DataVision.html and the FAQ starts at
+docs/faq/faq.html.
+
+Copying
+=======
+
+For licensing information, see the file COPYING.
+
+DataVision uses the XML parser MinML2 developed by John Wilson
+(tug@wilson.co.uk), the JCalendar widget developed by Kai Toedter
+(kai@toedter.com), icons developed by Sun, and JRuby
+(http://jruby.sourceforge.net). For their respective copyright notices see
+the file COPYING.
+
+Miscellaneous Last-Minute Notes
+===============================
+
+For the most up-to-date notes, see the DataVision Web page.
+
+There's one more thing that's not yet documented, but you may want to play
+with: the stuff in jimm/datavision/testdata. There you will find code to
+create example databases. The PostgreSQL and mySQL directories work. The
+Oracle directory might work, but I'm not sure. You will have to be
+logged in as a user that's allowed to create new databases.

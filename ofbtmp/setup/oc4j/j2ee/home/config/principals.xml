@@ -1,0 +1,41 @@
+<?xml version="1.0" standalone='yes'?>
+<!DOCTYPE principals PUBLIC "//Evermind - Orion Principals//" "http://xmlns.oracle.com/ias/dtds/principals.dtd">
+
+<principals>
+	<groups>
+		<group name="users">
+			<description>users</description>
+			<permission name="rmi:login" />
+			<permission name="com.evermind.server.rmi.RMIPermission" />
+		</group>
+		<group name="guests">
+			<description>guests</description>
+		</group>
+		<group name="administrators">
+			<description>administrators</description>
+			<permission name="administration" />
+			<permission name="com.evermind.server.AdministrationPermission" />
+		</group>
+	</groups>
+	<users>
+		<user username="SCOTT" password="TIGER">
+			<description>no description</description>
+			<group-membership group="users" />
+		</user>
+		<user username="user" password="456" deactivated="true">
+			<description>The default user</description>
+			<group-membership group="users" />
+			<group-membership group="guests" />
+		</user>
+		<user username="anonymous" password="">
+			<description>The default guest/anonyomous user</description>
+			<group-membership group="guests" />
+		</user>
+		<user username="admin" password="admin">
+			<description>The default administrator</description>
+			<group-membership group="users" />
+			<group-membership group="guests" />
+			<group-membership group="administrators" />
+		</user>
+	</users>
+</principals>

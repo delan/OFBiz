@@ -1,0 +1,33 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<!DOCTYPE jrun-dtd-mappings PUBLIC "-//Macromedia Inc.//DTD jrun-dtd-mappings 4.0//EN" "http://jrun.macromedia.com/dtds/jrun-dtd-mappings.dtd">
+
+<!--
+
+Specifies a mapping between an XML DOCTYPE public ID and a
+physical dtd file. Normally dtd files will be resolved over
+a connection to a remote server; specifying a mapping allows
+the dtd file to be read locally. The dtd file must be found
+on the current CLASSPATH.
+
+Example:
+
+<jrun-dtd-mappings>
+
+  <local-dtd-mapping>
+    <public-id>
+      -//Sun Microsystems, Inc.//DTD Web Application 2.3//EN
+    </public-id>
+    <local-resource>
+      javax/servlet/resources/web-app_2.3.dtd
+    </local-resource>
+  </local-dtd-mapping>
+
+</jrun-dtd-mappings>
+
+-->
+
+<jrun-dtd-mappings>
+
+
+</jrun-dtd-mappings>

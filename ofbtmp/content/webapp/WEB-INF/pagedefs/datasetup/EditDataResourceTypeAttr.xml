@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<page>
+    <template>main_def</template> 
+    <property name="title">Edit DataResource TypeAttr</property>
+    <property name="headerItem">DataSetupMenu</property>    
+    <property name="entityName">DataResourceTypeAttr</property>    
+    <property name="formDefFile">/datasetup/DataSetupForms.xml</property>    
+    <property name="subMenu">/datasetup/datasetup_menu.ftl</property>    
+    <page-action name="/includes/crudprep.bsh" />
+</page>
