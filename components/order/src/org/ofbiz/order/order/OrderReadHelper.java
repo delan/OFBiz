@@ -1,5 +1,5 @@
 /*
- * $Id: OrderReadHelper.java,v 1.26 2004/08/15 04:25:17 jonesde Exp $
+ * $Id: OrderReadHelper.java,v 1.27 2004/08/16 09:14:02 jonesde Exp $
  *
  *  Copyright (c) 2002 The Open For Business Project - www.ofbiz.org
  *
@@ -53,7 +53,7 @@ import org.ofbiz.security.Security;
  * @author     <a href="mailto:jonesde@ofbiz.org">David E. Jones</a>
  * @author     Eric Pabst
  * @author     <a href="mailto:ray.barlow@whatsthe-point.com">Ray Barlow</a>
- * @version    $Revision: 1.26 $
+ * @version    $Revision: 1.27 $
  * @since      2.0
  */
 public class OrderReadHelper {
@@ -437,6 +437,10 @@ public class OrderReadHelper {
 
     public double getShippingTotal() {
         return OrderReadHelper.calcOrderAdjustments(getOrderHeaderAdjustments(), getOrderItemsSubTotal(), false, false, true);
+    }
+
+    public double getTaxTotal() {
+        return OrderReadHelper.calcOrderAdjustments(getOrderHeaderAdjustments(), getOrderItemsSubTotal(), false, true, false);
     }
 
     public Set getItemFeatureSet(GenericValue item) {
@@ -1064,10 +1068,56 @@ public class OrderReadHelper {
             }
         }
         
+        // then go through all order items and for the quantity not returned calculate it's portion of the item, and of the entire order
+        double totalSubTotalNotReturned = 0;
+        double totalTaxNotReturned = 0;
+        double totalShippingNotReturned = 0;
         
-        // TODO: then go through all order items and for the quantity not returned calculate it's portion of the overall tax and shipping charges
+        Iterator orderItems = this.getOrderItems().iterator();
+        while (orderItems.hasNext()) {
+            GenericValue orderItem = (GenericValue) orderItems.next();
+            
+            // if the status is not ITEM_COMPLETED or ITEM_APPROVED, continue to next item
+            String statusId = orderItem.getString("statusId");
+            if (!"ITEM_COMPLETED".equals(statusId) && !"ITEM_APPROVED".equals(statusId)) {
+                continue;
+            }
+            
+            Double itemQuantityDbl = orderItem.getDouble("quantity");
+            if (itemQuantityDbl == null) {
+                continue;
+            }
+            double itemQuantity = itemQuantityDbl.doubleValue();
+            double itemSubTotal = this.getOrderItemSubTotal(orderItem);
+            double itemTaxes = this.getOrderItemTax(orderItem);
+            double itemShipping = this.getOrderItemShipping(orderItem);
+            
+            Double quantityReturnedDouble = (Double) itemReturnedQuantities.get(orderItem.get("orderItemSeqId"));
+            double quantityReturned = 0;
+            if (quantityReturnedDouble != null) {
+                quantityReturned = quantityReturnedDouble.doubleValue();
+            }
+            
+            double quantityNotReturned = itemQuantity = quantityReturned;
+            
+            double factorNotReturned = quantityNotReturned / itemQuantity;
+            double subTotalNotReturned = itemSubTotal * factorNotReturned;
+            
+            // calculate tax and shipping adjustments for each item, add to accumulators
+            double itemTaxNotReturned = itemTaxes * factorNotReturned;
+            double itemShippingNotReturned = itemShipping * factorNotReturned;
+
+            totalSubTotalNotReturned += subTotalNotReturned;
+            totalTaxNotReturned += itemTaxNotReturned;
+            totalShippingNotReturned += itemShippingNotReturned;
+        }
         
-        return 0;
+        // calculate tax and shipping adjustments for entire order, add to result
+        double orderFactorNotReturned = totalSubTotalNotReturned / this.getOrderItemsSubTotal();
+        double orderTaxNotReturned = this.getTaxTotal() * orderFactorNotReturned;
+        double orderShippingNotReturned = this.getShippingTotal() * orderFactorNotReturned;
+        
+        return totalTaxNotReturned + totalShippingNotReturned + orderTaxNotReturned + orderShippingNotReturned;
     }
 
     public double getItemShippedQuantity(GenericValue orderItem) {
