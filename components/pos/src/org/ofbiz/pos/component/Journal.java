@@ -1,5 +1,5 @@
 /*
- * $Id: Journal.java,v 1.1 2004/07/27 18:37:36 ajzeneski Exp $
+ * $Id: Journal.java,v 1.2 2004/08/06 20:55:09 ajzeneski Exp $
  *
  * Copyright (c) 2004 The Open For Business Project - www.ofbiz.org
  *
@@ -36,7 +36,7 @@ import org.ofbiz.pos.screen.PosScreen;
 /**
  * 
  * @author     <a href="mailto:jaz@ofbiz.org">Andy Zeneski</a>
- * @version    $Revision: 1.1 $
+ * @version    $Revision: 1.2 $
  * @since      3.1
  */
 public class Journal {
@@ -89,6 +89,12 @@ public class Journal {
 
     public void selectPrevious() {
         jtable.prev();
+    }
+
+    public void focus() {
+        if (jtable.isEnabled()) {
+            jtable.requestFocus();
+        }
     }
 
     public void setLock(boolean lock) {
