@@ -31,7 +31,7 @@
       <table width='100%' border='0' cellspacing='0' cellpadding='0' class='boxtop'>
         <tr>
           <td align=left width='40%' >
-            <div class='boxhead'>&nbsp;Calendar event: ${workEffort.workEffortName?if_exists}</div>
+            <div class='boxhead'>&nbsp;Calendar Event Contacts : ${workEffort.workEffortName?if_exists}</div>
           </td>
         </tr>
       </table>

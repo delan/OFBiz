@@ -39,7 +39,7 @@
             <div class='boxhead'>&nbsp;Request Items</div>
           </TD>
           <td align='right'>
-            <a href="<@ofbizUrl>/requestitem?custRequestId=${custRequestId}</@ofbizUrl>" class="lightbuttontext">[Create&nbsp;New]</a>
+            <a href="<@ofbizUrl>/requestitem?custRequestId=${custRequestId}</@ofbizUrl>" class="submenutextright">Create New</a>
           </td>
         </tr>
       </table>

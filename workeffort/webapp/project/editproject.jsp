@@ -217,12 +217,12 @@
         <% if(isOwner) {%>
         <tr><td><hr></td></tr>
         <tr>
-          <td align=left>Assign User to Project&nbsp;&nbsp;
+          <td align=left><div class="tabletext">Assign User to Project&nbsp;&nbsp;</div>
             <% Iterator people = delegator.findAll("Person").iterator();%>
             <form name='assignform' action='<ofbiz:url>/addprojectassignment</ofbiz:url>' method=POST>
             <input type=hidden name='roleTypeId' value='CAL_DELEGATE'>
             <input type=hidden name='workEffortId' value='<%=workEffortId%>'>
-            <select name='quickAssignPartyId' class='selectBox' onchange='javascript:window.assignform.submit();'>
+            <select name='quickAssignPartyId' class='selectBox' onchange='javascript:document.assignform.submit();'>
               <option value=''>(Choose User to Assign)
             <%while(people.hasNext()) {%>
               <% GenericValue person = (GenericValue)people.next();%>

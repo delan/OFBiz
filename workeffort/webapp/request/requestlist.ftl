@@ -32,8 +32,7 @@
             <div class='boxhead'>&nbsp;My Request List</div>
           </TD>
           <TD align=right width='60%'>
-            <A href='<@ofbizUrl>/requestlist</@ofbizUrl>' class='lightbuttontextdisabled'>[Request&nbsp;List]</A>
-            <A href='<@ofbizUrl>/request</@ofbizUrl>' class='lightbuttontext'>[New&nbsp;Request]</A>
+            <A href='<@ofbizUrl>/requestlist</@ofbizUrl>' class='submenutextdisabled'>Request List</A><A href='<@ofbizUrl>/request</@ofbizUrl>' class='submenutextright'>New Request</A>
           </TD>
         </tr>
       </table>

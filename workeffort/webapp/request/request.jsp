@@ -88,7 +88,7 @@
             <div class='boxhead'>&nbsp;Request Detail</div>
           </TD>
           <td align="right">
-            <a href="<ofbiz:url>/request</ofbiz:url>" class="lightbuttontext">[Create New]</a>
+            <a href="<ofbiz:url>/request</ofbiz:url>" class="submenutextright">Create New</a>
           </td>
         </tr>
       </table>
@@ -169,8 +169,8 @@
                         </td>
                       </tr>                                          
                       <tr>
-                        <td align="right"><div class="tableheadtext">Name</div<</td>
-                        <td><input type="text" class="inputBox" size="50" <ofbiz:inputvalue entityAttr="custRequest" field="custRequestName" fullattrs="true"/>></td>
+                        <td align="right"><div class="tableheadtext">Name</div></td>
+                        <td><input type="text" class="inputBox" size="50" <ofbiz:inputvalue entityAttr="custRequest" field="custRequestName" fullattrs="true"/></td>
                       </tr>
                       <tr>
                         <td align="right"><div class="tableheadtext">Description</div></td>
@@ -186,10 +186,10 @@
 
                       <tr>
                         <ofbiz:unless name="custRequest">
-                          <td align="right"><input type="submit" class="inputBox" value="Create"></td>
+                          <td align="right"><input type="submit" class="smallSubmit" value="Create"></td>
                         </ofbiz:unless>
                         <ofbiz:if name="custRequest">
-                          <td align="right"><input type="submit" style="font-size: small;" value="Update"></td>
+                          <td align="right"><input type="submit" class="smallSubmit" value="Update"></td>
                         </ofbiz:if>
                         <td>&nbsp</td>
                       </tr>

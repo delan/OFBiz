@@ -33,19 +33,8 @@
           <TD align=left>
             <div class='boxhead'>&nbsp;Projects</div>
           </TD>
-          <TD align=right>
-            <table><tr>
-              <TD>
-                <#if showAllProjects = "true">
-                  <A href='<@ofbizUrl>/projectlist</@ofbizUrl>' class='lightbuttontext'>[Show&nbsp;Active]</A>
-                <#else>
-                  <A href='<@ofbizUrl>/projectlist?ShowAllProjects=true</@ofbizUrl>' class='lightbuttontext'>[Show&nbsp;All]</A>
-                </#if>
-              </TD>
-              <TD align=right>
-                <A href='<@ofbizUrl>/editproject</@ofbizUrl>' class='lightbuttontext'>[New&nbsp;Project]</A>
-              </TD>
-            </tr></table>
+          <TD align=right>            
+            <#if showAllProjects = "true"><A href='<@ofbizUrl>/projectlist</@ofbizUrl>' class='submenutext'>Show Active</A><#else><A href='<@ofbizUrl>/projectlist?ShowAllProjects=true</@ofbizUrl>' class='submenutext'>Show All</A></#if><A href='<@ofbizUrl>/editproject</@ofbizUrl>' class='submenutextright'>New Project</A>
           </TD>
         </tr>
       </table>
@@ -72,7 +61,7 @@
                         ${workEffort.workEffortName}</a></DIV></TD>
                     <TD><A class='buttontext' href='<@ofbizUrl>/phaselist?projectWorkEffortId=${workEffort.workEffortId}</@ofbizUrl>'>
                         ${workEffort.description?if_exists}</a></DIV></TD>
-                    <TD><DIV class='tabletext'>${workEffort.estimatedStartDate?datetime?string.short}</DIV></TD>
+                    <TD><DIV class='tabletext'>${(workEffort.estimatedStartDate?datetime?string)?if_exists}</DIV></TD>
                     <#assign currentStatusItem = delegator.findByPrimaryKeyCache("StatusItem", Static["org.ofbiz.core.util.UtilMisc"].toMap("statusId", workEffort.currentStatusId))>                    
                     <TD><DIV class='tabletext'>${(currentStatusItem.description)?if_exists}</DIV></TD>
                     <TD align=right width='1%'><A class='buttontext' href='<@ofbizUrl>/editproject?workEffortId=${workEffort.workEffortId}</@ofbizUrl>'>
