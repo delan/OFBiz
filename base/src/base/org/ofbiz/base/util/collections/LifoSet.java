@@ -1,5 +1,5 @@
 /*
- * $Id: LifoSet.java,v 1.3 2004/07/14 18:46:38 jonesde Exp $
+ * $Id: LifoSet.java,v 1.4 2004/07/16 17:07:20 ajzeneski Exp $
  *
  *  Copyright (c) 2004 The Open For Business Project - www.ofbiz.org
  *
@@ -34,7 +34,7 @@ import java.util.EmptyStackException;
  *
  * @author     <a href="mailto:byersa@automationgroups.com">Al Byers</a>
  * @author     <a href="mailto:jaz@ofbiz.org">Andy Zeneski</a>
- * @version    $Revision: 1.3 $
+ * @version    $Revision: 1.4 $
  * @since      3.1
  */
 public class LifoSet extends AbstractSet implements Serializable {
@@ -152,7 +152,11 @@ public class LifoSet extends AbstractSet implements Serializable {
      * the return value -1  indicates that the object is not on the stack
      */
     public int search(Object item) {
-        return backedList.indexOf(item);
+    	int index = backedList.indexOf(item);
+    	if (index > -1) {
+    		return index + 1; // this method is 1 based (per java.util.Stack)
+    	}
+        return -1;
     }
 
 }
