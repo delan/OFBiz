@@ -54,6 +54,9 @@ public class ModelRelation {
 
     /** the name of the related entity */
     protected String relEntityName = "";
+    
+    /** the name to use for a database foreign key, if applies */
+    protected String fkName = "";
 
     /** keyMaps defining how to lookup the relatedTable using columns from this table */
     protected List keyMaps = new ArrayList();
@@ -71,6 +74,7 @@ public class ModelRelation {
         this.type = UtilXml.checkEmpty(relationElement.getAttribute("type"));
         this.title = UtilXml.checkEmpty(relationElement.getAttribute("title"));
         this.relEntityName = UtilXml.checkEmpty(relationElement.getAttribute("rel-entity-name"));
+        this.fkName = UtilXml.checkEmpty(relationElement.getAttribute("fk-name"));
 
         NodeList keyMapList = relationElement.getElementsByTagName("key-map");
 
@@ -105,13 +109,21 @@ public class ModelRelation {
         this.type = type;
     }
 
-    /** the name of the related EJB/entity */
+    /** the name of the related entity */
     public String getRelEntityName() {
         return this.relEntityName;
     }
 
     public void setRelEntityName(String relEntityName) {
         this.relEntityName = relEntityName;
+    }
+
+    public String getFkName() {
+        return this.fkName;
+    }
+
+    public void setFkName(String fkName) {
+        this.fkName = fkName;
     }
 
     /** the main entity of this relation */

@@ -82,10 +82,8 @@
 	rel-entity-alias CDATA #REQUIRED >
     <!-- ==================== Children of field ===================== -->
     <!ATTLIST field
-	name CDATA #REQUIRED >
-    <!ATTLIST field
-	col-name CDATA #IMPLIED >
-    <!ATTLIST field
+	name CDATA #REQUIRED
+	col-name CDATA #IMPLIED
 	type CDATA #REQUIRED >
     <!ELEMENT validate EMPTY>
     <!ATTLIST validate
@@ -95,7 +93,8 @@
     <!ATTLIST relation
 	type ( one | many | one-nofk ) #REQUIRED
 	title CDATA #IMPLIED
-	rel-entity-name CDATA #REQUIRED >
+	rel-entity-name CDATA #REQUIRED
+	fk-name CDATA #IMPLIED >
     <!ELEMENT key-map EMPTY>
     <!-- see definition of relation in entity section above -->
     <!-- ===================== Children of key-map ====================== -->

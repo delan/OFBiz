@@ -442,7 +442,7 @@ public class DatabaseUtil {
                     
                     ModelEntity relModelEntity = (ModelEntity) modelEntities.get(modelRelation.getRelEntityName());
                     
-                    String relConstraintName = makeFkConstraintName(modelRelation.getTitle(), modelRelation.getRelEntityName(), constraintNameClipLength);
+                    String relConstraintName = makeFkConstraintName(modelRelation, constraintNameClipLength);
                     ReferenceCheckInfo rcInfo = null;
                     if (rcInfoMap != null) {
                         rcInfo = (ReferenceCheckInfo) rcInfoMap.get(relConstraintName);
@@ -1069,14 +1069,18 @@ public class DatabaseUtil {
         return null;
     }
 
-    public String makeFkConstraintName(String title, String relEntityName, int constraintNameClipLength) {
-        String relConstraintName = title + relEntityName;
+    public String makeFkConstraintName(ModelRelation modelRelation, int constraintNameClipLength) {
+        String relConstraintName = modelRelation.getFkName();
+        if (relConstraintName == null || relConstraintName.length() == 0) {
+            relConstraintName = modelRelation.getTitle() + modelRelation.getRelEntityName();
+            relConstraintName = relConstraintName.toUpperCase();
+        }
 
         if (relConstraintName.length() > constraintNameClipLength) {
             relConstraintName = relConstraintName.substring(0, constraintNameClipLength);
         }
         
-        return relConstraintName.toUpperCase();
+        return relConstraintName;
     }
     
     public String createForeignKeys(ModelEntity entity, Map modelEntities, int constraintNameClipLength) {
@@ -1180,7 +1184,7 @@ public class DatabaseUtil {
         StringBuffer sqlBuf = new StringBuffer("");
 
         sqlBuf.append("CONSTRAINT ");
-        String relConstraintName = makeFkConstraintName(modelRelation.getTitle(), modelRelation.getRelEntityName(), constraintNameClipLength);
+        String relConstraintName = makeFkConstraintName(modelRelation, constraintNameClipLength);
         sqlBuf.append(relConstraintName);
 
         sqlBuf.append(" FOREIGN KEY (");
@@ -1242,7 +1246,7 @@ public class DatabaseUtil {
             return "Unable to esablish a connection with the database... Error was: " + e.toString();
         }
 
-        String relConstraintName = makeFkConstraintName(modelRelation.getTitle(), modelRelation.getRelEntityName(), constraintNameClipLength);
+        String relConstraintName = makeFkConstraintName(modelRelation, constraintNameClipLength);
         
         //now add constraint clause
         StringBuffer sqlBuf = new StringBuffer("ALTER TABLE ");
