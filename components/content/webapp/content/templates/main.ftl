@@ -22,7 +22,7 @@
  *  THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  *
  *@author     Al Byers (byersa@automationgroups.com)
- *@version    $Revision: 1.10 $
+ *@version    $Revision: 1.11 $
  *@since      3.0
 -->
 
@@ -55,14 +55,14 @@
     <style type="text/css">
         @import url(<@ofbizContentUrl>/content/images/htmlarea/htmlarea.css</@ofbizContentUrl>);
     
-        html, body {
-          font-family: Verdana,sans-serif;
-          background-color: #fea;
-          color: #000;
-        }
-        a:link, a:visited { color: #00f; }
-        a:hover { color: #048; }
-        a:active { color: #f00; }
+#        html, body {
+#          font-family: Verdana,sans-serif;
+#          background-color: #fea;
+#          color: #000;
+#        }
+#        a:link, a:visited { color: #00f; }
+#        a:hover { color: #048; }
+#        a:active { color: #f00; }
         
         textarea { background-color: #fff; border: 1px solid 00f; }
     </style>
