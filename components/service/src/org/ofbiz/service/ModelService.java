@@ -1,5 +1,5 @@
 /*
- * $Id: ModelService.java,v 1.6 2004/02/11 16:49:36 ajzeneski Exp $
+ * $Id: ModelService.java,v 1.7 2004/02/16 13:06:51 jonesde Exp $
  *
  * Copyright (c) 2001, 2002 The Open For Business Project - www.ofbiz.org
  *
@@ -49,7 +49,7 @@ import org.ofbiz.security.Security;
  *
  * @author     <a href="mailto:jaz@ofbiz.org">Andy Zeneski</a>
  * @author     <a href="mailto:jonesde@ofbiz.org">David E. Jones</a>
- * @version    $Revision: 1.6 $
+ * @version    $Revision: 1.7 $
  * @since      2.0
  */
 public class ModelService {
@@ -350,7 +350,7 @@ public class ModelService {
                     missing = missing + ", ";
                 }               
             }
-            throw new ServiceValidationException("The following required parameters found null (not allowed): " + missing);
+            throw new ServiceValidationException("The following required parameters are missing: " + missing);
         }
 
         if (verboseOn) {
@@ -445,8 +445,8 @@ public class ModelService {
 
             if (!ObjectType.instanceOf(testObject, infoType, null)) {
                 String testType = testObject == null ? "null" : testObject.getClass().getName();
-                throw new ServiceValidationException(serviceNameMessage + "type check failed for field " + key + "; expected type is " +
-                        infoType + "; actual type is: " + testType);
+                throw new ServiceValidationException(serviceNameMessage + "type check failed for field [" + key + "]; expected type is [" +
+                        infoType + "]; actual type is [" + testType + "]");
             }
         }
     }
