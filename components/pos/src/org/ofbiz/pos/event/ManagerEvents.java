@@ -374,6 +374,7 @@ public class ManagerEvents {
             pos.showDialog("dialog/error/mgrnotloggedin");
         } else {
             pos.getOutput().print("Shutting down...");
+            PosTransaction.getCurrentTx(pos.getSession()).closeTx();
             System.exit(0);
         }
     }
