@@ -6,7 +6,8 @@
     <errorpage>/error/error.jsp</errorpage>
     
     <handler name="java" class="org.ofbiz.core.event.JavaEventHandler"/>
-    <handler name="service" class="org.ofbiz.core.service.ServiceEventHandler"/>
+    <handler name="soap" class="org.ofbiz.core.event.SOAPEventHandler"/>
+    <handler name="service" class="org.ofbiz.core.event.ServiceEventHandler"/>
     
     <preprocessor>
     	<!-- Events to run on every request before security (chains exempt) -->
@@ -44,9 +45,9 @@
 
     <!-- Request Mappings -->
 	<request-map uri="SOAPService">
-	  <event type="java" path="org.ofbiz.core.service.SOAPServiceEvents" invoke="serviceSOAP"/>
-	  <response name="error" type="view" value="error"/>
-	  <response name="success" type="view" value="error"/>
+	  <event type="soap"/>
+	  <response name="error" type="none"/>
+	  <response name="success" type="none"/>
 	</request-map>
 	
     <request-map uri="view">
