@@ -1,0 +1,175 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+ *  Copyright (c) 2004-2005 The Open For Business Project - www.ofbiz.org
+ *
+ *  Permission is hereby granted, free of charge, to any person obtaining a
+ *  copy of this software and associated documentation files (the "Software"),
+ *  to deal in the Software without restriction, including without limitation
+ *  the rights to use, copy, modify, merge, publish, distribute, sublicense,
+ *  and/or sell copies of the Software, and to permit persons to whom the
+ *  Software is furnished to do so, subject to the following conditions:
+ *
+ *  The above copyright notice and this permission notice shall be included
+ *  in all copies or substantial portions of the Software.
+ *
+ *  THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS
+ *  OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF
+ *  MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT.
+ *  IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY
+ *  CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT
+ *  OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR
+ *  THE USE OR OTHER DEALINGS IN THE SOFTWARE.
+ *
+ *  $Id: CommonScreens.xml 4267 2005-01-15 08:00:01Z jonesde $
+-->
+
+<screens xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" 
+        xsi:noNamespaceSchemaLocation="http://www.ofbiz.org/dtds/widget-screen.xsd">
+    <screen name="CommonCatalogDecorator">
+        <section>
+            <actions>
+                <set field="leftbarScreenName" value="leftbar"/>
+                <!-- <set field="leftbarScreenLocation" value=""/> -->
+            </actions>
+            <widgets>
+                <decorator-screen name="main-decorator" location="component://product/widget/catalog/CommonScreens.xml">
+                    <decorator-section name="body">
+                        <section>
+                            <!-- do check for CATALOG, _VIEW permission -->
+                            <condition>
+                                <if-has-permission permission="CATALOG" action="_VIEW"/>
+                            </condition>
+                            <widgets>
+                                <platform-specific>
+                                    <html><html-template location="component://product/webapp/catalog/catalog/CatalogTabBar.ftl"/></html>
+                                </platform-specific>
+                                <container>
+                                    <link target="EditProdCatalog" text="[${uiLabelMap.ProductNewProdCatalog}]" style="buttontext"/>
+                                </container>
+            
+                                <!-- add Create Product and View Product (in ecommerce) links -->
+                                <decorator-section-include name="body"/>
+                            </widgets>
+                            <fail-widgets>
+                                <label style="head3">${uiLabelMap.ProductCatalogViewPermissionError}</label>
+                            </fail-widgets>
+                        </section>                    
+                    </decorator-section>
+                </decorator-screen>
+            </widgets>
+        </section>
+    </screen>
+    <screen name="EditProdCatalog">
+        <section>
+            <actions>
+                <set field="title" value="Edit Product Catalog"/>
+                <set field="titleProperty" value="PageTitleEditProductCatalog"/>
+                <set field="leftbarScreenName" value="leftbar"/>
+                <set field="headerItem" value="catalog"/>
+                <set field="tabButtonItem" value="ProductCatalog"/>
+                <script location="component://product/webapp/catalog/WEB-INF/actions/catalog/EditProdCatalog.bsh"/>
+            </actions>
+            <widgets>
+                <decorator-screen name="CommonCatalogDecorator">
+                    <decorator-section name="body">
+                        <container>
+                           <label style="head1">${uiLabelMap.ProductCatalog}</label><label style="head2"> for "${prodCatalog.catalogName}" [${prodCatalogId}]</label>
+                        </container>
+                        <include-form name="EditProdCatalog" location="component://product/webapp/catalog/catalog/ProdCatalogForms.xml"/>
+                    </decorator-section>
+                </decorator-screen>
+            </widgets>
+        </section>
+    </screen>
+    <screen name="EditProdCatalogCategories">
+        <section>
+            <actions>
+                <set field="title" value="Edit Product Catalog Categories"/>
+                <set field="titleProperty" value="PageTitleEditProductCatalogCategories"/>
+                <set field="leftbarScreenName" value="leftbar"/>
+                <set field="headerItem" value="catalog"/>
+                <set field="tabButtonItem" value="ProductCategories"/>
+                <script location="component://product/webapp/catalog/WEB-INF/actions/catalog/EditProdCatalogCategories.bsh"/>
+            </actions>
+            <widgets>
+                <decorator-screen name="CommonCatalogDecorator">
+                    <decorator-section name="body">
+                        <container>
+                           <label style="head1">${uiLabelMap.ProductCategories}</label><label style="head2"> for "${prodCatalog.catalogName}" [${prodCatalogId}]</label>
+                        </container>
+                        <include-form name="EditProdCatalogCategories" location="component://product/webapp/catalog/catalog/ProdCatalogForms.xml"/>
+                        <label style="head2">${uiLabelMap.ProductAddCatalogProdCat}</label>
+                        <include-form name="addProductCategoryToProdCatalog" location="component://product/webapp/catalog/catalog/ProdCatalogForms.xml"/>
+                    </decorator-section>
+                </decorator-screen>
+            </widgets>
+        </section>
+    </screen>
+    <screen name="EditProdCatalogParties">
+        <section>
+            <actions>
+                <set field="title" value="Edit Product Catalog Parties"/>
+                <set field="titleProperty" value="PageTitleEditProductCatalogParties"/>
+                <set field="leftbarScreenName" value="leftbar"/>
+                <set field="headerItem" value="catalog"/>
+                <set field="tabButtonItem" value="PartyParties"/>
+                <script location="component://product/webapp/catalog/WEB-INF/actions/catalog/EditProdCatalogParties.bsh"/>
+            </actions>
+            <widgets>
+                <decorator-screen name="CommonCatalogDecorator">
+                    <decorator-section name="body">
+                        <container>
+                           <label style="head1">${uiLabelMap.PartyParties}</label><label style="head2"> for "${prodCatalog.catalogName}" [${prodCatalogId}]</label>
+                        </container>
+                        <include-form name="UpdateProdCatalogToParty" location="component://product/webapp/catalog/catalog/ProdCatalogForms.xml"/>
+                        <include-form name="AddProdCatalogToParty" location="component://product/webapp/catalog/catalog/ProdCatalogForms.xml"/>
+                    </decorator-section>
+                </decorator-screen>
+            </widgets>
+        </section>
+    </screen>
+    <screen name="EditProdCatalogStores">
+        <section>
+            <actions>
+                <set field="title" value="Edit Product Catalog Stores"/>
+                <set field="titleProperty" value="PageTitleEditProductCatalog Stores"/>
+                <set field="leftbarScreenName" value="leftbar"/>
+                <set field="headerItem" value="catalog"/>
+                <set field="tabButtonItem" value="ProductStores"/>
+
+                <script location="component://product/webapp/catalog/WEB-INF/actions/catalog/EditProdCatalogStores.bsh"/>
+            </actions>
+            <widgets>
+                <decorator-screen name="CommonCatalogDecorator">
+                    <decorator-section name="body">
+                        <container>
+                           <label style="head1">${uiLabelMap.ProductStores}</label><label style="head2"> for "${prodCatalog.catalogName}" [${prodCatalogId}]</label>
+                        </container>
+                        <include-form name="UpdateProductStoreCatalog" location="component://product/webapp/catalog/catalog/ProdCatalogForms.xml"/>
+                        <include-form name="CreateProductStoreCatalog" location="component://product/webapp/catalog/catalog/ProdCatalogForms.xml"/>
+                    </decorator-section>
+                </decorator-screen>
+            </widgets>
+        </section>
+    </screen>
+    <screen name="FindProdCatalog">
+        <section>
+            <actions>
+                <set field="title" value="Find Product Catalog"/>
+                <set field="titleProperty" value="PageTitleEditFindProductCatalog"/>
+                <set field="leftbarScreenName" value="leftbar"/>
+                <script location="component://product/webapp/catalog/WEB-INF/actions/catalog/FindProdCatalog.bsh"/>
+            </actions>
+            <widgets>
+                <decorator-screen name="main-decorator" location="component://product/widget/catalog/CommonScreens.xml">
+                    <decorator-section name="body">
+                         <platform-specific>
+                            <html><html-template location="component://product/webapp/catalog/catalog/FindProdCatalog.ftl"/></html>
+                        </platform-specific>
+                    </decorator-section>
+                </decorator-screen>
+            </widgets>
+        </section>
+    </screen>
+</screens>
+    
