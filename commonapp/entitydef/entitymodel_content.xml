@@ -1136,6 +1136,21 @@
         <key-map field-name="webSiteId"/>
       </relation>
     </entity>
+    <entity entity-name="WebSiteEmailSetting"
+            package-name="org.ofbiz.commonapp.content.website"
+            title="Web Site Email Settings Entity">
+      <field name="webSiteId" type="id-ne"></field>
+      <field name="emailType" type="id-ne"></field>
+      <field name="location" type="long-varchar"></field>          
+      <prim-key field="webSiteId"/>
+      <prim-key field="emailType"/>
+      <relation type="one" fk-name="WES_WEB_SITE" rel-entity-name="WebSite">
+        <key-map field-name="webSiteId"/>
+      </relation>
+      <relation type="one" fk-name="WES_TO_ENUM" rel-entity-name="Enumeration">
+        <key-map field-name="emailType" rel-field-name="enumId"/>
+      </relation>     
+    </entity>    
     <entity entity-name="WebSitePaymentSetting"
             package-name="org.ofbiz.commonapp.content.website"
             title="Web Site Payment Settings Entity">
