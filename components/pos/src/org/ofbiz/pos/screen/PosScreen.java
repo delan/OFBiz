@@ -79,7 +79,7 @@ public class PosScreen extends NavigationHelper implements Runnable, DialogCallb
         this.setVisible(false);
 
         // setup the shared components
-        this.session = XuiContainer.getSession("pos-1");
+        this.session = XuiContainer.getSession();
         this.output = new Output(this);
         this.input = new Input(this);
         this.journal = new Journal(this);
