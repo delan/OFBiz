@@ -1,5 +1,5 @@
 /*
- * $Id: FreeMarkerWorker.java,v 1.7 2004/01/07 19:30:11 byersa Exp $
+ * $Id: FreeMarkerWorker.java,v 1.8 2004/01/08 22:10:13 byersa Exp $
  *
  * Copyright (c) 2001-2003 The Open For Business Project - www.ofbiz.org
  *
@@ -62,7 +62,7 @@ import freemarker.template.TemplateModelException;
  * FreemarkerViewHandler - Freemarker Template Engine Util
  *
  * @author     <a href="mailto:byersa@automationgroups.com">Al Byers</a>
- * @version    $Revision: 1.7 $
+ * @version    $Revision: 1.8 $
  * @since      3.0
  */
 public class FreeMarkerWorker {
@@ -83,6 +83,7 @@ public class FreeMarkerWorker {
     public static RenderSubContentCacheTransform  renderSubContentCache = new RenderSubContentCacheTransform();
     public static LoopSubContentCacheTransform  loopSubContentCache = new LoopSubContentCacheTransform();
     public static TraverseSubContentCacheTransform  traverseSubContentCache = new TraverseSubContentCacheTransform();
+    public static CheckPermissionTransform  checkPermission = new CheckPermissionTransform();
     
     public static void addAllOfbizTransforms(Map context) {
         BeansWrapper wrapper = BeansWrapper.getDefaultInstance();
@@ -102,6 +103,7 @@ public class FreeMarkerWorker {
         context.put("renderSubContentCache", renderSubContentCache);
         context.put("loopSubContentCache", loopSubContentCache);
         context.put("traverseSubContentCache", traverseSubContentCache);
+        context.put("checkPermission", checkPermission);
     }
     
     public static Configuration makeDefaultOfbizConfig() throws TemplateException {
