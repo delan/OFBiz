@@ -207,21 +207,26 @@ public class ServiceUtil {
     }
 
     public static String getErrorMessage(Map result) {
-        String errorMessage = (String) result.get(ModelService.ERROR_MESSAGE);
+        StringBuffer errorMessage = new StringBuffer();
+        
+        if (result.get(ModelService.ERROR_MESSAGE) != null) errorMessage.append((String) result.get(ModelService.ERROR_MESSAGE));
+        
         if (result.get(ModelService.ERROR_MESSAGE_LIST) != null) {
             List errors = (List) result.get(ModelService.ERROR_MESSAGE_LIST);
-            for (int i = 0; i < errors.size(); i++) {
-                if (errors.get(i) != null) {
-                    if (errorMessage != null) {
-                        errorMessage = errorMessage + ", ";
-                    } else {
-                        errorMessage = "";
-                    }
-                    errorMessage = errorMessage + ((String) errors.get(i));
+            Iterator errorIter = errors.iterator();
+            while (errorIter.hasNext()) {
+                // NOTE: this MUST use toString and not cast to String because it may be a MessageString object
+                String curMessage = errorIter.next().toString();
+                if (errorMessage.length() == 0) {
+                    errorMessage.append(", ");
+                } else {
+                    errorMessage.append("");
                 }
+                errorMessage.append(curMessage);
             }
         }
-        return errorMessage;
+        
+        return errorMessage.toString();
     }
 
     public static String makeErrorMessage(Map result, String msgPrefix, String msgSuffix, String errorPrefix, String errorSuffix) {
