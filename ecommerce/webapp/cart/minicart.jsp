@@ -61,7 +61,7 @@
     </tr>
 <%}else{%>
     <tr>
-      <td colspan="3"><div class="headertext">Shopping Cart is empty.</div></td>
+      <td colspan="3"><div class="tabletext">Shopping Cart is empty.</div></td>
     </tr>
 <%}%>
 </table>
