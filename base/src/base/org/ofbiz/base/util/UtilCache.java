@@ -1,5 +1,5 @@
 /*
- * $Id: UtilCache.java,v 1.3 2004/04/30 00:16:12 jonesde Exp $
+ * $Id: UtilCache.java,v 1.4 2004/04/30 00:46:07 jonesde Exp $
  *
  *  Copyright (c) 2001-2004 The Open For Business Project - www.ofbiz.org
  *
@@ -30,6 +30,7 @@ import java.util.Iterator;
 import java.util.LinkedList;
 import java.util.Map;
 import java.util.ResourceBundle;
+import java.util.Set;
 
 /**
  * Generalized caching utility. Provides a number of caching features:
@@ -42,7 +43,7 @@ import java.util.ResourceBundle;
  * </ul>
  *
  * @author     <a href="mailto:jonesde@ofbiz.org">David E. Jones</a>
- * @version    $Revision: 1.3 $
+ * @version    $Revision: 1.4 $
  * @since      2.0
  */
 public class UtilCache {
@@ -192,9 +193,9 @@ public class UtilCache {
      * @param key The key for the element, used to reference it in the hastables and LRU linked list
      * @param value The value of the element
      */
-    public synchronized void put(Object key, Object value) {
+    public synchronized Object put(Object key, Object value) {
         if (key == null)
-            return;
+            return null;
 
         if (maxSize > 0) {
             // when maxSize is changed, the setter will take care of filling the LRU list
@@ -212,15 +213,18 @@ public class UtilCache {
         } else {
             oldCacheLine = (UtilCache.CacheLine) cacheLineTable.put(key, new UtilCache.CacheLine(this, value, useSoftReference));
         }
-        if (oldCacheLine == null) {
-            noteAddition(key, value);
-        } else {
-            noteUpdate(key, value, oldCacheLine.getValue());
-        }
         if (maxSize > 0 && cacheLineTable.size() > maxSize) {
             Object lastKey = keyLRUList.getLast();
             remove(lastKey);
         }
+        if (oldCacheLine == null) {
+            noteAddition(key, value);
+            return null;
+        } else {
+            noteUpdate(key, value, oldCacheLine.getValue());
+            return oldCacheLine.getValue();
+        }
+
     }
 
     /** Gets an element from the cache according to the specified key.
@@ -433,6 +437,10 @@ public class UtilCache {
         } else {
             return false;
         }
+    }
+
+    public Set getCacheLineKeys() {
+        return cacheLineTable.keySet();
     }
 
     public Collection getCacheLineValues() {
