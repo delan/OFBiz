@@ -1,5 +1,5 @@
 /*
- * $Id: ProductPromoWorker.java,v 1.14 2003/11/22 23:51:54 jonesde Exp $
+ * $Id: ProductPromoWorker.java,v 1.15 2003/11/23 00:00:08 jonesde Exp $
  *
  *  Copyright (c) 2001, 2002 The Open For Business Project - www.ofbiz.org
  *
@@ -53,7 +53,7 @@ import org.ofbiz.service.LocalDispatcher;
  *
  * @author     <a href="mailto:jonesde@ofbiz.org">David E. Jones</a>
  * @author     <a href="mailto:jaz@ofbiz.org">Andy Zeneski</a>
- * @version    $Revision: 1.14 $
+ * @version    $Revision: 1.15 $
  * @since      2.0
  */
 public class ProductPromoWorker {
@@ -303,9 +303,6 @@ public class ProductPromoWorker {
 
                 if (performActions) {
                     // perform all actions, either apply or unapply
-
-                    // rule performed, avoid running again through use limits
-                    promoUsed = true;
 
                     List productPromoActions = productPromoRule.getRelatedCache("ProductPromoAction", null, UtilMisc.toList("productPromoActionSeqId"));
                     if (Debug.infoOn()) Debug.logInfo("Performing " + productPromoActions.size() + " actions for rule " + productPromoRule, module);
