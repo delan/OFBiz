@@ -32,7 +32,9 @@
 
   <form method="post" action="<@ofbizUrl>/receiveOfflinePayments/${donePage}</@ofbizUrl>" name="paysetupform">    
     <input type="hidden" name="orderId" value="${requestParameters.order_id}">
-    <input type="hidden" name="workEffortId" value="${requestParameters.workEffortId}">                                  
+    <#if requestParameters.workEffortId?exists>
+    	<input type="hidden" name="workEffortId" value="${requestParameters.workEffortId}">
+    </#if>
     <table width="100%" cellpadding="1" cellspacing="0" border="0">
       <tr>
         <td width="30%" align="right"><div class="tableheadtext"><u>Payment Type</u></div></td>
