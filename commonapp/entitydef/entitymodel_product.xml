@@ -1732,6 +1732,7 @@
       <field name="facilityGroupId" type="id-ne"></field>
       <field name="fromDate" type="date-time"></field>
       <field name="thruDate" type="date-time"></field>
+      <field name="sequenceNum" type="numeric"></field>
       <prim-key field="facilityId"/>
       <prim-key field="facilityGroupId"/>
       <prim-key field="fromDate"/>
@@ -1768,6 +1769,7 @@
       <field name="parentFacilityGroupId" type="id-ne"></field>
       <field name="fromDate" type="date-time"></field>
       <field name="thruDate" type="date-time"></field>
+      <field name="sequenceNum" type="numeric"></field>
       <prim-key field="facilityGroupId"/>
       <prim-key field="parentFacilityGroupId"/>
       <prim-key field="fromDate"/>
