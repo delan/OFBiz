@@ -43,26 +43,25 @@
 
   URL dataFileUrl = null;
   try { dataFileUrl = dataFileIsUrl?new URL(dataFileLoc):UtilURL.fromFilename(dataFileLoc); }
-  catch(java.net.MalformedURLException e) { messages.add(e.getMessage()); }
+  catch (java.net.MalformedURLException e) { messages.add(e.getMessage()); }
   URL definitionUrl = null;
   try { definitionUrl = definitionIsUrl?new URL(definitionLoc):UtilURL.fromFilename(definitionLoc); }
-  catch(java.net.MalformedURLException e) { messages.add(e.getMessage()); }
+  catch (java.net.MalformedURLException e) { messages.add(e.getMessage()); }
 
   DataFile dataFile = null;
-  if(dataFileUrl != null && definitionUrl != null && definitionName != null && definitionName.length() > 0) {
+  if (dataFileUrl != null && definitionUrl != null && definitionName != null && definitionName.length() > 0) {
     try { dataFile = DataFile.readFile(dataFileUrl, definitionUrl, definitionName); }
-    catch(Exception e) { messages.add(e.toString()); Debug.logWarning(e); }
+    catch (Exception e) { messages.add(e.toString()); Debug.logWarning(e); }
   }
 
   ModelDataFile modelDataFile = null;
-  if(dataFile != null) modelDataFile = dataFile.getModelDataFile();
+  if (dataFile != null) modelDataFile = dataFile.getModelDataFile();
 
-  if(dataFile != null && dataFileSave != null) {
+  if (dataFile != null && dataFileSave != null) {
     try {
       dataFile.writeDataFile(dataFileSave);
       messages.add("Data File saved to: " + dataFileSave);
-    }
-    catch(Exception e) { messages.add(e.getMessage()); }
+    } catch (Exception e) { messages.add(e.getMessage()); }
   }
 %>
 <h3>View Data File</h3>
