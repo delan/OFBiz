@@ -37,6 +37,7 @@
         <a href="<@ofbizUrl>/EditProductCategories?productId=${productId}</@ofbizUrl>" class="${selectedClassMap.EditProductCategories?default(unselectedClassName)}">${uiLabelMap.ProductCategories}</a>
         <a href="<@ofbizUrl>/EditProductKeyword?productId=${productId}</@ofbizUrl>" class="${selectedClassMap.EditProductKeyword?default(unselectedClassName)}">${uiLabelMap.ProductKeywords}</a>
         <a href="<@ofbizUrl>/EditProductAssoc?productId=${productId}</@ofbizUrl>" class="${selectedClassMap.EditProductAssoc?default(unselectedClassName)}">${uiLabelMap.ProductAssociations}</a>
+        <a href="<@ofbizUrl>/ViewProductManufacturing?productId=${productId}</@ofbizUrl>" class="${selectedClassMap.ViewProductManufacturing?default(unselectedClassName)}">${uiLabelMap.ProductManufacturing}</a>
         <a href="<@ofbizUrl>/EditProductAttributes?productId=${productId}</@ofbizUrl>" class="${selectedClassMap.EditProductAttributes?default(unselectedClassName)}">${uiLabelMap.ProductAttributes}</a>
         <a href="<@ofbizUrl>/EditProductFeatures?productId=${productId}</@ofbizUrl>" class="${selectedClassMap.EditProductFeatures?default(unselectedClassName)}">${uiLabelMap.ProductFeatures}</a>
         <a href="<@ofbizUrl>/EditProductFacilities?productId=${productId}</@ofbizUrl>" class="${selectedClassMap.EditProductFacilities?default(unselectedClassName)}">${uiLabelMap.ProductFacilities}</a>

@@ -46,7 +46,6 @@ HtmlFormWrapper editProductFeatureWrapper = new HtmlFormWrapper("/feature/Featur
 editProductFeatureWrapper.putInContext("productFeature", productFeature);
 editProductFeatureWrapper.putInContext("productFeatureId", productFeatureId);
 editProductFeatureWrapper.putInContext("productFeatureCategoryId", productFeatureCategoryId);
-editProductFeatureWrapper.putInContext("uiLabelMap", request.getAttribute("uiLabelMap"));
 
 context.put("productFeatureId", productFeatureId);
 context.put("productFeature", productFeature);

@@ -763,6 +763,77 @@
 		
         <field name="submitButton" title="${uiLabelMap.CommonUpdate}" widget-style="standardSubmit"><submit button-type="button"/></field>
     </form>
-	
+
+    <form name="ListProductAssocs" type="list" use-row-submit="true" 
+            title="" list-name="productAssocs" paginate-target="EditProductAssoc"
+            default-title-style="tableheadtext" default-widget-style="tabletext" default-tooltip-style="tabletext">
+        <auto-fields-entity entity-name="ProductAssoc" default-field-type="display"/>
+        <field name="productId"><hidden/></field>
+        <field name="productIdTo" title="Edit" widget-style="buttontext">
+            <hyperlink also-hidden="false" description="${productIdTo}" target="EditProduct?productId=${productIdTo}"/>
+        </field>
+
+    </form>
+    <form name="ListProductAssocsTo" type="list" use-row-submit="true" 
+            title="" list-name="productAssocsTo" paginate-target="EditProductAssoc"
+            default-title-style="tableheadtext" default-widget-style="tabletext" default-tooltip-style="tabletext">
+        <auto-fields-entity entity-name="ProductAssoc" default-field-type="display"/>
+        <field name="productIdTo"><hidden/></field>
+        <field name="productId" title="Edit" widget-style="buttontext">
+            <hyperlink also-hidden="false" description="${productId}" target="EditProduct?productId=${productId}"/>
+        </field>
+    </form>
+
+    <form name="ListProductComponents" type="list" use-row-submit="true" 
+            title="" list-name="components" paginate-target="ViewProductManufacturing"
+            default-title-style="tableheadtext" default-widget-style="tabletext" default-tooltip-style="tabletext">
+        <auto-fields-entity entity-name="ProductAssoc" default-field-type="display"/>
+        <field name="productId"><hidden/></field>
+        <field name="productAssocTypeId"><hidden/></field>
+        <field name="reason"><hidden/></field>
+        <field name="instruction"><hidden/></field>
+        <field name="routingWorkEffortId"><hidden/></field>
+        <field name="productIdTo" title="Edit" widget-style="buttontext">
+            <hyperlink also-hidden="false" description="${productIdTo}" target="ViewProductManufacturing?productId=${productIdTo}"/>
+        </field>
+        <field name="productName" entry-name="productIdTo">
+            <display-entity entity-name="Product" key-field-name="productId" description="${internalName}"/>
+        </field>
+    </form>
+    <form name="ListProductParents" type="list" use-row-submit="true" 
+            title="" list-name="parents" paginate-target="ViewProductManufacturing"
+            default-title-style="tableheadtext" default-widget-style="tabletext" default-tooltip-style="tabletext">
+        <auto-fields-entity entity-name="ProductAssoc" default-field-type="display"/>
+        <field name="productIdTo"><hidden/></field>
+        <field name="productAssocTypeId"><hidden/></field>
+        <field name="sequenceNum"><hidden/></field>
+        <field name="reason"><hidden/></field>
+        <field name="instruction"><hidden/></field>
+        <field name="routingWorkEffortId"><hidden/></field>
+        <field name="productAssocTypeId"><hidden/></field>
+        <field name="scrapFactor"><hidden/></field>
+        <field name="productId" title="Edit" widget-style="buttontext">
+            <hyperlink also-hidden="false" description="${productId}" target="ViewProductManufacturing?productId=${productId}"/>
+        </field>
+        <field name="productName" entry-name="productId">
+            <display-entity entity-name="Product" key-field-name="productId" description="${internalName}"/>
+        </field>
+    </form>
+    <form name="ListProductRoutings" type="list" use-row-submit="true" 
+            title="" list-name="routings" paginate-target="ViewProductManufacturing"
+            default-title-style="tableheadtext" default-widget-style="tabletext" default-tooltip-style="tabletext">
+        <auto-fields-entity entity-name="WorkEffortGoodStandard" default-field-type="display"/>
+        <field name="productId"><hidden/></field>
+        <field name="statusId"><hidden/></field>
+        <field name="workEffortName" entry-name="workEffortId">
+            <display-entity entity-name="WorkEffort" key-field-name="workEffortId" description="${workEffortName}"/>
+        </field>
+        <field name="workEffortId" title="Edit" widget-style="buttontext">
+            <hyperlink also-hidden="false" description="${workEffortId}" target="ViewProductManufacturing?productId=${productId}"/>
+        </field>
+    </form>
+
+    
+    	
 </forms>
 
