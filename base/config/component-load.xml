@@ -1,6 +1,4 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<!DOCTYPE component-loader PUBLIC "-//OFBiz//DTD Component Loader//EN" "http://www.ofbiz.org/dtds/component-loader.dtd">
-
 <!--
  *  Copyright (c) 2003 The Open For Business Project - www.ofbiz.org
  *
@@ -23,10 +21,11 @@
  *  THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
  *  OFBiz Components
- *  $Id: component-load.xml,v 1.23 2004/08/05 16:42:49 ajzeneski Exp $
+ *  $Id$
 -->
 
-<component-loader>
+<component-loader xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" 
+        xsi:noNamespaceSchemaLocation="http://www.ofbiz.org/dtds/component-loader.xsd">
     <!-- <load-components parent-directory="${ofbiz.home}/components"/> -->
 
     <load-component component-location="${ofbiz.home}/components/minerva"/>
