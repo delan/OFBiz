@@ -350,6 +350,8 @@ public class CoreEvents {
             return "error";
         }
         
+        Debug.logInfo("Running service named [" + serviceName + "] from event with mode [" + mode + "]");
+        
         // call the service via the ServiceEventHandler which 
         // adapts an event to a service.
         try {
