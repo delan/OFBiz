@@ -1,6 +1,9 @@
 /*
  * $Id$
  * $Log$
+ * Revision 1.2  2001/12/19 06:43:05  jonesde
+ * Added method to get the debug PrintWriter and PrintStream
+ *
  * Revision 1.1  2001/09/28 22:56:44  jonesde
  * Big update for fromDate PK use, organization stuff
  *
@@ -24,34 +27,48 @@ package org.ofbiz.core.util;
 
 import java.io.*;
 import java.util.Date;
+import java.text.DateFormat;
 
 /**
  * <p><b>Title:</b> Debug.java
  * <p><b>Description:</b> Debugging Methods.
  * <p>Copyright (c) 2001 The Open For Business Project and repected authors.
- * <p>Permission is hereby granted, free of charge, to any person obtaining a 
- *  copy of this software and associated documentation files (the "Software"), 
- *  to deal in the Software without restriction, including without limitation 
- *  the rights to use, copy, modify, merge, publish, distribute, sublicense, 
- *  and/or sell copies of the Software, and to permit persons to whom the 
+ * <p>Permission is hereby granted, free of charge, to any person obtaining a
+ *  copy of this software and associated documentation files (the "Software"),
+ *  to deal in the Software without restriction, including without limitation
+ *  the rights to use, copy, modify, merge, publish, distribute, sublicense,
+ *  and/or sell copies of the Software, and to permit persons to whom the
  *  Software is furnished to do so, subject to the following conditions:
  *
- * <p>The above copyright notice and this permission notice shall be included 
+ * <p>The above copyright notice and this permission notice shall be included
  *  in all copies or substantial portions of the Software.
  *
- * <p>THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS 
- *  OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF 
- *  MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. 
- *  IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY 
- *  CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT 
- *  OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR 
+ * <p>THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS
+ *  OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF
+ *  MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT.
+ *  IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY
+ *  CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT
+ *  OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR
  *  THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  *
- * @author Andy Zeneski (jaz@zsolv.com)
+ * @author <a href="mailto:jonesde@ofbiz.org">David E. Jones</a>
+ * @author <a href="mailto:jaz@zsolv.com">Andy Zeneski</a>
  * @version 1.0
  * Created on July 1, 2001, 5:03 PM
  */
 public final class Debug {
+    static DateFormat dateFormat = DateFormat.getDateTimeInstance(DateFormat.SHORT, DateFormat.MEDIUM);
+    
+    public static final int ALWAYS = 0;
+    public static final int VERBOSE = 1;
+    public static final int TIMING = 2;
+    public static final int INFO = 3;
+    public static final int WARNING = 4;
+    public static final int ERROR = 5;
+    
+    public static final String[] levels = {"Always", "Verbose", "Timing", "Info", "Warning", "Error"};
+    public static final String[] levelProps = {"", "print.verbose", "print.timing", "print.info", "print.warning", "print.error"};
+    
     protected static PrintStream printStream = System.out;
     protected static PrintWriter printWriter = new PrintWriter(printStream);
     
@@ -67,99 +84,63 @@ public final class Debug {
         return printWriter;
     }
     
-    public static void print(String msg) {
-        long timeStamp = System.currentTimeMillis();
-        System.out.println(timeStamp + " : " + msg);
-    }
-    
-    public static void println(String msg) {
-        print(msg);
-    }
-    
-    public static void print(Exception e, String msg) {
-        print((Throwable)e, msg);
-    }
-    
-    public static void print(Exception e) {
-        print(e, null);
-    }
-    
-    public static void print(Throwable t, String msg) {
-        if (msg != null )
-            print(msg);
-        print("Received throwable with Message: "+t.getMessage());
-        t.printStackTrace();
-    }
-    
-    public static void print(Throwable t) {
-        print(t, null);
-    }
-    
-    public static void log(Throwable t, String msg) {
-        print(t,msg);
-    }
-    
-    public static void log(Exception e, String msg) {
-        print(e,msg);
-    }
-    
-    public static void log(Throwable t) {
-        print(t);
-    }
-    
-    public static void log(Exception e ) {
-        print(e);
-    }
-
-    public static void logInfo(Exception e ) {
-      if(UtilProperties.propertyValueEqualsIgnoreCase("debug", "print.info", "true")) {
-        print(e);
-      }
-    }
-
-    public static void logWarning(Exception e ) {
-      if(UtilProperties.propertyValueEqualsIgnoreCase("debug", "print.warning", "true")) {
-        print(e);
-      }
-    }
-
-    public static void logError(Exception e ) {
-      if(UtilProperties.propertyValueEqualsIgnoreCase("debug", "print.error", "true")) {
-        print(e);
-      }
-    }
-    
-    public static void logError(Exception e, String msg) {
-        if(UtilProperties.propertyValueEqualsIgnoreCase("debug", "print.error", "true")) {
-            print(e,msg);
+    public static void log(Throwable t, String msg, int level, String module) {
+        if(level == Debug.ALWAYS || UtilProperties.propertyValueEqualsIgnoreCase("debug", levelProps[level], "true")) {
+            StringBuffer prefixBuf = new StringBuffer();
+            prefixBuf.append(dateFormat.format(new java.util.Date()));
+            prefixBuf.append(" [OFBiz");
+            if (module != null) {
+                prefixBuf.append(":");
+                prefixBuf.append(module);
+            }
+            prefixBuf.append(":");
+            prefixBuf.append(levels[level]);
+            prefixBuf.append("] ");
+            if (msg != null) {
+                getPrintWriter().print(prefixBuf.toString());
+                getPrintWriter().println(msg);
+            }
+            if (t != null) {
+                getPrintWriter().print(prefixBuf.toString());
+                getPrintWriter().println("Received throwable:");
+                t.printStackTrace(getPrintWriter());
+            }
         }
     }
     
-    public static void logError(Throwable t, String msg) {
-        if(UtilProperties.propertyValueEqualsIgnoreCase("debug", "print.error", "true")) {
-            print(t,msg);
-        }
-    }
+    public static void log(String msg) { log(null, msg, Debug.ALWAYS, null); }
+    public static void log(String msg, String module) { log(null, msg, Debug.ALWAYS, module); }
+    public static void log(Throwable t) { log(t, null, Debug.ALWAYS, null); }
+    public static void log(Throwable t, String msg) { log(t, msg, Debug.ALWAYS, null); }
+    public static void log(Throwable t, String msg, String module) { log(t, msg, Debug.ALWAYS, module); }
+    
+    public static void logVerbose(String msg) { log(null, msg, Debug.VERBOSE, null); }
+    public static void logVerbose(String msg, String module) { log(null, msg, Debug.VERBOSE, module); }
+    public static void logVerbose(Throwable t) { log(t, null, Debug.VERBOSE, null); }
+    public static void logVerbose(Throwable t, String msg) { log(t, msg, Debug.VERBOSE, null); }
+    public static void logVerbose(Throwable t, String msg, String module) { log(t, msg, Debug.VERBOSE, module); }
+    
+    public static void logTiming(String msg) { log(null, msg, Debug.TIMING, null); }
+    public static void logTiming(String msg, String module) { log(null, msg, Debug.TIMING, module); }
+    public static void logTiming(Throwable t) { log(t, null, Debug.TIMING, null); }
+    public static void logTiming(Throwable t, String msg) { log(t, msg, Debug.TIMING, null); }
+    public static void logTiming(Throwable t, String msg, String module) { log(t, msg, Debug.TIMING, module); }
 
-    public static void log(String msg) {
-        print(msg);
-    }
-    
-    public static void logInfo(String msg) {
-      if(UtilProperties.propertyValueEqualsIgnoreCase("debug", "print.info", "true")) {
-        print(msg);
-      }
-    }
-    
-    public static void logWarning(String msg) {
-      if(UtilProperties.propertyValueEqualsIgnoreCase("debug", "print.warning", "true")) {
-        print(msg);
-      }
-    }
-    
-    public static void logError(String msg) {
-      if(UtilProperties.propertyValueEqualsIgnoreCase("debug", "print.error", "true")) {
-        print(msg);
-      }
-    }
+    public static void logInfo(String msg) { log(null, msg, Debug.INFO, null); }
+    public static void logInfo(String msg, String module) { log(null, msg, Debug.INFO, module); }
+    public static void logInfo(Throwable t) { log(t, null, Debug.INFO, null); }
+    public static void logInfo(Throwable t, String msg) { log(t, msg, Debug.INFO, null); }
+    public static void logInfo(Throwable t, String msg, String module) { log(t, msg, Debug.INFO, module); }
+
+    public static void logWarning(String msg) { log(null, msg, Debug.WARNING, null); }
+    public static void logWarning(String msg, String module) { log(null, msg, Debug.WARNING, module); }
+    public static void logWarning(Throwable t) { log(t, null, Debug.WARNING, null); }
+    public static void logWarning(Throwable t, String msg) { log(t, msg, Debug.WARNING, null); }
+    public static void logWarning(Throwable t, String msg, String module) { log(t, msg, Debug.WARNING, module); }
+
+    public static void logError(String msg) { log(null, msg, Debug.ERROR, null); }
+    public static void logError(String msg, String module) { log(null, msg, Debug.ERROR, module); }
+    public static void logError(Throwable t) { log(t, null, Debug.ERROR, null); }
+    public static void logError(Throwable t, String msg) { log(t, msg, Debug.ERROR, null); }
+    public static void logError(Throwable t, String msg, String module) { log(t, msg, Debug.ERROR, module); }
 }
