@@ -231,7 +231,7 @@ public class LoginEvents {
      * @return String specifying the exit status of this event
      */
     public static String forgotPassword(HttpServletRequest request, HttpServletResponse response) {
-        if (UtilValidate.isNotEmpty(request.getParameter("GET_PASSWORD_HINT"))) {
+        if ((UtilValidate.isNotEmpty(request.getParameter("GET_PASSWORD_HINT"))) || (UtilValidate.isNotEmpty(request.getParameter("GET_PASSWORD_HINT.x")))){
             return showPasswordHint(request, response);
         } else {
             return emailPassword(request, response);
