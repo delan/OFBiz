@@ -24,7 +24,7 @@
  *
  * @author     David E. Jones (jonesde@ofbiz.org)
  * @author     Andy Zeneski (jaz@ofbiz.org)
- * @version    $Revision: 1.12 $
+ * @version    $Revision: 1.13 $
  * @since      2.0
  -->
 
@@ -504,8 +504,8 @@
         <!-- update the review average on the Product entity -->
         <make-value entity-name="Product" value-name="product"/>
         <env-to-env env-name="parameters.productId" to-env-name="product.productId"/>
-        <call-class-method class-name="ProductWorker" method-name="getAverageProductRating" ret-field-name="product.averageCustomerRating">
-            <field field-name="delegator" type="org.ofbiz.core.entity.GenericDelegator"/>
+        <call-class-method class-name="org.ofbiz.product.product.ProductWorker" method-name="getAverageProductRating" ret-field-name="product.averageCustomerRating">
+            <field field-name="delegator" type="org.ofbiz.entity.GenericDelegator"/>
             <field field-name="parameters.productId" type="java.lang.String"/>
         </call-class-method>
         <log level="info" message="Got new average customer rating ${product.averageCustomerRating}"/>
