@@ -1,5 +1,5 @@
 /*
- * $Id: DataResourceWorker.java,v 1.28 2004/06/02 17:50:08 byersa Exp $
+ * $Id: DataResourceWorker.java,v 1.29 2004/06/08 19:53:10 byersa Exp $
  *
  *  Copyright (c) 2001, 2002 The Open For Business Project - www.ofbiz.org
  *
@@ -64,7 +64,7 @@ import freemarker.template.TemplateException;
  * 
  * @author <a href="mailto:byersa@automationgroups.com">Al Byers</a>
  * @author <a href="mailto:jonesde@ofbiz.org">David E. Jones</a>
- * @version $Revision: 1.28 $
+ * @version $Revision: 1.29 $
  * @since 3.0
  */
 public class DataResourceWorker {
@@ -364,10 +364,10 @@ public class DataResourceWorker {
         }
 
         
-        Map context = (Map) templateContext.get("context");
-        if (context == null) {
-            context = new HashMap();
-        }
+//        Map context = (Map) templateContext.get("context");
+//        if (context == null) {
+//            context = new HashMap();
+//        }
 
         if (UtilValidate.isEmpty(mimeTypeId)) {
             mimeTypeId = "text/html";
@@ -414,22 +414,25 @@ public class DataResourceWorker {
         if (UtilValidate.isEmpty(dataTemplateTypeId) || "NONE".equals(dataTemplateTypeId)) {
             writeDataResourceText(dataResource, mimeTypeId, locale, templateContext, delegator, out);
         } else {
-            String subContentId = (String)context.get("subContentId");
+            String subContentId = (String)templateContext.get("subContentId");
+            //String subContentId = (String)context.get("subContentId");
             // TODO: the reason why I did this (and I can't remember) may not be valid or it can be done better
             if (UtilValidate.isNotEmpty(subContentId)) {
-                context.put("contentId", subContentId);
-                context.put("subContentId", null);
+                //context.put("contentId", subContentId);
+                //context.put("subContentId", null);
+                templateContext.put("contentId", subContentId);
+                templateContext.put("subContentId", null);
             }
             
-            //String subContentId2 = (String)context.get("subContentId");
 
             // get the full text of the DataResource
             String templateText = getDataResourceText(dataResource, mimeTypeId, locale, templateContext, delegator);
             
             //String subContentId3 = (String)context.get("subContentId");
             
-            context.put("mimeTypeId", null);
-            templateContext.put("context", context);
+//            context.put("mimeTypeId", null);
+            templateContext.put("mimeTypeId", null);
+//            templateContext.put("context", context);
             
             if ("FTL".equals(dataTemplateTypeId)) {
                 try {
