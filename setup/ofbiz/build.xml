@@ -811,7 +811,7 @@
         <delete><fileset dir="." includes="**/.nbattrs,**/*~,**/*.#*" /></delete>
     </target>
     
-    <target name="distro-apps" depends="distro-apps-catalina"/>
+    <target name="distro-apps" depends="distro-apps-jetty"/>
     
     <target name="distro-apps-jetty" depends="">
         <antcall target="clean" />
