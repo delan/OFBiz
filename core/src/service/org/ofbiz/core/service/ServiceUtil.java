@@ -33,6 +33,7 @@ import javax.servlet.http.HttpServletRequest;
 
 import org.ofbiz.core.entity.GenericValue;
 import org.ofbiz.core.security.Security;
+import org.ofbiz.core.util.Debug;
 import org.ofbiz.core.util.SiteDefs;
 import org.ofbiz.core.util.UtilValidate;
 
@@ -44,6 +45,8 @@ import org.ofbiz.core.util.UtilValidate;
  * @since      2.0
  */
 public class ServiceUtil {
+    
+    public static final String module = ServiceUtil.class.getName();
 
     /** A small routine used all over to improve code efficiency, make a result map with the message and the error response code */
     public static Map returnError(String errorMessage) {
@@ -130,6 +133,10 @@ public class ServiceUtil {
     }
 
     public static String makeErrorMessage(Map result, String msgPrefix, String msgSuffix, String errorPrefix, String errorSuffix) {
+        if (result == null) {
+            Debug.logWarning("A null result map was passed", module);
+            return null;
+        }
         String errorMsg = (String) result.get(ModelService.ERROR_MESSAGE);
         List errorMsgList = (List) result.get(ModelService.ERROR_MESSAGE_LIST);
         Map errorMsgMap = (Map) result.get(ModelService.ERROR_MESSAGE_MAP);
