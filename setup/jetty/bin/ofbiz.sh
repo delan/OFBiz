@@ -38,8 +38,10 @@ fi
 
 # ----- Set JAVA_OPTIONS and Start Catalina -----------------------------------------
 
-export JAVA_OPTIONS="$JAVA_OPTIONS -Dofbiz.home=$OFBIZ_HOME"
-#export JAVA_OPTIONS="$JAVA_OPTIONS -Dofbiz.home=$OFBIZ_HOME -Xrunhprof:cpu=times,thread=y,depth=16,cutoff=0,format=a"
+export JAVA_OPTIONS="$JAVA_OPTIONS -Dofbiz.home=$OFBIZ_HOME -Dorg.mortbay.jetty.servlet.AbstractSessionManager.24SessionDestroyed=true"
+#export JAVA_OPTIONS="$JAVA_OPTIONS -Duser.language=en -Duser.region=US"
+#export JAVA_OPTIONS="$JAVA_OPTIONS -Xbootclasspath:$OFBIZ_HOME/lib/worldpay/cryptix.jar:$JAVA_HOME/jre/lib/rt.jar:$JAVA_HOME/jre/lib/i18n.jar"
+#export JAVA_OPTIONS="$JAVA_OPTIONS -Xrunhprof:cpu=times,thread=y,depth=16,cutoff=0,format=a"
 
 CP=`find $OFBIZ_HOME/core/lib -name *.jar | paste -s -d":" -`
 CP=$CP:`find $OFBIZ_HOME/lib/share -name *.jar | paste -s -d":" -`

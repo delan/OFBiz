@@ -108,6 +108,7 @@ rem ----- Set JAVA_OPTS and Start Jetty ----------------------------------------
 
 set _JAVA_OPTS=%JAVA_OPTS%
 set JAVA_OPTS=%JAVA_OPTS% -Dofbiz.home=%OFBIZ_HOME% -Djetty.home=%JETTY_HOME%
+set JAVA_OPTS=%JAVA_OPTS% -Dorg.mortbay.jetty.servlet.AbstractSessionManager.24SessionDestroyed=true
 
 echo Running Jetty with the following options:
 echo JAVA_HOME=%JAVA_HOME%
