@@ -1,5 +1,5 @@
 /*
- * $Id: GeoWorker.java,v 1.2 2003/11/21 02:45:49 ajzeneski Exp $
+ * $Id: GeoWorker.java,v 1.3 2004/02/06 17:04:48 ajzeneski Exp $
  *
  *  Copyright (c) 2003 The Open For Business Project - www.ofbiz.org
  *
@@ -38,7 +38,7 @@ import java.util.ArrayList;
  * Worker methods for Geos
  *
  * @author     <a href="mailto:jaz@ofbiz.org">Andy Zeneski</a>
- * @version    $Revision: 1.2 $
+ * @version    $Revision: 1.3 $
  * @since      3.0
  */
 public class GeoWorker {
@@ -63,7 +63,7 @@ public class GeoWorker {
             return UtilMisc.toList(geo);
         }
 
-        Debug.log("Expanding geo : " + geo, module);
+        //Debug.log("Expanding geo : " + geo, module);
 
         List geoList = new LinkedList();
         List thisGeoAssoc = null;
@@ -85,7 +85,7 @@ public class GeoWorker {
                 geoList.addAll(expandGeoGroup(nextGeo));
             }
         } else {
-            Debug.log("No associated geos with this group", module);
+            //Debug.log("No associated geos with this group", module);
         }
 
         //Debug.log("Expanded to : " + geoList, module);
