@@ -63,12 +63,12 @@ if (lookupFlag != null) {
     if (lookupErrorMessage == null) {               
         workEffortId = request.getParameter("workEffortId");
         workEffortName = request.getParameter("workEffortName");
-        if (workEffortId != null && workEffortId.length() > 0) {
-            paramList = paramList + "&workEffortId=" + workEffortId;
-            andExprs.add(new EntityExpr("workEffortId", EntityOperator.EQUALS, workEffortId));
-        } else if (workEffortName != null) {
-            paramList = paramList + "&workEffortName=" + workEffortName;
-            andExprs.add(new EntityExpr("workEffortName", EntityOperator.GREATER_THAN_EQUAL_TO, workEffortName));
+        if (workEffortId != null) {
+           paramList = paramList + "&workEffortId=" + workEffortId;
+	       if (workEffortId.length() > 0) 
+		      andExprs.add(new EntityExpr("workEffortId", EntityOperator.EQUALS, workEffortId));
+	       else 
+		      andExprs.add(new EntityExpr("workEffortName", EntityOperator.GREATER_THAN_EQUAL_TO, workEffortName));
         }
         if (!andExprs.isEmpty()) {
             andExprs.add(new EntityExpr("workEffortTypeId", EntityOperator.EQUALS, "ROUTING"));
