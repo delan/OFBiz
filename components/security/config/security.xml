@@ -21,20 +21,12 @@
  *  THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 -->
 
-<security-config xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" 
-        xsi:noNamespaceSchemaLocation="http://www.ofbiz.org/dtds/security-config.xsd">
+<security-config>
+    <!-- This is the default implementation and uses the OFBizSecurity implementation as its default -->
+    <security name="default"/>
 
-	<!-- This is the default implementation and uses the OFBizSecurity implementation as its default -->
-	<security
-		name="default"
-	/>
-
-	<!-- This is an example custom implementation and uses the class name specified as security implementation -->
-	<!--
-	<security
-		name="myCustom"
-		class="org.ofbiz.security.MyCustomSecurity"
-	/>
-	-->
-
+    <!-- This is an example custom implementation and uses the class name specified as security implementation -->
+    <!--
+    <security name="myCustom" class="com.mycompany.security.MyCustomSecurity"/>
+    -->
 </security-config>
