@@ -1,0 +1,92 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE services PUBLIC "-//OFBiz//DTD Services Config//EN" "http://www.ofbiz.org/dtds/services.dtd">
+
+<services>
+    <description>Common Application Shared Project Services</description>
+    <vendor>OFBiz</vendor>
+    <version>1.0</version>
+
+  <!-- Project services -->
+    <service name="createPhase" engine="simple"
+            location="org/ofbiz/commonapp/workeffort/project/ProjectSimpleServices.xml" invoke="createPhase">
+        <description>Create a WorkEffort which is a phase in a project</description>
+        <attribute name="workEffortTypeId" type="String" mode="IN" optional="false"/>
+        <attribute name="workEffortPurposeTypeId" type="String" mode="IN" optional="true"/>
+        <attribute name="workEffortParentId" type="String" mode="IN" optional="true"/>
+        <attribute name="currentStatusId" type="String" mode="IN" optional="false"/>
+        <attribute name="universalId" type="String" mode="IN" optional="true"/>
+        <attribute name="scopeEnumId" type="String" mode="IN" optional="true"/>
+        <attribute name="priority" type="Long" mode="IN" optional="true"/>
+        <attribute name="percentComplete" type="Long" mode="IN" optional="true"/>
+        <attribute name="workEffortName" type="String" mode="IN" optional="false"/>
+        <attribute name="description" type="String" mode="IN" optional="true"/>
+        <attribute name="locationDesc" type="String" mode="IN" optional="true"/>
+        <attribute name="fixedAssetId" type="String" mode="IN" optional="true"/>
+        <attribute name="facilityId" type="String" mode="IN" optional="true"/>
+        <attribute name="estimatedStartDate" type="java.sql.Timestamp" mode="IN" optional="true"/>
+        <attribute name="estimatedCompletionDate" type="java.sql.Timestamp" mode="IN" optional="true"/>
+        <attribute name="actualStartDate" type="java.sql.Timestamp" mode="IN" optional="true"/>
+        <attribute name="actualCompletionDate" type="java.sql.Timestamp" mode="IN" optional="true"/>
+        <attribute name="estimatedMilliSeconds" type="Double" mode="IN" optional="true"/>
+        <attribute name="actualMilliSeconds" type="Double" mode="IN" optional="true"/>
+        <attribute name="totalMilliSecondsAllowed" type="Double" mode="IN" optional="true"/>
+        <attribute name="totalMoneyAllowed" type="Double" mode="IN" optional="true"/>
+        <attribute name="moneyUomId" type="String" mode="IN" optional="true"/>
+        <attribute name="specialTerms" type="String" mode="IN" optional="true"/>
+        <attribute name="timeTransparency" type="Long" mode="IN" optional="true"/>
+        <attribute name="infoUrl" type="String" mode="IN" optional="true"/>
+        <attribute name="recurrenceInfoId" type="String" mode="IN" optional="true"/>
+        <attribute name="runtimeDataId" type="String" mode="IN" optional="true"/>
+        <attribute name="noteId" type="String" mode="IN" optional="true"/>
+        <attribute name="serviceLoaderName" type="String" mode="IN" optional="true"/>
+        <attribute name="workflowPackageId" type="String" mode="IN" optional="true"/>
+        <attribute name="workflowPackageVersion" type="String" mode="IN" optional="true"/>
+        <attribute name="workflowProcessId" type="String" mode="IN" optional="true"/>
+        <attribute name="workflowProcessVersion" type="String" mode="IN" optional="true"/>
+        <attribute name="workflowActivityId" type="String" mode="IN" optional="true"/>
+        <attribute name="quickAssignPartyId" type="String" mode="IN" optional="true"/>
+        <attribute name="projectWorkEffortId" type="String" mode="IN" optional="false"/>
+    </service>
+
+    <service name="createPhaseTask" engine="simple"
+            location="org/ofbiz/commonapp/workeffort/project/ProjectSimpleServices.xml" invoke="createPhaseTask">
+        <description>Create a WorkEffort Entity which is a task in a phase</description>
+        <attribute name="workEffortTypeId" type="String" mode="IN" optional="false"/>
+        <attribute name="workEffortPurposeTypeId" type="String" mode="IN" optional="true"/>
+        <attribute name="workEffortParentId" type="String" mode="IN" optional="true"/>
+        <attribute name="currentStatusId" type="String" mode="IN" optional="false"/>
+        <attribute name="universalId" type="String" mode="IN" optional="true"/>
+        <attribute name="scopeEnumId" type="String" mode="IN" optional="true"/>
+        <attribute name="priority" type="Long" mode="IN" optional="true"/>
+        <attribute name="percentComplete" type="Long" mode="IN" optional="true"/>
+        <attribute name="workEffortName" type="String" mode="IN" optional="false"/>
+        <attribute name="description" type="String" mode="IN" optional="true"/>
+        <attribute name="locationDesc" type="String" mode="IN" optional="true"/>
+        <attribute name="fixedAssetId" type="String" mode="IN" optional="true"/>
+        <attribute name="facilityId" type="String" mode="IN" optional="true"/>
+        <attribute name="estimatedStartDate" type="java.sql.Timestamp" mode="IN" optional="true"/>
+        <attribute name="estimatedCompletionDate" type="java.sql.Timestamp" mode="IN" optional="true"/>
+        <attribute name="actualStartDate" type="java.sql.Timestamp" mode="IN" optional="true"/>
+        <attribute name="actualCompletionDate" type="java.sql.Timestamp" mode="IN" optional="true"/>
+        <attribute name="estimatedMilliSeconds" type="Double" mode="IN" optional="true"/>
+        <attribute name="actualMilliSeconds" type="Double" mode="IN" optional="true"/>
+        <attribute name="totalMilliSecondsAllowed" type="Double" mode="IN" optional="true"/>
+        <attribute name="totalMoneyAllowed" type="Double" mode="IN" optional="true"/>
+        <attribute name="moneyUomId" type="String" mode="IN" optional="true"/>
+        <attribute name="specialTerms" type="String" mode="IN" optional="true"/>
+        <attribute name="timeTransparency" type="Long" mode="IN" optional="true"/>
+        <attribute name="infoUrl" type="String" mode="IN" optional="true"/>
+        <attribute name="recurrenceInfoId" type="String" mode="IN" optional="true"/>
+        <attribute name="runtimeDataId" type="String" mode="IN" optional="true"/>
+        <attribute name="noteId" type="String" mode="IN" optional="true"/>
+        <attribute name="serviceLoaderName" type="String" mode="IN" optional="true"/>
+        <attribute name="workflowPackageId" type="String" mode="IN" optional="true"/>
+        <attribute name="workflowPackageVersion" type="String" mode="IN" optional="true"/>
+        <attribute name="workflowProcessId" type="String" mode="IN" optional="true"/>
+        <attribute name="workflowProcessVersion" type="String" mode="IN" optional="true"/>
+        <attribute name="workflowActivityId" type="String" mode="IN" optional="true"/>
+        <attribute name="quickAssignPartyId" type="String" mode="IN" optional="true"/>
+        <attribute name="phaseWorkEffortId" type="String" mode="IN" optional="false"/>
+    </service>
+        
+</services>
