@@ -102,6 +102,32 @@
         <security https="true" auth="true"/>
         <response name="success" type="view" value="keywordsearch"/>
     </request-map>
+
+    <request-map uri="searchRemoveFromCategory">
+        <security https="true" auth="true"/>
+        <event type="java" path="org.ofbiz.product.product.ProductSearchEvents" invoke="searchRemoveFromCategory"/>
+        <response name="success" type="view" value="keywordsearch"/>
+        <response name="error" type="view" value="keywordsearch"/>
+    </request-map>
+    <request-map uri="searchExpireFromCategory">
+        <security https="true" auth="true"/>
+        <event type="java" path="org.ofbiz.product.product.ProductSearchEvents" invoke="searchExpireFromCategory"/>
+        <response name="success" type="view" value="keywordsearch"/>
+        <response name="error" type="view" value="keywordsearch"/>
+    </request-map>
+    <request-map uri="searchAddToCategory">
+        <security https="true" auth="true"/>
+        <event type="java" path="org.ofbiz.product.product.ProductSearchEvents" invoke="searchAddToCategory"/>
+        <response name="success" type="view" value="keywordsearch"/>
+        <response name="error" type="view" value="keywordsearch"/>
+    </request-map>
+    <request-map uri="searchAddFeature">
+        <security https="true" auth="true"/>
+        <event type="java" path="org.ofbiz.product.product.ProductSearchEvents" invoke="searchAddFeature"/>
+        <response name="success" type="view" value="keywordsearch"/>
+        <response name="error" type="view" value="keywordsearch"/>
+    </request-map>
+
     <request-map uri="FindProductById">
         <security https="true" auth="true"/>
         <response name="success" type="view" value="FindProductById"/>
@@ -111,7 +137,7 @@
         <security https="true" auth="true"/>
         <response name="success" type="view" value="ChooseTopCategory"/>
     </request-map>
-
+    
     <!-- ================ Category Requests ================= -->
     <request-map uri="EditCategory">
         <security https="true" auth="true"/>
