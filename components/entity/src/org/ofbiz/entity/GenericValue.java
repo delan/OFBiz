@@ -1,5 +1,5 @@
 /*
- * $Id: GenericValue.java,v 1.3 2003/11/03 13:13:14 jonesde Exp $
+ * $Id: GenericValue.java,v 1.4 2003/12/05 20:09:55 ajzeneski Exp $
  *
  *  Copyright (c) 2001 The Open For Business Project - www.ofbiz.org
  *
@@ -40,7 +40,7 @@ import org.ofbiz.entity.util.EntityUtil;
  *
  *@author     <a href="mailto:jonesde@ofbiz.org">David E. Jones</a>
  *@author     Eric Pabst
- *@version    $Revision: 1.3 $
+ *@version    $Revision: 1.4 $
  *@since      1.0
  */
 public class GenericValue extends GenericEntity {
@@ -127,6 +127,16 @@ public class GenericValue extends GenericEntity {
 
     /** Get the named Related Entity for the GenericValue from the persistent store
      *@param relationName String containing the relation name which is the combination of relation.title and relation.rel-entity-name as specified in the entity XML definition file
+     * @param orderBy The fields of the named entity to order the query by; may be null;
+     *      optionally add a " ASC" for ascending or " DESC" for descending
+     *@return List of GenericValue instances as specified in the relation definition
+     */
+    public List getRelated(String relationName, List orderBy) throws GenericEntityException {
+        return this.getDelegator().getRelated(relationName, null, orderBy, this);
+    }
+
+    /** Get the named Related Entity for the GenericValue from the persistent store
+     *@param relationName String containing the relation name which is the combination of relation.title and relation.rel-entity-name as specified in the entity XML definition file
      * @param byAndFields the fields that must equal in order to keep; may be null
      * @param orderBy The fields of the named entity to order the query by; may be null;
      *      optionally add a " ASC" for ascending or " DESC" for descending
@@ -187,6 +197,17 @@ public class GenericValue extends GenericEntity {
         if (byAndFields != null) col = EntityUtil.filterByAnd(col, byAndFields);
         if (UtilValidate.isNotEmpty(orderBy)) col = EntityUtil.orderBy(col, orderBy);
         return col;
+    }
+
+    /** Get the named Related Entity for the GenericValue from the persistent
+     *  store, looking first in the global generic cache (for the moment this isn't true, is same as EmbeddedCache variant)
+     *@param relationName String containing the relation name which is the combination of relation.title and relation.rel-entity-name as specified in the entity XML definition file
+     * @param orderBy The fields of the named entity to order the query by; may be null;
+     *      optionally add a " ASC" for ascending or " DESC" for descending
+     *@return List of GenericValue instances as specified in the relation definition
+     */
+    public List getRelatedCache(String relationName, List orderBy) throws GenericEntityException {
+        return this.getRelatedCache(relationName, null, orderBy);
     }
 
     /** Get the named Related Entity for the GenericValue from the persistent
