@@ -90,9 +90,9 @@ public class RecurrenceRule {
         String freq = rule.getString("frequency");
         if ( !checkFreq(freq) )
             throw new RecurrenceRuleException("Recurrence FREQUENCY is a required parameter.");
-        if ( rule.get("until") != null && rule.getInteger("count").intValue() > 0 )
+        if ( rule.get("untilDateTime") != null && rule.getInteger("countNumber").intValue() > 0 )
             throw new RecurrenceRuleException("Recurrence cannot have both UNTIL and COUNT properties.");
-        if ( rule.getInteger("interval").intValue() < 1 )
+        if ( rule.getInteger("intervalNumber").intValue() < 1 )
             throw new RecurrenceRuleException("Recurrence INTERVAL must be a positive integer.");
         
         // Initialize the byXXX lists
@@ -139,7 +139,7 @@ public class RecurrenceRule {
             return -1;
         long time = 0;
         java.sql.Timestamp stamp = null;
-        stamp = rule.getTimestamp("until");
+        stamp = rule.getTimestamp("untilDateTime");
         if ( stamp != null ) {
             long nanos = (long) stamp.getNanos();
             time = stamp.getTime();
@@ -150,8 +150,8 @@ public class RecurrenceRule {
     
     /** Get the number of times this recurrence will run. */
     public int getCount() {
-        if ( rule.get("count") != null )
-            return rule.getInteger("count").intValue();
+        if ( rule.get("countNumber") != null )
+            return rule.getInteger("countNumber").intValue();
         return 0;
     }
     
@@ -184,9 +184,9 @@ public class RecurrenceRule {
     
     /** Returns the interval of the frequency. */
     public int getInterval() {
-        if ( rule.get("interval") == null )
+        if ( rule.get("intervalNumber") == null )
             return 1;
-        return rule.getInteger("interval").intValue();
+        return rule.getInteger("intervalNumber").intValue();
     }
     
     /** Returns the next recurrence of this rule.
