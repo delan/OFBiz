@@ -1,5 +1,5 @@
 /*
- * $Id: ShoppingListEvents.java,v 1.4 2004/07/09 17:19:11 jonesde Exp $
+ * $Id: ShoppingListEvents.java,v 1.5 2004/07/10 06:04:09 ajzeneski Exp $
  *
  *  Copyright (c) 2003 The Open For Business Project - www.ofbiz.org
  *
@@ -59,16 +59,15 @@ import org.ofbiz.service.ServiceUtil;
  * Shopping cart events.
  *
  * @author     <a href="mailto:jaz@ofbiz.org">Andy Zeneski</a>
- * @version    $Revision: 1.4 $
+ * @version    $Revision: 1.5 $
  * @since      2.2
  */
 public class ShoppingListEvents {
     
     public static final String module = ShoppingListEvents.class.getName();
     public static final String resource = "OrderUiLabels";
+    public static final String err_resource = "OrderErrorUiLabel";
     public static final String PERSISTANT_LIST_NAME = "auto-save";
-    /** Contains the property file name for translation of error messages. */
-    public static final String ERR_RESOURCE = "OrderErrorUiLabel";
 
     public static String addBulkFromCart(HttpServletRequest request, HttpServletResponse response) {
         GenericDelegator delegator = (GenericDelegator) request.getAttribute("delegator");
@@ -314,8 +313,8 @@ public class ShoppingListEvents {
         try {
             result = dispatcher.runSync("updateShoppingListItem", serviceInMap);
         } catch (GenericServiceException e) {
-            String errMsg = UtilProperties.getMessage(ShoppingListEvents.ERR_RESOURCE,
-                    "shoppingListEvents.error_calling_update", (locale != null ? locale : Locale.getDefault())) + ": "  + e.toString();            
+            String errMsg = UtilProperties.getMessage(ShoppingListEvents.err_resource,
+                    "shoppingListEvents.error_calling_update", locale) + ": "  + e.toString();            
             request.setAttribute("_ERROR_MESSAGE_", errMsg);            
             String errorMsg = "Error calling the updateShoppingListItem in handleShoppingListItemVariant: " + e.toString();
             Debug.logError(e, errorMsg, module);

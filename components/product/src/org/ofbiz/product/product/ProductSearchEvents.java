@@ -1,5 +1,5 @@
 /*
- * $Id: ProductSearchEvents.java,v 1.9 2004/07/09 17:04:38 jonesde Exp $
+ * $Id: ProductSearchEvents.java,v 1.10 2004/07/10 06:04:10 ajzeneski Exp $
  *
  *  Copyright (c) 2001, 2002 The Open For Business Project - www.ofbiz.org
  *
@@ -52,22 +52,14 @@ import org.ofbiz.product.product.ProductSearch.ResultSortOrder;
  * Product Search Related Events
  *
  * @author     <a href="mailto:jonesde@ofbiz.org">David E. Jones</a>
- * @version    $Revision: 1.9 $
+ * @version    $Revision: 1.10 $
  * @since      3.0
  */
 public class ProductSearchEvents {
 
     public static final String module = ProductSearchEvents.class.getName();
     public static final String resource = "ProductUiLabels";
-    /**
-     * Contains the property file name for translation of error
-     * messages.
-     */
-    public static final String ERR_RESOURCE = "ProductErrorUiLabel";
-    /**
-     * Language setting.
-     */
-    private static Locale locale;
+    public static final String err_resource = "ProductErrorUiLabel";
 
     /** Removes the results of a search from the specified category
      *@param request The HTTPRequest object for the current request
@@ -203,7 +195,7 @@ public class ProductSearchEvents {
        String productCategoryId = request.getParameter("SE_SEARCH_CATEGORY_ID");
        String fromDateStr = request.getParameter("fromDate");
        Timestamp fromDate = null;
-       String errMsg=null;
+       String errMsg = null;
 
        try {
            fromDate = Timestamp.valueOf(fromDateStr);
@@ -226,7 +218,7 @@ public class ProductSearchEvents {
            try {
 
                GenericValue searchResultView = null;
-               int numAdded=0;
+               int numAdded = 0;
                while ((searchResultView = (GenericValue) eli.next()) != null) {
                    String productId = searchResultView.getString("productId");
 
@@ -269,7 +261,7 @@ public class ProductSearchEvents {
     */
    public static String searchAddFeature(HttpServletRequest request, HttpServletResponse response) {
        GenericDelegator delegator = (GenericDelegator) request.getAttribute("delegator");
-       ProductSearchEvents.locale = UtilHttp.getLocale(request); 
+       Locale locale = UtilHttp.getLocale(request);
 
        String productFeatureId = request.getParameter("productFeatureId");
        String fromDateStr = request.getParameter("fromDate");
@@ -277,12 +269,13 @@ public class ProductSearchEvents {
        String amountStr = request.getParameter("amount");
        String sequenceNumStr = request.getParameter("sequenceNum");
        String productFeatureApplTypeId = request.getParameter("productFeatureApplTypeId");
-       String errMsg=null;
+       String errMsg = null;
 
-       Timestamp thruDate=null;
-       Timestamp fromDate=null;
-       Double amount=null;
-       Long sequenceNum=null;
+       Timestamp thruDate = null;
+       Timestamp fromDate = null;
+       Double amount = null;
+       Long sequenceNum = null;
+
        try {
            if (UtilValidate.isNotEmpty(fromDateStr)) {
                fromDate = Timestamp.valueOf(fromDateStr);
@@ -297,11 +290,9 @@ public class ProductSearchEvents {
                sequenceNum= Long.valueOf(sequenceNumStr);
            }
        } catch (RuntimeException e) {
-           String errorMsg = UtilProperties.getMessage(
-           ProductSearchEvents.ERR_RESOURCE,
-                   "productSearchEvents.error_casting_types", (locale != null
-                           ? locale
-                               : Locale.getDefault())) + ": " + e.toString();            
+           String errorMsg = UtilProperties.getMessage(ProductSearchEvents.err_resource,
+                   "productSearchEvents.error_casting_types", locale) + " : " + e.toString();
+
            request.setAttribute("_ERROR_MESSAGE_", errorMsg);
            errMsg = "Error casting data types: " + e.toString();
            Debug.logError(e, errMsg, module);
@@ -335,32 +326,26 @@ public class ProductSearchEvents {
                    numAdded++;
                }
                Map messageMap = UtilMisc.toMap("numAdded", new Integer(numAdded));               
-               String eventMsg = UtilProperties.getMessage(
-               ProductSearchEvents.ERR_RESOURCE,
-                       "productSearchEvents.added_param_features", (locale != null
-                               ? locale
-                                   : Locale.getDefault())) + ".";               
+               String eventMsg = UtilProperties.getMessage(ProductSearchEvents.err_resource,
+                       "productSearchEvents.added_param_features", locale) + ".";
+
                request.setAttribute("_EVENT_MESSAGE_", eventMsg);
                eli.close();
                TransactionUtil.commit(beganTransaction);
            } catch (GenericEntityException e) {
-               String errorMsg = UtilProperties.getMessage(
-               ProductSearchEvents.ERR_RESOURCE,
-                       "productSearchEvents.error_getting_results", (locale != null
-                               ? locale
-                                   : Locale.getDefault())) + ": " + e.toString();            
-               request.setAttribute("_ERROR_MESSAGE_", errorMsg);               
+               String errorMsg = UtilProperties.getMessage(ProductSearchEvents.err_resource,
+                       "productSearchEvents.error_getting_results", locale) + " : " + e.toString();
+
+               request.setAttribute("_ERROR_MESSAGE_", errorMsg);
                errMsg = "Error getting search results: " + e.toString();
                Debug.logError(e, errMsg, module);
                TransactionUtil.rollback(beganTransaction);
                return "error";
            }
        } catch (GenericTransactionException e) {
-           String errorMsg = UtilProperties.getMessage(
-           ProductSearchEvents.ERR_RESOURCE,
-                   "productSearchEvents.error_getting_results", (locale != null
-                           ? locale
-                               : Locale.getDefault())) + ": " + e.toString();            
+           String errorMsg = UtilProperties.getMessage(ProductSearchEvents.err_resource,
+                   "productSearchEvents.error_getting_results", locale) + " : " + e.toString();
+
            request.setAttribute("_ERROR_MESSAGE_", errorMsg);               
            errMsg = "Error getting search results: " + e.toString();
            Debug.logError(e, errMsg, module);
