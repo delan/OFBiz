@@ -25,7 +25,7 @@
 -->
 
 <#assign security = requestAttributes.security>
-<#assign externalKeyParam = requestAttributes.externalKeyParam>
+<#assign externalKeyParam = "?externalLoginKey=" + requestAttributes.externalLoginKey>
 
 <#if requestAttributes.userLogin?has_content>
 
