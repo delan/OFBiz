@@ -1,5 +1,5 @@
 /*
- * $Id: ZipSalesServices.java,v 1.8 2004/01/21 14:07:30 ajzeneski Exp $
+ * $Id: ZipSalesServices.java,v 1.9 2004/01/24 16:26:43 ajzeneski Exp $
  *
  *  Copyright (c) 2001-2003 The Open For Business Project - www.ofbiz.org
  *
@@ -51,7 +51,7 @@ import java.io.File;
  * Zip-Sales Database Services
  *
  * @author     <a href="mailto:jaz@ofbiz.org">Andy Zeneski</a>
- * @version    $Revision: 1.8 $
+ * @version    $Revision: 1.9 $
  * @since      3.0
  */
 public class ZipSalesServices {
@@ -453,7 +453,7 @@ public class ZipSalesServices {
 
         double taxableAmount = itemAmount;
         if (taxShipping) {
-            Debug.log("Taxing shipping", module);
+            //Debug.log("Taxing shipping", module);
             taxableAmount += shippingAmount;
         } else {
             Debug.log("Shipping is not taxable", module);
