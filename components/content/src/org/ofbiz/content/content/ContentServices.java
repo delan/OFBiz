@@ -1,5 +1,5 @@
 /*
- * $Id: ContentServices.java,v 1.1 2003/10/27 19:52:31 byersa Exp $
+ * $Id: ContentServices.java,v 1.2 2003/10/27 23:56:11 byersa Exp $
  *
  * Copyright (c) 2001, 2002 The Open For Business Project - www.ofbiz.org
  *
@@ -42,7 +42,6 @@ import org.ofbiz.entity.GenericValue;
 import org.ofbiz.entity.condition.EntityCondition;
 import org.ofbiz.entity.condition.EntityConditionList;
 import org.ofbiz.entity.condition.EntityExpr;
-import org.ofbiz.entity.condition.EntityExprList;
 import org.ofbiz.entity.condition.EntityOperator;
 import org.ofbiz.security.Security;
 import org.ofbiz.service.DispatchContext;
@@ -54,7 +53,7 @@ import org.ofbiz.service.LocalDispatcher;
  * ContentServices Class
  *
  * @author     <a href="mailto:byersa@automationgroups.com">Al Byers</a>
- * @version    $Revision: 1.1 $
+ * @version    $Revision: 1.2 $
  * @since      2.2
  *
  * 
