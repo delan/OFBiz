@@ -367,18 +367,28 @@
   <ShipmentType description="" hasTable="N" parentTypeId="" shipmentTypeId="DROP_SHIPMENT"/>
   <ShipmentType description="" hasTable="N" parentTypeId="" shipmentTypeId="TRANSFER"/>
   <StatusItem description="Ordered" sequenceId="01" statusCode="ORDERED" statusId="ORDERED" statusTypeId="ORDER_STATUS"/>
-  <StatusItem description="Scheduled" sequenceId="02" statusCode="SCHEDULED" statusId="SCHEDULED" statusTypeId="ORDER_STATUS"/>
-  <StatusItem description="Shipped" sequenceId="03" statusCode="SHIPPED" statusId="SHIPPED" statusTypeId="ORDER_STATUS"/>
-  <StatusItem description="Invoiced" sequenceId="04" statusCode="INVOICED" statusId="INVOICED" statusTypeId="ORDER_STATUS"/>
+  <StatusItem description="Paid" sequenceId="02" statusCode="PAID" statusId="PAID" statusTypeId="ORDER_STATUS"/>
+  <StatusItem description="Processing" sequenceId="03" statusCode="PROCESSING" statusId="PROCESSING" statusTypeId="ORDER_STATUS"/>
+  <StatusItem description="Scheduled" sequenceId="04" statusCode="SCHEDULED" statusId="SCHEDULED" statusTypeId="ORDER_STATUS"/>
+  <StatusItem description="Shipped" sequenceId="05" statusCode="SHIPPED" statusId="SHIPPED" statusTypeId="ORDER_STATUS"/>
+  <StatusItem description="Invoiced" sequenceId="06" statusCode="INVOICED" statusId="INVOICED" statusTypeId="ORDER_STATUS"/>
   <StatusItem description="Back-Ordered" sequenceId="10" statusCode="BACKORDERED" statusId="BACKORDERED" statusTypeId="ORDER_STATUS"/>
   <StatusItem description="Cancelled" sequenceId="99" statusCode="CANCELLED" statusId="CANCELLED" statusTypeId="ORDER_STATUS"/>
-  <StatusValidChange condition="" statusId="ORDERED" statusIdTo="SCHEDULED" transitionName="Schedule Shipment"/>
+  <StatusValidChange condition="" statusId="ORDERED" statusIdTo="PAID" transitionName="Payment Received"/>
+  <StatusValidChange condition="" statusId="PAID" statusIdTo="PROCESSING" transitionName="Processing Order"/>
+  <StatusValidChange condition="" statusId="PAID" statusIdTo="SCHEDULED" transitionName="Schedule Shipment"/>
+  <StatusValidChange condition="" statusId="PROCESSING" statusIdTo="SCHEDULED" transitionName="Schedule Shipment"/>
   <StatusValidChange condition="" statusId="SCHEDULED" statusIdTo="SHIPPED" transitionName="Ship Order"/>
   <StatusValidChange condition="" statusId="SHIPPED" statusIdTo="INVOICED" transitionName="Invoice Order"/>
   <StatusValidChange condition="" statusId="ORDERED" statusIdTo="BACKORDERED" transitionName="Back Order"/>
+  <StatusValidChange condition="" statusId="PAID" statusIdTo="BACKORDERED" transitionName="Back Order"/>
+  <StatusValidChange condition="" statusId="PROCESSING" statusIdTo="BACKORDERED" transitionName="Back Order"/>
+  <StatusValidChange condition="" statusId="BACKORDERED" statusIdTo="PROCESSING" transitionName="Processing Order"/>
   <StatusValidChange condition="" statusId="BACKORDERED" statusIdTo="SCHEDULED" transitionName="Schedule Shipment"/>
   <StatusValidChange condition="" statusId="ORDERED" statusIdTo="CANCELLED" transitionName="Cancel Order"/>
   <StatusValidChange condition="" statusId="BACKORDERED" statusIdTo="CANCELLED" transitionName="Cancel Back Order"/>
+  <StatusValidChange condition="" statusId="PAID" statusIdTo="CANCELLED" transitionName="Last Minute Cancel Order"/>
+  <StatusValidChange condition="" statusId="PROCESSING" statusIdTo="CANCELLED" transitionName="Last Minute Cancel Order"/>
   <StatusValidChange condition="" statusId="SCHEDULED" statusIdTo="CANCELLED" transitionName="Last Minute Cancel Order"/>
   <StatusType description="" hasTable="N" parentTypeId="" statusTypeId="WORK_EFFORT_STATUS"/>
   <StatusType description="" hasTable="N" parentTypeId="WORK_EFFORT_STATUS" statusTypeId="CALENDAR_STATUS"/>
