@@ -1,7 +1,7 @@
 /*
  * $Id$
  *
- *  Copyright (c) 2001-2004 The Open For Business Project - www.ofbiz.org
+ *  Copyright (c) 2001-2005 The Open For Business Project - www.ofbiz.org
  *
  *  Permission is hereby granted, free of charge, to any person obtaining a
  *  copy of this software and associated documentation files (the "Software"),
@@ -27,22 +27,25 @@ import java.sql.Connection;
 import java.sql.SQLException;
 import java.sql.Timestamp;
 import java.util.HashMap;
-import java.util.Map;
 import java.util.Iterator;
+import java.util.LinkedList;
+import java.util.List;
+import java.util.Map;
 
 import javax.sql.XAConnection;
-import javax.transaction.*;
 import javax.transaction.HeuristicMixedException;
 import javax.transaction.HeuristicRollbackException;
+import javax.transaction.InvalidTransactionException;
 import javax.transaction.NotSupportedException;
 import javax.transaction.RollbackException;
 import javax.transaction.Status;
+import javax.transaction.Synchronization;
 import javax.transaction.SystemException;
 import javax.transaction.Transaction;
 import javax.transaction.TransactionManager;
 import javax.transaction.UserTransaction;
-import javax.transaction.xa.XAResource;
 import javax.transaction.xa.XAException;
+import javax.transaction.xa.XAResource;
 
 import org.ofbiz.base.util.Debug;
 import org.ofbiz.base.util.UtilDateTime;
@@ -85,9 +88,14 @@ public class TransactionUtil implements Status {
                     Debug.logVerbose("[TransactionUtil.begin] active transaction in place, so no transaction begun", module);
                     return false;
                 } else if (currentStatus == Status.STATUS_MARKED_ROLLBACK) {
-                    Debug.logVerbose("[TransactionUtil.begin] active transaction marked for rollback in place, so no transaction begun", module);
+                    Exception e = getTransactionBeginStack();
+                    if (e != null) {
+                        Debug.logWarning(e, "[TransactionUtil.begin] active transaction marked for rollback in place, so no transaction begun; this stack trace shows when the exception began: ", module);
+                    } else {
+                        Debug.logWarning("[TransactionUtil.begin] active transaction marked for rollback in place, so no transaction begun", module);
+                    }
+                    
                     throw new GenericTransactionException("The current transaction is marked for rollback, should stop immediately.");
-                    //return false;
                 }
                 
                 // set the timeout for THIS transaction
@@ -104,6 +112,8 @@ public class TransactionUtil implements Status {
                 clearTransactionStamps();
                 // initialize the start stamp
                 getTransactionStartStamp();
+                // set the tx begin stack placeholder
+                setTransactionBeginStack();
 
                 // initialize the debug resource
                 if (debugResources) {
@@ -153,6 +163,57 @@ public class TransactionUtil implements Status {
         }
     }
     
+    private static ThreadLocal transactionBeginStack = new ThreadLocal();
+    private static ThreadLocal transactionBeginStackSave = new ThreadLocal();
+    private static void pushTransactionBeginStackSave(Exception e) {
+        List el = (List) transactionBeginStackSave.get();
+        if (el == null) {
+            el = new LinkedList();
+            transactionBeginStackSave.set(el);
+        }
+        el.add(0, e);
+    }
+    private static Exception popTransactionBeginStackSave() {
+        List el = (List) transactionBeginStackSave.get();
+        if (el != null && el.size() > 0) {
+            return (Exception) el.remove(0);
+        } else {
+            return null;
+        }
+    }
+    
+    private static void setTransactionBeginStack() {
+        Exception e = new Exception("Tx Stack Placeholder");
+        setTransactionBeginStack(e);
+    }
+    private static void setTransactionBeginStack(Exception newExc) {
+        if (transactionBeginStack.get() != null) {
+            Exception e = (Exception) transactionBeginStack.get();
+            Debug.logWarning(e, "WARNING: In setTransactionBeginStack a stack placeholder was already in place, here is where the transaction began: ", module);
+            Exception e2 = new Exception("Current Stack Trace");
+            Debug.logWarning(e2, "WARNING: In setTransactionBeginStack a stack placeholder was already in place, here is the current location: ", module);
+        }
+        transactionBeginStack.set(newExc);
+    }
+    private static Exception clearTransactionBeginStack() {
+        Exception e = (Exception) transactionBeginStack.get();
+        if (e == null) {
+            Exception e2 = new Exception("Current Stack Trace");
+            Debug.logWarning("WARNING: In clearTransactionBeginStack no stack placeholder was in place, here is the current location: ", module);
+            return null;
+        } else {
+            transactionBeginStack.set(null);
+            return e;
+        }
+    }
+    public static Exception getTransactionBeginStack() {
+        if (transactionBeginStack.get() == null) {
+            Exception e2 = new Exception("Current Stack Trace");
+            Debug.logWarning("WARNING: In getTransactionBeginStack no stack placeholder was in place, here is the current location: ", module);
+        }
+        return (Exception) transactionBeginStack.get();
+    }
+    
     /** Commits the transaction in the current thread IF transactions are available
      *  AND if beganTransaction is true
      */
@@ -172,11 +233,13 @@ public class TransactionUtil implements Status {
                 Debug.logVerbose("[TransactionUtil.commit] current status : " + getTransactionStateString(status), module);
                 
                 if (status != STATUS_NO_TRANSACTION) {
-                    ut.commit();
-                    Debug.logVerbose("[TransactionUtil.commit] transaction committed", module);
-                    
                     // clear out the stamps to keep it clean
                     clearTransactionStamps();
+                    // clear out the stack too
+                    clearTransactionBeginStack();
+
+                    ut.commit();
+                    Debug.logVerbose("[TransactionUtil.commit] transaction committed", module);
                 } else {
                     Debug.logInfo("[TransactionUtil.commit] Not committing transaction, status is STATUS_NO_TRANSACTION", module);
                 }
@@ -226,11 +289,14 @@ public class TransactionUtil implements Status {
                         Exception newE = new Exception("Stack Trace");
                         Debug.logError(newE, "[TransactionUtil.rollback]", module);
                     }
-                    ut.rollback();
-                    Debug.logInfo("[TransactionUtil.rollback] transaction rolled back", module);
-                    
+
                     // clear out the stamps to keep it clean
                     clearTransactionStamps();
+                    // clear out the stack too
+                    clearTransactionBeginStack();
+
+                    ut.rollback();
+                    Debug.logInfo("[TransactionUtil.rollback] transaction rolled back", module);
                 } else {
                     Debug.logInfo("[TransactionUtil.rollback] transaction not rolled back, status is STATUS_NO_TRANSACTION", module);
                 }
@@ -267,6 +333,40 @@ public class TransactionUtil implements Status {
         }
     }
 
+    public static Transaction suspend() throws GenericTransactionException {
+        try {
+            if (TransactionUtil.getStatus() == TransactionUtil.STATUS_ACTIVE) {
+                TransactionManager txMgr = TransactionFactory.getTransactionManager();
+                if (txMgr != null ) {
+                    pushTransactionBeginStackSave(clearTransactionBeginStack());
+                    return txMgr.suspend();
+                } else {
+                    return null;
+                }
+            } else {
+                Debug.logWarning("No transaction active, so not suspending.", module);
+                return null;
+            }
+        } catch (SystemException e) {
+            throw new GenericTransactionException("System error, could not suspend transaction", e);
+        }
+    }
+    
+    public static void resume(Transaction parentTx) throws GenericTransactionException {
+        if (parentTx == null) return;
+        try {
+            TransactionManager txMgr = TransactionFactory.getTransactionManager();
+            if (txMgr != null ) {
+                setTransactionBeginStack(popTransactionBeginStackSave());
+                txMgr.resume(parentTx);
+            }
+        } catch (InvalidTransactionException e) {
+            throw new GenericTransactionException("System error, could not resume transaction", e);
+        } catch (SystemException e) {
+            throw new GenericTransactionException("System error, could not resume transaction", e);
+        }
+    }
+    
     /** Sets the timeout of the transaction in the current thread IF transactions are available */
     public static void setTransactionTimeout(int seconds) throws GenericTransactionException {
         UserTransaction ut = TransactionFactory.getUserTransaction();

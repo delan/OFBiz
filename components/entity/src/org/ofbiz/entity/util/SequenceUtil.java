@@ -1,7 +1,7 @@
 /*
  * $Id$
  *
- *  Copyright (c) 2001-2004 The Open For Business Project - www.ofbiz.org
+ *  Copyright (c) 2001-2005 The Open For Business Project - www.ofbiz.org
  *
  *  Permission is hereby granted, free of charge, to any person obtaining a
  *  copy of this software and associated documentation files (the "Software"),
@@ -30,10 +30,7 @@ import java.sql.Statement;
 import java.util.Hashtable;
 import java.util.Map;
 
-import javax.transaction.InvalidTransactionException;
-import javax.transaction.SystemException;
 import javax.transaction.Transaction;
-import javax.transaction.TransactionManager;
 
 import org.ofbiz.base.util.Debug;
 import org.ofbiz.entity.GenericEntityException;
@@ -41,7 +38,6 @@ import org.ofbiz.entity.jdbc.ConnectionFactory;
 import org.ofbiz.entity.model.ModelEntity;
 import org.ofbiz.entity.model.ModelField;
 import org.ofbiz.entity.transaction.GenericTransactionException;
-import org.ofbiz.entity.transaction.TransactionFactory;
 import org.ofbiz.entity.transaction.TransactionUtil;
 
 /**
@@ -157,28 +153,15 @@ public class SequenceUtil {
             long val2 = 0;
 
             // NOTE: the fancy ethernet type stuff is for the case where transactions not available
-            boolean manualTX = true;
+            boolean manualTX = false;
             Transaction suspendedTransaction = null;
-            TransactionManager transactionManager = null;
 
             try {
-                if (TransactionUtil.getStatus() == TransactionUtil.STATUS_ACTIVE) {
-                    manualTX = false;
-                    try {
-                        //if we can suspend the transaction, we'll try to do this in a local manual transaction
-                        transactionManager = TransactionFactory.getTransactionManager();
-                        if (transactionManager != null) {
-                            suspendedTransaction = transactionManager.suspend();
-                            manualTX = true;
-                        }
-                    } catch (SystemException e) {
-                        Debug.logError(e, "System Error suspending transaction in sequence util", module);
-                    }
-                }
+                //if we can suspend the transaction, we'll try to do this in a local manual transaction
+                suspendedTransaction = TransactionUtil.suspend();
+                manualTX = true;
             } catch (GenericTransactionException e) {
-                // nevermind, don't worry about it, but print the exc anyway
-                Debug.logWarning("[SequenceUtil.SequenceBank.fillBank] Exception was thrown trying to check " +
-                    "transaction status: " + e.toString(), module);
+                Debug.logError(e, "System Error suspending transaction in sequence util", module);
             }
 
             Connection connection = null;
@@ -313,18 +296,9 @@ public class SequenceUtil {
             
             if (suspendedTransaction != null) {
                 try {
-                    if (transactionManager == null) {
-                        transactionManager = TransactionFactory.getTransactionManager();
-                    }
-                    if (transactionManager != null) {
-                        transactionManager.resume(suspendedTransaction);
-                    }
-                } catch (InvalidTransactionException e) {
-                    Debug.logError(e, "InvalidTransaction Error resuming suspended transaction in sequence util", module);
-                } catch (IllegalStateException e) {
-                    Debug.logError(e, "IllegalState Error resuming suspended transaction in sequence util", module);
-                } catch (SystemException e) {
-                    Debug.logError(e, "System Error resuming suspended transaction in sequence util", module);
+                    TransactionUtil.resume(suspendedTransaction);
+                } catch (GenericTransactionException e) {
+                    Debug.logError(e, "Error resuming suspended transaction in sequence util", module);
                 }
             }
         }

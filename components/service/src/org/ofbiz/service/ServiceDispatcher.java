@@ -1,7 +1,7 @@
 /*
  * $Id$
  *
- * Copyright (c) 2001, 2002 The Open For Business Project - www.ofbiz.org
+ * Copyright (c) 2001-2005 The Open For Business Project - www.ofbiz.org
  *
  * Permission is hereby granted, free of charge, to any person obtaining a
  * copy of this software and associated documentation files (the "Software"),
@@ -26,27 +26,24 @@ package org.ofbiz.service;
 
 import java.util.HashMap;
 import java.util.Iterator;
+import java.util.LinkedList;
 import java.util.List;
 import java.util.Locale;
 import java.util.Map;
-import java.util.LinkedList;
 
-import javax.transaction.InvalidTransactionException;
-import javax.transaction.SystemException;
 import javax.transaction.Transaction;
-import javax.transaction.TransactionManager;
 
+import org.apache.commons.collections.map.LRUMap;
 import org.ofbiz.base.config.GenericConfigException;
 import org.ofbiz.base.util.Debug;
 import org.ofbiz.base.util.UtilMisc;
+import org.ofbiz.base.util.UtilTimer;
 import org.ofbiz.base.util.UtilValidate;
 import org.ofbiz.base.util.UtilXml;
-import org.ofbiz.base.util.UtilTimer;
 import org.ofbiz.entity.GenericDelegator;
 import org.ofbiz.entity.GenericValue;
 import org.ofbiz.entity.transaction.DebugXaResource;
 import org.ofbiz.entity.transaction.GenericTransactionException;
-import org.ofbiz.entity.transaction.TransactionFactory;
 import org.ofbiz.entity.transaction.TransactionUtil;
 import org.ofbiz.security.Security;
 import org.ofbiz.security.SecurityConfigurationException;
@@ -60,7 +57,6 @@ import org.ofbiz.service.jms.JmsListenerFactory;
 import org.ofbiz.service.job.JobManager;
 import org.ofbiz.service.job.JobManagerException;
 import org.w3c.dom.Element;
-import org.apache.commons.collections.map.LRUMap;
 
 /**
  * Global Service Dispatcher
@@ -259,206 +255,193 @@ public class ServiceDispatcher {
         // set up the running service log
         RunningService rs = this.logService(localName, modelService, GenericEngine.SYNC_MODE);
 
+        // get eventMap once for all calls for speed, don't do event calls if it is null
+        Map eventMap = ServiceEcaUtil.getServiceEventMap(modelService.name);
+
         // check the locale
         Locale locale = this.checkLocale(context);
-
-        // for isolated transactions
-        TransactionManager tm = TransactionFactory.getTransactionManager();
-        Transaction parentTransaction = null;
-
-        // start the transaction
-        boolean beganTrans = false;
-        if (modelService.useTransaction) {
-            try {
-                beganTrans = TransactionUtil.begin(modelService.transactionTimeout);
-            } catch (GenericTransactionException te) {
-                throw new GenericServiceException("Cannot start the transaction.", te.getNested());
-            }
-
-            // isolate the transaction if defined
-            if (modelService.requireNewTransaction && !beganTrans) {
-                try {
-                    parentTransaction = tm.suspend();
-                } catch (SystemException se) {
-                    Debug.logError(se, "Problems suspending current transaction", module);
-                    throw new GenericServiceException("Problems suspending transaction, see logs");
-                }
-
-                // now start a new transaction
-                try {
-                    beganTrans = TransactionUtil.begin(modelService.transactionTimeout);
-                } catch (GenericTransactionException gte) {
-                    throw new GenericServiceException("Cannot start the transaction.", gte.getNested());
-                }
-            }
-        }
-
-        // XAResource debugging
-        if (beganTrans && TransactionUtil.debugResources) {
-            DebugXaResource dxa = new DebugXaResource(modelService.name);
-            try {
-                dxa.enlist();
-            } catch (Exception e) {
-                Debug.logError(e, module);
-            }
-        }
 
         // setup the engine and context
         DispatchContext ctx = (DispatchContext) localContext.get(localName);
         GenericEngine engine = this.getGenericEngine(modelService.engineName);
 
+        Map ecaContext = null; 
+        
+        // for isolated transactions
+        Transaction parentTransaction = null;
+
+        // start the transaction
+        boolean beganTrans = false;
         try {
-            // get eventMap once for all calls for speed, don't do event calls if it is null
-            Map eventMap = ServiceEcaUtil.getServiceEventMap(modelService.name);
-
-            // setup global transaction ECA listeners
-            if (eventMap != null) ServiceEcaUtil.evalRules(modelService.name, eventMap, "global-rollback", ctx, context, result, false, false);
-            if (eventMap != null) ServiceEcaUtil.evalRules(modelService.name, eventMap, "global-commit", ctx, context, result, false, false);
-
-            // pre-auth ECA
-            if (eventMap != null) ServiceEcaUtil.evalRules(modelService.name, eventMap, "auth", ctx, context, result, false, false);
-
-            context = checkAuth(localName, context, modelService);
-            Object userLogin = context.get("userLogin");
-
-            if (modelService.auth && userLogin == null) {
-                throw new ServiceAuthException("User authorization is required for this service: " + modelService.name + modelService.debugInfo());
+            if (modelService.useTransaction) {
+                beganTrans = TransactionUtil.begin(modelService.transactionTimeout);
+                // isolate the transaction if defined
+                if (modelService.requireNewTransaction && !beganTrans) {
+                    parentTransaction = TransactionUtil.suspend();
+                    // now start a new transaction
+                    beganTrans = TransactionUtil.begin(modelService.transactionTimeout);
+                }
             }
 
-            // pre-validate ECA
-            if (eventMap != null) ServiceEcaUtil.evalRules(modelService.name, eventMap, "in-validate", ctx, context, result, false, false);
-
-            // check for pre-validate failure/erros
-            isFailure = ModelService.RESPOND_FAIL.equals(result.get(ModelService.RESPONSE_MESSAGE));
-            isError = ModelService.RESPOND_ERROR.equals(result.get(ModelService.RESPONSE_MESSAGE));
-
-            // validate the context
-            if (modelService.validate && !isError && !isFailure) {
+            // XAResource debugging
+            if (beganTrans && TransactionUtil.debugResources) {
+                DebugXaResource dxa = new DebugXaResource(modelService.name);
                 try {
-                    modelService.validate(context, ModelService.IN_PARAM, locale);
-                } catch (ServiceValidationException e) {
-                    Debug.logError(e, "Incoming context (in runSync : " + modelService.name + ") does not match expected requirements", module);
-                    throw e;
+                    dxa.enlist();
+                } catch (Exception e) {
+                    Debug.logError(e, module);
                 }
             }
 
-            // pre-invoke ECA
-            if (eventMap != null) ServiceEcaUtil.evalRules(modelService.name, eventMap, "invoke", ctx, context, result, false, false);
+            try {
+                // setup global transaction ECA listeners
+                if (eventMap != null) ServiceEcaUtil.evalRules(modelService.name, eventMap, "global-rollback", ctx, context, result, false, false);
+                if (eventMap != null) ServiceEcaUtil.evalRules(modelService.name, eventMap, "global-commit", ctx, context, result, false, false);
 
-            // check for pre-invoke failure/erros
-            isFailure = ModelService.RESPOND_FAIL.equals(result.get(ModelService.RESPONSE_MESSAGE));
-            isError = ModelService.RESPOND_ERROR.equals(result.get(ModelService.RESPONSE_MESSAGE));
+                // pre-auth ECA
+                if (eventMap != null) ServiceEcaUtil.evalRules(modelService.name, eventMap, "auth", ctx, context, result, false, false);
 
-            // ===== invoke the service =====
-            if (!isError && !isFailure) {
-                Map invokeResult = engine.runSync(localName, modelService, context);
-                engine.sendCallbacks(modelService, context, invokeResult, GenericEngine.SYNC_MODE);
-                if (invokeResult != null) {
-                    result.putAll(invokeResult);
-                } else {
-                    Debug.logWarning("Service (in runSync : " + modelService.name + ") returns null result", module);
+                context = checkAuth(localName, context, modelService);
+                Object userLogin = context.get("userLogin");
+
+                if (modelService.auth && userLogin == null) {
+                    throw new ServiceAuthException("User authorization is required for this service: " + modelService.name + modelService.debugInfo());
                 }
-            }
 
-            // re-check the errors/failures
-            isFailure = ModelService.RESPOND_FAIL.equals(result.get(ModelService.RESPONSE_MESSAGE));
-            isError = ModelService.RESPOND_ERROR.equals(result.get(ModelService.RESPONSE_MESSAGE));            
+                // pre-validate ECA
+                if (eventMap != null) ServiceEcaUtil.evalRules(modelService.name, eventMap, "in-validate", ctx, context, result, false, false);
 
-            // create a new context with the results to pass to ECA services; necessary because caller may reuse this context
-            Map ecaContext = new HashMap(context);
+                // check for pre-validate failure/erros
+                isFailure = ModelService.RESPOND_FAIL.equals(result.get(ModelService.RESPONSE_MESSAGE));
+                isError = ModelService.RESPOND_ERROR.equals(result.get(ModelService.RESPONSE_MESSAGE));
 
-            // copy all results: don't worry parameters that aren't allowed won't be passed to the ECA services
-            ecaContext.putAll(result);
-
-            // validate the result
-            if (modelService.validate && validateOut) {
-                // pre-out-validate ECA
-                if (eventMap != null) ServiceEcaUtil.evalRules(modelService.name, eventMap, "out-validate", ctx, ecaContext, result, isError, isFailure);
-                try {
-                    modelService.validate(result, ModelService.OUT_PARAM, locale);
-                } catch (ServiceValidationException e) {
-                    Debug.logError(e, "Outgoing result (in runSync : " + modelService.name + ") does not match expected requirements", module);
-                    throw e;
+                // validate the context
+                if (modelService.validate && !isError && !isFailure) {
+                    try {
+                        modelService.validate(context, ModelService.IN_PARAM, locale);
+                    } catch (ServiceValidationException e) {
+                        Debug.logError(e, "Incoming context (in runSync : " + modelService.name + ") does not match expected requirements", module);
+                        throw e;
+                    }
                 }
-            }
 
-            // pre-commit ECA
-            if (eventMap != null) ServiceEcaUtil.evalRules(modelService.name, eventMap, "commit", ctx, ecaContext, result, isError, isFailure);
+                // pre-invoke ECA
+                if (eventMap != null) ServiceEcaUtil.evalRules(modelService.name, eventMap, "invoke", ctx, context, result, false, false);
 
-            // check for failure and log on info level; this is used for debugging
-            if (isFailure) {
-                Debug.logWarning("Service Failure [" + modelService.name + "]: " + ServiceUtil.getErrorMessage(result), module);
-            }
+                // check for pre-invoke failure/erros
+                isFailure = ModelService.RESPOND_FAIL.equals(result.get(ModelService.RESPONSE_MESSAGE));
+                isError = ModelService.RESPOND_ERROR.equals(result.get(ModelService.RESPONSE_MESSAGE));
 
-            // if there was an error, rollback transaction, otherwise commit
-            if (isError) {
-                // try to log the error
-                Debug.logError("Service Error [" + modelService.name + "]: " + ServiceUtil.getErrorMessage(result), module);
+                // ===== invoke the service =====
+                if (!isError && !isFailure) {
+                    Map invokeResult = engine.runSync(localName, modelService, context);
+                    engine.sendCallbacks(modelService, context, invokeResult, GenericEngine.SYNC_MODE);
+                    if (invokeResult != null) {
+                        result.putAll(invokeResult);
+                    } else {
+                        Debug.logWarning("Service (in runSync : " + modelService.name + ") returns null result", module);
+                    }
+                }
 
-                // rollback the transaction
+                // re-check the errors/failures
+                isFailure = ModelService.RESPOND_FAIL.equals(result.get(ModelService.RESPONSE_MESSAGE));
+                isError = ModelService.RESPOND_ERROR.equals(result.get(ModelService.RESPONSE_MESSAGE));            
+
+                // create a new context with the results to pass to ECA services; necessary because caller may reuse this context
+                ecaContext = new HashMap(context);
+
+                // copy all results: don't worry parameters that aren't allowed won't be passed to the ECA services
+                ecaContext.putAll(result);
+
+                // validate the result
+                if (modelService.validate && validateOut) {
+                    // pre-out-validate ECA
+                    if (eventMap != null) ServiceEcaUtil.evalRules(modelService.name, eventMap, "out-validate", ctx, ecaContext, result, isError, isFailure);
+                    try {
+                        modelService.validate(result, ModelService.OUT_PARAM, locale);
+                    } catch (ServiceValidationException e) {
+                        Debug.logError(e, "Outgoing result (in runSync : " + modelService.name + ") does not match expected requirements", module);
+                        throw e;
+                    }
+                }
+
+                // pre-commit ECA
+                if (eventMap != null) ServiceEcaUtil.evalRules(modelService.name, eventMap, "commit", ctx, ecaContext, result, isError, isFailure);
+
+                // check for failure and log on info level; this is used for debugging
+                if (isFailure) {
+                    Debug.logWarning("Service Failure [" + modelService.name + "]: " + ServiceUtil.getErrorMessage(result), module);
+                }
+
+            } catch (Throwable t) {
+                if (Debug.timingOn()) {
+                    UtilTimer.closeTimer(localName + " / " + modelService.name, "Sync service failed...", module);
+                }
+                Debug.logError(t, "Service [" + modelService.name + "] threw an unexpected exception/error", module);
+                engine.sendCallbacks(modelService, context, t, GenericEngine.SYNC_MODE);
                 try {
                     TransactionUtil.rollback(beganTrans);
-                } catch (GenericTransactionException e) {
-                    Debug.logError(e, "Could not rollback transaction", module);
+                } catch (GenericTransactionException te) {
+                    Debug.logError(te, "Cannot rollback transaction", module);
                 }
-            } else {
-                // commit the transaction
-                try {
-                    TransactionUtil.commit(beganTrans);
-                } catch (GenericTransactionException e) {
-                    Debug.logError(e, "Could not commit transaction", module);
-                    throw new GenericServiceException("Commit transaction failed");
+                checkDebug(modelService, 0, debugging);
+                rs.setEndStamp();
+                if (t instanceof ServiceAuthException) {
+                    throw (ServiceAuthException) t;
+                } else if (t instanceof ServiceValidationException) {
+                    throw (ServiceValidationException) t;
+                } else if (t instanceof GenericServiceException) {
+                    throw (GenericServiceException) t;
+                } else {
+                    throw new GenericServiceException("Service [" + modelService.name + "] Failed" + modelService.debugInfo() , t);
+                }
+            } finally {
+                // if there was an error, rollback transaction, otherwise commit
+                if (isError) {
+                    // try to log the error
+                    Debug.logError("Service Error [" + modelService.name + "]: " + ServiceUtil.getErrorMessage(result), module);
+
+                    // rollback the transaction
+                    try {
+                        TransactionUtil.rollback(beganTrans);
+                    } catch (GenericTransactionException e) {
+                        Debug.logError(e, "Could not rollback transaction", module);
+                    }
+                } else {
+                    // commit the transaction
+                    try {
+                        TransactionUtil.commit(beganTrans);
+                    } catch (GenericTransactionException e) {
+                        Debug.logError(e, "Could not commit transaction", module);
+                        throw new GenericServiceException("Commit transaction failed");
+                    }
                 }
             }
-
+        } catch (GenericTransactionException te) {
+            Debug.logError(te, "Problems with the transaction", module);
+            throw new GenericServiceException("Problems with the transaction.", te.getNested());
+        } finally {
             // resume the parent transaction
             if (parentTransaction != null) {
                 try {
-                    tm.resume(parentTransaction);
-                } catch (InvalidTransactionException ite) {
-                    Debug.logWarning(ite, "Invalid transaction, not resumed", module);
-                } catch (IllegalStateException ise) {
-                    Debug.logError(ise, "Trouble resuming parent transaction", module);
-                    throw new GenericServiceException("Resume transaction exception, see logs");
-                } catch (SystemException se) {
-                    Debug.logError(se, "Trouble resuming parent transaction", module);
+                    TransactionUtil.resume(parentTransaction);
+                } catch (GenericTransactionException ite) {
+                    Debug.logWarning(ite, "Transaction error, not resumed", module);
                     throw new GenericServiceException("Resume transaction exception, see logs");
                 }
             }
-
-            // pre-return ECA
-            if (eventMap != null) ServiceEcaUtil.evalRules(modelService.name, eventMap, "return", ctx, ecaContext, result, isError, isFailure);
-
-            checkDebug(modelService, 0, debugging);
-            rs.setEndStamp();
-            if (timer != null) {
-                timer.setLog(true);
-                timer.timerString("Sync service finished", module);
-            }
-            return result;
-        } catch (Throwable t) {
-            if (Debug.timingOn()) {
-                UtilTimer.closeTimer(localName + " / " + modelService.name, "Sync service failed...", module);
-            }
-            Debug.logError(t, "Service [" + modelService.name + "] threw an unexpected exception/error", module);
-            engine.sendCallbacks(modelService, context, t, GenericEngine.SYNC_MODE);
-            try {
-                TransactionUtil.rollback(beganTrans);
-            } catch (GenericTransactionException te) {
-                Debug.logError(te, "Cannot rollback transaction", module);
-            }
-            checkDebug(modelService, 0, debugging);
-            rs.setEndStamp();
-            if (t instanceof ServiceAuthException) {
-                throw (ServiceAuthException) t;
-            } else if (t instanceof ServiceValidationException) {
-                throw (ServiceValidationException) t;
-            } else if (t instanceof GenericServiceException) {
-                throw (GenericServiceException) t;
-            } else {
-                throw new GenericServiceException("Service [" + modelService.name + "] Failed" + modelService.debugInfo() , t);
-            }
         }
+
+        // pre-return ECA
+        if (eventMap != null) ServiceEcaUtil.evalRules(modelService.name, eventMap, "return", ctx, ecaContext, result, isError, isFailure);
+
+        checkDebug(modelService, 0, debugging);
+        rs.setEndStamp();
+        if (timer != null) {
+            timer.setLog(true);
+            timer.timerString("Sync service finished", module);
+        }
+        return result;
     }
 
     /**
@@ -493,138 +476,123 @@ public class ServiceDispatcher {
         // check the locale
         Locale locale = this.checkLocale(context);
 
-        // for isolated transactions
-        TransactionManager tm = TransactionFactory.getTransactionManager();
-        Transaction parentTransaction = null;
-
-        // start the transaction
-        boolean beganTrans = false;
-        if (service.useTransaction) {
-            try {
-                beganTrans = TransactionUtil.begin(service.transactionTimeout);
-            } catch (GenericTransactionException te) {
-                throw new GenericServiceException("Cannot start the transaction.", te.getNested());
-            }
-
-            // isolate the transaction if defined
-            if (service.requireNewTransaction && !beganTrans) {
-                try {
-                    parentTransaction = tm.suspend();
-                } catch (SystemException se) {
-                    Debug.logError(se, "Problems suspending current transaction", module);
-                    throw new GenericServiceException("Problems suspending transaction, see logs");
-                }
-
-                // now start a new transaction
-                try {
-                    beganTrans = TransactionUtil.begin(service.transactionTimeout);
-                } catch (GenericTransactionException gte) {
-                    throw new GenericServiceException("Cannot start the transaction.", gte.getNested());
-                }
-            }
-        }
-
-        // XAResource debugging
-        if (beganTrans && TransactionUtil.debugResources) {
-            DebugXaResource dxa = new DebugXaResource(service.name);
-            try {
-                dxa.enlist();
-            } catch (Exception e) {
-                Debug.logError(e, module);
-            }
-        }
-
         // setup the engine and context
         DispatchContext ctx = (DispatchContext) localContext.get(localName);
         GenericEngine engine = this.getGenericEngine(service.engineName);
 
+        // for isolated transactions
+        Transaction parentTransaction = null;
+        // start the transaction
+        boolean beganTrans = false;
+        
         try {
-            // get eventMap once for all calls for speed, don't do event calls if it is null
-            Map eventMap = ServiceEcaUtil.getServiceEventMap(service.name);
+            if (service.useTransaction) {
+                beganTrans = TransactionUtil.begin(service.transactionTimeout);
 
-            // pre-auth ECA
-            if (eventMap != null) ServiceEcaUtil.evalRules(service.name, eventMap, "auth", ctx, context, result, isError, isFailure);
-
-            context = checkAuth(localName, context, service);
-            Object userLogin = context.get("userLogin");
-
-            if (service.auth && userLogin == null)
-                throw new ServiceAuthException("User authorization is required for this service: " + service.name + service.debugInfo());
-
-            // pre-validate ECA
-            if (eventMap != null) ServiceEcaUtil.evalRules(service.name, eventMap, "in-validate", ctx, context, result, isError, isFailure);
-
-            // check for pre-validate failure/errors
-            isFailure = ModelService.RESPOND_FAIL.equals(result.get(ModelService.RESPONSE_MESSAGE));
-            isError = ModelService.RESPOND_ERROR.equals(result.get(ModelService.RESPONSE_MESSAGE));
-
-            // validate the context
-            if (service.validate && !isError && !isFailure) {
+                // isolate the transaction if defined
+                if (service.requireNewTransaction && !beganTrans) {
+                    parentTransaction = TransactionUtil.suspend();
+                    // now start a new transaction
+                    beganTrans = TransactionUtil.begin(service.transactionTimeout);
+                }
+            }
+            
+            // XAResource debugging
+            if (beganTrans && TransactionUtil.debugResources) {
+                DebugXaResource dxa = new DebugXaResource(service.name);
                 try {
-                    service.validate(context, ModelService.IN_PARAM, locale);
-                } catch (ServiceValidationException e) {
-                    Debug.logError(e, "Incoming service context (in runAsync: " + service.name + ") does not match expected requirements", module);
-                    throw e;
+                    dxa.enlist();
+                } catch (Exception e) {
+                    Debug.logError(e, module);
                 }
             }
 
-            // run the service
-            if (!isError && !isFailure) {
-                if (requester != null) {
-                    engine.runAsync(localName, service, context, requester, persist);
-                } else {
-                    engine.runAsync(localName, service, context, persist);
-                }
-                engine.sendCallbacks(service, context, null, GenericEngine.ASYNC_MODE);
-            }
-
-            // always try to commit the transaction since we don't know in this case if its was an error or not
             try {
-                TransactionUtil.commit(beganTrans);
-            } catch (GenericTransactionException e) {
-                Debug.logError(e, "Could not commit transaction", module);
-                throw new GenericServiceException("Commit transaction failed");
-            }
+                // get eventMap once for all calls for speed, don't do event calls if it is null
+                Map eventMap = ServiceEcaUtil.getServiceEventMap(service.name);
 
+                // pre-auth ECA
+                if (eventMap != null) ServiceEcaUtil.evalRules(service.name, eventMap, "auth", ctx, context, result, isError, isFailure);
+
+                context = checkAuth(localName, context, service);
+                Object userLogin = context.get("userLogin");
+
+                if (service.auth && userLogin == null)
+                    throw new ServiceAuthException("User authorization is required for this service: " + service.name + service.debugInfo());
+
+                // pre-validate ECA
+                if (eventMap != null) ServiceEcaUtil.evalRules(service.name, eventMap, "in-validate", ctx, context, result, isError, isFailure);
+
+                // check for pre-validate failure/errors
+                isFailure = ModelService.RESPOND_FAIL.equals(result.get(ModelService.RESPONSE_MESSAGE));
+                isError = ModelService.RESPOND_ERROR.equals(result.get(ModelService.RESPONSE_MESSAGE));
+
+                // validate the context
+                if (service.validate && !isError && !isFailure) {
+                    try {
+                        service.validate(context, ModelService.IN_PARAM, locale);
+                    } catch (ServiceValidationException e) {
+                        Debug.logError(e, "Incoming service context (in runAsync: " + service.name + ") does not match expected requirements", module);
+                        throw e;
+                    }
+                }
+
+                // run the service
+                if (!isError && !isFailure) {
+                    if (requester != null) {
+                        engine.runAsync(localName, service, context, requester, persist);
+                    } else {
+                        engine.runAsync(localName, service, context, persist);
+                    }
+                    engine.sendCallbacks(service, context, null, GenericEngine.ASYNC_MODE);
+                }
+
+                if (Debug.timingOn()) {
+                    UtilTimer.closeTimer(localName + " / " + service.name, "ASync service finished...", module);
+                }
+                checkDebug(service, 0, debugging);
+            } catch (Throwable t) {
+                if (Debug.timingOn()) {
+                    UtilTimer.closeTimer(localName + " / " + service.name, "ASync service failed...", module);
+                }
+                Debug.logError(t, "Service [" + service.name + "] threw an unexpected exception/error", module);
+                engine.sendCallbacks(service, context, t, GenericEngine.ASYNC_MODE);
+                try {
+                    TransactionUtil.rollback(beganTrans);
+                } catch (GenericTransactionException te) {
+                    Debug.logError(te, "Cannot rollback transaction", module);
+                }
+                checkDebug(service, 0, debugging);
+                if (t instanceof ServiceAuthException) {
+                    throw (ServiceAuthException) t;
+                } else if (t instanceof ServiceValidationException) {
+                    throw (ServiceValidationException) t;
+                } else if (t instanceof GenericServiceException) {
+                    throw (GenericServiceException) t;
+                } else {
+                    throw new GenericServiceException("Service [" + service.name + "] Failed" + service.debugInfo() , t);
+                }
+            } finally {
+                // always try to commit the transaction since we don't know in this case if its was an error or not
+                try {
+                    TransactionUtil.commit(beganTrans);
+                } catch (GenericTransactionException e) {
+                    Debug.logError(e, "Could not commit transaction", module);
+                    throw new GenericServiceException("Commit transaction failed");
+                }
+            }
+        } catch (GenericTransactionException se) {
+            Debug.logError(se, "Problems with the transaction", module);
+            throw new GenericServiceException("Problems with the transaction, see logs");
+        } finally {
             // resume the parent transaction
             if (parentTransaction != null) {
                 try {
-                    tm.resume(parentTransaction);
-                } catch (InvalidTransactionException ite) {
-                    Debug.logWarning(ite, "Invalid transaction, not resumed", module);
-                } catch (IllegalStateException ise) {
+                    TransactionUtil.resume(parentTransaction);
+                } catch (GenericTransactionException ise) {
                     Debug.logError(ise, "Trouble resuming parent transaction", module);
                     throw new GenericServiceException("Resume transaction exception, see logs");
-                } catch (SystemException se) {
-                    Debug.logError(se, "Trouble resuming parent transaction", module);
-                    throw new GenericServiceException("Resume transaction exception, see logs");
                 }
-            }
-
-            if (Debug.timingOn()) {
-                UtilTimer.closeTimer(localName + " / " + service.name, "ASync service finished...", module);
-            }
-            checkDebug(service, 0, debugging);
-        } catch (Throwable t) {
-            if (Debug.timingOn()) {
-                UtilTimer.closeTimer(localName + " / " + service.name, "ASync service failed...", module);
-            }
-            Debug.logError(t, "Service [" + service.name + "] threw an unexpected exception/error", module);
-            engine.sendCallbacks(service, context, t, GenericEngine.ASYNC_MODE);
-            try {
-                TransactionUtil.rollback(beganTrans);
-            } catch (GenericTransactionException te) {
-                Debug.logError(te, "Cannot rollback transaction", module);
-            }
-            checkDebug(service, 0, debugging);
-            if (t instanceof ServiceAuthException) {
-                throw (ServiceAuthException) t;
-            } else if (t instanceof ServiceValidationException) {
-                throw (ServiceValidationException) t;
-            } else if (t instanceof GenericServiceException) {
-                throw (GenericServiceException) t;
-            } else {
-                throw new GenericServiceException("Service [" + service.name + "] Failed" + service.debugInfo() , t);
             }
         }
     }

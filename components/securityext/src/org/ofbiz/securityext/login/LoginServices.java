@@ -1,7 +1,7 @@
 /*
  * $Id$
  *
- *  Copyright (c) 2001, 2002 The Open For Business Project - www.ofbiz.org
+ *  Copyright (c) 2001-2005 The Open For Business Project - www.ofbiz.org
  *
  *  Permission is hereby granted, free of charge, to any person obtaining a
  *  copy of this software and associated documentation files (the "Software"),
@@ -27,27 +27,22 @@ import java.sql.Timestamp;
 import java.util.HashMap;
 import java.util.LinkedList;
 import java.util.List;
-import java.util.Map;
 import java.util.Locale;
+import java.util.Map;
 
-
-import javax.transaction.InvalidTransactionException;
-import javax.transaction.SystemException;
 import javax.transaction.Transaction;
-import javax.transaction.TransactionManager;
 
+import org.ofbiz.base.crypto.HashCrypt;
 import org.ofbiz.base.util.Debug;
 import org.ofbiz.base.util.UtilDateTime;
 import org.ofbiz.base.util.UtilMisc;
 import org.ofbiz.base.util.UtilProperties;
 import org.ofbiz.base.util.UtilValidate;
-import org.ofbiz.base.crypto.HashCrypt;
 import org.ofbiz.entity.GenericDelegator;
 import org.ofbiz.entity.GenericEntityException;
 import org.ofbiz.entity.GenericValue;
 import org.ofbiz.entity.serialize.XmlSerializer;
 import org.ofbiz.entity.transaction.GenericTransactionException;
-import org.ofbiz.entity.transaction.TransactionFactory;
 import org.ofbiz.entity.transaction.TransactionUtil;
 import org.ofbiz.security.Security;
 import org.ofbiz.service.DispatchContext;
@@ -242,71 +237,66 @@ public class LoginServices {
                         // this section is being done in its own transaction rather than in the
                         //current/existing transaction because we may return error and we don't
                         //want that to stop this from getting stored
-                        TransactionManager txMgr = TransactionFactory.getTransactionManager();
                         Transaction parentTx = null;
                         boolean beganTransaction = false;
 
                         try {
-                            if (txMgr != null) {
-                                try {
-                                    parentTx = txMgr.suspend();
-                                    beganTransaction = TransactionUtil.begin();
-                                } catch (SystemException se) {
-                                    Debug.logError(se, "Cannot suspend transaction: " + se.getMessage(), module);
-                                } catch (GenericTransactionException e) {
-                                    Debug.logError(e, "Cannot begin nested transaction: " + e.getMessage(), module);
-                                }
-                            }
-
-                            if (doStore) {
-                                try {
-                                    userLogin.store();
-                                } catch (GenericEntityException e) {
-                                    Debug.logWarning(e, "", module);
-                                }
-                            }
-
-                            if ("true".equals(UtilProperties.getPropertyValue("security.properties", "store.login.history"))) {
-                                boolean createHistory = true;
-                                
-                                // only save info on service auth if option set to true to do so
-                                if (isServiceAuth && !"true".equals(UtilProperties.getPropertyValue("security.properties", "store.login.history.on.service.auth"))) {
-                                    createHistory = false;
-                                }
-
-                                if (createHistory) {
-                                    Map ulhCreateMap = UtilMisc.toMap("userLoginId", username, "visitId", visitId,
-                                            "fromDate", UtilDateTime.nowTimestamp(),
-                                            "partyId", userLogin.get("partyId"), "successfulLogin", successfulLogin);
-
-                                    // ONLY save the password if it was incorrect
-                                    if ("N".equals(successfulLogin) && !"false".equals(UtilProperties.getPropertyValue("security.properties", "store.login.history.incorrect.password"))) {
-                                        ulhCreateMap.put("passwordUsed", password);
-                                    }
-                                    
-                                    try {
-                                        delegator.create("UserLoginHistory", ulhCreateMap);
-                                    } catch (GenericEntityException e) {
-                                        Debug.logWarning(e, "", module);
-                                    }
-                                }
-                            }
+                            try {
+                                parentTx = TransactionUtil.suspend();
+                            } catch (GenericTransactionException e) {
+                                Debug.logError(e, "Could not suspend transaction: " + e.getMessage(), module);
+                            }                                
 
                             try {
-                                TransactionUtil.commit(beganTransaction);
-                            } catch (GenericTransactionException e) {
-                                Debug.logError(e, "Could not commit nested transaction: " + e.getMessage(), module);
+                                beganTransaction = TransactionUtil.begin();
+    
+                                if (doStore) {
+                                    userLogin.store();
+                                }
+    
+                                if ("true".equals(UtilProperties.getPropertyValue("security.properties", "store.login.history"))) {
+                                    boolean createHistory = true;
+                                    
+                                    // only save info on service auth if option set to true to do so
+                                    if (isServiceAuth && !"true".equals(UtilProperties.getPropertyValue("security.properties", "store.login.history.on.service.auth"))) {
+                                        createHistory = false;
+                                    }
+    
+                                    if (createHistory) {
+                                        Map ulhCreateMap = UtilMisc.toMap("userLoginId", username, "visitId", visitId,
+                                                "fromDate", UtilDateTime.nowTimestamp(),
+                                                "partyId", userLogin.get("partyId"), "successfulLogin", successfulLogin);
+    
+                                        // ONLY save the password if it was incorrect
+                                        if ("N".equals(successfulLogin) && !"false".equals(UtilProperties.getPropertyValue("security.properties", "store.login.history.incorrect.password"))) {
+                                            ulhCreateMap.put("passwordUsed", password);
+                                        }
+                                        
+                                        delegator.create("UserLoginHistory", ulhCreateMap);
+                                    }
+                                }
+                            } catch (GenericEntityException e) {
+                                try {
+                                    TransactionUtil.rollback(beganTransaction);
+                                } catch (GenericTransactionException e2) {
+                                    Debug.logError(e2, "Could not rollback nested transaction: " + e2.getMessage(), module);
+                                }
+                                
+                            } finally {
+                                try {
+                                    TransactionUtil.commit(beganTransaction);
+                                } catch (GenericTransactionException e) {
+                                    Debug.logError(e, "Could not commit nested transaction: " + e.getMessage(), module);
+                                }
                             }
                         } finally {
                             // resume/restore parent transaction
                             if (parentTx != null) {
                                 try {
-                                    txMgr.resume(parentTx);
+                                    TransactionUtil.resume(parentTx);
                                     Debug.logVerbose("Resumed the parent transaction.", module);
-                                } catch (InvalidTransactionException ite) {
-                                    Debug.logError(ite, "Cannot resume transaction: " + ite.getMessage(), module);
-                                } catch (SystemException se) {
-                                    Debug.logError(se, "Unexpected transaction error: " + se.getMessage(), module);
+                                } catch (GenericTransactionException e) {
+                                    Debug.logError(e, "Could not resume parent nested transaction: " + e.getMessage(), module);
                                 }
                             }
                         }

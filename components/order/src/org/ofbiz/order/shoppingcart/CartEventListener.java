@@ -1,7 +1,7 @@
 /*
  * $Id$
  *
- *  Copyright (c) 2001, 2002 The Open For Business Project - www.ofbiz.org
+ *  Copyright (c) 2001-2005 The Open For Business Project - www.ofbiz.org
  *
  *  Permission is hereby granted, free of charge, to any person obtaining a
  *  copy of this software and associated documentation files (the "Software"),
@@ -35,7 +35,6 @@ import org.ofbiz.content.stats.VisitHandler;
 import org.ofbiz.entity.GenericDelegator;
 import org.ofbiz.entity.GenericEntityException;
 import org.ofbiz.entity.GenericValue;
-import org.ofbiz.entity.transaction.GenericTransactionException;
 import org.ofbiz.entity.transaction.TransactionUtil;
 
 /**
@@ -74,47 +73,57 @@ public class CartEventListener implements HttpSessionListener {
             return;
         }
         
-        GenericValue visit = VisitHandler.getVisit(session);
-        if (visit == null) {
-            Debug.logError("Could not get the current visit, not saving abandoned cart info.", module);
-            return;
-        }
-        
-        Debug.logInfo("Saving abandoned cart", module);
+        boolean beganTransaction = false;
         try {
-            boolean beganTransaction = TransactionUtil.begin();
+            beganTransaction = TransactionUtil.begin();
+        
+            GenericValue visit = VisitHandler.getVisit(session);
+            if (visit == null) {
+                Debug.logError("Could not get the current visit, not saving abandoned cart info.", module);
+                return;
+            }
+            
+            Debug.logInfo("Saving abandoned cart", module);
+            Iterator cartItems = cart.iterator();
+            int seqId = 1;
+            while (cartItems.hasNext()) {
+                ShoppingCartItem cartItem = (ShoppingCartItem) cartItems.next();
+                GenericValue cartAbandonedLine = delegator.makeValue("CartAbandonedLine", null);
+
+                cartAbandonedLine.set("visitId", visit.get("visitId"));
+                cartAbandonedLine.set("cartAbandonedLineSeqId", (new Integer(seqId)).toString());
+                cartAbandonedLine.set("productId", cartItem.getProductId());
+                cartAbandonedLine.set("prodCatalogId", cartItem.getProdCatalogId());
+                cartAbandonedLine.set("quantity", new Double(cartItem.getQuantity()));
+                cartAbandonedLine.set("reservStart", cartItem.getReservStart());
+                cartAbandonedLine.set("reservLength", new Double(cartItem.getReservLength()));
+                cartAbandonedLine.set("reservPersons", new Double(cartItem.getReservPersons()));
+                cartAbandonedLine.set("unitPrice", new Double(cartItem.getBasePrice()));
+                cartAbandonedLine.set("reserv2ndPPPerc", new Double(cartItem.getReserv2ndPPPerc()));
+                cartAbandonedLine.set("reservNthPPPerc", new Double(cartItem.getReservNthPPPerc()));
+                cartAbandonedLine.set("totalWithAdjustments", new Double(cartItem.getItemSubTotal()));
+                //not doing pre-reservations now, so this is always N
+                cartAbandonedLine.set("wasReserved", "N");
+                cartAbandonedLine.create();
+
+                seqId++;
+            }
+        } catch (GenericEntityException e) {
             try {
-                Iterator cartItems = cart.iterator();
-                int seqId = 1;
-                while (cartItems.hasNext()) {
-                    ShoppingCartItem cartItem = (ShoppingCartItem) cartItems.next();
-                    GenericValue cartAbandonedLine = delegator.makeValue("CartAbandonedLine", null);
+                // only rollback the transaction if we started one...
+                TransactionUtil.rollback(beganTransaction);
+            } catch (GenericEntityException e2) {
+                Debug.logError(e2, "Could not rollback transaction: " + e2.toString(), module);
+            }
 
-                    cartAbandonedLine.set("visitId", visit.get("visitId"));
-                    cartAbandonedLine.set("cartAbandonedLineSeqId", (new Integer(seqId)).toString());
-                    cartAbandonedLine.set("productId", cartItem.getProductId());
-                    cartAbandonedLine.set("prodCatalogId", cartItem.getProdCatalogId());
-                    cartAbandonedLine.set("quantity", new Double(cartItem.getQuantity()));
-                    cartAbandonedLine.set("reservStart", cartItem.getReservStart());
-                    cartAbandonedLine.set("reservLength", new Double(cartItem.getReservLength()));
-                    cartAbandonedLine.set("reservPersons", new Double(cartItem.getReservPersons()));
-                    cartAbandonedLine.set("unitPrice", new Double(cartItem.getBasePrice()));
-                    cartAbandonedLine.set("reserv2ndPPPerc", new Double(cartItem.getReserv2ndPPPerc()));
-                    cartAbandonedLine.set("reservNthPPPerc", new Double(cartItem.getReservNthPPPerc()));
-                    cartAbandonedLine.set("totalWithAdjustments", new Double(cartItem.getItemSubTotal()));
-                    //not doing pre-reservations now, so this is always N
-                    cartAbandonedLine.set("wasReserved", "N");
-                    cartAbandonedLine.create();
-
-                    seqId++;
-                }
+            Debug.logError(e, "An entity engine error occurred while saving abandoned cart information", module);
+        } finally {
+            // only commit the transaction if we started one... this will throw an exception if it fails
+            try {
                 TransactionUtil.commit(beganTransaction);
             } catch (GenericEntityException e) {
-                Debug.logError(e, "An entity engine error occurred while saving abandoned cart information", module);
-                TransactionUtil.rollback(beganTransaction);
+                Debug.logError(e, "Could not commit transaction for entity engine error occurred while saving abandoned cart information", module);
             }
-        } catch (GenericTransactionException e) {
-            Debug.logError(e, "A transaction error occurred while saving abandoned cart information", module);
         }
     }
 }
