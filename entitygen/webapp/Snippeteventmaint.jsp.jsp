@@ -18,7 +18,7 @@
       <TD><%=entity.ejbName%></TD>
       <TD>
         [ltp]if(Security.hasEntityPermission("<%=entity.tableName%>", "_CREATE", session)){%>
-          <a href="[ltp]=response.encodeURL("/<%=packagePath%>/Edit<%=entity.ejbName%>.jsp")%>" class="buttontext">Create</a>
+          <a href="[ltp]=response.encodeURL("/<%=packagePath%>/View<%=entity.ejbName%>.jsp")%>" class="buttontext">Create</a>
         [ltp]}%>
       </TD>
       <TD><a href="[ltp]=response.encodeURL("/<%=packagePath%>/Find<%=entity.ejbName%>.jsp")%>" class="buttontext">Find</a></TD>

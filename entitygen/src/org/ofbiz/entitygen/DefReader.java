@@ -19,6 +19,7 @@ import org.w3c.dom.Node;
 import org.w3c.dom.NodeList;
 
 import org.ofbiz.commonapp.common.UtilCache;
+import org.ofbiz.commonapp.common.UtilTimer;
 
 /**
  * <p><b>Title:</b> Entity Generator - Entity Definition Reader
@@ -69,14 +70,24 @@ public class DefReader
     {
       Document document = getDocument(defFileName);
       if(document == null) return null;
+      Hashtable docElementValues = null;
+      if(documentCache.containsKey(defFileName + ":elementvalues"))
+      {
+        docElementValues = (Hashtable)documentCache.get(defFileName + ":elementvalues");
+      }
+      else
+      {
+        docElementValues = new Hashtable();
+        documentCache.put(defFileName + ":elementvalues", docElementValues);
+      }
 
       Element docElement = document.getDocumentElement();
       if(docElement == null) return null;
       docElement.normalize();
 
-      entity = createEntity(findEntity(docElement, ejbName), docElement);
+      entity = createEntity(findEntity(docElement, ejbName), docElement, null, docElementValues);
       if(entity != null) entityCache.put(defFileName + "::" + ejbName, entity);
-      else System.out.println("-- -- ENTITYGEN ERROR:getEntity: Related Table not found for ejbName: " + ejbName);
+      else System.out.println("-- -- ENTITYGEN ERROR:getEntity: Could not create entity for ejbName: " + ejbName);
     }
     return entity;
   }
@@ -100,17 +111,81 @@ public class DefReader
   {
     Document document = getDocument(defFileName);
     if(document == null) return null;
-
     Vector ejbNames = new Vector();
+
+    if(documentCache.containsKey(defFileName + ":ejbnames"))
+    {
+      ejbNames = (Vector)documentCache.get(defFileName + ":ejbnames");
+    }
+    else
+    {
+      Element docElement = document.getDocumentElement();
+      if(docElement == null) return null;
+      docElement.normalize();
+      NodeList entityList = docElement.getElementsByTagName("entity");
+      for(int i=0; i<entityList.getLength(); i++)
+      {
+        ejbNames.add(entityEjbName(entityList.item(i)));
+      }
+      
+      documentCache.put(defFileName + ":ejbnames", ejbNames);
+    }
+
+    return ejbNames;
+  }
+  
+  /** Creates a Collection with the ejbName of each Entity defined in the specified XML Entity Descriptor file
+   *   and as it reaches each entity it creates and Entity object for that entity, which will be cached.
+   * @param defFileName The full path and file name of the XML Entity descriptor file.
+   * @return A Collection of ejbName Strings
+   */  
+  public static Collection loadAllEntities(String defFileName)
+  {
+    Vector ejbNames = new Vector();
+    UtilTimer utilTimer = new UtilTimer();
+    utilTimer.timerString("Before getDocument");
+    Document document = getDocument(defFileName);
+    if(document == null) return null;
+    Hashtable docElementValues = null;
+    if(documentCache.containsKey(defFileName + ":elementvalues"))
+    {
+      docElementValues = (Hashtable)documentCache.get(defFileName + ":elementvalues");
+    }
+    else
+    {
+      docElementValues = new Hashtable();
+      documentCache.put(defFileName + ":elementvalues", docElementValues);
+    }
+
+    utilTimer.timerString("Before getDocumentElement");
     Element docElement = document.getDocumentElement();
     if(docElement == null) return null;
     docElement.normalize();
+    utilTimer.timerString("Before getElementsByTagName(entity)");
     NodeList entityList = docElement.getElementsByTagName("entity");
-    for(int i=0; i<entityList.getLength(); i++)
+
+    utilTimer.timerString("Before start of loop");
+    int i;
+    for(i=0; i<entityList.getLength(); i++)
     {
-      ejbNames.add(entityEjbName(entityList.item(i)));
+      utilTimer.timerString("Start loop -- " + i + " --");
+      Element curEntity = (Element)entityList.item(i);
+      String ejbName = entityEjbName(curEntity);
+      //utilTimer.timerString("  After entityEjbName -- " + i + " --");
+      ejbNames.add(ejbName);      
+      //Entity entity = createEntity(curEntity, docElement, utilTimer, docElementValues);
+      Entity entity = createEntity(curEntity, docElement, null, docElementValues);
+      utilTimer.timerString("  After createEntity -- " + i + " --");
+      if(entity != null) 
+      {
+        entityCache.put(defFileName + "::" + ejbName, entity);
+        //utilTimer.timerString("  After entityCache.put -- " + i + " --");
+        System.out.println("-- getEntity: Created entity for ejbName: " + ejbName);
+      }
+      else System.out.println("-- -- ENTITYGEN ERROR:getEntity: Could not create entity for ejbName: " + ejbName);
     }
-    return ejbNames;
+    utilTimer.timerString("FINISHED - Total Entities: " + i + " FINISHED");
+    return ejbNames;    
   }
   
   static Element findEntity(Element docElement, String ejbName)
@@ -125,30 +200,50 @@ public class DefReader
     return null;
   }
   
-  static Entity createEntity(Element entityElement, Element docElement)
+  static Entity createEntity(Element entityElement, Element docElement, UtilTimer utilTimer, Hashtable docElementValues)
   {
     if(entityElement == null) return null;
     org.ofbiz.entitygen.Entity entity = new Entity();
     
+    if(utilTimer != null) utilTimer.timerString("  createEntity: before general");
     entity.ejbName = checkNull(entityEjbName(entityElement));
     entity.tableName = checkNull(childElementValue(entityElement, "table-name"));
     entity.packageName = checkNull(childElementValue(entityElement, "package-name"));
     entity.useCache = ("true".compareToIgnoreCase(checkNull(childElementValue(entityElement, "use-cache"))) == 0);
     entity.allOrderBy = checkNull(childElementValue(entityElement, "all-order-by"));
 
-    entity.title = checkNull(childElementValue(entityElement, "title"),childElementValue(docElement, "title"),"None");
-    entity.description = checkNull(childElementValue(entityElement, "description"),childElementValue(docElement, "description"),"None");
-    entity.copyright = checkNull(childElementValue(entityElement, "copyright"),childElementValue(docElement, "copyright"),"Copyright (c) 2001 The Open For Business Project - www.ofbiz.org");
-    entity.author = checkNull(childElementValue(entityElement, "author"),childElementValue(docElement, "author"),"None");
-    entity.version = checkNull(childElementValue(entityElement, "version"),childElementValue(docElement, "version"),"1.0");
+    if(utilTimer != null) utilTimer.timerString("  createEntity: before comments");
+    if(docElementValues == null)
+    {
+      entity.title = checkNull(childElementValue(entityElement, "title"),childElementValue(docElement, "title"),"None");
+      entity.description = checkNull(childElementValue(entityElement, "description"),childElementValue(docElement, "description"),"None");
+      entity.copyright = checkNull(childElementValue(entityElement, "copyright"),childElementValue(docElement, "copyright"),"Copyright (c) 2001 The Open For Business Project - www.ofbiz.org");
+      entity.author = checkNull(childElementValue(entityElement, "author"),childElementValue(docElement, "author"),"None");
+      entity.version = checkNull(childElementValue(entityElement, "version"),childElementValue(docElement, "version"),"1.0");
+    }
+    else
+    {
+      if(!docElementValues.containsKey("title")) docElementValues.put("title", childElementValue(docElement, "title"));
+      if(!docElementValues.containsKey("description")) docElementValues.put("description", childElementValue(docElement, "description"));
+      if(!docElementValues.containsKey("copyright")) docElementValues.put("copyright", childElementValue(docElement, "copyright"));
+      if(!docElementValues.containsKey("author")) docElementValues.put("author", childElementValue(docElement, "author"));
+      if(!docElementValues.containsKey("version")) docElementValues.put("version", childElementValue(docElement, "version"));
+      entity.title = checkNull(childElementValue(entityElement, "title"),(String)docElementValues.get("title"),"None");
+      entity.description = checkNull(childElementValue(entityElement, "description"),(String)docElementValues.get("description"),"None");
+      entity.copyright = checkNull(childElementValue(entityElement, "copyright"),(String)docElementValues.get("copyright"),"Copyright (c) 2001 The Open For Business Project - www.ofbiz.org");
+      entity.author = checkNull(childElementValue(entityElement, "author"),(String)docElementValues.get("author"),"None");
+      entity.version = checkNull(childElementValue(entityElement, "version"),(String)docElementValues.get("version"),"1.0");
+    }
 
+    if(utilTimer != null) utilTimer.timerString("  createEntity: before cmp-fields");
     NodeList fieldList = entityElement.getElementsByTagName("cmp-field");
     for(int i=0; i<fieldList.getLength(); i++)
     {
-      org.ofbiz.entitygen.Field field = createField((Element)fieldList.item(i), docElement);
+      org.ofbiz.entitygen.Field field = createField((Element)fieldList.item(i), docElement, docElementValues);
       if(field != null) entity.fields.add(field);
     }
     
+    if(utilTimer != null) utilTimer.timerString("  createEntity: before prim-key-columns");
     NodeList pkList = entityElement.getElementsByTagName("prim-key-column");
     for(int i=0; i<pkList.getLength(); i++)
     {
@@ -180,6 +275,7 @@ public class DefReader
       }
     }
 
+    if(utilTimer != null) utilTimer.timerString("  createEntity: before finders");
     NodeList finderList = entityElement.getElementsByTagName("finder");
     for(int i=0; i<finderList.getLength(); i++)
     {
@@ -187,6 +283,7 @@ public class DefReader
       if(finder != null) entity.finders.add(finder);
     }
 
+    if(utilTimer != null) utilTimer.timerString("  createEntity: before relations");
     NodeList relationList = entityElement.getElementsByTagName("relation");
     for(int i=0; i<relationList.getLength(); i++)
     {
@@ -274,7 +371,7 @@ public class DefReader
     return null;
   }
   
-  static org.ofbiz.entitygen.Field createField(Element fieldElement, Element docElement)
+  static org.ofbiz.entitygen.Field createField(Element fieldElement, Element docElement, Hashtable docElementValues)
   {
     if(fieldElement == null) return null;
     
@@ -285,7 +382,24 @@ public class DefReader
     String fieldType = childElementValue(fieldElement, "field-type");
     if(fieldType != null && fieldType.length() > 0)
     {
-      Element fieldTypeDef = findFieldTypeDef(fieldType, docElement);
+      Element fieldTypeDef = null;
+      if(docElementValues == null)
+      {
+        fieldTypeDef = findFieldTypeDef(fieldType, docElement);
+      }
+      else
+      {
+        if(docElementValues.containsKey("field-type:" + fieldType))
+        {
+          fieldTypeDef = (Element)docElementValues.get("field-type:" + fieldType);
+        }
+        else
+        {
+          fieldTypeDef = findFieldTypeDef(fieldType, docElement);
+          docElementValues.put("field-type:" + fieldType, fieldTypeDef);
+        }
+      }
+      
       if(fieldTypeDef != null)
       {
         field.javaType = checkNull(childElementValue(fieldTypeDef, "java-type"));
@@ -394,15 +508,15 @@ public class DefReader
     //factory.setNamespaceAware(true);
     try 
     {
-      if(documentCache.containsKey(filename))
+      if(documentCache.containsKey(filename + ":document"))
       {
-        document = (Document)documentCache.get(filename);
+        document = (Document)documentCache.get(filename + ":document");
       }
       else
       {
         DocumentBuilder builder = factory.newDocumentBuilder();
         document = builder.parse(new File(filename));
-        documentCache.put(filename, document);
+        documentCache.put(filename + ":document", document);
       }
     } 
     catch (SAXException sxe) 

@@ -53,7 +53,18 @@ The generated text is meant to be saved as is, and includes no HTML tags.
 
 <%
   String clearCache = request.getParameter("clearCache");
-  if(clearCache != null && clearCache.equalsIgnoreCase("yes")) { DefReader.documentCache.clear();  DefReader.entityCache.clear(); }
+  if(clearCache != null && clearCache.equalsIgnoreCase("yes")) 
+  { 
+    DefReader.documentCache.clear();
+    DefReader.entityCache.clear(); 
+    %><p style='color: red; font-size: medium;'>CACHES CLEARED.</p><%
+  }
+  String quickLoad = request.getParameter("quickLoad");
+  if(quickLoad != null && quickLoad.equalsIgnoreCase("yes")) 
+  {
+    DefReader.loadAllEntities(defFileName); 
+    %><p style='color: red; font-size: medium;'>ENTITY LOAD FINISHED (see log for details).</p><%
+  }
 %>
 
 <hr>
@@ -69,6 +80,9 @@ NOTE: Document and Entity objects are cached for performance. You can use the co
 <a href="entitygen.jsp?defFileName=<%=(defFileName!=null?defFileName:"None")%>&clearCache=yes">Clear Document & Entity Caches</a>
 <hr>
 <%if(classNamesIterator != null){%>
+<br>You may click here to quick-load the caches:
+<a href="entitygen.jsp?defFileName=<%=(defFileName!=null?defFileName:"None")%>&quickLoad=yes">Quick Load Document & Entity Caches</a>
+<hr>
 <B><U>Generate all Java files in this directory (enter the path on the SERVER):</U></B>
 <FORM method="POST" action="genalljavafiles.jsp?defFileName=<%=defFileName%>" style='margin:0;'>
   <input type="text" size="50" name="outPathName">
@@ -143,7 +157,6 @@ Select Entity for Entity specific code:
   </ul>
   <li>Entity JSPs
   <ul>
-    <li><a href="EditEntity.jsp.jsp?defFileName=<%=defFileName%>&ejbName=<%=ejbName%>">Edit<%=ejbName%>.jsp</a>
     <li><a href="FindEntity.jsp.jsp?defFileName=<%=defFileName%>&ejbName=<%=ejbName%>">Find<%=ejbName%>.jsp</a>
     <li><a href="ViewEntity.jsp.jsp?defFileName=<%=defFileName%>&ejbName=<%=ejbName%>">View<%=ejbName%>.jsp</a>
   </ul>

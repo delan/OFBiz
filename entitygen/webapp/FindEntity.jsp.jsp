@@ -125,7 +125,7 @@ Note: you may use the '%' character as a wildcard, to replace any other letters.
       <td valign="top">Primary Key:</td>
       <td valign="top">
           <input type="hidden" name="SEARCH_TYPE" value="primaryKey">
-<%for(int j=0;j<entity.pks.size();j++){%>
+        <%for(int j=0;j<entity.pks.size();j++){%>
           <input type="text" name="SEARCH_PARAMETER<%=j+1%>" value="" size="20"><%}%>
           (Must be exact)
       </td>
@@ -134,14 +134,13 @@ Note: you may use the '%' character as a wildcard, to replace any other letters.
       </td>
     </form>
   </tr>
-<%for(i=0;i<entity.finders.size();i++){%>
-  <%Finder finderDesc = (Finder)entity.finders.elementAt(i);%>
+<%for(i=0;i<entity.finders.size();i++){%><%Finder finderDesc = (Finder)entity.finders.elementAt(i);%>
   [ltp]rowClassTop=(rowClassTop==rowClassTop1?rowClassTop2:rowClassTop1);%><tr class="[ltp]=rowClassTop%>">
     <td valign="top"><%=entity.classNameString(finderDesc.fields," and ","")%>: </td>
     <form method="post" action="[ltp]=response.encodeURL("Find<%=entity.ejbName%>.jsp")%>" style=margin:0;>
       <td valign="top">
         <input type="hidden" name="SEARCH_TYPE" value="<%=entity.classNameString(finderDesc.fields,"And","")%>">
-<%for(int j=0;j<finderDesc.fields.size();j++){%>
+      <%for(int j=0;j<finderDesc.fields.size();j++){%>
         <input type="text" name="SEARCH_PARAMETER<%=j+1%>" value="" size="20"><%}%>
       </td>
       <td valign="top">
@@ -165,7 +164,7 @@ Note: you may use the '%' character as a wildcard, to replace any other letters.
 <b><%=entity.ejbName%>s found by:&nbsp; [ltp]=searchType%> : [ltp]=UtilFormatOut.checkNull(searchParam1)%> : [ltp]=UtilFormatOut.checkNull(searchParam2)%> : [ltp]=UtilFormatOut.checkNull(searchParam3)%></b>
 <br>
 [ltp]if(hasCreatePermission){%>
-  <a href="[ltp]=response.encodeURL("Edit<%=entity.ejbName%>.jsp")%>" class="buttontext">[Create <%=entity.ejbName%>]</a>
+  <a href="[ltp]=response.encodeURL("View<%=entity.ejbName%>.jsp")%>" class="buttontext">[Create New <%=entity.ejbName%>]</a>
 [ltp]}%>
 <table border="0" width="100%" cellpadding="2">
 [ltp] if(arraySize > 0) { %>
@@ -192,9 +191,6 @@ Note: you may use the '%' character as a wildcard, to replace any other letters.
   <%for(i=0;i<entity.fields.size();i++){%>
       <td><div class="tabletext"><b><nobr><%=((Field)entity.fields.elementAt(i)).columnName%></nobr></b></div></td><%}%>
       <td>&nbsp;</td>
-      [ltp]if(hasUpdatePermission){%>
-        <td>&nbsp;</td>
-      [ltp]}%>
       [ltp]if(hasDeletePermission){%>
         <td>&nbsp;</td>
       [ltp]}%>
@@ -213,9 +209,7 @@ Note: you may use the '%' character as a wildcard, to replace any other letters.
     [ltp]rowClassResult=(rowClassResult==rowClassResult1?rowClassResult2:rowClassResult1);%><tr class="[ltp]=rowClassResult%>">
   <%for(i=0;i<entity.fields.size();i++){%>
       <td>
-        <div class="tabletext">
-    <%if(((Field)entity.fields.elementAt(i)).javaType.equals("Timestamp") || 
-         ((Field)entity.fields.elementAt(i)).javaType.equals("java.sql.Timestamp")){%>
+        <div class="tabletext"><%if(((Field)entity.fields.elementAt(i)).javaType.equals("Timestamp") || ((Field)entity.fields.elementAt(i)).javaType.equals("java.sql.Timestamp")){%>
       [ltp]{
         String dateString = null;
         String timeString = null;
@@ -230,9 +224,7 @@ Note: you may use the '%' character as a wildcard, to replace any other letters.
         }
       %>
       [ltp]=UtilFormatOut.checkNull(dateString)%>&nbsp;[ltp]=UtilFormatOut.checkNull(timeString)%>
-      [ltp]}%>
-    <%} else if(((Field)entity.fields.elementAt(i)).javaType.equals("Date") || 
-                ((Field)entity.fields.elementAt(i)).javaType.equals("java.util.Date")){%>
+      [ltp]}%><%} else if(((Field)entity.fields.elementAt(i)).javaType.equals("Date") || ((Field)entity.fields.elementAt(i)).javaType.equals("java.util.Date")){%>
       [ltp]{
         String dateString = null;
         String timeString = null;
@@ -247,26 +239,14 @@ Note: you may use the '%' character as a wildcard, to replace any other letters.
         }
       %>
       [ltp]=UtilFormatOut.checkNull(dateString)%>&nbsp;[ltp]=UtilFormatOut.checkNull(timeString)%>
-      [ltp]}%>
-    <%}else if(((Field)entity.fields.elementAt(i)).javaType.indexOf("Integer") >= 0 || 
-               ((Field)entity.fields.elementAt(i)).javaType.indexOf("Long") >= 0 || 
-               ((Field)entity.fields.elementAt(i)).javaType.indexOf("Double") >= 0 || 
-               ((Field)entity.fields.elementAt(i)).javaType.indexOf("Float") >= 0){%>
-      [ltp]=UtilFormatOut.formatQuantity(<%=GenUtil.lowerFirstChar(entity.ejbName)%>.get<%=GenUtil.upperFirstChar(((Field)entity.fields.elementAt(i)).fieldName)%>())%>
-    <%}else{%>
-      [ltp]=UtilFormatOut.checkNull(<%=GenUtil.lowerFirstChar(entity.ejbName)%>.get<%=GenUtil.upperFirstChar(((Field)entity.fields.elementAt(i)).fieldName)%>())%>
-    <%}%>
+      [ltp]}%><%}else if(((Field)entity.fields.elementAt(i)).javaType.indexOf("Integer") >= 0 || ((Field)entity.fields.elementAt(i)).javaType.indexOf("Long") >= 0 || ((Field)entity.fields.elementAt(i)).javaType.indexOf("Double") >= 0 || ((Field)entity.fields.elementAt(i)).javaType.indexOf("Float") >= 0){%>
+      [ltp]=UtilFormatOut.formatQuantity(<%=GenUtil.lowerFirstChar(entity.ejbName)%>.get<%=GenUtil.upperFirstChar(((Field)entity.fields.elementAt(i)).fieldName)%>())%><%}else{%>
+      [ltp]=UtilFormatOut.checkNull(<%=GenUtil.lowerFirstChar(entity.ejbName)%>.get<%=GenUtil.upperFirstChar(((Field)entity.fields.elementAt(i)).fieldName)%>())%><%}%>
         &nbsp;</div>
-      </td>
-  <%}%>
+      </td><%}%>
       <td>
         <a href="[ltp]=response.encodeURL("View<%=entity.ejbName%>.jsp?" + <%=entity.httpArgListFromClass(entity.pks)%>)%>" class="buttontext">[View]</a>
       </td>
-      [ltp]if(hasUpdatePermission){%>
-        <td>
-          <a href="[ltp]=response.encodeURL("Edit<%=entity.ejbName%>.jsp?" + <%=entity.httpArgListFromClass(entity.pks)%>)%>" class="buttontext">[Edit]</a>
-        </td>
-      [ltp]}%>
       [ltp]if(hasDeletePermission){%>
         <td>
           <a href="[ltp]=response.encodeURL("Find<%=entity.ejbName%>.jsp?WEBEVENT=UPDATE_<%=entity.tableName%>&UPDATE_MODE=DELETE&" + <%=entity.httpArgListFromClass(entity.pks)%> + "&" + curFindString)%>" class="buttontext">[Delete]</a>
@@ -281,7 +261,7 @@ Note: you may use the '%' character as a wildcard, to replace any other letters.
  {
 %>
 [ltp]rowClassResult=(rowClassResult==rowClassResult1?rowClassResult2:rowClassResult1);%><tr class="[ltp]=rowClassResult%>">
-<td colspan="8">
+<td colspan="<%=entity.fields.size() + 2%>">
 <h3>No <%=entity.ejbName%>s Found.</h3>
 </td>
 </tr>
@@ -308,7 +288,7 @@ Note: you may use the '%' character as a wildcard, to replace any other letters.
 [ltp] } %>
 </table>
 [ltp]if(hasCreatePermission){%>
-  <a href="[ltp]=response.encodeURL("Edit<%=entity.ejbName%>.jsp")%>" class="buttontext">[Create <%=entity.ejbName%>]</a>
+  <a href="[ltp]=response.encodeURL("View<%=entity.ejbName%>.jsp")%>" class="buttontext">[Create <%=entity.ejbName%>]</a>
 [ltp]}%>
 [ltp]}else{%>
   <h3>You do not have permission to view this page (<%=entity.tableName%>_ADMIN, or <%=entity.tableName%>_VIEW needed).</h3>

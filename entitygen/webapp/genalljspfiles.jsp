@@ -35,30 +35,6 @@
     String fileName;
     String codeString;
 
-    url = new java.net.URL("http",request.getServerName(),request.getServerPort(),request.getContextPath() + "/EditEntity.jsp.jsp");
-    fileName = "Edit" + entity.ejbName + ".jsp";
-    codeString = GenUtil.getCodeFromUrl(url,params);
-    if(codeString != null && codeString.length() > 0)
-    {
-      %> <li>Successfully Retrieved URL: <%=url.toString() + "?" + params%> <%
-      //before writing file, replace all "[ltp]" instances with a "<%"
-      codeString = GenUtil.replaceString(codeString, "[ltp]", "<%");
-      if(GenUtil.writeFile(filePath,fileName,codeString))
-      {
-        System.out.println("Successfully Created file: " + filePath + sep + fileName);
-        %> <li>Successfully Created file: <%=filePath + sep + fileName%> <%
-      }
-      else
-      {
-        System.out.println("Failed to Create file: " + filePath + sep + fileName);
-        %> <li>Failed to Create file: <%=filePath + sep + fileName%> <%
-      }
-    }
-    else
-    {
-      %> <li>Retrieved empty or null String from URL: <%=url.toString() + "?" + params%> <%
-    }
-
     url = new java.net.URL("http",request.getServerName(),request.getServerPort(),request.getContextPath() + "/FindEntity.jsp.jsp");
     fileName = "Find" + entity.ejbName + ".jsp";
     codeString = GenUtil.getCodeFromUrl(url,params);
