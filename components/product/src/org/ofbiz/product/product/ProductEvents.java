@@ -49,7 +49,7 @@ import org.ofbiz.service.LocalDispatcher;
  * Product Information Related Events
  *
  * @author <a href="mailto:jonesde@ofbiz.org">David E. Jones</a>
- * @version $Rev:$
+ * @version $Rev$
  * @since 2.0
  */
 public class ProductEvents {
@@ -249,10 +249,8 @@ public class ProductEvents {
     /**
      * Updates/adds keywords for all products
      *
-     * @param request
-     *                The HTTPRequest object for the current request
-     * @param response
-     *                The HTTPResponse object for the current request
+     * @param request HTTPRequest object for the current request
+     * @param response HTTPResponse object for the current request
      * @return String specifying the exit status of this event
      */
     public static String updateAllKeywords(HttpServletRequest request, HttpServletResponse response) {
@@ -276,11 +274,15 @@ public class ProductEvents {
 
         EntityCondition condition = null;
         if (!"Y".equals(doAll)) {
-            condition = new EntityConditionList(UtilMisc.toList(
-                    new EntityExpr(new EntityExpr("isVariant", EntityOperator.EQUALS, null), EntityOperator.OR, new EntityExpr("isVariant", EntityOperator.NOT_EQUAL, "Y")),
-                    new EntityExpr(new EntityExpr("autoCreateKeywords", EntityOperator.EQUALS, null), EntityOperator.OR, new EntityExpr("autoCreateKeywords", EntityOperator.NOT_EQUAL, "N")),
-                    new EntityExpr(new EntityExpr("salesDiscontinuationDate", EntityOperator.EQUALS, null), EntityOperator.OR, new EntityExpr("salesDiscontinuationDate", EntityOperator.GREATER_THAN_EQUAL_TO, nowTimestamp))
-                    ), EntityOperator.AND);
+            List condList = new LinkedList();
+            condList.add(new EntityExpr(new EntityExpr("autoCreateKeywords", EntityOperator.EQUALS, null), EntityOperator.OR, new EntityExpr("autoCreateKeywords", EntityOperator.NOT_EQUAL, "N")));
+            if ("true".equals(UtilProperties.getPropertyValue("prodsearch", "index.ignore.variants"))) {
+                condList.add(new EntityExpr(new EntityExpr("isVariant", EntityOperator.EQUALS, null), EntityOperator.OR, new EntityExpr("isVariant", EntityOperator.NOT_EQUAL, "Y")));
+            }
+            if ("true".equals(UtilProperties.getPropertyValue("prodsearch", "index.ignore.discontinued.sales"))) {
+                condList.add(new EntityExpr(new EntityExpr("salesDiscontinuationDate", EntityOperator.EQUALS, null), EntityOperator.OR, new EntityExpr("salesDiscontinuationDate", EntityOperator.GREATER_THAN_EQUAL_TO, nowTimestamp)));
+            }
+            condition = new EntityConditionList(condList, EntityOperator.AND);
         } else {
             condition = new EntityExpr(new EntityExpr("autoCreateKeywords", EntityOperator.EQUALS, null), EntityOperator.OR, new EntityExpr("autoCreateKeywords", EntityOperator.NOT_EQUAL, "N"));
         }
