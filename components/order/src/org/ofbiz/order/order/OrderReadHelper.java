@@ -1,5 +1,5 @@
 /*
- * $Id: OrderReadHelper.java,v 1.16 2003/12/30 19:58:48 ajzeneski Exp $
+ * $Id: OrderReadHelper.java,v 1.17 2004/01/16 21:17:11 ajzeneski Exp $
  *
  *  Copyright (c) 2002 The Open For Business Project - www.ofbiz.org
  *
@@ -51,7 +51,7 @@ import org.ofbiz.security.Security;
  * @author     <a href="mailto:jonesde@ofbiz.org">David E. Jones</a>
  * @author     Eric Pabst
  * @author     <a href="mailto:ray.barlow@whatsthe-point.com">Ray Barlow</a>
- * @version    $Revision: 1.16 $
+ * @version    $Revision: 1.17 $
  * @since      2.0
  */
 public class OrderReadHelper {
@@ -1146,7 +1146,10 @@ public class OrderReadHelper {
         Iterator itemIter = UtilMisc.toIterator(orderItems);
 
         while (itemIter != null && itemIter.hasNext()) {
-            result += getOrderItemSubTotal((GenericValue) itemIter.next(), adjustments);
+            GenericValue orderItem = (GenericValue) itemIter.next();
+            double itemTotal = getOrderItemSubTotal(orderItem, adjustments);
+            Debug.log("Item : " + orderItem.getString("orderId") + " / " + orderItem.getString("orderItemSeqId") + " = " + itemTotal, module);
+            result += itemTotal;
         }
         return result;
     }
@@ -1165,6 +1168,7 @@ public class OrderReadHelper {
         if (unitPrice == null || quantity == null) {
             Debug.logWarning("[getOrderItemTotal] unitPrice or quantity are null, using 0 for the item base price", module);
         } else {
+            Debug.log("Unit Price : " + unitPrice.doubleValue() + " / " + "Quantity : " + quantity.doubleValue(), module);
             result = unitPrice.doubleValue() * quantity.doubleValue();
         }
 

@@ -1,5 +1,5 @@
 /*
- * $Id: ZipSalesServices.java,v 1.6 2003/12/12 04:02:04 ajzeneski Exp $
+ * $Id: ZipSalesServices.java,v 1.7 2004/01/16 21:17:11 ajzeneski Exp $
  *
  *  Copyright (c) 2001-2003 The Open For Business Project - www.ofbiz.org
  *
@@ -51,7 +51,7 @@ import java.io.File;
  * Zip-Sales Database Services
  *
  * @author     <a href="mailto:jaz@ofbiz.org">Andy Zeneski</a>
- * @version    $Revision: 1.6 $
+ * @version    $Revision: 1.7 $
  * @since      3.0
  */
 public class ZipSalesServices {
@@ -223,12 +223,25 @@ public class ZipSalesServices {
         GenericValue shippingAddress = (GenericValue) context.get("shippingAddress");
 
         // flatTaxCalc only uses the Zip + City from the address
+        String stateProvince = shippingAddress.getString("stateProvinceGeoId");
         String postalCode = shippingAddress.getString("postalCode");
         String city = shippingAddress.getString("city");
 
         // setup the return lists.
         List orderAdjustments = new ArrayList();
         List itemAdjustments = new ArrayList();
+
+        // check for a valid state/province geo
+        String validStates = UtilProperties.getPropertyValue("zipsales.properties", "valid.state");
+        if (validStates != null) {
+            List stateSplit = StringUtil.split(validStates, "|");
+            if (!stateSplit.contains(stateProvince)) {
+                Map result = ServiceUtil.returnSuccess();
+                result.put("orderAdjustments", orderAdjustments);
+                result.put("itemAdjustments", itemAdjustments);
+                return result;
+            }
+        }
 
         // loop through and get per item tax rates
         for (int i = 0; i < itemProductList.size(); i++) {
