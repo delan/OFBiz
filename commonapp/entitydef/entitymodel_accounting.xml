@@ -1234,6 +1234,41 @@
         <key-map field-name="glJournalId"/>
       </relation>
     </entity>
+    <entity entity-name="GlReconciliation"
+            package-name="org.ofbiz.commonapp.accounting.ledger"
+            title="General Ledger Reconciliation Entity">
+      <field name="glReconciliationId" type="id-ne"></field>
+      <field name="description" type="description"></field>
+      <field name="createdDate" type="date-time"></field>
+      <field name="createdByUserLogin" type="id-vlong"></field>
+      <field name="lastModifiedDate" type="date-time"></field>
+      <field name="lastModifiedByUserLogin" type="id-vlong"></field>
+      <prim-key field="glReconciliationId"/>
+      <relation type="many" rel-entity-name="GlReconciliationEntry">
+        <key-map field-name="glReconciliationId"/>
+      </relation>
+    </entity>
+    <entity entity-name="GlReconciliationEntry"
+            package-name="org.ofbiz.commonapp.accounting.ledger"
+            title="General Ledger Reconciliation Entry Entity">
+      <field name="glReconciliationId" type="id-ne"></field>
+      <field name="acctgTransId" type="id-ne"></field>
+      <field name="acctgTransEntrySeqId" type="id-ne"></field>
+      <field name="reconciledAmount" type="currency-amount"></field>
+      <prim-key field="glReconciliationId"/>
+      <prim-key field="acctgTransId"/>
+      <prim-key field="acctgTransEntrySeqId"/>
+      <relation type="one" fk-name="GL_RECENT_GLREC" rel-entity-name="GlReconciliation">
+        <key-map field-name="glReconciliationId"/>
+      </relation>
+      <relation type="one" fk-name="GL_RECENT_ACTTXE" rel-entity-name="AcctgTransEntry">
+        <key-map field-name="acctgTransId"/>
+        <key-map field-name="acctgTransEntrySeqId"/>
+      </relation>
+      <relation type="one-nofk" rel-entity-name="AcctgTrans">
+        <key-map field-name="acctgTransId"/>
+      </relation>
+    </entity>
     <entity entity-name="SettlementTerm"
             package-name="org.ofbiz.commonapp.accounting.ledger"
             title="Settlement Term Entity">
