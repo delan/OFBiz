@@ -1,5 +1,5 @@
 /*
- * $Id: EditRenderSubContentTransform.java,v 1.7 2003/12/23 07:24:05 jonesde Exp $
+ * $Id: EditRenderSubContentTransform.java,v 1.8 2003/12/30 05:35:50 byersa Exp $
  *
  *  Copyright (c) 2001, 2002 The Open For Business Project - www.ofbiz.org
  *
@@ -49,7 +49,7 @@ import freemarker.template.TemplateTransformModel;
  * This is an interactive FreeMarker tranform that allows the user to modify the contents that are placed within it.
  * 
  * @author <a href="mailto:byersa@automationgroups.com">Al Byers</a>
- * @version $Revision: 1.7 $
+ * @version $Revision: 1.8 $
  * @since 3.0
  */
 public class EditRenderSubContentTransform implements TemplateTransformModel {
@@ -215,24 +215,27 @@ public class EditRenderSubContentTransform implements TemplateTransformModel {
                         templateRoot.put("wrapMimeTypeId", mimeTypeId);
                         templateRoot.put("wrapMapKey", mapKey);
                         templateRoot.put("context", templateContext);
-                        if (Debug.verboseOn()) Debug.logVerbose("in EditRenderSubContent, wrapDataResourceId:" + dataResourceId, module);
-                        if (Debug.verboseOn()) Debug.logVerbose("in EditRenderSubContent, wrapDataResourceTypeId:" + subDataResourceTypeId, module);
-                        if (Debug.verboseOn()) Debug.logVerbose("in EditRenderSubContent, wrapContentIdTo:" + contentId, module);
-                        if (Debug.verboseOn()) Debug.logVerbose("in EditRenderSubContent, wrapSubContentId:" + subContentIdSub, module);
-                        if (Debug.verboseOn()) Debug.logVerbose("in EditRenderSubContent, wrapMimeTypeId:" + mimeTypeId, module);
-                        //if (Debug.verboseOn()) Debug.logVerbose("in EditRenderSubContent, wrapMapKey:" + mapKey,module);
-                        if (Debug.verboseOn()) Debug.logVerbose("in EditRenderSubContent, calling renderContentAsText, wrapTemplateId:" + wrapTemplateId, module);
+                        if (Debug.verboseOn()) Debug.logVerbose("in ERSC, wrapDataResourceId:" + dataResourceId, module);
+                        if (Debug.verboseOn()) Debug.logVerbose("in ERSC, wrapDataResourceTypeId:" + subDataResourceTypeId, module);
+                        if (Debug.verboseOn()) Debug.logVerbose("in ERSC, wrapContentIdTo:" + contentId, module);
+                        if (Debug.verboseOn()) Debug.logVerbose("in ERSC, wrapSubContentId:" + subContentIdSub, module);
+                        if (Debug.verboseOn()) Debug.logVerbose("in ERSC, wrapMimeTypeId:" + mimeTypeId, module);
+                        //if (Debug.verboseOn()) Debug.logVerbose("in ERSC, wrapMapKey:" + mapKey,module);
+                        if (Debug.verboseOn()) Debug.logVerbose("in ERSC, calling renderContentAsText, wrapTemplateId:" + wrapTemplateId, module);
                         
                         try {
                             ContentWorker.renderContentAsText(delegator, wrapTemplateId, out, templateRoot, null, locale, mimeTypeId);
-                        } catch (GeneralException e) {
-                            Debug.logError(e, "Error rendering content", module);
+                        } catch (IOException e) {
+                            Debug.logError(e, "Error rendering content" + e.getMessage(), module);
                             throw new IOException("Error rendering content" + e.toString());
+                        } catch (GeneralException e2) {
+                            Debug.logError(e2, "Error rendering content" + e2.getMessage(), module);
+                            throw new IOException("Error rendering content" + e2.toString());
                         }
-                        if (Debug.verboseOn()) Debug.logVerbose("in EditRenderSubContent, after renderContentAsText", module);
+                        if (Debug.verboseOn()) Debug.logVerbose("in ERSC, after renderContentAsText", module);
                         
                         Map ctx = (Map) FreeMarkerWorker.getWrappedObject("context", env);
-                        if (Debug.verboseOn()) Debug.logVerbose("in EditRenderSubContent, contentId:" + ctx.get("contentId"), module);
+                        if (Debug.verboseOn()) Debug.logVerbose("in ERSC, contentId:" + ctx.get("contentId"), module);
                         templateContext.put("contentId", contentId);
                         templateContext.put("locale", locale);
                         templateContext.put("mapKey", null);
@@ -240,14 +243,14 @@ public class EditRenderSubContentTransform implements TemplateTransformModel {
                         templateContext.put("templateContentId", null);
                         templateContext.put("subDataResourceTypeId", null);
                         templateContext.put("mimeTypeId", null);
-                        if (Debug.verboseOn()) Debug.logVerbose("in EditRenderSubContent, after.", module);
-                        if (Debug.verboseOn()) Debug.logVerbose("in EditRenderSubContent, mapKey:" + mapKey, module);
-                        if (Debug.verboseOn()) Debug.logVerbose("in EditRenderSubContent, subContentId:" + subContentId, module);
-                        if (Debug.verboseOn()) Debug.logVerbose("in EditRenderSubContent, subDataResourceTypeId:" + subDataResourceTypeId, module);
-                        if (Debug.verboseOn()) Debug.logVerbose("in EditRenderSubContent, contentId:" + contentId, module);
-                        if (Debug.verboseOn()) Debug.logVerbose("in EditRenderSubContent, mimeTypeId:" + mimeTypeId, module);
-                        if (Debug.verboseOn()) Debug.logVerbose("in EditRenderSubContent, locale:" + locale, module);
-                        if (Debug.verboseOn()) Debug.logVerbose("in EditRenderSubContent, contentId2." + ctx.get("contentId"), module);
+                        if (Debug.verboseOn()) Debug.logVerbose("in ERSC, after.", module);
+                        if (Debug.verboseOn()) Debug.logVerbose("in ERSC, mapKey:" + mapKey, module);
+                        if (Debug.verboseOn()) Debug.logVerbose("in ERSC, subContentId:" + subContentId, module);
+                        if (Debug.verboseOn()) Debug.logVerbose("in ERSC, subDataResourceTypeId:" + subDataResourceTypeId, module);
+                        if (Debug.verboseOn()) Debug.logVerbose("in ERSC, contentId:" + contentId, module);
+                        if (Debug.verboseOn()) Debug.logVerbose("in ERSC, mimeTypeId:" + mimeTypeId, module);
+                        if (Debug.verboseOn()) Debug.logVerbose("in ERSC, locale:" + locale, module);
+                        if (Debug.verboseOn()) Debug.logVerbose("in ERSC, contentId2." + ctx.get("contentId"), module);
                     }
                 } else {
                     out.write(wrappedFTL);
