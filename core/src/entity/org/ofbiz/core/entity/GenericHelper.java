@@ -114,7 +114,7 @@ public interface GenericHelper {
         Collection fieldsToSelect, List orderBy) throws GenericEntityException;
 
     public List findByMultiRelation(GenericValue value, ModelRelation modelRelationOne, ModelEntity modelEntityOne,
-        ModelRelation modelRelationTwo, ModelEntity modelEntityTwo) throws GenericEntityException;
+        ModelRelation modelRelationTwo, ModelEntity modelEntityTwo, List orderBy) throws GenericEntityException;
 
     /** Finds GenericValues by the conditions specified in the EntityCondition object, the the EntityCondition javadoc for more details.
      *@param modelEntity The ModelEntity of the Entity as defined in the entity XML file

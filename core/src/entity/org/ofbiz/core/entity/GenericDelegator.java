@@ -1003,7 +1003,19 @@ public class GenericDelegator {
         return helper.removeByAnd(modelEntity, fields);
     }
 
-    public List getMultiRelation(GenericValue value, String relationNameOne, String relationNameTwo) throws GenericEntityException {
+    /**
+     * Get the named Related Entity for the GenericValue from the persistent store across another Relation.
+     * Helps to get related Values in a multi-to-multi relationship.
+     * @param relationNameOne String containing the relation name which is the
+     *      combination of relation.title and relation.rel-entity-name as
+     *      specified in the entity XML definition file, for first relation
+     * @param relationNameTwo String containing the relation name for second relation
+     * @param value GenericValue instance containing the entity
+     * @param orderBy The fields of the named entity to order the query by; may be null;
+     *      optionally add a " ASC" for ascending or " DESC" for descending
+     * @return List of GenericValue instances as specified in the relation definition
+     */
+    public List getMultiRelation(GenericValue value, String relationNameOne, String relationNameTwo, List orderBy) throws GenericEntityException {
         // traverse the relationships
         ModelEntity modelEntity = value.getModelEntity();
         ModelRelation modelRelationOne = modelEntity.getRelation(relationNameOne);
@@ -1013,7 +1025,21 @@ public class GenericDelegator {
 
         GenericHelper helper = getEntityHelper(modelEntity);
 
-        return helper.findByMultiRelation(value, modelRelationOne, modelEntityOne, modelRelationTwo, modelEntityTwo);
+        return helper.findByMultiRelation(value, modelRelationOne, modelEntityOne, modelRelationTwo, modelEntityTwo, orderBy);
+    }
+
+    /**
+     * Get the named Related Entity for the GenericValue from the persistent store across another Relation.
+     * Helps to get related Values in a multi-to-multi relationship.
+     * @param relationNameOne String containing the relation name which is the
+     *      combination of relation.title and relation.rel-entity-name as
+     *      specified in the entity XML definition file, for first relation
+     * @param relationNameTwo String containing the relation name for second relation
+     * @param value GenericValue instance containing the entity
+     * @return List of GenericValue instances as specified in the relation definition
+     */
+    public List getMultiRelation(GenericValue value, String relationNameOne, String relationNameTwo) throws GenericEntityException {
+        return getMultiRelation(value, relationNameOne, relationNameTwo, null);
     }
 
     /** Get the named Related Entity for the GenericValue from the persistent store

@@ -299,7 +299,12 @@ public class SqlJdbcUtil {
     }
 
     public static String makeOrderByClause(ModelEntity modelEntity, List orderBy) {
+        return makeOrderByClause(modelEntity, orderBy, false);
+    }
+
+    public static String makeOrderByClause(ModelEntity modelEntity, List orderBy, boolean includeTablenamePrefix) {
         StringBuffer sql = new StringBuffer("");
+        String fieldPrefix = includeTablenamePrefix ? (modelEntity.getTableName() + ".") : "";
 
         if (orderBy != null && orderBy.size() > 0) {
             if (Debug.verboseOn()) Debug.logVerbose("Order by list contains: " + orderBy.size() + " entries.", module);
@@ -327,9 +332,9 @@ public class SqlJdbcUtil {
 
                     if (curField.getName().equals(keyName)) {
                         if (ext != null)
-                            orderByStrings.add(curField.getColName() + ext);
+                            orderByStrings.add(fieldPrefix + curField.getColName() + ext);
                         else
-                            orderByStrings.add(curField.getColName());
+                            orderByStrings.add(fieldPrefix + curField.getColName());
                     }
                 }
             }

@@ -345,7 +345,7 @@ public class MemoryHelper implements GenericHelper {
     }
 
     public List findByMultiRelation(GenericValue value, ModelRelation modelRelationOne, ModelEntity modelEntityOne,
-                                    ModelRelation modelRelationTwo, ModelEntity modelEntityTwo) throws GenericEntityException {
+                                    ModelRelation modelRelationTwo, ModelEntity modelEntityTwo, List orderBy) throws GenericEntityException {
         return null;
     }
 

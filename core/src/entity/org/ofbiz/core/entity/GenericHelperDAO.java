@@ -203,8 +203,8 @@ public class GenericHelperDAO implements GenericHelper {
     }
 
     public List findByMultiRelation(GenericValue value, ModelRelation modelRelationOne, ModelEntity modelEntityOne,
-        ModelRelation modelRelationTwo, ModelEntity modelEntityTwo) throws GenericEntityException {
-        return genericDAO.selectByMultiRelation(value, modelRelationOne, modelEntityOne, modelRelationTwo, modelEntityTwo);
+        ModelRelation modelRelationTwo, ModelEntity modelEntityTwo, List orderBy) throws GenericEntityException {
+        return genericDAO.selectByMultiRelation(value, modelRelationOne, modelEntityOne, modelRelationTwo, modelEntityTwo, orderBy);
     }
 
     /** Removes/deletes Generic Entity records found by all of the specified fields (ie: combined using AND)

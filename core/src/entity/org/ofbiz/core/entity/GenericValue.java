@@ -136,8 +136,32 @@ public class GenericValue extends GenericEntity {
         return this.getDelegator().getRelatedCache(relationName, this);
     }
 
+    /**
+     * Get the named Related Entity for the GenericValue from the persistent store across another Relation.
+     * Helps to get related Values in a multi-to-multi relationship.
+     * @param relationNameOne String containing the relation name which is the
+     *      combination of relation.title and relation.rel-entity-name as
+     *      specified in the entity XML definition file, for first relation
+     * @param relationNameTwo String containing the relation name for second relation
+     * @param orderBy The fields of the named entity to order the query by; may be null;
+     *      optionally add a " ASC" for ascending or " DESC" for descending
+     * @return List of GenericValue instances as specified in the relation definition
+     */
+    public List getRelatedMulti(String relationNameOne, String relationNameTwo, List orderBy) throws GenericEntityException {
+        return this.getDelegator().getMultiRelation(this, relationNameOne, relationNameTwo, orderBy);
+    }
+
+    /**
+     * Get the named Related Entity for the GenericValue from the persistent store across another Relation.
+     * Helps to get related Values in a multi-to-multi relationship.
+     * @param relationNameOne String containing the relation name which is the
+     *      combination of relation.title and relation.rel-entity-name as
+     *      specified in the entity XML definition file, for first relation
+     * @param relationNameTwo String containing the relation name for second relation
+     * @return List of GenericValue instances as specified in the relation definition
+     */
     public List getRelatedMulti(String relationNameOne, String relationNameTwo) throws GenericEntityException {
-        return this.getDelegator().getMultiRelation(this, relationNameOne, relationNameTwo);
+        return this.getDelegator().getMultiRelation(this, relationNameOne, relationNameTwo, null);
     }
 
     /** Get the named Related Entity for the GenericValue from the persistent
