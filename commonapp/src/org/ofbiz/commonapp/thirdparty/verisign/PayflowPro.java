@@ -24,7 +24,6 @@
  */
 package org.ofbiz.commonapp.thirdparty.verisign;
 
-import java.net.*;
 import java.util.*;
 import java.text.*;
 
@@ -57,11 +56,13 @@ public class PayflowPro {
         Double processAmount = (Double) context.get("processAmount");
         GenericValue cc = (GenericValue) context.get("creditCard");
         GenericValue ps = (GenericValue) context.get("billingAddress");
-        String configUrlStr = (String) context.get("configUrl");
+        String configString = (String) context.get("paymentConfig");
+        if (configString == null)
+            configString = "payment.properties";
 
         Map data = UtilMisc.toMap("COMMENT1", orderId);
 
-        if (UtilProperties.propertyValueEqualsIgnoreCase("payflow", "preAuth", "Y"))
+        if (UtilProperties.propertyValueEqualsIgnoreCase(configString, "payment.verisign.preAuth", "Y"))
             data.put("TRXTYPE", "A");
         else
             data.put("TRXTYPE", "S");
@@ -95,21 +96,11 @@ public class PayflowPro {
             data.put("STREET", street);
             data.put("ZIP", ps.getString("postalCode"));
         }
-        
-        URL configUrl = null;
-        if (configUrlStr != null) {        
-            try {
-                configUrl = new URL(configUrlStr);
-            } catch (MalformedURLException e) {
-                Debug.logError(e, "Bad URL for payflow payment properties file; fatal error.", module);
-                return ServiceUtil.returnError("Bad properties URL; cannot find settings");
-            }
-        }
-
-        PFProAPI pn = init(configUrl);
+               
+        PFProAPI pn = init(configString);
 
         // get the base params
-        StringBuffer params = makeBaseParams();
+        StringBuffer params = makeBaseParams(configString);
 
         // parse the context parameters
         params.append("&" + parseContext(data));
@@ -124,13 +115,13 @@ public class PayflowPro {
         pn.DestroyContext();
 
         // check the response
-        parseResponse(resp, result);
+        parseResponse(resp, result, configString);
         result.put("processAmount", processAmount);
         return result;
     }
 
-    private static void parseResponse(String resp, Map result) {
-        boolean checkAVS = UtilProperties.propertyValueEqualsIgnoreCase("payflow", "checkAvs", "Y");
+    private static void parseResponse(String resp, Map result, String resource) {
+        boolean checkAVS = UtilProperties.propertyValueEqualsIgnoreCase(resource, "payment.verisign.checkAvs", "Y");
         Map parameters = new OrderedMap();
         List params = StringUtil.split(resp, "&");
         Iterator i = params.iterator();
@@ -178,73 +169,54 @@ public class PayflowPro {
         return buf.toString();
     }
 
-    private static StringBuffer makeBaseParams() {
+    private static StringBuffer makeBaseParams(String resource) {
         StringBuffer buf = new StringBuffer();
 
         try {
             buf.append("PARTNER=");
-            buf.append(UtilProperties.getPropertyValue("payflow", "partner", "VeriSign"));
+            buf.append(UtilProperties.getPropertyValue(resource, "payment.verisign.partner", "VeriSign"));
             buf.append("&");
             buf.append("VENDOR=");
-            buf.append(UtilProperties.getPropertyValue("payflow", "vendor", "nobody"));
+            buf.append(UtilProperties.getPropertyValue(resource, "payment.verisign.vendor", "nobody"));
             buf.append("&");
             buf.append("USER=");
-            buf.append(UtilProperties.getPropertyValue("payflow", "user", "nobody"));
+            buf.append(UtilProperties.getPropertyValue(resource, "payment.verisign.user", "nobody"));
             buf.append("&");
             buf.append("PWD=");
-            buf.append(UtilProperties.getPropertyValue("payflow", "pwd", "password"));
+            buf.append(UtilProperties.getPropertyValue(resource, "payment.verisign.pwd", "password"));
         } catch (Exception e) {
             return null;
         }
         return buf;
     }
 
-    private static PFProAPI init(URL configUrl) {
+    private static PFProAPI init(String resource) {
         String hostAddress = "test-payflow.verisign.com";
         Integer hostPort = Integer.decode("443");
         Integer timeout = Integer.decode("80");
+        
         String proxyAddress = "";
         Integer proxyPort = Integer.decode("0");
         String proxyLogon = "";
         String proxyPassword = "";
+        
         String certsPath = "certs";
-                
-        try {
-            if (configUrl != null) {
-                certsPath = UtilProperties.getPropertyValue(configUrl, "certsPath", "certs");                        
-                hostAddress = UtilProperties.getPropertyValue(configUrl, "hostAddress", "test-payflow.verisign.com");
-                hostPort = Integer.decode(UtilProperties.getPropertyValue(configUrl, "hostPort", "443"));
-                timeout = Integer.decode(UtilProperties.getPropertyValue(configUrl, "timeout", "80"));
-                proxyAddress = UtilProperties.getPropertyValue(configUrl, "proxyAddress", "");
-                proxyPort = Integer.decode(UtilProperties.getPropertyValue(configUrl, "proxyPort", "80"));
-                proxyLogon = UtilProperties.getPropertyValue(configUrl, "proxyLogon", "");
-                proxyPassword = UtilProperties.getPropertyValue(configUrl, "proxyPassword", "");                            
-            } else {    
-                certsPath = UtilProperties.getPropertyValue("payflow", "certsPath", "certs");                        
-                hostAddress = UtilProperties.getPropertyValue("payflow", "hostAddress", "test-payflow.verisign.com");
-                hostPort = Integer.decode(UtilProperties.getPropertyValue("payflow", "hostPort", "443"));
-                timeout = Integer.decode(UtilProperties.getPropertyValue("payflow", "timeout", "80"));
-                proxyAddress = UtilProperties.getPropertyValue("payflow", "proxyAddress", "");
-                proxyPort = Integer.decode(UtilProperties.getPropertyValue("payflow", "proxyPort", "80"));
-                proxyLogon = UtilProperties.getPropertyValue("payflow", "proxyLogon", "");
-                proxyPassword = UtilProperties.getPropertyValue("payflow", "proxyPassword", "");
-            }
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
+                                    
+        certsPath = UtilProperties.getPropertyValue(resource, "payment.verisign.certsPath", "certs");                        
+        hostAddress = UtilProperties.getPropertyValue(resource, "payment.verisign.hostAddress", "test-payflow.verisign.com");
+        hostPort = Integer.decode(UtilProperties.getPropertyValue(resource, "payment.verisign.hostPort", "443"));
+        timeout = Integer.decode(UtilProperties.getPropertyValue(resource, "payment.verisign.timeout", "80"));
+        proxyAddress = UtilProperties.getPropertyValue(resource, "payment.verisign.proxyAddress", "");
+        proxyPort = Integer.decode(UtilProperties.getPropertyValue(resource, "payment.verisign.proxyPort", "80"));
+        proxyLogon = UtilProperties.getPropertyValue(resource, "payment.verisign.proxyLogon", "");
+        proxyPassword = UtilProperties.getPropertyValue(resource, "payment.verisign.proxyPassword", "");                                    
 
         PFProAPI pn = new PFProAPI();
 
         // Set the certificate path
         pn.SetCertPath(certsPath);
         // Call the client.
-        pn.CreateContext(hostAddress,
-            hostPort.intValue(),
-            timeout.intValue(),
-            proxyAddress,
-            proxyPort.intValue(),
-            proxyLogon,
-            proxyPassword);
+        pn.CreateContext(hostAddress, hostPort.intValue(), timeout.intValue(), proxyAddress, proxyPort.intValue(), proxyLogon, proxyPassword);                                                                       
         return pn;
     }
 }

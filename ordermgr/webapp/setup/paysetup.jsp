@@ -57,7 +57,7 @@
                 <td nowrap><div class="tableheadtext"><b>WebSite</b></div></td>
                 <td nowrap><div class="tableheadtext"><b>Payment Method Type</b></div></td>
                 <td nowrap><div class="tableheadtext"><b>Service Name</b></div></td>
-                <td nowrap><div class="tableheadtext"><b>Config Url</b></div></td>               
+                <td nowrap><div class="tableheadtext"><b>Payment Config</b></div></td>               
                 <td nowrap><div class="tableheadtext">&nbsp;</div></td>
               </tr>
               <tr><td colspan="5"><hr class="sepbar"></td></tr>

@@ -969,7 +969,7 @@ public class CheckOutEvents {
             if (methodType != null && methodType.equals("offline")) {
                 cart.clearPaymentMethodTypeIds();
                 cart.clearPaymentMethodIds();
-                cart.addPaymentMethodTypeId("OFFLINE");
+                cart.addPaymentMethodTypeId("EXT_OFFLINE");
             }                            
         }
         

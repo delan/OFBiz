@@ -121,7 +121,7 @@
     <input type="hidden" name="finalizeMode" value="offline_payments">
     <table width="100%" cellpadding="1" cellspacing="0" border="0">
       <%
-          List pmtFields = UtilMisc.toList(new EntityExpr("paymentMethodTypeId", EntityOperator.NOT_EQUAL, "OFFLINE"));
+          List pmtFields = UtilMisc.toList(new EntityExpr("paymentMethodTypeId", EntityOperator.NOT_EQUAL, "EXT_OFFLINE"));
           List paymentMethodTypes = delegator.findByAnd("PaymentMethodType", pmtFields);
           if (paymentMethodTypes != null) pageContext.setAttribute("paymentMethodTypes", paymentMethodTypes);
       %>
@@ -158,8 +158,8 @@
         <tr><td colspan="3"><hr class='sepbar'></td></tr>    
         <tr>
           <td width="1%" nowrap>
-            <input type="radio" name="checkOutPaymentId" value="OFFLINE"
-            <%="OFFLINE".equals(checkOutPaymentId) ? "CHECKED" : ""%>>
+            <input type="radio" name="checkOutPaymentId" value="EXT_OFFLINE"
+            <%="EXT_OFFLINE".equals(checkOutPaymentId) ? "CHECKED" : ""%>>
           </td>
           <td colpan="2" width="50%" nowrap>
             <span class="tabletext">Offline:&nbsp;Check/Money Order</span>

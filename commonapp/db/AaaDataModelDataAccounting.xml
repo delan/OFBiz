@@ -85,8 +85,11 @@
   <PaymentMethodType description="Electronic Funds Transfer" paymentMethodTypeId="EFT_ACCOUNT"/>
   <PaymentMethodType description="Personal Check" paymentMethodTypeId="PERSONAL_CHECK"/>
   <PaymentMethodType description="Certified Check" paymentMethodTypeId="CERTIFIED_CHECK"/>
-  <PaymentMethodType description="Money Order" paymentMethodTypeId="MONEY_ORDER"/>
-  <PaymentMethodType description="Offline Payment" paymentMethodTypeId="OFFLINE"/>
+  <PaymentMethodType description="Money Order" paymentMethodTypeId="MONEY_ORDER"/>  
+  <PaymentMethodType description="Company Account" paymentMethodTypeId="COMPANY_ACCOUNT"/>
+  <PaymentMethodType description="Offline Payment" paymentMethodTypeId="EXT_OFFLINE"/>
+  <PaymentMethodType description="PayPal" paymentMethodTypeId="EXT_PAYPAL"/>
+  <PaymentMethodType description="WorldPay" paymentMethodTypeId="EXT_WORLDPAY"/>
 
   <PaymentType description="Disbursement" hasTable="N" parentTypeId="" paymentTypeId="DISBURSEMENT"/>
   <PaymentType description="Pay Check" hasTable="N" parentTypeId="DISBURSEMENT" paymentTypeId="PAY_CHECK"/>

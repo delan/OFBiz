@@ -292,8 +292,8 @@
   <tr><td colspan="2"><hr class='sepbar'></td></tr>
   <tr>
     <td width="1%" nowrap>
-      <input type="radio" name="checkOutPaymentId" value="OFFLINE"
-        <%="OFFLINE".equals(checkOutPaymentId) ? "CHECKED" : ""%>>
+      <input type="radio" name="checkOutPaymentId" value="EXT_OFFLINE"
+        <%="EXT_OFFLINE".equals(checkOutPaymentId) ? "CHECKED" : ""%>>
     </td>
     <td width="50%" nowrap>
       <span class="tabletext">Offline:&nbsp;Check/Money Order</span>

@@ -190,7 +190,7 @@ public class OrderManagerEvents {
         List paymentMethodTypes = null;
         
         try {
-            List pmtFields = UtilMisc.toList(new EntityExpr("paymentMethodTypeId", EntityOperator.NOT_EQUAL, "OFFLINE"));
+            List pmtFields = UtilMisc.toList(new EntityExpr("paymentMethodTypeId", EntityOperator.NOT_EQUAL, "EXT_OFFLINE"));
             paymentMethodTypes = delegator.findByAnd("PaymentMethodType", pmtFields);                 
         } catch (GenericEntityException e) {
             Debug.logError(e, "Problems getting payment types", module);

@@ -37,7 +37,7 @@
 
 <%
 	String orderId = request.getParameter("order_id");
-    List pmtFields = UtilMisc.toList(new EntityExpr("paymentMethodTypeId", EntityOperator.NOT_EQUAL, "OFFLINE"));
+    List pmtFields = UtilMisc.toList(new EntityExpr("paymentMethodTypeId", EntityOperator.NOT_EQUAL, "EXT_OFFLINE"));
     List paymentMethodTypes = delegator.findByAnd("PaymentMethodType", pmtFields);
     if (paymentMethodTypes != null) pageContext.setAttribute("paymentMethodTypes", paymentMethodTypes);	
     
@@ -69,10 +69,15 @@
     <input type="hidden" name="orderId" value="<%=orderId%>">
     <input type="hidden" name="workEffortId" value="<%=workEffortId%>">                                  
     <table width="100%" cellpadding="1" cellspacing="0" border="0">
+      <tr>
+        <td width="30%" align="right"><div class="tableheadtext"><u>Payment Type</u></div></td>
+        <td width="10">&nbsp;&nbsp;</td>
+        <td width="70%" align="left"><div class="tableheadtext"><u>Amount</u></div></td>
+      </tr>    
       <ofbiz:iterator name="payType" property="paymentMethodTypes">      
       <tr>
         <td width="30%" align="right"><div class="tabletext"><%=UtilFormatOut.checkNull(payType.getString("description"))%></div></td>
-        <td width="5">&nbsp;</td>
+        <td width="10">&nbsp;</td>
         <td width="70%"><input type="text" size="12" name="<%=payType.getString("paymentMethodTypeId")%>" style="font-size: x-small;"></td>
       </tr>
       </ofbiz:iterator>

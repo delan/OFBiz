@@ -206,7 +206,7 @@
                       <td>
                         <div class="tabletext">&nbsp;<b><%=UtilFormatOut.checkNull(paymentMethodType.getString("description"))%></b></div>
                       </td>
-                      <% if (!paymentMethodType.getString("paymentMethodTypeId").equals("OFFLINE")) { %>
+                      <% if (!paymentMethodType.getString("paymentMethodTypeId").equals("EXT_OFFLINE")) { %>
                       <td align="right">
                         <div class="tabletext"><%=UtilFormatOut.formatPrice(orderPaymentPreference.getDouble("maxAmount"))%><%=UtilFormatOut.ifNotEmpty(UtilFormatOut.formatDate(orderPaymentPreference.getTimestamp("authDate")), "&nbsp;-&nbsp;", "")%></div>
                       </td>
