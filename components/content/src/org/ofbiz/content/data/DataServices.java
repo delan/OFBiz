@@ -516,7 +516,7 @@ public class DataServices {
                     if (imageDataResource == null) {
                     	return createImageMethod(dctx, context);
                     } else {
-                        imageDataResource.set("imageData", imageBytes);
+                        imageDataResource.setBytes("imageData", imageBytes);
                     	imageDataResource.store();
                     }
                 } catch (GenericEntityException e) {
