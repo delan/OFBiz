@@ -5,7 +5,7 @@
 <!--
  * <p><b>Title:</b> LoginSimpleEvents
  * <p><b>Description:</b> Events to handle form input and other data changes
- * <p>Copyright (c) 2001 The Open For Business Project and repected authors.
+ * <p>Copyright (c) 2002 The Open For Business Project and repected authors.
  * <p>Permission is hereby granted, free of charge, to any person obtaining a
  *  copy of this software and associated documentation files (the "Software"),
  *  to deal in the Software without restriction, including without limitation
@@ -25,6 +25,7 @@
  *  THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  *
  * @author <a href="mailto:jonesde@ofbiz.org">David E. Jones</a>
+ * @author <a href="mailto:jaz@jflow.net">Andy Zeneski</a>
  * @version 1.0
  * Created on January 18, 2001
  -->
@@ -41,6 +42,13 @@
         </if-has-permission>
         <check-errors/>
         <call-service service-name="updatePassword" in-map-name="context">
-            <default-message>Password successfully updated.</default-message></call-service>
+            <default-message>Password successfully updated.</default-message>
+            <result-to-field result-name="updatedUserLogin" map-name="dummyServiceResultMap"/>
+        </call-service>
+        <field-to-env env-name="updatedUserLogin" map-name="dummyServiceResultMap"/>
+        <session-to-field field-name="userLogin"/>
+        <if-compare-field map-name="userLogin" field-name="userLoginId" operator="equals" to-map-name="updatedUserLogin" to-field-name="userLoginId">
+            <field-to-session field-name="updatedUserLogin" session-name="userLogin"/>
+        </if-compare-field>
     </simple-method>
 </simple-methods>

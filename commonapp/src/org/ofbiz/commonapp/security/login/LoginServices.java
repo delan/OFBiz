@@ -330,6 +330,7 @@ public class LoginServices {
         }
 
         result.put(ModelService.RESPONSE_MESSAGE, ModelService.RESPOND_SUCCESS);
+        result.put("updatedUserLogin", userLoginToUpdate);
         return result;
     }
 
