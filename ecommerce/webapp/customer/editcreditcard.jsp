@@ -77,13 +77,13 @@
       <p class="head1">Add New Credit Card</p>
       &nbsp;<a href="<ofbiz:url>/authview/<%=donePage%></ofbiz:url>" class="buttontext">[Done/Cancel]</a>
       &nbsp;<a href="javascript:document.editcreditcardform.submit()" class="buttontext">[Save]</a>
-      <form method="post" action="<ofbiz:url>/createcreditcard?DONE_PAGE=<%=donePage%></ofbiz:url>" name="editcreditcardform" style='margin: 0;'>
+      <form method="post" action="<ofbiz:url>/createCreditCardInfo?DONE_PAGE=<%=donePage%></ofbiz:url>" name="editcreditcardform" style='margin: 0;'>
       <table width="90%" border="0" cellpadding="2" cellspacing="0">
     <%} else {%>
       <p class="head1">Edit Credit Card</p>
       &nbsp;<a href="<ofbiz:url>/authview/<%=donePage%></ofbiz:url>" class="buttontext">[Done/Cancel]</a>
       &nbsp;<a href="javascript:document.editcreditcardform.submit()" class="buttontext">[Save]</a>
-      <form method="post" action="<ofbiz:url>/updatecreditcard?DONE_PAGE=<%=donePage%></ofbiz:url>" name="editcreditcardform" style='margin: 0;'>
+      <form method="post" action="<ofbiz:url>/updateCreditCardInfo?DONE_PAGE=<%=donePage%></ofbiz:url>" name="editcreditcardform" style='margin: 0;'>
       <table width="90%" border="0" cellpadding="2" cellspacing="0">
         <input type=hidden name="creditCardId" value="<%=creditCardId%>">
     <%}%>

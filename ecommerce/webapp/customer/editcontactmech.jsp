@@ -36,39 +36,88 @@
 <%@ include file="/includes/header.jsp" %>
 <%@ include file="/includes/onecolumn.jsp" %>
 <%
-  boolean useValues = true;
-  if(request.getAttribute(SiteDefs.ERROR_MESSAGE) != null) useValues = false;
-  if("true".equals(request.getParameter("useValues"))) useValues = true;
+    boolean tryEntity = true;
+    if(request.getAttribute(SiteDefs.ERROR_MESSAGE) != null) tryEntity = false;
+    if("true".equals(request.getParameter("tryEntity"))) tryEntity = true;
 
-  String donePage = request.getParameter("DONE_PAGE");
-  if(donePage == null || donePage.length() <= 0) donePage="viewprofile";
+    String donePage = request.getParameter("DONE_PAGE");
+    if(donePage == null || donePage.length() <= 0) donePage="viewprofile";
 
-  String contactMechId = request.getParameter("contactMechId");
-  if(contactMechId == null || request.getParameter("UPDATE_MODE") != null) contactMechId = (String)request.getAttribute("contactMechId");
+    String contactMechId = request.getParameter("contactMechId");
+    if(request.getAttribute("contactMechId") != null)
+        contactMechId = (String) request.getAttribute("contactMechId");
 
-  //try to find a PartyContactMech with a valid date range
-  Collection partyContactMechs = EntityUtil.filterByDate(delegator.findByAnd("PartyContactMech", UtilMisc.toMap("partyId", userLogin.get("partyId"), "contactMechId", contactMechId), null));
-  GenericValue partyContactMech = EntityUtil.getFirst(partyContactMechs);
+    //try to find a PartyContactMech with a valid date range
+    Collection partyContactMechs = EntityUtil.filterByDate(delegator.findByAnd("PartyContactMech", UtilMisc.toMap("partyId", userLogin.get("partyId"), "contactMechId", contactMechId)));
+    GenericValue partyContactMech = EntityUtil.getFirst(partyContactMechs);
+    if (partyContactMech != null) {
+        request.setAttribute("partyContactMech", partyContactMech);
+    }
 
-  GenericValue contactMech = delegator.findByPrimaryKey("ContactMech", UtilMisc.toMap("contactMechId", contactMechId));
-  String contactMechTypeId = null;
-  if(contactMech != null) contactMechTypeId = contactMech.getString("contactMechTypeId");
+    GenericValue contactMech = delegator.findByPrimaryKey("ContactMech", UtilMisc.toMap("contactMechId", contactMechId));
+    String contactMechTypeId = null;
+    if (contactMech != null) {
+        pageContext.setAttribute("contactMech", contactMech);
+        contactMechTypeId = contactMech.getString("contactMechTypeId");
+    }
+    if (contactMechTypeId != null)
+        pageContext.setAttribute("contactMechTypeId", contactMechTypeId);
+    
+    String requestName;
+    if (contactMech == null) {
+        //create
+        if ("POSTAL_ADDRESS".equals(contactMechTypeId)) {
+            requestName = "createPostalAddress";
+        } else if ("TELECOM_NUMBER".equals(contactMechTypeId)) {
+            requestName = "createTelecomNumber";
+        } else if ("EMAIL_ADDRESS".equals(contactMechTypeId)) {
+            requestName = "createEmailAddress";
+        } else {
+            requestName = "createContactMech";
+        }
+    } else {
+        //update
+        if ("POSTAL_ADDRESS".equals(contactMechTypeId)) {
+            requestName = "updatePostalAddress";
+        } else if ("TELECOM_NUMBER".equals(contactMechTypeId)) {
+            requestName = "updateTelecomNumber";
+        } else if ("EMAIL_ADDRESS".equals(contactMechTypeId)) {
+            requestName = "updateEmailAddress";
+        } else {
+            requestName = "updateContactMech";
+        }
+    }
+
+    
+    if ("POSTAL_ADDRESS".equals(contactMechTypeId)) {
+        GenericValue postalAddress = null;
+        if (contactMech != null) postalAddress = contactMech.getRelatedOne("PostalAddress");
+        if (postalAddress == null) tryEntity = false;
+        if (postalAddress != null) pageContext.setAttribute("postalAddress", postalAddress);
+    } else if ("TELECOM_NUMBER".equals(contactMechTypeId)) {
+        GenericValue telecomNumber = null;
+        if (contactMech != null) telecomNumber = contactMech.getRelatedOne("TelecomNumber");
+        if (telecomNumber == null) tryEntity = false;
+        if (telecomNumber != null) pageContext.setAttribute("telecomNumber", telecomNumber);
+    }
+
+    pageContext.setAttribute("tryEntity", new Boolean(tryEntity));
 %>
 
-<%if(!security.hasPermission("USER_ADMIN", session) && partyContactMech == null && contactMech != null){%>
+<%if (!security.hasPermission("USER_ADMIN", session) && partyContactMech == null && contactMech != null){%>
   <p><h3>The contact information specified does not belong to you, you may not view or edit it.</h3></p>
   &nbsp;<a href="<ofbiz:url><%="/authview/" + donePage%></ofbiz:url>" class="buttontext">[Back]</a>
-<%}else{%>
+<%} else {%>
 
-  <%if(contactMech == null){%>
-    <%if(request.getParameter("CONTACT_MECH_TYPE_ID") == null){%>
+  <%if (contactMech == null) {%>
+    <%if (request.getParameter("contactMechTypeId") == null) {%>
     <p class="head1">Create New Contact Information</p>
     <form method="post" action="<ofbiz:url>/editcontactmech?DONE_PAGE=<%=donePage%></ofbiz:url>" name="createcontactmechform">
       <table width="90%" border="0" cellpadding="2" cellspacing="0">
         <tr>
           <td width="26%"><div class="tabletext">Select Contact Type:</div></td>
           <td width="74%">
-            <select name="CONTACT_MECH_TYPE_ID">
+            <select name="contactMechTypeId">
               <%Iterator contactMechTypes = UtilMisc.toIterator(delegator.findAll("ContactMechType", null));%>
               <%while(contactMechTypes != null && contactMechTypes.hasNext()){%>
                 <%GenericValue contactMechType = (GenericValue)contactMechTypes.next();%>
@@ -81,32 +130,32 @@
     </form>
     <%-- <p><h3>ERROR: Contact information with ID "<%=UtilFormatOut.checkNull(contactMechId)%>" not found!</h3></p> --%>
     <%}else{%>
-      <%contactMechTypeId = request.getParameter("CONTACT_MECH_TYPE_ID");%>
-      <%useValues = false;%>
+      <%contactMechTypeId = request.getParameter("contactMechTypeId");%>
+      <%pageContext.setAttribute("tryEntity", new Boolean(false));%>
     <%}%>
   <%}%>
 
-  <%if(contactMechTypeId != null){%>
-    <%if(contactMech == null){%>
+  <%if (contactMechTypeId != null) {%>
+    <%if (contactMech == null) {%>
       <p class="head1">Create New Contact Information</p>
     &nbsp;<a href="<ofbiz:url>/authview/<%=donePage%></ofbiz:url>" class="buttontext">[Done/Cancel]</a>
     &nbsp;<a href="javascript:document.editcontactmechform.submit()" class="buttontext">[Save]</a>
-      <%String cmNewPurposeTypeId = request.getParameter("CM_NEW_PURPOSE_TYPE_ID");%>
-      <%if(cmNewPurposeTypeId != null){%>
+      <%String cmNewPurposeTypeId = request.getParameter("contactMechPurposeTypeId");%>
+      <%if (cmNewPurposeTypeId != null){%>
         <%GenericValue contactMechPurposeType = delegator.findByPrimaryKey("ContactMechPurposeType", UtilMisc.toMap("contactMechPurposeTypeId", cmNewPurposeTypeId));%>
-        <%if(contactMechPurposeType != null){%>
+        <%if (contactMechPurposeType != null){%>
         <div>(Note: this new contact information will have the purpose <b>"<%=UtilFormatOut.checkNull(contactMechPurposeType.getString("description"))%>"</b>)</div>
-        <%}else{ cmNewPurposeTypeId = null; }%>
+        <%} else { cmNewPurposeTypeId = null; }%>
       <%}%>
       <table width="90%" border="0" cellpadding="2" cellspacing="0">
         <%-- <form method="post" action="<%=response.encodeURL(controlPath + "/updatecontactmech/" + donePage)%>" name="editcontactmechform"> --%>
-        <form method="post" action="<ofbiz:url>/updatecontactmech?DONE_PAGE=<%=donePage%></ofbiz:url>" name="editcontactmechform">
-        <input type=hidden name="CONTACT_MECH_TYPE_ID" value="<%=contactMechTypeId%>">
-        <input type=hidden name="UPDATE_MODE" value="CREATE">
-        <%=UtilFormatOut.ifNotEmpty(cmNewPurposeTypeId, "<input type='hidden' name='CM_NEW_PURPOSE_TYPE_ID' value='", "'>")%>
-    <%}else{%>
+        <form method="post" action="<ofbiz:url>/<%=requestName%></ofbiz:url>" name="editcontactmechform">
+        <input type=hidden name="DONE_PAGE" value="<%=donePage%>">
+        <input type=hidden name="contactMechTypeId" value="<%=contactMechTypeId%>">
+        <%=UtilFormatOut.ifNotEmpty(cmNewPurposeTypeId, "<input type='hidden' name='contactMechPurposeTypeId' value='", "'>")%>
+    <%} else {%>
       <p class="head1">Edit Contact Information</p>
-    &nbsp;<a href="<ofbiz:url><%="/authview/" + donePage%></ofbiz:url>" class="buttontext">[Done/Cancel]</a>
+    &nbsp;<a href="<ofbiz:url>/authview/<%=donePage%></ofbiz:url>" class="buttontext">[Done/Cancel]</a>
     &nbsp;<a href="javascript:document.editcontactmechform.submit()" class="buttontext">[Save]</a>
       <table width="90%" border="0" cellpadding="2" cellspacing="0">
         <tr>
@@ -115,9 +164,9 @@
           <td width="74%">
             <table border='0' cellspacing='1' bgcolor='black'>
               <%Iterator partyContactMechPurposesIter = UtilMisc.toIterator(EntityUtil.filterByDate(partyContactMech.getRelated("PartyContactMechPurpose")));%>
-              <%while(partyContactMechPurposesIter != null && partyContactMechPurposesIter.hasNext()){%>
+              <%while (partyContactMechPurposesIter != null && partyContactMechPurposesIter.hasNext()){%>
                 <%GenericValue partyContactMechPurpose = (GenericValue)partyContactMechPurposesIter.next();%>
-                <%if(partyContactMechPurpose != null) {%>
+                <%if (partyContactMechPurpose != null) {%>
                     <%GenericValue contactMechPurposeType = partyContactMechPurpose.getRelatedOne("ContactMechPurposeType");%>
                     <tr>
                       <td bgcolor='white'>
@@ -130,14 +179,14 @@
                           (Since:<%=UtilDateTime.toDateString(partyContactMechPurpose.getTimestamp("fromDate"))%>)
                           <%=UtilFormatOut.ifNotEmpty(UtilDateTime.toDateTimeString(partyContactMechPurpose.getTimestamp("thruDate")), "(Expires:", ")")%>
                         &nbsp;</div></td>
-                      <td bgcolor='white'><div><a href='<ofbiz:url><%="/deletepartycontactmechpurpose?contactMechId=" + contactMechId + "&contactMechPurposeTypeId=" + partyContactMechPurpose.getString("contactMechPurposeTypeId") + "&fromDate=" + UtilFormatOut.encodeQueryValue(partyContactMechPurpose.getTimestamp("fromDate").toString()) + "&DONE_PAGE=" + donePage + "&useValues=true"%></ofbiz:url>' class='buttontext'>&nbsp;Delete&nbsp;</a></div></td>
+                      <td bgcolor='white'><div><a href='<ofbiz:url><%="/deletePartyContactMechPurpose?contactMechId=" + contactMechId + "&contactMechPurposeTypeId=" + partyContactMechPurpose.getString("contactMechPurposeTypeId") + "&fromDate=" + UtilFormatOut.encodeQueryValue(partyContactMechPurpose.getTimestamp("fromDate").toString()) + "&DONE_PAGE=" + donePage + "&useValues=true"%></ofbiz:url>' class='buttontext'>&nbsp;Delete&nbsp;</a></div></td>
                     </tr>
                 <%}%>
               <%}%>
               <%Iterator purposeTypes = UtilMisc.toIterator(delegator.findByAnd("ContactMechTypePurpose", UtilMisc.toMap("contactMechTypeId", contactMechTypeId), null));%>
               <%if(purposeTypes != null && purposeTypes.hasNext()){%>
               <tr>
-                <form method=POST action='<ofbiz:url><%="/createpartycontactmechpurpose?contactMechId=" + contactMechId + "&DONE_PAGE=" + donePage + "&useValues=true"%></ofbiz:url>' name='newpurposeform'>
+                <form method=POST action='<ofbiz:url><%="/createPartyContactMechPurpose?contactMechId=" + contactMechId + "&DONE_PAGE=" + donePage + "&useValues=true"%></ofbiz:url>' name='newpurposeform'>
                   <td bgcolor='white'>
                     <SELECT name='contactMechPurposeTypeId'>
                       <OPTION></OPTION>
@@ -158,55 +207,53 @@
           </td>
         </tr>
         <%-- <form method="post" action="<%=response.encodeURL(controlPath + "/updatecontactmech/" + donePage)%>" name="editcontactmechform"> --%>
-        <form method="post" action="<ofbiz:url>/updatecontactmech?DONE_PAGE=<%=donePage%></ofbiz:url>" name="editcontactmechform">
+        <form method="post" action="<ofbiz:url>/<%=requestName%></ofbiz:url>" name="editcontactmechform">
+        <input type=hidden name="DONE_PAGE" value="<%=donePage%>">
         <input type=hidden name="contactMechId" value="<%=contactMechId%>">
-        <input type=hidden name="UPDATE_MODE" value="UPDATE">
     <%}%>
 
-  <%if("POSTAL_ADDRESS".equals(contactMechTypeId)){%>
-    <%GenericValue postalAddress = null;%>
-    <%if(contactMech != null) postalAddress = contactMech.getRelatedOne("PostalAddress");%>
+  <%if ("POSTAL_ADDRESS".equals(contactMechTypeId)) {%>
     <tr>
       <td width="26%" align=right valign=top><div class="tabletext">To Name</div></td>
       <td width="5">&nbsp;</td>
       <td width="74%">
-        <input type="text" name="CM_TO_NAME" value="<%=UtilFormatOut.checkNull(useValues?postalAddress.getString("toName"):request.getParameter("CM_TO_NAME"))%>" size="30" maxlength="60">
+        <input type="text" size="30" maxlength="60" <ofbiz:inputvalue field="toName" entityAttr="postalAddress" tryEntityAttr="tryEntity" fullattrs="true"/>>
       </td>
     </tr>
     <tr>
       <td width="26%" align=right valign=top><div class="tabletext">Attention Name</div></td>
       <td width="5">&nbsp;</td>
       <td width="74%">
-        <input type="text" name="CM_ATTN_NAME" value="<%=UtilFormatOut.checkNull(useValues?postalAddress.getString("attnName"):request.getParameter("CM_ATTN_NAME"))%>" size="30" maxlength="60">
+        <input type="text" size="30" maxlength="60" <ofbiz:inputvalue field="attnName" entityAttr="postalAddress" tryEntityAttr="tryEntity" fullattrs="true"/>>
       </td>
     </tr>
     <tr>
       <td width="26%" align=right valign=top><div class="tabletext">Address Line 1</div></td>
       <td width="5">&nbsp;</td>
       <td width="74%">
-        <input type="text" name="CM_ADDRESS1" value="<%=UtilFormatOut.checkNull(useValues?postalAddress.getString("address1"):request.getParameter("CM_ADDRESS1"))%>" size="30" maxlength="30">
+        <input type="text" size="30" maxlength="30" <ofbiz:inputvalue field="address1" entityAttr="postalAddress" tryEntityAttr="tryEntity" fullattrs="true"/>>
       *</td>
     </tr>
     <tr>
       <td width="26%" align=right valign=top><div class="tabletext">Address Line 2</div></td>
       <td width="5">&nbsp;</td>
       <td width="74%">
-          <input type="text" name="CM_ADDRESS2" value="<%=UtilFormatOut.checkNull(useValues?postalAddress.getString("address2"):request.getParameter("CM_ADDRESS2"))%>" size="30" maxlength="30">
+          <input type="text" size="30" maxlength="30" <ofbiz:inputvalue field="address2" entityAttr="postalAddress" tryEntityAttr="tryEntity" fullattrs="true"/>>
       </td>
     </tr>
     <tr>
       <td width="26%" align=right valign=top><div class="tabletext">City</div></td>
       <td width="5">&nbsp;</td>
       <td width="74%">
-          <input type="text" name="CM_CITY" value="<%=UtilFormatOut.checkNull(useValues?postalAddress.getString("city"):request.getParameter("CM_CITY"))%>" size="30" maxlength="30">
-      * </td>
+          <input type="text" size="30" maxlength="30" <ofbiz:inputvalue field="city" entityAttr="postalAddress" tryEntityAttr="tryEntity" fullattrs="true"/>>
+      *</td>
     </tr>
     <tr>
       <td width="26%" align=right valign=top><div class="tabletext">State/Province</div></td>
       <td width="5">&nbsp;</td>
       <td width="74%">
         <select name="CM_STATE">
-          <option><%=UtilFormatOut.checkNull(useValues?postalAddress.getString("stateProvinceGeoId"):request.getParameter("CM_STATE"))%></option>
+          <option><ofbiz:inputvalue field="stateProvinceGeoId" entityAttr="postalAddress" tryEntityAttr="tryEntity"/></option>
           <option></option>
           <%@ include file="/includes/states.jsp" %>
         </select>
@@ -216,7 +263,7 @@
       <td width="26%" align=right valign=top><div class="tabletext">Zip/Postal Code</div></td>
       <td width="5">&nbsp;</td>
       <td width="74%">
-        <input type="text" name="CM_POSTAL_CODE" value="<%=UtilFormatOut.checkNull(useValues?postalAddress.getString("postalCode"):request.getParameter("CM_POSTAL_CODE"))%>" size="12" maxlength="10">
+        <input type="text" size="12" maxlength="10" <ofbiz:inputvalue field="postalCode" entityAttr="postalAddress" tryEntityAttr="tryEntity" fullattrs="true"/>>
       *</td>
     </tr>
     <tr>
@@ -224,24 +271,21 @@
       <td width="5">&nbsp;</td>
       <td width="74%">
         <select name="CM_COUNTRY" >
-          <option><%=UtilFormatOut.checkNull(useValues?postalAddress.getString("countryGeoId"):request.getParameter("CM_COUNTRY"))%></option>
+          <option><ofbiz:inputvalue field="countryGeoId" entityAttr="postalAddress" tryEntityAttr="tryEntity"/></option>
           <option></option>
           <%@ include file="/includes/countries.jsp" %>
         </select>
       *</td>
     </tr>
-  <%}else if("TELECOM_NUMBER".equals(contactMechTypeId)){%>
-    <%GenericValue telecomNumber = null;%>
-    <%if(contactMech != null) telecomNumber = contactMech.getRelatedOne("TelecomNumber");%>
-    <%if(telecomNumber == null) useValues = false;%>
+  <%} else if("TELECOM_NUMBER".equals(contactMechTypeId)) {%>
     <tr>
       <td width="26%" align=right valign=top><div class="tabletext">Phone Number</div></td>
       <td width="5">&nbsp;</td>
       <td width="74%">
-        <input type="text" name="CM_COUNTRY_CODE" value="<%=UtilFormatOut.checkNull(useValues?telecomNumber.getString("countryCode"):request.getParameter("CM_COUNTRY_CODE"))%>" size="4" maxlength="10">
-        -&nbsp;<input type="text" name="CM_AREA_CODE" value="<%=UtilFormatOut.checkNull(useValues?telecomNumber.getString("areaCode"):request.getParameter("CM_AREA_CODE"))%>" size="4" maxlength="10">
-        -&nbsp;<input type="text" name="CM_CONTACT_NUMBER" value="<%=UtilFormatOut.checkNull(useValues?telecomNumber.getString("contactNumber"):request.getParameter("CM_CONTACT_NUMBER"))%>" size="15" maxlength="15">
-        &nbsp;ext&nbsp;<input type="text" name="CM_EXTENSION" value="<%=UtilFormatOut.checkNull(useValues?partyContactMech.getString("extension"):request.getParameter("CM_EXTENSION"))%>" size="6" maxlength="10">
+        <input type="text" size="4" maxlength="10" <ofbiz:inputvalue field="countryCode" entityAttr="telecomNumber" tryEntityAttr="tryEntity" fullattrs="true"/>">
+        -&nbsp;<input type="text" size="4" maxlength="10" <ofbiz:inputvalue field="areaCode" entityAttr="telecomNumber" tryEntityAttr="tryEntity" fullattrs="true"/>>
+        -&nbsp;<input type="text" size="15" maxlength="15" <ofbiz:inputvalue field="contactNumber" entityAttr="telecomNumber" tryEntityAttr="tryEntity" fullattrs="true"/>>
+        &nbsp;ext&nbsp;<input type="text" size="6" maxlength="10" <ofbiz:inputvalue field="extension" entityAttr="partyContactMech" tryEntityAttr="tryEntity" fullattrs="true"/>>
       </td>
     </tr>
     <tr>
@@ -249,30 +293,30 @@
       <td width="5">&nbsp;</td>
       <td><div class="tabletext">[Country Code] [Area Code] [Contact Number] [Extension]</div></td>
     </tr>
-  <%}else if("EMAIL_ADDRESS".equals(contactMechTypeId)){%>
+  <%} else if("EMAIL_ADDRESS".equals(contactMechTypeId)) {%>
     <tr>
       <td width="26%" align=right valign=top><div class="tabletext">Email address</div></td>
       <td width="5">&nbsp;</td>
       <td width="74%">
-          <input type="text" name="CM_INFO_STRING" value="<%=UtilFormatOut.checkNull(useValues?contactMech.getString("infoString"):request.getParameter("CM_INFO_STRING"))%>" size="60" maxlength="255"> *
-      </td>
+          <input type="text" size="60" maxlength="255" <ofbiz:inputvalue field="infoString" param="emailAddress" entityAttr="contactMech" tryEntityAttr="tryEntity" fullattrs="true"/>>
+      *</td>
     </tr>
-  <%}else{%>
+  <%} else {%>
     <%GenericValue curContactMechType = delegator.findByPrimaryKey("ContactMechType", UtilMisc.toMap("contactMechTypeId", contactMechTypeId));%>
     <tr>
       <td width="26%" align=right valign=top><div class="tabletext"><%=curContactMechType.getString("description")%></div></td>
       <td width="5">&nbsp;</td>
       <td width="74%">
-          <input type="text" name="CM_INFO_STRING" value="<%=UtilFormatOut.checkNull(useValues?contactMech.getString("infoString"):request.getParameter("CM_INFO_STRING"))%>" size="60" maxlength="255"> *
-      </td>
+          <input type="text" size="60" maxlength="255" <ofbiz:inputvalue field="infoString" entityAttr="contactMech" tryEntityAttr="tryEntity" fullattrs="true"/>>
+      *</td>
     </tr>
   <%}%>
     <tr>
       <td width="26%" align=right valign=top><div class="tabletext">Allow Solicitation?</div></td>
       <td width="5">&nbsp;</td>
       <td width="74%">
-        <select name="CM_ALLOW_SOL">
-          <option><%=UtilFormatOut.checkNull(useValues?partyContactMech.getString("allowSolicitation"):request.getParameter("CM_ADDRESS_ALLOW_SOL"), "Y")%></option>
+        <select name="allowSolicitation">
+          <option><ofbiz:inputvalue field="allowSolicitation" entityAttr="partyContactMech" tryEntityAttr="tryEntity"/></option>
           <option></option><option>Y</option><option>N</option>
         </select>
       </td>
@@ -280,10 +324,10 @@
   </form>
   </table>
 
-    &nbsp;<a href="<ofbiz:url><%="/authview/" + donePage%></ofbiz:url>" class="buttontext">[Done/Cancel]</a>
+    &nbsp;<a href="<ofbiz:url>/authview/<%=donePage%></ofbiz:url>" class="buttontext">[Done/Cancel]</a>
     &nbsp;<a href="javascript:document.editcontactmechform.submit()" class="buttontext">[Save]</a>
   <%}else{%>
-    &nbsp;<a href="<ofbiz:url><%="/authview/" + donePage%></ofbiz:url>" class="buttontext">[Done/Cancel]</a>
+    &nbsp;<a href="<ofbiz:url>/authview/<%=donePage%></ofbiz:url>" class="buttontext">[Done/Cancel]</a>
   <%}%>
 <%}%>
 
