@@ -22,7 +22,7 @@ import org.w3c.dom.Node;
 import org.w3c.dom.NodeList;
 
 //needed for XML writing with Crimson
-import org.apache.crimson.tree.*;
+//import org.apache.crimson.tree.*;
 //needed for XML writing with Xerces
 import org.apache.xml.serialize.*;
 
@@ -294,19 +294,19 @@ public class GenericEntity implements Serializable {
     FileOutputStream fos = null;
     fos = new FileOutputStream(outFile);
 
-    if(document instanceof XmlDocument) {
+    //if(document instanceof XmlDocument) {
       //Crimson writer
-      XmlDocument xdoc = (XmlDocument) document;
-      xdoc.write(fos);
-    }
-    else {
+      //XmlDocument xdoc = (XmlDocument) document;
+      //xdoc.write(fos);
+    //}
+    //else {
       //Xerces writer
       OutputFormat format = new OutputFormat(document);
       format.setIndent(2);
       XMLSerializer serializer = new XMLSerializer(fos, format);
       serializer.asDOMSerializer();
       serializer.serialize(document.getDocumentElement());
-    }
+    //}
     if(fos != null) fos.close();
   }
   
