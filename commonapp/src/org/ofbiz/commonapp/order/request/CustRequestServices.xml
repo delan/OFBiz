@@ -38,6 +38,7 @@
         <field-to-result field-name="custRequestId" result-name="custRequestId"/>
 
         <create-value value-name="newEntity"/>
+        <field-to-result field-name="custRequestId"/>
     </simple-method>
 
     <simple-method method-name="updateCustRequest" short-description="Update Customer Request">
@@ -63,9 +64,9 @@
     </simple-method>
 
     <simple-method method-name="createCustRequestItem" short-description="Create Customer Request Item">
-        <make-value value-name="newEntity" entity-name="CustRequestAttribute"/>
+        <make-value value-name="newEntity" entity-name="CustRequestItem"/>
         <set-pk-fields map-name="parameters" value-name="newEntity"/>
-        <set-nopk-fields map-name="parameters" value-name="newEntity"/>
+        <set-nonpk-fields map-name="parameters" value-name="newEntity"/>
         <create-value value-name="newEntity"/>
     </simple-method>
 
