@@ -1,5 +1,5 @@
 <#--
- *  Copyright (c) 2003 The Open For Business Project - www.ofbiz.org
+ *  Copyright (c) 2003-2004 The Open For Business Project - www.ofbiz.org
  *
  *  Permission is hereby granted, free of charge, to any person obtaining a
  *  copy of this software and associated documentation files (the "Software"),
@@ -19,12 +19,11 @@
  *  OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR
  *  THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  *
- *@author     Andy Zeneski (jaz@ofbiz.org)
+ *@author     David E. Jones (jonesde@ofbiz.org)
  *@version    $Rev$
  *@since      2.1
 -->
 
-<#assign uiLabelMap = requestAttributes.uiLabelMap>
 <div class="head1">${uiLabelMap.ProductProductSearch}, <span class="head2">${uiLabelMap.ProductYouSearchedFor}:</span></div>
 <#list searchConstraintStrings as searchConstraintString>
     <div class="tabletext">&nbsp;<a href="<@ofbizUrl>/keywordsearch?removeConstraint=${searchConstraintString_index}&clearSearch=N</@ofbizUrl>" class="buttontext">[X]</a>&nbsp;${searchConstraintString}</div>
@@ -75,7 +74,7 @@
       <tr><td colspan="2"><hr class="sepbar"></td></tr>
       <tr>
         <td>
-          ${pages.get("/catalog/productsummary.ftl")}
+          ${screens.render("component://ecommerce/widget/CatalogScreens.xml#productsummary")}
         </td>
       </tr>
     </#list>
