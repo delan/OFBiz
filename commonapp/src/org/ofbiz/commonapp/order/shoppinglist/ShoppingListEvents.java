@@ -23,15 +23,29 @@
  */
 package org.ofbiz.commonapp.order.shoppinglist;
 
-import java.util.*;
-import javax.servlet.http.*;
+import java.util.HashMap;
+import java.util.Iterator;
+import java.util.List;
+import java.util.Map;
 
-import org.ofbiz.core.entity.*;
-import org.ofbiz.core.service.*;
-import org.ofbiz.core.util.*;
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
 
-import org.ofbiz.commonapp.order.shoppingcart.*;
-import org.ofbiz.commonapp.product.catalog.*;
+import org.ofbiz.commonapp.order.shoppingcart.CartItemModifyException;
+import org.ofbiz.commonapp.order.shoppingcart.ShoppingCart;
+import org.ofbiz.commonapp.order.shoppingcart.ShoppingCartEvents;
+import org.ofbiz.commonapp.order.shoppingcart.ShoppingCartItem;
+import org.ofbiz.commonapp.product.catalog.CatalogWorker;
+import org.ofbiz.core.entity.GenericDelegator;
+import org.ofbiz.core.entity.GenericEntityException;
+import org.ofbiz.core.entity.GenericValue;
+import org.ofbiz.core.service.GenericServiceException;
+import org.ofbiz.core.service.LocalDispatcher;
+import org.ofbiz.core.service.ModelService;
+import org.ofbiz.core.service.ServiceUtil;
+import org.ofbiz.core.util.Debug;
+import org.ofbiz.core.util.SiteDefs;
+import org.ofbiz.core.util.UtilMisc;
 
 /**
  * Shopping cart events.
@@ -46,7 +60,7 @@ public class ShoppingListEvents {
     
     public static String addBulkFromCart(HttpServletRequest request, HttpServletResponse response) {
         LocalDispatcher dispatcher = (LocalDispatcher) request.getAttribute("dispatcher");
-        ShoppingCart cart = (ShoppingCart) request.getSession().getAttribute(SiteDefs.SHOPPING_CART);
+        ShoppingCart cart = ShoppingCartEvents.getCartObject(request);
         GenericValue userLogin = (GenericValue) request.getSession().getAttribute("userLogin");        
         
         String shoppingListId = request.getParameter("shoppingListId");
@@ -109,7 +123,7 @@ public class ShoppingListEvents {
     public static String addListToCart(HttpServletRequest request, HttpServletResponse response) {
         GenericDelegator delegator = (GenericDelegator) request.getAttribute("delegator");
         LocalDispatcher dispatcher = (LocalDispatcher) request.getAttribute("dispatcher");
-        ShoppingCart cart = (ShoppingCart) request.getSession().getAttribute(SiteDefs.SHOPPING_CART);        
+        ShoppingCart cart = ShoppingCartEvents.getCartObject(request);        
         
         String shoppingListId = request.getParameter("shoppingListId");
         String includeChild = request.getParameter("includeChild");
