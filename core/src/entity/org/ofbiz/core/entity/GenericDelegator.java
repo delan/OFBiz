@@ -1396,7 +1396,8 @@ public class GenericDelegator {
 
     // ======= Misc Methods ========
 
-    /** Get the next guaranteed unique seq id from the sequence with the given sequence name; if the named sequence doesn't exist, it will be created
+    /** Get the next guaranteed unique seq id from the sequence with the given sequence name; 
+     * if the named sequence doesn't exist, it will be created
      *@param seqName The name of the sequence to get the next seq id from
      *@return Long with the next seq id for the given sequence name
      */
@@ -1415,6 +1416,17 @@ public class GenericDelegator {
         } else {
             return null;
         }
+    }
+
+    /** Allows you to pass a SequenceUtil class (possibly one that overrides the getNextSeqId method); 
+     * if null is passed will effectively refresh the sequencer. */
+    public void setSequencer(SequenceUtil sequencer) {
+       this.sequencer = sequencer;
+    }
+
+    /** Refreshes the ID sequencer clearing all cached bank values. */
+    public void refreshSequencer() {
+       this.sequencer = null;
     }
 
     protected void absorbCollection(Collection col) {
@@ -1436,5 +1448,4 @@ public class GenericDelegator {
     public UtilCache getAllCache() {
         return allCache;
 	}
-
 }
