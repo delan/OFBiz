@@ -171,12 +171,14 @@
         <attribute name="carrierPartyId" type="String" mode="IN"/>
         <attribute name="maySplit" type="Boolean" mode="IN"/>
         <attribute name="creditCardId" type="String" mode="IN"/>
+        <attribute name="orderId" type="String" mode="OUT"/>
     </service>
     <service name="changeOrderStatus" engine="java"
             location="org.ofbiz.commonapp.order.order.OrderServices" invoke="setOrderStatus">
         <description>Change the status of an existing order</description>
         <attribute name="orderId" type="String" mode="IN"/>
         <attribute name="statusId" type="String" mode="IN"/>
+        <attribute name="orderStatusId" type="String" mode="OUT" optional="true"/>
     </service>
     <service name="addOrderRole" engine="java"
     location="org.ofbiz.commonapp.order.order.OrderServices" invoke="addRoleType">
