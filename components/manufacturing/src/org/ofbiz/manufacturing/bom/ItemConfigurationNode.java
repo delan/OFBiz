@@ -28,6 +28,7 @@ public class ItemConfigurationNode {
 
     private ItemConfigurationNode parentNode; // the parent node (null if it's not present)
     private ItemConfigurationNode substitutedNode; // The virtual node (if any) that this instance substitutes
+    private GenericValue ruleApplied; // The rule (if any) that that has been applied to configure the current node
     private String productForRules;
     private GenericValue part; // the current product (from Product entity)
     private ArrayList children; // current node's children (ProductAssocs)
@@ -133,6 +134,7 @@ public class ItemConfigurationNode {
                     } else {
                         oneChildNode = new ItemConfigurationNode(newPart, delegator);
                         oneChildNode.setSubstitutedNode(tmpNode);
+                        oneChildNode.setRuleApplied(rule);
                         if (ruleQuantity > 0) {
                             oneChildNode.setQuantityMultiplier(ruleQuantity);
                         }
@@ -450,6 +452,22 @@ public class ItemConfigurationNode {
      */
     public void setQuantityMultiplier(float quantityMultiplier) {
         this.quantityMultiplier = quantityMultiplier;
+    }
+    
+    /** Getter for property ruleApplied.
+     * @return Value of property ruleApplied.
+     *
+     */
+    public org.ofbiz.entity.GenericValue getRuleApplied() {
+        return ruleApplied;
+    }
+    
+    /** Setter for property ruleApplied.
+     * @param ruleApplied New value of property ruleApplied.
+     *
+     */
+    public void setRuleApplied(org.ofbiz.entity.GenericValue ruleApplied) {
+        this.ruleApplied = ruleApplied;
     }
     
 }
