@@ -22,7 +22,7 @@
  *  THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  *
  *  This is the Open for Business Main build script.
- *  $Id: build.xml,v 1.25 2003/10/20 22:08:14 ajzeneski Exp $
+ *  $Id: build.xml,v 1.26 2003/10/21 18:30:29 ajzeneski Exp $
 -->
 
 <project name="OFBiz Main Build" default="build" basedir=".">
@@ -494,7 +494,7 @@
     <target name="copy-apis">
         <mkdir dir="${site.dir}/api"/>
         <copy todir="${site.dir}/api">
-            <fileset dir="${basedir}" includes="**/build/javadocs/*"/>
+            <fileset dir="${basedir}" includes="**/build/javadocs/**"/>
         </copy>
     </target>
     
