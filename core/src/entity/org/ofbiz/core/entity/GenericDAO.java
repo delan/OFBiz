@@ -2226,25 +2226,23 @@ public class GenericDAO {
             if (messages != null)
                 messages.add(message);
             return tableNames;
-        }
-        finally { try {
-                      tableSet.close();
-              } catch (SQLException sqle) {
-                      String message = "Unable to close ResultSet for table list, continuing anyway... Error was:" + sqle.toString();
-                      Debug.logError(message, module);
-                  if (messages != null)
-                          messages.add(message);
-                  }
+        } finally { 
+            try {
+                tableSet.close();
+            } catch (SQLException sqle) {
+                String message = "Unable to close ResultSet for table list, continuing anyway... Error was:" + sqle.toString();
+                Debug.logError(message, module);
+                if (messages != null) messages.add(message);
+            }
 
-              try {
-                      connection.close();
-              } catch (SQLException sqle) {
-                      String message = "Unable to close database connection, continuing anyway... Error was:" + sqle.toString();
-                      Debug.logError(message, module);
-                  if (messages != null)
-                          messages.add(message);
-                  }
-                }
+            try {
+                connection.close();
+            } catch (SQLException sqle) {
+                String message = "Unable to close database connection, continuing anyway... Error was:" + sqle.toString();
+                Debug.logError(message, module);
+                if (messages != null) messages.add(message);
+            }
+        }
         return tableNames;
     }
 
