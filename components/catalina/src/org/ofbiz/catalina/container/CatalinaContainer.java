@@ -445,7 +445,7 @@ public class CatalinaContainer implements Container {
         boolean enableKeepAlive = ContainerConfig.getPropertyValue(connectorProp, "enable-keep-alive", true);
         connector.setKeepAlive(enableKeepAlive);
 
-        int redirect = ContainerConfig.getPropertyValue(connectorProp, "port", -1);
+        int redirect = ContainerConfig.getPropertyValue(connectorProp, "redirect", -1);
         if (redirect > 0) {
             connector.setRedirectPort(redirect);
         }
