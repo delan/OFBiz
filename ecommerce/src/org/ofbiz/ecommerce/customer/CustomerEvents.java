@@ -1,6 +1,13 @@
 /*
  * $Id$
  * $Log$
+ * Revision 1.23  2001/09/25 14:42:12  epabst
+ * added password hint
+ * added getCurrentPartyContactMechList helper method
+ * created (via refactoring) setPassword method to validate and set it and the hint
+ * fixed minor bugs
+ * fixed minor formatting
+ *
  * Revision 1.22  2001/09/19 08:42:08  jonesde
  * Initial checkin of refactored entity engine.
  *
@@ -372,9 +379,8 @@ public class CustomerEvents {
 
         String cmPurposeTypeId;
         try {
-            Collection c = delegator.findByAnd("PartyContactMechPurpose", UtilMisc.toMap("partyId", userLogin.get("partyId"), "contactMechPurposeTypeId", "PRIMARY_EMAIL"), null);
-            Debug.logInfo("list of Primary Emails: " + c);
-            if (UtilValidate.isEmpty(delegator.findByAnd("PartyContactMechPurpose", UtilMisc.toMap("partyId", userLogin.get("partyId"), "contactMechPurposeTypeId", "PRIMARY_EMAIL"), null))) {
+            GenericValue party = userLogin.getRelatedOne("Party");
+            if (UtilValidate.isEmpty(getCurrentPartyContactMechList(party, "PRIMARY_EMAIL"))) {
                 cmPurposeTypeId = "PRIMARY_EMAIL";
             } else {
                 cmPurposeTypeId = "OTHER_EMAIL";
