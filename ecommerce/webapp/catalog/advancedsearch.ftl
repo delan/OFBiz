@@ -25,31 +25,50 @@
 -->
 
 <div class='head1'>Advanced Search in Category: ${searchCategory.description}</div>
-
+<br>
 <form name="advtokeywordsearchform" method="POST" action="<@ofbizUrl>/keywordsearch</@ofbizUrl>" style='margin: 0;'>
   <input type='hidden' name="VIEW_SIZE" value="10">
   <input type='hidden' name="SEARCH_CATEGORY_ID" value="${searchCategoryId}">
-  <div class='tabletext'>
-    Keywords: <input type='text' class='inputBox' name="SEARCH_STRING" size="40" value="${requestParameters.SEARCH_STRING?if_exists}">
-    Any<input type='RADIO' name='SEARCH_OPERATOR' value='OR' <#if searchOperator == "OR">checked</#if>>
-    All<input type='RADIO' name='SEARCH_OPERATOR' value='AND' <#if searchOperator == "AND">checked</#if>>
-  </div>
-  <#list productFeaturesByTypeMap.keySet() as productFeatureTypeId>
-    <#assign findPftMap = Static["org.ofbiz.core.util.UtilMisc"].toMap("productFeatureTypeId", productFeatureTypeId)>
-    <#assign productFeatureType = delegator.findByPrimaryKeyCache("ProductFeatureType", findPftMap)>
-    <#assign productFeatures = productFeaturesByTypeMap[productFeatureTypeId]>
-    <div class='tabletext'>
-      ${productFeatureType.description}:
-      <select name="pft_${productFeatureTypeId}">
-        <option value="">- any -</option>
-        <#list productFeatures as productFeature>
-          <option value="${productFeature.productFeatureId}">${productFeature.description}</option>
-        </#list>
-      </select>
-    </div>
-  </#list>
-  <div class='tabletext'>
-    <a href="javascript:document.advtokeywordsearchform.submit()" class="buttontext">Find</a>
-  </div>
+  <table border="0" wdith="100%">
+    <tr>
+      <td>
+        <div class='tabletext'>Keywords:</div>
+      </td>
+      <td>
+        <div class='tabletext'>
+          <input type='text' class='inputBox' name="SEARCH_STRING" size="40" value="${requestParameters.SEARCH_STRING?if_exists}">&nbsp;
+          Any<input type='RADIO' name='SEARCH_OPERATOR' value='OR' <#if searchOperator == "OR">checked</#if>>
+          All<input type='RADIO' name='SEARCH_OPERATOR' value='AND' <#if searchOperator == "AND">checked</#if>>
+        </div>
+      </td>
+    </tr>   
+    <#list productFeaturesByTypeMap.keySet() as productFeatureTypeId>
+      <#assign findPftMap = Static["org.ofbiz.core.util.UtilMisc"].toMap("productFeatureTypeId", productFeatureTypeId)>
+      <#assign productFeatureType = delegator.findByPrimaryKeyCache("ProductFeatureType", findPftMap)>
+      <#assign productFeatures = productFeaturesByTypeMap[productFeatureTypeId]>
+      <tr>
+        <td>
+          <div class='tabletext'>${productFeatureType.description}:</div>
+        </td>
+        <td>
+          <div class='tabletext'>
+            <select class="selectBox" name="pft_${productFeatureTypeId}">
+              <option value="">- any -</option>
+              <#list productFeatures as productFeature>
+              <option value="${productFeature.productFeatureId}">${productFeature.description}</option>
+              </#list>
+            </select>
+          </div>
+        </td>
+      </tr>
+    </#list>
+    <tr>
+      <td>
+        <div class='tabletext'>
+          <a href="javascript:document.advtokeywordsearchform.submit()" class="buttontext">Find</a>
+        </div>
+      </td>
+    </tr>
+  </table>
 </form>
 
