@@ -96,6 +96,25 @@
         <auto-attributes include="pk" mode="IN" optional="false"/>
     </service>
 
+    <!-- ShipmentPackageRouteSeg Services -->
+    <service name="createShipmentPackageRouteSeg" default-entity-name="ShipmentPackageRouteSeg" engine="simple"
+            location="org/ofbiz/commonapp/shipment/shipment/ShipmentServices.xml" invoke="createShipmentPackageRouteSeg" auth="true">
+        <description>Create ShipmentPackageRouteSeg</description>
+        <auto-attributes include="pk" mode="IN" optional="false"/>
+        <auto-attributes include="nonpk" mode="IN" optional="true"/>
+    </service>
+    <service name="updateShipmentPackageRouteSeg" default-entity-name="ShipmentPackageRouteSeg" engine="simple"
+            location="org/ofbiz/commonapp/shipment/shipment/ShipmentServices.xml" invoke="updateShipmentPackageRouteSeg" auth="true">
+        <description>Update ShipmentPackageRouteSeg</description>
+        <auto-attributes include="pk" mode="IN" optional="false"/>
+        <auto-attributes include="nonpk" mode="IN" optional="true"/>
+    </service>
+    <service name="deleteShipmentPackageRouteSeg" default-entity-name="ShipmentPackageRouteSeg" engine="simple"
+            location="org/ofbiz/commonapp/shipment/shipment/ShipmentServices.xml" invoke="deleteShipmentPackageRouteSeg" auth="true">
+        <description>Delete ShipmentPackageRouteSeg</description>
+        <auto-attributes include="pk" mode="IN" optional="false"/>
+    </service>
+
     <!-- ShipmentContactMech Services -->
     <service name="createShipmentContactMech" default-entity-name="ShipmentContactMech" engine="simple"
             location="org/ofbiz/commonapp/shipment/shipment/ShipmentServices.xml" invoke="createShipmentContactMech" auth="true">

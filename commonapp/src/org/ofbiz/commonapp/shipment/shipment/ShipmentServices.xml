@@ -213,6 +213,43 @@
         <remove-value value-name="lookedUpValue"/>
     </simple-method>
 
+    <!-- ShipmentPackageRouteSeg services -->
+    <simple-method method-name="createShipmentPackageRouteSeg" short-description="Create ShipmentPackageRouteSeg">
+        <check-permission permission="FACILITY" action="_CREATE">
+            <fail-message message="Security Error: to run createShipmentPackageRouteSeg you must have the FACILITY_CREATE or FACILITY_ADMIN permission"/>
+        </check-permission>
+        <check-errors/>
+
+        <make-value value-name="newEntity" entity-name="ShipmentPackageRouteSeg"/>
+        <set-pk-fields map-name="parameters" value-name="newEntity"/>
+        <set-nonpk-fields map-name="parameters" value-name="newEntity"/>
+        
+        <create-value value-name="newEntity"/>
+    </simple-method>
+    <simple-method method-name="updateShipmentPackageRouteSeg" short-description="Update ShipmentPackageRouteSeg">
+        <check-permission permission="FACILITY" action="_UPDATE">
+            <fail-message message="Security Error: to run updateShipmentPackageRouteSeg you must have the FACILITY_UPDATE or FACILITY_ADMIN permission"/>
+        </check-permission>
+        <check-errors/>
+
+        <make-value value-name="lookupPKMap" entity-name="ShipmentPackageRouteSeg"/>
+        <set-pk-fields map-name="parameters" value-name="lookupPKMap"/>
+        <find-by-primary-key entity-name="ShipmentPackageRouteSeg" map-name="lookupPKMap" value-name="lookedUpValue"/>
+        <set-nonpk-fields map-name="parameters" value-name="lookedUpValue"/>
+        <store-value value-name="lookedUpValue"/>
+    </simple-method>
+    <simple-method method-name="deleteShipmentPackageRouteSeg" short-description="Delete ShipmentPackageRouteSeg">
+        <check-permission permission="FACILITY" action="_DELETE">
+            <fail-message message="Security Error: to run deleteShipmentPackageRouteSeg you must have the FACILITY_DELETE or FACILITY_ADMIN permission"/>
+        </check-permission>
+        <check-errors/>
+
+        <make-value value-name="lookupPKMap" entity-name="ShipmentPackageRouteSeg"/>
+        <set-pk-fields map-name="parameters" value-name="lookupPKMap"/>
+        <find-by-primary-key entity-name="ShipmentPackageRouteSeg" map-name="lookupPKMap" value-name="lookedUpValue"/>
+        <remove-value value-name="lookedUpValue"/>
+    </simple-method>
+
     <!-- ShipmentContactMech services -->
     <simple-method method-name="createShipmentContactMech" short-description="Create ShipmentContactMech">
         <check-permission permission="FACILITY" action="_CREATE">
