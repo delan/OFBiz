@@ -1,0 +1,82 @@
+
+import java.util.*;
+import org.ofbiz.base.util.*;
+import org.ofbiz.shark.container.*;
+import org.ofbiz.shark.requester.*;
+import org.enhydra.shark.api.client.wfservice.*;
+import org.enhydra.shark.api.client.wfmodel.*;
+
+userLogin = session.getAttribute("userLogin");
+
+// get the admin tools
+admin = SharkContainer.getAdminInterface();
+exMgr = admin.getExecutionAdministration();
+
+if (userLogin == null) {
+    request.setAttribute("_ERROR_MESSAGE_", "UserLogin object not found.");
+    return;
+}
+
+// connect to the engine
+exMgr.connect(userLogin.getString("userLoginId"), userLogin.getString("currentPassword"), null, null);
+
+// enabled state code
+context.put("enabledCode", process_mgr_stateType._enabled);
+
+// create a process
+if (request.getParameter("create") != null) {
+    mgrName = request.getParameter("create");
+    try {
+        mgr = exMgr.getProcessMgr(mgrName);
+        if (mgr != null) {
+            PersistentRequester req = new LoggingRequester();
+            WfProcess proc = mgr.create_process(req);
+            req.addPerformer(proc);
+            proc.start();            
+        }
+    } catch (Exception e) {
+        request.setAttribute("_ERROR_MESSAGE_", e.getMessage());
+    }
+}
+
+// disable the mgr
+if (request.getParameter("disable") != null) {
+    mgrName = request.getParameter("disable");
+    try {
+        mgr = exMgr.getProcessMgr(mgrName);
+        if (mgr != null) {
+            disabledType = process_mgr_stateType.from_int(process_mgr_stateType._disabled);
+            mgr.set_process_mgr_state(disabledType);
+        }
+    } catch (Exception e) {
+        request.setAttribute("_ERROR_MESSAGE_", e.getMessage());
+    }
+}
+
+// enable the mgr
+if (request.getParameter("enable") != null) {
+    mgrName = request.getParameter("enable");
+    try {
+        mgr = exMgr.getProcessMgr(mgrName);
+        if (mgr != null) {
+            enabledType = process_mgr_stateType.from_int(process_mgr_stateType._enabled);
+            mgr.set_process_mgr_state(enabledType);                                    
+        }
+    } catch (Exception e) {
+        request.setAttribute("_ERROR_MESSAGE_", e.getMessage());
+    }
+}
+
+// get the process managers
+pi = exMgr.get_iterator_processmgr();
+if (pi != null) {
+    mgrList = new ArrayList();
+    size = pi.how_many();
+    mgrs = pi.get_next_n_sequence(size);
+    Debug.log("Mgrs : " + mgrs.length);
+    context.put("processMgrs", Arrays.asList(mgrs));
+}
+
+
+// disconnect from the engine
+exMgr.disconnect();
