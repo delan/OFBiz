@@ -24,7 +24,7 @@
  *  THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  *
  *@author     David E. Jones
- *@created    Wed Jul 04 01:03:20 MDT 2001
+ *@created    Fri Jul 06 16:51:34 MDT 2001
  *@version    1.0
  */
 %>
@@ -52,9 +52,9 @@
 <%if(hasViewPermission){%>
 
 <%
-  String rowColor1 = "99CCFF";
-  String rowColor2 = "CCFFFF";
-  String rowColor = "";
+  String rowClass1 = "viewOneTR1";
+  String rowClass2 = "viewOneTR2";
+  String rowClass = "";
 
   String userLoginId = request.getParameter("LOGIN_ACCOUNT_HISTORY_USER_LOGIN_ID");  
   String userLoginSeqId = request.getParameter("LOGIN_ACCOUNT_HISTORY_USER_LOGIN_SEQ_ID");  
@@ -66,7 +66,7 @@
 %>
 
 <br>
-<div style='color:yellow;width:100%;background-color:#330033;padding:3;'>
+<div style='color: white; width: 100%; background-color: black; padding:3;'>
   <b>View Entity: LoginAccountHistory with (USER_LOGIN_ID, USER_LOGIN_SEQ_ID: <%=userLoginId%>, <%=userLoginSeqId%>).</b>
 </div>
 
@@ -87,11 +87,11 @@
 
 <table border="0" cellspacing="2" cellpadding="2">
 <%if(loginAccountHistory == null){%>
-<tr bgcolor="<%=rowColor1%>"><td><h3>Specified LoginAccountHistory was not found.</h3></td></tr>
+<tr class="<%=rowClass1%>"><td><h3>Specified LoginAccountHistory was not found.</h3></td></tr>
 <%}else{%>
 
-  <%rowColor=(rowColor==rowColor1?rowColor2:rowColor1);%>
-  <tr bgcolor="<%=rowColor%>">
+  <%rowClass=(rowClass==rowClass1?rowClass2:rowClass1);%>
+  <tr class="<%=rowClass%>">
     <td><b>USER_LOGIN_ID</b></td>
     <td>
     
@@ -100,8 +100,8 @@
     </td>
   </tr>
 
-  <%rowColor=(rowColor==rowColor1?rowColor2:rowColor1);%>
-  <tr bgcolor="<%=rowColor%>">
+  <%rowClass=(rowClass==rowClass1?rowClass2:rowClass1);%>
+  <tr class="<%=rowClass%>">
     <td><b>USER_LOGIN_SEQ_ID</b></td>
     <td>
     
@@ -110,8 +110,8 @@
     </td>
   </tr>
 
-  <%rowColor=(rowColor==rowColor1?rowColor2:rowColor1);%>
-  <tr bgcolor="<%=rowColor%>">
+  <%rowClass=(rowClass==rowClass1?rowClass2:rowClass1);%>
+  <tr class="<%=rowClass%>">
     <td><b>FROM_DATE</b></td>
     <td>
     
@@ -134,8 +134,8 @@
     </td>
   </tr>
 
-  <%rowColor=(rowColor==rowColor1?rowColor2:rowColor1);%>
-  <tr bgcolor="<%=rowColor%>">
+  <%rowClass=(rowClass==rowClass1?rowClass2:rowClass1);%>
+  <tr class="<%=rowClass%>">
     <td><b>THRU_DATE</b></td>
     <td>
     
@@ -158,8 +158,8 @@
     </td>
   </tr>
 
-  <%rowColor=(rowColor==rowColor1?rowColor2:rowColor1);%>
-  <tr bgcolor="<%=rowColor%>">
+  <%rowClass=(rowClass==rowClass1?rowClass2:rowClass1);%>
+  <tr class="<%=rowClass%>">
     <td><b>PARTY_ID</b></td>
     <td>
     
@@ -168,8 +168,8 @@
     </td>
   </tr>
 
-  <%rowColor=(rowColor==rowColor1?rowColor2:rowColor1);%>
-  <tr bgcolor="<%=rowColor%>">
+  <%rowClass=(rowClass==rowClass1?rowClass2:rowClass1);%>
+  <tr class="<%=rowClass%>">
     <td><b>USER_ID</b></td>
     <td>
     
@@ -178,8 +178,8 @@
     </td>
   </tr>
 
-  <%rowColor=(rowColor==rowColor1?rowColor2:rowColor1);%>
-  <tr bgcolor="<%=rowColor%>">
+  <%rowClass=(rowClass==rowClass1?rowClass2:rowClass1);%>
+  <tr class="<%=rowClass%>">
     <td><b>PASSWORD</b></td>
     <td>
     
@@ -206,6 +206,39 @@
   <%}%>
 <%}%>
 <br>
+<br>
+<SCRIPT language='JavaScript'>  
+var numTabs=2;
+function ShowTab(lname) 
+{
+  for(inc=1; inc <= numTabs; inc++)
+  {
+    document.all['tab' + inc].className = (lname == 'tab' + inc) ? 'ontab' : 'offtab';
+    document.all['lnk' + inc].className = (lname == 'tab' + inc) ? 'onlnk' : 'offlnk';
+    document.all['area' + inc].style.visibility = (lname == 'tab' + inc) ? 'visible' : 'hidden';
+  }
+}
+</SCRIPT>
+<%if(loginAccountHistory != null){%>
+<table cellpadding='0' cellspacing='0'><tr>
+
+  
+    <%if(Security.hasEntityPermission("USER_LOGIN", "_VIEW", session)){%>
+    <td id=tab1 class=ontab>
+      <a href='javascript:ShowTab("tab1")' id=lnk1 class=onlnk> UserLogin</a>
+    </td>
+    <%}%>
+
+  
+    <%if(Security.hasEntityPermission("PARTY", "_VIEW", session)){%>
+    <td id=tab2 class=offtab>
+      <a href='javascript:ShowTab("tab2")' id=lnk2 class=offlnk> Party</a>
+    </td>
+    <%}%>
+
+</tr></table>
+<%}%>
+  
 
   
   
@@ -214,8 +247,8 @@
 <%if(loginAccountHistory != null){%>
   <%if(Security.hasEntityPermission("USER_LOGIN", "_VIEW", session)){%>
     <%UserLogin userLoginRelated = UserLoginHelper.findByPrimaryKey(loginAccountHistory.getUserLoginId());%>
-    <br>
-    <div style='color:yellow;width:100%;background-color:#660066;padding:2;'>
+  <DIV id=area1 style="VISIBILITY: visible; POSITION: absolute" width="100%">
+    <div class=areaheader>
      <b></b> Related Entity: <b>UserLogin</b> with (USER_LOGIN_ID: <%=loginAccountHistory.getUserLoginId()%>)
     </div>
     <%if(loginAccountHistory.getUserLoginId() != null){%>
@@ -234,11 +267,11 @@
     <%}%>
     <table border="0" cellspacing="2" cellpadding="2">
     <%if(userLoginRelated == null){%>
-    <tr bgcolor="<%=rowColor1%>"><td><h3>Specified UserLogin was not found.</h3></td></tr>
+    <tr class="<%=rowClass1%>"><td><h3>Specified UserLogin was not found.</h3></td></tr>
     <%}else{%>
 
-  <%rowColor=(rowColor==rowColor1?rowColor2:rowColor1);%>
-  <tr bgcolor="<%=rowColor%>">
+  <%rowClass=(rowClass==rowClass1?rowClass2:rowClass1);%>
+  <tr class="<%=rowClass%>">
     <td><b>USER_LOGIN_ID</b></td>
     <td>
     
@@ -247,8 +280,8 @@
     </td>
   </tr>
 
-  <%rowColor=(rowColor==rowColor1?rowColor2:rowColor1);%>
-  <tr bgcolor="<%=rowColor%>">
+  <%rowClass=(rowClass==rowClass1?rowClass2:rowClass1);%>
+  <tr class="<%=rowClass%>">
     <td><b>PARTY_ID</b></td>
     <td>
     
@@ -257,8 +290,8 @@
     </td>
   </tr>
 
-  <%rowColor=(rowColor==rowColor1?rowColor2:rowColor1);%>
-  <tr bgcolor="<%=rowColor%>">
+  <%rowClass=(rowClass==rowClass1?rowClass2:rowClass1);%>
+  <tr class="<%=rowClass%>">
     <td><b>CONTACT_MECHANISM_ID</b></td>
     <td>
     
@@ -267,8 +300,8 @@
     </td>
   </tr>
 
-  <%rowColor=(rowColor==rowColor1?rowColor2:rowColor1);%>
-  <tr bgcolor="<%=rowColor%>">
+  <%rowClass=(rowClass==rowClass1?rowClass2:rowClass1);%>
+  <tr class="<%=rowClass%>">
     <td><b>CURRENT_USER_ID</b></td>
     <td>
     
@@ -277,8 +310,8 @@
     </td>
   </tr>
 
-  <%rowColor=(rowColor==rowColor1?rowColor2:rowColor1);%>
-  <tr bgcolor="<%=rowColor%>">
+  <%rowClass=(rowClass==rowClass1?rowClass2:rowClass1);%>
+  <tr class="<%=rowClass%>">
     <td><b>CURRENT_PASSWORD</b></td>
     <td>
     
@@ -289,6 +322,7 @@
 
     <%} //end if userLoginRelated == null %>
     </table>
+  </div>
   <%}%>
 <%}%>
 <%-- End Relation for UserLogin, type: one --%>
@@ -301,8 +335,8 @@
 <%if(loginAccountHistory != null){%>
   <%if(Security.hasEntityPermission("PARTY", "_VIEW", session)){%>
     <%Party partyRelated = PartyHelper.findByPrimaryKey(loginAccountHistory.getPartyId());%>
-    <br>
-    <div style='color:yellow;width:100%;background-color:#660066;padding:2;'>
+  <DIV id=area2 style="VISIBILITY: hidden; POSITION: absolute" width="100%">
+    <div class=areaheader>
      <b></b> Related Entity: <b>Party</b> with (PARTY_ID: <%=loginAccountHistory.getPartyId()%>)
     </div>
     <%if(loginAccountHistory.getPartyId() != null){%>
@@ -321,11 +355,11 @@
     <%}%>
     <table border="0" cellspacing="2" cellpadding="2">
     <%if(partyRelated == null){%>
-    <tr bgcolor="<%=rowColor1%>"><td><h3>Specified Party was not found.</h3></td></tr>
+    <tr class="<%=rowClass1%>"><td><h3>Specified Party was not found.</h3></td></tr>
     <%}else{%>
 
-  <%rowColor=(rowColor==rowColor1?rowColor2:rowColor1);%>
-  <tr bgcolor="<%=rowColor%>">
+  <%rowClass=(rowClass==rowClass1?rowClass2:rowClass1);%>
+  <tr class="<%=rowClass%>">
     <td><b>PARTY_ID</b></td>
     <td>
     
@@ -336,6 +370,7 @@
 
     <%} //end if partyRelated == null %>
     </table>
+  </div>
   <%}%>
 <%}%>
 <%-- End Relation for Party, type: one --%>

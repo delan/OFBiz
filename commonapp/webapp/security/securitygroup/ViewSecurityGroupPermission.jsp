@@ -24,7 +24,7 @@
  *  THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  *
  *@author     David E. Jones
- *@created    Wed Jul 04 01:03:22 MDT 2001
+ *@created    Fri Jul 06 16:51:36 MDT 2001
  *@version    1.0
  */
 %>
@@ -51,9 +51,9 @@
 <%if(hasViewPermission){%>
 
 <%
-  String rowColor1 = "99CCFF";
-  String rowColor2 = "CCFFFF";
-  String rowColor = "";
+  String rowClass1 = "viewOneTR1";
+  String rowClass2 = "viewOneTR2";
+  String rowClass = "";
 
   String groupId = request.getParameter("SECURITY_GROUP_PERMISSION_GROUP_ID");  
   String permissionId = request.getParameter("SECURITY_GROUP_PERMISSION_PERMISSION_ID");  
@@ -65,7 +65,7 @@
 %>
 
 <br>
-<div style='color:yellow;width:100%;background-color:#330033;padding:3;'>
+<div style='color: white; width: 100%; background-color: black; padding:3;'>
   <b>View Entity: SecurityGroupPermission with (GROUP_ID, PERMISSION_ID: <%=groupId%>, <%=permissionId%>).</b>
 </div>
 
@@ -86,11 +86,11 @@
 
 <table border="0" cellspacing="2" cellpadding="2">
 <%if(securityGroupPermission == null){%>
-<tr bgcolor="<%=rowColor1%>"><td><h3>Specified SecurityGroupPermission was not found.</h3></td></tr>
+<tr class="<%=rowClass1%>"><td><h3>Specified SecurityGroupPermission was not found.</h3></td></tr>
 <%}else{%>
 
-  <%rowColor=(rowColor==rowColor1?rowColor2:rowColor1);%>
-  <tr bgcolor="<%=rowColor%>">
+  <%rowClass=(rowClass==rowClass1?rowClass2:rowClass1);%>
+  <tr class="<%=rowClass%>">
     <td><b>GROUP_ID</b></td>
     <td>
     
@@ -99,8 +99,8 @@
     </td>
   </tr>
 
-  <%rowColor=(rowColor==rowColor1?rowColor2:rowColor1);%>
-  <tr bgcolor="<%=rowColor%>">
+  <%rowClass=(rowClass==rowClass1?rowClass2:rowClass1);%>
+  <tr class="<%=rowClass%>">
     <td><b>PERMISSION_ID</b></td>
     <td>
     
@@ -127,6 +127,39 @@
   <%}%>
 <%}%>
 <br>
+<br>
+<SCRIPT language='JavaScript'>  
+var numTabs=2;
+function ShowTab(lname) 
+{
+  for(inc=1; inc <= numTabs; inc++)
+  {
+    document.all['tab' + inc].className = (lname == 'tab' + inc) ? 'ontab' : 'offtab';
+    document.all['lnk' + inc].className = (lname == 'tab' + inc) ? 'onlnk' : 'offlnk';
+    document.all['area' + inc].style.visibility = (lname == 'tab' + inc) ? 'visible' : 'hidden';
+  }
+}
+</SCRIPT>
+<%if(securityGroupPermission != null){%>
+<table cellpadding='0' cellspacing='0'><tr>
+
+  
+    <%if(Security.hasEntityPermission("SECURITY_GROUP", "_VIEW", session)){%>
+    <td id=tab1 class=ontab>
+      <a href='javascript:ShowTab("tab1")' id=lnk1 class=onlnk> SecurityGroup</a>
+    </td>
+    <%}%>
+
+  
+    <%if(Security.hasEntityPermission("SECURITY_PERMISSION", "_VIEW", session)){%>
+    <td id=tab2 class=offtab>
+      <a href='javascript:ShowTab("tab2")' id=lnk2 class=offlnk> SecurityPermission</a>
+    </td>
+    <%}%>
+
+</tr></table>
+<%}%>
+  
 
   
   
@@ -135,8 +168,8 @@
 <%if(securityGroupPermission != null){%>
   <%if(Security.hasEntityPermission("SECURITY_GROUP", "_VIEW", session)){%>
     <%SecurityGroup securityGroupRelated = SecurityGroupHelper.findByPrimaryKey(securityGroupPermission.getGroupId());%>
-    <br>
-    <div style='color:yellow;width:100%;background-color:#660066;padding:2;'>
+  <DIV id=area1 style="VISIBILITY: visible; POSITION: absolute" width="100%">
+    <div class=areaheader>
      <b></b> Related Entity: <b>SecurityGroup</b> with (GROUP_ID: <%=securityGroupPermission.getGroupId()%>)
     </div>
     <%if(securityGroupPermission.getGroupId() != null){%>
@@ -155,11 +188,11 @@
     <%}%>
     <table border="0" cellspacing="2" cellpadding="2">
     <%if(securityGroupRelated == null){%>
-    <tr bgcolor="<%=rowColor1%>"><td><h3>Specified SecurityGroup was not found.</h3></td></tr>
+    <tr class="<%=rowClass1%>"><td><h3>Specified SecurityGroup was not found.</h3></td></tr>
     <%}else{%>
 
-  <%rowColor=(rowColor==rowColor1?rowColor2:rowColor1);%>
-  <tr bgcolor="<%=rowColor%>">
+  <%rowClass=(rowClass==rowClass1?rowClass2:rowClass1);%>
+  <tr class="<%=rowClass%>">
     <td><b>GROUP_ID</b></td>
     <td>
     
@@ -168,8 +201,8 @@
     </td>
   </tr>
 
-  <%rowColor=(rowColor==rowColor1?rowColor2:rowColor1);%>
-  <tr bgcolor="<%=rowColor%>">
+  <%rowClass=(rowClass==rowClass1?rowClass2:rowClass1);%>
+  <tr class="<%=rowClass%>">
     <td><b>DESCRIPTION</b></td>
     <td>
     
@@ -180,6 +213,7 @@
 
     <%} //end if securityGroupRelated == null %>
     </table>
+  </div>
   <%}%>
 <%}%>
 <%-- End Relation for SecurityGroup, type: one --%>
@@ -192,8 +226,8 @@
 <%if(securityGroupPermission != null){%>
   <%if(Security.hasEntityPermission("SECURITY_PERMISSION", "_VIEW", session)){%>
     <%SecurityPermission securityPermissionRelated = SecurityPermissionHelper.findByPrimaryKey(securityGroupPermission.getPermissionId());%>
-    <br>
-    <div style='color:yellow;width:100%;background-color:#660066;padding:2;'>
+  <DIV id=area2 style="VISIBILITY: hidden; POSITION: absolute" width="100%">
+    <div class=areaheader>
      <b></b> Related Entity: <b>SecurityPermission</b> with (PERMISSION_ID: <%=securityGroupPermission.getPermissionId()%>)
     </div>
     <%if(securityGroupPermission.getPermissionId() != null){%>
@@ -212,11 +246,11 @@
     <%}%>
     <table border="0" cellspacing="2" cellpadding="2">
     <%if(securityPermissionRelated == null){%>
-    <tr bgcolor="<%=rowColor1%>"><td><h3>Specified SecurityPermission was not found.</h3></td></tr>
+    <tr class="<%=rowClass1%>"><td><h3>Specified SecurityPermission was not found.</h3></td></tr>
     <%}else{%>
 
-  <%rowColor=(rowColor==rowColor1?rowColor2:rowColor1);%>
-  <tr bgcolor="<%=rowColor%>">
+  <%rowClass=(rowClass==rowClass1?rowClass2:rowClass1);%>
+  <tr class="<%=rowClass%>">
     <td><b>PERMISSION_ID</b></td>
     <td>
     
@@ -225,8 +259,8 @@
     </td>
   </tr>
 
-  <%rowColor=(rowColor==rowColor1?rowColor2:rowColor1);%>
-  <tr bgcolor="<%=rowColor%>">
+  <%rowClass=(rowClass==rowClass1?rowClass2:rowClass1);%>
+  <tr class="<%=rowClass%>">
     <td><b>DESCRIPTION</b></td>
     <td>
     
@@ -237,6 +271,7 @@
 
     <%} //end if securityPermissionRelated == null %>
     </table>
+  </div>
   <%}%>
 <%}%>
 <%-- End Relation for SecurityPermission, type: one --%>

@@ -24,7 +24,7 @@
  *  THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  *
  *@author     David E. Jones
- *@created    Wed Jul 04 01:03:21 MDT 2001
+ *@created    Fri Jul 06 16:51:35 MDT 2001
  *@version    1.0
  */
 %>
@@ -50,9 +50,9 @@
 
 <%
   boolean showFields = true;
-  String rowColor1 = "99CCFF";
-  String rowColor2 = "CCFFFF";
-  String rowColor = "";
+  String rowClass1 = "viewOneTR1";
+  String rowClass2 = "viewOneTR2";
+  String rowClass = "";
 
   String permissionId = request.getParameter("SECURITY_PERMISSION_PERMISSION_ID");  
 
@@ -97,7 +97,7 @@
     You may create a SecurityPermission by entering the values you want, and clicking Update.
     <input type="hidden" name="UPDATE_MODE" value="CREATE">
   
-    <%rowColor=(rowColor==rowColor1?rowColor2:rowColor1);%><tr bgcolor="<%=rowColor%>">
+    <%rowClass=(rowClass==rowClass1?rowClass2:rowClass1);%><tr class="<%=rowClass%>">
       <td>PERMISSION_ID</td>
       <td>
       
@@ -115,7 +115,7 @@
     <input type="hidden" name="UPDATE_MODE" value="UPDATE">
   
       <input type="hidden" name="SECURITY_PERMISSION_PERMISSION_ID" value="<%=permissionId%>">
-    <%rowColor=(rowColor==rowColor1?rowColor2:rowColor1);%><tr bgcolor="<%=rowColor%>">
+    <%rowClass=(rowClass==rowClass1?rowClass2:rowClass1);%><tr class="<%=rowClass%>">
       <td>PERMISSION_ID</td>
       <td>
         <b><%=permissionId%></b> (This cannot be changed without re-creating the securityPermission.)
@@ -132,7 +132,7 @@
   
 
   
-  <%rowColor=(rowColor==rowColor1?rowColor2:rowColor1);%><tr bgcolor="<%=rowColor%>">
+  <%rowClass=(rowClass==rowClass1?rowClass2:rowClass1);%><tr class="<%=rowClass%>">
     <td>DESCRIPTION</td>
     <td>
     
@@ -142,7 +142,7 @@
   </tr>
   
 
-  <%rowColor=(rowColor==rowColor1?rowColor2:rowColor1);%><tr bgcolor="<%=rowColor%>">
+  <%rowClass=(rowClass==rowClass1?rowClass2:rowClass1);%><tr class="<%=rowClass%>">
     <td colspan="2"><input type="submit" name="Update" value="Update"></td>
   </tr>
 <%}%>

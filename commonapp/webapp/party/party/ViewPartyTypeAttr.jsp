@@ -24,7 +24,7 @@
  *  THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  *
  *@author     David E. Jones
- *@created    Wed Jul 04 01:03:19 MDT 2001
+ *@created    Fri Jul 06 16:51:33 MDT 2001
  *@version    1.0
  */
 %>
@@ -51,9 +51,9 @@
 <%if(hasViewPermission){%>
 
 <%
-  String rowColor1 = "99CCFF";
-  String rowColor2 = "CCFFFF";
-  String rowColor = "";
+  String rowClass1 = "viewOneTR1";
+  String rowClass2 = "viewOneTR2";
+  String rowClass = "";
 
   String partyTypeId = request.getParameter("PARTY_TYPE_ATTR_PARTY_TYPE_ID");  
   String name = request.getParameter("PARTY_TYPE_ATTR_NAME");  
@@ -65,7 +65,7 @@
 %>
 
 <br>
-<div style='color:yellow;width:100%;background-color:#330033;padding:3;'>
+<div style='color: white; width: 100%; background-color: black; padding:3;'>
   <b>View Entity: PartyTypeAttr with (PARTY_TYPE_ID, NAME: <%=partyTypeId%>, <%=name%>).</b>
 </div>
 
@@ -86,11 +86,11 @@
 
 <table border="0" cellspacing="2" cellpadding="2">
 <%if(partyTypeAttr == null){%>
-<tr bgcolor="<%=rowColor1%>"><td><h3>Specified PartyTypeAttr was not found.</h3></td></tr>
+<tr class="<%=rowClass1%>"><td><h3>Specified PartyTypeAttr was not found.</h3></td></tr>
 <%}else{%>
 
-  <%rowColor=(rowColor==rowColor1?rowColor2:rowColor1);%>
-  <tr bgcolor="<%=rowColor%>">
+  <%rowClass=(rowClass==rowClass1?rowClass2:rowClass1);%>
+  <tr class="<%=rowClass%>">
     <td><b>PARTY_TYPE_ID</b></td>
     <td>
     
@@ -99,8 +99,8 @@
     </td>
   </tr>
 
-  <%rowColor=(rowColor==rowColor1?rowColor2:rowColor1);%>
-  <tr bgcolor="<%=rowColor%>">
+  <%rowClass=(rowClass==rowClass1?rowClass2:rowClass1);%>
+  <tr class="<%=rowClass%>">
     <td><b>NAME</b></td>
     <td>
     
@@ -127,6 +127,46 @@
   <%}%>
 <%}%>
 <br>
+<br>
+<SCRIPT language='JavaScript'>  
+var numTabs=3;
+function ShowTab(lname) 
+{
+  for(inc=1; inc <= numTabs; inc++)
+  {
+    document.all['tab' + inc].className = (lname == 'tab' + inc) ? 'ontab' : 'offtab';
+    document.all['lnk' + inc].className = (lname == 'tab' + inc) ? 'onlnk' : 'offlnk';
+    document.all['area' + inc].style.visibility = (lname == 'tab' + inc) ? 'visible' : 'hidden';
+  }
+}
+</SCRIPT>
+<%if(partyTypeAttr != null){%>
+<table cellpadding='0' cellspacing='0'><tr>
+
+  
+    <%if(Security.hasEntityPermission("PARTY_TYPE", "_VIEW", session)){%>
+    <td id=tab1 class=ontab>
+      <a href='javascript:ShowTab("tab1")' id=lnk1 class=onlnk> PartyType</a>
+    </td>
+    <%}%>
+
+  
+    <%if(Security.hasEntityPermission("PARTY_ATTRIBUTE", "_VIEW", session)){%>
+    <td id=tab2 class=offtab>
+      <a href='javascript:ShowTab("tab2")' id=lnk2 class=offlnk> PartyAttribute</a>
+    </td>
+    <%}%>
+
+  
+    <%if(Security.hasEntityPermission("PARTY_CLASSIFICATION", "_VIEW", session)){%>
+    <td id=tab3 class=offtab>
+      <a href='javascript:ShowTab("tab3")' id=lnk3 class=offlnk> PartyClassification</a>
+    </td>
+    <%}%>
+
+</tr></table>
+<%}%>
+  
 
   
   
@@ -135,8 +175,8 @@
 <%if(partyTypeAttr != null){%>
   <%if(Security.hasEntityPermission("PARTY_TYPE", "_VIEW", session)){%>
     <%PartyType partyTypeRelated = PartyTypeHelper.findByPrimaryKey(partyTypeAttr.getPartyTypeId());%>
-    <br>
-    <div style='color:yellow;width:100%;background-color:#660066;padding:2;'>
+  <DIV id=area1 style="VISIBILITY: visible; POSITION: absolute" width="100%">
+    <div class=areaheader>
      <b></b> Related Entity: <b>PartyType</b> with (PARTY_TYPE_ID: <%=partyTypeAttr.getPartyTypeId()%>)
     </div>
     <%if(partyTypeAttr.getPartyTypeId() != null){%>
@@ -155,11 +195,11 @@
     <%}%>
     <table border="0" cellspacing="2" cellpadding="2">
     <%if(partyTypeRelated == null){%>
-    <tr bgcolor="<%=rowColor1%>"><td><h3>Specified PartyType was not found.</h3></td></tr>
+    <tr class="<%=rowClass1%>"><td><h3>Specified PartyType was not found.</h3></td></tr>
     <%}else{%>
 
-  <%rowColor=(rowColor==rowColor1?rowColor2:rowColor1);%>
-  <tr bgcolor="<%=rowColor%>">
+  <%rowClass=(rowClass==rowClass1?rowClass2:rowClass1);%>
+  <tr class="<%=rowClass%>">
     <td><b>PARTY_TYPE_ID</b></td>
     <td>
     
@@ -168,8 +208,8 @@
     </td>
   </tr>
 
-  <%rowColor=(rowColor==rowColor1?rowColor2:rowColor1);%>
-  <tr bgcolor="<%=rowColor%>">
+  <%rowClass=(rowClass==rowClass1?rowClass2:rowClass1);%>
+  <tr class="<%=rowClass%>">
     <td><b>PARENT_TYPE_ID</b></td>
     <td>
     
@@ -178,8 +218,8 @@
     </td>
   </tr>
 
-  <%rowColor=(rowColor==rowColor1?rowColor2:rowColor1);%>
-  <tr bgcolor="<%=rowColor%>">
+  <%rowClass=(rowClass==rowClass1?rowClass2:rowClass1);%>
+  <tr class="<%=rowClass%>">
     <td><b>HAS_TABLE</b></td>
     <td>
     
@@ -188,8 +228,8 @@
     </td>
   </tr>
 
-  <%rowColor=(rowColor==rowColor1?rowColor2:rowColor1);%>
-  <tr bgcolor="<%=rowColor%>">
+  <%rowClass=(rowClass==rowClass1?rowClass2:rowClass1);%>
+  <tr class="<%=rowClass%>">
     <td><b>DESCRIPTION</b></td>
     <td>
     
@@ -200,6 +240,7 @@
 
     <%} //end if partyTypeRelated == null %>
     </table>
+  </div>
   <%}%>
 <%}%>
 <%-- End Relation for PartyType, type: one --%>
@@ -212,18 +253,18 @@
 <%if(partyTypeAttr != null){%>
   <%if(Security.hasEntityPermission("PARTY_ATTRIBUTE", "_VIEW", session)){%>    
     <%Iterator relatedIterator = PartyAttributeHelper.findByNameIterator(partyTypeAttr.getName());%>
-    <br>
-    <div style='color:yellow;width:100%;background-color:#660066;padding:2;'>
+  <DIV id=area2 style="VISIBILITY: hidden; POSITION: absolute" width="100%">
+    <div class=areaheader>
       <b></b> Related Entities: <b>PartyAttribute</b> with (NAME: <%=partyTypeAttr.getName()%>)
     </div>
     <%boolean relatedCreatePerm = Security.hasEntityPermission("PARTY_ATTRIBUTE", "_CREATE", session);%>
     <%boolean relatedUpdatePerm = Security.hasEntityPermission("PARTY_ATTRIBUTE", "_UPDATE", session);%>
     <%boolean relatedDeletePerm = Security.hasEntityPermission("PARTY_ATTRIBUTE", "_DELETE", session);%>
     <%
-      String rowColorResultHeader = "99CCFF";
-      String rowColorResult1 = "99FFCC";
-      String rowColorResult2 = "CCFFCC"; 
-      String rowColorResult = "";
+      String rowClassResultHeader = "viewManyHeaderTR";
+      String rowClassResult1 = "viewManyTR1";
+      String rowClassResult2 = "viewManyTR2"; 
+      String rowClassResult = "";
     %>
       
     <%if(relatedCreatePerm){%>
@@ -234,8 +275,9 @@
     <%curFindString = curFindString + "&SEARCH_PARAMETER1=" + partyTypeAttr.getName();%>
     <a href="<%=response.encodeURL("/commonapp/party/party/FindPartyTypeAttr.jsp?" + UtilFormatOut.encodeQuery(curFindString))%>" class="buttontext">[Find PartyAttribute]</a>
 
+  <div style='width:100%;height:250px;overflow:scroll;'>
   <table width="100%" cellpadding="2" cellspacing="2" border="0">
-    <tr bgcolor="<%=rowColorResultHeader%>">
+    <tr class="<%=rowClassResultHeader%>">
   
       <td><div class="tabletext"><b><nobr>PARTY_ID</nobr></b></div></td>
       <td><div class="tabletext"><b><nobr>NAME</nobr></b></div></td>
@@ -249,17 +291,17 @@
       <%}%>
     </tr>
     <%
+     int relatedLoopCount = 0;
      if(relatedIterator != null && relatedIterator.hasNext())
      {
-      int relatedLoopCount = 0;
       while(relatedIterator != null && relatedIterator.hasNext())
       {
-        relatedLoopCount++; if(relatedLoopCount > 10) break;
+        relatedLoopCount++; //if(relatedLoopCount > 10) break;
         PartyAttribute partyAttributeRelated = (PartyAttribute)relatedIterator.next();
         if(partyAttributeRelated != null)
         {
     %>
-    <%rowColorResult=(rowColorResult==rowColorResult1?rowColorResult2:rowColorResult1);%><tr bgcolor="<%=rowColorResult%>">
+    <%rowClassResult=(rowClassResult==rowClassResult1?rowClassResult2:rowClassResult1);%><tr class="<%=rowClassResult%>">
   
       <td>
         <div class="tabletext">
@@ -303,13 +345,16 @@
     <%}%>
   <%}%>
 <%}else{%>
-<%rowColorResult=(rowColorResult==rowColorResult1?rowColorResult2:rowColorResult1);%><tr bgcolor="<%=rowColorResult%>">
+<%rowClassResult=(rowClassResult==rowClassResult1?rowClassResult2:rowClassResult1);%><tr class="<%=rowClassResult%>">
 <td colspan="8">
 <h3>No PartyAttributes Found.</h3>
 </td>
 </tr>
 <%}%>
-</table>
+    </table>
+  </div>
+Displaying <%=relatedLoopCount%> entities.
+  </div>
   <%}%>
 <%}%>
 <%-- End Relation for PartyAttribute, type: many --%>
@@ -322,18 +367,18 @@
 <%if(partyTypeAttr != null){%>
   <%if(Security.hasEntityPermission("PARTY_CLASSIFICATION", "_VIEW", session)){%>    
     <%Iterator relatedIterator = PartyClassificationHelper.findByPartyTypeIdIterator(partyTypeAttr.getPartyTypeId());%>
-    <br>
-    <div style='color:yellow;width:100%;background-color:#660066;padding:2;'>
+  <DIV id=area3 style="VISIBILITY: hidden; POSITION: absolute" width="100%">
+    <div class=areaheader>
       <b></b> Related Entities: <b>PartyClassification</b> with (PARTY_TYPE_ID: <%=partyTypeAttr.getPartyTypeId()%>)
     </div>
     <%boolean relatedCreatePerm = Security.hasEntityPermission("PARTY_CLASSIFICATION", "_CREATE", session);%>
     <%boolean relatedUpdatePerm = Security.hasEntityPermission("PARTY_CLASSIFICATION", "_UPDATE", session);%>
     <%boolean relatedDeletePerm = Security.hasEntityPermission("PARTY_CLASSIFICATION", "_DELETE", session);%>
     <%
-      String rowColorResultHeader = "99CCFF";
-      String rowColorResult1 = "99FFCC";
-      String rowColorResult2 = "CCFFCC"; 
-      String rowColorResult = "";
+      String rowClassResultHeader = "viewManyHeaderTR";
+      String rowClassResult1 = "viewManyTR1";
+      String rowClassResult2 = "viewManyTR2"; 
+      String rowClassResult = "";
     %>
       
     <%if(relatedCreatePerm){%>
@@ -344,8 +389,9 @@
     <%curFindString = curFindString + "&SEARCH_PARAMETER1=" + partyTypeAttr.getPartyTypeId();%>
     <a href="<%=response.encodeURL("/commonapp/party/party/FindPartyTypeAttr.jsp?" + UtilFormatOut.encodeQuery(curFindString))%>" class="buttontext">[Find PartyClassification]</a>
 
+  <div style='width:100%;height:250px;overflow:scroll;'>
   <table width="100%" cellpadding="2" cellspacing="2" border="0">
-    <tr bgcolor="<%=rowColorResultHeader%>">
+    <tr class="<%=rowClassResultHeader%>">
   
       <td><div class="tabletext"><b><nobr>PARTY_ID</nobr></b></div></td>
       <td><div class="tabletext"><b><nobr>PARTY_TYPE_ID</nobr></b></div></td>
@@ -361,17 +407,17 @@
       <%}%>
     </tr>
     <%
+     int relatedLoopCount = 0;
      if(relatedIterator != null && relatedIterator.hasNext())
      {
-      int relatedLoopCount = 0;
       while(relatedIterator != null && relatedIterator.hasNext())
       {
-        relatedLoopCount++; if(relatedLoopCount > 10) break;
+        relatedLoopCount++; //if(relatedLoopCount > 10) break;
         PartyClassification partyClassificationRelated = (PartyClassification)relatedIterator.next();
         if(partyClassificationRelated != null)
         {
     %>
-    <%rowColorResult=(rowColorResult==rowColorResult1?rowColorResult2:rowColorResult1);%><tr bgcolor="<%=rowColorResult%>">
+    <%rowClassResult=(rowClassResult==rowClassResult1?rowClassResult2:rowClassResult1);%><tr class="<%=rowClassResult%>">
   
       <td>
         <div class="tabletext">
@@ -459,13 +505,16 @@
     <%}%>
   <%}%>
 <%}else{%>
-<%rowColorResult=(rowColorResult==rowColorResult1?rowColorResult2:rowColorResult1);%><tr bgcolor="<%=rowColorResult%>">
+<%rowClassResult=(rowClassResult==rowClassResult1?rowClassResult2:rowClassResult1);%><tr class="<%=rowClassResult%>">
 <td colspan="8">
 <h3>No PartyClassifications Found.</h3>
 </td>
 </tr>
 <%}%>
-</table>
+    </table>
+  </div>
+Displaying <%=relatedLoopCount%> entities.
+  </div>
   <%}%>
 <%}%>
 <%-- End Relation for PartyClassification, type: many --%>

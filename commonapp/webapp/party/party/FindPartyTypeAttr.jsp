@@ -24,7 +24,7 @@
  *  THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  *
  *@author     David E. Jones
- *@created    Wed Jul 04 01:03:19 MDT 2001
+ *@created    Fri Jul 06 16:51:33 MDT 2001
  *@version    1.0
  */
 %>
@@ -50,14 +50,14 @@
 <%boolean hasDeletePermission=Security.hasEntityPermission("PARTY_TYPE_ATTR", "_DELETE", session);%>
 <%if(hasViewPermission){%>
 <%
-  String rowColorTop1 = "99CCFF";
-  String rowColorTop2 = "CCFFFF";
-  String rowColorTop = "";
-  String rowColorResultIndex = "CCFFFF";
-  String rowColorResultHeader = "99CCFF";
-  String rowColorResult1 = "99FFCC";
-  String rowColorResult2 = "CCFFCC";
-  String rowColorResult = "";
+  String rowClassTop1 = "viewOneTR1";
+  String rowClassTop2 = "viewOneTR2";
+  String rowClassTop = "";
+  String rowClassResultIndex = "viewOneTR2";
+  String rowClassResultHeader = "viewOneTR1";
+  String rowClassResult1 = "viewManyTR1";
+  String rowClassResult2 = "viewManyTR2";
+  String rowClassResult = "";
 
   String searchType = request.getParameter("SEARCH_TYPE");
   String searchParam1 = UtilFormatOut.checkNull(request.getParameter("SEARCH_PARAMETER1"));
@@ -122,7 +122,7 @@
 <h3 style=margin:0;>Find PartyTypeAttrs</h3>
 Note: you may use the '%' character as a wildcard, to replace any other letters.
 <table cellpadding="2" cellspacing="2" border="0">
-  <%rowColorTop=(rowColorTop==rowColorTop1?rowColorTop2:rowColorTop1);%><tr bgcolor="<%=rowColorTop%>">
+  <%rowClassTop=(rowClassTop==rowClassTop1?rowClassTop2:rowClassTop1);%><tr class="<%=rowClassTop%>">
     <form method="post" action="<%=response.encodeURL("FindPartyTypeAttr.jsp")%>" style=margin:0;>
       <td valign="top">Primary Key:</td>
       <td valign="top">
@@ -139,7 +139,7 @@ Note: you may use the '%' character as a wildcard, to replace any other letters.
   </tr>
 
   
-  <%rowColorTop=(rowColorTop==rowColorTop1?rowColorTop2:rowColorTop1);%><tr bgcolor="<%=rowColorTop%>">
+  <%rowClassTop=(rowClassTop==rowClassTop1?rowClassTop2:rowClassTop1);%><tr class="<%=rowClassTop%>">
     <td valign="top">PartyTypeId: </td>
     <form method="post" action="<%=response.encodeURL("FindPartyTypeAttr.jsp")%>" style=margin:0;>
       <td valign="top">
@@ -154,7 +154,7 @@ Note: you may use the '%' character as a wildcard, to replace any other letters.
   </tr>
 
   
-  <%rowColorTop=(rowColorTop==rowColorTop1?rowColorTop2:rowColorTop1);%><tr bgcolor="<%=rowColorTop%>">
+  <%rowClassTop=(rowClassTop==rowClassTop1?rowClassTop2:rowClassTop1);%><tr class="<%=rowClassTop%>">
     <td valign="top">Name: </td>
     <form method="post" action="<%=response.encodeURL("FindPartyTypeAttr.jsp")%>" style=margin:0;>
       <td valign="top">
@@ -168,7 +168,7 @@ Note: you may use the '%' character as a wildcard, to replace any other letters.
     </form>
   </tr>
 
-  <%rowColorTop=(rowColorTop==rowColorTop1?rowColorTop2:rowColorTop1);%><tr bgcolor="<%=rowColorTop%>">
+  <%rowClassTop=(rowClassTop==rowClassTop1?rowClassTop2:rowClassTop1);%><tr class="<%=rowClassTop%>">
     <td valign="top">Display All: </td>
     <form method="post" action="<%=response.encodeURL("FindPartyTypeAttr.jsp")%>" style=margin:0;>
       <td valign="top">
@@ -187,7 +187,7 @@ Note: you may use the '%' character as a wildcard, to replace any other letters.
 <%}%>
 <table border="0" width="100%" cellpadding="2">
 <% if(arraySize > 0) { %>
-    <tr bgcolor="<%=rowColorResultIndex%>">
+    <tr class="<%=rowClassResultIndex%>">
       <td align="left">
         <b>
         <% if(viewIndex > 0) { %>
@@ -206,7 +206,7 @@ Note: you may use the '%' character as a wildcard, to replace any other letters.
 </table>
 
   <table width="100%" cellpadding="2" cellspacing="2" border="0">
-    <tr bgcolor="<%=rowColorResultHeader%>">
+    <tr class="<%=rowClassResultHeader%>">
   
       <td><div class="tabletext"><b><nobr>PARTY_TYPE_ID</nobr></b></div></td>
       <td><div class="tabletext"><b><nobr>NAME</nobr></b></div></td>
@@ -229,7 +229,7 @@ Note: you may use the '%' character as a wildcard, to replace any other letters.
     if(partyTypeAttr != null)
     {
 %>
-    <%rowColorResult=(rowColorResult==rowColorResult1?rowColorResult2:rowColorResult1);%><tr bgcolor="<%=rowColorResult%>">
+    <%rowClassResult=(rowClassResult==rowClassResult1?rowClassResult2:rowClassResult1);%><tr class="<%=rowClassResult%>">
   
       <td>
         <div class="tabletext">
@@ -268,7 +268,7 @@ Note: you may use the '%' character as a wildcard, to replace any other letters.
  else
  {
 %>
-<%rowColorResult=(rowColorResult==rowColorResult1?rowColorResult2:rowColorResult1);%><tr bgcolor="<%=rowColorResult%>">
+<%rowClassResult=(rowClassResult==rowClassResult1?rowClassResult2:rowClassResult1);%><tr class="<%=rowClassResult%>">
 <td colspan="8">
 <h3>No PartyTypeAttrs Found.</h3>
 </td>
@@ -278,7 +278,7 @@ Note: you may use the '%' character as a wildcard, to replace any other letters.
 
 <table border="0" width="100%" cellpadding="2">
 <% if(arraySize > 0) { %>
-    <tr bgcolor="<%=rowColorResultIndex%>">
+    <tr class="<%=rowClassResultIndex%>">
       <td align="left">
         <b>
         <% if(viewIndex > 0) { %>

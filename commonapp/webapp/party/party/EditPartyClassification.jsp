@@ -24,7 +24,7 @@
  *  THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  *
  *@author     David E. Jones
- *@created    Wed Jul 04 01:03:16 MDT 2001
+ *@created    Fri Jul 06 16:51:30 MDT 2001
  *@version    1.0
  */
 %>
@@ -50,9 +50,9 @@
 
 <%
   boolean showFields = true;
-  String rowColor1 = "99CCFF";
-  String rowColor2 = "CCFFFF";
-  String rowColor = "";
+  String rowClass1 = "viewOneTR1";
+  String rowClass2 = "viewOneTR2";
+  String rowClass = "";
 
   String partyId = request.getParameter("PARTY_CLASSIFICATION_PARTY_ID");  
   String partyTypeId = request.getParameter("PARTY_CLASSIFICATION_PARTY_TYPE_ID");  
@@ -98,7 +98,7 @@
     You may create a PartyClassification by entering the values you want, and clicking Update.
     <input type="hidden" name="UPDATE_MODE" value="CREATE">
   
-    <%rowColor=(rowColor==rowColor1?rowColor2:rowColor1);%><tr bgcolor="<%=rowColor%>">
+    <%rowClass=(rowClass==rowClass1?rowClass2:rowClass1);%><tr class="<%=rowClass%>">
       <td>PARTY_ID</td>
       <td>
       
@@ -107,7 +107,7 @@
 
       </td>
     </tr>
-    <%rowColor=(rowColor==rowColor1?rowColor2:rowColor1);%><tr bgcolor="<%=rowColor%>">
+    <%rowClass=(rowClass==rowClass1?rowClass2:rowClass1);%><tr class="<%=rowClass%>">
       <td>PARTY_TYPE_ID</td>
       <td>
       
@@ -125,14 +125,14 @@
     <input type="hidden" name="UPDATE_MODE" value="UPDATE">
   
       <input type="hidden" name="PARTY_CLASSIFICATION_PARTY_ID" value="<%=partyId%>">
-    <%rowColor=(rowColor==rowColor1?rowColor2:rowColor1);%><tr bgcolor="<%=rowColor%>">
+    <%rowClass=(rowClass==rowClass1?rowClass2:rowClass1);%><tr class="<%=rowClass%>">
       <td>PARTY_ID</td>
       <td>
         <b><%=partyId%></b> (This cannot be changed without re-creating the partyClassification.)
       </td>
     </tr>
       <input type="hidden" name="PARTY_CLASSIFICATION_PARTY_TYPE_ID" value="<%=partyTypeId%>">
-    <%rowColor=(rowColor==rowColor1?rowColor2:rowColor1);%><tr bgcolor="<%=rowColor%>">
+    <%rowClass=(rowClass==rowClass1?rowClass2:rowClass1);%><tr class="<%=rowClass%>">
       <td>PARTY_TYPE_ID</td>
       <td>
         <b><%=partyTypeId%></b> (This cannot be changed without re-creating the partyClassification.)
@@ -151,7 +151,7 @@
   
 
   
-  <%rowColor=(rowColor==rowColor1?rowColor2:rowColor1);%><tr bgcolor="<%=rowColor%>">
+  <%rowClass=(rowClass==rowClass1?rowClass2:rowClass1);%><tr class="<%=rowClass%>">
     <td>PARTY_CLASSIFICATION_TYPE_ID</td>
     <td>
     
@@ -162,7 +162,7 @@
   
 
   
-  <%rowColor=(rowColor==rowColor1?rowColor2:rowColor1);%><tr bgcolor="<%=rowColor%>">
+  <%rowClass=(rowClass==rowClass1?rowClass2:rowClass1);%><tr class="<%=rowClass%>">
     <td>FROM_DATE</td>
     <td>
     
@@ -194,7 +194,7 @@
   
 
   
-  <%rowColor=(rowColor==rowColor1?rowColor2:rowColor1);%><tr bgcolor="<%=rowColor%>">
+  <%rowClass=(rowClass==rowClass1?rowClass2:rowClass1);%><tr class="<%=rowClass%>">
     <td>THRU_DATE</td>
     <td>
     
@@ -225,7 +225,7 @@
   </tr>
   
 
-  <%rowColor=(rowColor==rowColor1?rowColor2:rowColor1);%><tr bgcolor="<%=rowColor%>">
+  <%rowClass=(rowClass==rowClass1?rowClass2:rowClass1);%><tr class="<%=rowClass%>">
     <td colspan="2"><input type="submit" name="Update" value="Update"></td>
   </tr>
 <%}%>

@@ -1,10 +1,23 @@
 <style>
-  form {margin:0;}
-  p {margin: 0.2em;font-family:Helvetica,sans-serif;font-size:10pt;}
+  form {margin: 0;}
+  p {margin: 0.2em; font-family: Helvetica,sans-serif; font-size: 10pt;}
 
-  .button	{border-style:outset;border-color:#9999cc;border-width:2px;background-color:#dddddd;padding-right:5px;padding-left:5px;}
-  A.buttontext {font-family:Helvetica,sans-serif;font-size:8pt;font-weight:bold;text-decoration:none;color:blue;}
+  .button	{border-style: outset; border-color: #9999CC; border-width: 2px; background-color: #dddddd; padding-right: 5px; padding-left: 5px;}
+  A.buttontext {font-family: Helvetica,sans-serif; font-size: 8pt; font-weight: bold; text-decoration: none; color: blue;}
   A.buttontext:hover {color:red;}
+
+  .ontab {FONT-SIZE: 10pt; background-color: black; padding: 2; border-right: solid white 2px;}
+  a.onlnk {FONT-SIZE: 10pt; FONT: bold; COLOR: white; FONT-FAMILY: Arial, Helvetica, sans-serif; TEXT-DECORATION: none; padding: 2;}
+  .offtab {FONT-SIZE: 9pt; background-color:#CCCCCC;padding:2;border-right:solid white 2px;}
+  a.offlnk {FONT-SIZE: 9pt; FONT: bold; COLOR: blue; FONT-FAMILY: Arial, Helvetica, sans-serif; TEXT-DECORATION: none;padding: 2;}
+  a.offlnk:hover {COLOR: red;}
+  .areaheader {FONT-SIZE: 9pt; FONT-FAMILY: Arial, Helvetica, sans-serif; FONT: bold; color: white; width: 100%; background-color: black; padding: 2;}
+
+  .viewOneTR1 {background-color: #99CCFF; FONT-SIZE: 9pt; FONT-FAMILY: Arial, Helvetica, sans-serif;}
+  .viewOneTR2 {background-color: #CCFFFF; FONT-SIZE: 9pt; FONT-FAMILY: Arial, Helvetica, sans-serif;}
+  .viewManyHeaderTR {background-color: #99CCFF; FONT-SIZE: 9pt; FONT-FAMILY: Arial, Helvetica, sans-serif;}
+  .viewManyTR1 {background-color: #99FFCC; FONT-SIZE: 9pt; FONT-FAMILY: Arial, Helvetica, sans-serif;}
+  .viewManyTR2 {background-color: #CCFFCC; FONT-SIZE: 9pt; FONT-FAMILY: Arial, Helvetica, sans-serif;}
 </style>
 
 

@@ -24,7 +24,7 @@
  *  THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  *
  *@author     David E. Jones
- *@created    Wed Jul 04 01:03:18 MDT 2001
+ *@created    Fri Jul 06 16:51:33 MDT 2001
  *@version    1.0
  */
 %>
@@ -50,9 +50,9 @@
 
 <%
   boolean showFields = true;
-  String rowColor1 = "99CCFF";
-  String rowColor2 = "CCFFFF";
-  String rowColor = "";
+  String rowClass1 = "viewOneTR1";
+  String rowClass2 = "viewOneTR2";
+  String rowClass = "";
 
   String partyTypeId = request.getParameter("PARTY_TYPE_ATTR_PARTY_TYPE_ID");  
   String name = request.getParameter("PARTY_TYPE_ATTR_NAME");  
@@ -98,7 +98,7 @@
     You may create a PartyTypeAttr by entering the values you want, and clicking Update.
     <input type="hidden" name="UPDATE_MODE" value="CREATE">
   
-    <%rowColor=(rowColor==rowColor1?rowColor2:rowColor1);%><tr bgcolor="<%=rowColor%>">
+    <%rowClass=(rowClass==rowClass1?rowClass2:rowClass1);%><tr class="<%=rowClass%>">
       <td>PARTY_TYPE_ID</td>
       <td>
       
@@ -107,7 +107,7 @@
 
       </td>
     </tr>
-    <%rowColor=(rowColor==rowColor1?rowColor2:rowColor1);%><tr bgcolor="<%=rowColor%>">
+    <%rowClass=(rowClass==rowClass1?rowClass2:rowClass1);%><tr class="<%=rowClass%>">
       <td>NAME</td>
       <td>
       
@@ -125,14 +125,14 @@
     <input type="hidden" name="UPDATE_MODE" value="UPDATE">
   
       <input type="hidden" name="PARTY_TYPE_ATTR_PARTY_TYPE_ID" value="<%=partyTypeId%>">
-    <%rowColor=(rowColor==rowColor1?rowColor2:rowColor1);%><tr bgcolor="<%=rowColor%>">
+    <%rowClass=(rowClass==rowClass1?rowClass2:rowClass1);%><tr class="<%=rowClass%>">
       <td>PARTY_TYPE_ID</td>
       <td>
         <b><%=partyTypeId%></b> (This cannot be changed without re-creating the partyTypeAttr.)
       </td>
     </tr>
       <input type="hidden" name="PARTY_TYPE_ATTR_NAME" value="<%=name%>">
-    <%rowColor=(rowColor==rowColor1?rowColor2:rowColor1);%><tr bgcolor="<%=rowColor%>">
+    <%rowClass=(rowClass==rowClass1?rowClass2:rowClass1);%><tr class="<%=rowClass%>">
       <td>NAME</td>
       <td>
         <b><%=name%></b> (This cannot be changed without re-creating the partyTypeAttr.)
@@ -150,7 +150,7 @@
 
   
 
-  <%rowColor=(rowColor==rowColor1?rowColor2:rowColor1);%><tr bgcolor="<%=rowColor%>">
+  <%rowClass=(rowClass==rowClass1?rowClass2:rowClass1);%><tr class="<%=rowClass%>">
     <td colspan="2"><input type="submit" name="Update" value="Update"></td>
   </tr>
 <%}%>

@@ -24,7 +24,7 @@
  *  THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  *
  *@author     David E. Jones
- *@created    Wed Jul 04 01:03:21 MDT 2001
+ *@created    Fri Jul 06 16:51:35 MDT 2001
  *@version    1.0
  */
 %>
@@ -51,9 +51,9 @@
 <%if(hasViewPermission){%>
 
 <%
-  String rowColor1 = "99CCFF";
-  String rowColor2 = "CCFFFF";
-  String rowColor = "";
+  String rowClass1 = "viewOneTR1";
+  String rowClass2 = "viewOneTR2";
+  String rowClass = "";
 
   String groupId = request.getParameter("SECURITY_GROUP_GROUP_ID");  
 
@@ -63,7 +63,7 @@
 %>
 
 <br>
-<div style='color:yellow;width:100%;background-color:#330033;padding:3;'>
+<div style='color: white; width: 100%; background-color: black; padding:3;'>
   <b>View Entity: SecurityGroup with (GROUP_ID: <%=groupId%>).</b>
 </div>
 
@@ -84,11 +84,11 @@
 
 <table border="0" cellspacing="2" cellpadding="2">
 <%if(securityGroup == null){%>
-<tr bgcolor="<%=rowColor1%>"><td><h3>Specified SecurityGroup was not found.</h3></td></tr>
+<tr class="<%=rowClass1%>"><td><h3>Specified SecurityGroup was not found.</h3></td></tr>
 <%}else{%>
 
-  <%rowColor=(rowColor==rowColor1?rowColor2:rowColor1);%>
-  <tr bgcolor="<%=rowColor%>">
+  <%rowClass=(rowClass==rowClass1?rowClass2:rowClass1);%>
+  <tr class="<%=rowClass%>">
     <td><b>GROUP_ID</b></td>
     <td>
     
@@ -97,8 +97,8 @@
     </td>
   </tr>
 
-  <%rowColor=(rowColor==rowColor1?rowColor2:rowColor1);%>
-  <tr bgcolor="<%=rowColor%>">
+  <%rowClass=(rowClass==rowClass1?rowClass2:rowClass1);%>
+  <tr class="<%=rowClass%>">
     <td><b>DESCRIPTION</b></td>
     <td>
     
@@ -125,6 +125,39 @@
   <%}%>
 <%}%>
 <br>
+<br>
+<SCRIPT language='JavaScript'>  
+var numTabs=2;
+function ShowTab(lname) 
+{
+  for(inc=1; inc <= numTabs; inc++)
+  {
+    document.all['tab' + inc].className = (lname == 'tab' + inc) ? 'ontab' : 'offtab';
+    document.all['lnk' + inc].className = (lname == 'tab' + inc) ? 'onlnk' : 'offlnk';
+    document.all['area' + inc].style.visibility = (lname == 'tab' + inc) ? 'visible' : 'hidden';
+  }
+}
+</SCRIPT>
+<%if(securityGroup != null){%>
+<table cellpadding='0' cellspacing='0'><tr>
+
+  
+    <%if(Security.hasEntityPermission("USER_LOGIN_SECURITY_GROUP", "_VIEW", session)){%>
+    <td id=tab1 class=ontab>
+      <a href='javascript:ShowTab("tab1")' id=lnk1 class=onlnk> UserLoginSecurityGroup</a>
+    </td>
+    <%}%>
+
+  
+    <%if(Security.hasEntityPermission("SECURITY_GROUP_PERMISSION", "_VIEW", session)){%>
+    <td id=tab2 class=offtab>
+      <a href='javascript:ShowTab("tab2")' id=lnk2 class=offlnk> SecurityGroupPermission</a>
+    </td>
+    <%}%>
+
+</tr></table>
+<%}%>
+  
 
   
   
@@ -133,18 +166,18 @@
 <%if(securityGroup != null){%>
   <%if(Security.hasEntityPermission("USER_LOGIN_SECURITY_GROUP", "_VIEW", session)){%>    
     <%Iterator relatedIterator = UserLoginSecurityGroupHelper.findByGroupIdIterator(securityGroup.getGroupId());%>
-    <br>
-    <div style='color:yellow;width:100%;background-color:#660066;padding:2;'>
+  <DIV id=area1 style="VISIBILITY: visible; POSITION: absolute" width="100%">
+    <div class=areaheader>
       <b></b> Related Entities: <b>UserLoginSecurityGroup</b> with (GROUP_ID: <%=securityGroup.getGroupId()%>)
     </div>
     <%boolean relatedCreatePerm = Security.hasEntityPermission("USER_LOGIN_SECURITY_GROUP", "_CREATE", session);%>
     <%boolean relatedUpdatePerm = Security.hasEntityPermission("USER_LOGIN_SECURITY_GROUP", "_UPDATE", session);%>
     <%boolean relatedDeletePerm = Security.hasEntityPermission("USER_LOGIN_SECURITY_GROUP", "_DELETE", session);%>
     <%
-      String rowColorResultHeader = "99CCFF";
-      String rowColorResult1 = "99FFCC";
-      String rowColorResult2 = "CCFFCC"; 
-      String rowColorResult = "";
+      String rowClassResultHeader = "viewManyHeaderTR";
+      String rowClassResult1 = "viewManyTR1";
+      String rowClassResult2 = "viewManyTR2"; 
+      String rowClassResult = "";
     %>
       
     <%if(relatedCreatePerm){%>
@@ -155,8 +188,9 @@
     <%curFindString = curFindString + "&SEARCH_PARAMETER1=" + securityGroup.getGroupId();%>
     <a href="<%=response.encodeURL("/commonapp/security/securitygroup/FindSecurityGroup.jsp?" + UtilFormatOut.encodeQuery(curFindString))%>" class="buttontext">[Find UserLoginSecurityGroup]</a>
 
+  <div style='width:100%;height:250px;overflow:scroll;'>
   <table width="100%" cellpadding="2" cellspacing="2" border="0">
-    <tr bgcolor="<%=rowColorResultHeader%>">
+    <tr class="<%=rowClassResultHeader%>">
   
       <td><div class="tabletext"><b><nobr>USER_LOGIN_ID</nobr></b></div></td>
       <td><div class="tabletext"><b><nobr>GROUP_ID</nobr></b></div></td>
@@ -169,17 +203,17 @@
       <%}%>
     </tr>
     <%
+     int relatedLoopCount = 0;
      if(relatedIterator != null && relatedIterator.hasNext())
      {
-      int relatedLoopCount = 0;
       while(relatedIterator != null && relatedIterator.hasNext())
       {
-        relatedLoopCount++; if(relatedLoopCount > 10) break;
+        relatedLoopCount++; //if(relatedLoopCount > 10) break;
         UserLoginSecurityGroup userLoginSecurityGroupRelated = (UserLoginSecurityGroup)relatedIterator.next();
         if(userLoginSecurityGroupRelated != null)
         {
     %>
-    <%rowColorResult=(rowColorResult==rowColorResult1?rowColorResult2:rowColorResult1);%><tr bgcolor="<%=rowColorResult%>">
+    <%rowClassResult=(rowClassResult==rowClassResult1?rowClassResult2:rowClassResult1);%><tr class="<%=rowClassResult%>">
   
       <td>
         <div class="tabletext">
@@ -215,13 +249,16 @@
     <%}%>
   <%}%>
 <%}else{%>
-<%rowColorResult=(rowColorResult==rowColorResult1?rowColorResult2:rowColorResult1);%><tr bgcolor="<%=rowColorResult%>">
+<%rowClassResult=(rowClassResult==rowClassResult1?rowClassResult2:rowClassResult1);%><tr class="<%=rowClassResult%>">
 <td colspan="8">
 <h3>No UserLoginSecurityGroups Found.</h3>
 </td>
 </tr>
 <%}%>
-</table>
+    </table>
+  </div>
+Displaying <%=relatedLoopCount%> entities.
+  </div>
   <%}%>
 <%}%>
 <%-- End Relation for UserLoginSecurityGroup, type: many --%>
@@ -234,18 +271,18 @@
 <%if(securityGroup != null){%>
   <%if(Security.hasEntityPermission("SECURITY_GROUP_PERMISSION", "_VIEW", session)){%>    
     <%Iterator relatedIterator = SecurityGroupPermissionHelper.findByGroupIdIterator(securityGroup.getGroupId());%>
-    <br>
-    <div style='color:yellow;width:100%;background-color:#660066;padding:2;'>
+  <DIV id=area2 style="VISIBILITY: hidden; POSITION: absolute" width="100%">
+    <div class=areaheader>
       <b></b> Related Entities: <b>SecurityGroupPermission</b> with (GROUP_ID: <%=securityGroup.getGroupId()%>)
     </div>
     <%boolean relatedCreatePerm = Security.hasEntityPermission("SECURITY_GROUP_PERMISSION", "_CREATE", session);%>
     <%boolean relatedUpdatePerm = Security.hasEntityPermission("SECURITY_GROUP_PERMISSION", "_UPDATE", session);%>
     <%boolean relatedDeletePerm = Security.hasEntityPermission("SECURITY_GROUP_PERMISSION", "_DELETE", session);%>
     <%
-      String rowColorResultHeader = "99CCFF";
-      String rowColorResult1 = "99FFCC";
-      String rowColorResult2 = "CCFFCC"; 
-      String rowColorResult = "";
+      String rowClassResultHeader = "viewManyHeaderTR";
+      String rowClassResult1 = "viewManyTR1";
+      String rowClassResult2 = "viewManyTR2"; 
+      String rowClassResult = "";
     %>
       
     <%if(relatedCreatePerm){%>
@@ -256,8 +293,9 @@
     <%curFindString = curFindString + "&SEARCH_PARAMETER1=" + securityGroup.getGroupId();%>
     <a href="<%=response.encodeURL("/commonapp/security/securitygroup/FindSecurityGroup.jsp?" + UtilFormatOut.encodeQuery(curFindString))%>" class="buttontext">[Find SecurityGroupPermission]</a>
 
+  <div style='width:100%;height:250px;overflow:scroll;'>
   <table width="100%" cellpadding="2" cellspacing="2" border="0">
-    <tr bgcolor="<%=rowColorResultHeader%>">
+    <tr class="<%=rowClassResultHeader%>">
   
       <td><div class="tabletext"><b><nobr>GROUP_ID</nobr></b></div></td>
       <td><div class="tabletext"><b><nobr>PERMISSION_ID</nobr></b></div></td>
@@ -270,17 +308,17 @@
       <%}%>
     </tr>
     <%
+     int relatedLoopCount = 0;
      if(relatedIterator != null && relatedIterator.hasNext())
      {
-      int relatedLoopCount = 0;
       while(relatedIterator != null && relatedIterator.hasNext())
       {
-        relatedLoopCount++; if(relatedLoopCount > 10) break;
+        relatedLoopCount++; //if(relatedLoopCount > 10) break;
         SecurityGroupPermission securityGroupPermissionRelated = (SecurityGroupPermission)relatedIterator.next();
         if(securityGroupPermissionRelated != null)
         {
     %>
-    <%rowColorResult=(rowColorResult==rowColorResult1?rowColorResult2:rowColorResult1);%><tr bgcolor="<%=rowColorResult%>">
+    <%rowClassResult=(rowClassResult==rowClassResult1?rowClassResult2:rowClassResult1);%><tr class="<%=rowClassResult%>">
   
       <td>
         <div class="tabletext">
@@ -316,13 +354,16 @@
     <%}%>
   <%}%>
 <%}else{%>
-<%rowColorResult=(rowColorResult==rowColorResult1?rowColorResult2:rowColorResult1);%><tr bgcolor="<%=rowColorResult%>">
+<%rowClassResult=(rowClassResult==rowClassResult1?rowClassResult2:rowClassResult1);%><tr class="<%=rowClassResult%>">
 <td colspan="8">
 <h3>No SecurityGroupPermissions Found.</h3>
 </td>
 </tr>
 <%}%>
-</table>
+    </table>
+  </div>
+Displaying <%=relatedLoopCount%> entities.
+  </div>
   <%}%>
 <%}%>
 <%-- End Relation for SecurityGroupPermission, type: many --%>
