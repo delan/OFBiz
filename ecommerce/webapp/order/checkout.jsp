@@ -66,7 +66,7 @@
 //  if (creditCardInfo == null) {
 
   Collection orderItemList = cart.makeOrderItems(delegator);
-  Iterator orderAdjustmentIterator = cart.getAdjustments().iterator();
+  Collection orderAdjustments = cart.getAdjustments();
 %>
 
 <%@ include file="orderinformation.jsp" %>

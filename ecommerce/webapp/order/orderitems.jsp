@@ -1,3 +1,4 @@
+
 <%
 // NOTE: This page is meant to be included, not called independently
 
@@ -110,15 +111,20 @@
                     <td align="right" nowrap><div class="tabletext"><%= UtilFormatOut.formatPrice(total)%></div></td>
                 </tr>
 
-                <% if (orderAdjustmentIterator != null) pageContext.setAttribute("orderAdjustmentIterator", orderAdjustmentIterator); %>
-                <ofbiz:iterator name="orderAdjustmentObject" type="java.lang.Object" property="orderAdjustmentIterator">
-                <%Adjustment orderAdjustment = (Adjustment) orderAdjustmentObject;%>
+                <% if (orderAdjustments != null) pageContext.setAttribute("orderAdjustments", orderAdjustments); %>
+                <ofbiz:iterator name="orderAdjustment" property="orderAdjustments">
+
+                <%
+                   GenericValue adjustmentType = orderAdjustment.getRelatedOne("OrderAdjustmentType");
+                   double currentTotal = OrderReadHelper.calcOrderAdjustment(orderAdjustment, total);
+                   total += currentTotal;
+                %>
+
                 <tr>
-                    <td align="right" colspan="3"><div class="tabletext"><b><%=orderAdjustment.getDescription()%></b></div></td>
-                    <td align="right" nowrap><div class="tabletext"><%= UtilFormatOut.formatPrice(orderAdjustment.getAmount())%></div></td>
-                    <%total += orderAdjustment.getAmount();%>
+                    <td align="right" colspan="3"><div class="tabletext"><b><%=adjustmentType.getString("description")%></b></div></td>
+                    <td align="right" nowrap><div class="tabletext"><%= UtilFormatOut.formatPrice(currentTotal)%></div></td>
                 </tr>
-                </ofbiz:iterator> 
+                </ofbiz:iterator>
                 <tr><td colspan=2></td><td colspan="7"><hr class='sepbar'></td></tr>
                 <tr>
                     <td align="right" colspan="3"><div class="tabletext"><b>Total Due</b></div></td>

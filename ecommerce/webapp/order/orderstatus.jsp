@@ -70,7 +70,7 @@
   Collection orderItemList = order.getOrderItems();
 
   GenericValue shippingAddress = order.getShippingAddress();
-  GenericValue billingAddress = order.getBillingAddress(); 
+  //GenericValue billingAddress = order.getBillingAddress();
   GenericValue billingAccount = orderHeader.getRelatedOne("BillingAccount");
 
   GenericValue paymentMethod = null;
@@ -105,7 +105,7 @@
     customerPoNumber = ((GenericValue)orderItemPOIter.next()).getString("correspondingPoId");
   }
 
-  Iterator orderAdjustmentIterator = order.getAdjustmentIterator();
+  Collection orderAdjustments = order.getOrderAdjustmentCollection();
 %>
 
 <%@ include file="orderinformation.jsp" %>

@@ -83,7 +83,7 @@
     <%
       OrderReadHelper order = new OrderReadHelper(orderHeader);
       Collection orderItemList = orderHeader.getRelated("OrderItem");
-      Iterator orderAdjustmentIterator = order.getAdjustmentIterator();
+      Collection orderAdjustments = order.getOrderAdjustmentCollection();
 
       GenericValue shippingAddress = order.getShippingAddress(); 
       GenericValue billingAddress = order.getShippingAddress(); 

@@ -37,7 +37,7 @@ import org.ofbiz.core.util.*;
 public class ShoppingCartItem implements java.io.Serializable {
     
     private transient GenericValue _product;
-    private String delegatorName;    
+    private String delegatorName;
     private String productId;    
     private String itemComment;
     private double discountAmount;
@@ -45,7 +45,8 @@ public class ShoppingCartItem implements java.io.Serializable {
     private Map features;
     private Map attributes;
     private int type;
-    
+    private List itemAdjustments;
+
     /** Creates new ShoppingCartItem object. */
     public ShoppingCartItem(GenericValue product, double quantity) {
         this(product,quantity,null);
@@ -62,6 +63,7 @@ public class ShoppingCartItem implements java.io.Serializable {
         this.type = 0;
         this.attributes = new HashMap();
         this.delegatorName = _product.getDelegator().getDelegatorName();
+        this.itemAdjustments = new LinkedList();
     }
         
     /** Sets the quantity for the item. */
@@ -229,5 +231,17 @@ public class ShoppingCartItem implements java.io.Serializable {
             throw new RuntimeException("Error with Entity Engine ("+e.getMessage()+")");
         }
         return _product;
+    }
+
+    public void addAdjustment(GenericValue adjustment) {
+        itemAdjustments.add(adjustment);
+    }
+
+    public void removeAdjustment(GenericValue adjustment) {
+        itemAdjustments.remove(adjustment);
+    }
+
+    public Collection getAdjustments() {
+        return itemAdjustments;
     }
 }
