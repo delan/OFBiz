@@ -860,6 +860,24 @@
   <!-- org.ofbiz.commonapp.party.party -->
   <!-- ========================================================= -->
 
+    <entity entity-name="Affiliate" 
+            package-name="org.ofbiz.commonapp.party.party"
+            title="Affiliate Party Entity">
+      <field name="partyId" type="id-ne"></field>
+      <field name="affiliateName" type="name"></field>
+      <field name="affiliateDescription" type="description"></field>
+      <field name="yearEstablished" type="very-short"></field>
+      <field name="siteType" type="comment"></field>
+      <field name="sitePageViews" type="comment"></field>
+      <field name="siteVisitors" type="comment"></field>	
+      <prim-key field="partyId" />
+      <relation type="one" rel-entity-name="Party">
+        <key-map field-name="partyId" />
+      </relation>
+      <relation type="one" rel-entity-name="PartyGroup">
+        <key-map field-name="partyId" />
+      </relation>
+    </entity>
     <entity entity-name="Party" 
             package-name="org.ofbiz.commonapp.party.party"
             title="Party Entity">
@@ -936,6 +954,9 @@
         <key-map field-name="partyId" />
       </relation>
       <relation type="many" rel-entity-name="WorkEffortPartyAssignment">
+        <key-map field-name="partyId" />
+      </relation>
+      <relation type="one" rel-entity-name="Affiliate">
         <key-map field-name="partyId" />
       </relation>
     </entity>
