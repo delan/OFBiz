@@ -25,12 +25,12 @@
 
 <forms>
 	<form name="EditProductSimpleTest" type="single" 
-		target="updateProduct" title="" default-title-style="tableheadtext" default-widget-style="inputBox">
+		target="updateProduct" title="" default-title-style="tableheadtext" default-widget-style="inputBox" default-tooltip-style="tabletext">
 		<auto-fields-service service-name="updateProduct" map-name="product"/>
 	</form>
 	<form name="EditProduct" type="single" 
 		target="updateProduct" title="" default-map-name="product"
-		default-title-style="tableheadtext" default-widget-style="inputBox">
+		default-title-style="tableheadtext" default-widget-style="inputBox" default-tooltip-style="tabletext">
 		
 		<alt-target use-when="product==null" target="createProduct"/>
 		
@@ -117,7 +117,7 @@
 	</form>
 	<form name="AddProductCategoryMember" type="single" 
 		target="addProductToCategory" title="Add ProductCategoryMember (select Category, enter From Date):"
-		default-title-style="tableheadtext" default-widget-style="inputBox">
+		default-title-style="tableheadtext" default-widget-style="inputBox" default-tooltip-style="tabletext">
 		<auto-fields-service service-name="safeAddProductToCategory"/>
 		<field name="productId" map-name="product"><hidden/></field>
 		<field name="productCategoryId" widget-style="selectBox">
@@ -134,7 +134,7 @@
 	</form>
 	<form name="UpdateProductCategoryMemeber" type="list" 
 		target="updateProductToCategory" title="" list-name="productCategoryMemberDatas"
-		default-title-style="tableheadtext" default-widget-style="inputBox">
+		default-title-style="tableheadtext" default-widget-style="inputBox" default-tooltip-style="tabletext">
 		<!-- each entry in the list will be a Map with the entries: productCategoryMember and productCategory -->
 		<auto-fields-service service-name="updateProductToCategory" map-name="productCategoryMember"/>
 		<field name="productId"><hidden/></field>
