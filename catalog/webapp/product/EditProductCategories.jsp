@@ -35,19 +35,19 @@
 <%
     String nowTimestampString = UtilDateTime.nowTimestamp().toString();
 
-    boolean useValues = true;
-    if (request.getAttribute(SiteDefs.ERROR_MESSAGE) != null) useValues = false;
-
     String productId = request.getParameter("productId");
     GenericValue product = delegator.findByPrimaryKey("Product", UtilMisc.toMap("productId", productId));
-    if (product == null) useValues = false;
+
     Collection productCategoryMembers = product.getRelated("ProductCategoryMember", null, UtilMisc.toList("sequenceNum", "productCategoryId"));
     if (productCategoryMembers != null) pageContext.setAttribute("productCategoryMembers", productCategoryMembers);
 
     Collection categoryCol = delegator.findAll("ProductCategory", UtilMisc.toList("description"));
     if (categoryCol != null) pageContext.setAttribute("categoryCol", categoryCol);
 
-    if ("true".equalsIgnoreCase((String)request.getParameter("useValues"))) useValues = true;
+    HtmlFormWrapper updateProductCategoryMemberWrapper = new HtmlFormWrapper("/product/ProductForms.xml", "UpdateProductCategoryMemeber", request, response);
+    //productFormWrapper.putInContext("productCategoryMemberDatas", productCategoryMemberDatas);
+
+    HtmlFormWrapper addProductCategoryMemberWrapper = new HtmlFormWrapper("/product/ProductForms.xml", "AddProductCategoryMember", request, response);
 %>
 
 <%if(productId != null && productId.length() > 0){%>
@@ -124,7 +124,6 @@
 <br>
 <form method="POST" action="<ofbiz:url>/addProductToCategory</ofbiz:url>" style='margin: 0;' name='addProductCategoryMemberForm'>
   <input type="hidden" name="productId" value="<%=productId%>">
-  <input type="hidden" name="useValues" value="true">
 
   <div class='head2'>Add ProductCategoryMember (select Category, enter From Date):</div>
   <br>
