@@ -21,7 +21,7 @@
  *  CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT 
  *  OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR 
  *  THE USE OR OTHER DEALINGS IN THE SOFTWARE.
- *  $Id: ofbiz-component-example.xml,v 1.1 2003/08/20 07:01:43 ajzeneski Exp $
+ *  $Id: ofbiz-component-example.xml,v 1.2 2004/04/08 15:42:36 jonesde Exp $
 -->
 
 <ofbiz-component name="example">
@@ -33,6 +33,8 @@
     
     <!-- place the config directory on the classpath to access configuration files -->
     <classpath type="dir" location="config"/>
+    
+    <classpath type="dir" location="script"/>
     
     <!-- entity resources: model(s), eca(s) and group definitions -->
     <!--   
