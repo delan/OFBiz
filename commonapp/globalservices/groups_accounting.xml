@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE service-group PUBLIC "-//OFBiz//DTD Service Group Config//EN" "http://www.ofbiz.org/dtds/service-group.dtd">
+
+<service-group>
+	
+	<group name="createCreditCardAndAddress" send-mode="all">
+		<service name="createPostalAddress" mode="sync" result-to-context="true"/>
+		<service name="buildCcExpireDate" mode="sync" result-to-context="true"/>
+		<service name="createCreditCard" mode="sync"/>
+	</group>			
+	<group name="updateCreditCardAndAddress" send-mode="all">
+		<service name="updatePostalAddress" mode="sync" result-to-context="true"/>
+		<service name="buildCcExpireDate" mode="sync" result-to-context="true"/>
+		<service name="updateCreditCard" mode="sync"/>
+	</group>		
+	
+	<group name="createEftAccountAndAddress" send-mode="all">
+		<service name="createPostalAddress" mode="sync" result-to-context="true"/>
+		<service name="createEftAccount" mode="sync"/>
+	</group>		
+	<group name="updateEftAccountAndAddress" send-mode="all">
+		<service name="updatePostalAddress" mode="sync" result-to-context="true"/>
+		<service name="updateEftAccount" mode="sync"/>
+	</group>					
+</service-group>

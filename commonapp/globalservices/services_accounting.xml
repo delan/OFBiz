@@ -13,6 +13,7 @@
         <attribute name="partyId" type="String" mode="IN" optional="true"/>
         <attribute name="paymentMethodId" type="String" mode="IN" optional="false"/>
     </service>
+        
     <service name="createCreditCard" engine="java"
             location="org.ofbiz.commonapp.accounting.payment.PaymentServices" invoke="createCreditCard" auth="true">
         <description>Create CreditCard</description>
@@ -28,6 +29,18 @@
         <attribute name="expireDate" type="String" mode="IN" optional="false"/>
         <attribute name="paymentMethodId" type="String" mode="OUT" optional="true"/>
     </service>
+    <service name="createCreditCardAndAddress" engine="group" location="createCreditCardAndAddress" invoke="" auth="true">
+    	<description>Creates a CreditCard and PostalAddress</description>
+    	<attribute name="expireDate" type="String" mode="INOUT" optional="true"/>
+    	<attribute name="contactMechId" type="String" mode="INOUT" optional="true"/>
+    	<attribute name="paymentMethodId" type="String" mode="INOUT" optional="true"/>    
+    </service>
+    <service name="updateCreditCardAndAddress" engine="group" location="updateCreditCardAndAddress" invoke="" auth="true">
+    	<description>Updates a CreditCard and PostalAddress</description>
+    	<attribute name="expireDate" type="String" mode="INOUT" optional="true"/>
+    	<attribute name="contactMechId" type="String" mode="INOUT" optional="true"/>
+    	<attribute name="paymentMethodId" type="String" mode="INOUT" optional="true"/>    
+    </service>    
     <service name="updateCreditCard" engine="java"
             location="org.ofbiz.commonapp.accounting.payment.PaymentServices" invoke="updateCreditCard" auth="true">
         <description>Update CreditCard</description>
@@ -43,6 +56,13 @@
         <attribute name="contactMechId" type="String" mode="IN" optional="true"/>
         <attribute name="expireDate" type="String" mode="IN" optional="false"/>
         <attribute name="newPaymentMethodId" type="String" mode="OUT" optional="true"/>
+    </service>
+    <service name="buildCcExpireDate" engine="java"
+    		location="org.ofbiz.commonapp.accounting.payment.PaymentServices" invoke="makeExpireDate">
+    	<description>Makes a Expire Date</description>
+    	<attribute name="expMonth" type="String" mode="IN" optional="false"/>
+    	<attribute name="expYear" type="String" mode="IN" optional="false"/>
+    	<attribute name="expireDate" type="String" mode="OUT"/>
     </service>
 
     <service name="createEftAccount" engine="java"
@@ -60,6 +80,16 @@
         <attribute name="contactMechId" type="String" mode="IN" optional="true"/>
         <attribute name="paymentMethodId" type="String" mode="OUT" optional="true"/>
     </service>
+    <service name="createEftAccountAndAddress" engine="group" location="createEftAccountAndAddress" invoke="" auth="true">
+    	<description>Creates an EftAccount and PostalAddress</description>
+    	<attribute name="contactMechId" type="String" mode="INOUT" optional="true"/>
+    	<attribute name="paymentMethodId" type="String" mode="INOUT" optional="true"/>    
+    </service>    
+    <service name="updateEftAccountAndAddress" engine="group" location="updateEftAccountAndAddress" invoke="" auth="true">
+    	<description>Updates an EftAccount and PostalAddress</description>
+    	<attribute name="contactMechId" type="String" mode="INOUT" optional="true"/>
+    	<attribute name="paymentMethodId" type="String" mode="INOUT" optional="true"/>    
+    </service>        
     <service name="updateEftAccount" engine="java"
             location="org.ofbiz.commonapp.accounting.payment.PaymentServices" invoke="updateEftAccount" auth="true">
         <description>Update EftAccount</description>
@@ -76,6 +106,7 @@
         <attribute name="contactMechId" type="String" mode="IN" optional="true"/>
         <attribute name="newPaymentMethodId" type="String" mode="OUT" optional="true"/>
     </service>
+    
     <service name="setPaymentMethodAddress" engine="simple"
             location="org/ofbiz/commonapp/accounting/payment/PaymentSimpleMethods.xml" invoke="setPaymentMethodAddress" auth="true">
         <description>Set the inital payment method address.</description>
