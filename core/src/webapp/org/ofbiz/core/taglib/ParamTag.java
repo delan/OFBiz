@@ -112,23 +112,22 @@ public class ParamTag extends TagSupport {
             Object value = null;
             if (attribute != null) {
                 if (map == null) {
-                    paramValue = pageContext.findAttribute(attribute);
-                    if (paramValue == null)
-                        paramValue = pageContext.getRequest().getParameter(attribute);
+                    value = pageContext.findAttribute(attribute);
+                    if (value == null)
+                        value = pageContext.getRequest().getParameter(attribute);
                 } else {
                     try {
                         Map mapObject = (Map) pageContext.findAttribute(map);
-                        paramValue = mapObject.get(attribute);
+                        value = mapObject.get(attribute);
                     } catch (Exception e) {
                         throw new JspTagException("Problem processing map (" + map + ") for attributes.");
                     }
                 }
             }
-            if (value == null && paramValue != null)
+            if (value == null && paramValue != null) {
                 value = paramValue;
-            if (value == null)
-                throw new JspTagException("No value for this parameter could be found.");
-
+            }
+            
             sTag.addInParameter(name, value);
         }
 
@@ -139,6 +138,3 @@ public class ParamTag extends TagSupport {
         return EVAL_PAGE;
     }
 }
-
-
-
