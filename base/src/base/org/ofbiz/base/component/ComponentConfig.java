@@ -1,5 +1,5 @@
 /*
- * $Id: ComponentConfig.java,v 1.7 2003/08/20 05:55:59 ajzeneski Exp $
+ * $Id: ComponentConfig.java,v 1.8 2003/08/20 18:43:17 ajzeneski Exp $
  *
  * Copyright (c) 2003 The Open For Business Project - www.ofbiz.org
  *
@@ -51,7 +51,7 @@ import org.xml.sax.SAXException;
  *
  * @author     <a href="mailto:jonesde@ofbiz.org">David E. Jones</a>
  * @author     <a href="mailto:jaz@ofbiz.org">Andy Zeneski</a>
- * @version    $Revision: 1.7 $
+ * @version    $Revision: 1.8 $
  * @since      3.0
  */
 public class ComponentConfig {
@@ -175,6 +175,22 @@ public class ComponentConfig {
             throw new ComponentException("Could not find component with name: " + componentName);
         }
         return cc.getFullLocation(resourceLoaderName, location);
+    }
+    
+    public static List getAppBarWebInfos(String serverName) {
+        List webInfos = new LinkedList();
+        Iterator i = getAllComponents().iterator();
+        while (i.hasNext()) {
+            ComponentConfig cc = (ComponentConfig) i.next();
+            Iterator wi = cc.getWebappInfos().iterator();
+            while (wi.hasNext()) {
+                ComponentConfig.WebappInfo wInfo = (ComponentConfig.WebappInfo) wi.next();
+                if (serverName.equals(wInfo.server) && wInfo.appBarDisplay) {
+                    webInfos.add(wInfo);
+                }
+            }            
+        }
+        return webInfos;       
     }
     
     // ========== component info fields ==========
@@ -460,6 +476,7 @@ public class ComponentConfig {
         public String server;
         public String mountPoint;
         public String location;
+        public boolean appBarDisplay;
 
         public WebappInfo(ComponentConfig componentConfig, Element element) {
             this.componentConfig = componentConfig;
@@ -468,6 +485,7 @@ public class ComponentConfig {
             this.server = element.getAttribute("server");
             this.mountPoint = element.getAttribute("mount-point");
             this.location = element.getAttribute("location");
+            this.appBarDisplay = "true".equals(element.getAttribute("app-bar-display"));
             
             // default title is name w/ upper-cased first letter
             if (UtilValidate.isEmpty(this.title)) {                

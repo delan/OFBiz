@@ -24,7 +24,7 @@
  *  CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT 
  *  OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR 
  *  THE USE OR OTHER DEALINGS IN THE SOFTWARE.
- *  $Id: ofbiz-component.dtd,v 1.4 2003/08/19 11:00:47 jonesde Exp $
+ *  $Id: ofbiz-component.dtd,v 1.5 2003/08/20 18:43:17 ajzeneski Exp $
 -->
 
 <!ELEMENT ofbiz-component ( depends-on*, resource-loader*, classpath*, entity-resource*, service-resource*, webapp* )>
@@ -70,8 +70,9 @@
     name CDATA #REQUIRED
     title CDATA #IMPLIED
     server CDATA #REQUIRED
-    location CDATA #REQUIRED
+    location CDATA #REQUIRED    
     mount-point CDATA #IMPLIED
+    app-bar-display ( true | false ) "true"
 >
 
 
