@@ -540,27 +540,31 @@ public class CatalinaContainer implements Container {
             context.addParameter(paramName, (String) initParameters.get(paramName));
         }
 
-        if (virtualHosts == null || virtualHosts.size() == 0) {
+        if (UtilValidate.isEmpty(virtualHosts)) {
             Host host = (Host) hosts.get(engine.getName() + "._DEFAULT");
             context.setRealm(host.getRealm());
             host.addChild(context);
             context.getMapper().setDefaultHostName(host.getName());
         } else {
+            // assume that the first virtual-host will be the default; additional virtual-hosts will be aliases
             Iterator vhi = virtualHosts.iterator();
-            boolean isFirst = true;
+            String hostName = (String) vhi.next();
+
+            boolean newHost = false;
+            Host host = (Host) hosts.get(engine.getName() + "." + hostName);
+            if (host == null) {
+                host = createHost(engine, hostName);
+                newHost = true;
+            }
             while (vhi.hasNext()) {
-                String hostName = (String) vhi.next();
-                Host host = (Host) hosts.get(engine.getName() + "." + hostName);
-                if (host == null) {
-                    host = createHost(engine, hostName);
-                    context.setRealm(host.getRealm());
-                    host.addChild(context);
-                    if (isFirst) {
-                        context.getMapper().setDefaultHostName(host.getName());
-                        isFirst = false;
-                    }
-                    hosts.put(engine.getName() + "." + hostName, host);
-                }
+                host.addAlias((String) vhi.next());
+            }
+            context.setRealm(host.getRealm());
+            host.addChild(context);
+            context.getMapper().setDefaultHostName(host.getName());
+
+            if (newHost) {
+                hosts.put(engine.getName() + "." + hostName, host);
             }
         }
 
