@@ -162,7 +162,7 @@ public class ItemConfigurationNode {
         ItemConfigurationNode oneChildNode = new ItemConfigurationNode((String)node.get("productIdTo"), delegator);
         try {
             oneChildNode.setQuantityMultiplier(node.getDouble("quantity").floatValue());
-        } catch(NumberFormatException nfe) {
+        } catch(Exception nfe) {
             oneChildNode.setQuantityMultiplier(1);
         }
         try {
@@ -173,7 +173,7 @@ public class ItemConfigurationNode {
                 percScrapFactor = 1;
             }
             oneChildNode.setScrapFactor(percScrapFactor);
-        } catch(NumberFormatException nfe) {
+        } catch(Exception nfe) {
             oneChildNode.setScrapFactor(1);
         }
         ItemConfigurationNode newNode = oneChildNode;
