@@ -48,7 +48,8 @@
     String assignRoleTypeId = request.getParameter("roleTypeId");
     String fromDate = request.getParameter("fromDate");
     String delegate = request.getParameter("delegate");
-    if (delegate != null) fromDate = request.getParameter("toFromDate");
+    if (delegate != null && request.getParameter("toFromDate") != null) 
+    	fromDate = request.getParameter("toFromDate");
     
     GenericValue orderHeader = null;
     GenericValue orderRole = null; 

@@ -30,7 +30,8 @@
 	String workEffortStatus = null;
 	if (workEffortId != null && assignPartyId != null && assignRoleTypeId != null && fromDate != null) { 		
 		Map fields = UtilMisc.toMap("workEffortId", workEffortId, "partyId", assignPartyId, "roleTypeId", assignRoleTypeId, "fromDate", fromDate);
-	    GenericValue wepa = delegator.findByPrimaryKey("WorkEffortPartyAssignment", fields);	    
+	    GenericValue wepa = delegator.findByPrimaryKey("WorkEffortPartyAssignment", fields);
+	    Debug.logError(""+wepa);	    
 	    if (wepa != null && wepa.get("statusId") != null && wepa.getString("statusId").equals("CAL_ACCEPTED")) {	    	
     		GenericValue workEffort = delegator.findByPrimaryKey("WorkEffort", UtilMisc.toMap("workEffortId", workEffortId));      		
     		workEffortStatus = workEffort.getString("currentStatusId");
