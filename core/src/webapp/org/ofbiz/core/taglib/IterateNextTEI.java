@@ -52,7 +52,7 @@ public class IterateNextTEI extends TagExtraInfo {
 
         VariableInfo info =
                 new VariableInfo(name, className, true, VariableInfo.NESTED);
-        VariableInfo[] result = { info };
+        VariableInfo[] result = {info};
         return result;
     }
 

@@ -1,5 +1,26 @@
 /*
  * $Id$
+ *
+ * Copyright (c) 2002 The Open For Business Project - www.ofbiz.org
+ *
+ * Permission is hereby granted, free of charge, to any person obtaining a
+ * copy of this software and associated documentation files (the "Software"),
+ * to deal in the Software without restriction, including without limitation
+ * the rights to use, copy, modify, merge, publish, distribute, sublicense,
+ * and/or sell copies of the Software, and to permit persons to whom the
+ * Software is furnished to do so, subject to the following conditions:
+ *
+ * The above copyright notice and this permission notice shall be included
+ * in all copies or substantial portions of the Software.
+ *
+ * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS
+ * OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF
+ * MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT.
+ * IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY
+ * CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT
+ * OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR
+ * THE USE OR OTHER DEALINGS IN THE SOFTWARE.
+ *
  */
 
 package org.ofbiz.core.taglib;
@@ -9,29 +30,11 @@ import java.util.*;
 import java.lang.reflect.*;
 import javax.servlet.jsp.*;
 import javax.servlet.jsp.tagext.*;
+
 import org.ofbiz.core.util.*;
 
 /**
- * <p><b>Title:</b> Custom JSP Tag to iterate over a collection.
- * <p><b>Description:</b> None
- * <p>Copyright (c) 2002 The Open For Business Project and repected authors.
- * <p>Permission is hereby granted, free of charge, to any person obtaining a
- *  copy of this software and associated documentation files (the "Software"),
- *  to deal in the Software without restriction, including without limitation
- *  the rights to use, copy, modify, merge, publish, distribute, sublicense,
- *  and/or sell copies of the Software, and to permit persons to whom the
- *  Software is furnished to do so, subject to the following conditions:
- *
- * <p>The above copyright notice and this permission notice shall be included
- *  in all copies or substantial portions of the Software.
- *
- * <p>THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS
- *  OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF
- *  MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT.
- *  IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY
- *  CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT
- *  OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR
- *  THE USE OR OTHER DEALINGS IN THE SOFTWARE.
+ * IterateTag - JSP Tag to iterate over a Collection or any object with an iterator() method.
  *
  * @author     <a href="mailto:jaz@zsolv.com">Andy Zeneski</a>
  * @author     <a href="mailto:jonesde@ofbiz.org">David E. Jones</a>
@@ -47,6 +50,8 @@ public class IteratorTag extends BodyTagSupport {
     protected String property = null;
     protected Object element = null;
     protected Class type = null;
+    protected int limit = 0;
+    protected int offset = 0;
     protected boolean expandMap = false;
 
     public void setName(String name) {
@@ -59,6 +64,14 @@ public class IteratorTag extends BodyTagSupport {
 
     public void setType(String type) throws ClassNotFoundException {
         this.type = Class.forName(type);
+    }
+
+    public void setLimit(int limit) {
+        this.limit = limit;
+    }
+
+    public void setOffset(int offset) {
+        this.offset = offset;
     }
 
     public void setExpandMap(String expMap) {
@@ -88,6 +101,14 @@ public class IteratorTag extends BodyTagSupport {
 
     public String getType() {
         return type.getName();
+    }
+
+    public int getLimit() {
+        return this.limit;
+    }
+
+    public int getOffset() {
+        return this.offset;
     }
 
     public String getExpandMap() {
@@ -172,7 +193,17 @@ public class IteratorTag extends BodyTagSupport {
             if (thisCollection == null || thisCollection.size() < 1)
                 return false;
 
-            newIterator = thisCollection.iterator();
+            if (limit > 0 || offset > 0) {
+                ArrayList colList = new ArrayList(thisCollection);
+                int startIndex = offset > 0 ? offset : 0;
+                int endIndex = limit > 0 ? offset + limit : colList.size();
+                endIndex = endIndex > colList.size() ? colList.size() : endIndex;
+                List subList = colList.subList(startIndex, endIndex);
+                newIterator = subList.iterator();
+            } else {
+                newIterator = thisCollection.iterator();
+            }
+
             Debug.logVerbose("Got iterator.", module);
         } else {//already set
             Debug.logVerbose("iterator already set.", module);
