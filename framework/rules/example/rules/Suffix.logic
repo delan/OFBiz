@@ -1,0 +1,15 @@
+/* 
+usage: suffix(SuffixList, LongerList)
+
+Try the query:
+    suffix(L, ["a", "b", "c", "d"])
+which should produce the result:
+    L = [a, b, c, d]
+    L = [b, c, d]
+    L = [c, d]
+    L = [d]
+    L = []
+    no more results
+*/
+suffix(List, List);
+suffix(List1, [X | Rest]) :- suffix(List1, Rest);

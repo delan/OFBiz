@@ -1,0 +1,67 @@
+
+import java.util.*;
+import org.ofbiz.base.util.*;
+import org.ofbiz.shark.container.*;
+import org.enhydra.shark.api.client.wfservice.*;
+import org.apache.commons.fileupload.*;
+
+admin = SharkContainer.getAdminInterface();
+repMgr = SharkContainer.getRepositoryMgr();
+pkgMgr = admin.getPackageAdministration();
+
+// open package
+if (request.getParameter("open") != null) {
+    packageId = request.getParameter("open");
+    try {
+        pkgMgr.openPackage(packageId);
+    } catch (Exception e) {
+        request.setAttribute("_ERROR_MESSAGE_", e.getMessage());
+    }
+}
+
+// close package
+if (request.getParameter("close") != null) {
+    packageId = request.getParameter("close");
+    try {
+        pkgMgr.closePackage(packageId);
+    } catch (Exception e) {
+        request.setAttribute("_ERROR_MESSAGE_", e.getMessage());
+    }
+}
+
+// delete package
+if (request.getParameter("delete") != null) {
+    deleteXpdl = request.getParameter("delete");
+    try {
+        repMgr.deletePackage(deleteXpdl);
+    } catch (Exception e) {
+        request.setAttribute("_ERROR_MESSAGE_", e.getMessage());
+    }
+}
+
+// upload package
+if (request.getParameter("upload") != null) {
+    try {
+        fu = new DiskFileUpload();
+        lst = fu.parseRequest(request);
+        if (lst.size() > 0) {
+            fui = lst.iterator();
+            while (fui.hasNext()) {
+                fi = fui.next();
+                repMgr.uploadPackage(fi.get(), fi.getName());
+                packageId = repMgr.getPackageId(fi.getName());
+                pkgMgr.openPackage(fi.getName());
+                fi.delete();
+            }
+        }
+    } catch (Exception e) {
+        request.setAttribute("_ERROR_MESSAGE_", e.getMessage());
+    }
+}
+
+// get package list
+paths = repMgr.getPackagePaths();
+
+context.put("repMgr", repMgr);
+context.put("pkgMgr", pkgMgr);
+context.put("packages", Arrays.asList(paths));

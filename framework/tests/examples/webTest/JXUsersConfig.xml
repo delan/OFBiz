@@ -1,0 +1,8 @@
+<jxuConfig>
+	<!-- Creates multiple mvelopes user -->
+	<!-- E.G. TestUser0, TestUser1, ... TestUser1000 -->
+	<!-- E.G. TestUser1001 -->
+	<!-- errorCondition sets the condition if an error occurs.  FAIL means the test -->
+	<!-- stop.  WARN means the test outputs a warning error but continues   -->
+    <multiUser userNamePrefix="TestUser" password="mvelopes" count="20" errorCondition="WARN" /> 
+</jxuConfig>

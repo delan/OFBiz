@@ -1,0 +1,93 @@
+
+import java.util.*;
+import org.ofbiz.base.util.*;
+import org.ofbiz.shark.container.*;
+import org.ofbiz.shark.requester.*;
+import org.enhydra.shark.api.client.wfservice.*;
+import org.enhydra.shark.api.client.wfmodel.*;
+
+userLogin = session.getAttribute("userLogin");
+
+// get the admin tools
+admin = SharkContainer.getAdminInterface();
+exMgr = admin.getExecutionAdministration();
+
+if (userLogin == null) {
+    request.setAttribute("_ERROR_MESSAGE_", "UserLogin object not found.");
+    return;
+}
+
+// connect to the engine
+exMgr.connect(userLogin.getString("userLoginId"), userLogin.getString("currentPassword"), null, null);
+
+// start a process
+if (request.getParameter("start") != null) {
+    try {
+        procId = request.getParameter("start");
+        proc = exMgr.getProcess(procId);
+        proc.start();
+    } catch (Exception e) {
+        request.setAttribute("_ERROR_MESSAGE_", e.getMessage());
+    }
+}
+
+// suspend a process
+if (request.getParameter("suspend") != null) {
+    try {
+        procId = request.getParameter("suspend");
+        proc = exMgr.getProcess(procId);
+        proc.suspend();
+    } catch (Exception e) {
+        request.setAttribute("_ERROR_MESSAGE_", e.getMessage());
+    }
+}
+
+// resume a process
+if (request.getParameter("resume") != null) {
+    try {
+        procId = request.getParameter("resume");
+        proc = exMgr.getProcess(procId);
+        proc.resume();
+    } catch (Exception e) {
+        request.setAttribute("_ERROR_MESSAGE_", e.getMessage());
+    }
+}
+
+// abort a process
+if (request.getParameter("abort") != null) {
+    try {
+        procId = request.getParameter("abort");
+        proc = exMgr.getProcess(procId);
+        proc.abort();
+    } catch (Exception e) {
+        request.setAttribute("_ERROR_MESSAGE_", e.getMessage());
+    }
+}
+
+// terminate a process
+if (request.getParameter("terminate") != null) {
+    try {
+        procId = request.getParameter("terminate");
+        proc = exMgr.getProcess(procId);
+        proc.terminate();
+    } catch (Exception e) {
+        request.setAttribute("_ERROR_MESSAGE_", e.getMessage());
+    }
+}
+
+// manager name
+mgrName = request.getParameter("manager");
+if (mgrName != null) {
+    context.put("manager", mgrName);
+
+    // get the process manager
+    mgr = exMgr.getProcessMgr(mgrName);
+
+    // get the processes
+    count = mgr.how_many_process();
+    procs = mgr.get_sequence_process(count);
+    context.put("processes", procs);
+}
+
+// disconnect from the engine
+exMgr.disconnect();

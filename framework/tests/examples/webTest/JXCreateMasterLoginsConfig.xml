@@ -1,0 +1,21 @@
+<!--
+ - JXCreateMasterLoginsConfig.xml
+ -
+ - author:  Phil Thunborg
+ - Created: 1/2/2002
+ - Copyright © 2001-2002, In2M Corporation, All Rights Reserved.
+ -->
+<jxuConfig>
+    <masterLogins>
+        <masterLogin>
+            <userName>jxuTest-1</userName>
+            <password>password</password>
+            <timeLocked>1/2/2002 2:30:55 PM</timeLocked>
+            <loginAttempts>0</loginAttempts>
+            <role>Admin</role>
+            <question>PetName</question>
+            <answer>Lady</answer>
+            <passwordHint>type of brick</passwordHint>
+        </masterLogin>
+    </masterLogins>
+</jxuConfig>

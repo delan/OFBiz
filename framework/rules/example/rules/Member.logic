@@ -1,0 +1,15 @@
+/*
+Here is a simple example of lists. An element is a member of a list if it is
+the head of the list or part of the tail.
+
+Try the query:
+    member(champion, ["spassky", "fischer", "karpov", "kasparov"])
+which should produce the result:
+    champion = spassky
+    champion = fischer
+    champion = karpov
+    champion = kasparov
+    no more results
+*/
+member(X, [X | Rest]);
+member(X, [Y | Rest]) :- member(X, Rest);

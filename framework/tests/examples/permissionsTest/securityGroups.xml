@@ -1,0 +1,81 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<entity-config name="Create Security Groups">
+<!--
+	This tests creates new security groups and assigns permissons to these groups.
+
+    <entity entity-name="SecurityGroup"
+            package-name="org.ofbiz.security.securitygroup"
+            title="Security Component - Security Group Entity">
+      <field name="groupId" type="id-ne"></field>
+      <field name="description" type="description"></field>
+      <prim-key field="groupId"/>
+      <relation type="many" rel-entity-name="UserLoginSecurityGroup">
+        <key-map field-name="groupId"/>
+      </relation>
+      <relation type="many" rel-entity-name="SecurityGroupPermission">
+        <key-map field-name="groupId"/>
+      </relation>
+    </entity>
+
+    <entity entity-name="SecurityGroupPermission"
+            package-name="org.ofbiz.security.securitygroup"
+            title="Security Component - Security Group Permission Entity">
+      <description>Defines a permission available to a security group; there is no FK to SecurityPermission because we want to leave open the possibility of ad-hoc permissions, especially for the Entity Data Maintenance pages which have TONS of permissions</description>
+      <field name="groupId" type="id-ne"></field>
+      <field name="permissionId" type="id-long-ne"></field>
+      <prim-key field="groupId"/>
+      <prim-key field="permissionId"/>
+      <relation type="one" fk-name="SEC_GRP_PERM_GRP" rel-entity-name="SecurityGroup">
+        <key-map field-name="groupId"/>
+      </relation>
+      <relation type="one-nofk" rel-entity-name="SecurityPermission">
+        <key-map field-name="permissionId"/>
+      </relation>
+    </entity>
+
+-->
+
+	<entity entity-name="SecurityGroup" >
+		<field name="groupId" type="id-ne">TEST_SECURITY_GRP_ONE</field>
+      	<field name="description" type="description">JXTest Security Group One</field>
+    </entity>
+	<entity entity-name="SecurityGroup" >
+		<field name="groupId" type="id-ne">TEST_SECURITY_GRP_TWO</field>
+      	<field name="description" type="description">JXTest Security Group One</field>
+    </entity>
+
+	<!-- Add permissions to groups -->
+	<entity entity-name="SecurityGroupPermission" >
+		<field name="groupId" type="id-ne">TEST_SECURITY_GRP_1</field>
+      	<field name="permissionId" type="id-long-ne">TEST_PERM_ONE</field>
+    </entity>
+	<entity entity-name="SecurityGroupPermission" >
+		<field name="groupId" type="id-ne">TEST_SECURITY_GRP_1</field>
+      	<field name="permissionId" type="id-long-ne">TEST_PERM_TWO</field>
+    </entity>
+	<entity entity-name="SecurityGroupPermission" >
+		<field name="groupId" type="id-ne">TEST_SECURITY_GRP_1</field>
+      	<field name="permissionId" type="id-long-ne">TEST_PERM_THREE</field>
+    </entity>
+	<entity entity-name="SecurityGroupPermission" >
+		<field name="groupId" type="id-ne">TEST_SECURITY_GRP_1</field>
+      	<field name="permissionId" type="id-long-ne">TEST_PERM_FOUR</field>
+    </entity>
+	<entity entity-name="SecurityGroupPermission" >
+		<field name="groupId" type="id-ne">TEST_SECURITY_GRP_2</field>
+      	<field name="permissionId" type="id-long-ne">TEST_PERM_FIVE</field>
+    </entity>
+	<entity entity-name="SecurityGroupPermission" >
+		<field name="groupId" type="id-ne">TEST_SECURITY_GRP_2</field>
+      	<field name="permissionId" type="id-long-ne">TEST_PERM_SIX</field>
+    </entity>
+	<entity entity-name="SecurityGroupPermission" >
+		<field name="groupId" type="id-ne">TEST_SECURITY_GRP_2</field>
+      	<field name="permissionId" type="id-long-ne">TEST_PERM_SEVEN</field>
+    </entity>
+	<entity entity-name="SecurityGroupPermission" >
+		<field name="groupId" type="id-ne">TEST_SECURITY_GRP_2</field>
+      	<field name="permissionId" type="id-long-ne">TEST_PERM_EIGHT</field>
+    </entity>
+
+</entity-config>

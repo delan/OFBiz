@@ -1,0 +1,15 @@
+<jxu>
+	<!-- Setup: load new securityPermissions into the SecurityPermission entity -->
+	<ofbentity delegator="default" action="create" input="securityPermissions.xml" />
+	<!-- Setup: load new security groups into the SecurityGroup entity -->
+	<ofbentity delegator="default" action="create" input="securityGroups.xml" />  
+	<!-- Setup: creates a new OFBiz user by calling the createPersonAndUserLogin service 
+		described in the users.xml file -->
+	<ofbservice delegator="default" dispatcher="local" input="users.xml"/> 
+	<!-- Setup: manually add permissions to newly created user -->
+	<ofbentity delegator="default" action="create" input="addUserSecurity.xml"/> 
+	<!-- Test: use a beanshell script to verify that the new user has the correct permissions -->
+	<bsh script="verifyRights.bsh"/>
+	<!-- Teardown: remove the created permissions so future tests can run again -->
+	<bsh script="removePermissions.bsh"/>
+</jxu>
