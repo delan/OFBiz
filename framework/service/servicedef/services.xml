@@ -58,14 +58,19 @@
 
     <!-- Service Engine Interfaces -->
     <service name="serviceEcaConditionInterface" engine="interface" location="" invoke="">
-        <description>Interface to describe services which are used as ECA conditions</description>
+        <description>Interface to describe services which are used as SECA conditions</description>
         <attribute name="serviceContext" type="Map" mode="IN"/>
         <attribute name="serviceName" type="String" mode="IN"/>
+        <attribute name="conditionReply" type="Boolean" mode="OUT"/>
+    </service>
+    <service name="serviceMcaConditionInterface" engine="interface" location="" invoke="">
+        <description>Interface to describe services which are used as SMCA conditions</description>
+        <attribute name="messageWrapper" type="org.ofbiz.service.mail.MimeMessageWrapper" mode="IN"/>
         <attribute name="conditionReply" type="Boolean" mode="OUT"/>
     </service>
 
     <service name="mailProcessInterface" engine="interface" location="" invoke="">
         <description>Interface to describe services used to process incoming email</description>
-        <attribute name="message" type="javax.mail.Message" mode="IN"/>
+        <attribute name="messageWrapper" type="org.ofbiz.service.mail.MimeMessageWrapper" mode="IN"/>
     </service>
 </services>

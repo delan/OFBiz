@@ -111,6 +111,12 @@
         <attribute name="message" type="String" mode="IN"/>
     </service>
 
+    <service name="testMca" engine="java"
+            location="org.ofbiz.common.CommonServices" invoke="mcaTest">
+        <description>Test Service MCA</description>
+        <implements service="mailProcessInterface"/>
+    </service>
+
     <service name="testRoute" engine="route" location="" invoke="" auth="true">
     	<description>Test the Route engine</description>
     </service>
