@@ -1,5 +1,5 @@
 /*
- * $Id: BillingAccountWorker.java,v 1.2 2003/09/04 03:25:55 ajzeneski Exp $
+ * $Id: BillingAccountWorker.java,v 1.3 2003/09/04 19:23:52 ajzeneski Exp $
  *
  *  Copyright (c) 2003 The Open For Business Project - www.ofbiz.org
  *
@@ -44,7 +44,7 @@ import org.ofbiz.service.ServiceUtil;
  * Worker methods for BillingAccounts
  *
  * @author     <a href="mailto:jaz@ofbiz.org">Andy Zeneski</a>
- * @version    $Revision: 1.2 $
+ * @version    $Revision: 1.3 $
  * @since      2.1
  */
 public class BillingAccountWorker {
@@ -83,8 +83,7 @@ public class BillingAccountWorker {
         // next get all the un-paid invoices (this will include all completed orders)
         List invoices = null;
         List exprs2 = new LinkedList();
-        exprs2.add(new EntityExpr("billingAccountId", EntityOperator.EQUALS, billingAccountId));
-        exprs2.add(new EntityExpr("statusId", EntityOperator.NOT_EQUAL, "INVOICE_PAID"));
+        exprs2.add(new EntityExpr("billingAccountId", EntityOperator.EQUALS, billingAccountId));       
         exprs2.add(new EntityExpr("statusId", EntityOperator.NOT_EQUAL, "INVOICE_CANCELLED"));
         try {
             invoices = delegator.findByAnd("Invoice", exprs2);
@@ -100,12 +99,10 @@ public class BillingAccountWorker {
             }
         }
         
-        // finally apply any non-invoice credits to the balance
+        // finally apply any payments to the balance
         List credits = null;
         List exprs3 = new LinkedList();
-        exprs3.add(new EntityExpr("billingAccountId", EntityOperator.EQUALS, billingAccountId));
-        exprs3.add(new EntityExpr("invoiceId", EntityOperator.EQUALS, null));
-        exprs3.add(new EntityExpr("invoiceItemSeqId", EntityOperator.EQUALS, null));
+        exprs3.add(new EntityExpr("billingAccountId", EntityOperator.EQUALS, billingAccountId));       
         try {
             credits = delegator.findByAnd("PaymentApplication", exprs3);
         } catch (GenericEntityException e) {

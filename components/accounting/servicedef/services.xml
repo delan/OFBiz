@@ -333,6 +333,7 @@
         <description>Captures (settles) pre-authorized order payments</description>       
         <attribute name="orderId" type="String" mode="IN" optional="false"/> 
         <attribute name="invoiceId" type="String" mode="IN" optional="true"/>
+        <attribute name="billingAccountId" type="String" mode="IN" optional="true"/>
         <attribute name="captureAmount" type="Double" mode="IN" optional="false"/>     
         <attribute name="processResult" type="String" mode="OUT" optional="false"/>        
     </service>

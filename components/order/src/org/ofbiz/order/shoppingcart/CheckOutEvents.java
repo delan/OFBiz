@@ -1,5 +1,5 @@
 /*
- * $Id: CheckOutEvents.java,v 1.6 2003/09/04 06:28:19 ajzeneski Exp $
+ * $Id: CheckOutEvents.java,v 1.7 2003/09/04 19:23:52 ajzeneski Exp $
  *
  *  Copyright (c) 2001, 2002 The Open For Business Project - www.ofbiz.org
  *
@@ -56,7 +56,7 @@ import org.ofbiz.service.ServiceUtil;
  * @author     <a href="mailto:cnelson@einnovation.com">Chris Nelson</a>
  * @author     <a href="mailto:jonesde@ofbiz.org">David E. Jones</a>
  * @author     <a href="mailto:tristana@twibble.org">Tristan Austin</a>
- * @version    $Revision: 1.6 $
+ * @version    $Revision: 1.7 $
  * @since      2.0
  */
 public class CheckOutEvents {
@@ -124,6 +124,19 @@ public class CheckOutEvents {
             if (cart.getGrandTotal() > availableAmount) {
                 request.setAttribute("_ERROR_MESSAGE_", "<li>Insufficient credit available on accounts.");
                 return "error";
+            }
+        } 
+        
+        // the payment method needs to be updated to make sure we set expect the right amount
+        // TODO: fix this to support multiple payment methods
+        double paymentMethodAmount = cart.getGrandTotal() - cart.getBillingAccountAmount();
+        List paymentMethodIds = cart.getPaymentMethodIds();
+        if (paymentMethodIds.size() > 0) {
+            String paymentMethodId = (String) paymentMethodIds.get(0);        
+            if (paymentMethodAmount > 0) {                                   
+                cart.setPaymentMethodAmount(paymentMethodId, new Double(paymentMethodAmount));
+            } else {
+                cart.setPaymentMethodAmount(paymentMethodId, new Double(0.00));               
             }
         }
                 

@@ -1,5 +1,5 @@
 /*
- * $Id: CheckOutHelper.java,v 1.6 2003/09/04 06:28:19 ajzeneski Exp $
+ * $Id: CheckOutHelper.java,v 1.7 2003/09/04 19:23:52 ajzeneski Exp $
  *
  *  Copyright (c) 2001, 2002 The Open For Business Project - www.ofbiz.org
  *
@@ -63,7 +63,7 @@ import org.ofbiz.service.ServiceUtil;
  * @author     <a href="mailto:cnelson@einnovation.com">Chris Nelson</a>
  * @author     <a href="mailto:jonesde@ofbiz.org">David E. Jones</a>
  * @author     <a href="mailto:tristana@twibble.org">Tristan Austin</a>
- * @version    $Revision: 1.6 $
+ * @version    $Revision: 1.7 $
  * @since      2.0
  */
 public class CheckOutHelper {
@@ -84,7 +84,7 @@ public class CheckOutHelper {
             String billingAccountId, Double billingAccountAmt, String correspondingPoId, String shippingInstructions, 
             String orderAdditionalEmails, String maySplit, String giftMessage, String isGift) {
         List errorMessages = new ArrayList();
-        Map result;
+        Map result = null;
 
         if (this.cart != null && this.cart.size() > 0) {            
             /* no longer needed 
@@ -158,7 +158,11 @@ public class CheckOutHelper {
                 if (Character.isLetter(checkOutPaymentId.charAt(0))) {
                     this.cart.addPaymentMethodTypeId(checkOutPaymentId);
                 } else {
-                    this.cart.setPaymentMethodAmount(checkOutPaymentId, null);
+                    Double paymentAmount = null;
+                    if (billingAccountAmt != null) {
+                        paymentAmount = new Double(cart.getGrandTotal() - billingAccountAmt.doubleValue());
+                    }
+                    this.cart.setPaymentMethodAmount(checkOutPaymentId, paymentAmount);
                 }                
                            
             } else if (UtilValidate.isEmpty(checkOutPaymentId)) {
@@ -437,9 +441,10 @@ public class CheckOutHelper {
         Map paymentFields = UtilMisc.toMap("statusId", "PAYMENT_NOT_AUTH");
         List paymentPreferences = EntityUtil.filterByAnd(allPaymentPreferences, paymentFields);
         
-        if (paymentPreferences != null && paymentPreferences.size() > 0)
+        if (paymentPreferences != null && paymentPreferences.size() > 0) {
             requireAuth = true;
-        
+        }
+                        
         // Invoke payment processing.
         if (requireAuth) {
             Map paymentResult = null;
@@ -999,8 +1004,19 @@ public class CheckOutHelper {
                 accountBalance = new Double(0.00);
             }
         }
-        Debug.logInfo("Billing Account : " + billingAccountId + " - " + (accountLimit.doubleValue() - accountBalance.doubleValue()), module);     
-        return accountLimit.doubleValue() - accountBalance.doubleValue();                
+        
+        double availableBalance = (accountLimit.doubleValue() - accountBalance.doubleValue());
+        String currencyFormat = UtilProperties.getPropertyValue("general.properties", "currency.decimal.format", "##0.00");        
+        DecimalFormat formatter = new DecimalFormat(currencyFormat);
+        String availableString = formatter.format(availableBalance);
+        Double available = null;
+        try {
+            available = new Double(formatter.parse(availableString).doubleValue());            
+        } catch (ParseException e) {
+            Debug.logError(e, "Problem getting parsed available amount", module);            
+        }        
+        Debug.logInfo("Billing Account : " + billingAccountId + " - " + available, module);     
+        return available.doubleValue();                
     }
     
     public Map makeBillingAccountMap(List paymentPrefs) {
