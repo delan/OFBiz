@@ -57,6 +57,9 @@ public class OrderChangeHelper {
     
     public static boolean approveOrder(LocalDispatcher dispatcher, GenericValue userLogin, String orderId) {        
         GenericValue productStore = OrderReadHelper.getProductStoreFromOrder(dispatcher.getDelegator(), orderId);
+        if (productStore == null) {
+            throw new IllegalArgumentException("Could not find ProductStore for orderId [" + orderId + "], cannot approve order.");
+        }
         String HEADER_STATUS = "ORDER_PROCESSING";
         String ITEM_STATUS = "ITEM_CREATED";
         String DIGITAL_ITEM_STATUS = "ITEM_APPROVED";
