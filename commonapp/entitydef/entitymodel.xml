@@ -24,6 +24,7 @@
  *  THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  *
  *@author David E. Jones (jonesde@ofbiz.org) 
+ *@author Andy Zeneski (jaz@zsolv.com)
  *@version    1.0
  */
 -->
@@ -105,6 +106,7 @@
   <!-- ======================== Data Model ===================== -->
   <!-- The modules in this file are as follows:                  -->
   <!--  - org.ofbiz.commonapp.common.currency -->
+  <!--  - org.ofbiz.commonapp.common.enum -->
   <!--  - org.ofbiz.commonapp.common.geo -->
   <!--  - org.ofbiz.commonapp.common.note -->
   <!--  - org.ofbiz.commonapp.common.period -->
@@ -112,6 +114,7 @@
   <!--  - org.ofbiz.commonapp.common.status -->
   <!--  - org.ofbiz.commonapp.common.uom -->
   <!--  - org.ofbiz.commonapp.content.content -->
+  <!--  - org.ofbiz.commonapp.content.data -->
   <!--  - org.ofbiz.commonapp.content.document -->
   <!--  - org.ofbiz.commonapp.content.preference -->
   <!--  - org.ofbiz.commonapp.content.subscription -->
@@ -132,6 +135,42 @@
       <field name="currencyCode" type="id-ne"></field>
       <field name="currencyName" type="description"></field>	
       <prim-key field="currencyCode" />
+    </entity>
+
+  <!-- ========================================================= -->
+  <!-- org.ofbiz.commonapp.common.enum -->
+  <!-- ========================================================= -->
+	
+    <entity entity-name="Enumeration" 
+            package-name="org.ofbiz.commonapp.common.enum"
+            title="Enumeration Entity">
+      <field name="enumId" type="id-ne"></field>
+      <field name="enumTypeId" type="id-ne"></field>
+      <field name="enumCode" type="short-varchar"></field>
+      <field name="sequenceId" type="id"></field>
+      <field name="description" type="description"></field>	
+      <prim-key field="enumId" />
+      <relation type="one" rel-entity-name="EnumerationType">
+        <key-map field-name="enumTypeId" />
+      </relation>
+    </entity>	
+    <entity entity-name="EnumerationType" 
+            package-name="org.ofbiz.commonapp.common.enum"
+            title="Enumeration Type Entity">
+      <field name="enumTypeId" type="id-ne"></field>
+      <field name="parentTypeId" type="id"></field>
+      <field name="hasTable" type="indicator"></field>
+      <field name="description" type="description"></field>	
+      <prim-key field="enumTypeId" />
+      <relation type="one" title="Parent" rel-entity-name="EnumerationType">
+        <key-map field-name="parentTypeId" rel-field-name="enumTypeId" />
+      </relation>
+      <relation type="many" title="Child" rel-entity-name="EnumerationType">
+        <key-map field-name="enumTypeId" rel-field-name="parentTypeId" />
+      </relation>
+      <relation type="many" rel-entity-name="Enumeration">
+        <key-map field-name="enumTypeId" />
+      </relation>
     </entity>
 
   <!-- ========================================================= -->
@@ -302,6 +341,7 @@
             title="Status Entity">
       <field name="statusId" type="id-ne"></field>
       <field name="statusTypeId" type="id"></field>
+      <field name="statusCode" type="short-varchar"></field>
       <field name="sequenceId" type="id"></field>
       <field name="description" type="description"></field>	
       <prim-key field="statusId" />
@@ -311,12 +351,18 @@
       <relation type="many" rel-entity-name="OrderStatus">
         <key-map field-name="statusId" />
       </relation>
+      <relation type="many" title="Main" rel-entity-name="StatusValidChange">
+        <key-map field-name="statusId" />
+      </relation>
+      <relation type="many" title="To" rel-entity-name="StatusValidChange">
+        <key-map field-name="statusId" rel-field-name="statusIdTo" />
+      </relation>
     </entity>	
     <entity entity-name="StatusType" 
             package-name="org.ofbiz.commonapp.common.status"
             title="Status Type Entity">
       <field name="statusTypeId" type="id-ne"></field>
-      <field name="parentTypeId" type="id-ne"></field>
+      <field name="parentTypeId" type="id"></field>
       <field name="hasTable" type="indicator"></field>
       <field name="description" type="description"></field>	
       <prim-key field="statusTypeId" />
@@ -328,6 +374,22 @@
       </relation>
       <relation type="many" rel-entity-name="StatusItem">
         <key-map field-name="statusTypeId" />
+      </relation>
+    </entity>	
+    <entity entity-name="StatusValidChange" 
+            package-name="org.ofbiz.commonapp.common.status"
+            title="Status Valid Change Entity">
+      <field name="statusId" type="id-ne"></field>
+      <field name="statusIdTo" type="id-ne"></field>
+      <field name="conditionExpression" type="long-varchar"></field>
+      <field name="transitionName" type="name"></field>	
+      <prim-key field="statusId" />	
+      <prim-key field="statusIdTo" />
+      <relation type="one" title="Main" rel-entity-name="StatusItem">
+        <key-map field-name="statusId" />
+      </relation>
+      <relation type="one" title="To" rel-entity-name="StatusItem">
+        <key-map field-name="statusIdTo" rel-field-name="statusId" />
       </relation>
     </entity>
 
@@ -398,7 +460,8 @@
       <field name="contentTypeId" type="id"></field>
       <field name="statusId" type="id"></field>
       <field name="description" type="description"></field>
-      <field name="urlLocation" type="long-varchar"></field>	
+      <field name="urlLocation" type="url"></field>
+      <field name="dataObjectId" type="id"></field>	
       <prim-key field="contentId" />
       <relation type="one" rel-entity-name="StatusItem">
         <key-map field-name="statusId" />
@@ -417,6 +480,9 @@
       </relation>
       <relation type="many" rel-entity-name="ContentCategoryClass">
         <key-map field-name="contentId" />
+      </relation>
+      <relation type="one" rel-entity-name="DataObject">
+        <key-map field-name="dataObjectId" />
       </relation>
     </entity>	
     <entity entity-name="ContentAssociation" 
@@ -546,15 +612,59 @@
       <relation type="many" rel-entity-name="Content">
         <key-map field-name="contentTypeId" />
       </relation>
+    </entity>
+
+  <!-- ========================================================= -->
+  <!-- org.ofbiz.commonapp.content.data -->
+  <!-- ========================================================= -->
+	
+    <entity entity-name="DataCategory" 
+            package-name="org.ofbiz.commonapp.content.data"
+            title="Data Category Entity">
+      <field name="dataCategoryId" type="id-ne"></field>
+      <field name="parentCategoryId" type="id"></field>
+      <field name="categoryName" type="name"></field>	
+      <prim-key field="dataCategoryId" />
+      <relation type="one" title="Parent" rel-entity-name="DataCategory">
+        <key-map field-name="parentCategoryId" rel-field-name="dataCategoryId" />
+      </relation>
+      <relation type="many" title="Child" rel-entity-name="DataCategory">
+        <key-map field-name="dataCategoryId" rel-field-name="parentCategoryId" />
+      </relation>
+      <relation type="many" title="Sibling" rel-entity-name="DataCategory">
+        <key-map field-name="parentCategoryId" />
+      </relation>
+      <relation type="many" rel-entity-name="DataCategoryMember">
+        <key-map field-name="dataCategoryId" />
+      </relation>
+    </entity>	
+    <entity entity-name="DataCategoryMember" 
+            package-name="org.ofbiz.commonapp.content.data"
+            title="Data Category Member Entity">
+      <field name="dataObjectId" type="id-ne"></field>
+      <field name="dataCategoryId" type="id-ne"></field>
+      <field name="fromDate" type="date-time"></field>	
+      <prim-key field="dataObjectId" />	
+      <prim-key field="dataCategoryId" />
+      <relation type="one" rel-entity-name="DataCategory">
+        <key-map field-name="dataCategoryId" />
+      </relation>
+      <relation type="one" rel-entity-name="DataObject">
+        <key-map field-name="dataObjectId" />
+      </relation>
     </entity>	
     <entity entity-name="DataObject" 
-            package-name="org.ofbiz.commonapp.content.content"
+            package-name="org.ofbiz.commonapp.content.data"
             title="Data Object Entity">
       <field name="dataObjectId" type="id-ne"></field>
       <field name="dataObjectTypeId" type="id"></field>
+      <field name="dataObjectName" type="name"></field>
       <field name="description" type="description"></field>
       <field name="fileLocation" type="long-varchar"></field>
-      <field name="dataObjectName" type="name"></field>	
+      <field name="createdDate" type="date-time"></field>
+      <field name="createdByPartyId" type="id"></field>
+      <field name="lastModifiedDate" type="date-time"></field>
+      <field name="lastModifiedByPartyId" type="id"></field>	
       <prim-key field="dataObjectId" />
       <relation type="one" rel-entity-name="ElectronicText">
         <key-map field-name="dataObjectId" />
@@ -563,6 +673,9 @@
         <key-map field-name="dataObjectId" />
       </relation>
       <relation type="one" rel-entity-name="OtherDataObject">
+        <key-map field-name="dataObjectId" />
+      </relation>
+      <relation type="many" rel-entity-name="Content">
         <key-map field-name="dataObjectId" />
       </relation>
       <relation type="many" rel-entity-name="ContentDataObjectUsage">
@@ -586,9 +699,18 @@
       <relation type="many" rel-entity-name="FeatureDataObject">
         <key-map field-name="dataObjectId" />
       </relation>
+      <relation type="one" title="CreatedBy" rel-entity-name="Party">
+        <key-map field-name="createdByPartyId" rel-field-name="partyId" />
+      </relation>
+      <relation type="one" title="LastModifiedBy" rel-entity-name="Party">
+        <key-map field-name="lastModifiedByPartyId" rel-field-name="partyId" />
+      </relation>
+      <relation type="many" rel-entity-name="DataCategoryMember">
+        <key-map field-name="dataObjectId" />
+      </relation>
     </entity>	
     <entity entity-name="DataObjectAttribute" 
-            package-name="org.ofbiz.commonapp.content.content"
+            package-name="org.ofbiz.commonapp.content.data"
             title="Data Object Attribute Entity">
       <field name="dataObjectId" type="id-ne"></field>
       <field name="attrName" type="id-long-ne"></field>
@@ -603,7 +725,7 @@
       </relation>
     </entity>	
     <entity entity-name="DataObjectPurpose" 
-            package-name="org.ofbiz.commonapp.content.content"
+            package-name="org.ofbiz.commonapp.content.data"
             title="Data Object Purpose Entity">
       <field name="dataObjectId" type="id-ne"></field>
       <field name="dataObjectPurposeTypeId" type="id-ne"></field>	
@@ -617,7 +739,7 @@
       </relation>
     </entity>	
     <entity entity-name="DataObjectPurposeType" 
-            package-name="org.ofbiz.commonapp.content.content"
+            package-name="org.ofbiz.commonapp.content.data"
             title="Data Object Purpose Type Entity">
       <field name="dataObjectPurposeTypeId" type="id-ne"></field>
       <field name="description" type="description"></field>	
@@ -627,7 +749,7 @@
       </relation>
     </entity>	
     <entity entity-name="DataObjectType" 
-            package-name="org.ofbiz.commonapp.content.content"
+            package-name="org.ofbiz.commonapp.content.data"
             title="Data Object Type Entity">
       <field name="dataObjectTypeId" type="id-ne"></field>
       <field name="parentTypeId" type="id-ne"></field>
@@ -648,7 +770,7 @@
       </relation>
     </entity>	
     <entity entity-name="DataObjectTypeAttr" 
-            package-name="org.ofbiz.commonapp.content.content"
+            package-name="org.ofbiz.commonapp.content.data"
             title="Data Object Type Attribute Entity">
       <field name="dataObjectTypeId" type="id-ne"></field>
       <field name="attrName" type="id-long-ne"></field>	
@@ -665,7 +787,7 @@
       </relation>
     </entity>	
     <entity entity-name="ElectronicText" 
-            package-name="org.ofbiz.commonapp.content.content"
+            package-name="org.ofbiz.commonapp.content.data"
             title="Electronic Text Entity">
       <field name="dataObjectId" type="id-ne"></field>
       <field name="textData" type="very-long"></field>	
@@ -675,14 +797,14 @@
       </relation>
     </entity>	
     <entity entity-name="FunctionType" 
-            package-name="org.ofbiz.commonapp.content.content"
+            package-name="org.ofbiz.commonapp.content.data"
             title="Function Type Entity">
       <field name="functionTypeId" type="id-ne"></field>
       <field name="description" type="description"></field>	
       <prim-key field="functionTypeId" />
     </entity>	
     <entity entity-name="ImageDataObject" 
-            package-name="org.ofbiz.commonapp.content.content"
+            package-name="org.ofbiz.commonapp.content.data"
             title="Image Data Object Entity">
       <field name="dataObjectId" type="id-ne"></field>
       <field name="imageData" type="blob"></field>	
@@ -692,7 +814,7 @@
       </relation>
     </entity>	
     <entity entity-name="OtherDataObject" 
-            package-name="org.ofbiz.commonapp.content.content"
+            package-name="org.ofbiz.commonapp.content.data"
             title="Other Data Object Entity">
       <field name="dataObjectId" type="id-ne"></field>
       <field name="dataObjectContent" type="blob"></field>	
