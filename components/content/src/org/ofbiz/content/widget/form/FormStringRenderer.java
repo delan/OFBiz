@@ -53,6 +53,7 @@ public interface FormStringRenderer {
     public void renderIgnoredField(StringBuffer buffer, Map context, ModelFormField.IgnoredField ignoredField);
 
     public void renderFieldTitle(StringBuffer buffer, Map context, ModelFormField modelFormField);
+    public void renderSingleFormFieldTitle(StringBuffer buffer, Map context, ModelFormField modelFormField);
     
     public void renderFormOpen(StringBuffer buffer, Map context, ModelForm modelForm);
     public void renderFormClose(StringBuffer buffer, Map context, ModelForm modelForm);
