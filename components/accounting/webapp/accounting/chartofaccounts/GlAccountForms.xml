@@ -23,12 +23,58 @@
 
 <forms xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" 
         xsi:noNamespaceSchemaLocation="http://www.ofbiz.org/dtds/widget-form.xsd">
+
+    <!-- Displays the form for assigning accounts to a party or company -->
+    <!-- TODO: Localize field names --> 
+    <form name="AssignGlAccount" type="single"
+            target="createGlAccountOrganization" title="" default-map-name="account"
+            default-title-style="tableheadtext" default-widget-style="inputBox" default-tooltip-style="tabletext">
+
+        <!-- field name="glAccountId" title="Edit" widget-style="buttontext" -->
+
+        <field name="glAccountId" title="GlAccount" widget-style="selectBox">
+            <drop-down>
+                <entity-options entity-name="GlAccount" description="${accountName}"> 
+                    <entity-order-by field-name="accountName"/>
+                </entity-options>
+            </drop-down>
+        </field>
+        <!-- field name="partyId" title="Party" widget-style="selectBox" -->
+        <field name="partyId" title="Party" widget-style="selectBox">
+            <drop-down>
+                <entity-options entity-name="PartyRoleAndPartyDetail" description="${partyId}"> 
+                    <entity-constraint name="roleTypeId" value="INTERNAL_ORGANIZATIO"/>
+                    <entity-order-by field-name="partyId"/>
+                </entity-options>
+            </drop-down>
+        </field>
+
+        <!--field position="1" name="testDt" title="Test Date" red-when="after-now"><date-time/></field -->
+        <!-- field position="1" name="accountId" title="Account" widget-style="selectBox">
+            <drop-down allow-empty="true"><option key="Y" description="${uiLabelMap.CommonY}" /><option key="N" description="${uiLabelMap.CommonN}"/></drop-down>
+        </field -->
+        <!-- field position="2" name="partyId" title="Party ID" widget-style="selectBox">
+            <drop-down allow-empty="true"><option key="Y" description="${uiLabelMap.CommonY}"/><option key="N" description="${uiLabelMap.CommonN}"/></drop-down>
+        </field -->
+        
+        <!-- field name="productTypeId" title="${uiLabelMap.ProductProductType}" widget-style="selectBox">
+            <drop-down>
+                <entity-options entity-name="ProductType" description="${description}"> 
+                    <entity-order-by field-name="description"/>
+                </entity-options>
+            </drop-down>
+        </field -->
+
+        <field name="submitButton" title="Create Assignment" widget-style="standardSubmit"><submit button-type="button"/></field>
+
+    </form>
+
     <form name="ListGlAccount" default-title-style="tableheadtext"
         default-tooltip-style="tabletext" default-widget-style="display"
         list-name="entityList" target="" paginate-target="/EditGlobalAccount" title="" type="list">
         <auto-fields-entity entity-name="GlAccount" default-field-type="display"/>
         <field name="glAccountId" title="Edit" widget-style="buttontext">
-            <hyperlink also-hidden="false" description="${glAccountId}" target="GlAccountTree?glAccountId=${glAccountId}"/>
+            <hyperlink also-hidden="false" description="${glAccountId}" target="GlAccountNavigate?glAccountId=${glAccountId}"/>
         </field>
     </form>
 
@@ -82,8 +128,12 @@
         </field>
         <field name="postedBalance"><display/></field>
 
+
         <field name="submitButton" title="${uiLabelMap.CommonUpdate}" widget-style="standardSubmit"><submit button-type="button"/></field>
     </form>
+
+
+
     <!--
     <form name="CreateProductStoreCatalog" type="single" 
             target="createGlAccountStore" title=""
