@@ -138,7 +138,7 @@ if (security.hasPermission("ENTITY_MAINT", session) || request.getParameter("ori
   <!-- ========================================================= -->
 <%
     Iterator i = entities.iterator();
-    while ( i.hasNext() ) {
+    while (i.hasNext()) {
       String entityName = (String)i.next();
       ModelEntity entity = reader.getModelEntity(entityName);
       if (entity instanceof ModelViewEntity) {
@@ -155,17 +155,17 @@ if (security.hasPermission("ENTITY_MAINT", session) || request.getParameter("ori
   Iterator meIter = viewEntity.getMemberEntityNames().entrySet().iterator();
   while(meIter.hasNext()) {
     Map.Entry entry = (Map.Entry)meIter.next();%>	
-      <member-entity entity-alias="<%=(String)entry.getKey()%>" entity-name="<%=(String)entry.getValue()%>" /><%
+      <member-entity entity-alias="<%=(String)entry.getKey()%>" entity-name="<%=(String)entry.getValue()%>"/><%
   }
   for (int y = 0; y < viewEntity.getAliasesSize(); y++) {
     ModelViewEntity.ModelAlias alias = viewEntity.getAlias(y);%>
       <alias entity-alias="<%=alias.getEntityAlias()%>" name="<%=alias.getName()%>"<%if (!alias.getName().equals(alias.getField())){
-      %> field="<%=alias.getField()%>"<%}%><%if (alias.getIsPk()) {%> prim-key="true"<%}%> /><%
+      %> field="<%=alias.getField()%>"<%}%><%if (alias.getIsPk()) {%> prim-key="true"<%}%>/><%
   }
   for (int r = 0; r < viewEntity.getViewLinksSize(); r++) {
     ModelViewEntity.ModelViewLink viewLink = viewEntity.getViewLink(r);%>
       <view-link entity-alias="<%=viewLink.getEntityAlias()%>" rel-entity-alias="<%=viewLink.getRelEntityAlias()%>"><%for (int km = 0; km < viewLink.getKeyMapsSize(); km++){ ModelKeyMap keyMap = viewLink.getKeyMap(km);%>
-        <key-map field-name="<%=keyMap.getFieldName()%>"<%if (!keyMap.getFieldName().equals(keyMap.getRelFieldName())) {%> rel-field-name="<%=keyMap.getRelFieldName()%>"<%}%> /><%}%>
+        <key-map field-name="<%=keyMap.getFieldName()%>"<%if (!keyMap.getFieldName().equals(keyMap.getRelFieldName())) {%> rel-field-name="<%=keyMap.getRelFieldName()%>"<%}%>/><%}%>
       </view-link><%
   }
   if (entity.getRelationsSize() > 0) {
@@ -173,7 +173,7 @@ if (security.hasPermission("ENTITY_MAINT", session) || request.getParameter("ori
       ModelRelation relation = entity.getRelation(r);%>
       <relation type="<%=relation.getType()%>"<%if (relation.getTitle().length() > 0) {%> title="<%=relation.getTitle()%>"<%}
               %> rel-entity-name="<%=relation.getRelEntityName()%>"><%for (int km = 0; km < relation.getKeyMapsSize(); km++){ ModelKeyMap keyMap = relation.getKeyMap(km);%>
-        <key-map field-name="<%=keyMap.getFieldName()%>"<%if (!keyMap.getFieldName().equals(keyMap.getRelFieldName())) {%> rel-field-name="<%=keyMap.getRelFieldName()%>"<%}%> /><%}%>
+        <key-map field-name="<%=keyMap.getFieldName()%>"<%if (!keyMap.getFieldName().equals(keyMap.getRelFieldName())) {%> rel-field-name="<%=keyMap.getRelFieldName()%>"<%}%>/><%}%>
       </relation><%
     }
   }%>
@@ -196,19 +196,19 @@ if (security.hasPermission("ENTITY_MAINT", session) || request.getParameter("ori
       %> col-name="<%=field.getColName()%>"<%}%> type="<%=field.getType()%>"><%
     for (int v = 0; v<field.getValidatorsSize(); v++) {
       String valName = field.getValidator(v);
-      %><validate name="<%=valName%>" /><%
+      %><validate name="<%=valName%>"/><%
     }%></field><%
   }
   for (int y = 0; y < entity.getPksSize(); y++) {
-    ModelField field = entity.getPk(y);%>	
-      <prim-key field="<%=field.getName()%>" /><%
+    ModelField field = entity.getPk(y);%>
+      <prim-key field="<%=field.getName()%>"/><%
   }
   if (entity.getRelationsSize() > 0) {
     for (int r=0; r<entity.getRelationsSize(); r++) {
       ModelRelation relation = entity.getRelation(r);%>
       <relation type="<%=relation.getType()%>"<%if (relation.getTitle().length() > 0) {%> title="<%=relation.getTitle()%>"<%}
               %> rel-entity-name="<%=relation.getRelEntityName()%>"><%for (int km = 0; km < relation.getKeyMapsSize(); km++){ ModelKeyMap keyMap = relation.getKeyMap(km);%>
-        <key-map field-name="<%=keyMap.getFieldName()%>"<%if (!keyMap.getFieldName().equals(keyMap.getRelFieldName())) {%> rel-field-name="<%=keyMap.getRelFieldName()%>"<%}%> /><%}%>
+        <key-map field-name="<%=keyMap.getFieldName()%>"<%if (!keyMap.getFieldName().equals(keyMap.getRelFieldName())) {%> rel-field-name="<%=keyMap.getRelFieldName()%>"<%}%>/><%}%>
       </relation><%
     }
   }%>
@@ -219,8 +219,7 @@ if (security.hasPermission("ENTITY_MAINT", session) || request.getParameter("ori
 </entitymodel>
 <%
   }
-} 
-else {
+} else {
   %>ERROR: You do not have permission to use this page (ENTITY_MAINT needed)<%
 }
 } catch (Exception e) {

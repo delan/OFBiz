@@ -63,18 +63,18 @@
       <field name="shipmentId" type="id"></field>
       <field name="shipmentItemSeqId" type="id"></field>
       <field name="issuedDateTime" type="date-time"></field>
-      <field name="quantity" type="floating-point"></field>	
-      <prim-key field="itemIssuanceId" />
+      <field name="quantity" type="floating-point"></field>
+      <prim-key field="itemIssuanceId"/>
     </entity>
     <entity entity-name="ItemIssuanceRole" 
             package-name="org.ofbiz.commonapp.shipment.issuance"
             title="Item Issuance Role Entity">
       <field name="itemIssuanceId" type="id-ne"></field>
       <field name="partyId" type="id-ne"></field>
-      <field name="roleTypeId" type="id-ne"></field>	
-      <prim-key field="itemIssuanceId" />	
-      <prim-key field="partyId" />	
-      <prim-key field="roleTypeId" />
+      <field name="roleTypeId" type="id-ne"></field>
+      <prim-key field="itemIssuanceId"/>
+      <prim-key field="partyId"/>
+      <prim-key field="roleTypeId"/>
     </entity>
 
   <!-- ========================================================= -->
@@ -94,18 +94,18 @@
       <field name="datetimeReceived" type="date-time"></field>
       <field name="itemDescription" type="description"></field>
       <field name="quantityAccepted" type="floating-point"></field>
-      <field name="quantityRejected" type="floating-point"></field>	
-      <prim-key field="receiptId" />
+      <field name="quantityRejected" type="floating-point"></field>
+      <prim-key field="receiptId"/>
     </entity>
     <entity entity-name="ShipmentReceiptRole" 
             package-name="org.ofbiz.commonapp.shipment.receipt"
             title="Shipment Receipt Role Entity">
       <field name="receiptId" type="id-ne"></field>
       <field name="partyId" type="id-ne"></field>
-      <field name="roleTypeId" type="id-ne"></field>	
-      <prim-key field="receiptId" />	
-      <prim-key field="partyId" />	
-      <prim-key field="roleTypeId" />
+      <field name="roleTypeId" type="id-ne"></field>
+      <prim-key field="receiptId"/>
+      <prim-key field="partyId"/>
+      <prim-key field="roleTypeId"/>
     </entity>
 
   <!-- ========================================================= -->
@@ -128,9 +128,9 @@
       <field name="estimatedArrivalDate" type="date-time"></field>
       <field name="startMileage" type="floating-point"></field>
       <field name="endMileage" type="floating-point"></field>
-      <field name="fuelUsed" type="floating-point"></field>	
-      <prim-key field="shipmentRouteSegmentId" />	
-      <prim-key field="shipmentId" />
+      <field name="fuelUsed" type="floating-point"></field>
+      <prim-key field="shipmentRouteSegmentId"/>
+      <prim-key field="shipmentId"/>
     </entity>
 
   <!-- ========================================================= -->
@@ -143,22 +143,22 @@
       <field name="shipmentMethodTypeId" type="id-ne"></field>
       <field name="partyId" type="id-ne"></field>
       <field name="roleTypeId" type="id-ne"></field>
-      <field name="sequenceNumber" type="numeric"></field>	
-      <prim-key field="shipmentMethodTypeId" />	
-      <prim-key field="partyId" />	
-      <prim-key field="roleTypeId" />
+      <field name="sequenceNumber" type="numeric"></field>
+      <prim-key field="shipmentMethodTypeId"/>
+      <prim-key field="partyId"/>
+      <prim-key field="roleTypeId"/>
       <relation type="one" rel-entity-name="ShipmentMethodType">
-        <key-map field-name="shipmentMethodTypeId" />
+        <key-map field-name="shipmentMethodTypeId"/>
       </relation>
       <relation type="many" rel-entity-name="OrderShipmentPreference">
-        <key-map field-name="shipmentMethodTypeId" />
-        <key-map field-name="partyId" rel-field-name="carrierPartyId" />
-        <key-map field-name="roleTypeId" rel-field-name="carrierRoleTypeId" />
+        <key-map field-name="shipmentMethodTypeId"/>
+        <key-map field-name="partyId" rel-field-name="carrierPartyId"/>
+        <key-map field-name="roleTypeId" rel-field-name="carrierRoleTypeId"/>
       </relation>
       <relation type="many" rel-entity-name="ShipmentCostEstimate">
-        <key-map field-name="shipmentMethodTypeId" />
-        <key-map field-name="partyId" />
-        <key-map field-name="roleTypeId" />
+        <key-map field-name="shipmentMethodTypeId"/>
+        <key-map field-name="partyId"/>
+        <key-map field-name="roleTypeId"/>
       </relation>
     </entity>
     <entity entity-name="PackagingContent" 
@@ -167,10 +167,10 @@
       <field name="shipmentPackageId" type="id-ne"></field>
       <field name="shipmentId" type="id-ne"></field>
       <field name="shipmentItemSeqId" type="id-ne"></field>
-      <field name="quantity" type="floating-point"></field>	
-      <prim-key field="shipmentPackageId" />	
-      <prim-key field="shipmentId" />	
-      <prim-key field="shipmentItemSeqId" />
+      <field name="quantity" type="floating-point"></field>
+      <prim-key field="shipmentPackageId"/>
+      <prim-key field="shipmentId"/>
+      <prim-key field="shipmentItemSeqId"/>
     </entity>
     <entity entity-name="Shipment" 
             package-name="org.ofbiz.commonapp.shipment.shipment"
@@ -186,19 +186,19 @@
       <field name="actualShipCost" type="currency-amount"></field>
       <field name="latestCancelDate" type="date-time"></field>
       <field name="handlingInstructions" type="long-varchar"></field>
-      <field name="lastUpdated" type="date-time"></field>	
-      <prim-key field="shipmentId" />
+      <field name="lastUpdated" type="date-time"></field>
+      <prim-key field="shipmentId"/>
       <relation type="one" rel-entity-name="ShipmentType">
-        <key-map field-name="shipmentTypeId" />
+        <key-map field-name="shipmentTypeId"/>
       </relation>
       <relation type="many" rel-entity-name="ShipmentTypeAttr">
-        <key-map field-name="shipmentTypeId" />
+        <key-map field-name="shipmentTypeId"/>
       </relation>
       <relation type="many" rel-entity-name="ShipmentAttribute">
-        <key-map field-name="shipmentId" />
+        <key-map field-name="shipmentId"/>
       </relation>
       <relation type="many" rel-entity-name="OrderShipment">
-        <key-map field-name="shipmentId" />
+        <key-map field-name="shipmentId"/>
       </relation>
     </entity>
     <entity entity-name="ShipmentAttribute" 
@@ -206,14 +206,14 @@
             title="Shipment Attribute Entity">
       <field name="shipmentId" type="id-ne"></field>
       <field name="attrName" type="id-long-ne"></field>
-      <field name="attrValue" type="value"></field>	
-      <prim-key field="shipmentId" />	
-      <prim-key field="attrName" />
+      <field name="attrValue" type="value"></field>
+      <prim-key field="shipmentId"/>
+      <prim-key field="attrName"/>
       <relation type="one" rel-entity-name="Shipment">
-        <key-map field-name="shipmentId" />
+        <key-map field-name="shipmentId"/>
       </relation>
       <relation type="many" rel-entity-name="ShipmentTypeAttr">
-        <key-map field-name="attrName" />
+        <key-map field-name="attrName"/>
       </relation>
     </entity>
     <entity entity-name="ShipmentCostEstimate" 
@@ -235,40 +235,40 @@
       <field name="priceUnitPrice" type="currency-amount"></field>
       <field name="orderFlatPrice" type="currency-amount"></field>
       <field name="orderPricePercent" type="floating-point"></field>
-      <field name="orderItemFlatPrice" type="currency-amount"></field>	
-      <prim-key field="shipmentCostEstimateId" />
+      <field name="orderItemFlatPrice" type="currency-amount"></field>
+      <prim-key field="shipmentCostEstimateId"/>
       <relation type="one" rel-entity-name="CarrierShipmentMethod">
-        <key-map field-name="shipmentMethodTypeId" />
-        <key-map field-name="partyId" />
-        <key-map field-name="roleTypeId" />
+        <key-map field-name="shipmentMethodTypeId"/>
+        <key-map field-name="partyId"/>
+        <key-map field-name="roleTypeId"/>
       </relation>
       <relation type="one" rel-entity-name="Party">
-        <key-map field-name="partyId" />
+        <key-map field-name="partyId"/>
       </relation>
       <relation type="one" rel-entity-name="PartyRole">
-        <key-map field-name="partyId" />
-        <key-map field-name="roleTypeId" />
+        <key-map field-name="partyId"/>
+        <key-map field-name="roleTypeId"/>
       </relation>
       <relation type="one" rel-entity-name="RoleType">
-        <key-map field-name="roleTypeId" />
+        <key-map field-name="roleTypeId"/>
       </relation>
       <relation type="one" rel-entity-name="Uom">
-        <key-map field-name="weightUomId" rel-field-name="uomId" />
+        <key-map field-name="weightUomId" rel-field-name="uomId"/>
       </relation>
       <relation type="one" title="To" rel-entity-name="Geo">
-        <key-map field-name="geoIdTo" rel-field-name="geoId" />
+        <key-map field-name="geoIdTo" rel-field-name="geoId"/>
       </relation>
       <relation type="one" title="From" rel-entity-name="Geo">
-        <key-map field-name="geoIdFrom" rel-field-name="geoId" />
+        <key-map field-name="geoIdFrom" rel-field-name="geoId"/>
       </relation>
       <relation type="one" title="Weight" rel-entity-name="QuantityBreak">
-        <key-map field-name="weightBreakId" rel-field-name="quantityBreakId" />
+        <key-map field-name="weightBreakId" rel-field-name="quantityBreakId"/>
       </relation>
       <relation type="one" title="Quantity" rel-entity-name="QuantityBreak">
-        <key-map field-name="quantityBreakId" />
+        <key-map field-name="quantityBreakId"/>
       </relation>
       <relation type="one" title="Price" rel-entity-name="QuantityBreak">
-        <key-map field-name="priceBreakId" rel-field-name="quantityBreakId" />
+        <key-map field-name="priceBreakId" rel-field-name="quantityBreakId"/>
       </relation>
     </entity>
     <entity entity-name="ShipmentItem" 
@@ -278,12 +278,12 @@
       <field name="shipmentItemSeqId" type="id-ne"></field>
       <field name="productId" type="id"></field>
       <field name="quantity" type="floating-point"></field>
-      <field name="shipmentContentDescription" type="description"></field>	
-      <prim-key field="shipmentId" />	
-      <prim-key field="shipmentItemSeqId" />
+      <field name="shipmentContentDescription" type="description"></field>
+      <prim-key field="shipmentId"/>
+      <prim-key field="shipmentItemSeqId"/>
       <relation type="many" rel-entity-name="OrderShipment">
-        <key-map field-name="shipmentId" />
-        <key-map field-name="shipmentItemSeqId" />
+        <key-map field-name="shipmentId"/>
+        <key-map field-name="shipmentItemSeqId"/>
       </relation>
     </entity>
     <entity entity-name="ShipmentItemBilling" 
@@ -292,47 +292,47 @@
       <field name="shipmentId" type="id-ne"></field>
       <field name="shipmentItemSeqId" type="id-ne"></field>
       <field name="invoiceId" type="id-ne"></field>
-      <field name="invoiceItemSeqId" type="id-ne"></field>	
-      <prim-key field="shipmentId" />	
-      <prim-key field="shipmentItemSeqId" />	
-      <prim-key field="invoiceId" />	
-      <prim-key field="invoiceItemSeqId" />
+      <field name="invoiceItemSeqId" type="id-ne"></field>
+      <prim-key field="shipmentId"/>
+      <prim-key field="shipmentItemSeqId"/>
+      <prim-key field="invoiceId"/>
+      <prim-key field="invoiceItemSeqId"/>
     </entity>
     <entity entity-name="ShipmentItemFeature" 
             package-name="org.ofbiz.commonapp.shipment.shipment"
             title="Shipment Item Feature Entity">
       <field name="shipmentId" type="id-ne"></field>
       <field name="shipmentItemSeqId" type="id-ne"></field>
-      <field name="productFeatureId" type="id-ne"></field>	
-      <prim-key field="shipmentId" />	
-      <prim-key field="shipmentItemSeqId" />	
-      <prim-key field="productFeatureId" />
+      <field name="productFeatureId" type="id-ne"></field>
+      <prim-key field="shipmentId"/>
+      <prim-key field="shipmentItemSeqId"/>
+      <prim-key field="productFeatureId"/>
     </entity>
     <entity entity-name="ShipmentMethodType" 
             package-name="org.ofbiz.commonapp.shipment.shipment"
             title="Shipment Method Type Entity">
       <field name="shipmentMethodTypeId" type="id-ne"></field>
-      <field name="description" type="description"></field>	
-      <prim-key field="shipmentMethodTypeId" />
+      <field name="description" type="description"></field>
+      <prim-key field="shipmentMethodTypeId"/>
       <relation type="many" rel-entity-name="OrderShipmentPreference">
-        <key-map field-name="shipmentMethodTypeId" />
+        <key-map field-name="shipmentMethodTypeId"/>
       </relation>
     </entity>
     <entity entity-name="ShipmentPackage" 
             package-name="org.ofbiz.commonapp.shipment.shipment"
             title="Shipment Package Entity">
       <field name="shipmentPackageId" type="id-ne"></field>
-      <field name="dateCreated" type="date-time"></field>	
-      <prim-key field="shipmentPackageId" />
+      <field name="dateCreated" type="date-time"></field>
+      <prim-key field="shipmentPackageId"/>
     </entity>
     <entity entity-name="ShipmentStatus" 
             package-name="org.ofbiz.commonapp.shipment.shipment"
             title="Shipment Status Entity">
       <field name="statusId" type="id-ne"></field>
       <field name="shipmentId" type="id-ne"></field>
-      <field name="statusDate" type="date-time"></field>	
-      <prim-key field="statusId" />	
-      <prim-key field="shipmentId" />
+      <field name="statusDate" type="date-time"></field>
+      <prim-key field="statusId"/>
+      <prim-key field="shipmentId"/>
     </entity>
     <entity entity-name="ShipmentType" 
             package-name="org.ofbiz.commonapp.shipment.shipment"
@@ -340,36 +340,36 @@
       <field name="shipmentTypeId" type="id-ne"></field>
       <field name="parentTypeId" type="id-ne"></field>
       <field name="hasTable" type="indicator"></field>
-      <field name="description" type="description"></field>	
-      <prim-key field="shipmentTypeId" />
+      <field name="description" type="description"></field>
+      <prim-key field="shipmentTypeId"/>
       <relation type="one" title="Parent" rel-entity-name="ShipmentType">
-        <key-map field-name="parentTypeId" rel-field-name="shipmentTypeId" />
+        <key-map field-name="parentTypeId" rel-field-name="shipmentTypeId"/>
       </relation>
       <relation type="many" title="Child" rel-entity-name="ShipmentType">
-        <key-map field-name="shipmentTypeId" rel-field-name="parentTypeId" />
+        <key-map field-name="shipmentTypeId" rel-field-name="parentTypeId"/>
       </relation>
       <relation type="many" rel-entity-name="ShipmentTypeAttr">
-        <key-map field-name="shipmentTypeId" />
+        <key-map field-name="shipmentTypeId"/>
       </relation>
       <relation type="many" rel-entity-name="Shipment">
-        <key-map field-name="shipmentTypeId" />
+        <key-map field-name="shipmentTypeId"/>
       </relation>
     </entity>
     <entity entity-name="ShipmentTypeAttr" 
             package-name="org.ofbiz.commonapp.shipment.shipment"
             title="Shipment Type Attribute Entity">
       <field name="shipmentTypeId" type="id-ne"></field>
-      <field name="attrName" type="id-long-ne"></field>	
-      <prim-key field="shipmentTypeId" />	
-      <prim-key field="attrName" />
+      <field name="attrName" type="id-long-ne"></field>
+      <prim-key field="shipmentTypeId"/>
+      <prim-key field="attrName"/>
       <relation type="one" rel-entity-name="ShipmentType">
-        <key-map field-name="shipmentTypeId" />
+        <key-map field-name="shipmentTypeId"/>
       </relation>
       <relation type="many" rel-entity-name="ShipmentAttribute">
-        <key-map field-name="attrName" />
+        <key-map field-name="attrName"/>
       </relation>
       <relation type="many" rel-entity-name="Shipment">
-        <key-map field-name="shipmentTypeId" />
+        <key-map field-name="shipmentTypeId"/>
       </relation>
     </entity>
     <entity entity-name="ShippingDocument" 
@@ -379,8 +379,8 @@
       <field name="shipmentId" type="id"></field>
       <field name="shipmentItemSeqId" type="id"></field>
       <field name="shipmentPackageId" type="id"></field>
-      <field name="description" type="description"></field>	
-      <prim-key field="documentId" />
+      <field name="description" type="description"></field>
+      <prim-key field="documentId"/>
     </entity>  
 </entitymodel>
 
