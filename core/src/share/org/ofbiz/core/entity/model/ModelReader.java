@@ -286,6 +286,9 @@ public class ModelReader {
         entity.pks.add(field);
         field.isPk = true;
       }
+      else {
+        Debug.logError("[ModelReader.createModelEntity] ERROR: Could not find field \"" + ((Element)pkList.item(i)).getAttribute("field") + "\" specified in a prim-key");
+      }
     }
     
     //now that we have the pks and the fields, make the nopks vector
