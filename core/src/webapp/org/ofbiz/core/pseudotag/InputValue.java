@@ -93,7 +93,7 @@ public class InputValue {
     public static void run(String field, String param, String entityAttr, String tryEntityAttr, 
             String defaultStr, String fullattrsStr, PageContext pageContext) throws IOException {
         if (field == null || entityAttr == null || pageContext == null) {
-            throw new RuntimeException("Required parameter (attribute || field || pageContext) missing");
+            throw new RuntimeException("Required parameter (field or entityAttr or pageContext) missing");
         }
         
         if (defaultStr == null) defaultStr = "";
@@ -107,7 +107,7 @@ public class InputValue {
 
         Boolean tempBool = null;
         if (tryEntityAttr != null)
-            tempBool = (Boolean) pageContext.getAttribute(tryEntityAttr);
+            tempBool = (Boolean) pageContext.findAttribute(tryEntityAttr);
         if (tempBool != null)
             tryEntity = tempBool.booleanValue();
 
@@ -115,7 +115,7 @@ public class InputValue {
         fullattrs = "true".equals(fullattrsStr);
 
         if (tryEntity) {
-            Object entTemp = pageContext.getAttribute(entityAttr);
+            Object entTemp = pageContext.findAttribute(entityAttr);
             if (entTemp != null) {
                 if (entTemp instanceof GenericValue) {
                     GenericValue entity = (GenericValue) entTemp;
