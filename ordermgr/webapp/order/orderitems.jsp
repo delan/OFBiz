@@ -120,7 +120,7 @@
                 <ofbiz:iterator name="orderItemAdjustment" property="orderItemAdjustments">
                     <%GenericValue adjustmentType = orderItemAdjustment.getRelatedOneCache("OrderAdjustmentType");%>
                     <tr>
-                        <td align="right" colspan="2"><div class="tabletext" style='font-size: xx-small;'><b><i>Adjustment</i>:</b> <b><%=adjustmentType.getString("description")%></b> <%=UtilFormatOut.ifNotEmpty(orderItemAdjustment.getString("comments"), ": ", "")%></div></td>
+                        <td align="right" colspan="2"><div class="tabletext" style='font-size: xx-small;'><b><i>Adjustment</i>:</b> <b><%=adjustmentType.getString("description")%></b> <%=UtilFormatOut.ifNotEmpty(orderItemAdjustment.getString("description"), ": ", "")%> <%=UtilFormatOut.ifNotEmpty(orderItemAdjustment.getString("comments"), "(", ")")%></div></td>
                         <td>&nbsp;</td>
                         <td>&nbsp;</td>
                         <td align="right"><div class="tabletext" style='font-size: xx-small;'><%=UtilFormatOut.formatPrice(OrderReadHelper.calcItemAdjustment(orderItemAdjustment, orderItem))%></div></td>
