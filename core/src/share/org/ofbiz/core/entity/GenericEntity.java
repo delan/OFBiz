@@ -86,7 +86,12 @@ public class GenericEntity extends Observable implements Serializable, Comparabl
   /** Creates new GenericEntity */
   public GenericEntity(ModelEntity modelEntity) { this.entityName = modelEntity.entityName; this.modelEntity = modelEntity; this.fields = new HashMap(); }
   /** Creates new GenericEntity from existing Map */
-  public GenericEntity(ModelEntity modelEntity, Map fields) { this.entityName = modelEntity.entityName; this.modelEntity = modelEntity; this.fields = (fields==null?new HashMap():new HashMap(fields)); }
+  public GenericEntity(ModelEntity modelEntity, Map fields) {
+    if(modelEntity == null) throw new IllegalArgumentException("Cannont create a GenericEntity with a null modelEntity parameter");
+    this.modelEntity = modelEntity;
+    this.entityName = modelEntity.entityName;
+    this.fields = (fields==null?new HashMap():new HashMap(fields));
+  }
   /** Copy Constructor: Creates new GenericEntity from existing GenericEntity */
   public GenericEntity(GenericEntity value) { this.entityName = value.modelEntity.entityName; this.modelEntity = value.modelEntity; this.fields = (value.fields==null?new HashMap():new HashMap(value.fields)); }
   
