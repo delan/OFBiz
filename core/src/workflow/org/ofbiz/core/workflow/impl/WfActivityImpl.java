@@ -89,16 +89,6 @@ public class WfActivityImpl extends WfExecutionObjectImpl implements WfActivity 
                 }
             }
         }
-
-        boolean limitAfterStart = valueObject.getBoolean("limitAfterStart").booleanValue();
-
-        if (Debug.infoOn())
-            Debug.logInfo("[WfActivity.init]: limitAfterStart - " + limitAfterStart, module);
-        if (!limitAfterStart && valueObject.get("limitService") != null && 
-                !valueObject.getString("limitService").equals("")) {                        
-            Debug.logVerbose("[WfActivity.init]: limit service is not after start, setting up now.", module);
-            setLimitService();
-        }
         
         GenericValue performer = null;
         if (valueObject.get("performerParticipantId") != null) {
@@ -110,7 +100,16 @@ public class WfActivityImpl extends WfExecutionObjectImpl implements WfActivity 
         }
         if (performer != null)
             createAssignments(performer);
-        
+            
+        boolean limitAfterStart = valueObject.getBoolean("limitAfterStart").booleanValue();
+
+        if (Debug.infoOn())
+            Debug.logInfo("[WfActivity.init]: limitAfterStart - " + limitAfterStart, module);
+        if (!limitAfterStart && valueObject.get("limitService") != null &&
+                !valueObject.getString("limitService").equals("")) {
+            Debug.logVerbose("[WfActivity.init]: limit service is not after start, setting up now.", module);
+            setLimitService();
+        }                    
     }
 
     private void createAssignments(GenericValue performer) throws WfException {
