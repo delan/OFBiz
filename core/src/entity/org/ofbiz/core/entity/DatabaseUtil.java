@@ -87,6 +87,7 @@ public class DatabaseUtil {
         
         //get ALL tables from this database
         TreeSet tableNames = this.getTableNames(messages);
+        TreeSet fkTableNames = new TreeSet(tableNames);
 
         if (tableNames == null) {
             String message = "Could not get table name information from the database, aborting.";
@@ -374,10 +375,12 @@ public class DatabaseUtil {
         
         //make sure each one-relation has an FK
         if (useFks) {
+            int numFksCreated = 0;
             //TODO: check each key-map to make sure it exists in the FK, if any differences warn and then remove FK and recreate it
             
             //get ALL column info, put into hashmap by table name
-            Map refTableInfoMap = this.getReferenceInfo(tableNames, messages);
+            Map refTableInfoMap = this.getReferenceInfo(fkTableNames, messages);
+            //Debug.logVerbose("Ref Info Map: " + refTableInfoMap);
             
             Iterator refModelEntityIter = modelEntityList.iterator();
             while (refModelEntityIter.hasNext()) {
@@ -396,6 +399,7 @@ public class DatabaseUtil {
                 
                 //get existing FK map for this table
                 Map rcInfoMap = (Map) refTableInfoMap.get(entity.getTableName());
+                Debug.logVerbose("Got ref info for table " + entity.getTableName() + ": " + rcInfoMap);
                 
                 //go through each relation to see if an FK already exists
                 Iterator relations = entity.getRelationsIterator();
@@ -418,7 +422,7 @@ public class DatabaseUtil {
                         rcInfoMap.remove(relConstraintName);
                     } else {
                         //if not, create one
-                        Debug.logVerbose("No Foreign Key Constraint " + relConstraintName + " found in table " + entityName);
+                        Debug.logVerbose("No Foreign Key Constraint " + relConstraintName + " found in entity " + entityName);
                         String errMsg = createForeignKey(entity, modelRelation, relModelEntity);
                         if (errMsg != null && errMsg.length() > 0) {
                             String message = "Could not create foreign key " + relConstraintName + " for entity \"" + entity.getEntityName() + "\"";
@@ -434,6 +438,7 @@ public class DatabaseUtil {
                             if (messages != null) messages.add(message);
                             
                             createdConstraints = true;
+                            numFksCreated++;
                         }
                     }
                 }
@@ -451,7 +456,9 @@ public class DatabaseUtil {
                         Debug.logImportant("Unknown Foreign Key Constraint " + rcKeyLeft + " found in table " + entityName);
                     }
                 }
+             
             }
+            Debug.logInfo("Created " + numFksCreated + " fk refs");
         }
         
         timer.timerString("Finished Checking Entity Database");
@@ -802,11 +809,9 @@ public class DatabaseUtil {
         try {
             ResultSet rsCols = dbData.getImportedKeys(null, null, null);
 
+            int totalFkRefs = 0;
             while (rsCols.next()) {
                 try {
-                    //Debug.log("FK Import for table " + rsCols.getString("PKTABLE_NAME") + " and col " + rsCols.getString("PKCOLUMN_NAME") +
-                    //        " from fktable " + rsCols.getString("FKTABLE_NAME") + " and fkcol " + rsCols.getString("FKCOLUMN_NAME"));
-                    
                     ReferenceCheckInfo rcInfo = new ReferenceCheckInfo();
 
                     rcInfo.pkTableName = rsCols.getString("PKTABLE_NAME");
@@ -825,12 +830,16 @@ public class DatabaseUtil {
                     rcInfo.fkName = rsCols.getString("FK_NAME");
                     rcInfo.fkName = (rcInfo.fkName == null) ? null : rcInfo.fkName.toUpperCase();
 
+                    Debug.logVerbose("Got: " + rcInfo.toString());
+                    
                     Map tableRefInfo = (Map) refInfo.get(rcInfo.fkTableName);
 
                     if (tableRefInfo == null) {
                         tableRefInfo = new HashMap();
                         refInfo.put(rcInfo.fkTableName, tableRefInfo);
+                        Debug.logVerbose("Adding new Map for table: " + rcInfo.fkTableName);
                     }
+                    if (!tableRefInfo.containsKey(rcInfo.fkName)) totalFkRefs++;
                     tableRefInfo.put(rcInfo.fkName, rcInfo);
                 } catch (SQLException sqle) {
                     String message = "Error getting column info for column. Error was:" + sqle.toString();
@@ -841,6 +850,7 @@ public class DatabaseUtil {
                     continue;
                 }
             }
+            Debug.logInfo("There are " + totalFkRefs + " in the database");
             
             try {
                 rsCols.close();
@@ -1231,5 +1241,9 @@ public class DatabaseUtil {
         public String fkTableName;
         /** Comma separated list of column names in the primary tables foreign keys */
         public String fkColumnName;
+        
+        public String toString() {
+            return "FK Reference from table " + fkTableName + " called " + fkName + " to PK in table " + pkTableName;
+        }
     }
 }
