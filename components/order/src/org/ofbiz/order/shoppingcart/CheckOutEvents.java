@@ -1,5 +1,5 @@
 /*
- * $Id: CheckOutEvents.java,v 1.27 2004/03/07 01:18:38 ajzeneski Exp $
+ * $Id: CheckOutEvents.java,v 1.28 2004/03/08 19:57:56 ajzeneski Exp $
  *
  *  Copyright (c) 2001, 2002 The Open For Business Project - www.ofbiz.org
  *
@@ -62,7 +62,7 @@ import org.ofbiz.service.ServiceUtil;
  * @author     <a href="mailto:cnelson@einnovation.com">Chris Nelson</a>
  * @author     <a href="mailto:jonesde@ofbiz.org">David E. Jones</a>
  * @author     <a href="mailto:tristana@twibble.org">Tristan Austin</a>
- * @version    $Revision: 1.27 $
+ * @version    $Revision: 1.28 $
  * @since      2.0
  */
 public class CheckOutEvents {
@@ -720,7 +720,35 @@ public class CheckOutEvents {
         boolean isSingleUsePayment = singleUsePayment != null && "Y".equalsIgnoreCase(singleUsePayment) ? true : false;
         boolean doAppendPayment = appendPayment != null && "Y".equalsIgnoreCase(appendPayment) ? true : false;
 
-        CheckOutHelper checkOutHelper = new CheckOutHelper(dispatcher, delegator, cart);
+		CheckOutHelper checkOutHelper = new CheckOutHelper(dispatcher, delegator, cart);
+
+        // get the currency format
+        String currencyFormat = UtilProperties.getPropertyValue("general.properties", "currency.decimal.format", "##0.00");
+        DecimalFormat formatter = new DecimalFormat(currencyFormat);
+
+        // Set the payment options
+        Map selectedPaymentMethods = getSelectedPaymentMethods(request);
+        if (selectedPaymentMethods == null) {
+	        return "error";
+        }
+
+        String billingAccountId = request.getParameter("billingAccountId");
+        String billingAcctAmtStr = request.getParameter("amount_" + billingAccountId);
+        Double billingAccountAmt = null;
+
+        // parse the amount to a decimal
+        if (billingAcctAmtStr != null) {
+	        try {
+		        billingAccountAmt = new Double(formatter.parse(billingAcctAmtStr).doubleValue());
+	        } catch (ParseException e) {
+		        Debug.logError(e, module);
+		        request.setAttribute("_ERROR_MESSAGE_", "<li>Invalid amount set for Billing Account #" + billingAccountId);
+		        return "error";
+	        }
+        }
+
+        checkOutHelper.setCheckOutPayment(selectedPaymentMethods, null, billingAccountId, billingAccountAmt);
+
         Map callResult = checkOutHelper.finalizeOrderEntry(mode, shippingContactMechId, shippingMethod, shippingInstructions,
             maySplit, giftMessage, isGift, methodType, checkOutPaymentId, isSingleUsePayment, doAppendPayment, paramMap);
 
