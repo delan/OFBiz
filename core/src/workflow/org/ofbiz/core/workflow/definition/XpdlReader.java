@@ -712,9 +712,9 @@ public class XpdlReader {
         Element conditionElement = UtilXml.firstChildElement(transitionElement, "Condition");
         if (conditionElement != null) {
             if (conditionElement.getAttribute("Type") != null)
-                transitionValue.set("loopTypeEnumId", "WTC_" + conditionElement.getAttribute("Type"));
+                transitionValue.set("conditionTypeEnumId", "WTC_" + conditionElement.getAttribute("Type"));
             else
-                transitionValue.set("loopTypeEnumId", "WTC_CONDITION");
+                transitionValue.set("conditionTypeEnumId", "WTC_CONDITION");
 
             //a Condition will have either a list of XPression elements, or plain PCDATA
             List xPressions = UtilXml.childElementList(conditionElement, "XPression");

@@ -683,9 +683,19 @@ public class WfActivityImpl extends WfExecutionObjectImpl implements WfActivity 
     private Map actualContext(String actualParameters, String extendedAttr) throws WfException {
         Map actualContext = new HashMap();
         Map context = processContext();
+
+        // extended attributes take priority over context attributes
         Map extendedAttributes = StringUtil.strToMap(extendedAttr);
         if (extendedAttributes != null && extendedAttributes.size() > 0)
-            actualContext.putAll(extendedAttributes);
+            context.putAll(extendedAttributes);
+
+        // setup some internal buffer parameters
+        if (context.containsKey("runAsUser")) {
+            GenericValue userLogin = getUserLogin((String) context.get("userLogin"));
+            context.put("userLogin", userLogin);
+        }
+        context.put("workEffortId", runtimeKey());
+
         if (actualParameters != null) {
             List params = StringUtil.split(actualParameters, ",");
             Iterator i = params.iterator();
@@ -696,10 +706,6 @@ public class WfActivityImpl extends WfExecutionObjectImpl implements WfActivity 
                    eval(keyStr.trim().substring(5).trim(), context);
                 else if (context.containsKey(key))
                     actualContext.put(key, context.get(key));
-                else if (((String) key).equals("workEffortId"))
-                    actualContext.put(key, runtimeKey());
-                else if (((String) key).equals("userLogin"))
-                    actualContext.put(key, getUserLogin((String)key));
                 else if (!actualContext.containsKey(key))
                     throw new WfException("Context does not contain the key: '" + (String) key + "'");
             }
