@@ -1,6 +1,9 @@
 /*
  * $Id$
  * $Log$
+ * Revision 1.1  2001/07/16 14:45:48  azeneski
+ * Added the missing 'core' directory into the module.
+ *
  * Revision 1.1  2001/07/15 16:36:18  azeneski
  * Initial Import
  *
@@ -58,7 +61,7 @@ public final class MyNarrow
    */
   public static Object lookup(InitialContext ic, String jndiName) throws Exception
   {
-    if(UtilProperties.propertyValueEqualsIgnoreCase("debug", "print.info", "true")) System.out.println("Looking up initial context "+ ic +" with JNDI name " + jndiName);
+    Debug.logInfo("Looking up initial context "+ ic +" with JNDI name " + jndiName);
     return ic.lookup(jndiName);
   }
 
@@ -67,7 +70,7 @@ public final class MyNarrow
    */
   public static Object narrow(Object obj, Class c) throws Exception
   {
-    //if(UtilProperties.propertyValueEqualsIgnoreCase("debug", "print.info", "true")) System.out.println("Narrowing object "+ obj +" of class " + c);
+    //Debug.logInfo("Narrowing object "+ obj +" of class " + c);
     return obj;
   }
 }

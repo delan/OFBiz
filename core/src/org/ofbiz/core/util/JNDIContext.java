@@ -1,6 +1,9 @@
 /*
  * $Id$
  * $Log$
+ * Revision 1.1  2001/07/16 14:45:48  azeneski
+ * Added the missing 'core' directory into the module.
+ *
  * Revision 1.1  2001/07/15 16:36:18  azeneski
  * Initial Import
  *
@@ -50,7 +53,7 @@ public final class JNDIContext
     } 
     catch (Exception e) 
     {
-      if(UtilProperties.propertyValueEqualsIgnoreCase("debug", "print.error", "true")) e.printStackTrace();
+      Debug.logWarning(e);
     }
 
     return ic;

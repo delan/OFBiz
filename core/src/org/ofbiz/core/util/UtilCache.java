@@ -1,6 +1,9 @@
 /*
  * $Id$
  * $Log$
+ * Revision 1.2  2001/07/16 21:33:27  jonesde
+ * Updated events in UtilCache for new sevlet controller.
+ *
  * Revision 1.1  2001/07/16 14:45:48  azeneski
  * Added the missing 'core' directory into the module.
  *
@@ -186,17 +189,17 @@ public class UtilCache
     if(hasExpired(key))
     {
       //note that print.info in debug.properties cannot be checked through UtilProperties here, it would cause infinite recursion...
-      //System.out.println("Element has expired with key " + key);
+      //Debug.logInfo("Element has expired with key " + key);
       remove(key);
     }
     Object value = valueTable.get(key);
     if(value == null) 
     {
-      //System.out.println("Element not found with key " + key);
+      //Debug.logInfo("Element not found with key " + key);
       missCount++;
       return null;
     }
-    //System.out.println("Element found with key " + key);
+    //Debug.logInfo("Element found with key " + key);
     hitCount++;
     keyLRUList.remove(key);
     keyLRUList.addFirst(key);

@@ -1,6 +1,9 @@
 /*
  * $Id$
  * $Log$
+ * Revision 1.1  2001/07/16 14:45:48  azeneski
+ * Added the missing 'core' directory into the module.
+ *
  * Revision 1.1  2001/07/15 16:36:18  azeneski
  * Initial Import
  *
@@ -61,7 +64,7 @@ public class UtilTimer
     String retString =  "[[" + message + ": seconds since start: " + secondsSinceStart() + ",since last(" + lastMessage + "):" + secondsSinceLast() + "]]";
     lastMessageTime = (new Date()).getTime();
     lastMessage = message;
-    if(!quiet && UtilProperties.propertyValueEqualsIgnoreCase("debug", "print.info", "true")) System.out.println(retString);
+    if(!quiet) Debug.logInfo(retString);
     return retString;
   }
   

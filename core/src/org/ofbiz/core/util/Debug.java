@@ -1,6 +1,9 @@
 /*
  * $Id$
  * $Log$
+ * Revision 1.1  2001/07/16 14:45:48  azeneski
+ * Added the missing 'core' directory into the module.
+ *
  * Revision 1.1  2001/07/15 16:36:18  azeneski
  * Initial Import
  *
@@ -67,10 +70,6 @@ public final class Debug {
         print(t, null);
     }
     
-    public static void log(String msg) {
-        print(msg);
-    }
-    
     public static void log(Throwable t, String msg) {
         print(t,msg);
     }
@@ -85,5 +84,45 @@ public final class Debug {
     
     public static void log(Exception e ) {
         print(e);
+    }
+
+    public static void logInfo(Exception e ) {
+      if(UtilProperties.propertyValueEqualsIgnoreCase("debug", "print.info", "true")) {
+        print(e);
+      }
+    }
+
+    public static void logWarning(Exception e ) {
+      if(UtilProperties.propertyValueEqualsIgnoreCase("debug", "print.warning", "true")) {
+        print(e);
+      }
+    }
+
+    public static void logError(Exception e ) {
+      if(UtilProperties.propertyValueEqualsIgnoreCase("debug", "print.error", "true")) {
+        print(e);
+      }
+    }
+
+    public static void log(String msg) {
+        print(msg);
+    }
+    
+    public static void logInfo(String msg) {
+      if(UtilProperties.propertyValueEqualsIgnoreCase("debug", "print.info", "true")) {
+        print(msg);
+      }
+    }
+    
+    public static void logWarning(String msg) {
+      if(UtilProperties.propertyValueEqualsIgnoreCase("debug", "print.warning", "true")) {
+        print(msg);
+      }
+    }
+    
+    public static void logError(String msg) {
+      if(UtilProperties.propertyValueEqualsIgnoreCase("debug", "print.error", "true")) {
+        print(msg);
+      }
     }
 }

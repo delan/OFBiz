@@ -1,6 +1,9 @@
 /*
  * $Id$
  * $Log$
+ * Revision 1.1  2001/07/16 14:45:48  azeneski
+ * Added the missing 'core' directory into the module.
+ *
  * Revision 1.1  2001/07/15 16:36:18  azeneski
  * Initial Import
  *
@@ -100,7 +103,7 @@ public class UtilProperties
     }
     if(res == null) 
     {
-      System.out.println("UtilProperties.getPropertyValue: could not find resource: " + resource);
+      Debug.logWarning("UtilProperties.getPropertyValue: could not find resource: " + resource);
       return null;
     }
 
