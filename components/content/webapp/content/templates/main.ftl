@@ -22,7 +22,7 @@
  *  THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  *
  *@author     Al Byers (byersa@automationgroups.com)
- *@version    $Revision: 1.9 $
+ *@version    $Revision: 1.10 $
  *@since      3.0
 -->
 
@@ -38,7 +38,8 @@
     <link rel='stylesheet' href='<@ofbizContentUrl>/content/images/wrap.css</@ofbizContentUrl>' type='text/css'>    
 <#assign primaryHTMLField= page.getProperty("primaryHTMLField")?if_exists />
 <#assign secondaryHTMLField= page.getProperty("secondaryHTMLField")?if_exists />
-<#if primaryHTMLField?exists && (primaryHTMLField?length >0)>
+<#if (primaryHTMLField?exists && (primaryHTMLField?length >0))
+       || (dynamicPrimaryHTMLField?exists && (dynamicPrimaryHTMLField?length >0)) >
     <script type="text/javascript" language="javascript"> 
       _editor_url = "/content/images/htmlarea/"; // omit the final slash 
     </script> 
