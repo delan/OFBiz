@@ -201,7 +201,7 @@ public interface WfExecutionObject  {
    * @return Found history elements that meet the search criteria.
    */
   public Iterator getIteratorHistory(String query, java.util.Map namesInQuery) throws WfException, HistoryNotAvailable;
-  
+
   /**
    * Getter for history sequence.
    * @param maxNumber Maximum number of element in result list.
@@ -210,7 +210,7 @@ public interface WfExecutionObject  {
    * @return List of History objects.
    */
   public List getSequenceHistory(int maxNumber) throws WfException, HistoryNotAvailable;
-  
+
   /**
    * Predicate to check if a 'member' is an element of the history.
    * @param member An element of the history.
@@ -218,12 +218,13 @@ public interface WfExecutionObject  {
    * @return true if the element of the history, false otherwise.
    */
   public boolean isMemberOfHistory(WfExecutionObject member) throws WfException;
-  
+
   /**
    * Getter for timestamp of last state change.
    * @throws WfException General workflow exception.
    * @return Timestamp of last state change.
    */
-  public Timestamp lastStateTime() throws WfException;
-  
+  public Timestamp lastStateTime() throws WfException; 
+
 } // interface WfExecutionObjectOperations
+
