@@ -26,7 +26,7 @@
  *
  * @author     David E. Jones (jonesde@ofbiz.org)
  * @author     Andy Zeneski (jaz@ofbiz.org)
- * @version    $Revision: 1.94 $
+ * @version    $Revision: 1.95 $
  */
 -->
 
@@ -253,13 +253,13 @@
       <prim-key field="productCategoryId"/>
       <prim-key field="prodCatContentTypeId"/>
       <prim-key field="fromDate"/>
-      <relation type="one" fk-name="PRODCAT_CNT_PDCAT" rel-entity-name="ProductCategory">
+      <relation type="one" fk-name="PRDCAT_CNT_PRDCAT" rel-entity-name="ProductCategory">
         <key-map field-name="productCategoryId"/>
       </relation>
-      <relation type="one" fk-name="PRODCAT_CNT_CNT" rel-entity-name="Content">
+      <relation type="one" fk-name="PRDCAT_CNT_CNT" rel-entity-name="Content">
         <key-map field-name="contentId"/>
       </relation>
-      <relation type="one" fk-name="PRODCAT_CNT_TYPE" rel-entity-name="ProductCategoryContentType">
+      <relation type="one" fk-name="PRDCAT_CNT_TYPE" rel-entity-name="ProductCategoryContentType">
         <key-map field-name="prodCatContentTypeId"/>
       </relation>
     </entity>
@@ -2501,6 +2501,33 @@
       </relation>
       <relation type="one" fk-name="PROD_STR_RORDENUM" title="ReserveOrder" rel-entity-name="Enumeration">
         <key-map field-name="reserveOrderEnumId" rel-field-name="enumId"/>
+      </relation>
+      <relation type="one" fk-name="PROD_STR_PAYTOPTY" rel-entity-name="Party">
+        <key-map field-name="payToPartyId" rel-field-name="partyId"/>
+      </relation>      
+      <relation type="one" fk-name="PROD_STR_CURUOM" rel-entity-name="Uom">
+        <key-map field-name="defaultCurrencyUomId" rel-field-name="uomId"/>
+      </relation>
+      <relation type="one" fk-name="PROD_STR_HAPSTS" title="HeaderApproved" rel-entity-name="StatusItem">
+        <key-map field-name="headerApprovedStatus" rel-field-name="statusId"/>
+      </relation>
+      <relation type="one" fk-name="PROD_STR_IAPSTS" title="ItemApproved" rel-entity-name="StatusItem">
+        <key-map field-name="itemApprovedStatus" rel-field-name="statusId"/>
+      </relation>
+      <relation type="one" fk-name="PROD_STR_DIAPSTS" title="DigitalItemApproved" rel-entity-name="StatusItem">
+        <key-map field-name="digitalItemApprovedStatus" rel-field-name="statusId"/>
+      </relation>
+      <relation type="one" fk-name="PROD_STR_HDCSTS" title="HeaderDeclined" rel-entity-name="StatusItem">
+        <key-map field-name="headerDeclinedStatus" rel-field-name="statusId"/>
+      </relation>
+      <relation type="one" fk-name="PROD_STR_IDCSTS" title="ItemDeclined" rel-entity-name="StatusItem">
+        <key-map field-name="itemDeclinedStatus" rel-field-name="statusId"/>
+      </relation>
+      <relation type="one" fk-name="PROD_STR_HCNSTS" title="HeaderCancel" rel-entity-name="StatusItem">
+        <key-map field-name="headerCancelStatus" rel-field-name="statusId"/>
+      </relation>
+      <relation type="one" fk-name="PROD_STR_ICNSTS" title="ItemCancel" rel-entity-name="StatusItem">
+        <key-map field-name="itemCancelStatus" rel-field-name="statusId"/>
       </relation>
     </entity>
     <entity entity-name="ProductStoreCatalog"
