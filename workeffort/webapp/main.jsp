@@ -59,8 +59,7 @@
 <DIV class='tabletext'>For something interesting make sure you are logged in, try username:admin, password:ofbiz.</DIV>
 <BR>
 <%}%>
-<DIV class='tabletext'>This application is primarily intended for those repsonsible for the maintenance of work related information.</DIV>
-<DIV class='tabletext'>NOTE: This application is currently empty, so don't bother looking for anything.</DIV>
+<DIV class='tabletext'>This application is primarily intended for those who maintain and use schedules, task lists, and other work effort related information.</DIV>
           </td>
         </tr>
       </table>

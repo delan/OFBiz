@@ -49,7 +49,7 @@
             <A href='<ofbiz:url>/day</ofbiz:url>' class='lightbuttontext'>[Day&nbsp;View]</A>
             <A href='<ofbiz:url>/week</ofbiz:url>' class='lightbuttontext'>[Week&nbsp;View]</A>
             <A href='<ofbiz:url>/month</ofbiz:url>' class='lightbuttontext'>[Month&nbsp;View]</A>
-            <A href='<ofbiz:url>/upcoming</ofbiz:url>' class='lightbuttontext'>[Upcoming&nbsp;Events]</A>
+            <A href='<ofbiz:url>/upcoming</ofbiz:url>' class='lightbuttontextdisabled'>[Upcoming&nbsp;Events]</A>
             <A href='<ofbiz:url>/event</ofbiz:url>' class='lightbuttontext'>[New&nbsp;Event]</A>
           </TD>
         </tr>
@@ -62,16 +62,25 @@
         <tr>
           <td>
             <ofbiz:if name="days" size="0">
-              <ofbiz:iterator name="workEfforts" property="days" type="java.util.List">
-                <ofbiz:iterator name="workEffort" property="workEfforts">
-                  <DIV class='tabletext'>
-                    <ofbiz:entityfield attribute="workEffort" field="estimatedStartDate"/> -
-                    <ofbiz:entityfield attribute="workEffort" field="estimatedCompletionDate"/>:
-                    <b><ofbiz:entityfield attribute="workEffort" field="workEffortName"/></b>
-                  </DIV>
+              <TABLE width='100%' cellpadding='2' cellspacing='0' border='0'>
+                <TR>
+                  <TD><DIV class='tabletext'>Start Date/Time</DIV></TD>
+                  <TD><DIV class='tabletext'>End Date/Time</DIV></TD>
+                  <TD><DIV class='tabletext'>Event Name</DIV></TD>
+                </TR>
+                <ofbiz:iterator name="workEfforts" property="days" type="java.util.List">
+                  <TR><TD colspan='3'><HR class='sepbar'></TD></TR>
+                  <ofbiz:iterator name="workEffort" property="workEfforts">
+                    <TR>
+                      <TD><DIV class='tabletext'><ofbiz:entityfield attribute="workEffort" field="estimatedStartDate"/></DIV></TD>
+                      <TD><DIV class='tabletext'><ofbiz:entityfield attribute="workEffort" field="estimatedCompletionDate"/></DIV></TD>
+                      <TD><A class='buttontext' href='<ofbiz:url>/event?WORK_EFFORT_ID=<ofbiz:entityfield attribute="workEffort" field="workEffortId"/></ofbiz:url>'>
+                          <ofbiz:entityfield attribute="workEffort" field="workEffortName"/></a></DIV></TD>
+                    </TR>
+                  </ofbiz:iterator>
+                  <%-- <ofbiz:iteratorHasNext><TR><TD colspan='3'><HR></TD></TR></ofbiz:iteratorHasNext> --%>
                 </ofbiz:iterator>
-                <ofbiz:iteratorHasNext><HR></ofbiz:iteratorHasNext>
-              </ofbiz:iterator>
+              </TABLE>
             </ofbiz:if>
             <ofbiz:unless name="days" size="0">
               <div class='tabletext'>No events found.</div>

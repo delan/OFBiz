@@ -44,7 +44,7 @@
       <table width='100%' border='0' cellpadding='<%=boxTopPadding%>' cellspacing='0' bgcolor='<%=boxTopColor%>'>
         <tr>
           <TD align=left width='40%' >
-            <div class='boxhead'>&nbsp;Calendar Event Editor</div>
+            <div class='boxhead'>&nbsp;Calendar Event Detail</div>
           </TD>
           <TD align=right width='60%'>
             <A href='<ofbiz:url>/day</ofbiz:url>' class='lightbuttontext'>[Day&nbsp;View]</A>
@@ -85,6 +85,19 @@
                   <td width='74%'><input type='text' size='30' maxlength='30' name='WORK_EFFORT_NAME' value='<ofbiz:inputvalue field="workEffortName" param="WORK_EFFORT_NAME" entityAttr="workEffort" tryEntityAttr="tryEntity"/>'></td>
                 </tr>
                 <tr>
+                  <td width='26%' align=right><div class='tabletext'>Priority</div></td>
+                  <td>&nbsp;</td>
+                  <td width='74%'>
+                    <SELECT name='PRIORITY'>
+                      <OPTION><ofbiz:inputvalue field="priority" param="PRIORITY" entityAttr="workEffort" tryEntityAttr="tryEntity"/></OPTION>
+                      <OPTION value=''>--</OPTION>
+                      <OPTION>1</OPTION> <OPTION>2</OPTION> <OPTION>3</OPTION>
+                      <OPTION>4</OPTION> <OPTION>5</OPTION> <OPTION>6</OPTION>
+                      <OPTION>7</OPTION> <OPTION>8</OPTION> <OPTION>9</OPTION>
+                    </SELECT>
+                  </td>
+                </tr>
+                <tr>
                   <td width='26%' align=right><div class='tabletext'>Location</div></td>
                   <td>&nbsp;</td>
                   <td width='74%'><input type='text' size='60' maxlength='255' name='LOCATION_DESC' value='<ofbiz:inputvalue field="locationDesc" param="LOCATION_DESC" entityAttr="workEffort" tryEntityAttr="tryEntity"/>'></td>
@@ -98,16 +111,45 @@
                 <tr>
                   <td width='26%' align=right><div class='tabletext'>Start Date/Time</div></td>
                   <td>&nbsp;</td>
-                  <td width='74%'><input type='text' size='30' maxlength='30' name='ESTIMATED_START_DATE' value='<ofbiz:inputvalue field="estimatedStartDate" param="ESTIMATED_START_DATE" entityAttr="workEffort" tryEntityAttr="tryEntity"/>'></td>
+                  <td width='74%'><input type='text' size='30' maxlength='30' name='ESTIMATED_START_DATE' value='<ofbiz:inputvalue field="estimatedStartDate" param="ESTIMATED_START_DATE" entityAttr="workEffort" tryEntityAttr="tryEntity"/>'><span class='tabletext'>(YYYY-MM-DD hh:mm:ss)</span></td>
                 </tr>
                 <tr>
                   <td width='26%' align=right><div class='tabletext'>End Date/Time</div></td>
                   <td>&nbsp;</td>
-                  <td width='74%'><input type='text' size='30' maxlength='30' name='ESTIMATED_COMPLETION_DATE' value='<ofbiz:inputvalue field="estimatedCompletionDate" param="ESTIMATED_COMPLETION_DATE" entityAttr="workEffort" tryEntityAttr="tryEntity"/>'></td>
+                  <td width='74%'><input type='text' size='30' maxlength='30' name='ESTIMATED_COMPLETION_DATE' value='<ofbiz:inputvalue field="estimatedCompletionDate" param="ESTIMATED_COMPLETION_DATE" entityAttr="workEffort" tryEntityAttr="tryEntity"/>'><span class='tabletext'>(YYYY-MM-DD hh:mm:ss)</span></td>
                 </tr>
 
+                <ofbiz:if name="workEffort">
+                  <tr>
+                    <td width='26%' align=right><div class='tabletext'>Revision #</div></td>
+                    <td>&nbsp;</td>
+                    <td width='74%'><div class='tabletext'><ofbiz:entityfield field="revisionNumber" attribute="workEffort"/></div></td>
+                  </tr>
+                  <tr>
+                    <td width='26%' align=right><div class='tabletext'>Created</div></td>
+                    <td>&nbsp;</td>
+                    <td width='74%'><div class='tabletext'>
+                      <ofbiz:entityfield field="createdDate" attribute="workEffort"/>
+                      by <ofbiz:entityfield field="createdByPartyId" attribute="workEffort"/>
+                    </div></td>
+                  </tr>
+                  <tr>
+                    <td width='26%' align=right><div class='tabletext'>Last Modified</div></td>
+                    <td>&nbsp;</td>
+                    <td width='74%'><div class='tabletext'>
+                      <ofbiz:entityfield field="lastModifiedDate" attribute="workEffort"/>
+                      by <ofbiz:entityfield field="lastModifiedByPartyId" attribute="workEffort"/>
+                    </div></td>
+                  </tr>
+                </ofbiz:if>
+
                 <tr>
-                  <td colspan='3'><input type="submit" name="Update" value="Update"></td>
+                  <td width='26%' align=right>
+                    <ofbiz:if name="workEffort"><input type="submit" name="Update" value="Update"></ofbiz:if>
+                    <ofbiz:unless name="workEffort"><input type="submit" name="Create" value="Create"></ofbiz:unless>
+                  </td>
+                  <td>&nbsp;</td>
+                  <td width='74%'><div class='tabletext'>&nbsp;</div></td>
                 </tr>
               </table>
               </form>
