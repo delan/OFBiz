@@ -55,6 +55,7 @@
                                 <!-- add Create Product and View Product (in ecommerce) links -->
                                 <container>
                                     <link target="EditProduct" text="[${uiLabelMap.ProductNewProduct}]" style="buttontext"/>
+                                    <link target="CreateVirtualWithVariantsForm" text="[New Virtual Product]" style="buttontext"/>
                                     <!-- TODO: make link conditional on non-empty productId... -->
                                     <link target="/ecommerce/control/product?product_id=${productId}" url-mode="raw" text="[${uiLabelMap.ProductProductPage}]" style="buttontext"/>
                                 </container>

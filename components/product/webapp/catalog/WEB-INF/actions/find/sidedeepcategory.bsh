@@ -20,7 +20,7 @@
  *  THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  *
  *@author     David E. Jones
- *@version    $Rev:$
+ *@version    $Rev$
  *@since      2.1
  */
 
@@ -44,7 +44,7 @@ if (state != null) {
 context.put("isOpen", isOpen);
 
 requestParameters = UtilHttp.getParameterMap(request);
-defaultTopCategoryId = requestParameters.get("TOP_CATEGORY") != null ? requestParameters.get("TOP_CATEGORY") : UtilProperties.getPropertyValue(application.getResource("/WEB-INF/catalog.properties"), "top.category.default");
+defaultTopCategoryId = requestParameters.get("TOP_CATEGORY") != null ? requestParameters.get("TOP_CATEGORY") : UtilProperties.getPropertyValue("catalog", "top.category.default");
 currentTopCategoryId = CategoryWorker.getCatalogTopCategory(request, defaultTopCategoryId);
 currentTopCategory = null;
 if (isOpen) {

@@ -39,6 +39,7 @@ import org.ofbiz.base.util.Debug;
 import org.ofbiz.base.util.UtilDateTime;
 import org.ofbiz.base.util.UtilMisc;
 import org.ofbiz.base.util.UtilProperties;
+import org.ofbiz.base.util.UtilValidate;
 import org.ofbiz.base.util.collections.OrderedMap;
 import org.ofbiz.base.util.collections.OrderedSet;
 import org.ofbiz.entity.GenericDelegator;
@@ -791,8 +792,10 @@ public class ProductServices {
         // separate variantProductIdsBag into a Set of variantProductIds
         //note: can be comma, tab, or white-space delimited
         Set prelimVariantProductIds = new HashSet();
-        String[] splitIds = variantProductIdsBag.split("[,\\P{Space}]");
-        prelimVariantProductIds.addAll(Arrays.asList(splitIds));
+        List splitIds = Arrays.asList(variantProductIdsBag.split("[,\\P{Space}]"));
+        Debug.logInfo("Variants: bag=" + variantProductIdsBag, module);
+        Debug.logInfo("Variants: split=" + splitIds, module);
+        prelimVariantProductIds.addAll(splitIds);
         //note: should support both direct productIds and GoodIdentification entries (what to do if more than one GoodID? Add all?
         try {
             Map variantProductsById = new HashMap();
@@ -808,12 +811,12 @@ public class ProductServices {
                     List goodIdentificationList = delegator.findByAnd("GoodIdentification", UtilMisc.toMap("idValue", variantProductId));
                     if (goodIdentificationList == null || goodIdentificationList.size() == 0) {
                         // whoops, nothing found... return error
-                        return ServiceUtil.returnError("Error creating a virtual from variants: the ID [" + variantProductId + "] is not a valid Product.productId or a GoodIdentification.idValue");
+                        return ServiceUtil.returnError("Error creating a virtual with variants: the ID [" + variantProductId + "] is not a valid Product.productId or a GoodIdentification.idValue");
                     }
                     
                     if (goodIdentificationList.size() > 1) {
                         // what to do here? for now just log a warning and add all of them as variants; they can always be dissociated later
-                        Debug.logWarning("Warning creating a virtual from variants: the ID [" + variantProductId + "] was not a productId and resulted in [" + goodIdentificationList.size() + "] GoodIdentification records: " + goodIdentificationList, module);
+                        Debug.logWarning("Warning creating a virtual with variants: the ID [" + variantProductId + "] was not a productId and resulted in [" + goodIdentificationList.size() + "] GoodIdentification records: " + goodIdentificationList, module);
                     }
                     
                     Iterator goodIdentificationIter = goodIdentificationList.iterator();
@@ -859,10 +862,12 @@ public class ProductServices {
                 String featureProductId = (String) featureProductIdIter.next();
                 while (productFeatureIdIter.hasNext()) {
                     String productFeatureId = (String) productFeatureIdIter.next();
-                    GenericValue productFeatureAppl = delegator.makeValue("ProductFeatureAppl", 
-                            UtilMisc.toMap("productId", featureProductId, "productFeatureId", productFeatureId,
-                                    "productFeatureApplTypeId", "STANDARD_FEATURE", "fromDate", nowTimestamp));
-                    productFeatureAppl.create();
+                    if (UtilValidate.isNotEmpty(productFeatureId)) {
+                        GenericValue productFeatureAppl = delegator.makeValue("ProductFeatureAppl", 
+                                UtilMisc.toMap("productId", featureProductId, "productFeatureId", productFeatureId,
+                                        "productFeatureApplTypeId", "STANDARD_FEATURE", "fromDate", nowTimestamp));
+                        productFeatureAppl.create();
+                    }
                 }
             }
             
