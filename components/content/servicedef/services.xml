@@ -897,6 +897,18 @@
         <auto-attributes include="pk" mode="IN" optional="false"/>
     </service>
 
+    <!-- Survey Response Service -->
+    <service name="createSurveyResponse" engine="simple" auth="false"
+            location="org/ofbiz/content/survey/SurveyServices.xml" invoke="createSurveyResponse">
+        <description>Create a Survey Response w/ Response Answers</description>
+        <attribute name="surveyId" type="String" mode="IN" optional="false"/>
+        <attribute name="partyId" type="String" mode="IN" optional="true"/>
+        <attribute name="responseDate" type="Timestamp" mode="IN" optional="true"/>
+        <attribute name="referenceId" type="String" mode="IN" optional="true"/>
+        <attribute name="generalFeedback" type="String" mode="IN" optional="true"/>
+        <attribute name="answers" type="Map" mode="IN" optional="false" string-map-prefix="answers_"/>
+    </service>
+
     <!-- Util -->
     <service name="findAssocContent" engine="simple"
         location="org/ofbiz/content/content/ContentServices.xml" invoke="findAssocContent" auth="true">

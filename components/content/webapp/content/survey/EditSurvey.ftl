@@ -20,13 +20,15 @@
  *  THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  *
  *@author     David E. Jones (jonesde@ofbiz.org)
- *@version    $Revision: 1.1 $
+ *@version    $Revision: 1.2 $
  *@since      3.0
 -->
 
 <#if security.hasEntityPermission("CONTENTMGR", "_VIEW", session)>
 
 ${pages.get("/survey/SurveyTabBar.ftl")}
+<div class="head1">Edit Survey - <span class="head2">ID: ${requestParameters.surveyId?if_exists}</span></div>
+<br>
 
 ${editSurveyWrapper.renderFormString()}
 
