@@ -147,9 +147,10 @@
                 }
     
                 function getList(name, value, src) {
+                    var value2 = 'NULL';
                     currentOrderIndex = findIndex(name);                    
                     if (src == 1 && OPT.length == 1) {
-                        value2 = document.forms["addform"].elements[name].options[(value*1)+1].value;
+                        value2 = document.forms["addform"].elements[name].options[(value*1)+1].value;                        
                     }                    
                     if (currentOrderIndex < 0 || value == "")                      
                         return;
@@ -162,6 +163,8 @@
                             eval("list" + OPT[currentOrderIndex+1] + value + "()");                        
                             document.addform.add_product_id.value = 'NULL';
                         } else {
+                            if (value2 == 'NULL')
+                                value2 = value;
                             document.addform.add_product_id.value = value2;
                         }
                     } else {
