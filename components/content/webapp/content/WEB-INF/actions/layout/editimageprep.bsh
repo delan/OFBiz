@@ -1,5 +1,5 @@
 /*
- * $Id: editimageprep.bsh,v 1.1 2003/12/05 21:51:57 byersa Exp $
+ * $Id: editimageprep.bsh,v 1.2 2003/12/06 09:02:38 byersa Exp $
  *
  * Copyright (c) 2003 The Open For Business Project - www.ofbiz.org
  *
@@ -26,7 +26,7 @@
 /**
  *
  * @author     <a href="mailto:byersa@automationgroups.com">Al Byers</a>
- * @version    $Revision: 1.1 $
+ * @version    $Revision: 1.2 $
  * @since      3.0
 
  */
@@ -51,15 +51,24 @@ delegator = (GenericDelegator) request.getAttribute("delegator");
 
 formDefFile		= page.getProperty("formDefFile");
 singleFormName	= page.getProperty("singleFormName");
+addFormName	= page.getProperty("addFormName");
+editFormName	= page.getProperty("editFormName");
 entityName		= page.getProperty("entityName");
 //String defaultMapName		= page.getProperty("defaultMapName");
 //if( defaultMapName == null) defaultMapName	= "currentValue";
 defaultMapName	= "currentValue";
 GenericValue currentValue = (GenericValue)request.getAttribute("currentValue");
 Debug.logInfo("in editimageprep, currentValue:" + currentValue, "");
-if (currentValue != null) {
+mode = (String)request.getParameter("mode");
+if (mode == null || mode.length() == 0) {
+    mode = (String)request.getAttribute("mode");
+}
+Debug.logInfo("in editsubcontentprep, mode:" + mode, "");
+if (currentValue == null || (mode != null && mode.equalsIgnoreCase("add"))) {
+        singleWrapper = new HtmlFormWrapper(formDefFile, addFormName, request, response);
+} else {
 
-    singleWrapper = new HtmlFormWrapper(formDefFile, singleFormName, request, response);
+    singleWrapper = new HtmlFormWrapper(formDefFile, editFormName, request, response);
     dataResourceId = (String)currentValue.get("drDataResourceId");
     contentId = (String)currentValue.get("contentId");
     objectInfo = (String)currentValue.get("drObjectInfo");
@@ -68,5 +77,12 @@ if (currentValue != null) {
     singleWrapper.putInContext("currentValue", currentValue);
     context.put("drDataResourceId", dataResourceId);
     context.put("subContentId", contentId);
-    context.put("singleWrapper", singleWrapper);
 }
+paramMap = UtilHttp.getParameterMap(request);
+contentIdTo = (String)paramMap.get("contentIdTo");
+Debug.logInfo("in editsubcontentprep, contentIdTo:" + contentIdTo, "");
+singleWrapper.putInContext("contentIdTo", contentIdTo);
+mapKey = (String)paramMap.get("mapKey");
+Debug.logInfo("in editsubcontentprep, mapKey:" + mapKey, "");
+singleWrapper.putInContext("mapKey", mapKey);
+context.put("singleWrapper", singleWrapper);
