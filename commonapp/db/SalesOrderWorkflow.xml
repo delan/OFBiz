@@ -54,4 +54,3 @@
     <WorkflowTransition packageId="org.ofbiz.commonapp.order.order" packageVersion="1.5" processId="ProcessOrder" processVersion="1.5" transitionId="trans5.2" transitionName="Order not ready for processing" conditionTypeEnumId="WTC_OTHERWISE" fromActivityId="orderNotReady" toActivityId="receiveOrder" loopTypeEnumId="WTL_NOLOOP"/>
 </entity-engine-xml>
 
-</entity-engine-xml>
