@@ -1,5 +1,5 @@
 /*
- * $Id: IcsPaymentServices.java,v 1.3 2003/10/30 22:20:59 ajzeneski Exp $
+ * $Id: IcsPaymentServices.java,v 1.4 2003/11/03 18:04:40 ajzeneski Exp $
  *
  * Copyright (c) 2003 The Open For Business Project - www.ofbiz.org
  *
@@ -25,7 +25,6 @@
 package org.ofbiz.accounting.thirdparty.cybersource;
 
 import java.util.*;
-import java.text.NumberFormat;
 import java.text.DecimalFormat;
 
 import org.ofbiz.service.DispatchContext;
@@ -35,6 +34,7 @@ import org.ofbiz.entity.GenericEntityException;
 import org.ofbiz.base.util.UtilProperties;
 import org.ofbiz.base.util.StringUtil;
 import org.ofbiz.base.util.Debug;
+import org.ofbiz.base.util.SSLUtil;
 import org.ofbiz.accounting.payment.PaymentGatewayServices;
 
 import com.cybersource.ws.client.axis.basic.Client;
@@ -45,12 +45,17 @@ import com.cybersource.ws.client.axis.AxisFaultException;
  * CyberSource WS Integration Services
  *
  * @author     <a href="mailto:jaz@ofbiz.org">Andy Zeneski</a>
- * @version    $Revision: 1.3 $
+ * @version    $Revision: 1.4 $
  * @since      3.0
  */
 public class IcsPaymentServices {
 
     public static final String module = IcsPaymentServices.class.getName();
+
+    // load the JSSE properties
+    static {
+        SSLUtil.loadJsseProperties();
+    }
 
     public static Map ccAuth(DispatchContext dctx, Map context) {
         // generate the request/properties
