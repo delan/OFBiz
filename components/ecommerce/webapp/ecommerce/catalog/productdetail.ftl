@@ -20,7 +20,7 @@
  *  THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  *
  *@author     Andy Zeneski (jaz@ofbiz.org)
- *@version    $Revision: 1.3 $
+ *@version    $Revision: 1.4 $
  *@since      2.1
 -->
 
@@ -195,11 +195,11 @@ ${requestAttributes.virtualJavaScript?if_exists}
           <tr>
             <#assign indexer = 0>              
             <#list imageKeys as key>
-              <#assign product = imageMap.get(key)>
-              <#assign imageUrl = product.smallImageUrl?if_exists>       
-              <#if product?exists && product.smallImageUrl?exists>                  
+              <#assign swatchProduct = imageMap.get(key)>
+              <#assign imageUrl = swatchProduct.smallImageUrl?if_exists>       
+              <#if swatchProduct?exists && swatchProduct.smallImageUrl?exists>                  
                 <td align="center" valign="bottom">
-                  <a href="#"><img src="<@ofbizContentUrl>${requestAttributes.contentPathPrefix?if_exists}${product.smallImageUrl}</@ofbizContentUrl>" border="0" width="60" height="60" onclick="javascript:getList('${requestAttributes.featureOrderFirst}','${indexer}',1);"></a>
+                  <a href="#"><img src="<@ofbizContentUrl>${requestAttributes.contentPathPrefix?if_exists}${swatchProduct.smallImageUrl}</@ofbizContentUrl>" border="0" width="60" height="60" onclick="javascript:getList('${requestAttributes.featureOrderFirst}','${indexer}',1);"></a>
                   <br>
                   <a href="#" class="buttontext" onclick="javascript:getList('${requestAttributes.featureOrderFirst}','${indexer}',1);">${key}</a>
                 </td>
