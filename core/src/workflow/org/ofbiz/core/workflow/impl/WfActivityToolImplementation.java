@@ -96,16 +96,21 @@ public class WfActivityToolImplementation extends WfActivityAbstractImplementati
                 GenericResultWaiter thw = (GenericResultWaiter) wi.next();
                 
                 if (thw.isCompleted()) {
-                    Map thwResult = thw.getResult();
+                    Map thwResult = null;
+                    if (thw.status() == GenericResultWaiter.SERVICE_FINISHED) {
+                        thwResult = thw.getResult();
+                        Debug.logVerbose("Service finished.", module);
+                    } else if (thw.status() == GenericResultWaiter.SERVICE_FAILED) {
+                        Debug.logError(thw.getException(), "Service failed", module);
+                    }
                     if (thwResult != null && thwResult.containsKey(ModelService.RESPONSE_MESSAGE)) {
                         if (thwResult.get(ModelService.RESPONSE_MESSAGE).equals(ModelService.RESPOND_ERROR)) {
                             String errorMsg = (String) thwResult.remove(ModelService.ERROR_MESSAGE);
                             Debug.logError("Service Error: " + errorMsg, module);
                         }
                         thwResult.remove(ModelService.RESPONSE_MESSAGE);
-                    }
+                    }                    
                     
-                    Debug.logVerbose("Service finished.", module);
                     try {
                         if (thwResult != null)
                             this.setResult(thwResult, allParams);
