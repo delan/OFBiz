@@ -131,7 +131,7 @@ public class XAResourceImpl implements XAResource {
      *     Occurs when the state was not correct (end called twice), or the
      *     transaction ID is wrong.
      */
-    public void end(Xid id, int flags) throws javax.transaction.xa.XAException {
+    public void end(Xid id, int flags) throws XAException {
         //System.out.println("end: " + xaCon + ", current: " + current + ", xid: " + id + ", active: " + active);
         if (!active) // End was called twice!
         {
@@ -151,7 +151,7 @@ public class XAResourceImpl implements XAResource {
      *     Occurs when the state was not correct (end never called), or the
      *     transaction ID is wrong.
      */
-    public void forget(Xid id) throws javax.transaction.xa.XAException {
+    public void forget(Xid id) throws XAException {
         if (current == null || !id.equals(current)) {
             throwXAException(XAException.XAER_NOTA);
         }
@@ -164,7 +164,7 @@ public class XAResourceImpl implements XAResource {
     /**
      * Gets the transaction timeout.
      */
-    public int getTransactionTimeout() throws javax.transaction.xa.XAException {
+    public int getTransactionTimeout() throws XAException {
         return timeout_ignored;
     }
 
@@ -173,7 +173,7 @@ public class XAResourceImpl implements XAResource {
      * JDBC connections must be managed individually), indicates whether the
      * specified resource is the same as this one.
      */
-    public boolean isSameRM(XAResource res) throws javax.transaction.xa.XAException {
+    public boolean isSameRM(XAResource res) throws XAException {
         return res == this;
     }
 
@@ -185,7 +185,7 @@ public class XAResourceImpl implements XAResource {
      *     Occurs when the state was not correct (end never called), the
      *     transaction ID is wrong, or the connection was set to Auto-Commit.
      */
-    public int prepare(Xid id) throws javax.transaction.xa.XAException {
+    public int prepare(Xid id) throws XAException {
         //System.out.println("prepare: " + xaCon + ", current: " + current + ", xid: " + id + ", active: " + active);
         if (active) // End was not called!
             System.err.println("WARNING: Connection not closed before transaction commit.\nConnection will not participate in any future transactions.\nAre you sure you want to be doing this?");
@@ -225,7 +225,7 @@ public class XAResourceImpl implements XAResource {
      *     or the rollback on the underlying connection fails.  The error code
      *     differs depending on the exact situation.
      */
-    public void rollback(Xid id) throws javax.transaction.xa.XAException {
+    public void rollback(Xid id) throws XAException {
         //System.out.println("rollback: " + xaCon + ", current: " + current + ", xid: " + id + ", active: " + active);
         if (active) // End was not called!
             System.err.println("WARNING: Connection not closed before transaction rollback.\nConnection will not participate in any future transactions.\nAre you sure you want to be doing this?");
@@ -257,7 +257,7 @@ public class XAResourceImpl implements XAResource {
      * Sets the transaction timeout.  This is saved, but the value is not used
      * by the current implementation.
      */
-    public boolean setTransactionTimeout(int timeout) throws javax.transaction.xa.XAException {
+    public boolean setTransactionTimeout(int timeout) throws XAException {
         timeout_ignored = timeout;
         return true;
     }
@@ -275,7 +275,7 @@ public class XAResourceImpl implements XAResource {
      *     Occurs when the state was not correct (start called twice), the
      *     transaction ID is wrong, or the instance has already been closed.
      */
-    public void start(Xid id, int flags) throws javax.transaction.xa.XAException {
+    public void start(Xid id, int flags) throws XAException {
         //System.out.println("start: " + xaCon + ", current: " + current + ", xid: " + id + ", active: " + active);
         if (active) {// Start was called twice!
             if (current != null && id.equals(current)) {
