@@ -38,6 +38,9 @@
 		<field use-when="webSite==null&amp;&amp;webSiteId==null" name="webSiteId"><text size="20" maxlength="20"/></field>
 
 		<field name="siteName"><text size="30" maxlength="60"/></field>
+		<field name="enableHttps" widget-style="selectBox">
+		    <drop-down allow-empty="true"><option key="Y"/><option key="N"/></drop-down>
+		</field>		
 
 		<field name="submitButton" title="Update" widget-style="standardSubmit"><submit button-type="button"/></field>
 	</form>
