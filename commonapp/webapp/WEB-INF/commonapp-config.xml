@@ -138,6 +138,11 @@
         <response name="success" type="view" value="FindUtilCacheElements"/>
         <response name="error" type="view" value="FindUtilCacheElements"/>
     </request-map>
+
+    <request-map uri="viewdatafile">
+    	<security https="true" auth="true"/><response name="success" type="view" value="viewdatafile"/>
+    </request-map>
+
     <!-- end of request mappings -->
 
     <!-- View Mappings -->
@@ -168,6 +173,8 @@
     <view-map name="EditUtilCache" page="/cache/EditUtilCache.jsp"/>
     <view-map name="FindUtilCache" page="/cache/FindUtilCache.jsp"/>
     <view-map name="FindUtilCacheElements" page="/cache/FindUtilCacheElements.jsp"/>
+
+    <view-map name="viewdatafile" page="/datafile/viewdatafile.jsp"/>
     <!-- end of view mappings -->
     
 </site-conf>

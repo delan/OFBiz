@@ -33,6 +33,7 @@
 <%
   String filename = request.getParameter("filename");
   String entityName = request.getParameter("entityName");
+  boolean isUrl = request.getParameter("IS_URL")!=null?true:false;
 %>
 
 <h2>XML Import to DataSource(s)</h2>
@@ -41,9 +42,9 @@
 <%if(security.hasPermission("ENTITY_MAINT", session)){%>
   <h3>Import:</h3>
 
-  <FORM method=POST action='<%=response.encodeURL(controlPath + "/xmldsimport")%>'>
+  <FORM method=POST action='<ofbiz:url>/xmldsimport</ofbiz:url>'>
     <div>Absolute Filename or URL:</div>
-    <INPUT type=text size='60' name='filename' value='<%=UtilFormatOut.checkNull(filename)%>'>
+    <INPUT type=text size='60' name='filename' value='<%=UtilFormatOut.checkNull(filename)%>'> Is URL?:<INPUT type=checkbox name='IS_URL' <%=isUrl?"checked":""%>>
     <INPUT type=submit value='Import'>
   </FORM>
   <hr>
@@ -53,12 +54,8 @@
   <%if(filename != null && filename.length() > 0) {%>
   <%
     URL url = null;
-    if(filename.charAt(0) == '/') {
-      url = UtilURL.fromFilename(filename);
-    }
-    else {
-      url = new URL(filename);
-    }
+    try { url = isUrl?new URL(filename):UtilURL.fromFilename(filename); }
+    catch(java.net.MalformedURLException e) { %><div>ERROR: <%=e.toString()%></div><% }
 
     Collection values = null;
     try {
@@ -70,7 +67,7 @@
     }
   %>
     <%if(values != null) {%>
-      <div>Wrote <%=values.size()%> entities to the datasource.</div>
+      <div>Got <%=values.size()%> entities to write to the datasource.</div>
     <%}else{%>
       <div>Could not get any values from the XML file.</div>
     <%}%>

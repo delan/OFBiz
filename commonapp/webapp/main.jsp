@@ -68,32 +68,41 @@ content and knowledge management, data analysis, and so forth.</DIV>
 definitions, checking them with the current database, and generating text based on those definitions. </DIV>
 <ul>
   <%if(security.hasPermission("ENTITY_MAINT", session)){%>
-    <li><DIV class='tabletext'>Entity Maintenance Utilities</div>
+    <li><div class='tabletext'>Entity Engine Utilities</div>
     <ul>
-      <li><a href="<%=response.encodeURL(controlPath + "/entitymaint")%>" class='buttontext'>Entity Data Maintenance</A>
-      <li><a href="<%=response.encodeURL(controlPath + "/view/entityref")%>" class='buttontext' target='_blank'>Entity Reference & Editing Tools</A>
+      <li><a href="<ofbiz:url>/entitymaint</ofbiz:url>" class='buttontext'>Entity Data Maintenance</A>
+      <li><a href="<ofbiz:url>/view/entityref</ofbiz:url>" class='buttontext' target='_blank'>Entity Reference & Editing Tools</A>
       <ul>
-        <li><a href="<%=response.encodeURL(controlPath + "/view/checkdb")%>" class='buttontext'>Check/Update Database</A>
-        <li><a href="<%=response.encodeURL(controlPath + "/view/ModelWriter")%>" class='buttontext' target='_blank'>Generate Entity Model XML (all in one)</A>
-        <li><a href="<%=response.encodeURL(controlPath + "/view/ModelWriter?savetofile=true")%>" target='_blank' class='buttontext'>Save Entity Model XML to Files</A><BR>
-        <li><a href="<%=response.encodeURL(controlPath + "/view/ModelGroupWriter")%>" target='_blank' class='buttontext'>Generate Entity Group XML</A><BR>
-        <li><a href="<%=response.encodeURL(controlPath + "/view/ModelGroupWriter?savetofile=true")%>" target='_blank' class='buttontext'>Save Entity Group XML to File</A><BR>
-        <li><a href="<%=response.encodeURL(controlPath + "/view/EditEntity")%>" class='buttontext' target='_blank'>Edit Entity Definitions</A>
+        <li><a href="<ofbiz:url>/view/checkdb</ofbiz:url>" class='buttontext'>Check/Update Database</A>
+        <li><a href="<ofbiz:url>/view/ModelWriter</ofbiz:url>" class='buttontext' target='_blank'>Generate Entity Model XML (all in one)</A>
+        <li><a href="<ofbiz:url>/view/ModelWriter?savetofile=true</ofbiz:url>" target='_blank' class='buttontext'>Save Entity Model XML to Files</A><BR>
+        <li><a href="<ofbiz:url>/view/ModelGroupWriter</ofbiz:url>" target='_blank' class='buttontext'>Generate Entity Group XML</A><BR>
+        <li><a href="<ofbiz:url>/view/ModelGroupWriter?savetofile=true</ofbiz:url>" target='_blank' class='buttontext'>Save Entity Group XML to File</A><BR>
+        <li><a href="<ofbiz:url>/view/EditEntity</ofbiz:url>" class='buttontext' target='_blank'>Edit Entity Definitions</A>
       </ul>
-      <li><a href="<%=response.encodeURL(controlPath + "/view/xmldsdump")%>" class='buttontext'>XML Data Export</A>
-      <li><a href="<%=response.encodeURL(controlPath + "/view/xmldsimport")%>" class='buttontext'>XML Data Import</A>
+      <li><a href="<ofbiz:url>/view/xmldsdump</ofbiz:url>" class='buttontext'>XML Data Export</A>
+      <li><a href="<ofbiz:url>/view/xmldsimport</ofbiz:url>" class='buttontext'>XML Data Import</A>
 <%--
-      <li><a href="<%=response.encodeURL(controlPath + "/view/tablesMySql")%>" class='buttontext'>MySQL Table Creation SQL</A>
-      <li><a href="<%=response.encodeURL(controlPath + "/view/dataMySql")%>" class='buttontext'>MySQL Auto Data SQL</A>
+      <li><a href="<ofbiz:url>/view/tablesMySql</ofbiz:url>" class='buttontext'>MySQL Table Creation SQL</A>
+      <li><a href="<ofbiz:url>/view/dataMySql</ofbiz:url>" class='buttontext'>MySQL Auto Data SQL</A>
 --%>
     </ul>
   <%}%>
   <%if(security.hasPermission("UTIL_CACHE_VIEW", session)){%>
-    <li><a href="<%=response.encodeURL(controlPath + "/FindUtilCache")%>" class='buttontext'>Cache Maintenance</A>
+    <li><div class='tabletext'>Cache Utilities</div>
+    <ul>
+      <li><a href="<ofbiz:url>/FindUtilCache</ofbiz:url>" class='buttontext'>Cache Maintenance</A>
+    </ul>
+  <%}%>
+  <%if(security.hasPermission("DATAFILE_MAINT", session)){%>
+    <li><div class='tabletext'>Data File Utilities</div>
+    <ul>
+      <li><a href="<ofbiz:url>/viewdatafile</ofbiz:url>" class='buttontext'>View Data File</A>
+    </ul>
   <%}%>
 </ul>
 
-<DIV class='tabletext'>NOTE: If you have not already run the installation data loading script, <a href="<%=response.encodeURL(controlPath + "/install")%>" class='buttontext'>click here</a> to run it.</DIV>
+<DIV class='tabletext'>NOTE: If you have not already run the installation data loading script, <a href="<ofbiz:url>/install</ofbiz:url>" class='buttontext'>click here</a> to run it.</DIV>
 <DIV class='tabletext'>DOUBLE NOTE: If you are deploying this version of commonapp on a public server, remove the install.jsp page and these two paragraphs about it.</DIV>
           </td>
         </tr>
