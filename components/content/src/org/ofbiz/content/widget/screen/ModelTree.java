@@ -1,5 +1,5 @@
 /*
- * $Id: ModelTree.java,v 1.1 2004/07/16 05:33:47 byersa Exp $
+ * $Id: ModelTree.java,v 1.2 2004/07/16 17:35:08 byersa Exp $
  *
  * Copyright (c) 2004 The Open For Business Project - www.ofbiz.org
  *
@@ -27,7 +27,10 @@ import java.io.Writer;
 import java.util.*;
 
 import org.ofbiz.base.util.UtilXml;
+import org.ofbiz.base.util.collections.MapStack;
 import org.ofbiz.entity.GenericDelegator;
+import org.ofbiz.entity.GenericValue;
+import org.ofbiz.entity.GenericPK;
 import org.ofbiz.service.LocalDispatcher;
 import org.w3c.dom.Element;
 
@@ -35,7 +38,7 @@ import org.w3c.dom.Element;
  * Widget Library - Tree model class
  *
  * @author     <a href="mailto:byersa@automationgroups.com">Al Byers</a>
- * @version    $Revision: 1.1 $
+ * @version    $Revision: 1.2 $
  * @since      3.1
  */
 public class ModelTree extends ModelScreenWidget {
@@ -45,6 +48,7 @@ public class ModelTree extends ModelScreenWidget {
     protected String name;
     protected String rootNodeName;
     protected List nodeList = new ArrayList();
+    protected Map nodeMap = new HashMap();
     
 // ===== CONSTRUCTORS =====
     /** Default Constructor */
@@ -62,7 +66,9 @@ public class ModelTree extends ModelScreenWidget {
         while (nodeElementIter.hasNext()) {
             Element nodeElementEntry = (Element) nodeElementIter.next();
             ModelNode node = new ModelNode(nodeElementEntry, this);
+            String nodeName = node.getName();
             nodeList.add(node);
+            nodeMap.put(nodeName,node);
         }
     
         if (nodeList.size() == 0) {
@@ -97,57 +103,49 @@ public class ModelTree extends ModelScreenWidget {
      */
     public void renderWidgetString(Writer writer, Map context, ScreenStringRenderer screenStringRenderer) {
         
-        Iterator nodeIter = nodeList.iterator();
-        while (nodeIter.hasNext()) {
-            ModelNode node = (ModelNode)nodeIter.next();
+            ModelNode node = (ModelNode)nodeMap.get(rootNodeName);
             node.renderWidgetString(writer, context, screenStringRenderer);
-        }
     }
 
-    public class ModelNode {
+    public static class ModelNode {
 
-        protected ModelTree rootTree;
         protected ModelScreen screen;
-        //protected ScreenConditionOne entityOne;
         protected ModelScreenWidget.Label label;
-        //protected ScreenService screenService;
-        //protected GenericValue entityValue;
         protected List subNodeList = new ArrayList();
+        protected List actions = new ArrayList();
         protected String name;
+        protected ModelTree modelTree;
 
         public ModelNode() {}
 
         public ModelNode(Element nodeElement, ModelTree modelTree) {
 
-            this.rootTree = modelTree;
+            this.modelTree = modelTree;
             this.name = nodeElement.getAttribute("name");
     
-/*
-            Element entityOneElement = UtilXml.firstChildElement(nodeElement, "entity-one");
-            if (entityOneElement != null) {
-                this.entityOne = new ScreenConditionOne(this, entityOneElement);
+            Element actionsElement = UtilXml.firstChildElement(nodeElement, "entity-one");
+            List lst = null;
+            if (actionsElement != null) {
+                lst = ModelScreenAction.readSubActions(modelTree.modelScreen, actionsElement);
             }
-            
-            Element screenServiceElement = UtilXml.firstChildElement(nodeElement, "service");
-            if (screenServiceElement != null) {
-                this.screenService = new ScreenService(this, screenServiceElement);
+            this.actions.addAll(lst);
+        
+            actionsElement = UtilXml.firstChildElement(nodeElement, "service");
+            if (actionsElement != null) {
+                lst = ModelScreenAction.readSubActions(modelTree.modelScreen, actionsElement);
             }
-    
-            if (entityOneElement == null && screenServiceElement == null) {
-                throw new IllegalArgumentException("Neither 'entity-one' nor 'service' found for the tree definition with name: " + this.name);
-            }
-*/
-            
+            this.actions.addAll(lst);
+        
             Element screenElement = UtilXml.firstChildElement(nodeElement, "screen");
-            GenericDelegator delegator = modelScreen.getDelegator();
-            LocalDispatcher dispatcher = modelScreen.getDispacher();
+            GenericDelegator delegator = modelTree.modelScreen.getDelegator();
+            LocalDispatcher dispatcher = modelTree.modelScreen.getDispacher();
             if (screenElement != null) {
                 this.screen = new ModelScreen(screenElement, delegator, dispatcher);
             }
             
             Element labelElement = UtilXml.firstChildElement(nodeElement, "label");
             if (labelElement != null) {
-                this.label = new ModelScreenWidget.Label(modelScreen, labelElement);
+                this.label = new ModelScreenWidget.Label(modelTree.modelScreen, labelElement);
             }
     
             if (screenElement == null && labelElement == null) {
@@ -167,16 +165,7 @@ public class ModelTree extends ModelScreenWidget {
     
         public void renderWidgetString(Writer writer, Map context, ScreenStringRenderer screenStringRenderer) {
             
-/*
-            if (entityOne != null) {
-                entityValue = entityOne.retrieveValue(context);
-            } else if (screenService != null) {
-                entityValue = screenService.retrieveValue(context);
-            } else {
-                return;
-            }
-            context.put("entityValue", entityValue);
-*/
+            ModelScreenAction.runSubActions(this.actions, context);
          
             screenStringRenderer.renderNodeOpen(writer, context,  this);
             if ( screen != null)
@@ -187,17 +176,21 @@ public class ModelTree extends ModelScreenWidget {
             Iterator nodeIter = subNodeList.iterator();
             while (nodeIter.hasNext()) {
                 ModelSubNode subNode = (ModelSubNode)nodeIter.next();
-                List subNodes = subNode.retrieveSubNodes(context);
-                tempNodeList.addAll(subNodes);
+                String nodeName = subNode.getNodeName();
+                ModelNode node = (ModelNode)modelTree.nodeMap.get(nodeName);
+                List subNodeActions = subNode.getActions();
+                ModelScreenAction.runSubActions(subNodeActions, context);
+                List dataFound = (List)context.get("dataFound");
+                Iterator dataIter = dataFound.iterator();
+                while (dataIter.hasNext()) {
+                    GenericValue val = (GenericValue)dataIter.next();
+                    GenericPK pk = val.getPrimaryKey();
+                    Map newContext = ((MapStack) context).standAloneChildStack();
+                    newContext.putAll(pk);
+                    node.renderWidgetString(writer, newContext, screenStringRenderer);
+                }
             }
 
-            List subNodeValueList = sortNodes(tempNodeList);
-
-            Iterator nodeValueIter = subNodeValueList.iterator();
-            while (nodeValueIter.hasNext()) {
-                ModelNode node = (ModelNode)nodeValueIter.next();
-                node.renderWidgetString(writer, context, screenStringRenderer);
-            }
             screenStringRenderer.renderNodeClose(writer, context,  this);
         }
 
@@ -211,13 +204,12 @@ public class ModelTree extends ModelScreenWidget {
             return name;
         }
     
-        public class ModelSubNode {
+        public static class ModelSubNode {
     
             protected ModelNode rootNode;
             protected ModelNode subNode;
             protected String nodeName;
-            //protected ScreenConditionAnd entityAnd;
-            //protected ScreenService screenService;
+            protected List actions = new ArrayList();
             protected List outFieldMaps;
     
             public ModelSubNode() {}
@@ -227,32 +219,27 @@ public class ModelTree extends ModelScreenWidget {
                 this.rootNode = modelNode;
                 this.nodeName = nodeElement.getAttribute("node-name");
         
-/*
-                Element entityAndElement = UtilXml.firstChildElement(nodeElement, "entity-one");
-                if (entityAndElement != null) {
-                    this.entityAnd = new ScreenConditionAnd(this, entityAndElement);
+                Element actionsElement = UtilXml.firstChildElement(nodeElement, "entity-one");
+                List lst = null;
+                if (actionsElement != null) {
+                    lst = ModelScreenAction.readSubActions(rootNode.modelTree.modelScreen, actionsElement);
                 }
-                
-                Element screenServiceElement = UtilXml.firstChildElement(nodeElement, "service");
-                if (screenServiceElement != null) {
-                    this.screenService = new ScreenService(this, screenServiceElement);
+                this.actions.addAll(lst);
+            
+                actionsElement = UtilXml.firstChildElement(nodeElement, "service");
+                if (actionsElement != null) {
+                    lst = ModelScreenAction.readSubActions(rootNode.modelTree.modelScreen, actionsElement);
                 }
-        
-                if (entityAndElement == null && screenServiceElement == null) {
-                    throw new IllegalArgumentException("Neither 'entity-one' nor 'service' found for the tree definition with name: " + this.name);
-                }
-*/
-                
+                this.actions.addAll(lst);
                 
             }
         
-            public List retrieveSubNodes(Map context) {
-                List retrievedNodes = new ArrayList();
-                // TODO: finish
-                return retrievedNodes;
-            }
             public String getNodeName() {
                 return nodeName;
+            }
+    
+            public List getActions() {
+                return actions;
             }
     
         }
