@@ -58,6 +58,7 @@ public class SequenceUtil
     public static final long startSeqId = 10000;
     public static final int minWaitNanos = 500000;   // 1/2 ms
     public static final int maxWaitNanos = 1000000;  // 1 ms
+    public static final int maxTries = 5;
   
     long curSeqId;
     long maxSeqId;
@@ -118,8 +119,10 @@ public class SequenceUtil
         connection.setAutoCommit(true);
         stmt = connection.createStatement();
         
+        int numTries = 0;
         while(val1+bankSize != val2)
         {
+          Debug.logInfo("[SequenceUtil.SequenceBank.fillBank]: Trying to get a bank of sequenced ids for " + this.seqName + "; start of loop val1=" + val1 + ", val2=" + val2 + ", bankSize=" + bankSize);
           sql = "SELECT SEQ_ID FROM SEQUENCE WHERE SEQ_NAME='" + this.seqName + "'";
           rs = stmt.executeQuery(sql);
           if(rs.next()) { val1 = rs.getInt("SEQ_ID"); } 
@@ -153,15 +156,23 @@ public class SequenceUtil
           
           if(val1+bankSize != val2)
           {
+            if(numTries >= maxTries) 
+            {
+              Debug.logError("[SequenceUtil.SequenceBank.fillBank]: maxTries (" + maxTries + ") reached, giving up.");
+              return;
+            }
             //collision happened, wait a bounded random amount of time then continue
             int waitTime = (new Double(Math.random()*(maxWaitNanos - minWaitNanos))).intValue() + minWaitNanos;
             try { this.wait(0, waitTime); }
             catch(Exception e) { }
           }
+          
+          numTries++;
         }
         
         curSeqId = val1;
         maxSeqId = val2;
+        Debug.logInfo("[SequenceUtil.SequenceBank.fillBank]: Successfully got a bank of sequenced ids for " + this.seqName + "; curSeqId=" + curSeqId + ", maxSeqId=" + maxSeqId + ", bankSize=" + bankSize);
       } 
       catch (SQLException sqle) 
       {
