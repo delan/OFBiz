@@ -1,7 +1,12 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE service-eca PUBLIC "-//OFBiz//DTD Service ECA Config//EN" "http://www.ofbiz.org/dtds/service-eca.dtd">
 
-<service-eca>
+<service-eca>	
+	<eca service="updateShipment" event="commit">
+		<condition field-name="statusId" operator="equals" value="SHIPMENT_PACKED"/>
+		<action service="createInvoicesFromShipment" mode="async"/>
+	</eca>
+	
     <eca service="createShipmentReceipt" event="commit">
         <condition field-name="returnId" operator="is-not-empty"/>
         <action service="updateReturnStatusFromReceipt" mode="sync"/>
