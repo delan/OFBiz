@@ -1348,7 +1348,7 @@
     <entity entity-name="UserLoginSecurityGroup" 
             package-name="org.ofbiz.commonapp.security.securitygroup"
             title="Security Component - User Login Security Group Entity">
-      <description>Defines a permission available to a security group</description>
+      <description>Maps a UserLogin to a security group</description>
       <field name="userLoginId" type="id-vlong-ne"></field>
       <field name="groupId" type="id-ne"></field>	
       <prim-key field="userLoginId" />	
