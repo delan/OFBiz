@@ -31,9 +31,9 @@ import org.ofbiz.core.util.*;
  *  OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR
  *  THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  *
- * @author  Andy Zeneski (jaz@zsolv.com)
- * @version 1.0
- * Created on November 6, 2001
+ * @author     <a href="mailto:jaz@zsolv.com">Andy Zeneski</a>
+ * @version    1.0
+ * @created    November 6, 2001
  */
 public class RecurrenceInfo {
     
@@ -252,12 +252,8 @@ public class RecurrenceInfo {
     public String primaryKey() {
         return info.getString("recurrenceInfoId");
     }
-    
-    public static RecurrenceInfo makeInfo(GenericDelegator delegator, long startTime) throws RecurrenceInfoException {
-        return makeInfo(delegator,startTime,"DAILY",1,1);
-    }
-    
-    public static RecurrenceInfo makeInfo(GenericDelegator delegator, long startTime, String frequency, int interval, int count) throws RecurrenceInfoException {
+        
+    public static RecurrenceInfo makeInfo(GenericDelegator delegator, long startTime, int frequency, int interval, int count) throws RecurrenceInfoException {
         try {
             RecurrenceRule r = RecurrenceRule.makeRule(delegator,frequency,interval,count);
             String ruleId = r.primaryKey();

@@ -42,6 +42,8 @@ import org.ofbiz.core.util.*;
  */
 public class JobManager {
     
+    public static final String module = JobManager.class.getName();
+    
     protected JobScheduler js;
     protected GenericDelegator delegator;
     protected ServiceDispatcher dispatcher;
@@ -58,7 +60,13 @@ public class JobManager {
     public void loadJobs() {
         // Get all scheduled jobs from the database.
         Collection jobList = null;
-        Debug.logInfo("[JobScheduler.loadJobs] : loading jobs...");
+        UtilTimer timer = null;
+        if (Debug.timingOn()) {
+            timer = new UtilTimer();            
+            Debug.logTiming(timer.timerString("[JobScheduler.loadJobs] : loading jobs..."), module);            
+        } else {
+            Debug.logInfo("[JobScheduler.loadJobs] : loading jobs...", module);
+        }        
         try {
             jobList = delegator.findAll("JobSandbox");
         }
@@ -81,30 +89,35 @@ public class JobManager {
                     Job thisJob = addJob(jobObj,ctx);
                 }
                 catch ( GenericEntityException e ) {
-                    Debug.logInfo("[JobManager.loadJobs] : " + e.getMessage());
+                    Debug.logError("[JobManager.loadJobs] : " + e.getMessage());
                     // e.printStackTrace();
                 }
                 catch ( SerializeException e ) {
-                    Debug.logInfo("[JobManager.loadJobs] : " + e.getMessage());
+                    Debug.logError(e,"[JobManager.loadJobs] : " + e.getMessage());
                     // e.printStackTrace();
                 }
                 catch ( ParserConfigurationException e ) {
-                    Debug.logInfo("[JobManager.loadJobs] : " + e.getMessage());
+                    Debug.logError(e,"[JobManager.loadJobs] : " + e.getMessage());
                     // e.printStackTrace();
                 }
                 catch ( SAXException e ) {
-                    Debug.logInfo("[JobManager.loadJobs] : " + e.getMessage());
+                    Debug.logError(e,"[JobManager.loadJobs] : " + e.getMessage());
                     // e.printStackTrace();
                 }
                 catch ( IOException e ) {
-                    Debug.logInfo("[JobManager.loadJobs] : " + e.getMessage());
+                    Debug.logError(e,"[JobManager.loadJobs] : " + e.getMessage());
                     // e.printStackTrace();
                 }
                 catch ( JobSchedulerException e ) {
-                    Debug.logInfo("[JobManager.loadJobs] : " + e.getMessage());
+                    Debug.logVerbose("[JobManager.loadJobs] : " + e.getMessage());
                     // e.printStackTrace();
                 }
             }
+             if (Debug.timingOn()) {
+                Debug.logTiming(timer.timerString("[JobScheduler.loadJobs] : Finished"), module);
+             } else {
+                 Debug.logInfo("[JobScheduler.loadJobs] : Finished", module);
+             }
         }
     }
     
@@ -165,17 +178,7 @@ public class JobManager {
     public ServiceDispatcher getDispatcher() {
         return this.dispatcher;
     }
-    
-    /** Schedule a job to run at a single specific time
-     *@param loader The name of the local dispatcher to use
-     *@param serviceName The name of the service to invoke
-     *@param context The context for the service
-     *@param startTime The time in milliseconds the service should run
-     */
-    public synchronized void schedule(String loader, String serviceName, Map context, long startTime) throws JobSchedulerException {
-        schedule(loader,serviceName,context,startTime,"DAILY",1,1);
-    }
-    
+        
     /** Schedule a job to start at a specific time with specific recurrence info
      *@param loader The name of the local dispatcher to use
      *@param serviceName The name of the service to invoke
@@ -185,7 +188,7 @@ public class JobManager {
      *@param interval The interval of the frequency recurrence
      *@param count The number of times to repeat
      */
-    public synchronized void schedule(String loader, String serviceName, Map context, long startTime, String frequency, int interval, int count) throws JobSchedulerException {
+    public synchronized void schedule(String loader, String serviceName, Map context, long startTime, int frequency, int interval, int count) throws JobSchedulerException {
         String dataId = null;
         String infoId = null;
         String jobName = new String(new Long((new Date().getTime())).toString());

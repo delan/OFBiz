@@ -31,9 +31,9 @@ import org.ofbiz.core.util.*;
  *  OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR 
  *  THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  *
- * @author  Andy Zeneski (jaz@zsolv.com)
- * @version 1.0
- * Created on November 6, 2001
+ * @author     <a href="mailto:jaz@zsolv.com">Andy Zeneski</a>
+ * @version    1.0
+ * @created    November 6, 2001
  */
 public class RecurrenceRule {
     
@@ -54,12 +54,19 @@ public class RecurrenceRule {
     public static final int MAX_MTH = 12;
     
     // Frequency constants
+    /** Frequency SECONDLY */
     public static final int SECONDLY = 1;
+    /** Frequency MINUTELY */
     public static final int MINUTELY = 2;
+    /** Frequency HOURLY */
     public static final int HOURLY = 3;
+    /** Frequency DAILY */
     public static final int DAILY = 4;
+    /** Frequency WEEKLY */
     public static final int WEEKLY = 5;
+    /** Frequency MONTHLY */
     public static final int MONTHLY = 6;
+    /** Frequency YEARLY */
     public static final int YEARLY = 7;
     
     // GenericValue object
@@ -209,7 +216,7 @@ public class RecurrenceRule {
      *@return The interval of this frequency as an integer.
      */
     public int getIntervalInt() {
-        //Debug.logInfo("[RecurrenceInfo.getInterval] : " + getInterval());
+        Debug.logVerbose("[RecurrenceInfo.getInterval] : " + getInterval());
         return (int) getInterval();
     }
     
@@ -294,7 +301,7 @@ public class RecurrenceRule {
         
         long nextStartTime = startTime;
         while ( nextStartTime < fromTime ) {
-            //Debug.logInfo("[RecurrenceInfo.getNextFreq] : Updating time - " + getFrequency());
+            Debug.logVerbose("[RecurrenceInfo.getNextFreq] : Updating time - " + getFrequency());
             switch(getFrequency()) {
                 case SECONDLY:
                     cal.add(Calendar.SECOND,getIntervalInt());
@@ -547,11 +554,19 @@ public class RecurrenceRule {
         return rule.getString("recurrenceRuleId");
     }
     
-    public static RecurrenceRule makeRule(GenericDelegator delegator, String frequency, int interval, int count) throws RecurrenceRuleException {
+    public static RecurrenceRule makeRule(GenericDelegator delegator, int frequency, int interval, int count) throws RecurrenceRuleException {
+        String freq[] = { "", "SECONDLY", "MINUTELY", "HOURLY", "DAILY", "WEEKLY", "MONTHLY", "YEARLY" };  
+        if (frequency < 1 || frequency > 7)
+            throw new RecurrenceRuleException("Invalid frequency");
+        if (interval < 0)
+            throw new RecurrenceRuleException("Invalid interval");
+        if (count < 0)
+            throw new RecurrenceRuleException("Invalid count");
+        String freqStr = freq[frequency];
         try {
             String ruleId = delegator.getNextSeqId("RecurrenceRule").toString();
             GenericValue value = delegator.makeValue("RecurrenceRule",UtilMisc.toMap("recurrenceRuleId",ruleId));
-            value.set("frequency",frequency);
+            value.set("frequency",freqStr);
             value.set("intervalNumber",new Long(interval));
             value.set("countNumber",new Long(count));
             delegator.create(value);

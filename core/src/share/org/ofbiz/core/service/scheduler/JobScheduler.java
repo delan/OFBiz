@@ -35,6 +35,8 @@ import org.ofbiz.core.util.*;
  */
 public class JobScheduler implements Runnable {
     
+    public static final String module = JobScheduler.class.getName();
+    
     protected JobManager jm;
     protected Thread thread;
     protected long sleep;

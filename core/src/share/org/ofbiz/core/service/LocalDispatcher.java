@@ -5,10 +5,11 @@
 package org.ofbiz.core.service;
 
 import java.util.*;
-import org.ofbiz.core.util.*;
+import org.ofbiz.core.calendar.*;
 import org.ofbiz.core.entity.*;
 import org.ofbiz.core.service.scheduler.*;
 import org.ofbiz.core.security.*;
+import org.ofbiz.core.util.*;
 
 /**
  * <p><b>Title:</b> Generic Services Local Dispatcher
@@ -127,22 +128,21 @@ public class LocalDispatcher {
      *@param serviceName Name of the service to invoke
      *@param context The name/value pairs composing the context
      *@param startTime The time to run this service
-     *@param frequency The frequency of the recurrence (HOURLY,DAILY,MONTHLY,etc)
+     *@param frequency The frequency of the recurrence (RecurrenceRule.DAILY, etc)
      *@param interval The interval of the frequency recurrence
      *@param count The number of times to repeat
      */
     public void schedule(String serviceName, Map context, long startTime,
-            String frequency, int interval,
-            int count) throws GenericServiceException {
+            int frequency, int interval, int count) throws GenericServiceException {             
         try {
             getJobManager().schedule(getName(), serviceName, context, startTime,
                     frequency, interval, count);
-            Debug.logInfo("[LocalDispatcher.schedule] : Current time: " +
+            Debug.logVerbose("[LocalDispatcher.schedule] : Current time: " +
                     (new Date()).getTime());
-            Debug.logInfo("[LocalDispatcher.schedule] : Runtime: " + startTime);
-            Debug.logInfo("[LocalDispatcher.schedule] : Frequency: " + frequency);
-            Debug.logInfo("[LocalDispatcher.schedule] : Interval: " + interval);
-            Debug.logInfo("[LocalDispatcher.schedule] : Count: " + count);
+            Debug.logVerbose("[LocalDispatcher.schedule] : Runtime: " + startTime);
+            Debug.logVerbose("[LocalDispatcher.schedule] : Frequency: " + frequency);
+            Debug.logVerbose("[LocalDispatcher.schedule] : Interval: " + interval);
+            Debug.logVerbose("[LocalDispatcher.schedule] : Count: " + count);
         } catch (JobSchedulerException e) {
             throw new GenericServiceException(e.getMessage(), e);
         }
@@ -155,14 +155,7 @@ public class LocalDispatcher {
      */
     public void schedule(String serviceName, Map context,
             long startTime) throws GenericServiceException {
-        try {
-            getJobManager().schedule(getName(), serviceName, context, startTime);
-            Debug.logInfo("[LocalDispatcher.schedule] : Current time: " +
-                    (new Date()).getTime());
-            Debug.logInfo("[LocalDispatcher.schedule] : Runtime: " + startTime);
-        } catch (JobSchedulerException e) {
-            throw new GenericServiceException(e.getMessage(), e);
-        }
+        schedule(serviceName, context, startTime, RecurrenceRule.DAILY, 1, 1);        
     }
 
     /** Gets the JobManager associated with this dispatcher

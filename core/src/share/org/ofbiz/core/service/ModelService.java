@@ -131,9 +131,9 @@ public class ModelService {
             }
         }
 
-        Debug.logInfo("[ModelService.validate] : (" + mode + ") Required - " +
+        Debug.logVerbose("[ModelService.validate] : (" + mode + ") Required - " +
                 requiredTest.size() + " / " + requiredInfo.size());
-        Debug.logInfo("[ModelService.validate] : (" + mode + ") Optional - " +
+        Debug.logVerbose("[ModelService.validate] : (" + mode + ") Optional - " +
                 optionalTest.size() + " / " + optionalInfo.size());
 
 

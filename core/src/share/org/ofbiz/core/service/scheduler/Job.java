@@ -40,6 +40,8 @@ import org.ofbiz.core.util.*;
 
 public class Job implements Comparable, Serializable {
     
+    public static final String module = Job.class.getName();
+    
     private RecurrenceInfo recurrence;
     private GenericValue job;
     private GenericRequester requester;
@@ -82,7 +84,7 @@ public class Job implements Comparable, Serializable {
         if ( recurrence == null )
             return;
         runtime = recurrence.next();
-        Debug.logInfo("[Job.updateRuntime] : " + runtime);
+        Debug.logVerbose("[Job.updateRuntime] : " + runtime);
     }
     
     /** Returns the name of the service associated with this job. */
@@ -123,7 +125,7 @@ public class Job implements Comparable, Serializable {
         if ( result != null && requester != null ) {
             requester.receiveResult(result);
         }
-        Debug.logInfo("[Job.receiveNotice] : Next Runtime: " + runtime);
+        Debug.logVerbose("[Job.receiveNotice] : Next Runtime: " + runtime);
         // This would be a good place to log async transactions.
         
         if ( runtime == 0 )
