@@ -488,15 +488,15 @@
       <field name="until" type="date-time"></field>	
       <field name="count" type="numeric"></field>
       <field name="interval" type="numeric"></field>      
-      <field name="bySecond" type="very-long"></field>
-      <field name="byMinute" type="very-long"></field>
-      <field name="byHour" type="very-long"></field>
-      <field name="byDay" type="very-long"></field>
-      <field name="byMonthDay" type="very-long"></field>
-      <field name="byYearDay" type="very-long"></field>
-      <field name="byWeekNo" type="very-long"></field>
-      <field name="byMonth" type="very-long"></field>
-      <field name="bySetPos" type="very-long"></field>
+      <field name="bySecondList" type="very-long"></field>
+      <field name="byMinuteList" type="very-long"></field>
+      <field name="byHourList" type="very-long"></field>
+      <field name="byDayList" type="very-long"></field>
+      <field name="byMonthDayList" type="very-long"></field>
+      <field name="byYearDayList" type="very-long"></field>
+      <field name="byWeekNoList" type="very-long"></field>
+      <field name="byMonthList" type="very-long"></field>
+      <field name="bySetPosList" type="very-long"></field>
       <field name="weekStart" type="short-varchar"></field>
       <field name="xName" type="very-long"></field>
       <prim-key field="recurrenceRuleId" />
