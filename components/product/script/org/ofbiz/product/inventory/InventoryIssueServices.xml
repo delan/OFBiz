@@ -87,7 +87,7 @@
         </else>
         </if-empty>
 
-        <!-- TODO: kind of like the inventory reservation routine, find InventoryItems to issue from, but instead of doing the reservation just create an issuance and an inventory item detail for the change -->
+        <!-- kind of like the inventory reservation routine (with a few variations...), find InventoryItems to issue from, but instead of doing the reservation just create an issuance and an inventory item detail for the change -->
         <if-not-empty field-name="orderItem.productId">
             <now-timestamp-to-env env-name="nowTimestamp"/>
 
@@ -139,7 +139,7 @@
                 <call-simple-method method-name="issueImmediateForInventoryItemInline"/>
             </iterate>
             
-            <!-- TODO: if quantityNotIssued is not 0, then pull it from the last non-serialized inventory item found, in the quantityNotIssued field -->
+            <!-- if quantityNotIssued is not 0, then pull it from the last non-serialized inventory item found, in the quantityNotIssued field -->
             <if-compare field-name="parameters.quantityNotIssued" operator="not-equals" value="0" type="Double">
                 <if-not-empty field-name="lastNonSerInventoryItem">
                     <!-- create ItemIssuance record -->
