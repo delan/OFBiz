@@ -69,7 +69,7 @@
           <#elseif product.isVirtual?exists && product.isVirtual == "Y">
             <a href='<@ofbizUrl>/product?<#if requestAttributes.categoryId?exists>category_id=${requestAttributes.categoryId}&</#if>product_id=${product.productId}</@ofbizUrl>' class="buttontext"><nobr>[Choose Variation...]</nobr></a>                                                          
           <#else>
-            <form method="POST" action="<@ofbizUrl>/additem<#if requestAttributes._CURRENT_VIEW_?exists>/${requestAttributes._CURRENT_VIEW_}</#if></@ofbizUrl>" name="the${requestAttributes.formNamePrefix?if_exists}${requestAttributes.listIndex?if_exists}form" style='margin: 0;'>
+            <form method="POST" action="<@ofbizUrl>/additem</@ofbizUrl>" name="the${requestAttributes.formNamePrefix?if_exists}${requestAttributes.listIndex?if_exists}form" style='margin: 0;'>
               <input type='hidden' name='add_product_id' value='${product.productId}'>
               <input type="text" class='inputBox' size="5" name="quantity" value="1">              
               <#if requestParameters.product_id?exists><input type='hidden' name='product_id' value='${requestParameters.product_id}'></#if>
@@ -83,7 +83,7 @@
             <#if requestAttributes.productCategoryMember?exists>
 			  <#assign prodCatMem = requestAttributes.productCategoryMember>
 			  <#if prodCatMem?exists && prodCatMem.quantity?exists && 0.00 < prodCatMem.quantity?double>
-                <form method="POST" action="<@ofbizUrl>/additem<#if requestAttributes._CURRENT_VIEW_?exists>/${requestAttributes._CURRENT_VIEW_}</#if></@ofbizUrl>" name="the${requestAttributes.formNamePrefix?if_exists}${requestAttributes.listIndex?if_exists}defaultform" style='margin: 0;'>
+                <form method="POST" action="<@ofbizUrl>/additem</@ofbizUrl>" name="the${requestAttributes.formNamePrefix?if_exists}${requestAttributes.listIndex?if_exists}defaultform" style='margin: 0;'>
                   <input type='hidden' name='add_product_id' value='${prodCatMem.productId?if_exists}'>
                   <input type='hidden' name="quantity" value='${prodCatMem.quantity?if_exists}'>                  
                   <#if requestParameters.product_id?exists><input type='hidden' name='product_id' value='${requestParameters.product_id}'></#if>

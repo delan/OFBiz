@@ -46,7 +46,7 @@
         <table width='100%' border='0' cellspacing='0' cellpadding='0' class='boxbottom'>
           <tr>
             <td align=center>
-              <form name="choosecatalogform" method="POST" action="<@ofbizUrl>/salesentry</@ofbizUrl>" style='margin: 0;'>
+              <form name="choosecatalogform" method="POST" action="<@ofbizUrl>/orderentry</@ofbizUrl>" style='margin: 0;'>
                 <SELECT name='CURRENT_CATALOG_ID' class='selectBox'>
                   <OPTION value='${currentCatalogId}'>${currentCatalogName}</OPTION>
                   <OPTION value='${currentCatalogId}'></OPTION>

@@ -75,7 +75,7 @@ function addToList() {
       <table width='100%' border='0' cellspacing='0' cellpadding='0' class='boxtop'>
         <tr>
           <td valign="middle" align="left">
-            <div class="boxhead">&nbsp;Order Entry</div>
+            <div class="boxhead">&nbsp;<#if modeStr?exists>${modeStr?cap_first}&nbsp;</#if>Order Entry</div>
           </td>
           <td valign="middle" align="right">
             <div class='lightbuttontextdisabled'>              
@@ -227,40 +227,7 @@ function addToList() {
         <tr>
           <td colspan="6">&nbsp;</td>
         </tr>
-        </#if>
-        <tr>
-          <td colspan="6"><hr class="sepbar"></td>
-        </tr>
-        <tr>          
-          <td colspan="6" align="right" valign="bottom">
-            <div class="tabletext">
-              <#if sessionAttributes.userLogin?has_content>
-              <select name="shoppingListId" class="selectBox">
-                <#if shoppingLists?has_content>
-                  <#list shoppingLists as shoppingList>
-                    <option value="${shoppingList.shoppingListId}">${shoppingList.listName}</option>
-                  </#list>
-                </#if>
-                <option value="">---</option>
-                <option value="">New Shopping List</option>
-              </select>
-              &nbsp;&nbsp;
-              <a href="javascript:addToList();" class="buttontext">[Add Selected To List]</a>&nbsp;&nbsp;   
-              <#else>
-                You must <a href="<@ofbizUrl>/checkLogin/showcart</@ofbizUrl>" class="buttontext">Login</a>
-                to add selected items to a shopping list.&nbsp;
-              </#if>           
-            </div>
-          </td>
-        </tr>       
-        <tr>
-          <td colspan="6"><hr class="sepbar"></td>
-        </tr>        
-        <tr>
-          <td colspan="6" align="center" valign="bottom">
-            <div class="tabletext"><input type="checkbox" onChange="javascript:document.cartform.submit()" name="alwaysShowcart" <#if shoppingCart.viewCartOnAdd()>checked</#if>>&nbsp;Always view cart after adding an item.</div>
-          </td>
-        </tr>        
+        </#if>         
       </table>    
     </FORM>
   <#else>

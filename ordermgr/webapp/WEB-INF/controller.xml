@@ -177,29 +177,29 @@
     </request-map>
 
 	<!-- Order Entry Requests -->
-    <request-map uri="salesentry">
+    <request-map uri="orderentry">
         <security https="true" auth="true"/>
-        <response name="success" type="view" value="salesentry"/>
+        <response name="success" type="view" value="orderentry"/>
     </request-map>
     <request-map uri="additem">
         <event type="java" path="org.ofbiz.commonapp.order.shoppingcart.ShoppingCartEvents" invoke="addToCart"/>
-        <response name="success" type="view" value="salesentry"/>
-        <response name="error" type="view" value="salesentry"/>
+        <response name="success" type="view" value="orderentry"/>
+        <response name="error" type="view" value="orderentry"/>
     </request-map>    
     <request-map uri="addseperator">
         <event type="java" path="org.ofbiz.commonapp.order.shoppingcart.ShoppingCartEvents" invoke="addSeparator"/>
-        <response name="success" type="view" value="salesentry"/>
-        <response name="error" type="view" value="salesentry"/>
+        <response name="success" type="view" value="orderentry"/>
+        <response name="error" type="view" value="orderentry"/>
     </request-map>
     <request-map uri="modifycart">
         <event type="java" path="org.ofbiz.commonapp.order.shoppingcart.ShoppingCartEvents" invoke="modifyCart"/>
-        <response name="success" type="view" value="salesentry"/>
-        <response name="error" type="view" value="salesentry"/>
+        <response name="success" type="view" value="orderentry"/>
+        <response name="error" type="view" value="orderentry"/>
     </request-map>
     <request-map uri="emptycart">
         <event type="java" path="org.ofbiz.commonapp.order.shoppingcart.ShoppingCartEvents" invoke="destroyCart"/>
-        <response name="success" type="view" value="salesentry"/>
-        <response name="error" type="view" value="salesentry"/>
+        <response name="success" type="view" value="orderentry"/>
+        <response name="error" type="view" value="orderentry"/>
     </request-map>   
     <request-map uri="advancedsearch">
         <response name="success" type="view" value="advancedsearch"/>
@@ -220,7 +220,7 @@
     	<response name="options" type="view" value="optionsetting"/>
     	<response name="payment" type="view" value="billsetting"/>
     	<response name="success" type="view" value="confirm"/>
-    	<response name="error" type="view" value="salesentry"/>    	
+    	<response name="error" type="view" value="orderentry"/>    	
     </request-map>  
     <request-map uri="setShipping">
     	<security https="true" auth="true"/>
@@ -401,7 +401,7 @@
     <view-map name="createnewnote" type="jpublish" page="/order/newnote.ftl"/>
     <view-map name="receivepayment" type="region"/>
     
-    <view-map name="salesentry" type="jpublish" page="/entry/showcart.ftl"/>
+    <view-map name="orderentry" type="jpublish" page="/entry/showcart.ftl"/>
     <view-map name="keywordsearch" type="jpublish" page="/entry/catalog/keywordsearch.ftl"/>
     <view-map name="advancedsearch" type="jpublish" page="/entry/catalog/advancedsearch.ftl"/>
     <view-map name="category" type="jpublish" page="/entry/catalog/category.ftl"/>

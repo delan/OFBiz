@@ -24,44 +24,55 @@
  */
 
 import org.ofbiz.core.util.UtilMisc;
+import org.ofbiz.commonapp.order.shoppingcart.*;
 import org.ofbiz.commonapp.product.catalog.CatalogWorker;
 import org.ofbiz.commonapp.product.promo.ProductPromoWorker;
 
 delegator = request.getAttribute("delegator");
 userLogin = session.getAttribute("userLogin");
 
-// Get the Cart and Prepare Size
-shoppingCart = session.getAttribute("shoppingCart");
-if (shoppingCart != null) {
-    context.put("shoppingCartSize", shoppingCart.size());
-} else {
-    context.put("shoppingCartSize", 0);
+mode = session.getAttribute("mode");
+if (mode == null) {
+    mode = request.getParameter("mode");
+    session.setAttribute("mode", mode);
 }
+context.put("mode", mode);
+
+// Get the Cart and Prepare Size
+shoppingCart = ShoppingCartEvents.getCartObject(request);
+context.put("shoppingCartSize", shoppingCart.size());
 context.put("shoppingCart", shoppingCart);
 
-// get the shopping lists for the logged in user
-if (userLogin != null) {
-    shoppingLists = delegator.findByAnd("ShoppingList", UtilMisc.toMap("partyId", userLogin.getString("partyId")), UtilMisc.toList("listName"));
-    context.put("shoppingLists", shoppingLists);
+// Get the order mode
+mode = request.getParameter("mode");
+if (mode != null) {
+    shoppingCart.setOrderType(mode);
 }
+mode = shoppingCart.getOrderType();
+if (mode.equals("SALES_ORDER")) context.put("modeStr", "Sales");
+if (mode.equals("PURCHASE_ORDER")) context.put("modeStr", "Purchase");
 
-// Get Cart Associated Products Data
-associatedProducts = CatalogWorker.getRandomCartProductAssoc(request, true);
-if (associatedProducts != null) 
-    context.put("associatedProducts", associatedProducts);
+if (mode.equals("SALES_ORDER")) {
+    // Get Cart Associated Products Data
+    associatedProducts = CatalogWorker.getRandomCartProductAssoc(request, true);
+    if (associatedProducts != null) 
+        context.put("associatedProducts", associatedProducts);
 
-//Get Promo Text Data
-productPromos = ProductPromoWorker.getCatalogProductPromos(delegator, request);
-//Make sure that at least one promo has non-empty promoText
-showPromoText = false;
-productPromoIterator = productPromos.iterator(); 
-while (productPromoIterator.hasNext()) {
-    productPromo = productPromoIterator.next(); 
-    promoText = productPromo.get("promoText"); 
-    if (promoText != null && promoText.length() > 0) showPromoText = true;
+    //Get Promo Text Data
+    productPromos = ProductPromoWorker.getCatalogProductPromos(delegator, request);
+    //Make sure that at least one promo has non-empty promoText
+    showPromoText = false;
+    productPromoIterator = productPromos.iterator(); 
+    while (productPromoIterator.hasNext()) {
+        productPromo = productPromoIterator.next(); 
+        promoText = productPromo.get("promoText"); 
+        if (promoText != null && promoText.length() > 0) showPromoText = true;
+    }
+    context.put("productPromos", productPromos);
+    context.put("showPromoText", showPromoText);
+} else {
+    context.put("showPromoText", false);
 }
-context.put("productPromos", productPromos);
-context.put("showPromoText", showPromoText);
 
 context.put("contentPathPrefix", CatalogWorker.getContentPathPrefix(request));
 

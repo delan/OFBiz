@@ -16,8 +16,8 @@
   <div class="col"><a href="<ofbiz:url>/orderlist</ofbiz:url>" class="headerButtonLeft">Find&nbsp;Orders</a></div>
   <%}%>
   <%if(security.hasEntityPermission("ORDERMGR", "_CREATE", session)) {%>
-  <div class="col"><a href="<ofbiz:url>/salesentry</ofbiz:url>" class="headerButtonLeft">Sale&nbsp;Entry</a></div>
-  <%--<div class="col"><a href="#" class="headerButtonLeft">Purchase&nbsp;Entry</a></div>--%>
+  <div class="col"><a href="<ofbiz:url>/orderentry?mode=SALES_ORDER</ofbiz:url>" class="headerButtonLeft">Sale&nbsp;Entry</a></div>
+  <div class="col"><a href="<ofbiz:url>/orderentry?mode=PURCHASE_ORDER</ofbiz:url>" class="headerButtonLeft">Purchase&nbsp;Entry</a></div>
   <%}%>
   <div class="col"><a href="<ofbiz:url>/orderreportlist</ofbiz:url>" class="headerButtonLeft">Order&nbsp;Reports</a></div>                 
   <ofbiz:unless name="userLogin">
