@@ -184,18 +184,24 @@ public class OrderServices {
         String statusId = (String) context.get("statusId");        
         try {
             GenericValue orderHeader = delegator.findByPrimaryKey("OrderHeader",UtilMisc.toMap("orderId",orderId));
+            if ( orderHeader == null ) {
+                result.put(ModelService.RESPONSE_MESSAGE, ModelService.RESPOND_ERROR);
+                result.put(ModelService.ERROR_MESSAGE,"ERROR: Could not change order status; order cannot be found.");
+            }     
+            Debug.logInfo("[OrderServices.setOrderStatus] : From Status : " + orderHeader.getString("statusId"));
+            Debug.logInfo("[OrderServices.setOrderStatus] : To Status : " + statusId);
             try {
                 Map statusFields = UtilMisc.toMap("statusId",orderHeader.getString("statusId"),"statusIdTo",statusId);
                 GenericValue statusChange = delegator.findByPrimaryKeyCache("StatusValidChange",statusFields);
                 if  ( statusChange == null ) {
                     result.put(ModelService.RESPONSE_MESSAGE, ModelService.RESPOND_ERROR);
-                    result.put(ModelService.ERROR_MESSAGE,"ERROR: Could change order status; status is not a valid change.");
+                    result.put(ModelService.ERROR_MESSAGE,"ERROR: Could not change order status; status is not a valid change.");
                     return result;
                 }
             }
             catch ( GenericEntityException e ) {
                 result.put(ModelService.RESPONSE_MESSAGE, ModelService.RESPOND_ERROR);
-                result.put(ModelService.ERROR_MESSAGE,"ERROR: Could change order status (" + e.getMessage() + ").");
+                result.put(ModelService.ERROR_MESSAGE,"ERROR: Could not change order status (" + e.getMessage() + ").");
                 return result;
             }
             orderHeader.set("statusId",statusId);
@@ -212,7 +218,7 @@ public class OrderServices {
         }
         catch ( GenericEntityException e ) {
             result.put(ModelService.RESPONSE_MESSAGE, ModelService.RESPOND_ERROR);
-            result.put(ModelService.ERROR_MESSAGE,"ERROR: Could change order status (" + e.getMessage() + ").");
+            result.put(ModelService.ERROR_MESSAGE,"ERROR: Could not change order status (" + e.getMessage() + ").");
             return result;
         }
         result.put(ModelService.RESPONSE_MESSAGE, ModelService.RESPOND_SUCCESS);
