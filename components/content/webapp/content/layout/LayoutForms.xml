@@ -118,9 +118,16 @@
         <field name="drMimeTypeId" >
             <display/>
         </field>
-        <field name="drObjectInfo" title="File Path">
-            <text />
+        <field name="contentName" >
+            <display/>
         </field>
+        <field name="description" >
+            <display/>
+        </field>
+        <field name="drObjectInfo" title="File Path">
+            <display />
+        </field>
+        <!--
         <field name="createdByUserLogin" position="1">
             <display/>
         </field>
@@ -140,6 +147,7 @@
             <hyperlink also-hidden="false" description="Create New"  
                 target="EditLayoutTemplate?mode=add&amp;contentIdTo=TEMPLATE_MASTER"/>
         </field>
+        -->
         <field name="cloneLayout" title="&amp;nbsp;" widget-style="buttontext" position="2" >
             <hyperlink also-hidden="false" description="Clone Layout"  
                 target="cloneLayout?contentId=${currentValue.contentId}"/>
@@ -196,9 +204,12 @@
         default-title-style="tableheadtext"
         default-tooltip-style="tabletext" default-widget-style="display"
         default-entity-name="ContentDataResourceView"
-        list-name="entityList" target="" paginate-target="" title="" type="list">
+        list-name="entityList" target="" paginate-target="FindLayout" title="" type="list">
         <field name="contentId" title="Edit" widget-style="buttontext">
             <hyperlink also-hidden="false" description="${contentId}" target="EditLayout?contentId=${contentId}&amp;drDataResourceId=${drDataResourceId}"/>
+        </field>
+        <field name="dummy" title="Clip" widget-style="buttontext" map-name="dummy">
+            <hyperlink also-hidden="false" description="${contentId}" target="clipFindLayout?contentId=${contentId}&amp;drDataResourceId=${drDataResourceId}&amp;viewSize=${viewSize}&amp;viewIndex=${viewIndex}&amp;entityName=${entityName}"/>
         </field>
         <field name="contentName"><display/></field>
         <field name="description"><display/></field>
@@ -212,7 +223,7 @@
         default-title-style="tableheadtext"
         default-tooltip-style="tabletext" default-widget-style="display"
         default-entity-name="ContentAssocDataResourceViewFrom"
-        list-name="entityList" target="" paginate-target="" title="" type="list">
+        list-name="entityList" target="" paginate-target="FindLayout" title="" type="list">
         <field name="contentId" title="Edit" widget-style="buttontext">
             <hyperlink also-hidden="false" description="${contentId}" target="EditLayout?contentId=${contentId}&amp;drDataResourceId=${drDataResourceId}"/>
         </field>
@@ -222,6 +233,19 @@
         <field name="deleteLink" title="&amp;nbsp;" widget-style="buttontext">
             <hyperlink also-hidden="false" description="[Delete]" target="removeLayout?contentId=${contentId}&amp;contentIdTo=${caContentIdTo}&amp;contentAssocTypeId=${caContentAssocTypeId}&amp;fromDate=${caFromDate}"/>
         </field>
+    </form>
+
+    <form name="lookupListLayout" 
+        default-title-style="tableheadtext"
+        default-tooltip-style="tabletext" default-widget-style="display"
+        default-entity-name="ContentAssocDataResourceViewFrom"
+        list-name="entityList" target="" paginate-target="FindLayout" title="" type="list">
+        <field name="contentId" title="Edit" widget-style="buttontext">
+            <hyperlink also-hidden="false" description="${contentId}" target-type="plain" target="javascript:execRemoteCall('cloneLayout', '${drDataResourceId}', '${contentId}', 'TEMPLATE_MASTER', '')"/>
+        </field>
+        <field name="contentName"><display/></field>
+        <field name="description"><display/></field>
+        <field name="drObjectInfo" title="Template File"><display/></field>
     </form>
 
 
@@ -234,13 +258,13 @@
         target="" title="" type="list">
         <field name="replace" title="Replace" widget-style="buttontext" >
             <hyperlink also-hidden="false" target-type="plain" description="Replace[${dataResourceId}/${coContentId}]" 
-               target="javascript:replaceContent('${dataResourceId}','${coContentId}', '${contentIdTo}', '${mapKey}')"
+               target="javascript:execRemoteCall('replaceSubContent','${dataResourceId}','${coContentId}', '${contentIdTo}', '${mapKey}')"
             />
         </field>
         <field name="pasteContent" title="Paste" widget-style="buttontext" >
                 
             <hyperlink also-hidden="false" target-type="plain" description="Paste[${dataResourceId}/${coContentId}]" 
-               target="javascript:paste('${dataResourceId}','${coContentId}')"
+               target="javascript:execRemoteCall('pasteContent','${dataResourceId}','${coContentId}')"
             />
         </field>
         <field name="dataResourceName" title="Name" widget-style="buttontext">
@@ -540,7 +564,7 @@
         default-title-style="tableheadtext"
         default-tooltip-style="tabletext" default-widget-style="display"
         default-entity-name="ContentDataResourceViewTo"
-        list-name="entityList" target="" paginate-target="" title="" type="list">
+        list-name="entityList" target="" paginate-target="FindLayout" title="" type="list">
         <field name="contentId" title="Edit" widget-style="buttontext">
             <hyperlink also-hidden="false" description="${contentId}" target="EditLayout?contentId=${contentId}&amp;drDataResourceId=${drDataResourceId}"/>
         </field>
@@ -645,9 +669,16 @@
         <field name="submitButton" title="Create" widget-style="standardSubmit">
             <submit button-type="button"/>
         </field>
-        <field name="paste" title="&amp;nbsp;" widget-style="buttontext">
-            <hyperlink link-style="buttontext" target-type="plain" 
-              target="javascript:call_fieldlookup2(document.EditContent.dataResourceId, 'LookupDataResource');"
+        <field name="paste" title="&amp;nbsp;" widget-style="buttontext"
+            use-when="!&quot;${contentIdTo}&quot;.equals(&quot;TEMPLATE_MASTER&quot;)" >
+            <hyperlink target-type="plain" 
+              target="javascript:call_fieldlookup2(document.AddLayoutSubContent.drDataResourceId, 'ClipBoardContent')"
+              description="Paste"/>
+        </field>
+        <field name="paste" title="&amp;nbsp;" widget-style="buttontext"
+            use-when="&quot;${contentIdTo}&quot;.equals(&quot;TEMPLATE_MASTER&quot;)" >
+            <hyperlink target-type="plain" 
+              target="javascript:call_fieldlookup2(document.AddLayoutSubContent.drDataResourceId, 'LookupListLayout')"
               description="Paste"/>
         </field>
     </form>
