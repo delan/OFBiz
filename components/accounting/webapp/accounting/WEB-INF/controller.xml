@@ -19,6 +19,7 @@
     <handler name="ftl" type="view" class="org.ofbiz.content.webapp.ftl.FreeMarkerViewHandler"/>
     <handler name="velocity" type="view" class="org.ofbiz.content.webapp.view.VelocityViewHandler"/>
     <handler name="jsp" type="view" class="org.ofbiz.content.webapp.view.JspViewHandler"/>
+    <handler name="screen" type="view" class="org.ofbiz.content.webapp.view.ScreenWidgetViewHandler"/>
     
     <handler name="http" type="view" class="org.ofbiz.content.webapp.view.HttpViewHandler"/>
     <handler name="datavision" type="view" class="org.ofbiz.content.webapp.view.DataVisionViewHandler"/>
@@ -205,10 +206,26 @@
     </request-map>
 
     <!-- GlAccount requests -->
+    <request-map uri="SimpleScreen">
+        <security https="true" auth="true"/>
+        <response name="success" type="view" value="SimpleScreen"/>
+    </request-map>
+    <request-map uri="GlAccountTree">
+        <security https="true" auth="true"/>
+        <response name="success" type="view" value="GlAccountTree"/>
+    </request-map>
+    <request-map uri="ListGlobalGlAccount">
+        <security https="true" auth="true"/>
+        <response name="success" type="view" value="listGlobalGlAccount"/>
+    </request-map>
     <request-map uri="FindGlobalGlAccount">
         <security https="true" auth="true"/>
         <response name="success" type="view" value="FindGlobalGlAccount"/>
     </request-map>
+    <request-map uri="AddGlAccount">
+        <security https="true" auth="true"/>
+        <response name="success" type="view" value="AddGlAccount"/>
+    </request-map> 
     <request-map uri="EditGlobalGlAccount">
         <security https="true" auth="true"/>
         <response name="success" type="view" value="EditGlobalGlAccount"/>
@@ -236,7 +253,7 @@
         <response name="success" type="view" value="EditGlobalGlAccountOrganizations"/>
         <response name="error" type="view" value="EditGlobalGlAccountOrganizations"/>
     </request-map>
-    <request-map uri="createGlAccountOrganization">
+    <request-map uri="updateGlAccountOrganization">
         <security https="true" auth="true"/>
         <event type="service" invoke="updateGlAccount"/>
         <response name="success" type="view" value="EditGlobalGlAccountOrganizations"/>
@@ -281,8 +298,17 @@
     <view-map name="editPayment" type="jpublish" page="/payment/editPayment.ftl"/>
     <view-map name="manualTx" type="jpublish" page="/payment/manualTx.ftl"/>
 
-    <view-map name="FindGlobalGlAccount" type="jpublish" page="/chartofaccounts/FindGlobalGlAccount.ftl"/>
-    <view-map name="EditGlobalGlAccount" type="jpublish" page="/chartofaccounts/EditGlobalGlAccount.ftl"/>
+    <!-- view-map name="FindGlobalGlAccount" type="jpublish" page="/chartofaccounts/FindGlobalGlAccount.ftl"/ -->
+	<!-- New Screen Widget for EditGlobalGlAccount -->
+    <view-map name="SimpleScreen" type="screen" page="component://accounting/widget/SimpleScreens.xml#SimpleScreen"/>
+    <view-map name="AddGlAccount" type="screen" page="component://accounting/widget/AccountingScreens.xml#AddGlAccount"/>
+    <view-map name="FindGlobalGlAccount" type="screen" page="component://accounting/widget/AccountingScreens.xml#ListGlAccounts"/>
+    <view-map name="ListGlobalGlAccounts" type="screen" page="component://accounting/widget/AccountingScreens.xml#ListGlAccounts"/>
+    <view-map name="GlAccountTree" type="screen" page="component://accounting/widget/AccountingScreens.xml#GlAccountTree"/>
+ 
+    <!-- view-map name="EditGlobalGlAccount" type="screen" page="component://accounting/widget/AccountingScreens.xml#EditGlobalGlAccount"/ -->
+    <view-map name="EditGlobalGlAccount" type="screen" page="component://accounting/widget/AccountingScreens.xml#AddGlAccount"/>
+    <!-- view-map name="EditGlobalGlAccount" type="jpublish" page="/chartofaccounts/EditGlobalGlAccount.ftl"/ -->
     <view-map name="EditGlobalGlAccountOrganizations" type="jpublish" page="/chartofaccounts/EditGlobalGlAccountOrganizations.ftl"/>
     <view-map name="EditGlobalGlAccountRoles" type="jpublish" page="/chartofaccounts/EditGlobalGlAccountRoles.ftl"/>
     <!-- end of view mappings -->
