@@ -27,7 +27,7 @@
             <Button x="228" y="0" w="75" h="68" style="posButton" content="" alignment="Center"/>
 
             <!--<Button name="menuChgQty" x="0" y="69" w="75" h="68" style="posButton" content="MOD" alignment="Center"/>-->
-            <Button name="menuChgQty" x="76" y="69" w="75" h="68" style="posButton" alignment="Center"/>
+            <Button name="menuChgQty" x="76" y="69" w="75" h="68" style="posButton" content="MOD" alignment="Center"/>
             <Button name="" x="152" y="69" w="75" h="68" style="posButton" content="" alignment="Center"/>
             <Button name="" x="228" y="69" w="75" h="68" style="posButton" content="" alignment="Center"/>
 
