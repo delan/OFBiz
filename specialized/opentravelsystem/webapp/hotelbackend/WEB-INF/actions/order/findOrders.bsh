@@ -80,7 +80,7 @@ if (currentWebSiteId != null && currentWebSiteId.length() > 0) {
     context.put("currentWebSite", currentWebSite);
 }
 
-// current store
+//current store
 currentProductStoreId = request.getParameter("productStoreId");
 if (currentProductStoreId != null && currentProductStoreId.length() > 0) {
     currentProductStore = delegator.findByPrimaryKeyCache("ProductStore", UtilMisc.toMap("productStoreId", currentProductStoreId));
@@ -204,7 +204,7 @@ if (lookupFlag != null) {
         minDate = request.getParameter("minDate");
         maxDate = request.getParameter("maxDate");
 
-        if (productStoreId == null) productStoreId = "ANY";
+        productStoreId =  context.get("productStoreId");
         if (webSiteId == null) webSiteId = "ANY";
         if (roleType == null) roleType = "ANY";
         if (orderType == null) orderType = "ANY";

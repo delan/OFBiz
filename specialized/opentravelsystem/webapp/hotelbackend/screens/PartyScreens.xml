@@ -61,13 +61,13 @@
                 <set field="productStoreId" from-scope="application" from-field="productStoreId"/>
                 <property-map resource="PartyUiLabels" map-name="uiLabelMap" global="true"/>
                 <entity-condition entity-name="CustomerSummary" list-name="customers">
-                        <condition-expr field-name="productStoreId" operator="equals" value="${productStoreId}"/>
+                        <condition-expr field-name="productStoreId" operator="equals"  env-name="productStoreId"/>
                 </entity-condition>
             </actions>
             <widgets>
                 <decorator-screen name="CommonPartyDecorator">
                     <decorator-section name="body">
-                            <label style="head1">Customer list.&lt;br&gt;</label>
+                            <label style="head1">List of customers who placed an order.&lt;br&gt;</label>
                         <include-form name="ListCustomers" location="component://opentravelsystem/webapp/hotelbackend/screens/PartyForms.xml"/>
                     </decorator-section>
                 </decorator-screen>
@@ -98,4 +98,53 @@
             </widgets>
         </section>
     </screen>
+    <screen name="visitdetail">
+        <section>
+            <actions>
+                <set field="page.appTabButtonItem" value="Customers"/>
+                <set field="page.headerItem" value="main"/>
+                <set field="productStoreId" from-scope="application" from-field="productStoreId"/>
+                <property-map resource="PartyUiLabels" map-name="uiLabelMap" global="true"/>
+                <script location="component://party/webapp/partymgr/WEB-INF/actions/visit/visitdetail.bsh"/>
+            </actions>
+            <widgets>
+                <decorator-screen name="CommonPartyDecorator">
+                    <decorator-section name="body">
+                        <container>
+                            <platform-specific>
+                                <html>
+                                    <html-template location="component://party/webapp/partymgr/visit/visitdetail.ftl"/>
+                                </html>
+                            </platform-specific>
+                        </container>
+                    </decorator-section>
+                </decorator-screen>
+            </widgets>
+        </section>
+    </screen>
+    
+    <screen name="findordersCust">
+        <section>
+            <actions>
+                <set field="page.appTabButtonItem" value="Customers"/>
+                <set field="page.headerItem" value="main"/>
+                <property-map resource="OrderUiLabels" map-name="uiLabelMap" global="true"/>
+                <set field="productStoreId" from-scope="application" from-field="productStoreId"/>
+                <set field="productStoreId" to-scope="user" value="${productStoreId}"/>
+                <script location="component://opentravelsystem/webapp/hotelbackend/WEB-INF/actions/order/findOrders.bsh"/>
+            </actions>
+            <widgets>
+                <decorator-screen name="CommonPartyDecorator">
+                    <decorator-section name="body">
+                        <platform-specific>
+                            <html>
+                                <html-template location="component://opentravelsystem/webapp/hotelbackend/order/findOrders.ftl"/>
+                            </html>
+                        </platform-specific>
+                    </decorator-section>
+                </decorator-screen>
+            </widgets>
+        </section>
+    </screen>
+    
 </screens>

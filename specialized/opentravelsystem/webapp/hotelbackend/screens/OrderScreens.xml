@@ -33,14 +33,14 @@
                     <decorator-section name="body">
                         <section>
                             <widgets>
-<!--                                 <platform-specific>
+                                 <platform-specific>
                                     <html>
-                                        <html-template location="component://opentravelsystem/webapp/hotelbackend/includes/appheader.ftl"/>
+                                        <html-template location="component://opentravelsystem/webapp/hotelbackend/includes/appheaderOrder.ftl"/>
                                     </html>
                                 </platform-specific>
- -->                                <container style="contentarea">
+                                <container style="contentarea">
                                     <!-- by default will render left-bar only if leftbarScreen value not empty -->
-                                    <include-screen name="${leftbarScreenName}" location="${leftbarScreenLocation}"/>
+                                    <!--include-screen name="${leftbarScreenName}" location="${leftbarScreenLocation}"/-->
                                     <decorator-section-include name="body"/>
                                 </container>
                             </widgets>
@@ -57,8 +57,10 @@
         <section>
             <actions>
                 <set field="page.appTabButtonItem" value="Reservations"/>
-                <set field="page.headerItem" value="main"/>
+                <set field="page.headerItem" value="findorders"/>
                 <property-map resource="OrderUiLabels" map-name="uiLabelMap" global="true"/>
+                <set field="productStoreId" from-scope="application" from-field="productStoreId"/>
+                <set field="productStoreId" to-scope="user" value="${productStoreId}"/>
                 <script location="component://opentravelsystem/webapp/hotelbackend/WEB-INF/actions/order/findOrders.bsh"/>
             </actions>
             <widgets>
@@ -75,27 +77,184 @@
         </section>
     </screen>
 
-    <screen name="orderstatus">
+    <screen name="orderview">
         <section>
             <actions>
                 <set field="page.appTabButtonItem" value="Reservations"/>
                 <set field="page.headerItem" value="main"/>
                 <property-map resource="OrderUiLabels" map-name="uiLabelMap" global="true"/>
                 <set field="orderId" from-field="parameters.order_id"/>
-                <entity-one entity-name="OrderHeader" value-name="orderHeader"></entity-one>
-                <!--script location="component://ecommerce/webapp/ecommerce/WEB-INF/actions/order/orderstatus.bsh"/-->
+                <script location="component://order/webapp/ordermgr/WEB-INF/actions/order/orderview.bsh"/>
             </actions>
             <widgets>
                 <decorator-screen name="CommonOrderDecorator">
                     <decorator-section name="body">
                         <platform-specific>
                             <html>
-                                <html-template location="component://ecommerce/webapp/ecommerce/order/orderheader.ftl"/>
+                                <html-template location="component://opentravelsystem/webapp/hotelbackend/order/orderheader.ftl"/>
+                             </html>
+                        </platform-specific>
+                        <platform-specific>
+                            <html>
+                                <html-template location="component://opentravelsystem/webapp/hotelbackend/order/orderitems.ftl"/>
                             </html>
+                        </platform-specific>
+                        <platform-specific>
+                            <html>
+                                <html-template location="component://order/webapp/ordermgr/order/ordernotes.ftl"/>
+                             </html>
+                        </platform-specific>
+                        <platform-specific>
+                            <html>
+                                <html-template location="component://order/webapp/ordermgr/order/transitions.ftl"/>
+                             </html>
                         </platform-specific>
                     </decorator-section>
                 </decorator-screen>
             </widgets>
         </section>
     </screen>
+
+    <screen name="downloadorder">
+        <section>
+            <actions>
+                <set field="page.appTabButtonItem" value="Reservations"/>
+                <set field="page.headerItem" value="downloadorder"/>
+                <property-map resource="OrderUiLabels" map-name="uiLabelMap" global="true"/>
+                <set field="orderId" from-field="parameters.order_id"/>
+            </actions>
+            <widgets>
+                <decorator-screen name="CommonOrderDecorator">
+                    <decorator-section name="body">
+                        <platform-specific>
+                            <html>
+                                <html-template location="component://opentravelsystem/webapp/hotelbackend/order/orderdownload.ftl"/>
+                             </html>
+                        </platform-specific>
+                    </decorator-section>
+                </decorator-screen>
+            </widgets>
+        </section>
+    </screen>
+    <screen name="statistics">
+        <section>
+            <actions>
+                <set field="page.appTabButtonItem" value="Reservations"/>
+                <set field="page.headerItem" value="statistics"/>
+                <property-map resource="OrderUiLabels" map-name="uiLabelMap" global="true"/>
+                <script location="component://opentravelsystem/webapp/hotelbackend/WEB-INF/actions/order/orderstats.bsh"/>
+            </actions>
+            <widgets>
+                <decorator-screen name="CommonOrderDecorator">
+                    <decorator-section name="body">
+                        <platform-specific>
+                            <html>
+                                <html-template location="component://opentravelsystem/webapp/hotelbackend/order/orderstats.ftl"/>
+                             </html>
+                        </platform-specific>
+                    </decorator-section>
+                </decorator-screen>
+            </widgets>
+        </section>
+    </screen>
+        <screen name="reports">
+        <section>
+            <actions>
+                <set field="page.appTabButtonItem" value="Reservations"/>
+                <set field="page.headerItem" value="reports"/>
+                <property-map resource="OrderUiLabels" map-name="uiLabelMap" global="true"/>
+                <set field="title" value="Order Purchase Report Options"/>
+                <!-- <set field="titleProperty" value=""/> -->
+            </actions>
+            <widgets>
+                <decorator-screen name="CommonOrderDecorator">
+                    <decorator-section name="body">
+                        <container>
+                            <label style="head1" text="Order Reports"/>
+                        </container>
+                        <container>
+                            <label style="head2" text="Purchases by Product Report"/>
+                            <include-form name="OrderPurchaseProductOptions" location="component://opentravelsystem/webapp/hotelbackend/screens/ReportForms.xml"/>
+                        </container>
+                        <container>
+                            <label style="head2" text="Purchases by Payment Method Report"/>
+                            <include-form name="OrderPurchasePaymentOptions" location="component://opentravelsystem/webapp/hotelbackend/screens/ReportForms.xml"/>
+                        </container>
+                    </decorator-section>
+                </decorator-screen>
+            </widgets>
+        </section>
+    </screen>
+    
+    <screen name="OrderPurchaseReportPayment">
+        <section>
+            <actions>
+                <set field="title" value="Order Purchase Report Payment"/>
+                <entity-condition entity-name="OrderPurchasePaymentSummary" list-name="orderPurchasePaymentSummaryList">
+                    <condition-list combine="and">
+                        <condition-expr field-name="productStoreId" operator="equals" env-name="parameters.productStoreId" ignore-if-empty="true"/>
+                        <condition-expr field-name="originFacilityId" operator="equals" env-name="parameters.originFacilityId" ignore-if-empty="true"/>
+                        <condition-expr field-name="terminalId" operator="equals" env-name="parameters.terminalId" ignore-if-empty="true"/>
+                        <condition-expr field-name="statusId" operator="equals" env-name="parameters.statusId" ignore-if-empty="true"/>
+                        <condition-expr field-name="orderDate" operator="greater-equals" env-name="parameters.fromOrderDate" ignore-if-null="true"/>
+                        <condition-expr field-name="orderDate" operator="less" env-name="parameters.thruOrderDate" ignore-if-null="true"/>
+                    </condition-list>
+                    <select-field field-name="productStoreId"/>
+                    <select-field field-name="originFacilityId"/>
+                    <select-field field-name="terminalId"/>
+                    <select-field field-name="statusId"/>
+                    <select-field field-name="paymentMethodTypeId"/>
+                    <select-field field-name="description"/>
+                    <select-field field-name="maxAmount"/>
+                    <order-by field-name="productStoreId"/>
+                    <order-by field-name="originFacilityId"/>
+                    <order-by field-name="terminalId"/>
+                    <order-by field-name="paymentMethodTypeId"/>
+                </entity-condition>
+            </actions>
+            <widgets>
+                <platform-specific>
+                    <!-- NOTE: this is really generating XSL:FO, but the HTML oriented renderer should do fine, the screen will need to be called differently though to get binary output from it -->
+                    <html><html-template location="component://order/webapp/ordermgr/reports/OrderPurchaseReportPayment.fo.ftl"/></html>
+                </platform-specific>
+            </widgets>
+        </section>
+    </screen>
+    <screen name="OrderPurchaseReportProduct">
+        <section>
+            <actions>
+                <set field="title" value="Order Purchase Report Product"/>
+                <entity-condition entity-name="OrderPurchaseProductSummary" list-name="orderPurchaseProductSummaryList">
+                    <condition-list combine="and">
+                        <condition-expr field-name="productStoreId" operator="equals" env-name="parameters.productStoreId" ignore-if-empty="true"/>
+                        <condition-expr field-name="originFacilityId" operator="equals" env-name="parameters.originFacilityId" ignore-if-empty="true"/>
+                        <condition-expr field-name="terminalId" operator="equals" env-name="parameters.terminalId" ignore-if-empty="true"/>
+                        <condition-expr field-name="statusId" operator="equals" env-name="parameters.statusId" ignore-if-empty="true"/>
+                        <condition-expr field-name="orderDate" operator="greater-equals" env-name="parameters.fromOrderDate" ignore-if-null="true"/>
+                        <condition-expr field-name="orderDate" operator="less" env-name="parameters.thruOrderDate" ignore-if-null="true"/>
+                    </condition-list>
+                    <select-field field-name="productStoreId"/>
+                    <select-field field-name="originFacilityId"/>
+                    <select-field field-name="terminalId"/>
+                    <select-field field-name="statusId"/>
+                    <select-field field-name="productId"/>
+                    <select-field field-name="internalName"/>
+                    <select-field field-name="quantity"/>
+                    <select-field field-name="cancelQuantity"/>
+                    <order-by field-name="productStoreId"/>
+                    <order-by field-name="originFacilityId"/>
+                    <order-by field-name="terminalId"/>
+                    <order-by field-name="productId"/>
+                </entity-condition>
+                <!-- <script location="component://order/widget/test.bsh"/> -->
+            </actions>
+            <widgets>
+                <platform-specific>
+                    <!-- NOTE: this is really generating XSL:FO, but the HTML oriented renderer should do fine, the screen will need to be called differently though to get binary output from it -->
+                    <html><html-template location="component://order/webapp/ordermgr/reports/OrderPurchaseReportProduct.fo.ftl"/></html>
+                </platform-specific>
+            </widgets>
+        </section>
+    </screen>
+    
 </screens>

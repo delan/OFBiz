@@ -34,12 +34,12 @@
                     <decorator-section name="body">
                         <section>
                             <widgets>
-<!--                                 <platform-specific>
+                                 <platform-specific>
                                     <html>
-                                        <html-template location="component://opentravelsystem/webapp/hotelbackend/includes/appheader.ftl"/>
+                                        <html-template location="component://opentravelsystem/webapp/hotelbackend/includes/appheaderMain.ftl"/>
                                     </html>
                                 </platform-specific>
- -->                                <container style="contentarea">
+                                <container style="contentarea">
                                     <!-- by default will render left-bar only if leftbarScreen value not empty -->
                                     <include-screen name="${leftbarScreenName}" location="${leftbarScreenLocation}"/>
                                     <decorator-section-include name="body"/>
@@ -64,6 +64,7 @@
                 <decorator-screen name="CommonMainDecorator">
                     <decorator-section name="body">
                         <!--content content-id="otsfrontpage"/--> <!-- get page from internal cms instead of main.ftl below-->
+                        <!--content content-id="otsxmlxsl"/--> <!-- xml/xsl test-->
                         <platform-specific>
                             <html>
                                 <html-template location="component://opentravelsystem/webapp/hotelbackend/main.ftl"/>

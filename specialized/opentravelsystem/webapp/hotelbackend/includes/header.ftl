@@ -53,7 +53,10 @@
         <tr>
           <#if layoutSettings.headerImageUrl?exists>
           <td align=left width='1%'><img alt="${layoutSettings.companyName}" src='<@ofbizContentUrl>${layoutSettings.headerImageUrl}</@ofbizContentUrl>'></td>
-          </#if>       
+          </#if>  
+            <#if userLogin?has_content && productStoreId?exists>
+				<td class="head2"><center><u>Store Name: ${productStoreId}</u></center></td/>
+			</#if>
           <td align='right' width='1%' nowrap <#if layoutSettings.headerRightBackgroundUrl?has_content>background='${layoutSettings.headerRightBackgroundUrl}'</#if>>
             <#if person?has_content>
               <div class="insideHeaderText">${uiLabelMap.CommonWelcome}&nbsp;${person.firstName?if_exists}&nbsp;${person.lastName?if_exists}!</div>

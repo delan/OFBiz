@@ -52,7 +52,7 @@
       <#list productStoreRoles as role>
         <#assign roleType = role.getRelatedOne("RoleType")>
         <tr> 
-          <td><a href="/partymgr/control/viewprofile?partyId=${role.partyId}&externalLoginKey=${requestAttributes.externalLoginKey}" class="buttontext">${role.partyId}</a></td>
+          <td><a href="viewprofile?partyId=${role.partyId}&externalLoginKey=${requestAttributes.externalLoginKey}" class="buttontext">${role.partyId}</a></td>
           <td><span class="tabletext">${roleType.description}</span></td>
           <td><span class="tabletext">${role.fromDate?string}</span></td>
           <td><span class="tabletext">${role.thruDate?default("N/A")?string?if_exists}</span></td>
@@ -60,7 +60,7 @@
             <td>&nbsp;</td>
           <#else>
             <td align="center">
-              <a href="<@ofbizUrl>/storeRemoveRole?productStoreId=${productStoreId}&partyId=${role.partyId}&roleTypeId=${role.roleTypeId}&fromDate=${role.fromDate}</@ofbizUrl>" class="buttontext">[${uiLabelMap.CommonDelete}]</a>
+              <a href="<@ofbizUrl>storeRemoveRole?productStoreId=${productStoreId}&partyId=${role.partyId}&roleTypeId=${role.roleTypeId}&fromDate=${role.fromDate}</@ofbizUrl>" class="buttontext">[${uiLabelMap.CommonDelete}]</a>
             </td>
           </#if>
         </tr>

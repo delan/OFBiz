@@ -45,7 +45,7 @@
  		,{"title":"Product",				"url":"mainCatalog"}
 <#-- 		,{"title":"Assets",				"url":"ListFixedAssets?parentFixedAssetId=${productStoreId}"}-->
 		,{"title":"Reservations",		"url":"findorders?productStoreId=${productStoreId}"}
-		,{"title":"Customers",			"url":"findparty?productStoreId=${productStoreId}&productStoreRole=ADMIN"}
+		,{"title":"Customers",			"url":"findparty"}
 		,{"title":"Settings",				"url":"mainSettings"}
 <#--		,{"title":"Profile",				"url":"EditProductStore?productStoreId=${productStoreId}"}-->
 		,{"title":"Website", 			"url":"http://127.0.0.1:8080/hotelfrontend?productStoreId=${productStoreId}"}
