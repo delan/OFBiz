@@ -69,6 +69,10 @@
   <Enumeration description="Other Change" enumCode="ODR_CHANGE" enumId="PRDS_ODR_CHANGE" enumTypeId="PRDS_EMAIL" sequenceId="04"/>  
   <Enumeration description="Retrieve Password" enumCode="PWD_RETRIEVE" enumId="PRDS_PWD_RETRIEVE" enumTypeId="PRDS_EMAIL" sequenceId="05"/>
     
+  <EnumerationType description="Facility Location Type" enumTypeId="FACLOC_TYPE" hasTable="N" parentTypeId=""/>
+  <Enumeration description="Pick/Primary" enumCode="PICKLOC" enumId="FLT_PICKLOC" enumTypeId="FACLOC_TYPE" sequenceId="01"/>
+  <Enumeration description="Bulk" enumCode="BULK" enumId="FLT_BULK" enumTypeId="FACLOC_TYPE" sequenceId="02"/>
+
   <FacilityType description="Building" facilityTypeId="BUILDING" hasTable="N" parentTypeId=""/>
   <FacilityType description="Floor" facilityTypeId="FLOOR" hasTable="N" parentTypeId=""/>
   <FacilityType description="Office" facilityTypeId="OFFICE" hasTable="N" parentTypeId=""/>
