@@ -560,6 +560,8 @@
       <field name="paymentMethodId" type="id"></field>
       <field name="maxAmount" type="currency-amount"></field>
       <field name="authRefNum" type="short-varchar"></field>
+      <field name="authMessage" type="long-varchar"></field>
+      <field name="statusId" type="id"></field>
       <prim-key field="orderPaymentPreferenceId"/>
       <relation type="one" rel-entity-name="OrderHeader">
         <key-map field-name="orderId"/>
@@ -569,6 +571,9 @@
       </relation>
       <relation type="one" rel-entity-name="PaymentMethod">
         <key-map field-name="paymentMethodId"/>
+      </relation>
+      <relation type="one" rel-entity-name="StatusItem">
+        <key-map field-name="statusId"/>
       </relation>
       <relation type="one-nofk" rel-entity-name="CreditCard">
         <key-map field-name="paymentMethodId"/>
