@@ -1,5 +1,5 @@
 /*
- * $Id: ModelMenuItem.java,v 1.2 2004/03/24 16:04:24 byersa Exp $
+ * $Id: ModelMenuItem.java,v 1.3 2004/03/29 18:14:16 byersa Exp $
  *
  * Copyright (c) 2003 The Open For Business Project - www.ofbiz.org
  *
@@ -59,7 +59,7 @@ import bsh.Interpreter;
  *
  * @author     <a href="mailto:jonesde@ofbiz.org">David E. Jones</a>
  * @author     <a href="mailto:byersa@automationgroups.com">Al Byers</a>
- * @version    $Revision: 1.2 $
+ * @version    $Revision: 1.3 $
  * @since      2.2
  */
 public class ModelMenuItem {
@@ -139,7 +139,7 @@ public class ModelMenuItem {
             hideIfSelected = null;
 
         dataMap.put("name", this.name);
-        dataMap.put("associatedContentId", this.associatedContentId);
+        //dataMap.put("associatedContentId", this.associatedContentId);
 
         // read in add target defs, add/override one by one using the targetList and targetMap
         List targetElements = UtilXml.childElementList(fieldElement, "target");
@@ -594,7 +594,6 @@ public class ModelMenuItem {
             + "\n     requestName=" + this.requestName
             + "\n     requestType=" + this.requestType
             + "\n\n");
-     
             
         return;
     }
@@ -608,6 +607,11 @@ public class ModelMenuItem {
         public String getMenuTargetTitle() {
             return this.targetTitle;
         }
+
+        public String getRequestName() {
+            return this.requestName;
+        }
+
         /**
          * @return
          */
@@ -631,9 +635,6 @@ public class ModelMenuItem {
             String paramStr = UtilHttp.urlEncodeArgs(thisParamMap);
             String questionMark = UtilValidate.isNotEmpty(paramStr) ? "?" : "";
             String url = "/" + this.requestName + questionMark + paramStr;
-            if (url.indexOf("null") >= 0) {
-                if (Debug.infoOn()) Debug.logInfo("in renderAsUrl, requestName: " + requestName, module);
-            }
             return url;
         }
 
@@ -739,6 +740,7 @@ public class ModelMenuItem {
            public Map getParamMap(Map context) {
                Map map = new HashMap();
                map.put(infoName, (String)getValue(context));
+               if (Debug.infoOn()) Debug.logInfo("in getParamMap, context: " + context + " map:" + map, module);
                return map;
            }
 

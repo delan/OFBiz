@@ -1,5 +1,5 @@
 /*
- * $Id: ContentServices.java,v 1.18 2004/03/24 16:04:16 byersa Exp $
+ * $Id: ContentServices.java,v 1.19 2004/03/29 18:14:14 byersa Exp $
  *
  *  Copyright (c) 2001, 2002 The Open For Business Project - www.ofbiz.org
  *
@@ -55,7 +55,7 @@ import org.ofbiz.content.content.PermissionRecorder;
  * ContentServices Class
  * 
  * @author <a href="mailto:byersa@automationgroups.com">Al Byers</a>
- * @version $Revision: 1.18 $
+ * @version $Revision: 1.19 $
  * @since 2.2
  * 
  *  
@@ -381,7 +381,7 @@ public class ContentServices {
             String errorMessage = "Permission to create contentAssoc:" + contentAssoc + " is denied."; 
             PermissionRecorder recorder = (PermissionRecorder)permResults.get("permissionRecorder");
                 //Debug.logInfo("recorder(0):" + recorder, "");
-            if (recorder != null) {
+            if (recorder != null && recorder.isOn()) {
                 String permissionMessage = recorder.toHtml();
                 //Debug.logInfo("permissionMessage(0):" + permissionMessage, "");
                 errorMessage += " \n " + permissionMessage;
@@ -567,7 +567,7 @@ public class ContentServices {
             String errorMessage = "Permission to update contentAssoc:" + contentAssoc + " is denied."; 
             PermissionRecorder recorder = (PermissionRecorder)permResults.get("permissionRecorder");
                 //Debug.logInfo("recorder(0):" + recorder, "");
-            if (recorder != null) {
+            if (recorder != null && recorder.isOn()) {
                 String permissionMessage = recorder.toHtml();
                 //Debug.logInfo("permissionMessage(0):" + permissionMessage, "");
                 errorMessage += " \n " + permissionMessage;

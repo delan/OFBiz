@@ -1,5 +1,5 @@
 /*
- * $Id: HtmlMenuRenderer.java,v 1.3 2004/03/24 16:04:22 byersa Exp $
+ * $Id: HtmlMenuRenderer.java,v 1.4 2004/03/29 18:14:15 byersa Exp $
  *
  * Copyright (c) 2003 The Open For Business Project - www.ofbiz.org
  *
@@ -54,7 +54,7 @@ import org.ofbiz.content.content.ContentPermissionServices;
  *
  * @author     <a href="mailto:jonesde@ofbiz.org">David E. Jones</a>
  * @author     <a href="mailto:byersa@automationgroups.com">Al Byers</a>
- * @version    $Revision: 1.3 $
+ * @version    $Revision: 1.4 $
  * @since      2.2
  */
 public class HtmlMenuRenderer implements MenuStringRenderer {
@@ -148,6 +148,7 @@ public class HtmlMenuRenderer implements MenuStringRenderer {
 
     public void renderMenuItem(StringBuffer buffer, Map context, ModelMenuItem menuItem) {
         
+            //Debug.logInfo("in renderMenuItem, menuItem:" + menuItem.getName() + " context:" + context ,"");
         boolean hideThisItem = isHideIfSelected(menuItem);
             //if (Debug.infoOn()) Debug.logInfo("in HtmlMenuRendererImage, hideThisItem:" + hideThisItem,"");
         if (hideThisItem)
@@ -189,7 +190,10 @@ public class HtmlMenuRenderer implements MenuStringRenderer {
 
     public void renderMenuOpen(StringBuffer buffer, Map context, ModelMenu modelMenu) {
 
-        userLoginIdHasChanged = userLoginIdHasChanged(); 
+        if (!userLoginIdHasChanged)
+            userLoginIdHasChanged = userLoginIdHasChanged(); 
+
+            Debug.logInfo("in HtmlMenuRenderer, userLoginIdHasChanged:" + userLoginIdHasChanged,"");
         String menuWidth = modelMenu.getMenuWidth();
         String widthStr = "";
         if (UtilValidate.isNotEmpty(menuWidth)) 
@@ -206,10 +210,13 @@ public class HtmlMenuRenderer implements MenuStringRenderer {
         buffer.append("</table> ");
         this.appendWhitespace(buffer);
         
+        userLoginIdHasChanged = userLoginIdHasChanged(); 
         GenericValue userLogin = (GenericValue)request.getSession().getAttribute("userLogin");
         if (userLogin != null) {
             String userLoginId = userLogin.getString("userLoginId");
-            request.getSession().setAttribute("userLoginIdAtPermGrant", userLoginId);
+            //request.getSession().setAttribute("userLoginIdAtPermGrant", userLoginId);
+            setUserLoginIdAtPermGrant(userLoginId);
+            //Debug.logInfo("in HtmlMenuRenderer, userLoginId(Close):" + userLoginId + " userLoginIdAtPermGrant:" + request.getSession().getAttribute("userLoginIdAtPermGrant"),"");
         } else {
             request.getSession().setAttribute("userLoginIdAtPermGrant", null);
         }
@@ -243,6 +250,7 @@ public class HtmlMenuRenderer implements MenuStringRenderer {
      * @param string
      */
     public void setUserLoginIdAtPermGrant(String string) {
+            //Debug.logInfo("in HtmlMenuRenderer,  userLoginIdAtPermGrant(setUserLoginIdAtPermGrant):" + string,"");
         this.userLoginIdAtPermGrant = string;
     }
 
@@ -285,7 +293,8 @@ public class HtmlMenuRenderer implements MenuStringRenderer {
 
         boolean hasChanged = false;
         GenericValue userLogin = (GenericValue)request.getSession().getAttribute("userLogin");
-        userLoginIdAtPermGrant = (String)request.getSession().getAttribute("userLoginIdAtPermGrant");
+        userLoginIdAtPermGrant = getUserLoginIdAtPermGrant();
+        //userLoginIdAtPermGrant = (String)request.getSession().getAttribute("userLoginIdAtPermGrant");
         String userLoginId = null;
         if (userLogin != null)
             userLoginId = userLogin.getString("userLoginId");
@@ -295,6 +304,13 @@ public class HtmlMenuRenderer implements MenuStringRenderer {
            || ((userLoginId != null && userLoginIdAtPermGrant != null)
               && !userLoginId.equals(userLoginIdAtPermGrant))) {
             hasChanged = true;
+        } else {
+            if (userLoginIdAtPermGrant != null)
+               hasChanged = true;
+            else
+               hasChanged = false;
+
+            userLoginIdAtPermGrant = null;
         }
         return hasChanged;
     }

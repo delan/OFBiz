@@ -1,5 +1,5 @@
 /*
- * $Id: CheckPermissionTransform.java,v 1.5 2004/03/24 16:04:19 byersa Exp $
+ * $Id: CheckPermissionTransform.java,v 1.6 2004/03/29 18:14:14 byersa Exp $
  * 
  * Copyright (c) 2001-2003 The Open For Business Project - www.ofbiz.org
  * 
@@ -54,7 +54,7 @@ import freemarker.template.TemplateModelException;
  * CheckPermissionTransform - Freemarker Transform for URLs (links)
  * 
  * @author <a href="mailto:byersa@automationgroups.com">Al Byers</a>
- * @version $Revision: 1.5 $
+ * @version $Revision: 1.6 $
  * @since 3.0
  */
 public class CheckPermissionTransform implements TemplateTransformModel {
@@ -126,13 +126,15 @@ public class CheckPermissionTransform implements TemplateTransformModel {
                 }
                 final GenericValue view = val;
                 currentContent = val;
-                if (currentContent != null)
-                    //Debug.logInfo("in CheckPermission, currentContent:" + currentContent.get("contentId"),"");
+                if (currentContent != null) {
+                    //Debug.logInfo("in CheckPermission, currentContent(0):" + currentContent.get("contentId"),"");
+                }
 
                 if (currentContent == null) {
                     currentContent = delegator.makeValue("Content", null);
                     currentContent.put("ownerContentId", templateCtx.get("ownerContentId"));
                 }
+                    //Debug.logInfo("in CheckPermission, currentContent(1):" + currentContent.get("contentId"),"");
         
                 Security security = null;
                 if (request != null) {

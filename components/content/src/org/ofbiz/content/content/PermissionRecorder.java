@@ -1,5 +1,5 @@
 /*
- * $Id: PermissionRecorder.java,v 1.2 2004/03/24 16:04:17 byersa Exp $
+ * $Id: PermissionRecorder.java,v 1.3 2004/03/29 18:14:14 byersa Exp $
  *
  * Copyright (c) 2001-2003 The Open For Business Project - www.ofbiz.org
  *
@@ -53,7 +53,7 @@ import org.ofbiz.service.ServiceUtil;
  * PermissionRecorder Class
  *
  * @author     <a href="mailto:byersa@automationgroups.com">Al Byers</a>
- * @version    $Revision: 1.2 $
+ * @version    $Revision: 1.3 $
  * @since      2.2
  * 
  * Services for granting operation permissions on Content entities in a data-driven manner.
@@ -182,6 +182,7 @@ public class PermissionRecorder {
     }
 
     public void startMatchGroup(List targetOperations, List purposes, List roles, List targStatusList, String targPrivilegeEnumId, String contentId) {
+
         currentContentMap = new HashMap();
         permCheckResults.add(currentContentMap);
         String s = null;
@@ -213,6 +214,8 @@ public class PermissionRecorder {
         currentContentMap.put("contentId", contentId);
         currentContentMap.put("checkResultList", new ArrayList());
         currentContentMap.put("matches", null);
+        currentContentId = contentId;
+            //if (Debug.infoOn()) Debug.logInfo("startMatchGroup, currentContentMap:" + currentContentMap, module);
     }
 
     public void record(GenericValue purposeOp, boolean targetOpCond, boolean purposeCond, boolean statusCond, boolean privilegeCond, boolean roleCond) {
@@ -225,6 +228,7 @@ public class PermissionRecorder {
         map.put("roleTypeIdCond", new Boolean(roleCond));
         map.put("contentId", currentContentId);
         ((List)currentContentMap.get("checkResultList")).add(map);
+            //if (Debug.infoOn()) Debug.logInfo("record, map:" + map, module);
     }
 
     public String toHtml() {
@@ -272,6 +276,7 @@ public class PermissionRecorder {
         Iterator iter = resultList.iterator();
         while (iter.hasNext()) {
             Map rMap = (Map)iter.next();
+            //if (Debug.infoOn()) Debug.logInfo("renderCCMapHtml, (1):" + rMap, module);
             sb.append(renderResultRowHtml(rMap, cMap));
         }
  
@@ -287,7 +292,7 @@ public class PermissionRecorder {
         sb.append("<tr>");
 
         sb.append("<td class=\"target\">");
-        sb.append((String)currentContentResultMap.get("contentId"));
+        sb.append((String)rMap.get("contentId"));
         sb.append("</td>");
 
         //if (Debug.infoOn()) Debug.logInfo("renderResultRowHtml, (1):" + sb.toString(), module);
