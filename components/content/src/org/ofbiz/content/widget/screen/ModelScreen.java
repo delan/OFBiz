@@ -1,5 +1,5 @@
 /*
- * $Id: ModelScreen.java,v 1.1 2004/07/10 15:49:14 jonesde Exp $
+ * $Id: ModelScreen.java,v 1.2 2004/07/10 17:08:48 jonesde Exp $
  *
  * Copyright (c) 2004 The Open For Business Project - www.ofbiz.org
  *
@@ -23,6 +23,7 @@
  */
 package org.ofbiz.content.widget.screen;
 
+import java.util.List;
 import java.util.Map;
 
 import org.ofbiz.entity.GenericDelegator;
@@ -33,7 +34,7 @@ import org.w3c.dom.Element;
  * Widget Library - Screen model class
  *
  * @author     <a href="mailto:jonesde@ofbiz.org">David E. Jones</a>
- * @version    $Revision: 1.1 $
+ * @version    $Revision: 1.2 $
  * @since      3.1
  */
 public class ModelScreen {
@@ -44,6 +45,9 @@ public class ModelScreen {
     protected LocalDispatcher dispatcher;
 
     protected String name;
+    
+    protected List actions;
+    protected Section section;
 
     // ===== CONSTRUCTORS =====
     /** Default Constructor */
@@ -89,5 +93,22 @@ public class ModelScreen {
     }
     public void setName(String name) {
         this.name = name;
+    }
+    
+    public static interface ScreenAction {
+        public void runAction(Map context);
+    }
+
+    public static interface ScreenWidget {
+        public void renderWidgetString(StringBuffer buffer, Map context, ScreenStringRenderer screenStringRenderer);
+    }
+    public static class Section implements ScreenWidget {
+        public Section(Element sectionElement) {
+            // TODO: implement this
+        }
+
+        public void renderWidgetString(StringBuffer buffer, Map context, ScreenStringRenderer screenStringRenderer) {
+            // TODO: implement this
+        }
     }
 }
