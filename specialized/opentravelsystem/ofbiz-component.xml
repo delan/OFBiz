@@ -43,8 +43,8 @@
     <!--entity-resource type="eca" reader-name="main" loader="main" location="entitydef/eecas.xml"/>
     <entity-resource type="data" reader-name="main" loader="main" location="data/ExampleTypeData.xml"/-->
 
-    <entity-resource type="data" reader-name="main" loader="main" location="webapp/frontend/data/HotelDemoStoreProduct.xml"/>
-    <entity-resource type="data" reader-name="main" loader="main" location="webapp/frontend/data/HotelDemoStoreShipping.xml"/>
+    <entity-resource type="data" reader-name="main" loader="main" location="data/HotelDemoStoreProduct.xml"/>
+    <entity-resource type="data" reader-name="main" loader="main" location="data/HotelDemoStoreShipping.xml"/>
     
     <!-- service resources: model(s), eca(s) and group definitions -->
     <service-resource type="model" loader="main" location="servicedef/services.xml"/>
