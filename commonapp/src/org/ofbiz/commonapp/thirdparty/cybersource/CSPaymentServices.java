@@ -464,13 +464,15 @@ public class CSPaymentServices {
         // Process the return codes and return a nice response
         try {
             if (reply.getReplyCode() > 0) {
-                paymentPreference.set("authRefNum", reply.getField("request_id"));
+                paymentPreference.set("authCode", reply.getField("auth_auth_code"));
                 paymentPreference.set("statusId", "PAYMENT_AUTHORIZED");
                 result.put("authResponse", "SUCCESS");
             } else {
                 paymentPreference.set("statusId", "PAYMENT_DECLINED");
                 result.put("authResponse", "FAIL");
             }
+            paymentPreference.set("authRefNum", reply.getField("request_id"));
+            paymentPreference.set("authFlag", reply.getField("ics_rflag"));
             paymentPreference.set("authMessage", reply.getErrorMessage());
             paymentPreference.store();
         } catch (ICSException ie) {
