@@ -82,8 +82,14 @@ public class JasperReportsPdfViewHandler implements ViewHandler {
             
             PipedOutputStream fillToPrintOutputStream = new PipedOutputStream();
             PipedInputStream fillToPrintInputStream = new PipedInputStream(fillToPrintOutputStream);
-            JasperFillManager.fillReportToStream(report, fillToPrintOutputStream, parameters, ConnectionFactory.getConnection(datasourceName));
-            JasperPrintManager.printReportToPdfStream(fillToPrintInputStream, response.getOutputStream());
+            //JasperFillManager.fillReportToStream(report, fillToPrintOutputStream, parameters, ConnectionFactory.getConnection(datasourceName));
+            //JasperPrintManager.printReportToPdfStream(fillToPrintInputStream, response.getOutputStream());
+
+            JasperPrint jp = JasperManager.fillReport(report,parameters,ConnectionFactory.getConnection(datasourceName));
+            if (jp.getPages().size() < 1) {
+                throw new ViewHandlerException("Report is Empty (no results?)");
+            }
+            JasperManager.printReportToPdfStream(jp, response.getOutputStream());
         } catch (IOException ie) {
             throw new ViewHandlerException("IO Error in region", ie);
         } catch (java.sql.SQLException e) {
