@@ -484,11 +484,10 @@
             package-name="org.ofbiz.commonapp.workeffort.scheduler"
             title="Recurrence Rule Entity">
       <field name="recurrenceRuleId" type="id-ne"></field>
-      <field name="startDateTime" type="date-time"></field>
-      <field name="endDateTime" type="date-time"></field>
-      <field name="count" type="numeric"></field>
-      <field name="interval" type="numeric"></field>
       <field name="frequency" type="short-varchar"></field>
+      <field name="until" type="date-time"></field>	
+      <field name="count" type="numeric"></field>
+      <field name="interval" type="numeric"></field>      
       <field name="bySecond" type="very-long"></field>
       <field name="byMinute" type="very-long"></field>
       <field name="byHour" type="very-long"></field>
@@ -499,7 +498,7 @@
       <field name="byMonth" type="very-long"></field>
       <field name="bySetPos" type="very-long"></field>
       <field name="weekStart" type="short-varchar"></field>
-      <field name="xName" type="very-long"></field>	
+      <field name="xName" type="very-long"></field>
       <prim-key field="recurrenceRuleId" />
     </entity>	
     <entity entity-name="RuntimeData" 
