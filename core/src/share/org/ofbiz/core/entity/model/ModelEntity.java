@@ -82,6 +82,25 @@ public class ModelEntity {
     }
   }
   
+  public boolean isField(String fieldName) {
+    if(fieldName == null) return false;
+    for(int i=0; i<fields.size(); i++) {
+      ModelField field = (ModelField)fields.get(i);
+      if(field.name.equals(fieldName)) return true;
+    }
+    return false;
+  }
+  
+  public boolean areFields(Collection fieldNames) {
+    if(fieldNames == null) return false;
+    Iterator iter = fieldNames.iterator();
+    while(iter.hasNext()) {
+      String fieldName = (String)iter.next();
+      if(!isField(fieldName)) return false;
+    }
+    return true;
+  }
+  
   public ModelField getField(String fieldName) {
     if(fieldName == null) return null;
     for(int i=0; i<fields.size(); i++) {
