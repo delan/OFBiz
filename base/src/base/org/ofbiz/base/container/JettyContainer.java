@@ -1,5 +1,5 @@
 /*
- * $Id: JettyContainer.java,v 1.14 2003/09/14 18:17:18 ajzeneski Exp $
+ * $Id: JettyContainer.java,v 1.15 2003/10/22 23:03:39 ajzeneski Exp $
  *
  * Copyright (c) 2003 The Open For Business Project - www.ofbiz.org
  *
@@ -53,44 +53,44 @@ import org.ofbiz.base.util.UtilURL;
  * JettyContainer - Container implementation for Jetty
  * This container depends on the ComponentContainer as well.
  *
- * @author     <a href="mailto:jaz@ofbiz.org">Andy Zeneski</a> 
-  *@version    $Revision: 1.14 $
+ * @author     <a href="mailto:jaz@ofbiz.org">Andy Zeneski</a>
+  *@version    $Revision: 1.15 $
  * @since      3.0
  */
 public class JettyContainer implements Container {
-    
-    public static final String module = JettyContainer.class.getName();    
+
+    public static final String module = JettyContainer.class.getName();
     private Map servers = new HashMap();
-    
+
     private void init(String configFile) throws ContainerException {
-        // configure jetty logging        
+        // configure jetty logging
         Log log = Log.instance();
         log.disableLog();
         Log4jSink sink = new Log4jSink();
         log.add(sink);
-        sink.setOptions(UtilURL.fromResource("debug.properties").toExternalForm());        
+        sink.setOptions(UtilURL.fromResource("debug.properties").toExternalForm());
         try {
             sink.start();
         } catch (Exception e) {
-            Debug.logWarning(e, module);            
+            Debug.logWarning(e, module);
         }
 
-        // get the container        
+        // get the container
         ContainerConfig.Container jc = ContainerConfig.getContainer("jetty-container", configFile);
-                        
+
         // create the servers
         Iterator sci = jc.properties.values().iterator();
         while (sci.hasNext()) {
             ContainerConfig.Container.Property prop = (ContainerConfig.Container.Property) sci.next();
-            servers.put(prop.name, createServer(prop.name, prop));                                   
+            servers.put(prop.name, createServer(prop.name, prop));
         }
-        
+
         // load the applications
         Collection componentConfigs = ComponentConfig.getAllComponents();
         if (componentConfigs != null) {
             Iterator components = componentConfigs.iterator();
             while (components.hasNext()) {
-                ComponentConfig component = (ComponentConfig) components.next();                
+                ComponentConfig component = (ComponentConfig) components.next();
                 Iterator appInfos = component.getWebappInfos().iterator();
                 while (appInfos.hasNext()) {
                     ComponentConfig.WebappInfo appInfo = (ComponentConfig.WebappInfo) appInfos.next();
@@ -101,50 +101,50 @@ public class JettyContainer implements Container {
                         Debug.logWarning("Server with name [" + appInfo.server + "] not found; not mounting [" + appInfo.name + "]", module);
                     } else {
                         try {
-                            // set the root location (make sure we set the paths correctly)                           
+                            // set the root location (make sure we set the paths correctly)
                             String location = component.getRootLocation() + appInfo.location;
                             location = location.replace('\\', '/');
                             if (!location.endsWith("/")) {
                                 location = location + "/";
                             }
-                            
+
                             // load the application
                             WebApplicationContext ctx = server.addWebApplication(appInfo.mountPoint, location);
                             ctx.setAttribute("_serverId", appInfo.server);
-                            
+
                             // set the virtual hosts
                             Iterator vh = virtualHosts.iterator();
                             while (vh.hasNext()) {
-                            	ctx.addVirtualHost((String)vh.next());
+                                ctx.addVirtualHost((String)vh.next());
                             }
-                            
+
                             // set the init parameters
                             Iterator ip = initParameters.keySet().iterator();
                             while (ip.hasNext()) {
                                 String paramName = (String) ip.next();
                                 ctx.setInitParameter(paramName, (String) initParameters.get(paramName));
                             }
-			
+
                         } catch (IOException e) {
-                            Debug.logError(e, "Problem mounting application [" + appInfo.name + " / " + appInfo.location + "]", module);                        
+                            Debug.logError(e, "Problem mounting application [" + appInfo.name + " / " + appInfo.location + "]", module);
                         }
-                    }                    
-                }                        
+                    }
+                }
             }
-        }                
+        }
     }
-    
+
     private Server createServer(String serverName, ContainerConfig.Container.Property serverConfig) throws ContainerException {
-        Server server = new Server();        
-        
+        Server server = new Server();
+
         // configure the listeners/loggers
         int listeners = 0;
         Iterator properties = serverConfig.properties.values().iterator();
         while (properties.hasNext()) {
-            ContainerConfig.Container.Property props = 
+            ContainerConfig.Container.Property props =
                     (ContainerConfig.Container.Property) properties.next();
-                                
-            if ("listener".equals(props.value)) {                        
+
+            if ("listener".equals(props.value)) {
                 if ("default".equals(props.getProperty("type").value)) {
                     SocketListener listener = new SocketListener();
                     setListenerOptions(listener, props, serverName);
@@ -158,19 +158,19 @@ public class JettyContainer implements Container {
                         if (value > 0) {
                             listener.setLowResourcePersistTimeMs(value);
                         }
-                    }                
-                    server.addListener(listener);                                               
+                    }
+                    server.addListener(listener);
                 } else if ("sun-jsse".equals(props.getProperty("type").value)) {
                     SunJsseListener listener = new SunJsseListener();
                     setListenerOptions(listener, props, serverName);
                     if (props.getProperty("keystore") != null) {
-                        listener.setKeystore(props.getProperty("keystore").value);    
+                        listener.setKeystore(props.getProperty("keystore").value);
                     }
                     if (props.getProperty("password") != null) {
-                        listener.setPassword(props.getProperty("password").value);    
-                    }                
+                        listener.setPassword(props.getProperty("password").value);
+                    }
                     if (props.getProperty("key-password") != null) {
-                        listener.setKeyPassword(props.getProperty("key-password").value);    
+                        listener.setKeyPassword(props.getProperty("key-password").value);
                     }
                     if (props.getProperty("low-resource-persist-time") != null) {
                         int value = 0;
@@ -182,7 +182,7 @@ public class JettyContainer implements Container {
                         if (value > 0) {
                             listener.setLowResourcePersistTimeMs(value);
                         }
-                    }                                               
+                    }
                     server.addListener(listener);
                 } else if ("ibm-jsse".equals(props.getProperty("type").value)) {
                     throw new ContainerException("Listener not supported yet [" + props.getProperty("type").value + "]");
@@ -191,35 +191,35 @@ public class JettyContainer implements Container {
                 } else if ("ajp13".equals(props.getProperty("type").value)) {
                     AJP13Listener listener = new AJP13Listener();
                     setListenerOptions(listener, props, serverName);
-                    server.addListener(listener);                
+                    server.addListener(listener);
                 }
             } else if ("request-log".equals(props.value)) {
                 NCSARequestLog rl = new NCSARequestLog();
-                
+
                 if (props.getProperty("filename") != null) {
                     rl.setFilename(props.getProperty("filename").value);
                 }
-                
+
                 if (props.getProperty("append") != null) {
                     rl.setAppend("true".equalsIgnoreCase(props.getProperty("append").value));
                 }
-                
+
                 if (props.getProperty("buffered") != null) {
                     rl.setBuffered("true".equalsIgnoreCase(props.getProperty("buffered").value));
                 }
-                
+
                 if (props.getProperty("extended") != null) {
                     rl.setExtended("true".equalsIgnoreCase(props.getProperty("extended").value));
                 }
-                
+
                 if (props.getProperty("timezone") != null) {
                     rl.setLogTimeZone(props.getProperty("timezone").value);
                 }
-                
+
                 if (props.getProperty("date-format") != null) {
                     rl.setLogDateFormat(props.getProperty("date-format").value);
                 }
-                
+
                 if (props.getProperty("retain-days") != null) {
                     int days = 90;
                     try {
@@ -227,24 +227,24 @@ public class JettyContainer implements Container {
                     } catch (NumberFormatException e) {
                         days = 90;
                     }
-                    rl.setRetainDays(days);                   
+                    rl.setRetainDays(days);
                 }
-                server.setRequestLog(rl);               
-            }                       
+                server.setRequestLog(rl);
+            }
         }
         return server;
-    }  
-    
+    }
+
     private void setListenerOptions(ThreadedServer listener, ContainerConfig.Container.Property listenerProps, String serverName) throws ContainerException {
         String systemHost = null;
         if ("default".equals(listenerProps.getProperty("type").value)) {
-            systemHost = System.getProperty(serverName + ".host");            
+            systemHost = System.getProperty(listenerProps.name + ".host");
         }
         if (listenerProps.getProperty("host") != null && systemHost == null) {
             try {
                 listener.setHost(listenerProps.getProperty("host").value);
             } catch (UnknownHostException e) {
-                throw new ContainerException(e);                       
+                throw new ContainerException(e);
             }
         } else {
             String host = "0.0.0.0";
@@ -255,12 +255,12 @@ public class JettyContainer implements Container {
                 listener.setHost(host);
             } catch (UnknownHostException e) {
                 throw new ContainerException(e);
-            }          
+            }
         }
-        
+
         String systemPort = null;
         if ("default".equals(listenerProps.getProperty("type").value)) {
-            systemPort = System.getProperty(serverName + ".port");            
+            systemPort = System.getProperty(listenerProps.name + ".port");
         }
         if (listenerProps.getProperty("port") != null && systemPort == null) {
             int value = 8080;
@@ -270,7 +270,7 @@ public class JettyContainer implements Container {
                 value = 8080;
             }
             if (value == 0) value = 8080;
-            
+
             listener.setPort(value);
         } else {
             int port = 8080;
@@ -283,7 +283,7 @@ public class JettyContainer implements Container {
             }
             listener.setPort(port);
         }
-        
+
         if (listenerProps.getProperty("min-threads") != null) {
             int value = 0;
             try {
@@ -295,7 +295,7 @@ public class JettyContainer implements Container {
                 listener.setMinThreads(value);
             }
         }
-        
+
         if (listenerProps.getProperty("max-threads") != null) {
             int value = 0;
             try {
@@ -307,7 +307,7 @@ public class JettyContainer implements Container {
                 listener.setMaxThreads(value);
             }
         }
-        
+
         if (listenerProps.getProperty("max-idle-time") != null) {
             int value = 0;
             try {
@@ -318,29 +318,29 @@ public class JettyContainer implements Container {
             if (value > 0) {
                 listener.setMaxIdleTimeMs(value);
             }
-        }                                   
-    }  
-    
+        }
+    }
+
     /**
      * @see org.ofbiz.base.start.StartupContainer#start(java.lang.String)
      */
-    public boolean start(String configFile) throws ContainerException {        
+    public boolean start(String configFile) throws ContainerException {
         // start the server(s)
         this.init(configFile);
         if (servers != null) {
             Iterator i = servers.values().iterator();
             while (i.hasNext()) {
                 Server server = (Server) i.next();
-                try {                    
-                    server.start();                                                                              
-                } catch (MultiException e) {                    
+                try {
+                    server.start();
+                } catch (MultiException e) {
                     throw new ContainerException(e);
                 }
             }
-        }                                        
+        }
         return true;
     }
-        
+
     /**
      * @see org.ofbiz.base.start.StartupContainer#stop()
      */
@@ -352,11 +352,11 @@ public class JettyContainer implements Container {
                 try {
                     server.stop();
                 } catch (InterruptedException e) {
-                    Debug.logWarning(e, module);                    
+                    Debug.logWarning(e, module);
                 }
             }
         }
-    }              
+    }
 }
 
 // taken from JettyPlus
@@ -364,34 +364,34 @@ class Log4jSink implements LogSink {
 
     private String _options;
     private transient boolean _started;
-        
+
     public void setOptions(String filename) {
         _options=filename;
     }
-       
+
     public String getOptions() {
         return _options;
     }
-       
+
     public void start() throws Exception {
         _started=true;
     }
-       
-    public void stop() {    
+
+    public void stop() {
         _started=false;
     }
-   
-    public boolean isStarted() {    
+
+    public boolean isStarted() {
         return _started;
     }
-       
-    public void log(String tag, Object msg, Frame frame, long time) {    
+
+    public void log(String tag, Object msg, Frame frame, long time) {
         String method = frame.getMethod();
         int lb = method.indexOf('(');
         int ld = (lb > 0) ? method.lastIndexOf('.', lb) : method.lastIndexOf('.');
         if (ld < 0) ld = lb;
         String class_name = (ld > 0) ? method.substring(0,ld) : method;
-        
+
         Logger log = Logger.getLogger(class_name);
 
         Priority priority = Priority.INFO;
@@ -403,15 +403,15 @@ class Log4jSink implements LogSink {
         } else if (Log.FAIL.equals(tag)) {
             priority = Priority.FATAL;
         }
-        
+
         if (!log.isEnabledFor(priority)) {
             return;
         }
 
         log.log(Log4jSink.class.getName(), priority, "" + msg, null);
     }
-    
+
     public synchronized void log(String s) {
         Logger.getRootLogger().log("jetty.log4jSink", Priority.INFO, s, null);
-    }    
+    }
 }

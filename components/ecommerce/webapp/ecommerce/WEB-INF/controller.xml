@@ -342,13 +342,13 @@
     <request-map uri="calcTax">
         <security direct-request="false"/>
         <event type="java" path="org.ofbiz.order.shoppingcart.CheckOutEvents" invoke="calcTax"/>
-        <response name="success" type="request" value="validateBillAccts"/>
+        <response name="success" type="request" value="validatePaymentMethods"/>
         <response name="error" type="view" value="checkoutoptions"/>
     </request-map>
 
-    <request-map uri="validateBillAccts">
+    <request-map uri="validatePaymentMethods">
         <security direct-request="false"/>
-        <event type="java" path="org.ofbiz.order.shoppingcart.CheckOutEvents" invoke="checkBillingAccounts"/>
+        <event type="java" path="org.ofbiz.order.shoppingcart.CheckOutEvents" invoke="checkPaymentMethods"/>
         <response name="success" type="view" value="checkout"/>
         <response name="error" type="view" value="checkoutoptions"/>
     </request-map>

@@ -1,5 +1,5 @@
 /*
- * $Id: CheckOutEvents.java,v 1.11 2003/10/20 22:08:14 ajzeneski Exp $
+ * $Id: CheckOutEvents.java,v 1.12 2003/10/22 23:03:40 ajzeneski Exp $
  *
  *  Copyright (c) 2001, 2002 The Open For Business Project - www.ofbiz.org
  *
@@ -25,7 +25,9 @@ package org.ofbiz.order.shoppingcart;
 
 import java.text.DecimalFormat;
 import java.text.ParseException;
+import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 
@@ -58,7 +60,7 @@ import org.ofbiz.service.ServiceUtil;
  * @author     <a href="mailto:cnelson@einnovation.com">Chris Nelson</a>
  * @author     <a href="mailto:jonesde@ofbiz.org">David E. Jones</a>
  * @author     <a href="mailto:tristana@twibble.org">Tristan Austin</a>
- * @version    $Revision: 1.11 $
+ * @version    $Revision: 1.12 $
  * @since      2.0
  */
 public class CheckOutEvents {
@@ -149,23 +151,9 @@ public class CheckOutEvents {
         DecimalFormat formatter = new DecimalFormat(currencyFormat);
 
         // Set the payment options
-        Map selectedPaymentMethods = new HashMap();
-        String[] paymentMethods = request.getParameterValues("checkOutPaymentId");
-        if (paymentMethods != null) {
-            for (int i = 0; i < paymentMethods.length; i++) {
-                String amountStr = request.getParameter("amount_" + paymentMethods[i]);
-                Double amount = null;
-                if (amountStr != null) {
-                    try {
-                        amount = new Double(formatter.parse(amountStr).doubleValue());
-                    } catch (ParseException e) {
-                        Debug.logError(e, module);
-                        request.setAttribute("_ERROR_MESSAGE_", "<li>Invalid amount set for Payment method.");
-                        return "error";
-                    }
-                }
-                selectedPaymentMethods.put(paymentMethods[i], amount);
-            }
+        Map selectedPaymentMethods = getSelectedPaymentMethods(request);
+        if (selectedPaymentMethods == null) {
+            return "error";
         }
 
         String billingAccountId = request.getParameter("billingAccountId");
@@ -203,7 +191,7 @@ public class CheckOutEvents {
         return "success";
     }
 
-    public static String checkBillingAccounts(HttpServletRequest request, HttpServletResponse response) {
+    public static String checkPaymentMethods(HttpServletRequest request, HttpServletResponse response) {
         ShoppingCart cart = (ShoppingCart) request.getSession().getAttribute("shoppingCart");
         LocalDispatcher dispatcher = (LocalDispatcher) request.getAttribute("dispatcher");
         GenericDelegator delegator = (GenericDelegator) request.getAttribute("delegator");
@@ -227,20 +215,64 @@ public class CheckOutEvents {
             }
         }
 
-        // the payment method needs to be updated to make sure we set expect the right amount
-        // TODO: fix this to support multiple payment methods
-        double paymentMethodAmount = cart.getGrandTotal() - cart.getBillingAccountAmount();
+        // update the selected payment methods amount with valid numbers
         List paymentMethodIds = cart.getPaymentMethodIds();
-        if (paymentMethodIds.size() > 0) {
-            String paymentMethodId = (String) paymentMethodIds.get(0);
-            if (paymentMethodAmount > 0) {
-                cart.setPaymentMethodAmount(paymentMethodId, new Double(paymentMethodAmount));
-            } else {
-                cart.setPaymentMethodAmount(paymentMethodId, new Double(0.00));
+        if (paymentMethodIds != null) {
+            List nullPaymentIds = new ArrayList();
+            Iterator i = paymentMethodIds.iterator();
+            while (i.hasNext()) {
+                String paymentMethodId = (String) i.next();
+                Double paymentAmount = cart.getPaymentMethodAmount(paymentMethodId);
+                if (paymentAmount == null || paymentAmount.doubleValue() == 0) {
+                    nullPaymentIds.add(paymentMethodId);
+                }
+            }
+            Iterator npi = nullPaymentIds.iterator();
+            while (npi.hasNext()) {
+                String paymentMethodId = (String) npi.next();
+                double requiredAmount = cart.getGrandTotal() - cart.getBillingAccountAmount();
+                double selectedPaymentTotal = cart.getSelectedPaymentMethodsTotal();
+                double nullAmount = requiredAmount - selectedPaymentTotal;
+                if (nullAmount > 0) {
+                    cart.setPaymentMethodAmount(paymentMethodId, new Double(nullAmount));
+                }
             }
         }
 
+        // verify the selected payment method amounts will cover the total
+        double requiredAmount = cart.getGrandTotal() - cart.getBillingAccountAmount();
+        double selectedPaymentTotal = cart.getSelectedPaymentMethodsTotal();
+        if (requiredAmount > selectedPaymentTotal) {
+            request.setAttribute("_ERROR_MESSAGE_", "<li>Selected payment methods will not cover this order.");
+            return "error";
+        }
+
         return "success";
+    }
+
+    public static Map getSelectedPaymentMethods(HttpServletRequest request) {
+        String currencyFormat = UtilProperties.getPropertyValue("general.properties", "currency.decimal.format", "##0.00");
+        DecimalFormat formatter = new DecimalFormat(currencyFormat);
+        Map selectedPaymentMethods = new HashMap();
+        String[] paymentMethods = request.getParameterValues("checkOutPaymentId");
+        if (paymentMethods != null) {
+            for (int i = 0; i < paymentMethods.length; i++) {
+                String amountStr = request.getParameter("amount_" + paymentMethods[i]);
+                Double amount = null;
+                if (amountStr != null && amountStr.length() > 0 && !"REMAINING".equals(amountStr)) {
+                    try {
+                        amount = new Double(formatter.parse(amountStr).doubleValue());
+                    } catch (ParseException e) {
+                        Debug.logError(e, module);
+                        request.setAttribute("_ERROR_MESSAGE_", "<li>Invalid amount set for Payment method.");
+                        return null;
+                    }
+                }
+                selectedPaymentMethods.put(paymentMethods[i], amount);
+            }
+        }
+        Debug.logInfo("Selected Payment Methods : " + selectedPaymentMethods, module);
+        return selectedPaymentMethods;
     }
 
     public static String setCheckOutOptions(HttpServletRequest request, HttpServletResponse response) {
@@ -252,23 +284,10 @@ public class CheckOutEvents {
         String currencyFormat = UtilProperties.getPropertyValue("general.properties", "currency.decimal.format", "##0.00");
         DecimalFormat formatter = new DecimalFormat(currencyFormat);
 
-        Map selectedPaymentMethods = new HashMap();
-        String[] paymentMethods = request.getParameterValues("checkOutPaymentId");
-        if (paymentMethods != null) {
-            for (int i = 0; i < paymentMethods.length; i++) {
-                String amountStr = request.getParameter("amount_" + paymentMethods[i]);
-                Double amount = null;
-                if (amountStr != null) {
-                    try {
-                        amount = new Double(formatter.parse(amountStr).doubleValue());
-                    } catch (ParseException e) {
-                        Debug.logError(e, module);
-                        request.setAttribute("_ERROR_MESSAGE_", "<li>Invalid amount set for Payment method.");
-                        return "error";
-                    }
-                }
-                selectedPaymentMethods.put(paymentMethods[i], amount);
-            }
+        // Set the payment options
+        Map selectedPaymentMethods = getSelectedPaymentMethods(request);
+        if (selectedPaymentMethods == null) {
+            return "error";
         }
 
         String shippingMethod = request.getParameter("shipping_method");

@@ -1,5 +1,5 @@
 /*
- * $Id: ShoppingCart.java,v 1.9 2003/10/17 20:25:12 ajzeneski Exp $
+ * $Id: ShoppingCart.java,v 1.10 2003/10/22 23:03:40 ajzeneski Exp $
  *
  *  Copyright (c) 2001, 2002 The Open For Business Project - www.ofbiz.org
  *
@@ -49,7 +49,7 @@ import org.ofbiz.service.LocalDispatcher;
  * @author     <a href="mailto:jaz@ofbiz.org">Andy Zeneski</a>
  * @author     <a href="mailto:cnelson@einnovation.com">Chris Nelson</a>
  * @author     <a href="mailto:jonesde@ofbiz.org">David E. Jones</a>
- * @version    $Revision: 1.9 $
+ * @version    $Revision: 1.10 $
  * @since      2.0
  */
 public class ShoppingCart implements java.io.Serializable {
@@ -416,7 +416,25 @@ public class ShoppingCart implements java.io.Serializable {
 
     /** Returns set amount of the Payment Method. */
     public Double getPaymentMethodAmount(String paymentMethodId) {
-        return (Double) this.paymentMethodAmounts.get(paymentMethodId);
+        if (this.paymentMethodAmounts.get(paymentMethodId) != null) {
+            return (Double) this.paymentMethodAmounts.get(paymentMethodId);
+        } else {
+            return new Double(0.00);
+        }
+    }
+
+    /** Returns the total amount of the selected Payment Method(s). */
+    public double getSelectedPaymentMethodsTotal() {
+        double paymentMethodsTotal = 0.00;
+        Iterator i = this.getPaymentMethodIds().iterator();
+        while (i.hasNext()) {
+            String paymentMethodId = (String) i.next();
+            Double paymentTotal = (Double) this.paymentMethodAmounts.get(paymentMethodId);
+            if (paymentTotal != null) {
+                paymentMethodsTotal += paymentTotal.doubleValue();
+            }
+        }
+        return paymentMethodsTotal;
     }
 
     /** Returns a list of PaymentMethod value objects selected in the cart. */

@@ -1,5 +1,5 @@
 /*
- * $Id: PaymentGatewayServices.java,v 1.13 2003/10/15 22:19:40 ajzeneski Exp $
+ * $Id: PaymentGatewayServices.java,v 1.14 2003/10/22 23:03:39 ajzeneski Exp $
  *
  *  Copyright (c) 2002 The Open For Business Project - www.ofbiz.org
  *
@@ -43,6 +43,8 @@ import org.ofbiz.base.util.UtilValidate;
 import org.ofbiz.entity.GenericDelegator;
 import org.ofbiz.entity.GenericEntityException;
 import org.ofbiz.entity.GenericValue;
+import org.ofbiz.entity.condition.EntityExpr;
+import org.ofbiz.entity.condition.EntityOperator;
 import org.ofbiz.entity.util.EntityUtil;
 import org.ofbiz.order.order.OrderReadHelper;
 import org.ofbiz.party.contact.ContactHelper;
@@ -57,7 +59,7 @@ import org.ofbiz.service.ServiceUtil;
  * PaymentGatewayServices
  *
  * @author     <a href="mailto:jaz@ofbiz.org">Andy Zeneski</a>
- * @version    $Revision: 1.13 $
+ * @version    $Revision: 1.14 $
  * @since      2.0
  */
 public class PaymentGatewayServices {
@@ -164,6 +166,13 @@ public class PaymentGatewayServices {
                     continue;
                 }
             } else {
+                Debug.logInfo("Invalid OrderPaymentPreference; maxAmount is 0", module);
+                paymentPref.set("statusId", "PAYMENT_CANCELLED");
+                try {
+                    paymentPref.store();
+                } catch (GenericEntityException e) {
+                    Debug.logError(e, "ERROR: Problem setting OrderPaymentPreference status to CANCELLED", module);
+                }
                 finished.add(null);
             }
         }
@@ -302,10 +311,15 @@ public class PaymentGatewayServices {
         // get the billing information
         getBillingInformation(orh, paymentPreference, processContext);
 
-        // get the process amount.
+        // get the process amount
         double thisAmount = totalRemaining;
         if (paymentPreference.get("maxAmount") != null) {
             thisAmount = paymentPreference.getDouble("maxAmount").doubleValue();
+        }
+
+        // don't authorized more then what is required
+        if (thisAmount > totalRemaining) {
+            thisAmount = totalRemaining;
         }
 
         // format the decimal
@@ -684,7 +698,22 @@ public class PaymentGatewayServices {
         Iterator payments = paymentPrefs.iterator();
         while (payments.hasNext()) {
             GenericValue paymentPref = (GenericValue) payments.next();
-            Double authAmount = paymentPref.getDouble("maxAmount");
+            GenericValue authTrans = null;
+            try {
+                List order = UtilMisc.toList("transactionDate");
+                List transactions = paymentPref.getRelated("PaymentGatewayResponse", null, order);
+
+                List exprs = UtilMisc.toList(new EntityExpr("paymentServiceTypeEnumId", EntityOperator.EQUALS, "PRDS_PAY_AUTH"),
+                        new EntityExpr("paymentServiceTypeEnumId", EntityOperator.EQUALS, "PRDS_PAY_REAUTH"));
+
+                List authTransactions = EntityUtil.filterByOr(transactions, exprs);
+                authTrans = EntityUtil.getFirst(authTransactions);
+            } catch (GenericEntityException e) {
+                Debug.logError(e, "ERROR: Problem getting authorization information from PaymentGatewayResponse", module);
+                continue;
+            }
+
+            Double authAmount = authTrans.getDouble("amount");
             if (authAmount == null) authAmount = new Double(0.00);
             if (authAmount.doubleValue() == 0.00) {
                 // nothing to capture

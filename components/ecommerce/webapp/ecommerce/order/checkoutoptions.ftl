@@ -20,7 +20,7 @@
  *  THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  *
  *@author     Andy Zeneski (jaz@ofbiz.org)
- *@version    $Revision: 1.10 $
+ *@version    $Revision: 1.11 $
  *@since      2.1
 -->
 
@@ -59,6 +59,10 @@ function submitForm(form, mode, value) {
                 // edit eft account
                 form.action="<@ofbizUrl>/updateCheckoutOptions/editeftaccount?paymentMethodId="+value+"</@ofbizUrl>";
                 form.submit();
+        } else if (mode == "SP") {
+                // split payment
+                form.action="<@ofbizUrl>/updateCheckoutOptions/checkoutpayment</@ofbizUrl>";
+                form.submit();
         } else if (mode == "SA") {
         // selected shipping address
         form.action="<@ofbizUrl>/updateCheckoutOptions/quickcheckout</@ofbizUrl>";
@@ -84,6 +88,7 @@ function toggleBillingAccount(box) {
 <#assign uiLabelMap = requestAttributes.uiLabelMap>
 <#assign cart = context.shoppingCart?if_exists>
 <form method="post" name="checkoutInfoForm" style='margin:0;'>
+  <input type="hidden" name="DONE_PAGE" value="quickcheckout">
   <input type="hidden" name="BACK_PAGE" value="quickcheckout">
   <table width="100%" border="0" cellpadding='0' cellspacing='0'>
     <tr valign="top" align="left">
@@ -358,7 +363,7 @@ function toggleBillingAccount(box) {
                           <#assign creditCard = paymentMethod.getRelatedOne("CreditCard")>
                           <tr>
                             <td width="1%" nowrap>
-                              <input type="checkbox" name="checkOutPaymentId" value="${paymentMethod.paymentMethodId}" <#if cart.isPaymentMethodSelected(paymentMethod.paymentMethodId)>checked</#if>>
+                              <input type="radio" name="checkOutPaymentId" value="${paymentMethod.paymentMethodId}" <#if cart.isPaymentMethodSelected(paymentMethod.paymentMethodId)>checked</#if>>
                             </td>
                             <td width="50%" nowrap>
                               <span class="tabletext">CC:&nbsp;${Static["org.ofbiz.party.contact.ContactHelper"].formatCreditCard(creditCard)}</span>
@@ -369,7 +374,7 @@ function toggleBillingAccount(box) {
                           <#assign eftAccount = paymentMethod.getRelatedOne("EftAccount")>
                           <tr>
                             <td width="1%" nowrap>
-                              <input type="checkbox" name="checkOutPaymentId" value="${paymentMethod.paymentMethodId}" <#if cart.isPaymentMethodSelected(paymentMethod.paymentMethodId)>checked</#if>>
+                              <input type="radio" name="checkOutPaymentId" value="${paymentMethod.paymentMethodId}" <#if cart.isPaymentMethodSelected(paymentMethod.paymentMethodId)>checked</#if>>
                             </td>
                             <td width="50%" nowrap>
                               <span class="tabletext">EFT:&nbsp;${eftAccount.bankName?if_exists}: ${eftAccount.accountNumber?if_exists}</span>
@@ -424,6 +429,12 @@ function toggleBillingAccount(box) {
                     </#if>
                   </td>
                 </tr>
+                <tr>
+                  <td colspan="2" align="center">
+                    <div class="tabletext">
+                      <a href="javascript:submitForm(document.checkoutInfoForm, 'SP', '');" class="buttontext">[Split Payment]</a>
+                    </div>
+                  </td>
               </table>
             </td>
           </tr>
