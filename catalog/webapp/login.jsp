@@ -57,8 +57,8 @@
         <tr>
           <td align="center" valign="center" width='100%'>
               <form method="POST" action="<ofbiz:url>/login<%=UtilFormatOut.ifNotEmpty(previousParams, "?", "")%></ofbiz:url>" name="loginform" style='margin: 0;'>
-                <div align=center>Username:&nbsp;<input type="text" name="USERNAME" value="<%=UtilFormatOut.checkNull(request.getParameter("USERNAME"))%>" size="20"></div>
-                <div align=center>Password:&nbsp;<input type="password" name="PASSWORD" value="" size="20"></div>
+                <div class="tabletext" align=center>Username:&nbsp;<input type="text" name="USERNAME" value="<%=UtilFormatOut.checkNull(request.getParameter("USERNAME"))%>" size="20"></div>
+                <div class="tabletext" align=center>Password:&nbsp;<input type="password" name="PASSWORD" value="" size="20"></div>
                 <div align=center><input type="submit" value="Login"></div>
               </form>
           </td>
