@@ -288,6 +288,7 @@ public class CallService extends MethodOperation {
 
         String errorMessage = ServiceUtil.makeErrorMessage(result, messagePrefixStr, messageSuffixStr, errorPrefixStr, errorSuffixStr);
         if (UtilValidate.isNotEmpty(errorMessage)) {
+            errorMessage += " calling service " + serviceName + " in " + simpleMethod.getMethodName();
             if (methodContext.getMethodType() == MethodContext.EVENT) {
                 methodContext.putEnv(simpleMethod.getEventErrorMessageName(), errorMessage);
             } else if (methodContext.getMethodType() == MethodContext.SERVICE) {
