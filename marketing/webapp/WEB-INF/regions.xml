@@ -42,4 +42,26 @@
         <put section='title'>Login Page</put>
         <put section='content' content='/login.jsp'/>
     </define>
+
+    <define id='EditDataSources' region='MAIN_REGION'>
+        <put section='title'>Edit Data Sources</put>
+        <put section='content' content='/datasource/EditDataSources.jsp'/>
+    </define>
+
+    <define id='FindTrackingCode' region='MAIN_REGION'>
+        <put section='title'>Find Tracking Code</put>
+        <put section='content' content='/trackingcode/FindTrackingCode.jsp'/>
+    </define>
+    <define id='EditTrackingCode' region='MAIN_REGION'>
+        <put section='title'>Edit Tracking Code</put>
+        <put section='content' content='/trackingcode/EditTrackingCode.jsp'/>
+    </define>
+    <define id='FindTrackingCodeOrders' region='MAIN_REGION'>
+        <put section='title'>Find Tracking Code Orders</put>
+        <put section='content' content='/trackingcode/FindTrackingCodeOrders.jsp'/>
+    </define>
+    <define id='FindTrackingCodeVisits' region='MAIN_REGION'>
+        <put section='title'>Find Tracking Code Visits</put>
+        <put section='content' content='/trackingcode/FindTrackingCodeVisits.jsp'/>
+    </define>
 </regions>

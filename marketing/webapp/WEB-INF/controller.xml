@@ -49,7 +49,7 @@
 
     <!-- Request Mappings -->
     <request-map uri="view">
-        <security https="false" auth="false"/>
+        <security https="true" auth="true"/>
         <response name="success" type="view" value="main"/>
         <response name="error" type="view" value="error"/>
     </request-map>
@@ -60,20 +60,72 @@
         <response name="error" type="view" value="error"/>
     </request-map>
 
-    <request-map uri="main"><security https="false" auth="false"/>
+    <request-map uri="main"><security https="true" auth="true"/>
     	<response name="success" type="view" value="main"/>
     </request-map>
     
-    <request-map uri="changeDelegator">
+    <request-map uri="changeDelegator"><security https="true" auth="true"/>
         <event type="java" path="org.ofbiz.core.event.CoreEvents" invoke="changeDelegator"/>
         <response name="success" type="view" value="main"/>
         <response name="error" type="view" value="error"/>
-    </request-map>    
+    </request-map>
+    
+    <request-map uri="EditDataSources"><security https="true" auth="true"/>
+    	<response name="success" type="view" value="EditDataSources"/>
+    </request-map>
+    <request-map uri="createDataSource"><security https="true" auth="true"/>
+        <event type="service" path="" invoke="createDataSource"/>
+    	<response name="success" type="view" value="EditDataSources"/>
+    	<response name="error" type="view" value="EditDataSources"/>
+    </request-map>
+    <request-map uri="updateDataSource"><security https="true" auth="true"/>
+        <event type="service" path="" invoke="updateDataSource"/>
+    	<response name="success" type="view" value="EditDataSources"/>
+    	<response name="error" type="view" value="EditDataSources"/>
+    </request-map>
+    <request-map uri="deleteDataSource"><security https="true" auth="true"/>
+        <event type="service" path="" invoke="deleteDataSource"/>
+    	<response name="success" type="view" value="EditDataSources"/>
+    	<response name="error" type="view" value="EditDataSources"/>
+    </request-map>
+    
+    <request-map uri="FindTrackingCode"><security https="true" auth="true"/>
+    	<response name="success" type="view" value="FindTrackingCode"/>
+    </request-map>
+    
+    <request-map uri="EditTrackingCode"><security https="true" auth="true"/>
+    	<response name="success" type="view" value="EditTrackingCode"/>
+    </request-map>
+    <request-map uri="createTrackingCode"><security https="true" auth="true"/>
+        <event type="service" path="" invoke="createTrackingCode"/>
+    	<response name="success" type="view" value="EditTrackingCode"/>
+    	<response name="error" type="view" value="EditTrackingCode"/>
+    </request-map>
+    <request-map uri="updateTrackingCode"><security https="true" auth="true"/>
+        <event type="service" path="" invoke="updateTrackingCode"/>
+    	<response name="success" type="view" value="EditTrackingCode"/>
+    	<response name="error" type="view" value="EditTrackingCode"/>
+    </request-map>
+    
+    <request-map uri="FindTrackingCodeOrders"><security https="true" auth="true"/>
+    	<response name="success" type="view" value="FindTrackingCodeOrders"/>
+    </request-map>
+    <request-map uri="FindTrackingCodeVisits"><security https="true" auth="true"/>
+    	<response name="success" type="view" value="FindTrackingCodeVisits"/>
+    </request-map>
+    
     <!-- end of request mappings -->
 
     <!-- View Mappings -->
     <view-map name="error" page="/error/error.jsp"/>
     <view-map name="main" type="region"/>
     <view-map name="login" type="region"/>
+    
+    <view-map name="EditDataSources" type="region"/>
+    
+    <view-map name="FindTrackingCode" type="region"/>
+    <view-map name="EditTrackingCode" type="region"/>
+    <view-map name="FindTrackingCodeOrders" type="region"/>
+    <view-map name="FindTrackingCodeVisits" type="region"/>
     <!-- end of view mappings -->
 </site-conf>

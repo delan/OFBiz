@@ -40,6 +40,10 @@
       <table width='100%' border='0' cellspacing='0' cellpadding='0' class='headerboxbottom'>
         <tr>
           <td class="headerButtonLeft"><a href="<ofbiz:url>/main</ofbiz:url>" class="headerbuttontext">Main</a></td>
+          <td class="headerButtonLeft"><a href="<ofbiz:url>/EditDataSources</ofbiz:url>" class="headerbuttontext">DataSource</a></td>
+          <td class="headerButtonLeft"><a href="#<%--<ofbiz:url>/FindMarketingCampaign</ofbiz:url>--%>" class="headerbuttontext">Campaign</a></td>
+          <td class="headerButtonLeft"><a href="<ofbiz:url>/FindTrackingCode</ofbiz:url>" class="headerbuttontext">Tracking</a></td>
+          <td class="headerButtonLeft"><a href="#<%--<ofbiz:url>/FindContactList</ofbiz:url>--%>" class="headerbuttontext">ContactList</a></td>
 
           <td width="90%" align=center class='headerCenter'>&nbsp;</td>
 
