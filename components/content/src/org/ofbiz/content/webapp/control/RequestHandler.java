@@ -1,5 +1,5 @@
 /*
- * $Id: RequestHandler.java,v 1.16 2004/07/30 02:11:16 jonesde Exp $
+ * $Id: RequestHandler.java,v 1.17 2004/07/30 22:27:53 ajzeneski Exp $
  *
  * Copyright (c) 2001-2003 The Open For Business Project - www.ofbiz.org
  *
@@ -44,6 +44,7 @@ import org.ofbiz.base.util.StringUtil;
 import org.ofbiz.base.util.UtilHttp;
 import org.ofbiz.base.util.UtilMisc;
 import org.ofbiz.base.util.UtilProperties;
+import org.ofbiz.base.util.UtilValidate;
 import org.ofbiz.content.stats.ServerHitBin;
 import org.ofbiz.content.stats.VisitHandler;
 import org.ofbiz.content.webapp.event.EventFactory;
@@ -63,7 +64,7 @@ import org.ofbiz.entity.GenericValue;
  * @author     <a href="mailto:jaz@ofbiz.org">Andy Zeneski</a>
  * @author     <a href="mailto:jonesde@ofbiz.org">David E. Jones</a>
  * @author     Dustin Caldwell
- * @version    $Revision: 1.16 $
+ * @version    $Revision: 1.17 $
  * @since      2.0
  */
 public class RequestHandler implements Serializable {
@@ -122,26 +123,16 @@ public class RequestHandler implements Serializable {
 
             // Check if we SHOULD be secure and are not. If we are posting let it pass to not lose data. (too late now anyway)
             if (!request.isSecure() && requestManager.requiresHttps(requestUri) && !request.getMethod().equalsIgnoreCase("POST")) {
-                String port = UtilProperties.getPropertyValue("url.properties", "port.https", "443");
-
-                if (UtilProperties.propertyValueEqualsIgnoreCase("url.properties", "port.https.enabled", "Y")) {
-                    StringBuffer newUrl = new StringBuffer();
-
-                    newUrl.append("https://");
-                    String server = UtilProperties.getPropertyValue("url.properties", "force.http.host", request.getServerName());
-
-                    newUrl.append(server);
-                    if (!port.equals("443")) {
-                        newUrl.append(":" + port);
-                    }
-                    newUrl.append((String) request.getAttribute("_CONTROL_PATH_"));
-                    newUrl.append(request.getPathInfo());
-                    if (request.getQueryString() != null)
-                        newUrl.append("?" + request.getQueryString());
-
+                StringBuffer urlBuf = new StringBuffer();
+                urlBuf.append(request.getPathInfo());
+                if (request.getQueryString() != null) {
+                    urlBuf.append("?" + request.getQueryString());
+                }
+                String newUrl = RequestHandler.makeUrl(request, response, urlBuf.toString());
+                if (newUrl.toUpperCase().startsWith("HTTPS")) {
                     // if we are supposed to be secure, redirect secure.
                     callRedirect(newUrl.toString(), response);
-                }
+                }                
             }
 
             // If its the first visit run the first visit events.
@@ -579,17 +570,22 @@ public class RequestHandler implements Serializable {
         }
         
         // fill in any missing properties with fields from the global file
-        if (httpsPort == null) 
+        if (UtilValidate.isEmpty(httpsPort)) {
             httpsPort = UtilProperties.getPropertyValue("url.properties", "port.https", "443");
-        if (httpServer == null)
+        }
+        if (UtilValidate.isEmpty(httpServer)) {
             httpsServer = UtilProperties.getPropertyValue("url.properties", "force.https.host");
-        if (httpPort == null)
+        }
+        if (UtilValidate.isEmpty(httpPort)) {
             httpPort = UtilProperties.getPropertyValue("url.properties", "port.http", "80");
-        if (httpServer == null)
+        }
+        if (UtilValidate.isEmpty(httpServer)) {
             httpServer = UtilProperties.getPropertyValue("url.properties", "force.http.host");
-        if (enableHttps == null)
+        }
+        if (enableHttps == null) {
             enableHttps = new Boolean(UtilProperties.propertyValueEqualsIgnoreCase("url.properties", "port.https.enabled", "Y"));
-        
+        }
+
         // create the path the the control servlet
         String controlPath = (String) request.getAttribute("_CONTROL_PATH_");              
         
