@@ -21,7 +21,7 @@
  *
  *@author     Andy Zeneski (jaz@ofbiz.org)
  *@author     David E. Jones (jonesde@ofbiz.org)
- *@version    $Revision: 1.7 $
+ *@version    $Revision: 1.8 $
  *@since      2.2
  */
 
@@ -52,6 +52,15 @@ if (partyGroup != null) request.setAttribute("partyGroup", partyGroup);
 controlPath = request.getAttribute("_CONTROL_PATH_");
 contextRoot = request.getAttribute("_CONTEXT_ROOT_");
 serverRoot = request.getAttribute("_SERVER_ROOT_URL_");
+
+/* reading of the localization information */
+availableLocales = UtilMisc.availableLocales();
+request.setAttribute("availableLocales",availableLocales);
+
+locale = UtilHttp.getLocale(request);
+request.setAttribute("locale",locale);
+uiLabelMap = UtilProperties.getResourceBundleMap("ManufacturingUiLabels", locale);
+request.setAttribute("uiLabelMap", uiLabelMap);
 
 layoutSettings = new HashMap();
 request.setAttribute("layoutSettings", layoutSettings);
