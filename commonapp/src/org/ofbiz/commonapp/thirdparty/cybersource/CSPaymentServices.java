@@ -246,10 +246,10 @@ public class CSPaymentServices {
             long roundQ = Math.round(quantity.doubleValue());
             Double rounded = new Double(new Long(roundQ).toString());
             if (rounded.doubleValue() != quantity.doubleValue()) {
-                offer.setAmount((price.doubleValue() * quantity.doubleValue()));
+                offer.setAmount(new Double(price.doubleValue() * quantity.doubleValue()).toString());
                 offer.setQuantity(1);
             } else {
-                offer.setAmount(price.doubleValue());
+                offer.setAmount(price.toString());
                 offer.setQuantity(quantity.intValue());
             }
 
