@@ -42,7 +42,7 @@
 <table width="100%" border="0">
 <tr valign="top" align="left">
 <td bgcolor="#FFCCCC">
-<% String defaultShipMethod = "FIXME: US Postal Service (default)"; %>
+<% String defaultShipMethod = "FIXME: NO DEFAULT!!!US Postal Service (default)"; %>
 <% pageContext.setAttribute("carrierShipmentMethodList", helper.findAllCache("CarrierShipmentMethod", null)); %>
 
   <div class="head2" nowrap><b>How shall WE ship it?</b></div>
@@ -73,11 +73,11 @@
       </td>
     </tr>
 </ofbiz:unless>
-    <tr>
+    <%-- XXX  tr>
       <td colspan="2">
       Enter account code here, or ship freight collect: <input size="25" type="text" name="SHIPPING_ACCOUNT" value="">
       </td>
-    </tr>
+    </tr --%>
 <%--    <tr>
       <td colspan="2">
         <hr size="1">
@@ -143,7 +143,7 @@
         <div class="tabletext">Your may update these in your <a href="<ofbiz:url>/viewprofile?DONE_PAGE=checkoutoptions</ofbiz:url>" class="buttonlink">profile</a>.</div>
         <br>
         <div class="tabletext">You may add other comma separated email addresses here that will be used only for the current order:</div>
-        <input type="text" size="38" name="ORDER_ADDITIONAL_EMAILS" value="">
+        <input type="text" size="38" name="order_additional_emails" value="">
       </td>
     </tr>
   </table>
@@ -175,7 +175,7 @@
     <ofbiz:if name="shippingLocation">
     <tr>
       <td align="left" valign="top" width="1%" nowrap>
-          <input type="radio" name="SHIPPING_CONTACT_MECH_ID" value="<%=shippingLocation.get("contactMechId")%>">
+          <input type="radio" name="shipping_contact_mech_id" value="<%=shippingLocation.get("contactMechId")%>">
       </td>
       <td align="left" valign="top" width="99%" nowrap>
         <div class="tabletext">
@@ -222,7 +222,7 @@
     <ofbiz:iterator name="creditCardInfo" property="creditCardInfoList">
   <tr>
     <td width="1%" nowrap>
-      <input type="radio" name="PAYMENT_CODE" value="<%=creditCardInfo.getString("creditCardId")%>">
+      <input type="radio" name="payment_code" value="ccard:<%=creditCardInfo.getString("creditCardId")%>">
     </td>
     <td width="50%" nowrap>
       <span class="tabletext">
@@ -245,7 +245,7 @@
 </ofbiz:unless>
 
     <div class="tabletext">To pay with store credit, enter your Purchase Order (PO) number here and select the billing address:</div>
-    <input type="text" name="customer_po_number" size="20">
+    <input type="text" name="corresponding_po_id" size="20">
 <%--    <nobr><input CHECKED type="radio" name="credit_card_id" value="store_credit_purchase_order">
     Pay with Store Credit<nobr>--%>
     <br>
@@ -266,7 +266,7 @@
     <ofbiz:if name="billingLocation">
     <tr>
       <td align="left" valign="top" width="1%" nowrap>
-          <input type="radio" name="PAYMENT_CODE" value="billing:<%=billingLocation.get("contactMechId")%>">
+          <input type="radio" name="payment_code" value="billing:<%=billingLocation.get("contactMechId")%>">
       </td>
       <td align="left" valign="top" width="99%" nowrap>
         <div class="tabletext">

@@ -94,27 +94,24 @@
     <request-map><uri>checkoutoptions</uri><secure>true</secure><auth>true</auth><success>view:checkoutoptions</success></request-map>
     <request-map>
       <uri>checkout</uri><secure>true</secure><auth>true</auth>
-<!--      <event-type>java</event-type>
-      <event-path>org.ofbiz.ecommerce.shoppingcart.ShoppingCartEvents</event-path>
-      <event-invoke>updateCheckOutOptions</event-invoke> -->
+      <event-type>java</event-type>
+      <event-path>org.ofbiz.ecommerce.checkout.CheckOutEvents</event-path>
+      <event-invoke>setCheckOutOptions</event-invoke> 
       <success>view:checkout</success>
+      <error>view:error</error>
+    </request-map>		
+    <request-map>
+      <uri>submitorder</uri><secure>true</secure><auth>true</auth>
+      <event-type>java</event-type>
+      <event-path>org.ofbiz.ecommerce.checkout.CheckOutEvents</event-path>
+      <event-invoke>submitOrder</event-invoke> 
+      <success>view:confirmorder</success>
       <error>view:error</error>
     </request-map>		
     <request-map><uri>catalog</uri><success>view:catalog</success></request-map>
     <request-map><uri>category</uri><success>view:category</success></request-map>
     <request-map><uri>product</uri><success>view:product</success></request-map>	
     <request-map><uri>keywordsearch</uri><success>view:keywordsearch</success></request-map>	
-
-    <request-map><uri>shippingAddress</uri><success>view:shippingAddress</success></request-map>
-
-    <request-map>
-      <uri>setShippingAddress</uri>
-      <event-type>java</event-type>
-      <event-path>org.ofbiz.ecommerce.checkout.CheckOutEvents</event-path>
-      <event-invoke>setAddressInfo</event-invoke>
-      <success>view:main</success>
-      <error>view:shippingAddress</error>
-    </request-map>
 
     <request-map><uri>orderhistory</uri><secure>true</secure><auth>true</auth><success>view:orderhistory</success></request-map>
     <request-map><uri>orderstatus</uri><secure>true</secure><auth>true</auth><success>view:orderstatus</success></request-map>
@@ -179,6 +176,7 @@
 
     <view-map><view>checkoutoptions</view><secure>true</secure><auth>true</auth><mapped-page>/order/checkoutoptions.jsp</mapped-page></view-map>
     <view-map><view>checkout</view><secure>true</secure><auth>true</auth><mapped-page>/order/checkout.jsp</mapped-page></view-map>
+    <view-map><view>confirmorder</view><mapped-page>/order/confirmorder.jsp</mapped-page></view-map>
     <view-map><view>orderhistory</view><secure>true</secure><auth>true</auth><mapped-page>/order/orderhistory.jsp</mapped-page></view-map>
     <view-map><view>orderstatus</view><secure>true</secure><auth>true</auth><mapped-page>/order/orderstatus.jsp</mapped-page></view-map>
 

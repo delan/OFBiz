@@ -44,18 +44,20 @@
 <p class="head1">Final Checkout Review</p>
 <p>NOTE: This is a DEMO store-front.  Orders placed here will NOT be billed, and will NOT be fulfilled.</p>
 
-<ofbiz:if name="cart" size="0">
-
 <%ShoppingCart cart = (ShoppingCart)session.getAttribute(SiteDefs.SHOPPING_CART); %>
+<%pageContext.setAttribute("cart", cart);%>
+<ofbiz:if name="cart" size="0">
 <%
-  GenericValue creditCardInfo = cart.getCreditCardInfo(helper);
   GenericValue shippingAddress = cart.getShippingAddress(helper);
-  GenericValue  billingAddress = cart.getShippingAddress(helper);
+  GenericValue creditCardInfo = cart.getCreditCardInfo(helper);
+  GenericValue  billingAddress = cart.getBillingAddress(helper);
+  String customerPoNumber = cart.getPoNumber();
+//  if (creditCardInfo == null) {
 
-  pageContext.setAttribute("creditCardInfo", creditCardInfo);
-  pageContext.setAttribute("shippingAddress", shippingAddress);
-  pageContext.setAttribute("billingAddress", billingAddress);
-  pageContext.setAttribute("cartItems", cart.items());
+  if (shippingAddress != null) pageContext.setAttribute("shippingAddress", shippingAddress);
+  if (creditCardInfo != null) pageContext.setAttribute("creditCardInfo", creditCardInfo);
+  if (billingAddress != null) pageContext.setAttribute("billingAddress", billingAddress);
+  pageContext.setAttribute("cartItems", cart.items()); 
 %>
 
 <ofbiz:unless name="shippingAddress">
@@ -76,8 +78,8 @@
     <td>&nbsp;</td>
     <td align="left" valign="top" nowrap>
       <div class="tabletext">
-        <%=UtilFormatOut.ifNotEmpty(shippingAddress.getString("toName"), "", "<br>")%>
-        <%=UtilFormatOut.ifNotEmpty(shippingAddress.getString("attnName"), "Attn: ", "<br>")%>
+        <%=UtilFormatOut.ifNotEmpty(shippingAddress.getString("toName"), "<b>To:</b> ", "<br>")%>
+        <%=UtilFormatOut.ifNotEmpty(shippingAddress.getString("attnName"), "<b>Attn:</b> ", "<br>")%>
         <%=UtilFormatOut.ifNotEmpty(shippingAddress.getString("address1"), "", "<br>")%>
         <%=UtilFormatOut.ifNotEmpty(shippingAddress.getString("address2"), "", "<br>")%>
         <%=UtilFormatOut.ifNotEmpty(shippingAddress.getString("city"), "", "<br>")%>
@@ -130,8 +132,8 @@
             <div class="tabletext"><b>Store Credit</b></div>
         </td>
       </tr>
-</ofbiz:if>
-<ofbiz:if name="customerPaymentType" value="PURCHASE_ORDER">
+</ofbiz:if> --%> 
+<ofbiz:if name="billingAddress">
       <tr>
         <td align="left" colspan="5"><div class="head2">Payment Information</div></td>
       </tr>
@@ -142,7 +144,7 @@
         </td>
       </tr>
 </ofbiz:if>
-<ofbiz:if name="customerPaymentType" value="CREDIT_CARD"> --%>
+<ofbiz:if name="creditCardInfo"> 
           <tr>
             <td align="left" colspan="5"><div class="head2">Payment Information</div></td>
           </tr>
@@ -150,7 +152,9 @@
             <td>&nbsp;</td>
             <td align="left" valign="top" nowrap>
               <div class="tabletext">
-                <%=creditCardInfo.getString("nameOnCard")%><br>
+                <b>Name on Card:</b> <%=creditCardInfo.getString("nameOnCard")%><br>
+                <%=UtilFormatOut.ifNotEmpty(billingAddress.getString("toName"), "<b>To:</b> ", "<br>")%>
+                <%=UtilFormatOut.ifNotEmpty(billingAddress.getString("attnName"), "<b>Attn:</b> ", "<br>")%>
                 <%=UtilFormatOut.checkNull(billingAddress.getString("address1"))%><br>
                 <%=UtilFormatOut.ifNotEmpty(billingAddress.getString("address2"),  "", "<br>")%>
                 <%=UtilFormatOut.ifNotEmpty(billingAddress.getString("city"), "", "<br>")%>
@@ -165,8 +169,8 @@
                 <div class="tabletext"><b><%=creditCardInfo.getString("cardType")%>: <%=creditCardInfo.getString("cardNumber").substring(creditCardInfo.getString("cardNumber").length()-4)%> <%=creditCardInfo.getString("expireDate")%></b></div>
             </td>
           </tr>
-      <%-- </ofbiz:if> --%>
-<%-- </ofbiz:if> --%>
+</ofbiz:if>
+</ofbiz:if> <%-- shippingAddress --%>
 </table>
 <%-- table for shoppingcartline items --%>
   <table border="0" cellpadding="1" width="100%">
@@ -196,7 +200,7 @@
       <td colspan="5"><hr size="1"></td>
     </tr>
 
- <ofbiz:iterator name="cartItem" type="ShoppingCartItem" property="cartItems">
+ <ofbiz:iterator name="cartItem" type="org.ofbiz.ecommerce.shoppingcart.ShoppingCartItem" property="cartItems">
 <% pageContext.setAttribute("productId", cartItem.getProductId()); %>
   <ofbiz:if name="productId" value="shoppingcart.CommentLine">
     <tr>
@@ -246,10 +250,7 @@
     </tr>
 </ofbiz:iterator>
 
-<%
-String prevPage = "/selectaddress";
-//if(CommonConstants.CREDITCARD_MANAGE_INFO) prevPage = "/checkoutoptions";
-%>
+<%String prevPage = "/checkoutoptions"; %>
     <tr>
       <td colspan="4" align="right"><div class="tabletext">Item Total</div></td>
       <td align="right" nowrap>

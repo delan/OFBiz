@@ -1,6 +1,9 @@
 /*
  * $Id$
  * $Log$
+ * Revision 1.4  2001/09/05 21:51:13  epabst
+ * added more data that is used for staging the Order in the shopping cart
+ *
  * Revision 1.3  2001/08/31 17:45:36  epabst
  * added method to simplify code
  *
@@ -48,7 +51,6 @@ import org.ofbiz.core.util.*;
  * Created on August 4, 2001, 8:21 PM
  */
 public class ShoppingCart {
-    
     private ArrayList cartLines;
     
     //either creditCardId or poNumber must be null (use one or the other)
@@ -57,7 +59,12 @@ public class ShoppingCart {
     
     private String shippingContactMechId;
     private String billingContactMechId;
+    private String shippingInstructions;
+    
+    /** stored in the format of <shipment method type id>@<carrier party id> */
+    private String shippingMethod;
     private String cartDiscountString;
+    private String orderAdditionalEmails;
     private String taxString;
     private double salesTax;
     private double shipping;
@@ -174,7 +181,7 @@ public class ShoppingCart {
     }
     
     /** Sets the credit card id in the cart. */
-    public void setCreditCartId(String creditCardId) {
+    public void setCreditCardId(String creditCardId) {
         this.poNumber = null;
         this.creditCardId = creditCardId;
     }
@@ -184,9 +191,28 @@ public class ShoppingCart {
         this.shipping = shipping;
     }
     
+    /** Sets the billing message string. */
+    public void setBillingContactMechId(String billingContactMechId) {
+        this.billingContactMechId = billingContactMechId;
+    }
+    
     /** Sets the shipping message string. */
     public void setShippingContactMechId(String shippingContactMechId) {
         this.shippingContactMechId = shippingContactMechId;
+    }
+    
+    /** Sets the shipping instructions. */
+    public void setShippingInstructions(String shippingInstructions) {
+        this.shippingInstructions = shippingInstructions;
+    }
+    
+    /** Sets the shipping instructions. */
+    public void setShippingMethod(String shippingMethod) {
+        this.shippingMethod = shippingMethod;
+    }
+    
+    public void setOrderAdditionalEmails(String orderAdditionalEmails) {
+        this.orderAdditionalEmails = orderAdditionalEmails;
     }
     
     /** Sets the tax dollar amount in the cart. */
@@ -227,6 +253,25 @@ public class ShoppingCart {
     /** Returns the shipping message string. */
     public String getShippingContactMechId() {
         return shippingContactMechId;
+    }
+    
+    /** Returns the billing message string. */
+    public String getBillingContactMechId() {
+        return billingContactMechId;
+    }
+    
+    /** Returns the shipping instructions. */
+    public String getShippingInstructions() {
+        return shippingInstructions;
+    }
+    
+    /** Returns the shipping instructions. */
+    public String getShippingMethod() {
+        return shippingMethod;
+    }
+    
+    public String getOrderAdditionalEmails() {
+        return orderAdditionalEmails;
     }
     
     public GenericValue getCreditCardInfo(GenericHelper helper) {
