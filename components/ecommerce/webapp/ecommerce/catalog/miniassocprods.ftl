@@ -21,11 +21,11 @@
  *
  *@author     David E. Jones (jonesde@ofbiz.org)
  *@author     Andy Zeneski (jaz@ofbiz.org)
- *@version    $Revision: 1.2 $
+ *@version    $Revision: 1.3 $
  *@since      2.1
 -->
 
-<#assign associatedProducts = Static["org.ofbiz.product.catalog.CatalogWorker"].getRandomCartProductAssoc(request, true)?if_exists>
+<#assign associatedProducts = Static["org.ofbiz.order.shoppingcart.product.ProductDisplayWorker"].getRandomCartProductAssoc(request, true)?if_exists>
 
 <#if associatedProducts?has_content>
   <br>
