@@ -29,7 +29,6 @@ import jpos.ScannerConst;
 
 import org.ofbiz.base.util.Debug;
 import org.ofbiz.pos.adaptor.DataEventAdaptor;
-import org.ofbiz.pos.config.ButtonEventConfig;
 import org.ofbiz.pos.screen.PosScreen;
 
 /**
@@ -93,14 +92,8 @@ public class Scanner extends GenericDevice {
             PosScreen.currentScreen.getInput().clearInput();
             PosScreen.currentScreen.getInput().appendString(new String(data));
 
-            // call the PLU event - maybe make this configurable
-            try {
-                ButtonEventConfig.invokeButtonEvent("menuSku", PosScreen.currentScreen);
-            } catch (ButtonEventConfig.ButtonEventException e) {
-                Debug.logError(e, module);
-            } catch (ButtonEventConfig.ButtonEventNotFound e) {
-                Debug.logError(e, module);
-            }
+            // call the ENTER event
+            this.callEnter();
         }
     }
 }

@@ -28,6 +28,8 @@ import jpos.BaseControl;
 import jpos.JposException;
 
 import org.ofbiz.base.util.Debug;
+import org.ofbiz.pos.config.ButtonEventConfig;
+import org.ofbiz.pos.screen.PosScreen;
 
 /**
  * 
@@ -67,5 +69,15 @@ public abstract class GenericDevice implements JposDevice {
         control = null;
     }
 
+    protected void callEnter() {
+        try {
+            ButtonEventConfig.invokeButtonEvent("menuEnter", PosScreen.currentScreen);
+        } catch (ButtonEventConfig.ButtonEventException e) {
+            Debug.logError(e, module);
+        } catch (ButtonEventConfig.ButtonEventNotFound e) {
+            Debug.logError(e, module);
+        }
+    }
+    
     protected abstract void initialize() throws JposException;
 }
