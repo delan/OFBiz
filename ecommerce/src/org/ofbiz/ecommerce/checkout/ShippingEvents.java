@@ -21,26 +21,20 @@ public class ShippingEvents {
         String SHIPPING_FROM_ZIP = UtilProperties.getPropertyValue(contextRoot + "/WEB-INF/ecommerce.properties", "shipping.fromZip");
         ShoppingCart cart = ShoppingCartEvents.getCartObject(request);
                 
-        double shippingTotal = 0.00;
-        
-        // Setup the available models.
-        if ( SHIPPING_MODEL.equalsIgnoreCase("NONE") ) {
-            double handling = calcHandling(cart,contextRoot);
-            shippingTotal = handling;
-        }
-        else if ( SHIPPING_MODEL.equalsIgnoreCase("UPS") ) {
+        double shippingTotal = calcHandling(cart,contextRoot);
+                
+        if ( SHIPPING_MODEL.equalsIgnoreCase("UPS") ) {
             HashMap upsMapping = new HashMap();
             upsMapping.put("GROUND@UPS","GND");
             upsMapping.put("AIR@UPS","2DA");
             upsMapping.put("NEXT_DAY@UPS","1DA");
             
-            String shippingMethod = request.getParameter("shipping_method");                        
-            double handling = calcHandling(cart,contextRoot);
+            String shippingMethod = request.getParameter("shipping_method");                                
             double shipping = 0.00;
             if ( upsMapping.containsKey(shippingMethod) )
                 shipping = getUPSRate(cart,SHIPPING_FROM_ZIP,(String) upsMapping.get(shippingMethod));
                                     
-            shippingTotal = shipping + handling;
+            shippingTotal += shipping;
         }
         
         cart.setShipping(shippingTotal);
