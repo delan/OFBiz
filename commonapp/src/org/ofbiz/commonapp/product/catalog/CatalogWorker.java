@@ -298,6 +298,27 @@ public class CatalogWorker {
         return null;
     }
 
+    public static List getPartyCatalogs(PageContext pageContext) {
+        return getPartyCatalogs((HttpServletRequest) pageContext.getRequest());
+    }
+
+    public static List getPartyCatalogs(ServletRequest request) {
+        HttpSession session = ((HttpServletRequest) request).getSession();
+        GenericValue userLogin = (GenericValue) session.getAttribute("userLogin");
+        if (userLogin == null) userLogin = (GenericValue) session.getAttribute("autoUserLogin");
+        if (userLogin == null) return null;
+        String partyId = userLogin.getString("partyId");
+        if (partyId == null) return null;
+        GenericDelegator delegator = (GenericDelegator) request.getAttribute("delegator");
+
+        try {
+            return EntityUtil.filterByDate(delegator.findByAndCache("PartyCatalog", UtilMisc.toMap("partyId", partyId), UtilMisc.toList("sequenceNum", "prodCatalogId")), true);
+        } catch (GenericEntityException e) {
+            Debug.logError(e, "Error looking up party catalogs for party with id " + partyId);
+        }
+        return null;
+    }
+
     public static List getProdCatalogCategories(PageContext pageContext, String prodCatalogId, String prodCatalogCategoryTypeId) {
         GenericDelegator delegator = (GenericDelegator) pageContext.getRequest().getAttribute("delegator");
 
@@ -335,13 +356,8 @@ public class CatalogWorker {
         }
         // get it from the database
         if (prodCatalogId == null) {
-            List webSiteCatalogs = getWebSiteCatalogs(request);
-
-            if (webSiteCatalogs != null && webSiteCatalogs.size() > 0) {
-                GenericValue webSiteCatalog = EntityUtil.getFirst(webSiteCatalogs);
-
-                prodCatalogId = webSiteCatalog.getString("prodCatalogId");
-            }
+            List catalogIds = getCatalogIdsAvailable(request);
+            if (catalogIds != null && catalogIds.size() > 0) prodCatalogId = (String) catalogIds.get(0);
         }
 
         if (!fromSession) {
@@ -352,17 +368,23 @@ public class CatalogWorker {
         return prodCatalogId;
     }
 
-    public static Collection getCatalogIdsAvailable(PageContext pageContext) {
-        Collection categoryIds = new LinkedList();
-        Collection webSiteCatalogs = getWebSiteCatalogs(pageContext);
-
-        if (webSiteCatalogs != null && webSiteCatalogs.size() > 0) {
-            Iterator wscIter = webSiteCatalogs.iterator();
-
-            while (wscIter.hasNext()) {
-                GenericValue webSiteCatalog = (GenericValue) wscIter.next();
-
-                categoryIds.add(webSiteCatalog.getString("prodCatalogId"));
+    public static List getCatalogIdsAvailable(PageContext pageContext) {
+        return getCatalogIdsAvailable((HttpServletRequest) pageContext.getRequest());
+    }
+    
+    public static List getCatalogIdsAvailable(ServletRequest request) {
+        List categoryIds = new LinkedList();
+        List partyCatalogs = getPartyCatalogs(request);
+        List webSiteCatalogs = getWebSiteCatalogs(request);
+        List allCatalogLinks = new ArrayList((webSiteCatalogs == null ? 0 : webSiteCatalogs.size()) + (partyCatalogs == null ? 0 : partyCatalogs.size()));
+        if (partyCatalogs != null) allCatalogLinks.addAll(partyCatalogs);
+        if (webSiteCatalogs != null) allCatalogLinks.addAll(webSiteCatalogs);
+        
+        if (allCatalogLinks.size() > 0) {
+            Iterator aclIter = allCatalogLinks.iterator();
+            while (aclIter.hasNext()) {
+                GenericValue catalogLink = (GenericValue) aclIter.next();
+                categoryIds.add(catalogLink.getString("prodCatalogId"));
             }
         }
         return categoryIds;
@@ -544,7 +566,7 @@ public class CatalogWorker {
     /* ================================ Catalog Inventory Check ===============================*/
 
     public static boolean isCatalogInventoryRequired(ServletRequest request, GenericValue product) {
-        String prodCatalogId = getCurrentCatalogId(request);
+        String prodCatalogId = getCurrentCatalogId((HttpServletRequest) request);
 
         if (prodCatalogId == null || prodCatalogId.length() == 0) {
             Debug.logWarning("No current catalog id found, return false for inventory check");
@@ -556,7 +578,7 @@ public class CatalogWorker {
     }
 
     public static boolean isCatalogInventoryAvailable(ServletRequest request, String productId, double quantity) {
-        String prodCatalogId = getCurrentCatalogId(request);
+        String prodCatalogId = getCurrentCatalogId((HttpServletRequest) request);
 
         if (prodCatalogId == null || prodCatalogId.length() == 0) {
             Debug.logWarning("No current catalog id found, return false for inventory check");
@@ -632,8 +654,7 @@ public class CatalogWorker {
         GenericDelegator delegator = (GenericDelegator) pageContext.getRequest().getAttribute("delegator");
         GenericValue userLogin = (GenericValue) pageContext.findAttribute(SiteDefs.USER_LOGIN);
 
-        if (userLogin == null)
-            userLogin = (GenericValue) pageContext.findAttribute("autoUserLogin");
+        if (userLogin == null) userLogin = (GenericValue) pageContext.findAttribute("autoUserLogin");
         if (userLogin == null) return;
 
         try {
