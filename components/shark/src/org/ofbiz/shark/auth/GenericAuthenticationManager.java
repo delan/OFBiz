@@ -1,5 +1,5 @@
 /*
- * $Id: GenericAuthenticationManager.java,v 1.1 2004/04/22 15:40:56 ajzeneski Exp $
+ * $Id: GenericAuthenticationManager.java,v 1.2 2004/05/11 16:59:54 ajzeneski Exp $
  *
  * Copyright (c) 2004 The Open For Business Project - www.ofbiz.org
  *
@@ -39,7 +39,7 @@ import org.enhydra.shark.api.UserTransaction;
  * Shark Generic Authentication Manager - Uses the Generic Entities
  *
  * @author     <a href="mailto:jaz@ofbiz.org">Andy Zeneski</a>
- * @version    $Revision: 1.1 $
+ * @version    $Revision: 1.2 $
  * @since      3.1
  */
 public class GenericAuthenticationManager implements AuthenticationManager {
@@ -60,7 +60,7 @@ public class GenericAuthenticationManager implements AuthenticationManager {
         }
 
         if (sharkUser != null) {
-            String registeredPwd = sharkUser.getString("password");
+            String registeredPwd = sharkUser.getString("passwd");
             if (password.equals(registeredPwd)) {
                 return true;
             }

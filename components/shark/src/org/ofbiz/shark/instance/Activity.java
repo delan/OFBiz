@@ -1,5 +1,5 @@
 /*
- * $Id: Activity.java,v 1.1 2004/04/22 15:40:59 ajzeneski Exp $
+ * $Id: Activity.java,v 1.2 2004/05/11 16:59:54 ajzeneski Exp $
  *
  * Copyright (c) 2004 The Open For Business Project - www.ofbiz.org
  *
@@ -38,7 +38,7 @@ import org.enhydra.shark.api.internal.instancepersistence.*;
  * Persistance Object
  *
  * @author     <a href="mailto:jaz@ofbiz.org">Andy Zeneski</a>
- * @version    $Revision: 1.1 $
+ * @version    $Revision: 1.2 $
  * @since      3.1
  */
 public class Activity implements ActivityPersistenceInterface {
@@ -139,11 +139,11 @@ public class Activity implements ActivityPersistenceInterface {
     }
 
     public void setState(String s) {
-        activity.set("state", s);
+        activity.set("currentState", s);
     }
 
     public String getState() {
-        return activity.getString("state");
+        return activity.getString("currentState");
     }
 
     public void setBlockActivityId(String s) {
