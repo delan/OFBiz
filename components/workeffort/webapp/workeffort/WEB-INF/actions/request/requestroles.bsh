@@ -1,0 +1,21 @@
+import java.util.*;
+import org.ofbiz.core.security.*;
+import org.ofbiz.core.entity.*;
+import org.ofbiz.core.util.*;
+import org.ofbiz.core.service.*;
+import org.ofbiz.commonapp.workeffort.workeffort.*;
+
+delegator = request.getAttribute("delegator");
+
+String custRequestId = request.getParameter("custRequestId");	
+GenericValue custRequest = null;
+
+if (custRequestId != null) {
+	custRequest = delegator.findByPrimaryKey("CustRequest", UtilMisc.toMap("custRequestId", custRequestId));
+	if (custRequest != null) context.put("custRequest", custRequest);
+    List requestRoles = delegator.findByAnd("CustRequestRole", UtilMisc.toMap("custRequestId", custRequestId));
+    if (requestRoles != null && requestRoles.size() > 0) context.put("custRequestRoles", requestRoles);
+}	
+  	
+context.put("custRequestId",custRequestId);
+
