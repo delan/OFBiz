@@ -77,6 +77,8 @@
     <entity-group group="org.ofbiz" entity="OrderTermAttribute" />
     <entity-group group="org.ofbiz" entity="OrderType" />
     <entity-group group="org.ofbiz" entity="OrderTypeAttr" />
+    <entity-group group="org.ofbiz" entity="OrderContent" />
+    <entity-group group="org.ofbiz" entity="OrderContentType" />
     <entity-group group="org.ofbiz" entity="ProductOrderItem" />
     <entity-group group="org.ofbiz" entity="SimpleSalesTaxLookup" />
     <entity-group group="org.ofbiz" entity="ReturnHeader" />
