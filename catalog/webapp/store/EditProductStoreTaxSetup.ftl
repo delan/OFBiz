@@ -50,7 +50,7 @@
         <td><div class="tabletext">${taxItem.salesTaxPercentage?if_exists}</div></td>
         <td><div class="tabletext">${taxItem.fromDate?string}</div></td>
         <#if security.hasEntityPermission("TAXRATE", "_DELETE", session)>
-          <td><div class="tabletext"><a href="<@ofbizUrl>/storeRemoveTaxRate?productStoreId=${productStoreId}&countryGeoId=${taxItem.countryGeoId}&stateProvinceGeoId=${taxItem.stateProvinceGeoId}&taxCategory=${taxItem.taxCategory}&minPurchase=${taxItem.minPurchase?string.number}&fromDate=${taxItem.get("fromDate").toString()}</@ofbizUrl>" class="buttontext">[Remove]</a></div></td>
+          <td align="center"><div class="tabletext"><a href="<@ofbizUrl>/storeRemoveTaxRate?productStoreId=${productStoreId}&countryGeoId=${taxItem.countryGeoId}&stateProvinceGeoId=${taxItem.stateProvinceGeoId}&taxCategory=${taxItem.taxCategory}&minPurchase=${taxItem.minPurchase?string.number}&fromDate=${taxItem.get("fromDate").toString()}</@ofbizUrl>" class="buttontext">[Delete]</a></div></td>
         <#else>
           <td>&nbsp;</td>
         </#if>

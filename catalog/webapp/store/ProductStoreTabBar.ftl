@@ -29,9 +29,10 @@
   <#if productStoreId?has_content>
     <div class='tabContainer'>
       <a href="<@ofbizUrl>/EditProductStore?productStoreId=${productStoreId}</@ofbizUrl>" class="${selectedClassMap.EditProductStore?default(unselectedClassName)}">Store</a>
+      <a href="<@ofbizUrl>/EditProductStoreRoles?productStoreId=${productStoreId}</@ofbizUrl>" class="${selectedClassMap.EditProductStoreRoles?default(unselectedClassName)}">Roles</a>
       <a href="<@ofbizUrl>/EditProductStorePromos?productStoreId=${productStoreId}</@ofbizUrl>" class="${selectedClassMap.EditProductStorePromos?default(unselectedClassName)}">Promos</a>
 	  <a href="<@ofbizUrl>/EditProductStoreCatalogs?productStoreId=${productStoreId}</@ofbizUrl>" class="${selectedClassMap.EditProductStoreCatalogs?default(unselectedClassName)}">Catalogs</a>
-	  <a href="<@ofbizUrl>/EditProductStoreWebSites?productStoreId=${productStoreId}</@ofbizUrl>" class="${selectedClassMap.EditProductStoreWebSites?default(unselectedClassName)}">WebSites</a>
+	  <a href="<@ofbizUrl>/EditProductStoreWebSites?viewProductStoreId=${productStoreId}</@ofbizUrl>" class="${selectedClassMap.EditProductStoreWebSites?default(unselectedClassName)}">WebSites</a>
 	  <a href="<@ofbizUrl>/EditProductStoreTaxSetup?productStoreId=${productStoreId}</@ofbizUrl>" class="${selectedClassMap.EditProductStoreTaxSetup?default(unselectedClassName)}">Sales Tax</a>
 	  <a href="<@ofbizUrl>/EditProductStoreShipSetup?viewProductStoreId=${productStoreId}</@ofbizUrl>" class="${selectedClassMap.EditProductStoreShipSetup?default(unselectedClassName)}">Shipping</a>
 	  <a href="<@ofbizUrl>/EditProductStorePaySetup?productStoreId=${productStoreId}</@ofbizUrl>" class="${selectedClassMap.EditProductStorePaySetup?default(unselectedClassName)}">Payments</a>

@@ -47,8 +47,8 @@
         <td><div class="tabletext">${enum.description}</div></td>
         <td><div class="tabletext">${setting.paymentService}</div></td>
         <td><div class="tabletext">${setting.paymentPropertiesPath?default("[global]")}</div></td>
-        <td>
-          <div class="tabletext"><#if security.hasEntityPermission("CATALOG", "_DELETE", session)><a href="<@ofbizUrl>/storeRemovePaySetting?productStoreId=${productStoreId}&paymentMethodTypeId=${setting.paymentMethodTypeId}&paymentServiceTypeEnumId=${setting.paymentServiceTypeEnumId}</@ofbizUrl>" class="buttontext">[Remove]</a></#if> <a href="<@ofbizUrl>/EditProductStorePaySetup?productStoreId=${productStoreId}&paymentMethodTypeId=${setting.paymentMethodTypeId}&paymentServiceTypeEnumId=${setting.paymentServiceTypeEnumId}</@ofbizUrl>" class="buttontext">[Edit]</a></div>
+        <td align="center" nowrap>
+          <div class="tabletext"><#if security.hasEntityPermission("CATALOG", "_DELETE", session)><a href="<@ofbizUrl>/storeRemovePaySetting?productStoreId=${productStoreId}&paymentMethodTypeId=${setting.paymentMethodTypeId}&paymentServiceTypeEnumId=${setting.paymentServiceTypeEnumId}</@ofbizUrl>" class="buttontext">[Delete]</a></#if> <a href="<@ofbizUrl>/EditProductStorePaySetup?productStoreId=${productStoreId}&paymentMethodTypeId=${setting.paymentMethodTypeId}&paymentServiceTypeEnumId=${setting.paymentServiceTypeEnumId}</@ofbizUrl>" class="buttontext">[Edit]</a></div>
         </td>        
       </tr>
     </#list>

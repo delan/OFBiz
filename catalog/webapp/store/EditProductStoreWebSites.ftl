@@ -36,6 +36,7 @@
       <td><span class="tableheadtext">WebSite [ID]</span></td>
       <td><span class="tableheadtext">Host</span></td>
       <td><span class="tableheadtext">Port</span></td>
+      <td>&nbsp;</td>
     </tr>
     <#if storeWebSites?has_content>
       <#list storeWebSites as webSite>
@@ -43,6 +44,9 @@
           <td><a href="/content/control/EditWebSite?webSiteId=${webSite.webSiteId}&externalLoginKey=${requestAttributes.externalLoginKey}" class="buttontext">${webSite.siteName} [${webSite.webSiteId}]</a></td>
           <td><span class="tabletext">${webSite.httpHost?default('&nbsp;')}</span></td>
           <td><span class="tabletext">${webSite.httpPort?default('&nbsp;')}</span></td>
+          <td align="center">
+            <a href="<@ofbizUrl>/storeUpdateWebSite?viewProductStoreId=${productStoreId}&productStoreId=&webSiteId=${webSite.webSiteId}</@ofbizUrl>" class="buttontext">[Delete]</a>
+          </td>
         </tr>
       </#list>
     </#if>
@@ -51,6 +55,7 @@
   <br>
   <div class="head2">Set store on WebSite:</div>
   <form name="addWebSite" action="<@ofbizUrl>/storeUpdateWebSite</@ofbizUrl>" method="post">
+    <input type="hidden" name="viewProductStoreId" value="${productStoreId}">
     <input type="hidden" name="productStoreId" value="${productStoreId}">
     <select class="selectBox" name="webSiteId">
       <#list webSites as webSite>

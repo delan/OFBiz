@@ -1103,6 +1103,22 @@
         <override name="storeName" optional="false"/>
     </service>          
 
+    <!-- Product Store Role Services -->
+    <service name="createProductStoreRole" default-entity-name="ProductStoreRole" engine="simple"
+            location="org/ofbiz/commonapp/product/store/ProductStoreServices.xml" invoke="createProductStoreRole" auth="true">
+        <description>Create ProductStoreRole</description>
+        <auto-attributes include="pk" mode="IN" optional="false"/>
+        <auto-attributes include="nonpk" mode="IN" optional="true"/>
+        <override name="fromDate" optional="true"/>
+    </service>
+    <service name="removeProductStoreRole" default-entity-name="ProductStoreRole" engine="simple"
+            location="org/ofbiz/commonapp/product/store/ProductStoreServices.xml" invoke="removeProductStoreRole" auth="true">
+        <description>Remove ProductStoreRole</description>
+        <auto-attributes include="pk" mode="IN" optional="false"/>
+        <auto-attributes include="nonpk" mode="IN" optional="true"/>
+    </service>
+    
+    <!-- Product Store Catalog Services -->    
     <service name="createProductStoreCatalog" default-entity-name="ProductStoreCatalog" engine="simple"
             location="org/ofbiz/commonapp/product/store/ProductStoreServices.xml" invoke="createProductStoreCatalog" auth="true">
         <description>Create ProductStoreCatalog</description>

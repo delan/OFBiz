@@ -104,8 +104,8 @@ function setAssocFields(select) {
           <td><div class="tabletext">${estimate.orderPricePercent?default(0)?string.number}%</div></td>
           <td><div class="tabletext">${estimate.orderFlatPrice?default(0)?string.currency}</div></td>
           <td><div class="tabletext">${estimate.orderItemFlatPrice?default(0)?string.currency}</div></td>
-          <td>
-            <div class="tabletext"><#if security.hasEntityPermission("SHIPRATE", "_DELETE", session)><a href="<@ofbizUrl>/storeRemoveShipRate?viewProductStoreId=${productStoreId}&shipmentCostEstimateId=${estimate.shipmentCostEstimateId}</@ofbizUrl>" class="buttontext">[Remove]</a></#if> <a href="<@ofbizUrl>/EditProductStoreShipSetup?productStoreId=${productStoreId}&shipmentCostEstimateId=${estimate.shipmentCostEstimateId}</@ofbizUrl>" class="buttontext">[View]</a></div>     
+          <td align="center">
+            <div class="tabletext"><#if security.hasEntityPermission("SHIPRATE", "_DELETE", session)><a href="<@ofbizUrl>/storeRemoveShipRate?viewProductStoreId=${productStoreId}&shipmentCostEstimateId=${estimate.shipmentCostEstimateId}</@ofbizUrl>" class="buttontext">[Delete]</a></#if> <a href="<@ofbizUrl>/EditProductStoreShipSetup?productStoreId=${productStoreId}&shipmentCostEstimateId=${estimate.shipmentCostEstimateId}</@ofbizUrl>" class="buttontext">[View]</a></div>     
           </td>
         </tr>
       </#list>

@@ -19,34 +19,36 @@
  *  OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR 
  *  THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  *
- *@author     Andy Zeneski (jaz@ofbiz.org)
+ *@author     Andy Zeneski (jaz@ofbiz.org);
  *@version    $Revision$
  *@since      2.2
  */
- 
-import org.ofbiz.core.entity.*;
+
 import org.ofbiz.core.util.*;
+import org.ofbiz.core.entity.*;
+import org.ofbiz.core.widgetimpl.*;
 
-delegator = request.getAttribute("delegator");
 security = request.getAttribute("security");
+delegator = request.getAttribute("delegator");
 
-if (security.hasEntityPermission("CATALOG", "_VIEW", session)) {
+if(security.hasEntityPermission("CONTENTMGR", "_VIEW", session)) {
     context.put("hasPermission", Boolean.TRUE);
 } else {
     context.put("hasPermission", Boolean.FALSE);
 }
 
-productStoreId = request.getParameter("viewProductStoreId");
-if (productStoreId != null) {
-    productStore = delegator.findByPrimaryKey("ProductStore", UtilMisc.toMap("productStoreId", productStoreId));
-    storeWebSites = delegator.findByAnd("WebSite", UtilMisc.toMap("productStoreId", productStoreId));
-    context.put("productStoreId", productStoreId);
-    context.put("productStore", productStore);
-    context.put("storeWebSites", storeWebSites);
+String productStoreId = request.getParameter("productStoreId");
+context.put("productStoreId", productStoreId);
+
+GenericValue productStore = delegator.findByPrimaryKey("ProductStore", UtilMisc.toMap("productStoreId", productStoreId));
+context.put("productStore", productStore);
+
+List productStoreRoles = delegator.findByAnd("ProductStoreRole", UtilMisc.toMap("productStoreId", productStoreId), UtilMisc.toList("sequenceNum"));
+if (request.getParameter("showAll") == null) {
+    productStoreRoles = EntityUtil.filterByDate(productStoreRoles);
 }
+context.put("productStoreRoles", productStoreRoles);
 
-webSites = delegator.findAll("WebSite", UtilMisc.toList("siteName"));
-context.put("webSites", webSites);
-
-
+roleTypes = delegator.findAll("RoleType", UtilMisc.toList("description"));
+context.put("roleTypes", roleTypes);
 
