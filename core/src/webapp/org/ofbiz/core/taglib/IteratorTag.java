@@ -40,6 +40,8 @@ import org.ofbiz.core.util.*;
  */
 public class IteratorTag extends BodyTagSupport {
 
+    public static final String module = IteratorTag.class.getName();
+
     protected Iterator iterator = null;
     protected String name = null;
     protected String property = null;
@@ -93,12 +95,12 @@ public class IteratorTag extends BodyTagSupport {
     }
 
     public int doStartTag() throws JspTagException {
-        //Debug.logInfo("Starting Iterator Tag...");
+        Debug.logVerbose("Starting Iterator Tag...", module);
 
         if (!defineIterator())
             return SKIP_BODY;
 
-        //Debug.logInfo("We now have an iterator.");
+        Debug.logVerbose("We now have an iterator.", module);
 
         if (defineElement())
             return EVAL_BODY_AGAIN;
@@ -132,7 +134,7 @@ public class IteratorTag extends BodyTagSupport {
         Iterator newIterator = null;
         Collection thisCollection = null;
         if (property != null) {
-            Debug.logInfo("Getting iterator from property: " + property);
+            Debug.logVerbose("Getting iterator from property: " + property, module);
             Object propertyObject = pageContext.findAttribute(property);
             if (propertyObject instanceof Iterator) {
                 newIterator = (Iterator) propertyObject;
@@ -154,7 +156,7 @@ public class IteratorTag extends BodyTagSupport {
                             Class.forName(objectTag.getType()).getDeclaredMethods();
                     for (int i = 0; i < m.length; i++) {
                         if (m[i].getName().equals("iterator")) {
-                            //Debug.logInfo("Found iterator method. Using it.");
+                            Debug.logVerbose("Found iterator method. Using it.", module);
                             newIterator = (Iterator) m[i].invoke(
                                     objectTag.getObject(), null);
                             break;
@@ -171,9 +173,9 @@ public class IteratorTag extends BodyTagSupport {
                 return false;
 
             newIterator = thisCollection.iterator();
-            //Debug.logInfo("Got iterator.");
+            Debug.logVerbose("Got iterator.", module);
         } else {//already set
-            Debug.logInfo("iterator already set.");
+            Debug.logVerbose("iterator already set.", module);
         }
         this.iterator = newIterator;
         return true;
@@ -184,12 +186,12 @@ public class IteratorTag extends BodyTagSupport {
         pageContext.removeAttribute(name);
         if (this.iterator.hasNext()) {
             element = this.iterator.next();
-            //Debug.logInfo("iterator has another object: " + element);
+            Debug.logVerbose("iterator has another object: " + element, module);
         } else {
-            //Debug.logInfo("iterator has no more objects");
+            Debug.logVerbose("iterator has no more objects", module);
         }
         if (element != null) {
-            //Debug.logInfo("set attribute " + name + " to be " + element + " as next value from iterator");
+            Debug.logVerbose("set attribute " + name + " to be " + element + " as next value from iterator", module);
             pageContext.setAttribute(name, element);
 
             //expand a map element here if requested
@@ -206,8 +208,7 @@ public class IteratorTag extends BodyTagSupport {
 
             return true;
         }
-        //Debug.logInfo("no more iterations; element = " + element);
-        //Debug.logInfo("no more iterations");
+        Debug.logVerbose("no more iterations; element = " + element, module);
         return false;
     }
 }
