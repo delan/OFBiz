@@ -583,9 +583,6 @@ public class GenericDelegator implements DelegatorInterface {
                 }
             }
             
-            // only commit the transaction if we started one...
-            TransactionUtil.commit(beganTransaction);
-
             this.evalEcaRules(EntityEcaHandler.EV_RETURN, EntityEcaHandler.OP_CREATE, value, ecaEventMap, (ecaEventMap == null), false);
             return value;
         } catch (GenericEntityException e) {
@@ -597,6 +594,9 @@ public class GenericDelegator implements DelegatorInterface {
             }
             // after rolling back, rethrow the exception
             throw e;
+        } finally {
+            // only commit the transaction if we started one... this will throw an exception if it fails
+            TransactionUtil.commit(beganTransaction);
         }
     }
 
@@ -622,8 +622,7 @@ public class GenericDelegator implements DelegatorInterface {
                 this.refresh(value);
             }
             
-            // only commit the transaction if we started one...
-            TransactionUtil.commit(beganTransaction);
+            return value;
         } catch (GenericEntityException e) {
             try {
                 // only rollback the transaction if we started one...
@@ -633,9 +632,10 @@ public class GenericDelegator implements DelegatorInterface {
             }
             // after rolling back, rethrow the exception
             throw e;
+        } finally {
+            // only commit the transaction if we started one... this will throw an exception if it fails
+            TransactionUtil.commit(beganTransaction);
         }
-
-        return value;
     }
 
     /** Creates or stores an Entity
@@ -712,9 +712,6 @@ public class GenericDelegator implements DelegatorInterface {
             int num = helper.removeByPrimaryKey(primaryKey);
             this.saveEntitySyncRemoveInfo(primaryKey);
             
-            // only commit the transaction if we started one...
-            TransactionUtil.commit(beganTransaction);
-            
             this.evalEcaRules(EntityEcaHandler.EV_RETURN, EntityEcaHandler.OP_REMOVE, primaryKey, ecaEventMap, (ecaEventMap == null), false);
             return num;
         } catch (GenericEntityException e) {
@@ -726,6 +723,9 @@ public class GenericDelegator implements DelegatorInterface {
             }
             // after rolling back, rethrow the exception
             throw e;
+        } finally {
+            // only commit the transaction if we started one... this will throw an exception if it fails
+            TransactionUtil.commit(beganTransaction);
         }
     }
 
@@ -764,9 +764,6 @@ public class GenericDelegator implements DelegatorInterface {
             int num = helper.removeByPrimaryKey(value.getPrimaryKey());
             this.saveEntitySyncRemoveInfo(value.getPrimaryKey());
             
-            // only commit the transaction if we started one...
-            TransactionUtil.commit(beganTransaction);
-            
             this.evalEcaRules(EntityEcaHandler.EV_RETURN, EntityEcaHandler.OP_REMOVE, value, ecaEventMap, (ecaEventMap == null), false);
             return num;
         } catch (GenericEntityException e) {
@@ -778,6 +775,9 @@ public class GenericDelegator implements DelegatorInterface {
             }
             // after rolling back, rethrow the exception
             throw e;
+        } finally {
+            // only commit the transaction if we started one... this will throw an exception if it fails
+            TransactionUtil.commit(beganTransaction);
         }
     }
 
@@ -822,9 +822,6 @@ public class GenericDelegator implements DelegatorInterface {
             int num = helper.removeByAnd(modelEntity, dummyPK.getAllFields());
             this.saveEntitySyncRemoveInfo(dummyPK);
             
-            // only commit the transaction if we started one...
-            TransactionUtil.commit(beganTransaction);
-            
             this.evalEcaRules(EntityEcaHandler.EV_RETURN, EntityEcaHandler.OP_REMOVE, dummyPK, ecaEventMap, (ecaEventMap == null), false);
             return num;
         } catch (GenericEntityException e) {
@@ -836,6 +833,9 @@ public class GenericDelegator implements DelegatorInterface {
             }
             // after rolling back, rethrow the exception
             throw e;
+        } finally {
+            // only commit the transaction if we started one... this will throw an exception if it fails
+            TransactionUtil.commit(beganTransaction);
         }
     }
 
@@ -868,9 +868,6 @@ public class GenericDelegator implements DelegatorInterface {
             ModelEntity modelEntity = getModelReader().getModelEntity(entityName);
             GenericHelper helper = getEntityHelper(entityName);
             
-            // only commit the transaction if we started one...
-            TransactionUtil.commit(beganTransaction);
-            
             return helper.removeByCondition(modelEntity, condition);
         } catch (GenericEntityException e) {
             try {
@@ -881,6 +878,9 @@ public class GenericDelegator implements DelegatorInterface {
             }
             // after rolling back, rethrow the exception
             throw e;
+        } finally {
+            // only commit the transaction if we started one... this will throw an exception if it fails
+            TransactionUtil.commit(beganTransaction);
         }
     }
 
@@ -989,9 +989,6 @@ public class GenericDelegator implements DelegatorInterface {
                 refresh(value, doCacheClear);
             }
             
-            // only commit the transaction if we started one...
-            TransactionUtil.commit(beganTransaction);
-            
             this.evalEcaRules(EntityEcaHandler.EV_RETURN, EntityEcaHandler.OP_STORE, value, ecaEventMap, (ecaEventMap == null), false);
             return retVal;
         } catch (GenericEntityException e) {
@@ -1003,6 +1000,9 @@ public class GenericDelegator implements DelegatorInterface {
             }
             // after rolling back, rethrow the exception
             throw e;
+        } finally {
+            // only commit the transaction if we started one... this will throw an exception if it fails
+            TransactionUtil.commit(beganTransaction);
         }
     }
 
@@ -1114,8 +1114,7 @@ public class GenericDelegator implements DelegatorInterface {
                 }
             }
 
-            // only commit the transaction if we started one...
-            TransactionUtil.commit(beganTransaction);
+            return numberChanged;
         } catch (GenericEntityException e) {
             try {
                 // only rollback the transaction if we started one...
@@ -1125,9 +1124,10 @@ public class GenericDelegator implements DelegatorInterface {
             }
             // after rolling back, rethrow the exception
             throw e;
+        } finally {
+            // only commit the transaction if we started one... this will throw an exception if it fails
+            TransactionUtil.commit(beganTransaction);
         }
-
-        return numberChanged;
     }
     
     /** Remove the Entities from the List from the persistent store.
@@ -1176,8 +1176,7 @@ public class GenericDelegator implements DelegatorInterface {
                 }
             }
 
-            // only commit the transaction if we started one...
-            TransactionUtil.commit(beganTransaction);
+            return numRemoved;
         } catch (GenericEntityException e) {
             try {
                 // only rollback the transaction if we started one...
@@ -1187,9 +1186,10 @@ public class GenericDelegator implements DelegatorInterface {
             }
             // after rolling back, rethrow the exception
             throw e;
+        } finally {
+            // only commit the transaction if we started one... this will throw an exception if it fails
+            TransactionUtil.commit(beganTransaction);
         }
-
-        return numRemoved;
     }
 
     // ======================================
@@ -1201,28 +1201,47 @@ public class GenericDelegator implements DelegatorInterface {
      *@return The GenericValue corresponding to the primaryKey
      */
     public GenericValue findByPrimaryKey(GenericPK primaryKey) throws GenericEntityException {
-        Map ecaEventMap = this.getEcaEntityEventMap(primaryKey.getEntityName());
-        this.evalEcaRules(EntityEcaHandler.EV_VALIDATE, EntityEcaHandler.OP_FIND, primaryKey, ecaEventMap, (ecaEventMap == null), false);
-
-        GenericHelper helper = getEntityHelper(primaryKey.getEntityName());
-        GenericValue value = null;
-
-        if (!primaryKey.isPrimaryKey()) {
-            throw new GenericModelException("[GenericDelegator.findByPrimaryKey] Passed primary key is not a valid primary key: " + primaryKey);
-        }
-        this.evalEcaRules(EntityEcaHandler.EV_RUN, EntityEcaHandler.OP_FIND, primaryKey, ecaEventMap, (ecaEventMap == null), false);
+        boolean beganTransaction = false;
         try {
-            value = helper.findByPrimaryKey(primaryKey);
-        } catch (GenericEntityNotFoundException e) {
-            value = null;
-        }
-        if (value != null) {
-            value.setDelegator(this);
-            this.decryptFields(value);
-        }
+            if (alwaysUseTransaction) {
+                beganTransaction = TransactionUtil.begin();
+            }
 
-        this.evalEcaRules(EntityEcaHandler.EV_RETURN, EntityEcaHandler.OP_FIND, primaryKey, ecaEventMap, (ecaEventMap == null), false);
-        return value;
+            Map ecaEventMap = this.getEcaEntityEventMap(primaryKey.getEntityName());
+            this.evalEcaRules(EntityEcaHandler.EV_VALIDATE, EntityEcaHandler.OP_FIND, primaryKey, ecaEventMap, (ecaEventMap == null), false);
+    
+            GenericHelper helper = getEntityHelper(primaryKey.getEntityName());
+            GenericValue value = null;
+    
+            if (!primaryKey.isPrimaryKey()) {
+                throw new GenericModelException("[GenericDelegator.findByPrimaryKey] Passed primary key is not a valid primary key: " + primaryKey);
+            }
+            this.evalEcaRules(EntityEcaHandler.EV_RUN, EntityEcaHandler.OP_FIND, primaryKey, ecaEventMap, (ecaEventMap == null), false);
+            try {
+                value = helper.findByPrimaryKey(primaryKey);
+            } catch (GenericEntityNotFoundException e) {
+                value = null;
+            }
+            if (value != null) {
+                value.setDelegator(this);
+                this.decryptFields(value);
+            }
+    
+            this.evalEcaRules(EntityEcaHandler.EV_RETURN, EntityEcaHandler.OP_FIND, primaryKey, ecaEventMap, (ecaEventMap == null), false);
+            return value;
+        } catch (GenericEntityException e) {
+            try {
+                // only rollback the transaction if we started one...
+                TransactionUtil.rollback(beganTransaction);
+            } catch (GenericEntityException e2) {
+                Debug.logError(e2, "[GenericDelegator] Could not rollback transaction: " + e2.toString(), module);
+            }
+            // after rolling back, rethrow the exception
+            throw e;
+        } finally {
+            // only commit the transaction if we started one... this will throw an exception if it fails
+            TransactionUtil.commit(beganTransaction);
+        }
     }
 
     /** Find a CACHED Generic Entity by its Primary Key
@@ -1271,26 +1290,45 @@ public class GenericDelegator implements DelegatorInterface {
      *@return The GenericValue corresponding to the primaryKey
      */
     public GenericValue findByPrimaryKeyPartial(GenericPK primaryKey, Set keys) throws GenericEntityException {
-        Map ecaEventMap = this.getEcaEntityEventMap(primaryKey.getEntityName());
-        this.evalEcaRules(EntityEcaHandler.EV_VALIDATE, EntityEcaHandler.OP_FIND, primaryKey, ecaEventMap, (ecaEventMap == null), false);
-
-        GenericHelper helper = getEntityHelper(primaryKey.getEntityName());
-        GenericValue value = null;
-
-        if (!primaryKey.isPrimaryKey()) {
-            throw new GenericModelException("[GenericDelegator.findByPrimaryKey] Passed primary key is not a valid primary key: " + primaryKey);
-        }
-
-        this.evalEcaRules(EntityEcaHandler.EV_RUN, EntityEcaHandler.OP_FIND, primaryKey, ecaEventMap, (ecaEventMap == null), false);
+        boolean beganTransaction = false;
         try {
-            value = helper.findByPrimaryKeyPartial(primaryKey, keys);
-        } catch (GenericEntityNotFoundException e) {
-            value = null;
-        }
-        if (value != null) value.setDelegator(this);
+            if (alwaysUseTransaction) {
+                beganTransaction = TransactionUtil.begin();
+            }
 
-        this.evalEcaRules(EntityEcaHandler.EV_RETURN, EntityEcaHandler.OP_FIND, primaryKey, ecaEventMap, (ecaEventMap == null), false);
-        return value;
+            Map ecaEventMap = this.getEcaEntityEventMap(primaryKey.getEntityName());
+            this.evalEcaRules(EntityEcaHandler.EV_VALIDATE, EntityEcaHandler.OP_FIND, primaryKey, ecaEventMap, (ecaEventMap == null), false);
+    
+            GenericHelper helper = getEntityHelper(primaryKey.getEntityName());
+            GenericValue value = null;
+    
+            if (!primaryKey.isPrimaryKey()) {
+                throw new GenericModelException("[GenericDelegator.findByPrimaryKey] Passed primary key is not a valid primary key: " + primaryKey);
+            }
+    
+            this.evalEcaRules(EntityEcaHandler.EV_RUN, EntityEcaHandler.OP_FIND, primaryKey, ecaEventMap, (ecaEventMap == null), false);
+            try {
+                value = helper.findByPrimaryKeyPartial(primaryKey, keys);
+            } catch (GenericEntityNotFoundException e) {
+                value = null;
+            }
+            if (value != null) value.setDelegator(this);
+    
+            this.evalEcaRules(EntityEcaHandler.EV_RETURN, EntityEcaHandler.OP_FIND, primaryKey, ecaEventMap, (ecaEventMap == null), false);
+            return value;
+        } catch (GenericEntityException e) {
+            try {
+                // only rollback the transaction if we started one...
+                TransactionUtil.rollback(beganTransaction);
+            } catch (GenericEntityException e2) {
+                Debug.logError(e2, "[GenericDelegator] Could not rollback transaction: " + e2.toString(), module);
+            }
+            // after rolling back, rethrow the exception
+            throw e;
+        } finally {
+            // only commit the transaction if we started one... this will throw an exception if it fails
+            TransactionUtil.commit(beganTransaction);
+        }
     }
 
     /** Find a number of Generic Value objects by their Primary Keys, all at once
@@ -1298,41 +1336,60 @@ public class GenericDelegator implements DelegatorInterface {
      *@return List of GenericValue objects corresponding to the passed primaryKey objects
      */
     public List findAllByPrimaryKeys(Collection primaryKeys) throws GenericEntityException {
-        //TODO: add eca eval calls
-        //TODO: maybe this should use the internal findBy methods
-        if (primaryKeys == null) return null;
-        List results = new LinkedList();
-
-        // from the delegator level this is complicated because different GenericPK
-        // objects in the list may correspond to different helpers
-        HashMap pksPerHelper = new HashMap();
-        Iterator pkiter = primaryKeys.iterator();
-
-        while (pkiter.hasNext()) {
-            GenericPK curPK = (GenericPK) pkiter.next();
-            String helperName = this.getEntityHelperName(curPK.getEntityName());
-            List pks = (List) pksPerHelper.get(helperName);
-
-            if (pks == null) {
-                pks = new LinkedList();
-                pksPerHelper.put(helperName, pks);
+        boolean beganTransaction = false;
+        try {
+            if (alwaysUseTransaction) {
+                beganTransaction = TransactionUtil.begin();
             }
-            pks.add(curPK);
+
+            //TODO: add eca eval calls
+            //TODO: maybe this should use the internal findBy methods
+            if (primaryKeys == null) return null;
+            List results = new LinkedList();
+    
+            // from the delegator level this is complicated because different GenericPK
+            // objects in the list may correspond to different helpers
+            HashMap pksPerHelper = new HashMap();
+            Iterator pkiter = primaryKeys.iterator();
+    
+            while (pkiter.hasNext()) {
+                GenericPK curPK = (GenericPK) pkiter.next();
+                String helperName = this.getEntityHelperName(curPK.getEntityName());
+                List pks = (List) pksPerHelper.get(helperName);
+    
+                if (pks == null) {
+                    pks = new LinkedList();
+                    pksPerHelper.put(helperName, pks);
+                }
+                pks.add(curPK);
+            }
+    
+            Iterator helperIter = pksPerHelper.entrySet().iterator();
+    
+            while (helperIter.hasNext()) {
+                Map.Entry curEntry = (Map.Entry) helperIter.next();
+                String helperName = (String) curEntry.getKey();
+                GenericHelper helper = GenericHelperFactory.getHelper(helperName);
+                List values = helper.findAllByPrimaryKeys((List) curEntry.getValue());
+    
+                results.addAll(values);
+            }
+    
+            this.decryptFields(results);
+            return results;
+        } catch (GenericEntityException e) {
+            try {
+                // only rollback the transaction if we started one...
+                TransactionUtil.rollback(beganTransaction);
+            } catch (GenericEntityException e2) {
+                Debug.logError(e2, "[GenericDelegator] Could not rollback transaction: " + e2.toString(), module);
+            }
+            // after rolling back, rethrow the exception
+            throw e;
+        } finally {
+            // only commit the transaction if we started one... this will throw an exception if it fails
+            TransactionUtil.commit(beganTransaction);
         }
-
-        Iterator helperIter = pksPerHelper.entrySet().iterator();
-
-        while (helperIter.hasNext()) {
-            Map.Entry curEntry = (Map.Entry) helperIter.next();
-            String helperName = (String) curEntry.getKey();
-            GenericHelper helper = GenericHelperFactory.getHelper(helperName);
-            List values = helper.findAllByPrimaryKeys((List) curEntry.getValue());
-
-            results.addAll(values);
-        }
-
-        this.decryptFields(results);
-        return results;
     }
 
     /** Find a number of Generic Value objects by their Primary Keys, all at once;
@@ -1343,52 +1400,71 @@ public class GenericDelegator implements DelegatorInterface {
      *@return List of GenericValue objects corresponding to the passed primaryKey objects
      */
     public List findAllByPrimaryKeysCache(Collection primaryKeys) throws GenericEntityException {
-        //TODO: add eca eval calls
-        //TODO: maybe this should use the internal findBy methods
-        if (primaryKeys == null)
-            return null;
-        List results = new LinkedList();
-
-        // from the delegator level this is complicated because different GenericPK
-        // objects in the list may correspond to different helpers
-        HashMap pksPerHelper = new HashMap();
-        Iterator pkiter = primaryKeys.iterator();
-
-        while (pkiter.hasNext()) {
-            GenericPK curPK = (GenericPK) pkiter.next();
-
-            GenericValue value = this.getFromPrimaryKeyCache(curPK);
-
-            if (value != null) {
-                // it is in the cache, so just put the cached value in the results
-                results.add(value);
-            } else {
-                // is not in the cache, so put in a list for a call to the helper
-                String helperName = this.getEntityHelperName(curPK.getEntityName());
-                List pks = (List) pksPerHelper.get(helperName);
-
-                if (pks == null) {
-                    pks = new LinkedList();
-                    pksPerHelper.put(helperName, pks);
-                }
-                pks.add(curPK);
+        boolean beganTransaction = false;
+        try {
+            if (alwaysUseTransaction) {
+                beganTransaction = TransactionUtil.begin();
             }
+
+            //TODO: add eca eval calls
+            //TODO: maybe this should use the internal findBy methods
+            if (primaryKeys == null)
+                return null;
+            List results = new LinkedList();
+    
+            // from the delegator level this is complicated because different GenericPK
+            // objects in the list may correspond to different helpers
+            HashMap pksPerHelper = new HashMap();
+            Iterator pkiter = primaryKeys.iterator();
+    
+            while (pkiter.hasNext()) {
+                GenericPK curPK = (GenericPK) pkiter.next();
+    
+                GenericValue value = this.getFromPrimaryKeyCache(curPK);
+    
+                if (value != null) {
+                    // it is in the cache, so just put the cached value in the results
+                    results.add(value);
+                } else {
+                    // is not in the cache, so put in a list for a call to the helper
+                    String helperName = this.getEntityHelperName(curPK.getEntityName());
+                    List pks = (List) pksPerHelper.get(helperName);
+    
+                    if (pks == null) {
+                        pks = new LinkedList();
+                        pksPerHelper.put(helperName, pks);
+                    }
+                    pks.add(curPK);
+                }
+            }
+    
+            Iterator helperIter = pksPerHelper.entrySet().iterator();
+    
+            while (helperIter.hasNext()) {
+                Map.Entry curEntry = (Map.Entry) helperIter.next();
+                String helperName = (String) curEntry.getKey();
+                GenericHelper helper = GenericHelperFactory.getHelper(helperName);
+                List values = helper.findAllByPrimaryKeys((List) curEntry.getValue());
+    
+                this.putAllInPrimaryKeyCache(values);
+                results.addAll(values);
+            }
+    
+            this.decryptFields(results);
+            return results;
+        } catch (GenericEntityException e) {
+            try {
+                // only rollback the transaction if we started one...
+                TransactionUtil.rollback(beganTransaction);
+            } catch (GenericEntityException e2) {
+                Debug.logError(e2, "[GenericDelegator] Could not rollback transaction: " + e2.toString(), module);
+            }
+            // after rolling back, rethrow the exception
+            throw e;
+        } finally {
+            // only commit the transaction if we started one... this will throw an exception if it fails
+            TransactionUtil.commit(beganTransaction);
         }
-
-        Iterator helperIter = pksPerHelper.entrySet().iterator();
-
-        while (helperIter.hasNext()) {
-            Map.Entry curEntry = (Map.Entry) helperIter.next();
-            String helperName = (String) curEntry.getKey();
-            GenericHelper helper = GenericHelperFactory.getHelper(helperName);
-            List values = helper.findAllByPrimaryKeys((List) curEntry.getValue());
-
-            this.putAllInPrimaryKeyCache(values);
-            results.addAll(values);
-        }
-
-        this.decryptFields(results);
-        return results;
     }
 
     /** Finds all Generic entities
@@ -1471,23 +1547,42 @@ public class GenericDelegator implements DelegatorInterface {
     }
 
     public List findByAnd(ModelEntity modelEntity, Map fields, List orderBy) throws GenericEntityException {
-        GenericValue dummyValue = new GenericValue(modelEntity);
-        Map ecaEventMap = this.getEcaEntityEventMap(modelEntity.getEntityName());
+        boolean beganTransaction = false;
+        try {
+            if (alwaysUseTransaction) {
+                beganTransaction = TransactionUtil.begin();
+            }
 
-        GenericHelper helper = getEntityHelper(modelEntity);
-
-        if (fields != null && !modelEntity.areFields(fields.keySet())) {
-            throw new GenericModelException("At least one of the passed fields is not valid: " + fields.keySet().toString());
+            GenericValue dummyValue = new GenericValue(modelEntity);
+            Map ecaEventMap = this.getEcaEntityEventMap(modelEntity.getEntityName());
+    
+            GenericHelper helper = getEntityHelper(modelEntity);
+    
+            if (fields != null && !modelEntity.areFields(fields.keySet())) {
+                throw new GenericModelException("At least one of the passed fields is not valid: " + fields.keySet().toString());
+            }
+    
+            this.evalEcaRules(EntityEcaHandler.EV_RUN, EntityEcaHandler.OP_FIND, dummyValue, ecaEventMap, (ecaEventMap == null), false);
+            List list = null;
+            list = helper.findByAnd(modelEntity, fields, orderBy);
+            absorbList(list);
+            decryptFields(list);
+    
+            this.evalEcaRules(EntityEcaHandler.EV_RETURN, EntityEcaHandler.OP_FIND, dummyValue, ecaEventMap, (ecaEventMap == null), false);
+            return list;
+        } catch (GenericEntityException e) {
+            try {
+                // only rollback the transaction if we started one...
+                TransactionUtil.rollback(beganTransaction);
+            } catch (GenericEntityException e2) {
+                Debug.logError(e2, "[GenericDelegator] Could not rollback transaction: " + e2.toString(), module);
+            }
+            // after rolling back, rethrow the exception
+            throw e;
+        } finally {
+            // only commit the transaction if we started one... this will throw an exception if it fails
+            TransactionUtil.commit(beganTransaction);
         }
-
-        this.evalEcaRules(EntityEcaHandler.EV_RUN, EntityEcaHandler.OP_FIND, dummyValue, ecaEventMap, (ecaEventMap == null), false);
-        List list = null;
-        list = helper.findByAnd(modelEntity, fields, orderBy);
-        absorbList(list);
-        decryptFields(list);
-
-        this.evalEcaRules(EntityEcaHandler.EV_RETURN, EntityEcaHandler.OP_FIND, dummyValue, ecaEventMap, (ecaEventMap == null), false);
-        return list;
     }
 
     /** Finds Generic Entity records by all of the specified fields (ie: combined using OR)
@@ -1498,25 +1593,44 @@ public class GenericDelegator implements DelegatorInterface {
      * @return List of GenericValue instances that match the query
      */
     public List findByOr(String entityName, Map fields, List orderBy) throws GenericEntityException {
-        ModelEntity modelEntity = getModelReader().getModelEntity(entityName);
-        GenericValue dummyValue = new GenericValue(modelEntity);
-        Map ecaEventMap = this.getEcaEntityEventMap(modelEntity.getEntityName());
-        this.evalEcaRules(EntityEcaHandler.EV_VALIDATE, EntityEcaHandler.OP_FIND, dummyValue, null, false, false);
+        boolean beganTransaction = false;
+        try {
+            if (alwaysUseTransaction) {
+                beganTransaction = TransactionUtil.begin();
+            }
 
-        GenericHelper helper = getEntityHelper(entityName);
-
-        if (fields != null && !modelEntity.areFields(fields.keySet())) {
-            throw new GenericModelException("[GenericDelegator.findByOr] At least of the passed fields is not valid: " + fields.keySet().toString());
+            ModelEntity modelEntity = getModelReader().getModelEntity(entityName);
+            GenericValue dummyValue = new GenericValue(modelEntity);
+            Map ecaEventMap = this.getEcaEntityEventMap(modelEntity.getEntityName());
+            this.evalEcaRules(EntityEcaHandler.EV_VALIDATE, EntityEcaHandler.OP_FIND, dummyValue, null, false, false);
+    
+            GenericHelper helper = getEntityHelper(entityName);
+    
+            if (fields != null && !modelEntity.areFields(fields.keySet())) {
+                throw new GenericModelException("[GenericDelegator.findByOr] At least of the passed fields is not valid: " + fields.keySet().toString());
+            }
+    
+            this.evalEcaRules(EntityEcaHandler.EV_RUN, EntityEcaHandler.OP_FIND, dummyValue, ecaEventMap, (ecaEventMap == null), false);
+            List list = null;
+            list = helper.findByOr(modelEntity, fields, orderBy);
+            absorbList(list);
+            decryptFields(list);
+    
+            this.evalEcaRules(EntityEcaHandler.EV_RETURN, EntityEcaHandler.OP_FIND, dummyValue, ecaEventMap, (ecaEventMap == null), false);
+            return list;
+        } catch (GenericEntityException e) {
+            try {
+                // only rollback the transaction if we started one...
+                TransactionUtil.rollback(beganTransaction);
+            } catch (GenericEntityException e2) {
+                Debug.logError(e2, "[GenericDelegator] Could not rollback transaction: " + e2.toString(), module);
+            }
+            // after rolling back, rethrow the exception
+            throw e;
+        } finally {
+            // only commit the transaction if we started one... this will throw an exception if it fails
+            TransactionUtil.commit(beganTransaction);
         }
-
-        this.evalEcaRules(EntityEcaHandler.EV_RUN, EntityEcaHandler.OP_FIND, dummyValue, ecaEventMap, (ecaEventMap == null), false);
-        List list = null;
-        list = helper.findByOr(modelEntity, fields, orderBy);
-        absorbList(list);
-        decryptFields(list);
-
-        this.evalEcaRules(EntityEcaHandler.EV_RETURN, EntityEcaHandler.OP_FIND, dummyValue, ecaEventMap, (ecaEventMap == null), false);
-        return list;
     }
 
     /** Finds Generic Entity records by all of the specified fields (ie: combined using AND), looking first in the cache; uses orderBy for lookup, but only keys results on the entityName and fields
@@ -1605,23 +1719,42 @@ public class GenericDelegator implements DelegatorInterface {
      *@return List of GenericValue objects representing the result
      */
     public List findByCondition(String entityName, EntityCondition entityCondition, Collection fieldsToSelect, List orderBy) throws GenericEntityException {
-        ModelEntity modelEntity = getModelReader().getModelEntity(entityName);
-        GenericValue dummyValue = new GenericValue(modelEntity);
-        Map ecaEventMap = this.getEcaEntityEventMap(entityName);
+        boolean beganTransaction = false;
+        try {
+            if (alwaysUseTransaction) {
+                beganTransaction = TransactionUtil.begin();
+            }
 
-        this.evalEcaRules(EntityEcaHandler.EV_VALIDATE, EntityEcaHandler.OP_FIND, dummyValue, ecaEventMap, (ecaEventMap == null), false);
-        if (entityCondition != null) entityCondition.checkCondition(modelEntity);
-
-        this.evalEcaRules(EntityEcaHandler.EV_RUN, EntityEcaHandler.OP_FIND, dummyValue, ecaEventMap, (ecaEventMap == null), false);
-        GenericHelper helper = getEntityHelper(entityName);
-        List list = null;
-        list = helper.findByCondition(modelEntity, entityCondition, fieldsToSelect, orderBy);
-
-        absorbList(list);
-        decryptFields(list);
-        this.evalEcaRules(EntityEcaHandler.EV_RETURN, EntityEcaHandler.OP_FIND, dummyValue, ecaEventMap, (ecaEventMap == null), false);
-
-        return list;
+            ModelEntity modelEntity = getModelReader().getModelEntity(entityName);
+            GenericValue dummyValue = new GenericValue(modelEntity);
+            Map ecaEventMap = this.getEcaEntityEventMap(entityName);
+    
+            this.evalEcaRules(EntityEcaHandler.EV_VALIDATE, EntityEcaHandler.OP_FIND, dummyValue, ecaEventMap, (ecaEventMap == null), false);
+            if (entityCondition != null) entityCondition.checkCondition(modelEntity);
+    
+            this.evalEcaRules(EntityEcaHandler.EV_RUN, EntityEcaHandler.OP_FIND, dummyValue, ecaEventMap, (ecaEventMap == null), false);
+            GenericHelper helper = getEntityHelper(entityName);
+            List list = null;
+            list = helper.findByCondition(modelEntity, entityCondition, fieldsToSelect, orderBy);
+    
+            absorbList(list);
+            decryptFields(list);
+            this.evalEcaRules(EntityEcaHandler.EV_RETURN, EntityEcaHandler.OP_FIND, dummyValue, ecaEventMap, (ecaEventMap == null), false);
+    
+            return list;
+        } catch (GenericEntityException e) {
+            try {
+                // only rollback the transaction if we started one...
+                TransactionUtil.rollback(beganTransaction);
+            } catch (GenericEntityException e2) {
+                Debug.logError(e2, "[GenericDelegator] Could not rollback transaction: " + e2.toString(), module);
+            }
+            // after rolling back, rethrow the exception
+            throw e;
+        } finally {
+            // only commit the transaction if we started one... this will throw an exception if it fails
+            TransactionUtil.commit(beganTransaction);
+        }
     }
 
     /** Finds GenericValues by the conditions specified in the EntityCondition object, looking first in the cache, see the EntityCondition javadoc for more details.
@@ -1676,6 +1809,15 @@ public class GenericDelegator implements DelegatorInterface {
             EntityCondition havingEntityCondition, Collection fieldsToSelect, List orderBy, EntityFindOptions findOptions)
             throws GenericEntityException {
 
+        // if there is no transaction throw an exception, we don't want to create a transaction here since closing it would mess up the ELI
+        if (!TransactionUtil.isTransactionInPlace()) {
+            //throw new GenericEntityException("ERROR: Cannot do a find that returns an EntityListIterator with no transaction in place. Wrap this call in a transaction.");
+
+            //throwing an exception is a little harsh for now, just display a really big error message since we want to get all of these fixed...
+            Exception newE = new Exception("Stack Trace");
+            Debug.logError(newE, "ERROR: Cannot do a find that returns an EntityListIterator with no transaction in place. Wrap this call in a transaction.", module);
+        }
+        
         ModelEntity modelEntity = getModelReader().getModelEntity(entityName);
         GenericValue dummyValue = new GenericValue(modelEntity);
         Map ecaEventMap = this.getEcaEntityEventMap(modelEntity.getEntityName());
@@ -1708,6 +1850,15 @@ public class GenericDelegator implements DelegatorInterface {
             EntityCondition havingEntityCondition, Collection fieldsToSelect, List orderBy, EntityFindOptions findOptions)
             throws GenericEntityException {
 
+        // if there is no transaction throw an exception, we don't want to create a transaction here since closing it would mess up the ELI
+        if (!TransactionUtil.isTransactionInPlace()) {
+            //throw new GenericEntityException("ERROR: Cannot do a find that returns an EntityListIterator with no transaction in place. Wrap this call in a transaction.");
+
+            //throwing an exception is a little harsh for now, just display a really big error message since we want to get all of these fixed...
+            Exception newE = new Exception("Stack Trace");
+            Debug.logError(newE, "ERROR: Cannot do a find that returns an EntityListIterator with no transaction in place. Wrap this call in a transaction.", module);
+        }
+        
         ModelViewEntity modelViewEntity = dynamicViewEntity.makeModelViewEntity(this);
         if (whereEntityCondition != null) whereEntityCondition.checkCondition(modelViewEntity);
         if (havingEntityCondition != null) havingEntityCondition.checkCondition(modelViewEntity);
@@ -1726,20 +1877,40 @@ public class GenericDelegator implements DelegatorInterface {
 
     public long findCountByCondition(String entityName, EntityCondition whereEntityCondition,
             EntityCondition havingEntityCondition) throws GenericEntityException {
-        ModelEntity modelEntity = getModelReader().getModelEntity(entityName);
-        GenericValue dummyValue = new GenericValue(modelEntity);
-        Map ecaEventMap = this.getEcaEntityEventMap(modelEntity.getEntityName());
-        this.evalEcaRules(EntityEcaHandler.EV_VALIDATE, EntityEcaHandler.OP_FIND, dummyValue, ecaEventMap, (ecaEventMap == null), false);
 
-        if (whereEntityCondition != null) whereEntityCondition.checkCondition(modelEntity);
-        if (havingEntityCondition != null) havingEntityCondition.checkCondition(modelEntity);
+        boolean beganTransaction = false;
+        try {
+            if (alwaysUseTransaction) {
+                beganTransaction = TransactionUtil.begin();
+            }
 
-        this.evalEcaRules(EntityEcaHandler.EV_RUN, EntityEcaHandler.OP_FIND, dummyValue, ecaEventMap, (ecaEventMap == null), false);
-        GenericHelper helper = getEntityHelper(modelEntity.getEntityName());
-        long count = helper.findCountByCondition(modelEntity, whereEntityCondition, havingEntityCondition);
-
-        this.evalEcaRules(EntityEcaHandler.EV_RETURN, EntityEcaHandler.OP_FIND, dummyValue, ecaEventMap, (ecaEventMap == null), false);
-        return count;
+            ModelEntity modelEntity = getModelReader().getModelEntity(entityName);
+            GenericValue dummyValue = new GenericValue(modelEntity);
+            Map ecaEventMap = this.getEcaEntityEventMap(modelEntity.getEntityName());
+            this.evalEcaRules(EntityEcaHandler.EV_VALIDATE, EntityEcaHandler.OP_FIND, dummyValue, ecaEventMap, (ecaEventMap == null), false);
+    
+            if (whereEntityCondition != null) whereEntityCondition.checkCondition(modelEntity);
+            if (havingEntityCondition != null) havingEntityCondition.checkCondition(modelEntity);
+    
+            this.evalEcaRules(EntityEcaHandler.EV_RUN, EntityEcaHandler.OP_FIND, dummyValue, ecaEventMap, (ecaEventMap == null), false);
+            GenericHelper helper = getEntityHelper(modelEntity.getEntityName());
+            long count = helper.findCountByCondition(modelEntity, whereEntityCondition, havingEntityCondition);
+    
+            this.evalEcaRules(EntityEcaHandler.EV_RETURN, EntityEcaHandler.OP_FIND, dummyValue, ecaEventMap, (ecaEventMap == null), false);
+            return count;
+        } catch (GenericEntityException e) {
+            try {
+                // only rollback the transaction if we started one...
+                TransactionUtil.rollback(beganTransaction);
+            } catch (GenericEntityException e2) {
+                Debug.logError(e2, "[GenericDelegator] Could not rollback transaction: " + e2.toString(), module);
+            }
+            // after rolling back, rethrow the exception
+            throw e;
+        } finally {
+            // only commit the transaction if we started one... this will throw an exception if it fails
+            TransactionUtil.commit(beganTransaction);
+        }
     }
 
     /**
@@ -1755,17 +1926,36 @@ public class GenericDelegator implements DelegatorInterface {
      * @return List of GenericValue instances as specified in the relation definition
      */
     public List getMultiRelation(GenericValue value, String relationNameOne, String relationNameTwo, List orderBy) throws GenericEntityException {
-        //TODO: add eca eval calls
-        // traverse the relationships
-        ModelEntity modelEntity = value.getModelEntity();
-        ModelRelation modelRelationOne = modelEntity.getRelation(relationNameOne);
-        ModelEntity modelEntityOne = getModelEntity(modelRelationOne.getRelEntityName());
-        ModelRelation modelRelationTwo = modelEntityOne.getRelation(relationNameTwo);
-        ModelEntity modelEntityTwo = getModelEntity(modelRelationTwo.getRelEntityName());
+        boolean beganTransaction = false;
+        try {
+            if (alwaysUseTransaction) {
+                beganTransaction = TransactionUtil.begin();
+            }
 
-        GenericHelper helper = getEntityHelper(modelEntity);
-
-        return helper.findByMultiRelation(value, modelRelationOne, modelEntityOne, modelRelationTwo, modelEntityTwo, orderBy);
+            //TODO: add eca eval calls
+            // traverse the relationships
+            ModelEntity modelEntity = value.getModelEntity();
+            ModelRelation modelRelationOne = modelEntity.getRelation(relationNameOne);
+            ModelEntity modelEntityOne = getModelEntity(modelRelationOne.getRelEntityName());
+            ModelRelation modelRelationTwo = modelEntityOne.getRelation(relationNameTwo);
+            ModelEntity modelEntityTwo = getModelEntity(modelRelationTwo.getRelEntityName());
+    
+            GenericHelper helper = getEntityHelper(modelEntity);
+    
+            return helper.findByMultiRelation(value, modelRelationOne, modelEntityOne, modelRelationTwo, modelEntityTwo, orderBy);
+        } catch (GenericEntityException e) {
+            try {
+                // only rollback the transaction if we started one...
+                TransactionUtil.rollback(beganTransaction);
+            } catch (GenericEntityException e2) {
+                Debug.logError(e2, "[GenericDelegator] Could not rollback transaction: " + e2.toString(), module);
+            }
+            // after rolling back, rethrow the exception
+            throw e;
+        } finally {
+            // only commit the transaction if we started one... this will throw an exception if it fails
+            TransactionUtil.commit(beganTransaction);
+        }
     }
 
     /**
