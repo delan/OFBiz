@@ -146,7 +146,8 @@ if (security.hasPermission("ENTITY_MAINT", session) || request.getParameter("ori
 %>
     <view-entity entity-name="<%=entity.getEntityName()%>"
             package-name="<%=entity.getPackageName()%>"<%if (entity.getDependentOn().length() > 0) {%>
-            dependent-on="<%=entity.getDependentOn()%>"<%}%><%if (!title.equals(entity.getTitle())) {%>
+            dependent-on="<%=entity.getDependentOn()%>"<%}%><%if (entity.getNeverCache()) {%>
+            never-cache="true"<%}%><%if (!title.equals(entity.getTitle())) {%>
             title="<%=entity.getTitle()%>"<%}%><%if (!copyright.equals(entity.getCopyright())) {%>
             copyright="<%=entity.getCopyright()%>"<%}%><%if (!author.equals(entity.getAuthor())) {%>
             author="<%=entity.getAuthor()%>"<%}%><%if (!version.equals(entity.getVersion())) {%>
@@ -169,7 +170,7 @@ if (security.hasPermission("ENTITY_MAINT", session) || request.getParameter("ori
   for (int r = 0; r < viewEntity.getViewLinksSize(); r++) {
     ModelViewEntity.ModelViewLink viewLink = viewEntity.getViewLink(r);%>
       <view-link entity-alias="<%=viewLink.getEntityAlias()%>" rel-entity-alias="<%=viewLink.getRelEntityAlias()%>"<%
-          if (viewLink.isRelOptional()) {%> optional="true"<%}%>><%for (int km = 0; km < viewLink.getKeyMapsSize(); km++){ ModelKeyMap keyMap = viewLink.getKeyMap(km);%>
+          if (viewLink.isRelOptional()) {%> rel-optional="true"<%}%>><%for (int km = 0; km < viewLink.getKeyMapsSize(); km++){ ModelKeyMap keyMap = viewLink.getKeyMap(km);%>
         <key-map field-name="<%=keyMap.getFieldName()%>"<%if (!keyMap.getFieldName().equals(keyMap.getRelFieldName())) {%> rel-field-name="<%=keyMap.getRelFieldName()%>"<%}%>/><%}%>
       </view-link><%
   }
@@ -189,7 +190,9 @@ if (security.hasPermission("ENTITY_MAINT", session) || request.getParameter("ori
     <entity entity-name="<%=entity.getEntityName()%>"<%if (!entity.getEntityName().equals(ModelUtil.dbNameToClassName(entity.getTableName()))){
           %> table-name="<%=entity.getTableName()%>"<%}%>
             package-name="<%=entity.getPackageName()%>"<%if (entity.getDependentOn().length() > 0) {%>
-            dependent-on="<%=entity.getDependentOn()%>"<%}%><%if (!title.equals(entity.getTitle())) {%>
+            dependent-on="<%=entity.getDependentOn()%>"<%}%><%if (entity.getDoLock()) {%>
+            enable-lock="true"<%}%><%if (entity.getNeverCache()) {%>
+            never-cache="true"<%}%><%if (!title.equals(entity.getTitle())) {%>
             title="<%=entity.getTitle()%>"<%}%><%if (!copyright.equals(entity.getCopyright())) {%>
             copyright="<%=entity.getCopyright()%>"<%}%><%if (!author.equals(entity.getAuthor())) {%>
             author="<%=entity.getAuthor()%>"<%}%><%if (!version.equals(entity.getVersion())) {%>
