@@ -58,19 +58,20 @@ public class CacheLineTable implements Serializable {
     protected String cacheName = null;
     protected int maxInMemory = 0;
 
-    public CacheLineTable(String fileStore, String cacheName, boolean fileTable, int maxInMemory) {
+    public CacheLineTable(String fileStore, String cacheName, boolean useFileSystemStore, int maxInMemory) {
         this.fileStore = fileStore;
         this.cacheName = cacheName;
         this.maxInMemory = maxInMemory;
-        if (fileTable) {
+        if (useFileSystemStore) {
             // create the manager the first time it is needed
             if (CacheLineTable.jdbmMgr == null) {
                 synchronized (this) {
                     if (CacheLineTable.jdbmMgr == null) {
                         try {
+                            Debug.logImportant("Creating file system cache store for cache with name: " + cacheName, module);
                             CacheLineTable.jdbmMgr = new JdbmRecordManager(fileStore);
                         } catch (IOException e) {
-                            Debug.logError(e, module);
+                            Debug.logError(e, "Error creating file system cache store for cache with name: " + cacheName, module);
                         }
                     }
                 }

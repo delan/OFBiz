@@ -24,7 +24,6 @@
 package org.ofbiz.base.util.cache;
 
 import java.io.Serializable;
-import java.util.Arrays;
 import java.util.Collection;
 import java.util.Iterator;
 import java.util.List;
@@ -40,6 +39,7 @@ import javolution.util.FastSet;
 
 import org.ofbiz.base.util.Debug;
 import org.ofbiz.base.util.ObjectType;
+import org.ofbiz.base.util.UtilValidate;
 
 /**
  * Generalized caching utility. Provides a number of caching features:
@@ -115,14 +115,15 @@ public class UtilCache implements Serializable {
      * @param cacheName The name of the cache.
      * @param useSoftReference Specifies whether or not to use soft references for this cache.
      */
-    public UtilCache(String cacheName, int maxSize, int maxMemorySize, long expireTime, boolean useSoftReference, boolean useFileSystemStore) {
-        this.useSoftReference = useSoftReference;
+    public UtilCache(String cacheName, int maxSize, int maxInMemory, long expireTime, boolean useSoftReference, boolean useFileSystemStore) {
         this.maxSize = maxSize;
+        this.maxInMemory = maxInMemory;
         this.expireTime = expireTime;
-        setPropertiesParams(cacheName);
-
+        this.useSoftReference = useSoftReference;
+        this.useFileSystemStore = useFileSystemStore;
         name = cacheName + this.getNextDefaultIndex(cacheName);
-        cacheLineTable = new CacheLineTable(fileStore, name, useFileSystemStore, maxMemorySize);
+
+        setPropertiesParams(cacheName);
 
         utilCacheTable.put(name, this);
     }
@@ -152,6 +153,7 @@ public class UtilCache implements Serializable {
         String name = "specified" + this.getNextDefaultIndex("specified");
 
         setPropertiesParams(name);
+
         utilCacheTable.put(name, this);
     }
 
@@ -160,11 +162,12 @@ public class UtilCache implements Serializable {
      * @param cacheName The name of the cache.
      */
     public UtilCache(String cacheName, boolean useSoftReference) {
+        name = cacheName + this.getNextDefaultIndex(cacheName);
+        this.useSoftReference = useSoftReference;
+
         setPropertiesParams("default");
         setPropertiesParams(cacheName);
 
-        name = cacheName + this.getNextDefaultIndex(cacheName);
-        this.useSoftReference = useSoftReference;
         utilCacheTable.put(name, this);
     }
 
@@ -173,10 +176,11 @@ public class UtilCache implements Serializable {
      * @param cacheName The name of the cache.
      */
     public UtilCache(String cacheName) {
+        name = cacheName + this.getNextDefaultIndex(cacheName);
+
         setPropertiesParams("default");
         setPropertiesParams(cacheName);
 
-        name = cacheName + this.getNextDefaultIndex(cacheName);
         utilCacheTable.put(name, this);
     }
 
@@ -207,9 +211,10 @@ public class UtilCache implements Serializable {
                 value = res.getString(propNames[i] + '.' + parameter);
             } catch (MissingResourceException e) {}
         }
-        if (value == null) {
-            throw new MissingResourceException("Can't find resource for bundle", res.getClass().getName(), Arrays.asList(propNames) + "." + parameter);
-        }
+        // don't need this, just return null
+        //if (value == null) {
+        //    throw new MissingResourceException("Can't find resource for bundle", res.getClass().getName(), Arrays.asList(propNames) + "." + parameter);
+        //}
         return value;
     }
 
@@ -223,52 +228,66 @@ public class UtilCache implements Serializable {
         if (res != null) {
             try {
                 String value = getPropertyParam(res, propNames, "maxSize");
-                Integer intValue = new Integer(value);
-
-                if (intValue != null) {
-                    maxSize = intValue.intValue();
+                if (UtilValidate.isNotEmpty(value)) {
+                    Integer intValue = new Integer(value);
+                    if (intValue != null) {
+                        this.maxSize = intValue.intValue();
+                    }
                 }
-            } catch (Exception e) {}
+            } catch (Exception e) {
+                Debug.logWarning(e, "Error getting maxSize value from cache.properties file for propNames: " + propNames, module);
+            }
             try {
                 String value = getPropertyParam(res, propNames, "maxInMemory");
-                Integer intValue = new Integer(value);
-
-                if (intValue != null) {
-                    maxInMemory = intValue.intValue();
+                if (UtilValidate.isNotEmpty(value)) {
+                    Integer intValue = new Integer(value);
+                    if (intValue != null) {
+                        this.maxInMemory = intValue.intValue();
+                    }
                 }
-            } catch (Exception e) {}
+            } catch (Exception e) {
+                Debug.logWarning(e, "Error getting maxInMemory value from cache.properties file for propNames: " + propNames, module);
+            }
             try {
                 String value = getPropertyParam(res, propNames, "expireTime");
-                Long longValue = new Long(value);
-
-                if (longValue != null) {
-                    expireTime = longValue.longValue();
+                if (UtilValidate.isNotEmpty(value)) {
+                    Long longValue = new Long(value);
+                    if (longValue != null) {
+                        this.expireTime = longValue.longValue();
+                    }
                 }
-            } catch (Exception e) {}
+            } catch (Exception e) {
+                Debug.logWarning(e, "Error getting expireTime value from cache.properties file for propNames: " + propNames, module);
+            }
             try {
                 String value = getPropertyParam(res, propNames, "useSoftReference");
-
                 if (value != null) {
                     useSoftReference = "true".equals(value);
                 }
-            } catch (Exception e) {}
+            } catch (Exception e) {
+                Debug.logWarning(e, "Error getting useSoftReference value from cache.properties file for propNames: " + propNames, module);
+            }
             try {
                 String value = getPropertyParam(res, propNames, "useFileSystemStore");
-
                 if (value != null) {
                     useFileSystemStore = "true".equals(value);
                 }
-            } catch (Exception e) {}
+            } catch (Exception e) {
+                Debug.logWarning(e, "Error getting useFileSystemStore value from cache.properties file for propNames: " + propNames, module);
+            }
             try {
                 String value = res.getString("cache.file.store");
-
                 if (value != null) {
                     fileStore = value;
                 }
-            } catch (Exception e) {}
+            } catch (Exception e) {
+                Debug.logWarning(e, "Error getting cache.file.store value from cache.properties file for propNames: " + propNames, module);
+            }
         }
 
-        this.cacheLineTable = new CacheLineTable(fileStore, name, useFileSystemStore, (int) maxSize);
+        int maxMemSize = this.maxInMemory;
+        if (maxMemSize == 0) maxMemSize = (int) maxSize;
+        this.cacheLineTable = new CacheLineTable(this.fileStore, this.name, this.useFileSystemStore, maxMemSize);
     }
 
     /** Puts or loads the passed element into the cache
@@ -539,6 +558,10 @@ public class UtilCache implements Serializable {
     /** Return whether or not the cache lines should use a soft reference to the data */
     public boolean getUseSoftReference() {
         return this.useSoftReference;
+    }
+    
+    public boolean getUseFileSystemStore() {
+        return this.useFileSystemStore;
     }
 
     /** Returns the number of elements currently in the cache
