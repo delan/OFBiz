@@ -1,5 +1,5 @@
 <%--
- *  Copyright (c) 2004 The Open For Business Project and respected authors.
+ *  Copyright (c) 2004-2005 The Open For Business Project and respected authors.
  *
  *  Permission is hereby granted, free of charge, to any person obtaining a 
  *  copy of this software and associated documentation files (the "Software"), 
@@ -32,7 +32,7 @@
 
 <%-- For 3.0 and later series OFBiz --%>
 <%@ page import="org.ofbiz.security.*, org.ofbiz.entity.*, org.ofbiz.base.util.*, org.ofbiz.content.webapp.pseudotag.*" %>
-<%@ page import="org.ofbiz.entity.model.*, org.ofbiz.entity.util.*" %>
+<%@ page import="org.ofbiz.entity.model.*, org.ofbiz.entity.util.*, org.ofbiz.entity.transaction.*" %>
 
 
 <%@ taglib uri="ofbizTags" prefix="ofbiz" %>
@@ -79,46 +79,65 @@
             numberWritten = 0;
             String curEntityName = (String)passedEntityNames.next();
             EntityListIterator values = null;
-            try{
-                ModelEntity me = delegator.getModelEntity(curEntityName);
-                if (me instanceof ModelViewEntity) {
-                    results.add("["+fileNumber +"] [vvv] " + curEntityName + " skipping view entity");
-                    continue;
-                }
-                
-                // some databases don't support cursors, or other problems may happen, so if there is an error here log it and move on to get as much as possible
-                try {
-                    values = delegator.findListIteratorByCondition(curEntityName, null, null, null, me.getPkFieldNames(), null);
-                } catch (Exception entityEx) {
-                    results.add("["+fileNumber +"] [xxx] Error when writing " + curEntityName + ": " + entityEx);
-                    continue;
-                }
-                
-                //Don't bother writing the file if there's nothing
-                //to put into it
-                GenericValue value = (GenericValue) values.next();
-                if (value != null) {
-                    PrintWriter writer = new PrintWriter(new BufferedWriter(new OutputStreamWriter(new FileOutputStream(new File(outdir, curEntityName +".xml")), "UTF-8")));
-                    writer.println("<?xml version=\"1.0\" encoding=\"UTF-8\"?>");
-                    writer.println("<entity-engine-xml>");
-
-                    do {
-                        value.writeXmlText(writer, "");
-                        numberWritten++;
-                    } while ((value = (GenericValue) values.next()) != null);
-                    writer.println("</entity-engine-xml>");
-                    writer.close();
-                    results.add("["+fileNumber +"] [" + numberWritten + "] " + curEntityName + " wrote " + numberWritten + " records");
-                } else {
-                    results.add("["+fileNumber +"] [---] " + curEntityName + " has no records, not writing file");
-                }
-                values.close();
-            } catch (Exception ex) {
-                if (values != null) {
+            boolean beganTransaction = false;
+            try {
+                beganTransaction = TransactionUtil.begin();
+    
+                try{
+                    ModelEntity me = delegator.getModelEntity(curEntityName);
+                    if (me instanceof ModelViewEntity) {
+                        results.add("["+fileNumber +"] [vvv] " + curEntityName + " skipping view entity");
+                        continue;
+                    }
+                    
+                    // some databases don't support cursors, or other problems may happen, so if there is an error here log it and move on to get as much as possible
+                    try {
+                        values = delegator.findListIteratorByCondition(curEntityName, null, null, null, me.getPkFieldNames(), null);
+                    } catch (Exception entityEx) {
+                        results.add("["+fileNumber +"] [xxx] Error when writing " + curEntityName + ": " + entityEx);
+                        continue;
+                    }
+                    
+                    //Don't bother writing the file if there's nothing
+                    //to put into it
+                    GenericValue value = (GenericValue) values.next();
+                    if (value != null) {
+                        PrintWriter writer = new PrintWriter(new BufferedWriter(new OutputStreamWriter(new FileOutputStream(new File(outdir, curEntityName +".xml")), "UTF-8")));
+                        writer.println("<?xml version=\"1.0\" encoding=\"UTF-8\"?>");
+                        writer.println("<entity-engine-xml>");
+    
+                        do {
+                            value.writeXmlText(writer, "");
+                            numberWritten++;
+                        } while ((value = (GenericValue) values.next()) != null);
+                        writer.println("</entity-engine-xml>");
+                        writer.close();
+                        results.add("["+fileNumber +"] [" + numberWritten + "] " + curEntityName + " wrote " + numberWritten + " records");
+                    } else {
+                        results.add("["+fileNumber +"] [---] " + curEntityName + " has no records, not writing file");
+                    }
                     values.close();
+                } catch (Exception ex) {
+                    if (values != null) {
+                        values.close();
+                    }
+                    results.add("["+fileNumber +"] [xxx] Error when writing " + curEntityName + ": " + ex);
                 }
-                results.add("["+fileNumber +"] [xxx] Error when writing " + curEntityName + ": " + ex);
+            } catch (GenericEntityException e) {
+                Debug.logError(e, "Failure in operation, rolling back transaction", "xmldsdumpall.jsp");
+                try {
+                    // only rollback the transaction if we started one...
+                    TransactionUtil.rollback(beganTransaction);
+                } catch (GenericEntityException e2) {
+                    Debug.logError(e2, "Could not rollback transaction: " + e2.toString(), "xmldsdumpall.jsp");
+                }
+                // after rolling back, rethrow the exception
+                throw e;
+            } finally {
+                // only commit the transaction if we started one... this will throw an exception if it fails
+                TransactionUtil.commit(beganTransaction);
             }
+            
             fileNumber++;
         }
     }
