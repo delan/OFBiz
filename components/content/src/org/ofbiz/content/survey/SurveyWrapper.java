@@ -1,5 +1,5 @@
 /*
- * $Id: SurveyWrapper.java,v 1.8 2004/05/21 04:55:24 ajzeneski Exp $
+ * $Id: SurveyWrapper.java,v 1.9 2004/05/21 05:53:49 ajzeneski Exp $
  *
  *  Copyright (c) 2003 The Open For Business Project - www.ofbiz.org
  *
@@ -57,7 +57,7 @@ import freemarker.ext.beans.BeansWrapper;
  * Survey Wrapper - Class to render survey forms
  *
  * @author     <a href="mailto:jaz@ofbiz.org">Andy Zeneski</a>
- * @version    $Revision: 1.8 $
+ * @version    $Revision: 1.9 $
  * @since      3.0
  */
 public class SurveyWrapper {
@@ -454,15 +454,15 @@ public class SurveyWrapper {
         switch (type) {
             case 1:
                 if (result[0] > 0)
-                    result[2] = ((long) result[0]) / ((long) result[1]);
+                    result[2] = ((long) result[1]) / ((long) result[0]);
                 break;
             case 2:
                 if (result[0] > 0)
-                    result[2] = (((double) Math.round((result[0] / result[1]) * 100)) / 100);
+                    result[2] = (((double) Math.round((result[1] / result[0]) * 100)) / 100);
                 break;
             case 3:
                 if (result[0] > 0)
-                    result[2] = result[0] / result[1];
+                    result[2] = result[1] / result[0];
                 break;
         }
 

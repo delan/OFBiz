@@ -20,7 +20,7 @@
  *  THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  *
  *@author     Andy Zeneski (jaz@ofbiz.org)
- *@version    $Revision: 1.1 $
+ *@version    $Revision: 1.2 $
  *@since      3.1
 -->
 
@@ -57,7 +57,11 @@
 
         <#-- standard question options -->
         <td align='right' nowrap>
-          <div class="tabletext">${question.question?if_exists} (${results._total?default(0)?string.number} answers)</div>
+          <#assign answerString = "answers">
+          <#if (results._total?default(0) == 1)>
+             <#assign answerString = "answer">
+          </#if>
+          <div class="tabletext">${question.question?if_exists} (${results._total?default(0)?string.number} ${answerString})</div>
           <#if question.hint?has_content>
             <div class="tabletext">${question.hint}</div>
           </#if>
@@ -67,10 +71,12 @@
         <td align="${align}">
           <#if question.surveyQuestionTypeId == "BOOLEAN">
             <#assign selectedOption = (answer.booleanResponse)?default("Y")>
-            <div class="tabletext">
-              <#if "Y" == selectedOption><b></#if>Y<#if "Y" == selectedOption>&nbsp;[you]</b></#if>&nbsp;[${results._yes_total?default(0)?string.number} / ${results._yes_percent?default(0)?string.number}%]
-              <#if "N" == selectedOption><b></#if>N<#if "N" == selectedOption>&nbsp;[you]</b></#if>&nbsp;[${results._no_total?default(0)?string.number} / ${results._no_percent?default(0)?string.number}%]
-            </div>
+            <div class="tabletext"><nobr>
+              <#if "Y" == selectedOption><b>==>&nbsp;<font color="red"></#if>Y<#if "Y" == selectedOption></font></b></#if>&nbsp;[${results._yes_total?default(0)?string("#")} / ${results._yes_percent?default(0)?string("#")}%]
+            </nobr></div>
+            <div class="tabletext"><nobr>
+              <#if "N" == selectedOption><b>==>&nbsp;<font color="red"></#if>N<#if "N" == selectedOption></font></b></#if>&nbsp;[${results._no_total?default(0)?string("#")} / ${results._no_percent?default(0)?string("#")}%]
+            </nobr></div>
           <#elseif question.surveyQuestionTypeId == "TEXTAREA">
             <div class="tabletext">${(answer.textResponse)?if_exists}</div>
           <#elseif question.surveyQuestionTypeId == "TEXT_SHORT">
@@ -92,7 +98,7 @@
           <#elseif question.surveyQuestionTypeId == "NUMBER_FLOAT">
             <div class="tabletext">${answer.floatResponse?number?default(0)?string("#")}</div>
           <#elseif question.surveyQuestionTypeId == "NUMBER_LONG">
-            <div class="tabletext">${answer.numericResponse?number?default(0)?string("#")}</div>
+            <div class="tabletext">${answer.numericResponse?number?default(0)?string("#")}&nbsp;[Tally: ${results._tally?default(0)?string("#")} / Average: ${results._average?default(0)?string("#")}]</div>
           <#elseif question.surveyQuestionTypeId == "PASSWORD">
             <div class="tabletext">[Not Shown]</div>
 
@@ -101,11 +107,13 @@
             <#assign selectedOption = (answer.surveyOptionSeqId)?default("_NA_")>
             <#if options?has_content>
               <#list options as option>
-                  <div class="tabletext">
-                    <#if option.surveyOptionSeqId == selectedOption><b></#if>
+                <#assign optionResults = results.get(option.surveyOptionSeqId)?if_exists>
+                  <div class="tabletext"><nobr>
+                    <#if option.surveyOptionSeqId == selectedOption><b>==>&nbsp;<font color="red"></#if>
                     ${option.description?if_exists}
-                    <#if option.surveyOptionSeqId == selectedOption>&nbsp;[you]</b></#if>
-                  </div>
+                    <#if option.surveyOptionSeqId == selectedOption></font></b></#if>
+                    &nbsp;[${optionResults._total?default(0)?string("#")} / ${optionResults._percent?default(0?string("#"))}%]
+                  </nobr></div>
               </#list>
             </#if>
           <#else>
