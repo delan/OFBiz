@@ -101,7 +101,7 @@
       </tr>
   <%}%>
 <%} else {%>
-  <form action="<ofbiz:url>/updateTrackingCode</ofbiz:url>" method=POST style='margin: 0;'>
+  <form action="<ofbiz:url>/updateTrackingCode</ofbiz:url>" method="GET" style='margin: 0;'>
       <input type=hidden name="trackingCodeId" value="<%=trackingCodeId%>">
   <table border='0' cellpadding='2' cellspacing='0'>
   <tr>
@@ -158,6 +158,16 @@
         <td width="26%" align=right><div class="tabletext">Redirect URL</div></td>
         <td>&nbsp;</td>
         <td width="74%"><input type="text" <ofbiz:inputvalue entityAttr="trackingCode" field="redirectUrl" fullattrs="true"/> size="60" maxlength="250"> (No redirect if empty)</td>
+      </tr>
+      <tr>
+        <td width="26%" align=right><div class="tabletext">Override Logo URL</div></td>
+        <td>&nbsp;</td>
+        <td width="74%"><input type="text" <ofbiz:inputvalue entityAttr="trackingCode" field="overrideLogo" fullattrs="true"/> size="60" maxlength="250"> (No override (co-brand) if empty)</td>
+      </tr>
+      <tr>
+        <td width="26%" align=right><div class="tabletext">Override CSS URL</div></td>
+        <td>&nbsp;</td>
+        <td width="74%"><input type="text" <ofbiz:inputvalue entityAttr="trackingCode" field="overrideCss" fullattrs="true"/> size="60" maxlength="250"> (No override (co-brand) if empty)</td>
       </tr>
       <tr>
         <td width="26%" align=right><div class="tabletext">Trackable Lifetime</div></td>
