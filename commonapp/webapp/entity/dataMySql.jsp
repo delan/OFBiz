@@ -1,4 +1,5 @@
-<%@ page contentType="text/plain" %><%@ page import="java.util.*" %><%@ page import="org.ofbiz.core.entity.*" %><%@ page import="org.ofbiz.core.entity.model.*" %><jsp:useBean id="delegator" type="org.ofbiz.core.entity.GenericDelegator" scope="application" /><%
+<%@ page contentType="text/plain" %><%@ page import="java.util.*" %><%@ page import="org.ofbiz.core.entity.*" %><%@ page import="org.ofbiz.core.entity.model.*" %><jsp:useBean id="delegator" type="org.ofbiz.core.entity.GenericDelegator" scope="application" /><jsp:useBean id="security" type="org.ofbiz.core.security.Security" scope="application" /><%
+if(security.hasPermission("ENTITY_MAINT", session)) {
   ModelReader reader = delegator.getModelReader();
   Collection ec = reader.getEntityNames();
   TreeSet entities = new TreeSet(ec);
@@ -15,5 +16,10 @@ INSERT INTO SECURITY_GROUP_PERMISSION (GROUP_ID,PERMISSION_ID) VALUES ('FLEXADMI
 INSERT INTO SECURITY_GROUP_PERMISSION (GROUP_ID,PERMISSION_ID) VALUES ('FLEXADMIN','<%=entity.tableName%>_CREATE');
 INSERT INTO SECURITY_GROUP_PERMISSION (GROUP_ID,PERMISSION_ID) VALUES ('FLEXADMIN','<%=entity.tableName%>_UPDATE');
 INSERT INTO SECURITY_GROUP_PERMISSION (GROUP_ID,PERMISSION_ID) VALUES ('FLEXADMIN','<%=entity.tableName%>_DELETE');
-<%}%>
-
+<%
+  }
+} 
+else {
+  %>ERROR: You do not have permission to use this page (ENTITY_MAINT needed)<%
+}
+%>

@@ -154,6 +154,8 @@
     <view-map name="ViewGeneric" page="/entity/ViewGeneric.jsp"/>
 
     <view-map name="tablesMySql" page="/entity/tablesMySql.jsp"/>
+    <view-map name="droptablesMySql" page="/entity/droptablesMySql.jsp"/>
+    <view-map name="droptablesplain" page="/entity/droptablesplain.jsp"/>
     <view-map name="dataMySql" page="/entity/dataMySql.jsp"/>
     <view-map name="ModelWriter" page="/entity/ModelWriter.jsp"/>
     <view-map name="ModelGroupWriter" page="/entity/ModelGroupWriter.jsp"/>

@@ -29,10 +29,12 @@
 <%@ page import="org.ofbiz.core.entity.*" %>
 <%@ page import="org.ofbiz.core.entity.model.*" %>
 
+<jsp:useBean id="security" type="org.ofbiz.core.security.Security" scope="application" />
 <jsp:useBean id="delegator" type="org.ofbiz.core.entity.GenericDelegator" scope="application" />
 <%String controlPath=(String)request.getAttribute(SiteDefs.CONTROL_PATH);%>
 
 <%
+if(security.hasPermission("ENTITY_MAINT", session)) {
   boolean addMissing = false;
   String addMissingStr = request.getParameter("addMissing");
   if("true".equalsIgnoreCase(addMissingStr)) addMissing = true;
@@ -78,3 +80,18 @@
 
 </body>
 </html>
+
+<%}else{%>
+<html>
+<head>
+  <title>Entity Editor</title>
+</head>
+<body>
+
+<H3>Entity Editor</H3>
+
+ERROR: You do not have permission to use this page (ENTITY_MAINT needed)
+
+</body>
+</html>
+<%}%>

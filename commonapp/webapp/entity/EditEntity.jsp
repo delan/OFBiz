@@ -30,10 +30,12 @@
 <%@ page import="org.ofbiz.core.entity.*" %>
 <%@ page import="org.ofbiz.core.entity.model.*" %>
 
+<jsp:useBean id="security" type="org.ofbiz.core.security.Security" scope="application" />
 <jsp:useBean id="delegator" type="org.ofbiz.core.entity.GenericDelegator" scope="application" />
 <%String controlPath=(String)request.getAttribute(SiteDefs.CONTROL_PATH);%>
 
 <%
+if(security.hasPermission("ENTITY_MAINT", session)) {
   String entityName = request.getParameter("entityName");
   ModelReader reader = delegator.getModelReader();
   ModelEntity entity = reader.getModelEntity(entityName);
@@ -41,10 +43,8 @@
   String errorMsg = "";
 
   String event = request.getParameter("event");
-  if("addEntity".equals(event))
-  {
-    if(entity == null)
-    {
+  if("addEntity".equals(event)) {
+    if(entity == null) {
       entity = new ModelEntity();
       entity.entityName = request.getParameter("entityName");
       entity.tableName = ModelUtil.javaNameToDbName(entity.entityName);
@@ -55,8 +55,7 @@
       delegator.getModelGroupReader().getGroupCache().put(entityName, entityGroup);
     }
   }
-  else if("updateEntity".equals(event))
-  {
+  else if("updateEntity".equals(event)) {
     entity.tableName = request.getParameter("tableName");
     entity.packageName = request.getParameter("packageName");
     entity.dependentOn = request.getParameter("dependentOn");
@@ -73,13 +72,11 @@
     delegator.getModelReader().entityFile.put(entityName, filename);
     delegator.getModelReader().rebuildFileNameEntities();
   }
-  else if("removeField".equals(event))
-  {
+  else if("removeField".equals(event)) {
     String fieldName = request.getParameter("fieldName");
     entity.removeField(fieldName);
   }
-  else if("updateField".equals(event))
-  {
+  else if("updateField".equals(event)) {
     String fieldName = request.getParameter("fieldName");
     String fieldType = request.getParameter("fieldType");
     String primaryKey = request.getParameter("primaryKey");
@@ -89,16 +86,14 @@
     else field.isPk = false;
     entity.updatePkLists();
   }
-  else if("addField".equals(event))
-  {
+  else if("addField".equals(event)) {
     ModelField field = new ModelField();
     field.name = request.getParameter("name");
     field.colName = ModelUtil.javaNameToDbName(field.name);
     field.type = request.getParameter("fieldType");
     entity.fields.add(field);
   }
-  else if("addRelation".equals(event))
-  {
+  else if("addRelation".equals(event)) {
     String relEntityName = request.getParameter("relEntityName");
     String type = request.getParameter("type");
     String title = request.getParameter("title");
@@ -106,18 +101,15 @@
 
     ModelEntity relEntity = reader.getModelEntity(relEntityName);
     if(relEntity == null) errorMsg = errorMsg + "<li> Related Entity \"" + relEntityName + "\" not found, not adding.";
-    else
-    {
+    else {
       relation.relEntityName = relEntityName;
       relation.relTableName = relEntity.tableName;
       relation.type = type;
       relation.title = title;
       relation.mainEntity = entity;
       entity.relations.add(relation);
-      if("one".equals(type))
-      {
-        for(int pk=0; pk<relEntity.pks.size(); pk++)
-        {
+      if("one".equals(type)) {
+        for(int pk=0; pk<relEntity.pks.size(); pk++) {
           ModelField pkf = (ModelField)relEntity.pks.get(pk);
           ModelKeyMap keyMap = new ModelKeyMap();
           keyMap.fieldName = pkf.name;
@@ -127,8 +119,7 @@
       }
     }
   }
-  else if("updateRelation".equals(event))
-  {
+  else if("updateRelation".equals(event)) {
     int relNum = Integer.parseInt(request.getParameter("relNum"));
     String type = request.getParameter("type");
     String title = request.getParameter("title");
@@ -137,14 +128,12 @@
     relation.type = type;
     relation.title = title;
   }
-  else if("removeRelation".equals(event))
-  {
+  else if("removeRelation".equals(event)) {
     int relNum = Integer.parseInt(request.getParameter("relNum"));
     if(relNum < entity.relations.size() && relNum >= 0) entity.relations.removeElementAt(relNum);
     else errorMsg = errorMsg + "<li> Relation number " + relNum + " is out of bounds.";
   }
-  else if("updateKeyMap".equals(event))
-  {
+  else if("updateKeyMap".equals(event)) {
     int relNum = Integer.parseInt(request.getParameter("relNum"));
     int kmNum = Integer.parseInt(request.getParameter("kmNum"));
     String fieldName = request.getParameter("fieldName");
@@ -159,32 +148,27 @@
     keyMap.fieldName = field.name;
     keyMap.relFieldName = relField.name;
   }
-  else if("removeKeyMap".equals(event))
-  {
+  else if("removeKeyMap".equals(event)) {
     int relNum = Integer.parseInt(request.getParameter("relNum"));
     int kmNum = Integer.parseInt(request.getParameter("kmNum"));
 
     ModelRelation relation = (ModelRelation)entity.relations.get(relNum);
     relation.keyMaps.removeElementAt(kmNum);
   }
-  else if("addKeyMap".equals(event))
-  {
+  else if("addKeyMap".equals(event)) {
     int relNum = Integer.parseInt(request.getParameter("relNum"));
 
     ModelRelation relation = (ModelRelation)entity.relations.get(relNum);
     ModelKeyMap keyMap = new ModelKeyMap();
     relation.keyMaps.add(keyMap);
   }
-  else if("addReverse".equals(event))
-  {
+  else if("addReverse".equals(event)) {
     int relNum = Integer.parseInt(request.getParameter("relNum"));
 
     ModelRelation relation = (ModelRelation)entity.relations.get(relNum);
     ModelEntity relatedEnt = reader.getModelEntity(relation.relEntityName);
-    if(relatedEnt != null)
-    {
-      if(relatedEnt.getRelation(relation.title + entity.entityName) == null)
-      {
+    if(relatedEnt != null) {
+      if(relatedEnt.getRelation(relation.title + entity.entityName) == null) {
         ModelRelation newRel = new ModelRelation();
         relatedEnt.relations.add(newRel);
 
@@ -194,8 +178,7 @@
         if(relation.type.equalsIgnoreCase("one")) newRel.type = "many";
         else newRel.type = "one";
 
-        for(int kmn=0; kmn<relation.keyMaps.size(); kmn++)
-        {
+        for(int kmn=0; kmn<relation.keyMaps.size(); kmn++) {
           ModelKeyMap curkm = (ModelKeyMap)relation.keyMaps.get(kmn);
           ModelKeyMap newkm = new ModelKeyMap();
           newRel.keyMaps.add(newkm);
@@ -417,3 +400,18 @@ Column Name: <%=entity.tableName%><br>
 
 </body>
 </html>
+
+<%}else{%>
+<html>
+<head>
+  <title>Entity Editor</title>
+</head>
+<body>
+
+<H3>Entity Editor</H3>
+
+ERROR: You do not have permission to use this page (ENTITY_MAINT needed)
+
+</body>
+</html>
+<%}%>

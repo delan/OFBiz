@@ -1,47 +1,48 @@
-<%@ page contentType="text/plain" %><%@ page import="java.util.*, java.io.*, java.net.*, org.ofbiz.core.util.*, org.ofbiz.core.entity.*, org.ofbiz.core.entity.model.*" %><jsp:useBean id="delegator" type="org.ofbiz.core.entity.GenericDelegator" scope="application" /><%
+<%@ page contentType="text/plain" %><%@ page import="java.util.*, java.io.*, java.net.*, org.ofbiz.core.util.*, org.ofbiz.core.entity.*, org.ofbiz.core.entity.model.*" %><jsp:useBean id="delegator" type="org.ofbiz.core.entity.GenericDelegator" scope="application" /><jsp:useBean id="security" type="org.ofbiz.core.security.Security" scope="application" /><%
 
-if("true".equals(request.getParameter("savetofile"))) {
-  //save to the file specified in the ModelReader config
-  String controlPath=(String)request.getAttribute(SiteDefs.CONTROL_PATH);
-  String serverRootUrl=(String)request.getAttribute(SiteDefs.SERVER_ROOT_URL);
-  ModelReader modelReader = delegator.getModelReader();
-  
-  Map fileNameEntities = modelReader.fileNameEntities;
-  Iterator filenameIter = fileNameEntities.keySet().iterator();
-  while(filenameIter.hasNext()) {
-    String filename = (String)filenameIter.next();
+if(security.hasPermission("ENTITY_MAINT", session)) {
+  if("true".equals(request.getParameter("savetofile"))) {
+    //save to the file specified in the ModelReader config
+    String controlPath=(String)request.getAttribute(SiteDefs.CONTROL_PATH);
+    String serverRootUrl=(String)request.getAttribute(SiteDefs.SERVER_ROOT_URL);
+    ModelReader modelReader = delegator.getModelReader();
 
-    java.net.URL url = new java.net.URL(serverRootUrl + controlPath + "/view/ModelWriter");
-    HashMap params = new HashMap();
-    params.put("originalFileName", filename);
-    HttpClient httpClient = new HttpClient(url, params);
-    InputStream in = httpClient.getStream();
+    Map fileNameEntities = modelReader.fileNameEntities;
+    Iterator filenameIter = fileNameEntities.keySet().iterator();
+    while(filenameIter.hasNext()) {
+      String filename = (String)filenameIter.next();
 
-    File newFile = new File(filename);
-    FileWriter newFileWriter = new FileWriter(newFile);
+      java.net.URL url = new java.net.URL(serverRootUrl + controlPath + "/view/ModelWriter");
+      HashMap params = new HashMap();
+      params.put("originalFileName", filename);
+      HttpClient httpClient = new HttpClient(url, params);
+      InputStream in = httpClient.getStream();
 
-    BufferedReader post = new BufferedReader(new InputStreamReader(in));
-    String line = null;
-    while((line = post.readLine()) != null) {
-      newFileWriter.write(line);
-      newFileWriter.write("\n");
+      File newFile = new File(filename);
+      FileWriter newFileWriter = new FileWriter(newFile);
+
+      BufferedReader post = new BufferedReader(new InputStreamReader(in));
+      String line = null;
+      while((line = post.readLine()) != null) {
+        newFileWriter.write(line);
+        newFileWriter.write("\n");
+      }
+      newFileWriter.close();
+      %>
+      If you aren't seeing any exceptions, XML was written successfully to:
+      <%=filename%>
+      from the URL:
+      <%=url.toString()%>
+      <%
     }
-    newFileWriter.close();
-    %>
-    If you aren't seeing any exceptions, XML was written successfully to:
-    <%=filename%>
-    from the URL:
-    <%=url.toString()%>
-    <%
   }
-}
-else
-{
-  String title = "Entity of an Open For Business Project Component";
-  String description = "None";
-  String copyright = "Copyright (c) 2001 The Open For Business Project - www.ofbiz.org";
-  String author = "None";
-  String version = "1.0";
+  else
+  {
+    String title = "Entity of an Open For Business Project Component";
+    String description = "None";
+    String copyright = "Copyright (c) 2001 The Open For Business Project - www.ofbiz.org";
+    String author = "None";
+    String version = "1.0";
 %><?xml version="1.0" encoding="UTF-8" standalone="yes"?>
 <!--
 /**
@@ -238,4 +239,10 @@ else
     }
   }%>  
 </entitymodel>
-<%}%>
+<%
+  }
+} 
+else {
+  %>ERROR: You do not have permission to use this page (ENTITY_MAINT needed)<%
+}
+%>

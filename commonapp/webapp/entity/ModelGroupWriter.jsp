@@ -1,37 +1,38 @@
-<%@ page contentType="text/plain" %><%@ page import="java.util.*, java.io.*, java.net.*, org.ofbiz.core.util.*, org.ofbiz.core.entity.*, org.ofbiz.core.entity.model.*" %><jsp:useBean id="delegator" type="org.ofbiz.core.entity.GenericDelegator" scope="application" /><%
+<%@ page contentType="text/plain" %><%@ page import="java.util.*, java.io.*, java.net.*, org.ofbiz.core.util.*, org.ofbiz.core.entity.*, org.ofbiz.core.entity.model.*" %><jsp:useBean id="delegator" type="org.ofbiz.core.entity.GenericDelegator" scope="application" /><jsp:useBean id="security" type="org.ofbiz.core.security.Security" scope="application" /><%
 
-if("true".equals(request.getParameter("savetofile"))) {
-  //save to the file specified in the ModelReader config
-  String controlPath=(String)request.getAttribute(SiteDefs.CONTROL_PATH);
-  String serverRootUrl=(String)request.getAttribute(SiteDefs.SERVER_ROOT_URL);
-  ModelGroupReader modelGroupReader = delegator.getModelGroupReader();
+if(security.hasPermission("ENTITY_MAINT", session)) {
+  if("true".equals(request.getParameter("savetofile"))) {
+    //save to the file specified in the ModelReader config
+    String controlPath=(String)request.getAttribute(SiteDefs.CONTROL_PATH);
+    String serverRootUrl=(String)request.getAttribute(SiteDefs.SERVER_ROOT_URL);
+    ModelGroupReader modelGroupReader = delegator.getModelGroupReader();
 
-  String filename = modelGroupReader.entityGroupFileName;
+    String filename = modelGroupReader.entityGroupFileName;
 
-  java.net.URL url = new java.net.URL(serverRootUrl + controlPath + "/view/ModelGroupWriter");
-  HashMap params = new HashMap();
-  HttpClient httpClient = new HttpClient(url, params);
-  InputStream in = httpClient.getStream();
+    java.net.URL url = new java.net.URL(serverRootUrl + controlPath + "/view/ModelGroupWriter");
+    HashMap params = new HashMap();
+    HttpClient httpClient = new HttpClient(url, params);
+    InputStream in = httpClient.getStream();
 
-  File newFile = new File(filename);
-  FileWriter newFileWriter = new FileWriter(newFile);
+    File newFile = new File(filename);
+    FileWriter newFileWriter = new FileWriter(newFile);
 
-  BufferedReader post = new BufferedReader(new InputStreamReader(in));
-  String line = null;
-  while((line = post.readLine()) != null) {
-    newFileWriter.write(line);
-    newFileWriter.write("\n");
+    BufferedReader post = new BufferedReader(new InputStreamReader(in));
+    String line = null;
+    while((line = post.readLine()) != null) {
+      newFileWriter.write(line);
+      newFileWriter.write("\n");
+    }
+    newFileWriter.close();
+    %>
+    If you aren't seeing any exceptions, XML was written successfully to:
+    <%=filename%>
+    from the URL:
+    <%=url.toString()%>
+    <%
   }
-  newFileWriter.close();
-  %>
-  If you aren't seeing any exceptions, XML was written successfully to:
-  <%=filename%>
-  from the URL:
-  <%=url.toString()%>
-  <%
-}
-else
-{
+  else
+  {
 %><?xml version="1.0" encoding="UTF-8" standalone="yes"?>
 <!--
 /**
@@ -116,4 +117,10 @@ else
     }
   }%>  
 </entitygroup>
-<%}%>
+<%
+  }
+} 
+else {
+  %>ERROR: You do not have permission to use this page (ENTITY_MAINT needed)<%
+}
+%>

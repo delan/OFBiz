@@ -27,9 +27,11 @@
 <%@ page import="java.util.*" %>
 <%@ page import="org.ofbiz.core.entity.*, org.ofbiz.core.entity.model.*, org.ofbiz.core.util.*" %>
 
+<jsp:useBean id="security" type="org.ofbiz.core.security.Security" scope="application" />
 <jsp:useBean id="delegator" type="org.ofbiz.core.entity.GenericDelegator" scope="application" />
 
 <% 
+if(security.hasPermission("ENTITY_MAINT", session)) {
   initReservedWords();
   String search = null;
   //GenericDelegator delegator = GenericHelperFactory.getDefaultHelper();
@@ -253,6 +255,20 @@
 
 </body>
 </html>
+<%}else{%>
+<html>
+<head>
+  <title>Entity Editor</title>
+</head>
+<body>
+
+<H3>Entity Editor</H3>
+
+ERROR: You do not have permission to use this page (ENTITY_MAINT needed)
+
+</body>
+</html>
+<%}%>
 
 <%!
 public TreeSet reservedWords = new TreeSet();
