@@ -169,17 +169,51 @@
   <Uom abbreviation="ft3" description="Cubic foot" uomId="VDRY_ft3" uomTypeId="VOLUME_DRY_MEASURE"/>
   <Uom abbreviation="in3" description="Cubic inch" uomId="VDRY_in3" uomTypeId="VOLUME_DRY_MEASURE"/>
   <Uom abbreviation="m3" description="Cubic meter" uomId="VDRY_m3" uomTypeId="VOLUME_DRY_MEASURE"/>
+  <Uom abbreviation="mm3" description="Cubic millimeter" uomId="VDRY_mm3" uomTypeId="VOLUME_DRY_MEASURE"/>
   <Uom abbreviation="ST" description="Stere (cubic meter)" uomId="VDRY_ST" uomTypeId="VOLUME_DRY_MEASURE"/>
   <Uom abbreviation="yd3" description="Cubic yard" uomId="VDRY_yd3" uomTypeId="VOLUME_DRY_MEASURE"/>
   
   <UomConversion uomId="VLIQ_L" uomIdTo="VDRY_m3" conversionFactor="0.001"/>
   <UomConversion uomId="VLIQ_galUK" uomIdTo="VDRY_m3" conversionFactor="0.4546"/>
+  <UomConversion uomId="VDRY_cm3" uomIdTo="VDRY_mm3" conversionFactor="1000"/>
+  <UomConversion uomId="VDRY_cm3" uomIdTo="VDRY_in3" conversionFactor="0.061"/>
+  <UomConversion uomId="VDRY_ft3" uomIdTo="VDRY_in3" conversionFactor="1728"/>
+  <UomConversion uomId="VDRY_ST" uomIdTo="VDRY_m3" conversionFactor="1"/>
+  <UomConversion uomId="VDRY_m3" uomIdTo="VDRY_yd3" conversionFactor="1.3"/>
+  <UomConversion uomId="VDRY_yd3" uomIdTo="VDRY_ft3" conversionFactor="27"/>
   
   <!-- =============== WEIGHT_MEASURE =============== -->
   <Uom abbreviation="dr avdp" description="Dram (avdp)" uomId="WT_dr_avdp" uomTypeId="WEIGHT_MEASURE"/>
   <Uom abbreviation="gr" description="Grain" uomId="WT_gr" uomTypeId="WEIGHT_MEASURE"/>
   <Uom abbreviation="g" description="Gram" uomId="WT_g" uomTypeId="WEIGHT_MEASURE"/>
   <Uom abbreviation="kg" description="Kilogram" uomId="WT_kg" uomTypeId="WEIGHT_MEASURE"/>
+  <Uom abbreviation="mg" description="Milligram" uomId="WT_mg" uomTypeId="WEIGHT_MEASURE"/>
+  <Uom abbreviation="oz" description="Ounce (avdp)" uomId="WT_oz" uomTypeId="WEIGHT_MEASURE"/>
+  <Uom abbreviation="oz tr" description="Ounce (troy)" uomId="WT_oz_tr" uomTypeId="WEIGHT_MEASURE"/>
+  <Uom abbreviation="dwt" description="Pennyweight" uomId="WT_dwt" uomTypeId="WEIGHT_MEASURE"/>
+  <Uom abbreviation="lb" description="Pound (avdp)" uomId="WT_lb" uomTypeId="WEIGHT_MEASURE"/>
+  <Uom abbreviation="st" description="Stone" uomId="WT_st" uomTypeId="WEIGHT_MEASURE"/>
+  <Uom abbreviation="lt" description="Ton (long or British)" uomId="WT_lt" uomTypeId="WEIGHT_MEASURE"/>
+  <Uom abbreviation="mt" description="Ton (metric)" uomId="WT_mt" uomTypeId="WEIGHT_MEASURE"/>
+  <Uom abbreviation="sh t" description="Ton (short)" uomId="WT_sh_t" uomTypeId="WEIGHT_MEASURE"/>
+  
+  <UomConversion uomId="WT_dr_avdp" uomIdTo="WT_oz" conversionFactor="0.0625"/>
+  <UomConversion uomId="WT_gr" uomIdTo="WT_oz" conversionFactor="0.00229"/>
+  <UomConversion uomId="WT_gr" uomIdTo="WT_g" conversionFactor="0.0648"/>
+  <UomConversion uomId="WT_kg" uomIdTo="WT_g" conversionFactor="1000"/>
+  <UomConversion uomId="WT_kg" uomIdTo="WT_lb" conversionFactor="2.2"/>
+  <UomConversion uomId="WT_g" uomIdTo="WT_mg" conversionFactor="1000"/>
+  <UomConversion uomId="WT_g" uomIdTo="WT_oz" conversionFactor="0.03527"/>
+  <UomConversion uomId="WT_oz" uomIdTo="WT_lb" conversionFactor="0.0625"/>
+  <UomConversion uomId="WT_oz" uomIdTo="WT_g" conversionFactor="28"/>
+  <UomConversion uomId="WT_oz_tr" uomIdTo="WT_g" conversionFactor="30"/>
+  <UomConversion uomId="WT_dwt" uomIdTo="WT_g" conversionFactor="1.555"/>
+  <UomConversion uomId="WT_lb" uomIdTo="WT_oz" conversionFactor="16"/>
+  <UomConversion uomId="WT_st" uomIdTo="WT_lb" conversionFactor="14"/>
+  <UomConversion uomId="WT_lt" uomIdTo="WT_mt" conversionFactor="1.02"/>
+  <UomConversion uomId="WT_lt" uomIdTo="WT_lb" conversionFactor="2240"/>
+  <UomConversion uomId="WT_mt" uomIdTo="WT_kg" conversionFactor="1000"/>
+  <UomConversion uomId="WT_sh_t" uomIdTo="WT_lb" conversionFactor="2000"/>
   
   <!-- =============== ENERGY_MEASURE =============== -->
   <Uom abbreviation="Btu" description="British Thermal Unit" uomId="EN_Btu" uomTypeId="ENERGY_MEASURE"/>
@@ -187,11 +221,27 @@
   <Uom abbreviation="HP" description="Horsepower (mechanical)" uomId="EN_HP" uomTypeId="ENERGY_MEASURE"/>
   <Uom abbreviation="J" description="Joule (absolute)" uomId="EN_J" uomTypeId="ENERGY_MEASURE"/>
   <Uom abbreviation="Kw" description="Kilowatt" uomId="EN_Kw" uomTypeId="ENERGY_MEASURE"/>
+  <Uom abbreviation="w" description="Watt" uomId="EN_w" uomTypeId="ENERGY_MEASURE"/>
+  
+  <UomConversion uomId="EN_cal15" uomIdTo="EN_J" conversionFactor="4.1855"/>
+  <UomConversion uomId="EN_Kw" uomIdTo="EN_w" conversionFactor="1000"/>
+  <UomConversion uomId="EN_HP" uomIdTo="EN_w" conversionFactor="746"/>
+  <UomConversion uomId="EN_Kw" uomIdTo="EN_HP" conversionFactor="1.3410"/>
+  
+  <!-- How to express these?
+    1 Btu = 0.0002829 Kw/hour
+    1 J = 0.7376 ft/lbs
+  -->
   
   <!-- =============== TEMP_MEASURE =============== -->
   <Uom abbreviation="K" description="Kelvin" uomId="TEMP_K" uomTypeId="TEMP_MEASURE"/>
   <Uom abbreviation="C" description="Degrees Celsius" uomId="TEMP_C" uomTypeId="TEMP_MEASURE"/>
   <Uom abbreviation="F" description="Degrees Fahrenheit" uomId="TEMP_F" uomTypeId="TEMP_MEASURE"/>
+  
+  <!-- How to express these?
+    1 F = 1.8C + 32
+    1 C = (F-32)/1.8
+  -->
   
   <!-- =============== OTHER_MEASURE =============== -->
   <Uom abbreviation="A" description="Amphere - Electric current" uomId="OTH_A" uomTypeId="OTHER_MEASURE"/>
