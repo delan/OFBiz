@@ -30,6 +30,7 @@ import java.net.*;
 import java.util.*;
 import javax.servlet.*;
 import javax.servlet.http.*;
+import javax.servlet.jsp.*;
 
 import org.ofbiz.core.util.*;
 import org.ofbiz.core.region.*;
@@ -88,8 +89,12 @@ public class RegionViewHandler implements ViewHandler {
             region.render(request, response);
         } catch (IOException ie) {
             throw new ViewHandlerException("IO Error in region", ie);
-        } catch (ServletException se) {
-            throw new ViewHandlerException("Error in region", se.getRootCause());
+        } catch (ServletException e) {
+            Throwable throwable = e.getRootCause() != null ? e.getRootCause() : e;
+            if (throwable instanceof JspException) {
+                throwable = ((JspException) throwable).getRootCause();
+            }
+            throw new ViewHandlerException(e.getMessage(), throwable);
         }
         RegionStack.pop(request);
     }

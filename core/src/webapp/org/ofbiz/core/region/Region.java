@@ -88,9 +88,13 @@ public class Region extends Content {
 
         try {
             pageContext.include(content);
-        } catch (Exception ex) {
-            // IOException or ServletException
-            throw new JspException(ex.getMessage());
+        } catch (java.io.IOException e) {
+            Debug.logError(e, "Error rendering region: ");
+            throw new JspException(e);
+        } catch (ServletException e) {
+            Throwable throwable = e.getRootCause() != null ? e.getRootCause() : e;
+            Debug.logError(throwable, "Error rendering region: ");
+            throw new JspException(throwable);
         }
     }
 

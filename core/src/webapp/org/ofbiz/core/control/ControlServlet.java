@@ -197,6 +197,11 @@ public class ControlServlet extends HttpServlet {
         try {
             //the ServerHitBin call for the event is done inside the doRequest method
             getRequestHandler().doRequest(request, response, null, userLogin, delegator);
+        } catch (RequestHandlerException e) {
+            Throwable throwable = e.getNested() != null ? e.getNested() : e;
+            Debug.logError(throwable, "Error in request handler: ");
+            request.setAttribute(SiteDefs.ERROR_MESSAGE, throwable.toString());
+            errorPage = getRequestHandler().getDefaultErrorPage(request);
         } catch (Exception e) {
             Debug.logError(e, "Error in request handler: ");
             request.setAttribute(SiteDefs.ERROR_MESSAGE, e.toString());

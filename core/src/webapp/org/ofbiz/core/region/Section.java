@@ -74,8 +74,9 @@ public class Section extends Content {
             Debug.logError(e, "Error rendering section: ");
             throw new JspException(e);
         } catch (ServletException e) {
-            Debug.logError(e, "Error rendering section: ");
-            throw new JspException(e);
+            Throwable throwable = e.getRootCause() != null ? e.getRootCause() : e;
+            Debug.logError(throwable, "Error rendering section: ");
+            throw new JspException(throwable);
         }
     }
     

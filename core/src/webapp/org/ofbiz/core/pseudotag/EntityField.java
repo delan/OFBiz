@@ -147,11 +147,13 @@ public class EntityField {
             if (type.equalsIgnoreCase("currency")) {
                 // Convert the String to a Double for standard processing.
                 if (fieldObject instanceof String) {
+                    String objStr = (String) fieldObject;
                     try {
-                        String objStr = (String) fieldObject;
-                        fieldObject = new Double(objStr);
+                        if (objStr.length() > 0) {
+                            fieldObject = new Double(objStr);
+                        }
                     } catch (NumberFormatException nfe) {
-                        throw new IllegalStateException("String not a number.");
+                        throw new IllegalStateException("String not a number for printing of type currency: " + objStr);
                     }
                 }
                 // The default type for currency is Double.
