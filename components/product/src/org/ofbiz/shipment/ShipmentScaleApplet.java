@@ -1,5 +1,5 @@
 /*
- * $Id: ShipmentScaleApplet.java,v 1.1 2003/09/05 22:53:12 ajzeneski Exp $
+ * $Id: ShipmentScaleApplet.java,v 1.2 2003/09/09 22:13:18 ajzeneski Exp $
  *
  *  Copyright (c) 2001, 2002 The Open For Business Project - www.ofbiz.org
  *
@@ -25,17 +25,24 @@ package org.ofbiz.shipment;
 
 import javax.comm.*;
 
+import netscape.javascript.*;
+
+import java.applet.Applet;
+import java.applet.AppletContext;
 import java.io.*;
+import java.util.StringTokenizer;
 import java.util.TooManyListenersException;
 
 /**
  * ShipmentScaleApplet - Applet for reading weight from a scale and input into the browser
  *
  * @author     <a href="mailto:jaz@ofbiz.org">Andy Zeneski</a> 
- * @version    $Revision: 1.1 $
+ * @version    $Revision: 1.2 $
  * @since      3.0
  */
-public class ShipmentScaleApplet implements SerialPortEventListener, CommPortOwnershipListener {
+public class ShipmentScaleApplet extends Applet implements SerialPortEventListener, CommPortOwnershipListener {
+    
+    private AppletContext ctx = null;    
     
     private CommPortIdentifier portId = null;
     private SerialPort serialPort = null;
@@ -44,9 +51,26 @@ public class ShipmentScaleApplet implements SerialPortEventListener, CommPortOwn
     private InputStream in = null;
     private OutputStream out = null;
     
-    public ShipmentScaleApplet() throws UnsupportedCommOperationException, IOException {
+    public void init() {
+        this.ctx = this.getAppletContext();
+        
+        String port = this.getParameter("serialPort");
         try {
-            portId = CommPortIdentifier.getPortIdentifier("COM1");
+            this.configurePort(port);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        
+        try {
+            this.sendMessage();
+        } catch (IOException e) {           
+            e.printStackTrace();
+        }
+    }
+    
+    public void configurePort(String port) throws UnsupportedCommOperationException, IOException {
+        try {
+            portId = CommPortIdentifier.getPortIdentifier(port);
         } catch (NoSuchPortException e) {
             // TODO Auto-generated catch block
             e.printStackTrace();
@@ -115,13 +139,13 @@ public class ShipmentScaleApplet implements SerialPortEventListener, CommPortOwn
                     }
                 }
 
-            // Append received data to messageAreaIn.
-            System.out.println(inputBuffer.toString());
-            break;
+                // Append received data to messageAreaIn.
+                checkResponse(inputBuffer.toString());            
+                break;
 
             // If break event append BREAK RECEIVED message.
             case SerialPortEvent.BI:
-            System.out.println("\n--- BREAK RECEIVED ---\n");
+                break;
         }                
     }
 
@@ -133,6 +157,7 @@ public class ShipmentScaleApplet implements SerialPortEventListener, CommPortOwn
         
     }
     
+    // send the code to the scale and requests the weight
     public void sendMessage() throws IOException {
         String message = "W\r";
         char[] msgChars = message.toCharArray();
@@ -153,5 +178,25 @@ public class ShipmentScaleApplet implements SerialPortEventListener, CommPortOwn
         ShipmentScaleApplet applet = new ShipmentScaleApplet();
         applet.sendMessage();
         applet.close();   
+    }
+    
+    
+    // validates the response from the scale and calls the set method
+    private void checkResponse(String response) {
+        StringTokenizer token = new StringTokenizer(response, "|");
+        if (token != null && token.hasMoreElements()) {
+            String weightStr = token.nextToken();
+            setWeight(weightStr);
+        }
+    }
+    
+    // calls the setWeight(weight) JavaScript function on the current page
+    private void setWeight(String weight) {
+        JSObject win = JSObject.getWindow(this);
+        JSObject doc = (JSObject) win.getMember("document");
+        JSObject frm = (JSObject) win.getMember("weightForm");
+        JSObject obj = (JSObject) win.getMember("weight");
+        String[] args = { weight };
+        win.call("setWeight", args);
     }
 }
