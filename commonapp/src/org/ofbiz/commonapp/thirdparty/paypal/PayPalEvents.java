@@ -416,7 +416,7 @@ public class PayPalEvents {
                 
         try {
             paymentPreference.store();
-            payment.store();
+            paymentPreference.getDelegator().create(payment);
         } catch (GenericEntityException e) {
             Debug.logError(e, "Cannot set payment preference/payment info", module);
             return false;

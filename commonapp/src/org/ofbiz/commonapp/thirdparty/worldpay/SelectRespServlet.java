@@ -233,12 +233,12 @@ public class SelectRespServlet extends SelectServlet implements SelectDefs {
         paymentPreference.set("authMessage", rawAuthMessage);
         paymentPreference.set("maxAmount", new Double(authAmount));
         
-        // create a payment record too
+        // create a payment record too -- this method does not store the object so we must here
         GenericValue payment = OrderChangeHelper.createPaymentFromPreference(paymentPreference, null, null, "Payment received via WorldPay");
         
         try {
             paymentPreference.store();
-            payment.store();
+            paymentPreference.getDelegator().create(payment);
         } catch (GenericEntityException e) {
             Debug.logError(e, "Cannot set payment preference/payment info", module);
             return false;
