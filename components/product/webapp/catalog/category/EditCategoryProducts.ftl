@@ -21,7 +21,7 @@
  *
  *@author     David E. Jones (jonesde@ofbiz.org)
  *@author     Catherine Heintz (catherine.heintz@nereide.biz)
- *@version    $Revision: 1.5 $
+ *@version    $Revision: 1.6 $
  *@since      2.1
 -->
 
@@ -54,10 +54,10 @@ ${pages.get("/category/CategoryTabBar.ftl")}
                     <a href="<@ofbizUrl>/EditCategoryProducts?productCategoryId=${productCategoryId?if_exists}&VIEW_SIZE=${viewSize}&VIEW_INDEX=${viewIndex-1}&activeOnly=${activeOnly.toString()}</@ofbizUrl>" class="buttontext">[${uiLabelMap.CommonPrevious}]</a> |
                     </#if>
                     <#if (listSize > 0)>
-                        ${lowIndex+1} - ${highIndex+1} of ${listSize}
+                        ${lowIndex+1} - ${highIndex} of ${listSize}
                     </#if>
-                    <#if (listSize > (highIndex+1))>
-                    | <a href="<@ofbizUrl>/EditCategoryProducts?productCategoryId=${productCategoryId}&VIEW_SIZE=${viewSize}&VIEW_INDEX=${viewIndex+1}&activeOnly=${activeOnly.toString()}</@ofbizUrl>" class="buttontext">[${uiLabelMap.CommonNext}]</a>
+                    <#if (listSize > highIndex)>
+                    | <a href="<@ofbizUrl>/EditCategoryProducts?productCategoryId=${productCategoryId?if_exists}&VIEW_SIZE=${viewSize}&VIEW_INDEX=${viewIndex+1}&activeOnly=${activeOnly.toString()}</@ofbizUrl>" class="buttontext">[${uiLabelMap.CommonNext}]</a>
                     </#if>
                     </b>
                 </td>
@@ -74,7 +74,7 @@ ${pages.get("/category/CategoryTabBar.ftl")}
         </tr>
         <#if (listSize > 0)>
             <#assign line = 0>
-            <#list productCategoryMembers[lowIndex..highIndex] as productCategoryMember> 
+            <#list productCategoryMembers[lowIndex..highIndex-1] as productCategoryMember>
             <#assign product = productCategoryMember.getRelatedOne("Product")>
             <#assign hasntStarted = false>
             <#if productCategoryMember.fromDate?exists && nowTimestamp.before(productCategoryMember.getTimestamp("fromDate"))><#assign hasntStarted = true></#if>
@@ -112,13 +112,13 @@ ${pages.get("/category/CategoryTabBar.ftl")}
                 <td align=right>
                     <b>
                     <#if (viewIndex > 0)>
-                        <a href="<@ofbizUrl>"/EditCategoryProducts?productCategoryId=${productCategoryId?if_exists}&VIEW_SIZE=${viewSize}&VIEW_INDEX=${viewIndex-1}&activeOnly=${activeOnly.toString()}</@ofbizUrl>" class="buttontext">[${uiLabelMap.CommonPrevious}]</a> |
+                        <a href="<@ofbizUrl>/EditCategoryProducts?productCategoryId=${productCategoryId?if_exists}&VIEW_SIZE=${viewSize}&VIEW_INDEX=${viewIndex-1}&activeOnly=${activeOnly.toString()}</@ofbizUrl>" class="buttontext">[${uiLabelMap.CommonPrevious}]</a> |
                         </#if>
                         <#if (listSize > 0)>
-                        ${lowIndex+1} - ${highIndex+1} of ${listSize}
+                        ${lowIndex+1} - ${highIndex} of ${listSize}
                         </#if>
-                        <#if (listSize > (highIndex+1))>
-                        | <a href="<@ofbizUrl>"/EditCategoryProducts?productCategoryId=${productCategoryId?if_exists}&VIEW_SIZE=${viewSize}&VIEW_INDEX=${viewIndex+1}&activeOnly=${activeOnly.toString()}</@ofbizUrl>" class="buttontext">[${uiLabelMap.CommonNext}]</a>
+                        <#if (listSize > highIndex)>
+                        | <a href="<@ofbizUrl>/EditCategoryProducts?productCategoryId=${productCategoryId?if_exists}&VIEW_SIZE=${viewSize}&VIEW_INDEX=${viewIndex+1}&activeOnly=${activeOnly.toString()}</@ofbizUrl>" class="buttontext">[${uiLabelMap.CommonNext}]</a>
                     </#if>
                     </b>
                 </td>

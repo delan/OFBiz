@@ -21,7 +21,7 @@
  *
  *@author     Andy Zeneski
  *@author     Brad Steiner
- *@version    $Revision: 1.4 $
+ *@version    $Revision: 1.5 $
  *@since      2.2
  */
  
@@ -40,7 +40,7 @@ if(security.hasEntityPermission("FACILITY", "_VIEW", session)) {
 } else {
     context.put("hasPermission", Boolean.FALSE);
 }
-String nowTimestampString = UtilDateTime.nowTimestamp().toString();
+nowTimestampString = UtilDateTime.nowTimestamp().toString();
 context.put("nowTimestampString", nowTimestampString);
 
 //default this to true, ie only show active
@@ -50,24 +50,17 @@ context.put("activeOnly", activeOnly);
 boolean useValues = true;
 if (request.getAttribute("_ERROR_MESSAGE_") != null) useValues = false;
 
-String facilityGroupId = request.getParameter("facilityGroupId");
-if (facilityGroupId != null) context.put("facilityGroupId", facilityGroupId);
+facilityGroupId = request.getParameter("facilityGroupId");
 
 GenericValue facilityGroup = delegator.findByPrimaryKey("FacilityGroup", UtilMisc.toMap("facilityGroupId", facilityGroupId));
-if (facilityGroup != null) context.put("facilityGroup", facilityGroup);
-
 if (facilityGroup == null) useValues = false;
 
-List facilityGroupMembers = facilityGroup.getRelated("FacilityGroupMember", null, UtilMisc.toList("sequenceNum", "facilityId"));
+facilityGroupMembers = facilityGroup.getRelated("FacilityGroupMember", null, UtilMisc.toList("sequenceNum", "facilityId"));
 if (activeOnly) facilityGroupMembers = EntityUtil.filterByDate(facilityGroupMembers, true);
 
-if (facilityGroupMembers != null) context.put("facilityGroupMembers", facilityGroupMembers);
-
-List facilityGroups = delegator.findAll("FacilityGroup", UtilMisc.toList("description"));
-if (facilityGroups != null) context.put("facilityGroups", facilityGroups);
+facilityGroups = delegator.findAll("FacilityGroup", UtilMisc.toList("description"));
 
 if ("true".equalsIgnoreCase((String)request.getParameter("useValues"))) useValues = true;
-context.put("useValues", useValues);
 
 int viewIndex = 0;
 int viewSize = 20;
@@ -80,28 +73,31 @@ try {
 } catch (Exception e) {
     viewIndex = 0;
 }
-context.put("viewIndex", viewIndex);
 
 try {
     viewSize = Integer.valueOf((String) request.getParameter("VIEW_SIZE")).intValue();
 } catch (Exception e) {
     viewSize = 20;
 }
-context.put("viewSize", viewSize);
 
 if (facilityGroupMembers != null) {
     listSize = facilityGroupMembers.size();
 }
-context.put("listSize", listSize);
 
 lowIndex = viewIndex * viewSize;
 highIndex = (viewIndex + 1) * viewSize;
 if (listSize < highIndex) {
-    if (listSize > 0) { 
-        highIndex = listSize-1;
-    } else {
-        highIndex = 0;
-    }
-}    
+    highIndex = listSize;
+}
+
+context.put("facilityGroupId", facilityGroupId);
+context.put("facilityGroup", facilityGroup);
+context.put("facilityGroupMembers", facilityGroupMembers);
+context.put("facilityGroups", facilityGroups);
+context.put("useValues", useValues);
+
+context.put("viewIndex", viewIndex);
+context.put("viewSize", viewSize);
+context.put("listSize", listSize);
 context.put("lowIndex", lowIndex);
 context.put("highIndex", highIndex);

@@ -21,7 +21,7 @@
  *
  *@author     David E. Jones
  *@author     Brad Steiner
- *@version    $Revision: 1.5 $
+ *@version    $Revision: 1.6 $
  *@since      2.2
  */
 
@@ -93,13 +93,9 @@ if (productCategoryMembers != null) {
 
 lowIndex = viewIndex * viewSize;
 highIndex = (viewIndex + 1) * viewSize;
-if (listSize < highIndex) { 
-    if (listSize > 0) { 
-        highIndex = listSize-1;
-    } else {
-        highIndex = 0;
-    }
-} 
+if (listSize < highIndex) {
+    highIndex = listSize;
+}
 
 context.put("viewIndex", viewIndex);
 context.put("viewSize", viewSize);
