@@ -114,6 +114,7 @@ public class PosTransaction implements Serializable {
         this.cart = new ShoppingCart(session.getDelegator(), productStoreId, locale, currency);
         this.transactionId = session.getDelegator().getNextSeqId("PosTransaction");
         this.ch = new CheckOutHelper(session.getDispatcher(), session.getDelegator(), cart);
+        cart.setChannelType("POS_SALES_CHANNEL");
         cart.setTransactionId(transactionId);
         cart.setFacilityId(facilityId);
         cart.setTerminalId(terminalId);
