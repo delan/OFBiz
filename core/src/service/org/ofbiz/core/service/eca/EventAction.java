@@ -70,7 +70,7 @@ public class EventAction {
         if (serviceMode.equals("sync")) {
             actionResult = dispatcher.runSync(this.serviceName, actionContext);
         } else if (serviceMode.equals("async")) {
-            dispatcher.runAsync(serviceName, context);
+            dispatcher.runAsync(serviceName, actionContext);
         }
 
         // use the result to update the context fields.
