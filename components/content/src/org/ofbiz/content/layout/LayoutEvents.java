@@ -42,7 +42,7 @@ import javax.servlet.http.HttpSession;
  * LayoutEvents Class
  *
  * @author     <a href="mailto:byersa@automationgroups.com">Al Byers</a>
- * @version    $Revision: 1.2 $
+ * @version    $Revision: 1.3 $
  * @since      3.0
  *
  * 
@@ -91,7 +91,7 @@ public class LayoutEvents {
             context.put("userLogin", session.getAttribute("userLogin"));
             context.put("dataResourceTypeId", "IMAGE_OBJECT");
             context.put("contentAssocTypeId", "SUB_CONTENT");
-            context.put("contentTypeId", "IMAGE");
+            context.put("contentTypeId", "DOCUMENT");
             context.put("contentIdTo", formInput.get("contentIdTo"));
             context.put("textData", formInput.get("textData"));
             String contentPurposeTypeId = (String)formInput.get("contentPurposeTypeId");
@@ -173,7 +173,7 @@ public class LayoutEvents {
             context.put("userLogin", session.getAttribute("userLogin"));
             context.put("dataResourceTypeId", "IMAGE_OBJECT");
             context.put("contentAssocTypeId", "SUB_CONTENT");
-            context.put("contentTypeId", "IMAGE");
+            context.put("contentTypeId", "DOCUMENT");
             context.put("mimeType", context.get("drMimeType"));
             context.put("drMimeType", null);
             context.put("objectInfo", context.get("drobjectInfo"));
