@@ -103,7 +103,7 @@ public class ECAUtil {
         return (Map) ecaCache.get(serviceName);
     }
     
-    public static void evalConditions(String serviceName, Map eventMap, String event, DispatchContext dctx, Map context, boolean isError) throws GenericServiceException {
+    public static void evalConditions(String serviceName, Map eventMap, String event, DispatchContext dctx, Map context, Map result, boolean isError) throws GenericServiceException {
         //if the eventMap is passed we save a HashMap lookup, but if not that's okay we'll just look it up now
         if (eventMap == null) eventMap = getServiceEventMap(serviceName);
         if (eventMap == null || eventMap.size() == 0) {
@@ -119,7 +119,7 @@ public class ECAUtil {
         if (i.hasNext() && Debug.verboseOn()) Debug.logVerbose("Running ECA (" + event + ").");
         while (i.hasNext()) {
             EventConditionAction eca = (EventConditionAction) i.next();
-            eca.eval(serviceName, dctx, context, isError);
+            eca.eval(serviceName, dctx, context, result, isError);
         }
     }
 }

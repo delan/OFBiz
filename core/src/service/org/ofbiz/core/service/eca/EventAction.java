@@ -40,7 +40,10 @@ import org.ofbiz.core.service.*;
  */
 public class EventAction {
 
-    protected String serviceName, serviceMode, useResult, updateContext;
+    protected String serviceName;
+    protected String serviceMode;
+    protected boolean updateContext;
+    protected boolean ignoreError;
 
     protected EventAction() {
     }
@@ -48,11 +51,12 @@ public class EventAction {
     public EventAction(Element action) {
         this.serviceName = action.getAttribute("service");
         this.serviceMode = action.getAttribute("mode");
-        this.updateContext = action.getAttribute("update-context");
-        this.useResult = action.getAttribute("use-result");
+        //default is true, so anything but false is true
+        this.updateContext = !"false".equals(action.getAttribute("update-context"));
+        this.ignoreError = !"false".equals(action.getAttribute("ignore-error"));
     }
 
-    public void runAction(String selfService, DispatchContext dctx, Map context) throws GenericServiceException {
+    public void runAction(String selfService, DispatchContext dctx, Map context, Map result) throws GenericServiceException {
         if (this.serviceName.equals(selfService)) {
             throw new GenericServiceException("Cannot invoke self on ECA.");
         }
@@ -62,17 +66,54 @@ public class EventAction {
         // pull out context parameters needed for this service.
         Map actionContext = dctx.getModelService(serviceName).makeValid(context, ModelService.IN_PARAM);
 
-        Map result = null;
+        Map actionResult = null;
         LocalDispatcher dispatcher = dctx.getDispatcher();
         if (serviceMode.equals("sync")) {
-            result = dispatcher.runSync(this.serviceName, actionContext);
+            actionResult = dispatcher.runSync(this.serviceName, actionContext);
         } else if (serviceMode.equals("async")) {
             dispatcher.runAsync(serviceName, context);
         }
 
         // use the result to update the context fields.
-        if (updateContext.equalsIgnoreCase("true")) {
-            context.putAll(dctx.getModelService(selfService).makeValid(result, ModelService.IN_PARAM));
+        if (updateContext) {
+            context.putAll(dctx.getModelService(selfService).makeValid(actionResult, ModelService.IN_PARAM));
+        }
+        
+        //if we aren't ignoring errors check it here...
+        if (!ignoreError && result != null) {
+            if (ModelService.RESPOND_ERROR.equals(actionResult.get(ModelService.RESPONSE_MESSAGE))) {
+                result.put(ModelService.RESPONSE_MESSAGE, ModelService.RESPOND_ERROR);
+                String errorMessage = (String) actionResult.get(ModelService.ERROR_MESSAGE);
+                List errorMessageList = (List) actionResult.get(ModelService.ERROR_MESSAGE_LIST);
+                Map errorMessageMap = (Map) actionResult.get(ModelService.ERROR_MESSAGE_MAP);
+                //do something with the errorMessage
+                if (UtilValidate.isNotEmpty(errorMessage)) {
+                    if (UtilValidate.isEmpty((String) result.get(ModelService.ERROR_MESSAGE))) {
+                        result.put(ModelService.ERROR_MESSAGE, errorMessage);
+                    } else {
+                        if (errorMessageList == null) errorMessageList = new LinkedList();
+                        errorMessageList.add(0, errorMessage);
+                    }
+                }
+                //do something with the errorMessageList
+                if (errorMessageList != null && errorMessageList.size() > 0) {
+                    List origErrorMessageList = (List) result.get(ModelService.ERROR_MESSAGE_LIST);
+                    if (origErrorMessageList == null) {
+                        result.put(ModelService.ERROR_MESSAGE_LIST, errorMessageList);
+                    } else {
+                        origErrorMessageList.addAll(errorMessageList);
+                    }
+                }
+                //do something with the errorMessageMap
+                if (errorMessageMap != null && errorMessageMap.size() > 0) {
+                    Map origErrorMessageMap = (Map) result.get(ModelService.ERROR_MESSAGE_MAP);
+                    if (origErrorMessageMap == null) {
+                        result.put(ModelService.ERROR_MESSAGE_MAP, errorMessageMap);
+                    } else {
+                        origErrorMessageMap.putAll(errorMessageMap);
+                    }
+                }
+            }
         }
     }
 }

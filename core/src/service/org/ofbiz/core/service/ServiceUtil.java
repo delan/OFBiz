@@ -122,9 +122,8 @@ public class ServiceUtil {
     public static String makeErrorMessage(Map result, String msgPrefix, String msgSuffix, String errorPrefix, String errorSuffix) {
         String errorMsg = (String) result.get(ModelService.ERROR_MESSAGE);
         List errorMsgList = (List) result.get(ModelService.ERROR_MESSAGE_LIST);
+        Map errorMsgMap = (Map) result.get(ModelService.ERROR_MESSAGE_MAP);
         StringBuffer outMsg = new StringBuffer();
-
-        outMsg.append(makeMessageList(errorMsgList, msgPrefix, msgSuffix));
 
         if (errorMsg != null) {
             if (msgPrefix != null) outMsg.append(msgPrefix);
@@ -132,6 +131,20 @@ public class ServiceUtil {
             if (msgSuffix != null) outMsg.append(msgSuffix);
         }
 
+        outMsg.append(makeMessageList(errorMsgList, msgPrefix, msgSuffix));
+
+        if (errorMsgMap != null) {
+            Iterator mapIter = errorMsgMap.entrySet().iterator();
+            while (mapIter.hasNext()) {
+                Map.Entry entry = (Map.Entry) mapIter.next();
+                outMsg.append(msgPrefix);
+                outMsg.append(entry.getKey());
+                outMsg.append(": ");
+                outMsg.append(entry.getValue());
+                outMsg.append(msgSuffix);
+            }
+        }
+        
         if (outMsg.length() > 0) {
             StringBuffer strBuf = new StringBuffer();
             if (errorPrefix != null) strBuf.append(errorPrefix);

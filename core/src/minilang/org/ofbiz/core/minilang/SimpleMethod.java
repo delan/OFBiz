@@ -187,6 +187,7 @@ public class SimpleMethod {
     String serviceResponseMessageName;
     String serviceErrorMessageName;
     String serviceErrorMessageListName;
+    String serviceErrorMessageMapName;
     String serviceSuccessMessageName;
     String serviceSuccessMessageListName;
 
@@ -235,6 +236,10 @@ public class SimpleMethod {
         serviceErrorMessageListName = simpleMethodElement.getAttribute("service-error-message-list-name");
         if (serviceErrorMessageListName == null || serviceErrorMessageListName.length() == 0)
             serviceErrorMessageListName = "errorMessageList";
+        serviceErrorMessageMapName = simpleMethodElement.getAttribute("service-error-message-map-name");
+        if (serviceErrorMessageMapName == null || serviceErrorMessageMapName.length() == 0)
+            serviceErrorMessageMapName = "errorMessageMap";
+        
         serviceSuccessMessageName = simpleMethodElement.getAttribute("service-success-message-name");
         if (serviceSuccessMessageName == null || serviceSuccessMessageName.length() == 0)
             serviceSuccessMessageName = "successMessage";
@@ -397,6 +402,11 @@ public class SimpleMethod {
             List errorMsgList = (List) methodContext.getEnv(serviceErrorMessageListName);
             if (errorMsgList != null && errorMsgList.size() > 0) {
                 methodContext.putResult(ModelService.ERROR_MESSAGE_LIST, errorMsgList);
+            }
+
+            Map errorMsgMap = (Map) methodContext.getEnv(serviceErrorMessageMapName);
+            if (errorMsgMap != null && errorMsgMap.size() > 0) {
+                methodContext.putResult(ModelService.ERROR_MESSAGE_MAP, errorMsgMap);
             }
 
             String successMsg = (String) methodContext.getEnv(serviceSuccessMessageName);

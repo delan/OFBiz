@@ -85,6 +85,7 @@
     service-response-message-name CDATA "responseMessage"
     service-error-message-name CDATA "errorMessage"
     service-error-message-list-name CDATA "errorMessageList"
+    service-error-message-map-name CDATA "errorMessageMap"
     service-success-message-name CDATA "successMessage"
     service-success-message-list-name CDATA "successMessageList"
     delegator-name CDATA "delegator"

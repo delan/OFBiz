@@ -79,7 +79,7 @@ public class EventConditionAction {
         if (Debug.verboseOn()) Debug.logVerbose("Actions: " + actions);
     }
 
-    public void eval(String serviceName, DispatchContext dctx, Map context, boolean isError) throws GenericServiceException {
+    public void eval(String serviceName, DispatchContext dctx, Map context, Map result, boolean isError) throws GenericServiceException {
         if (isError && !this.runOnError) {
             return;
         }
@@ -98,7 +98,7 @@ public class EventConditionAction {
             Iterator a = actions.iterator();
             while (a.hasNext()) {
                 EventAction ea = (EventAction) a.next();
-                ea.runAction(serviceName, dctx, context);
+                ea.runAction(serviceName, dctx, context, result);
             }
         }
     }

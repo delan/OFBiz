@@ -142,7 +142,7 @@ public class ServiceDispatcher {
             //get eventMap once for all calls for speed, don't do event calls if it is null
             Map eventMap = ECAUtil.getServiceEventMap(service.name);
             // pre-auth ECA
-            if (eventMap != null) ECAUtil.evalConditions(service.name, eventMap, "auth", (DispatchContext) localContext.get(localName), context, false);
+            if (eventMap != null) ECAUtil.evalConditions(service.name, eventMap, "auth", (DispatchContext) localContext.get(localName), context, null, false);
 
             context = checkAuth(localName, context, service);
             Object userLogin = context.get("userLogin");
@@ -154,7 +154,7 @@ public class ServiceDispatcher {
             engine.setLoader(localName);
 
             // pre-validate ECA
-            if (eventMap != null) ECAUtil.evalConditions(service.name, eventMap, "in-validate", (DispatchContext) localContext.get(localName), context, false);
+            if (eventMap != null) ECAUtil.evalConditions(service.name, eventMap, "in-validate", (DispatchContext) localContext.get(localName), context, null, false);
 
             // validate the context
             if (service.validate) {
@@ -166,7 +166,7 @@ public class ServiceDispatcher {
             }
 
             // pre-invoke ECA
-            if (eventMap != null) ECAUtil.evalConditions(service.name, eventMap, "invoke", (DispatchContext) localContext.get(localName), context, false);
+            if (eventMap != null) ECAUtil.evalConditions(service.name, eventMap, "invoke", (DispatchContext) localContext.get(localName), context, null, false);
 
             if (Debug.verboseOn()) {
                 Debug.logVerbose("[ServiceDispatcher.runSync] : invoking service [" + service.location +
@@ -186,7 +186,7 @@ public class ServiceDispatcher {
 
             // validate the result
             if (service.validate) {
-                if (eventMap != null) ECAUtil.evalConditions(service.name, eventMap, "out-validate", (DispatchContext) localContext.get(localName), ecaContext, isError);
+                if (eventMap != null) ECAUtil.evalConditions(service.name, eventMap, "out-validate", (DispatchContext) localContext.get(localName), ecaContext, result, isError);
                 try {
                     service.validate(result, ModelService.OUT_PARAM);
                 } catch (ServiceValidationException e) {
@@ -195,7 +195,7 @@ public class ServiceDispatcher {
             }
 
             // pre-commit ECA
-            if (eventMap != null) ECAUtil.evalConditions(service.name, eventMap, "commit", (DispatchContext) localContext.get(localName), ecaContext, isError);
+            if (eventMap != null) ECAUtil.evalConditions(service.name, eventMap, "commit", (DispatchContext) localContext.get(localName), ecaContext, result, isError);
 
             // commit the transaction
             try {
@@ -205,7 +205,7 @@ public class ServiceDispatcher {
             }
 
             // pre-return ECA
-            if (eventMap != null) ECAUtil.evalConditions(service.name, eventMap, "return", (DispatchContext) localContext.get(localName), ecaContext, isError);
+            if (eventMap != null) ECAUtil.evalConditions(service.name, eventMap, "return", (DispatchContext) localContext.get(localName), ecaContext, result, isError);
 
             return result;
         } catch (GenericServiceException e) {
@@ -242,7 +242,7 @@ public class ServiceDispatcher {
             Map eventMap = ECAUtil.getServiceEventMap(service.name);
 
             // pre-auth ECA
-            if (eventMap != null) ECAUtil.evalConditions(service.name, eventMap, "auth", (DispatchContext) localContext.get(localName), context, false);
+            if (eventMap != null) ECAUtil.evalConditions(service.name, eventMap, "auth", (DispatchContext) localContext.get(localName), context, null, false);
 
             context = checkAuth(localName, context, service);
             Object userLogin = context.get("userLogin");
@@ -254,7 +254,7 @@ public class ServiceDispatcher {
             engine.setLoader(localName);
 
             // pre-validate ECA
-            if (eventMap != null) ECAUtil.evalConditions(service.name, eventMap, "in-validate", (DispatchContext) localContext.get(localName), context, false);
+            if (eventMap != null) ECAUtil.evalConditions(service.name, eventMap, "in-validate", (DispatchContext) localContext.get(localName), context, null, false);
 
             // validate the context
             if (service.validate) {
@@ -266,7 +266,7 @@ public class ServiceDispatcher {
             }
 
             // pre-invoke ECA
-            if (eventMap != null) ECAUtil.evalConditions(service.name, eventMap, "invoke", (DispatchContext) localContext.get(localName), context, false);
+            if (eventMap != null) ECAUtil.evalConditions(service.name, eventMap, "invoke", (DispatchContext) localContext.get(localName), context, null, false);
 
             if (Debug.verboseOn()) {
                 Debug.logVerbose("[ServiceDispatcher.runSyncIgnore] : invoking service [" + service.location + "/" + service.invoke +
@@ -276,7 +276,7 @@ public class ServiceDispatcher {
             engine.runSyncIgnore(service, context);
 
             // pre-commit ECA
-            if (eventMap != null) ECAUtil.evalConditions(service.name, eventMap, "commit", (DispatchContext) localContext.get(localName), context, false);
+            if (eventMap != null) ECAUtil.evalConditions(service.name, eventMap, "commit", (DispatchContext) localContext.get(localName), context, null, false);
 
             // commit the transaction
             try {
@@ -286,7 +286,7 @@ public class ServiceDispatcher {
             }
 
             // pre-return ECA
-            if (eventMap != null) ECAUtil.evalConditions(service.name, eventMap, "return", (DispatchContext) localContext.get(localName), context, false);
+            if (eventMap != null) ECAUtil.evalConditions(service.name, eventMap, "return", (DispatchContext) localContext.get(localName), context, null, false);
         } catch (GenericServiceException e) {
             try {
                 TransactionUtil.rollback(beganTrans);
@@ -312,7 +312,7 @@ public class ServiceDispatcher {
         Map eventMap = ECAUtil.getServiceEventMap(service.name);
 
         // pre-auth ECA
-        if (eventMap != null) ECAUtil.evalConditions(service.name, eventMap, "auth", (DispatchContext) localContext.get(localName), context, false);
+        if (eventMap != null) ECAUtil.evalConditions(service.name, eventMap, "auth", (DispatchContext) localContext.get(localName), context, null, false);
 
         context = checkAuth(localName, context, service);
         Object userLogin = context.get("userLogin");
@@ -324,7 +324,7 @@ public class ServiceDispatcher {
         engine.setLoader(localName);
 
         // pre-validate ECA
-        if (eventMap != null) ECAUtil.evalConditions(service.name, eventMap, "in-validate", (DispatchContext) localContext.get(localName), context, false);
+        if (eventMap != null) ECAUtil.evalConditions(service.name, eventMap, "in-validate", (DispatchContext) localContext.get(localName), context, null, false);
 
         // validate the context
         if (service.validate) {
@@ -357,7 +357,7 @@ public class ServiceDispatcher {
         Map eventMap = ECAUtil.getServiceEventMap(service.name);
 
         // pre-auth ECA
-        if (eventMap != null) ECAUtil.evalConditions(service.name, eventMap, "auth", (DispatchContext) localContext.get(localName), context, false);
+        if (eventMap != null) ECAUtil.evalConditions(service.name, eventMap, "auth", (DispatchContext) localContext.get(localName), context, null, false);
 
         context = checkAuth(localName, context, service);
         Object userLogin = context.get("userLogin");
@@ -369,7 +369,7 @@ public class ServiceDispatcher {
         engine.setLoader(localName);
 
         // pre-validate ECA
-        if (eventMap != null) ECAUtil.evalConditions(service.name, eventMap, "in-validate", (DispatchContext) localContext.get(localName), context, false);
+        if (eventMap != null) ECAUtil.evalConditions(service.name, eventMap, "in-validate", (DispatchContext) localContext.get(localName), context, null, false);
 
         // validate the context
         if (service.validate) {
