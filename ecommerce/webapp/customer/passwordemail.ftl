@@ -28,8 +28,8 @@
 <head>
 </head>
 <body>
-  <div>This email is in response to your request to have <#if useEncryption>a new<#else>your</#if> password sent to you.</div>
+  <div>This email is in response to your request to have <#if requestAttributes.useEncryption>a new<#else>your</#if> password sent to you.</div>
   <br>
-  <div>Your <#if useEncryption>new</#if> password is "${password}"</div>
+  <div>Your <#if requestAttributes.useEncryption>new</#if> password is "${requestAttributes.password}"</div>
 </body>
 </html>

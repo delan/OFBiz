@@ -23,26 +23,35 @@
  */
 package org.ofbiz.commonapp.security.login;
 
-import java.util.*;
-import java.io.*;
-import java.net.*;
-import javax.servlet.*;
-import javax.servlet.http.*;
+import java.net.URL;
+import java.util.HashMap;
+import java.util.Iterator;
+import java.util.Map;
 
-import org.ofbiz.core.util.*;
-import org.ofbiz.core.entity.*;
-import org.ofbiz.core.service.*;
-import org.ofbiz.core.security.*;
-import org.ofbiz.core.stats.*;
-import org.ofbiz.commonapp.party.contact.*;
+import javax.servlet.ServletContext;
+import javax.servlet.http.Cookie;
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
+import javax.servlet.http.HttpSession;
 
-import freemarker.ext.beans.BeansWrapper;
-import freemarker.template.Configuration;
-import freemarker.template.SimpleHash;
-import freemarker.template.Template;
-import freemarker.template.TemplateException;
-import freemarker.template.TemplateHashModel;
-import freemarker.template.WrappingTemplateModel;
+import org.ofbiz.commonapp.party.contact.ContactHelper;
+import org.ofbiz.core.control.JPublishWrapper;
+import org.ofbiz.core.entity.GenericDelegator;
+import org.ofbiz.core.entity.GenericEntityException;
+import org.ofbiz.core.entity.GenericValue;
+import org.ofbiz.core.security.Security;
+import org.ofbiz.core.service.GenericServiceException;
+import org.ofbiz.core.service.LocalDispatcher;
+import org.ofbiz.core.service.ModelService;
+import org.ofbiz.core.stats.VisitHandler;
+import org.ofbiz.core.util.Debug;
+import org.ofbiz.core.util.GeneralException;
+import org.ofbiz.core.util.SiteDefs;
+import org.ofbiz.core.util.UtilFormatOut;
+import org.ofbiz.core.util.UtilHttp;
+import org.ofbiz.core.util.UtilMisc;
+import org.ofbiz.core.util.UtilProperties;
+import org.ofbiz.core.util.UtilValidate;
 
 /**
  * LoginEvents - Events for UserLogin and Security handling.
@@ -437,38 +446,32 @@ public class LoginEvents {
             return "error";
         }
         
-        // prepare the FTL context
-        WrappingTemplateModel.setDefaultObjectWrapper(BeansWrapper.getDefaultInstance());
-        BeansWrapper wrapper = BeansWrapper.getDefaultInstance();
-        SimpleHash templateContext = new SimpleHash(wrapper);    
-        templateContext.put("password", UtilFormatOut.checkNull(passwordToSend));   
-        templateContext.put("useEncryption", new Boolean(useEncryption));
+        // set the needed variables in the request
+        request.setAttribute("useEncryption", new Boolean(useEncryption));
+        request.setAttribute("password", UtilFormatOut.checkNull(passwordToSend));
         
-        // get the FTL template Reader
+        // get the JPublishWrapper
+        ServletContext servletContext = (ServletContext) request.getAttribute("servletContext");
+        JPublishWrapper jp = (JPublishWrapper) servletContext.getAttribute("jpublishWrapper");       
+        
+        // get the FTL Page
         String templatePath = UtilProperties.getPropertyValue(ecommercePropertiesUrl, "password.send.template");
-        Reader reader = new InputStreamReader(application.getResourceAsStream(templatePath));
-               
-        // process the template
-        Configuration config = Configuration.getDefaultConfiguration();     
-        config.setObjectWrapper(BeansWrapper.getDefaultInstance());
-        config.setLocale(UtilHttp.getLocale(request));             
-        TemplateHashModel staticModels = wrapper.getStaticModels();   
-        templateContext.put("Static", staticModels);
-        
-        Writer writer = new StringWriter();
-        try {
-            Template template = new Template(templatePath, reader, config);
-            template.process(templateContext, writer, BeansWrapper.getDefaultInstance());
-        } catch (IOException e) {
-            Debug.logError(e, "Problems reading send password template", module);
+        if (templatePath == null || templatePath.length() == 0) {
+            Debug.logError("Empty password template in ecommerce.properties; fix this!", module);
             request.setAttribute(SiteDefs.ERROR_MESSAGE, "<li>Email password configuration error, please contact customer service.");
-            return "error";                        
-        } catch (TemplateException e) {
-            Debug.logError(e, "Template processing problem", module);
+            return "error";    
+        }
+               
+        // process the email content
+        String content = null;
+        try {
+            content = jp.render(templatePath, request, response);
+        } catch (GeneralException e) {
+            Debug.logError(e, "Problems rendering email template", module);
             request.setAttribute(SiteDefs.ERROR_MESSAGE, "<li>Email password configuration error, please contact customer service.");
             return "error";
-        }           
-             
+        }
+                               
         Map context = new HashMap();       
         String mailHost = UtilProperties.getPropertyValue(ecommercePropertiesUrl, "smtp.relay.host");        
         String sendFrom = UtilProperties.getPropertyValue(ecommercePropertiesUrl, "password.send.email");
@@ -478,7 +481,7 @@ public class LoginEvents {
         } else {
             context.put("subject", UtilProperties.getPropertyValue(ecommercePropertiesUrl, "company.name", "") + " Password Reminder");
         }
-        context.put("body", writer.toString());
+        context.put("body", content);
         context.put("sendTo", emails.toString());
         context.put("sendFrom", sendFrom);
         context.put("sendVia", mailHost);
