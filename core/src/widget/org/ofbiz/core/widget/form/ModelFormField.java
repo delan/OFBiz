@@ -63,23 +63,23 @@ public class ModelFormField {
     public ModelFormField() {}
 
     /** XML Constructor */
-    public ModelFormField(Element formElement) {
-        this.name = formElement.getAttribute("name");
-        this.mapName = formElement.getAttribute("map-name");
-        this.entityName = formElement.getAttribute("entity-name");
-        this.serviceName = formElement.getAttribute("service-name");
-        this.entryName = UtilXml.checkEmpty(formElement.getAttribute("entry-name"), this.name);
-        this.parameterName = UtilXml.checkEmpty(formElement.getAttribute("parameter-name"), this.name);
-        this.fieldName = UtilXml.checkEmpty(formElement.getAttribute("field-name"), this.name);
-        this.attributeName = UtilXml.checkEmpty(formElement.getAttribute("attribute-name"), this.name);
-        this.title = formElement.getAttribute("title");
-        this.tooltip = formElement.getAttribute("tooltip");
-        this.titleStyle = formElement.getAttribute("title-style");
-        this.widgetStyle = formElement.getAttribute("widget-style");
-        this.redWhen = formElement.getAttribute("red-when");
-        this.useWhen = formElement.getAttribute("use-when");
+    public ModelFormField(Element fieldElement) {
+        this.name = fieldElement.getAttribute("name");
+        this.mapName = fieldElement.getAttribute("map-name");
+        this.entityName = fieldElement.getAttribute("entity-name");
+        this.serviceName = fieldElement.getAttribute("service-name");
+        this.entryName = UtilXml.checkEmpty(fieldElement.getAttribute("entry-name"), this.name);
+        this.parameterName = UtilXml.checkEmpty(fieldElement.getAttribute("parameter-name"), this.name);
+        this.fieldName = UtilXml.checkEmpty(fieldElement.getAttribute("field-name"), this.name);
+        this.attributeName = UtilXml.checkEmpty(fieldElement.getAttribute("attribute-name"), this.name);
+        this.title = fieldElement.getAttribute("title");
+        this.tooltip = fieldElement.getAttribute("tooltip");
+        this.titleStyle = fieldElement.getAttribute("title-style");
+        this.widgetStyle = fieldElement.getAttribute("widget-style");
+        this.redWhen = fieldElement.getAttribute("red-when");
+        this.useWhen = fieldElement.getAttribute("use-when");
         
-        String positionStr = formElement.getAttribute("position");
+        String positionStr = fieldElement.getAttribute("position");
         try {
             position = Integer.parseInt(positionStr);
         } catch (Exception e) {
@@ -89,7 +89,7 @@ public class ModelFormField {
         }
         
         // get sub-element and set fieldInfo
-        Element subElement = UtilXml.firstChildElement(formElement, null);
+        Element subElement = UtilXml.firstChildElement(fieldElement, null);
         if (subElement != null) {
             String subElementName = subElement.getTagName();
             if (Debug.infoOn()) Debug.logInfo("Processing field " + this.name + " with type info tag " + subElementName);
@@ -122,6 +122,14 @@ public class ModelFormField {
                 throw new IllegalArgumentException("The field sub-element with name " + subElementName + " is not supported");
             }
         }
+    }
+    
+    public void mergeOverrideModelFormField(ModelFormField overrideFormField) {
+        // TODO: incorporate updates for values that are not null empty in the overrideFormField
+    }
+
+    public void renderFieldString(StringBuffer buffer, Map context, FormStringRenderer formStringRenderer, GenericDelegator delegator, LocalDispatcher dispatcher) {
+        this.fieldInfo.renderFieldString(buffer, context, formStringRenderer, delegator, dispatcher);
     }
     
     /**

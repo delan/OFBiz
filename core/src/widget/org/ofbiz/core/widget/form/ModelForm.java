@@ -25,6 +25,8 @@ package org.ofbiz.core.widget.form;
 
 import java.util.*;
 import org.w3c.dom.*;
+import org.ofbiz.core.entity.GenericDelegator;
+import org.ofbiz.core.service.LocalDispatcher;
 import org.ofbiz.core.util.*;
 
 /**
@@ -96,7 +98,8 @@ public class ModelForm {
         Iterator altTargetElementIter = altTargetElements.iterator();
         while (altTargetElementIter.hasNext()) {
             Element altTargetElement = (Element) altTargetElementIter.next();
-            altTargets.add(new AltTarget(altTargetElement));
+            AltTarget altTarget = new AltTarget(altTargetElement);
+            this.addAltTarget(altTarget);
         }
 
         // auto-fields-service
@@ -104,7 +107,8 @@ public class ModelForm {
         Iterator autoFieldsServiceElementIter = autoFieldsServiceElements.iterator();
         while (autoFieldsServiceElementIter.hasNext()) {
             Element autoFieldsServiceElement = (Element) autoFieldsServiceElementIter.next();
-            autoFieldsServices.add(new AutoFieldsService(autoFieldsServiceElement));
+            AutoFieldsService autoFieldsService = new AutoFieldsService(autoFieldsServiceElement);
+            this.addAutoFieldsFromService(autoFieldsService);
         }
 
         // auto-fields-entity
@@ -112,12 +116,64 @@ public class ModelForm {
         Iterator autoFieldsEntityElementIter = autoFieldsEntityElements.iterator();
         while (autoFieldsEntityElementIter.hasNext()) {
             Element autoFieldsEntityElement = (Element) autoFieldsEntityElementIter.next();
-            autoFieldsEntities.add(new AutoFieldsEntity(autoFieldsEntityElement));
+            AutoFieldsEntity autoFieldsEntity = new AutoFieldsEntity(autoFieldsEntityElement);
+            this.addAutoFieldsFromEntity(autoFieldsEntity);
         }
 
-        // TODO: read in add field defs, add/override one by one using the fieldList and fieldMap
+        // read in add field defs, add/override one by one using the fieldList and fieldMap
+        List fieldElements = UtilXml.childElementList(formElement, "field");
+        Iterator fieldElementIter = fieldElements.iterator();
+        while (fieldElementIter.hasNext()) {
+            Element fieldElement = (Element) fieldElementIter.next();
+            ModelFormField modelFormField = new ModelFormField(fieldElement);
+            this.addUpdateField(modelFormField);
+        }
+    }
+    
+    public void renderFormString(StringBuffer buffer, Map context, FormStringRenderer formStringRenderer, GenericDelegator delegator, LocalDispatcher dispatcher) {
+        // TODO: based on the type of form, render form headers/footers/wrappers and call individual field renderers
+        // NOTE: for display and hyperlink with also hidden set to true: iterate through field list, find these and hidden fields and render them
+        if ("single".equals(this.type)) {
+            
+        } else if ("list".equals(this.type)) {
+        } else {
+            throw new IllegalArgumentException("The type " + this.getType() + " is not supported for form with name " + this.getName());
+        }
+    }
+    
+    /** add/override modelFormField using the fieldList and fieldMap */
+    public void addUpdateField(ModelFormField modelFormField) {
+        if (modelFormField.getUseWhen() != null && modelFormField.getUseWhen().length() > 0) {
+            // is a conditional field, add to the List but don't worry about the Map
+            this.fieldList.add(modelFormField);
+        } else {
+            // not a conditional field, see if a named field exists in Map
+            ModelFormField existingField = (ModelFormField) this.fieldMap.get(modelFormField.getName());
+            if (existingField != null) {
+                // does exist, update the field by doing a merge/override
+                existingField.mergeOverrideModelFormField(modelFormField); 
+            } else {
+                // does not exist, add to List and Map
+                this.fieldList.add(modelFormField);
+                this.fieldMap.put(modelFormField.getName(), modelFormField);
+            }
+        }
+    }
+    
+    public void addAltTarget(AltTarget altTarget) {
+        altTargets.add(altTarget);
+    }
+    
+    public void addAutoFieldsFromService(AutoFieldsService autoFieldsService) {
+        autoFieldsServices.add(autoFieldsService);
+        // TODO: read service def and auto-create fields
     }
 
+    public void addAutoFieldsFromEntity(AutoFieldsEntity autoFieldsEntity) {
+        autoFieldsEntities.add(autoFieldsEntity);
+        // TODO: read entity def and auto-create fields
+    }
+    
     /**
      * @return
      */
@@ -170,7 +226,8 @@ public class ModelForm {
     /**
      * @return
      */
-    public String getTarget() {
+    public String getTarget(Map context) {
+        // TODO: iterate through altConditions list to see if any should be used, if not return original target
         return target;
     }
 

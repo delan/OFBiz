@@ -52,4 +52,31 @@ public interface FormStringRenderer {
 
     public void renderHiddenField(StringBuffer buffer, Map context, ModelFormField.HiddenField hiddenField, GenericDelegator delegator, LocalDispatcher dispatcher);
     public void renderIgnoredField(StringBuffer buffer, Map context, ModelFormField.IgnoredField ignoredField, GenericDelegator delegator, LocalDispatcher dispatcher);
+
+    public void renderFieldTitle(StringBuffer buffer, Map context, ModelFormField.IgnoredField ignoredField, GenericDelegator delegator, LocalDispatcher dispatcher);
+    
+    public void renderFormOpen(StringBuffer buffer, Map context, ModelForm modelForm);
+    public void renderFormClose(StringBuffer buffer, Map context, ModelForm modelForm);
+    
+    public void renderFormatWrapperOpen(StringBuffer buffer, Map context, ModelForm modelForm);
+    public void renderFormatWrapperClose(StringBuffer buffer, Map context, ModelForm modelForm);
+
+    public void renderFormatHeaderRowOpen(StringBuffer buffer, Map context, ModelForm modelForm);
+    public void renderFormatHeaderRowClose(StringBuffer buffer, Map context, ModelForm modelForm);
+    public void renderFormatHeaderRowCellOpen(StringBuffer buffer, Map context, ModelForm modelForm);
+    public void renderFormatHeaderRowCellClose(StringBuffer buffer, Map context, ModelForm modelForm);
+    
+    public void renderFormatItemRowOpen(StringBuffer buffer, Map context, ModelForm modelForm);
+    public void renderFormatItemRowClose(StringBuffer buffer, Map context, ModelForm modelForm);
+
+    public void renderFormatItemRowListContentCellOpen(StringBuffer buffer, Map context, ModelForm modelForm);
+    public void renderFormatItemRowListContentCellClose(StringBuffer buffer, Map context, ModelForm modelForm);
+    public void renderFormatItemRowListFormCellOpen(StringBuffer buffer, Map context, ModelForm modelForm);
+    public void renderFormatItemRowListFormCellClose(StringBuffer buffer, Map context, ModelForm modelForm);
+
+    public void renderFormatFieldRowTitleCellOpen(StringBuffer buffer, Map context, ModelForm modelForm);
+    public void renderFormatFieldRowTitleCellClose(StringBuffer buffer, Map context, ModelForm modelForm);
+    public void renderFormatFieldRowSpacerCell(StringBuffer buffer, Map context, ModelForm modelForm);
+    public void renderFormatFieldRowWidgetCellOpen(StringBuffer buffer, Map context, ModelForm modelForm);
+    public void renderFormatFieldRowWidgetCellClose(StringBuffer buffer, Map context, ModelForm modelForm);
 }
