@@ -52,10 +52,10 @@
   </tr>
 <ofbiz:iterator name="securityGroup" property="securityGroups">
   <tr valign="middle">
-    <td><div class='tabletext'>&nbsp;<ofbiz:inputvalue entityAttr="securityGroup" field="securityGroupId"/></div></td>
+    <td><div class='tabletext'>&nbsp;<ofbiz:inputvalue entityAttr="securityGroup" field="groupId"/></div></td>
     <td><div class='tabletext'>&nbsp;<ofbiz:inputvalue entityAttr="securityGroup" field="description"/></div></td>
     <td>
-      <a href='<ofbiz:url>/EditSecurityGroup?securityGroupId=<ofbiz:inputvalue entityAttr="securityGroup" field="securityGroupId"/></ofbiz:url>' class="buttontext">
+      <a href='<ofbiz:url>/EditSecurityGroup?groupId=<ofbiz:inputvalue entityAttr="securityGroup" field="groupId"/></ofbiz:url>' class="buttontext">
       [Edit]</a>
     </td>
   </tr>

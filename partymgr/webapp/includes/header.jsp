@@ -1,8 +1,9 @@
 
-<%@ taglib uri="ofbizTags" prefix="ofbiz" %>
 <%@ page import="org.ofbiz.core.security.*, org.ofbiz.core.entity.*, org.ofbiz.core.util.*, org.ofbiz.core.pseudotag.*" %>
 <%@ page import="org.ofbiz.commonapp.common.*" %>
 <%@ page import="java.util.*" %>
+<%@ taglib uri="ofbizTags" prefix="ofbiz" %>
+<jsp:useBean id="security" type="org.ofbiz.core.security.Security" scope="request" />
 
 <TABLE border=0 width='100%' cellspacing='0' cellpadding='0' class='headerboxoutside'>
   <TR>

@@ -33,10 +33,10 @@
 
 <%if (security.hasEntityPermission("SECURITY", "_VIEW", session)) {%>
 <%
-    String securityGroupId = request.getParameter("securityGroupId");
-    Collection securityGroupPermissions = delegator.findByAnd("SecurityPermission", 
-            UtilMisc.toMap("securityGroupId", securityGroupId), 
-            UtilMisc.toList("statusId", "quantityOnHand", "serialNumber"));
+    String groupId = request.getParameter("groupId");
+    Collection securityGroupPermissions = delegator.findByAnd("SecurityGroupPermission", 
+            UtilMisc.toMap("groupId", groupId), 
+            UtilMisc.toList("permissionId"));
     if (securityGroupPermissions != null) pageContext.setAttribute("securityGroupPermissions", securityGroupPermissions);
 
     int viewIndex = 0;
@@ -67,13 +67,13 @@
 <br>
 
 <a href="<ofbiz:url>/EditSecurityGroup</ofbiz:url>" class="buttontext">[New SecurityGroup]</a>
-<%if(securityGroupId != null && securityGroupId.length() > 0){%>
-  <a href="<ofbiz:url>/EditSecurityGroup?securityGroupId=<%=securityGroupId%></ofbiz:url>" class="buttontext">[SecurityGroup]</a>
-  <a href="<ofbiz:url>/EditSecurityGroupPermissions?securityGroupId=<%=securityGroupId%></ofbiz:url>" class="buttontextdisabled">[Permissions]</a>
+<%if(groupId != null && groupId.length() > 0){%>
+  <a href="<ofbiz:url>/EditSecurityGroup?groupId=<%=groupId%></ofbiz:url>" class="buttontext">[SecurityGroup]</a>
+  <a href="<ofbiz:url>/EditSecurityGroupPermissions?groupId=<%=groupId%></ofbiz:url>" class="buttontextdisabled">[Permissions]</a>
 <%}%>
 
-<div class="head1">Inventory Items for SecurityGroup with ID "<%=UtilFormatOut.checkNull(securityGroupId)%>"</div>
-<a href='<ofbiz:url>/EditPermission?securityGroupId=<%=securityGroupId%></ofbiz:url>' class="buttontext">
+<div class="head1">Inventory Items for SecurityGroup with ID "<%=UtilFormatOut.checkNull(groupId)%>"</div>
+<a href='<ofbiz:url>/EditPermission?groupId=<%=groupId%></ofbiz:url>' class="buttontext">
 [Create New Inventory Item for this SecurityGroup]</a>
 
 <ofbiz:if name="securityGroupPermissions" size="0">
@@ -82,20 +82,20 @@
       <td align=right>
         <b>
         <%if (viewIndex > 0) {%>
-          <a href="<ofbiz:url><%="/EditSecurityGroupPermissions?securityGroupId=" + securityGroupId + "&VIEW_SIZE=" + viewSize + "&VIEW_INDEX=" + (viewIndex-1)%></ofbiz:url>" class="buttontext">[Previous]</a> |
+          <a href="<ofbiz:url><%="/EditSecurityGroupPermissions?groupId=" + groupId + "&VIEW_SIZE=" + viewSize + "&VIEW_INDEX=" + (viewIndex-1)%></ofbiz:url>" class="buttontext">[Previous]</a> |
         <%}%>
         <%if (listSize > 0) {%>
           <%=lowIndex+1%> - <%=highIndex%> of <%=listSize%>
         <%}%>
         <%if (listSize > highIndex) {%>
-          | <a href="<ofbiz:url><%="/EditSecurityGroupPermissions?securityGroupId=" + securityGroupId + "&VIEW_SIZE=" + viewSize + "&VIEW_INDEX=" + (viewIndex+1)%></ofbiz:url>" class="buttontext">[Next]</a>
+          | <a href="<ofbiz:url><%="/EditSecurityGroupPermissions?groupId=" + groupId + "&VIEW_SIZE=" + viewSize + "&VIEW_INDEX=" + (viewIndex+1)%></ofbiz:url>" class="buttontext">[Next]</a>
         <%}%>
         </b>
       </td>
     </tr>
   </table>
 </ofbiz:if>
-<%if (securityGroupId != null){%>
+<%if (groupId != null){%>
 <table border="1" cellpadding='2' cellspacing='0' width='100%'>
   <tr>
     <td><div class="tabletext"><b>Item&nbsp;ID</b></div></td>
@@ -134,13 +134,13 @@
       <td align=right>
         <b>
         <%if (viewIndex > 0) {%>
-          <a href="<ofbiz:url><%="/EditSecurityGroupPermissions?securityGroupId=" + securityGroupId + "&VIEW_SIZE=" + viewSize + "&VIEW_INDEX=" + (viewIndex-1)%></ofbiz:url>" class="buttontext">[Previous]</a> |
+          <a href="<ofbiz:url><%="/EditSecurityGroupPermissions?groupId=" + groupId + "&VIEW_SIZE=" + viewSize + "&VIEW_INDEX=" + (viewIndex-1)%></ofbiz:url>" class="buttontext">[Previous]</a> |
         <%}%>
         <%if (listSize > 0) {%>
           <%=lowIndex+1%> - <%=highIndex%> of <%=listSize%>
         <%}%>
         <%if (listSize > highIndex) {%>
-          | <a href="<ofbiz:url><%="/EditSecurityGroupPermissions?securityGroupId=" + securityGroupId + "&VIEW_SIZE=" + viewSize + "&VIEW_INDEX=" + (viewIndex+1)%></ofbiz:url>" class="buttontext">[Next]</a>
+          | <a href="<ofbiz:url><%="/EditSecurityGroupPermissions?groupId=" + groupId + "&VIEW_SIZE=" + viewSize + "&VIEW_INDEX=" + (viewIndex+1)%></ofbiz:url>" class="buttontext">[Next]</a>
         <%}%>
         </b>
       </td>

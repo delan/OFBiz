@@ -38,11 +38,11 @@
     boolean tryEntity = true;
     if(request.getAttribute(SiteDefs.ERROR_MESSAGE) != null) tryEntity = false;
 
-    String securityGroupId = request.getParameter("securityGroupId");
-    if (UtilValidate.isEmpty(securityGroupId) && UtilValidate.isNotEmpty((String) request.getAttribute("securityGroupId"))) {
-        securityGroupId = (String) request.getAttribute("securityGroupId");
+    String groupId = request.getParameter("groupId");
+    if (UtilValidate.isEmpty(groupId) && UtilValidate.isNotEmpty((String) request.getAttribute("groupId"))) {
+        groupId = (String) request.getAttribute("groupId");
     }
-    GenericValue securityGroup = delegator.findByPrimaryKey("SecurityGroup", UtilMisc.toMap("securityGroupId", securityGroupId));
+    GenericValue securityGroup = delegator.findByPrimaryKey("SecurityGroup", UtilMisc.toMap("groupId", groupId));
     if (securityGroup == null) {
         tryEntity = false;
     } else {
@@ -52,17 +52,17 @@
 
 <br>
 <a href="<ofbiz:url>/EditSecurityGroup</ofbiz:url>" class="buttontext">[New SecurityGroup]</a>
-<%if(securityGroupId != null && securityGroupId.length() > 0){%>
-  <a href="<ofbiz:url>/EditSecurityGroup?securityGroupId=<%=securityGroupId%></ofbiz:url>" class="buttontextdisabled">[SecurityGroup]</a>
-  <a href="<ofbiz:url>/EditSecurityGroupPermissions?securityGroupId=<%=securityGroupId%></ofbiz:url>" class="buttontext">[Permissions]</a>
+<%if(groupId != null && groupId.length() > 0){%>
+  <a href="<ofbiz:url>/EditSecurityGroup?groupId=<%=groupId%></ofbiz:url>" class="buttontextdisabled">[SecurityGroup]</a>
+  <a href="<ofbiz:url>/EditSecurityGroupPermissions?groupId=<%=groupId%></ofbiz:url>" class="buttontext">[Permissions]</a>
 <%}%>
 
-<div class="head1">Edit SecurityGroup with ID "<%=UtilFormatOut.checkNull(securityGroupId)%>"</div>
+<div class="head1">Edit SecurityGroup with ID "<%=UtilFormatOut.checkNull(groupId)%>"</div>
 <%if (securityGroup == null) {%>
-  <%if (securityGroupId != null) {%>
+  <%if (groupId != null) {%>
     <form action="<ofbiz:url>/CreateSecurityGroup</ofbiz:url>" method=POST style='margin: 0;'>
     <table border='0' cellpadding='2' cellspacing='0'>
-    <h3>Could not find securityGroup with ID "<%=securityGroupId%>".</h3>
+    <h3>Could not find securityGroup with ID "<%=groupId%>".</h3>
   <%} else {%>
     <form action="<ofbiz:url>/CreateSecurityGroup</ofbiz:url>" method=POST style='margin: 0;'>
     <table border='0' cellpadding='2' cellspacing='0'>
@@ -70,12 +70,12 @@
 <%} else {%>
   <form action="<ofbiz:url>/UpdateSecurityGroup</ofbiz:url>" method=POST style='margin: 0;'>
   <table border='0' cellpadding='2' cellspacing='0'>
-  <input type=hidden name="securityGroupId" value="<%=securityGroupId%>">
+  <input type=hidden name="groupId" value="<%=groupId%>">
   <tr>
     <td align=right><div class="tabletext">SecurityGroup ID</div></td>
     <td>&nbsp;</td>
     <td>
-      <b><%=securityGroupId%></b> (This cannot be changed without re-creating the securityGroup.)
+      <b><%=groupId%></b> (This cannot be changed without re-creating the securityGroup.)
     </td>
   </tr>
 <%}%>
