@@ -50,9 +50,9 @@
           <td height="15" class="${colClass}">
             <table width="100%" border="0" cellspacing="0" cellpadding="0">                
               <tr>
-                <td class="tabdownleft"><a href="${response.encodeURL("/partymgr/control/main" + externalKeyParam)}" title="Party Manager" class="tablink"><img src="<@ofbizContentUrl>/images/spacer.gif</@ofbizContentUrl>" alt="" width="24" height="15" border="0"></a></td>
-                <td nowrap="nowrap" class="tabdowncenter"><a href="${response.encodeURL("/partymgr/control/main" + externalKeyParam)}" title="Party Manager" class="tablink">Party</a></td>
-                <td class="tabdownright"><a href="${response.encodeURL("/partymgr/control/main" + externalKeyParam)}" title="Party Manager" class="tablink"><img src="<@ofbizContentUrl>/images/spacer.gif</@ofbizContentUrl>" alt="" width="24" height="15" border="0"></a></td>
+                <td class="tabdownleft"><a href="${response.encodeURL("/partymgr/control/main" + externalKeyParam)}" title="Party Manager" class="${linkClass}"><img src="<@ofbizContentUrl>/images/spacer.gif</@ofbizContentUrl>" alt="" width="24" height="15" border="0"></a></td>
+                <td nowrap="nowrap" class="tabdowncenter"><a href="${response.encodeURL("/partymgr/control/main" + externalKeyParam)}" title="Party Manager" class="${linkClass}">Party</a></td>
+                <td class="tabdownright"><a href="${response.encodeURL("/partymgr/control/main" + externalKeyParam)}" title="Party Manager" class="${linkClass}"><img src="<@ofbizContentUrl>/images/spacer.gif</@ofbizContentUrl>" alt="" width="24" height="15" border="0"></a></td>
               </tr> 
               <#if !requestAttributes.isPartyMgrActive?default(false)>
               <tr><td colspan="3" class="blackarea"><img src="<@ofbizContentUrl>/images/spacer.gif</@ofbizContentUrl>" alt="" height="1"></td></tr>
@@ -163,7 +163,7 @@
             <table width="100%" border="0" cellspacing="0" cellpadding="0">                
               <tr>
                 <td class="${leftClass}"><a href="${response.encodeURL("/ordermgr/control/main" + externalKeyParam)}" title="Order Manager" class="${linkClass}selected"><img src="<@ofbizContentUrl>/images/spacer.gif</@ofbizContentUrl>" alt="" width="24" height="15" border="0"></a></td>
-                <td nowrap="nowrap" class="${centerClass}"><a href="${response.encodeURL("/ordermgr/control/main" + externalKeyParam)}" title="Order Manager" class="${linkClass}selected">Order</a></td>
+                <td nowrap="nowrap" class="${centerClass}"><a href="${response.encodeURL("/ordermgr/control/main" + externalKeyParam)}" title="Order Manager" class="${linkClass}">Order</a></td>
                 <td class="${rightClass}"><a href="${response.encodeURL("/ordermgr/control/main" + externalKeyParam)}" title="Order Manager" class="${linkClass}selected"><img src="<@ofbizContentUrl>/images/spacer.gif</@ofbizContentUrl>" alt="" width="24" height="15" border="0"></a></td>
               </tr> 
               <#if !requestAttributes.isOrderMgrActive?default(false)>
