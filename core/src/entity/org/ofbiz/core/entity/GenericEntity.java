@@ -1,7 +1,7 @@
 /*
  * $Id$
  *
- *  Copyright (c) 2001 The Open For Business Project - www.ofbiz.org
+ *  Copyright (c) 2002 The Open For Business Project - www.ofbiz.org
  *
  *  Permission is hereby granted, free of charge, to any person obtaining a
  *  copy of this software and associated documentation files (the "Software"),
@@ -42,7 +42,7 @@ import org.w3c.dom.Element;
  * <code>Observer</code>.
  *
  *@author     <a href="mailto:jonesde@ofbiz.org">David E. Jones</a>
- *@author     <a href="mailto:jaz@zsolv.com">Andy Zeneski</a>
+ *@author     <a href="mailto:jaz@jflow.net">Andy Zeneski</a>
  *@created    Wed Aug 08 2001
  *@version    1.0
  */
@@ -596,6 +596,12 @@ public class GenericEntity extends Observable implements Map, Serializable, Comp
                 writer.print((String) entry.getKey());
                 writer.println('>');
             }
+
+            // don't forget to close the entity.
+            for (int i=0; i<indent; i++) writer.print(' ');
+            writer.print("</");
+            writer.print(this.getEntityName());
+            writer.println(">");
         }
     }
 
