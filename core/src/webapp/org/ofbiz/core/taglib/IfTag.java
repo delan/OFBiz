@@ -1,6 +1,9 @@
 /*
  * $Id$
  * $Log$
+ * Revision 1.5  2002/01/22 22:48:35  jonesde
+ * Added default EVAL_BODY_AGAIN when not null if no other constraints apply
+ *
  * Revision 1.4  2002/01/21 23:40:26  jonesde
  * Expanded if tag, no longer requires type (uses instanceof), supports Long, Float
  *
@@ -148,54 +151,6 @@ public class IfTag extends BodyTagSupport {
             } catch (RuntimeException e) {
                 return SKIP_BODY;
             }
-        } else if (object instanceof String || "String".equalsIgnoreCase(type)) {
-            // Assume the object is a string and compare to the String value of value.
-            try {
-                String s = (String) object;
-                if (s.equals(value))
-                    return EVAL_BODY_AGAIN;
-            }
-            catch ( RuntimeException e ) { return SKIP_BODY; }
-        } else if (object instanceof Integer || "Integer".equalsIgnoreCase(type)) {
-            // Assume the object is a Integer and compare to the Integer value of value.
-            try {
-                Integer i = (Integer) object;
-                Integer v = Integer.valueOf(value);
-                if (i.equals(v))
-                    return EVAL_BODY_AGAIN;
-            } catch (RuntimeException e) {
-                return SKIP_BODY;
-            }
-        } else if (object instanceof Long || "Long".equalsIgnoreCase(type)) {
-            // Assume the object is a Integer and compare to the Integer value of value.
-            try {
-                Long i = (Long) object;
-                Long v = Long.valueOf(value);
-                if (i.equals(v))
-                    return EVAL_BODY_AGAIN;
-            } catch (RuntimeException e) {
-                return SKIP_BODY;
-            }
-        } else if (object instanceof Float || "Float".equalsIgnoreCase(type)) {
-            // Assume the object is a Double and compare to the Double value of value.
-            try {
-                Float d = (Float) object;
-                Float v = Float.valueOf(value);
-                if (d.equals(v))
-                    return EVAL_BODY_AGAIN;
-            } catch (RuntimeException e) {
-                return SKIP_BODY;
-            }
-        } else if (object instanceof Double || "Double".equalsIgnoreCase(type)) {
-            // Assume the object is a Double and compare to the Double value of value.
-            try {
-                Double d = (Double) object;
-                Double v = Double.valueOf(value);
-                if (d.equals(v))
-                    return EVAL_BODY_AGAIN;
-            } catch (RuntimeException e) {
-                return SKIP_BODY;
-            }
         } else if (object instanceof Boolean || "Boolean".equalsIgnoreCase(type)) {
             // Assume the object is a Boolean and compare to the Boolean value of value.
             try {
@@ -210,14 +165,64 @@ public class IfTag extends BodyTagSupport {
                 return SKIP_BODY;
             }
         } else if (value != null) {
-            // Assume the object is an Object and compare to the Object named value.
-            Object valueObject = null;
-            try {
-                valueObject = pageContext.findAttribute(value);
-                if (valueObject != null && valueObject.equals(object))
-                    return EVAL_BODY_AGAIN;
-            } catch (RuntimeException e) {
-                return SKIP_BODY;
+            if (object instanceof String || "String".equalsIgnoreCase(type)) {
+                // Assume the object is a string and compare to the String value of value.
+                try {
+                    String s = (String) object;
+                    if (s.equals(value))
+                        return EVAL_BODY_AGAIN;
+                }
+                catch ( RuntimeException e ) { return SKIP_BODY; }
+            } else if (object instanceof Integer || "Integer".equalsIgnoreCase(type)) {
+                // Assume the object is a Integer and compare to the Integer value of value.
+                try {
+                    Integer i = (Integer) object;
+                    Integer v = Integer.valueOf(value);
+                    if (i.equals(v))
+                        return EVAL_BODY_AGAIN;
+                } catch (RuntimeException e) {
+                    return SKIP_BODY;
+                }
+            } else if (object instanceof Long || "Long".equalsIgnoreCase(type)) {
+                // Assume the object is a Integer and compare to the Integer value of value.
+                try {
+                    Long i = (Long) object;
+                    Long v = Long.valueOf(value);
+                    if (i.equals(v))
+                        return EVAL_BODY_AGAIN;
+                } catch (RuntimeException e) {
+                    return SKIP_BODY;
+                }
+            } else if (object instanceof Float || "Float".equalsIgnoreCase(type)) {
+                // Assume the object is a Double and compare to the Double value of value.
+                try {
+                    Float d = (Float) object;
+                    Float v = Float.valueOf(value);
+                    if (d.equals(v))
+                        return EVAL_BODY_AGAIN;
+                } catch (RuntimeException e) {
+                    return SKIP_BODY;
+                }
+            } else if (object instanceof Double || "Double".equalsIgnoreCase(type)) {
+                // Assume the object is a Double and compare to the Double value of value.
+                try {
+                    Double d = (Double) object;
+                    Double v = Double.valueOf(value);
+                    if (d.equals(v))
+                        return EVAL_BODY_AGAIN;
+                } catch (RuntimeException e) {
+                    return SKIP_BODY;
+                }
+            } else {
+                // Assume the object is an Object and compare to the Object named value.
+                Object valueObject = null;
+                try {
+                    valueObject = pageContext.findAttribute(value);
+                    if (valueObject != null && valueObject.equals(object))
+                        return EVAL_BODY_AGAIN;
+                } catch (RuntimeException e) {
+                    return SKIP_BODY;
+                }
             }
         } else {
             // basicly if no other comparisons available, just check to see if
