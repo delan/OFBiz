@@ -73,7 +73,7 @@ public class OrderReadHelper {
         }
         return (List) orderItems;
     }
-    
+        
     public List getValidOrderItems() {        
         List exprs = UtilMisc.toList(new EntityExpr("statusId", EntityOperator.NOT_EQUAL, "ITEM_CANCELLED"));
         return EntityUtil.filterByAnd(getOrderItems(), exprs);                
@@ -496,6 +496,67 @@ public class OrderReadHelper {
 
     public double getOrderItemShipping(GenericValue orderItem) {
         return getOrderItemAdjustmentsTotal(orderItem, false, false, true);
+    }
+    
+    public static Map getOrderHeaderDisplay(GenericValue orderHeader, List orderHeaderAdjustments, double orderSubTotal) {
+        Map newMap = new HashMap(orderHeader);               
+        newMap.put("headerAdjustmentsToShow", getOrderHeaderAdjustmentToShow(orderHeaderAdjustments, orderSubTotal));
+        return newMap;            
+    }
+    
+    public static List getOrderHeaderAdjustmentToShow(List orderHeaderAdjustments, double orderSubTotal) {        
+        List headerAdjustmentsToShow = filterOrderAdjustments(orderHeaderAdjustments, true, false, false, false, false);
+        Iterator ai = headerAdjustmentsToShow.iterator();
+        List hats = new LinkedList();
+        while (ai.hasNext()) {
+            GenericValue adj = (GenericValue) ai.next();
+            Map adjMap = new HashMap(adj);
+            try {
+                GenericValue type = adj.getRelatedOne("OrderAdjustmentType");
+                adjMap.put("typeDescription", type.getString("description"));
+                adjMap.put("adjustmentCalc", new Double(calcOrderAdjustment(adj, orderSubTotal)));
+            } catch (GenericEntityException e) {
+                Debug.logError(e, "Problems getting adjustment type", module);
+            }
+            hats.add(adjMap);
+        }  
+        return hats;                          
+    }
+    
+    public static List getOrderItemDisplay(List orderItems, List orderAdjustments) {
+        List itemList = new LinkedList();      
+        Iterator itemIt = orderItems.iterator();
+        while (itemIt.hasNext()) {
+            GenericValue gv = (GenericValue) itemIt.next();
+            Map newMap = new HashMap(gv);            
+            double itemAdjTotal = getOrderItemAdjustmentsTotal(gv, orderAdjustments, true, false, false);
+            double itemSubTotal = getOrderItemSubTotal(gv, orderAdjustments);
+            newMap.put("itemAdjTotal", new Double(itemAdjTotal));
+            newMap.put("itemSubTotal", new Double(itemSubTotal));
+            newMap.put("itemAdjustments", getOrderItemAdjustmentDisplay(gv, getOrderItemAdjustmentList(gv, orderAdjustments)));
+            itemList.add(newMap);
+        }
+        return itemList;
+    }
+    
+    public static List getOrderItemAdjustmentDisplay(GenericValue orderItem, List orderItemAdjustments) {       
+        List adjList = new LinkedList();
+        Iterator ai = orderItemAdjustments.iterator();
+        while (ai.hasNext()) {            
+            GenericValue adj = (GenericValue) ai.next();
+            Map newMap = new HashMap(adj);           
+            try {
+                GenericValue adjType = adj.getRelatedOne("OrderAdjustmentType");
+                newMap.put("typeDescription", adjType.getString("description"));
+            } catch (GenericEntityException e) {
+                Debug.logError(e, "Problems with order adjustment", module);
+            }            
+            double adjTotal = calcItemAdjustment(adj, orderItem);
+            newMap.put("itemAdjTotal", new Double(adjTotal));      
+            adjList.add(newMap);      
+        }        
+        return adjList;
+        
     }
 
     public static double getAllOrderItemsAdjustmentsTotal(List orderItems, List adjustments, boolean includeOther, boolean includeTax, boolean includeShipping) {
