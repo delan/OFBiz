@@ -59,6 +59,9 @@
     <service name="distributedClearAllEntityCaches" engine="jms" location="serviceMessenger" invoke="clearAllEntityCaches">
         <description>Clear All Entity Engine Caches for all Servers listening to the topic</description>
     </service>
+    <!-- Below uses Group/HTTP engine 
+    <service name="distributedClearAllEntityCaches" engine="group" location="distributedClearAllEntityCaches" invoke=""/>
+    -->
     <service name="clearAllEntityCaches" engine="java"
             location="org.ofbiz.commonapp.common.EntityCacheServices" invoke="clearAllEntityCaches">
         <description>Clears all values from all Entity Engine caches. By default does not distribute.</description>
@@ -69,6 +72,9 @@
         <description>Clear Cache Line by value for all Servers listening to the topic</description>
         <attribute name="value" type="GenericValue" mode="IN" optional="false"/>
     </service>
+    <!-- Below uses Group/HTTP engine
+    <service name="distributedClearCacheLineByValue" engine="group" location="distributedClearCacheLineByValue" invoke=""/>
+    -->
     <service name="clearCacheLineByValue" engine="java"
             location="org.ofbiz.core.extentity.EntityCacheServices" invoke="clearCacheLine">
         <description>Clear Cache Line with a value (GenericValue); this is the preferred method since the all, by primary key and by and caches will be cleared. By default does not distribute.</description>
@@ -80,6 +86,9 @@
         <description>Clear Cache Line by dummyPK for all Servers listening to the topic</description>
         <attribute name="dummyPK" type="GenericEntity" mode="IN" optional="false"/>
     </service>
+    <!-- Below uses Group/HTTP engine
+    <service name="distributedClearCacheLineByDummyPK" engine="group" location="distributedClearCacheLineByDummyPK" invoke=""/>
+    -->
     <service name="clearCacheLineByDummyPK" engine="java"
             location="org.ofbiz.core.extentity.EntityCacheServices" invoke="clearCacheLine">
         <description>Clear Cache Line with a dummyPK (GenericEntity); clears that all cache entry and depending on whether the dummyPK is a primaryKey or not this clears the by primary key cache or the specified entry in the by and cache. By default does not distribute.</description>
@@ -92,12 +101,36 @@
         <attribute name="primaryKey" type="GenericPK" mode="IN" optional="false"/>
         <attribute name="distribute" type="Boolean" mode="IN" optional="true"/>
     </service>
+    <!-- Below uses Group/HTTP engine
+    <service name="distributedClearCacheLineByPrimaryKey" engine="group" location="distributedClearCacheLineByPrimaryKey" invoke=""/>
+    -->
     <service name="clearCacheLineByPrimaryKey" engine="java"
             location="org.ofbiz.core.extentity.EntityCacheServices" invoke="clearCacheLine">
         <description>Clear Cache Line with a primaryKey (GenericPK); clears the all and by primary key caches. By default does not distribute.</description>
         <attribute name="primaryKey" type="GenericPK" mode="IN" optional="false"/>
         <attribute name="distribute" type="Boolean" mode="IN" optional="true"/>
     </service>
+    
+    <!-- HTTP Engine localhost cache clearing (example: duplicate entire block for each server) -->   
+    <service name="localhostClearAllEntityCaches" engine="http"
+            location="http://localhost:8080/commonapp/control/httpService" invoke="clearAllEntityCaches">        
+        <attribute name="distribute" type="Boolean" mode="IN" optional="true"/>
+    </service>
+    <service name="localhostClearCacheLineByValue" engine="http"
+            location="http://localhost:8080/commonapp/control/httpService" invoke="clearCacheLineByValue">        
+        <attribute name="value" type="GenericValue" mode="IN" optional="false"/>
+        <attribute name="distribute" type="Boolean" mode="IN" optional="true"/>
+    </service>
+    <service name="localhostClearCacheLineByDummyPK" engine="http"
+            location="http://localhost:8080/commonapp/control/httpService" invoke="clearCacheLineByDummyPK">
+        <attribute name="dummyPK" type="GenericEntity" mode="IN" optional="false"/>
+        <attribute name="distribute" type="Boolean" mode="IN" optional="true"/>
+    </service>   
+    <service name="localhostClearCacheLineByPrimaryKey" engine="http"
+            location="http://localhost:8080/commonapp/control/httpService" invoke="clearCacheLineByPrimaryKey">        
+        <attribute name="primaryKey" type="GenericPK" mode="IN" optional="false"/>
+        <attribute name="distribute" type="Boolean" mode="IN" optional="true"/>
+    </service>   
     
     <!-- DataSource Services -->
     <service name="interfaceDataSource" engine="interface" location="" invoke="">
