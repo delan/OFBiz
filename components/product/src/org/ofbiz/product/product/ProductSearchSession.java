@@ -1,5 +1,5 @@
 /*
- * $Id: ProductSearchSession.java,v 1.9 2004/04/30 10:14:19 jonesde Exp $
+ * $Id: ProductSearchSession.java,v 1.10 2004/04/30 10:19:25 jonesde Exp $
  *
  *  Copyright (c) 2001 The Open For Business Project (www.ofbiz.org)
  *  Permission is hereby granted, free of charge, to any person obtaining a
@@ -48,7 +48,7 @@ import org.ofbiz.product.store.ProductStoreWorker;
  *  Utility class with methods to prepare and perform ProductSearch operations in the content of an HttpSession
  *
  * @author <a href="mailto:jonesde@ofbiz.org">David E. Jones</a>
- * @version    $Revision: 1.9 $
+ * @version    $Revision: 1.10 $
  * @since      3.0
  */
 public class ProductSearchSession {
@@ -115,19 +115,22 @@ public class ProductSearchSession {
             ProductSearchOptions productSearchOptions = getProductSearchOptions(session); 
 	        // if the options have changed since the last search, add it to the beginning of the search options history
 	        if (productSearchOptions.changed) {
-	            List optionsHistoryList = getProductSearchOptionsHistoryList(session); 
+	            List optionsHistoryList = getSearchOptionsHistoryList(session); 
 	            optionsHistoryList.add(0, productSearchOptions);
 	            productSearchOptions.changed = false;
 	        }
 			
 		}
-		public static List getProductSearchOptionsHistoryList(HttpSession session) {
+		public static List getSearchOptionsHistoryList(HttpSession session) {
             List optionsHistoryList = (List) session.getAttribute("_PRODUCT_SEARCH_OPTIONS_HISTORY_"); 
     		if (optionsHistoryList == null) {
     			optionsHistoryList = new LinkedList();
     			session.setAttribute("_PRODUCT_SEARCH_OPTIONS_HISTORY_", optionsHistoryList);
     		}
     		return optionsHistoryList;
+		}
+		public static void clearSearchOptionsHistoryList(HttpSession session) {
+			session.removeAttribute("_PRODUCT_SEARCH_OPTIONS_HISTORY_");
 		}
 		
 		public void clearViewInfo() {
