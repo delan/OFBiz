@@ -44,11 +44,48 @@
     </request-map>
 
     <request-map><uri>main</uri><secure>false</secure><auth>false</auth><success>view:main</success></request-map>
+
+    <request-map><uri>EditCategory</uri><secure>true</secure><auth>true</auth><success>view:EditCategory</success></request-map>
+    <request-map>
+        <uri>UpdateCategory</uri><secure>true</secure><auth>true</auth>
+        <success>view:EditCategory</success><error>view:EditCategory</error>
+        <event-type>java</event-type><event-path>org.ofbiz.catalog.CategoryEvents</event-path><event-invoke>updateCategory</event-invoke>
+    </request-map>
+
+    <request-map><uri>EditProduct</uri><secure>true</secure><auth>true</auth><success>view:EditProduct</success></request-map>
+    <request-map>
+        <uri>UpdateProduct</uri><secure>true</secure><auth>true</auth>
+        <success>view:EditProduct</success><error>view:EditProduct</error>
+        <event-type>java</event-type><event-path>org.ofbiz.catalog.ProductEvents</event-path><event-invoke>updateProduct</event-invoke>
+    </request-map>
+    <request-map>
+        <uri>UpdateProductCategoryMember</uri><secure>true</secure><auth>true</auth>
+        <success>view:EditProduct</success><error>view:EditProduct</error>
+        <event-type>java</event-type><event-path>org.ofbiz.catalog.CategoryEvents</event-path><event-invoke>updateProductCategoryMember</event-invoke>
+    </request-map>
+    <request-map>
+        <uri>UpdateProductKeyword</uri><secure>true</secure><auth>true</auth>
+        <success>view:EditProduct</success><error>view:EditProduct</error>
+        <event-type>java</event-type><event-path>org.ofbiz.catalog.ProductEvents</event-path><event-invoke>updateProductKeyword</event-invoke>
+    </request-map>
+
+    <request-map><uri>EditProductKeyword</uri><secure>true</secure><auth>true</auth><success>view:EditProductKeyword</success></request-map>
+    <request-map>
+        <uri>UpdateProductKeyword</uri><secure>true</secure><auth>true</auth>
+        <success>view:EditProductKeyword</success><error>view:EditProductKeyword</error>
+        <event-type>java</event-type><event-path>org.ofbiz.catalog.ProductEvents</event-path><event-invoke>updateProductKeyword</event-invoke>
+    </request-map>
+
+    <request-map><uri>UploadImage</uri><secure>true</secure><auth>true</auth><success>view:UploadImage</success></request-map>
     <!-- end of request mappings -->
 
     <!-- View Mappings -->
     <view-map><view>error</view><mapped-page>/error/error.jsp</mapped-page></view-map>
     <view-map><view>main</view><mapped-page>/main.jsp</mapped-page></view-map>
+
+    <view-map><view>EditCategory</view><mapped-page>/EditCategory.jsp</mapped-page></view-map>
+    <view-map><view>EditProduct</view><mapped-page>/EditProduct.jsp</mapped-page></view-map>
+    <view-map><view>EditProductKeyword</view><mapped-page>/EditProductKeyword.jsp</mapped-page></view-map>
+    <view-map><view>UploadImage</view><mapped-page>/UploadImage.jsp</mapped-page></view-map>
     <!-- end of view mappings -->
 </site-conf>
-
