@@ -21,33 +21,34 @@
  *
  *@author     Andy Zeneski (jaz@ofbiz.org)
  *@author     David E. Jones (jonesde@ofbiz.org)
- *@version    $Revision: 1.1 $
+ *@author     Catherine.Heintz@nereide.biz (migration to UiLabel)
+ *@version    $Revision: 1.2 $
  *@since      3.0
 -->
-
+<#assign uiLabelMap = requestAttributes.uiLabelMap>
 <#if shipmentRouteSegmentDatas?has_content>
 <table width="100%" cellspacing="0" cellpadding="2" border="1">
     <tr>
-        <td><div class="tableheadtext">Segment#</div></td>
+        <td><div class="tableheadtext">${uiLabelMap.ProductSegment}</div></td>
         <td>
-            <div class="tableheadtext">Carrier-ShipmentMethod</div>
-            <div class="tableheadtext">Origin-Destination Facility</div>
-            <div class="tableheadtext">Origin-Destination Address ID</div>
-            <div class="tableheadtext">Origin-Destination Phone ID</div>
+            <div class="tableheadtext">${uiLabelMap.ProductCarrierShipmentMethod}</div>
+            <div class="tableheadtext">${uiLabelMap.ProductOriginDestinationFacility}</div>
+            <div class="tableheadtext">${uiLabelMap.ProductOriginDestinationAddressId}</div>
+            <div class="tableheadtext">${uiLabelMap.ProductOriginDestinationPhoneId}</div>
         </td>
         <td>
-            <div class="tableheadtext">Carrier Status</div>
-            <div class="tableheadtext">Tracking Number</div>
-            <div class="tableheadtext">Estimated (Start-Arrive)</div>
-            <div class="tableheadtext">Actual (Start-Arrive)</div>
+            <div class="tableheadtext">${uiLabelMap.ProductCarrierStatus}</div>
+            <div class="tableheadtext">${uiLabelMap.ProductTrackingNumber}</div>
+            <div class="tableheadtext">${uiLabelMap.ProductEstimatedStartArrive}</div>
+            <div class="tableheadtext">${uiLabelMap.ProductActualStartArrive}</div>
         </td>
         <td>
-        	<div class="tableheadtext">Billing Weight &amp; UOM</div>
-        	<div class="tableheadtext">Currency UOM</div>
-        	<div class="tableheadtext">Actual Transport</div>
-        	<div class="tableheadtext">Actual Services</div>
-        	<div class="tableheadtext">Actual Other</div>
-        	<div class="tableheadtext">Actual Total</div>
+        	<div class="tableheadtext">${uiLabelMap.ProductBillingWeightUom}</div>
+        	<div class="tableheadtext">${uiLabelMap.ProductCurrencyUom}</div>
+        	<div class="tableheadtext">${uiLabelMap.ProductActualTransport}</div>
+        	<div class="tableheadtext">${uiLabelMap.ProductActualServices}</div>
+        	<div class="tableheadtext">${uiLabelMap.ProductActualOther}</div>
+        	<div class="tableheadtext">${uiLabelMap.ProductActualTotal}</div>
         </td>
     </tr>
 <#list shipmentRouteSegmentDatas as shipmentRouteSegmentData>
@@ -72,23 +73,23 @@
             <span class="tabletext">${(carrierPerson.firstName)?if_exists} ${(carrierPerson.middleName)?if_exists} ${(carrierPerson.lastName)?if_exists} ${(carrierPartyGroup.groupName)?if_exists} [${shipmentRouteSegment.carrierPartyId?if_exists}]</span>
             <span class="tabletext">${shipmentMethodType.description?default(shipmentRouteSegment.shipmentMethodTypeId?if_exists)}</span>
             <br/>
-            <span class="tabletext">Origin: ${(originFacility.facilityName)?if_exists} [${originFacility.facilityId?if_exists}]</span>
-            <span class="tabletext">Dest: ${(destFacility.facilityName)?if_exists} [${destFacility.facilityId?if_exists}]</span>
+            <span class="tabletext">${uiLabelMap.ProductOrigin} : ${(originFacility.facilityName)?if_exists} [${originFacility.facilityId?if_exists}]</span>
+            <span class="tabletext">${uiLabelMap.ProductDest} : ${(destFacility.facilityName)?if_exists} [${destFacility.facilityId?if_exists}]</span>
             <br/>
             <div class="tabletext">
-                Origin: <b>${shipmentRouteSegment.originContactMechId?if_exists}</b>
-                <#if originPostalAddress?has_content>[To: ${originPostalAddress.toName?if_exists}, Attn: ${originPostalAddress.attnName?if_exists}, ${originPostalAddress.address1?if_exists}, ${originPostalAddress.address2?if_exists}, ${originPostalAddress.city?if_exists}, ${originPostalAddress.stateProvinceGeoId?if_exists}, ${originPostalAddress.postalCode?if_exists}, ${originPostalAddress.countryGeoId?if_exists}]</#if>
+                ${uiLabelMap.ProductOrigin} : <b>${shipmentRouteSegment.originContactMechId?if_exists}</b>
+                <#if originPostalAddress?has_content>[${uiLabelMap.CommonTo} : ${originPostalAddress.toName?if_exists}, ${uiLabelMap.CommonAttn} : ${originPostalAddress.attnName?if_exists}, ${originPostalAddress.address1?if_exists}, ${originPostalAddress.address2?if_exists}, ${originPostalAddress.city?if_exists}, ${originPostalAddress.stateProvinceGeoId?if_exists}, ${originPostalAddress.postalCode?if_exists}, ${originPostalAddress.countryGeoId?if_exists}]</#if>
             </div>
             <div class="tabletext">
-                Dest: <b>${shipmentRouteSegment.destContactMechId?if_exists}</b>
-                <#if destPostalAddress?has_content>[To: ${destPostalAddress.toName?if_exists}, Attn: ${destPostalAddress.attnName?if_exists}, ${destPostalAddress.address1?if_exists}, ${destPostalAddress.address2?if_exists}, ${destPostalAddress.city?if_exists}, ${destPostalAddress.stateProvinceGeoId?if_exists}, ${destPostalAddress.postalCode?if_exists}, ${destPostalAddress.countryGeoId?if_exists}]</#if>
+                ${uiLabelMap.ProductDest}: <b>${shipmentRouteSegment.destContactMechId?if_exists}</b>
+                <#if destPostalAddress?has_content>[${uiLabelMap.CommonTo} : ${destPostalAddress.toName?if_exists}, ${uiLabelMap.CommonAttn} : ${destPostalAddress.attnName?if_exists}, ${destPostalAddress.address1?if_exists}, ${destPostalAddress.address2?if_exists}, ${destPostalAddress.city?if_exists}, ${destPostalAddress.stateProvinceGeoId?if_exists}, ${destPostalAddress.postalCode?if_exists}, ${destPostalAddress.countryGeoId?if_exists}]</#if>
             </div>
             <div class="tabletext">
-                Origin: <b>${shipmentRouteSegment.originTelecomNumberId?if_exists}</b>
+                ${uiLabelMap.ProductOrigin} : <b>${shipmentRouteSegment.originTelecomNumberId?if_exists}</b>
                 <#if originTelecomNumber?has_content>[${originTelecomNumber.countryCode?if_exists}  ${originTelecomNumber.areaCode?if_exists} ${originTelecomNumber.contactNumber?if_exists}]</#if>
             </div>
             <div class="tabletext">
-                Dest: <b>${shipmentRouteSegment.destTelecomNumberId?if_exists}</b>
+                ${uiLabelMap.ProductDest} : <b>${shipmentRouteSegment.destTelecomNumberId?if_exists}</b>
                 <#if destTelecomNumber?has_content>[${destTelecomNumber.countryCode?if_exists}  ${destTelecomNumber.areaCode?if_exists} ${destTelecomNumber.contactNumber?if_exists}]</#if>
             </div>
         </td>
@@ -111,9 +112,9 @@
     <#list shipmentPackageRouteSegs as shipmentPackageRouteSeg>
         <tr>
             <td><div class="tabletext">&nbsp;</div></td>
-            <td><div class="tabletext">Package:${shipmentPackageRouteSeg.shipmentPackageSeqId}</div></td>
-            <td><span class="tabletext">Tracking#: ${shipmentPackageRouteSeg.trackingCode?if_exists}</span></td>
-            <td><span class="tabletext">Box#: ${shipmentPackageRouteSeg.boxNumber?if_exists}</span></td>
+            <td><div class="tabletext">${uiLabelMap.ProductPackage} :${shipmentPackageRouteSeg.shipmentPackageSeqId}</div></td>
+            <td><span class="tabletext">${uiLabelMap.ProductTracking} : ${shipmentPackageRouteSeg.trackingCode?if_exists}</span></td>
+            <td><span class="tabletext">${uiLabelMap.ProductBox} : ${shipmentPackageRouteSeg.boxNumber?if_exists}</span></td>
         </tr>
     </#list>
 </#list>

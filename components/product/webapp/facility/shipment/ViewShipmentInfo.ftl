@@ -21,104 +21,105 @@
  *
  *@author     Andy Zeneski (jaz@ofbiz.org)
  *@author     David E. Jones (jonesde@ofbiz.org)
- *@version    $Revision: 1.2 $
+ *@author     Catherine.Heintz@nereide.biz (migration to UiLabel)
+ *@version    $Revision: 1.3 $
  *@since      3.0
 -->
-
+  <#assign uiLabelMap = requestAttributes.uiLabelMap>
   <#if shipment?exists>
     <table border="0" cellpadding="2" cellspacing="0">
       <tr>
-        <td width="20%" align="right"><span class="tableheadtext">Shipment ID</span></td>
+        <td width="20%" align="right"><span class="tableheadtext">${uiLabelMap.ProductShipmentId}</span></td>
         <td><span class="tabletext">&nbsp;</span></td>
         <td width="80%" align="left"><span class="tabletext">${shipment.shipmentId}</span></td>
       </tr>    
       <tr>
-        <td width="20%" align="right"><span class="tableheadtext">Shipment Type</span></td>
+        <td width="20%" align="right"><span class="tableheadtext">${uiLabelMap.ProductShipmentType}</span></td>
         <td><span class="tabletext">&nbsp;</span></td>
         <td width="80%" align="left"><span class="tabletext">${(shipmentType.description)?default(shipment.shipmentTypeId?if_exists)}</span></td>
       </tr>
       <tr>
-        <td width="20%" align="right"><span class="tableheadtext">Status</span></td>
+        <td width="20%" align="right"><span class="tableheadtext">${uiLabelMap.ProductStatus}</span></td>
         <td><span class="tabletext">&nbsp;</span></td>
         <td width="80%" align="left"><span class="tabletext">${(statusItem.description)?default(shipment.statusId?if_exists)}</span></td>
       </tr>
       <tr>
-        <td width="20%" align="right"><span class="tableheadtext">Primary Order Id</span></td>
+        <td width="20%" align="right"><span class="tableheadtext">${uiLabelMap.ProductPrimaryOrderId}</span></td>
         <td><span class="tabletext">&nbsp;</span></td>
         <td width="80%" align="left"><span class="tabletext">${shipment.primaryOrderId?if_exists}</span></td>
       </tr>
       <tr>
-        <td width="20%" align="right"><span class="tableheadtext">Estimated Dates</span></td>
+        <td width="20%" align="right"><span class="tableheadtext">${uiLabelMap.ProductEstimatedDates}</span></td>
         <td><span class="tabletext">&nbsp;</span></td>
         <td width="80%" align="left">
           <span class="tabletext">
-            <span class="tableheadtext">Ready:&nbsp;</span>${(shipment.estimatedReadyDate.toString())?if_exists}
+            <span class="tableheadtext">${uiLabelMap.CommonReady}:&nbsp;</span>${(shipment.estimatedReadyDate.toString())?if_exists}
             <span class="tableheadtext">Ship:&nbsp;</span>${(shipment.estimatedShipDate.toString())?if_exists}
-            <span class="tableheadtext">Arrival:&nbsp;</span>${(shipment.estimatedArrivalDate.toString())?if_exists}
+            <span class="tableheadtext">${uiLabelMap.ProductArrival}:&nbsp;</span>${(shipment.estimatedArrivalDate.toString())?if_exists}
           </span>
         </td>
       </tr>
       <tr>
-        <td width="20%" align="right"><span class="tableheadtext">Latest Cancel Date</span></td>
+        <td width="20%" align="right"><span class="tableheadtext">${uiLabelMap.ProductLatestCancelDate}</span></td>
         <td><span class="tabletext">&nbsp;</span></td>
         <td width="80%" align="left"><span class="tabletext">${(shipment.latestCancelDate.toString())?if_exists}</span></td>
       </tr>
       <tr>
-        <td width="20%" align="right"><span class="tableheadtext">Estimated Ship Cost</span></td>
+        <td width="20%" align="right"><span class="tableheadtext">${uiLabelMap.ProductEstimatedShipCost}</span></td>
         <td><span class="tabletext">&nbsp;</span></td>
         <td width="80%" align="left"><span class="tabletext">${(shipment.estimatedShipCost?string.currency)?if_exists}</span></td>
       </tr>
       <tr>
-        <td width="20%" align="right"><span class="tableheadtext">Handling Instructions</span></td>
+        <td width="20%" align="right"><span class="tableheadtext">${uiLabelMap.ProductHandlingInstructions}</span></td>
         <td><span class="tabletext">&nbsp;</span></td>
         <td width="80%" align="left"><span class="tabletext">${shipment.handlingInstructions?if_exists}</span></td>
       </tr>
       <tr>
-        <td width="20%" align="right"><span class="tableheadtext">Facilities</span></td>
+        <td width="20%" align="right"><span class="tableheadtext">${uiLabelMap.ProductFacilities}</span></td>
         <td><span class="tabletext">&nbsp;</span></td>
         <td width="80%" align="left">
-          <div class="tabletext"><span class="tableheadtext">Origin:&nbsp;</span>${(originFacility.facilityName)?if_exists}&nbsp;[${(shipment.originFacilityId?if_exists)}]</div>
-          <div class="tabletext"><span class="tableheadtext">Destination:&nbsp;</span>${(destinationFacility.facilityName)?if_exists}&nbsp;[${(shipment.destinationFacilityId?if_exists)}]</div>
+          <div class="tabletext"><span class="tableheadtext">${uiLabelMap.ProductOrigin}:&nbsp;</span>${(originFacility.facilityName)?if_exists}&nbsp;[${(shipment.originFacilityId?if_exists)}]</div>
+          <div class="tabletext"><span class="tableheadtext">${uiLabelMap.ProductDestination}:&nbsp;</span>${(destinationFacility.facilityName)?if_exists}&nbsp;[${(shipment.destinationFacilityId?if_exists)}]</div>
         </td>
       </tr>
       <tr>
-        <td width="20%" align="right"><span class="tableheadtext">Parties</span></td>
+        <td width="20%" align="right"><span class="tableheadtext">${uiLabelMap.ProductParties}</span></td>
         <td><span class="tabletext">&nbsp;</span></td>
         <td width="80%" align="left">
           <span class="tabletext">
-            <span class="tableheadtext">To:&nbsp;</span>${(toPerson.firstName)?if_exists} ${(toPerson.middleName)?if_exists} ${(toPerson.lastName)?if_exists} ${(toPartyGroup.groupName)?if_exists} [${shipment.partyIdTo?if_exists}]
-            <span class="tableheadtext">From:&nbsp;</span>${(fromPerson.firstName)?if_exists} ${(fromPerson.middleName)?if_exists} ${(fromPerson.lastName)?if_exists} ${(fromPartyGroup.groupName)?if_exists} [${shipment.partyIdFrom?if_exists}]
+            <span class="tableheadtext">${uiLabelMap.CommonTo}:&nbsp;</span>${(toPerson.firstName)?if_exists} ${(toPerson.middleName)?if_exists} ${(toPerson.lastName)?if_exists} ${(toPartyGroup.groupName)?if_exists} [${shipment.partyIdTo?if_exists}]
+            <span class="tableheadtext">${uiLabelMap.CommonFrom}:&nbsp;</span>${(fromPerson.firstName)?if_exists} ${(fromPerson.middleName)?if_exists} ${(fromPerson.lastName)?if_exists} ${(fromPartyGroup.groupName)?if_exists} [${shipment.partyIdFrom?if_exists}]
           </span>
         </td>
       </tr>
       <tr>
-        <td width="20%" align="right"><span class="tableheadtext">Addresses</span></td>
+        <td width="20%" align="right"><span class="tableheadtext">${uiLabelMap.ProductAddresses}</span></td>
         <td><span class="tabletext">&nbsp;</span></td>
         <td width="80%" align="left">
-          <div class="tabletext"><span class="tableheadtext">Origin:&nbsp;</span>${shipment.originContactMechId?if_exists}&nbsp;<#if originPostalAddress?has_content>[To: ${originPostalAddress.toName?if_exists}, Attn: ${originPostalAddress.attnName?if_exists}, ${originPostalAddress.address1?if_exists}, ${originPostalAddress.address2?if_exists}, ${originPostalAddress.city?if_exists}, ${originPostalAddress.stateProvinceGeoId?if_exists}, ${originPostalAddress.postalCode?if_exists}, ${originPostalAddress.countryGeoId?if_exists}]</#if></div>
-          <div class="tabletext"><span class="tableheadtext">Destination:&nbsp;</span>${shipment.destinationContactMechId?if_exists}&nbsp;<#if destinationPostalAddress?has_content>[To: ${destinationPostalAddress.toName?if_exists}, Attn: ${destinationPostalAddress.attnName?if_exists}, ${destinationPostalAddress.address1?if_exists}, ${destinationPostalAddress.address2?if_exists}, ${destinationPostalAddress.city?if_exists}, ${destinationPostalAddress.stateProvinceGeoId?if_exists}, ${destinationPostalAddress.postalCode?if_exists}, ${destinationPostalAddress.countryGeoId?if_exists}]</#if></div>
+          <div class="tabletext"><span class="tableheadtext">${uiLabelMap.ProductOrigin}:&nbsp;</span>${shipment.originContactMechId?if_exists}&nbsp;<#if originPostalAddress?has_content>[${uiLabelMap.CommonTo} : ${originPostalAddress.toName?if_exists}, ${uiLabelMap.CommonAttn} : ${originPostalAddress.attnName?if_exists}, ${originPostalAddress.address1?if_exists}, ${originPostalAddress.address2?if_exists}, ${originPostalAddress.city?if_exists}, ${originPostalAddress.stateProvinceGeoId?if_exists}, ${originPostalAddress.postalCode?if_exists}, ${originPostalAddress.countryGeoId?if_exists}]</#if></div>
+          <div class="tabletext"><span class="tableheadtext">${uiLabelMap.ProductDestination}:&nbsp;</span>${shipment.destinationContactMechId?if_exists}&nbsp;<#if destinationPostalAddress?has_content>[${uiLabelMap.CommonTo} : ${destinationPostalAddress.toName?if_exists}, ${uiLabelMap.CommonAttn} : ${destinationPostalAddress.attnName?if_exists}, ${destinationPostalAddress.address1?if_exists}, ${destinationPostalAddress.address2?if_exists}, ${destinationPostalAddress.city?if_exists}, ${destinationPostalAddress.stateProvinceGeoId?if_exists}, ${destinationPostalAddress.postalCode?if_exists}, ${destinationPostalAddress.countryGeoId?if_exists}]</#if></div>
         </td>
       </tr>
       <tr>
-        <td width="20%" align="right"><span class="tableheadtext">Phone Numbers</span></td>
+        <td width="20%" align="right"><span class="tableheadtext">${uiLabelMap.ProductPhoneNumbers}</span></td>
         <td><span class="tabletext">&nbsp;</span></td>
         <td width="80%" align="left">
-          <div class="tabletext"><span class="tableheadtext">Origin:&nbsp;</span>${shipment.originTelecomNumberId?if_exists}&nbsp;<#if originTelecomNumber?has_content>[${originTelecomNumber.countryCode?if_exists}  ${originTelecomNumber.areaCode?if_exists} ${originTelecomNumber.contactNumber?if_exists}]</#if></div>
-          <div class="tabletext"><span class="tableheadtext">Destination:&nbsp;</span>${shipment.destinationTelecomNumberId?if_exists}&nbsp;<#if destinationTelecomNumber?has_content>[${destinationTelecomNumber.countryCode?if_exists}  ${destinationTelecomNumber.areaCode?if_exists} ${destinationTelecomNumber.contactNumber?if_exists}]</#if></div>
+          <div class="tabletext"><span class="tableheadtext">${uiLabelMap.ProductOrigin}:&nbsp;</span>${shipment.originTelecomNumberId?if_exists}&nbsp;<#if originTelecomNumber?has_content>[${originTelecomNumber.countryCode?if_exists}  ${originTelecomNumber.areaCode?if_exists} ${originTelecomNumber.contactNumber?if_exists}]</#if></div>
+          <div class="tabletext"><span class="tableheadtext">${uiLabelMap.ProductDestination}:&nbsp;</span>${shipment.destinationTelecomNumberId?if_exists}&nbsp;<#if destinationTelecomNumber?has_content>[${destinationTelecomNumber.countryCode?if_exists}  ${destinationTelecomNumber.areaCode?if_exists} ${destinationTelecomNumber.contactNumber?if_exists}]</#if></div>
         </td>
       </tr>
       <tr>
-        <td width="20%" align="right"><span class="tableheadtext">Created</span></td>
+        <td width="20%" align="right"><span class="tableheadtext">${uiLabelMap.CommonCreated}</span></td>
         <td><span class="tabletext">&nbsp;</span></td>
         <td width="80%" align="left">
-          <div class="tabletext">by [${shipment.createdByUserLogin?if_exists}] on ${(shipment.createdDate.toString())?if_exists}</div>
+          <div class="tabletext">${uiLabelMap.CommonBy} [${shipment.createdByUserLogin?if_exists}] ${uiLabelMap.CommonOn} ${(shipment.createdDate.toString())?if_exists}</div>
         </td>
       </tr>
       <tr>
-        <td width="20%" align="right"><span class="tableheadtext">Last Updated</span></td>
+        <td width="20%" align="right"><span class="tableheadtext">${uiLabelMap.CommonLastUpdated}</span></td>
         <td><span class="tabletext">&nbsp;</span></td>
         <td width="80%" align="left">
-          <div class="tabletext">by [${shipment.lastModifiedByUserLogin?if_exists}] on ${(shipment.lastModifiedDate.toString())?if_exists}</div>
+          <div class="tabletext">${uiLabelMap.CommonBy} [${shipment.lastModifiedByUserLogin?if_exists}] ${uiLabelMap.CommonOn} ${(shipment.lastModifiedDate.toString())?if_exists}</div>
         </td>
       </tr>
     </table>  

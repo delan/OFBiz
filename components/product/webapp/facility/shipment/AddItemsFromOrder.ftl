@@ -21,7 +21,7 @@
  *
  *@author     David E. Jones (jonesde@ofbiz.org)
  *@author     Catherine.Heintz@nereide.biz (migration to UiLabel)
- *@version    $Revision: 1.2 $
+ *@version    $Revision: 1.3 $
  *@since      2.2
 -->
 <#assign uiLabelMap = requestAttributes.uiLabelMap>
@@ -51,9 +51,9 @@ ${pages.get("/shipment/ShipmentTabBar.ftl")}
         <div class="head3">${uiLabelMap.ProductNoteOrderType} ${(orderType.description)?default(orderHeader.orderTypeId?if_exists)}.</div>
     </#if>
     <#if shipment.shipmentTypeId == "SALES_SHIPMENT">
-		<div class="head3">${uiLabelMap.ProductOriginFacility}: <#if originFacility?exists>${originFacility.facilityName?if_exists} [${originFacility.facilityId}]<#else><span style="color: red;">${uiLabelMap.ProductNotSet}</span></#if></div>
+		<div class="head3">${uiLabelMap.ProductOriginFacilityIs}: <#if originFacility?exists>${originFacility.facilityName?if_exists} [${originFacility.facilityId}]<#else><span style="color: red;">${uiLabelMap.ProductNotSet}</span></#if></div>
     <#elseif shipment.shipmentTypeId == "PURCHASE_SHIPMENT">
-		<div class="head3">${uiLabelMap.ProductDestinationFacility}: <#if destinationFacility?exists>${destinationFacility.facilityName?if_exists} [${destinationFacility.facilityId}]<#else><span style="color: red;">${uiLabelMap.ProductNotSet}</span></#if></div>
+		<div class="head3">${uiLabelMap.ProductDestinationFacilityIs}: <#if destinationFacility?exists>${destinationFacility.facilityName?if_exists} [${destinationFacility.facilityId}]<#else><span style="color: red;">${uiLabelMap.ProductNotSet}</span></#if></div>
     </#if>
     <#if "ORDER_APPROVED" == orderHeader.statusId || "ORDER_BACKORDERED" == orderHeader.statusId>
         <div class="head3">${uiLabelMap.ProductNoteOrderStatus} ${(orderHeaderStatus.description)?default(orderHeader.statusId?if_exists)}.</div>
@@ -85,7 +85,7 @@ ${pages.get("/shipment/ShipmentTabBar.ftl")}
             </#if>
             <td><div class="tableheadtext">${uiLabelMap.ProductIssue}</div></td>
             <td align="right">
-                <div class="tableheadtext">${uiLabelMap.ProductSubmit} ?</div>
+                <div class="tableheadtext">${uiLabelMap.CommonSubmit} ?</div>
                 <div class="tableheadtext">${uiLabelMap.CommonAll}<input type="checkbox" name="selectAll" value="${uiLabelMap.CommonY}" onclick="javascript:toggleAll(this);"></div>
             </td>
         </tr>

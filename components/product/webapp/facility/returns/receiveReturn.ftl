@@ -21,7 +21,7 @@
  *
  *@author     Andy Zeneski (jaz@ofbiz.org)
  *@author     Catherine.Heintz@nereide.biz (migration to UiLabel)
- *@version    $Revision: 1.6 $
+ *@version    $Revision: 1.7 $
  *@since      2.2
 -->
 <#assign uiLabelMap = requestAttributes.uiLabelMap>
@@ -40,10 +40,10 @@ ${pages.get("/facility/FacilityTabBar.ftl")}
     <tr><td colspan="7"><div class="head3">${uiLabelMap.ProductReceiptForReturn} #${returnHeader.returnId}</div></td></tr>
     <tr><td colspan="7"><hr class="sepbar"></td></tr>
     <tr>
-      <td><div class="tableheadtext">${uiLabelMap.ProductReceipt} #</div></td>
+      <td><div class="tableheadtext">${uiLabelMap.ProductReceipt}</div></td>
       <td><div class="tableheadtext">${uiLabelMap.CommonDate}</div></td>
-      <td><div class="tableheadtext">${uiLabelMap.CommonReturn} #</div></td>
-      <td><div class="tableheadtext">${uiLabelMap.ProductLine} #</div></td>
+      <td><div class="tableheadtext">${uiLabelMap.CommonReturn}</div></td>
+      <td><div class="tableheadtext">${uiLabelMap.ProductLine}</div></td>
       <td><div class="tableheadtext">${uiLabelMap.ProductProductId}</div></td>     
       <td><div class="tableheadtext">${uiLabelMap.ProductReceived}</div></td>
     </tr>

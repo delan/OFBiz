@@ -2,6 +2,7 @@
 <page>
     <template>main</template>
     <property name="title">Quick Ship Order</property>
+    <property name="titleProperty">ProductQuickShipOrder</property>
     <property name="headerItem">shipment</property>
     <page-action name="/shipment/QuickShipOrder.bsh"/>
     <page-action name="/shipment/EditShipmentItems.bsh"/> 

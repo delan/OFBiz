@@ -21,15 +21,16 @@
  *
  *@author     Andy Zeneski (jaz@ofbiz.org)
  *@author     David E. Jones (jonesde@ofbiz.org)
- *@version    $Revision: 1.1 $
+ *@author     Catherine.Heintz@nereide.biz (migration to UiLabel)
+ *@version    $Revision: 1.2 $
  *@since      3.0
 -->
-
+<#assign uiLabelMap = requestAttributes.uiLabelMap>
 <#if shipmentPackageDatas?has_content>
   <table width="100%" cellspacing="0" cellpadding="2" border="1">
     <tr>
-      <td><div class="tableheadtext">Package#</div></td>
-      <td><div class="tableheadtext">Created</div></td>
+      <td><div class="tableheadtext">${uiLabelMap.ProductPackage}</div></td>
+      <td><div class="tableheadtext">${uiLabelMap.CommonCreated}</div></td>
       <td><div class="tableheadtext">&nbsp;</div></td>
       <td><div class="tableheadtext">&nbsp;</div></td>
     </tr>
@@ -41,23 +42,23 @@
       <tr>
         <td><div class="tabletext">${shipmentPackage.shipmentPackageSeqId}</div></td>
         <td><div class="tabletext">${(shipmentPackage.dateCreated.toString())?if_exists}</div></td>
-        <td><span class="tabletext">Weight: ${shipmentPackage.weight?if_exists}</span></td>
-        <td><span class="tabletext">WeightUnit:${weightUom.description?default(shipmentPackage.weightUomId?if_exists)}</span></td>
+        <td><span class="tabletext">${uiLabelMap.ProductWeight} : ${shipmentPackage.weight?if_exists}</span></td>
+        <td><span class="tabletext">${uiLabelMap.ProductWeightUnit} :${weightUom.description?default(shipmentPackage.weightUomId?if_exists)}</span></td>
       </tr>
       <#list shipmentPackageContents as shipmentPackageContent>
         <tr>
           <td><div class="tabletext">&nbsp;</div></td>
-          <td><div class="tabletext">Item:${shipmentPackageContent.shipmentItemSeqId}</div></td>
-          <td><div class="tabletext">Quantity:${shipmentPackageContent.quantity?if_exists}</div></td>
+          <td><div class="tabletext">${uiLabelMap.ProductItem} :${shipmentPackageContent.shipmentItemSeqId}</div></td>
+          <td><div class="tabletext">${uiLabelMap.ProductQuantity} :${shipmentPackageContent.quantity?if_exists}</div></td>
           <td><div class="tabletext">&nbsp;</div></td>
         </tr>
       </#list>
       <#list shipmentPackageRouteSegs as shipmentPackageRouteSeg>
         <tr>
           <td><div class="tabletext">&nbsp;</div></td>
-          <td><div class="tabletext">RouteSegment:${shipmentPackageRouteSeg.shipmentRouteSegmentId}</div></td>
-          <td><span class="tabletext">Tracking#: ${shipmentPackageRouteSeg.trackingCode?if_exists}</span></td>
-          <td><span class="tabletext">Box#: ${shipmentPackageRouteSeg.boxNumber?if_exists}</span></td>
+          <td><div class="tabletext">${uiLabelMap.ProductRouteSegment} :${shipmentPackageRouteSeg.shipmentRouteSegmentId}</div></td>
+          <td><span class="tabletext">${uiLabelMap.ProductTracking} : ${shipmentPackageRouteSeg.trackingCode?if_exists}</span></td>
+          <td><span class="tabletext">${uiLabelMap.ProductBox} : ${shipmentPackageRouteSeg.boxNumber?if_exists}</span></td>
         </tr>
       </#list>
     </#list>

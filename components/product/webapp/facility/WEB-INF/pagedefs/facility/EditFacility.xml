@@ -2,6 +2,7 @@
 <page>
     <template>main</template>
     <property name="title">Edit Facility</property>
+    <property name="titleProperty">ProductEditFacility</property>
     <property name="headerItem">facility</property>
     <property name="tabButtonItem">EditFacility</property>
     <page-action name="/facility/EditFacility.bsh"/> 

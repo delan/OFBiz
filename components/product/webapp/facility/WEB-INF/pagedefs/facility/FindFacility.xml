@@ -2,6 +2,7 @@
 <page>
     <template>main</template>
     <property name="title">Find Facility</property>
+    <property name="titleProperty">PageTitleFindFacility</property>
     <property name="headerItem">facility</property>
     <page-action name="/facility/FindFacility.bsh"/> 
 </page>
