@@ -93,6 +93,10 @@ public class MenuEvents {
                 SecurityEvents.mgrLogin(pos);
             } else if ("LOGIN".equals(lastFunc[0])) {
                 SecurityEvents.login(pos);
+            } else if ("OPEN".equals(lastFunc[0])) {
+                ManagerEvents.openTerminal(pos);
+            } else if ("CLOSE".equals(lastFunc[0])) {
+                ManagerEvents.closeTerminal(pos);
             } else if ("REFNUM".equals(lastFunc[0])) {
                 PaymentEvents.setRefNum(pos);
             } else if ("CREDIT".equals(lastFunc[0])) {
@@ -134,43 +138,48 @@ public class MenuEvents {
             }
         }
 
-        // check for quantity
-        double quantity = 1;
-        if (func != null && "QTY".equals(func[0])) {
-            try {
-                quantity = Double.parseDouble(func[1]);
-            } catch (NumberFormatException e) {
-                quantity = 1;
-            }
-        }
+        if (!trans.isOpen()) {
+            pos.showDialog("main/dialog/error/terminalclosed");
+        } else {
 
-        // locate the product ID
-        String productId = null;
-        try {
-            List items = trans.lookupItem(value);
-            if (items != null && items.size() == 1) {
-                GenericValue product = EntityUtil.getFirst(items);
-                productId = product.getString("productId");
-            } else if (items != null && items.size() > 0) {
-                Debug.logInfo("Multiple products found; need to select one from the list", module);
+            // check for quantity
+            double quantity = 1;
+            if (func != null && "QTY".equals(func[0])) {
+                try {
+                    quantity = Double.parseDouble(func[1]);
+                } catch (NumberFormatException e) {
+                    quantity = 1;
+                }
             }
-        } catch (GeneralException e) {
-            Debug.logError(e, module);
-            pos.showDialog("main/dialog/error/producterror");
-        }
 
-        // add the item to the cart; report any errors to the user
-        if (productId != null) {
+            // locate the product ID
+            String productId = null;
             try {
-                trans.addItem(productId, quantity);
-            } catch (CartItemModifyException e) {
+                List items = trans.lookupItem(value);
+                if (items != null && items.size() == 1) {
+                    GenericValue product = EntityUtil.getFirst(items);
+                    productId = product.getString("productId");
+                } else if (items != null && items.size() > 0) {
+                    Debug.logInfo("Multiple products found; need to select one from the list", module);
+                }
+            } catch (GeneralException e) {
                 Debug.logError(e, module);
                 pos.showDialog("main/dialog/error/producterror");
-            } catch (ItemNotFoundException e) {
+            }
+
+            // add the item to the cart; report any errors to the user
+            if (productId != null) {
+                try {
+                    trans.addItem(productId, quantity);
+                } catch (CartItemModifyException e) {
+                    Debug.logError(e, module);
+                    pos.showDialog("main/dialog/error/producterror");
+                } catch (ItemNotFoundException e) {
+                    pos.showDialog("main/dialog/error/productnotfound");
+                }
+            } else {
                 pos.showDialog("main/dialog/error/productnotfound");
             }
-        } else {
-            pos.showDialog("main/dialog/error/productnotfound");
         }
 
         // clear the qty flag
@@ -242,58 +251,66 @@ public class MenuEvents {
 
     public static void saleDiscount(PosScreen pos) {
         PosTransaction trans = PosTransaction.getCurrentTx(pos.getSession());
-        Input input = pos.getInput();
-        String value = input.value();
-        if (UtilValidate.isNotEmpty(value)) {
-            double amount = 0.00;
-            boolean percent = false;
-            if (value.endsWith("%")) {
-                percent = true;
-                value = value.substring(0, value.length() - 1);
-            }
-            try {
-                amount = Double.parseDouble(value);
-            } catch (NumberFormatException e) {
-            }
+        if (!trans.isOpen()) {
+            pos.showDialog("main/dialog/error/terminalclosed");
+        } else {
+            Input input = pos.getInput();
+            String value = input.value();
+            if (UtilValidate.isNotEmpty(value)) {
+                double amount = 0.00;
+                boolean percent = false;
+                if (value.endsWith("%")) {
+                    percent = true;
+                    value = value.substring(0, value.length() - 1);
+                }
+                try {
+                    amount = Double.parseDouble(value);
+                } catch (NumberFormatException e) {
+                }
 
-            amount = (amount / 100) * -1;
-            trans.addDiscount(null, amount, percent);
-            trans.calcTax();
+                amount = (amount / 100) * -1;
+                trans.addDiscount(null, amount, percent);
+                trans.calcTax();
+            }
         }
         pos.refresh();
     }
 
     public static void itemDiscount(PosScreen pos) {
         PosTransaction trans = PosTransaction.getCurrentTx(pos.getSession());
-        String sku = null;
-        try {
-            sku = getSelectedItem(pos);
-        } catch (ArrayIndexOutOfBoundsException e) {
-        }
-
-        if (sku == null) {
-            pos.getOutput().print("Invalid Selection!");
-            pos.getJournal().refresh(pos);
-            pos.getInput().clear();
-        }
-
-        Input input = pos.getInput();
-        String value = input.value();
-        if (UtilValidate.isNotEmpty(value)) {
-            double amount = 0.00;
-            boolean percent = false;
-            if (value.endsWith("%")) {
-                percent = true;
-                value = value.substring(0, value.length() - 1);
-            }
+        if (!trans.isOpen()) {
+            pos.showDialog("main/dialog/error/terminalclosed");
+        } else {
+            String sku = null;
             try {
-                amount = Double.parseDouble(value);
-            } catch (NumberFormatException e) {
+                sku = getSelectedItem(pos);
+            } catch (ArrayIndexOutOfBoundsException e) {
             }
 
-            amount = (amount / 100) * -1;
-            trans.addDiscount(sku, amount, percent);
-            trans.calcTax();
+            if (sku == null) {
+                pos.getOutput().print("Invalid Selection!");
+                pos.getJournal().refresh(pos);
+                pos.getInput().clear();
+            }
+
+            Input input = pos.getInput();
+            String value = input.value();
+            if (UtilValidate.isNotEmpty(value)) {
+                double amount = 0.00;
+                boolean percent = false;
+                if (value.endsWith("%")) {
+                    percent = true;
+                    value = value.substring(0, value.length() - 1);
+                }
+                try {
+                    amount = Double.parseDouble(value);
+                } catch (NumberFormatException e) {
+                }
+
+                amount = (amount / 100) * -1;
+                trans.addDiscount(sku, amount, percent);
+                trans.calcTax();
+            }
         }
         pos.refresh();
     }

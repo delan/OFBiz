@@ -8,14 +8,14 @@
         <Button name="menuPromo" x="306" y="0" w="100" h="60" style="posButton" content="PROMO" alignment="Center"/>
         <Button name="" x="408" y="0" w="100" h="60" style="posButton" content="" alignment="Center"/>
         <Button name="menuPay" x="510" y="0" w="100" h="60" style="posButton" content="PAY" alignment="Center"/>
-        
+
         <!-- col 2 -->
         <Button name="mgrPriceChg" x="0" y="62" w="100" h="60" style="posButton" content="CHANGE PRICE" alignment="Center"/>
-        <Button name="" x="102" y="62" w="100" h="60" style="posButton" content="" alignment="Center"/>
+        <Button name="ngrReprintTx" x="102" y="62" w="100" h="60" style="posButton" content="REPRINT" alignment="Center"/>
         <Button name="" x="204" y="62" w="100" h="60" style="posButton" content="" alignment="Center"/>
         <Button name="" x="306" y="62" w="100" h="60" style="posButton" content="" alignment="Center"/>
         <Button name="" x="408" y="62" w="100" h="60" style="posButton" content="" alignment="Center"/>
-        <Button name="" x="510" y="62" w="100" h="60" style="posButton" content="" alignment="Center"/>
+        <Button name="mgrOpenTerm" x="510" y="62" w="100" h="60" style="posButton" content="OPEN" alignment="Center"/>
 
         <!-- col 3 -->
         <Button name="" x="0" y="124" w="100" h="60" style="posButton" content="" alignment="Center"/>
@@ -23,7 +23,7 @@
         <Button name="" x="204" y="124" w="100" h="60" style="posButton" content="" alignment="Center"/>
         <Button name="" x="306" y="124" w="100" h="60" style="posButton" content="" alignment="Center"/>
         <Button name="" x="408" y="124" w="100" h="60" style="posButton" content="" alignment="Center"/>
-        <Button name="" x="510" y="124" w="100" h="60" style="posButton" content="" alignment="Center"/>
+        <Button name="mgrCloseTerm" x="510" y="124" w="100" h="60" style="posButton" content="CLOSE" alignment="Center"/>
 
         <!-- col 4 -->
         <Button name="" x="0" y="186" w="100" h="60" style="posButton" content="" alignment="Center"/>

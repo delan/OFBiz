@@ -163,7 +163,11 @@ public class PosScreen extends NavigationHelper implements Runnable, DialogCallb
                     }
                 } else {
                     journal.refresh(this);
-                    output.print(Output.ISOPEN);
+                    if (PosTransaction.getCurrentTx(session).isOpen()) {
+                        output.print(Output.ISOPEN);
+                    } else {
+                        output.print(Output.ISCLOSED);
+                    }
                 }
             } else {
                 journal.refresh(this);

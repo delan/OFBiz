@@ -84,8 +84,11 @@ $Id$
     <!-- pos promo menu events -->
 
     <!-- pos mgr menu events -->
-    <event button-name="mgrPopDrwr" class-name="org.ofbiz.pos.event.ManagerEvents" method-name="openDrawer" disable-lock="false"/>
+    <event button-name="mgrOpenTerm" class-name="org.ofbiz.pos.event.ManagerEvents" method-name="openTerminal" disable-lock="false"/>
+    <event button-name="mgrCloseTerm" class-name="org.ofbiz.pos.event.ManagerEvents" method-name="closeTerminal" disable-lock="false"/>
+    <event button-name="mgrPopDrwr" class-name="org.ofbiz.pos.event.ManagerEvents" method-name="popDrawer" disable-lock="false"/>
     <event button-name="mgrPriceChg" class-name="org.ofbiz.pos.event.ManagerEvents" method-name="modifyPrice" disable-lock="false"/>
+    <event button-name="ngrReprintTx" class-name="org.ofbiz.pos.event.ManagerEvents" method-name="reprintLastTx" disable-lock="false"/>
     <event button-name="mgrTotals" class-name="org.ofbiz.pos.event.ManagerEvents" method-name="totalsReport" disable-lock="false"/>
     <event button-name="mgrCacheClear" class-name="org.ofbiz.pos.event.ManagerEvents" method-name="clearCache" disable-lock="false"/>
     <event button-name="mgrResetXui" class-name="org.ofbiz.pos.event.ManagerEvents" method-name="resetXui" disable-lock="false"/>

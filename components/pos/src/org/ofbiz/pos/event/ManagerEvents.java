@@ -42,6 +42,7 @@ import org.ofbiz.pos.device.impl.Receipt;
 import org.ofbiz.pos.screen.PosScreen;
 import org.ofbiz.pos.PosTransaction;
 import org.ofbiz.pos.component.Input;
+import org.ofbiz.pos.component.Output;
 import org.ofbiz.entity.GenericDelegator;
 import org.ofbiz.entity.GenericEntityException;
 import org.ofbiz.entity.GenericValue;
@@ -99,11 +100,169 @@ public class ManagerEvents {
         pos.refresh();
     }
 
-    public static void openDrawer(PosScreen pos) {
+    public static void openTerminal(PosScreen pos) {
+        if (!mgrLoggedIn) {
+            pos.showDialog("main/dialog/error/mgrnotloggedin");
+            return;
+        }
+
+        PosTransaction trans = PosTransaction.getCurrentTx(pos.getSession());
+        Input input = pos.getInput();
+        if (!trans.isOpen()) {
+            if (input.isFunctionSet("OPEN")) {
+                String amountStr = input.value();
+                Double amount = null;
+                if (UtilValidate.isNotEmpty(amountStr)) {
+                    try {
+                        double amt = Double.parseDouble(amountStr);
+                        amt = amt / 100;
+                        amount = new Double(amt);
+                    } catch (NumberFormatException e) {
+                        Debug.logError(e, module);
+                    }
+                }
+                GenericValue state = pos.getSession().getDelegator().makeValue("PosTerminalState", null);
+                state.set("posTerminalId", pos.getSession().getId());
+                state.set("openedDate", UtilDateTime.nowTimestamp());
+                state.set("openedByUserLoginId", pos.getSession().getUserId());
+                state.set("startingTxId", trans.getTransactionId());
+                state.set("startingDrawerAmount", amount);
+                try {
+                    state.create();
+                } catch (GenericEntityException e) {
+                    Debug.logError(e, module);
+                    pos.showDialog("main/dialog/error/exception", e.getMessage());
+                }
+                NavagationEvents.showPosScreen(pos);
+            } else {
+                input.clear();
+                input.setFunction("OPEN");
+                pos.getOutput().print(Output.OPDRAM);
+                return;
+            }
+        } else {
+            pos.showPage("main/pospanel");
+        }
+    }
+
+    public static void closeTerminal(PosScreen pos) {
+        if (!mgrLoggedIn) {
+            pos.showDialog("main/dialog/error/mgrnotloggedin");
+            return;
+        }
+
+        PosTransaction trans = PosTransaction.getCurrentTx(pos.getSession());
+        if (!trans.isOpen()) {
+            pos.showDialog("main/dialog/error/terminalclosed");
+            return;
+        }
+
+        Output output = pos.getOutput();
+        Input input = pos.getInput();
+        if (input.isFunctionSet("CLOSE")) {
+            String[] func = input.getFunction("CLOSE");
+            String lastValue = input.value();
+            if (UtilValidate.isNotEmpty(lastValue)) {
+                try {
+                    double dbl = Double.parseDouble(lastValue);
+                    dbl = dbl / 100;
+                    lastValue = UtilFormatOut.formatPrice(dbl);
+                } catch (NumberFormatException e) {
+                    Debug.logError(e, module);
+                }
+                if (UtilValidate.isNotEmpty(func[1])) {
+                    func[1] = func[1] + "|";
+                }
+                func[1] = func[1] + lastValue;
+                input.setFunction("CLOSE", func[1]);
+            }
+
+            String[] closeInfo = new String[0];
+            if (UtilValidate.isNotEmpty(func[1])) {
+                closeInfo = func[1].split("\\|");
+            }
+            switch (closeInfo.length) {
+                case 0:
+                    output.print(Output.ENTCAS);
+                    break;
+                case 1:
+                    output.print(Output.ENTCHK);
+                    break;
+                case 2:
+                    output.print(Output.ENTCRC);
+                    break;
+                case 3:
+                    output.print(Output.ENTGFC);
+                    break;
+                case 4:
+                    output.print(Output.ENTOTH);
+                    break;
+                case 5:
+                    GenericValue state = trans.getTerminalState();
+                    state.set("closedDate", UtilDateTime.nowTimestamp());
+                    state.set("closedByUserLoginId", pos.getSession().getUserId());
+                    state.set("actualEndingCash", new Double(closeInfo[0]));
+                    state.set("actualEndingCheck", new Double(closeInfo[1]));
+                    state.set("actualEndingCc", new Double(closeInfo[2]));
+                    state.set("actualEndingGc", new Double(closeInfo[3]));
+                    state.set("actualEndingOther", new Double(closeInfo[4]));
+                    state.set("endingTxId", trans.getTransactionId());
+                    Debug.log("Updated State - " + state, module);
+                    try {
+                        state.store();
+                    } catch (GenericEntityException e) {
+                        Debug.logError(e, module);
+                        pos.showDialog("main/dialog/error/exception", e.getMessage());
+                    }
+
+                    // print the totals report
+                    printTotals(pos, state, true);
+
+                    // lock the terminal for the moment
+                    output.print("Transmitting final sales data...");
+                    pos.getInput().setLock(true);
+                    pos.getButtons().setLock(true);
+                    pos.refresh(false);
+
+                    // transmit final data to server
+                    GenericValue terminal = null;
+                    try {
+                        terminal = state.getRelatedOne("PosTerminal");
+                    } catch (GenericEntityException e) {
+                        Debug.logError(e, module);
+                        pos.showDialog("main/dialog/error/exception", e.getMessage());
+                    }
+                    if (terminal != null && terminal.get("pushEntitySyncId") != null) {
+                        String syncId = terminal.getString("pushEntitySyncId");
+                        // TODO add service call to push the final data
+                    }
+
+                    // logout
+                    SecurityEvents.logout(pos);
+            }
+        } else {
+            input.clear();
+            input.setFunction("CLOSE");
+            output.print(Output.ENTCAS);
+        }
+
+    }
+
+    public static void reprintLastTx(PosScreen pos) {
+        if (!mgrLoggedIn) {
+            pos.showDialog("main/dialog/error/mgrnotloggedin");
+            return;
+        }
+        DeviceLoader.receipt.reprintReceipt(true);
+        pos.refresh();
+    }
+
+    public static void popDrawer(PosScreen pos) {
         if (!mgrLoggedIn) {
             pos.showDialog("main/dialog/error/mgrnotloggedin");
         } else {
-            DeviceLoader.drawer[0].openDrawer();
+            PosTransaction trans = PosTransaction.getCurrentTx(pos.getSession());
+            trans.popDrawer();
             pos.refresh();
         }
     }
@@ -140,8 +299,19 @@ public class ManagerEvents {
             pos.showDialog("main/dialog/error/mgrnotloggedin");
             return;
         }
+        printTotals(pos, null, false);
+    }
 
+    private static void printTotals(PosScreen pos, GenericValue state, boolean runBalance) {
         PosTransaction trans = PosTransaction.getCurrentTx(pos.getSession());
+        if (!trans.isOpen()) {
+            pos.showDialog("main/dialog/error/terminalclosed");
+            return;
+        }
+        if (state == null) {
+            state = trans.getTerminalState();
+        }
+
         double checkTotal = 0.00;
         double cashTotal = 0.00;
         double gcTotal = 0.00;
@@ -160,8 +330,12 @@ public class ManagerEvents {
             Debug.logError(e, module);
         }
 
-        Timestamp dayStart = UtilDateTime.getDayStart(UtilDateTime.nowTimestamp());
-        Timestamp dayEnd = UtilDateTime.getDayEnd(UtilDateTime.nowTimestamp());
+        Timestamp dayStart = state.getTimestamp("openedDate");
+        Timestamp dayEnd = state.getTimestamp("closedDate");
+        if (dayEnd == null) {
+            dayEnd = UtilDateTime.nowTimestamp();
+        }
+
         if (eli != null) {
             GenericValue ohpp;
             while (((ohpp = (GenericValue) eli.next()) != null)) {
@@ -170,7 +344,6 @@ public class ManagerEvents {
                     String pmt = ohpp.getString("paymentMethodTypeId");
                     Double amt = ohpp.getDouble("maxAmount");
 
-                    Debug.log("PMT - " + pmt, module);
                     if ("CASH".equals(pmt)) {
                         cashTotal += amt.doubleValue();
                     } else  if ("CHECK".equals(pmt)) {
@@ -194,23 +367,64 @@ public class ManagerEvents {
         }
 
         Map reportMap = new HashMap();
+        String reportTemplate = "totals.txt";
+
+        // titles
         reportMap.put("cashTitle", UtilFormatOut.padString("CASH:", 20, false, ' '));
         reportMap.put("checkTitle", UtilFormatOut.padString("CHECK:", 20, false, ' '));
         reportMap.put("giftCardTitle", UtilFormatOut.padString("GIFT CARD:", 20, false, ' '));
         reportMap.put("creditCardTitle", UtilFormatOut.padString("CREDIT CARD:", 20, false, ' '));
         reportMap.put("otherTitle", UtilFormatOut.padString("OTHER:", 20, false, ' '));
         reportMap.put("grossSalesTitle", UtilFormatOut.padString("GROSS SALES:", 20, false, ' '));
+        reportMap.put("+/-", UtilFormatOut.padString("+/-", 20, false, ' '));
+        reportMap.put("spacer", UtilFormatOut.padString("", 20, false, ' '));
 
+        // logged
         reportMap.put("cashTotal", UtilFormatOut.padString(UtilFormatOut.formatPrice(cashTotal), 8, false, ' '));
         reportMap.put("checkTotal", UtilFormatOut.padString(UtilFormatOut.formatPrice(checkTotal), 8, false, ' '));
-        reportMap.put("giftCardTotal", UtilFormatOut.padString(UtilFormatOut.formatPrice(gcTotal), 8, false, ' '));
-        reportMap.put("creditCardTotalTotal", UtilFormatOut.padString(UtilFormatOut.formatPrice(ccTotal), 8, false, ' '));
+        reportMap.put("ccTotal", UtilFormatOut.padString(UtilFormatOut.formatPrice(ccTotal), 8, false, ' '));
+        reportMap.put("gcTotal", UtilFormatOut.padString(UtilFormatOut.formatPrice(gcTotal), 8, false, ' '));
         reportMap.put("otherTotal", UtilFormatOut.padString(UtilFormatOut.formatPrice(othTotal), 8, false, ' '));
-        reportMap.put("grossSalesTotal", UtilFormatOut.padString(UtilFormatOut.formatPrice(total), 8, false, ' '));
+        reportMap.put("grossTotal", UtilFormatOut.padString(UtilFormatOut.formatPrice(total), 8, false, ' '));
+
+        if (runBalance) {
+            // actuals
+            double cashEnd = state.getDouble("actualEndingCash").doubleValue();
+            double checkEnd = state.getDouble("actualEndingCheck").doubleValue();
+            double ccEnd = state.getDouble("actualEndingCc").doubleValue();
+            double gcEnd = state.getDouble("actualEndingGc").doubleValue();
+            double othEnd = state.getDouble("actualEndingOther").doubleValue();
+            double grossEnd = cashEnd + checkEnd + ccEnd + gcEnd + othEnd;
+
+            reportMap.put("cashEnd", UtilFormatOut.padString(UtilFormatOut.formatPrice(cashEnd), 8, false, ' '));
+            reportMap.put("checkEnd", UtilFormatOut.padString(UtilFormatOut.formatPrice(checkEnd), 8, false, ' '));
+            reportMap.put("ccEnd", UtilFormatOut.padString(UtilFormatOut.formatPrice(ccEnd), 8, false, ' '));
+            reportMap.put("gcEnd", UtilFormatOut.padString(UtilFormatOut.formatPrice(gcEnd), 8, false, ' '));
+            reportMap.put("otherEnd", UtilFormatOut.padString(UtilFormatOut.formatPrice(othEnd), 8, false, ' '));
+            reportMap.put("grossEnd", UtilFormatOut.padString(UtilFormatOut.formatPrice(grossEnd), 8, false, ' '));
+
+            // diffs
+            double cashDiff = cashEnd - cashTotal;
+            double checkDiff = checkEnd - checkTotal;
+            double ccDiff = ccEnd - ccTotal;
+            double gcDiff = gcEnd - gcTotal;
+            double othDiff = othEnd - othTotal;
+            double grossDiff = cashDiff + checkDiff + ccDiff + gcDiff + othDiff;
+
+            reportMap.put("cashDiff", UtilFormatOut.padString(UtilFormatOut.formatPrice(cashDiff), 8, false, ' '));
+            reportMap.put("checkDiff", UtilFormatOut.padString(UtilFormatOut.formatPrice(checkDiff), 8, false, ' '));
+            reportMap.put("ccDiff", UtilFormatOut.padString(UtilFormatOut.formatPrice(ccDiff), 8, false, ' '));
+            reportMap.put("gcDiff", UtilFormatOut.padString(UtilFormatOut.formatPrice(gcDiff), 8, false, ' '));
+            reportMap.put("otherDiff", UtilFormatOut.padString(UtilFormatOut.formatPrice(othDiff), 8, false, ' '));
+            reportMap.put("grossDiff", UtilFormatOut.padString(UtilFormatOut.formatPrice(grossDiff), 8, false, ' '));
+
+            // set the report template
+            reportTemplate = "balance.txt";
+        }
 
         Receipt receipt = DeviceLoader.receipt;
         if (receipt.isEnabled()) {
-            receipt.printReport(trans, "totals.txt", reportMap);
+            receipt.printReport(trans, reportTemplate, reportMap);
         }
     }
 }
