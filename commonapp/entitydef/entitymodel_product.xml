@@ -31,37 +31,55 @@
 
 <!DOCTYPE entitymodel [
     <!-- ====================== Root Element ======================= -->
-    <!ELEMENT entitymodel ( title?, description?, copyright?, author?, version?, entity* )>
+    <!ELEMENT entitymodel ( title?, description?, copyright?, author?, version?, ( entity | view-entity )* )>
     <!-- ================= Children of entitymodel =================== -->
-    <!ELEMENT entity ( description?, field*, prim-key*, relation* )>
     <!ELEMENT title ( #PCDATA  )>
     <!ELEMENT description ( #PCDATA  )>
     <!ELEMENT copyright ( #PCDATA  )>
     <!ELEMENT author ( #PCDATA  )>
     <!ELEMENT version ( #PCDATA  )>
+    <!ELEMENT entity ( description?, field+, prim-key*, relation* )>
+    <!ELEMENT view-entity ( description?, member-entity+, alias+, view-link+, relation* )>
     <!-- ================== Children of entity ===================== -->
     <!-- see the children of entitymodel section for description, etc. -->
     <!ATTLIST entity
-	entity-name CDATA #REQUIRED >
-    <!ATTLIST entity
-	table-name CDATA #IMPLIED >
-    <!ATTLIST entity
-	package-name CDATA #REQUIRED >
-    <!ATTLIST entity
-	dependent-on CDATA #IMPLIED >
-    <!ATTLIST entity
-	title CDATA #IMPLIED >
-    <!ATTLIST entity
-	copyright CDATA #IMPLIED >
-    <!ATTLIST entity
-	author CDATA #IMPLIED >
-    <!ATTLIST entity
+	entity-name CDATA #REQUIRED
+	table-name CDATA #IMPLIED
+	package-name CDATA #REQUIRED
+	dependent-on CDATA #IMPLIED
+	title CDATA #IMPLIED
+	copyright CDATA #IMPLIED
+	author CDATA #IMPLIED
 	version CDATA #IMPLIED >
     <!ELEMENT field ( validate* )>
     <!ELEMENT prim-key EMPTY>
     <!ATTLIST prim-key
 	field CDATA #REQUIRED >
-    <!ELEMENT relation ( key-map* )>
+    <!ELEMENT relation ( key-map+ )>
+    <!-- ================== Children of view-entity ===================== -->
+    <!-- see the children of entitymodel section for description, etc. -->
+    <!ATTLIST view-entity
+	entity-name CDATA #REQUIRED
+	package-name CDATA #REQUIRED
+	dependent-on CDATA #IMPLIED
+	title CDATA #IMPLIED
+	copyright CDATA #IMPLIED
+	author CDATA #IMPLIED
+	version CDATA #IMPLIED >
+    <!ELEMENT member-entity EMPTY>
+    <!ATTLIST member-entity
+	entity-alias CDATA #REQUIRED
+	entity-name CDATA #REQUIRED >
+    <!ELEMENT alias EMPTY>
+    <!ATTLIST alias
+	entity-alias CDATA #REQUIRED
+	name CDATA #REQUIRED
+	field CDATA #IMPLIED 
+        prim-key ( true | false ) "false" >
+    <!ELEMENT view-link ( key-map+ )>
+    <!ATTLIST view-link
+	entity-alias CDATA #REQUIRED
+	rel-entity-alias CDATA #REQUIRED >
     <!-- ==================== Children of field ===================== -->
     <!ATTLIST field
 	name CDATA #REQUIRED >
@@ -75,13 +93,9 @@
     <!-- ==================== Children of relation ====================== -->
     <!-- specifies whether or not the relation is a dependent one; ie if the related entity can exist without the main entity -->
     <!ATTLIST relation
-	type ( one | many ) #REQUIRED >
-    <!ATTLIST relation
-	title CDATA #IMPLIED >
-    <!ATTLIST relation
+	type ( one | many ) #REQUIRED
+	title CDATA #IMPLIED
 	rel-entity-name CDATA #REQUIRED >
-    <!ATTLIST relation
-	rel-table-name CDATA #IMPLIED >
     <!ELEMENT key-map EMPTY>
     <!-- see definition of relation in entity section above -->
     <!-- ===================== Children of key-map ====================== -->
@@ -119,7 +133,7 @@
   <!-- ========================================================= -->
   <!-- org.ofbiz.commonapp.product.category -->
   <!-- ========================================================= -->
-	
+
     <entity entity-name="ProductCategory" 
             package-name="org.ofbiz.commonapp.product.category"
             title="Product Category Entity">
@@ -162,7 +176,7 @@
       <relation type="many" rel-entity-name="SalesTaxLookup">
         <key-map field-name="productCategoryId" />
       </relation>
-    </entity>	
+    </entity>
     <entity entity-name="ProductCategoryAttribute" 
             package-name="org.ofbiz.commonapp.product.category"
             title="Product Category Attribute Entity">
@@ -177,7 +191,7 @@
       <relation type="many" rel-entity-name="ProductCategoryTypeAttr">
         <key-map field-name="attrName" />
       </relation>
-    </entity>	
+    </entity>
     <entity entity-name="ProductCategoryClass" 
             package-name="org.ofbiz.commonapp.product.category"
             title="Product Category Classification Entity">
@@ -200,7 +214,7 @@
       <relation type="many" rel-entity-name="ProductCategoryAttribute">
         <key-map field-name="productCategoryId" />
       </relation>
-    </entity>	
+    </entity>
     <entity entity-name="ProductCategoryMember" 
             package-name="org.ofbiz.commonapp.product.category"
             title="Product Category Member Entity">
@@ -218,7 +232,7 @@
       <relation type="one" rel-entity-name="ProductCategory">
         <key-map field-name="productCategoryId" />
       </relation>
-    </entity>	
+    </entity>
     <entity entity-name="ProductCategoryRollup" 
             package-name="org.ofbiz.commonapp.product.category"
             title="Product Category Rollup Entity">
@@ -241,7 +255,7 @@
       <relation type="many" title="Sibling" rel-entity-name="ProductCategoryRollup">
         <key-map field-name="parentProductCategoryId" />
       </relation>
-    </entity>	
+    </entity>
     <entity entity-name="ProductCategoryType" 
             package-name="org.ofbiz.commonapp.product.category"
             title="Product Category Type Entity">
@@ -262,7 +276,7 @@
       <relation type="many" rel-entity-name="ProductCategoryClass">
         <key-map field-name="productCategoryTypeId" />
       </relation>
-    </entity>	
+    </entity>
     <entity entity-name="ProductCategoryTypeAttr" 
             package-name="org.ofbiz.commonapp.product.category"
             title="Product Category Type Attribute Entity">
@@ -284,7 +298,7 @@
   <!-- ========================================================= -->
   <!-- org.ofbiz.commonapp.product.cost -->
   <!-- ========================================================= -->
-	
+
     <entity entity-name="CostComponent" 
             package-name="org.ofbiz.commonapp.product.cost"
             title="Cost Component Entity">
@@ -319,7 +333,7 @@
       <relation type="one" rel-entity-name="Geo">
         <key-map field-name="geoId" />
       </relation>
-    </entity>	
+    </entity>
     <entity entity-name="CostComponentAttribute" 
             package-name="org.ofbiz.commonapp.product.cost"
             title="Cost Component Attribute Entity">
@@ -334,7 +348,7 @@
       <relation type="many" rel-entity-name="CostComponentTypeAttr">
         <key-map field-name="attrName" />
       </relation>
-    </entity>	
+    </entity>
     <entity entity-name="CostComponentType" 
             package-name="org.ofbiz.commonapp.product.cost"
             title="Cost Component Type Entity">
@@ -355,7 +369,7 @@
       <relation type="many" rel-entity-name="CostComponent">
         <key-map field-name="costComponentTypeId" />
       </relation>
-    </entity>	
+    </entity>
     <entity entity-name="CostComponentTypeAttr" 
             package-name="org.ofbiz.commonapp.product.cost"
             title="Cost Component Type Attribute Entity">
@@ -377,7 +391,7 @@
   <!-- ========================================================= -->
   <!-- org.ofbiz.commonapp.product.feature -->
   <!-- ========================================================= -->
-	
+
     <entity entity-name="FeatureDataObject" 
             package-name="org.ofbiz.commonapp.product.feature"
             title="Feature Data Object Entity">
@@ -391,7 +405,7 @@
       <relation type="one" rel-entity-name="DataObject">
         <key-map field-name="dataObjectId" />
       </relation>
-    </entity>	
+    </entity>
     <entity entity-name="ProductFeature" 
             package-name="org.ofbiz.commonapp.product.feature"
             title="Product Feature Entity">
@@ -426,7 +440,7 @@
       <relation type="many" rel-entity-name="PriceComponent">
         <key-map field-name="productFeatureId" />
       </relation>
-    </entity>	
+    </entity>
     <entity entity-name="ProductFeatureAppl" 
             package-name="org.ofbiz.commonapp.product.feature"
             title="Product Feature Applicability Entity">
@@ -447,7 +461,7 @@
       <relation type="one" rel-entity-name="ProductFeature">
         <key-map field-name="productFeatureId" />
       </relation>
-    </entity>	
+    </entity>
     <entity entity-name="ProductFeatureApplType" 
             package-name="org.ofbiz.commonapp.product.feature"
             title="Product Feature Applicability Type Entity">
@@ -465,7 +479,7 @@
       <relation type="many" rel-entity-name="ProductFeatureAppl">
         <key-map field-name="productFeatureApplTypeId" />
       </relation>
-    </entity>	
+    </entity>
     <entity entity-name="ProductFeatureCategory" 
             package-name="org.ofbiz.commonapp.product.feature"
             title="Product Feature Category Entity">
@@ -479,7 +493,7 @@
       <relation type="many" rel-entity-name="ProductFeature">
         <key-map field-name="productFeatureCategoryId" />
       </relation>
-    </entity>	
+    </entity>
     <entity entity-name="ProductFeatureIactn" 
             package-name="org.ofbiz.commonapp.product.feature"
             title="Product Feature Interaction Entity">
@@ -498,7 +512,7 @@
       <relation type="one" title="Assoc" rel-entity-name="ProductFeature">
         <key-map field-name="productFeatureIdTo" rel-field-name="productFeatureId" />
       </relation>
-    </entity>	
+    </entity>
     <entity entity-name="ProductFeatureIactnType" 
             package-name="org.ofbiz.commonapp.product.feature"
             title="Product Feature Interaction Type Entity">
@@ -516,7 +530,7 @@
       <relation type="many" rel-entity-name="ProductFeatureIactn">
         <key-map field-name="productFeatureIactnTypeId" />
       </relation>
-    </entity>	
+    </entity>
     <entity entity-name="ProductFeatureType" 
             package-name="org.ofbiz.commonapp.product.feature"
             title="Product Feature Type Entity">
@@ -539,7 +553,7 @@
   <!-- ========================================================= -->
   <!-- org.ofbiz.commonapp.product.inventory -->
   <!-- ========================================================= -->
-	
+
     <entity entity-name="InventoryItem" 
             package-name="org.ofbiz.commonapp.product.inventory"
             title="Inventory Item Entity">
@@ -591,7 +605,7 @@
       <relation type="many" rel-entity-name="PicklistItem">
         <key-map field-name="inventoryItemId" />
       </relation>
-    </entity>	
+    </entity>
     <entity entity-name="InventoryItemAttribute" 
             package-name="org.ofbiz.commonapp.product.inventory"
             title="Inventory Item Attribute Entity">
@@ -606,7 +620,7 @@
       <relation type="many" rel-entity-name="InventoryItemTypeAttr">
         <key-map field-name="attrName" />
       </relation>
-    </entity>	
+    </entity>
     <entity entity-name="InventoryItemType" 
             package-name="org.ofbiz.commonapp.product.inventory"
             title="Inventory Item Type Entity">
@@ -627,7 +641,7 @@
       <relation type="many" rel-entity-name="InventoryItem">
         <key-map field-name="inventoryItemTypeId" />
       </relation>
-    </entity>	
+    </entity>
     <entity entity-name="InventoryItemTypeAttr" 
             package-name="org.ofbiz.commonapp.product.inventory"
             title="Inventory Item Type Attribute Entity">
@@ -644,7 +658,7 @@
       <relation type="many" rel-entity-name="InventoryItem">
         <key-map field-name="inventoryItemTypeId" />
       </relation>
-    </entity>	
+    </entity>
     <entity entity-name="InventoryItemVariance" 
             package-name="org.ofbiz.commonapp.product.inventory"
             title="Inventory Item Variance Entity">
@@ -668,7 +682,7 @@
         <key-map field-name="inventoryItemId" />
         <key-map field-name="physicalInventoryId" />
       </relation>
-    </entity>	
+    </entity>
     <entity entity-name="ItemVarianceAcctgTrans" 
             package-name="org.ofbiz.commonapp.product.inventory"
             title="Item Variance Accounting Transaction Entity">
@@ -689,7 +703,7 @@
         <key-map field-name="inventoryItemId" />
         <key-map field-name="physicalInventoryId" />
       </relation>
-    </entity>	
+    </entity>
     <entity entity-name="Lot" 
             package-name="org.ofbiz.commonapp.product.inventory"
             title="Lot Entity">
@@ -701,7 +715,7 @@
       <relation type="many" rel-entity-name="InventoryItem">
         <key-map field-name="lotId" />
       </relation>
-    </entity>	
+    </entity>
     <entity entity-name="PhysicalInventory" 
             package-name="org.ofbiz.commonapp.product.inventory"
             title="Physical Inventory Entity">
@@ -713,7 +727,7 @@
       <relation type="many" rel-entity-name="InventoryItemVariance">
         <key-map field-name="physicalInventoryId" />
       </relation>
-    </entity>	
+    </entity>
     <entity entity-name="VarianceReason" 
             package-name="org.ofbiz.commonapp.product.inventory"
             title="Variance Reason Entity">
@@ -728,7 +742,7 @@
   <!-- ========================================================= -->
   <!-- org.ofbiz.commonapp.product.price -->
   <!-- ========================================================= -->
-	
+
     <entity entity-name="PriceComponent" 
             package-name="org.ofbiz.commonapp.product.price"
             title="Price Component Entity">
@@ -803,7 +817,7 @@
       <relation type="one" title="OrderValue" rel-entity-name="QuantityBreak">
         <key-map field-name="orderValueBreakId" rel-field-name="quantityBreakId" />
       </relation>
-    </entity>	
+    </entity>
     <entity entity-name="PriceComponentAttribute" 
             package-name="org.ofbiz.commonapp.product.price"
             title="Price Component Attribute Entity">
@@ -818,7 +832,7 @@
       <relation type="many" rel-entity-name="PriceComponentTypeAttr">
         <key-map field-name="attrName" />
       </relation>
-    </entity>	
+    </entity>
     <entity entity-name="PriceComponentType" 
             package-name="org.ofbiz.commonapp.product.price"
             title="Price Component Type Entity">
@@ -839,7 +853,7 @@
       <relation type="many" rel-entity-name="PriceComponent">
         <key-map field-name="priceComponentTypeId" />
       </relation>
-    </entity>	
+    </entity>
     <entity entity-name="PriceComponentTypeAttr" 
             package-name="org.ofbiz.commonapp.product.price"
             title="Price Component Type Attribute Entity">
@@ -856,7 +870,7 @@
       <relation type="many" rel-entity-name="PriceComponent">
         <key-map field-name="priceComponentTypeId" />
       </relation>
-    </entity>	
+    </entity>
     <entity entity-name="QuantityBreak" 
             package-name="org.ofbiz.commonapp.product.price"
             title="Quantity Break Entity">
@@ -871,7 +885,7 @@
       <relation type="one" rel-entity-name="QuantityBreakType">
         <key-map field-name="quantityBreakTypeId" />
       </relation>
-    </entity>	
+    </entity>
     <entity entity-name="QuantityBreakType" 
             package-name="org.ofbiz.commonapp.product.price"
             title="Quantity Break Type Entity">
@@ -881,7 +895,7 @@
       <relation type="many" rel-entity-name="QuantityBreak">
         <key-map field-name="quantityBreakTypeId" />
       </relation>
-    </entity>	
+    </entity>
     <entity entity-name="SaleType" 
             package-name="org.ofbiz.commonapp.product.price"
             title="Sale Type Entity">
@@ -896,7 +910,7 @@
   <!-- ========================================================= -->
   <!-- org.ofbiz.commonapp.product.product -->
   <!-- ========================================================= -->
-	
+
     <entity entity-name="GoodIdentification" 
             package-name="org.ofbiz.commonapp.product.product"
             title="Good Identification Entity">
@@ -911,7 +925,7 @@
       <relation type="one" rel-entity-name="Product">
         <key-map field-name="productId" />
       </relation>
-    </entity>	
+    </entity>
     <entity entity-name="GoodIdentificationType" 
             package-name="org.ofbiz.commonapp.product.product"
             title="Good Identification Type Entity">
@@ -929,7 +943,7 @@
       <relation type="many" rel-entity-name="GoodIdentification">
         <key-map field-name="goodIdentificationTypeId" />
       </relation>
-    </entity>	
+    </entity>
     <entity entity-name="Product" 
             package-name="org.ofbiz.commonapp.product.product"
             title="Product Entity">
@@ -1015,7 +1029,7 @@
       <relation type="many" rel-entity-name="ShoppingListItem">
         <key-map field-name="productId" />
       </relation>
-    </entity>	
+    </entity>
     <entity entity-name="ProductAssoc" 
             package-name="org.ofbiz.commonapp.product.product"
             title="Product Association Entity">
@@ -1040,7 +1054,7 @@
       <relation type="one" title="Assoc" rel-entity-name="Product">
         <key-map field-name="productIdTo" rel-field-name="productId" />
       </relation>
-    </entity>	
+    </entity>
     <entity entity-name="ProductAssocType" 
             package-name="org.ofbiz.commonapp.product.product"
             title="Product Association Type Entity">
@@ -1058,7 +1072,7 @@
       <relation type="many" rel-entity-name="ProductAssoc">
         <key-map field-name="productAssocTypeId" />
       </relation>
-    </entity>	
+    </entity>
     <entity entity-name="ProductAttribute" 
             package-name="org.ofbiz.commonapp.product.product"
             title="Product Attribute Entity">
@@ -1073,7 +1087,7 @@
       <relation type="many" rel-entity-name="ProductTypeAttr">
         <key-map field-name="attrName" />
       </relation>
-    </entity>	
+    </entity>
     <entity entity-name="ProductClass" 
             package-name="org.ofbiz.commonapp.product.product"
             title="Product Classification Entity">
@@ -1096,7 +1110,7 @@
       <relation type="many" rel-entity-name="ProductAttribute">
         <key-map field-name="productId" />
       </relation>
-    </entity>	
+    </entity>
     <entity entity-name="ProductDataObject" 
             package-name="org.ofbiz.commonapp.product.product"
             title="Product Data Object Entity">
@@ -1110,7 +1124,7 @@
       <relation type="one" rel-entity-name="DataObject">
         <key-map field-name="dataObjectId" />
       </relation>
-    </entity>	
+    </entity>
     <entity entity-name="ProductKeyword" 
             package-name="org.ofbiz.commonapp.product.product"
             title="Product Keyword Entity">
@@ -1121,7 +1135,7 @@
       <relation type="one" rel-entity-name="Product">
         <key-map field-name="productId" />
       </relation>
-    </entity>	
+    </entity>
     <entity entity-name="ProductType" 
             package-name="org.ofbiz.commonapp.product.product"
             title="Product Type Entity">
@@ -1142,7 +1156,7 @@
       <relation type="many" rel-entity-name="ProductClass">
         <key-map field-name="productTypeId" />
       </relation>
-    </entity>	
+    </entity>
     <entity entity-name="ProductTypeAttr" 
             package-name="org.ofbiz.commonapp.product.product"
             title="Product Type Attribute Entity">
@@ -1164,7 +1178,7 @@
   <!-- ========================================================= -->
   <!-- org.ofbiz.commonapp.product.storage -->
   <!-- ========================================================= -->
-	
+
     <entity entity-name="Container" 
             package-name="org.ofbiz.commonapp.product.storage"
             title="Container Entity">
@@ -1181,7 +1195,7 @@
       <relation type="one" rel-entity-name="Facility">
         <key-map field-name="facilityId" />
       </relation>
-    </entity>	
+    </entity>
     <entity entity-name="ContainerType" 
             package-name="org.ofbiz.commonapp.product.storage"
             title="Container Type Entity">
@@ -1191,7 +1205,7 @@
       <relation type="many" rel-entity-name="Container">
         <key-map field-name="containerTypeId" />
       </relation>
-    </entity>	
+    </entity>
     <entity entity-name="Facility" 
             package-name="org.ofbiz.commonapp.product.storage"
             title="Facility Entity">
@@ -1228,7 +1242,7 @@
       <relation type="many" rel-entity-name="WorkEffortPartyAssignment">
         <key-map field-name="facilityId" />
       </relation>
-    </entity>	
+    </entity>
     <entity entity-name="FacilityAttribute" 
             package-name="org.ofbiz.commonapp.product.storage"
             title="Facility Attribute Entity">
@@ -1243,7 +1257,7 @@
       <relation type="many" rel-entity-name="FacilityTypeAttr">
         <key-map field-name="attrName" />
       </relation>
-    </entity>	
+    </entity>
     <entity entity-name="FacilityContactMech" 
             package-name="org.ofbiz.commonapp.product.storage"
             title="Facility Contact Mechanism Entity">
@@ -1258,7 +1272,7 @@
       <relation type="one" rel-entity-name="ContactMech">
         <key-map field-name="contactMechId" />
       </relation>
-    </entity>	
+    </entity>
     <entity entity-name="FacilityRoleType" 
             package-name="org.ofbiz.commonapp.product.storage"
             title="Facility Role Type Entity">
@@ -1268,7 +1282,7 @@
       <relation type="many" rel-entity-name="PartyFacility">
         <key-map field-name="facilityRoleTypeId" />
       </relation>
-    </entity>	
+    </entity>
     <entity entity-name="FacilityType" 
             package-name="org.ofbiz.commonapp.product.storage"
             title="Facility Type Entity">
@@ -1289,7 +1303,7 @@
       <relation type="many" rel-entity-name="Facility">
         <key-map field-name="facilityTypeId" />
       </relation>
-    </entity>	
+    </entity>
     <entity entity-name="FacilityTypeAttr" 
             package-name="org.ofbiz.commonapp.product.storage"
             title="Facility Type Attribute Entity">
@@ -1306,7 +1320,7 @@
       <relation type="many" rel-entity-name="Facility">
         <key-map field-name="facilityTypeId" />
       </relation>
-    </entity>	
+    </entity>
     <entity entity-name="PartyFacility" 
             package-name="org.ofbiz.commonapp.product.storage"
             title="Party Facility Entity">
@@ -1329,7 +1343,7 @@
   <!-- ========================================================= -->
   <!-- org.ofbiz.commonapp.product.supplier -->
   <!-- ========================================================= -->
-	
+
     <entity entity-name="MarketInterest" 
             package-name="org.ofbiz.commonapp.product.supplier"
             title="Market Interest Entity">
@@ -1346,7 +1360,7 @@
       <relation type="one" rel-entity-name="PartyType">
         <key-map field-name="partyTypeId" />
       </relation>
-    </entity>	
+    </entity>
     <entity entity-name="ReorderGuideline" 
             package-name="org.ofbiz.commonapp.product.supplier"
             title="Reorder Guideline Entity">
@@ -1373,7 +1387,7 @@
       <relation type="one" rel-entity-name="Geo">
         <key-map field-name="geoId" />
       </relation>
-    </entity>	
+    </entity>
     <entity entity-name="SupplierPrefOrder" 
             package-name="org.ofbiz.commonapp.product.supplier"
             title="Preference Type Entity">
@@ -1383,7 +1397,7 @@
       <relation type="many" rel-entity-name="SupplierProduct">
         <key-map field-name="supplierPrefOrderId" />
       </relation>
-    </entity>	
+    </entity>
     <entity entity-name="SupplierProduct" 
             package-name="org.ofbiz.commonapp.product.supplier"
             title="Supplier Product Entity">
@@ -1409,7 +1423,7 @@
       <relation type="one" rel-entity-name="SupplierRatingType">
         <key-map field-name="supplierRatingTypeId" />
       </relation>
-    </entity>	
+    </entity>
     <entity entity-name="SupplierRatingType" 
             package-name="org.ofbiz.commonapp.product.supplier"
             title="Supplier Rating Type Entity">

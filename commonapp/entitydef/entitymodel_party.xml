@@ -31,37 +31,55 @@
 
 <!DOCTYPE entitymodel [
     <!-- ====================== Root Element ======================= -->
-    <!ELEMENT entitymodel ( title?, description?, copyright?, author?, version?, entity* )>
+    <!ELEMENT entitymodel ( title?, description?, copyright?, author?, version?, ( entity | view-entity )* )>
     <!-- ================= Children of entitymodel =================== -->
-    <!ELEMENT entity ( description?, field*, prim-key*, relation* )>
     <!ELEMENT title ( #PCDATA  )>
     <!ELEMENT description ( #PCDATA  )>
     <!ELEMENT copyright ( #PCDATA  )>
     <!ELEMENT author ( #PCDATA  )>
     <!ELEMENT version ( #PCDATA  )>
+    <!ELEMENT entity ( description?, field+, prim-key*, relation* )>
+    <!ELEMENT view-entity ( description?, member-entity+, alias+, view-link+, relation* )>
     <!-- ================== Children of entity ===================== -->
     <!-- see the children of entitymodel section for description, etc. -->
     <!ATTLIST entity
-	entity-name CDATA #REQUIRED >
-    <!ATTLIST entity
-	table-name CDATA #IMPLIED >
-    <!ATTLIST entity
-	package-name CDATA #REQUIRED >
-    <!ATTLIST entity
-	dependent-on CDATA #IMPLIED >
-    <!ATTLIST entity
-	title CDATA #IMPLIED >
-    <!ATTLIST entity
-	copyright CDATA #IMPLIED >
-    <!ATTLIST entity
-	author CDATA #IMPLIED >
-    <!ATTLIST entity
+	entity-name CDATA #REQUIRED
+	table-name CDATA #IMPLIED
+	package-name CDATA #REQUIRED
+	dependent-on CDATA #IMPLIED
+	title CDATA #IMPLIED
+	copyright CDATA #IMPLIED
+	author CDATA #IMPLIED
 	version CDATA #IMPLIED >
     <!ELEMENT field ( validate* )>
     <!ELEMENT prim-key EMPTY>
     <!ATTLIST prim-key
 	field CDATA #REQUIRED >
-    <!ELEMENT relation ( key-map* )>
+    <!ELEMENT relation ( key-map+ )>
+    <!-- ================== Children of view-entity ===================== -->
+    <!-- see the children of entitymodel section for description, etc. -->
+    <!ATTLIST view-entity
+	entity-name CDATA #REQUIRED
+	package-name CDATA #REQUIRED
+	dependent-on CDATA #IMPLIED
+	title CDATA #IMPLIED
+	copyright CDATA #IMPLIED
+	author CDATA #IMPLIED
+	version CDATA #IMPLIED >
+    <!ELEMENT member-entity EMPTY>
+    <!ATTLIST member-entity
+	entity-alias CDATA #REQUIRED
+	entity-name CDATA #REQUIRED >
+    <!ELEMENT alias EMPTY>
+    <!ATTLIST alias
+	entity-alias CDATA #REQUIRED
+	name CDATA #REQUIRED
+	field CDATA #IMPLIED 
+        prim-key ( true | false ) "false" >
+    <!ELEMENT view-link ( key-map+ )>
+    <!ATTLIST view-link
+	entity-alias CDATA #REQUIRED
+	rel-entity-alias CDATA #REQUIRED >
     <!-- ==================== Children of field ===================== -->
     <!ATTLIST field
 	name CDATA #REQUIRED >
@@ -75,13 +93,9 @@
     <!-- ==================== Children of relation ====================== -->
     <!-- specifies whether or not the relation is a dependent one; ie if the related entity can exist without the main entity -->
     <!ATTLIST relation
-	type ( one | many ) #REQUIRED >
-    <!ATTLIST relation
-	title CDATA #IMPLIED >
-    <!ATTLIST relation
+	type ( one | many ) #REQUIRED
+	title CDATA #IMPLIED
 	rel-entity-name CDATA #REQUIRED >
-    <!ATTLIST relation
-	rel-table-name CDATA #IMPLIED >
     <!ELEMENT key-map EMPTY>
     <!-- see definition of relation in entity section above -->
     <!-- ===================== Children of key-map ====================== -->
@@ -116,7 +130,7 @@
   <!-- ========================================================= -->
   <!-- org.ofbiz.commonapp.party.agreement -->
   <!-- ========================================================= -->
-	
+
     <entity entity-name="Addendum" 
             package-name="org.ofbiz.commonapp.party.agreement"
             title="Addendum Entity">
@@ -134,7 +148,7 @@
         <key-map field-name="agreementId" />
         <key-map field-name="agreementItemSeqId" />
       </relation>
-    </entity>	
+    </entity>
     <entity entity-name="Agreement" 
             package-name="org.ofbiz.commonapp.party.agreement"
             title="Agreement Entity">
@@ -195,7 +209,7 @@
       <relation type="many" rel-entity-name="PriceComponent">
         <key-map field-name="agreementId" />
       </relation>
-    </entity>	
+    </entity>
     <entity entity-name="AgreementAttribute" 
             package-name="org.ofbiz.commonapp.party.agreement"
             title="Agreement Attribute Entity">
@@ -210,7 +224,7 @@
       <relation type="many" rel-entity-name="AgreementTypeAttr">
         <key-map field-name="attrName" />
       </relation>
-    </entity>	
+    </entity>
     <entity entity-name="AgreementGeographicalApplic" 
             package-name="org.ofbiz.commonapp.party.agreement"
             title="Agreement Geographical Applicability Entity">
@@ -220,7 +234,7 @@
       <prim-key field="agreementId" />	
       <prim-key field="agreementItemSeqId" />	
       <prim-key field="geoId" />
-    </entity>	
+    </entity>
     <entity entity-name="AgreementItem" 
             package-name="org.ofbiz.commonapp.party.agreement"
             title="Agreement Item Entity">
@@ -248,7 +262,7 @@
         <key-map field-name="agreementId" />
         <key-map field-name="agreementItemSeqId" />
       </relation>
-    </entity>	
+    </entity>
     <entity entity-name="AgreementItemAttribute" 
             package-name="org.ofbiz.commonapp.party.agreement"
             title="Agreement Item Attribute Entity">
@@ -266,7 +280,7 @@
       <relation type="many" rel-entity-name="AgreementItemTypeAttr">
         <key-map field-name="attrName" />
       </relation>
-    </entity>	
+    </entity>
     <entity entity-name="AgreementItemType" 
             package-name="org.ofbiz.commonapp.party.agreement"
             title="Agreement Item Type Entity">
@@ -287,7 +301,7 @@
       <relation type="many" rel-entity-name="AgreementItem">
         <key-map field-name="agreementItemTypeId" />
       </relation>
-    </entity>	
+    </entity>
     <entity entity-name="AgreementItemTypeAttr" 
             package-name="org.ofbiz.commonapp.party.agreement"
             title="Agreement Item Type Attribute Entity">
@@ -304,7 +318,7 @@
       <relation type="many" rel-entity-name="AgreementItem">
         <key-map field-name="agreementItemTypeId" />
       </relation>
-    </entity>	
+    </entity>
     <entity entity-name="AgreementOrganizationApplic" 
             package-name="org.ofbiz.commonapp.party.agreement"
             title="Agreement Organizational Applicability Entity">
@@ -314,7 +328,7 @@
       <prim-key field="agreementId" />	
       <prim-key field="agreementItemSeqId" />	
       <prim-key field="partyId" />
-    </entity>	
+    </entity>
     <entity entity-name="AgreementProductApplic" 
             package-name="org.ofbiz.commonapp.party.agreement"
             title="Agreement Product Applicability Entity">
@@ -324,7 +338,7 @@
       <prim-key field="agreementId" />	
       <prim-key field="agreementItemSeqId" />	
       <prim-key field="productId" />
-    </entity>	
+    </entity>
     <entity entity-name="AgreementRole" 
             package-name="org.ofbiz.commonapp.party.agreement"
             title="Agreement Role Entity">
@@ -334,7 +348,7 @@
       <prim-key field="agreementId" />	
       <prim-key field="partyId" />	
       <prim-key field="roleTypeId" />
-    </entity>	
+    </entity>
     <entity entity-name="AgreementTerm" 
             package-name="org.ofbiz.commonapp.party.agreement"
             title="Agreement Term Entity">
@@ -346,7 +360,7 @@
       <field name="thruDate" type="date-time"></field>
       <field name="termValue" type="numeric"></field>	
       <prim-key field="agreementTermId" />
-    </entity>	
+    </entity>
     <entity entity-name="AgreementTermAttribute" 
             package-name="org.ofbiz.commonapp.party.agreement"
             title="Agreement Term Attribute Entity">
@@ -361,7 +375,7 @@
       <relation type="many" rel-entity-name="TermTypeAttr">
         <key-map field-name="attrName" />
       </relation>
-    </entity>	
+    </entity>
     <entity entity-name="AgreementType" 
             package-name="org.ofbiz.commonapp.party.agreement"
             title="Agreement Type Entity">
@@ -382,7 +396,7 @@
       <relation type="many" rel-entity-name="Agreement">
         <key-map field-name="agreementTypeId" />
       </relation>
-    </entity>	
+    </entity>
     <entity entity-name="AgreementTypeAttr" 
             package-name="org.ofbiz.commonapp.party.agreement"
             title="Agreement Type Attribute Entity">
@@ -399,7 +413,7 @@
       <relation type="many" rel-entity-name="Agreement">
         <key-map field-name="agreementTypeId" />
       </relation>
-    </entity>	
+    </entity>
     <entity entity-name="TermType" 
             package-name="org.ofbiz.commonapp.party.agreement"
             title="Term Type Entity">
@@ -429,7 +443,7 @@
       <relation type="many" rel-entity-name="InvoiceTerm">
         <key-map field-name="termTypeId" />
       </relation>
-    </entity>	
+    </entity>
     <entity entity-name="TermTypeAttr" 
             package-name="org.ofbiz.commonapp.party.agreement"
             title="Term Type Attribute Entity">
@@ -469,7 +483,7 @@
   <!-- ========================================================= -->
   <!-- org.ofbiz.commonapp.party.communication -->
   <!-- ========================================================= -->
-	
+
     <entity entity-name="CommunicationEvent" 
             package-name="org.ofbiz.commonapp.party.communication"
             title="Communication Event Entity">
@@ -493,7 +507,7 @@
       <relation type="many" rel-entity-name="CommunicationEventPurpose">
         <key-map field-name="communicationEventId" />
       </relation>
-    </entity>	
+    </entity>
     <entity entity-name="CommunicationEventPrpTyp" 
             package-name="org.ofbiz.commonapp.party.communication"
             title="Communication Event Purpose Type Entity">
@@ -511,7 +525,7 @@
       <relation type="many" rel-entity-name="CommunicationEventPurpose">
         <key-map field-name="communicationEventPrpTypId" />
       </relation>
-    </entity>	
+    </entity>
     <entity entity-name="CommunicationEventPurpose" 
             package-name="org.ofbiz.commonapp.party.communication"
             title="Communication Event Purpose Entity">
@@ -526,7 +540,7 @@
       <relation type="one" rel-entity-name="CommunicationEventPrpTyp">
         <key-map field-name="communicationEventPrpTypId" />
       </relation>
-    </entity>	
+    </entity>
     <entity entity-name="CommunicationEventRole" 
             package-name="org.ofbiz.commonapp.party.communication"
             title="Communication Event Role Entity">
@@ -536,7 +550,7 @@
       <prim-key field="communicationEventId" />	
       <prim-key field="partyId" />	
       <prim-key field="roleTypeId" />
-    </entity>	
+    </entity>
     <entity entity-name="CommunicationEventType" 
             package-name="org.ofbiz.commonapp.party.communication"
             title="Communication Event Type Entity">
@@ -554,7 +568,7 @@
       <relation type="many" rel-entity-name="CommunicationEvent">
         <key-map field-name="communicationEventTypeId" />
       </relation>
-    </entity>	
+    </entity>
     <entity entity-name="IssueCase" 
             package-name="org.ofbiz.commonapp.party.communication"
             title="Issue Case Entity">
@@ -563,7 +577,7 @@
       <field name="description" type="description"></field>
       <field name="startDatetime" type="date-time"></field>	
       <prim-key field="issueCaseId" />
-    </entity>	
+    </entity>
     <entity entity-name="IssueCaseRole" 
             package-name="org.ofbiz.commonapp.party.communication"
             title="Issue Case Role Entity">
@@ -578,7 +592,7 @@
   <!-- ========================================================= -->
   <!-- org.ofbiz.commonapp.party.contact -->
   <!-- ========================================================= -->
-	
+
     <entity entity-name="ContactMech" 
             package-name="org.ofbiz.commonapp.party.contact"
             title="Contact Mechanism Entity">
@@ -619,7 +633,7 @@
       <relation type="many" rel-entity-name="OrderItemContactMech">
         <key-map field-name="contactMechId" />
       </relation>
-    </entity>	
+    </entity>
     <entity entity-name="ContactMechAttribute" 
             package-name="org.ofbiz.commonapp.party.contact"
             title="Contact Mechanism Attribute Entity">
@@ -634,7 +648,7 @@
       <relation type="many" rel-entity-name="ContactMechTypeAttr">
         <key-map field-name="attrName" />
       </relation>
-    </entity>	
+    </entity>
     <entity entity-name="ContactMechLink" 
             package-name="org.ofbiz.commonapp.party.contact"
             title="Contact Mechanism Link Entity">
@@ -648,7 +662,7 @@
       <relation type="one" title="To" rel-entity-name="ContactMech">
         <key-map field-name="contactMechIdTo" rel-field-name="contactMechId" />
       </relation>
-    </entity>	
+    </entity>
     <entity entity-name="ContactMechPurposeType" 
             package-name="org.ofbiz.commonapp.party.contact"
             title="Contact Mechanism Purpose Type Entity">
@@ -667,7 +681,7 @@
       <relation type="many" rel-entity-name="ContactMechTypePurpose">
         <key-map field-name="contactMechPurposeTypeId" />
       </relation>
-    </entity>	
+    </entity>
     <entity entity-name="ContactMechType" 
             package-name="org.ofbiz.commonapp.party.contact"
             title="Contact Mechanism Type Entity">
@@ -694,7 +708,7 @@
       <relation type="many" rel-entity-name="ContactMechTypePurpose">
         <key-map field-name="contactMechTypeId" />
       </relation>
-    </entity>	
+    </entity>
     <entity entity-name="ContactMechTypeAttr" 
             package-name="org.ofbiz.commonapp.party.contact"
             title="Contact Mechanism Type Attribute Entity">
@@ -711,7 +725,7 @@
       <relation type="many" rel-entity-name="ContactMech">
         <key-map field-name="contactMechTypeId" />
       </relation>
-    </entity>	
+    </entity>
     <entity entity-name="ContactMechTypePurpose" 
             package-name="org.ofbiz.commonapp.party.contact"
             title="Contact Mechanism Type Purpose Entity">
@@ -726,7 +740,7 @@
       <relation type="one" rel-entity-name="ContactMechPurposeType">
         <key-map field-name="contactMechPurposeTypeId" />
       </relation>
-    </entity>	
+    </entity>
     <entity entity-name="CreditCardInfo" 
             package-name="org.ofbiz.commonapp.party.contact"
             title="Credit Card Information Entity">
@@ -754,7 +768,7 @@
       <relation type="many" rel-entity-name="OrderPaymentPreference">
         <key-map field-name="creditCardId" rel-field-name="paymentInfoId" />
       </relation>
-    </entity>	
+    </entity>
     <entity entity-name="PartyContactMech" 
             package-name="org.ofbiz.commonapp.party.contact"
             title="Party Contact Mechanism Entity">
@@ -786,7 +800,7 @@
         <key-map field-name="partyId" />
         <key-map field-name="contactMechId" />
       </relation>
-    </entity>	
+    </entity>
     <entity entity-name="PartyContactMechPurpose" 
             package-name="org.ofbiz.commonapp.party.contact"
             title="Party Contact Mechanism Purpose Entity">
@@ -812,7 +826,7 @@
       <relation type="one" rel-entity-name="ContactMech">
         <key-map field-name="contactMechId" />
       </relation>
-    </entity>	
+    </entity>
     <entity entity-name="PostalAddress" 
             package-name="org.ofbiz.commonapp.party.contact"
             title="Postal Address Entity">
@@ -846,7 +860,7 @@
       <relation type="one" title="PostalCode" rel-entity-name="Geo">
         <key-map field-name="postalCodeGeoId" rel-field-name="geoId" />
       </relation>
-    </entity>	
+    </entity>
     <entity entity-name="PostalAddressBoundary" 
             package-name="org.ofbiz.commonapp.party.contact"
             title="Postal Address Boundary Entity">
@@ -860,7 +874,7 @@
       <relation type="one" rel-entity-name="Geo">
         <key-map field-name="geoId" />
       </relation>
-    </entity>	
+    </entity>
     <entity entity-name="TelecomNumber" 
             package-name="org.ofbiz.commonapp.party.contact"
             title="Telecommunications Number Entity">
@@ -872,7 +886,7 @@
       <relation type="one" rel-entity-name="ContactMech">
         <key-map field-name="contactMechId" />
       </relation>
-    </entity>	
+    </entity>
     <entity entity-name="ValidContactMechRole" 
             package-name="org.ofbiz.commonapp.party.contact"
             title="Valid Contact Mechanism Role Entity">
@@ -891,14 +905,14 @@
   <!-- ========================================================= -->
   <!-- org.ofbiz.commonapp.party.need -->
   <!-- ========================================================= -->
-	
+
     <entity entity-name="NeedType" 
             package-name="org.ofbiz.commonapp.party.need"
             title="Need Type Entity">
       <field name="needTypeId" type="id-ne"></field>
       <field name="description" type="description"></field>	
       <prim-key field="needTypeId" />
-    </entity>	
+    </entity>
     <entity entity-name="PartyNeed" 
             package-name="org.ofbiz.commonapp.party.need"
             title="Party Need Entity">
@@ -921,7 +935,7 @@
   <!-- ========================================================= -->
   <!-- org.ofbiz.commonapp.party.party -->
   <!-- ========================================================= -->
-	
+
     <entity entity-name="Party" 
             package-name="org.ofbiz.commonapp.party.party"
             title="Party Entity">
@@ -990,7 +1004,7 @@
       <relation type="many" rel-entity-name="WorkEffortPartyAssignment">
         <key-map field-name="partyId" />
       </relation>
-    </entity>	
+    </entity>
     <entity entity-name="PartyAttribute" 
             package-name="org.ofbiz.commonapp.party.party"
             title="Party Attribute Entity">
@@ -1005,7 +1019,7 @@
       <relation type="many" rel-entity-name="PartyTypeAttr">
         <key-map field-name="attrName" />
       </relation>
-    </entity>	
+    </entity>
     <entity entity-name="PartyClassification" 
             package-name="org.ofbiz.commonapp.party.party"
             title="Party Classification Entity">
@@ -1032,7 +1046,7 @@
       <relation type="many" rel-entity-name="PartyAttribute">
         <key-map field-name="partyId" />
       </relation>
-    </entity>	
+    </entity>
     <entity entity-name="PartyClassificationType" 
             package-name="org.ofbiz.commonapp.party.party"
             title="Party Classification Type Entity">
@@ -1050,7 +1064,7 @@
       <relation type="many" rel-entity-name="PartyClassification">
         <key-map field-name="partyClassificationTypeId" />
       </relation>
-    </entity>	
+    </entity>
     <entity entity-name="PartyDataObject" 
             package-name="org.ofbiz.commonapp.party.party"
             title="Party Data Object Entity">
@@ -1064,7 +1078,7 @@
       <relation type="one" rel-entity-name="DataObject">
         <key-map field-name="dataObjectId" />
       </relation>
-    </entity>	
+    </entity>
     <entity entity-name="PartyRelationship" 
             package-name="org.ofbiz.commonapp.party.party"
             title="Party Relationship Entity">
@@ -1106,7 +1120,7 @@
       <relation type="one" rel-entity-name="PartyRelationshipType">
         <key-map field-name="partyRelationshipTypeId" />
       </relation>
-    </entity>	
+    </entity>
     <entity entity-name="PartyRelationshipType" 
             package-name="org.ofbiz.commonapp.party.party"
             title="Party Relationship Type Entity">
@@ -1133,7 +1147,7 @@
       <relation type="one" title="ValidTo" rel-entity-name="RoleType">
         <key-map field-name="roleTypeIdValidTo" rel-field-name="roleTypeId" />
       </relation>
-    </entity>	
+    </entity>
     <entity entity-name="PartyRole" 
             package-name="org.ofbiz.commonapp.party.party"
             title="Party Role Entity">
@@ -1186,7 +1200,7 @@
         <key-map field-name="partyId" />
         <key-map field-name="roleTypeId" />
       </relation>
-    </entity>	
+    </entity>
     <entity entity-name="PartyType" 
             package-name="org.ofbiz.commonapp.party.party"
             title="Party Type Entity">
@@ -1216,7 +1230,7 @@
       <relation type="many" rel-entity-name="MarketInterest">
         <key-map field-name="partyTypeId" />
       </relation>
-    </entity>	
+    </entity>
     <entity entity-name="PartyTypeAttr" 
             package-name="org.ofbiz.commonapp.party.party"
             title="Party Type Attribute Entity">
@@ -1233,7 +1247,7 @@
       <relation type="many" rel-entity-name="PartyClassification">
         <key-map field-name="partyTypeId" />
       </relation>
-    </entity>	
+    </entity>
     <entity entity-name="Person" 
             package-name="org.ofbiz.commonapp.party.party"
             title="Person Entity">
@@ -1262,7 +1276,7 @@
       <relation type="many" rel-entity-name="WorkEffortPartyAssignment">
         <key-map field-name="partyId" />
       </relation>
-    </entity>	
+    </entity>
     <entity entity-name="PriorityType" 
             package-name="org.ofbiz.commonapp.party.party"
             title="Priority Type Entity">
@@ -1272,7 +1286,7 @@
       <relation type="many" rel-entity-name="PartyRelationship">
         <key-map field-name="priorityTypeId" />
       </relation>
-    </entity>	
+    </entity>
     <entity entity-name="RoleType" 
             package-name="org.ofbiz.commonapp.party.party"
             title="Role Type Entity">
@@ -1305,7 +1319,7 @@
       <relation type="many" rel-entity-name="WorkEffortPartyAssignment">
         <key-map field-name="roleTypeId" />
       </relation>
-    </entity>	
+    </entity>
     <entity entity-name="RoleTypeAttr" 
             package-name="org.ofbiz.commonapp.party.party"
             title="Role Type Attribute Entity">

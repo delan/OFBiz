@@ -31,37 +31,55 @@
 
 <!DOCTYPE entitymodel [
     <!-- ====================== Root Element ======================= -->
-    <!ELEMENT entitymodel ( title?, description?, copyright?, author?, version?, entity* )>
+    <!ELEMENT entitymodel ( title?, description?, copyright?, author?, version?, ( entity | view-entity )* )>
     <!-- ================= Children of entitymodel =================== -->
-    <!ELEMENT entity ( description?, field*, prim-key*, relation* )>
     <!ELEMENT title ( #PCDATA  )>
     <!ELEMENT description ( #PCDATA  )>
     <!ELEMENT copyright ( #PCDATA  )>
     <!ELEMENT author ( #PCDATA  )>
     <!ELEMENT version ( #PCDATA  )>
+    <!ELEMENT entity ( description?, field+, prim-key*, relation* )>
+    <!ELEMENT view-entity ( description?, member-entity+, alias+, view-link+, relation* )>
     <!-- ================== Children of entity ===================== -->
     <!-- see the children of entitymodel section for description, etc. -->
     <!ATTLIST entity
-	entity-name CDATA #REQUIRED >
-    <!ATTLIST entity
-	table-name CDATA #IMPLIED >
-    <!ATTLIST entity
-	package-name CDATA #REQUIRED >
-    <!ATTLIST entity
-	dependent-on CDATA #IMPLIED >
-    <!ATTLIST entity
-	title CDATA #IMPLIED >
-    <!ATTLIST entity
-	copyright CDATA #IMPLIED >
-    <!ATTLIST entity
-	author CDATA #IMPLIED >
-    <!ATTLIST entity
+	entity-name CDATA #REQUIRED
+	table-name CDATA #IMPLIED
+	package-name CDATA #REQUIRED
+	dependent-on CDATA #IMPLIED
+	title CDATA #IMPLIED
+	copyright CDATA #IMPLIED
+	author CDATA #IMPLIED
 	version CDATA #IMPLIED >
     <!ELEMENT field ( validate* )>
     <!ELEMENT prim-key EMPTY>
     <!ATTLIST prim-key
 	field CDATA #REQUIRED >
-    <!ELEMENT relation ( key-map* )>
+    <!ELEMENT relation ( key-map+ )>
+    <!-- ================== Children of view-entity ===================== -->
+    <!-- see the children of entitymodel section for description, etc. -->
+    <!ATTLIST view-entity
+	entity-name CDATA #REQUIRED
+	package-name CDATA #REQUIRED
+	dependent-on CDATA #IMPLIED
+	title CDATA #IMPLIED
+	copyright CDATA #IMPLIED
+	author CDATA #IMPLIED
+	version CDATA #IMPLIED >
+    <!ELEMENT member-entity EMPTY>
+    <!ATTLIST member-entity
+	entity-alias CDATA #REQUIRED
+	entity-name CDATA #REQUIRED >
+    <!ELEMENT alias EMPTY>
+    <!ATTLIST alias
+	entity-alias CDATA #REQUIRED
+	name CDATA #REQUIRED
+	field CDATA #IMPLIED 
+        prim-key ( true | false ) "false" >
+    <!ELEMENT view-link ( key-map+ )>
+    <!ATTLIST view-link
+	entity-alias CDATA #REQUIRED
+	rel-entity-alias CDATA #REQUIRED >
     <!-- ==================== Children of field ===================== -->
     <!ATTLIST field
 	name CDATA #REQUIRED >
@@ -75,13 +93,9 @@
     <!-- ==================== Children of relation ====================== -->
     <!-- specifies whether or not the relation is a dependent one; ie if the related entity can exist without the main entity -->
     <!ATTLIST relation
-	type ( one | many ) #REQUIRED >
-    <!ATTLIST relation
-	title CDATA #IMPLIED >
-    <!ATTLIST relation
+	type ( one | many ) #REQUIRED
+	title CDATA #IMPLIED
 	rel-entity-name CDATA #REQUIRED >
-    <!ATTLIST relation
-	rel-table-name CDATA #IMPLIED >
     <!ELEMENT key-map EMPTY>
     <!-- see definition of relation in entity section above -->
     <!-- ===================== Children of key-map ====================== -->
@@ -115,7 +129,7 @@
   <!-- ========================================================= -->
   <!-- org.ofbiz.commonapp.shipment.issuance -->
   <!-- ========================================================= -->
-	
+
     <entity entity-name="ItemIssuance" 
             package-name="org.ofbiz.commonapp.shipment.issuance"
             title="Item Issuance Entity">
@@ -127,7 +141,7 @@
       <field name="issuedDateTime" type="date-time"></field>
       <field name="quantity" type="floating-point"></field>	
       <prim-key field="itemIssuanceId" />
-    </entity>	
+    </entity>
     <entity entity-name="ItemIssuanceRole" 
             package-name="org.ofbiz.commonapp.shipment.issuance"
             title="Item Issuance Role Entity">
@@ -142,7 +156,7 @@
   <!-- ========================================================= -->
   <!-- org.ofbiz.commonapp.shipment.receipt -->
   <!-- ========================================================= -->
-	
+
     <entity entity-name="ShipmentReceipt" 
             package-name="org.ofbiz.commonapp.shipment.receipt"
             title="Shipment Receipt Entity">
@@ -158,7 +172,7 @@
       <field name="quantityAccepted" type="floating-point"></field>
       <field name="quantityRejected" type="floating-point"></field>	
       <prim-key field="receiptId" />
-    </entity>	
+    </entity>
     <entity entity-name="ShipmentReceiptRole" 
             package-name="org.ofbiz.commonapp.shipment.receipt"
             title="Shipment Receipt Role Entity">
@@ -173,7 +187,7 @@
   <!-- ========================================================= -->
   <!-- org.ofbiz.commonapp.shipment.route -->
   <!-- ========================================================= -->
-	
+
     <entity entity-name="ShipmentRouteSegment" 
             package-name="org.ofbiz.commonapp.shipment.route"
             title="Shipment Route Segment Entity">
@@ -198,7 +212,7 @@
   <!-- ========================================================= -->
   <!-- org.ofbiz.commonapp.shipment.shipment -->
   <!-- ========================================================= -->
-	
+
     <entity entity-name="CarrierShipmentMethod" 
             package-name="org.ofbiz.commonapp.shipment.shipment"
             title="Carrier Shipment Method Entity">
@@ -221,7 +235,7 @@
         <key-map field-name="partyId" />
         <key-map field-name="roleTypeId" />
       </relation>
-    </entity>	
+    </entity>
     <entity entity-name="PackagingContent" 
             package-name="org.ofbiz.commonapp.shipment.shipment"
             title="Packaging Content Entity">
@@ -232,7 +246,7 @@
       <prim-key field="shipmentPackageId" />	
       <prim-key field="shipmentId" />	
       <prim-key field="shipmentItemSeqId" />
-    </entity>	
+    </entity>
     <entity entity-name="Shipment" 
             package-name="org.ofbiz.commonapp.shipment.shipment"
             title="Shipment Entity">
@@ -261,7 +275,7 @@
       <relation type="many" rel-entity-name="OrderShipment">
         <key-map field-name="shipmentId" />
       </relation>
-    </entity>	
+    </entity>
     <entity entity-name="ShipmentAttribute" 
             package-name="org.ofbiz.commonapp.shipment.shipment"
             title="Shipment Attribute Entity">
@@ -276,7 +290,7 @@
       <relation type="many" rel-entity-name="ShipmentTypeAttr">
         <key-map field-name="attrName" />
       </relation>
-    </entity>	
+    </entity>
     <entity entity-name="ShipmentCostEstimate" 
             package-name="org.ofbiz.commonapp.shipment.shipment"
             title="Shipment Cost Estimate Entity">
@@ -331,7 +345,7 @@
       <relation type="one" title="Price" rel-entity-name="QuantityBreak">
         <key-map field-name="priceBreakId" rel-field-name="quantityBreakId" />
       </relation>
-    </entity>	
+    </entity>
     <entity entity-name="ShipmentItem" 
             package-name="org.ofbiz.commonapp.shipment.shipment"
             title="Shipment Item Entity">
@@ -346,7 +360,7 @@
         <key-map field-name="shipmentId" />
         <key-map field-name="shipmentItemSeqId" />
       </relation>
-    </entity>	
+    </entity>
     <entity entity-name="ShipmentItemBilling" 
             package-name="org.ofbiz.commonapp.shipment.shipment"
             title="Shipment Item Billing Entity">
@@ -358,7 +372,7 @@
       <prim-key field="shipmentItemSeqId" />	
       <prim-key field="invoiceId" />	
       <prim-key field="invoiceItemSeqId" />
-    </entity>	
+    </entity>
     <entity entity-name="ShipmentItemFeature" 
             package-name="org.ofbiz.commonapp.shipment.shipment"
             title="Shipment Item Feature Entity">
@@ -368,7 +382,7 @@
       <prim-key field="shipmentId" />	
       <prim-key field="shipmentItemSeqId" />	
       <prim-key field="productFeatureId" />
-    </entity>	
+    </entity>
     <entity entity-name="ShipmentMethodType" 
             package-name="org.ofbiz.commonapp.shipment.shipment"
             title="Shipment Method Type Entity">
@@ -378,14 +392,14 @@
       <relation type="many" rel-entity-name="OrderShipmentPreference">
         <key-map field-name="shipmentMethodTypeId" />
       </relation>
-    </entity>	
+    </entity>
     <entity entity-name="ShipmentPackage" 
             package-name="org.ofbiz.commonapp.shipment.shipment"
             title="Shipment Package Entity">
       <field name="shipmentPackageId" type="id-ne"></field>
       <field name="dateCreated" type="date-time"></field>	
       <prim-key field="shipmentPackageId" />
-    </entity>	
+    </entity>
     <entity entity-name="ShipmentStatus" 
             package-name="org.ofbiz.commonapp.shipment.shipment"
             title="Shipment Status Entity">
@@ -394,7 +408,7 @@
       <field name="statusDate" type="date-time"></field>	
       <prim-key field="statusId" />	
       <prim-key field="shipmentId" />
-    </entity>	
+    </entity>
     <entity entity-name="ShipmentType" 
             package-name="org.ofbiz.commonapp.shipment.shipment"
             title="Shipment Type Entity">
@@ -415,7 +429,7 @@
       <relation type="many" rel-entity-name="Shipment">
         <key-map field-name="shipmentTypeId" />
       </relation>
-    </entity>	
+    </entity>
     <entity entity-name="ShipmentTypeAttr" 
             package-name="org.ofbiz.commonapp.shipment.shipment"
             title="Shipment Type Attribute Entity">
@@ -432,7 +446,7 @@
       <relation type="many" rel-entity-name="Shipment">
         <key-map field-name="shipmentTypeId" />
       </relation>
-    </entity>	
+    </entity>
     <entity entity-name="ShippingDocument" 
             package-name="org.ofbiz.commonapp.shipment.shipment"
             title="Shipping Document Entity">
