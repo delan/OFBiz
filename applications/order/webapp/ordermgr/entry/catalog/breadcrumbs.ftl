@@ -23,7 +23,6 @@
  *@version    $Rev$
  *@since      3.1
 -->
-<#if requestAttributes.uiLabelMap?exists><#assign uiLabelMap = requestAttributes.uiLabelMap></#if>
 <#-- variable setup and worker calls -->
 <#assign topLevelList = requestAttributes.topLevelList?if_exists>
 <#assign curCategoryId = requestAttributes.curCategoryId?if_exists>
@@ -56,8 +55,8 @@
     <@categoryList parentCategory=category category=category/>
   </#list>
   <#-- Show the product, if there is one -->
-  <#if requestAttributes.productContentWrapper?exists>
-    -> ${requestAttributes.productContentWrapper.get("PRODUCT_NAME")?if_exists}
+  <#if productContentWrapper?exists>
+    -> ${productContentWrapper.get("PRODUCT_NAME")?if_exists}
   </#if>
 </div>
 <br>

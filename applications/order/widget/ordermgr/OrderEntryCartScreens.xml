@@ -29,7 +29,11 @@
     <!-- Included Screens -->
     <screen name="minicart">
         <section>
-            <widgets>
+          <actions>
+              <set field="hidetoplinks" value="Y"/>
+              <set field="hidebottomlinks" value="Y"/>
+          </actions>
+          <widgets>
                 <platform-specific><html><html-template location="component://order/webapp/ordermgr/entry/minicart.ftl"/></html></platform-specific>
             </widgets>
         </section>
@@ -63,6 +67,8 @@
         <section>
             <actions>
                 <set field="title" value="Show Cart"/>
+                <set field="productsummaryScreen" value="component://order/widget/ordermgr/OrderEntryCatalogScreens.xml#productsummary"/>
+                <set field="promoUseDetailsInlineScreen" value="component://order/widget/ordermgr/OrderEntryCartScreens.xml#promoUseDetailsInline"/>
                 <script location="component://order/webapp/ordermgr/WEB-INF/actions/entry/showcart.bsh"/>
                 <script location="component://order/webapp/ordermgr/WEB-INF/actions/entry/showpromotext.bsh"/>
             </actions>
@@ -81,6 +87,7 @@
                 <set field="leftbarScreenName" value="leftbar"/>
 
                 <set field="title" value="Show All Promotions"/>
+                <set field="promoUseDetailsInlineScreen" value="component://order/widget/ordermgr/OrderEntryCartScreens.xml#promoUseDetailsInline"/>
                 <script location="component://order/webapp/ordermgr/WEB-INF/actions/entry/showcart.bsh"/>
                 <script location="component://order/webapp/ordermgr/WEB-INF/actions/entry/showpromotext.bsh"/>
             </actions>
@@ -101,6 +108,7 @@
                 <set field="rightbarScreenName" value="rightbar"/>
 
                 <set field="title" value="Show Promotion Details"/>
+                <set field="productsummaryScreen" value="component://order/widget/ordermgr/OrderEntryCatalogScreens.xml#productsummary"/>
                 <script location="component://order/webapp/ordermgr/WEB-INF/actions/entry/cart/showPromotionDetails.bsh"/>
             </actions>
             <widgets>

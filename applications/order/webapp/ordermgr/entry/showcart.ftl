@@ -530,7 +530,7 @@ function gwAll(e) {
           <td>
             ${setRequestAttribute("optProduct", assocProduct)} 
             ${setRequestAttribute("listIndex", assocProduct_index)}         
-            ${screens.render("component://order/widget/ordermgr/OrderEntryCatalogScreens.xml#productsummary")}
+            ${screens.render(productsummaryScreen)}
           </td>
         </tr>
         <#if assocProduct_has_next>
@@ -549,5 +549,5 @@ function gwAll(e) {
 
 <#if (shoppingCartSize?default(0) > 0)>
   <br/>
-  ${screens.render("component://order/widget/ordermgr/OrderEntryCartScreens.xml#promoUseDetailsInline")}
+  ${screens.render(promoUseDetailsInlineScreen)}
 </#if>

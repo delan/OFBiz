@@ -233,9 +233,6 @@ ${virtualJavaScript?if_exists}
     <td align="right" valign="top">
       <div class="head2">${productContentWrapper.get("PRODUCT_NAME")?if_exists}</div>
       <div class="tabletext">${productContentWrapper.get("DESCRIPTION")?if_exists}</div>
-      <#if product.productId?has_content>
-        <div class="tabletext"><b>${product.productId}</b> <a href="/catalog/control/EditProduct?productId=${product.productId}<#if requestAttributes.externalLoginKey?exists>&externalLoginKey=${requestAttributes.externalLoginKey}</#if>" class="buttontext">[Edit&nbsp;Product]</a></div>
-      </#if>
       <#-- example of showing a certain type of feature with the product -->
       <#if sizeProductFeatureAndAppls?has_content>
         <div class="tabletext">
@@ -550,7 +547,7 @@ ${virtualJavaScript?if_exists}
       </#if>
       <tr>
         <td>
-          ${screens.render("component://order/widget/ordermgr/OrderEntryCatalogScreens.xml#productsummary")}
+          ${screens.render(productsummaryScreen)}
         </td>
       </tr>
       <#local listIndex = listIndex + 1>
@@ -587,7 +584,7 @@ ${setRequestAttribute("productValue", productValue)}
       ${setRequestAttribute("listIndex", commonFeatureResultId_index)}
       ${setRequestAttribute("formNamePrefix", "cfeatcssl")}
       <#-- ${setRequestAttribute("targetRequestName", targetRequestName)} -->
-      ${screens.render("component://order/widget/ordermgr/OrderEntryCatalogScreens.xml#productsummary")}
+      ${screens.render(productsummaryScreen)}
     </div>
     <#if commonFeatureResultId_has_next>
       <hr class="sepbar"/>
