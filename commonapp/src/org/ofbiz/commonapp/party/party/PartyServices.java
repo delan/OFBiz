@@ -45,10 +45,11 @@ import org.ofbiz.core.service.*;
  */
 public class PartyServices {
 
-    /** Deletes a Party
-     *@param ctx The DispatchContext that this service is operating in
-     *@param context Map containing the input parameters
-     *@return Map with the result of the service, the output parameters
+    /**
+     * Deletes a Party.
+     * @param ctx The DispatchContext that this service is operating in.
+     * @param context Map containing the input parameters.
+     * @return Map with the result of the service, the output parameters.
      */
     public static Map deleteParty(DispatchContext ctx, Map context) {
         /*
@@ -67,11 +68,12 @@ public class PartyServices {
         return ServiceUtil.returnError("Cannot delete party, operation not yet implemented");
     }
 
-    /** Creates a Person
-     * If no partyId is specified a numeric partyId is retrieved from the Party sequence
-     *@param ctx The DispatchContext that this service is operating in
-     *@param context Map containing the input parameters
-     *@return Map with the result of the service, the output parameters
+    /**
+     * Creates a Person.
+     * If no partyId is specified a numeric partyId is retrieved from the Party sequence.
+     * @param ctx The DispatchContext that this service is operating in.
+     * @param context Map containing the input parameters.
+     * @return Map with the result of the service, the output parameters.
      */
     public static Map createPerson(DispatchContext ctx, Map context) {
         Map result = new HashMap();
@@ -162,11 +164,12 @@ public class PartyServices {
         return result;
     }
 
-    /** Updates a Person
-     *<b>security check</b>: userLogin partyId must equal partyId, or must have PARTYMGR_UPDATE permission
-     *@param ctx The DispatchContext that this service is operating in
-     *@param context Map containing the input parameters
-     *@return Map with the result of the service, the output parameters
+    /**
+     * Updates a Person.
+     * <b>security check</b>: userLogin partyId must equal partyId, or must have PARTYMGR_UPDATE permission.
+     * @param ctx The DispatchContext that this service is operating in.
+     * @param context Map containing the input parameters.
+     * @return Map with the result of the service, the output parameters.
      */
     public static Map updatePerson(DispatchContext ctx, Map context) {
         Map result = new HashMap();
@@ -220,11 +223,12 @@ public class PartyServices {
         return result;
     }
 
-    /** Creates a PartyGroup
-     * If no partyId is specified a numeric partyId is retrieved from the Party sequence
-     *@param ctx The DispatchContext that this service is operating in
-     *@param context Map containing the input parameters
-     *@return Map with the result of the service, the output parameters
+    /**
+     * Creates a PartyGroup.
+     * If no partyId is specified a numeric partyId is retrieved from the Party sequence.
+     * @param ctx The DispatchContext that this service is operating in.
+     * @param context Map containing the input parameters.
+     * @return Map with the result of the service, the output parameters.
      */
     public static Map createPartyGroup(DispatchContext ctx, Map context) {
         Map result = new HashMap();
@@ -301,10 +305,11 @@ public class PartyServices {
         return result;
     }
 
-    /** Updates a PartyGroup
-     *@param ctx The DispatchContext that this service is operating in
-     *@param context Map containing the input parameters
-     *@return Map with the result of the service, the output parameters
+    /**
+     * Updates a PartyGroup.
+     * @param ctx The DispatchContext that this service is operating in.
+     * @param context Map containing the input parameters.
+     * @return Map with the result of the service, the output parameters.
      */
     public static Map updatePartyGroup(DispatchContext ctx, Map context) {
         Map result = new HashMap();
@@ -342,10 +347,11 @@ public class PartyServices {
         return result;
     }
 
-    /** Create an Affiliate entity
-     *@param ctx The DispatchContext that this service is operating in
-     *@param context Map containing the input parameters
-     *@return Map with the result of the service, the output parameters
+    /**
+     * Create an Affiliate entity.
+     * @param ctx The DispatchContext that this service is operating in.
+     * @param context Map containing the input parameters.
+     * @return Map with the result of the service, the output parameters.
      */
     public static Map createAffiliate(DispatchContext ctx, Map context) {
         Map result = new HashMap();
@@ -420,11 +426,12 @@ public class PartyServices {
         return result;
     }
 
-    /** Updates an Affiliate
-     *<b>security check</b>: userLogin partyId must equal partyId, or must have PARTYMGR_UPDATE permission
-     *@param ctx The DispatchContext that this service is operating in
-     *@param context Map containing the input parameters
-     *@return Map with the result of the service, the output parameters
+    /**
+     * Updates an Affiliate.
+     * <b>security check</b>: userLogin partyId must equal partyId, or must have PARTYMGR_UPDATE permission.
+     * @param ctx The DispatchContext that this service is operating in.
+     * @param context Map containing the input parameters.
+     * @return Map with the result of the service, the output parameters.
      */
     public static Map updateAffiliate(DispatchContext ctx, Map context) {
         Map result = new HashMap();
@@ -463,10 +470,11 @@ public class PartyServices {
         return ServiceUtil.returnSuccess();
     }
 
-    /** Create a party survey response record
-     *@param ctx The DispatchContext that this service is operating in
-     *@param context Map containing the input parameters
-     *@return Map with the result of the service, the output parameters
+    /**
+     * Create a party survey response record.
+     * @param ctx The DispatchContext that this service is operating in.
+     * @param context Map containing the input parameters.
+     * @return Map with the result of the service, the output parameters.
      */
     public static Map createSurveyResp(DispatchContext ctx, Map context) {
         GenericDelegator delegator = ctx.getDelegator();
@@ -511,6 +519,16 @@ public class PartyServices {
             }
         }
         return ServiceUtil.returnSuccess();
+    }
+
+    /**
+     * Add a PartyNote.
+     * @param ctx The DispatchContext that this service is operating in.
+     * @param context Map containing the input parameters.
+     * @return Map with the result of the service, the output parameters.
+     */
+    public Map createPartyNote(DispatchContext dctx, Map context) {
+        return new HashMap();
     }
 
 }

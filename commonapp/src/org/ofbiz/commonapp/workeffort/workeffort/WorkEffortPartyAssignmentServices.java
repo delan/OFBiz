@@ -1,14 +1,28 @@
 /*
  * $Id$
- * $Log$
- * Revision 1.2  2002/01/10 08:07:56  jonesde
- * Finished WorkEffortPartyAssignment minilang events
  *
- * Revision 1.1  2001/12/30 04:22:56  jonesde
- * Finished WorkEffortPartyAssignment services, cleaned up WorkEffort services
+ * Copyright (c) 2002 The Open For Business Project - www.ofbiz.org
  *
+ * Permission is hereby granted, free of charge, to any person obtaining a
+ * copy of this software and associated documentation files (the "Software"),
+ * to deal in the Software without restriction, including without limitation
+ * the rights to use, copy, modify, merge, publish, distribute, sublicense,
+ * and/or sell copies of the Software, and to permit persons to whom the
+ * Software is furnished to do so, subject to the following conditions:
+ *
+ * The above copyright notice and this permission notice shall be included
+ * in all copies or substantial portions of the Software.
+ *
+ * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS
+ * OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF
+ * MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT.
+ * IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY
+ * CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT
+ * OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR
+ * THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  *
  */
+
 package org.ofbiz.commonapp.workeffort.workeffort;
 
 import java.util.*;
@@ -20,36 +34,19 @@ import org.ofbiz.core.security.*;
 import org.ofbiz.core.service.*;
 
 /**
- * <p><b>Title:</b> WorkEffortPartyAssignmentServices
- * <p><b>Description:</b> Services to handle form input and other data changes
- * <p>Copyright (c) 2001 The Open For Business Project and repected authors.
- * <p>Permission is hereby granted, free of charge, to any person obtaining a
- *  copy of this software and associated documentation files (the "Software"),
- *  to deal in the Software without restriction, including without limitation
- *  the rights to use, copy, modify, merge, publish, distribute, sublicense,
- *  and/or sell copies of the Software, and to permit persons to whom the
- *  Software is furnished to do so, subject to the following conditions:
- *
- * <p>The above copyright notice and this permission notice shall be included
- *  in all copies or substantial portions of the Software.
- *
- * <p>THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS
- *  OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF
- *  MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT.
- *  IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY
- *  CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT
- *  OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR
- *  THE USE OR OTHER DEALINGS IN THE SOFTWARE.
+ * WorkEffortPartyAssignmentServices - Services to handle form input and other data changes.
  *
  * @author <a href="mailto:jonesde@ofbiz.org">David E. Jones</a>
  * @version 1.0
  * Created on December 29, 2001
  */
 public class WorkEffortPartyAssignmentServices {
-    /** Service that creates a WorkEffortPartyAssignment entity
-     *@param ctx The DispatchContext that this service is operating in
-     *@param context Map containing the input parameters
-     *@return Map with the result of the service, the output parameters
+
+    /**
+     * Service that creates a WorkEffortPartyAssignment entity
+     * @param ctx The DispatchContext that this service is operating in
+     * @param context Map containing the input parameters
+     * @return Map with the result of the service, the output parameters
      */
     public static Map createWorkEffortPartyAssignment(DispatchContext ctx, Map context) {
         Map result = new HashMap();
@@ -57,7 +54,7 @@ public class WorkEffortPartyAssignmentServices {
         Security security = ctx.getSecurity();
         //where is userLogin?? TODO
         GenericValue userLogin = (GenericValue) context.get("userLogin");
-        
+
         Timestamp nowStamp = UtilDateTime.nowTimestamp();
         Timestamp fromDate = nowStamp;
 
@@ -75,14 +72,14 @@ public class WorkEffortPartyAssignmentServices {
         newWorkEffortPartyAssignment.set("comments", context.get("comments"), false);
         newWorkEffortPartyAssignment.set("mustRsvp", context.get("mustRsvp"), false);
         newWorkEffortPartyAssignment.set("expectationEnumId", context.get("expectationEnumId"), false);
-        
+
         //if necessary create new status entry, and set statusDateTime date
         String statusId = (String) context.get("statusId");
         if (statusId != null) {
             //set the current status & timestamp
             newWorkEffortPartyAssignment.set("statusId", statusId);
             newWorkEffortPartyAssignment.set("statusDateTime", nowStamp);
-            updateWorkflowEngine(newWorkEffortPartyAssignment, delegator, ctx.getDispatcher());
+            updateWorkflowEngine(newWorkEffortPartyAssignment, userLogin, ctx.getDispatcher());
         }
 
         try {
@@ -101,10 +98,11 @@ public class WorkEffortPartyAssignmentServices {
         return result;
     }
 
-    /** Service that updates a WorkEffortPartyAssignment entity
-     *@param ctx The DispatchContext that this service is operating in
-     *@param context Map containing the input parameters
-     *@return Map with the result of the service, the output parameters
+    /**
+     * Service that updates a WorkEffortPartyAssignment entity
+     * @param ctx The DispatchContext that this service is operating in
+     * @param context Map containing the input parameters
+     * @return Map with the result of the service, the output parameters
      */
     public static Map updateWorkEffortPartyAssignment(DispatchContext ctx, Map context) {
         Map result = new HashMap();
@@ -112,13 +110,13 @@ public class WorkEffortPartyAssignmentServices {
         Security security = ctx.getSecurity();
         //where is userLogin?? TODO
         GenericValue userLogin = (GenericValue) context.get("userLogin");
-        
+
         //do a findByPrimary key to see if the entity exists, and other things later
         GenericValue workEffortPartyAssignment = null;
         try {
-            workEffortPartyAssignment = delegator.findByPrimaryKey("WorkEffortPartyAssignment", 
-                    UtilMisc.toMap("workEffortId", context.get("workEffortId"), "partyId", context.get("partyId"), 
-                    "roleTypeId", context.get("roleTypeId"), "fromDate", context.get("fromDate")));
+            workEffortPartyAssignment = delegator.findByPrimaryKey("WorkEffortPartyAssignment",
+                                                                   UtilMisc.toMap("workEffortId", context.get("workEffortId"), "partyId", context.get("partyId"),
+                                                                                  "roleTypeId", context.get("roleTypeId"), "fromDate", context.get("fromDate")));
         } catch (GenericEntityException e) {
             Debug.logWarning(e);
         }
@@ -154,14 +152,14 @@ public class WorkEffortPartyAssignmentServices {
         newWorkEffortPartyAssignment.set("comments", context.get("comments"), false);
         newWorkEffortPartyAssignment.set("mustRsvp", context.get("mustRsvp"), false);
         newWorkEffortPartyAssignment.set("expectationEnumId", context.get("expectationEnumId"), false);
-        
+
         //if necessary create new status entry, and set statusDateTime date
         String statusId = (String) context.get("statusId");
         if (statusId != null && !statusId.equals(workEffortPartyAssignment.getString("statusId"))) {
             //set the current status & timestamp
             newWorkEffortPartyAssignment.set("statusId", statusId);
             newWorkEffortPartyAssignment.set("statusDateTime", nowStamp);
-            updateWorkflowEngine(newWorkEffortPartyAssignment, delegator, ctx.getDispatcher());
+            updateWorkflowEngine(newWorkEffortPartyAssignment, userLogin, ctx.getDispatcher());
         }
 
         //if nothing has changed, return
@@ -180,15 +178,16 @@ public class WorkEffortPartyAssignmentServices {
             result.put(ModelService.ERROR_MESSAGE, "Could not update WorkEffortPartyAssignment (write error)");
             return result;
         }
-        
+
         result.put(ModelService.RESPONSE_MESSAGE, ModelService.RESPOND_SUCCESS);
         return result;
     }
 
-    /** Service that deletes a WorkEffortPartyAssignment entity
-     *@param ctx The DispatchContext that this service is operating in
-     *@param context Map containing the input parameters
-     *@return Map with the result of the service, the output parameters
+    /**
+     * Service that deletes a WorkEffortPartyAssignment entity
+     * @param ctx The DispatchContext that this service is operating in
+     * @param context Map containing the input parameters
+     * @return Map with the result of the service, the output parameters
      */
     public static Map deleteWorkEffortPartyAssignment(DispatchContext ctx, Map context) {
         Map result = new HashMap();
@@ -198,13 +197,13 @@ public class WorkEffortPartyAssignmentServices {
         //where is userLogin?? TODO
         GenericValue userLogin = (GenericValue) context.get("userLogin");
         GenericValue workEffort = null;
-        
+
         //do a findByPrimary key to see if the entity exists, and other things later
         GenericValue workEffortPartyAssignment = null;
         try {
-            workEffortPartyAssignment = delegator.findByPrimaryKey("WorkEffortPartyAssignment", 
-                    UtilMisc.toMap("workEffortId", context.get("workEffortId"), "partyId", context.get("partyId"), 
-                    "roleTypeId", context.get("roleTypeId"), "fromDate", context.get("fromDate")));
+            workEffortPartyAssignment = delegator.findByPrimaryKey("WorkEffortPartyAssignment",
+                                                                   UtilMisc.toMap("workEffortId", context.get("workEffortId"), "partyId", context.get("partyId"),
+                                                                                  "roleTypeId", context.get("roleTypeId"), "fromDate", context.get("fromDate")));
         } catch (GenericEntityException e) {
             Debug.logWarning(e);
         }
@@ -226,7 +225,7 @@ public class WorkEffortPartyAssignmentServices {
         }
 
         //TODO: if WorkEffortPartyAssignment deleted, let the Workflow engine know...
-        
+
         try {
             TransactionUtil.begin();
 
@@ -241,11 +240,11 @@ public class WorkEffortPartyAssignmentServices {
 
             try {
                 TransactionUtil.rollback();
-            } catch(GenericEntityException e2) {
+            } catch (GenericEntityException e2) {
                 errorMessageList.add("Could not rollback delete of WorkEffortPartyAssignment: " + e2.getMessage());
             }
         }
-        
+
         if (errorMessageList.size() > 0) {
             result.put(ModelService.RESPONSE_MESSAGE, ModelService.RESPOND_ERROR);
             result.put(ModelService.ERROR_MESSAGE_LIST, errorMessageList);
@@ -255,9 +254,10 @@ public class WorkEffortPartyAssignmentServices {
 
         return result;
     }
-    
-    public static void updateWorkflowEngine(GenericValue wepa, GenericDelegator delegator, LocalDispatcher dispatcher) {
+
+    public static void updateWorkflowEngine(GenericValue wepa, GenericValue userLogin, LocalDispatcher dispatcher) {
         //if the WorkEffort is an ACTIVITY, check for accept or complete new status...
+        GenericDelegator delegator = wepa.getDelegator();
         GenericValue workEffort = null;
         try {
             workEffort = delegator.findByPrimaryKey("WorkEffort", UtilMisc.toMap("workEffortId", wepa.get("workEffortId")));
@@ -268,11 +268,16 @@ public class WorkEffortPartyAssignmentServices {
             //TODO: restrict status transitions
 
             String statusId = (String) wepa.get("statusId");
-            Map context = UtilMisc.toMap("workEffortId", wepa.get("workEffortId"), "partyId", wepa.get("partyId"), "roleTypeId", wepa.get("roleTypeId"), "fromDate", wepa.get("fromDate"));
+            Map context = UtilMisc.toMap("workEffortId", wepa.get("workEffortId"), "partyId", wepa.get("partyId"),
+                                         "roleTypeId", wepa.get("roleTypeId"), "fromDate", wepa.get("fromDate"),
+                                         "userLogin", userLogin);
+
             if ("CAL_ACCEPTED".equals(statusId)) {
                 //accept the activity assignment
                 try {
                     Map results = dispatcher.runSync("wfAcceptAssignment", context);
+                    if (results != null && results.get(ModelService.ERROR_MESSAGE) != null)
+                        Debug.logWarning((String) results.get(ModelService.ERROR_MESSAGE));
                 } catch (GenericServiceException e) {
                     Debug.logWarning(e);
                 }
@@ -280,6 +285,8 @@ public class WorkEffortPartyAssignmentServices {
                 //complete the activity assignment
                 try {
                     Map results = dispatcher.runSync("wfCompleteAssignment", context);
+                    if (results != null && results.get(ModelService.ERROR_MESSAGE) != null)
+                        Debug.logWarning((String) results.get(ModelService.ERROR_MESSAGE));
                 } catch (GenericServiceException e) {
                     Debug.logWarning(e);
                 }
@@ -287,6 +294,8 @@ public class WorkEffortPartyAssignmentServices {
                 //decline the activity assignment
                 try {
                     Map results = dispatcher.runSync("wfDeclineAssignment", context);
+                    if (results != null && results.get(ModelService.ERROR_MESSAGE) != null)
+                        Debug.logWarning((String) results.get(ModelService.ERROR_MESSAGE));
                 } catch (GenericServiceException e) {
                     Debug.logWarning(e);
                 }

@@ -356,6 +356,8 @@ public class WorkEffortWorker {
         } catch (GenericServiceException e) {
             Debug.logError(e);
         }
+        if (result != null && result.get(ModelService.RESPONSE_MESSAGE).equals(ModelService.RESPOND_ERROR))
+            Debug.logError((String)result.get(ModelService.ERROR_MESSAGE));
         if (result != null && result.containsKey("activityContext")) {
             Map aC = (Map) result.get("activityContext");
             pageContext.setAttribute(attribute, aC);
