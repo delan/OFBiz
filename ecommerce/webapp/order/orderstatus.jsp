@@ -254,7 +254,7 @@
       </td>
     </tr></table>
   </td></tr></table>
-  <table border="1" width="100%" cellpadding="2" cellspacing="0">
+  <table border="0" width="100%" cellpadding="2" cellspacing="2">
     <tr bgcolor="<%=bColorA2%>">
       <td width="15%"><div class="tabletext"><b>ID</b></div></td>
       <td width="50%"><div class="tabletext"><b>Description</b></div></td>
