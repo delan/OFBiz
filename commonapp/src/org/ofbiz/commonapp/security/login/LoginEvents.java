@@ -155,7 +155,7 @@ public class LoginEvents {
         LocalDispatcher dispatcher = (LocalDispatcher) request.getAttribute("dispatcher");
         Map result = null;
         try {
-            result = dispatcher.runSync("loginUser", UtilMisc.toMap("username", username, "password", password));
+            result = dispatcher.runSync("userLogin", UtilMisc.toMap("login.username", username, "login.password", password));
         } catch (GenericServiceException e) {
             Debug.logError(e, "Error calling userLogin service");
             request.setAttribute(SiteDefs.ERROR_MESSAGE, "<b>The following error occured during login:</b><br>" + e.getMessage());
