@@ -1901,15 +1901,15 @@
         <key-map field-name="productStoreId"/>
       </relation>
       <relation type="one" fk-name="SHLIST_PSSM" rel-entity-name="ProductStoreShipmentMeth">
-        <key-map field-name="carrierRoleTypeId" rel-field-name="roleTypeId"/>
-        <key-map field-name="carrierPartyId" rel-field-name="partyId"/>
-        <key-map field-name="shipmentMethodTypeId"/>
         <key-map field-name="productStoreId"/>
+        <key-map field-name="shipmentMethodTypeId"/>
+        <key-map field-name="carrierPartyId" rel-field-name="partyId"/>
+        <key-map field-name="carrierRoleTypeId" rel-field-name="roleTypeId"/>
       </relation>
       <relation type="one" fk-name="SHLIST_CSSM" rel-entity-name="CarrierShipmentMethod">
-        <key-map field-name="carrierRoleTypeId" rel-field-name="roleTypeId"/>
-        <key-map field-name="carrierPartyId" rel-field-name="partyId"/>
         <key-map field-name="shipmentMethodTypeId"/>
+        <key-map field-name="carrierPartyId" rel-field-name="partyId"/>
+        <key-map field-name="carrierRoleTypeId" rel-field-name="roleTypeId"/>                
       </relation>
       <relation type="one" fk-name="SHLIST_CMECH" rel-entity-name="ContactMech">
         <key-map field-name="contactMechId"/>
