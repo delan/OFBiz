@@ -1,6 +1,9 @@
 /*
  * $Id$
  * $Log$
+ * Revision 1.21  2001/10/03 05:17:32  jonesde
+ * Added reorder products and associated products to sidebars
+ *
  * Revision 1.20  2001/09/27 07:10:16  jonesde
  * Moved ecommerce.properties to WEB-INF
  *
@@ -201,9 +204,8 @@ public class CheckOutEvents {
     GenericDelegator delegator = (GenericDelegator)request.getAttribute("delegator");
     StringBuffer errorMessage = new StringBuffer();
 
-    //remove these whenever creating an order so quick reorder cache will refresh/recalc
+    //remove this whenever creating an order so quick reorder cache will refresh/recalc
     request.getSession().removeAttribute("_QUICK_REORDER_PRODUCTS_");
-    request.getSession().removeAttribute("_QUICK_REORDER_PRODUCT_QUANTITIES_");
 
     if (cart != null && cart.size() > 0) {
       String orderId = delegator.getNextSeqId("OrderHeader").toString();

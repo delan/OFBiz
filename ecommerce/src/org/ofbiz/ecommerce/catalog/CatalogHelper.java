@@ -1,6 +1,9 @@
 /*
  * $Id$
  * $Log$
+ * Revision 1.28  2001/10/03 05:17:32  jonesde
+ * Added reorder products and associated products to sidebars
+ *
  * Revision 1.27  2001/10/03 00:12:08  jonesde
  * Added product complements to shopping cart; Formatting cleanup
  *
@@ -91,14 +94,7 @@
 
 package org.ofbiz.ecommerce.catalog;
 
-import java.util.ArrayList;
-import java.util.Collection;
-import java.util.HashMap;
-import java.util.Map;
-import java.util.Iterator;
-import java.util.List;
-import java.util.Vector;
-import java.util.TreeSet;
+import java.util.*;
 import javax.servlet.jsp.PageContext;
 import javax.servlet.http.HttpSession;
 import javax.servlet.ServletRequest;
@@ -520,12 +516,13 @@ public class CatalogHelper {
     try {
       Map products = (Map)pageContext.getSession().getAttribute("_QUICK_REORDER_PRODUCTS_");
       Map productQuantities = (Map)pageContext.getSession().getAttribute("_QUICK_REORDER_PRODUCT_QUANTITIES_");
+      Map productOccurances = (Map)pageContext.getSession().getAttribute("_QUICK_REORDER_PRODUCT_OCCURANCES_");
       
-      if(products == null || productQuantities == null) {
+      if(products == null || productQuantities == null || productOccurances == null) {
         products = new HashMap();
         productQuantities = new HashMap();
-        //keep track of how many times a product occurs in order to find averages
-        Map productOccurances = new HashMap();
+        //keep track of how many times a product occurs in order to find averages and rank by purchase amount
+        productOccurances = new HashMap();
 
         //get all order role entities for user by customer role type
         //final String[] USER_ORDER_ROLE_TYPES = {"END_USER_CUSTOMER", "SHIP_TO_CUSTOMER", "BILL_TO_CUSTOMER", "PLACING_CUSTOMER"};
@@ -571,11 +568,13 @@ public class CatalogHelper {
         
         pageContext.getSession().setAttribute("_QUICK_REORDER_PRODUCTS_", new HashMap(products));
         pageContext.getSession().setAttribute("_QUICK_REORDER_PRODUCT_QUANTITIES_", new HashMap(productQuantities));
+        pageContext.getSession().setAttribute("_QUICK_REORDER_PRODUCT_OCCURANCES_", new HashMap(productOccurances));
       }
       else {
         // make a copy since we are going to change them
         products = new HashMap(products);
         productQuantities = new HashMap(productQuantities);
+        productOccurances = new HashMap(productOccurances);
       }
 
       //remove all products that are already in the cart
@@ -586,14 +585,37 @@ public class CatalogHelper {
           ShoppingCartItem item = (ShoppingCartItem)cartiter.next();
           products.remove(item.getProductId());
           productQuantities.remove(item.getProductId());
+          productOccurances.remove(item.getProductId());
         }
       }
 
-      ArrayList reorderProds = new ArrayList(products.values());
+      List reorderProds = new ArrayList(products.values());
+      /*
       //randomly remove products while there are more than 5
       while(reorderProds.size() > 5) {
         int toRemove = (int)(Math.random()*(double)(reorderProds.size()));
         reorderProds.remove(toRemove);
+      }
+      */
+      
+      //sort descending by new metric...
+      double occurancesModifier = 1.0;
+      double quantityModifier = 1.0;
+      Map newMetric = new HashMap();
+      Iterator occurEntries = productOccurances.entrySet().iterator();
+      while(occurEntries.hasNext()) {
+        Map.Entry entry = (Map.Entry)occurEntries.next();
+        Object prodId = entry.getKey();
+        Integer quantity = (Integer)entry.getValue();
+        Integer occs = (Integer)productQuantities.get(prodId);
+        double nqdbl = quantity.doubleValue()*quantityModifier + occs.doubleValue()*occurancesModifier;
+        newMetric.put(prodId, new Double(nqdbl));
+      }      
+      reorderProds = productOrderByMap(reorderProds, newMetric, true);
+      
+      //remove extra products - only return 5
+      while(reorderProds.size() > 5) {
+        reorderProds.remove(reorderProds.size() - 1);
       }
       
       pageContext.setAttribute(productsAttrName, reorderProds);
@@ -601,6 +623,50 @@ public class CatalogHelper {
     }
     catch(GenericEntityException e) {
       Debug.logWarning(e);
+    }
+  }
+
+  public static List productOrderByMap(Collection values, Map orderByMap, boolean descending) {
+    if (values == null)  return null;
+    if (values.size() == 0) return UtilMisc.toList(values);
+    
+    List result = new ArrayList(values);
+    Collections.sort(result, new ProductByMapComparator(orderByMap, descending));
+    return result;
+  }
+  
+  static class ProductByMapComparator implements Comparator {
+    private Map orderByMap;
+    private boolean descending;
+    
+    ProductByMapComparator(Map orderByMap, boolean descending) {
+      this.orderByMap = orderByMap;
+      this.descending = descending;
+    }
+    
+    public int compare(java.lang.Object prod1, java.lang.Object prod2) {
+      int result = compareAsc((GenericEntity) prod1, (GenericEntity) prod2);
+      if(descending) {
+        result = -result;
+      }
+      return result;
+    }
+    
+    private int compareAsc(GenericEntity prod1, GenericEntity prod2) {
+      Object value = orderByMap.get(prod1.get("productId"));
+      Object value2 = orderByMap.get(prod2.get("productId"));
+      //null is defined as the smallest possible value
+      if(value == null) return value2 == null ? 0 : -1;
+      return ((Comparable)value).compareTo(value2);
+    }
+    
+    public boolean equals(java.lang.Object obj) {
+      if ((obj != null) && (obj instanceof ProductByMapComparator)) {
+        ProductByMapComparator that = (ProductByMapComparator) obj;
+        return this.orderByMap.equals(that.orderByMap) && this.descending == that.descending;
+      } else {
+        return false;
+      }
     }
   }
 }
