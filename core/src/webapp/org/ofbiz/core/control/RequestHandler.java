@@ -38,6 +38,7 @@ import org.ofbiz.core.util.*;
  *
  *@author     <a href="mailto:jaz@zsolv.com">Andy Zeneski</a> 
  *@author     <a href="mailto:jonesde@ofbiz.org">David E. Jones</a>
+ *@author Dustin Caldwell
  *@created    June 28, 2001
  *@version    1.0
  */
@@ -72,8 +73,7 @@ public class RequestHandler implements Serializable {
             requestUri = getRequestUri(chain);
             nextView = getNextPageUri(chain);
             Debug.logInfo("Chain in place: requestUri=" + requestUri + " nextView=" + nextView);
-        } 
-        else {
+        } else {
             // Invoke the pre-processor (but NOT in a chain)
             Collection preProcEvents = rm.getPreProcessor();
             if ( preProcEvents != null ) {
@@ -167,9 +167,11 @@ public class RequestHandler implements Serializable {
         }
         
         // check for a no dispatch return (meaning the return was processed by the event
-        if ( nextView != null && nextView.startsWith("none:") )
+        if ( nextView != null && nextView.startsWith("none:") ) {
+            nextView = nextView.substring(5);
             noDispatch = true;
-                
+        }
+        
         // get the next view. 
         if ( !chainRequest && !redirect && !noDispatch ) {
             String tempView = nextView;
@@ -210,11 +212,11 @@ public class RequestHandler implements Serializable {
                 nextPage = doRequest(request, response, previousRequest);
             }
         }
-                
+        
         // if noDispatch return null to the control servlet
         if ( noDispatch )
             return null;
-        
+                
         // if redirect - redirect to the url and return null to the control servlet
         if ( redirect ) {
             Debug.logInfo("Sending redirect: " + nextView);
