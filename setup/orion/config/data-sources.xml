@@ -22,26 +22,16 @@
 		url="jdbc:HypersonicSQL:./database/defaultdb"
 		inactivity-timeout="30"
 	/>
-
 	<data-source
 		class="com.evermind.sql.DriverManagerDataSource"
-		name="RawPostgresDataSource"
-		location="jdbc/raw/PostgresDataSource"
-		xa-location="jdbc/xa/raw/PostgresDataSource"
-		connection-driver="org.postgresql.Driver"
+		name="localsapdb"
+		location="comp/env/jdbc/localsapdb"
+		xa-location="comp/env/jdbc/xa/localsapdb"
+		ejb-location="comp/env/jdbc/ejb/localsapdb"
+		connection-driver="com.sap.dbtech.jdbc.DriverSapDB"
 		username="ofbiz"
 		password="ofbiz"
-		url="jdbc:postgresql://127.0.0.1/ofbiz"
+		url="jdbc:sapdb://localhost/OFBIZ"
 		inactivity-timeout="30"
 	/>
-	<data-source
-		class="com.evermind.sql.OrionCMTDataSource"
-        source-location="jdbc/raw/PostgresDataSource"
-        xa-source-location="jdbc/xa/raw/PostgresDataSource"
-		name="PostgresDataSource"
-		location="jdbc/PostgresDataSource"
-		xa-location="jdbc/xa/PostgresDataSource"
-		inactivity-timeout="30"
-	/>
-
 </data-sources>
