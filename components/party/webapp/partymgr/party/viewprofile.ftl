@@ -28,6 +28,7 @@
  */
 -->
 <#assign uiLabelMap = requestAttributes.uiLabelMap>
+<#assign delegator = requestAttributes.delegator>
 <#if security.hasEntityPermission("PARTYMGR", "_VIEW", session)>
 
 <script language='JavaScript'>
@@ -718,7 +719,7 @@
               <#list notes as noteRef>
                 <tr>
                   <td align="left" valign="top" width="35%">
-                    <div class="tabletext">&nbsp;<b>${uiLabelMap.CommonBy}: </b>${noteRef.firstName}&nbsp;${noteRef.lastName}</div>
+                    <div class="tabletext">&nbsp;<b>${uiLabelMap.CommonBy}: </b>${Static["org.ofbiz.party.party.PartyHelper"].getPartyName(delegator, noteRef.noteParty, true)}</div>
                     <div class="tabletext">&nbsp;<b>${uiLabelMap.CommonAt}: </b>${noteRef.noteDateTime.toString()}</div>
                   </td>
                   <td align="left" valign="top" width="65%">

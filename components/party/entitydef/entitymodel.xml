@@ -26,7 +26,7 @@
  *
  * @author     David E. Jones (jonesde@ofbiz.org)
  * @author     Andy Zeneski (jaz@ofbiz.org)
- * @version    $Revision: 1.20 $
+ * @version    $Revision: 1.21 $
  */
 -->
 
@@ -1267,7 +1267,6 @@
     <view-entity entity-name="PartyNoteView"
             package-name="org.ofbiz.party.party"
             title="Party Note View Entity">
-      <member-entity entity-alias="PR" entity-name="Person"/>
       <member-entity entity-alias="PN" entity-name="PartyNote"/>
       <member-entity entity-alias="ND" entity-name="NoteData"/>
       <alias entity-alias="PN" name="targetPartyId" field="partyId"/>
@@ -1275,15 +1274,10 @@
       <alias entity-alias="ND" name="noteName"/>
       <alias entity-alias="ND" name="noteInfo"/>
       <alias entity-alias="ND" name="noteDateTime"/>
-      <alias entity-alias="PR" name="partyId"/>
-      <alias entity-alias="PR" name="firstName"/>
-      <alias entity-alias="PR" name="lastName"/>
+      <alias entity-alias="ND" name="noteParty"/>
       <view-link entity-alias="PN" rel-entity-alias="ND">
         <key-map field-name="noteId"/>
-      </view-link>
-      <view-link entity-alias="ND" rel-entity-alias="PR">
-        <key-map field-name="noteParty" rel-field-name="partyId"/>
-      </view-link>
+      </view-link>     
     </view-entity>
     <entity entity-name="PartyProfileDefault"
             package-name="org.ofbiz.party.party"
