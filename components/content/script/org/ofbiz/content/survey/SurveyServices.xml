@@ -348,6 +348,7 @@
             <check-errors/>
         </if-empty>
         <field-to-env field-name="answers" map-name="parameters" env-name="answers"/>
+        <log level="always" message="Answers Map - ${answers}"/>
 
         <!-- make sure all required fields were responded to -->
         <iterate entry-name="question" list-name="questions">
@@ -506,7 +507,23 @@
                     <field-to-field field-name="${question.surveyQuestionId}" map-name="answers" to-field-name="surveyOptionSeqId" to-map-name="responseAnswer"/>
                 </if-compare>
                 <if-compare field-name="surveyQuestionTypeId" map-name="question" operator="equals" value="CONTENT">
-                    <field-to-field field-name="${question.surveyQuestionId}" map-name="answers" to-field-name="contentId" to-map-name="responseAnswer"/>
+                    <log level="always" message="Found CONTENT type question"/>
+                    <if-instance-of field-name="${question.surveyQuestionId}" map-name="answers" class="org.ofbiz.entity.util.ByteWrapper">
+                        <log level="always" message="CONTENT is an instance of ByteWrapper"/>
+                        <field-to-field field-name="_${question.surveyQuestionId}_contentType" map-name="answers" to-field-name="_uploadedFile_contentType" to-map-name="partyContent"/>
+                        <field-to-field field-name="_${question.surveyQuestionId}_fileName" map-name="answers" to-field-name="_uploadedFile_fileName" to-map-name="partyContent"/>
+                        <field-to-field field-name="${question.surveyQuestionId}" map-name="answers" to-field-name="uploadedFile" to-map-name="partyContent"/>
+                        <string-to-field string="DOCUMENT" field-name="contentTypeId" map-name="partyContent"/>
+                        <string-to-field string="PERSONAL" field-name="dataCategoryId" map-name="partyContent"/>
+                        <string-to-field string="CTNT_PUBLISHED" field-name="statusId" map-name="partyContent"/>
+                        <call-service service-name="createPartyContent" in-map-name="partyContent">
+                            <result-to-field result-name="contentId" field-name="contentId" map-name="responseAnswer"/>
+                        </call-service>
+                    <else>
+                        <log level="always" message="CONTENT is NOT an instance of ByteWrapper"/>
+                        <field-to-field field-name="${question.surveyQuestionId}" map-name="answers" to-field-name="contentId" to-map-name="responseAnswer"/>
+                    </else>
+                    </if-instance-of>
                 </if-compare>
 
                 <env-to-field env-name="nowTimestamp" field-name="answeredDate" map-name="responseAnswer"/>
@@ -518,6 +535,10 @@
         <field-to-field field-name="surveyResponseId" map-name="surveyResponse" to-map-name="respServiceCtx"/>
         <if-not-empty field-name="responseService" map-name="survey">
             <call-service-asynch service-name="${survey.responseService}" in-map-name="respServiceCtx" include-user-login="true"/>  
-        </if-not-empty> 
+        </if-not-empty>
+
+        <field-to-result field-name="surveyResponseId" map-name="surveyResponse"/>
+        <field-to-result field-name="productStoreSurveyId" map-name="parameters"/>
+        <field-to-result field-name="surveyId" map-name="parameters"/>
     </simple-method>
 </simple-methods>

@@ -101,7 +101,11 @@
             <div class="tabletext">${answer.numericResponse?number?default(0)?string("#")}&nbsp;[Tally: ${results._tally?default(0)?string("#")} / Average: ${results._average?default(0)?string("#")}]</div>
           <#elseif question.surveyQuestionTypeId == "PASSWORD">
             <div class="tabletext">[Not Shown]</div>
-
+          <#elseif question.surveyQuestionTypeId == "CONTENT">
+            <#if answer.contentId?has_content>
+              <#assign content = answer.getRelatedOne("Content")>
+              <a href="/content/control/img?imgId=${content.dataResourceId}" class="buttontext">${answer.contentId}</a>&nbsp;-&nbsp;${content.contentName?if_exists}                         
+            </#if>
           <#elseif question.surveyQuestionTypeId == "OPTION">
             <#assign options = question.getRelated("SurveyQuestionOption", sequenceSort)?if_exists>
             <#assign selectedOption = (answer.surveyOptionSeqId)?default("_NA_")>

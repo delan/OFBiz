@@ -110,6 +110,11 @@
                       <div class="tabletext">${answer.numericResponse?default(0)?string("#")}&nbsp;[Tally: ${results._tally?default(0)?string("#")} / Average: ${results._average?default(0)?string("#")}]</div>
                     <#elseif question.surveyQuestionTypeId == "PASSWORD">
                       <div class="tabletext">[Not Shown]</div>
+                    <#elseif question.surveyQuestionTypeId == "CONTENT">
+                       <#if answer.contentId?has_content>
+                         <#assign content = answer.getRelatedOne("Content")>
+                         <a href="<@ofbizUrl>/img?imgId=${content.dataResourceId}</@ofbizUrl>" class="buttontext">${answer.contentId}</a>&nbsp;-&nbsp;${content.contentName?if_exists}                         
+                       </#if>
                     </#if>
                   </#list>
                 </#if>

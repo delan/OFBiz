@@ -26,7 +26,7 @@
  *
  * @author     David E. Jones (jonesde@ofbiz.org)
  * @author     Andy Zeneski (jaz@ofbiz.org)
- * @version    $Rev:$
+ * @version    $Rev$
  */
 -->
 
@@ -1212,6 +1212,7 @@
       <alias entity-alias="RA" name="floatResponse"/>
       <alias entity-alias="RA" name="numericResponse"/>
       <alias entity-alias="RA" name="textResponse"/>
+      <alias entity-alias="RA" name="contentId"/>
       <alias entity-alias="RA" name="surveyOptionSeqId"/>
       <alias entity-alias="RA" name="answeredDate"/>
       <view-link entity-alias="RA" rel-entity-alias="SR">
@@ -1226,6 +1227,9 @@
       <relation type="one-nofk" rel-entity-name="SurveyQuestionOption">
         <key-map field-name="surveyQuestionId"/>
         <key-map field-name="surveyOptionSeqId"/>
+      </relation>
+      <relation type="one-nofk" rel-entity-name="Content">
+        <key-map field-name="contentId"/>
       </relation>
     </view-entity>
     <entity entity-name="SurveyResponseAnswer"

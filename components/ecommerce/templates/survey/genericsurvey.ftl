@@ -50,7 +50,7 @@
   <#list surveyQuestions as question>
     <#-- special formatting for select boxes -->
     <#assign align = "left">
-    <#if (question.surveyQuestionTypeId == "BOOLEAN" || question.surveyQuestionTypeId == "OPTION")>
+    <#if (question.surveyQuestionTypeId == "BOOLEAN" || question.surveyQuestionTypeId == "CONTENT" || question.surveyQuestionTypeId == "OPTION")>
       <#assign align = "right">
     </#if>
     <#-- get an answer from the answerMap -->
@@ -108,7 +108,11 @@
           <#elseif question.surveyQuestionTypeId == "PASSWORD">
             <input type="password" size="30" class="textBox" name="answers_${question.surveyQuestionId}" value="${(answer.textResponse)?if_exists}">
           <#elseif question.surveyQuestionTypeId == "CONTENT">
-            <input type="file" size="50" name="answers_${question.surveyQuestionId}">
+             <#if (answer.contentId)?has_content>
+              <#assign content = answer.getRelatedOne("Content")>
+              <a href="/content/control/img?imgId=${content.dataResourceId}" class="buttontext">${answer.contentId}</a>&nbsp;-&nbsp;${content.contentName?if_exists}&nbsp;&nbsp;&nbsp;
+            </#if>
+            <input type="file" size="15" name="answers_${question.surveyQuestionId}">
           <#elseif question.surveyQuestionTypeId == "OPTION">
             <#assign options = question.getRelated("SurveyQuestionOption", sequenceSort)?if_exists>
             <#assign selectedOption = (answer.surveyOptionSeqId)?default("_NA_")>

@@ -259,24 +259,13 @@
             </if-empty>
             <create-value value-name="contentRole"/>
         </if-not-empty>
-
-        <!-- if no user login lets create a dummy to store the file -->
-        <if-empty field-name="userLogin">
-            <string-to-field string="anonymous" field-name="userLoginId" map-name="ulLookup"/>
-            <find-by-primary-key map-name="ulLookup" value-name="anUserLogin" entity-name="UserLogin"/>
-            <field-to-field field-name="partyId" map-name="parameters" to-map-name="anUserLogin"/>
-            <if-empty field-name="partyId" map-name="userLogin">
-                <string-to-field string="_NA_" field-name="partyId" map-name="anUserLogin"/>
-            </if-empty>
-            <set-current-user-login value-name="anUserLogin"/>
-        </if-empty>
-
+        
         <!-- store the file -->
         <field-to-field field-name="uploadedFile" map-name="parameters" to-field-name="binData" to-map-name="fileCtx"/>
         <field-to-field field-name="dataResource" to-map-name="fileCtx"/>
         <env-to-field env-name="userLogin" map-name="fileCtx"/>
-        <call-service service-name="createFile" in-map-name="fileCtx" include-user-login="true"/>
+        <call-service service-name="createAnonFile" in-map-name="fileCtx" include-user-login="true"/>
 
-        <field-to-result field-name="contentId" map-name="content"/> 
+        <field-to-result field-name="contentId" map-name="content"/>
     </simple-method>
 </simple-methods>

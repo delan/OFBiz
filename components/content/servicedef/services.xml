@@ -868,6 +868,11 @@
         <attribute mode="IN" name="textData" optional="true" type="String"/>
         <attribute mode="IN" name="rootDir" optional="true" type="String"/>
     </service>
+    <service name="createAnonFile" engine="java"
+        location="org.ofbiz.content.data.DataServices" invoke="createFileNoPerm" auth="false">
+        <description>Create a File No Permission Required</description>
+        <implements service="createFile"/>
+    </service>
     <service name="updateFile" engine="java"
         location="org.ofbiz.content.data.DataServices" invoke="updateFile" auth="true">
         <description>Update a File</description>
@@ -1071,7 +1076,8 @@
         <auto-attributes mode="IN" entity-name="SurveyResponse" include="nonpk" optional="true"/>
         <attribute name="answers" type="Map" mode="IN" optional="false" string-map-prefix="answers_"/>
         <attribute name="surveyResponseId" type="String" mode="INOUT" optional="true"/>
-        <override name="surveyId" optional="false"/>
+        <attribute name="productStoreSurveyId" type="String" mode="INOUT" optional="true"/>
+        <override name="surveyId" mode="INOUT" optional="false"/>
     </service>
 
     <service name="surveyResponseProcessInterface" engine="interface" location="" invoke="">
