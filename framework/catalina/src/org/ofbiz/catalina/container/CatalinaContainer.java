@@ -45,6 +45,7 @@ import org.apache.catalina.Host;
 import org.apache.catalina.LifecycleException;
 import org.apache.catalina.Manager;
 import org.apache.catalina.ServerFactory;
+import org.apache.catalina.util.ServerInfo;
 import org.apache.catalina.cluster.mcast.McastService;
 import org.apache.catalina.cluster.tcp.ReplicationListener;
 import org.apache.catalina.cluster.tcp.ReplicationTransmitter;
@@ -55,7 +56,6 @@ import org.apache.catalina.core.StandardEngine;
 import org.apache.catalina.core.StandardServer;
 import org.apache.catalina.core.StandardWrapper;
 import org.apache.catalina.realm.MemoryRealm;
-import org.apache.catalina.session.PersistentManager;
 import org.apache.catalina.session.StandardManager;
 import org.apache.catalina.startup.Embedded;
 import org.apache.catalina.valves.AccessLogValve;
@@ -143,7 +143,7 @@ public class CatalinaContainer implements Container {
     protected Map clusterConfig = new HashMap();
     protected Map engines = new HashMap();
     protected Map hosts = new HashMap();
-    protected boolean usePersistentManager = false;
+
     protected boolean contextReloadable = false;
     protected boolean crossContext = false;
     protected boolean distribute = false;
@@ -169,7 +169,6 @@ public class CatalinaContainer implements Container {
 
         // grab some global context settings
         this.delegator = GenericDelegator.getGenericDelegator(ContainerConfig.getPropertyValue(cc, "delegator-name", "default"));
-        this.usePersistentManager = ContainerConfig.getPropertyValue(cc, "apps-db-persistent-mgr", false);
         this.contextReloadable = ContainerConfig.getPropertyValue(cc, "apps-context-reloadable", false);
         this.crossContext = ContainerConfig.getPropertyValue(cc, "apps-cross-context", true);
         this.distribute = ContainerConfig.getPropertyValue(cc, "apps-distributable", true);
@@ -184,9 +183,7 @@ public class CatalinaContainer implements Container {
 
         // create the instance of Embedded
         embedded = new Embedded();
-        //embedded.setDebug(debug);
         embedded.setUseNaming(useNaming);
-        //embedded.setLogger(new DebugLogger());
 
         // create the engines
         List engineProps = cc.getPropertiesWithValue("engine");
@@ -228,6 +225,7 @@ public class CatalinaContainer implements Container {
             throw new ContainerException(e);
         }
 
+        Debug.logInfo("Started " + ServerInfo.getServerInfo(), module);
         return true;
     }
 
@@ -462,13 +460,7 @@ public class CatalinaContainer implements Container {
         }
 
         // configure persistent sessions
-        Manager sessionMgr = null;
-        if (usePersistentManager) {
-            sessionMgr = new PersistentManager();
-            ((PersistentManager)sessionMgr).setStore(new OfbizStore(delegator));
-        } else {
-            sessionMgr = new StandardManager();
-        }
+        Manager sessionMgr = new StandardManager();
 
         // create the web application context
         StandardContext context = (StandardContext) embedded.createContext(mount, location);
@@ -502,7 +494,7 @@ public class CatalinaContainer implements Container {
         jspServlet.setServletName("jsp");
         jspServlet.setLoadOnStartup(1);
         jspServlet.addInitParameter("fork", "false");
-        jspServlet.addInitParameter("xpoweredBy", "false");
+        jspServlet.addInitParameter("xpoweredBy", "true");
         jspServlet.addMapping("*.jsp");
         jspServlet.addMapping("*.jspx");
         context.addChild(jspServlet);

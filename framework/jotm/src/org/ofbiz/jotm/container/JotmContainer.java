@@ -30,6 +30,7 @@ import org.ofbiz.base.container.Container;
 import org.ofbiz.base.container.ContainerException;
 import org.ofbiz.base.container.ContainerConfig;
 import org.ofbiz.base.util.UtilProperties;
+import org.ofbiz.base.util.Debug;
 
 import org.objectweb.carol.util.configuration.RMIConfigurationException;
 import org.objectweb.transaction.jta.TMService;
@@ -111,6 +112,7 @@ public class JotmContainer implements Container {
         } catch (NamingException e) {
             throw new ContainerException("Unable to lookup bound objects", e);
         }
+        Debug.logInfo("JOTM is bound to JNDI - java:comp/UserTransaction", module);
     }
 
     public void stop() throws ContainerException {        
