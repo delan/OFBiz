@@ -103,12 +103,6 @@ public class WorkflowServices {
         Security security = ctx.getSecurity();
         String workEffortId = (String) context.get("workEffortId");
 
-        GenericValue userLogin = (GenericValue) context.get("userLogin");
-        if (!hasPermission(security, workEffortId, userLogin)) {
-            result.put(ModelService.RESPONSE_MESSAGE, ModelService.RESPOND_ERROR);
-            result.put(ModelService.ERROR_MESSAGE, "You do not have permission to access this activity");
-            return result;
-        }
         try {
             WorkflowClient client = WfFactory.getClient(ctx);
             result.put("activityState", client.getState(workEffortId));
@@ -128,12 +122,6 @@ public class WorkflowServices {
         Security security = ctx.getSecurity();
         String workEffortId = (String) context.get("workEffortId");
 
-        GenericValue userLogin = (GenericValue) context.get("userLogin");
-        if (!hasPermission(security, workEffortId, userLogin)) {
-            result.put(ModelService.RESPONSE_MESSAGE, ModelService.RESPOND_ERROR);
-            result.put(ModelService.ERROR_MESSAGE, "You do not have permission to access this activity");
-            return result;
-        }
         try {
             WorkflowClient client = WfFactory.getClient(ctx);
             result.put("activityContext", client.getContext(workEffortId));
