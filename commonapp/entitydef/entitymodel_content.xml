@@ -1112,7 +1112,7 @@
       <field name="webSiteId" type="id-ne"></field>
       <field name="paymentMethodTypeId" type="id-ne"></field>
       <field name="paymentService" type="name"></field>
-      <field name="paymentConfiguration" type="url"></field>
+      <field name="paymentConfiguration" type="value"></field>
       <prim-key field="webSiteId"/>
       <prim-key field="paymentMethodTypeId"/>
       <relation type="one" fk-name="WSP_WEB_SITE"  rel-entity-name="WebSite">

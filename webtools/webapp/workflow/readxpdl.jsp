@@ -47,12 +47,16 @@
     List toBeStored = null;
     try { if (xpdlUrl != null) toBeStored = XpdlReader.readXpdl(xpdlUrl, delegator); }
     catch (Exception e) { messages.add(e.getMessage()); messages.add(e.toString()); Debug.logWarning(e); }
-
+		
     if (toBeStored != null && xpdlImport) {
+    	boolean beganTransaction = false;
         try {
+        	beganTransaction = TransactionUtil.begin();
             delegator.storeAll(toBeStored);
+            TransactionUtil.commit(beganTransaction);
             messages.add("Wrote/Updated " + toBeStored.size() + " toBeStored objects to the data source.");
         } catch (GenericEntityException e) {
+        	TransactionUtil.rollback(beganTransaction);
             messages.add(e.getMessage()); messages.add(e.toString()); Debug.logWarning(e);
         }
     }

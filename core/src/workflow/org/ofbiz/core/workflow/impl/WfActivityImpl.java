@@ -94,6 +94,12 @@ public class WfActivityImpl extends WfExecutionObjectImpl implements WfActivity 
         if (valueObject.get("performerParticipantId") != null) {
             try {
                 performer = valueObject.getRelatedOne("PerformerWorkflowParticipant");
+                if (performer == null) {
+                    Map performerFields = UtilMisc.toMap("packageId", valueObject.getString("packageId"), 
+                            "packageVersion", valueObject.getString("packageVersion"), "processId", "_NA_", 
+                            "processVersion", "_NA_", "participantId", valueObject.getString("performerParticipantId"));                
+                    performer = delegator.findByPrimaryKey("WorkflowParticipant", performerFields);
+                }
             } catch (GenericEntityException e) {
                 throw new WfException(e.getMessage(), e);
             }

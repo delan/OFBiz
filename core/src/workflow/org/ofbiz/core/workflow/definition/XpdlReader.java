@@ -57,10 +57,25 @@ public class XpdlReader {
      * datasource through the given delegator */
     public static void importXpdl(URL location, GenericDelegator delegator) throws DefinitionParserException {
         List values = readXpdl(location, delegator);
-
+        
+        // attempt to start a transaction
+        boolean beganTransaction = false;
+        try {
+            beganTransaction = TransactionUtil.begin();
+        } catch (GenericTransactionException gte) {
+            Debug.logError(gte, "Unable to begin transaction", module);
+        }
+        
         try {
             delegator.storeAll(values);
+            TransactionUtil.commit(beganTransaction);
         } catch (GenericEntityException e) {
+            try {
+                // only rollback the transaction if we started one...
+                TransactionUtil.rollback(beganTransaction);
+            } catch (GenericEntityException e2) {                
+                Debug.logError(e2, "Problems rolling back transaction", module);
+            }                                  
             throw new DefinitionParserException("Could not store values", e);
         }
     }
@@ -160,7 +175,7 @@ public class XpdlReader {
             Element participantsElement = UtilXml.firstChildElement(packageElement, "Participants");
             List participants = UtilXml.childElementList(participantsElement, "Participant");
 
-            readParticipants(participants, packageValue);
+            readParticipants(participants, packageId, packageVersion, "_NA_", "_NA_", packageValue);
 
             // ExternalPackages?
             Element externalPackagesElement = UtilXml.firstChildElement(packageElement, "ExternalPackages");
@@ -476,7 +491,7 @@ public class XpdlReader {
         Element participantsElement = UtilXml.firstChildElement(workflowProcessElement, "Participants");
         List participants = UtilXml.childElementList(participantsElement, "Participant");
 
-        readParticipants(participants, workflowProcessValue);
+        readParticipants(participants, packageId, packageVersion, processId, processVersion, workflowProcessValue);
 
         // Applications?
         Element applicationsElement = UtilXml.firstChildElement(workflowProcessElement, "Applications");
@@ -959,8 +974,7 @@ public class XpdlReader {
         }
     }
 
-    protected void readTransitionRefs(List transitionRefs, String packageId, String packageVersion, String processId,
-        String processVersion, String activityId) throws DefinitionParserException {
+    protected void readTransitionRefs(List transitionRefs, String packageId, String packageVersion, String processId, String processVersion, String activityId) throws DefinitionParserException {        
         if (transitionRefs == null || transitionRefs.size() == 0)
             return;
         Iterator transitionRefsIter = transitionRefs.iterator();
@@ -984,7 +998,43 @@ public class XpdlReader {
     // Others
     // ----------------------------------------------------------------
 
-    protected void readParticipants(List participants, GenericValue valueObject) throws DefinitionParserException {
+    protected void readParticipants(List participants, String packageId, String packageVersion, String processId, String processVersion, GenericValue valueObject) throws DefinitionParserException {
+        if (participants == null || participants.size() == 0)
+            return;
+        Iterator participantsIter = participants.iterator();
+        
+        while (participantsIter.hasNext()) {
+            Element participantElement = (Element) participantsIter.next();
+            String participantId = participantElement.getAttribute("Id");
+            GenericValue participantValue = delegator.makeValue("WorkflowParticipant", null);
+            
+            values.add(participantValue);
+            
+            participantValue.set("packageId", packageId);
+            participantValue.set("packageVersion", packageVersion);
+            participantValue.set("processId", processId);
+            participantValue.set("processVersion", processVersion);
+            participantValue.set("participantId", participantId);
+            participantValue.set("participantName", participantElement.getAttribute("Name"));
+            
+            // ParticipantType
+            Element participantTypeElement = UtilXml.firstChildElement(participantElement, "ParticipantType");
+
+            if (participantTypeElement != null) {
+                participantValue.set("participantTypeId", participantTypeElement.getAttribute("Type"));
+            }
+
+            // Description?
+            participantValue.set("description", UtilXml.childElementValue(participantElement, "Description"));
+
+            // ExtendedAttributes
+            participantValue.set("partyId", getExtendedAttributeValue(participantElement, "partyId", null), false);
+            participantValue.set("roleTypeId", getExtendedAttributeValue(participantElement, "roleTypeId", null), false);            
+        }
+    }
+    
+    /*
+    protected void readParticipants(List participants, String packageId, String packageVersion, String processId, String processVersion, GenericValue valueObject) throws DefinitionParserException {
         if (participants == null || participants.size() == 0)
             return;
 
@@ -1015,6 +1065,10 @@ public class XpdlReader {
                 GenericValue participantValue = delegator.makeValue("WorkflowParticipant", null);
 
                 values.add(participantValue);
+                participantValue.set("packageId", packageId);
+                participantValue.set("packageVersion", packageVersion);
+                participantValue.set("processId", processId);
+                participantValue.set("processVersion", processVersion);
                 participantValue.set("participantId", participantId);
                 participantValue.set("participantName", participantElement.getAttribute("Name"));
 
@@ -1043,6 +1097,7 @@ public class XpdlReader {
             index++;
         }
     }
+    */
 
     protected void readApplications(List applications, String packageId, String packageVersion, String processId,
             String processVersion) throws DefinitionParserException {

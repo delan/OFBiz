@@ -102,7 +102,11 @@
       <relation type="one" fk-name="WFLW_ACT_FM_ENUM" title="FinishMode" rel-entity-name="Enumeration">
         <key-map field-name="finishModeEnumId" rel-field-name="enumId"/>
       </relation>
-      <relation type="one" fk-name="WFLW_ACT_PF_WFPT" title="Performer" rel-entity-name="WorkflowParticipant">
+      <relation type="one-nofk" title="Performer" rel-entity-name="WorkflowParticipant">
+      	<key-map field-name="packageId"/>
+      	<key-map field-name="packageVersion"/>
+      	<key-map field-name="processId"/>
+      	<key-map field-name="processVersion"/>
         <key-map field-name="performerParticipantId" rel-field-name="participantId"/>
       </relation>
       <relation type="many" title="From" rel-entity-name="WorkflowTransition">
@@ -118,9 +122,6 @@
         <key-map field-name="processId"/>
         <key-map field-name="processVersion"/>
         <key-map field-name="activityId" rel-field-name="toActivityId"/>
-      </relation>
-      <relation type="many" title="Performer" rel-entity-name="WorkflowParticipantsView">
-        <key-map field-name="performerParticipantId" rel-field-name="participantId"/>
       </relation>
       <relation type="one" fk-name="WFLW_ACT_WFLW_PRC" rel-entity-name="WorkflowProcess">
         <key-map field-name="packageId"/>
@@ -464,13 +465,7 @@
       <relation type="many" title="Responsible" rel-entity-name="WorkflowParticipantList">
         <key-map field-name="responsibleListId" rel-field-name="participantListId"/>
       </relation>
-      <relation type="many" title="Responsible" rel-entity-name="WorkflowParticipantsView">
-        <key-map field-name="responsibleListId" rel-field-name="participantListId"/>
-      </relation>
       <relation type="many" rel-entity-name="WorkflowParticipantList">
-        <key-map field-name="participantListId"/>
-      </relation>
-      <relation type="many" rel-entity-name="WorkflowParticipantsView">
         <key-map field-name="participantListId"/>
       </relation>
       <relation type="many" rel-entity-name="WorkflowTypeDeclaration">
@@ -507,14 +502,26 @@
     <entity entity-name="WorkflowParticipant"
             package-name="org.ofbiz.commonapp.workeffort.definition"
             title="Workflow Participant Entity">
+      <field name="packageId" type="id-long-ne"></field>
+      <field name="packageVersion" type="very-short"></field>
+      <field name="processId" type="id-long-ne"></field>
+      <field name="processVersion" type="very-short"></field>      
       <field name="participantId" type="id-ne"></field>
       <field name="participantName" type="name"></field>
-      <field name="partyId" type="id"></field>
-      <field name="roleTypeId" type="id"></field>
+      <field name="partyId" type="id-long"></field>
+      <field name="roleTypeId" type="id-long"></field>
       <field name="description" type="description"></field>
       <field name="participantTypeId" type="id"></field>
+      <prim-key field="packageId"/>
+      <prim-key field="packageVersion"/>
+      <prim-key field="processId"/>
+      <prim-key field="processVersion"/>      
       <prim-key field="participantId"/>
       <relation type="many" title="Performer" rel-entity-name="WorkflowActivity">
+      	<key-map field-name="packageId"/>
+      	<key-map field-name="packageVersion"/>
+      	<key-map field-name="processId"/>
+      	<key-map field-name="processVersion"/>
         <key-map field-name="participantId" rel-field-name="performerParticipantId"/>
       </relation>
       <relation type="one" fk-name="WFLW_PART_TYPE" rel-entity-name="WorkflowParticipantType">
@@ -577,54 +584,6 @@
         <key-map field-name="participantTypeId"/>
       </relation>
     </entity>
-    <view-entity entity-name="WorkflowParticipantsView"
-            package-name="org.ofbiz.commonapp.workeffort.definition"
-            title="Workflow Participants View Entity">
-      <member-entity entity-alias="WP" entity-name="WorkflowParticipant"/>
-      <member-entity entity-alias="WPL" entity-name="WorkflowParticipantList"/>
-      <alias entity-alias="WP" name="participantId"/>
-      <alias entity-alias="WP" name="partyId"/>
-      <alias entity-alias="WP" name="roleTypeId"/>
-      <alias entity-alias="WP" name="participantName"/>
-      <alias entity-alias="WP" name="description"/>
-      <alias entity-alias="WP" name="participantTypeId"/>
-      <alias entity-alias="WPL" name="participantListId"/>
-      <alias entity-alias="WPL" name="participantIndex"/>
-      <view-link entity-alias="WP" rel-entity-alias="WPL">
-        <key-map field-name="participantId"/>
-      </view-link>
-      <relation type="one-nofk" rel-entity-name="WorkflowParticipant">
-        <key-map field-name="participantId"/>
-      </relation>
-      <relation type="one-nofk" rel-entity-name="WorkflowParticipantList">
-        <key-map field-name="participantListId"/>
-        <key-map field-name="participantId"/>
-      </relation>
-      <relation type="many" title="Performer" rel-entity-name="WorkflowActivity">
-        <key-map field-name="participantId" rel-field-name="performerParticipantId"/>
-      </relation>
-      <relation type="one-nofk" rel-entity-name="WorkflowParticipantType">
-        <key-map field-name="participantTypeId"/>
-      </relation>
-      <relation type="many" rel-entity-name="WorkflowProcess">
-        <key-map field-name="participantListId"/>
-      </relation>
-      <relation type="many" rel-entity-name="WorkflowPackage">
-        <key-map field-name="participantListId"/>
-      </relation>
-      <relation type="many" title="Responsible" rel-entity-name="WorkflowProcess">
-        <key-map field-name="participantListId" rel-field-name="responsibleListId"/>
-      </relation>
-      <relation type="many" title="Responsible" rel-entity-name="WorkflowPackage">
-        <key-map field-name="participantListId" rel-field-name="responsibleListId"/>
-      </relation>
-      <relation type="one-nofk" rel-entity-name="Party">
-        <key-map field-name="partyId"/>
-      </relation>
-      <relation type="one-nofk" rel-entity-name="Person">
-        <key-map field-name="partyId"/>
-      </relation>
-    </view-entity>
     <entity entity-name="WorkflowProcess"
             package-name="org.ofbiz.commonapp.workeffort.definition"
             title="Workflow Process Entity">
@@ -695,9 +654,6 @@
         <key-map field-name="durationUomId" rel-field-name="uomId"/>
       </relation>
       <relation type="many" rel-entity-name="WorkflowParticipantList">
-        <key-map field-name="participantListId"/>
-      </relation>
-      <relation type="many" rel-entity-name="WorkflowParticipantsView">
         <key-map field-name="participantListId"/>
       </relation>
       <relation type="many" rel-entity-name="WorkflowApplication">
