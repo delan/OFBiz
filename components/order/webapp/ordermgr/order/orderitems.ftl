@@ -20,7 +20,7 @@
  *  THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  *
  *@author     Andy Zeneski (jaz@ofbiz.org)
- *@version    $Revision: 1.2 $
+ *@version    $Revision: 1.3 $
  *@since      2.2
 -->
 
@@ -96,6 +96,14 @@
                             ${orderItemStatus.statusDatetime.toString()} : ${loopStatusItem.description?default(orderItemStatus.statusId)}
                           </div>
                         </#list>
+                        <#assign returns = orderItem.getRelated("ReturnItem")?if_exists>
+                        <#if returns?has_content>
+                          <#list returns as return>
+                            <div class='tabletext'>
+                              <font color="red"><b>Returned</b></font> #<a href="<@ofbizUrl>/returnMain?returnId=${return.returnId}</@ofbizUrl>" class='buttontext'>${return.returnId}</a>
+                            </div>
+                          </#list>
+                        </#if>
                       </td>
                       <td align="center" valign="top" nowrap>
                         <div class="tabletext" nowrap>${orderItem.quantity?string.number}&nbsp;</div>

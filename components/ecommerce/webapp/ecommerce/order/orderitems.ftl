@@ -20,7 +20,7 @@
  *  THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  *
  *@author     Andy Zeneski (jaz@ofbiz.org)
- *@version    $Revision: 1.2 $
+ *@version    $Revision: 1.3 $
  *@since      2.1
 -->
 
@@ -77,6 +77,14 @@
                       <div class="tabletext">
                         <a href="<@ofbizUrl>/product?product_id=${orderItem.productId}</@ofbizUrl>" class="buttontext">${orderItem.productId} - ${orderItem.itemDescription}</a>
                       </div>
+                      <#if maySelectItems?default(false)>
+                        <#assign returns = orderItem.getRelated("ReturnItem")?if_exists>
+                        <#if returns?has_content>
+                          <#list returns as return>
+                            <div class='tabletext'><font color="red"><b>Returned</b></font> (#${return.returnId})</div>
+                          </#list>
+                        </#if>
+                      </#if>
                     </td>
                     <#if !maySelectItems?default(false)>
                     <td>&nbsp;</td>
