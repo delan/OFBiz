@@ -5,7 +5,7 @@
     <description>Facility Manager Module Site Configuration File</description>
     <owner>The Open For Business Project Copyright (c) 2002</owner>
     <errorpage>/error/error.jsp</errorpage>
-    
+
     <handler name="java" type="request" class="org.ofbiz.content.webapp.event.JavaEventHandler"/>
     <handler name="soap" type="request" class="org.ofbiz.content.webapp.event.SOAPEventHandler"/>
     <handler name="service" type="request" class="org.ofbiz.content.webapp.event.ServiceEventHandler"/>
@@ -21,12 +21,12 @@
     <handler name="velocity" type="view" class="org.ofbiz.content.webapp.view.VelocityViewHandler"/>
     <handler name="jsp" type="view" class="org.ofbiz.content.webapp.view.JspViewHandler"/>
     <handler name="fop" type="view" class="org.ofbiz.content.webapp.view.FopPdfViewHandler"/>
-    
+
     <handler name="http" type="view" class="org.ofbiz.content.webapp.view.HttpViewHandler"/>
     <handler name="datavision" type="view" class="org.ofbiz.content.webapp.view.DataVisionViewHandler"/>
     <handler name="jasperreportspdf" type="view" class="org.ofbiz.content.webapp.view.JasperReportsPdfViewHandler"/>
     <handler name="jasperreportsxml" type="view" class="org.ofbiz.content.webapp.view.JasperReportsXmlViewHandler"/>
-    
+
     <preprocessor>
         <!-- Events to run on every request before security (chains exempt) -->
         <!-- <event type="java" path="org.ofbiz.content.webapp.event.TestEvent" invoke="test"/> -->
@@ -67,24 +67,24 @@
         <response name="success" type="view" value="main"/>
         <response name="error" type="view" value="error"/>
     </request-map>
-    
+
     <request-map uri="authview">
         <security https="true" auth="true"/>
         <response name="success" type="view" value="main"/>
         <response name="error" type="view" value="error"/>
-    </request-map>    
-      
+    </request-map>
+
     <request-map uri="setSessionLocale">
         <event type="java" path="org.ofbiz.base.util.UtilHttp" invoke="setSessionLocale"/>
         <response name="success" type="view" value="main"/>
         <response name="error" type="view" value="main"/>
     </request-map>
-    
+
     <request-map uri="main">
         <security https="true" auth="true"/>
         <response name="success" type="view" value="main"/>
     </request-map>
-    
+
     <!-- ================ Facility Requests ================= -->
     <request-map uri="FindFacility">
         <security https="true" auth="true"/>
@@ -111,11 +111,11 @@
     <request-map uri="FindFacilityLocation">
         <security https="true" auth="true"/>
         <response name="success" type="view" value="FindFacilityLocation"/>
-    </request-map>        
+    </request-map>
     <request-map uri="EditFacilityLocation">
         <security https="true" auth="true"/>
         <response name="success" type="view" value="EditFacilityLocation"/>
-    </request-map>    
+    </request-map>
     <request-map uri="CreateFacilityLocation">
         <security https="true" auth="true"/>
         <event type="service" path="" invoke="createFacilityLocation"/>
@@ -127,7 +127,7 @@
         <event type="service" path="" invoke="updateFacilityLocation"/>
         <response name="success" type="view" value="EditFacilityLocation"/>
         <response name="error" type="view" value="EditFacilityLocation"/>
-    </request-map>    
+    </request-map>
     <request-map uri="createProductFacilityLocation">
         <security https="true" auth="true"/>
         <event type="service" path="" invoke="createProductFacilityLocation"/>
@@ -151,36 +151,36 @@
     <request-map uri="EditFacilityInventoryItems">
         <security https="true" auth="true"/>
         <response name="success" type="view" value="EditFacilityInventoryItems"/>
-    </request-map> 
-    <request-map uri="DeleteFacilityInventoryItem">
+    </request-map>
+    <!-- <request-map uri="DeleteFacilityInventoryItem">
         <security https="true" auth="true"/>
         <event type="service" path="" invoke="deleteInventoryItem"/>
         <response name="success" type="view" value="EditFacilityInventoryItems"/>
         <response name="error" type="view" value="EditFacilityInventoryItems"/>
-    </request-map> 
-    
+    </request-map> -->
+
     <request-map uri="FindFacilityTransfers">
         <security https="true" auth="true"/>
         <response name="success" type="view" value="FindFacilityTransfers"/>
-    </request-map>  
-    
+    </request-map>
+
     <!-- ================ Facility Contact Mech Requests ================= -->
     <request-map uri="ViewContactMechs">
         <security https="true" auth="true"/>
         <response name="success" type="view" value="ViewContactMechs"/>
-    </request-map>    
+    </request-map>
     <request-map uri="EditContactMech">
         <security https="true" auth="true"/>
         <response name="success" type="view" value="EditContactMech"/>
     </request-map>
-    
+
     <request-map uri="createContactMech">
         <security https="true" auth="true"/>
         <event type="service" invoke="createFacilityContactMech"/>
         <response name="success" type="view" value="EditContactMech"/>
         <response name="error" type="view" value="EditContactMech"/>
     </request-map>
-    
+
     <request-map uri="updateContactMech">
         <security https="true" auth="true"/>
         <event type="service" invoke="updateFacilityContactMech"/>
@@ -242,7 +242,7 @@
         <response name="success" type="view" value="EditContactMech"/>
         <response name="error" type="view" value="EditContactMech"/>
     </request-map>
-    
+
     <request-map uri="createFacilityContactMechPurpose">
         <security https="true" auth="true"/>
         <event type="service" invoke="createFacilityContactMechPurpose"/>
@@ -255,9 +255,9 @@
         <event type="service" invoke="deleteFacilityContactMechPurpose"/>
         <response name="success" type="view" value="EditContactMech"/>
         <response name="error" type="view" value="EditContactMech"/>
-    </request-map>      
-    
-    <!-- ================ Facility Group Requests ================= --> 
+    </request-map>
+
+    <!-- ================ Facility Group Requests ================= -->
     <request-map uri="FindFacilityGroup">
         <security https="true" auth="true"/>
         <response name="success" type="view" value="FindFacilityGroup"/>
@@ -278,7 +278,7 @@
         <response name="success" type="view" value="EditFacilityGroup"/>
         <response name="error" type="view" value="EditFacilityGroup"/>
     </request-map>
-    
+
     <!-- ================ Facility Group Rollup Requests ================= -->
     <request-map uri="EditFacilityGroupRollup">
         <security https="true" auth="true"/>
@@ -301,98 +301,98 @@
         <event type="service" path="" invoke="removeFacilityGroupFromGroup"/>
         <response name="success" type="view" value="EditFacilityGroupRollup"/>
         <response name="error" type="view" value="EditFacilityGroupRollup"/>
-    </request-map> 
-    
+    </request-map>
+
     <!-- ================ Facility Group Member Requests ================= -->
     <request-map uri="EditFacilityGroupMembers">
         <security https="true" auth="true"/>
         <response name="success" type="view" value="EditFacilityGroupMembers"/>
-    </request-map> 
+    </request-map>
     <request-map uri="EditFacilityGroups">
         <security https="true" auth="true"/>
         <response name="success" type="view" value="EditFacilityGroups"/>
-    </request-map> 
-        
+    </request-map>
+
     <request-map uri="addFacilityToGroup">
         <security https="true" auth="true"/>
         <event type="service" path="" invoke="addFacilityToGroup"/>
         <response name="success" type="view" value="EditFacilityGroupMembers"/>
         <response name="error" type="view" value="EditFacilityGroupMembers"/>
-    </request-map>        
+    </request-map>
     <request-map uri="addGroupToFacility">
         <security https="true" auth="true"/>
         <event type="service" path="" invoke="addFacilityToGroup"/>
         <response name="success" type="view" value="EditFacilityGroups"/>
         <response name="error" type="view" value="EditFacilityGroups"/>
     </request-map>
-    
+
     <request-map uri="updateFacilityToGroup">
         <security https="true" auth="true"/>
         <event type="service" path="" invoke="updateFacilityToGroup"/>
         <response name="success" type="view" value="EditFacilityGroupMembers"/>
         <response name="error" type="view" value="EditFacilityGroupMembers"/>
-    </request-map>        
+    </request-map>
     <request-map uri="updateGroupToFacility">
         <security https="true" auth="true"/>
         <event type="service" path="" invoke="updateFacilityToGroup"/>
         <response name="success" type="view" value="EditFacilityGroups"/>
         <response name="error" type="view" value="EditFacilityGroups"/>
     </request-map>
-        
+
     <request-map uri="removeFacilityFromGroup">
         <security https="true" auth="true"/>
         <event type="service" path="" invoke="removeFacilityFromGroup"/>
         <response name="success" type="view" value="EditFacilityGroupMembers"/>
         <response name="error" type="view" value="EditFacilityGroupMembers"/>
-    </request-map>   
+    </request-map>
     <request-map uri="removeGroupFromFacility">
         <security https="true" auth="true"/>
         <event type="service" path="" invoke="removeFacilityFromGroup"/>
         <response name="success" type="view" value="EditFacilityGroups"/>
         <response name="error" type="view" value="EditFacilityGroups"/>
-    </request-map>              
-    
+    </request-map>
+
     <!-- ================ Facility Group Role Requests ================= -->
     <request-map uri="EditFacilityGroupRoles">
         <security https="true" auth="true"/>
         <response name="success" type="view" value="EditFacilityGroupRoles"/>
-    </request-map>    
+    </request-map>
     <request-map uri="addPartyToFacilityGroup">
         <security https="true" auth="true"/>
         <event type="service" path="" invoke="addPartyToFacilityGroup"/>
         <response name="success" type="view" value="EditFacilityGroupRoles"/>
         <response name="error" type="view" value="EditFacilityGroupRoles"/>
-    </request-map>     
+    </request-map>
     <request-map uri="removePartyFromFacilityGroup">
         <security https="true" auth="true"/>
         <event type="service" path="" invoke="removePartyFromFacilityGroup"/>
         <response name="success" type="view" value="EditFacilityGroupRoles"/>
         <response name="error" type="view" value="EditFacilityGroupRoles"/>
-    </request-map>            
-            
+    </request-map>
+
     <!-- ================ Facility Role Requests ================= -->
     <request-map uri="EditFacilityRoles">
         <security https="true" auth="true"/>
         <response name="success" type="view" value="EditFacilityRoles"/>
-    </request-map>    
+    </request-map>
     <request-map uri="addPartyToFacility">
         <security https="true" auth="true"/>
         <event type="service" path="" invoke="addPartyToFacility"/>
         <response name="success" type="view" value="EditFacilityRoles"/>
         <response name="error" type="view" value="EditFacilityRoles"/>
-    </request-map>     
+    </request-map>
     <request-map uri="removePartyFromFacility">
         <security https="true" auth="true"/>
         <event type="service" path="" invoke="removePartyFromFacility"/>
         <response name="success" type="view" value="EditFacilityRoles"/>
         <response name="error" type="view" value="EditFacilityRoles"/>
-    </request-map>    
-    
+    </request-map>
+
     <!-- ================ Inventory Requests ================= -->
     <request-map uri="EditInventoryItem">
         <security https="true" auth="true"/>
         <response name="success" type="view" value="EditInventoryItem"/>
-    </request-map>    
+    </request-map>
     <request-map uri="CreateInventoryItem">
         <security https="true" auth="true"/>
         <event type="service" path="" invoke="createInventoryItem"/>
@@ -410,19 +410,19 @@
         <event type="service" path="" invoke="deleteInventoryItem"/>
         <response name="success" type="view" value="EditInventoryItem"/>
         <response name="error" type="view" value="EditInventoryItem"/>
-    </request-map>   
+    </request-map>
     <request-map uri="createPhysicalInventoryAndVariance">
         <security https="true" auth="true"/>
         <event type="service" path="" invoke="createPhysicalInventoryAndVariance"/>
         <response name="success" type="view" value="EditInventoryItem"/>
         <response name="error" type="view" value="EditInventoryItem"/>
-    </request-map>   
-    
+    </request-map>
+
     <!-- ================ Inventory Transfer Requests ================= -->
     <request-map uri="TransferInventoryItem">
         <security https="true" auth="true"/>
         <response name="success" type="view" value="TransferInventoryItem"/>
-    </request-map>        
+    </request-map>
     <request-map uri="CreateInventoryTransfer">
         <security https="true" auth="true"/>
         <event type="service" path="" invoke="createInventoryTransfer"/>
@@ -434,19 +434,19 @@
         <event type="service" path="" invoke="updateInventoryTransfer"/>
         <response name="success" type="view" value="FindFacilityTransfers"/>
         <response name="error" type="view" value="FindFacilityTransfers"/>
-    </request-map>   
-    
+    </request-map>
+
     <!-- ================ Inventory Receive Requests ================= -->
     <request-map uri="ReceiveInventory">
         <security https="true" auth="true"/>
         <response name="success" type="view" value="ReceiveInventory"/>
-    </request-map>  
+    </request-map>
     <request-map uri="receiveInventoryProduct">
         <security https="true" auth="true"/>
         <event type="service-multi" path="" invoke="receiveInventoryProduct"/>
         <response name="success" type="view" value="ReceiveInventory"/>
         <response name="error" type="view" value="ReceiveInventory"/>
-    </request-map> 
+    </request-map>
     <request-map uri="ReceiveReturn">
         <security https="true" auth="true"/>
         <response name="success" type="view" value="ReceiveReturn"/>
@@ -456,8 +456,8 @@
         <event type="service-multi" path="" invoke="receiveInventoryProduct"/>
         <response name="success" type="view" value="ReceiveReturn"/>
         <response name="error" type="view" value="ReceiveReturn"/>
-    </request-map>         
-                     
+    </request-map>
+
     <!-- ================ Picklist Requests ================= -->
     <request-map uri="PicklistOptions">
         <security https="true" auth="true"/>
@@ -492,7 +492,7 @@
         <response name="success" type="view" value="PickMoveStock"/>
         <response name="error" type="view" value="PickMoveStock"/>
     </request-map>
-    
+
     <!-- ================ Shipment Requests ================= -->
     <request-map uri="FindShipment">
         <security https="true" auth="true"/>
@@ -533,7 +533,7 @@
         <event type="service" invoke="quickShipEntireOrder"/>
         <response name="success" type="view" value="QuickShipOrder"/>
         <response name="error" type="view" value="QuickShipOrder"/>
-    </request-map> 
+    </request-map>
     <request-map uri="setQuickPackageWeight">
         <security https="true" auth="true"/>
         <event type="service" invoke="updateShipmentPackage"/>
@@ -557,7 +557,7 @@
         <event type="service" path="" invoke="upsShipmentAccept"/>
         <response name="success" type="view" value="QuickShipOrder"/>
         <response name="error" type="view" value="QuickShipOrder"/>
-    </request-map>                     
+    </request-map>
 
     <!-- ================ Shipment Items Requests ================= -->
     <request-map uri="EditShipmentItems">
@@ -751,7 +751,7 @@
     <view-map name="error" page="/error/error.jsp"/>
     <view-map name="main" type="jpublish" page="facility/FindFacility.ftl"/>
     <view-map name="login" type="jpublish" page="/login.ftl"/>
-    
+
     <view-map name="FindFacility" type="jpublish" page="facility/FindFacility.ftl"/>
     <view-map name="EditFacility" type="jpublish" page="facility/EditFacility.ftl"/>
     <view-map name="FindFacilityTransfers" type="jpublish" page="/facility/FindFacilityTransfers.ftl"/>
@@ -760,10 +760,10 @@
     <view-map name="EditFacilityInventoryItems" type="jpublish" page="/facility/EditFacilityInventoryItems.ftl"/>
     <view-map name="EditFacilityGroups" type="jpublish" page="/facility/EditFacilityGroups.ftl"/>
     <view-map name="EditFacilityRoles" type="jpublish" page="/facility/EditFacilityRoles.ftl"/>
-    
+
     <view-map name="ViewContactMechs" type="jpublish" page="/facility/ViewContactMechs.ftl"/>
     <view-map name="EditContactMech" type="jpublish" page="/facility/EditContactMech.ftl"/>
-    
+
     <view-map name="EditInventoryItem" type="jpublish" page="/inventory/EditInventoryItem.ftl"/>
     <view-map name="TransferInventoryItem" type="jpublish" page="/inventory/TransferInventoryItem.ftl"/>
     <view-map name="ReceiveInventory" type="jpublish" page="/inventory/receiveInventory.ftl"/>
@@ -780,7 +780,7 @@
     <view-map name="EditFacilityGroupMembers" type="jpublish" page="/group/EditFacilityGroupMembers.ftl"/>
     <view-map name="EditFacilityGroupRollup" type="jpublish" page="/group/EditFacilityGroupRollup.ftl"/>
     <view-map name="EditFacilityGroupRoles" type="jpublish" page="/group/EditFacilityGroupRoles.ftl"/>
-    
+
     <view-map name="FindShipment" type="jpublish" page="/shipment/FindShipment.ftl"/>
     <view-map name="ViewShipment" type="jpublish" page="/shipment/ViewShipment.ftl"/>
     <view-map name="EditShipment" type="jpublish" page="/shipment/EditShipment.ftl"/>
