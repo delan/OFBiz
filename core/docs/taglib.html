@@ -44,70 +44,267 @@ $Id$ <br>
 
 <p></p>
 
+<table cellpadding='2' cellspacing='0' border='1'>
+<tr>
+    <td><b>Tag&nbsp;Name</b></td>
+    <td><b>BodyContent</b></td>
+    <td><b>Tag Class</b></td>
+    <td><b>TEI Class</b></td>
+</tr>
+<tr><td>url</td><td>JSP</td><td>UrlTag</td><td>&nbsp;</td></tr>
+<tr><td>contenturl</td><td>JSP</td><td>ContentUrlTag</td><td>&nbsp;</td></tr>
+<tr><td>if</td><td>JSP</td><td>IfTag</td><td>&nbsp;</td></tr>
+<tr><td>unless</td><td>JSP</td><td>UnlessTag</td><td>&nbsp;</td></tr>
+<tr><td>iterator</td><td>JSP</td><td>IteratorTag</td><td>IteratorTEI</td></tr>
+<tr><td>iteratorNext</td><td>JSP</td><td>IterateNextTag</td><td>IterateNextTEI</td></tr>
+<tr><td>iteratorHasNext</td><td>JSP</td><td>IteratorHasNextTag</td><td>&nbsp;</td></tr>
+<tr><td>format</td><td>bdy</td><td>tag</td><td>tei</td></tr>
+<tr><td>print</td><td>bdy</td><td>tag</td><td>tei</td></tr>
+<tr><td>field</td><td>bdy</td><td>tag</td><td>tei</td></tr>
+<tr><td>entityfield</td><td>bdy</td><td>tag</td><td>tei</td></tr>
+<tr><td>inputvalue</td><td>bdy</td><td>tag</td><td>tei</td></tr>
+<tr><td>i18nBundle</td><td>bdy</td><td>tag</td><td>tei</td></tr>
+<tr><td>i18nMessage</td><td>bdy</td><td>tag</td><td>tei</td></tr>
+<tr><td>i18nMessageArgument</td><td>bdy</td><td>tag</td><td>tei</td></tr>
+<tr><td>service</td><td>bdy</td><td>tag</td><td>tei</td></tr>
+<tr><td>param</td><td>bdy</td><td>tag</td><td>tei</td></tr>
+<tr><td>object</td><td>bdy</td><td>tag</td><td>tei</td></tr>
+</table>
+
 <hr>
 <h3><a name="URL">URL Tags</a></h3>
 <hr>
 
-<P><B>url</B></P>
+<P><B><U>ofbiz:url</U></B></P>
 
-<P><B>contenturl</B></P>
+<P>Add control path and URL encode if necessary. This is for links to dynamic 
+pages in the same webapp and the body is meant to contain a forward slash ("/")
+and then the name of a request defined in the controller.xml file. Parameters
+should also be included inside the tag.</P>
+
+<P>The tag will automatically insert the mounting point of the current webapp
+and the mounting point of the control servlet.</P>
+
+<P>The tag will also create a secure (HTTPS) URL (a URL that refers to the secure port on the
+server) to automatically go from insecure to secure areas, and will create an
+plain or non-secure (HTTP) URL to automatically go from secure to insecure areas of the
+site. This is configured in the url.properties file. See the Core Configuration
+Guide for more details.</P>
+
+<P>This tag has no attributes.</P>
+
+<P><B><U>ofbiz:contenturl</U></B></P>
+
+<P>Builds a URL for content referred to by this page. This is generally for 
+static content such as images that can be stored on a different server. So, if 
+necessary it will create a complete URL for the static content and is takes into
+account whether the content should be referred to securely (with HTTPS) or not
+(with HTTP).</P>
+
+<P>This is also configured in the url.properties file as described in the Core
+Configuration Guide.</P>
+
+<P>This tag has no attributes.</P>
 
 
 <hr>
 <h3><a name="Conditional">Conditional Tags</a></h3>
 <hr>
 
-<P><B>if</B></P>
+<P><B><U>ofbiz:if</U></B></P>
 
-<P><B>unless</B></P>
+<P>Processes the body content of the tag if the named attribute value exists
+and if it meets any size and value conditions specified.</P>
+
+<table cellpadding='2' cellspacing='0' border='1'>
+<tr>
+    <td><b>Attribute&nbsp;Name</b></td>
+    <td><b>Required?</b></td>
+    <td><b>ExprVal?</b></td>
+    <td><b>Description</b></td>
+</tr>
+<tr>
+    <td>name</td><td>Y</td><td>Y</td>
+    <td>The name of the page, request, session, or application attribute to use
+    for the comparison.</td>
+</tr>
+<tr>
+    <td>type</td><td>N</td><td>N</td>
+    <td>The type of the attribute Object. It is not necessary to specify this
+    because the tag will test the type of the object at runtime. Only necessary
+    if the default behavior does not behave as desired.</td>
+</tr>
+<tr>
+    <td>value</td><td>N</td><td>Y</td>
+    <td>If specified the named attribute value will be compared to this value.
+    Can be specified using the <code>&lt;%=...%&gt;</code> syntax to refer to
+    an existing object declared within the JSP.</td>
+</tr>
+<tr>
+    <td>size</td><td>N</td><td>N</td>
+    <td>If specified this value will be compared to the size of the named
+    attribute value. This is mostly applicable for type such as Collections,
+    Maps, Strings, etc.</td>
+</tr>
+</table>
+
+<P><B><U>ofbiz:unless</U></B></P>
+
+<P>Does the exact opposite of the if tag. In other words the body content will
+be evaluated if the named attribute value does not exist or if it does exist
+but does not meet the size and value conditions.</p>
+
+<P>The attributes of the unless tag are the same as the attributes of the if
+tag. Refer to the table above in the if tag section for detailed information
+on these attributes.</p>
 
 <hr>
 <h3><a name="Flow">Flow Control Tags</a></h3>
 <hr>
 
-<P><B>iterator</B></P>
+<P><B><U>ofbiz:iterator</U></B></P>
 
-<P><B>iteratorNext</B></P>
+<P>The iterator tag iterates over a collection of elements in a collection
+object in a named attribute. The individual elements are placed in a
+pageContext attribute, and made available in the JSP Java context for use in
+scriptlets.</P>
 
-<P><B>iteratorHasNext</B></P>
+<table cellpadding='2' cellspacing='0' border='1'>
+<tr>
+    <td><b>Attribute&nbsp;Name</b></td>
+    <td><b>Required?</b></td>
+    <td><b>ExprVal?</b></td>
+    <td><b>Description</b></td>
+</tr>
+<tr>
+    <td>name</td><td>Y</td><td>N</td>
+    <td>The name of the attribute that the collection of elements will come
+    from. Can be in the page, request, session or application contexts.</td>
+</tr>
+<tr>
+    <td>property</td><td>N</td><td>N</td>
+    <td>The name of the attribute and Java variable that the individual elements
+    will be put into as the iterator iterates.</td>
+</tr>
+<tr>
+    <td>type</td><td>N</td><td>N</td>
+    <td>The type of the elements within the collections. This must be specified
+    so that the Java context variable can be created. Defaults to
+    org.ofbiz.core.entity.GenericValue, which is one of the more common objects
+    to iterate over in OFBiz framework based applications.</td>
+</tr>
+<tr>
+    <td>expandMap</td><td>N</td><td>N</td>
+    <td>If expandMap is true then the iterator elements must implement
+    the Map interface the the keys in the Map entries must be Strings.
+    Each map entry will be put into the pageContext if this is set using the
+    Map key value as the attribute name.
+    Must be true or false. Defaults to false.</td>
+</tr>
+<tr>
+    <td>offset</td><td>N</td><td>Y</td>
+    <td>If specified the iteration will start at the given offset index instead
+    of at the beginning of the collection.</td>
+</tr>
+<tr>
+    <td>limit</td><td>N</td><td>Y</td>
+    <td>If specified only the specified number of iterations will be done. In
+    other words this limits the number of elements pulled from the iterator.</td>
+</tr>
+</table>
+<br>
+<table cellpadding='2' cellspacing='0' border='1'>
+<tr>
+    <td><b>Sub-Element&nbsp;Name</b></td>
+    <td><b>How&nbsp;Many</b></td>
+    <td><b>Description</b></td>
+</tr>
+<tr>
+    <td>iterateNext</td><td>0 to many</td>
+    <td>Descibed below.</td>
+</tr>
+<tr>
+    <td>iteratorHasNext</td><td>0 to many</td>
+    <td>Descibed below.</td>
+</tr>
+</table>
+
+<P><B><U>ofbiz:iteratorNext</U></B></P>
+
+<P>Grab the next element in the collection of the parent iterator tag.</P>
+
+<table cellpadding='2' cellspacing='0' border='1'>
+<tr>
+    <td><b>Attribute&nbsp;Name</b></td>
+    <td><b>Required?</b></td>
+    <td><b>ExprVal?</b></td>
+    <td><b>Description</b></td>
+</tr>
+<tr>
+    <td>name</td><td>N</td><td>N</td>
+    <td>The name of the attribute to put the element in. Defaults to the name
+    specified in the property attribute of the parent iterator tag.</td>
+</tr>
+<tr>
+    <td>type</td><td>N</td><td>N</td>
+    <td>The type of the elements within the collections. This must be specified
+    so that the Java context variable can be created. Defaults to
+    org.ofbiz.core.entity.GenericValue, which is one of the more common objects
+    to iterate over in OFBiz framework based applications.</td>
+</tr>
+<tr>
+    <td>expandMap</td><td>N</td><td>N</td>
+    <td>If expandMap is true then the iterator elements must implement
+    the Map interface the the keys in the Map entries must be Strings.
+    Each map entry will be put into the pageContext if this is set using the
+    Map key value as the attribute name.
+    Must be true or false. Defaults to false.</td>
+</tr>
+</table>
+
+<P><B><U>ofbiz:iteratorHasNext</U></B></P>
+
+<P>Only process body if parent iterator tag has another entry.</P>
+
+<P>This tag has no attributes.</P>
 
 <hr>
 <h3><a name="Presentation">Data Presentation Tags</a></h3>
 <hr>
 
-<P><B>format</B></P>
+<P><B><U>ofbiz:format</U></B></P>
 
-<P><B>print</B></P>
+<P><B><U>ofbiz:print</U></B></P>
 
-<P><B>field</B></P>
+<P><B><U>ofbiz:field</U></B></P>
 
-<P><B>entityfield</B></P>
+<P><B><U>ofbiz:entityfield</U></B></P>
 
-<P><B>inputvalue</B></P>
+<P><B><U>ofbiz:inputvalue</U></B></P>
 
 <hr>
 <h3><a name="Internationalization">Internationalization Tags</a></h3>
 <hr>
 
-<P><B>i18nBundle</B></P>
+<P><B><U>ofbiz:i18nBundle</U></B></P>
 
-<P><B>i18nMessage</B></P>
+<P><B><U>ofbiz:i18nMessage</U></B></P>
 
-<P><B>i18nMessageArgument</B></P>
+<P><B><U>ofbiz:i18nMessageArgument</U></B></P>
 
 <hr>
 <h3><a name="Service">Service Tags</a></h3>
 <hr>
 
-<P><B>service</B></P>
+<P><B><U>ofbiz:service</U></B></P>
 
-<P><B>param</B></P>
+<P><B><U>ofbiz:param</U></B></P>
 
 <hr>
 <h3><a name="Other">Other Tags</a></h3>
 <hr>
 
-<P><B>object</B></P>
+<P><B><U>ofbiz:object</U></B></P>
 
 </body>
 </html>
