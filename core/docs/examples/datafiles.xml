@@ -1,0 +1,44 @@
+<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+
+<!DOCTYPE data-files [
+  <!ELEMENT data-files ( data-file+ )>
+  <!ELEMENT data-file ( record+ )>
+  <!ATTLIST data-file
+    name CDATA #REQUIRED
+    type-code CDATA #REQUIRED
+    sender CDATA #IMPLIED
+    receiver CDATA #IMPLIED
+    delimiter CDATA #IMPLIED
+    record-length CDATA #IMPLIED
+    separator-style ( fixed-length | delimited ) #REQUIRED
+    description CDATA #IMPLIED >
+
+  <!ELEMENT record ( field+ )>
+  <!ATTLIST record
+    name CDATA #REQUIRED
+    type-code CDATA #REQUIRED
+    tc-position CDATA #REQUIRED
+    tc-length CDATA #IMPLIED
+    description CDATA #IMPLIED
+    parent-name CDATA #REQUIRED
+    limit ( one | many ) "many" >
+
+  <!ELEMENT field EMPTY>
+  <!ATTLIST field
+    name CDATA #REQUIRED
+    position CDATA #REQUIRED
+    length CDATA #REQUIRED
+    type CDATA #IMPLIED
+    format CDATA #IMPLIED
+    valid-exp CDATA #IMPLIED
+    description CDATA #IMPLIED
+    prim-key ( true | false ) "false" >
+]>
+
+<data-files>
+  <data-file name="" type-code="" sender="" receiver="" record-length="" delimiter="" separator-style="fixed-length" description="">
+    <record name="" type-code="" tc-position="" tc-length="" description="" parent-name="" limit="many">
+      <field name="" position="" length="" type="" format="" valid-exp="" description="" prim-key="false"/>
+    </record>
+  </data-file>
+</data-files>
