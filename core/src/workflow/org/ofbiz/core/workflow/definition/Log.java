@@ -3,6 +3,9 @@
 
 /*
  * $Log$
+ * Revision 1.3  2001/11/11 21:38:30  rbb36
+ * Added logRemotely( host, port )
+ *
  * Revision 1.2  2001/11/11 02:27:12  rbb36
  * Added CVS headers and copyright notice
  *
@@ -216,6 +219,7 @@ public abstract class Log {
             BasicConfigurator.resetConfiguration();
             Category.getRoot().setPriority( null );
             Category.getRoot().addAppender( appender );
+            setInitialized( true );
         } catch( Exception e ) {
             forceInit();
         } finally {
