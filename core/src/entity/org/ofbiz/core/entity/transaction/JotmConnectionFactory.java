@@ -1,7 +1,7 @@
 /*
  * $Id$
  *
- * Copyright (c) 2001, 2002 The Open For Business Project - www.ofbiz.org
+ * Copyright (c) 2003 The Open For Business Project - www.ofbiz.org
  *
  * Permission is hereby granted, free of charge, to any person obtaining a
  * copy of this software and associated documentation files (the "Software"),
@@ -24,15 +24,17 @@
  */
 package org.ofbiz.core.entity.transaction;
 
-import java.util.*;
-import java.sql.*;
-import org.w3c.dom.Element;
-
-import org.ofbiz.core.entity.*;
-import org.ofbiz.core.util.*;
+import java.sql.Connection;
+import java.sql.SQLException;
+import java.util.HashMap;
+import java.util.Map;
 
 import org.enhydra.jdbc.pool.StandardXAPoolDataSource;
 import org.enhydra.jdbc.standard.StandardXADataSource;
+import org.ofbiz.core.entity.GenericEntityException;
+import org.ofbiz.core.entity.TransactionFactory;
+import org.ofbiz.core.util.Debug;
+import org.w3c.dom.Element;
 
 /**
  * JotmFactory - Central source for JOTM JDBC Objects
@@ -50,7 +52,7 @@ public class JotmConnectionFactory {
     public static Connection getConnection(String helperName, Element jotmJdbcElement) throws SQLException, GenericEntityException {                               
         StandardXAPoolDataSource pds = (StandardXAPoolDataSource) dsCache.get(helperName);        
         if (pds != null) {                      
-            if (Debug.verboseOn()) Debug.logInfo(helperName + " pool size: " + pds.pool.getCount(), module);
+            if (Debug.verboseOn()) Debug.logVerbose(helperName + " pool size: " + pds.pool.getCount(), module);
             //return TransactionUtil.enlistConnection(ds.getXAConnection());
             //return ds.getXAConnection().getConnection();
             return pds.getConnection();
