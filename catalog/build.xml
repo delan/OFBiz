@@ -66,7 +66,7 @@
 	<property name="jaxp.jar"       value="${env.JBOSS_HOME}/lib/jaxp.jar"     />
 	<property name="parser.jar"     value="${env.JBOSS_HOME}/lib/xml.jar"      />
 	
-        <property name="ofb-jars"    value="${ofbcore.jar}:${commonapp.jar}" />
+        <property name="ofb-jars"    value="${ofbcore.jar}:${ofbcommonapp.jar}" />
         <property name="api-jars"    value="${servlet.jar}:${ejb.jar}:${jdbc.jar}:${mail.jar}" />
         <property name="xml-jars"    value="${jaxp.jar}:${parser.jar}" />
         <property name="classpath"   value="${env.CLASSPATH}:${lib.dir}:${ofb-jars}:${api-jars}:${xml-jars}" />
