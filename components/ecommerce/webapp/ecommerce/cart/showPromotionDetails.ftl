@@ -20,7 +20,7 @@
  *  THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  *
  *@author     David E. Jones (jonesde@ofbiz.org)
- *@version    $Revision: 1.2 $
+ *@version    $Revision: 1.3 $
  *@since      3.0
 -->
 <#assign uiLabelMap = requestAttributes.uiLabelMap>
@@ -54,6 +54,7 @@
 
   <br/>
 
+<#if productIds?has_content>
   <table border="0" width="100%" cellspacing="0" cellpadding="0" class="boxoutside">
     <tr>
       <td width="100%">
@@ -89,6 +90,7 @@
       </td>
     </tr>
   </table>
+</#if>
 <#else>
     <div class="head2">ERROR: No promotion found with ID [${productPromoId?if_exists}]</div>
 </#if>

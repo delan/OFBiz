@@ -1,5 +1,5 @@
 /*
- * $Id: ProductPromoWorker.java,v 1.19 2003/11/23 11:40:53 jonesde Exp $
+ * $Id: ProductPromoWorker.java,v 1.20 2003/11/25 09:48:04 jonesde Exp $
  *
  *  Copyright (c) 2001, 2002 The Open For Business Project - www.ofbiz.org
  *
@@ -53,7 +53,7 @@ import org.ofbiz.service.LocalDispatcher;
  *
  * @author     <a href="mailto:jonesde@ofbiz.org">David E. Jones</a>
  * @author     <a href="mailto:jaz@ofbiz.org">Andy Zeneski</a>
- * @version    $Revision: 1.19 $
+ * @version    $Revision: 1.20 $
  * @since      2.0
  */
 public class ProductPromoWorker {
@@ -566,7 +566,8 @@ public class ProductPromoWorker {
             while (quantityDesired > 0 && lineOrderedByBasePriceIter.hasNext()) {
                 ShoppingCartItem cartItem = (ShoppingCartItem) lineOrderedByBasePriceIter.next();
                 // only include if it is in the productId Set for this check and if it is not a Promo (GWP) item
-                if (!cartItem.getIsPromo() && productIds.contains(cartItem.getProductId())) {
+                String parentProductId = cartItem.getParentProductId();
+                if (!cartItem.getIsPromo() && (productIds.contains(cartItem.getProductId()) || (parentProductId != null && productIds.contains(parentProductId)))) {
                     // reduce quantity still needed to qualify for promo (quantityNeeded)
                     double quantityUsed = cartItem.addPromoQuantityCandidateUse(quantityDesired, productPromoAction);
                     quantityDesired -= quantityUsed;
@@ -595,7 +596,8 @@ public class ProductPromoWorker {
             while (quantityDesired > 0 && lineOrderedByBasePriceIter.hasNext()) {
                 ShoppingCartItem cartItem = (ShoppingCartItem) lineOrderedByBasePriceIter.next();
                 // only include if it is in the productId Set for this check and if it is not a Promo (GWP) item
-                if (!cartItem.getIsPromo() && productIds.contains(cartItem.getProductId())) {
+                String parentProductId = cartItem.getParentProductId();
+                if (!cartItem.getIsPromo() && (productIds.contains(cartItem.getProductId()) || (parentProductId != null && productIds.contains(parentProductId)))) {
                     // reduce quantity still needed to qualify for promo (quantityNeeded)
                     double quantityUsed = cartItem.addPromoQuantityCandidateUse(quantityDesired, productPromoAction);
                     quantityDesired -= quantityUsed;
@@ -620,7 +622,6 @@ public class ProductPromoWorker {
         } else if ("PROMO_PROD_PRICE".equals(productPromoActionEnumId)) {
             // with this we want the set of used items to be one price, so total the price for all used items, subtract the amount we want them to cost, and create an adjustment for what is left
             double quantityDesired = productPromoAction.get("quantity") == null ? 1.0 : productPromoAction.getDouble("quantity").doubleValue();
-            double startingQuantity = quantityDesired;
 
             double desiredAmount = productPromoAction.get("amount") == null ? 0.0 : productPromoAction.getDouble("amount").doubleValue();
             double totalAmount = 0;
@@ -632,7 +633,8 @@ public class ProductPromoWorker {
             while (quantityDesired > 0 && lineOrderedByBasePriceIter.hasNext()) {
                 ShoppingCartItem cartItem = (ShoppingCartItem) lineOrderedByBasePriceIter.next();
                 // only include if it is in the productId Set for this check and if it is not a Promo (GWP) item
-                if (!cartItem.getIsPromo() && productIds.contains(cartItem.getProductId())) {
+                String parentProductId = cartItem.getParentProductId();
+                if (!cartItem.getIsPromo() && (productIds.contains(cartItem.getProductId()) || (parentProductId != null && productIds.contains(parentProductId)))) {
                     // reduce quantity still needed to qualify for promo (quantityNeeded)
                     double quantityUsed = cartItem.addPromoQuantityCandidateUse(quantityDesired, productPromoAction);
                     if (quantityUsed > 0) {
