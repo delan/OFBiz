@@ -1442,6 +1442,56 @@
         <key-map field-name="productId"/>
       </relation>
     </entity>
+    <view-entity entity-name="GoodIdentificationAndProduct"
+                package-name="org.ofbiz.product.product"
+                title="GoodIdentification and Product View Entity">
+      <member-entity entity-alias="GI" entity-name="GoodIdentification"/>
+      <member-entity entity-alias="PR" entity-name="Product"/>
+      <alias-all entity-alias="GI" />
+      <alias-all entity-alias="PR" />
+      <view-link entity-alias="GI" rel-entity-alias="PR">
+        <key-map field-name="productId"/>
+      </view-link>
+      <relation type="one-nofk" rel-entity-name="ProductType">
+        <key-map field-name="productTypeId"/>
+      </relation>
+      <relation type="one-nofk" title="Primary" rel-entity-name="ProductCategory">
+        <key-map field-name="primaryProductCategoryId" rel-field-name="productCategoryId"/>
+      </relation>
+      <relation type="one-nofk" rel-entity-name="Facility">
+        <key-map field-name="facilityId"/>
+      </relation>
+      <relation type="one-nofk" title="Manufacturer" rel-entity-name="Party">
+        <key-map field-name="manufacturerPartyId" rel-field-name="partyId"/>
+      </relation>
+      <relation type="one-nofk" title="Quantity" rel-entity-name="Uom">
+        <key-map field-name="quantityUomId" rel-field-name="uomId"/>
+      </relation>
+      <relation type="one-nofk" title="Amount" rel-entity-name="UomType">
+        <key-map field-name="amountUomTypeId" rel-field-name="uomTypeId"/>
+      </relation>
+      <relation type="one-nofk" title="Weight" rel-entity-name="Uom">
+        <key-map field-name="weightUomId" rel-field-name="uomId"/>
+      </relation>
+      <relation type="one-nofk" title="Height" rel-entity-name="Uom">
+        <key-map field-name="heightUomId" rel-field-name="uomId"/>
+      </relation>
+      <relation type="one-nofk" title="Width" rel-entity-name="Uom">
+        <key-map field-name="widthUomId" rel-field-name="uomId"/>
+      </relation>
+      <relation type="one-nofk" title="Depth" rel-entity-name="Uom">
+        <key-map field-name="depthUomId" rel-field-name="uomId"/>
+      </relation>
+      <relation type="one-nofk" rel-entity-name="Enumeration">
+        <key-map field-name="ratingTypeEnum" rel-field-name="enumId"/>
+      </relation>
+      <relation type="one-nofk" title="CreatedBy" rel-entity-name="UserLogin">
+        <key-map field-name="createdByUserLogin" rel-field-name="userLoginId"/>
+      </relation>
+      <relation type="one-nofk" title="LastModifiedBy" rel-entity-name="UserLogin">
+        <key-map field-name="lastModifiedByUserLogin" rel-field-name="userLoginId"/>
+      </relation>
+    </view-entity>
     <entity entity-name="GoodIdentificationType"
             package-name="org.ofbiz.product.product"
             title="Good Identification Type Entity">
