@@ -1,5 +1,5 @@
 /*
- * $Id: HtmlMenuRenderer.java,v 1.9 2004/04/20 21:01:30 byersa Exp $
+ * $Id: HtmlMenuRenderer.java,v 1.10 2004/04/25 05:34:56 byersa Exp $
  *
  * Copyright (c) 2003 The Open For Business Project - www.ofbiz.org
  *
@@ -44,6 +44,9 @@ import org.ofbiz.content.widget.menu.MenuStringRenderer;
 import org.ofbiz.content.widget.menu.ModelMenu;
 import org.ofbiz.content.widget.menu.ModelMenuItem;
 import org.ofbiz.content.widget.menu.ModelMenuItem.MenuTarget;
+import org.ofbiz.content.widget.menu.ModelMenuItem.MenuImage;
+import org.ofbiz.content.widget.WidgetWorker;
+import org.ofbiz.content.ContentManagementWorker;
 import org.ofbiz.entity.GenericDelegator;
 import org.ofbiz.entity.GenericEntityException;
 import org.ofbiz.entity.GenericValue;
@@ -54,7 +57,7 @@ import org.ofbiz.security.Security;
  *
  * @author     <a href="mailto:jonesde@ofbiz.org">David E. Jones</a>
  * @author     <a href="mailto:byersa@automationgroups.com">Al Byers</a>
- * @version    $Revision: 1.9 $
+ * @version    $Revision: 1.10 $
  * @since      2.2
  */
 public class HtmlMenuRenderer implements MenuStringRenderer {
@@ -64,6 +67,8 @@ public class HtmlMenuRenderer implements MenuStringRenderer {
     protected String userLoginIdAtPermGrant;
     protected boolean userLoginIdHasChanged = true;
     protected String permissionErrorMessage = "";
+
+    public static final String module = HtmlMenuRenderer.class.getName();
 
     protected HtmlMenuRenderer() {}
 
@@ -162,9 +167,9 @@ public class HtmlMenuRenderer implements MenuStringRenderer {
 
     public void renderMenuItem(StringBuffer buffer, Map context, ModelMenuItem menuItem) {
         
-            //Debug.logInfo("in renderMenuItem, menuItem:" + menuItem.getName() + " context:" + context ,"");
+        //Debug.logInfo("in renderMenuItem, menuItem:" + menuItem.getName() + " context:" + context ,"");
         boolean hideThisItem = isHideIfSelected(menuItem);
-            //if (Debug.infoOn()) Debug.logInfo("in HtmlMenuRendererImage, hideThisItem:" + hideThisItem,"");
+        if (Debug.infoOn()) Debug.logInfo("in HtmlMenuRendererImage, hideThisItem:" + hideThisItem,"");
         if (hideThisItem)
             return;
 
@@ -176,7 +181,7 @@ public class HtmlMenuRenderer implements MenuStringRenderer {
             permissionErrorMessage = "";
             return;
         }
-        //if (Debug.infoOn()) Debug.logInfo("in HtmlMenuRendererImage, bHasPermission(2):" + bHasPermission,"");
+        if (Debug.infoOn()) Debug.logInfo("in HtmlMenuRendererImage, bHasPermission(2):" + bHasPermission,"");
 
         String orientation = menuItem.getModelMenu().getOrientation();
         if (orientation.equalsIgnoreCase("vertical"))
@@ -188,14 +193,23 @@ public class HtmlMenuRenderer implements MenuStringRenderer {
         
         buffer.append("<td " + widthStr + ">");
         MenuTarget target = selectMenuTarget(menuItem, context);
-        //if (Debug.infoOn()) Debug.logInfo("in HtmlMenuRendererImage, target(0):" + target.getMenuTargetName(),"");
+        if (Debug.infoOn()) Debug.logInfo("in HtmlMenuRendererImage, target(0):" + target.getMenuTargetName(),"");
         if (target != null) {
-            String divStr = buildDivStr(menuItem, context);
-            String url = target.renderAsUrl( context);
             String titleStyle = menuItem.getTitleStyle();
-            buffer.append("<a  class=\"" + titleStyle + "\" href=\""); 
-            appendOfbizUrl(buffer,  url);
-            buffer.append("\">" + divStr + "</a>");
+            String requestName = target.getRequestName();
+            String description = target.getMenuTargetTitle(context);
+            String targetType = target.getTargetType();
+            MenuImage menuImage = target.getMenuImage();
+            if (Debug.infoOn()) Debug.logInfo("in HtmlMenuRendererImage, requestName(0):" + requestName,"");
+            if (Debug.infoOn()) Debug.logInfo("in HtmlMenuRendererImage, menuImage(0):" + menuImage,"");
+            if (menuImage == null) {
+               if (Debug.infoOn()) Debug.logInfo("in HtmlMenuRendererImage, description(0):" + description,"");
+                List paramList = target.getParamList();
+                WidgetWorker.makeHyperlinkString(buffer, titleStyle, targetType, requestName, description, this.request, this.response, context, paramList);
+            } else { // is an image link
+                String imgLink = buildImgLink(menuItem, menuImage, context, target);
+                buffer.append(imgLink);
+            }
             buffer.append("</td>");
             if (orientation.equalsIgnoreCase("vertical"))
                 buffer.append("</tr>");
@@ -391,7 +405,7 @@ public class HtmlMenuRenderer implements MenuStringRenderer {
     public String doMenuTargetPermissionCheck(ModelMenuItem menuItem, MenuTarget menuTarget, Map context) {
 
         String permissionOperation = menuTarget.getPermissionOperation();
-        Debug.logInfo("in doMenuTargetPermissionCheck, menuItem:" + menuItem.getName() + " permissionOperation:" + permissionOperation,"");
+        //Debug.logInfo("in doMenuTargetPermissionCheck, menuItem:" + menuItem.getName() + " permissionOperation:" + permissionOperation,"");
         if (UtilValidate.isEmpty(permissionOperation)) 
             return "";
         String associatedContentId = menuItem.getAssociatedContentId(context);
@@ -406,7 +420,7 @@ public class HtmlMenuRenderer implements MenuStringRenderer {
 
     public String doMenuItemPermissionCheck( ModelMenuItem menuItem, Map context) {
         String permissionOperation = menuItem.getPermissionOperation();
-        Debug.logInfo("in doMenuItemPermissionCheck, menuItem:" + menuItem.getName() + " permissionOperation:" + permissionOperation,"");
+        //Debug.logInfo("in doMenuItemPermissionCheck, menuItem:" + menuItem.getName() + " permissionOperation:" + permissionOperation,"");
         if (UtilValidate.isEmpty(permissionOperation)) 
             return "";
         String associatedContentId = menuItem.getAssociatedContentId(context);
@@ -414,7 +428,7 @@ public class HtmlMenuRenderer implements MenuStringRenderer {
         String privilegeEnumId = menuItem.getPrivilegeEnumId();
         String permissionStatusId = menuItem.getPermissionStatusId();
         String b = doPermissionCheck(associatedContentId, permissionOperation, entityAction, privilegeEnumId, permissionStatusId);
-        Debug.logInfo("in doMenuItemPermChk, menuItemName:" + menuItem.getName() + " permissionOperation:" + permissionOperation + " associatedContentId:" + associatedContentId + " entityAction:" + entityAction + " privilegeEnumId:" + privilegeEnumId + " permissionStatusId:" + permissionStatusId,"");
+        //Debug.logInfo("in doMenuItemPermChk, menuItemName:" + menuItem.getName() + " permissionOperation:" + permissionOperation + " associatedContentId:" + associatedContentId + " entityAction:" + entityAction + " privilegeEnumId:" + privilegeEnumId + " permissionStatusId:" + permissionStatusId,"");
         if (UtilValidate.isNotEmpty(b))
             b += b + ">>>> in doMenuItemPermissionCheck, menuItem:" + menuItem.getName() +"<<<";
         return b;
@@ -459,5 +473,49 @@ public class HtmlMenuRenderer implements MenuStringRenderer {
     public void setUserLoginIdHasChanged(boolean b) {
         userLoginIdHasChanged = b;
     }
+
+    public String buildImgLink(ModelMenuItem menuItem, MenuImage menuImage, Map context, MenuTarget target ) {
+
+        String imgStr = "<img src=\"";
+/*
+        String contentId = menuItem.getAssociatedContentId(context);
+        GenericDelegator delegator = (GenericDelegator)request.getAttribute("delegator");
+        GenericValue webSitePublishPoint = null;
+                //Debug.logInfo("in HtmlMenuRendererImage, contentId:" + contentId,"");
+        try {
+            webSitePublishPoint = ContentManagementWorker.getWebSitePublishPoint(delegator, contentId);
+        } catch(GenericEntityException e) {
+                //Debug.logInfo("in HtmlMenuRendererImage, GEException:" + e.getMessage(),"");
+            throw new RuntimeException(e.getMessage());
+        }
+        String medallionLogoStr = webSitePublishPoint.getString("medallionLogo");
+*/
+        String requestName = menuImage.getRequestName(context);
+        String targetRequestName = target.getRequestName();
+        if (Debug.infoOn()) Debug.logInfo("in buildImgLink, requestName:" + requestName, module);
+        String targetType = menuImage.getTargetType();
+        List paramList = menuImage.getParamList();
+        StringBuffer buf = new StringBuffer();
+        WidgetWorker.buildHyperlinkUrl(buf, requestName, targetType, this.request, this.response, context, paramList);
+        imgStr += buf.toString();
+                //Debug.logInfo("in HtmlMenuRendererImage, imgStr:" + imgStr,"");
+        String cellWidth = menuItem.getCellWidth();
+        imgStr += "\"";
+        String widthStr = "";
+        if (UtilValidate.isNotEmpty(cellWidth)) 
+            widthStr = " width=\"" + cellWidth + "\" ";
+        
+        imgStr += widthStr;
+        imgStr += " border=\"0\" />";
+        if (Debug.infoOn()) Debug.logInfo("in buildImgLink, imgStr:" + imgStr, module);
+        buf = new StringBuffer();
+        String titleStyle = "";
+        List targetParamList = target.getParamList();
+        WidgetWorker.makeHyperlinkString(buf, titleStyle, targetType, targetRequestName, imgStr, this.request, this.response, context, targetParamList);
+        String imgLinkStr = buf.toString();
+        if (Debug.infoOn()) Debug.logInfo("in buildImgLink, imgLinkStr:" + imgLinkStr, module);
+        return imgLinkStr;
+    }
+
 }
 

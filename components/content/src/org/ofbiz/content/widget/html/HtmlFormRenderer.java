@@ -1,5 +1,5 @@
 /*
- * $Id: HtmlFormRenderer.java,v 1.8 2004/03/24 16:04:22 byersa Exp $
+ * $Id: HtmlFormRenderer.java,v 1.9 2004/04/25 05:34:56 byersa Exp $
  *
  * Copyright (c) 2003 The Open For Business Project - www.ofbiz.org
  *
@@ -59,12 +59,14 @@ import org.ofbiz.content.widget.form.ModelFormField.TextFindField;
 import org.ofbiz.content.widget.form.ModelFormField.TextareaField;
 import org.ofbiz.content.widget.form.ModelFormField.ImageField;
 
+import org.ofbiz.content.widget.WidgetWorker;
+
 /**
  * Widget Library - HTML Form Renderer implementation
  *
  * @author     <a href="mailto:jonesde@ofbiz.org">David E. Jones</a>
  * @author     <a href="mailto:byersa@automationgroups.com">Al Byers</a>
- * @version    $Revision: 1.8 $
+ * @version    $Revision: 1.9 $
  * @since      2.2
  */
 public class HtmlFormRenderer implements FormStringRenderer {
@@ -173,43 +175,10 @@ public class HtmlFormRenderer implements FormStringRenderer {
     }
 
     public void makeHyperlinkString(StringBuffer buffer, String linkStyle, String targetType, String target, String description) {
-        buffer.append("<a");
 
-        if (UtilValidate.isNotEmpty(linkStyle)) {
-            buffer.append(" class=\"");
-            buffer.append(linkStyle);
-            buffer.append("\"");
-        }
-
-        buffer.append(" href=\"");
-        if ("intra-app".equals(targetType)) {
-            this.appendOfbizUrl(buffer, "/" + target);
-        } else if ("inter-app".equals(targetType)) {
-            String fullTarget = target;
-            buffer.append(fullTarget);
-            String externalLoginKey = (String) this.request.getAttribute("externalLoginKey");
-            if (UtilValidate.isNotEmpty(externalLoginKey)) {
-                if (fullTarget.indexOf('?') == -1) {
-                    buffer.append('?');
-                } else {
-                    buffer.append('&');
-                }
-                buffer.append("externalLoginKey=");
-                buffer.append(externalLoginKey);
-            }
-        } else if ("content".equals(targetType)) {
-            this.appendContentUrl(buffer, target);
-        } else if ("plain".equals(targetType)) {
-            buffer.append(target);
-        } else {
-            buffer.append(target);
-        }
-        buffer.append("\"");
-
-        buffer.append('>');
-
-        buffer.append(description);
-        buffer.append("</a>");
+        Map context = null;
+        List paramList = null;
+        WidgetWorker.makeHyperlinkString(buffer, linkStyle, targetType, target, description, this.request, this.response, context, paramList);
     }
 
     /* (non-Javadoc)
