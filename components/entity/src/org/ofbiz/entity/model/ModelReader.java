@@ -1,5 +1,5 @@
 /*
- * $Id: ModelReader.java,v 1.13 2004/07/17 07:05:09 doogie Exp $
+ * $Id: ModelReader.java,v 1.14 2004/07/18 03:11:20 doogie Exp $
  *
  *  Copyright (c) 2001-2004 The Open For Business Project - www.ofbiz.org
  *
@@ -57,7 +57,7 @@ import org.w3c.dom.Node;
  *
  * @author     <a href="mailto:jonesde@ofbiz.org">David E. Jones</a>
  * @author     <a href="mailto:jaz@ofbiz.org">Andy Zeneski</a>
- * @version    $Revision: 1.13 $
+ * @version    $Revision: 1.14 $
  * @since      2.0
  */
 public class ModelReader {
@@ -298,7 +298,7 @@ public class ModelReader {
                                         
                                         // create the new relationship even if one exists so we can show what we are looking for in the info message
                                         ModelRelation newRel = new ModelRelation();
-                                        newRel.setMainEntity(relatedEnt);
+                                        newRel.setModelEntity(relatedEnt);
                                         newRel.setRelEntityName(curModelEntity.getEntityName());
                                         newRel.setTitle(targetTitle);
                                         newRel.setAutoRelation(true);
