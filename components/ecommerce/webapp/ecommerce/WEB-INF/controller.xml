@@ -324,7 +324,7 @@
       <response name="shippingoptions" type="view" value="checkoutshippingoptions"/>
       <response name="payment" type="view" value="checkoutpayment"/>
       <response name="confirm" type="request" value="calcShipping"/>
-      <response name="error" type="view" value="main"/>
+      <response name="error" type="view" value="checkoutshippingaddress"/>
       <response name="success" type="view" value="checkoutshippingaddress"/>
     </request-map>
 
