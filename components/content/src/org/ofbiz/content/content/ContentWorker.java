@@ -1,5 +1,5 @@
 /*
- * $Id: ContentWorker.java,v 1.22 2004/04/11 08:28:12 jonesde Exp $
+ * $Id: ContentWorker.java,v 1.23 2004/04/14 05:34:41 byersa Exp $
  *
  *  Copyright (c) 2001, 2002 The Open For Business Project - www.ofbiz.org
  *
@@ -62,7 +62,7 @@ import bsh.EvalError;
  * ContentWorker Class
  * 
  * @author <a href="mailto:byersa@automationgroups.com">Al Byers</a>
- * @version $Revision: 1.22 $
+ * @version $Revision: 1.23 $
  * @since 2.2
  * 
  *  
@@ -407,8 +407,7 @@ public class ContentWorker {
         String direction = (String)ctx.get("direction");
         if (UtilValidate.isEmpty(direction))
             direction = "From";
-        if (UtilValidate.isEmpty(contentAssocTypeId))
-            contentAssocTypeId = "SUB_CONTENT";
+        //if (UtilValidate.isEmpty(contentAssocTypeId)) contentAssocTypeId = "SUB_CONTENT";
         Timestamp fromDate = (Timestamp)ctx.get("fromDate");
         Timestamp thruDate = (Timestamp)ctx.get("thruDate");
         

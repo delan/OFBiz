@@ -34,7 +34,7 @@ import org.ofbiz.security.Security;
  * ContentManagementWorker Class
  *
  * @author     <a href="mailto:byersa@automationgroups.com">Al Byers</a>
- * @version    $Revision: 1.8 $
+ * @version    $Revision: 1.9 $
  * @since      3.0
  *
  * 
@@ -199,9 +199,14 @@ public class ContentManagementWorker {
             ret = (String)paramMap.get(name);
 
         if (UtilValidate.isEmpty(ret)) {
-            ret = (String)request.getAttribute(name);
-            if (UtilValidate.isEmpty(ret)) {
-                ret = (String)context.get(name);
+            Object obj = request.getAttribute(name);
+            if (obj != null) {
+                ret = obj.toString();
+            } else {
+                obj = context.get(name);
+                if (obj != null) {
+                    ret = obj.toString();
+                }
             }
         }
         return ret;

@@ -1,5 +1,5 @@
 /*
- * $Id: LoopSubContentCacheTransform.java,v 1.7 2004/04/13 04:56:14 byersa Exp $
+ * $Id: LoopSubContentCacheTransform.java,v 1.8 2004/04/14 05:34:42 byersa Exp $
  * 
  * Copyright (c) 2001-2003 The Open For Business Project - www.ofbiz.org
  * 
@@ -49,7 +49,7 @@ import freemarker.template.TransformControl;
  * LoopSubContentCacheTransform - Freemarker Transform for URLs (links)
  * 
  * @author <a href="mailto:byersa@automationgroups.com">Al Byers</a>
- * @version $Revision: 1.7 $
+ * @version $Revision: 1.8 $
  * @since 3.0
  */
 public class LoopSubContentCacheTransform implements TemplateTransformModel {
@@ -57,7 +57,7 @@ public class LoopSubContentCacheTransform implements TemplateTransformModel {
     public static final String module = LoopSubContentCacheTransform.class.getName();
 
     public static final String [] upSaveKeyNames = {"globalNodeTrail"};
-    public static final String [] saveKeyNames = {"contentId", "subContentId", "entityList", "entityIndex", "subDataResourceTypeId", "mimeTypeId", "whenMap", "locale",  "entityList", "viewSize", "viewIndex", "highIndex", "lowIndex", "listSize", "wrapTemplateId", "encloseWrapText", "nullThruDatesOnly"};
+    public static final String [] saveKeyNames = {"contentId", "subContentId", "entityList", "entityIndex", "subDataResourceTypeId", "mimeTypeId", "whenMap", "locale",  "entityList", "viewSize", "viewIndex", "highIndex", "lowIndex", "listSize", "wrapTemplateId", "encloseWrapText", "nullThruDatesOnly", "globalNodeTrail"};
 
     /**
      * A wrapper for the FreeMarkerWorker version.
@@ -80,12 +80,12 @@ public class LoopSubContentCacheTransform implements TemplateTransformModel {
         //String mimeTypeId = (String)ctx.get("mimeTypeId");
         List lst = (List) ctx.get("entityList");
         int entityIndex = ((Integer)ctx.get("entityIndex")).intValue();
-        if (Debug.infoOn()) Debug.logInfo("in LoopSubContentCache, prepCtx, entityIndex :" + entityIndex, module);
+        //if (Debug.infoOn()) Debug.logInfo("in LoopSubContentCache, prepCtx, entityIndex :" + entityIndex, module);
         if (entityIndex >= lst.size()) {
             return false;
         }
         GenericValue view = (GenericValue) lst.get(entityIndex);
-        if (Debug.verboseOn()) Debug.logVerbose("in LoopSubContentCache, subContentDataResourceView contentId/drDataResourceId:" + view.get("contentId")  + " / " + view.get("drDataResourceId"), module);
+        if (Debug.infoOn()) Debug.logInfo("in LoopSubContentCache, subContentDataResourceView contentId/drDataResourceId:" + view.get("contentId")  + " / " + view.get("drDataResourceId") + " entityIndex:" + entityIndex, module);
 
         String dataResourceId = (String) view.get("drDataResourceId");
         if (Debug.verboseOn()) Debug.logVerbose("in LoopSubContentCache(0), dataResourceId ." + dataResourceId, module);
@@ -106,15 +106,7 @@ public class LoopSubContentCacheTransform implements TemplateTransformModel {
         if (Debug.verboseOn()) Debug.logVerbose("in LoopSubContentCache(2), mimeTypeId." + mimeTypeId, module);
         if (Debug.verboseOn()) Debug.logVerbose("in LoopSubContentCache, subContentId/Sub." + subContentIdSub, module);
 
-        // This is what the FM template will see.
-        List passedGlobalNodeTrail = (List)ctx.get("passedGlobalNodeTrail");
-        //if (Debug.infoOn()) Debug.logInfo("passedGlobalNodeTrail(prepCtx):" + passedGlobalNodeTrail, "");
-        List trail = null;
-        if (passedGlobalNodeTrail != null) 
-            trail = new ArrayList(passedGlobalNodeTrail);
-        else
-            trail = new ArrayList();
-                //if (Debug.infoOn()) Debug.logInfo("prepCtx, trail(1):" + trail, "");
+
         Map trailNode = FreeMarkerWorker.makeNode(view);
         Map whenMap = (Map)ctx.get("whenMap");
         Locale locale = (Locale) ctx.get("locale");
@@ -132,12 +124,12 @@ public class LoopSubContentCacheTransform implements TemplateTransformModel {
               ||  (isFollowObj != null && isFollowObj.booleanValue()))
         ) {
      
-            trail.add(trailNode);
-            int indentSz = trail.size();
+            List globalNodeTrail = (List)ctx.get("globalNodeTrail");
+            globalNodeTrail.add(trailNode);
+            String csvTrail = FreeMarkerWorker.nodeTrailToCsv(globalNodeTrail);
+            ctx.put("nodeTrailCsv", csvTrail);
+            int indentSz = globalNodeTrail.size();
             ctx.put("indent", new Integer(indentSz));
-                String csvTrail = FreeMarkerWorker.nodeTrailToCsv(trail);
-                //if (Debug.infoOn()) Debug.logInfo("in Loop, csvTrail:"+csvTrail,module);
-            ctx.put("globalNodeTrail", trail);
                 //if (Debug.infoOn()) Debug.logInfo("prepCtx, trail(2):" + trail, "");
                 //if (Debug.infoOn()) Debug.logInfo("prepCtx, globalNodeTrail csv:" + FreeMarkerWorker.nodeTrailToCsv((List)trail), "");
 //            GenericValue electronicText = null;
@@ -190,7 +182,7 @@ public class LoopSubContentCacheTransform implements TemplateTransformModel {
                         }
                     }
                 }
-        if (Debug.infoOn()) Debug.logInfo("in LoopSubContentCache, getNextMatchingEntity, outputIndex :" + outputIndex, module);
+        //if (Debug.infoOn()) Debug.logInfo("in LoopSubContentCache, getNextMatchingEntity, outputIndex :" + outputIndex, module);
                 templateCtx.put("outputIndex", new Integer(outputIndex));
                 return matchFound;
     }
@@ -207,7 +199,7 @@ public class LoopSubContentCacheTransform implements TemplateTransformModel {
         //templateCtx.put("buf", buf);
         if (Debug.verboseOn()) Debug.logVerbose(FreeMarkerWorker.logMap("(L)before save", templateCtx, 0),module);
         final Map savedValuesUp = new HashMap();
-        FreeMarkerWorker.saveContextValues(templateCtx, upSaveKeyNames, savedValuesUp);
+        //FreeMarkerWorker.saveContextValues(templateCtx, upSaveKeyNames, savedValuesUp);
         final Map savedValues = new HashMap();
         // if (Debug.verboseOn()) Debug.logVerbose("(L-0)savedValues: " + savedValues,module);
         FreeMarkerWorker.overrideWithArgs(templateCtx, args);
@@ -241,13 +233,12 @@ public class LoopSubContentCacheTransform implements TemplateTransformModel {
             fromDate = UtilDateTime.nowTimestamp();
        
         final GenericValue userLogin = (GenericValue) FreeMarkerWorker.getWrappedObject("userLogin", env);
-        List trail = (List)templateCtx.get("globalNodeTrail");
-        //if (Debug.infoOn()) Debug.logInfo("in LoopSubContentCache(0), trail ." + trail, module);
+        List globalNodeTrail = (List)templateCtx.get("globalNodeTrail");
         String strNullThruDatesOnly = (String)templateCtx.get("nullThruDatesOnly");
         Boolean nullThruDatesOnly = (strNullThruDatesOnly != null && strNullThruDatesOnly.equalsIgnoreCase("true")) ? new Boolean(true) :new Boolean(false);
         GenericValue val = null;
         try {
-            val = FreeMarkerWorker.getCurrentContent(delegator, trail, userLogin, templateCtx, nullThruDatesOnly, null);
+            val = FreeMarkerWorker.getCurrentContent(delegator, globalNodeTrail, userLogin, templateCtx, nullThruDatesOnly, null);
         } catch(GeneralException e) {
             throw new RuntimeException("Error getting current content. " + e.toString());
         }
@@ -259,15 +250,7 @@ public class LoopSubContentCacheTransform implements TemplateTransformModel {
         templateCtx.put("contentId", null);
         templateCtx.put("subContentId", null);
 
-        trail = (List)templateCtx.get("globalNodeTrail");
-        List passedGlobalNodeTrail = null;
-        if (trail != null && trail.size() > 0) 
-            passedGlobalNodeTrail = new ArrayList(trail);
-        else
-            passedGlobalNodeTrail = new ArrayList();
-        templateCtx.put("passedGlobalNodeTrail", passedGlobalNodeTrail);
         String contentId = (String)view.get("contentId");
-        //if (Debug.infoOn()) Debug.logInfo("in LoopSubContentCache(0), passedGlobalNodeTrail ." + passedGlobalNodeTrail, module);
         //if (Debug.infoOn()) Debug.logInfo("in LoopSubContentCache(0), contentId ." + contentId, module);
         final String contentIdTo = contentId;
 
@@ -290,7 +273,7 @@ public class LoopSubContentCacheTransform implements TemplateTransformModel {
         int viewSize = Integer.parseInt(viewSizeStr); 
         if (Debug.verboseOn()) Debug.logVerbose("viewSize:" + viewSize, "");
         String viewIndexStr = (String)templateCtx.get("viewIndex");
-        if (Debug.infoOn()) Debug.logInfo("viewIndexStr:" + viewIndexStr, "");
+        //if (Debug.infoOn()) Debug.logInfo("viewIndexStr:" + viewIndexStr, "");
         if (UtilValidate.isEmpty(viewIndexStr))
             viewIndexStr = "0";
         int viewIndex = Integer.parseInt(viewIndexStr); 
@@ -327,6 +310,9 @@ public class LoopSubContentCacheTransform implements TemplateTransformModel {
             }
 
             public int onStart() throws TemplateModelException, IOException {
+                List globalNodeTrail = (List)templateCtx.get("globalNodeTrail");
+                String trailCsv = FreeMarkerWorker.nodeTrailToCsv(globalNodeTrail);
+                //if (Debug.infoOn()) Debug.logInfo("in Loop, onStart, trailCsv:" + trailCsv, "");
                 int viewIndex = ((Integer)templateCtx.get("viewIndex")).intValue(); 
                 int viewSize = ((Integer)templateCtx.get("viewSize")).intValue(); 
                 int listSize = ((Integer)templateCtx.get("listSize")).intValue(); 
@@ -347,8 +333,8 @@ public class LoopSubContentCacheTransform implements TemplateTransformModel {
                     inProgress = getNextMatchingEntity(templateCtx, delegator);
                 }
                 if (Debug.verboseOn()) Debug.logVerbose("in LoopSubContentCache, onStart, inProgress:" + inProgress, module);
+                FreeMarkerWorker.saveContextValues(templateCtx, saveKeyNames, savedValues);
                 if (inProgress) {
-                    FreeMarkerWorker.saveContextValues(templateCtx, saveKeyNames, savedValues);
                     return TransformControl.EVALUATE_BODY;
                 } else {
                     return TransformControl.SKIP_BODY;
@@ -358,6 +344,10 @@ public class LoopSubContentCacheTransform implements TemplateTransformModel {
             public int afterBody() throws TemplateModelException, IOException {
 
                 FreeMarkerWorker.reloadValues(templateCtx, savedValues);
+                List list = (List)templateCtx.get("globalNodeTrail");
+                List subList = list.subList(0, list.size() - 1 );
+                templateCtx.put("globalNodeTrail", subList);
+                
                 int outputIndex = ((Integer)templateCtx.get("outputIndex")).intValue(); 
                 int highIndex = ((Integer)templateCtx.get("highIndex")).intValue(); 
                 boolean inProgress = false;
@@ -375,62 +365,10 @@ public class LoopSubContentCacheTransform implements TemplateTransformModel {
 
             public void close() throws IOException {
 
-                FreeMarkerWorker.reloadValues(templateCtx, savedValuesUp);
+                FreeMarkerWorker.reloadValues(templateCtx, savedValues);
                 String wrappedContent = buf.toString();
                 out.write(wrappedContent);
                 //if (Debug.infoOn()) Debug.logInfo("in LoopSubContent, wrappedContent:" + wrappedContent, module);
-/*
-                if (Debug.verboseOn()) Debug.logVerbose("in LoopSubContentCache, wrappedContent:"+wrappedContent,module);
-                String wrapTemplateId = (String)templateCtx.get("wrapTemplateId");
-                    if (Debug.verboseOn()) Debug.logVerbose("in LoopSubContentCache, wrapTemplateId:" + wrapTemplateId, module);
-                String editTemplate = (String)templateCtx.get("editTemplate");
-                if (editTemplate != null && editTemplate.equalsIgnoreCase("true")
-                    && UtilValidate.isNotEmpty(wrapTemplateId)) {
-                    templateCtx.put("wrappedContent", wrappedContent);
-                    templateCtx.put("contentIdTo", contentIdTo);
-                    //if (Debug.verboseOn()) Debug.logVerbose("in LoopSubContentCache, rootDir:" + rootDir, module);
-                    
-                    //Map templateRoot = FreeMarkerWorker.createEnvironmentMap(env);
-                    Map templateRoot = null;
-                    Map templateRootTemplate = (Map)templateCtx.get("templateRootTemplate");
-                    if (templateRootTemplate == null) {
-                        Map templateRootTmp = FreeMarkerWorker.createEnvironmentMap(env);
-                        templateRoot = new HashMap(templateRootTmp);
-                        templateCtx.put("templateRootTemplate", templateRootTmp);
-                    } else {
-                        templateRoot = new HashMap(templateRootTemplate);
-                    }
-                    
-                    templateRoot.put("context", templateCtx);
-        if (Debug.verboseOn()) {
-            Debug.logVerbose("in LoopSubContent, templateCtx.keySet()" + templateCtx.keySet(), "");
-            Set kySet = templateCtx.keySet();
-            Iterator it = kySet.iterator();
-            while (it.hasNext()) {
-                Object ky = it.next();
-            Debug.logVerbose("in LoopContentAsText, ky:" + ky, "");
-                Object val = templateCtx.get(ky);
-                    Debug.logVerbose("in LoopContentAsText, val:" + val, "");
-            }
-        }
-                    
-                    Locale locale = (Locale) templateCtx.get("locale");
-                    if (locale == null)
-                        locale = Locale.getDefault();
-                    String mimeTypeId = (String) templateCtx.get("mimeTypeId");
-                if (Debug.verboseOn()) Debug.logVerbose(FreeMarkerWorker.logMap("(L)close middle", templateCtx, 0),module);
-                    try {
-                        ContentWorker.renderContentAsTextCache(delegator, wrapTemplateId, out, templateRoot, null, locale, mimeTypeId);
-                    } catch (GeneralException e) {
-                        Debug.logError(e, "Error rendering content", module);
-                        throw new IOException("Error rendering content" + e.toString());
-                    }
-                if (Debug.verboseOn()) Debug.logVerbose(FreeMarkerWorker.logMap("(L)close middle(2)", templateCtx, 0),module);
-                } else {
-                    if (UtilValidate.isNotEmpty(wrappedContent))
-                        out.write(wrappedContent);
-                }
-*/
         //try {
         //Profiler.end("Loop");
         //FileOutputStream fw = new FileOutputStream(new File("/usr/local/agi/ofbiz/hot-deploy/sfmp/misc/profile.data"));
