@@ -68,6 +68,9 @@ public class ProductPromoWorker {
     }
     
     public static void doPromotions(String prodCatalogId, ShoppingCart cart, ShoppingCartItem cartItem, double oldQuantity, GenericDelegator delegator, LocalDispatcher dispatcher) {
+        //this is our safety net; we should never need to loop through the rules more than a certain number of times, this is that number and may have to be changed for insanely large promo sets...
+        int maxIterations = 1000;
+        
         if (cartItem.getQuantity() == oldQuantity) {
             //no change, just return
             Debug.logInfo("Cart quantity did not change, not doing promos.");
@@ -91,20 +94,49 @@ public class ProductPromoWorker {
         
         //there will be a ton of db access, so just do a big catch entity exception block
         try {
-            //loop through promotions
-            Iterator prodCatalogPromoAppls = UtilMisc.toIterator(EntityUtil.filterByDate(prodCatalog.getRelatedCache("ProdCatalogPromoAppl", null, UtilMisc.toList("sequenceNum")), true));
-            if (prodCatalogPromoAppls == null || !prodCatalogPromoAppls.hasNext()) {
+            //loop through promotions and get a list of all of the rules...
+            Collection prodCatalogPromoApplsCol = EntityUtil.filterByDate(prodCatalog.getRelatedCache("ProdCatalogPromoAppl", null, UtilMisc.toList("sequenceNum")), true);
+            if (prodCatalogPromoApplsCol == null || prodCatalogPromoApplsCol.size() == 0) {
                 if (Debug.infoOn()) Debug.logInfo("Not doing promotions, none applied to prodCatalog with ID " + prodCatalogId);
             }
             
+            List allPromoRules = new LinkedList();
+            Iterator prodCatalogPromoAppls = UtilMisc.toIterator(prodCatalogPromoApplsCol);
             while (prodCatalogPromoAppls != null && prodCatalogPromoAppls.hasNext()){
                 GenericValue prodCatalogPromoAppl = (GenericValue) prodCatalogPromoAppls.next();
                 GenericValue productPromo = prodCatalogPromoAppl.getRelatedOneCache("ProductPromo");
+
+                Collection productPromoRules = productPromo.getRelatedCache("ProductPromoRule", null, null);
+                if (productPromoRules != null) {
+                    allPromoRules.addAll(productPromoRules);
+                }
+            }
+            
+            //This isn't necessary, just removing run rules from list: Set firedRules = new HashSet();
+            
+            //part of the safety net to avoid infinite iteration
+            int numberOfIterations = 0;
+            //repeat until no more rules to run: either all rules are run, or no changes to the cart in a loop
+            boolean cartChanged = true;
+            while (cartChanged) {
+                cartChanged = false;
+
+                numberOfIterations++;
+                if (numberOfIterations > maxIterations) {
+                    Debug.logError("ERROR: While calculating promotions the promotion rules where run more than " + maxIterations + " times, so the calculation has been ended. This should generally never happen unless you have bad rule definitions (or LOTS of promos/rules).");
+                    break;
+                }
                 
-                //loop through rules for promotion
-                Iterator productPromoRules = UtilMisc.toIterator(productPromo.getRelatedCache("ProductPromoRule", null, null));
-                while (productPromoRules != null && productPromoRules.hasNext()) {
-                    GenericValue productPromoRule = (GenericValue) productPromoRules.next();
+                Iterator allPromoRulesIter = allPromoRules.iterator();
+                while (allPromoRulesIter != null && allPromoRulesIter.hasNext()) {
+                    GenericValue productPromoRule = (GenericValue) allPromoRulesIter.next();
+                    /* This isn't necessary, just removing run rules from list: 
+                    GenericPK productPromoRulePK = productPromoRule.getPrimaryKey();
+                    //check to see if this rule has already been fired, if so don't fire it again
+                    if (firedRules.contains(productPromoRulePK)) {
+                        //go onto the next rule in this promo...
+                        continue;
+                    }*/
 
                     //by default we start with whatever apply is because:
                     // if apply then performActions when no conditions are false, so default to true
@@ -114,7 +146,7 @@ public class ProductPromoWorker {
                     Iterator productPromoConds = UtilMisc.toIterator(productPromoRule.getRelatedCache("ProductPromoCond", null, UtilMisc.toList("productPromoCondSeqId")));
                     while (productPromoConds != null && productPromoConds.hasNext()) {
                         GenericValue productPromoCond = (GenericValue) productPromoConds.next();
-                        
+
                         boolean condResult = checkCondition(prodCatalogId, productPromoCond, cart, cartItem, oldQuantity, delegator);
                         //if apply, any false condition will cause it to NOT perform the action
                         //if !apply, any false condition will cause it to PERFORM the action
@@ -124,18 +156,28 @@ public class ProductPromoWorker {
                             break;
                         }
                     }
-                    
+
                     if (performActions) {
                         //perform all actions, either apply or unapply
-                        if (Debug.infoOn()) Debug.logInfo((apply ? "Performing" : "Un-performing") + " actions for rule " + productPromoRule + "; apply=" + apply);
+                        if (Debug.verboseOn()) Debug.logVerbose((apply ? "Performing" : "Un-performing") + " actions for rule " + productPromoRule + "; apply=" + apply);
+                        /* This isn't necessary, just removing run rules from list: 
+                        //rule done, add to list so it won't get done again
+                        firedRules.add(productPromoRulePK);*/
                         
+                        //rule done, remove from list so it won't get done again
+                        allPromoRulesIter.remove();
+
                         Iterator productPromoActions = UtilMisc.toIterator(productPromoRule.getRelatedCache("ProductPromoAction", null, UtilMisc.toList("productPromoActionSeqId")));
                         while (productPromoActions != null && productPromoActions.hasNext()) {
                             GenericValue productPromoAction = (GenericValue) productPromoActions.next();
                             //Debug.logInfo("Doing action: " + productPromoAction);
-                            
+
                             try {
-                                performAction(apply, productPromoAction, cart, cartItem, oldQuantity, prodCatalogId, delegator, dispatcher);
+                                boolean actionChangedCart = performAction(apply, productPromoAction, cart, cartItem, oldQuantity, prodCatalogId, delegator, dispatcher);
+                                //if cartChanged is already true then don't set it again: implements OR logic (ie if ANY actions change content, redo loop)
+                                if (!cartChanged) {
+                                    cartChanged = actionChangedCart;
+                                }
                             } catch (CartItemModifyException e) {
                                 Debug.logWarning("Possible error modifying the cart in perform promotion action: " + e.toString());
                             }
@@ -221,14 +263,15 @@ public class ProductPromoWorker {
         }
         return false;
     }
-    
-    public static void performAction(boolean apply, GenericValue productPromoAction, ShoppingCart cart, ShoppingCartItem cartItem, double oldQuantity, String prodCatalogId, GenericDelegator delegator, LocalDispatcher dispatcher) throws GenericEntityException, CartItemModifyException {
+
+    /** returns true if the cart was changed and rules need to be re-evaluted */
+    public static boolean performAction(boolean apply, GenericValue productPromoAction, ShoppingCart cart, ShoppingCartItem cartItem, double oldQuantity, String prodCatalogId, GenericDelegator delegator, LocalDispatcher dispatcher) throws GenericEntityException, CartItemModifyException {
         if ("PROMO_GWP".equals(productPromoAction.getString("productPromoActionTypeId"))) {
             if (apply) {
                 Integer itemLoc = findPromoItem(productPromoAction, cart);
                 if (itemLoc != null) {
-                    if (Debug.infoOn()) Debug.logInfo("Not adding promo item, already there; action: " + productPromoAction);
-                    return;
+                    if (Debug.verboseOn()) Debug.logVerbose("Not adding promo item, already there; action: " + productPromoAction);
+                    return false;
                 }
 
                 GenericValue product = delegator.findByPrimaryKeyCache("Product", UtilMisc.toMap("productId", productPromoAction.get("productId")));
@@ -252,9 +295,10 @@ public class ProductPromoWorker {
                 //set promo after create; note that to setQuantity we must clear this flag, setQuantity, then re-set the flag
                 gwpItem.setIsPromo(true);
                 gwpItem.addAdjustment(orderAdjustment);
-                ProductPromoWorker.doPromotions(prodCatalogId, cart, gwpItem, 0, delegator, dispatcher);
-                
-                if (Debug.infoOn()) Debug.logInfo("qwpItem adjustments: " + gwpItem.getAdjustments());
+                if (Debug.verboseOn()) Debug.logVerbose("gwpItem adjustments: " + gwpItem.getAdjustments());
+
+                //ProductPromoWorker.doPromotions(prodCatalogId, cart, gwpItem, 0, delegator, dispatcher);
+                return true;
             } else {
                 //how to remove this? find item that isPromo with the product id and has adjustment with the same promo/rule id, then remove it
 
@@ -265,11 +309,13 @@ public class ProductPromoWorker {
                     //before clearing it, set it to a non-promo so that the setQuantity won't throw an exception
                     ShoppingCartItem cartItemToRemove = cart.findCartItem(itemLoc.intValue());
                     cartItemToRemove.setIsPromo(false);
-                    Debug.logInfo("About to remove cart item at location " + itemLoc.intValue());
+                    if (Debug.verboseOn()) Debug.logVerbose("About to remove cart item at location " + itemLoc.intValue());
                     cart.removeCartItem(itemLoc.intValue(), dispatcher);
-                    ProductPromoWorker.doPromotions(prodCatalogId, cart, cartItem, oldQuantity, delegator, dispatcher);
+                    //ProductPromoWorker.doPromotions(prodCatalogId, cart, cartItem, oldQuantity, delegator, dispatcher);
+                    return true;
                 } else {
                     if (Debug.verboseOn()) Debug.logVerbose("Could not find cart item for the action " + productPromoAction);
+                    return false;
                 }
             }
         } else if ("PROMO_FREE_SHIPPING".equals(productPromoAction.getString("productPromoActionTypeId"))) {
@@ -281,6 +327,8 @@ public class ProductPromoWorker {
                         "productPromoRuleId", productPromoAction.getString("productPromoRuleId"),
                         "productPromoActionSeqId", productPromoAction.getString("productPromoActionSeqId"),
                         "orderAdjustmentTypeId", productPromoAction.getString("orderAdjustmentTypeId")));
+                //don't consider this as a cart change...
+                return false;
             } else {
                 Map freeShippingInfo = cart.getFreeShippingInfo();
                 if (freeShippingInfo != null && freeShippingInfo.get("productPromoId") != null && freeShippingInfo.get("productPromoRuleId") != null ) {
@@ -291,19 +339,21 @@ public class ProductPromoWorker {
                         cart.setFreeShippingInfo(null);
                     }
                 }
+                return false;
             }
         } else if ("PROMO_ITEM_PERCENT".equals(productPromoAction.getString("productPromoActionTypeId"))) {
-            doItemPromoAction(apply, productPromoAction, cartItem, "percentage", delegator);
+            return doItemPromoAction(apply, productPromoAction, cartItem, "percentage", delegator);
         } else if ("PROMO_ITEM_AMOUNT".equals(productPromoAction.getString("productPromoActionTypeId"))) {
-            doItemPromoAction(apply, productPromoAction, cartItem, "amount", delegator);
+            return doItemPromoAction(apply, productPromoAction, cartItem, "amount", delegator);
         } else if ("PROMO_ITEM_AMNTPQ".equals(productPromoAction.getString("productPromoActionTypeId"))) {
-            doItemPromoAction(apply, productPromoAction, cartItem, "amountPerQuantity", delegator);
+            return doItemPromoAction(apply, productPromoAction, cartItem, "amountPerQuantity", delegator);
         } else if ("PROMO_ORDER_PERCENT".equals(productPromoAction.getString("productPromoActionTypeId"))) {
-            doOrderPromoAction(apply, productPromoAction, cart, "percentage", delegator);
+            return doOrderPromoAction(apply, productPromoAction, cart, "percentage", delegator);
         } else if ("PROMO_ORDER_AMOUNT".equals(productPromoAction.getString("productPromoActionTypeId"))) {
-            doOrderPromoAction(apply, productPromoAction, cart, "amount", delegator);
+            return doOrderPromoAction(apply, productPromoAction, cart, "amount", delegator);
         } else {
             Debug.logError("An un-supported productPromoActionType was used: " + productPromoAction.getString("productPromoActionTypeId") + ", not performing any action");
+            return false;
         }
     }
 
@@ -329,12 +379,12 @@ public class ProductPromoWorker {
         return null;
     }
 
-    public static void doItemPromoAction(boolean apply, GenericValue productPromoAction, ShoppingCartItem cartItem, String quantityField, GenericDelegator delegator) {
+    public static boolean doItemPromoAction(boolean apply, GenericValue productPromoAction, ShoppingCartItem cartItem, String quantityField, GenericDelegator delegator) {
         if (apply) {
             Integer adjLoc = findAdjustment(productPromoAction, (List) cartItem.getAdjustments());
             if (adjLoc != null) {
-                if (Debug.infoOn()) Debug.logInfo("Not adding promo adjustment, already there; action: " + productPromoAction);
-                return;
+                if (Debug.verboseOn()) Debug.logVerbose("Not adding promo adjustment, already there; action: " + productPromoAction);
+                return false;
             }
             
             double quantity = productPromoAction.get("quantity") == null ? 0.0 : productPromoAction.getDouble("quantity").doubleValue();
@@ -349,22 +399,26 @@ public class ProductPromoWorker {
             }
 
             cartItem.addAdjustment(itemAdjustment);
+            return true;
         } else {
             Integer adjLoc = findAdjustment(productPromoAction, (List) cartItem.getAdjustments());
             if (adjLoc != null) {
                 //Debug.logInfo("Found adjustment on cartItem for productId " + cartItem.getProductId() + "removing.");
                 cartItem.removeAdjustment(adjLoc.intValue());
+                return true;
+            } else {
+                return false;
             }
         }
     }
     
-    public static void doOrderPromoAction(boolean apply, GenericValue productPromoAction, ShoppingCart cart, String quantityField, GenericDelegator delegator) {
-        Debug.logInfo("Starting doOrderPromoAction: apply=" + apply + ", productPromoAction=" + productPromoAction);
+    public static boolean doOrderPromoAction(boolean apply, GenericValue productPromoAction, ShoppingCart cart, String quantityField, GenericDelegator delegator) {
+        //Debug.logInfo("Starting doOrderPromoAction: apply=" + apply + ", productPromoAction=" + productPromoAction);
         if (apply) {
             Integer adjLoc = findAdjustment(productPromoAction, (List) cart.getAdjustments());
             if (adjLoc != null) {
                 if (Debug.infoOn()) Debug.logInfo("Not adding promo adjustment, already there; action: " + productPromoAction);
-                return;
+                return false;
             }
             
             double quantity = productPromoAction.get("quantity") == null ? 0.0 : productPromoAction.getDouble("quantity").doubleValue();
@@ -379,11 +433,15 @@ public class ProductPromoWorker {
             }
 
             cart.addAdjustment(orderAdjustment);
+            return true;
         } else {
             Integer adjLoc = findAdjustment(productPromoAction, (List) cart.getAdjustments());
-            Debug.logInfo("Finding adjustment, adjLoc=" + adjLoc);
+            //Debug.logInfo("Finding adjustment, adjLoc=" + adjLoc);
             if (adjLoc != null) {
                 cart.removeAdjustment(adjLoc.intValue());
+                return true;
+            } else {
+                return false;
             }
         }
     }
