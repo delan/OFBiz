@@ -239,7 +239,7 @@
 
     <request-map uri="calcShipping">
         <security direct-request="false"/>
-        <event type="java" path="org.ofbiz.shipment.shipment.ShippingEvents" invoke="getShipEstimate"/>
+        <event type="java" path="org.ofbiz.order.shoppingcart.shipping.ShippingEvents" invoke="getShipEstimate"/>
         <response name="success" type="request" value="calcTax"/>
         <response name="error" type="view" value="checkoutoptions"/>
     </request-map>
