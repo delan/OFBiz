@@ -20,11 +20,15 @@
  *  THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  *
  *@author     Andy Zeneski
- *@version    $Revision: 1.2 $
+ *@version    $Revision: 1.3 $
  *@since      2.1
 -->
 
 <#-- Render the category page -->
-${pages.get("/catalog/category.ftl")}
+<#if requestAttributes.productCategoryId?has_content>
+  ${pages.get("/catalog/category.ftl")}
+<#else>
+  <center><h2>No PROMOTION Category found for CATALOG</h2></center>
+</#if>
 
 
