@@ -22,7 +22,7 @@
  *@author     Andy Zeneski (jaz@ofbiz.org)
  *@author     David E. Jones (jonesde@ofbiz.org)
  *@author     Olivier Heintz (olivier.heintz@nereide.biz)
- *@version    $Revision: 1.2 $
+ *@version    $Revision: 1.3 $
  *@since      2.1
 -->
 <#assign uiLabelMap = requestAttributes.uiLabelMap>
@@ -33,8 +33,8 @@
 <br>
 <table width="100%" border="0" cellpadding="0" cellspacing="0"> 
   <tr>
-    <td><div class="tableheadtext">${uiLabelMap.AccountingAccId}</div></td>
-    <td><div class="tableheadtext">${uiLabelMap.AccountingAccLimit}</div></td>
+    <td><div class="tableheadtext">${uiLabelMap.AccountingAccountId}</div></td>
+    <td><div class="tableheadtext">${uiLabelMap.AccountingAccountLimit}</div></td>
     <#if billingAccountRolesByParty?has_content>
       <#assign colSpan = "4">
       <td><div class="tableheadtext">${uiLabelMap.PartyRoleTypeId}</div></td>
@@ -69,7 +69,7 @@
     </#list>
   <#else>
     <tr>
-      <td colspan='3'><div class="tabletext">${uiLabelMap.AccountingNoBillAccFound}</div></td>
+      <td colspan='3'><div class="tabletext">${uiLabelMap.AccountingNoBillingAccountFound}</div></td>
     </tr>    
   </#if>
 </table>

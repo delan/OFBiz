@@ -22,14 +22,14 @@
  *@author     Andy Zeneski (jaz@ofbiz.org)
  *@author     David E. Jones (jonesde@ofbiz.org)
  *@author     Olivier Heintz (olivier.heintz@nereide.biz)
- *@version    $Revision: 1.2 $
+ *@version    $Revision: 1.3 $
  *@since      2.1
 -->
 <#assign uiLabelMap = requestAttributes.uiLabelMap>
 
 ${pages.get("/billingaccount/BillingAccountTabBar.ftl")}
 
-<div class="head1">${uiLabelMap.PageTitleEditBillingAccountRoles} - ${uiLabelMap.AccountingAccId}: ${billingAccount.billingAccountId}</div>
+<div class="head1">${uiLabelMap.PageTitleEditBillingAccountRoles} - ${uiLabelMap.AccountingAccountId}: ${billingAccount.billingAccountId}</div>
 
 <br>
 <table width="100%" border="0" cellpadding="2" cellspacing="0">
@@ -43,7 +43,7 @@ ${pages.get("/billingaccount/BillingAccountTabBar.ftl")}
   <tr><td colspan="5"><hr class="sepbar"></td></tr>
   <#if !billingAccountRoles?exists || billingAccountRoles?size == 0>
     <tr>
-      <td colspan='5'><div class='tabletext'>${uiLabelMap.AccountingNoBillAccRole}</div></td>
+      <td colspan='5'><div class='tabletext'>${uiLabelMap.AccountingNoBillingAccountRole}</div></td>
     </tr>
   <#else>
     <#list billingAccountRoles as role>
@@ -65,7 +65,7 @@ ${pages.get("/billingaccount/BillingAccountTabBar.ftl")}
 </table>
 
 <br>
-<div class="head1">${uiLabelMap.AccountingCreatBillAccRole}</div>
+<div class="head1">${uiLabelMap.AccountingCreateBillingAccountRole}</div>
 <br>
 <form name="billingform" method="post" action="<@ofbizUrl>/createBillingAccountRole</@ofbizUrl>">
   <input type="hidden" name="billingAccountId" value="${billingAccount.billingAccountId}">

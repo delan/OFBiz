@@ -22,14 +22,15 @@
  *@author     Andy Zeneski (jaz@ofbiz.org)
  *@author     David E. Jones (jonesde@ofbiz.org)
  *@author     Olivier Heintz (olivier.heintz@nereide.biz)
- *@version    $Revision: 1.2 $
+ *@version    $Revision: 1.3 $
  *@since      2.1
 -->
 <#assign uiLabelMap = requestAttributes.uiLabelMap>
+<#assign locale = requestAttributes.locale>
 
 ${pages.get("/billingaccount/BillingAccountTabBar.ftl")}
 
-<div class="head1">${uiLabelMap.PageTitleEditBillingAccountTerms} - ${uiLabelMap.AccountingAccId}: ${billingAccount.billingAccountId}</div>
+<div class="head1">${uiLabelMap.PageTitleEditBillingAccountTerms} - ${uiLabelMap.AccountingAccountId}: ${billingAccount.billingAccountId}</div>
 
 <br>
 <table width="100%" border="0" cellpadding="0" cellspacing="0">
@@ -42,7 +43,7 @@ ${pages.get("/billingaccount/BillingAccountTabBar.ftl")}
   <tr><td colspan="5"><hr class="sepbar"></td></tr>
   <#if !billingAccountTerms?exists || billingAccountTerms?size == 0>
     <tr>
-      <td colspan="5"><div class="tabletext">${uiLabelMap.AccountingNoBillAccTerm}</div></td>
+      <td colspan="5"><div class="tabletext">${uiLabelMap.AccountingNoBillingAccountTerm}</div></td>
     </tr>
   <#else>
     <#list billingAccountTerms as term>
@@ -51,7 +52,7 @@ ${pages.get("/billingaccount/BillingAccountTabBar.ftl")}
       <#assign uom = term.getRelatedOne("Uom")>
     </#if>
     <tr>
-      <td><div class="tabletext">${termType.description?if_exists}</div></td>
+      <td><div class="tabletext">${(termType.get("description", locale))?if_exists}</div></td>
       <td><div class="tabletext">${term.termValue?if_exists}</div></td>
       <td><div class="tabletext"><#if uom?has_content>${uom.description?if_exists}<#else>&nbsp;</#if></div></td>
       <td align="right">  
@@ -70,19 +71,19 @@ ${pages.get("/billingaccount/BillingAccountTabBar.ftl")}
     <form name="billingform" method="post" action="<@ofbizUrl>/updateBillingAccountTerm</@ofbizUrl>">
       <input type="hidden" name="billingAccountTermId" value="${billingAccountTerm.billingAccountTermId}">
 <#else>
-    <div class="head1">${uiLabelMap.AccountingCreatBillAccTerm}</div>
+    <div class="head1">${uiLabelMap.AccountingCreateBillingAccountTerm}</div>
     <br>
     <form name="billingform" method="post" action="<@ofbizUrl>/createBillingAccountTerm</@ofbizUrl>">
 </#if>
   <input type="hidden" name="billingAccountId" value="${billingAccount.billingAccountId}">
   <table width="90%" border="0" cellpadding="2" cellspacing="0"> 
     <tr>
-      <td width="26%" align="right" valign="top"><div class="tabletext">${uiLabelMap.PartyTermTyp}</div></td>
+      <td width="26%" align="right" valign="top"><div class="tabletext">${uiLabelMap.PartyTermType}</div></td>
       <td width="5">&nbsp;</td>
       <td width="74%">
         <select class="selectBox" name="termTypeId">
           <#list termTypes as termType>
-          <option value="${termType.termTypeId}" <#if termData?has_content && termData.termTypeId?default("") == termType.termTypeId>SELECTED</#if>>${termType.description?if_exists}</option>
+          <option value="${termType.termTypeId}" <#if termData?has_content && termData.termTypeId?default("") == termType.termTypeId>SELECTED</#if>>${(termType.get("description", locale))?if_exists}</option>
           </#list>
         </select>
       *</td>

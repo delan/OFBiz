@@ -25,13 +25,13 @@
  *
  * @author     Andy Zeneski (jaz@ofbiz.org)
  * @author     David E. Jones (jonesde@ofbiz.org)
- * @version    $Revision: 1.5 $
+ * @version    $Revision: 1.6 $
  * @since      2.0
 -->
 
 <simple-methods>
     <simple-method method-name="createBillingAccount" short-description="Create Billing Account">
-    	<check-permission permission="ACCOUNTING" action="_CREATE"><fail-message message="Security Error: to run createBillingAccount you must have the ACCOUNTING_CREATE or ACCOUNTING_ADMIN permission"/></check-permission>
+    	<check-permission permission="ACCOUNTING" action="_CREATE"><fail-property resource="AccountingUiLabels" property="AccountingCreateBillingAccountPermissionError"/></check-permission>
     	<check-errors/>
     	
         <make-value value-name="newEntity" entity-name="BillingAccount"/>
