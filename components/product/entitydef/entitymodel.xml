@@ -26,7 +26,7 @@
  *
  * @author     David E. Jones (jonesde@ofbiz.org)
  * @author     Andy Zeneski (jaz@ofbiz.org)
- * @version    $Revision: 1.97 $
+ * @version    $Revision: 1.98 $
  */
 -->
 
@@ -2977,6 +2977,7 @@
       <field name="unitsIncluded" type="floating-point"></field>
       <field name="quantityUomId" type="id"></field>
       <field name="lastPrice" type="currency-amount"></field>
+      <field name="currencyUomId" type="id"></field>
       <field name="supplierProductName" type="name"></field>
       <field name="supplierProductId" type="id"></field>
       <field name="comments" type="comment"></field>
