@@ -83,35 +83,7 @@ public class ConnectionFactory {
             }
         }
 
-        // Try to use PoolMan Connection Pool.
-        String poolManName = UtilProperties.getPropertyValue("entityengine", helperName + ".jdbc.poolman");
-        //Debug.logInfo("[ConnectionFactory.getConnection] Attempting to connect to PoolMan pool with name '"+poolManName+"'");
-        boolean usingPoolMan = false;
-        if (poolManName != null && poolManName.length() > 0) {
-            usingPoolMan = true;
-
-            // if exists, start PoolMan
-            try {
-                Class poolManClass = Class.forName("com.codestudio.sql.PoolMan");
-                Method startMethod = poolManClass.getMethod("start", null);
-                startMethod.invoke(null, null);
-                //Debug.logInfo("Found PoolMan Driver...");
-            } catch (Exception ex) {
-                //Debug.logWarning("[ControlServlet.init] WARNING: PoolMan not found");
-                usingPoolMan = false;
-            }
-
-            if (usingPoolMan) {
-                Connection con = DriverManager.getConnection("jdbc:poolman://" + poolManName);
-                if (con != null) {
-                    //Debug.logInfo("Connection to PoolMan established.");
-                    return con;
-                }
-            }
-            usingPoolMan = false;
-        }
-
-        //If not PoolMan or JNDI sources are specified, or found, try Tyrex
+        //If JNDI sources are not specified, or found, try Tyrex
         Connection con = TyrexConnectionFactory.getConnection(helperName);
         if (con != null)
             return con;
@@ -135,4 +107,3 @@ public class ConnectionFactory {
         return null;
     }
 }
-
