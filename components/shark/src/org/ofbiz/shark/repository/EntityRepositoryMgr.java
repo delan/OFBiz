@@ -1,5 +1,5 @@
 /*
- * $Id: EntityRepositoryMgr.java,v 1.1 2004/07/11 23:26:29 ajzeneski Exp $
+ * $Id: EntityRepositoryMgr.java,v 1.2 2004/07/13 22:22:04 ajzeneski Exp $
  *
  */
 package org.ofbiz.shark.repository;
@@ -30,7 +30,7 @@ import org.enhydra.shark.api.TransactionException;
 /**
  * 
  * @author     <a href="mailto:jaz@ofbiz.org">Andy Zeneski</a>
- * @version    $Revision: 1.1 $
+ * @version    $Revision: 1.2 $
  * @since      3.1
  */
 public class EntityRepositoryMgr implements RepositoryPersistenceManager {
@@ -255,8 +255,8 @@ public class EntityRepositoryMgr implements RepositoryPersistenceManager {
         GenericDelegator delegator = SharkContainer.getDelegator();
         GenericValue xpdl = null;
         try {
-            xpdl = delegator.findByPrimaryKey("WfRepository", UtilMisc.toMap("xpdlId", xpdlId, "xpdlVersion", xpdlVersion));
-            if (!includeHistorical && xpdl.getString("isHistorical").equalsIgnoreCase("Y")) {
+            xpdl = delegator.findByPrimaryKey("WfRepository", UtilMisc.toMap("xpdlId", xpdlId, "xpdlVersion", xpdlVersion));            
+            if (!includeHistorical && xpdl.get("isHistorical") != null && xpdl.getString("isHistorical").equalsIgnoreCase("Y")) {
                 xpdl = null;
 
             }
