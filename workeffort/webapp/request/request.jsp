@@ -104,6 +104,14 @@
                         <td align="right">Description</td>
                         <td><input type="text" name="description" style="font-size: medium;" size="50" value="<%= custRequest != null ? custRequest.getString("description") : ""%>"></td>
                       </tr>
+
+                      <ofbiz:unless name="custRequest">
+                      <tr>
+                        <td align="right">Requesting Party</td>
+                        <td><input type="text" name="requestPartyId" style="font-size: medium;" size="50"></td>
+                      </tr>
+                      </ofbiz:unless>
+
                       <tr>
                         <ofbiz:unless name="custRequest">
                           <td align="right"><input type="submit" style="font-size: medium;" value="Create"></td>
@@ -199,7 +207,13 @@
                           <td align="right">Party ID</td>
                           <td><input type="text" name="partyId" style="font-size: medium;" size="30"></td>
                           <td align="right">Role Type ID</td>
-                          <td><input type="text" name="roleTypeId" style="font-size: medium;" size="30" value=""></td>
+                          <td>
+                            <select name="roleTypeId" style="font-size: medium;">
+                              <option value="REQ_TAKER">Request Taker</option>
+                              <option value="REQ_REQUESTER">Requesting Party</option>
+                              <option value="REQ_MANAGER">Request Manager</option>
+                            </select>
+                          </td>
                           <td align="center"><input type="submit" style="font-size: medium;" value="Add"></td>
                           <td colspan="2">&nbsp;&nbsp;&nbsp;</td>
                         </tr>

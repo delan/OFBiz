@@ -35,10 +35,23 @@
         <sequenced-id-to-env sequence-name="CustRequest" env-name="custRequestId"/>
         <to-string field-name="custRequestId"/>
         <env-to-field env-name="custRequestId" map-name="newEntity"/>
-        <field-to-result field-name="custRequestId" result-name="custRequestId"/>
-
         <create-value value-name="newEntity"/>
-        <field-to-result field-name="custRequestId"/>
+        <field-to-result field-name="custRequestId" map-name="newEntity"/>
+
+        <field-to-field field-name="custRequestId" map-name="newEntity" to-map-name="takerMap"/>
+        <field-to-field field-name="partyId" map-name="userLogin" to-map-name="takerMap"/>
+        <string-to-field string="REQ_TAKER" map-name="takerMap" field-name="roleTypeId"/>
+        <call-service service-name="createCustRequestRole" in-map-name="takerMap"/>
+
+        <field-to-field field-name="custRequestId" map-name="newEntity" to-map-name="requesterMap"/>
+        <if-not-empty field-name="requestPartyId" map-name="parameters">
+            <field-to-field field-name="requestPartyId" map-name="parameters" to-map-name="requesterMap" to-field-name="partyId"/>
+            <else>
+              <field-to-field field-name="partyId" map-name="userLogin" to-map-name="requesterMap"/>
+            </else>
+        </if-not-empty>
+        <string-to-field string="REQ_REQUESTER" map-name="requesterMap" field-name="roleTypeId"/>
+        <call-service service-name="createCustRequestRole" in-map-name="requesterMap"/>
     </simple-method>
 
     <simple-method method-name="updateCustRequest" short-description="Update Customer Request">
@@ -51,7 +64,7 @@
     <simple-method method-name="createCustRequestAttribute" short-description="Create Customer Request Attribute">
         <make-value value-name="newEntity" entity-name="CustRequestAttribute"/>
         <set-pk-fields map-name="parameters" value-name="newEntity"/>
-        <set-nopk-fields map-name="parameters" value-name="newEntity"/>
+        <set-nonpk-fields map-name="parameters" value-name="newEntity"/>
         <create-value value-name="newEntity"/>
     </simple-method>
 
@@ -79,6 +92,14 @@
     </simple-method>
 
     <simple-method method-name="createCustRequestRole" short-description="Create Customer RequestRole">
+        <field-to-field field-name="partyId" map-name="parameters" to-map-name="lookupPKMap"/>
+        <field-to-field field-name="roleTypeId" map-name="parameters" to-map-name="lookupPKMap"/>
+        <find-by-primary-key entity-name="PartyRole" map-name="lookupPKMap" value-name="partyRole"/>
+        <if-empty map-name="partyRole" field-name="partyId">
+            <make-value value-name="partyRole" entity-name="PartyRole"/>
+            <set-pk-fields map-name="lookupPKMap" value-name="partyRole"/>
+            <create-value value-name="partyRole"/>
+        </if-empty>
         <make-value value-name="newEntity" entity-name="CustRequestRole"/>
         <set-pk-fields map-name="parameters" value-name="newEntity"/>
         <create-value value-name="newEntity"/>

@@ -352,6 +352,9 @@
   <RoleType description="Subscriber" hasTable="N" parentTypeId="" roleTypeId="SUBSCRIBER"/>
   <RoleType description="Visitor" hasTable="N" parentTypeId="" roleTypeId="VISITOR"/>
   <RoleType description="Web Master" hasTable="N" parentTypeId="" roleTypeId="WEB_MASTER"/>
+  <RoleType description="Requesting Party" hasTable="N" parentTypeId="" roleTypeId="REQ_REQUESTER"/>
+  <RoleType description="Request Manager" hasTable="N" parentTypeId="" roleTypeId="REQ_MANAGER"/>
+  <RoleType description="Request Taker" hasTable="N" parentTypeId="" roleTypeId="REQ_TAKER"/>
   <RoleType description="Calendar" hasTable="N" parentTypeId="" roleTypeId="CALENDAR_ROLE"/>
   <RoleType description="Calendar Attendee" hasTable="N" parentTypeId="CALENDAR_ROLE" roleTypeId="CAL_ATTENDEE"/>
   <RoleType description="Calendar Organizer" hasTable="N" parentTypeId="CALENDAR_ROLE" roleTypeId="CAL_ORGANIZER"/>
