@@ -337,13 +337,22 @@ public class HttpClient {
 
         while (i.hasNext()) {
             String name = (String) i.next();
-            String value = (String) args.get(name);
-
-            buf.append(URLEncoder.encode(name));
-            buf.append("=");
-            buf.append(URLEncoder.encode(value));
-            if (i.hasNext())
-                buf.append("&");
+            Object value = args.get(name);
+            String valueStr = null;
+            if (value != null && value instanceof String)
+                valueStr = (String) value;
+            else if (value != null)
+                valueStr = value.toString();
+                        
+            if (name != null) {
+                buf.append(URLEncoder.encode(name));
+                buf.append("=");
+                if (valueStr == null)
+                    valueStr = "";
+                buf.append(URLEncoder.encode(valueStr));
+                if (i.hasNext())
+                    buf.append("&");
+            }
         }
         return buf.toString();
     }
