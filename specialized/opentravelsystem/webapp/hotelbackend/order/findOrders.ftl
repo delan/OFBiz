@@ -61,7 +61,7 @@ function lookupOrders(click) {
               <#else>
                 <#if orderHeaderList?exists><a href="<@ofbizUrl>/findorders?hideFields=Y${paramList}</@ofbizUrl>" class="submenutext">${uiLabelMap.CommonHideFields}</a></#if>
                 <a href="javascript:lookupOrders(true);" class="submenutext">${uiLabelMap.OrderLookupOrder}</a>
-                <a href="/partymgr/control/findparty?externalLoginKey=${requestAttributes.externalLoginKey?if_exists}" class="submenutextright">${uiLabelMap.PartyLookupParty}</a>
+                <!--a href="/partymgr/control/findparty?externalLoginKey=${requestAttributes.externalLoginKey?if_exists}" class="submenutextright">${uiLabelMap.PartyLookupParty}</a-->
               </#if>
             </div>
           </td>
@@ -347,7 +347,7 @@ document.lookuporder.order_id.focus();
               <td><div class="tabletext"><nobr>${orderHeader.getString("orderDate")}</nobr></div></td>
               <td>
                 <#if partyId != "_NA_">
-                  <a href="/partymgr/control/viewprofile?party_id=${partyId}${requestAttributes.externalKeyParam}" class="buttontext">${partyId}</a>
+                  ${partyId}
                 <#else>
                   <span class='tabletext'>N/A</span>
                 </#if>

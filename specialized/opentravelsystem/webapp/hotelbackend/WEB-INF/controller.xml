@@ -23,8 +23,8 @@
 
 <site-conf xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" 
         xsi:noNamespaceSchemaLocation="http://www.ofbiz.org/dtds/site-conf.xsd">
-    <description>Catalog Module Site Configuration File</description>
-    <owner>The Open For Business Project (c) 2001-2004</owner>
+    <description>Hotel Backend Site Configuration File</description>
+    <owner>The Open TravelSystem (c) 2001-2005</owner>
     <errorpage>/error/error.jsp</errorpage>
 
     <handler name="java" type="request" class="org.ofbiz.content.webapp.event.JavaEventHandler"/>
@@ -117,12 +117,6 @@
         <response name="success" type="view" value="main"/>
         <response name="error" type="view" value="error"/>
     </request-map>
-    
-    <request-map uri="chain">
-        <event type="java" path="org.ofbiz.content.webapp.event.TestEvent" invoke="test"/>
-        <response name="success" type="request" value="/view"/>
-        <response name="error" type="view" value="error"/>
-    </request-map>
 
     <request-map uri="setSessionLocale">
         <security https="true" auth="false"/>
@@ -131,7 +125,14 @@
         <response name="error" type="view" value="main"/>
     </request-map>
     
-    <!--==========List products for a hotel store which have a oprimary category of the same name ===== -->
+    <!--========== show screens from the frontend application (does not work (yet))===== -->
+    <request-map uri="product">
+        <security https="false" auth="false"/>
+        <response name="success" type="view" value="product"/>
+    </request-map>
+    
+    
+    <!--==========List products for a hotel store which have a primary category of the same name ===== -->
     <request-map uri="EditProducts"><!-- show a tabular list -->
         <security https="true" auth="true"/>
         <response name="success" type="view" value="EditProducts"/>
@@ -221,14 +222,30 @@
 
 
     <!-- ================ Orders ================= -->
-    <request-map uri="findorders"><!-- show a tabular list of products connected -->
+    <request-map uri="findorders">
         <security https="true" auth="true"/>
         <response name="success" type="view" value="findorders"/>
     </request-map>
+
     <request-map uri="orderview">
         <security https="true" auth="true"/>
-        <response name="success" type="view" value="orderstatus"/>
+        <response name="success" type="view" value="orderview"/>
     </request-map>
+
+    <request-map uri="downloadorder">
+        <security https="true" auth="true"/>
+        <response name="success" type="view" value="downloadorder"/>
+    </request-map>
+
+    <request-map uri="statistics"><security https="true" auth="true"/><response name="success" type="view" value="statistics"/></request-map>
+    <request-map uri="reports"><security https="true" auth="true"/><response name="success" type="view" value="reports"/></request-map>
+    <request-map uri="OrderPurchaseReportPayment.pdf"><security https="true" auth="true"/>
+        <response name="success" type="view" value="OrderPurchaseReportPayment"/>
+    </request-map>
+    <request-map uri="OrderPurchaseReportProduct.pdf"><security https="true" auth="true"/>
+        <response name="success" type="view" value="OrderPurchaseReportProduct"/>
+    </request-map>
+    
     <!-- ================ Partys ================= -->
     <request-map uri="findparty"><!-- show a tabular list of products connected -->
         <security https="true" auth="true"/>
@@ -239,6 +256,30 @@
         <security https="true" auth="true"/>
         <response name="success" type="view" value="viewprofile"/>
     </request-map>
+
+    <request-map uri="visitdetail">
+        <security https="true" auth="true"/>
+        <response name="success" type="view" value="visitdetail"/>
+    </request-map>
+    
+        <request-map uri="pushPage">
+        <security https="true" auth="true"/>
+        <event type="java" path="org.ofbiz.common.CommonEvents" invoke="setFollowerPage"/>
+        <response name="success" type="view" value="visitdetail"/>
+    </request-map>
+
+    <request-map uri="setAppletFollower">
+        <security https="true" auth="true"/>
+        <event type="java" path="org.ofbiz.common.CommonEvents" invoke="setAppletFollower"/>
+        <response name="success" type="view" value="visitdetail"/>
+    </request-map>
+
+    <request-map uri="findordersCust"><!-- list orders from the customerlist  same as findorders-->
+        <security https="true" auth="true"/>
+        <response name="success" type="view" value="findordersCust"/>
+    </request-map>
+
+    
 
     <!-- ================ Misc. Requests ================= -->
     <request-map uri="FastLoadCache">
@@ -2063,91 +2104,20 @@
     <view-map name="EditProductStorePaySetup" type="screen" page="component://opentravelsystem/webapp/hotelbackend/screens/SettingsScreens.xml#EditProductStorePaySetup"/>
     <!-- reservations /orders -->
     <view-map name="findorders" type="screen" page="component://opentravelsystem/webapp/hotelbackend/screens/OrderScreens.xml#main"/>
-    <view-map name="orderstatus" type="screen" page="component://opentravelsystem/webapp/hotelbackend/screens/OrderScreens.xml#orderstatus"/>
+    <view-map name="orderview" type="screen" page="component://opentravelsystem/webapp/hotelbackend/screens/OrderScreens.xml#orderview"/>
+    <view-map name="downloadorder" type="screen" page="component://opentravelsystem/webapp/hotelbackend/screens/OrderScreens.xml#downloadorder"/>
+    <view-map name="statistics" type="screen" page="component://opentravelsystem/webapp/hotelbackend/screens/OrderScreens.xml#statistics"/>
+    <view-map name="reports" type="screen" page="component://opentravelsystem/webapp/hotelbackend/screens/OrderScreens.xml#reports"/>
+    <view-map name="OrderPurchaseReportPayment" type="screenfop" page="component://opentravelsystem/webapp/hotelbackend/screens/OrderScreens.xml#OrderPurchaseReportPayment" content-type="application/pdf" encoding="none"/>
+    <view-map name="OrderPurchaseReportProduct" type="screenfop" page="component://opentravelsystem/webapp/hotelbackend/screens/OrderScreens.xml#OrderPurchaseReportProduct" content-type="application/pdf" encoding="none"/>
     <!-- customers -->
     <view-map name="findparty" type="screen" page="component://opentravelsystem/webapp/hotelbackend/screens/PartyScreens.xml#main"/>
     <view-map name="viewprofile" type="screen" page="component://opentravelsystem/webapp/hotelbackend/screens/PartyScreens.xml#viewprofile"/>
+    <view-map name="visitdetail" type="screen" page="component://opentravelsystem/webapp/hotelbackend/screens/PartyScreens.xml#visitdetail"/>
+    <view-map name="findordersCust" type="screen" page="component://opentravelsystem/webapp/hotelbackend/screens/PartyScreens.xml#findordersCust"/>
+    <!--display by the frontend -->
+    <view-map name="product" type="screen" page="component://opentravelsystem/webapp/hotelfrontend/screens/CatalogScreens.xml#product"/>
     
-    <!-- screens not yet used.... -->
-
-    <view-map name="FastLoadCache" type="region"/>
-    <view-map name="FindProductById" type="region"/>
-    <view-map name="ChooseTopCategory" type="jpublish" page="/ChooseTopCategory.ftl"/>
-    <view-map name="advancedsearch" type="jpublish" page="/find/advancedsearch.ftl"/>
-    <view-map name="keywordsearch" type="jpublish" page="/find/keywordsearch.ftl"/>
-
-    <!--view-map name="EditCategory" type="jpublish" page="/category/EditCategory.ftl"/-->
-    <view-map name="EditCategoryContent" type="jpublish" page="/category/EditCategoryContent.ftl"/>
-    <view-map name="EditCategoryContentContent" type="jpublish" page="/category/EditCategoryContentContent.ftl"/>
-    <view-map name="EditCategoryRollup" type="jpublish" page="/category/EditCategoryRollup.ftl"/>
-    <view-map name="EditCategoryProdCatalogs" type="jpublish" page="/category/EditCategoryProdCatalogs.ftl"/>
-    <view-map name="EditCategoryFeatureCats" type="jpublish" page="/category/EditCategoryFeatureCats.ftl"/>
-    <view-map name="EditCategoryParties" type="jpublish" page="/category/EditCategoryParties.ftl"/>
-    <view-map name="UploadCategoryImage" type="region"/>
-    <view-map name="createProductInCategoryStart" type="jpublish" page="/category/createProductInCategoryStart.ftl"/>
-    <view-map name="createProductInCategoryCheckExisting" type="jpublish" page="/category/createProductInCategoryCheckExisting.ftl"/>
-    <view-map name="EditProductContent" type="jpublish" page="/product/EditProductContent.ftl"/>
-    <view-map name="EditProductGoodIdentifications" type="jpublish" page="/product/EditProductGoodIdentifications.ftl"/>
-    <view-map name="EditProductKeyword" type="jpublish" page="/product/EditProductKeyword.ftl"/>
-    <view-map name="EditProductAssoc" type="jpublish" page="/product/EditProductAssoc.ftl"/>
-    <view-map name="EditProductAttributes" type="jpublish" page="/product/EditProductAttributes.ftl"/>
-    <view-map name="EditProductFeatures" type="jpublish" page="/product/EditProductFeatures.ftl"/>
-    <view-map name="ApplyFeaturesFromCategory" type="jpublish" page="/product/ApplyFeaturesFromCategory.ftl"/>
-    <view-map name="EditProductFacilities" type="jpublish" page="/product/EditProductFacilities.ftl"/>
-    <view-map name="EditProductFacilityLocations" type="jpublish" page="/product/EditProductFacilityLocations.ftl"/>
-    <view-map name="EditProductQuickAdmin" type="jpublish" page="/product/EditProductQuickAdmin.ftl"/>
-    <view-map name="EditProductInventoryItems" type="jpublish" page="/product/EditProductInventoryItems.ftl"/>
-    <view-map name="EditProductGlAccounts" type="jpublish" page="/product/EditProductGlAccounts.ftl"/>
-    <view-map name="EditProductContentContent" type="jpublish" page="/product/EditProductContentContent.ftl"/>
-    <view-map name="EditSupplierProduct" type="jpublish" page="/product/EditSupplierProduct.ftl"/>
-    <!-- Product Configuration views -->
-    <view-map name="EditProductConfigs" type="screen" page="component://product/widget/catalog/ProductScreens.xml#EditProductConfigs"/>
-
-    <view-map name="UploadImage" type="region"/>
-
-    <view-map name="QuickAddVariants" type="jpublish" page="/product/QuickAddVariants.ftl"/>
-    <view-map name="CreateVirtualWithVariantsForm" type="jpublish" page="/product/CreateVirtualWithVariantsForm.ftl"/>
-
-    <view-map name="EditFeature" type="jpublish" page="/feature/EditFeature.ftl"/>
-    <view-map name="EditFeatureCategories" type="jpublish" page="/feature/EditFeatureCategories.ftl"/>
-    <view-map name="EditFeatureCategoryFeatures" type="jpublish" page="/feature/EditFeatureCategoryFeatures.ftl"/>
-    <view-map name="EditFeatureGroups" type="jpublish" page="/feature/EditFeatureGroups.ftl"/>
-    <view-map name="EditFeatureGroupAppls" type="jpublish" page="/feature/EditFeatureGroupAppls.ftl"/>
-
-    <view-map name="FindProdCatalog" type="jpublish" page="/catalog/FindProdCatalog.ftl"/>
-    <view-map name="EditProdCatalog" type="jpublish" page="/catalog/EditProdCatalog.ftl"/>
-    <!--view-map name="EditProdCatalogCategories" type="jpublish" page="/catalog/EditProdCatalogCategories.ftl"/-->
-    <view-map name="EditProdCatalogStores" type="jpublish" page="/catalog/EditProdCatalogStores.ftl"/>
-    <view-map name="EditProdCatalogParties" type="jpublish" page="/catalog/EditProdCatalogParties.ftl"/>
-
-    <view-map name="FindProductPromo" type="jpublish" page="/promo/FindProductPromo.ftl"/>
-    <view-map name="EditProductPromo" type="jpublish" page="/promo/EditProductPromo.ftl"/>
-    <view-map name="EditProductPromoRules" type="jpublish" page="/promo/EditProductPromoRules.ftl"/>
-    <view-map name="EditProductPromoStores" type="jpublish" page="/promo/EditProductPromoStores.ftl"/>
-    <view-map name="FindProductPromoCode" type="jpublish" page="/promo/FindProductPromoCode.ftl"/>
-    <view-map name="EditProductPromoCode" type="jpublish" page="/promo/EditProductPromoCode.ftl"/>
-
-    <view-map name="FindPriceRules" type="jpublish" page="/price/FindProductPriceRule.ftl"/>
-    <view-map name="EditProductPriceRules" type="jpublish" page="/price/EditProductPriceRules.ftl"/>
-
-    <view-map name="FindProductStore" type="jpublish" page="/store/FindProductStore.ftl"/>
-    <view-map name="EditProductStorePromos" type="jpublish" page="/store/EditProductStorePromos.ftl"/>
-    <view-map name="EditProductStoreCatalogs" type="jpublish" page="/store/EditProductStoreCatalogs.ftl"/>
-    <view-map name="EditProductStoreShipSetup" type="jpublish" page="/store/EditProductStoreShipSetup.ftl"/>
-    <view-map name="EditProductStoreSurveys" type="jpublish" page="/store/EditProductStoreSurveys.ftl"/>
-    <view-map name="EditProductStoreWebSites" type="jpublish" page="/store/EditProductStoreWebSites.ftl"/>
-    <view-map name="EditProductStoreKeywordOvrd" type="jpublish" page="/store/EditProductStoreKeywordOvrd.ftl"/>
-
-    <view-map name="EditKeywordThesaurus" type="jpublish" page="/thesaurus/EditKeywordThesaurus.ftl"/>
-
-    <view-map name="pendingReviews" type="jpublish" page="/reviews/pendingReviews.ftl"/>
-    
-    <view-map name="FindProductConfigItems" page="/config/FindProductConfigItems.ftl" type="jpublish"/>
-    <view-map name="EditProductConfigItem" page="/config/EditProductConfigItem.ftl" type="jpublish"/>
-    <view-map name="EditProductConfigOptions" page="/config/EditProductConfigOptions.ftl" type="jpublish"/>
-    <view-map name="EditProductConfigItemContent" type="jpublish" page="/config/EditProductConfigItemContent.ftl"/>
-    <view-map name="EditProductConfigItemContentContent" type="jpublish" page="/config/EditProductConfigItemContentContent.ftl"/>
-
     <!-- Lookup request mappings -->
     <view-map name="GenericLookup" page="/lookup/GenericLookup.ftl" type="jpublish"/>
 

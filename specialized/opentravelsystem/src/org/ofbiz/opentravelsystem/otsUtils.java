@@ -111,7 +111,8 @@ public class otsUtils {
 		long numberUpdated = 0;
 		long numberCreated = 0;
 		
-		String fileName = new String("exportFile.xml");
+		String fileName = new String("specialized/opentravelsystem/webapp/hotelbackend/images/files/" + productStoreId + ".xml");
+		String downloadLoc = new String("hotelbackend/images/files/" + productStoreId + ".xml");
 		String output = null;
 		
 		// single file
@@ -430,6 +431,7 @@ public class otsUtils {
 		msgs.append("Statistics: Entities written to output file " +  fileName + ": " + numberWritten + "\n");
 		msgs.append("            Records created:  " + numberCreated + "\n");
 		msgs.append("            Records Updated: " + numberUpdated + "\n");
+		msgs.append("Download your generated file at " + downloadLoc );
 		if (msgs.length() > 0)
 			request.setAttribute("_EVENT_MESSAGE_", msgs.toString());
 		return "success";

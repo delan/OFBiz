@@ -16,6 +16,14 @@
                 <!-- <set field="layoutSettings.headerMiddleBackgroundUrl" value="" global="true"/> -->
                 <!-- <set field="layoutSettings.headerRightBackgroundUrl" value="" global="true"/> -->
                 <set field="activeApp" value="hotelbackend" global="true"/>
+                <!--set field="nowTimestamp" value="UtilDateTime.nowTimestamp()"/>
+                <entity-condition entity-name="ProductStoreRole" list-name="producStoreRoles">
+                       <condition-list>
+                           <condition-expr field-name="partyId"  operator="equals" env-name="userLogin"/>
+                           <condition-expr field-name="roleTypeId"  operator="equals" value="ADMIN"/>
+                           <condition-expr field-name="fromDate" operator="less-equals" value="${nowTimestamp}"/>
+                       </condition-list>
+                </entity-condition-->
             </actions>
             <widgets>
                 <!-- render header -->

@@ -34,8 +34,8 @@
   <!-- ========================================================= -->
   <!-- ======================== Defaults ======================= -->
   <!-- ========================================================= -->
-    <title>Entity of the Open Travel System</title>
-    <description>View entities used in the OpenTravel System</description>
+    <title>Entitis of the Open Travel System</title>
+    <description>the views of the Open TravelSystem</description>
     <copyright>Copyright (c) 2001-2005 The Open Travel System - www.opentravelsystem.org</copyright>
     <author>Hans BakkerNone</author>
     <version>1.0</version>

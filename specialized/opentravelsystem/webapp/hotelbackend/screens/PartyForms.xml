@@ -7,8 +7,8 @@
          default-tooltip-style="tabletext" target="updateCategoryProductMember">
        
         <field name="p" title="Party Id" widget-style="buttontext"><hyperlink target="viewprofile?partyId=${partyId}" description="${partyId}"/></field>        
-        <field name="partyId" title="Lastname, first Name"><display-entity entity-name="Person" description="${lastName},${firstName} ${middleName}" key-field-name="partyId"/></field>
-        <field name="totalOrders" title="Nbr of orders" widget-style="buttontext"><hyperlink target="vieworder?party=${partyId}" description="${totalOrders}"/></field>
+        <field name="partyId" title="Name"><display-entity entity-name="Person" description="${lastName},${firstName} ${middleName}" key-field-name="partyId"/></field>
+        <field name="totalOrders" title="Nbr of orders" widget-style="buttontext"><hyperlink target="findordersCust?lookupFlag=Y&amp;hideFields=Y&amp;partyId=${partyId}" description="${totalOrders}"/></field>
         <field name="totalGrandAmount" title="Amount"><display/></field>
     </form>
                 

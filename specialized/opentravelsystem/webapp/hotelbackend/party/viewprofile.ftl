@@ -94,8 +94,8 @@
             </td>
             <#if security.hasEntityPermission("PARTYMGR", "_UPDATE", session)>
             <td valign="middle" align="right">
-              <a href="<@ofbizUrl>/editperson?partyId=${party.partyId}</@ofbizUrl>" class="submenutextright">
-              <#if lookupPerson?has_content>${uiLabelMap.CommonUpdate}</#if></a>
+              <!--a href="<@ofbizUrl>/editperson?partyId=${party.partyId}</@ofbizUrl>" class="submenutextright">
+              <#if lookupPerson?has_content>${uiLabelMap.CommonUpdate}</#if></a-->
             </td>
             </#if>
           </#if>
@@ -106,8 +106,8 @@
             </td>
             <#if security.hasEntityPermission("PARTYMGR", "_UPDATE", session)>
             <td valign="middle" align="right">
-              <a href="<@ofbizUrl>/editpartygroup?partyId=${party.partyId}</@ofbizUrl>" class="submenutextright">
-              <#if lookupGroup?has_content>${uiLabelMap.CommonUpdate}</#if></a>
+              <!--a href="<@ofbizUrl>/editpartygroup?partyId=${party.partyId}</@ofbizUrl>" class="submenutextright">
+              <#if lookupGroup?has_content>${uiLabelMap.CommonUpdate}</#if></a-->
             </td>
             </#if>
           </#if>
@@ -223,7 +223,7 @@
           </td>
           <#if security.hasEntityPermission("PARTYMGR", "_CREATE", session)>
           <td valign="middle" align="right">
-              <a href="<@ofbizUrl>/editcontactmech?partyId=${party.partyId}</@ofbizUrl>" class="submenutextright">${uiLabelMap.CommonCreateNew}</a>
+              <!--a href="<@ofbizUrl>/editcontactmech?partyId=${party.partyId}</@ofbizUrl>" class="submenutextright">${uiLabelMap.CommonCreateNew}</a-->
           </td>
           </#if>
         </tr>
@@ -322,14 +322,14 @@
             <td width="5">&nbsp;</td>
             <#if security.hasEntityPermission("PARTYMGR", "_UPDATE", session)>
             <td align="right" valign="top" nowrap width="1%">
-              <div><a href='<@ofbizUrl>/editcontactmech?partyId=${party.partyId}&contactMechId=${contactMech.contactMechId}</@ofbizUrl>' class="buttontext">
-              [${uiLabelMap.CommonUpdate}]</a>&nbsp;</div>
+              <!--div><a href='<@ofbizUrl>/editcontactmech?partyId=${party.partyId}&contactMechId=${contactMech.contactMechId}</@ofbizUrl>' class="buttontext">
+              [${uiLabelMap.CommonUpdate}]</a>&nbsp;</div-->
             </td>
             </#if>
             <#if security.hasEntityPermission("PARTYMGR", "_DELETE", session)>
             <td align="right" valign="top" width="1%">
-              <div><a href='<@ofbizUrl>/deleteContactMech/viewprofile?partyId=${party.partyId}&contactMechId=${contactMech.contactMechId}&partyId=${partyId}</@ofbizUrl>' class="buttontext">
-              [${uiLabelMap.CommonExpire}]</a>&nbsp;&nbsp;</div>
+              <!--div><a href='<@ofbizUrl>/deleteContactMech/viewprofile?partyId=${party.partyId}&contactMechId=${contactMech.contactMechId}&partyId=${partyId}</@ofbizUrl>' class="buttontext">
+              [${uiLabelMap.CommonExpire}]</a>&nbsp;&nbsp;</div-->
             </td>
             </#if>
           </tr>
@@ -356,7 +356,7 @@
           </td>
           <td valign="middle" align="right">
               <#if security.hasEntityPermission("PAY_INFO", "_CREATE", session)>
-                <a href="<@ofbizUrl>/editcreditcard?partyId=${party.partyId}</@ofbizUrl>" class="submenutext">${uiLabelMap.AccountingCreateNewCreditCard}</a><a href="<@ofbizUrl>/editgiftcard?partyId=${party.partyId}</@ofbizUrl>" class="submenutext">${uiLabelMap.AccountingCreateNewGiftCard}</a><a href="<@ofbizUrl>/editeftaccount?partyId=${party.partyId}</@ofbizUrl>" class="submenutextright">${uiLabelMap.AccountingCreateNewEftAccount}</a>
+                <!--a href="<@ofbizUrl>/editcreditcard?partyId=${party.partyId}</@ofbizUrl>" class="submenutext">${uiLabelMap.AccountingCreateNewCreditCard}</a><a href="<@ofbizUrl>/editgiftcard?partyId=${party.partyId}</@ofbizUrl>" class="submenutext">${uiLabelMap.AccountingCreateNewGiftCard}</a><a href="<@ofbizUrl>/editeftaccount?partyId=${party.partyId}</@ofbizUrl>" class="submenutextright">${uiLabelMap.AccountingCreateNewEftAccount}</a-->
               </#if>
           </td>
         </tr>
@@ -494,9 +494,9 @@
 </TABLE>
 
 <#-- AVS Strings -->
-<br>
+<!--br>
 <TABLE border=0 width='100%' cellspacing='0' cellpadding='0' class='boxoutside'>
-  <TR>
+  <!--TR>
     <TD width='100%'>
       <table width='100%' border='0' cellspacing='0' cellpadding='0' class='boxtop'>
         <tr>
@@ -528,7 +528,7 @@
       </table>
     </TD>
   </TR>
-</TABLE>
+</TABLE-->
 
 <#-- UserLogins -->
 <br>
@@ -542,7 +542,7 @@
           </td>
           <#if security.hasEntityPermission("PARTYMGR", "_CREATE", session)>
           <td valign="middle" align="right">
-            <a href="<@ofbizUrl>/createnewlogin?partyId=${party.partyId}</@ofbizUrl>" class="submenutextright">${uiLabelMap.CommonCreateNew}</a>
+            <!--a href="<@ofbizUrl>/createnewlogin?partyId=${party.partyId}</@ofbizUrl>" class="submenutextright">${uiLabelMap.CommonCreateNew}</a-->
           </td>
           </#if>
         </tr>
@@ -577,10 +577,10 @@
                 </td>
                 <td align="right" valign="top" width="20%">
                   <#if security.hasEntityPermission("PARTYMGR", "_CREATE", session)>
-                      <a href="<@ofbizUrl>/editlogin?partyId=${party.partyId}&userlogin_id=${userUserLogin.userLoginId}</@ofbizUrl>" class="buttontext">[${uiLabelMap.CommonEdit}]</a>&nbsp;
+                      <!--a href="<@ofbizUrl>/editlogin?partyId=${party.partyId}&userlogin_id=${userUserLogin.userLoginId}</@ofbizUrl>" class="buttontext">[${uiLabelMap.CommonEdit}]</a-->&nbsp;
                   </#if>
                   <#if security.hasEntityPermission("SECURITY", "_VIEW", session)>
-                      <a href="<@ofbizUrl>/EditUserLoginSecurityGroups?partyId=${party.partyId}&userLoginId=${userUserLogin.userLoginId}</@ofbizUrl>" class="buttontext">[${uiLabelMap.PartySecurityGroups}]</a>&nbsp;
+                      <!--a href="<@ofbizUrl>/EditUserLoginSecurityGroups?partyId=${party.partyId}&userLoginId=${userUserLogin.userLoginId}</@ofbizUrl>" class="buttontext">[${uiLabelMap.PartySecurityGroups}]</a-->&nbsp;
                   </#if>
                 </td>
               </tr>
@@ -607,7 +607,7 @@
             <div class="boxhead">&nbsp;${uiLabelMap.PartyLastVisit}</div>
           </td>
           <td valign="middle" align="right">
-            <a href="<@ofbizUrl>/showvisits?party_id=${partyId}</@ofbizUrl>" class="submenutextright">${uiLabelMap.CommonListAll}</a>
+            <!--a href="<@ofbizUrl>/showvisits?party_id=${partyId}</@ofbizUrl>" class="submenutextright">${uiLabelMap.CommonListAll}</a-->
           </td>
         </tr>
       </table>
@@ -673,7 +673,7 @@
                 <#assign listParam = "">
               </#if>
               <td valign="middle" align="right">
-              <a href="<@ofbizUrl>/editShoppingList?partyId=${partyId}${listParam}</@ofbizUrl>" class="submenutextright">${uiLabelMap.CommonEdit}</a>
+              <!--a href="<@ofbizUrl>/editShoppingList?partyId=${partyId}${listParam}</@ofbizUrl>" class="submenutextright">${uiLabelMap.CommonEdit}</a>--
               </td>
           </#if>
         </tr>
@@ -730,7 +730,7 @@
           </td>
           <#if security.hasEntityPermission("PARTYMGR", "_NOTE", session)>
           <td valign="middle" align="right">
-            <a href="<@ofbizUrl>/createnewnote?partyId=${partyId}</@ofbizUrl>" class="submenutextright">${uiLabelMap.CommonCreateNew}</a>
+            <!--a href="<@ofbizUrl>/createnewnote?partyId=${partyId}</@ofbizUrl>" class="submenutextright">${uiLabelMap.CommonCreateNew}</a-->
           </td>
           </#if>
         </tr>
