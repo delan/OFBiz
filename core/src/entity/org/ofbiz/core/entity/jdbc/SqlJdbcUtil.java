@@ -128,7 +128,7 @@ public class SqlJdbcUtil {
                         condBuffer.append(".");
                         condBuffer.append(linkField.getColName());
                         
-                        condBuffer.append("=");
+                        condBuffer.append(" = ");
                         
                         condBuffer.append(viewLink.getRelEntityAlias());
                         condBuffer.append(".");
