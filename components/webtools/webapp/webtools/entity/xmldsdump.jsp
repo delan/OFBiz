@@ -92,6 +92,51 @@
     passedEntityNames.add("InventoryItem");
     passedEntityNames.add("ProductFeatureCatGrpAppl");
     passedEntityNames.add("ProductFeatureGroupAppl");
+  } else if ("CatalogExport".equals(preConfiguredSetName)) {
+    passedEntityNames.add("ProdCatalog");
+    passedEntityNames.add("ProductCategory");
+    passedEntityNames.add("ProductCategoryRollup");
+    passedEntityNames.add("ProdCatalogCategory");
+    passedEntityNames.add("ProductFeatureType");
+    passedEntityNames.add("ProductFeatureCategory");
+
+    passedEntityNames.add("DataResource");
+    passedEntityNames.add("Content");
+    passedEntityNames.add("ElectronicText");
+
+    passedEntityNames.add("Product");
+    passedEntityNames.add("ProductAttribute");
+    passedEntityNames.add("GoodIdentification");
+    passedEntityNames.add("ProductPrice");
+
+    passedEntityNames.add("ProductPriceRule");
+    passedEntityNames.add("ProductPriceCond");
+    passedEntityNames.add("ProductPriceAction");
+    passedEntityNames.add("ProductPriceChange");
+
+    passedEntityNames.add("ProductPromo");
+    passedEntityNames.add("ProductPromoCode");
+    passedEntityNames.add("ProductPromoCategory");
+    passedEntityNames.add("ProductPromoProduct");
+    passedEntityNames.add("ProductPromoRule");
+    passedEntityNames.add("ProductPromoAction");
+    passedEntityNames.add("ProductPromoCodeEmail");
+    passedEntityNames.add("ProductPromoCodeParty");
+    passedEntityNames.add("ProductPromoCond");
+
+    passedEntityNames.add("ProductCategoryMember");
+    passedEntityNames.add("ProductAssoc");
+    passedEntityNames.add("ProductContent");
+
+    passedEntityNames.add("ProductFeature");
+    passedEntityNames.add("ProductFeatureCategoryAppl");
+    passedEntityNames.add("ProductFeatureAppl");
+    passedEntityNames.add("ProductFeatureDataResource");
+    passedEntityNames.add("ProductFeatureGroup");
+    passedEntityNames.add("ProductFeatureCatGrpAppl");
+    passedEntityNames.add("ProductFeatureGroupAppl");
+
+    passedEntityNames.add("ProductKeyword");
   }
   
   boolean checkAll = "true".equals(request.getParameter("checkAll"));
@@ -170,6 +215,9 @@
         while(i.hasNext()) {
             numberWritten = 0;
             String curEntityName = (String)i.next();
+            String fileName = preConfiguredSetName != null ? UtilFormatOut.formatPaddedNumber((long) fileNumber, 3) + "_" : "";
+            fileName = fileName + curEntityName;
+
             EntityListIterator values = null;
             boolean beganTransaction = TransactionUtil.begin(3600);
             try{
@@ -183,7 +231,7 @@
                 //Don't bother writing the file if there's nothing
                 //to put into it
                 if (values.hasNext()) {
-                    PrintWriter writer = new PrintWriter(new BufferedWriter(new OutputStreamWriter(new FileOutputStream(new File(outdir, curEntityName +".xml")), "UTF-8")));
+                    PrintWriter writer = new PrintWriter(new BufferedWriter(new OutputStreamWriter(new FileOutputStream(new File(outdir, fileName +".xml")), "UTF-8")));
                     writer.println("<?xml version=\"1.0\" encoding=\"UTF-8\"?>");
                     writer.println("<entity-engine-xml>");
 
@@ -255,9 +303,10 @@
         <A href='<ofbiz:url>/xmldsdump?checkAll=true</ofbiz:url>' class='buttontext'>Check All</A>
         <A href='<ofbiz:url>/xmldsdump</ofbiz:url>' class='buttontext'>Un-Check All</A>
         <br/>
-        Pre-configured set: 
+        Pre-configured set:
         <select name="preConfiguredSetName">
             <option value="">None</option>
+            <option value="CatalogExport">Catalog Export</option>
             <option value="Product1">Product Part 1</option>
             <option value="Product2">Product Part 2</option>
             <option value="Product3">Product Part 3</option>
