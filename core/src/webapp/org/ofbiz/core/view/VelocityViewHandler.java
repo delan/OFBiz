@@ -83,7 +83,7 @@ public class VelocityViewHandler implements ViewHandler {
             } else {
                 props = new Properties();
                 Debug.logWarning("[VelocityViewHandler.init] : Cannot load /WEB-INF/velocity.properties. " +
-                    "Using default properties.");
+                    "Using default properties.", module);
             }
 
             // set the file loader path -- used to mount the webapp

@@ -236,7 +236,7 @@ public class ModelViewEntity extends ModelEntity {
 
             if (aliasedEntity == null) {
                 Debug.logError("[ModelViewEntity.populateFields] ERROR: could not find ModelEntity for entity name: " +
-                    aliasedEntityName);
+                    aliasedEntityName, module);
                 continue;
             }
             memberModelEntities.put(entry.getKey(), aliasedEntity);
@@ -255,7 +255,7 @@ public class ModelViewEntity extends ModelEntity {
 
             if (aliasedEntity == null) {
                 Debug.logError("[ModelViewEntity.populateFields] ERROR: could not find ModelEntity for entity name: " +
-                    aliasedEntityName);
+                    aliasedEntityName, module);
                 continue;
             }
 
@@ -263,7 +263,7 @@ public class ModelViewEntity extends ModelEntity {
 
             if (aliasedField == null) {
                 Debug.logError("[ModelViewEntity.populateFields] ERROR: could not find ModelField for field name \"" +
-                    alias.field + "\" on entity with name: " + aliasedEntityName);
+                    alias.field + "\" on entity with name: " + aliasedEntityName, module);
                 continue;
             }
 

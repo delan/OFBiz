@@ -186,7 +186,7 @@ public class CategoryWorker {
         String previousCategory = (String) requestParameters.get("pcategory");
 
         if (Debug.verboseOn()) Debug.logVerbose("[CatalogHelper.setTrail] Start: previousCategory=" + previousCategory +
-                " currentCategory=" + currentCategory);
+                " currentCategory=" + currentCategory, module);
 
         // if there is no current category, just return and do nothing to that the last settings will stay
         if (currentCategory == null || currentCategory.length() <= 0)
@@ -209,7 +209,7 @@ public class CategoryWorker {
                         String deadCat = (String) crumb.remove(i);
 
                         if (Debug.infoOn()) Debug.logInfo("[CatalogHelper.setTrail] Removed after current category index: " + i +
-                                " catname: " + deadCat);
+                                " catname: " + deadCat, module);
                     }
                 }
                 return;
@@ -225,7 +225,7 @@ public class CategoryWorker {
         if (!crumb.contains(previousCategory)) {
             // previous category was NOT in the list, ERROR, start over
             if (Debug.infoOn()) Debug.logInfo("[CatalogHelper.setTrail] ERROR: previousCategory (" + previousCategory +
-                    ") was not in the crumb list, position is lost, starting over with TOP");
+                    ") was not in the crumb list, position is lost, starting over with TOP", module);
             previousCategory = "TOP";
             crumb.clear();
             crumb.add(previousCategory);
@@ -238,7 +238,7 @@ public class CategoryWorker {
                     String deadCat = (String) crumb.remove(i);
 
                     if (Debug.infoOn()) Debug.logInfo("[CatalogHelper.setTrail] Removed after previous category index: " + i +
-                            " catname: " + deadCat);
+                            " catname: " + deadCat, module);
                 }
             }
         }

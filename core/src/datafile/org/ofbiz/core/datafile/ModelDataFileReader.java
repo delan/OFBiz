@@ -122,7 +122,7 @@ public class ModelDataFileReader {
                                 // check to see if dataFile with same name has already been read
                                 if (modelDataFiles.containsKey(dataFileName)) {
                                     Debug.logWarning("WARNING: DataFile " + dataFileName +
-                                        " is defined more than once, most recent will over-write previous definition(s)");
+                                        " is defined more than once, most recent will over-write previous definition(s)", module);
                                 }
 
                                 // utilTimer.timerString("  After dataFileName -- " + i + " --");
