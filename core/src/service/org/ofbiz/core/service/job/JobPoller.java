@@ -64,12 +64,13 @@ public class JobPoller implements Runnable {
     public JobPoller(JobManager jm) {
         this.jm = jm;
         this.run = new LinkedList();       
+        
+        // create the thread pool
+        this.pool = createThreadPool();
 
-        // start the thread only if enabled
+        // start the thread only if polling is enabled
         if (pollEnabled()) {
-            // create the thread pool
-            this.pool = createThreadPool();
-            
+                        
             // create the poller thread
             thread = new Thread(this, this.toString());
             thread.setDaemon(false);
