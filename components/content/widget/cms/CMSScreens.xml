@@ -61,8 +61,8 @@
                   <widgets>
                        <decorator-screen name="cmsCommon" >
                          <decorator-section name="body">
-                           <form name="findContent" location="component://content/webapp/content/cms/CMSForms.xml" />
-                           <form name="listFindContent" location="component://content/webapp/content/cms/CMSForms.xml" />
+                           <include-form name="findContent" location="component://content/webapp/content/cms/CMSForms.xml" />
+                           <include-form name="listFindContent" location="component://content/webapp/content/cms/CMSForms.xml" />
                           </decorator-section>
                         </decorator-screen>
                   </widgets>
@@ -119,7 +119,7 @@
                   <widgets>
                        <decorator-screen name="cmsCommon" >
                          <decorator-section name="body">
-                           <form name="AddContent" location="component://content/webapp/content/cms/CMSForms.xml" />
+                           <include-form name="AddContent" location="component://content/webapp/content/cms/CMSForms.xml" />
                           </decorator-section>
                         </decorator-screen>
                   </widgets>
@@ -143,7 +143,7 @@
 	    	<widgets>
                        <decorator-screen name="cmsCommon" >
                          <decorator-section name="body">
-                           <form name="EditAddContentStuff" location="component://content/webapp/content/cms/CMSForms.xml" />
+                           <include-form name="EditAddContentStuff" location="component://content/webapp/content/cms/CMSForms.xml" />
                           </decorator-section>
                         </decorator-screen>
 	    	</widgets>
@@ -170,7 +170,7 @@
                              		<html-template location="component://content/webapp/content/cms/AdminSearch.ftl"/>
                          		</html>
                     		</platform-specific>
-                           <form name="searchList" location="component://content/webapp/content/cms/CMSForms.xml" />
+                           <include-form name="searchList" location="component://content/webapp/content/cms/CMSForms.xml" />
                           </decorator-section>
                         </decorator-screen>
                   </widgets>
@@ -191,8 +191,8 @@
                   <widgets>
                        <decorator-screen name="cmsCommon" >
                          <decorator-section name="body">
-                           <form name="AdminIndex" location="component://content/webapp/content/cms/CMSForms.xml" />
-                           <form name="AdminIndexAll" location="component://content/webapp/content/cms/CMSForms.xml" />
+                           <include-form name="AdminIndex" location="component://content/webapp/content/cms/CMSForms.xml" />
+                           <include-form name="AdminIndexAll" location="component://content/webapp/content/cms/CMSForms.xml" />
                           </decorator-section>
                         </decorator-screen>
                   </widgets>
