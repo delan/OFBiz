@@ -149,4 +149,23 @@
         <attribute name="groupActivities" type="java.util.List" mode="OUT" optional="false"/>
     </service>
     
+    <!-- Worker services -->
+    <service name="getWorkEffort" engine="java"
+            location="org.ofbiz.commonapp.workeffort.workeffort.WorkEffortServices" invoke="getWorkEffort">
+        <description>Get WorkEffort</description>
+        <attribute name="workEffortId" type="java.lang.String" mode="INOUT" optional="false"/>
+        <attribute name="currentStatusId" type="java.lang.String" mode="IN" optional="true"/>
+        <attribute name="workEffort" type="org.ofbiz.core.entity.GenericValue" mode="OUT" optional="true"/>
+        <attribute name="canView" type="java.lang.Boolean" mode="OUT" optional="true"/>
+        <attribute name="tryEntity" type="java.lang.Boolean" mode="OUT" optional="true"/>
+        <attribute name="currentStatusItem" type="org.ofbiz.core.entity.GenericValue" mode="OUT" optional="true"/>
+        <attribute name="partyAssigns" type="java.util.Collection" mode="OUT" optional="true"/>
+    </service>    
+    <service name="getWorkEffortEventsByDays" engine="java"
+            location="org.ofbiz.commonapp.workeffort.workeffort.WorkEffortServices" invoke="getWorkEffortEventsByDays">
+        <description>Get WorkEffort Events by days</description>
+        <attribute name="startDay" type="java.sql.Timestamp" mode="IN" optional="false"/>
+        <attribute name="numDays" type="java.lang.Integer" mode="IN" optional="true"/>
+        <attribute name="days" type="java.util.List" mode="OUT" optional="false"/>
+    </service>      
 </services>

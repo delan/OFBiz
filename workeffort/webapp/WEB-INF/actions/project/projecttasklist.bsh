@@ -1,0 +1,113 @@
+import java.util.*;
+import org.ofbiz.core.security.*;
+import org.ofbiz.core.entity.*;
+import org.ofbiz.core.util.*;
+import org.ofbiz.core.service.*;
+import org.ofbiz.commonapp.workeffort.workeffort.*;
+import org.ofbiz.commonapp.workeffort.project.*;
+
+delegator = request.getAttribute("delegator");
+GenericValue userLogin = (GenericValue) context.getSession().getAttribute(SiteDefs.USER_LOGIN);
+
+String projectWorkEffortId = context.getRequest().getParameter("projectWorkEffortId");
+
+// if there was no parameter, check the request attribute, this may be a newly created entity
+if (projectWorkEffortId == null)
+    projectWorkEffortId = (String) context.getRequest().getAttribute("projectWorkEffortId");
+
+Collection relatedWorkEfforts = null;
+
+if (userLogin != null && userLogin.get("partyId") != null) {
+    try {
+        relatedWorkEfforts = delegator.findByAnd("WorkEffortAssoc",
+                    UtilMisc.toList(new EntityExpr("workEffortIdFrom", EntityOperator.EQUALS, projectWorkEffortId),
+                        new EntityExpr("workEffortAssocTypeId", EntityOperator.EQUALS, "WORK_EFF_BREAKDOWN")));
+    } catch (GenericEntityException e) {
+        Debug.logWarning(e);
+    }
+}
+
+Collection validWorkEfforts = new ArrayList();
+
+if (relatedWorkEfforts != null) {
+    Iterator relatedWorkEffortsIter = relatedWorkEfforts.iterator();
+
+    try {
+        while (relatedWorkEffortsIter.hasNext()) {
+            GenericValue workEffortAssoc = (GenericValue) relatedWorkEffortsIter.next();
+            GenericValue workEffort = workEffortAssoc.getRelatedOne("ToWorkEffort");
+
+            // only get phases
+            if ("TASK".equals(workEffort.getString("workEffortTypeId")) &&
+                ("WEPT_PHASE".equals(workEffort.getString("workEffortPurposeTypeId")))) {
+
+                //Get all related tasks for this phase
+				String phaseWorkEffortId = workEffort.get("workEffortId");
+		        Collection relatedPhaseWorkEfforts = null;
+		
+		        if (userLogin != null && userLogin.get("partyId") != null) {
+		            try {
+		                relatedPhaseWorkEfforts = delegator.findByAnd("WorkEffortAssoc",
+		                            UtilMisc.toList(new EntityExpr("workEffortIdFrom", EntityOperator.EQUALS, phaseWorkEffortId),
+		                                new EntityExpr("workEffortAssocTypeId", EntityOperator.EQUALS, "WORK_EFF_BREAKDOWN")));
+		            } catch (GenericEntityException e) {
+		                Debug.logWarning(e);
+		            }
+		        }
+		
+		        Collection validPhaseWorkEfforts = new ArrayList();
+		
+		        if (relatedPhaseWorkEfforts != null) {
+		            Iterator relatedPhaseWorkEffortsIter = relatedPhaseWorkEfforts.iterator();
+		
+		            try {
+		                while (relatedPhaseWorkEffortsIter.hasNext()) {
+		                    GenericValue phaseWorkEffortAssoc = (GenericValue) relatedPhaseWorkEffortsIter.next();
+		                    GenericValue phaseWorkEffort = phaseWorkEffortAssoc.getRelatedOne("ToWorkEffort");
+		
+		                    // only get phases
+		                    if ("TASK".equals(phaseWorkEffort.getString("workEffortTypeId"))) {
+		                        validPhaseWorkEfforts.add(phaseWorkEffort);
+		                    }
+		                }
+		            } catch (GenericEntityException e) {
+		                Debug.logWarning(e);
+		            }
+		        }
+		        //Each collection entry is a map with the work effort as one entry and the list of related tasks as another
+		        validWorkEfforts.add(UtilMisc.toMap("workEffort",workEffort,"tasks",validPhaseWorkEfforts));
+              
+            }
+        }
+    } catch (GenericEntityException e) {
+        Debug.logWarning(e);
+    }
+}
+context.put("phases",validWorkEfforts);
+
+String projectWorkEffortId = request.getParameter("projectWorkEffortId");
+GenericValue projectWorkEffortStatus = null;
+GenericValue projectWorkEffort = delegator.findByPrimaryKey("WorkEffort", 
+	UtilMisc.toMap("workEffortId", projectWorkEffortId));
+if(projectWorkEffort != null) {
+	projectWorkEffortStatus = projectWorkEffort.getRelatedOne("CurrentStatusItem");
+}
+context.put("projectWorkEffortId", projectWorkEffortId);
+context.put("projectWorkEffort", projectWorkEffort);
+context.put("projectWorkEffortStatus", projectWorkEffortStatus);
+
+dispatcher = request.getAttribute("dispatcher");
+Map serviceCtx = UtilMisc.toMap(
+	"userLogin",context.getSession().getAttribute("userLogin"),
+	"workEffortId",projectWorkEffortId);
+Map result = dispatcher.runSync("getWorkEffort",serviceCtx);
+
+context.put("workEffort",result.get("workEffort"));
+context.put("workEffortId",result.get("workEffortId"));
+context.put("partyAssigns",result.get("partyAssigns"));
+context.put("canView",result.get("canView"));
+context.put("tryEntity",result.get("tryEntity"));
+context.put("currentStatusItem",result.get("currentStatusItem"));
+
+
+        

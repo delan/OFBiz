@@ -1,0 +1,28 @@
+import java.util.*;
+import org.ofbiz.core.security.*;
+import org.ofbiz.core.entity.*;
+import org.ofbiz.core.util.*;
+import org.ofbiz.core.service.*;
+import org.ofbiz.commonapp.workeffort.workeffort.*;
+
+delegator = request.getAttribute("delegator");
+
+String custRequestId = request.getParameter("custRequestId");
+String custRequestItemSeqId = request.getParameter("custRequestItemSeqId");
+String showAll = request.getParameter("showAll");	
+if (showAll == null) showAll = "false";
+context.put("showAll",showAll);
+
+GenericValue custRequestItem = null;
+if (custRequestId != null && custRequestItemSeqId != null) {
+	custRequestItem = delegator.findByPrimaryKey("CustRequestItem", UtilMisc.toMap("custRequestId", custRequestId, "custRequestItemSeqId", custRequestItemSeqId));
+   	if (custRequestItem != null) context.put("custRequestItem", custRequestItem);
+}	
+
+Map fields = UtilMisc.toMap("custRequestId", custRequestId);
+if (showAll.equals("false")) fields.put("custRequestItemSeqId", custRequestItemSeqId);
+List notes = delegator.findByAnd("CustRequestItemNoteView", fields, UtilMisc.toList("-noteDateTime"));
+if (notes != null && notes.size() > 0) context.put("notes", notes);	
+
+context.put("custRequestId",custRequestId);
+context.put("custRequestItemSeqId",custRequestItemSeqId);

@@ -1,0 +1,77 @@
+import java.util.*;
+import org.ofbiz.core.security.*;
+import org.ofbiz.core.entity.*;
+import org.ofbiz.core.util.*;
+import org.ofbiz.core.service.*;
+import org.ofbiz.commonapp.workeffort.workeffort.*;
+import org.ofbiz.commonapp.workeffort.project.*;
+
+delegator = request.getAttribute("delegator");
+GenericValue userLogin = (GenericValue) context.getSession().getAttribute(SiteDefs.USER_LOGIN);
+
+String phaseWorkEffortId = context.getRequest().getParameter("phaseWorkEffortId");
+
+// if there was no parameter, check the request attribute, this may be a newly created entity
+if (phaseWorkEffortId == null)
+    phaseWorkEffortId = (String) context.getRequest().getAttribute("phaseWorkEffortId");
+
+
+Collection relatedPhaseWorkEfforts = null;
+		
+if (userLogin != null && userLogin.get("partyId") != null) {
+    try {
+        relatedPhaseWorkEfforts = delegator.findByAnd("WorkEffortAssoc",
+                    UtilMisc.toList(new EntityExpr("workEffortIdFrom", EntityOperator.EQUALS, phaseWorkEffortId),
+                        new EntityExpr("workEffortAssocTypeId", EntityOperator.EQUALS, "WORK_EFF_BREAKDOWN")));
+    } catch (GenericEntityException e) {
+        Debug.logWarning(e);
+    }
+}
+
+Collection validPhaseWorkEfforts = new ArrayList();
+
+if (relatedPhaseWorkEfforts != null) {
+    Iterator relatedPhaseWorkEffortsIter = relatedPhaseWorkEfforts.iterator();
+
+    try {
+        while (relatedPhaseWorkEffortsIter.hasNext()) {
+            GenericValue phaseWorkEffortAssoc = (GenericValue) relatedPhaseWorkEffortsIter.next();
+            GenericValue phaseWorkEffort = phaseWorkEffortAssoc.getRelatedOne("ToWorkEffort");
+
+            // only get phases
+            if ("TASK".equals(phaseWorkEffort.getString("workEffortTypeId"))) {
+                validPhaseWorkEfforts.add(phaseWorkEffort);
+            }
+        }
+    } catch (GenericEntityException e) {
+        Debug.logWarning(e);
+    }
+}
+context.put("tasks",validPhaseWorkEfforts);
+
+// get workeffort for the current phase
+String phaseWorkEffortId = request.getParameter("phaseWorkEffortId");
+String projectWorkEffortId = null;
+GenericValue phaseWorkEffortStatus = null;
+GenericValue phaseWorkEffort = delegator.findByPrimaryKey("WorkEffort", UtilMisc.toMap("workEffortId", phaseWorkEffortId));
+if(phaseWorkEffort != null) {
+	phaseWorkEffortStatus = phaseWorkEffort.getRelatedOne("CurrentStatusItem");
+
+	// get workeffort for current project - assume that the first project related to this phase is it
+	Collection projectAssocColl = phaseWorkEffort.getRelated("ToWorkEffortAssoc");
+    if(projectAssocColl.size() > 0) {
+		GenericValue projectWorkEffortStatus = null;
+		GenericValue projectWorkEffort = ((GenericValue)projectAssocColl.iterator().next()).getRelatedOne("FromWorkEffort");
+		if(projectWorkEffort != null) {
+ 			projectWorkEffortStatus = projectWorkEffort.getRelatedOne("CurrentStatusItem");
+ 			projectWorkEffortId = projectWorkEffort.getString("workEffortId");
+		}
+		context.put("projectWorkEffort", projectWorkEffort);
+		context.put("projectWorkEffortId", projectWorkEffortId);
+		context.put("projectWorkEffortStatus", projectWorkEffortStatus);
+	}
+}
+
+context.put("phaseWorkEffort", phaseWorkEffort);
+context.put("phaseWorkEffortId", phaseWorkEffortId);
+context.put("phaseWorkEffortStatus", phaseWorkEffortStatus);

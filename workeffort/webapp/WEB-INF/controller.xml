@@ -421,39 +421,39 @@
 
     <!-- View Mappings -->
     <view-map name="error" page="/error/error.jsp"/>
-    <view-map name="main" type="region"/>
+    <view-map name="main" type="jpublish" page="/main.ftl"/>
     <view-map name="login" type="region"/>
 
-    <view-map name="requestlist" type="region"/>
+    <view-map name="requestlist" type="jpublish" page="/request/requestlist.ftl"/>
     <view-map name="request" type="region"/>
-    <view-map name="requestitems" type="region"/>
+    <view-map name="requestitems" type="jpublish" page="/request/requestitems.ftl"/>
     <view-map name="requestitem" type="region"/>    
-    <view-map name="requestroles" type="region"/>
-    <view-map name="requestitemnotes" type="region"/>
-    <view-map name="requestitemrequirements" type="region"/>
-    <view-map name="requirementlist" type="region"/>
+    <view-map name="requestroles" type="jpublish" page="/request/requestroles.ftl"/>
+    <view-map name="requestitemnotes" type="jpublish" page="/request/requestitemnotes.ftl"/>
+    <view-map name="requestitemrequirements" type="jpublish" page="/request/requestitemrequirements.ftl"/>
+    <view-map name="requirementlist" type="jpublish" page="/requirement/requirementlist.ftl"/>
     <view-map name="requirement" type="region"/>
 
-    <view-map name="workefforts" type="region"/>
+    <view-map name="workefforts" type="jpublish" page="/requirement/tasks.ftl"/>
 
     <view-map name="openapplication" page="/application/openapplication.jsp"/>
     <view-map name="task" type="region"/>
     <view-map name="activity" type="region"/>
-    <view-map name="mytasks" type="region"/>
+    <view-map name="mytasks" type="jpublish" page="/task/mytasks.ftl"/>
     
     <view-map name="event" type="region"/>
-    <view-map name="day" type="region"/>
-    <view-map name="week" type="region"/>
-    <view-map name="month" type="region"/>
-    <view-map name="upcoming" type="region"/>
+    <view-map name="day" type="jpublish" page="/calendar/day.ftl"/>
+    <view-map name="week" type="jpublish" page="/calendar/week.ftl"/>
+    <view-map name="month" type="jpublish" page="/calendar/month.ftl"/>
+    <view-map name="upcoming" type="jpublish" page="/calendar/upcoming.ftl"/>
     
     <!-- project management views -->
-    <view-map name="projectlist" type="region"/>
+    <view-map name="projectlist" type="jpublish" page="/project/projectlist.ftl"/>
     <view-map name="editproject" type="region"/>
-    <view-map name="projecttasklist" type="region"/>
-    <view-map name="phaselist" type="region"/>
+    <view-map name="projecttasklist" type="jpublish" page="/project/projecttasklist.ftl"/>
+    <view-map name="phaselist" type="jpublish" page="/project/phaselist.ftl"/>
     <view-map name="editphase" type="region"/>
-    <view-map name="phasetasklist" type="region"/>
+    <view-map name="phasetasklist" type="jpublish" page="/project/phasetasklist.ftl"/>
     <view-map name="editphasetask" type="region"/>
     <view-map name="edittasknote" type="region"/>
     

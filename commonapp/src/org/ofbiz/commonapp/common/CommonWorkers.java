@@ -43,6 +43,10 @@ public class CommonWorkers {
         return makeLoginUrl(pageContext, "checkLogin");
     }
 
+    public static String makeLoginUrl(ServletRequest request) {
+        return makeLoginUrl(request, "checkLogin");
+    }
+	
     public static String makeLoginUrl(PageContext pageContext, String requestName) {
         return makeLoginUrl(pageContext.getRequest(), requestName);
     }
