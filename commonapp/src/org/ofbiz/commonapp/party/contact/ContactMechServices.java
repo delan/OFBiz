@@ -294,8 +294,13 @@ public class ContactMechServices {
 
         toBeStored.add(tempContactMech);
 
-        toBeStored.add(delegator.makeValue("PartyContactMech", UtilMisc.toMap("partyId", partyId, "contactMechId", newCmId.toString(),
-                    "fromDate", now, "roleTypeId", context.get("roleTypeId"), "allowSolicitation", context.get("allowSolicitation"), "extension", context.get("extension"))));
+        // don't create a PartyContactMech if there is no party; we define no party as sending _NA_ as partyId
+        if (!partyId.equals("_NA_")) {
+            toBeStored.add(delegator.makeValue("PartyContactMech", 
+                    UtilMisc.toMap("partyId", partyId, "contactMechId", newCmId.toString(),
+                        "fromDate", now, "roleTypeId", context.get("roleTypeId"), "allowSolicitation", 
+                        context.get("allowSolicitation"), "extension", context.get("extension"))));
+        }
 
         GenericValue newAddr = delegator.makeValue("PostalAddress", null);
 
