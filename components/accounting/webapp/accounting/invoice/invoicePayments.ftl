@@ -1,56 +1,58 @@
 <#--
  *  Copyright (c) 2003 The Open For Business Project - www.ofbiz.org
  *
- *  Permission is hereby granted, free of charge, to any person obtaining a 
- *  copy of this software and associated documentation files (the "Software"), 
- *  to deal in the Software without restriction, including without limitation 
- *  the rights to use, copy, modify, merge, publish, distribute, sublicense, 
- *  and/or sell copies of the Software, and to permit persons to whom the 
+ *  Permission is hereby granted, free of charge, to any person obtaining a
+ *  copy of this software and associated documentation files (the "Software"),
+ *  to deal in the Software without restriction, including without limitation
+ *  the rights to use, copy, modify, merge, publish, distribute, sublicense,
+ *  and/or sell copies of the Software, and to permit persons to whom the
  *  Software is furnished to do so, subject to the following conditions:
  *
- *  The above copyright notice and this permission notice shall be included 
+ *  The above copyright notice and this permission notice shall be included
  *  in all copies or substantial portions of the Software.
  *
- *  THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS 
- *  OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF 
- *  MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. 
- *  IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY 
- *  CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT 
- *  OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR 
+ *  THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS
+ *  OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF
+ *  MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT.
+ *  IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY
+ *  CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT
+ *  OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR
  *  THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  *
  *@author     Andy Zeneski (jaz@ofbiz.org)
- *@version    $Revision: 1.2 $
+ *@version    $Revision: 1.3 $
  *@since      2.2
 -->
 
 <div class="head1">Invoice Payments</div>
 
 <br>
-<table width="100%" border="0" cellpadding="0" cellspacing="0"> 
+<table width="100%" border="0" cellpadding="0" cellspacing="0">
   <tr>
     <td><div class="tableheadtext">Payment #</div></td>
     <td><div class="tableheadtext">Type</div></td>
     <td><div class="tableheadtext">Status</div></td>
     <td><div class="tableheadtext">Invoice #</div></td>
-    <td><div class="tableheadtext">Invoice Item</div></td>   
+    <td><div class="tableheadtext">Invoice Item</div></td>
     <td><div class="tableheadtext">Billing Acct</div></td>
     <td><div class="tableheadtext">Payment Date</div></td>
+    <td><div class="tableheadtext">Ref #</div></td>
     <td align="right"><div class="tableheadtext">Amount</div></td>
-  </tr> 
-  <tr><td colspan="8"><hr class="sepbar"></td></tr>
+  </tr>
+  <tr><td colspan="9"><hr class="sepbar"></td></tr>
   <#list payments as payment>
   <#assign paymentMethodType = payment.getRelatedOne("PaymentMethodType")>
   <#assign statusItem = payment.getRelatedOne("StatusItem")?if_exists>
   <tr>
-    <td><div class="tabletext">${payment.paymentId?if_exists}</div></td>    
+    <td><div class="tabletext">${payment.paymentId?if_exists}</div></td>
     <td><div class="tabletext">${paymentMethodType.description?default("N/A")}</div></td>
     <td><div class="tabletext">${(statusItem.description)?if_exists}</div></td>
     <td><div class="tabletext">${payment.invoiceId}</div></td>
     <td><div class="tabletext">${payment.invoiceItemSeqId?default("N/A")}</div></td>
     <td><div class="tabletext">${payment.billingAccountId?default("N/A")}</div></td>
-    <td><div class="tabletext">${payment.effectiveDate?string?if_exists}</div></td>    
-    <td align="right"><div class="tabletext">${payment.amount?string.currency}</div></td>   
+    <td><div class="tabletext">${payment.effectiveDate?string?if_exists}</div></td>
+    <td><div class="tabletext">${payment.paymentRefNum?if_exists}</div></td>
+    <td align="right"><div class="tabletext">${payment.amount?string.currency}</div></td>
   </tr>
   </#list>
 </table>
