@@ -267,6 +267,11 @@ public class ShoppingCart implements java.io.Serializable {
         return shipmentMethodTypeId;
     }
 
+    /** Returns the order level shipping amount */
+    public double getOrderShipping() {
+        return OrderReadHelper.calcOrderAdjustments(this.getAdjustments(), this.getSubTotal(), false, false, true);
+    }
+
     /** Sets the shipping instructions. */
     public void setShippingInstructions(String shippingInstructions) {
         this.shippingInstructions = shippingInstructions;
