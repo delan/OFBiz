@@ -671,9 +671,13 @@ public class SqlJdbcUtil {
             throw new GenericModelException("GenericDAO.getValue: definition fieldType " + modelField.getType() + " not found, cannot setValue for field " +
                     entityName + "." + modelField.getName() + ".");
         }
+        
+        // if the value is the GenericEntity.NullField, treat as null
+        if (fieldValue == GenericEntity.NULL_FIELD) {
+            fieldValue = null;
+        }
 
         String fieldType = mft.getJavaType();
-
         if (fieldValue != null) {
             if (!ObjectType.instanceOf(fieldValue, fieldType)) {
                 // this is only an info level message because under normal operation for most JDBC
