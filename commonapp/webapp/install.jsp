@@ -1,5 +1,6 @@
 
 <%@ page import="java.io.*"%>
+<%@ page import="java.sql.*"%>
 
 <% pageContext.setAttribute("PageName", "Install"); %> 
 <%@ include file="/includes/header.jsp" %>
@@ -53,7 +54,7 @@
     <%if(fileList.size() > 0) {%>
       <%for(int i=0; i<fileList.size(); i++) {%>
         <%File sqlFile = (File)fileList.get(i);%>
-        <%int rowsChanged = loadData(sqlFile);%>
+        <%int rowsChanged = loadData(sqlFile, serverName);%>
         <%totalRowsChanged += rowsChanged;%>
         <LI><DIV class='tabletext'>Loaded <%=rowsChanged%> rows from <%=sqlFile.getAbsolutePath()%> (<%=totalRowsChanged%> total rows so far)</DIV>
       <%}%>
@@ -64,14 +65,86 @@
   </UL>
   <DIV class='head2'>Finished loading all data; <%=totalRowsChanged%> total rows updated.</DIV>
 
+  <DIV class='head2'>Error Messages:</DIV>
+  <UL>
+    <%Iterator errIter = errorMessages.iterator();%>
+    <%while(errIter.hasNext()){%>
+      <LI><%=(String)errIter.next()%>
+    <%}%>
+  </UL>
+
 <%}%>
 
 <%@ include file="/includes/onecolumnclose.jsp" %>
 <%@ include file="/includes/footer.jsp" %>
 
 <%!
-  int loadData(File sqlFile)
+  Collection errorMessages = new LinkedList();
+
+  int loadData(File sqlFile, String serverName)
   {
-    return 0;
+    if(!sqlFile.exists()) return 0;
+    Debug.logInfo("[install.loadData] Loading SQL File: \"" + sqlFile.getAbsolutePath() + "\"");
+
+    Connection connection = null; 
+    Statement stmt = null;
+    int rowsChanged = 0;
+    try {
+      connection = ConnectionFactory.getConnection(serverName);
+      connection.setAutoCommit(true);
+      stmt = connection.createStatement();
+
+      String sql = "";
+      BufferedReader in = new BufferedReader(new FileReader(sqlFile));
+      String line;
+      while((line = in.readLine()) != null) {
+        line = line.trim();
+        if(line.startsWith("--")) continue;
+        int scind = line.indexOf(';');
+        int linePos = 0;
+        if(scind >= 0) {
+          while(scind >= 0) {
+            sql += " ";
+            sql += line.substring(linePos, scind);
+
+            //run the sql...
+            //rowsChanged += runSql(sql);
+            sql = sql.trim();
+            if(sql.startsWith("INSERT") || sql.startsWith("insert"))
+            {
+              Debug.logInfo("[install.loadData] Running found insert sql: \"" + sql + "\"");
+              try {
+                rowsChanged += stmt.executeUpdate(sql);
+              }
+              catch (SQLException sqle) {
+                String sqlError = "[install.loadData]: Error running sql:\"" + sql + "\"; Error was: " + sqle.getMessage();
+                errorMessages.add(sqlError);
+                Debug.logWarning(sqlError);
+              }
+            }
+
+            linePos = scind + 1;
+            scind = line.indexOf(';', linePos);
+            sql = "";
+          }
+        }
+        else {
+          sql += " ";
+          sql += line;
+        }
+      }
+    } 
+    catch (Exception e) { 
+      String errorMsg = "[install.loadData]: Load error:" +  e.getMessage();
+      errorMessages.add(errorMsg);
+      Debug.logWarning(errorMsg);
+    } 
+    finally 
+    {
+      try { if (stmt != null) stmt.close(); } catch (SQLException sqle) { }
+      try { if (connection != null) connection.close(); } catch (SQLException sqle) { }
+    }
+
+    return rowsChanged;
   }
 %>
