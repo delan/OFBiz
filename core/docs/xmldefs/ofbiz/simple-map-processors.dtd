@@ -30,18 +30,36 @@
 
 <!ELEMENT simple-map-processors ( simple-map-processor* )>
 
-<!ELEMENT simple-map-processor ( process* )>
+<!ELEMENT simple-map-processor ( make-in-string*, process* )>
 <!ATTLIST simple-map-processor
     name CDATA #REQUIRED
 >
+
+<!-- 
+    Make In String & Operations 
+-->
+<!ELEMENT make-in-string ( ( in-field | property | constant )* )>
+<!ATTLIST make-in-string
+    field CDATA #REQUIRED
+>
+<!ELEMENT in-field EMPTY>
+<!ATTLIST in-field
+    field CDATA #REQUIRED
+>
+<!ELEMENT property EMPTY>
+<!ATTLIST property
+    resource CDATA #REQUIRED
+    property CDATA #REQUIRED
+>
+<!ELEMENT constant (#PCDATA)>
+
+<!-- 
+    Field Process & Operations 
+-->
 <!ELEMENT process ( ( validate-method | compare | compare-field | regexp | not-empty | equals | copy | convert )* )>
 <!ATTLIST process
     field CDATA #REQUIRED
 >
-
-<!-- 
-    String Operations 
--->
 
 <!-- validate-method calls a static Java method that takes a String and returns a boolean -->
 <!ELEMENT validate-method ( fail-message | fail-property )>

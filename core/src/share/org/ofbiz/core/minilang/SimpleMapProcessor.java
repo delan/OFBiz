@@ -56,17 +56,12 @@ public class SimpleMapProcessor {
         if (loader == null)
             loader = Thread.currentThread().getContextClassLoader();
         
-        List simpleMapProcesses = getSimpleMapProcesses(xmlURL, name);
-        if (simpleMapProcesses != null && simpleMapProcesses.size() > 0) {
-            Iterator strPrsIter = simpleMapProcesses.iterator();
-            while (strPrsIter.hasNext()) {
-                SimpleMapProcess simpleMapProcess = (SimpleMapProcess) strPrsIter.next();
-                simpleMapProcess.exec(inMap, results, messages, locale, loader);
-            }
-        }
+        SimpleMapProcessor.Processor processor = getProcessor(xmlURL, name);
+        if (processor != null)
+            processor.exec(inMap, results, messages, locale, loader);
     }
 
-    protected static List getSimpleMapProcesses(URL xmlURL, String name) throws MiniLangException {
+    protected static SimpleMapProcessor.Processor getProcessor(URL xmlURL, String name) throws MiniLangException {
         Map simpleMapProcessors = (Map) simpleMapProcessorsCache.get(xmlURL);
         if (simpleMapProcessors == null) {
             synchronized (SimpleMapProcessor.class) {
@@ -95,16 +90,9 @@ public class SimpleMapProcessor {
                     Iterator strProcorIter = simpleMapProcessorElements.iterator();
                     while (strProcorIter.hasNext()) {
                         Element simpleMapProcessorElement = (Element) strProcorIter.next();
-                        List simpleMapProcesses = new LinkedList();
-                        simpleMapProcessors.put(simpleMapProcessorElement.getAttribute("name"), simpleMapProcesses);
+                        SimpleMapProcessor.Processor processor = new SimpleMapProcessor.Processor(simpleMapProcessorElement);
+                        simpleMapProcessors.put(simpleMapProcessorElement.getAttribute("name"), processor);
 
-                        List simpleMapProcessElements = UtilXml.childElementList(simpleMapProcessorElement, "process");
-                        Iterator strProcIter = simpleMapProcessElements.iterator();
-                        while (strProcIter.hasNext()) {
-                            Element simpleMapProcessElement = (Element) strProcIter.next();
-                            SimpleMapProcessor.SimpleMapProcess strProc = new SimpleMapProcessor.SimpleMapProcess(simpleMapProcessElement);
-                            simpleMapProcesses.add(strProc);
-                        }
                     }
                     
                     //put it in the cache
@@ -113,14 +101,166 @@ public class SimpleMapProcessor {
             }
         }
         
-        List simpleMapProcessList = (List) simpleMapProcessors.get(name);
-        if (simpleMapProcessList == null) {
+        SimpleMapProcessor.Processor proc = (SimpleMapProcessor.Processor) simpleMapProcessors.get(name);
+        if (proc == null) {
             throw new MiniLangException("Could not find SimpleMapProcessor named " + name + " in XML document: " + xmlURL.toString());
         }
 
-        return simpleMapProcessList;
+        return proc;
     }
     
+    public static class Processor {
+        String name;
+        List makeInStrings = new LinkedList();
+        List simpleMapProcesses = new LinkedList();
+        
+        public Processor(Element simpleMapProcessorElement) {
+            name = simpleMapProcessorElement.getAttribute("name");
+
+            List makeInStringElements = UtilXml.childElementList(simpleMapProcessorElement, "make-in-string");
+            Iterator misIter = makeInStringElements.iterator();
+            while (misIter.hasNext()) {
+                Element makeInStringElement = (Element) misIter.next();
+                SimpleMapProcessor.MakeInString makeInString = new SimpleMapProcessor.MakeInString(makeInStringElement);
+                makeInStrings.add(makeInString);
+            }
+
+            List simpleMapProcessElements = UtilXml.childElementList(simpleMapProcessorElement, "process");
+            Iterator strProcIter = simpleMapProcessElements.iterator();
+            while (strProcIter.hasNext()) {
+                Element simpleMapProcessElement = (Element) strProcIter.next();
+                SimpleMapProcessor.SimpleMapProcess strProc = new SimpleMapProcessor.SimpleMapProcess(simpleMapProcessElement);
+                simpleMapProcesses.add(strProc);
+            }
+        }
+        
+        public String getName() {
+            return name;
+        }
+        
+        public void exec(Map inMap, Map results, List messages, Locale locale, ClassLoader loader) {
+            if (makeInStrings != null && makeInStrings.size() > 0) {
+                Iterator misIter = makeInStrings.iterator();
+                while (misIter.hasNext()) {
+                    MakeInString makeInString = (MakeInString) misIter.next();
+                    makeInString.exec(inMap, results, messages, locale, loader);
+                }
+            }
+            
+            if (simpleMapProcesses != null && simpleMapProcesses.size() > 0) {
+                Iterator strPrsIter = simpleMapProcesses.iterator();
+                while (strPrsIter.hasNext()) {
+                    SimpleMapProcess simpleMapProcess = (SimpleMapProcess) strPrsIter.next();
+                    simpleMapProcess.exec(inMap, results, messages, locale, loader);
+                }
+            }
+        }
+    }
+    
+    public static class MakeInString {
+        String fieldName;
+        List operations = new LinkedList();
+        
+        public MakeInString(Element makeInStringElement) {
+            fieldName = makeInStringElement.getAttribute("field");
+            
+            List operationElements = UtilXml.childElementList(makeInStringElement, null);
+            if (operationElements != null && operationElements.size() > 0) {
+                Iterator operElemIter = operationElements.iterator();
+                while (operElemIter.hasNext()) {
+                    Element curOperElem = (Element) operElemIter.next();
+                    String nodeName = curOperElem.getNodeName();
+                    if ("in-field".equals(nodeName)) {
+                        operations.add(new SimpleMapProcessor.InFieldOper(curOperElem));
+                    } else if ("property".equals(nodeName)) {
+                        operations.add(new SimpleMapProcessor.PropertyOper(curOperElem));
+                    } else if ("constant".equals(nodeName)) {
+                        operations.add(new SimpleMapProcessor.ConstantOper(curOperElem));
+                    } else {
+                        Debug.logWarning("[SimpleMapProcessor.MakeInString.MakeInString] Operation element \"" + nodeName + "\" not recognized");
+                    }
+                }
+            }
+        }
+        
+        public void exec(Map inMap, Map results, List messages, Locale locale, ClassLoader loader) {
+            Iterator iter = operations.iterator();
+            StringBuffer buffer = new StringBuffer();
+            while (iter.hasNext()) {
+                MakeInStringOperation oper = (MakeInStringOperation) iter.next();
+                String curStr = oper.exec(inMap, messages, locale, loader);
+                if (curStr != null)
+                    buffer.append(curStr);
+            }
+            inMap.put(fieldName, buffer.toString());
+        }
+    }
+    
+    public static abstract class MakeInStringOperation {
+        public MakeInStringOperation(Element element) {
+        }
+        
+        public abstract String exec(Map inMap, List messages, Locale locale, ClassLoader loader);
+    }
+
+    public static class InFieldOper extends MakeInStringOperation {
+        String fieldName;
+        
+        public InFieldOper(Element element) {
+            super(element);
+            fieldName = element.getAttribute("field");
+        }
+        
+        public String exec(Map inMap, List messages, Locale locale, ClassLoader loader) {
+            Object obj = inMap.get(fieldName);
+            if (obj == null) {
+                Debug.logWarning("[SimpleMapProcessor.InFieldOper.exec] In field " + fieldName + " not found, not appending anything");
+                return null;
+            }
+            try {
+                return (String) ObjectType.simpleTypeConvert(obj, "String", null, locale);
+            } catch (GeneralException e) {
+                Debug.logWarning(e);
+                messages.add("Error converting incoming field \"" + fieldName +"\" in map processor: " + e.getMessage());
+                return null;
+            }
+        }
+    }
+
+    public static class PropertyOper extends MakeInStringOperation {
+        String resource;
+        String property;
+        
+        public PropertyOper(Element element) {
+            super(element);
+            resource = element.getAttribute("resource");
+            property = element.getAttribute("property");
+        }
+        
+        public String exec(Map inMap, List messages, Locale locale, ClassLoader loader) {
+            String propStr = UtilProperties.getPropertyValue(UtilURL.fromResource(resource, loader), property);
+            if (propStr == null || propStr.length() == 0) {
+                Debug.logWarning("[SimpleMapProcessor.PropertyOper.exec] Property " + property + " in resource " + resource + " not found, not appending anything");
+                return null;
+            } else {
+                return propStr;
+            }
+        }
+    }
+
+    public static class ConstantOper extends MakeInStringOperation {
+        String constant;
+        
+        public ConstantOper(Element element) {
+            super(element);
+            constant = UtilXml.elementValue(element);
+        }
+        
+        public String exec(Map inMap, List messages, Locale locale, ClassLoader loader) {
+            return constant;
+        }
+    }
+
     /** A complete string process for a given field; contains multiple string operations */
     public static class SimpleMapProcess {
         List simpleMapOperations = new LinkedList();
@@ -165,11 +305,10 @@ public class SimpleMapProcessor {
                     } else if ("convert".equals(nodeName)) {
                         simpleMapOperations.add(new SimpleMapProcessor.Convert(curOperElem, this));
                     } else {
-                        Debug.logWarning("[SimpleMapProcessor.SimpleMapProcess.readOperations] Operation element \"" + nodeName + "\" no recognized");
+                        Debug.logWarning("[SimpleMapProcessor.SimpleMapProcess.readOperations] Operation element \"" + nodeName + "\" not recognized");
                     }
                 }
             }
-            
         }
     }
     
