@@ -1,6 +1,6 @@
 ####
 # OFBiz Startup Application Settings
-# $Id: configure,v 1.1 2004/03/31 02:29:55 ajzeneski Exp $
+# $Id: configure,v 1.2 2004/06/02 20:34:29 ajzeneski Exp $
 ####
 
 # --- By default we will use the current directory
@@ -8,8 +8,8 @@
 
 # --- Set these for shutting down when running as background process
 ofbiz.admin.host=127.0.0.1
-ofbiz.admin.port=10525
-ofbiz.admin.key=so3du5kasd5dn
+ofbiz.admin.port=0
+ofbiz.admin.key=
 
 # --- External Base configuration files (relative to ofbiz.home)
 ofbiz.base.config=base/config
