@@ -45,6 +45,8 @@ public class ModelService {
   public String location;
   /** The method or function to invoke for this service */
   public String invoke;
+  /** Can this service be exported via RPC/SOAP, etc */
+  public boolean export;
   /** Context Information, a list of parameters required by the service */
   public Map contextInfo;  
   /** Result Information, a list of values returned by the service */

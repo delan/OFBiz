@@ -161,6 +161,7 @@ public class ModelServiceReader {
         service.engineName = checkEmpty(serviceElement.getAttribute("engine"));
         service.location = checkEmpty(serviceElement.getAttribute("location"));
         service.invoke = checkEmpty(serviceElement.getAttribute("invoke"));
+        service.export = checkBoolean(serviceElement.getAttribute("export"));
         
         service.contextInfo = new HashMap();
         service.resultInfo = new HashMap();
@@ -220,6 +221,12 @@ public class ModelServiceReader {
         else if(string2 != null && string2.length() > 0) return string2;
         else if(string3 != null && string3.length() > 0) return string3;
         else return "";
+    }
+    
+    protected boolean checkBoolean(String string) {
+        if ( string != null && string.equalsIgnoreCase("true") ) 
+            return true;
+        return false;
     }
     
     protected Document getDocument(URL url) {
