@@ -150,7 +150,7 @@ public class ModelFormField {
         // incorporate updates for values that are not empty in the overrideFormField
         if (UtilValidate.isNotEmpty(overrideFormField.name)) this.name = overrideFormField.name;
         if (overrideFormField.mapAcsr != null && !overrideFormField.mapAcsr.isEmpty()) {
-            Debug.logInfo("overriding mapAcsr, old=" + (this.mapAcsr==null?"null":this.mapAcsr.getOriginalName()) + ", new=" + overrideFormField.mapAcsr.getOriginalName());
+            //Debug.logInfo("overriding mapAcsr, old=" + (this.mapAcsr==null?"null":this.mapAcsr.getOriginalName()) + ", new=" + overrideFormField.mapAcsr.getOriginalName());
             this.mapAcsr = overrideFormField.mapAcsr;
         } 
         if (UtilValidate.isNotEmpty(overrideFormField.entityName)) this.entityName = overrideFormField.entityName;
@@ -166,7 +166,9 @@ public class ModelFormField {
         if (overrideFormField.position != null) this.position = overrideFormField.position;
         if (UtilValidate.isNotEmpty(overrideFormField.redWhen)) this.redWhen = overrideFormField.redWhen;
         if (UtilValidate.isNotEmpty(overrideFormField.useWhen)) this.useWhen = overrideFormField.useWhen;
-        if (overrideFormField.fieldInfo != null) this.fieldInfo = overrideFormField.fieldInfo;        
+        if (overrideFormField.fieldInfo != null) {
+            this.setFieldInfo(overrideFormField.fieldInfo);
+        }        
     }
 
     public void renderFieldString(StringBuffer buffer, Map context, FormStringRenderer formStringRenderer) {
@@ -192,6 +194,9 @@ public class ModelFormField {
      */
     public void setFieldInfo(FieldInfo fieldInfo) {
         this.fieldInfo = fieldInfo;
+        if (this.fieldInfo != null) {
+            this.fieldInfo.modelFormField = this;
+        }
     }
     
     /** 
@@ -248,7 +253,7 @@ public class ModelFormField {
     public String getEntry(Map context, String defaultValue) {
         Boolean isError = (Boolean) context.get("isError");
         if (isError != null && isError.booleanValue()) {
-            Debug.logInfo("Getting entry, isError true so getting from parameters for field " + this.getName() + " of form " + this.modelForm.getName());
+            //Debug.logInfo("Getting entry, isError true so getting from parameters for field " + this.getName() + " of form " + this.modelForm.getName());
             Map parameters = (Map) context.get("parameters");
             if (parameters != null) {
                 return (String) parameters.get(this.getParameterName());
@@ -256,18 +261,18 @@ public class ModelFormField {
                 return defaultValue;
             }
         } else {
-            Debug.logInfo("Getting entry, isError false so getting from Map in context for field " + this.getName() + " of form " + this.modelForm.getName());
+            //Debug.logInfo("Getting entry, isError false so getting from Map in context for field " + this.getName() + " of form " + this.modelForm.getName());
             Map dataMap = this.getMap(context);
             if (dataMap == null) {
-                Debug.logInfo("Getting entry, no Map found with name " + this.getMapName() + ", using context for field " + this.getName() + " of form " + this.modelForm.getName());
+                //Debug.logInfo("Getting entry, no Map found with name " + this.getMapName() + ", using context for field " + this.getName() + " of form " + this.modelForm.getName());
                 dataMap = context;
             }
             Object retVal = null;
             if (this.entryAcsr != null && !this.entryAcsr.isEmpty()) {
-                Debug.logInfo("Getting entry, using entryAcsr for field " + this.getName() + " of form " + this.modelForm.getName());
+                //Debug.logInfo("Getting entry, using entryAcsr for field " + this.getName() + " of form " + this.modelForm.getName());
                 retVal = this.entryAcsr.get(dataMap);
             } else {
-                Debug.logInfo("Getting entry, no entryAcsr so using field name " + this.name + " for field " + this.getName() + " of form " + this.modelForm.getName());
+                //Debug.logInfo("Getting entry, no entryAcsr so using field name " + this.name + " for field " + this.getName() + " of form " + this.modelForm.getName());
                 // if no entry name was specified, use the field's name
                 retVal = dataMap.get(this.name);
             }
@@ -282,10 +287,10 @@ public class ModelFormField {
     
     public Map getMap(Map context) {
         if (this.mapAcsr == null || this.mapAcsr.isEmpty()) {
-            Debug.logInfo("Getting Map from default of the form because of no mapAcsr for field " + this.getName());
+            //Debug.logInfo("Getting Map from default of the form because of no mapAcsr for field " + this.getName());
             return this.modelForm.getDefaultMap(context);
         } else {
-            Debug.logInfo("Getting Map from mapAcsr for field " + this.getName());
+            //Debug.logInfo("Getting Map from mapAcsr for field " + this.getName());
             return (Map) mapAcsr.get(context);
         }
     }
@@ -611,7 +616,7 @@ public class ModelFormField {
      * @param string
      */
     public void setMapName(String string) {
-        mapAcsr = new FlexibleMapAccessor(string);
+        this.mapAcsr = new FlexibleMapAccessor(string);
     }
 
     /**
@@ -975,10 +980,8 @@ public class ModelFormField {
          */
         public String getDescription(Map context) {
             if (this.description != null && !this.description.isEmpty()) {
-                Debug.logInfo("Getting description from string expander with string: " + this.description.getOriginal() + " for field " + this.modelFormField.getName());
                 return this.description.expandString(context);
             } else {
-                Debug.logInfo("Getting description from entry for field " + this.modelFormField.getName());
                 return modelFormField.getEntry(context);
             }
         }
@@ -1409,10 +1412,8 @@ public class ModelFormField {
 
         public String getValue(Map context) {
             if (this.value != null && !this.value.isEmpty()) {
-                Debug.logInfo("Getting description from string expander with string: " + this.value.getOriginal() + " for field " + this.modelFormField.getName());
                 return this.value.expandString(context);
             } else {
-                Debug.logInfo("Getting description from entry for field " + this.modelFormField.getName());
                 return modelFormField.getEntry(context);
             }
         }

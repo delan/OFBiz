@@ -149,467 +149,8 @@ public class ModelForm {
         while (fieldElementIter.hasNext()) {
             Element fieldElement = (Element) fieldElementIter.next();
             ModelFormField modelFormField = new ModelFormField(fieldElement, this);
-            this.addUpdateField(modelFormField);
-        }
-    }
-    
-    /**
-     * Renders this form to a String, i.e. in a text format, as defined with the 
-     * FormStringRenderer implementation.
-     * 
-     * @param buffer The StringBuffer that the form text will be written to
-     * @param context Map containing the form context; the following are 
-     *   reserved words in this context: parameters (Map), isError (Boolean), 
-     *   itemIndex (Integer, for lists only, otherwise null), bshInterpreter,
-     *   formName (String, optional alternate name for form, defaults to the 
-     *   value of the name attribute)
-     * @param formStringRenderer An implementation of the FormStringRenderer 
-     *   interface that is responsible for the actual text generation for 
-     *   different form elements; implementing you own makes it possible to 
-     *   use the same form definitions for many types of form UIs
-     */
-    public void renderFormString(StringBuffer buffer, Map context, FormStringRenderer formStringRenderer) {
-        // find the highest position number to get the max positions used
-        int positions = 1;
-        Iterator fieldIter = this.fieldList.iterator();
-        while (fieldIter.hasNext()) {
-            ModelFormField modelFormField = (ModelFormField) fieldIter.next();
-            int curPos = modelFormField.getPosition();
-            if (curPos > positions) {
-                positions = curPos;
-            }
-        }
-            
-        if ("single".equals(this.type)) {
-            // render form open
-            formStringRenderer.renderFormOpen(buffer, context, this);
-            
-            // render all hidden & ignored fields
-            fieldIter = this.fieldList.iterator();
-            while (fieldIter.hasNext()) {
-                ModelFormField modelFormField = (ModelFormField) fieldIter.next();
-                ModelFormField.FieldInfo fieldInfo = modelFormField.getFieldInfo();
-
-                // render hidden/ignored field widget
-                switch (fieldInfo.getFieldType()) {
-                    case ModelFormField.FieldInfo.HIDDEN:
-                    case ModelFormField.FieldInfo.IGNORED:
-                    if (modelFormField.shouldUse(context)) {
-                        modelFormField.renderFieldString(buffer, context, formStringRenderer);
-                    }
-                    break;
-                    
-                    case ModelFormField.FieldInfo.DISPLAY:
-                    ModelFormField.DisplayField displayField = (ModelFormField.DisplayField) fieldInfo;
-                    if (displayField.getAlsoHidden() && modelFormField.shouldUse(context)) {
-                        formStringRenderer.renderHiddenField(buffer, context, modelFormField, modelFormField.getEntry(context));
-                    }
-                    break;
-                    
-                    case ModelFormField.FieldInfo.HYPERLINK:
-                    ModelFormField.HyperlinkField hyperlinkField = (ModelFormField.HyperlinkField) fieldInfo;
-                    if (hyperlinkField.getAlsoHidden() && modelFormField.shouldUse(context)) {
-                        formStringRenderer.renderHiddenField(buffer, context, modelFormField, modelFormField.getEntry(context));
-                    }
-                    break;
-                }
-            }
-            
-            // render formatting wrapper open
-            formStringRenderer.renderFormatSingleWrapperOpen(buffer, context, this);
-            
-            // render each field row, except hidden & ignored rows
-            fieldIter = this.fieldList.iterator();
-            ModelFormField lastFormField = null;
-            ModelFormField currentFormField = null;
-            ModelFormField nextFormField = null;
-            if (fieldIter.hasNext()) {
-                currentFormField = (ModelFormField) fieldIter.next();
-            }
-            if (fieldIter.hasNext()) {
-                nextFormField = (ModelFormField) fieldIter.next();
-            }
-
-            boolean isFirstPass = true;            
-            while (currentFormField != null) {
-                // do the check/get next stuff at the beginning so we can still use the continue stuff easily
-                // don't do it on the first pass though...
-                if (isFirstPass) {
-                    isFirstPass = false;
-                } else {
-                    if (fieldIter.hasNext()) {
-                        // at least two loops left
-                        lastFormField = currentFormField;
-                        currentFormField = nextFormField;
-                        nextFormField = (ModelFormField) fieldIter.next();
-                    } else if (nextFormField != null) {
-                        // okay, just one loop left
-                        lastFormField = currentFormField;
-                        currentFormField = nextFormField;
-                        nextFormField = null;
-                    } else {
-                        // at the end...
-                        lastFormField = currentFormField;
-                        currentFormField = null;
-                        // nextFormField is already null
-                        break;
-                    }
-                }
-                
-                ModelFormField.FieldInfo fieldInfo = currentFormField.getFieldInfo();
-                
-                if (fieldInfo.getFieldType() == ModelFormField.FieldInfo.HIDDEN || fieldInfo.getFieldType() == ModelFormField.FieldInfo.IGNORED) {
-                    continue; 
-                }
-
-                if (!currentFormField.shouldUse(context)) {
-                    continue;
-                }
-                
-                boolean stayingOnRow = false;
-                if (lastFormField != null) {
-                    if (lastFormField.getPosition() >= currentFormField.getPosition()) {
-                        // moving to next row
-                        stayingOnRow = false;
-                    } else {
-                        // staying on same row
-                        stayingOnRow = true;
-                    }
-                }
-
-                int positionSpan = 1;
-                Integer nextPositionInRow = null;
-                if (nextFormField != null) {
-                    if (nextFormField.getPosition() > currentFormField.getPosition()) {
-                        positionSpan = nextFormField.getPosition() - currentFormField.getPosition() - 1;
-                        nextPositionInRow = new Integer(nextFormField.getPosition());
-                    } else {
-                        positionSpan = positions - currentFormField.getPosition();
-                        if (!stayingOnRow && nextFormField.getPosition() > 1) {
-                            // TODO: here is a weird case where it is setup such 
-                            //that the first position(s) in the row are skipped
-                            // not sure what to do about this right now...
-                        }
-                    }
-                }
-                
-                if (stayingOnRow) {
-                    // render spacer cell
-                    //formStringRenderer.renderFormatFieldRowSpacerCell(buffer, context, currentFormField);
-                } else {
-                    if (lastFormField != null) {
-                        // render row formatting close
-                        formStringRenderer.renderFormatFieldRowClose(buffer, context, this);
-                    }
-                    
-                    // render row formatting open
-                    formStringRenderer.renderFormatFieldRowOpen(buffer, context, this);
-                }
-                
-                // render title formatting open
-                formStringRenderer.renderFormatFieldRowTitleCellOpen(buffer, context, currentFormField);
-                
-                // render title (unless this is a submit or a reset field)
-                if (fieldInfo.getFieldType() != ModelFormField.FieldInfo.SUBMIT && fieldInfo.getFieldType() != ModelFormField.FieldInfo.RESET) {
-                    formStringRenderer.renderFieldTitle(buffer, context, currentFormField);
-                } else {
-                    formStringRenderer.renderFormatEmptySpace(buffer, context, this);
-                }
-                
-                // render title formatting close
-                formStringRenderer.renderFormatFieldRowTitleCellClose(buffer, context, currentFormField);
-                
-                // render separator
-                formStringRenderer.renderFormatFieldRowSpacerCell(buffer, context, currentFormField);
-                                
-                // render widget formatting open
-                formStringRenderer.renderFormatFieldRowWidgetCellOpen(buffer, context, currentFormField, positions, positionSpan, nextPositionInRow);
-                
-                // render widget
-                currentFormField.renderFieldString(buffer, context, formStringRenderer);
-                
-                // render widget formatting close
-                formStringRenderer.renderFormatFieldRowWidgetCellClose(buffer, context, currentFormField, positions, positionSpan, nextPositionInRow);
-
-            }
-            // always render row formatting close after the end
-            formStringRenderer.renderFormatFieldRowClose(buffer, context, this);
-            
-            // render formatting wrapper close
-            formStringRenderer.renderFormatSingleWrapperClose(buffer, context, this);
-            
-            // render form close
-            formStringRenderer.renderFormClose(buffer, context, this);
-        } else if ("list".equals(this.type)) {
-            // render list/tabular type forms
-            
-            // render formatting wrapper open
-            formStringRenderer.renderFormatListWrapperOpen(buffer, context, this);
-            
-            // ===== render header row =====
-            formStringRenderer.renderFormatHeaderRowOpen(buffer, context, this);
-            
-            // render title for each field, except hidden & ignored rows
-            
-            // start by rendering all display and hyperlink fields, until we
-            //get to a field that should go into the form cell, then render
-            //the form cell with all non-display and non-hyperlink fields, then
-            //do a start after the first form input field and
-            //render all display and hyperlink fields after the form
-            
-            // do the first part of display and hyperlink fields 
-            Iterator displayHyperlinkFieldIter = this.fieldList.iterator();
-            while (displayHyperlinkFieldIter.hasNext()) {
-                ModelFormField modelFormField = (ModelFormField) displayHyperlinkFieldIter.next();
-                ModelFormField.FieldInfo fieldInfo = modelFormField.getFieldInfo();
-                
-                // don't do any header for hidden or ignored fields
-                if (fieldInfo.getFieldType() == ModelFormField.FieldInfo.HIDDEN || fieldInfo.getFieldType() == ModelFormField.FieldInfo.IGNORED) {
-                    continue; 
-                }
-
-                if (fieldInfo.getFieldType() != ModelFormField.FieldInfo.DISPLAY && fieldInfo.getFieldType() != ModelFormField.FieldInfo.HYPERLINK) {
-                    // okay, now do the form cell
-                    break;
-                }
-
-                if (!modelFormField.shouldUse(context)) {
-                    continue;
-                }
-
-                formStringRenderer.renderFormatHeaderRowCellOpen(buffer, context, this, modelFormField);
-
-                formStringRenderer.renderFieldTitle(buffer, context, modelFormField);
-                
-                formStringRenderer.renderFormatHeaderRowCellClose(buffer, context, this, modelFormField);
-            }
-            
-            
-            List headerFormFields = new LinkedList();
-            Iterator formFieldIter = this.fieldList.iterator();
-            boolean isFirstFormHeader = true;
-            while (formFieldIter.hasNext()) {
-                ModelFormField modelFormField = (ModelFormField) formFieldIter.next();
-                ModelFormField.FieldInfo fieldInfo = modelFormField.getFieldInfo();
-                
-                // don't do any header for hidden or ignored fields
-                if (fieldInfo.getFieldType() == ModelFormField.FieldInfo.HIDDEN || fieldInfo.getFieldType() == ModelFormField.FieldInfo.IGNORED) {
-                    continue; 
-                }
-
-                // skip all of the display/hyperlink fields
-                if (fieldInfo.getFieldType() == ModelFormField.FieldInfo.DISPLAY || fieldInfo.getFieldType() == ModelFormField.FieldInfo.HYPERLINK) {
-                    continue;
-                }
-
-                if (!modelFormField.shouldUse(context)) {
-                    continue;
-                }
-                
-                headerFormFields.add(modelFormField);
-            }
-            
-            // render the "form" cell 
-            formStringRenderer.renderFormatHeaderRowFormCellOpen(buffer, context, this);
-            
-            Iterator headerFormFieldIter = headerFormFields.iterator();
-            while (headerFormFieldIter.hasNext()) {
-                ModelFormField modelFormField = (ModelFormField) headerFormFieldIter.next();
-                ModelFormField.FieldInfo fieldInfo = modelFormField.getFieldInfo();
-                
-                // render title (unless this is a submit or a reset field)
-                if (fieldInfo.getFieldType() != ModelFormField.FieldInfo.SUBMIT && fieldInfo.getFieldType() != ModelFormField.FieldInfo.RESET) {
-                    formStringRenderer.renderFieldTitle(buffer, context, modelFormField);
-
-                    if (headerFormFieldIter.hasNext()) {
-                        // TODO: determine somehow if this is the last one... how?
-                        formStringRenderer.renderFormatHeaderRowFormCellTitleSeparator(buffer, context, this, modelFormField, false);
-                    }
-                } else {
-                    formStringRenderer.renderFormatEmptySpace(buffer, context, this);
-                }
-            }
-
-            formStringRenderer.renderFormatHeaderRowFormCellClose(buffer, context, this);
-            
-            // render the rest of the display/hyperlink fields 
-            while (displayHyperlinkFieldIter.hasNext()) {
-                ModelFormField modelFormField = (ModelFormField) displayHyperlinkFieldIter.next();
-                ModelFormField.FieldInfo fieldInfo = modelFormField.getFieldInfo();
-                
-                // don't do any header for hidden or ignored fields
-                if (fieldInfo.getFieldType() == ModelFormField.FieldInfo.HIDDEN || fieldInfo.getFieldType() == ModelFormField.FieldInfo.IGNORED) {
-                    continue; 
-                }
-
-                // skip all non-display and non-hyperlink fields
-                if (fieldInfo.getFieldType() != ModelFormField.FieldInfo.DISPLAY && fieldInfo.getFieldType() != ModelFormField.FieldInfo.HYPERLINK) {
-                    continue;
-                }
-
-                if (!modelFormField.shouldUse(context)) {
-                    continue;
-                }
-
-                formStringRenderer.renderFormatHeaderRowCellOpen(buffer, context, this, modelFormField);
-
-                formStringRenderer.renderFieldTitle(buffer, context, modelFormField);
-                
-                formStringRenderer.renderFormatHeaderRowCellClose(buffer, context, this, modelFormField);
-            }
-            
-            formStringRenderer.renderFormatHeaderRowClose(buffer, context, this);
-            
-            // ===== render the item rows =====
-            
-            // if list is empty, do not render rows
-            List items = (List) context.get(this.getListName());
-            if (items == null || items.size() == 0) {
-                // do nothing; we could show an simple box with a message here
-            } else {
-                // render item rows
-                Iterator itemIter = items.iterator();
-                int itemIndex = 0;
-                while (itemIter.hasNext()) {
-                    itemIndex++;
-                    Map localContext = new HashMap(context);
-                    Object item = itemIter.next();
-                    if (UtilValidate.isNotEmpty(this.getListEntryName())) {
-                        localContext.put(this.getListEntryName(), item);
-                    } else {
-                        Map itemMap = (Map) item;
-                        localContext.putAll(itemMap);
-                    }
-                    localContext.put("itemIndex", new Integer(itemIndex));
-                
-                    // render row formatting open
-                    formStringRenderer.renderFormatItemRowOpen(buffer, localContext, this);
-                    
-                    // do the first part of display and hyperlink fields 
-                    Iterator innerDisplayHyperlinkFieldIter = this.fieldList.iterator();
-                    while (innerDisplayHyperlinkFieldIter.hasNext()) {
-                        ModelFormField modelFormField = (ModelFormField) innerDisplayHyperlinkFieldIter.next();
-                        ModelFormField.FieldInfo fieldInfo = modelFormField.getFieldInfo();
-                
-                        // don't do any header for hidden or ignored fields
-                        if (fieldInfo.getFieldType() == ModelFormField.FieldInfo.HIDDEN || fieldInfo.getFieldType() == ModelFormField.FieldInfo.IGNORED) {
-                            continue; 
-                        }
-
-                        if (fieldInfo.getFieldType() != ModelFormField.FieldInfo.DISPLAY && fieldInfo.getFieldType() != ModelFormField.FieldInfo.HYPERLINK) {
-                            // okay, now do the form cell
-                            break;
-                        }
-
-                        if (!modelFormField.shouldUse(localContext)) {
-                            continue;
-                        }
-
-                        formStringRenderer.renderFormatItemRowCellOpen(buffer, localContext, this, modelFormField);
-
-                        modelFormField.renderFieldString(buffer, localContext, formStringRenderer);
-                
-                        formStringRenderer.renderFormatItemRowCellClose(buffer, localContext, this, modelFormField);
-                    }
-            
-                    // render the "form" cell 
-                    formStringRenderer.renderFormatItemRowFormCellOpen(buffer, localContext, this);
-                    
-                    formStringRenderer.renderFormOpen(buffer, localContext, this);
-                    
-                    // do all of the hidden fields...
-                    fieldIter = this.fieldList.iterator();
-                    while (fieldIter.hasNext()) {
-                        ModelFormField modelFormField = (ModelFormField) fieldIter.next();
-                        ModelFormField.FieldInfo fieldInfo = modelFormField.getFieldInfo();
-
-                        // render hidden/ignored field widget
-                        switch (fieldInfo.getFieldType()) {
-                            case ModelFormField.FieldInfo.HIDDEN:
-                            case ModelFormField.FieldInfo.IGNORED:
-                            if (modelFormField.shouldUse(localContext)) {
-                                modelFormField.renderFieldString(buffer, localContext, formStringRenderer);
-                            }
-                            break;
-                    
-                            case ModelFormField.FieldInfo.DISPLAY:
-                            ModelFormField.DisplayField displayField = (ModelFormField.DisplayField) fieldInfo;
-                            if (displayField.getAlsoHidden() && modelFormField.shouldUse(localContext)) {
-                                formStringRenderer.renderHiddenField(buffer, localContext, modelFormField, modelFormField.getEntry(localContext));
-                            }
-                            break;
-                    
-                            case ModelFormField.FieldInfo.HYPERLINK:
-                            ModelFormField.HyperlinkField hyperlinkField = (ModelFormField.HyperlinkField) fieldInfo;
-                            if (hyperlinkField.getAlsoHidden() && modelFormField.shouldUse(localContext)) {
-                                formStringRenderer.renderHiddenField(buffer, localContext, modelFormField, modelFormField.getEntry(localContext));
-                            }
-                            break;
-                        }
-                    }
-            
-                    Iterator innerFormFieldIter = this.fieldList.iterator();
-                    while (innerFormFieldIter.hasNext()) {
-                        ModelFormField modelFormField = (ModelFormField) innerFormFieldIter.next();
-                        ModelFormField.FieldInfo fieldInfo = modelFormField.getFieldInfo();
-                
-                        // don't do any header for hidden or ignored fields
-                        if (fieldInfo.getFieldType() == ModelFormField.FieldInfo.HIDDEN || fieldInfo.getFieldType() == ModelFormField.FieldInfo.IGNORED) {
-                            continue; 
-                        }
-
-                        // skip all of the display/hyperlink fields
-                        if (fieldInfo.getFieldType() == ModelFormField.FieldInfo.DISPLAY || fieldInfo.getFieldType() == ModelFormField.FieldInfo.HYPERLINK) {
-                            continue;
-                        }
-
-                        if (!modelFormField.shouldUse(localContext)) {
-                            continue;
-                        }
-
-                        // render field widget
-                        modelFormField.renderFieldString(buffer, localContext, formStringRenderer);
-                    }
-
-                    formStringRenderer.renderFormClose(buffer, localContext, this);
-            
-                    formStringRenderer.renderFormatItemRowFormCellClose(buffer, localContext, this);
-            
-                    // render the rest of the display/hyperlink fields 
-                    while (innerDisplayHyperlinkFieldIter.hasNext()) {
-                        ModelFormField modelFormField = (ModelFormField) innerDisplayHyperlinkFieldIter.next();
-                        ModelFormField.FieldInfo fieldInfo = modelFormField.getFieldInfo();
-                
-                        // don't do any header for hidden or ignored fields
-                        if (fieldInfo.getFieldType() == ModelFormField.FieldInfo.HIDDEN || fieldInfo.getFieldType() == ModelFormField.FieldInfo.IGNORED) {
-                            continue; 
-                        }
-
-                        // skip all non-display and non-hyperlink fields
-                        if (fieldInfo.getFieldType() != ModelFormField.FieldInfo.DISPLAY && fieldInfo.getFieldType() != ModelFormField.FieldInfo.HYPERLINK) {
-                            continue;
-                        }
-
-                        if (!modelFormField.shouldUse(localContext)) {
-                            continue;
-                        }
-
-                        formStringRenderer.renderFormatItemRowCellOpen(buffer, localContext, this, modelFormField);
-
-                        modelFormField.renderFieldString(buffer, localContext, formStringRenderer);
-                
-                        formStringRenderer.renderFormatItemRowCellClose(buffer, localContext, this, modelFormField);
-                    }
-
-                    // render row formatting close
-                    formStringRenderer.renderFormatItemRowClose(buffer, localContext, this);
-                }
-            }
-            
-            // render formatting wrapper close
-            formStringRenderer.renderFormatListWrapperClose(buffer, context, this);
-        } else {
-            throw new IllegalArgumentException("The type " + this.getType() + " is not supported for form with name " + this.getName());
+            modelFormField = this.addUpdateField(modelFormField);
+            //Debug.logInfo("Added field " + modelFormField.getName() + " from def, mapName=" + modelFormField.getMapName());
         }
     }
     
@@ -663,7 +204,6 @@ public class ModelForm {
             if (modelParam.formDisplay) {
                 ModelFormField modelFormField = this.addFieldFromServiceParam(modelService, modelParam);
                 if (UtilValidate.isNotEmpty(autoFieldsService.mapName)) {
-                    Debug.logInfo("Setting mapName " + autoFieldsService.mapName + " on the field " + modelFormField.getName());
                     modelFormField.setMapName(autoFieldsService.mapName);
                 }
             }
@@ -790,6 +330,477 @@ public class ModelForm {
         
         return this.addUpdateField(newFormField);
     }
+
+    /**
+     * Renders this form to a String, i.e. in a text format, as defined with the 
+     * FormStringRenderer implementation.
+     * 
+     * @param buffer The StringBuffer that the form text will be written to
+     * @param context Map containing the form context; the following are 
+     *   reserved words in this context: parameters (Map), isError (Boolean), 
+     *   itemIndex (Integer, for lists only, otherwise null), bshInterpreter,
+     *   formName (String, optional alternate name for form, defaults to the 
+     *   value of the name attribute)
+     * @param formStringRenderer An implementation of the FormStringRenderer 
+     *   interface that is responsible for the actual text generation for 
+     *   different form elements; implementing you own makes it possible to 
+     *   use the same form definitions for many types of form UIs
+     */
+    public void renderFormString(StringBuffer buffer, Map context, FormStringRenderer formStringRenderer) {
+        // find the highest position number to get the max positions used
+        int positions = 1;
+        Iterator fieldIter = this.fieldList.iterator();
+        while (fieldIter.hasNext()) {
+            ModelFormField modelFormField = (ModelFormField) fieldIter.next();
+            int curPos = modelFormField.getPosition();
+            if (curPos > positions) {
+                positions = curPos;
+            }
+        }
+            
+        if ("single".equals(this.type)) {
+            this.renderSingleFormString(buffer, context, formStringRenderer, positions);
+        } else if ("list".equals(this.type)) {
+            this.renderListFormString(buffer, context, formStringRenderer, positions);
+        } else {
+            throw new IllegalArgumentException("The type " + this.getType() + " is not supported for form with name " + this.getName());
+        }
+    }
+
+    public void renderSingleFormString(StringBuffer buffer, Map context, FormStringRenderer formStringRenderer, int positions) {
+        Iterator fieldIter = null;
+        
+        // render form open
+        formStringRenderer.renderFormOpen(buffer, context, this);
+            
+        // render all hidden & ignored fields
+        fieldIter = this.fieldList.iterator();
+        while (fieldIter.hasNext()) {
+            ModelFormField modelFormField = (ModelFormField) fieldIter.next();
+            ModelFormField.FieldInfo fieldInfo = modelFormField.getFieldInfo();
+
+            // render hidden/ignored field widget
+            switch (fieldInfo.getFieldType()) {
+                case ModelFormField.FieldInfo.HIDDEN:
+                case ModelFormField.FieldInfo.IGNORED:
+                if (modelFormField.shouldUse(context)) {
+                    modelFormField.renderFieldString(buffer, context, formStringRenderer);
+                }
+                break;
+                    
+                case ModelFormField.FieldInfo.DISPLAY:
+                ModelFormField.DisplayField displayField = (ModelFormField.DisplayField) fieldInfo;
+                if (displayField.getAlsoHidden() && modelFormField.shouldUse(context)) {
+                    formStringRenderer.renderHiddenField(buffer, context, modelFormField, modelFormField.getEntry(context));
+                }
+                break;
+                    
+                case ModelFormField.FieldInfo.HYPERLINK:
+                ModelFormField.HyperlinkField hyperlinkField = (ModelFormField.HyperlinkField) fieldInfo;
+                if (hyperlinkField.getAlsoHidden() && modelFormField.shouldUse(context)) {
+                    formStringRenderer.renderHiddenField(buffer, context, modelFormField, modelFormField.getEntry(context));
+                }
+                break;
+            }
+        }
+            
+        // render formatting wrapper open
+        formStringRenderer.renderFormatSingleWrapperOpen(buffer, context, this);
+            
+        // render each field row, except hidden & ignored rows
+        fieldIter = this.fieldList.iterator();
+        ModelFormField lastFormField = null;
+        ModelFormField currentFormField = null;
+        ModelFormField nextFormField = null;
+        if (fieldIter.hasNext()) {
+            currentFormField = (ModelFormField) fieldIter.next();
+        }
+        if (fieldIter.hasNext()) {
+            nextFormField = (ModelFormField) fieldIter.next();
+        }
+
+        boolean isFirstPass = true;            
+        while (currentFormField != null) {
+            // do the check/get next stuff at the beginning so we can still use the continue stuff easily
+            // don't do it on the first pass though...
+            if (isFirstPass) {
+                isFirstPass = false;
+            } else {
+                if (fieldIter.hasNext()) {
+                    // at least two loops left
+                    lastFormField = currentFormField;
+                    currentFormField = nextFormField;
+                    nextFormField = (ModelFormField) fieldIter.next();
+                } else if (nextFormField != null) {
+                    // okay, just one loop left
+                    lastFormField = currentFormField;
+                    currentFormField = nextFormField;
+                    nextFormField = null;
+                } else {
+                    // at the end...
+                    lastFormField = currentFormField;
+                    currentFormField = null;
+                    // nextFormField is already null
+                    break;
+                }
+            }
+                
+            ModelFormField.FieldInfo fieldInfo = currentFormField.getFieldInfo();
+                
+            if (fieldInfo.getFieldType() == ModelFormField.FieldInfo.HIDDEN || fieldInfo.getFieldType() == ModelFormField.FieldInfo.IGNORED) {
+                continue; 
+            }
+
+            if (!currentFormField.shouldUse(context)) {
+                continue;
+            }
+                
+            boolean stayingOnRow = false;
+            if (lastFormField != null) {
+                if (lastFormField.getPosition() >= currentFormField.getPosition()) {
+                    // moving to next row
+                    stayingOnRow = false;
+                } else {
+                    // staying on same row
+                    stayingOnRow = true;
+                }
+            }
+
+            int positionSpan = 1;
+            Integer nextPositionInRow = null;
+            if (nextFormField != null) {
+                if (nextFormField.getPosition() > currentFormField.getPosition()) {
+                    positionSpan = nextFormField.getPosition() - currentFormField.getPosition() - 1;
+                    nextPositionInRow = new Integer(nextFormField.getPosition());
+                } else {
+                    positionSpan = positions - currentFormField.getPosition();
+                    if (!stayingOnRow && nextFormField.getPosition() > 1) {
+                        // TODO: here is a weird case where it is setup such 
+                        //that the first position(s) in the row are skipped
+                        // not sure what to do about this right now...
+                    }
+                }
+            }
+                
+            if (stayingOnRow) {
+                // render spacer cell
+                //formStringRenderer.renderFormatFieldRowSpacerCell(buffer, context, currentFormField);
+            } else {
+                if (lastFormField != null) {
+                    // render row formatting close
+                    formStringRenderer.renderFormatFieldRowClose(buffer, context, this);
+                }
+                    
+                // render row formatting open
+                formStringRenderer.renderFormatFieldRowOpen(buffer, context, this);
+            }
+                
+            // render title formatting open
+            formStringRenderer.renderFormatFieldRowTitleCellOpen(buffer, context, currentFormField);
+                
+            // render title (unless this is a submit or a reset field)
+            if (fieldInfo.getFieldType() != ModelFormField.FieldInfo.SUBMIT && fieldInfo.getFieldType() != ModelFormField.FieldInfo.RESET) {
+                formStringRenderer.renderFieldTitle(buffer, context, currentFormField);
+            } else {
+                formStringRenderer.renderFormatEmptySpace(buffer, context, this);
+            }
+                
+            // render title formatting close
+            formStringRenderer.renderFormatFieldRowTitleCellClose(buffer, context, currentFormField);
+                
+            // render separator
+            formStringRenderer.renderFormatFieldRowSpacerCell(buffer, context, currentFormField);
+                                
+            // render widget formatting open
+            formStringRenderer.renderFormatFieldRowWidgetCellOpen(buffer, context, currentFormField, positions, positionSpan, nextPositionInRow);
+                
+            // render widget
+            currentFormField.renderFieldString(buffer, context, formStringRenderer);
+                
+            // render widget formatting close
+            formStringRenderer.renderFormatFieldRowWidgetCellClose(buffer, context, currentFormField, positions, positionSpan, nextPositionInRow);
+
+        }
+        // always render row formatting close after the end
+        formStringRenderer.renderFormatFieldRowClose(buffer, context, this);
+            
+        // render formatting wrapper close
+        formStringRenderer.renderFormatSingleWrapperClose(buffer, context, this);
+            
+        // render form close
+        formStringRenderer.renderFormClose(buffer, context, this);
+    }
+    
+    public void renderListFormString(StringBuffer buffer, Map context, FormStringRenderer formStringRenderer, int positions) {
+        // render list/tabular type forms
+            
+        // render formatting wrapper open
+        formStringRenderer.renderFormatListWrapperOpen(buffer, context, this);
+            
+        // ===== render header row =====
+        formStringRenderer.renderFormatHeaderRowOpen(buffer, context, this);
+            
+        // render title for each field, except hidden & ignored rows
+            
+        // start by rendering all display and hyperlink fields, until we
+        //get to a field that should go into the form cell, then render
+        //the form cell with all non-display and non-hyperlink fields, then
+        //do a start after the first form input field and
+        //render all display and hyperlink fields after the form
+            
+        // do the first part of display and hyperlink fields 
+        Iterator displayHyperlinkFieldIter = this.fieldList.iterator();
+        while (displayHyperlinkFieldIter.hasNext()) {
+            ModelFormField modelFormField = (ModelFormField) displayHyperlinkFieldIter.next();
+            ModelFormField.FieldInfo fieldInfo = modelFormField.getFieldInfo();
+                
+            // don't do any header for hidden or ignored fields
+            if (fieldInfo.getFieldType() == ModelFormField.FieldInfo.HIDDEN || fieldInfo.getFieldType() == ModelFormField.FieldInfo.IGNORED) {
+                continue; 
+            }
+
+            if (fieldInfo.getFieldType() != ModelFormField.FieldInfo.DISPLAY && fieldInfo.getFieldType() != ModelFormField.FieldInfo.HYPERLINK) {
+                // okay, now do the form cell
+                break;
+            }
+
+            if (!modelFormField.shouldUse(context)) {
+                continue;
+            }
+
+            formStringRenderer.renderFormatHeaderRowCellOpen(buffer, context, this, modelFormField);
+
+            formStringRenderer.renderFieldTitle(buffer, context, modelFormField);
+                
+            formStringRenderer.renderFormatHeaderRowCellClose(buffer, context, this, modelFormField);
+        }
+            
+            
+        List headerFormFields = new LinkedList();
+        Iterator formFieldIter = this.fieldList.iterator();
+        boolean isFirstFormHeader = true;
+        while (formFieldIter.hasNext()) {
+            ModelFormField modelFormField = (ModelFormField) formFieldIter.next();
+            ModelFormField.FieldInfo fieldInfo = modelFormField.getFieldInfo();
+                
+            // don't do any header for hidden or ignored fields
+            if (fieldInfo.getFieldType() == ModelFormField.FieldInfo.HIDDEN || fieldInfo.getFieldType() == ModelFormField.FieldInfo.IGNORED) {
+                continue; 
+            }
+
+            // skip all of the display/hyperlink fields
+            if (fieldInfo.getFieldType() == ModelFormField.FieldInfo.DISPLAY || fieldInfo.getFieldType() == ModelFormField.FieldInfo.HYPERLINK) {
+                continue;
+            }
+
+            if (!modelFormField.shouldUse(context)) {
+                continue;
+            }
+                
+            headerFormFields.add(modelFormField);
+        }
+            
+        // render the "form" cell 
+        formStringRenderer.renderFormatHeaderRowFormCellOpen(buffer, context, this);
+            
+        Iterator headerFormFieldIter = headerFormFields.iterator();
+        while (headerFormFieldIter.hasNext()) {
+            ModelFormField modelFormField = (ModelFormField) headerFormFieldIter.next();
+            ModelFormField.FieldInfo fieldInfo = modelFormField.getFieldInfo();
+                
+            // render title (unless this is a submit or a reset field)
+            if (fieldInfo.getFieldType() != ModelFormField.FieldInfo.SUBMIT && fieldInfo.getFieldType() != ModelFormField.FieldInfo.RESET) {
+                formStringRenderer.renderFieldTitle(buffer, context, modelFormField);
+
+                if (headerFormFieldIter.hasNext()) {
+                    // TODO: determine somehow if this is the last one... how?
+                    formStringRenderer.renderFormatHeaderRowFormCellTitleSeparator(buffer, context, this, modelFormField, false);
+                }
+            } else {
+                formStringRenderer.renderFormatEmptySpace(buffer, context, this);
+            }
+        }
+
+        formStringRenderer.renderFormatHeaderRowFormCellClose(buffer, context, this);
+            
+        // render the rest of the display/hyperlink fields 
+        while (displayHyperlinkFieldIter.hasNext()) {
+            ModelFormField modelFormField = (ModelFormField) displayHyperlinkFieldIter.next();
+            ModelFormField.FieldInfo fieldInfo = modelFormField.getFieldInfo();
+                
+            // don't do any header for hidden or ignored fields
+            if (fieldInfo.getFieldType() == ModelFormField.FieldInfo.HIDDEN || fieldInfo.getFieldType() == ModelFormField.FieldInfo.IGNORED) {
+                continue; 
+            }
+
+            // skip all non-display and non-hyperlink fields
+            if (fieldInfo.getFieldType() != ModelFormField.FieldInfo.DISPLAY && fieldInfo.getFieldType() != ModelFormField.FieldInfo.HYPERLINK) {
+                continue;
+            }
+
+            if (!modelFormField.shouldUse(context)) {
+                continue;
+            }
+
+            formStringRenderer.renderFormatHeaderRowCellOpen(buffer, context, this, modelFormField);
+
+            formStringRenderer.renderFieldTitle(buffer, context, modelFormField);
+                
+            formStringRenderer.renderFormatHeaderRowCellClose(buffer, context, this, modelFormField);
+        }
+            
+        formStringRenderer.renderFormatHeaderRowClose(buffer, context, this);
+            
+        // ===== render the item rows =====
+            
+        // if list is empty, do not render rows
+        List items = (List) context.get(this.getListName());
+        if (items == null || items.size() == 0) {
+            // do nothing; we could show an simple box with a message here
+        } else {
+            // render item rows
+            Iterator itemIter = items.iterator();
+            int itemIndex = 0;
+            while (itemIter.hasNext()) {
+                itemIndex++;
+                Map localContext = new HashMap(context);
+                Object item = itemIter.next();
+                if (UtilValidate.isNotEmpty(this.getListEntryName())) {
+                    localContext.put(this.getListEntryName(), item);
+                } else {
+                    Map itemMap = (Map) item;
+                    localContext.putAll(itemMap);
+                }
+                localContext.put("itemIndex", new Integer(itemIndex));
+                
+                // render row formatting open
+                formStringRenderer.renderFormatItemRowOpen(buffer, localContext, this);
+                    
+                // do the first part of display and hyperlink fields 
+                Iterator innerDisplayHyperlinkFieldIter = this.fieldList.iterator();
+                while (innerDisplayHyperlinkFieldIter.hasNext()) {
+                    ModelFormField modelFormField = (ModelFormField) innerDisplayHyperlinkFieldIter.next();
+                    ModelFormField.FieldInfo fieldInfo = modelFormField.getFieldInfo();
+                
+                    // don't do any header for hidden or ignored fields
+                    if (fieldInfo.getFieldType() == ModelFormField.FieldInfo.HIDDEN || fieldInfo.getFieldType() == ModelFormField.FieldInfo.IGNORED) {
+                        continue; 
+                    }
+
+                    if (fieldInfo.getFieldType() != ModelFormField.FieldInfo.DISPLAY && fieldInfo.getFieldType() != ModelFormField.FieldInfo.HYPERLINK) {
+                        // okay, now do the form cell
+                        break;
+                    }
+
+                    if (!modelFormField.shouldUse(localContext)) {
+                        continue;
+                    }
+
+                    formStringRenderer.renderFormatItemRowCellOpen(buffer, localContext, this, modelFormField);
+
+                    modelFormField.renderFieldString(buffer, localContext, formStringRenderer);
+                
+                    formStringRenderer.renderFormatItemRowCellClose(buffer, localContext, this, modelFormField);
+                }
+            
+                // render the "form" cell 
+                formStringRenderer.renderFormatItemRowFormCellOpen(buffer, localContext, this);
+                    
+                formStringRenderer.renderFormOpen(buffer, localContext, this);
+                    
+                // do all of the hidden fields...
+                Iterator fieldIter = this.fieldList.iterator();
+                while (fieldIter.hasNext()) {
+                    ModelFormField modelFormField = (ModelFormField) fieldIter.next();
+                    ModelFormField.FieldInfo fieldInfo = modelFormField.getFieldInfo();
+
+                    // render hidden/ignored field widget
+                    switch (fieldInfo.getFieldType()) {
+                        case ModelFormField.FieldInfo.HIDDEN:
+                        case ModelFormField.FieldInfo.IGNORED:
+                        if (modelFormField.shouldUse(localContext)) {
+                            modelFormField.renderFieldString(buffer, localContext, formStringRenderer);
+                        }
+                        break;
+                    
+                        case ModelFormField.FieldInfo.DISPLAY:
+                        ModelFormField.DisplayField displayField = (ModelFormField.DisplayField) fieldInfo;
+                        if (displayField.getAlsoHidden() && modelFormField.shouldUse(localContext)) {
+                            formStringRenderer.renderHiddenField(buffer, localContext, modelFormField, modelFormField.getEntry(localContext));
+                        }
+                        break;
+                    
+                        case ModelFormField.FieldInfo.HYPERLINK:
+                        ModelFormField.HyperlinkField hyperlinkField = (ModelFormField.HyperlinkField) fieldInfo;
+                        if (hyperlinkField.getAlsoHidden() && modelFormField.shouldUse(localContext)) {
+                            formStringRenderer.renderHiddenField(buffer, localContext, modelFormField, modelFormField.getEntry(localContext));
+                        }
+                        break;
+                    }
+                }
+            
+                Iterator innerFormFieldIter = this.fieldList.iterator();
+                while (innerFormFieldIter.hasNext()) {
+                    ModelFormField modelFormField = (ModelFormField) innerFormFieldIter.next();
+                    ModelFormField.FieldInfo fieldInfo = modelFormField.getFieldInfo();
+                
+                    // don't do any header for hidden or ignored fields
+                    if (fieldInfo.getFieldType() == ModelFormField.FieldInfo.HIDDEN || fieldInfo.getFieldType() == ModelFormField.FieldInfo.IGNORED) {
+                        continue; 
+                    }
+
+                    // skip all of the display/hyperlink fields
+                    if (fieldInfo.getFieldType() == ModelFormField.FieldInfo.DISPLAY || fieldInfo.getFieldType() == ModelFormField.FieldInfo.HYPERLINK) {
+                        continue;
+                    }
+
+                    if (!modelFormField.shouldUse(localContext)) {
+                        continue;
+                    }
+
+                    // render field widget
+                    modelFormField.renderFieldString(buffer, localContext, formStringRenderer);
+                }
+
+                formStringRenderer.renderFormClose(buffer, localContext, this);
+            
+                formStringRenderer.renderFormatItemRowFormCellClose(buffer, localContext, this);
+            
+                // render the rest of the display/hyperlink fields 
+                while (innerDisplayHyperlinkFieldIter.hasNext()) {
+                    ModelFormField modelFormField = (ModelFormField) innerDisplayHyperlinkFieldIter.next();
+                    ModelFormField.FieldInfo fieldInfo = modelFormField.getFieldInfo();
+                
+                    // don't do any header for hidden or ignored fields
+                    if (fieldInfo.getFieldType() == ModelFormField.FieldInfo.HIDDEN || fieldInfo.getFieldType() == ModelFormField.FieldInfo.IGNORED) {
+                        continue; 
+                    }
+
+                    // skip all non-display and non-hyperlink fields
+                    if (fieldInfo.getFieldType() != ModelFormField.FieldInfo.DISPLAY && fieldInfo.getFieldType() != ModelFormField.FieldInfo.HYPERLINK) {
+                        continue;
+                    }
+
+                    if (!modelFormField.shouldUse(localContext)) {
+                        continue;
+                    }
+
+                    formStringRenderer.renderFormatItemRowCellOpen(buffer, localContext, this, modelFormField);
+
+                    modelFormField.renderFieldString(buffer, localContext, formStringRenderer);
+                
+                    formStringRenderer.renderFormatItemRowCellClose(buffer, localContext, this, modelFormField);
+                }
+
+                // render row formatting close
+                formStringRenderer.renderFormatItemRowClose(buffer, localContext, this);
+            }
+        }
+            
+        // render formatting wrapper close
+        formStringRenderer.renderFormatListWrapperClose(buffer, context, this);
+    }
+    
 
     public LocalDispatcher getDispacher() {
         return this.dispatcher;
