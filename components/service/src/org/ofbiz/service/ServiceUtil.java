@@ -217,10 +217,8 @@ public class ServiceUtil {
             while (errorIter.hasNext()) {
                 // NOTE: this MUST use toString and not cast to String because it may be a MessageString object
                 String curMessage = errorIter.next().toString();
-                if (errorMessage.length() == 0) {
+                if (errorMessage.length() > 0) {
                     errorMessage.append(", ");
-                } else {
-                    errorMessage.append("");
                 }
                 errorMessage.append(curMessage);
             }
