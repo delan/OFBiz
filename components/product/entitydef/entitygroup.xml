@@ -26,7 +26,7 @@
  *
  *@author     David E. Jones (jonesde@ofbiz.org)
  *@author     Andy Zeneski (jaz@ofbiz.org)
- *@version    $Revision: 1.22 $
+ *@version    $Revision: 1.23 $
  */
 -->
 
@@ -242,6 +242,7 @@
     <entity-group group="org.ofbiz" entity="CarrierAndShipmentMethod" />
     <entity-group group="org.ofbiz" entity="CarrierShipmentMethod" />
     <entity-group group="org.ofbiz" entity="CarrierShipmentBoxType" />
+    <entity-group group="org.ofbiz" entity="OrderShipmentInfoSummary" />
     <entity-group group="org.ofbiz" entity="Shipment" />
     <entity-group group="org.ofbiz" entity="ShipmentAndItem" />
     <entity-group group="org.ofbiz" entity="ShipmentAttribute" />

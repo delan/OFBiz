@@ -26,7 +26,7 @@
  *
  * @author     David E. Jones (jonesde@ofbiz.org)
  * @author     Andy Zeneski (jaz@ofbiz.org)
- * @version    $Revision: 1.9 $
+ * @version    $Revision: 1.10 $
  */
 -->
 
@@ -297,6 +297,29 @@
         <key-map field-name="deliveryId"/>
       </relation>
     </entity>
+    <view-entity entity-name="OrderShipmentInfoSummary"
+            package-name="org.ofbiz.shipment.shipment"
+            title="Order Shipment Information View Entity">
+      <description>This view is meant for getting all tracking information for all shipments associated with an order, it does not include information to determine which packages in a given shipment correspond to that order, or to determine what information applies to each line item of the order.</description>
+      <member-entity entity-alias="II" entity-name="ItemIssuance"/>
+      <member-entity entity-alias="SRS" entity-name="ShipmentRouteSegment"/>
+      <member-entity entity-alias="SPRS" entity-name="ShipmentPackageRouteSeg"/>
+      <alias entity-alias="II" name="orderId"/>
+      <alias entity-alias="II" name="shipmentId"/>
+      <alias entity-alias="SRS" name="shipmentRouteSegmentId"/>
+      <alias entity-alias="SRS" name="carrierPartyId"/>
+      <alias entity-alias="SRS" name="shipmentMethodTypeId"/>
+      <alias entity-alias="SPRS" name="shipmentPackageSeqId"/>
+      <alias entity-alias="SPRS" name="trackingCode"/>
+      <alias entity-alias="SPRS" name="boxNumber"/>
+      <view-link entity-alias="II" rel-entity-alias="SRS">
+        <key-map field-name="shipmentId"/>
+      </view-link>
+      <view-link entity-alias="SRS" rel-entity-alias="SPRS">
+        <key-map field-name="shipmentId"/>
+        <key-map field-name="shipmentRouteSegmentId"/>
+      </view-link>
+    </view-entity>
     <entity entity-name="Shipment"
             package-name="org.ofbiz.shipment.shipment"
             title="Shipment Entity">
