@@ -21,7 +21,7 @@
  *
  *@author     Andy Zeneski (jaz@ofbiz.org)
  *@author     Olivier Heintz (olivier.heintz@nereide.biz) 
- *@version    $Revision: 1.6 $
+ *@version    $Revision: 1.7 $
  *@since      2.2
 -->
 
@@ -59,10 +59,11 @@
   </tr>
   <tr>
     <td colspan="2" align="right" nowrap>
-      <a href="<@ofbizUrl>/viewCommunicationEvent?partyId=${partyId}</@ofbizUrl>" class="buttontext">[${uiLabelMap.PartyNewCommunication}]</a>
       <#if communicationEvent?has_content>
         <a href="/workeffort/control/task?communicationEventId=${communicationEvent.communicationEventId}${requestAttributes.externalKeyParam}" class="buttontext">[${uiLabelMap.PartyNewTask}]</a>
         <a href="/workeffort/control/event?communicationEventId=${communicationEvent.communicationEventId}${requestAttributes.externalKeyParam}" class="buttontext">[${uiLabelMap.PartyNewEvent}]</a>
+        <a href="<@ofbizUrl>/viewCommunicationEvent?partyId=${partyId}&partyIdFrom=${partyId}</@ofbizUrl>" class="buttontext">[${uiLabelMap.PartyNewCommunication}]</a>
+        <a href="<@ofbizUrl>/viewCommunicationEvent?partyId=${partyId}&partyIdTo=${partyId}&parentCommEventId=${communicationEvent.communicationEventId}&origCommEventId=${communicationEvent.origCommEventId?default("")}</@ofbizUrl>" class="buttontext">[Reply]</a>
       </#if>
     </td>
   </tr>
@@ -152,6 +153,15 @@
             <form method="post" name="addeventrole" action="<@ofbizUrl>/createCommunicationEventRole</@ofbizUrl>">
               <input type="hidden" name="communicationEventId" value="${communicationEvent.communicationEventId}">
               <input type="hidden" name="party_id" value="${partyId}">
+              <#if ((requestParameters.parentCommEventId)?has_content)>
+                <input type="hidden" name="parentCommEventId" value="${requestParameters.parentCommEventId}">
+                <#if (requestParameters.origCommEventId?length > 0)>
+                  <#assign orgComm = requestParameters.origCommEventId>
+                <#else>
+                  <#assign orgComm = requestParameters.parentCommEventId>
+                </#if>
+                <input type="hidden" name="origCommEventId" value="${orgComm}">
+              </#if>
               <td bgcolor='white'>
                 <select name="roleTypeId" class="selectBox">
                   <#list roleTypes as roleType>
@@ -170,11 +180,12 @@
     <tr><td colspan="3">&nbsp;</td></tr>
   </#if>
   <form name="addevent" method="post" action="<@ofbizUrl>${formAction}</@ofbizUrl>" style="margin: 0;">  
-    <input type="hidden" name="partyId" value="${partyId}">
-    <input type="hidden" name="partyIdFrom" value="${partyId}">
-    <input type="hidden" name="partyIdTo" value="${sessionAttributes.userLogin.partyId}">
+    <input type="hidden" name="partyId" value="${partyId}">    
     <#if communicationEvent?has_content>      
-      <input type="hidden" name="communicationEventId" value="${communicationEvent.communicationEventId}">      
+      <input type="hidden" name="communicationEventId" value="${communicationEvent.communicationEventId}">
+    <#else>
+      <input type="hidden" name="partyIdFrom" value="${partyIdFrom}">
+      <input type="hidden" name="partyIdTo" value="${partyIdTo}">
     </#if>
     <tr>
       <td width="20%" align="right"><span class="tableheadtext">${uiLabelMap.PartyEventType}</span></td>
@@ -338,9 +349,19 @@
       <td width="1">&nbsp;</td>
       <td>
         <#if okayToUpdate>
-        <input type="text" class="inputBox" size="30" name="subject" value="${(communicationEvent.subject)?if_exists}">
+        <#assign defaultSubject = (communicationEvent.subject)?default("")>
+        <#if (defaultSubject?length == 0)>
+          <#assign replyPrefix = uiLabelMap.PartyReplyPrefix + " ">
+          <#if parentEvent?has_content>
+            <#if !parentEvent.subject?default("")?upper_case?starts_with(replyPrefix)>
+              <#assign defaultSubject = replyPrefix>
+            </#if>
+            <#assign defaultSubject = defaultSubject + parentEvent.subject?default("")>
+          </#if>
+        </#if>
+        <input type="text" class="inputBox" size="30" name="subject" value="${defaultSubject}">
         <#else>
-        <div class="tabletext">${(communicationEvent.subject)?if_exists}</div>
+        <div class="tabletext">${defaultSubject}</div>
         </#if>        
       </td>
     </tr>

@@ -21,7 +21,7 @@
  *
  *@author     Andy Zeneski (jaz@ofbiz.org)
  *@author     Olivier Heintz (olivier.heintz@nereide.biz) 
- *@version    $Revision: 1.2 $
+ *@version    $Revision: 1.3 $
  *@since      2.1
 -->
 
@@ -38,7 +38,8 @@
   <div class="col"><a href="<@ofbizUrl>/findparty</@ofbizUrl>" class="${selectedLeftClassMap.find?default(unselectedLeftClassName)}">${uiLabelMap.CommonFind}</a></div>
   <#if security.hasEntityPermission("PARTYMGR", "_CREATE", session)>
     <div class="col"><a href="<@ofbizUrl>/createnew</@ofbizUrl>" class="${selectedLeftClassMap.create?default(unselectedLeftClassName)}">${uiLabelMap.CommonCreate}</a></div>
-  </#if>  
+  </#if>
+  <div class="col"><a href="<@ofbizUrl>/pendingcommunications</@ofbizUrl>" class="${selectedLeftClassMap.comm?default(unselectedLeftClassName)}">Comm</a></div>  
   <div class="col"><a href="<@ofbizUrl>/showvisits</@ofbizUrl>" class="${selectedLeftClassMap.visits?default(unselectedLeftClassName)}">${uiLabelMap.PartyVisits}</a></div>
   <#if security.hasEntityPermission("SECURITY", "_VIEW", session)>
     <div class="col"><a href="<@ofbizUrl>/FindSecurityGroup</@ofbizUrl>" class="${selectedLeftClassMap.security?default(unselectedLeftClassName)}">${uiLabelMap.CommonSecurity}</a></div>

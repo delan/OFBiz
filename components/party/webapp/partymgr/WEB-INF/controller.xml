@@ -528,6 +528,10 @@
     </request-map>
 
     <!-- communication event requests -->
+    <request-map uri="pendingcommunications">
+        <security https="true" auth="true"/>
+        <response name="success" type="view" value="pendingCommunications"/>
+    </request-map>
     <request-map uri="viewcommunications">
         <security https="true" auth="true"/>
         <response name="success" type="view" value="listCommunications"/>
@@ -609,6 +613,7 @@
     <view-map name="showvisits" type="jpublish" page="/visit/showvisits.ftl"/>
     <view-map name="visitdetail" type="jpublish" page="/visit/visitdetail.ftl"/>
 
+    <view-map name="pendingCommunications" type="jpublish" page="/communication/pendingCommunications.ftl"/>
     <view-map name="listCommunications" type="jpublish" page="/communication/listCommunications.ftl"/>
     <view-map name="communicationEvent" type="jpublish" page="/communication/editCommunication.ftl"/>
     <!-- end of view mappings -->
