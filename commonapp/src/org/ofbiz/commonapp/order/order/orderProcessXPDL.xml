@@ -225,10 +225,63 @@
                     <ExtendedAttributes>
                         <ExtendedAttribute Name="canStart" Value="N"/>
                     </ExtendedAttributes>
-                </Activity>                
-
+                </Activity>      
+                          
+                <Activity Id="rejectOrder" Name="Reject The Order">
+                    <Description>Order was not appoved; reject the order</Description>
+                    <Limit>1</Limit>
+                    <Implementation>             
+                        <!-- change the order status -->
+                        <Tool Id="rejectOrderChangeOrderStatus" Type="PROCEDURE">
+                        	<ActualParameters>                        		
+                        		<ActualParameter>orderId</ActualParameter>
+                        		<ActualParameter>statusId</ActualParameter>
+                        	</ActualParameters>
+                        	<ExtendedAttributes>                          		
+                                <ExtendedAttribute Name="statusId" Value="ORDER_REJECTED"/>
+                                <ExtendedAttribute Name="serviceName" Value="changeOrderStatus"/>                              
+                                <ExtendedAttribute Name="runAsUser" Value="admin"/>
+                            </ExtendedAttributes>
+                        </Tool>
+                        <Tool Id="rejectOrderChangeItemStatus" Type="PROCEDURE">
+                        	<ActualParameters>                        		
+                        		<ActualParameter>orderId</ActualParameter>
+                        		<ActualParameter>statusId</ActualParameter>
+                        	</ActualParameters>
+                        	<ExtendedAttributes>                          		
+                                <ExtendedAttribute Name="statusId" Value="ITEM_REJECTED"/>
+                                <ExtendedAttribute Name="serviceName" Value="changeOrderItemStatus"/>                              
+                                <ExtendedAttribute Name="runAsUser" Value="admin"/>
+                            </ExtendedAttributes>
+                        </Tool>                        
+                        <!-- email customer with the status change 
+                        <Tool Id="emailOrderStatus" Type="PROCEDURE">
+                            <ActualParameters>
+                                <ActualParameter>orderId</ActualParameter>
+                            </ActualParameters>
+                        </Tool> -->                                                                            
+                    </Implementation>
+                    <Performer>admin</Performer>
+                    <StartMode>
+                        <Automatic/>
+                    </StartMode>
+                    <FinishMode>
+                        <Automatic/>
+                    </FinishMode>
+                    <Priority>5</Priority>                    
+                    <TransitionRestrictions>
+                        <TransitionRestriction>
+                            <Join Type="XOR"/>
+                            <Split Type="XOR"/>
+                        </TransitionRestriction>
+                    </TransitionRestrictions>
+                    <ExtendedAttributes>
+                        <ExtendedAttribute Name="canStart" Value="N"/>
+                    </ExtendedAttributes>
+                </Activity>
+                
                 <Activity Id="cancelOrder" Name="Cancel The Order">
-                    <Description>Order was not appoved; cancel the order and abort the workflow</Description>
+                    <Description>Order has been cancelled; cancel the order and abort the workflow</Description>
                     <Limit>1</Limit>
                     <Implementation>             
                         <!-- change the order status -->
@@ -280,7 +333,7 @@
                 </Activity>
                 
                 <Activity Id="completeOrder" Name="Complete Order">
-                    <Description>A clerk accepts and completes/declines (ships) the order</Description>
+                    <Description>A clerk accepts and completes (ships)/cancels the order</Description>
                     <Limit>12</Limit>
                     <Implementation>
                         <No/>
@@ -367,16 +420,23 @@
                     <ExtendedAttributes>
                     	<ExtendedAttribute Name="approvalCode" Value="0"/>
                     </ExtendedAttributes>                                    
-                </Transition>                             
-                <Transition Id="trans2.1" From="approveOrder" To="approveOrderEvent" Loop="NOLOOP" Name="Approve Order">
+                </Transition>
+                <Transition Id="trans2.1" From="approveOrder" To="rejectOrder" Loop="NOLOOP" Name="Reject Order">
                     <Condition Type="CONDITION"><![CDATA[approvalCode.equals("1")]]></Condition>
                     <!-- Extended Attributes are not used by the engine; this is for client application reference -->
                     <ExtendedAttributes>
                     	<ExtendedAttribute Name="approvalCode" Value="1"/>
                     </ExtendedAttributes>                                            
+                </Transition>                   
+                <Transition Id="trans2.2" From="approveOrder" To="approveOrderEvent" Loop="NOLOOP" Name="Approve Order">
+                    <Condition Type="CONDITION"><![CDATA[approvalCode.equals("2")]]></Condition>
+                    <!-- Extended Attributes are not used by the engine; this is for client application reference -->
+                    <ExtendedAttributes>
+                    	<ExtendedAttribute Name="approvalCode" Value="2"/>
+                    </ExtendedAttributes>                                            
                 </Transition>   
 
-                <Transition Id="trans3" From="approveOrderEvent" To="completeOrder" Loop="NOLOOP" Name="Goto Order Complete">
+                <Transition Id="trans3" From="approveOrderEvent" To="completeOrder" Loop="NOLOOP" Name="Complete Order">
                     <Condition Type="OTHERWISE"/>
                 </Transition>    
                                 
@@ -391,7 +451,7 @@
                     <Condition Type="CONDITION"><![CDATA[approvalCode.equals("2")]]></Condition>        
                      <!-- Extended Attributes are not used by the engine; this is for client application reference -->
                     <ExtendedAttributes>
-                    	<ExtendedAttribute Name="approvalCode" Value="2"/>
+                    	<ExtendedAttribute Name="approvalCode" Value="3"/>
                     </ExtendedAttributes>                                                                         
                 </Transition> 
                 
