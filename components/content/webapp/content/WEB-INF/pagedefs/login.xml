@@ -3,4 +3,5 @@
     <template>main</template> 
     <property name="title">Login</property>
     <property name="headerItem">login</property>
+    <property name="permissionType">none</property>    
 </page>
