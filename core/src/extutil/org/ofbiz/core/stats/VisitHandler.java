@@ -44,7 +44,23 @@ import org.ofbiz.core.util.*;
 public class VisitHandler {
     //Debug module name
     public static final String module = VisitHandler.class.getName();
-    
+
+    // this is not an event because it is required to run; as an event it could be disabled.
+    public static void setInitialVisit(HttpServletRequest request) {
+        HttpSession session = request.getSession();
+        String webappName = UtilMisc.getApplicationName(request);
+        StringBuffer fullRequestUrl = UtilMisc.getFullRequestUrl(request);
+        String initialLocale = request.getLocale() != null ? request.getLocale().toString() : "";
+        String initialRequest = fullRequestUrl.toString();
+        String initialReferrer = request.getHeader("Referer") != null ? request.getHeader("Referer") : "";
+        String initialUserAgent = request.getHeader("User-Agent") != null ? request.getHeader("User-Agent") : "";
+        session.setAttribute(SiteDefs.CLIENT_LOCALE, request.getLocale());
+        session.setAttribute(SiteDefs.CLIENT_REQUEST, initialRequest);
+        session.setAttribute(SiteDefs.CLIENT_USER_AGENT, initialUserAgent);
+        session.setAttribute(SiteDefs.CLIENT_REFERER, initialUserAgent);
+        VisitHandler.setInitials(request, session, initialLocale, initialRequest, initialReferrer, initialUserAgent, webappName);
+    }
+
     public static void setInitials(HttpServletRequest request, HttpSession session, String initialLocale, String initialRequest, String initialReferrer, String initialUserAgent, String webappName) {
         GenericValue visit = getVisit(session);
         if (visit != null) {

@@ -29,7 +29,7 @@
  *  $Id$
 -->
 
-<!ELEMENT site-conf (description?, owner?, errorpage, handler+, preprocessor?, postprocessor?, request-map+, view-map+)>
+<!ELEMENT site-conf (description?, owner?, errorpage, handler+, firstvisit?, preprocessor?, postprocessor?, request-map+, view-map+)>
 <!ELEMENT description ANY>
 <!ELEMENT owner (#PCDATA)>
 <!ELEMENT errorpage (#PCDATA)>
@@ -39,6 +39,7 @@
     type (view|request) "request"
     class CDATA #REQUIRED
 >
+<!ELEMENT firstvisit (event*)>
 <!ELEMENT preprocessor (event*)>
 <!ELEMENT postprocessor (event*)>
 <!ELEMENT request-map (description?, security?, event?, response+)>

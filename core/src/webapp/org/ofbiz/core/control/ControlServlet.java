@@ -1,5 +1,25 @@
 /*
  * $Id$
+ *
+ *  Copyright (c) 2002 The Open For Business Project - www.ofbiz.org
+ *
+ *  Permission is hereby granted, free of charge, to any person obtaining a
+ *  copy of this software and associated documentation files (the "Software"),
+ *  to deal in the Software without restriction, including without limitation
+ *  the rights to use, copy, modify, merge, publish, distribute, sublicense,
+ *  and/or sell copies of the Software, and to permit persons to whom the
+ *  Software is furnished to do so, subject to the following conditions:
+ *
+ *  The above copyright notice and this permission notice shall be included
+ *  in all copies or substantial portions of the Software.
+ *
+ *  THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS
+ *  OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF
+ *  MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT.
+ *  IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY
+ *  CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT
+ *  OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR
+ *  THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  */
 
 package org.ofbiz.core.control;
@@ -20,28 +40,9 @@ import org.ofbiz.core.util.*;
 
 
 /**
- * <p><b>Title:</b> ControlServlet.java
- * <p><b>Description:</b> Master servlet for the web application.
- * <p>Copyright (c) 2001 The Open For Business Project and repected authors.
- * <p>Permission is hereby granted, free of charge, to any person obtaining a
- *  copy of this software and associated documentation files (the "Software"),
- *  to deal in the Software without restriction, including without limitation
- *  the rights to use, copy, modify, merge, publish, distribute, sublicense,
- *  and/or sell copies of the Software, and to permit persons to whom the
- *  Software is furnished to do so, subject to the following conditions:
+ * ControlServlet.java - Master servlet for the web application.
  *
- * <p>The above copyright notice and this permission notice shall be included
- *  in all copies or substantial portions of the Software.
- *
- * <p>THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS
- *  OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF
- *  MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT.
- *  IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY
- *  CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT
- *  OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR
- *  THE USE OR OTHER DEALINGS IN THE SOFTWARE.
- *
- *@author     <a href="mailto:jaz@zsolv.com">Andy Zeneski</a>
+ *@author     <a href="mailto:jaz@jflow.net">Andy Zeneski</a>
  *@author     <a href="mailto:jonesde@ofbiz.org">David E. Jones</a>
  *@created    June 28, 2001
  *@version    1.0
@@ -175,25 +176,6 @@ public class ControlServlet extends HttpServlet {
 
         StringBuffer serverRootUrl = UtilMisc.getServerRootUrl(request);
         request.setAttribute(SiteDefs.SERVER_ROOT_URL, serverRootUrl.toString());
-
-        // Store some first hit client info for later.
-        if (session.getAttribute("visit") == null) {
-            //NOTE: inside this block we know that it is the first control servlet hit in this visit
-            
-            StringBuffer fullRequestUrl = UtilMisc.getFullRequestUrl(request);
-            String initialLocale = request.getLocale() != null ? request.getLocale().toString() : "";
-            String initialRequest = fullRequestUrl.toString();
-            String initialReferrer = request.getHeader("Referer") != null ? request.getHeader("Referer") : "";
-            String initialUserAgent = request.getHeader("User-Agent") != null ? request.getHeader("User-Agent") : "";
-            session.setAttribute(SiteDefs.CLIENT_LOCALE, request.getLocale());
-            session.setAttribute(SiteDefs.CLIENT_REQUEST, initialRequest);
-            session.setAttribute(SiteDefs.CLIENT_USER_AGENT, initialUserAgent);
-            session.setAttribute(SiteDefs.CLIENT_REFERER, initialUserAgent);
-            
-            VisitHandler.setInitials(request, session, initialLocale, initialRequest, initialReferrer, initialUserAgent, webappName);
-            
-            //check to see if the auto-login cookie is present, and if so set the autoUserLoginId session attribute
-        }
 
         //setup chararcter encoding and content type, do before so that view can override
         String charset = getServletContext().getInitParameter("charset");

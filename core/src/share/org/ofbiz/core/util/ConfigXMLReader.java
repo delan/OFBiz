@@ -1,5 +1,25 @@
 /*
  * $Id$
+ *
+ *  Copyright (c) 2002 The Open For Business Project - www.ofbiz.org
+ *
+ *  Permission is hereby granted, free of charge, to any person obtaining a
+ *  copy of this software and associated documentation files (the "Software"),
+ *  to deal in the Software without restriction, including without limitation
+ *  the rights to use, copy, modify, merge, publish, distribute, sublicense,
+ *  and/or sell copies of the Software, and to permit persons to whom the
+ *  Software is furnished to do so, subject to the following conditions:
+ *
+ *  The above copyright notice and this permission notice shall be included
+ *  in all copies or substantial portions of the Software.
+ *
+ *  THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS
+ *  OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF
+ *  MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT.
+ *  IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY
+ *  CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT
+ *  OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR
+ *  THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  */
 
 package org.ofbiz.core.util;
@@ -13,30 +33,11 @@ import org.xml.sax.*;
 import org.w3c.dom.*;
 
 /**
- * <p><b>Title:</b> ConfigXMLReader.java
- * <p><b>Description:</b> Reads and parses the XML site config files.
- * <p>Copyright (c) 2001 The Open For Business Project and repected authors.
- * <p>Permission is hereby granted, free of charge, to any person obtaining a
- *  copy of this software and associated documentation files (the "Software"),
- *  to deal in the Software without restriction, including without limitation
- *  the rights to use, copy, modify, merge, publish, distribute, sublicense,
- *  and/or sell copies of the Software, and to permit persons to whom the
- *  Software is furnished to do so, subject to the following conditions:
+ * ConfigXMLReader.java - Reads and parses the XML site config files.
  *
- * <p>The above copyright notice and this permission notice shall be included
- *  in all copies or substantial portions of the Software.
- *
- * <p>THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS
- *  OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF
- *  MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT.
- *  IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY
- *  CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT
- *  OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR
- *  THE USE OR OTHER DEALINGS IN THE SOFTWARE.
- *
- * @author Andy Zeneski (jaz@zsolv.com)
- * @version 1.0
- * Created on June 29, 2001, 6:18 PM
+ *@author     <a href="mailto:jaz@jflow.net">Andy Zeneski</a>
+ *@version    1.0
+ *@created    June 29, 2001
  */
 public class ConfigXMLReader {
 
@@ -52,6 +53,7 @@ public class ConfigXMLReader {
     public static final String DEFAULT_ERROR_PAGE = "errorpage";
     public static final String SITE_OWNER = "owner";
     public static final String SECURITY_CLASS = "security-class";
+    public static final String FIRSTVISIT = "firstvisit";
     public static final String PREPROCESSOR = "preprocessor";
     public static final String POSTPROCESSOR = "postprocessor";
 
@@ -468,6 +470,33 @@ public class ConfigXMLReader {
                 Node child = children.item(0);
                 if (child.getNodeName() != null)
                     map.put(SECURITY_CLASS, child.getNodeValue());
+            }
+            list = null;
+            // first visit events
+            list = root.getElementsByTagName(FIRSTVISIT);
+            if (list.getLength() > 0) {
+                ArrayList eventList = new ArrayList();
+                Node node = list.item(0);
+                if (node instanceof Element) {
+                    Element nodeElement = (Element) node;
+                    NodeList procEvents = nodeElement.getElementsByTagName(EVENT);
+                    for (int procCount = 0; procCount < procEvents.getLength(); procCount++) {
+                        Node eventNode = procEvents.item(procCount);
+                        if (eventNode instanceof Element) {
+                            Element event = (Element) eventNode;
+                            String type = event.getAttribute(EVENT_TYPE);
+                            String path = event.getAttribute(EVENT_PATH);
+                            String invoke = event.getAttribute(EVENT_METHOD);
+
+                            HashMap eventMap = new HashMap();
+                            eventMap.put(EVENT_TYPE, type);
+                            eventMap.put(EVENT_PATH, path);
+                            eventMap.put(EVENT_METHOD, invoke);
+                            eventList.add(eventMap);
+                        }
+                    }
+                }
+                map.put(FIRSTVISIT, eventList);
             }
             list = null;
             // preprocessor events

@@ -1,7 +1,7 @@
 /*
  * $Id$
  *
- * Copyright (c) 2001 The Open For Business Project - www.ofbiz.org
+ * Copyright (c) 2002 The Open For Business Project - www.ofbiz.org
  *
  * Permission is hereby granted, free of charge, to any person obtaining a
  * copy of this software and associated documentation files (the "Software"),
@@ -35,7 +35,7 @@ import org.ofbiz.core.util.*;
 /**
  * RequestManager - Manages request, config and view mappings.
  *
- *@author     <a href="mailto:jaz@zsolv.com">Andy Zeneski</a>
+ *@author     <a href="mailto:jaz@jflow.net">Andy Zeneski</a>
  *@created    June 28, 2001
  *@version    1.0
  */
@@ -233,6 +233,11 @@ public class RequestManager implements Serializable {
                 return true;
         } else
             return true;
+    }
+
+    public Collection getFirstVisitEvents() {
+        Collection c = (Collection) ConfigXMLReader.getConfigMap(configFileUrl).get(ConfigXMLReader.FIRSTVISIT);
+        return c;
     }
 
     public Collection getPreProcessor() {

@@ -103,12 +103,37 @@ public class RequestHandler implements Serializable {
                 }
             }
 
+            // If its the first visit run the first visit events.
+            HttpSession session = request.getSession();
+            if (session.getAttribute("visit") == null) {
+                // This isn't an event because it is required to run. We do not want to make it optional.
+                VisitHandler.setInitialVisit(request);
+                Collection events = rm.getFirstVisitEvents();
+                if (events != null) {
+                    Iterator i = events.iterator();
+                    while (i.hasNext()) {
+                        Map eventMap = (Map) i.next();
+                        String eType = (String) eventMap.get(org.ofbiz.core.util.ConfigXMLReader.EVENT_TYPE);
+                        String ePath = (String) eventMap.get(org.ofbiz.core.util.ConfigXMLReader.EVENT_PATH);
+                        String eMeth = (String) eventMap.get(org.ofbiz.core.util.ConfigXMLReader.EVENT_METHOD);
+                        try {
+                            EventHandler eh = EventFactory.getEventHandler(this, eType);
+                            String returnString = eh.invoke(ePath, eMeth, request, response);
+                            if (!returnString.equalsIgnoreCase("success"))
+                                throw new EventHandlerException("Event did not return 'success'.");
+                        } catch (EventHandlerException e) {
+                            Debug.logError(e, module);
+                        }
+                    }
+                }
+            }
+
             // Invoke the pre-processor (but NOT in a chain)
             Collection preProcEvents = rm.getPreProcessor();
             if (preProcEvents != null) {
                 Iterator i = preProcEvents.iterator();
                 while (i.hasNext()) {
-                    HashMap eventMap = (HashMap) i.next();
+                    Map eventMap = (HashMap) i.next();
                     String eType = (String) eventMap.get(org.ofbiz.core.util.ConfigXMLReader.EVENT_TYPE);
                     String ePath = (String) eventMap.get(org.ofbiz.core.util.ConfigXMLReader.EVENT_PATH);
                     String eMeth = (String) eventMap.get(org.ofbiz.core.util.ConfigXMLReader.EVENT_METHOD);
