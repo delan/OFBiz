@@ -532,4 +532,13 @@ public class SQLProcessor {
         
         _ind ++;
     }
+    
+    protected void finalize() throws Throwable {
+        try {
+            this.close();
+        } catch (Exception e) {
+            Debug.logError(e, "Error closing the result, connection, etc in finalize EntityListIterator");
+        }
+        super.finalize();
+    }
 }
