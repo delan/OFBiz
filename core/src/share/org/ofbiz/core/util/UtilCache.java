@@ -44,10 +44,10 @@ import javax.servlet.http.*;
  */
 public class UtilCache {
 
-    /** A static Hashtable to keep track of all of the UtilCache instances. */
+    /** A static Map to keep track of all of the UtilCache instances. */
     public static Map utilCacheTable = new HashMap();
     /** An index number appended to utilCacheTable names when there are conflicts. */
-    protected static int defaultIndex = 1;
+    protected static Map defaultIndices = new HashMap();
     /** The name of the UtilCache instance, is also the key for the instance in utilCacheTable. */
     protected String name;
 
@@ -64,7 +64,7 @@ public class UtilCache {
      */
     protected long maxSize = 0;
 
-    /** A hashtable containing a Long integer representing the time that the corresponding element was first loaded */
+    /** A Map containing a Long integer representing the time that the corresponding element was first loaded */
     public Map expireTable = new HashMap();
     /** Specifies the amount of time since initial loading before an element will be reported as expired.
      * If set to 0, elements will never expire.
@@ -82,9 +82,7 @@ public class UtilCache {
         this.expireTime = expireTime;
         setPropertiesParams(cacheName);
 
-        name = cacheName;
-        if (utilCacheTable.containsKey(cacheName))
-            name = name + (defaultIndex++);
+        name = cacheName + this.getNextDefaultIndex(cacheName);
         utilCacheTable.put(name, this);
     }
 
@@ -95,7 +93,7 @@ public class UtilCache {
     public UtilCache(long maxSize, long expireTime) {
         this.maxSize = maxSize;
         this.expireTime = expireTime;
-        name = "specified" + (defaultIndex++);
+        name = "specified" + this.getNextDefaultIndex("specified");
         utilCacheTable.put(name, this);
     }
 
@@ -107,9 +105,7 @@ public class UtilCache {
         setPropertiesParams("default");
         setPropertiesParams(cacheName);
 
-        name = cacheName;
-        if (utilCacheTable.containsKey(cacheName))
-            name = name + (defaultIndex++);
+        name = cacheName + this.getNextDefaultIndex(cacheName);
         utilCacheTable.put(name, this);
     }
 
@@ -117,8 +113,19 @@ public class UtilCache {
     public UtilCache() {
         setPropertiesParams("default");
 
-        name = "default" + (defaultIndex++);
+        name = "default" + this.getNextDefaultIndex("default");
         utilCacheTable.put(name, this);
+    }
+    
+    protected String getNextDefaultIndex(String cacheName) {
+        Integer curInd = (Integer) this.defaultIndices.get(cacheName);
+        if (curInd == null) {
+            this.defaultIndices.put(cacheName, new Integer(1));
+            return "";
+        } else {
+            this.defaultIndices.put(cacheName, new Integer(curInd.intValue() + 1));
+            return Integer.toString(curInd.intValue() + 1);
+        }
     }
 
     protected void setPropertiesParams(String cacheName) {
