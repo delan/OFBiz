@@ -288,7 +288,7 @@
         <antcall target="warn-deploy-copy" />
     </target>
     <target name="warn-deploy-copy" depends="" unless="copy.dirs.exist">
-        <echo message="NOTE: Not deploying to catalina because CATALINA_HOME is not set."/>
+        <echo message="NOTE: Not deploying to target because no target classes and lib directories (usually under CATALINA_HOME) are set."/>
     </target>
 
     <target name="deploy-copy" depends="" if="copy.dirs.exist">
