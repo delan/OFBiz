@@ -58,7 +58,7 @@ public class TransactionUtil implements javax.transaction.Status {
                     return false;
                 }
                 ut.begin();
-                Debug.logInfo("[TransactionUtil.begin] transaction begun", module);
+                Debug.logVerbose("[TransactionUtil.begin] transaction begun", module);
                 return true;
             } catch (NotSupportedException e) {
                 throw new GenericTransactionException("Not Supported error, could not begin transaction (probably a nesting problem)", e);
@@ -102,7 +102,7 @@ public class TransactionUtil implements javax.transaction.Status {
                 int status = ut.getStatus();
                 if (status != STATUS_NO_TRANSACTION) {
                     ut.commit();
-                    Debug.logInfo("[TransactionUtil.commit] transaction committed", module);
+                    Debug.logVerbose("[TransactionUtil.commit] transaction committed", module);
                 } else {
                     Debug.logInfo("[TransactionUtil.commit] Not committing transaction, status is STATUS_NO_TRANSACTION", module);
                 }
