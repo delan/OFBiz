@@ -95,7 +95,7 @@
 
         <make-value entity-name="ProductFacility" value-name="lookupPKMap"/>
         <set-pk-fields map-name="parameters" value-name="lookupPKMap"/>
-        <find-by-primary-key entity-name="ProductFacility" map-name="lookupPKMap" value-name="lookedUpValue"/>
+        <find-by-primary-key map-name="lookupPKMap" value-name="lookedUpValue"/>
         <set-nonpk-fields map-name="parameters" value-name="lookedUpValue"/>
         <store-value value-name="lookedUpValue"/>
     </simple-method>
@@ -108,7 +108,46 @@
 
         <make-value entity-name="ProductFacility" value-name="lookupPKMap"/>
         <set-pk-fields map-name="parameters" value-name="lookupPKMap"/>
-        <find-by-primary-key entity-name="ProductFacility" map-name="lookupPKMap" value-name="lookedUpValue"/>
+        <find-by-primary-key map-name="lookupPKMap" value-name="lookedUpValue"/>
+        <remove-value value-name="lookedUpValue"/>
+    </simple-method>
+
+    <!-- ProductFacilityLocation methods -->
+    <simple-method method-name="createProductFacilityLocation" short-description="Create a ProductFacilityLocation">
+		<string-to-field string="createProductFacilityLocation" field-name="callingMethodName"/>
+		<string-to-field string="CREATE" field-name="checkAction"/>
+		<string-to-field string="FACILITY" field-name="alternatePermissionRoot"/>
+    	<call-simple-method method-name="checkProductRelatedPermission" xml-resource="org/ofbiz/product/product/ProductServices.xml"/>
+        <check-errors/>
+
+        <make-value value-name="newEntity" entity-name="ProductFacilityLocation"/>
+        <set-nonpk-fields map-name="parameters" value-name="newEntity"/>
+        <set-pk-fields map-name="parameters" value-name="newEntity"/>
+        <create-value value-name="newEntity"/>
+    </simple-method>
+    <simple-method method-name="updateProductFacilityLocation" short-description="Update a ProductFacilityLocation">
+		<string-to-field string="updateProductFacilityLocation" field-name="callingMethodName"/>
+		<string-to-field string="UPDATE" field-name="checkAction"/>
+		<string-to-field string="FACILITY" field-name="alternatePermissionRoot"/>
+    	<call-simple-method method-name="checkProductRelatedPermission" xml-resource="org/ofbiz/product/product/ProductServices.xml"/>
+        <check-errors/>
+
+        <make-value entity-name="ProductFacilityLocation" value-name="lookupPKMap"/>
+        <set-pk-fields map-name="parameters" value-name="lookupPKMap"/>
+        <find-by-primary-key map-name="lookupPKMap" value-name="lookedUpValue"/>
+        <set-nonpk-fields map-name="parameters" value-name="lookedUpValue"/>
+        <store-value value-name="lookedUpValue"/>
+    </simple-method>
+    <simple-method method-name="deleteProductFacilityLocation" short-description="Delete a ProductFacilityLocation">
+		<string-to-field string="deleteProductFacilityLocation" field-name="callingMethodName"/>
+		<string-to-field string="DELETE" field-name="checkAction"/>
+		<string-to-field string="FACILITY" field-name="alternatePermissionRoot"/>
+    	<call-simple-method method-name="checkProductRelatedPermission" xml-resource="org/ofbiz/product/product/ProductServices.xml"/>
+        <check-errors/>
+
+        <make-value entity-name="ProductFacilityLocation" value-name="lookupPKMap"/>
+        <set-pk-fields map-name="parameters" value-name="lookupPKMap"/>
+        <find-by-primary-key map-name="lookupPKMap" value-name="lookedUpValue"/>
         <remove-value value-name="lookedUpValue"/>
     </simple-method>
 

@@ -709,22 +709,40 @@
     	<attribute name="inventoryTransferId" type="String" mode="IN" optional="false"/>
     </service>
 
-    <service name="createProductFacility" engine="simple"
+    <service name="createProductFacility" default-entity-name="ProductFacility" engine="simple"
                 location="org/ofbiz/product/inventory/InventoryServices.xml" invoke="createProductFacility" auth="true">
         <description>Create an ProductFacility</description>
-        <auto-attributes entity-name="ProductFacility" include="pk" mode="IN" optional="false"/>
-        <auto-attributes entity-name="ProductFacility" include="nonpk" mode="IN" optional="true"/>
+        <auto-attributes include="pk" mode="IN" optional="false"/>
+        <auto-attributes include="nonpk" mode="IN" optional="true"/>
     </service>
-    <service name="updateProductFacility" engine="simple"
+    <service name="updateProductFacility" default-entity-name="ProductFacility" engine="simple"
                 location="org/ofbiz/product/inventory/InventoryServices.xml" invoke="updateProductFacility" auth="true">
         <description>Update an ProductFacility</description>
-        <auto-attributes entity-name="ProductFacility" include="pk" mode="IN" optional="false"/>
-        <auto-attributes entity-name="ProductFacility" include="nonpk" mode="IN" optional="true"/>
+        <auto-attributes include="pk" mode="IN" optional="false"/>
+        <auto-attributes include="nonpk" mode="IN" optional="true"/>
     </service>
-    <service name="deleteProductFacility" engine="simple"
+    <service name="deleteProductFacility" default-entity-name="ProductFacility" engine="simple"
                 location="org/ofbiz/product/inventory/InventoryServices.xml" invoke="deleteProductFacility" auth="true">
         <description>Delete an ProductFacility</description>
-        <auto-attributes entity-name="ProductFacility" include="pk" mode="IN" optional="false"/>
+        <auto-attributes include="pk" mode="IN" optional="false"/>
+    </service>
+
+    <service name="createProductFacilityLocation" default-entity-name="ProductFacilityLocation" engine="simple"
+                location="org/ofbiz/product/inventory/InventoryServices.xml" invoke="createProductFacilityLocation" auth="true">
+        <description>Create an ProductFacilityLocation</description>
+        <auto-attributes include="pk" mode="IN" optional="false"/>
+        <auto-attributes include="nonpk" mode="IN" optional="true"/>
+    </service>
+    <service name="updateProductFacilityLocation" default-entity-name="ProductFacilityLocation" engine="simple"
+                location="org/ofbiz/product/inventory/InventoryServices.xml" invoke="updateProductFacilityLocation" auth="true">
+        <description>Update an ProductFacilityLocation</description>
+        <auto-attributes include="pk" mode="IN" optional="false"/>
+        <auto-attributes include="nonpk" mode="IN" optional="true"/>
+    </service>
+    <service name="deleteProductFacilityLocation" default-entity-name="ProductFacilityLocation" engine="simple"
+                location="org/ofbiz/product/inventory/InventoryServices.xml" invoke="deleteProductFacilityLocation" auth="true">
+        <description>Delete an ProductFacilityLocation</description>
+        <auto-attributes include="pk" mode="IN" optional="false"/>
     </service>
 
     <!-- Product Feature Services -->
