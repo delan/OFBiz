@@ -40,6 +40,12 @@
   <SecurityPermission description="Delete operations in the Order Manager." permissionId="ORDERMGR_DELETE"/>
   <SecurityPermission description="ALL operations in the Order Manager." permissionId="ORDERMGR_ADMIN"/>
 
+  <SecurityPermission description="View Payment Information." permissionId="PAY_INFO_VIEW"/>
+  <SecurityPermission description="Create Payment Information." permissionId="PAY_INFO_CREATE"/>
+  <SecurityPermission description="Update Payment Information." permissionId="PAY_INFO_UPDATE"/>
+  <SecurityPermission description="Delete Payment Information." permissionId="PAY_INFO_DELETE"/>
+  <SecurityPermission description="ALL Payment Information Operations." permissionId="PAY_INFO_ADMIN"/>
+
   <SecurityPermission description="View operations in the Security Management Screens." permissionId="SECURITY_VIEW"/>
   <SecurityPermission description="Create operations in the Security Management Screens." permissionId="SECURITY_CREATE"/>
   <SecurityPermission description="Update operations in the Security Management Screens." permissionId="SECURITY_UPDATE"/>
@@ -91,6 +97,12 @@
   <SecurityGroupPermission groupId="FLEXADMIN" permissionId="ORDERMGR_UPDATE"/>
   <SecurityGroupPermission groupId="FLEXADMIN" permissionId="ORDERMGR_VIEW"/>
   <SecurityGroupPermission groupId="FULLADMIN" permissionId="ORDERMGR_ADMIN"/>
+
+  <SecurityGroupPermission groupId="FLEXADMIN" permissionId="PAY_INFO_CREATE"/>
+  <SecurityGroupPermission groupId="FLEXADMIN" permissionId="PAY_INFO_DELETE"/>
+  <SecurityGroupPermission groupId="FLEXADMIN" permissionId="PAY_INFO_UPDATE"/>
+  <SecurityGroupPermission groupId="FLEXADMIN" permissionId="PAY_INFO_VIEW"/>
+  <SecurityGroupPermission groupId="FULLADMIN" permissionId="PAY_INFO_ADMIN"/>
 
   <SecurityGroupPermission groupId="FLEXADMIN" permissionId="SECURITY_CREATE"/>
   <SecurityGroupPermission groupId="FLEXADMIN" permissionId="SECURITY_DELETE"/>
