@@ -20,7 +20,7 @@
  *  THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  *
  *@author     Andy Zeneski (jaz@ofbiz.org)
- *@version    $Revision: 1.1 $
+ *@version    $Revision: 1.2 $
  *@since      2.1
 -->
 
@@ -63,7 +63,7 @@
           <#if product.introductionDate?exists && nowTimestamp.before(product.introductionDate)>
             <div class='tabletext' style='color: red;'>Not Yet Available</div>
           <#-- check to see if salesDiscontinuationDate has passed -->
-          <#elseif product.salesDiscontinuationDate?exists && nowTimestamp.before(product.salesDiscontinuationDate)>
+          <#elseif product.salesDiscontinuationDate?exists && nowTimestamp.after(product.salesDiscontinuationDate)>
             <div class='tabletext' style='color: red;'>No Longer Available</div>          
           <#-- check to see if the product is a virtual product -->
           <#elseif product.isVirtual?exists && product.isVirtual == "Y">
