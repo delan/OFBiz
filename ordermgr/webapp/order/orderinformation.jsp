@@ -199,11 +199,11 @@
                   <%GenericValue paymentMethod = orderPaymentPreference.getRelatedOne("PaymentMethod");%>
                   <%if (paymentMethod != null) pageContext.setAttribute("paymentMethod", paymentMethod);%>
                   <ofbiz:unless name="paymentMethod">
-                    <%GenericValue paymentMethodType = orderPaymentPreference.getRelatedOne("PaymentMethodType");%>
+                    <%GenericValue paymentMethodType = orderPaymentPreference.getRelatedOneCache("PaymentMethodType");%>
                     <%if (paymentMethodType != null) pageContext.setAttribute("paymentMethodType", paymentMethodType);%>
                     <tr>
                       <td colspan="2" valign="top">
-                        <div class="tabletext">&nbsp;<b><%EntityField.run("paymentMethodType", "description", pageContext);%></b> [<%EntityField.run("orderPaymentPreference", "paymentMethodTypeId", pageContext);%>]</div>
+                        <div class="tabletext">&nbsp;<b><%EntityField.run("paymentMethodType", "description", pageContext);%></b><%-- [<%EntityField.run("orderPaymentPreference", "paymentMethodTypeId", pageContext);%>]--%></div>
                       </td>
                     </tr>
                   </ofbiz:unless>
@@ -224,6 +224,8 @@
                           </td>
                           <td width="5">&nbsp;</td>
                           <td align="left" valign="top" width="80%">
+                              <%GenericValue oppStatusItem = orderPaymentPreference.getRelatedOneCache("StatusItem");%>
+                              <%if (oppStatusItem != null) pageContext.setAttribute("oppStatusItem", oppStatusItem);%>
                               <div class="tabletext">
                                   <%EntityField.run("creditCard", "nameOnCard", pageContext);%><br>
                                   <%EntityField.run("creditCard", "companyNameOnCard", "", "<br>", pageContext);%>
@@ -231,7 +233,7 @@
                                       <%EntityField.run("creditCard", "cardType", pageContext);%>
                                       <%EntityField.run("creditCard", "cardNumber", pageContext);%>
                                       <%EntityField.run("creditCard", "expireDate", pageContext);%>
-                                      &nbsp;[<%EntityField.run("orderPaymentPreference", "statusId", pageContext);%>]
+                                      &nbsp;[<%if (oppStatusItem != null) { EntityField.run("oppStatusItem", "description", pageContext); } else { EntityField.run("orderPaymentPreference", "statusId", pageContext); }%>]
                                   <%} else {%>
                                     <%=ContactHelper.formatCreditCard(creditCard)%>
                                   <%}%>

@@ -82,7 +82,7 @@
                     <%GenericValue currentItemStatus = orderItem.getRelatedOneCache("StatusItem");%>
                     <%if (currentItemStatus != null) pageContext.setAttribute("currentItemStatus", currentItemStatus);%>
                     <td align="left" colspan="1">
-                        <div class='tabletext'>Current: <ofbiz:entityfield attribute="currentItemStatus" field="description"/> [<ofbiz:entityfield attribute="orderItem" field="statusId"/>]</div>
+                        <div class='tabletext'>Current: <ofbiz:entityfield attribute="currentItemStatus" field="description"/><%-- [<ofbiz:entityfield attribute="orderItem" field="statusId"/>]--%></div>
                         <%Collection orderItemStatuses = orderReadHelper.getOrderItemStatuses(orderItem);%>
                         <%if (orderItemStatuses != null) pageContext.setAttribute("orderItemStatuses", orderItemStatuses);%>
                         <ofbiz:iterator name="orderItemStatus" property="orderItemStatuses">
@@ -91,7 +91,7 @@
                             <div class='tabletext'>
                                 <ofbiz:entityfield attribute="orderItemStatus" field="statusDatetime"/>: 
                                 <ofbiz:entityfield attribute="loopStatusItem" field="description"/>
-                                [<ofbiz:entityfield attribute="orderItemStatus" field="statusId"/>]
+                                <%-- [<ofbiz:entityfield attribute="orderItemStatus" field="statusId"/>] --%>
                             </div>
                         </ofbiz:iterator>
                     </td>
