@@ -137,7 +137,7 @@
         <attribute name="billingAccountTermId" type="String" mode="OUT" optional="false"/>
     </service>
     <service name="updateBillingAccountTerm" engine="simple"
-            location="org/ofbiz/accounting/payment/PaymentSimpleMethods.xml" invoke="updateBillingAccountRole">
+            location="org/ofbiz/accounting/payment/PaymentSimpleMethods.xml" invoke="updateBillingAccountTerm">
         <description>Update a Billing Account Term</description>
         <attribute name="billingAccountTermId" type="String" mode="IN" optional="false"/>
         <attribute name="billingAccountId" type="String" mode="IN" optional="true"/>
