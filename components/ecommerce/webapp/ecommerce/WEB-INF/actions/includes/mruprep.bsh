@@ -1,5 +1,5 @@
 /*
- * $Id: mruprep.bsh,v 1.1 2004/07/07 06:13:49 jonesde Exp $
+ * $Id: mruprep.bsh,v 1.2 2004/07/13 17:12:27 ajzeneski Exp $
  *
  * Copyright (c) 2003 The Open For Business Project - www.ofbiz.org
  *
@@ -25,7 +25,7 @@
 /**
  *
  * @author     <a href="mailto:byersa@automationgroups.com">Al Byers</a>
- * @version    $Revision: 1.1 $
+ * @version    $Revision: 1.2 $
  * @since      3.0
 
  * Builds a list of most recently used EntityValues from a session-kept cache
@@ -50,6 +50,7 @@ import org.ofbiz.service.*;
 import org.ofbiz.entity.model.*;
 import org.ofbiz.content.widget.html.*;
 import org.ofbiz.content.widget.form.*;
+import org.ofbiz.base.util.collections.LifoSet;
 
 
 import javax.servlet.*;
@@ -81,30 +82,27 @@ if (UtilValidate.isNotEmpty(entityName) && entityName.indexOf("DataResource") >=
     }
 }
 Debug.logInfo("cacheEntityName:" + cacheEntityName, "");
-utilCache = (UtilCache)lookupCaches.get(cacheEntityName);
-org.ofbiz.base.util.Debug.logInfo("utilCache:" + utilCache, "");
-    if(utilCache == null){
-        utilCache	= new UtilCache(cacheEntityName, 10, 0);
-        lookupCaches.put(cacheEntityName, utilCache);
+lifoSet = (LifoSet)lookupCaches.get(cacheEntityName);
+org.ofbiz.base.util.Debug.logInfo("lifoSet:" + lifoSet, "");
+    if(lifoSet == null){
+        lifoSet	= new LifoSet(10);
+        lookupCaches.put(cacheEntityName, lifoSet);
     }    
 
 LinkedList mruList = new LinkedList();
-int sz = utilCache.keyLRUList.size();
+int sz = lifoSet.keyLRUList.size();
 GenericValue gv	= null;
 GenericPK pk	= null;
 GenericPK pk2	= null;
 Object contentIdKey = null;
 
-for(int i=(sz-1); i >= 0; i--){
-    contentIdKey = utilCache.keyLRUList.get(i);
-
-Debug.logInfo("contentIdKey:" + contentIdKey, "");
-    if (contentIdKey != null && contentIdKey.length() > 0) {
-        pk = (GenericEntity)utilCache.cacheLineTable.get(contentIdKey).getValue();
-        gv = delegator.findByPrimaryKey(pk);
-        if (gv != null)
-            mruList.add(gv);
-    }
+iter = lifoSet.iterator();
+while (iter.hasNext()) {
+    pk0 = iter.next();
+    pk = pk0.getPrimaryKey();
+    gv = delegator.findByPrimaryKeyCache(pk); 
+    if (gv != null)
+        mruList.add(gv);
 }
 String formDefFile		= page.getProperty("formDefFile");
 String mruFormName		= page.getProperty("mruFormName");
