@@ -55,6 +55,8 @@ public class ModelService {
     public static final String ERROR_MESSAGE_MAP = "errorMessageMap";
     public static final String SUCCESS_MESSAGE = "successMessage";
     public static final String SUCCESS_MESSAGE_LIST = "successMessageList";
+    
+    private ModelServiceReader reader;
 
     /** The name of this service */
     public String name;
@@ -73,7 +75,7 @@ public class ModelService {
 
     /** The method or function to invoke for this service */
     public String invoke;
-
+    
     /** Does this service require authorization */
     public boolean auth;
 
@@ -85,18 +87,33 @@ public class ModelService {
 
     /** Create a transaction for this service (if one is not already in place...)? */
     public boolean useTransaction;
+    
+    /** Set of services this service implements */
+    public Set implServices = new OrderedSet();    
 
     /** Context Information, a list of parameters used by the service, contains ModelParam objects */
     protected Map contextInfo = new HashMap();
 
     /** Context Information, a list of parameters used by the service, contains ModelParam objects */
     protected List contextParamList = new LinkedList();
+    
+    /** Flag to say if we have pulled in our addition parameters from our implemented service(s) */
+    protected boolean inheritedParameters = false;
 
-    /** Gets the ModelParam by name
+    public ModelService() {
+        this.reader = null;
+    }
+    public ModelService(ModelServiceReader reader) {
+        this.reader = reader;
+    }
+    
+    /** 
+     * Gets the ModelParam by name
      * @param name The name of the parameter to get
      * @return ModelParam object with the specified name
      */
     public ModelParam getParam(String name) {
+        this.interfaceCheck();
         return (ModelParam) contextInfo.get(name);
     }
 
@@ -105,11 +122,13 @@ public class ModelService {
      * then sorts by order if specified.
      */
     public void addParam(ModelParam param) {
+        this.interfaceCheck();
         contextInfo.put(param.name, param);
         contextParamList.add(param);
     }
 
     public List getAllParamNames() {
+        this.interfaceCheck();
         List nameList = new LinkedList();
         Iterator i = this.contextParamList.iterator();
 
@@ -122,7 +141,8 @@ public class ModelService {
     }
 
     public List getInParamNames() {
-        List nameList = new LinkedList();
+        this.interfaceCheck();
+        List nameList = new LinkedList();        
         Iterator i = this.contextParamList.iterator();
 
         while (i.hasNext()) {
@@ -142,6 +162,7 @@ public class ModelService {
      * @return true if the validation is successful
      */
     public void validate(Map test, String mode) throws ServiceValidationException {
+        this.interfaceCheck();
         Map requiredInfo = new HashMap();
         Map optionalInfo = new HashMap();
         boolean verboseOn = Debug.verboseOn();
@@ -287,6 +308,7 @@ public class ModelService {
      * @return List of parameter names
      */
     public List getParameterNames(String mode, boolean optional) {
+        this.interfaceCheck();
         List names = new ArrayList();
 
         if (!"IN".equals(mode) && !"OUT".equals(mode) && !"INOUT".equals(mode)) {
@@ -317,6 +339,7 @@ public class ModelService {
      * @returns Map a new Map of only valid parameters
      */
     public Map makeValid(Map source, String mode) {
+        this.interfaceCheck();
         Map target = new HashMap();
 
         if (source == null) {
@@ -358,6 +381,7 @@ public class ModelService {
      * @return A list of required IN parameters in the order which they were defined.
      */
     public List getInParameterSequence(Map source) {
+        this.interfaceCheck();
         List target = new LinkedList();
 
         if (source == null) {
@@ -387,6 +411,7 @@ public class ModelService {
      * the service was created.
      */
     public List getModelParamList() {
+        this.interfaceCheck();
         return new LinkedList(this.contextParamList);
     }
 
@@ -394,6 +419,7 @@ public class ModelService {
      * the service was created.
      */
     public List getInModelParamList() {
+        this.interfaceCheck();
         List inList = new LinkedList();
         Iterator i = this.contextParamList.iterator();
 
@@ -406,4 +432,28 @@ public class ModelService {
         }
         return inList;
     }
+    
+    private void interfaceCheck() {       
+        if (!inheritedParameters && implServices.size() > 0 && reader != null) {
+            Map newInfo = new HashMap();
+            List newParams = new LinkedList();
+            Iterator implIter = implServices.iterator();
+            while (implIter.hasNext()) {
+                String serviceName = (String) implIter.next();
+                ModelService model = reader.getModelService(serviceName);
+                if (model != null) {
+                    newInfo.putAll(model.contextInfo);
+                    newParams.addAll(model.contextParamList);
+                }
+            }
+            // add in the added parameters
+            newInfo.putAll(this.contextInfo);
+            newParams.addAll(this.contextParamList);
+            
+            // overwrite the variables
+            this.contextInfo = new HashMap(newInfo);
+            this.contextParamList = new LinkedList(newParams);
+        }
+    }
+            
 }

@@ -253,22 +253,22 @@ public class ModelServiceReader {
     }
 
     protected ModelService createModelService(Element serviceElement) {
-        ModelService service = new ModelService();
+        ModelService service = new ModelService(this);
 
         service.name = UtilXml.checkEmpty(serviceElement.getAttribute("name"));
         service.engineName = UtilXml.checkEmpty(serviceElement.getAttribute("engine"));
         service.location = UtilXml.checkEmpty(serviceElement.getAttribute("location"));
-        service.invoke = UtilXml.checkEmpty(serviceElement.getAttribute("invoke"));
+        service.invoke = UtilXml.checkEmpty(serviceElement.getAttribute("invoke"));        
         service.auth = "true".equalsIgnoreCase(serviceElement.getAttribute("auth"));
         service.export = "true".equalsIgnoreCase(serviceElement.getAttribute("export"));
         // this defaults to true, so if anything but false, make it true
         service.validate = !"false".equalsIgnoreCase(serviceElement.getAttribute("validate"));
         service.useTransaction = !"false".equalsIgnoreCase(serviceElement.getAttribute("use-transaction"));
         service.description = getCDATADef(serviceElement, "description");
-        service.nameSpace = getCDATADef(serviceElement, "namespace");
+        service.nameSpace = getCDATADef(serviceElement, "namespace");        
         service.contextInfo = new HashMap();
-
-        createAttrDefs(serviceElement, service);
+        this.createImplDefs(serviceElement, service);
+        this.createAttrDefs(serviceElement, service);
         return service;
     }
 
@@ -289,7 +289,19 @@ public class ModelServiceReader {
         }
         return value;
     }
-
+    
+    protected void createImplDefs(Element baseElement, ModelService service) {
+        List implElements = UtilXml.childElementList(baseElement, "implement");
+        Iterator implIter = implElements.iterator();
+                
+        while (implIter.hasNext()) {
+            Element implement = (Element) implIter.next();
+            String serviceName = UtilXml.checkEmpty(implement.getAttribute("service"));
+            if (serviceName.length() > 0)
+                service.implServices.add(serviceName);
+        }
+    }
+            
     protected void createAttrDefs(Element baseElement, ModelService service) {
         // Add in the defined attributes (override the above defaults if specified)
         List paramElements = UtilXml.childElementList(baseElement, "attribute");

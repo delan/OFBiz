@@ -35,17 +35,20 @@
 <!ELEMENT vendor (#PCDATA)>
 <!ELEMENT version (#PCDATA)>
 <!ELEMENT created (#PCDATA)>
-<!ELEMENT service (description?, namespace?, attribute*)>
+<!ELEMENT service (description?, namespace?, implements*, attribute*)>
 <!ATTLIST service
 	name CDATA #REQUIRED
 	engine CDATA #REQUIRED
 	location CDATA #REQUIRED
-	invoke CDATA #REQUIRED
-	implements CDATA #IMPLIED
+	invoke CDATA #REQUIRED	
 	auth (true|false) "false"
 	export (true|false) "false"
 	validate (true|false) "true"
 	use-transaction (true|false) "true"
+>
+<!ELEMENT implement EMPTY>
+<!ATTLIST implement
+	service CDATA #REQUIRED
 >
 <!ELEMENT attribute EMPTY>
 <!ATTLIST attribute
