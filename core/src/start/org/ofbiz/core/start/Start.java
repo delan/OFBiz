@@ -293,7 +293,11 @@ class Configuration {
         System.setProperty("java.home", javaHome);
         
         // set the property to tell Log4J to use debug.properties
-        String log4jConfig = props.getProperty("log4j.configuration");
+        String log4jConfig = System.getProperty("log4j.configuration");
+        if (log4jConfig == null) {        
+            log4jConfig = props.getProperty("log4j.configuration");
+        }
+        
         if (log4jConfig == null) {
             log4jConfig = "file://" + ofbizHome + "/commonapp/etc/debug.properties";
         }
