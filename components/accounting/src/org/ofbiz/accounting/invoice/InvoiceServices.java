@@ -162,6 +162,7 @@ public class InvoiceServices {
         invoice.set("invoiceDate", UtilDateTime.nowTimestamp());
         invoice.set("invoiceTypeId", invoiceType);
         invoice.set("statusId", "INVOICE_READY");
+        invoice.set("currencyUomId", orderHeader.getString("currencyUom"));
         
         GenericValue billingAccount = null;
         List billingAccountTerms = null;

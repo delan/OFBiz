@@ -273,10 +273,10 @@
                     <div class="tabletext" nowrap>${invoiceItem.quantity?string.number}</div>
                   </td>
                   <td align="right" valign="top">
-                    <div class="tabletext" nowrap>${invoiceItem.amount?string.currency}</div>
+                    <div class="tabletext" nowrap><@ofbizCurrency amount=invoiceItem.amount isoCode=invoice.currencyUomId?if_exists/></div>
                   </td>                 
                   <td align="right" valign="top" nowrap>
-                    <div class="tabletext">${(invoiceItem.quantity?double * invoiceItem.amount?double)?string.currency}</div>
+                    <div class="tabletext"><@ofbizCurrency amount=(invoiceItem.quantity?double * invoiceItem.amount?double) isoCode=invoice.currencyUomId?if_exists/></div>
                   </td>                
                 </tr>
                 <#assign seqId = seqId + 1>               
@@ -321,7 +321,7 @@
               <tr>
                 <td align="right" colspan="4"><div class="tabletext"><b>${uiLabelMap.AccountingInvoiceTotal}</b></div></td>
                 <td align="right" nowrap>
-                  <div class="tabletext">${invoiceTotal?string.currency}</div>
+                  <div class="tabletext"><@ofbizCurrency amount=invoiceTotal isoCode=invoice.currencyUomId?if_exists/></div>
                 </td>
               </tr>
             </table>
