@@ -50,6 +50,7 @@
     <!-- Service-Group definition files -->
     <service-groups loader="mainfile" location="groups_test.xml"/> 
     <service-groups loader="mainfile" location="groups_common.xml"/>   
+    <service-groups loader="mainfile" location="groups_shipment.xml"/>
     
 	<!-- ECA definition files -->
     <service-ecas loader="mainfile" location="secas_test.xml"/>
