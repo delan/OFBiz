@@ -1,5 +1,5 @@
 /*
- * $Id: PaymentGatewayServices.java,v 1.11 2003/09/05 17:20:01 ajzeneski Exp $
+ * $Id: PaymentGatewayServices.java,v 1.12 2003/09/25 23:10:00 ajzeneski Exp $
  *
  *  Copyright (c) 2002 The Open For Business Project - www.ofbiz.org
  *
@@ -57,7 +57,7 @@ import org.ofbiz.service.ServiceUtil;
  * PaymentGatewayServices
  *
  * @author     <a href="mailto:jaz@ofbiz.org">Andy Zeneski</a>
- * @version    $Revision: 1.11 $
+ * @version    $Revision: 1.12 $
  * @since      2.0
  */
 public class PaymentGatewayServices {    
@@ -1058,7 +1058,7 @@ public class PaymentGatewayServices {
                     payment.put("partyIdFrom", payFromPartyId);
                     payment.put("partyIdTo", payToPartyId);   
                     payment.put("userLogin", userLogin);
-                    payment.put("statusId", "PAYMENT_PAID");                
+                    payment.put("statusId", "PMNT_SENT");                
                     payment.put("paymentRefNum", refundResponse.get("refundRefNum"));
                     payment.put("amount", refundResponse.get("refundAmount"));
                     payment.put("comments", "Refund : " + refundResponse.get("refundMessage"));
