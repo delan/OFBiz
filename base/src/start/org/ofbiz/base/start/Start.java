@@ -212,6 +212,11 @@ public class Start implements Runnable {
             classPath.addComponent(config.baseJar);
         }
 
+        // load the base schema directory
+        if (config.baseDtd != null) {
+            classPath.addComponent(config.baseDtd);
+        }
+
         // load the config directory
         if (config.baseConfig != null) {
             classPath.addComponent(config.baseConfig);
@@ -221,6 +226,10 @@ public class Start implements Runnable {
         System.setProperty("java.class.path", classPath.toString());
         this.classloader = classPath.getClassLoader();
         Thread.currentThread().setContextClassLoader(classloader);
+        if (System.getProperty("DEBUG") != null) {
+            System.out.println("Startup Classloader: " + classloader.toString());
+            System.out.println("Startup Classpath: " + classPath.toString());
+        }
     }
 
     private void initLogDirectory() {
@@ -438,6 +447,7 @@ public class Start implements Runnable {
         public String toolsJar;
         public String commJar;
         public String baseLib;
+        public String baseDtd;
         public String baseConfig;
         public String logDir;
         public List loaders;
@@ -522,13 +532,19 @@ public class Start implements Runnable {
             // base config directory
             baseConfig = System.getProperty("ofbiz.base.config");
             if (baseConfig == null) {
-                baseConfig = ofbizHome + "/" + props.getProperty("ofbiz.base.config", "config");
+                baseConfig = ofbizHome + "/" + props.getProperty("ofbiz.base.config", "base/config");
+            }
+
+            // base schema directory
+            baseDtd = System.getProperty("ofbiz.base.schema");
+            if (baseDtd == null) {
+                baseDtd = ofbizHome + "/" + props.getProperty("ofbiz.base.schema", "base/dtd");
             }
 
             // base lib directory
             baseLib = System.getProperty("ofbiz.base.lib");
             if (baseLib == null) {
-                baseLib = ofbizHome + "/" + props.getProperty("ofbiz.base.lib", "lib");
+                baseLib = ofbizHome + "/" + props.getProperty("ofbiz.base.lib", "base/lib");
             }
 
             // base jar file
