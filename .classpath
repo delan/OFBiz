@@ -73,5 +73,7 @@
     <classpathentry kind="lib" path="components/entity/lib/jdbc/p6spy.jar"/>
     <classpathentry kind="lib" path="components/entity/lib/jdbc/postgresql.jar"/>
     <classpathentry kind="lib" path="components/entity/lib/jdbc/sapdbc.jar"/>
+    <classpathentry kind="lib" path="components/accounting/lib/worldpay/cryptix.jar"/>
+    <classpathentry kind="lib" path="components/accounting/lib/worldpay/select.jar"/>
     <classpathentry kind="output" path="bin"/>
 </classpath>
