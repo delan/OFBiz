@@ -20,7 +20,7 @@
  *  THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  *
  *@author     Andy Zeneski (jaz@ofbiz.org)
- *@version    $Revision: 1.2 $
+ *@version    $Revision: 1.3 $
  *@since      3.0
 */
 
@@ -36,6 +36,12 @@ partyId = session.getAttribute("orderPartyId");
 cart = session.getAttribute("shoppingCart");
 context.put("cart", cart);
 context.put("paymentMethodType", request.getParameter("paymentMethodType"));
+
+if (partyId == null) {
+    userLogin = session.getAttribute("userLogin");
+    partyId = userLogin.getString("partyId");
+}
+context.put("partyId", partyId);
 
 // nuke the event messages
 request.removeAttribute("_EVENT_MESSAGE_");
@@ -82,7 +88,7 @@ if (request.getParameter("useShipAddr") != null && cart.getShippingContactMechId
     context.put("postalFields", UtilHttp.getParameterMap(request));
 }
 
-if (cart != null) {
+if (cart != null && request.getParameter("singleUsePayment") == null) {
     if (cart.getPaymentMethodIds() != null && cart.getPaymentMethodIds().size() > 0) {
         checkOutPaymentId = cart.getPaymentMethodIds().get(0);
         context.put("checkOutPaymentId", checkOutPaymentId);
@@ -97,6 +103,10 @@ if (cart != null) {
             account = paymentMethod.getRelatedOne("EftAccount");
             context.put("eftAccount", account);
             context.put("paymentMethodType", "EFT");
+        } else if (paymentMethod != null && paymentMethod.getString("paymentMethodTypeId").equals("GIFT_CARD")) {
+            account = paymentMethod.getRelatedOne("GiftCard");
+            context.put("giftCard", account);
+            context.put("paymentMethodType", "GC");
         } else {
             context.put("paymentMethodType", "offline");
         }

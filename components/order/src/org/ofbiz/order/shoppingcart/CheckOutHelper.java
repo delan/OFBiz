@@ -1,5 +1,5 @@
 /*
- * $Id: CheckOutHelper.java,v 1.10 2003/10/22 23:03:40 ajzeneski Exp $
+ * $Id: CheckOutHelper.java,v 1.11 2003/11/04 23:08:33 ajzeneski Exp $
  *
  *  Copyright (c) 2001, 2002 The Open For Business Project - www.ofbiz.org
  *
@@ -63,7 +63,7 @@ import org.ofbiz.service.ServiceUtil;
  * @author     <a href="mailto:cnelson@einnovation.com">Chris Nelson</a>
  * @author     <a href="mailto:jonesde@ofbiz.org">David E. Jones</a>
  * @author     <a href="mailto:tristana@twibble.org">Tristan Austin</a>
- * @version    $Revision: 1.10 $
+ * @version    $Revision: 1.11 $
  * @since      2.0
  */
 public class CheckOutHelper {
@@ -881,7 +881,7 @@ public class CheckOutHelper {
      * containing a <code>Boolean</code> indicating whether it's an offline
      * payment or not.
      */
-    public Map finalizeOrderEntryPayment(String checkOutPaymentId) {
+    public Map finalizeOrderEntryPayment(String checkOutPaymentId, boolean singleUse, boolean append) {
         Map result = ServiceUtil.returnSuccess();
 
         if (UtilValidate.isNotEmpty(checkOutPaymentId)) {
@@ -893,7 +893,7 @@ public class CheckOutHelper {
                 if (Character.isLetter(checkOutPaymentId.charAt(0))) {
                     this.cart.addPaymentMethodTypeId(checkOutPaymentId);
                 } else {
-                    this.cart.setPaymentMethodAmount(checkOutPaymentId, null);
+                    this.cart.setPaymentMethodAmount(checkOutPaymentId, null, singleUse);
                 }
             } else {
                 this.cart.clearPaymentMethodIds();
@@ -989,12 +989,12 @@ public class CheckOutHelper {
      * @see CheckOutHelper#finalizeOrderEntryMethodType(String)
      * @see CheckOutHelper#finalizeOrderEntryOfflinePayments(Map)
      * @see CheckOutHelper#finalizeOrderEntryOptions(String, String, String, String, String)
-     * @see CheckOutHelper#finalizeOrderEntryPayment(String)
+     * @see CheckOutHelper#finalizeOrderEntryPayment(String, boolean, boolean)
      * @see CheckOutHelper#finalizeOrderEntryShip(String)
      */
     public Map finalizeOrderEntry(String finalizeMode, String shippingContactMechId, String shippingMethod,
             String shippingInstructions, String maySplit, String giftMessage, String isGift, String methodType,
-            String checkOutPaymentId, Map params) {
+            String checkOutPaymentId, boolean isSingleUsePayment, boolean appendPayment, Map params) {
         Map result = ServiceUtil.returnSuccess();
         Map errorMaps = new HashMap();
         Map callResult;
@@ -1020,7 +1020,7 @@ public class CheckOutHelper {
 
         // set the payment
         if (finalizeMode != null && finalizeMode.equals("payment")) {
-            callResult = this.finalizeOrderEntryPayment(checkOutPaymentId);
+            callResult = this.finalizeOrderEntryPayment(checkOutPaymentId, isSingleUsePayment, appendPayment);
             this.addErrors(errorMessages, errorMaps, callResult);
         }
 
