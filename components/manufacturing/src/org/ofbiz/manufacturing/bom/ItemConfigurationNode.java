@@ -77,12 +77,6 @@ public class ItemConfigurationNode {
         while(childrenIterator.hasNext()) {
             oneChild = (GenericValue)childrenIterator.next();
             // Configurator
-System.out.println("");
-System.out.println("");
-System.out.println("*************************************************");
-System.out.println("Configuring component: " + oneChild);
-System.out.println("Product features: " + productFeatures);
-System.out.println("ROOT NODE: " + getRootNode().getProductForRules());
             oneChildNode = configurator(oneChild, productFeatures, getRootNode().getProductForRules(), delegator);
             // If the node is null this means that the node has been discarded by the rules.
             if (oneChildNode != null) {
@@ -101,7 +95,6 @@ System.out.println("ROOT NODE: " + getRootNode().getProductForRules());
                 String ruleCondition = (String)rule.get("productFeature");
                 String ruleOperator = (String)rule.get("ruleOperator");
                 String newPart = (String)rule.get("productIdInSubst");
-System.out.println("Evaluating rule: " + rule);
                 GenericValue feature = null;
                 boolean ruleSatisfied = false;
                 if (ruleCondition == null || ruleCondition.equals("")) {
@@ -117,7 +110,6 @@ System.out.println("Evaluating rule: " + rule);
                         }
                     }
                 }
-System.out.println("Rule satisfied: " + ruleSatisfied);                
                 if (ruleSatisfied && ruleOperator.equals("OR")) {
                     ItemConfigurationNode tmpNode = oneChildNode;
                     if (newPart == null || newPart.equals("")) {
@@ -140,7 +132,6 @@ System.out.println("Rule satisfied: " + ruleSatisfied);
         ItemConfigurationNode newNode = oneChildNode;
         // CONFIGURATOR
         if (oneChildNode.isVirtual()) {
-System.out.println("Virtual NODE: " + oneChildNode);
             // If the part is VIRTUAL and
             // productFeatures and productPartRules are not null
             // we have to substitute the part with the right part's variant
@@ -154,10 +145,8 @@ System.out.println("Virtual NODE: " + oneChildNode);
                                                     "productIdFor", substitutedNode.getPart().getString("productId"),
                                                     "productIdIn", node.get("productIdTo"))));
             }
-System.out.println("Tot spec rules: " + productPartRules);
             newNode = substituteNode(oneChildNode, productFeatures, productPartRules, delegator);
             if (newNode == oneChildNode) {
-System.out.println("NO rule FOUND!!!");
                 // If no substitution has been done (no valid rule applied),
                 // we try to search for a generic link-rule
                 List genericLinkRules = delegator.findByAnd("ProductManufacturingRule",
@@ -170,7 +159,6 @@ System.out.println("NO rule FOUND!!!");
                                                         "productIdFor", substitutedNode.getPart().getString("productId"),
                                                         "productIdIn", node.get("productIdTo"))));
                 }
-System.out.println("Tot gen link rules: " + genericLinkRules);
                 newNode = null;
                 newNode = substituteNode(oneChildNode, productFeatures, genericLinkRules, delegator);
                 if (newNode == oneChildNode) {
@@ -182,7 +170,6 @@ System.out.println("Tot gen link rules: " + genericLinkRules);
                                                             "productIdIn", node.get("productIdTo")),
                                                             UtilMisc.toList("ruleSeqId"));
                     newNode = null;
-System.out.println("Tot gen node rules: " + genericLinkRules);
                     newNode = substituteNode(oneChildNode, productFeatures, genericNodeRules, delegator);
                     if (newNode == oneChildNode) {
                         // If no substitution has been done (no valid rule applied),
