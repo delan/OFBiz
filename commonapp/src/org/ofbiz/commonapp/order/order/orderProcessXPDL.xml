@@ -118,7 +118,7 @@
                         <Tool Id="addOrderRole" Type="PROCEDURE">
                             <ActualParameters>
                                 <ActualParameter>orderId</ActualParameter>
-                                <ActualParameter>partyId</ActualParameter>
+                                <ActualParameter>name:partyId=assignedPartyId</ActualParameter>
                                 <ActualParameter>roleTypeId</ActualParameter>
                             </ActualParameters>
                             <ExtendedAttributes>
