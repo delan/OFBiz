@@ -30,6 +30,7 @@ import org.ofbiz.core.service.*;
 import org.ofbiz.core.security.*;
 import org.ofbiz.core.util.*;
 import org.ofbiz.commonapp.common.*;
+import org.ofbiz.commonapp.party.contact.*;
 import org.ofbiz.commonapp.product.catalog.*;
 
 /**
@@ -526,9 +527,14 @@ public class OrderServices {
         Map fields = UtilMisc.toMap("orderId", orderId, "partyId", partyId, "roleTypeId", roleTypeId);
 
         try {
-            GenericValue value = delegator.makeValue("OrderRole", fields);
-
-            delegator.create(value);
+            // first check and see if we are already there; if so, just return success
+            GenericValue testValue = delegator.findByPrimaryKey("OrderRole", fields);
+            if (testValue != null) {
+                ServiceUtil.returnSuccess();
+            } else {
+                GenericValue value = delegator.makeValue("OrderRole", fields);
+                delegator.create(value);
+            }
         } catch (GenericEntityException e) {
             result.put(ModelService.RESPONSE_MESSAGE, ModelService.RESPOND_ERROR);
             result.put(ModelService.ERROR_MESSAGE, "ERROR: Could not add role to order (" + e.getMessage() + ").");
@@ -584,6 +590,93 @@ public class OrderServices {
         // implement me
         return result;
     }
+    
+    /** Service to email order notifications for pending actions */
+    public static Map sendNotification(DispatchContext ctx, Map context) {
+        Map result = new HashMap();
+        GenericDelegator delegator = ctx.getDelegator(); 
+        LocalDispatcher dispatcher = ctx.getDispatcher();            
+        String adminEmailList = (String) context.get("adminEmailList");
+        String assignedToUser = (String) context.get("assignedPartyId");
+        String assignedToRole = (String) context.get("assignedRoleTypeId");
+        String workEffortId = (String) context.get("workEffortId");
+        
+        GenericValue workEffort = null;
+        GenericValue orderHeader = null;
+        String assignedEmail = null;
+        
+        // get the order/workflow info
+        try {
+            workEffort = delegator.findByPrimaryKey("WorkEffort", UtilMisc.toMap("workEffortId", workEffortId));
+            String sourceReferenceId = workEffort.getString("sourceReferenceId");
+            if (sourceReferenceId != null)              
+                orderHeader = delegator.findByPrimaryKey("OrderHeader", UtilMisc.toMap("orderId", sourceReferenceId));
+        } catch (GenericEntityException e) {
+            ServiceUtil.returnError("Problem with entity lookup");
+        }
+                    
+        // find the assigned user's email address(s)
+        GenericValue party = null;
+        Collection assignedToEmails = null;
+        try {
+            party = delegator.findByPrimaryKey("Party", UtilMisc.toMap("partyId", assignedToUser));
+        } catch (GenericEntityException e) {
+            ServiceUtil.returnError("Problem with entity lookup");
+        }
+        if (party != null)  
+            assignedToEmails = ContactHelper.getContactMechByPurpose(party, "PRIMARY_EMAIL", false);
+         
+        String server = UtilProperties.getPropertyValue("url.properties", "force.http.host", "localhost");
+        String port = UtilProperties.getPropertyValue("url.properties", "port.http", "80");
+        
+        StringBuffer serverRoot = new StringBuffer();
+        serverRoot.append("http://");
+        serverRoot.append(server);
+        if (!"80".equals(port)) {
+            serverRoot.append(":");
+            serverRoot.append(port);
+        }
+        serverRoot.append("/ordermgr/control/view/wfOrderNotify"); // maybe make this more dynamic
+        
+        Map parameters = new HashMap(context);
+        parameters.putAll(orderHeader);
+        parameters.putAll(workEffort);
+        
+        StringBuffer emailList = new StringBuffer();
+        
+        if (assignedToEmails != null) {
+            Iterator aei = assignedToEmails.iterator();        
+            while (aei.hasNext()) {                            
+                GenericValue ct = (GenericValue) aei.next();                                                                            
+                if (ct != null && ct.get("infoString") != null) {
+                    if (emailList.length() > 1)
+                        emailList.append(",");
+                    emailList.append(ct.getString("infoString"));
+                }
+            }
+        }
+        if (adminEmailList != null) {
+            if (emailList.length() > 1)
+                emailList.append(",");
+            emailList.append(adminEmailList);
+        }
+                            
+        // send the mail
+        Map sendMailContext = new HashMap();
+        sendMailContext.put("sendTo", emailList.toString());
+        sendMailContext.put("sendFrom", "workflow@ofbiz.org"); // fixme
+        sendMailContext.put("subject", "Workflow Notification");
+        sendMailContext.put("bodyUrl", serverRoot.toString());
+        sendMailContext.put("bodyUrlParameters", parameters);
+        
+        try {
+            dispatcher.runAsync("sendMailFromUrl", sendMailContext);
+        } catch (GenericServiceException e) {
+            ServiceUtil.returnError("SendMail service failed: " + e.getMessage());
+        }                    
+        return ServiceUtil.returnSuccess();
+    }
+        
 
     /** Service to create an order payment preference */
     public static Map createPaymentPreference(DispatchContext ctx, Map context) {

@@ -12,6 +12,15 @@
         <attribute name="orderId" type="String" mode="IN" optional="false"/>         
         <attribute name="orderStatusId" type="String" mode="INOUT" optional="false"/>
     </service>
+    
+    <service name="sendProcessNotification" engine="java"
+    		location="org.ofbiz.commonapp.order.order.OrderServices" invoke="sendNotification">
+    	<description>Limit Service for order processing workflow; sends activitiy notifications</description>
+    	<attribute name="workEffortId" type="String" mode="IN"/>
+    	<attribute name="adminEmailList" type="String" mode="IN"/>
+    	<attribute name="assignedPartyId" type="String" mode="IN" optional="true"/>
+    	<attribute name="assignedRoleTypeId" type="String" mode="IN" optional="true"/>    	
+    </service>
 
     <service name="storeOrder" engine="java" validate="true" auth="true"
             location="org.ofbiz.commonapp.order.order.OrderServices" invoke="createOrder">

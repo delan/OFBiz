@@ -14,7 +14,7 @@
 
     <RedefinableHeader PublicationStatus="UNDER_REVISION">
         <Author>Andy Zeneski</Author>
-        <Version>1.1</Version>
+        <Version>1.2</Version>
         <Responsibles>
             <Responsible>admin</Responsible>
         </Responsibles>
@@ -50,7 +50,7 @@
     <WorkflowProcesses>
         <WorkflowProcess Id="ProcessOrder" Name="Processes incoming orders">
 
-            <ProcessHeader DurationUnit="h">
+            <ProcessHeader DurationUnit="s">
                 <Created>2002-12-01 12:00:00</Created>
                 <Description>Order Processing Workflow</Description>
                 <Priority>5</Priority>
@@ -66,7 +66,7 @@
             
 			<RedefinableHeader PublicationStatus="UNDER_REVISION">
         		<Author>OFBiz</Author>
-	        	<Version>1.0</Version>
+	        	<Version>1.2</Version>
         		<Responsibles>
 		          <Responsible>admin</Responsible>
         		</Responsibles>
@@ -78,14 +78,23 @@
                         <BasicType Type="STRING"/>
                     </DataType>
                     <Description>The order number</Description>
-                </FormalParameter>                             
-                <FormalParameter Id="orderStatusId" Index="1" Mode="OUT">
+                </FormalParameter>                                                
+                <FormalParameter Id="orderStatusId" Index="2" Mode="INOUT">
                     <DataType>
                         <BasicType Type="STRING"/>
                     </DataType>
-                    <Description>The final order status</Description>
+                    <Description>The order status</Description>
                 </FormalParameter>              
             </FormalParameters>
+            
+            <DataFields>
+            	<DataField Id="adminEmailList">
+            		<DataType>
+            			<BasicType Type="STRING"/>
+            		</DataType>
+            		<InitialValue>jaz@jflow.net,jonesde@ofbiz.org</InitialValue>
+            	</DataField>
+            </DataFields>
 
             <Activities>
                 <Activity Id="receiveOrder" Name="Receive Order">
@@ -110,13 +119,50 @@
                         <ExtendedAttribute Name="canStart" Value="Y"/>
                     </ExtendedAttributes>
                 </Activity>
+                
+                <Activity Id="orderNotReady" Name="Order Not Ready">
+                    <Description>The order is not ready for processing; suspend and wait for action</Description>
+                    <Limit>72</Limit>
+                    <Implementation>
+                        <Tool Id="orderNotReadySuspend" Type="PROCEDURE">
+                            <ActualParameters>                            	
+                                <ActualParameter>workEffortId</ActualParameter>                                
+                            </ActualParameters>   
+                            <ExtendedAttributes>                            	                            	                                
+                                <ExtendedAttribute Name="serviceName" Value="wfSuspendActivity"/>
+                                <ExtendedAttribute Name="runAsUser" Value="admin"/>
+                            </ExtendedAttributes>                                                     
+                        </Tool>
+                    </Implementation>
+                    <Performer>admin</Performer>
+                    <StartMode>
+                        <Automatic/>
+                    </StartMode>
+                    <FinishMode>
+                        <Automatic/>
+                    </FinishMode>
+                    <Priority>5</Priority>                    
+                    <TransitionRestrictions>
+                        <TransitionRestriction>
+                            <Join Type="XOR"/>
+                            <Split Type="XOR"/>
+                        </TransitionRestriction>
+                    </TransitionRestrictions>
+                    <ExtendedAttributes>
+                        <ExtendedAttribute Name="canStart" Value="N"/>
+                        <ExtendedAttribute Name="runAsUser" Value="admin"/>
+                        <ExtendedAttribute Name="limitAfterStart" Value="N"/>
+                        <ExtendedAttribute Name="limitService" Value="sendProcessNotification"/>
+                        <ExtendedAttribute Name="inheritPriority" Value="Y"/>
+                    </ExtendedAttributes>
+                </Activity>                
                
-                <Activity Id="clerkApprove" Name="Clerk Approve Order">
+                <Activity Id="approveOrder" Name="Approve Order">
                     <Description>A clerk accepts and approves/declines the order</Description>
                     <Limit>12</Limit>
                     <Implementation>
                         <Tool Id="addOrderRole" Type="PROCEDURE">
-                            <ActualParameters>
+                            <ActualParameters>                            	
                                 <ActualParameter>orderId</ActualParameter>
                                 <ActualParameter>name:partyId=assignedPartyId</ActualParameter>
                                 <ActualParameter>roleTypeId</ActualParameter>
@@ -143,72 +189,14 @@
                     <ExtendedAttributes>
                         <ExtendedAttribute Name="canStart" Value="N"/>
                         <ExtendedAttribute Name="limitAfterStart" Value="N"/>
-                        <ExtendedAttribute Name="limitService" Value="testScv"/>
+                        <ExtendedAttribute Name="limitService" Value="sendProcessNotification"/>
                         <ExtendedAttribute Name="restartOnDelegate" Value="Y"/>
                         <ExtendedAttribute Name="inheritPriority" Value="Y"/>
                     </ExtendedAttributes>
                 </Activity>
-
-                <Activity Id="suspendOrder" Name="Suspend The Order">
-                    <Description>Order requires investigation; suspend the workflow and hold the order</Description>
-                    <Limit>1</Limit>
-                    <Implementation>
-                    	<!-- delegate the activity to the investigation department -->
-                        <Tool Id="suspendOrderDelegate" Type="PROCEDURE">
-                            <ActualParameters>
-                                <ActualParameter>workEffortId</ActualParameter>
-                                <ActualParameter>partyId</ActualParameter>
-                                <ActualParameter>roleTypeId</ActualParameter>
-                            </ActualParameters>
-                            <ExtendedAttributes>
-                            	<ExtendedAttribute Name="partyId" Value="_NA_"/>
-                                <ExtendedAttribute Name="roleTypeId" Value="ORDER_CLERK"/>                             
-                            </ExtendedAttributes>
-                        </Tool>
-                        <Tool Id="suspendOrderChangeState" Type="PROCEDURE">
-                        	<ActualParameters>
-                        		<ActualParameter>workEffortId</ActualParameter>
-                        		<ActualParameter>newState</ActualParameter>                        		
-                        	</ActualParameters>
-                        	<ExtendedAttributes>
-                        		<ExtendedAttribute Name="newState" Value="open.suspended"/>
-                        		<ExtendedAttribute Name="serviceName" Value="changeActivityState"/>
-                        	</ExtendedAttributes>
-                        </Tool>
-                        <!-- change the order status -->
-                        <Tool Id="suspendOrderChangeStatus" Type="PROCEDURE">
-                        	<ActualParameters>                        		
-                        		<ActualParameter>orderId</ActualParameter>
-                        		<ActualParameter>statusId</ActualParameter>
-                        	</ActualParameters>
-                        	<ExtendedAttributes>                          		
-                                <ExtendedAttribute Name="statusId" Value="ORDER_PROCESSING"/>
-                                <ExtendedAttribute Name="serviceName" Value="changeOrderStatus"/>                              
-                                <ExtendedAttribute Name="runAsUser" Value="admin"/>
-                            </ExtendedAttributes>
-                        </Tool>
-                    </Implementation>
-                    <Performer>admin</Performer>
-                    <StartMode>
-                        <Automatic/>
-                    </StartMode>
-                    <FinishMode>
-                        <Automatic/>
-                    </FinishMode>
-                    <Priority>5</Priority>                    
-                    <TransitionRestrictions>
-                        <TransitionRestriction>
-                            <Join Type="XOR"/>
-                            <Split Type="XOR"/>
-                        </TransitionRestriction>
-                    </TransitionRestrictions>
-                    <ExtendedAttributes>
-                        <ExtendedAttribute Name="canStart" Value="N"/>
-                    </ExtendedAttributes>
-                </Activity>
-                                                          
-                <Activity Id="completeOrder" Name="Complete Order">
-                    <Description>Set order status as complete</Description>
+                
+                <Activity Id="approveOrderEvent" Name="Approve Order Event">
+                    <Description>Activity runs after an order is approved</Description>
                     <Limit>1</Limit>
                     <Implementation>
                     	<!-- change the order status -->
@@ -218,40 +206,17 @@
                                 <ActualParameter>statusId</ActualParameter>
                             </ActualParameters>
                             <ExtendedAttributes>                            	                            	
-                                <ExtendedAttribute Name="statusId" Value="ORDER_COMPLETED"/>
+                                <ExtendedAttribute Name="statusId" Value="ORDER_APPROVED"/>
                                 <ExtendedAttribute Name="serviceName" Value="changeOrderStatus"/>
                                 <ExtendedAttribute Name="runAsUser" Value="admin"/>
                             </ExtendedAttributes>
                         </Tool>
-                    </Implementation>
-                    <Performer>admin</Performer>
-                    <StartMode>
-                        <Automatic/>
-                    </StartMode>
-                    <FinishMode>
-                        <Automatic/>
-                    </FinishMode>
-                    <Priority>1</Priority>                    
-                    <TransitionRestrictions>
-                        <TransitionRestriction>
-                            <Join Type="XOR"/>
-                            <Split Type="XOR"/>
-                        </TransitionRestriction>
-                    </TransitionRestrictions>
-                    <ExtendedAttributes>
-                        <ExtendedAttribute Name="canStart" Value="N"/>
-                    </ExtendedAttributes>
-                </Activity>
-
-                <Activity Id="emailCustomer" Name="Complete Order">
-                    <Description>E-Mail notification now that order has shipped</Description>
-                    <Limit>1</Limit>
-                    <Implementation>
+                        <!-- email customer with the status change 
                         <Tool Id="emailOrderStatus" Type="PROCEDURE">
                             <ActualParameters>
                                 <ActualParameter>orderId</ActualParameter>
                             </ActualParameters>
-                        </Tool>
+                        </Tool> -->                                    
                     </Implementation>
                     <Performer>admin</Performer>
                     <StartMode>
@@ -271,29 +236,178 @@
                         <ExtendedAttribute Name="canStart" Value="N"/>
                     </ExtendedAttributes>
                 </Activity>                
+
+                <Activity Id="cancelOrder" Name="Cancel The Order">
+                    <Description>Order was not appoved; cancel the order and abort the workflow</Description>
+                    <Limit>1</Limit>
+                    <Implementation>             
+                        <!-- change the order status -->
+                        <Tool Id="suspendOrderChangeStatus" Type="PROCEDURE">
+                        	<ActualParameters>                        		
+                        		<ActualParameter>orderId</ActualParameter>
+                        		<ActualParameter>statusId</ActualParameter>
+                        	</ActualParameters>
+                        	<ExtendedAttributes>                          		
+                                <ExtendedAttribute Name="statusId" Value="ORDER_PROCESSING"/>
+                                <ExtendedAttribute Name="serviceName" Value="changeOrderStatus"/>                              
+                                <ExtendedAttribute Name="runAsUser" Value="admin"/>
+                            </ExtendedAttributes>
+                        </Tool>
+                    	<!-- abort the current workflow -->
+                        <Tool Id="wfCancelWorkflow" Type="PROCEDURE">
+                            <ActualParameters>
+                                <ActualParameter>workEffortId</ActualParameter>                                
+                            </ActualParameters>                       
+                        </Tool>  
+                        <!-- email customer with the status change 
+                        <Tool Id="emailOrderStatus" Type="PROCEDURE">
+                            <ActualParameters>
+                                <ActualParameter>orderId</ActualParameter>
+                            </ActualParameters>
+                        </Tool> -->                                                                            
+                    </Implementation>
+                    <Performer>admin</Performer>
+                    <StartMode>
+                        <Automatic/>
+                    </StartMode>
+                    <FinishMode>
+                        <Automatic/>
+                    </FinishMode>
+                    <Priority>5</Priority>                    
+                    <TransitionRestrictions>
+                        <TransitionRestriction>
+                            <Join Type="XOR"/>
+                            <Split Type="XOR"/>
+                        </TransitionRestriction>
+                    </TransitionRestrictions>
+                    <ExtendedAttributes>
+                        <ExtendedAttribute Name="canStart" Value="N"/>
+                    </ExtendedAttributes>
+                </Activity>
+                
+                <Activity Id="completeOrder" Name="Complete Order">
+                    <Description>A clerk accepts and completes/declines (ships) the order</Description>
+                    <Limit>12</Limit>
+                    <Implementation>
+                        <Tool Id="addOrderRole" Type="PROCEDURE">
+                            <ActualParameters>                            	
+                                <ActualParameter>orderId</ActualParameter>
+                                <ActualParameter>name:partyId=assignedPartyId</ActualParameter>
+                                <ActualParameter>roleTypeId</ActualParameter>
+                            </ActualParameters>
+                            <ExtendedAttributes>
+                                <ExtendedAttribute Name="roleTypeId" Value="ORDER_CLERK"/>
+                            </ExtendedAttributes>
+                        </Tool>
+                    </Implementation>
+                    <Performer>clerk</Performer>
+                    <StartMode>
+                        <Manual/>
+                    </StartMode>
+                    <FinishMode>
+                        <Manual/>
+                    </FinishMode>
+                    <Priority>5</Priority>                    
+                    <TransitionRestrictions>
+                        <TransitionRestriction>
+                            <Join Type="XOR"/>
+                            <Split Type="XOR"/>
+                        </TransitionRestriction>
+                    </TransitionRestrictions>
+                    <ExtendedAttributes>
+                        <ExtendedAttribute Name="canStart" Value="N"/>
+                        <ExtendedAttribute Name="limitAfterStart" Value="N"/>
+                        <ExtendedAttribute Name="limitService" Value="sendProcessNotification"/>
+                        <ExtendedAttribute Name="restartOnDelegate" Value="Y"/>
+                        <ExtendedAttribute Name="inheritPriority" Value="Y"/>
+                    </ExtendedAttributes>
+                </Activity>                
+                                                          
+                <Activity Id="completeOrderEvent" Name="Complete Order Event">
+                    <Description>Activity runs after an order is completed</Description>
+                    <Limit>1</Limit>
+                    <Implementation>
+                    	<!-- change the order status -->
+                        <Tool Id="completeOrderStatus" Type="PROCEDURE">
+                            <ActualParameters>
+                                <ActualParameter>orderId</ActualParameter>
+                                <ActualParameter>statusId</ActualParameter>
+                            </ActualParameters>
+                            <ExtendedAttributes>                            	                            	
+                                <ExtendedAttribute Name="statusId" Value="ORDER_COMPLETED"/>
+                                <ExtendedAttribute Name="serviceName" Value="changeOrderStatus"/>
+                                <ExtendedAttribute Name="runAsUser" Value="admin"/>
+                            </ExtendedAttributes>
+                        </Tool>
+                        <!-- email customer with the status change 
+                        <Tool Id="emailOrderStatus" Type="PROCEDURE">
+                            <ActualParameters>
+                                <ActualParameter>orderId</ActualParameter>
+                            </ActualParameters>
+                        </Tool> -->              
+                    </Implementation>
+                    <Performer>admin</Performer>
+                    <StartMode>
+                        <Automatic/>
+                    </StartMode>
+                    <FinishMode>
+                        <Automatic/>
+                    </FinishMode>
+                    <Priority>1</Priority>                    
+                    <TransitionRestrictions>
+                        <TransitionRestriction>
+                            <Join Type="XOR"/>
+                            <Split Type="XOR"/>
+                        </TransitionRestriction>
+                    </TransitionRestrictions>
+                    <ExtendedAttributes>
+                        <ExtendedAttribute Name="canStart" Value="N"/>
+                    </ExtendedAttributes>
+                </Activity>              
             </Activities>
 
             <Transitions>
-                <Transition Id="trans1" From="receiveOrder" To="clerkApprove" Loop="NOLOOP" Name="Goto Order Approval">
-                    <Condition Type="OTHERWISE"/>
-                </Transition>                                                                          
-                <Transition Id="trans2" From="clerkApprove" To="suspendOrder" Loop="NOLOOP" Name="Goto Suspend Order">
-                    <Condition Type="CONDITION">
-                        <![CDATA[approvalCode == 0]]>
-                    </Condition>
-                </Transition>                             
-                <Transition Id="trans3" From="clerkApprove" To="completeOrder" Loop="NOLOOP" Name="Goto Complete Order">
-                    <Condition Type="CONDITION">
-                        <![CDATA[approvalCode == 1]]>
-                    </Condition>
-                </Transition>             
-                <Transition Id="trans4" From="completeOrder" To="emailCustomer" Loop="NOLOOP" Name="Goto E-Mail Order">
-                    <Condition Type="OTHERWISE"/>
+                <Transition Id="trans1" From="receiveOrder" To="approveOrder" Loop="NOLOOP" Name="Goto Order Approve">
+                    <Condition Type="CONDITION"><![CDATA[orderStatusId.equals("ORDER_PROCESSING")]]></Condition>                                     	                    
+                </Transition>  
+                <Transition Id="trans1.1" From="receiveOrder" To="completeOrder" Loop="NOLOOP" Name="Goto Order Complete">
+                    <Condition Type="CONDITION"><![CDATA[orderStatusId.equals("ORDER_APPROVED")]]></Condition>                                                            	                    
                 </Transition>
+                <Transition Id="trans1.2" From="receiveOrder" To="orderNotReady" Loop="NOLOOP" Name="Order not ready for processing">
+                    <Condition Type="OTHERWISE"/>                     
+                </Transition>                                  
+                                                                                                           
+                <Transition Id="trans2" From="approveOrder" To="cancelOrder" Loop="NOLOOP" Name="Goto Order Cancel">
+                    <Condition Type="CONDITION"><![CDATA[approvalCode == 0]]></Condition>                                            
+                </Transition>                             
+                <Transition Id="trans2.1" From="approveOrder" To="approveOrderEvent" Loop="NOLOOP" Name="Run approve order event">
+                    <Condition Type="CONDITION"><![CDATA[approvalCode == 1]]></Condition>                                            
+                </Transition>   
+
+                <Transition Id="trans3" From="approveOrderEvent" To="completeOrder" Loop="NOLOOP" Name="Goto Order Complete">
+                    <Condition Type="OTHERWISE"/>
+                </Transition>    
+                                
+                <Transition Id="trans4" From="completeOrder" To="cancelOrder" Loop="NOLOOP" Name="Goto Order Cancel">
+                    <Condition Type="CONDITION"><![CDATA[approvalCode == 0]]></Condition>                                            
+                </Transition>                             
+                <Transition Id="trans4.1" From="completeOrder" To="completeOrderEvent" Loop="NOLOOP" Name="Run complete order event">
+                    <Condition Type="CONDITION"><![CDATA[approvalCode == 2]]></Condition>                                            
+                </Transition> 
+                
+                <Transition Id="trans5" From="orderNotReady" To="approveOrder" Loop="NOLOOP" Name="Goto Order Approve">
+                    <Condition Type="CONDITION"><![CDATA[orderStatusId.equals("ORDER_PROCESSING")]]></Condition>                                                            	                    
+                </Transition>  
+                <Transition Id="trans5.1" From="orderNotReady" To="completeOrder" Loop="NOLOOP" Name="Goto Order Complete">
+                    <Condition Type="CONDITION"><![CDATA[orderStatusId.equals("ORDER_APPROVED")]]></Condition>                                                            	                    
+                </Transition>
+                <Transition Id="trans5.2" From="orderNotReady" To="receiveOrder" Loop="NOLOOP" Name="Order not ready for processing">
+                    <Condition Type="OTHERWISE"/>                     
+                </Transition>                                                                    
             </Transitions>
             
-            <ExtendedAttributes>
-            	<ExtendedAttribute Name="sourceReferenceField" Value="orderId"/>
+            <ExtendedAttributes>            	
+            	<ExtendedAttribute Name="sourceReferenceField" Value="orderId"/>            
             </ExtendedAttributes>
         </WorkflowProcess>
 
