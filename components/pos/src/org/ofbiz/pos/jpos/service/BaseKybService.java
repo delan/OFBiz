@@ -1,5 +1,5 @@
 /*
- * $Id: BaseKybService.java,v 1.1 2004/08/06 20:55:12 ajzeneski Exp $
+ * $Id: BaseKybService.java,v 1.2 2004/08/06 23:45:32 ajzeneski Exp $
  *
  * Copyright (c) 2004 The Open For Business Project - www.ofbiz.org
  *
@@ -24,31 +24,40 @@
  */
 package org.ofbiz.pos.jpos.service;
 
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Iterator;
+
 import jpos.services.BaseService;
 import jpos.services.EventCallbacks;
 import jpos.JposException;
 import jpos.JposConst;
+import jpos.events.DataEvent;
+import jpos.events.ErrorEvent;
+import jpos.events.DirectIOEvent;
+import jpos.events.OutputCompleteEvent;
+import jpos.events.StatusUpdateEvent;
 import jpos.config.JposEntry;
 import jpos.loader.JposServiceInstance;
-
 
 /**
  * JPOS BaseService Implementation for Keyboard Wedge Services
  * 
  * @author     <a href="mailto:jaz@ofbiz.org">Andy Zeneski</a>
- * @version    $Revision: 1.1 $
+ * @version    $Revision: 1.2 $
  * @since      3.2
  */
 public class BaseKybService implements BaseService, JposServiceInstance {
 
     public static final String module = BaseKybService.class.getName();
-
     protected static boolean claimed = false;
-    protected EventCallbacks ecb = null;
+
+    protected List eventQueue = new ArrayList();
     protected JposEntry entry = null;
 
     protected boolean freezeEvents = false;
-    protected boolean enabled = false;
+    protected boolean deviceEnabled = false;
+    protected boolean eventsEnabled = true;
 
     protected String deviceName = null;
     protected String healthText = null;
@@ -58,6 +67,8 @@ public class BaseKybService implements BaseService, JposServiceInstance {
 
     protected int serviceVer = 1008000;
     protected int state = JposConst.JPOS_S_CLOSED;
+
+    private EventCallbacks ecb = null;
 
     // open/close methods
     public void open(String deviceName, EventCallbacks ecb) throws JposException {
@@ -81,7 +92,7 @@ public class BaseKybService implements BaseService, JposServiceInstance {
     public void close() throws JposException {
         BaseKybService.claimed = false;
         this.freezeEvents = false;
-        this.enabled = false;
+        this.deviceEnabled = false;
         this.ecb = null;
         this.healthText = "CLOSED";
         this.state = JposConst.JPOS_S_CLOSED;
@@ -96,12 +107,32 @@ public class BaseKybService implements BaseService, JposServiceInstance {
         return BaseKybService.claimed;
     }
 
+    public int getDataCount() throws JposException {
+        return this.eventQueue.size();
+    }
+
+    public boolean getDataEventEnabled() throws JposException {
+        return this.eventsEnabled;
+    }
+
+    public void setDataEventEnabled(boolean b) throws JposException {
+        boolean fireEvents = false;
+        if (!this.eventsEnabled && b) {
+            fireEvents = true;
+        }
+        this.eventsEnabled = b;
+
+        if (fireEvents) {
+            this.fireQueuedEvents();
+        }
+    }
+
     public boolean getDeviceEnabled() throws JposException {
-        return this.enabled;
+        return this.deviceEnabled;
     }
 
     public void setDeviceEnabled(boolean b) throws JposException {
-        this.enabled = b;
+        this.deviceEnabled = b;
     }
 
     public String getDeviceServiceDescription() throws JposException {
@@ -147,5 +178,35 @@ public class BaseKybService implements BaseService, JposServiceInstance {
     // JposServiceInstance
     public void deleteInstance() throws JposException {
         // TODO: Implement Me!
+    }
+
+    protected void fireEvent(Object ev) {
+        if (this.eventsEnabled) {
+            if (ev instanceof DataEvent) {
+                this.ecb.fireDataEvent((DataEvent) ev);
+            } else if (ev instanceof DirectIOEvent) {
+                this.ecb.fireDirectIOEvent((DirectIOEvent) ev);
+            } else if (ev instanceof DirectIOEvent) {
+                this.ecb.fireErrorEvent((ErrorEvent) ev);
+            } else if (ev instanceof DirectIOEvent) {
+                this.ecb.fireOutputCompleteEvent((OutputCompleteEvent) ev);
+            } else if (ev instanceof DirectIOEvent) {
+                this.ecb.fireStatusUpdateEvent((StatusUpdateEvent) ev);
+            }
+        } else {
+            this.eventQueue.add(ev);
+        }
+    }
+
+    private void fireQueuedEvents() {
+        List queuedList = new ArrayList(eventQueue);
+        this.eventQueue = new ArrayList();
+        Iterator i = queuedList.iterator();
+
+        while (i.hasNext()) {
+            Object obj = i.next();
+            i.remove();
+            this.fireEvent(obj);
+        }
     }
 }

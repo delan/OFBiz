@@ -1,5 +1,5 @@
 /*
- * $Id: Scanner.java,v 1.1 2004/08/06 20:55:11 ajzeneski Exp $
+ * $Id: Scanner.java,v 1.2 2004/08/06 23:45:31 ajzeneski Exp $
  *
  * Copyright (c) 2004 The Open For Business Project - www.ofbiz.org
  *
@@ -35,7 +35,7 @@ import org.ofbiz.pos.screen.PosScreen;
 /**
  *
  * @author     <a href="mailto:jaz@ofbiz.org">Andy Zeneski</a>
- * @version    $Revision: 1.1 $
+ * @version    $Revision: 1.2 $
  * @since      3.2
  */
 public class Scanner extends GenericDevice {
@@ -47,8 +47,7 @@ public class Scanner extends GenericDevice {
 
     public Scanner(String deviceName, int timeout, PosScreen screen) {
         super(deviceName, timeout, screen);
-        this.control = new jpos.Scanner();
-        Debug.log("Control : " + this.control, module);
+        this.control = new jpos.Scanner();       
     }
 
     protected void initialize() throws JposException {
@@ -68,6 +67,7 @@ public class Scanner extends GenericDevice {
                 try {
                     dataType = scanner.getScanDataType();
                     scanData = scanner.getScanDataLabel();
+                    scanner.clearInput();
                     if (scanData == null) {
                         Debug.logWarning("Scanner driver does not support decoding data; the raw result is used instead", module);
                         scanData = scanner.getScanData();
@@ -82,7 +82,7 @@ public class Scanner extends GenericDevice {
         });
     }
 
-    private void processScanData(byte[] data, int dataType) {
+    protected void processScanData(byte[] data, int dataType) {
         if (data != null) {
             // we can add some type checking here if needed (i.e. type of barcode; type of SKU, etc)
             if (dataType == ScannerConst.SCAN_SDT_UNKNOWN) {

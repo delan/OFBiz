@@ -1,5 +1,5 @@
 /*
- * $Id: ScannerKybService.java,v 1.1 2004/08/06 20:55:12 ajzeneski Exp $
+ * $Id: ScannerKybService.java,v 1.2 2004/08/06 23:45:32 ajzeneski Exp $
  *
  * Copyright (c) 2004 The Open For Business Project - www.ofbiz.org
  *
@@ -24,9 +24,7 @@
  */
 package org.ofbiz.pos.jpos.service;
 
-import java.util.ArrayList;
 import java.util.HashMap;
-import java.util.List;
 import java.util.Map;
 
 import jpos.JposException;
@@ -39,19 +37,18 @@ import org.ofbiz.pos.adaptor.KeyboardReceiver;
 /**
  * 
  * @author     <a href="mailto:jaz@ofbiz.org">Andy Zeneski</a>
- * @version    $Revision: 1.1 $
+ * @version    $Revision: 1.2 $
  * @since      3.2
  */
 public class ScannerKybService extends BaseKybService implements jpos.services.ScannerService18, KeyboardReceiver {
 
     public static final String module = ScannerKybService.class.getName();
 
-    protected List dataEventQueue = new ArrayList();
     protected Map barcodeIdMap = new HashMap();
 
-    protected byte[] scannedDataLabel = null;
-    protected byte[] scannedData = null;
-    protected String codeId = null;
+    protected byte[] scannedDataLabel = new byte[0];
+    protected byte[] scannedData = new byte[0];
+    protected String codeId = new String();
 
     protected boolean decodeData = true;
     protected boolean eventEnabled = true;
@@ -149,9 +146,9 @@ public class ScannerKybService extends BaseKybService implements jpos.services.S
     }
 
     public void clearInput() throws JposException {
-        this.scannedDataLabel = null;
-        this.scannedData = null;
-        this.codeId = null;
+        this.scannedDataLabel = new byte[0];
+        this.scannedData = new byte[0];
+        this.codeId = new String();
     }
 
     // KeyboardReceiver
@@ -161,7 +158,7 @@ public class ScannerKybService extends BaseKybService implements jpos.services.S
 
         // fire off the event notification
         DataEvent event = new DataEvent(this, 0);
-        ecb.fireDataEvent(event);
+        this.fireEvent(event);
     }
 
     private void parseScannedString(String str) {

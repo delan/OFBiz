@@ -1,5 +1,5 @@
 /*
- * $Id: Msr.java,v 1.1 2004/08/06 20:55:11 ajzeneski Exp $
+ * $Id: Msr.java,v 1.2 2004/08/06 23:45:31 ajzeneski Exp $
  *
  * Copyright (c) 2004 The Open For Business Project - www.ofbiz.org
  *
@@ -33,7 +33,7 @@ import org.ofbiz.pos.screen.PosScreen;
 /**
  *
  * @author     <a href="mailto:jaz@ofbiz.org">Andy Zeneski</a>
- * @version    $Revision: 1.1 $
+ * @version    $Revision: 1.2 $
  * @since      3.2
  */
 public class Msr extends GenericDevice {
@@ -46,6 +46,7 @@ public class Msr extends GenericDevice {
     }
 
     protected void initialize() throws JposException {
+        Debug.logInfo("MSR [" + control.getPhysicalDeviceName() + "] Claimed : " + control.getClaimed(), module);
         final jpos.MSR msr = (jpos.MSR) control;
         msr.setDecodeData(true);
         msr.setTracksToRead(2);
@@ -82,6 +83,17 @@ public class Msr extends GenericDevice {
         });
     }
 
-    private void processMsrData(String[] decodedData, byte[] track1, byte[] track2) {
+    protected void processMsrData(String[] decodedData, byte[] track1, byte[] track2) {
+        StringBuffer msrStr = new StringBuffer();
+        msrStr.append(decodedData[5]);
+        msrStr.append("|");
+        msrStr.append(decodedData[6]);
+        msrStr.append("|");
+        msrStr.append(decodedData[1]);
+        msrStr.append("|");
+        msrStr.append(decodedData[2]);
+        Debug.log("Msr Info : " + msrStr.toString(), module);
+        screen.getInput().setFunction("CREDITINFO", msrStr.toString());
+        screen.getOutput().print("Credit Card Read");
     }
 }

@@ -1,5 +1,5 @@
 /*
- * $Id: KybServiceInstanceFactory.java,v 1.1 2004/08/06 20:55:11 ajzeneski Exp $
+ * $Id: KybServiceInstanceFactory.java,v 1.2 2004/08/06 23:45:32 ajzeneski Exp $
  *
  * Copyright (c) 2004 The Open For Business Project - www.ofbiz.org
  *
@@ -34,13 +34,12 @@ import jpos.loader.JposServiceInstance;
 import jpos.loader.JposServiceInstanceFactory;
 
 import org.ofbiz.base.util.ObjectType;
-import org.ofbiz.base.util.Debug;
 import org.ofbiz.pos.jpos.service.BaseKybService;
 
 /**
  * 
  * @author     <a href="mailto:jaz@ofbiz.org">Andy Zeneski</a>
- * @version    $Revision: 1.1 $
+ * @version    $Revision: 1.2 $
  * @since      3.2
  */
 public class KybServiceInstanceFactory extends Object implements JposServiceInstanceFactory {
@@ -49,7 +48,6 @@ public class KybServiceInstanceFactory extends Object implements JposServiceInst
     private static Map serviceMap = new HashMap();
 
     public JposServiceInstance createInstance(String logicalName, JposEntry entry) throws JposException {
-        Debug.log("JCL requested instance of - " + logicalName, module);
         // check to see if we have a service class property
         if (!entry.hasPropertyWithName(JposEntry.SERVICE_CLASS_PROP_NAME)) {
             throw new JposException(JposConst.JPOS_E_NOSERVICE, "serviceClass property not found!");
@@ -61,13 +59,11 @@ public class KybServiceInstanceFactory extends Object implements JposServiceInst
         if (service != null) {
             service.setEntry(entry);
         } else {
-            Debug.log("No service found in map; creating new instance", module);
             try {
                 Object obj = ObjectType.getInstance(className);
                 if (obj == null) {
                     throw new JposException(JposConst.JPOS_E_NOEXIST, "unable to locate serviceClass");
-                }
-                Debug.log("Found got instance to - " + className, module);
+                }                
 
                 if (!(obj instanceof JposServiceInstance)) {
                     throw new JposException(JposConst.JPOS_E_NOSERVICE, "serviceClass is not an instance of JposServiceInstance");
