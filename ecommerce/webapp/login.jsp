@@ -54,10 +54,11 @@
           <td>
               <form method="POST" action="<ofbiz:url>/login<%=UtilFormatOut.ifNotEmpty(previousParams, "?", "")%></ofbiz:url>" name="loginform" style='margin: 0;'>
                 <table width='100%' border='0' cellpadding='0' cellspacing='2'>
-                  <tr>
-                    <td align="center"><span class="tabletext">Username:&nbsp;</span></td>
+                  <tr align="center">
+                    <td align=right><span class="tabletext">Username:&nbsp;</span></td>
+                    <%-- another possible way...
                     <ofbiz:if name="autoUserLogin">
-                      <input type="hidden" name="USERNAME" value="<ofbiz:entityfield attribute="autoUserLogin" field="userLoginId"/>">
+                      <input type="hidden" name="USERNAME" value='<ofbiz:entityfield attribute="autoUserLogin" field="userLoginId"/>'>
                       <td>
                         <span class="head2"><ofbiz:entityfield attribute="autoUserLogin" field="userLoginId"/></span>
                         <span class="tabletext">
@@ -66,13 +67,24 @@
                         </span>
                       </td>
                     </ofbiz:if>
-                    <ofbiz:unless name="autoUserLogin">
-                      <td><input type="text" name="USERNAME" value="<%=UtilFormatOut.checkNull(request.getParameter("USERNAME"))%>" size="20"></td>
-                    </ofbiz:unless>
+                    --%>
+                      <td align=left>
+                        <input type="text" name="USERNAME" value='<%if (UtilValidate.isNotEmpty(request.getParameter("USERNAME"))) {%><%=request.getParameter("USERNAME")%><%} else {%><ofbiz:entityfield attribute="autoUserLogin" field="userLoginId"/><%}%>' size="20">
+                      </td>
                   </tr>
-                  <tr>
-                    <td align="center"><span class="tabletext">Password:&nbsp;</span>
-                    <td><input type="password" name="PASSWORD" value="" size="20"></td>
+                  <ofbiz:if name="autoUserLogin">
+                    <tr align="center">
+                      <td align=right>&nbsp;</td>
+                      <td align=left>
+                        <span class="tabletext">
+                          (Not&nbsp;<ofbiz:entityfield attribute="autoUserLogin" field="userLoginId"/>?&nbsp;<a href="<ofbiz:url><%=CommonWorkers.makeLoginUrl(pageContext, "autoLogout")%></ofbiz:url>" class="buttontext">click&nbsp;here</a>)
+                        </span>
+                      </td>
+                    </tr>
+                  </ofbiz:if>
+                  <tr align="center">
+                    <td align=right><span class="tabletext">Password:&nbsp;</span></td>
+                    <td align=left><input type="password" name="PASSWORD" value="" size="20"></td>
                   </tr>
                   <tr>
                     <td colspan="2" align="center"><input type="submit" value="Login"></td>
@@ -102,10 +114,10 @@
     <TD width='100%'>
       <table width='100%' border='0' cellspacing='0' cellpadding='0' class='boxbottom'>
         <tr>
-          <td>
+          <td valign=middle align=center>
       <form method="POST" action="<ofbiz:url>/forgotpassword<%=UtilFormatOut.ifNotEmpty(previousParams, "?", "")%></ofbiz:url>" name="forgotpassword" style='margin: 0;'>
-        <div class="tabletext" align=center>Username:&nbsp;<input type="text" name="USERNAME" value="<%=UtilFormatOut.checkNull(request.getParameter("USERNAME"))%>" size="20"></div>
-        <div align=center><input type="submit" value="Get Password Hint" name="GET_PASSWORD_HINT">&nbsp;<input type="submit" value="Email Password" name="EMAIL_PASSWORD"></div>
+        <span class="tabletext">Username:&nbsp;</span><input type="text" name="USERNAME" value='<%if (UtilValidate.isNotEmpty(request.getParameter("USERNAME"))) {%><%=request.getParameter("USERNAME")%><%} else {%><ofbiz:entityfield attribute="autoUserLogin" field="userLoginId"/><%}%>' size="20">
+        <div><input type="submit" value="Get Password Hint" name="GET_PASSWORD_HINT">&nbsp;<input type="submit" value="Email Password" name="EMAIL_PASSWORD"></div>
       </form>
           </td>
         </tr>
@@ -150,10 +162,6 @@
 </table>
 
 <script language="JavaScript">
- <ofbiz:if name="autoUserLogin">
-   document.loginform.PASSWORD.focus();
- </ofbiz:if>
- <ofbiz:unless name="autoUserLogin">
-   document.loginform.USERNAME.focus();
- </ofbiz:unless>
+ <ofbiz:if name="autoUserLogin">document.loginform.PASSWORD.focus();</ofbiz:if>
+ <ofbiz:unless name="autoUserLogin">document.loginform.USERNAME.focus();</ofbiz:unless>
 </script>
