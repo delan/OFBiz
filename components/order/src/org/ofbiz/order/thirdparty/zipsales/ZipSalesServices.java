@@ -1,5 +1,5 @@
 /*
- * $Id: ZipSalesServices.java,v 1.13 2004/02/12 15:22:43 ajzeneski Exp $
+ * $Id: ZipSalesServices.java,v 1.14 2004/02/12 15:53:58 ajzeneski Exp $
  *
  *  Copyright (c) 2001-2003 The Open For Business Project - www.ofbiz.org
  *
@@ -51,7 +51,7 @@ import java.io.File;
  * Zip-Sales Database Services
  *
  * @author     <a href="mailto:jaz@ofbiz.org">Andy Zeneski</a>
- * @version    $Revision: 1.13 $
+ * @version    $Revision: 1.14 $
  * @since      3.0
  */
 public class ZipSalesServices {
@@ -243,16 +243,20 @@ public class ZipSalesServices {
             }
         }
 
-        // loop through and get per item tax rates
-        for (int i = 0; i < itemProductList.size(); i++) {
-            GenericValue product = (GenericValue) itemProductList.get(i);
-            Double itemAmount = (Double) itemAmountList.get(i);
-            Double shippingAmount = (Double) itemShippingList.get(i);
-            itemAdjustments.add(getItemTaxList(delegator, product, postalCode, city, itemAmount.doubleValue(), shippingAmount.doubleValue(), false));
-        }
-        if (orderShippingAmount.doubleValue() > 0) {
-            List taxList = getItemTaxList(delegator, null, postalCode, city, 0.00, orderShippingAmount.doubleValue(), false);
-            orderAdjustments.addAll(taxList);
+        try {
+            // loop through and get per item tax rates
+            for (int i = 0; i < itemProductList.size(); i++) {
+                GenericValue product = (GenericValue) itemProductList.get(i);
+                Double itemAmount = (Double) itemAmountList.get(i);
+                Double shippingAmount = (Double) itemShippingList.get(i);
+                itemAdjustments.add(getItemTaxList(delegator, product, postalCode, city, itemAmount.doubleValue(), shippingAmount.doubleValue(), false));
+            }
+            if (orderShippingAmount.doubleValue() > 0) {
+                List taxList = getItemTaxList(delegator, null, postalCode, city, 0.00, orderShippingAmount.doubleValue(), false);
+                orderAdjustments.addAll(taxList);
+            }
+        } catch (GeneralException e) {
+            return ServiceUtil.returnError(e.getMessage());
         }
 
         Map result = ServiceUtil.returnSuccess();
@@ -261,7 +265,7 @@ public class ZipSalesServices {
         return result;
     }
 
-    private static List getItemTaxList(GenericDelegator delegator, GenericValue item, String zipCode, String city, double itemAmount, double shippingAmount, boolean isUseTax) {
+    private static List getItemTaxList(GenericDelegator delegator, GenericValue item, String zipCode, String city, double itemAmount, double shippingAmount, boolean isUseTax) throws GeneralException {
         List adjustments = new ArrayList();
 
         // check the item for tax status
@@ -271,12 +275,9 @@ public class ZipSalesServices {
         }
 
         // lookup the records
-        List zipLookup = null;
-        try {
-            zipLookup = delegator.findByAnd("ZipSalesTaxLookup", UtilMisc.toMap("zipCode", zipCode), UtilMisc.toList("-fromDate"));
-        } catch (GenericEntityException e) {
-            Debug.logWarning("ZipSalesFlatTaxCalc: No ZipCode Entry Found.", module);
-            return adjustments;
+        List zipLookup = delegator.findByAnd("ZipSalesTaxLookup", UtilMisc.toMap("zipCode", zipCode), UtilMisc.toList("-fromDate"));
+        if (zipLookup == null || zipLookup.size() == 0) {
+            throw new GeneralException("The zip code entered is not valid.");
         }
 
         // the filtered list

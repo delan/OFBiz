@@ -1,5 +1,5 @@
 /*
- * $Id: CheckOutHelper.java,v 1.16 2004/01/24 16:26:43 ajzeneski Exp $
+ * $Id: CheckOutHelper.java,v 1.17 2004/02/12 15:53:58 ajzeneski Exp $
  *
  *  Copyright (c) 2001, 2002 The Open For Business Project - www.ofbiz.org
  *
@@ -63,7 +63,7 @@ import org.ofbiz.service.ServiceUtil;
  * @author     <a href="mailto:cnelson@einnovation.com">Chris Nelson</a>
  * @author     <a href="mailto:jonesde@ofbiz.org">David E. Jones</a>
  * @author     <a href="mailto:tristana@twibble.org">Tristan Austin</a>
- * @version    $Revision: 1.16 $
+ * @version    $Revision: 1.17 $
  * @since      2.0
  */
 public class CheckOutHelper {
@@ -590,6 +590,10 @@ public class CheckOutHelper {
         } catch (GenericServiceException e) {
             Debug.logError(e, module);
             throw new GeneralException("Problem occurred in tax service (" + e.getMessage() + ")", e);
+        }
+
+        if (ServiceUtil.isError(serviceResult)) {
+            throw new GeneralException(ServiceUtil.getErrorMessage(serviceResult));
         }
 
         // the adjustments (returned in order) from taxware.
