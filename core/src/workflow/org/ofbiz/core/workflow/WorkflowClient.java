@@ -2,7 +2,7 @@
  * $Id$
  */
 
-package workflow.org.ofbiz.core.workflow;
+package org.ofbiz.core.workflow;
 
 import java.util.*;
 import org.ofbiz.core.entity.*;
