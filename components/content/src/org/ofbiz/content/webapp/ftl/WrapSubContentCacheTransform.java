@@ -1,5 +1,5 @@
 /*
- * $Id: WrapSubContentCacheTransform.java,v 1.6 2004/04/30 22:12:21 ajzeneski Exp $
+ * $Id: WrapSubContentCacheTransform.java,v 1.7 2004/04/30 23:08:28 ajzeneski Exp $
  *
  *  Copyright (c) 2001, 2002 The Open For Business Project - www.ofbiz.org
  *
@@ -39,7 +39,7 @@ import org.ofbiz.content.content.ContentWorker;
 import org.ofbiz.entity.GenericDelegator;
 import org.ofbiz.entity.GenericValue;
 
-import freemarker.template.Environment;
+import freemarker.core.Environment;
 import freemarker.template.TemplateTransformModel;
 
 //import com.clarkware.profiler.Profiler;
@@ -49,7 +49,7 @@ import freemarker.template.TemplateTransformModel;
  * This is an interactive FreeMarker tranform that allows the user to modify the contents that are placed within it.
  * 
  * @author <a href="mailto:byersa@automationgroups.com">Al Byers</a>
- * @version $Revision: 1.6 $
+ * @version $Revision: 1.7 $
  * @since 3.0
  */
 public class WrapSubContentCacheTransform implements TemplateTransformModel {

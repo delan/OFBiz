@@ -1,5 +1,5 @@
 /*
- * $Id: SetRequestAttributeMethod.java,v 1.4 2004/04/30 22:12:20 ajzeneski Exp $
+ * $Id: SetRequestAttributeMethod.java,v 1.5 2004/04/30 23:08:28 ajzeneski Exp $
  *
  * Copyright (c) 2001-2003 The Open For Business Project - www.ofbiz.org
  *
@@ -29,10 +29,9 @@ import java.util.List;
 import javax.servlet.http.HttpServletRequest;
 
 import freemarker.ext.beans.BeanModel;
-import freemarker.template.Environment;
+import freemarker.core.Environment;
 import freemarker.template.SimpleScalar;
 import freemarker.template.TemplateMethodModelEx;
-import freemarker.template.TemplateModel;
 import freemarker.template.TemplateModelException;
 import freemarker.template.TemplateNumberModel;
 import freemarker.template.TemplateScalarModel;
@@ -41,7 +40,7 @@ import freemarker.template.TemplateScalarModel;
  * SetRequestAttributeMethod - Freemarker Method for setting request attributes
  *
  * @author     <a href="mailto:jaz@ofbiz.org">Andy Zeneski</a>
- * @version    $Revision: 1.4 $
+ * @version    $Revision: 1.5 $
  * @since      2.1
  */
 public class SetRequestAttributeMethod implements TemplateMethodModelEx {
@@ -51,7 +50,7 @@ public class SetRequestAttributeMethod implements TemplateMethodModelEx {
     /* 
      * @see freemarker.template.TemplateMethodModel#exec(java.util.List)
      */
-    public TemplateModel exec(List args) throws TemplateModelException {      
+    public Object exec(List args) throws TemplateModelException {
         if (args == null || args.size() != 2)
             throw new TemplateModelException("Invalid number of arguements");  
         if (!(args.get(0) instanceof TemplateScalarModel))    

@@ -1,5 +1,5 @@
 /*
- * $Id: LoopSubContentTransform.java,v 1.9 2004/04/30 22:12:19 ajzeneski Exp $
+ * $Id: LoopSubContentTransform.java,v 1.10 2004/04/30 23:08:26 ajzeneski Exp $
  * 
  * Copyright (c) 2001-2003 The Open For Business Project - www.ofbiz.org
  * 
@@ -34,7 +34,7 @@ import org.ofbiz.entity.GenericDelegator;
 import org.ofbiz.entity.GenericEntityException;
 import org.ofbiz.entity.GenericValue;
 
-import freemarker.template.Environment;
+import freemarker.core.Environment;
 import freemarker.template.TemplateModelException;
 import freemarker.template.TemplateTransformModel;
 import freemarker.template.TransformControl;
@@ -43,7 +43,7 @@ import freemarker.template.TransformControl;
  * LoopSubContentTransform - Freemarker Transform for URLs (links)
  * 
  * @author <a href="mailto:byersa@automationgroups.com">Al Byers</a>
- * @version $Revision: 1.9 $
+ * @version $Revision: 1.10 $
  * @since 3.0
  */
 public class LoopSubContentTransform implements TemplateTransformModel {
