@@ -35,9 +35,9 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpSession;
 
 import org.ofbiz.base.util.Debug;
+import org.ofbiz.base.util.UtilHttp;
 import org.ofbiz.base.util.UtilMisc;
 import org.ofbiz.base.util.UtilValidate;
-import org.ofbiz.base.util.UtilHttp;
 import org.ofbiz.common.geo.GeoWorker;
 import org.ofbiz.entity.GenericDelegator;
 import org.ofbiz.entity.GenericEntityException;
@@ -45,6 +45,7 @@ import org.ofbiz.entity.GenericValue;
 import org.ofbiz.entity.util.EntityUtil;
 import org.ofbiz.party.contact.ContactMechWorker;
 import org.ofbiz.product.catalog.CatalogWorker;
+import org.ofbiz.product.config.ProductConfigWrapper;
 import org.ofbiz.product.product.ProductWorker;
 import org.ofbiz.service.GenericServiceException;
 import org.ofbiz.service.LocalDispatcher;
@@ -737,15 +738,15 @@ public class ProductStoreWorker {
             }
             return false;
 
-            /* TODO: must entire quantity be available in one location?
-             *  Right now the answer is yes, it only succeeds if one facility has sufficient inventory for the order.
-             *  When we get into splitting options it is much more complicated. There are various options like: 
-             *  - allow split between facilities
-             *  - in split order facilities by highest quantities
-             *  - in split order facilities by lowest quantities
-             *  - in split order facilities by order in database, ie sequence numbers on facility-store join table
-             *  - in split order facilities by nearest locations to customer (not an easy one there...)
-             */
+            // TODO: must entire quantity be available in one location?
+            //  Right now the answer is yes, it only succeeds if one facility has sufficient inventory for the order.
+            //  When we get into splitting options it is much more complicated. There are various options like: 
+            //  - allow split between facilities
+            //  - in split order facilities by highest quantities
+            //  - in split order facilities by lowest quantities
+            //  - in split order facilities by order in database, ie sequence numbers on facility-store join table
+            //  - in split order facilities by nearest locations to customer (not an easy one there...)
+           
 
             // loop through all facilities attached to this catalog and check for individual or cumulative sufficient inventory
         }
