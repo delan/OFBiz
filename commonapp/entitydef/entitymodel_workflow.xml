@@ -318,18 +318,24 @@
         <key-map field-name="applicationId" />
       </relation>
     </entity>
-    <entity entity-name="WorkflowArrayTypeMembers" 
+    <entity entity-name="WorkflowComplexTypeInfo" 
             package-name="org.ofbiz.commonapp.workeffort.definition"
             title="Workflow Array Type Members Entity">
-      <field name="arrayTypeMembersId" type="id-ne"></field>
-      <field name="dataTypeEnumId" type="id-ne"></field>	
-      <prim-key field="arrayTypeMembersId" />	
-      <prim-key field="dataTypeEnumId" />
-      <relation type="many" rel-entity-name="WorkflowFormalParam">
-        <key-map field-name="arrayTypeMembersId" />
-      </relation>
+      <field name="complexTypeInfoId" type="id-ne"></field>
+      <field name="memberParentInfoId" type="id"></field>
+      <field name="dataTypeEnumId" type="id"></field>
+      <field name="subTypeEnumId" type="id"></field>
+      <field name="arrayLowerIndex" type="numeric"></field>
+      <field name="arrayUpperIndex" type="numeric"></field>	
+      <prim-key field="complexTypeInfoId" />
       <relation type="many" rel-entity-name="WorkflowDataField">
-        <key-map field-name="arrayTypeMembersId" />
+        <key-map field-name="complexTypeInfoId" />
+      </relation>
+      <relation type="many" rel-entity-name="WorkflowFormalParam">
+        <key-map field-name="complexTypeInfoId" />
+      </relation>
+      <relation type="many" rel-entity-name="WorkflowTypeDeclaration">
+        <key-map field-name="complexTypeInfoId" />
       </relation>
       <relation type="one" title="DataType" rel-entity-name="Enumeration">
         <key-map field-name="dataTypeEnumId" rel-field-name="enumId" />
@@ -344,16 +350,19 @@
       <field name="dataFieldId" type="id-long-ne"></field>
       <field name="dataFieldName" type="name"></field>
       <field name="description" type="description"></field>
-      <field name="dataTypeEnumId" type="id"></field>
       <field name="initialValue" type="value"></field>
       <field name="lengthBytes" type="numeric"></field>
-      <field name="arrayTypeMembersId" type="id"></field>
+      <field name="dataTypeEnumId" type="id"></field>
+      <field name="complexTypeInfoId" type="id"></field>
       <field name="isArray" type="indicator"></field>	
       <prim-key field="packageId" />	
       <prim-key field="processId" />	
       <prim-key field="dataFieldId" />
       <relation type="one" title="DataType" rel-entity-name="Enumeration">
         <key-map field-name="dataTypeEnumId" rel-field-name="enumId" />
+      </relation>
+      <relation type="one" rel-entity-name="WorkflowComplexTypeInfo">
+        <key-map field-name="complexTypeInfoId" />
       </relation>
       <relation type="one" rel-entity-name="WorkflowPackage">
         <key-map field-name="packageId" />
@@ -374,7 +383,7 @@
       <field name="modeEnumId" type="id"></field>
       <field name="description" type="description"></field>
       <field name="dataTypeEnumId" type="id"></field>
-      <field name="arrayTypeMembersId" type="id"></field>	
+      <field name="complexTypeInfoId" type="id"></field>	
       <prim-key field="packageId" />	
       <prim-key field="processId" />	
       <prim-key field="applicationId" />	
@@ -385,8 +394,8 @@
       <relation type="one" title="DataType" rel-entity-name="Enumeration">
         <key-map field-name="dataTypeEnumId" rel-field-name="enumId" />
       </relation>
-      <relation type="many" rel-entity-name="WorkflowArrayTypeMembers">
-        <key-map field-name="arrayTypeMembersId" />
+      <relation type="one" rel-entity-name="WorkflowComplexTypeInfo">
+        <key-map field-name="complexTypeInfoId" />
       </relation>
       <relation type="one" rel-entity-name="WorkflowProcess">
         <key-map field-name="packageId" />
@@ -754,14 +763,14 @@
       <field name="typeName" type="name"></field>
       <field name="description" type="description"></field>
       <field name="dataTypeEnumId" type="id"></field>
-      <field name="arrayTypeMembersId" type="id"></field>	
+      <field name="complexTypeInfoId" type="id"></field>	
       <prim-key field="packageId" />	
       <prim-key field="typeId" />
       <relation type="one" title="DataType" rel-entity-name="Enumeration">
         <key-map field-name="dataTypeEnumId" rel-field-name="enumId" />
       </relation>
-      <relation type="many" rel-entity-name="WorkflowArrayTypeMembers">
-        <key-map field-name="arrayTypeMembersId" />
+      <relation type="one" rel-entity-name="WorkflowComplexTypeInfo">
+        <key-map field-name="complexTypeInfoId" />
       </relation>
       <relation type="one" rel-entity-name="WorkflowPackage">
         <key-map field-name="packageId" />
