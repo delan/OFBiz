@@ -383,6 +383,7 @@
       <field name="universalId" type="short-varchar"></field>
       <field name="scopeEnumId" type="id"></field>
       <field name="priority" type="numeric"></field>
+      <field name="percentComplete" type="numeric"></field>
       <field name="workEffortName" type="name"></field>
       <field name="description" type="description"></field>
       <field name="locationDesc" type="description"></field>
@@ -1018,6 +1019,20 @@
       </relation>
       <relation type="one" fk-name="WKEFF_INVPD_INVIT" rel-entity-name="InventoryItem">
         <key-map field-name="inventoryItemId"/>
+      </relation>
+    </entity>
+    <entity entity-name="WorkEffortNote"
+            package-name="org.ofbiz.commonapp.workeffort.workeffort"
+            title="Work Effort Note Entity">
+      <field name="workEffortId" type="id-ne"></field>
+      <field name="noteId" type="id-ne"></field>
+      <prim-key field="workEffortId"/>
+      <prim-key field="noteId"/>
+      <relation type="one" fk-name="WKEFF_NTE_WEFF" rel-entity-name="WorkEffort">
+        <key-map field-name="workEffortId"/>
+      </relation>
+      <relation type="one" fk-name="WKEFF_NTE_NOTE" rel-entity-name="NoteData">
+        <key-map field-name="noteId"/>
       </relation>
     </entity>
     <view-entity entity-name="WorkEffortPartyAssignByGroup"

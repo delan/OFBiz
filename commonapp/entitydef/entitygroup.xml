@@ -741,6 +741,7 @@
     <entity-group group="org.ofbiz.commonapp" entity="WorkEffortGoodStandard" />
     <entity-group group="org.ofbiz.commonapp" entity="WorkEffortInventoryAssign" />
     <entity-group group="org.ofbiz.commonapp" entity="WorkEffortInventoryProduced" />
+    <entity-group group="org.ofbiz.commonapp" entity="WorkEffortNote" />
     <entity-group group="org.ofbiz.commonapp" entity="WorkEffortPartyAssignByGroup" />
     <entity-group group="org.ofbiz.commonapp" entity="WorkEffortPartyAssignByRole" />
     <entity-group group="org.ofbiz.commonapp" entity="WorkEffortPartyAssignment" />
