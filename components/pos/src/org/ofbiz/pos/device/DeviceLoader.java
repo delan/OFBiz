@@ -1,5 +1,5 @@
 /*
- * $Id: DeviceLoader.java,v 1.1 2004/08/06 20:55:10 ajzeneski Exp $
+ * $Id: DeviceLoader.java,v 1.2 2004/08/06 23:45:31 ajzeneski Exp $
  *
  * Copyright (c) 2004 The Open For Business Project - www.ofbiz.org
  *
@@ -31,7 +31,7 @@ import org.ofbiz.base.util.Debug;
 /**
  * 
  * @author     <a href="mailto:jaz@ofbiz.org">Andy Zeneski</a>
- * @version    $Revision: 1.1 $
+ * @version    $Revision: 1.2 $
  * @since      3.2
  */
 public class DeviceLoader {
@@ -63,6 +63,13 @@ public class DeviceLoader {
         // load the check reader
 
         // load the msr
+        msr = new Msr("KeyboardMsr", -1, screen);
+        try {
+            msr.open();
+        } catch (jpos.JposException jpe) {
+            Debug.logError(jpe, "JPOS Exception", module);
+            throw new GeneralException(jpe.getOrigException());
+        }
 
         // load the keyboard
 
