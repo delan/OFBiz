@@ -1,5 +1,5 @@
 /*
- * $Id: EntityDataServices.java,v 1.13 2004/05/17 19:03:30 ajzeneski Exp $
+ * $Id: EntityDataServices.java,v 1.14 2004/05/17 22:32:43 ajzeneski Exp $
  *
  * Copyright (c) 2001-2003 The Open For Business Project - www.ofbiz.org
  *
@@ -49,7 +49,7 @@ import java.net.URISyntaxException;
  * Entity Data Import/Export Services
  *
  * @author     <a href="mailto:jaz@ofbiz.org">Andy Zeneski</a>
- * @version    $Revision: 1.13 $
+ * @version    $Revision: 1.14 $
  * @since      2.1
  */
 public class EntityDataServices {
@@ -342,6 +342,8 @@ public class EntityDataServices {
         }
 
         String groupName = (String) context.get("groupName");
+        Boolean fixSizes = (Boolean) context.get("fixColSizes");
+        if (fixSizes == null) fixSizes = new Boolean(false);
         List messages = new ArrayList();
 
         String helperName = delegator.getGroupHelperName(groupName);
@@ -351,7 +353,17 @@ public class EntityDataServices {
 
         Iterator modelEntityNameIter = null;
 
-        // step 1 - remove FKs
+        // step 1 - remove FK indices
+        Debug.logImportant("Removing all foreign key indices", module);
+        modelEntityNameIter = modelEntityNames.iterator();
+        while (modelEntityNameIter.hasNext()) {
+      	    String modelEntityName = (String) modelEntityNameIter.next();
+      	    ModelEntity modelEntity = (ModelEntity) modelEntities.get(modelEntityName);
+            dbUtil.deleteForeignKeyIndices(modelEntity, messages);
+        }
+        modelEntityNameIter = null;
+
+        // step 2 - remove FKs
         Debug.logImportant("Removing all foreign keys", module);
         modelEntityNameIter = modelEntityNames.iterator();
         while (modelEntityNameIter.hasNext()) {
@@ -361,7 +373,7 @@ public class EntityDataServices {
         }
         modelEntityNameIter = null;
 
-        // step 2 - remove PKs
+        // step 3 - remove PKs
         Debug.logImportant("Removing all primary keys", module);
         modelEntityNameIter = modelEntityNames.iterator();
         while (modelEntityNameIter.hasNext()) {
@@ -371,17 +383,31 @@ public class EntityDataServices {
         }
         modelEntityNameIter = null;
 
-        // step 3 - remove indexes
-        Debug.logImportant("Removing all indexes", module);
+        // step 4 - remove declared indices
+        Debug.logImportant("Removing all declared indices", module);
         modelEntityNameIter = modelEntityNames.iterator();
         while (modelEntityNameIter.hasNext()) {
             String modelEntityName = (String) modelEntityNameIter.next();
             ModelEntity modelEntity = (ModelEntity) modelEntities.get(modelEntityName);
-            messages.add(dbUtil.deleteDeclaredIndices(modelEntity));
+            dbUtil.deleteDeclaredIndices(modelEntity, messages);
         }
         modelEntityNameIter = null;
 
-        // step 4 - create PKs
+        // step 5 - repair field sizes
+        if (fixSizes.booleanValue()) {
+            Debug.logImportant("Updating column field size changes", module);
+            List fieldsWrongSize = new LinkedList();
+            dbUtil.checkDb(modelEntities, fieldsWrongSize, messages, true, true);
+            if (fieldsWrongSize.size() > 0) {
+                dbUtil.repairColumnSizeChanges(modelEntities, fieldsWrongSize, messages);
+            } else {
+                String thisMsg = "No field sizes to update";
+                messages.add(thisMsg);
+                Debug.logImportant(thisMsg, module);
+            }
+        }
+
+        // step 6 - create PKs
         Debug.logImportant("Creating all primary keys", module);
         modelEntityNameIter = modelEntityNames.iterator();
         while (modelEntityNameIter.hasNext()) {
@@ -391,17 +417,17 @@ public class EntityDataServices {
         }
         modelEntityNameIter = null;
 
-        // step 5 - create FK indexes
-        Debug.logImportant("Creating all foreign key indexes", module);
+        // step 7 - create FK indices
+        Debug.logImportant("Creating all foreign key indices", module);
         modelEntityNameIter = modelEntityNames.iterator();
         while (modelEntityNameIter.hasNext()) {
       	    String modelEntityName = (String) modelEntityNameIter.next();
       	    ModelEntity modelEntity = (ModelEntity) modelEntities.get(modelEntityName);
-            messages.add(dbUtil.createDeclaredIndices(modelEntity));
+            dbUtil.createForeignKeyIndices(modelEntity, messages);
         }
         modelEntityNameIter = null;
 
-        // step 6 - create FKs
+        // step 8 - create FKs
         Debug.logImportant("Creating all foreign keys", module);
         modelEntityNameIter = modelEntityNames.iterator();
         while (modelEntityNameIter.hasNext()) {
@@ -411,7 +437,17 @@ public class EntityDataServices {
         }
         modelEntityNameIter = null;
 
-        // step 7 - checkdb
+        // step 8 - create FKs
+        Debug.logImportant("Creating all declared indices", module);
+        modelEntityNameIter = modelEntityNames.iterator();
+        while (modelEntityNameIter.hasNext()) {
+      	    String modelEntityName = (String) modelEntityNameIter.next();
+      	    ModelEntity modelEntity = (ModelEntity) modelEntities.get(modelEntityName);
+            dbUtil.createDeclaredIndices(modelEntity, messages);
+        }
+        modelEntityNameIter = null;
+
+        // step 8 - checkdb
         Debug.logImportant("Running DB check with add missing enabled", module);
         dbUtil.checkDb(modelEntities, messages, true);
         

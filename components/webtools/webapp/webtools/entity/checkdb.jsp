@@ -51,6 +51,12 @@ if(security.hasPermission("ENTITY_MAINT", session)) {
 
     if ("checkupdatetables".equals(option)) {
         dbUtil.checkDb(modelEntities, messages, addMissing);
+    } else if ("checkandrepair".equals(option)) {
+        List fieldsToRepair = new ArrayList();
+        dbUtil.checkDb(modelEntities, fieldsToRepair, messages, false, addMissing);
+        if (fieldsToRepair.size() > 0) {
+            dbUtil.repairColumnSizeChanges(modelEntities, fieldsToRepair, messages);
+        }
     } else if ("removetables".equals(option)) {
         Iterator modelEntityNameIter = modelEntityNames.iterator();
         while (modelEntityNameIter.hasNext()) {
@@ -77,6 +83,7 @@ if(security.hasPermission("ENTITY_MAINT", session)) {
         while (modelEntityNameIter.hasNext()) {
       	    String modelEntityName = (String) modelEntityNameIter.next();
       	    ModelEntity modelEntity = (ModelEntity) modelEntities.get(modelEntityName);
+            dbUtil.createForeignKeyIndices(modelEntity, messages);
             dbUtil.createForeignKeys(modelEntity, modelEntities, messages);
         }
     } else if ("removefks".equals(option)) {
@@ -84,7 +91,22 @@ if(security.hasPermission("ENTITY_MAINT", session)) {
         while (modelEntityNameIter.hasNext()) {
       	    String modelEntityName = (String) modelEntityNameIter.next();
       	    ModelEntity modelEntity = (ModelEntity) modelEntities.get(modelEntityName);
+            dbUtil.deleteForeignKeyIndices(modelEntity, messages);
             dbUtil.deleteForeignKeys(modelEntity, modelEntities, messages);
+        }
+    } else if ("createidx".equals(option)) {
+        Iterator modelEntityNameIter = modelEntityNames.iterator();
+        while (modelEntityNameIter.hasNext()) {
+            String modelEntityName = (String) modelEntityNameIter.next();
+      	    ModelEntity modelEntity = (ModelEntity) modelEntities.get(modelEntityName);
+            dbUtil.createDeclaredIndices(modelEntity, messages);
+        }
+    } else if ("removeidx".equals(option)) {
+        Iterator modelEntityNameIter = modelEntityNames.iterator();
+        while (modelEntityNameIter.hasNext()) {
+            String modelEntityName = (String) modelEntityNameIter.next();
+      	    ModelEntity modelEntity = (ModelEntity) modelEntities.get(modelEntityName);
+            dbUtil.deleteDeclaredIndices(modelEntity, messages);
         }
     }
     miter = messages.iterator();
@@ -104,6 +126,12 @@ if(security.hasPermission("ENTITY_MAINT", session)) {
   Group Name: <input type=text class="inputBox" name="groupName" value="<%=groupName!=null?groupName:"org.ofbiz"%>" size="40"/>
   <input type="submit" value="Check and Add Missing"/>
 </form>
+<form method=post action="<%=response.encodeURL(controlPath + "/view/checkdb")%>">
+  <input type="hidden" name="option" value="checkandrepair"/>
+  <input type="hidden" name="addMissing" value="true"/>
+  Group Name: <input type=text class="inputBox" name="groupName" value="<%=groupName!=null?groupName:"org.ofbiz"%>" size="40"/>
+  <input type="submit" value="Check, Add Missing and Repair Column Sizes"/>
+</form>
 
 <p>NOTE: Use the following at your own risk; make sure you know what you are doing before running these...</p>
 
@@ -122,6 +150,18 @@ if(security.hasPermission("ENTITY_MAINT", session)) {
 </form>
 <form method=post action="<%=response.encodeURL(controlPath + "/view/checkdb")%>">
   <input type="hidden" name="option" value="removepks"/>
+  Group Name: <input type=text class="inputBox" name="groupName" value="<%=groupName!=null?groupName:"org.ofbiz"%>" size="40"/>
+  <input type="submit" value="Remove"/>
+</form>
+
+<H3>Create/Remove All Declared Indices</H3>
+<form method=post action="<%=response.encodeURL(controlPath + "/view/checkdb")%>">
+  <input type="hidden" name="option" value="createidx"/>
+  Group Name: <input type=text class="inputBox" name="groupName" value="<%=groupName!=null?groupName:"org.ofbiz"%>" size="40"/>
+  <input type="submit" value="Create"/>
+</form>
+<form method=post action="<%=response.encodeURL(controlPath + "/view/checkdb")%>">
+  <input type="hidden" name="option" value="removeidx"/>
   Group Name: <input type=text class="inputBox" name="groupName" value="<%=groupName!=null?groupName:"org.ofbiz"%>" size="40"/>
   <input type="submit" value="Remove"/>
 </form>

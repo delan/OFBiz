@@ -88,6 +88,7 @@
             <check-permission permission="ENTITY_MAINT"/>
         </required-permissions>
         <attribute name="groupName" type="String" mode="IN" optional="false"/>
+        <attribute name="fixColSizes" type="Boolean" mode="IN" optional="true"/>
         <attribute name="messages" type="List" mode="OUT" optional="false"/>
     </service>
 
