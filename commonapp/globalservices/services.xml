@@ -81,7 +81,8 @@
     <service name="changeActivityState" engine="java"
     location="org.ofbiz.core.workflow.WorkflowServices" invoke="changeActivityState">
         <description>Manually change the state of a workflow activity</description>
-        <attribute name="workEffortId" type="String" mode="IN"/>     
+        <attribute name="workEffortId" type="String" mode="IN"/> 
+        <attribute name="newState" type="String" mode="IN"/>    
     </service>
     <service name="acceptAssignment" engine="java"
     location="org.ofbiz.core.workflow.WorkflowServices" invoke="acceptAssignment">
