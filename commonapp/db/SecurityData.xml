@@ -38,6 +38,7 @@
   <SecurityPermission description="ALL operations in the Party Manager." permissionId="PARTYMGR_ADMIN"/>
 
   <SecurityPermission description="View operations in the Order Manager." permissionId="ORDERMGR_VIEW"/>
+  <SecurityPermission description="Limited view operations in the Order Manager." permissionId="ORDERMGR_VIEW_ROLE"/>
   <SecurityPermission description="Create operations in the Order Manager." permissionId="ORDERMGR_CREATE"/>
   <SecurityPermission description="Update operations in the Order Manager." permissionId="ORDERMGR_UPDATE"/>
   <SecurityPermission description="Delete operations in the Order Manager." permissionId="ORDERMGR_DELETE"/>
@@ -78,14 +79,18 @@
   <SecurityPermission description="ALL operations in the Accounting Manager." permissionId="ACCOUNTING_ADMIN"/>
 
   <SecurityPermission description="View operations in the Facility Manager." permissionId="FACILITY_VIEW"/>
+  <SecurityPermission description="Limited view operations in the Facility Manager." permissionId="FACILITY_VIEW_ROLE"/>
   <SecurityPermission description="Create operations in the Facility Manager." permissionId="FACILITY_CREATE"/>
   <SecurityPermission description="Update operations in the Facility Manager." permissionId="FACILITY_UPDATE"/>
+  <SecurityPermission description="Limited update operations in the Facility Manager." permissionId="FACILITY_UPDATE_ROLE"/>
   <SecurityPermission description="Delete operations in the Facility Manager." permissionId="FACILITY_DELETE"/>
   <SecurityPermission description="ALL operations in the Facility Manager." permissionId="FACILITY_ADMIN"/>
 
   <SecurityPermission description="View operations in the Marketing Manager." permissionId="MARKETING_VIEW"/>
+  <SecurityPermission description="Limited view operations in the Marketing Manager." permissionId="MARKETING_VIEW_ROLE"/>
   <SecurityPermission description="Create operations in the Marketing Manager." permissionId="MARKETING_CREATE"/>
   <SecurityPermission description="Update operations in the Marketing Manager." permissionId="MARKETING_UPDATE"/>
+  <SecurityPermission description="Limited update operations in the Marketing Manager." permissionId="MARKETING_UPDATE_ROLE"/>
   <SecurityPermission description="Delete operations in the Marketing Manager." permissionId="MARKETING_DELETE"/>
   <SecurityPermission description="ALL operations in the Marketing Manager." permissionId="MARKETING_ADMIN"/>
 
