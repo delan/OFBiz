@@ -1,5 +1,5 @@
 /*
- * $Id: ValueLinkServices.java,v 1.3 2004/02/28 19:26:48 ajzeneski Exp $
+ * $Id: ValueLinkServices.java,v 1.4 2004/03/02 19:59:23 ajzeneski Exp $
  *
  * Copyright (c) 2003 The Open For Business Project - www.ofbiz.org
  *
@@ -41,7 +41,7 @@ import javax.transaction.xa.XAException;
  * ValueLinkServices - Integration with ValueLink Gift Cards
  *
  * @author     <a href="mailto:jaz@ofbiz.org">Andy Zeneski</a>
- * @version    $Revision: 1.3 $
+ * @version    $Revision: 1.4 $
  * @since      3.0
  */
 public class ValueLinkServices {
@@ -741,6 +741,29 @@ public class ValueLinkServices {
         Map result = ServiceUtil.returnSuccess();
         if (redeemResult != null) {
             Boolean processResult = (Boolean) redeemResult.get("processResult");
+            // confirm the amount redeemed; since VL does not error in insufficient funds
+            if (processResult.booleanValue()) {
+                Double previous = (Double) redeemResult.get("previousAmount");
+                if (previous == null) previous = new Double(0);
+                Double current = (Double) redeemResult.get("amount");
+                if (current == null) current = new Double(0);
+                double redeemed = previous.doubleValue() - current.doubleValue();
+                if (redeemed < amount.doubleValue()) {
+                    // we didn't redeem enough void the transaction and return false
+                    Map voidResult = null;
+                    try {
+                        voidResult = dispatcher.runSync("voidRedeemGiftCard", redeemCtx);
+                    } catch (GenericServiceException e) {
+                        Debug.logError(e, module);
+                    }
+                    if (ServiceUtil.isError(voidResult)) {
+                        return voidResult;
+                    }
+                    processResult = new Boolean(false);
+                    amount = new Double(redeemed);
+                    result.put("authMessage", "Gift card did not contain enough funds");
+                }
+            }
             result.put("processAmount", amount);
             result.put("authFlag", redeemResult.get("responseCode"));
             result.put("authResult", processResult);
