@@ -1,5 +1,5 @@
 /*
- * $Id: ControlEventListener.java,v 1.2 2003/09/14 05:36:47 jonesde Exp $
+ * $Id: ControlEventListener.java,v 1.3 2004/05/22 20:13:41 ajzeneski Exp $
  *
  *  Copyright (c) 2001-2003 The Open For Business Project - www.ofbiz.org
  *
@@ -25,6 +25,7 @@ package org.ofbiz.content.webapp.control;
 
 import java.sql.Timestamp;
 import java.util.Map;
+import java.util.Enumeration;
 
 import javax.servlet.http.HttpSession;
 import javax.servlet.http.HttpSessionEvent;
@@ -42,7 +43,7 @@ import org.ofbiz.entity.serialize.XmlSerializer;
  * HttpSessionListener that gathers and tracks various information and statistics
  *
  * @author     <a href="mailto:jonesde@ofbiz.org">David E. Jones</a>
- * @version    $Revision: 1.2 $
+ * @version    $Revision: 1.3 $
  * @since      2.0
  */
 public class ControlEventListener implements HttpSessionListener {
@@ -61,6 +62,11 @@ public class ControlEventListener implements HttpSessionListener {
         // NOTE: don't create the visit here, just let the control servlet do it; GenericValue visit = VisitHandler.getVisit(session);
 
         countCreateSession();
+
+        // property setting flag for logging stats
+        if (System.getProperty("org.ofbiz.log.session.stats") != null) {
+            session.setAttribute("org.ofbiz.log.session.stats", "Y");
+        }
 
         Debug.logInfo("Creating session: " + session.getId(), module);
     }
@@ -99,8 +105,50 @@ public class ControlEventListener implements HttpSessionListener {
         }
 
         countDestroySession();
-
         Debug.logInfo("Destroying session: " + session.getId(), module);
+        this.logStats(session, visit);
+    }
+
+    public void logStats(HttpSession session, GenericValue visit) {
+        if (Debug.verboseOn() || session.getAttribute("org.ofbiz.log.session.stats") != null) {
+            Debug.log("<===================================================================>", module);
+            Debug.log("Session ID     : " + session.getId(), module);
+            Debug.log("Created Time   : " + session.getCreationTime(), module);
+            Debug.log("Last Access    : " + session.getLastAccessedTime(), module);
+            Debug.log("Max Inactive   : " + session.getMaxInactiveInterval(), module);
+            Debug.log("--------------------------------------------------------------------", module);
+            Debug.log("Total Sessions : " + ControlEventListener.getTotalActiveSessions(), module);
+            Debug.log("Total Active   : " + ControlEventListener.getTotalActiveSessions(), module);
+            Debug.log("Total Passive  : " + ControlEventListener.getTotalPassiveSessions(),  module);
+            Debug.log("** note : this session has been counted as destroyed.", module);
+            Debug.log("--------------------------------------------------------------------", module);
+            Debug.log("Visit ID       : " + visit.getString("visitId"), module);
+            Debug.log("Party ID       : " + visit.getString("partyId"), module);
+            Debug.log("Client IP      : " + visit.getString("clientIpAddress"), module);
+            Debug.log("Client Host    : " + visit.getString("clientHostName"), module);
+            Debug.log("Client User    : " + visit.getString("clientUser"), module);
+            Debug.log("WebApp         : " + visit.getString("webappName"), module);
+            Debug.log("Locale         : " + visit.getString("initialLocale"), module);
+            Debug.log("UserAgent      : " + visit.getString("initialUserAgent"), module);
+            Debug.log("Referrer       : " + visit.getString("initialReferrer"), module);
+            Debug.log("Initial Req    : " + visit.getString("initialRequest"), module);
+            Debug.log("Visit From     : " + visit.getString("fromDate"), module);
+            Debug.log("Visit Thru     : " + visit.getString("thruDate"), module);
+            Debug.log("--------------------------------------------------------------------", module);
+            Debug.log("--- Start Session Attributes: ---", module);
+            Enumeration sesNames = null;
+            try {
+                sesNames = session.getAttributeNames();
+            } catch (IllegalStateException e) {
+                Debug.log("Cannot get session attributes : " + e.getMessage(), module);
+            }
+            while (sesNames != null && sesNames.hasMoreElements()) {
+                String attName = (String) sesNames.nextElement();
+                Debug.log(attName + ":" + session.getAttribute(attName), module);
+            }
+            Debug.log("--- End Session Attributes ---", module);
+            Debug.log("<===================================================================>", module);
+        }
     }
 
     public static long getTotalActiveSessions() {
