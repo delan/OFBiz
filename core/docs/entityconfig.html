@@ -1,0 +1,86 @@
+<html>
+<head>
+<title>Open For Business Entity Engine Configuration Guide</title>
+</head>
+
+<body>
+
+<h2 align="center">The Open For Business Project: Entity Engine Configuration Guide</h2>
+
+<br>Written By: David E. Jones
+<br>Email: <a href="mailto:jonesde@ofbiz.org">jonesde@ofbiz.org</a>
+<br>Open For Business Site: <a href="http://www.ofbiz.org/">http://www.ofbiz.org</a>
+<br>
+<A href="http://sf.net/projects/ofbiz"> <IMG src="http://sourceforge.net/sflogo.php?group_id=27173" border="0" alt="SourceForge Logo"></A> 
+<br>
+Founders and Lead Architects: David E. Jones &amp; Andy Zeneski <br>
+Last Updated: February 9, 2002<br>
+$Id$ <br>
+<hr>
+<br>
+<h3>Table of Contents</h3>
+
+<ul>
+  <li><a href="#Related_Documents">Related Documents</a>
+  <li><a href="#Introduction">Introduction</a>
+  <li><a href="#JTA_Setup">JTA Setup</a>
+</ul>
+
+<hr>
+
+<h3><a name="Related_Documents">Related Documents:</a></h3>
+<hr>
+<ul>
+  <li><a href="coreconfig.html">Core Configuration Guide</a></li>
+  <li><a href="entity.html">Entity Engine Guide</a></li>
+</ul>
+
+<hr>
+<h3><a name="Introduction">Introduction</a></h3>
+<hr>
+
+<p>This document describes the configuration of the Entity Engine. It starts
+with an introduction to general ideas and then goes through each part of the
+entityengine.properties file and explains the available properties and their 
+usage. The entityengine.properties file used for the OFBiz applications has
+examples of a number of different options and is located in <b>ofbiz/commonapp/etc/entityengine.properties</b>.</p>
+
+<p>The configuration of the Entity Engine is done through a simple properties
+file called <b>entityengine.properties</b> that must exist somewhere on the classpath. This
+properties file is used to define parameters for persistence servers such as EJB
+server parameters or JDBC server parameters. It is also used to specify which
+XML entity, entity group, and field type model files will be used for that server.
+The default file for the OFBiz distribution can be found in <b>ofbiz/commonapp/etc/entityengine.properties</b>.</p>
+
+<p>Each application that uses the Entity Engine does so through a <b>GenericDelegator</b>
+instance. The delegator name must be passed to the static factory method which
+is then passed to the constructor if a new instance is needed. This delegator
+name is used to look up settings for that delegator in the <b>entityengine.properties</b>
+file. Each delegator uses an entity model XML file and an entity group XML file
+which specifies a group name for each named entity in the entity model file. The
+<b>entityengine.properties</b> file contains the settings which map each group name
+to a <b>GenericHelper</b> for that group. <b>GenericHelper</b> is an interface
+that must be implemented for each type of data source (ie: JDBC, EJB, SOAP,
+HTTP, et cetera).&nbsp;</p>
+
+<p>The setting for each named <b>GenericHelper</b> are specified in the <b>entityengine.properties</b>
+file. For a JDBC helper these would include database connection parameters such
+as either the JNDI data source name or the JDBC parameters including the driver
+name, the JDBC URI, and the username and password for the database. An EJB
+helper would contain the context provider URL, the initial context factory, and
+the URL package prefixes.</p>
+
+<p>The <b>GenericDelegator</b> is the primary access method for Entity Engine
+services. Each service request is dispatched to the helper that corresponds to
+the entity that the service is requested for according to the group name of the
+entity specified in the entity group XML file and the helper for that group
+specified in the <b>entityengine.properties</b> file. The default entity group XML
+file for the OFBiz entity model can be found in <b>ofbiz/commonapp/entitydef/entitygroup.xml</b>.</p>
+
+<hr>
+<h3><a name="JTA_Setup">JTA Setup</a></h3>
+<hr>
+<p>
+
+</body>
+</html>
