@@ -84,7 +84,7 @@
           <td>
   <ofbiz:if name="cartIter">
     <FORM METHOD="POST" ACTION="<ofbiz:url>/modifycart</ofbiz:url>" name='cartform' style='margin: 0;'>
-      <table width='100%' CELLSPACING="0" CELLPADDING="4" BORDER="0">
+      <table width='100%' cellspacing="0" cellpadding="1" border="0">
         <TR> 
           <TD NOWRAP><div class='tabletext'><b>Product</b></div></TD>
           <TD NOWRAP align=center><div class='tabletext'><b>Quantity</b></div></TD>
@@ -192,7 +192,7 @@
         <table width='100%' border='0' cellspacing='0' cellpadding='0' class='boxbottom'>
           <tr>
             <td>
-    <table width='100%' CELLSPACING="0" CELLPADDING="4" BORDER="0">
+    <table width='100%' cellspacing="0" cellpadding="1" border="0">
       <%int listIndex = 1;%>
       <!-- random complementary products -->
       <ofbiz:iterator name="product" property="associatedProducts">
