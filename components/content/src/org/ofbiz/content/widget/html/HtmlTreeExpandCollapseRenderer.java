@@ -40,13 +40,13 @@ import org.ofbiz.content.widget.tree.ModelTree;
  * Widget Library - HTML Form Renderer implementation
  *
  * @author     <a href="mailto:byersa@automationgroups.com">Al Byers</a>
- * @version    $Rev:$
+ * @version    $Rev$
  * @since      3.1
  */
 public class HtmlTreeExpandCollapseRenderer extends HtmlTreeRenderer {
 
-    protected List targetNodeTrail = null;
-    protected List currentNodeTrail = null;
+    //protected List targetNodeTrail = null;
+    //protected List currentNodeTrail = null;
    
     public static final String module = HtmlTreeExpandCollapseRenderer.class.getName(); 
 
@@ -71,25 +71,21 @@ public class HtmlTreeExpandCollapseRenderer extends HtmlTreeRenderer {
         writer.write(">");
 
         String contentId = (String)context.get("contentId");
+        /*
         if (targetNodeTrail == null) {
-            String targetNodeTrailCsv = (String)context.get("targetNodeTrailCsv");
-            if (UtilValidate.isNotEmpty(targetNodeTrailCsv))
-                targetNodeTrail = StringUtil.split(targetNodeTrailCsv, ",");
-            else
-                targetNodeTrail = new ArrayList();
+            targetNodeTrail = node.getModelTree().getTrailList();
     
             Debug.logInfo("HtmlTreeExpandCollapseRenderer, targetNodeTrail(2):" + targetNodeTrail, module);
             currentNodeTrail = new ArrayList();
         }
+        */
         boolean hasChildren = node.hasChildren(context);
             Debug.logInfo("HtmlTreeExpandCollapseRenderer, hasChildren(1):" + hasChildren, module);
 
         // check to see if this node needs to be expanded.
         if (hasChildren) {
-            Debug.logInfo("HtmlTreeExpandCollapseRenderer, targetNodeTrail(1):" + targetNodeTrail, module);
-            Debug.logInfo("HtmlTreeExpandCollapseRenderer, currentNodeTrail(1):" + currentNodeTrail, module);
-            Debug.logInfo("HtmlTreeExpandCollapseRenderer, contentId(1):" + contentId, module);
             String targetContentId = null;
+            List targetNodeTrail = node.getModelTree().getTrailList();
             if (depth < targetNodeTrail.size()) {
                 targetContentId = (String)targetNodeTrail.get(depth);
             }
@@ -103,38 +99,48 @@ public class HtmlTreeExpandCollapseRenderer extends HtmlTreeRenderer {
             expandCollapseLink.setStyle(expandCollapseStyle);
             expandCollapseLink.setImage(expandCollapseImage);
             //String currentNodeTrailCsv = (String)context.get("currentNodeTrailCsv");
-            String currentNodeTrailCsv = null;
+            String currentNodeTrailPiped = null;
+            List currentNodeTrail = node.getModelTree().getCurrentNodeTrail();
     
             if (targetContentId == null || !targetContentId.equals(contentId)) {
                 context.put("processChildren", new Boolean(false));
                 //expandCollapseLink.setText("&nbsp;+&nbsp;");
-                currentNodeTrail.add(contentId);
-                currentNodeTrailCsv = StringUtil.join(currentNodeTrail, ",");
-                context.put("currentNodeTrailCsv", currentNodeTrailCsv);
+                currentNodeTrailPiped = StringUtil.join(currentNodeTrail, "|");
+                context.put("currentNodeTrailPiped", currentNodeTrailPiped);
+                //context.put("currentNodeTrailCsv", currentNodeTrailCsv);
                 expandCollapseImage.setSrc("/images/expand.gif");
-                expandCollapseLink.setTarget("/ViewOutline?docRootContentId=${docRootContentId}&targetNodeTrailCsv=${currentNodeTrailCsv}");
+                String target = node.getModelTree().getExpandCollapseRequest(context);
+                String trailName = node.getModelTree().getTrailName(context);
+                target += "?" + trailName + "=" + currentNodeTrailPiped;
+                //expandCollapseLink.setTarget("/ViewOutline?docRootContentId=${docRootContentId}&targetNodeTrailCsv=${currentNodeTrailCsv}");
+                expandCollapseLink.setTarget(target);
             } else {
                 context.put("processChildren", new Boolean(true));
                 //expandCollapseLink.setText("&nbsp;-&nbsp;");
-                currentNodeTrailCsv = StringUtil.join(currentNodeTrail, ",");
-                context.put("currentNodeTrailCsv", currentNodeTrailCsv);
+                String lastContentId = (String)currentNodeTrail.remove(currentNodeTrail.size() - 1);
+                currentNodeTrailPiped = StringUtil.join(currentNodeTrail, "|");
+                context.put("currentNodeTrailPiped", currentNodeTrailPiped);
+                //context.put("currentNodeTrailCsv", currentNodeTrailCsv);
                 expandCollapseImage.setSrc("/images/collapse.gif");
-                expandCollapseLink.setTarget("/ViewOutline?docRootContentId=${docRootContentId}&targetNodeTrailCsv=${currentNodeTrailCsv}");
+                String target = node.getModelTree().getExpandCollapseRequest(context);
+                String trailName = node.getModelTree().getTrailName(context);
+                target += "?" + trailName + "=" + currentNodeTrailPiped;
+                expandCollapseLink.setTarget(target);
                 // add it so it can be remove in renderNodeEnd
-                currentNodeTrail.add(contentId);
+                currentNodeTrail.add(lastContentId);
             }
             renderLink( writer, context, expandCollapseLink);
         } else {
                 writer.write("&nbsp;");
                 context.put("processChildren", new Boolean(false));
-                currentNodeTrail.add(contentId);
+                //currentNodeTrail.add(contentId);
         }
 
         return;
     }
 
     public void renderNodeEnd(Writer writer, Map context, ModelTree.ModelNode node) throws IOException {
-        currentNodeTrail.remove(currentNodeTrail.size() - 1);
+        //currentNodeTrail.remove(currentNodeTrail.size() - 1);
         writer.write("</div>");
         return;
     }

@@ -36,6 +36,7 @@ import java.util.Map;
 import javax.xml.parsers.ParserConfigurationException;
 
 import org.ofbiz.base.util.Debug;
+import org.ofbiz.base.util.StringUtil;
 import org.ofbiz.base.util.UtilFormatOut;
 import org.ofbiz.base.util.UtilValidate;
 import org.ofbiz.base.util.UtilXml;
@@ -51,6 +52,7 @@ import org.ofbiz.entity.util.EntityListIterator;
 import org.ofbiz.service.LocalDispatcher;
 import org.w3c.dom.Element;
 import org.xml.sax.SAXException;
+import javax.servlet.http.HttpServletRequest;
 
 //import com.clarkware.profiler.Profiler;
 
@@ -73,6 +75,10 @@ public class ModelTree {
     protected Map nodeMap = new HashMap();
     protected GenericDelegator delegator;
     protected LocalDispatcher dispatcher;
+    protected FlexibleStringExpander expandCollapseRequestExdr;
+    protected FlexibleStringExpander trailNameExdr;
+    protected List trail = new ArrayList();
+    protected List currentNodeTrail;
     
 // ===== CONSTRUCTORS =====
     /** Default Constructor */
@@ -84,6 +90,8 @@ public class ModelTree {
         this.rootNodeName = treeElement.getAttribute("root-node-name");
         this.renderStyle = UtilFormatOut.checkEmpty(treeElement.getAttribute("render-style"), "simple");
         this.defaultWrapStyleExdr = new FlexibleStringExpander(treeElement.getAttribute("default-wrap-style"));
+        this.expandCollapseRequestExdr = new FlexibleStringExpander(treeElement.getAttribute("expand-collapse-request"));
+        this.trailNameExdr = new FlexibleStringExpander(UtilFormatOut.checkEmpty(treeElement.getAttribute("trail-name"), "trail"));
         this.delegator = delegator;
         this.dispatcher = dispatcher;
 
@@ -115,6 +123,32 @@ public class ModelTree {
         return this.defaultWrapStyleExdr.expandString(context);
     }
     
+    public String getExpandCollapseRequest(Map context) {
+        String expColReq = this.expandCollapseRequestExdr.expandString(context);
+        if (UtilValidate.isEmpty(expColReq)) {
+        	HttpServletRequest request = (HttpServletRequest)context.get("request");
+            String s1 = request.getRequestURI();
+            int pos = s1.lastIndexOf("/");
+            if (pos >= 0)
+            	expColReq = s1.substring(pos + 1);
+            else 
+                expColReq = s1;
+        }
+        return expColReq;
+    }
+    
+    public String getTrailName(Map context) {
+        return this.trailNameExdr.expandString(context);
+    }
+    
+    public List getTrailList() {
+    	return trail;
+    }
+    
+    public List getCurrentNodeTrail() {
+    	return currentNodeTrail;
+    }
+    
 
     /**
      * Renders this tree to a String, i.e. in a text format, as defined with the
@@ -133,6 +167,23 @@ public class ModelTree {
      */
     public void renderTreeString(StringBuffer buf, Map context, TreeStringRenderer treeStringRenderer) {
         ModelNode node = (ModelNode)nodeMap.get(rootNodeName);
+        currentNodeTrail = new ArrayList();
+        //Map requestParameters = (Map)context.get("requestParameters");
+        //String treeString = (String)requestParameters.get("trail");
+        String trailName = trailNameExdr.expandString(context);
+        String treeString = (String)context.get(trailName);
+        if (UtilValidate.isEmpty(treeString)) {
+        	Map parameters = (Map)context.get("parameters");
+        	treeString = (String)parameters.get(trailName);
+        }
+        if (UtilValidate.isNotEmpty(treeString)) {
+        	trail = StringUtil.split(treeString, "|");
+            if (trail == null || trail.size() == 0)
+                throw new RuntimeException("Tree 'trail' value is empty.");
+            
+            context.put("rootEntityId", trail.get(0));
+            context.put("trail", trail);
+        }
         StringWriter writer = new StringWriter();
         try {
             node.renderNodeString(writer, context, treeStringRenderer, 0, true);
@@ -252,6 +303,10 @@ public class ModelTree {
             context.put("processChildren", new Boolean(true));
             // this action will usually obtain the "current" entity
             ModelTreeAction.runSubActions(this.actions, context);
+            String contentId = (String)context.get("contentId");
+            modelTree.currentNodeTrail.add(contentId);
+            String currentNodeTrailPiped = StringUtil.join(modelTree.currentNodeTrail,"|");
+            context.put("currentNodeTrailPiped", currentNodeTrailPiped);
             treeStringRenderer.renderNodeBegin( writer, context, this, depth, isLast);
                     //if (Debug.infoOn()) Debug.logInfo(" context:" + context.entrySet(), module);
          
@@ -302,6 +357,7 @@ public class ModelTree {
 
 
             treeStringRenderer.renderNodeEnd(writer, context,  this);
+            modelTree.currentNodeTrail.remove(modelTree.currentNodeTrail.size() - 1);
         }
 
         public boolean hasChildren(Map context) {
