@@ -224,6 +224,7 @@
   <Enumeration description="Party Classification" enumCode="PARTY_CLASS" enumId="PRIP_PARTY_CLASS" sequenceId="07" enumTypeId="PROD_PRICE_IN_PARAM"/>
   <Enumeration description="Role Type" enumCode="ROLE_TYPE" enumId="PRIP_ROLE_TYPE" sequenceId="08" enumTypeId="PROD_PRICE_IN_PARAM"/>
   <Enumeration description="List Price" enumCode="LIST_PRICE" enumId="PRIP_LIST_PRICE" sequenceId="09" enumTypeId="PROD_PRICE_IN_PARAM"/>
+  <Enumeration description="Currency UomId" enumCode="CURRENCY_UOMID" enumId="PRIP_CURRENCY_UOMID" sequenceId="10" enumTypeId="PROD_PRICE_IN_PARAM"/>
 
   <Enumeration description="==" enumCode="EQ" enumId="PRC_EQ" sequenceId="01" enumTypeId="PROD_PRICE_COND"/>
   <Enumeration description="!=" enumCode="NEQ" enumId="PRC_NEQ" sequenceId="02" enumTypeId="PROD_PRICE_COND"/>

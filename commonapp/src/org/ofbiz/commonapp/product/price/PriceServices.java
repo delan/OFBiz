@@ -280,6 +280,17 @@ public class PriceServices {
                     }
                 }
 
+                //by currencyUomId
+                Collection currencyUomIdConds = delegator.findByAndCache("ProductPriceCond", 
+                        UtilMisc.toMap("inputParamEnumId", "PRIP_CURRENCY_UOMID", "condValue", currencyUomId));
+                if (currencyUomIdConds != null && currencyUomIdConds.size() > 0) {
+                    Iterator currencyUomIdCondsIter = currencyUomIdConds.iterator();
+                    while (currencyUomIdCondsIter.hasNext()) {
+                        GenericValue currencyUomIdCond = (GenericValue) currencyUomIdCondsIter.next();
+                        productPriceRuleIds.add(currencyUomIdCond.getString("productPriceRuleId"));
+                    }
+                }
+
 
                 // ========= go through each price rule by id and eval all conditions =========
                 //utilTimer.timerString("Before eval rules", module);
@@ -311,10 +322,10 @@ public class PriceServices {
                         GenericValue productPriceCond = (GenericValue) productPriceCondsIter.next();
                         totalConds++;
                         
-                        if (!checkPriceCondition(productPriceCond, productId, prodCatalogId, partyId, quantity, listPrice, delegator)) {
+                        if (!checkPriceCondition(productPriceCond, productId, prodCatalogId, partyId, quantity, listPrice, currencyUomId, delegator)) {
                             //if there is a virtualProductId, try that given that this one has failed
                             if (virtualProductId != null) {
-                                if (!checkPriceCondition(productPriceCond, virtualProductId, prodCatalogId, partyId, quantity, listPrice, delegator)) {
+                                if (!checkPriceCondition(productPriceCond, virtualProductId, prodCatalogId, partyId, quantity, listPrice, currencyUomId, delegator)) {
                                     allTrue = false;
                                     break;
                                 }
@@ -468,7 +479,7 @@ public class PriceServices {
     }
 
     public static boolean checkPriceCondition(GenericValue productPriceCond, String productId, String prodCatalogId, 
-            String partyId, double quantity, double listPrice, GenericDelegator delegator) throws GenericEntityException {
+            String partyId, double quantity, double listPrice, String currencyUomId, GenericDelegator delegator) throws GenericEntityException {
         Debug.logVerbose("Checking price condition: " + productPriceCond, module);
         int compare = 0;
         
@@ -518,6 +529,8 @@ public class PriceServices {
         } else if ("PRIP_LIST_PRICE".equals(productPriceCond.getString("inputParamEnumId"))) {
             Double listPriceValue = new Double(listPrice);
             compare = listPriceValue.compareTo(Double.valueOf(productPriceCond.getString("condValue")));
+        } else if ("PRIP_CURRENCY_UOMID".equals(productPriceCond.getString("inputParamEnumId"))) {
+            compare = currencyUomId.compareTo(productPriceCond.getString("condValue"));
         } else {
             Debug.logWarning("An un-supported productPriceCond input parameter (lhs) was used: " + productPriceCond.getString("inputParamEnumId") + ", returning false, ie check failed", module);
             return false;
