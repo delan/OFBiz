@@ -1040,7 +1040,7 @@ public class CheckOutEvents {
             request.setAttribute(SiteDefs.ERROR_MESSAGE, "<li>Problems getting order header. WF not started!");
             return "error";
         }
-        if (orderHeader != null) {
+        if (orderHeader != null && orderHeader.getString("orderTypeId").equals("SALES_ORDER")) {
             try {
                 dispatcher.runAsync("processOrder", UtilMisc.toMap("orderId", orderId, "orderStatusId", orderHeader.getString("statusId")));
             } catch (GenericServiceException e) {
