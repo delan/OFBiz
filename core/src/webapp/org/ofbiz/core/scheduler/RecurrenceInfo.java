@@ -67,7 +67,7 @@ public class RecurrenceInfo {
         // Get the exception date list
         eDateList = RecurrenceUtil.split(info.getString("exceptionDateTimes"),",");
     }
-    
+            
     /** Returns the startDate Date object. */
     public Date getStartDate() {
         return this.startDate;
@@ -115,7 +115,24 @@ public class RecurrenceInfo {
     }
     
     /** Returns the next recurrence from the specified time. */
-    public long next(long previous) throws RecurrenceRuleException {
+    public long next(long previous) throws RecurrenceRuleException {        
+        // Get the first rule.
+        Iterator rulesIt = getRecurrenceRuleIterator();
+        RecurrenceRule rule = null;
+        if ( rulesIt.hasNext() )
+            rule = (RecurrenceRule) rulesIt.next();
+        
+        int currentCount = info.getInteger("recurrenceCount").intValue();
+        int maxCount = rule.getCount();
+        
+        // Test the number of repeats
+        if ( maxCount > 0 && ++currentCount > maxCount )
+            return 0;
+        
+        // Test the end date/time
+        if ( rule.getEndTime() > RecurrenceUtil.now() )
+            return 0;
+                                
         return 0;
     }    
 }
