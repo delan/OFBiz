@@ -20,35 +20,57 @@
  *  THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  *
  *@author     Andy Zeneski (jaz@ofbiz.org)
- *@version    $Revision: 1.6 $
+ *@version    $Revision: 1.7 $
  *@since      2.2
 -->
 
 <script language="JavaScript">
 <!--
-var defaultText = "!";
-var defaultValue = "!";
-function setStore(disable) {
-    var selectBox = document.entryform.productStoreId;
-    if (disable) {
-        if (defaultText == "!") {
-            defaultText = selectBox.options[selectBox.selectedIndex].text;
+var defaultStoreText = "!";
+var defaultStoreValue = "!";
+var defaultSuppText = "!";
+var defaultSuppValue = "!";
+
+function setOrderType(po) {
+    var storeBox = document.entryform.productStoreId;
+    var suppBox = document.entryform.supplierPartyId;
+    if (po) {
+        if (defaultStoreText == "!") {
+            defaultStoreText = storeBox.options[storeBox.selectedIndex].text;
         }
-        if (defaultValue == "!") {
-            defaultValue = selectBox.options[selectBox.selectedIndex].value;
+        if (defaultStoreValue == "!") {
+            defaultStoreValue = storeBox.options[storeBox.selectedIndex].value;
         }
-        selectBox.options[selectBox.selectedIndex].text = "Not Used For Purchase Orders";
-        selectBox.options[selectBox.selectedIndex].value = "";      
+        storeBox.options[storeBox.selectedIndex].text = "Not Used For Purchase Orders";
+        storeBox.options[storeBox.selectedIndex].value = "";
+
+        if (defaultSuppText != "!") {
+            suppBox.options[suppBox.selectedIndex].text = defaultSuppText;
+        }
+        if (defaultSuppValue != "!") {
+            suppBox.options[suppBox.selectedIndex].value = defaultSuppValue;
+        }
     } else {
-        if (defaultText != "!") {
-            selectBox.options[selectBox.selectedIndex].text = defaultText;
+        if (defaultStoreText != "!") {
+            storeBox.options[storeBox.selectedIndex].text = defaultStoreText;
         }
-        if (defaultValue != "!") {
-            selectBox.options[selectBox.selectedIndex].value = defaultValue;
+        if (defaultStoreValue != "!") {
+            storeBox.options[storeBox.selectedIndex].value = defaultStoreValue;
         }
+
+        if (defaultSuppText == "!") {
+            defaultSuppText = suppBox.options[suppBox.selectedIndex].text;
+        }
+        if (defaultSuppValue == "!") {
+            defaultSuppValue = suppBox.options[suppBox.selectedIndex].value;
+        }
+        suppBox.options[suppBox.selectedIndex].text = "Not Used For Sales Orders";
+        suppBox.options[suppBox.selectedIndex].value = "";
     }
-    selectBox.disabled = disable;
+    storeBox.disabled = po;
+    suppBox.disabled = !po;
 }
+
 //-->
 </script>
 
@@ -78,8 +100,8 @@ function setStore(disable) {
           <td width='6%'>&nbsp;</td>
           <td width='74%' valign='middle'>
             <div class='tabletext' valign='top'>
-              <input type='radio' name='orderMode' onChange="javascript:setStore(false)" value='SALES_ORDER'<#if sessionAttributes.orderMode?default("") == "SALES_ORDER"> checked</#if><#if sessionAttributes.orderMode?exists> disabled</#if>>&nbsp;Sales Order&nbsp;
-              <input type='radio' name='orderMode' onChange="javascript:setStore(true)" value='PURCHASE_ORDER'<#if sessionAttributes.orderMode?default("") == "PURCHASE_ORDER"> checked</#if><#if sessionAttributes.orderMode?exists> disabled</#if>>&nbsp;Purchase Order&nbsp;
+              <input type='radio' name='orderMode' onChange="javascript:setOrderType(false)" value='SALES_ORDER'<#if sessionAttributes.orderMode?default("") == "SALES_ORDER"> checked</#if><#if sessionAttributes.orderMode?exists> disabled</#if>>&nbsp;Sales Order&nbsp;
+              <input type='radio' name='orderMode' onChange="javascript:setOrderType(true)" value='PURCHASE_ORDER'<#if sessionAttributes.orderMode?default("") == "PURCHASE_ORDER"> checked</#if><#if sessionAttributes.orderMode?exists> disabled</#if>>&nbsp;Purchase Order&nbsp;
               <#if !sessionAttributes.orderMode?exists>*<font color='red'>required</font><#else>(cannot be changed without clearing order.)</#if>
             </div>
           </td>
@@ -97,10 +119,32 @@ function setStore(disable) {
                   <option value="${productStore.productStoreId}"<#if productStore.productStoreId == currentStore> selected</#if>>${productStore.storeName}</option>
                 </#list>
               </select>
-              <#if !sessionAttributes.orderMode?exists>*<font color='red'>required</font><#else>(cannot be changed without clearing order.)</#if>
+              <#if !sessionAttributes.orderMode?exists>*<font color='red'>required for SO</font><#else>(cannot be changed without clearing order.)</#if>
             </div>
           </td>
+        </tr>
         <tr><td colspan="4">&nbsp;</td></tr>
+        <tr><td colspan="4">&nbsp;</td></tr>
+        <#if partyId?exists>
+          <#assign thisPartyId = partyId>
+        <#else>
+          <#assign thisPartyId = requestParameters.partyId?if_exists>
+        </#if>
+        <tr>
+          <td width='14%'>&nbsp;</td>
+          <td wdith='6%' align='right' valign='middle' nowrap><div class='tableheadtext'>Supplier:</div></td>
+          <td width='6%'>&nbsp;</td>
+          <td width='74%' valign='middle'>
+            <div class='tabletext' valign='top'>
+              <select class="selectBox" name="supplierPartyId"<#if sessionAttributes.orderMode?default("") != "PURCHASE_ORDER"> disabled</#if>>
+                <option value="">No Supplier</option>
+                <#list suppliers as supplier>
+                  <option value="${supplier.partyId}"<#if supplier.partyId == thisPartyId> selected</#if>>${Static["org.ofbiz.party.party.PartyHelper"].getPartyName(supplier, true)}</option>
+                </#list>
+              </select>
+            </div>
+          </td>
+        </tr>
         <tr>
           <td width='14%'>&nbsp;</td>
           <td wdith='6%' align='right' valign='middle' nowrap><div class='tableheadtext'>UserLogin ID:</div></td>
@@ -117,12 +161,8 @@ function setStore(disable) {
           <td width='6%'>&nbsp;</td>
           <td width='74%' valign='middle'>
             <div class='tabletext' valign='top'>
-              <#if partyId?exists>
-                <#assign thisPartyId = partyId>
-              <#else>
-                <#assign thisPartyId = requestParameters.partyId?if_exists>
-              </#if>              
               <input type='text' class='inputBox' name='partyId' value='${thisPartyId?if_exists}'>
+              (overrides either of the above selections.)
             </div>
           </td>
         </tr>         

@@ -53,6 +53,9 @@ if (updateParty != null) {
 productStores = delegator.findAllCache("ProductStore", UtilMisc.toList("storeName"));
 context.put("productStores", productStores);
 
+suppliers = delegator.findByAnd("PartyRole", UtilMisc.toMap("roleTypeId", "SUPPLIER"));
+context.put("suppliers", suppliers);
+
 // check the selected product store
 productStoreId = request.getParameter("productStoreId");
 if (productStoreId != null) {
@@ -117,7 +120,10 @@ productCategoryList = delegator.findAll("ProductCategory", UtilMisc.toList("desc
 context.put("productCategoryList", productCategoryList);
 
 // set party info
-partyId = request.getParameter("partyId");
+partyId = request.getParameter("supplierPartyId");
+if (!UtilValidate.isEmpty(request.getParameter("partyId"))) {
+    partyId = request.getParameter("partyId");
+}
 userLoginId = request.getParameter("userLoginId");
 if (partyId != null || userLoginId != null) {
     if ((partyId == null || partyId.length() == 0) && userLoginId != null && userLoginId.length() > 0) {
