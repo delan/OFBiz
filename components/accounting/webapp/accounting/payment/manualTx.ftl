@@ -20,7 +20,7 @@
  *  THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  *
  *@author     Andy Zeneski (jaz@ofbiz.org)
- *@version    $Revision: 1.2 $
+ *@version    $Revision: 1.3 $
  *@since      3.0
 -->
 
@@ -73,7 +73,7 @@
             <div class="tabletext">${currentTx.description}</div>
             <input type="hidden" name="transactionType" value="${currentTx.enumId}">
           <#else>
-            <select name="transactionType" class="selectBox" onclick="javascript:document.manualTxForm.submit();">
+            <select name="transactionType" class="selectBox" onchange="javascript:document.manualTxForm.submit();">
               <#list paymentSettings as setting>
                 <option value="${setting.enumId}">${setting.description}</option>
               </#list>
