@@ -24,7 +24,7 @@
  *
  * @author     David E. Jones (jonesde@ofbiz.org)
  * @author     Andy Zeneski (jaz@ofbiz.org)
- * @version    $Revision: 1.12 $
+ * @version    $Revision: 1.13 $
  * @since      2.2
 -->
 <simple-methods>
@@ -38,7 +38,7 @@
         <make-value value-name="newEntity" entity-name="Shipment"/>
         <set-nonpk-fields map-name="parameters" value-name="newEntity"/>
 
-        <sequenced-id-to-env sequence-name="Shipment" env-name="sequencedId" to-string="true"/>
+        <sequenced-id-to-env sequence-name="Shipment" env-name="sequencedId"/>
         <env-to-field env-name="sequencedId" field-name="shipmentId" map-name="newEntity"/>
         <field-to-result field-name="sequencedId" result-name="shipmentId"/>
 

@@ -23,7 +23,7 @@
  *  THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  *
  * @author     Andy Zeneski (jaz@ofbiz.org)
- * @version    $Revision: 1.2 $
+ * @version    $Revision: 1.3 $
  * @since      2.0
 -->
 
@@ -36,7 +36,6 @@
         <set-nonpk-fields map-name="parameters" value-name="newEntity"/>
 
         <sequenced-id-to-env sequence-name="OrderAdjustment" env-name="orderAdjustmentId"/>
-        <to-string field-name="orderAdjustmentId"/>
         <env-to-field env-name="orderAdjustmentId" map-name="newEntity"/>
         <field-to-result field-name="orderAdjustmentId" result-name="orderAdjustmentId"/>
 
@@ -52,7 +51,7 @@
 
     <simple-method method-name="createNotificationLog" short-description="Log an order notification" login-required="false">
         <make-value entity-name="OrderNotification" value-name="orderNotification"/>
-        <sequenced-id-to-env sequence-name="OrderNotification" env-name="orderNotificationId" to-string="true"/>
+        <sequenced-id-to-env sequence-name="OrderNotification" env-name="orderNotificationId"/>
         <env-to-field env-name="orderNotificationId" map-name="orderNotification"/>
 
         <field-to-field field-name="orderId" map-name="parameters" to-map-name="orderNotification"/>
@@ -92,7 +91,7 @@
             <store-value value-name="orderItem"/>
             <!-- create status change history -->
             <make-value entity-name="OrderStatus" value-name="newValue"/>
-            <sequenced-id-to-env sequence-name="OrderStatus" env-name="orderStatusId" to-string="true"/>
+            <sequenced-id-to-env sequence-name="OrderStatus" env-name="orderStatusId"/>
             <env-to-field env-name="orderStatusId" map-name="newValue"/>
 
             <field-to-field field-name="orderItemSeqId" map-name="orderItem" to-map-name="newValue"/>

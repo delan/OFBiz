@@ -33,7 +33,7 @@
 
         <make-value entity-name="ContactList" value-name="newEntity"/>
         <set-nonpk-fields map-name="parameters" value-name="newEntity"/>
-        <sequenced-id-to-env sequence-name="ContactList" env-name="newEntity.contactListId" to-string="true"/>
+        <sequenced-id-to-env sequence-name="ContactList" env-name="newEntity.contactListId"/>
         <field-to-result field-name="newEntity.contactListId" result-name="contactListId"/>
         <create-value value-name="newEntity"/>
     </simple-method>

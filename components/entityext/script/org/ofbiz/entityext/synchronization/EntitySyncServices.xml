@@ -23,7 +23,7 @@
  *  THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  *
  * @author     David E. Jones (jonesde@ofbiz.org)
- * @version    $Revision: 1.1 $
+ * @version    $Revision: 1.2 $
  * @since      3.0
 -->
 
@@ -35,7 +35,7 @@
         <make-value value-name="newEntity" entity-name="EntitySync"/>
         <set-nonpk-fields map-name="parameters" value-name="newEntity"/>
 
-        <sequenced-id-to-env sequence-name="EntitySync" env-name="entitySyncId" to-string="true"/>
+        <sequenced-id-to-env sequence-name="EntitySync" env-name="entitySyncId"/>
         <env-to-field env-name="entitySyncId" map-name="newEntity"/>
         <field-to-result field-name="entitySyncId" result-name="entitySyncId"/>
 

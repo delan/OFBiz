@@ -23,7 +23,7 @@
  *  THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  *
  * @author     Andy Zeneski (jaz@ofbiz.org)
- * @version    $Revision: 1.8 $
+ * @version    $Revision: 1.9 $
  * @since      2.2
 -->
 
@@ -35,7 +35,7 @@
         <make-value value-name="newEntity" entity-name="ProductStore"/>
         <set-nonpk-fields map-name="parameters" value-name="newEntity"/>
 
-        <sequenced-id-to-env sequence-name="ProductStore" env-name="productStoreId" to-string="true"/>
+        <sequenced-id-to-env sequence-name="ProductStore" env-name="productStoreId" />
         <env-to-field env-name="productStoreId" map-name="newEntity"/>
 
         <field-to-result field-name="productStoreId" result-name="productStoreId"/>
@@ -303,7 +303,6 @@
 
         <make-value value-name="newEntity" entity-name="ProductStoreSurveyAppl"/>
         <sequenced-id-to-env sequence-name="ProductStoreSurveyAppl" env-name="productStoreSurveyId"/>
-        <to-string field-name="productStoreSurveyId"/>
         <env-to-field env-name="productStoreSurveyId" map-name="newEntity"/>
         <field-to-result field-name="productStoreSurveyId" result-name="productStoreSurveyId"/>
         <set-nonpk-fields map-name="parameters" value-name="newEntity"/>

@@ -107,7 +107,6 @@
         <set-nonpk-fields map-name="parameters" value-name="newEntity"/>
 
         <sequenced-id-to-env sequence-name="ProductPriceChange" env-name="productPriceChangeId"/>
-        <to-string field-name="productPriceChangeId"/>
         <env-to-field env-name="productPriceChangeId" map-name="newEntity"/>
 
         <now-timestamp-to-env env-name="nowTimestamp"/>
@@ -125,7 +124,7 @@
 
         <make-value value-name="newEntity" entity-name="ProductPriceRule"/>
         <set-nonpk-fields map-name="parameters" value-name="newEntity"/>
-        <sequenced-id-to-env sequence-name="ProductPriceRule" env-name="newEntity.productPriceRuleId" to-string="true"/>
+        <sequenced-id-to-env sequence-name="ProductPriceRule" env-name="newEntity.productPriceRuleId"/>
         <field-to-result field-name="productPriceRuleId" map-name="newEntity"/>
 
         <create-value value-name="newEntity"/>

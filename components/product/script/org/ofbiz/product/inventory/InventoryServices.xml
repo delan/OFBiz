@@ -39,7 +39,7 @@
         <make-value value-name="newEntity" entity-name="InventoryItem"/>
         <set-nonpk-fields map-name="parameters" value-name="newEntity"/>
 
-        <sequenced-id-to-env sequence-name="InventoryItem" env-name="newEntity.inventoryItemId" to-string="true"/>
+        <sequenced-id-to-env sequence-name="InventoryItem" env-name="newEntity.inventoryItemId"/>
         <field-to-result field-name="newEntity.inventoryItemId" result-name="inventoryItemId"/>
 
         <create-value value-name="newEntity"/>
@@ -152,7 +152,6 @@
         </if-empty>
 
         <sequenced-id-to-env sequence-name="PhysicalInventory" env-name="physicalInventoryId"/>
-        <to-string field-name="physicalInventoryId"/>
         <env-to-field env-name="physicalInventoryId" map-name="newEntity"/>
         <field-to-result field-name="physicalInventoryId" result-name="physicalInventoryId"/>
 
@@ -464,7 +463,6 @@
                     <!-- no non-ser inv item, create a non-ser InventoryItem with availableToPromise = -quantityNotReserved -->
                     <make-value entity-name="InventoryItem" value-name="newNonSerInventoryItem"/>
                     <sequenced-id-to-env sequence-name="InventoryItem" env-name="inventoryItemId"/>
-                    <to-string field-name="inventoryItemId"/>
                     <env-to-field env-name="inventoryItemId" map-name="newNonSerInventoryItem"/>
 
                     <field-to-field field-name="productId" map-name="parameters" to-map-name="newNonSerInventoryItem"/>
@@ -783,7 +781,7 @@
 
         <make-value value-name="newEntity" entity-name="InventoryTransfer"/>
         <set-nonpk-fields map-name="parameters" value-name="newEntity"/>
-        <sequenced-id-to-env sequence-name="InventoryTransfer" env-name="newEntity.inventoryTransferId" to-string="true"/>
+        <sequenced-id-to-env sequence-name="InventoryTransfer" env-name="newEntity.inventoryTransferId"/>
         <field-to-result field-name="newEntity.inventoryTransferId" result-name="inventoryTransferId"/>
 
         <create-value value-name="newEntity"/>

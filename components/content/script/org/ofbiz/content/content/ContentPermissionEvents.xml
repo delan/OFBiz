@@ -6,7 +6,7 @@
         <set-nonpk-fields map-name="parameters" value-name="currentContent"/>
         <if-empty field-name="contentId" map-name="currentContent">
             <make-next-seq-id seq-field-name="contentId" value-name="currentContent"/>
-            <sequenced-id-to-env env-name="id" sequence-name="Content" to-string="true"/>
+            <sequenced-id-to-env env-name="id" sequence-name="Content"/>
             <env-to-field env-name="id" field-name="contentId" map-name="currentContent"/>
         </if-empty>
         <log level="always" message="currentContent: ${currentContent}"/>

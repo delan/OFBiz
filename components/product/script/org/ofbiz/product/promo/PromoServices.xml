@@ -34,7 +34,7 @@
 
         <make-value value-name="newEntity" entity-name="ProductPromo"/>
         <set-nonpk-fields map-name="parameters" value-name="newEntity"/>
-        <sequenced-id-to-env sequence-name="ProductPromo" env-name="newEntity.productPromoId" to-string="true"/>
+        <sequenced-id-to-env sequence-name="ProductPromo" env-name="newEntity.productPromoId"/>
         <field-to-result field-name="productPromoId" map-name="newEntity"/>
 
         <if-empty field-name="newEntity.userEntered">
@@ -156,7 +156,7 @@
 
         <make-value value-name="newEntity" entity-name="ProductPromoCode"/>
         <set-nonpk-fields map-name="parameters" value-name="newEntity"/>
-        <sequenced-id-to-env sequence-name="ProductPromoCode" env-name="newEntity.productPromoCodeId" to-string="true" stagger-max="100"/>
+        <sequenced-id-to-env sequence-name="ProductPromoCode" env-name="newEntity.productPromoCodeId" stagger-max="100"/>
         <field-to-result field-name="productPromoCodeId" map-name="newEntity"/>
 
         <now-timestamp-to-env env-name="nowTimestamp"/>
