@@ -43,7 +43,7 @@ import org.ofbiz.accounting.payment.PaymentGatewayServices;
 /**
  * 
  * @author     <a href="mailto:jaz@ofbiz.org">Andy Zeneski</a>
- * @version    $Rev:$
+ * @version    $Rev$
  * @since      3.2
  */
 public class PcChargeServices {
@@ -332,7 +332,7 @@ public class PcChargeServices {
                 name.append(sufix);
             }
             String nameOnCard = name.toString().trim();
-            String acctNumber = creditCard.getString("cardNumber");
+            String acctNumber = "F" + creditCard.getString("cardNumber");
             String cvNum = (String) context.get("cardSecurityCode");
 
             api.set(PcChargeApi.ACCT_NUM, acctNumber);

@@ -26,7 +26,7 @@
  *
  * @author     David E. Jones (jonesde@ofbiz.org)
  * @author     Andy Zeneski (jaz@ofbiz.org)
- * @version    $Rev:$
+ * @version    $Rev$
  */
 -->
 
@@ -1851,6 +1851,7 @@
       <field name="orderPaymentPreferenceId" type="id"></field>
       <field name="paymentMethodTypeId" type="id"></field>
       <field name="paymentMethodId" type="id"></field>
+      <field name="transCodeEnumId" type="id"></field>
       <field name="amount" type="currency-amount"></field>
       <field name="referenceNum" type="short-varchar"></field>
       <field name="subReference" type="short-varchar"></field>
@@ -1861,8 +1862,11 @@
       <field name="gatewayMessage" type="long-varchar"></field>
       <field name="transactionDate" type="date-time"></field>
       <prim-key field="paymentGatewayResponseId"/>
-      <relation type="one" fk-name="PAYGATR_PSTENUM" rel-entity-name="Enumeration">
+      <relation type="one" fk-name="PAYGATR_PSTENUM" title="ServiceType" rel-entity-name="Enumeration">
         <key-map field-name="paymentServiceTypeEnumId" rel-field-name="enumId"/>
+      </relation>
+      <relation type="one" fk-name="PAYGATR_TXCODE" title="TranCode" rel-entity-name="Enumeration">
+        <key-map field-name="transCodeEnum" rel-field-name="enumId"/>
       </relation>
       <relation type="one" fk-name="PAYGATR_ORDPMPRF" rel-entity-name="OrderPaymentPreference">
         <key-map field-name="orderPaymentPreferenceId"/>

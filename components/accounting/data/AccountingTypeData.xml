@@ -35,6 +35,13 @@
     <Enumeration description="Activate" enumCode="ACTIVATE" enumId="VL_ACTIVATE" sequenceId="01" enumTypeId="VL_FULFILL"/>
     <Enumeration description="Reload" enumCode="RELOAD" enumId="VL_RELOAD" sequenceId="02" enumTypeId="VL_FULFILL"/>
 
+    <EnumerationType description="Payment Gateway Transaction Code" enumTypeId="PGT_CODE" hasTable="N" parentTypeId=""/>
+    <Enumeration description="Authorize" enumCode="AUTHORIZE" enumId="PGT_AUTHORIZE" sequenceId="01" enumTypeId="PGT_CODE"/>
+    <Enumeration description="Capture" enumCode="CAPTURE" enumId="PGT_CAPTURE" sequenceId="02" enumTypeId="PGT_CODE"/>
+    <Enumeration description="Release" enumCode="RELEASE" enumId="PGT_RELEASE" sequenceId="03" enumTypeId="PGT_CODE"/>
+    <Enumeration description="Refund" enumCode="REFUND" enumId="PGT_REFUND" sequenceId="04" enumTypeId="PGT_CODE"/>
+    <Enumeration description="Credit" enumCode="CREDIT" enumId="PGT_CREDIT" sequenceId="05" enumTypeId="PGT_CODE"/>
+
     <FinAccountTransType description="Deposit" finAccountTransTypeId="DEPOSIT" hasTable="N" parentTypeId=""/>
     <FinAccountTransType description="Withdraw" finAccountTransTypeId="WITHDRAWAL" hasTable="N" parentTypeId=""/>
     <FinAccountTransType description="Adjustment" finAccountTransTypeId="ADJUSTMENT" hasTable="N" parentTypeId=""/>
