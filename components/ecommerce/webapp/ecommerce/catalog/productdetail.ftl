@@ -166,30 +166,38 @@ ${virtualJavaScript?if_exists}
     }    
 
     function additemSubmit(){
-           newdatevalue = validate(document.addform.reservStart.value);
-           if (newdatevalue == false)
-               document.addform.reservStart.focus();
-        else {
-               document.addform.reservStart.value = newdatevalue;
-               document.addform.submit();
+        <#if product.productTypeId == "ASSET_USAGE">
+        newdatevalue = validate(document.addform.reservStart.value);
+        if (newdatevalue == false) {
+            document.addform.reservStart.focus();
+        } else {
+            document.addform.reservStart.value = newdatevalue;
+            document.addform.submit();
         }
-     }
+        <#else>
+        document.addform.submit();
+        </#if>
+    }
 
     function addShoplistSubmit(){
-           if (document.addToShoppingList.reservStartStr.value == "")
-               document.addToShoppingList.submit();
-           else {
-               newdatevalue = validate(document.addToShoppingList.reservStartStr.value);
-               if (newdatevalue == false) 
-                   document.addToShoppingList.reservStartStr.focus();
-               else    {
-                   document.addToShoppingList.reservStartStr.value = newdatevalue;
-                   document.addToShoppingList.reservStart.value = 
-                           document.addToShoppingList.reservStartStr.value.slice(0,9)+" 00:00:00.000000000";
-                      document.addToShoppingList.submit();
-               }
-           }
-     }
+        <#if product.productTypeId == "ASSET_USAGE">
+        if (document.addToShoppingList.reservStartStr.value == "") {
+            document.addToShoppingList.submit();
+        } else {
+            newdatevalue = validate(document.addToShoppingList.reservStartStr.value);
+            if (newdatevalue == false) {
+                document.addToShoppingList.reservStartStr.focus();
+            } else {
+                document.addToShoppingList.reservStartStr.value = newdatevalue;
+                // document.addToShoppingList.reservStart.value = ;
+                document.addToShoppingList.reservStartStr.value.slice(0,9)+" 00:00:00.000000000";
+                document.addToShoppingList.submit();
+            }
+        }
+        <#else>
+        document.addToShoppingList.submit();
+        </#if>
+    }
  //-->
  </script>
 
