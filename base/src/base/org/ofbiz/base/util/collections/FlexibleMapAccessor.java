@@ -262,7 +262,7 @@ public class FlexibleMapAccessor {
                 base = this.subMapAccessor.getSubMap(base, forPut);
             }
             Object namedObj = base.get(this.extName);
-            if (this.isListReference && namedObj instanceof List) {
+            if (this.isListReference && (namedObj == null || namedObj instanceof List)) {
                 List lst = (List) base.get(this.extName);
                 if (lst == null) {
                     lst = new LinkedList();
@@ -279,7 +279,7 @@ public class FlexibleMapAccessor {
                 }
                 
                 return extMap;
-            } else if (namedObj instanceof Map) {
+            } else if (namedObj == null || namedObj instanceof Map) {
                 Map extMap = (Map) namedObj;
                 
                 // this code creates a new Map if none is missing, but for a get or remove this is a bad idea...
