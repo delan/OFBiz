@@ -1,5 +1,5 @@
 /*
- * $Id: EntityUtil.java,v 1.11 2004/07/07 06:33:23 doogie Exp $
+ * $Id: EntityUtil.java,v 1.12 2004/07/17 20:29:53 doogie Exp $
  *
  * <p>Copyright (c) 2001 The Open For Business Project - www.ofbiz.org
  *
@@ -279,36 +279,8 @@ public class EntityUtil {
             boolean include = true;
 
             while (exprIter.hasNext()) {
-                EntityExpr expr = (EntityExpr) exprIter.next();
-                Object lhs = value.get((String) expr.getLhs());
-                Object rhs = expr.getRhs();
-
-                int operatorId = expr.getOperator().getId();
-                switch (operatorId) {
-                    case EntityOperator.ID_EQUALS:
-                        include = EntityComparisonOperator.compareEqual(lhs, rhs);
-                        break;
-                    case EntityOperator.ID_NOT_EQUAL:
-                        include = EntityComparisonOperator.compareNotEqual(lhs, rhs);
-                        break;
-                    case EntityOperator.ID_GREATER_THAN:
-                        include = EntityComparisonOperator.compareGreaterThanEqualTo(lhs, rhs);
-                        break;
-                    case EntityOperator.ID_GREATER_THAN_EQUAL_TO:
-                        include = EntityComparisonOperator.compareGreaterThan(lhs, rhs);
-                        break;
-                    case EntityOperator.ID_LESS_THAN:
-                        include = EntityComparisonOperator.compareLessThan(lhs, rhs);
-                        break;
-                    case EntityOperator.ID_LESS_THAN_EQUAL_TO:
-                        include = EntityComparisonOperator.compareLessThanEqualTo(lhs, rhs);
-                        break;
-                    case EntityOperator.ID_LIKE:
-                        include = EntityComparisonOperator.compareLike(lhs, rhs);
-                        break;
-                    default:
-                        throw new IllegalArgumentException("The " + expr.getOperator().getCode() + " with id " + expr.getOperator().getId() + " operator is not yet supported by filterByAnd");
-                }
+                EntityCondition condition = (EntityCondition) exprIter.next();
+                include = condition.entityMatches(value);
                 if (!include) break;
             }
             if (include) {
