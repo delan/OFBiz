@@ -1,5 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <entity-engine-xml>
+  <Party partyId="_NA_" partyTypeId="PERSON"/>
+  <Person partyId="_NA_"/>
   <Party partyId="admin" partyTypeId="PERSON"/>
   <Person firstName="THE" lastName="ADMINISTRATOR" middleName="PRIVILEGED" partyId="admin" personalTitle="Mr."/>    
   <PartyRole partyId="admin" roleTypeId="ORDER_CLERK"/>
