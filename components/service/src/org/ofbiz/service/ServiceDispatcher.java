@@ -71,7 +71,7 @@ import org.apache.commons.collections.map.LRUMap;
 public class ServiceDispatcher {
 
     public static final String module = ServiceDispatcher.class.getName();
-    public static final int lruLogSize = 2;
+    public static final int lruLogSize = 200;
 
     protected static Map runLog = new LRUMap(lruLogSize);
     protected static Map dispatchers = new HashMap();
