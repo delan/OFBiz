@@ -38,6 +38,7 @@
 <%if (security.hasEntityPermission("CATALOG", "_VIEW", session)) {%>
 <%
     String productId = request.getParameter("productId");
+    GenericValue product = delegator.findByPrimaryKey("Product", UtilMisc.toMap("productId", productId));
     Collection productInventoryItems = delegator.findByAnd("InventoryItem", 
             UtilMisc.toMap("productId", productId), 
             UtilMisc.toList("statusId", "quantityOnHand", "serialNumber"));
@@ -58,6 +59,11 @@
 <%}%>
 
 <div class="head1">Inventory Items for Product with ID "<%=UtilFormatOut.checkNull(productId)%>"</div>
+
+<%if (product != null && "Y".equals(product.getString("isVirtual"))) {%>
+    <br>
+    <div class='head3'>WARNING: This is a Virtual product and generally should not have inventory items associated with it.</div>
+<%}%>
 
 <br>
 <br>
