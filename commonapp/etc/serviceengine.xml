@@ -13,6 +13,7 @@
     <engine name="soap" class="org.ofbiz.core.service.engine.SOAPClientEngine"/>
     <engine name="simple" class="org.ofbiz.core.minilang.SimpleServiceEngine"/>
     <engine name="jmsqueue" class="org.ofbiz.core.service.jms.JMSQueueSender"/>
+    <engine name="jmstopic" class="org.ofbiz.core.service.jms.JMSTopicPublisher"/>
 
     <resource-loader name="mainfile" class="org.ofbiz.core.config.FileLoader"
             prepend-env="ofbiz.home" prefix="/commonapp/globalservices/"/>
@@ -33,6 +34,7 @@
     <global-services loader="mainfile" location="services_workeffort.xml"/>
     <global-services loader="mainfile" location="services_workflow.xml"/>
 
+    <!--
     <jms-service name="testQueue"
                  jndi-name="OpenJMS"
                  type="queue"
@@ -42,13 +44,15 @@
                  listener-enabled="true"
                  listener-class="org.ofbiz.core.service.jms.JMSQueueListener"/>
 
-    <jms-service name="lookupName2"
-                 jndi-name="default"
-                 type="queue"
-                 broker="localhost"
-                 topic-queue="queueName"
+    <jms-service name="testTopic"
+                 jndi-name="OpenJMS"
+                 type="topic"
+                 broker="JmsTopicConnectionFactory"
+                 topic-queue="topic1"
+                 username="sub1"
                  publisher-enabled="true"
                  listener-enabled="true"
-                 listener-class="org.ofbiz.core.service.jms.JMSQueueListener"/>
+                 listener-class="org.ofbiz.core.service.jms.JMSTopicListener"/>
+    -->
 </service-config>
 
