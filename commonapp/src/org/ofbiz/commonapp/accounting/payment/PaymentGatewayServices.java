@@ -21,9 +21,7 @@
  *  OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR
  *  THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  */
-
 package org.ofbiz.commonapp.accounting.payment;
-
 
 import java.text.*;
 import java.util.*;
@@ -35,13 +33,12 @@ import org.ofbiz.core.util.*;
 import org.ofbiz.commonapp.order.order.*;
 import org.ofbiz.commonapp.party.contact.ContactHelper;
 
-
 /**
  * PaymentGatewayServices
  *
  * @author     <a href="mailto:jaz@jflow.net">Andy Zeneski</a>
- * @created    Sep 5, 2002
- * @version    1.0
+ * @version    $Revision$
+ * @since      2.0
  */
 public class PaymentGatewayServices {
 
@@ -60,11 +57,11 @@ public class PaymentGatewayServices {
         GenericValue orderHeader = null;
         List paymentPrefs = null;
 
-        try {
+        try {                       
+            orderHeader = delegator.findByPrimaryKey("OrderHeader", UtilMisc.toMap("orderId", orderId));
+            
             Map lookupMap = UtilMisc.toMap("orderId", orderId, "statusId", "PAYMENT_NOT_AUTH");
             List orderList = UtilMisc.toList("maxAmount");
-
-            orderHeader = delegator.findByPrimaryKey("OrderHeader", UtilMisc.toMap("orderId", orderId));
             paymentPrefs = delegator.findByAnd("OrderPaymentPreference", lookupMap, orderList);
         } catch (GenericEntityException gee) {
             gee.printStackTrace();
@@ -76,7 +73,7 @@ public class PaymentGatewayServices {
         if (orderHeader == null) {
             return ServiceUtil.returnError("Could not find OrderHeader with orderId: " + orderId + "; not processing payments.");
         }
-        
+                     
         OrderReadHelper orh = new OrderReadHelper(orderHeader);
         double amountToBill = orh.getOrderGrandTotal();
 
