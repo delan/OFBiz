@@ -1,5 +1,5 @@
 /*
- * $Id: UtilProperties.java,v 1.12 2004/07/01 08:37:47 jonesde Exp $
+ * $Id: UtilProperties.java,v 1.13 2004/07/09 04:33:17 ajzeneski Exp $
  *
  *  Copyright (c) 2001-2004 The Open For Business Project - www.ofbiz.org
  *
@@ -40,7 +40,7 @@ import org.ofbiz.base.util.string.FlexibleStringExpander;
  * Generic Property Accessor with Cache - Utilities for working with properties files
  *
  * @author     <a href="mailto:jonesde@ofbiz.org">David E. Jones</a>
- * @version    $Revision: 1.12 $
+ * @version    $Revision: 1.13 $
  * @since      1.0
  */
 public class UtilProperties {
@@ -181,7 +181,7 @@ public class UtilProperties {
     }
     
     /** Returns the specified resource/properties file
-     * @param resource The name of the resource - can be a file, class, or URL
+     * @param url The URL to the resource
      * @return The properties file
      */
     public static Properties getProperties(URL url) {
