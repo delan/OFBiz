@@ -1,5 +1,5 @@
 /*
- * $Id: ContentServicesComplex.java,v 1.16 2004/07/02 15:48:25 byersa Exp $
+ * $Id: ContentServicesComplex.java,v 1.17 2004/07/28 14:55:17 byersa Exp $
  *
  * Copyright (c) 2001, 2002 The Open For Business Project - www.ofbiz.org
  *
@@ -54,7 +54,7 @@ import org.ofbiz.service.ServiceUtil;
  * ContentServicesComplex Class
  *
  * @author     <a href="mailto:byersa@automationgroups.com">Al Byers</a>
- * @version    $Revision: 1.16 $
+ * @version    $Revision: 1.17 $
  * @since      2.2
  *
  * 
@@ -279,7 +279,8 @@ public class ContentServicesComplex {
         if (fromDate == null && fromDateStr != null ) {
             fromDate = UtilDateTime.toTimestamp( fromDateStr );
 	}
-        List contentAssocsDateFiltered = EntityUtil.filterByDate(contentAssocsUnfiltered, fromDate);
+        List contentAssocsDateFiltered2 = EntityUtil.filterByDate(contentAssocsUnfiltered, fromDate);
+        List contentAssocsDateFiltered = EntityUtil.orderBy(contentAssocsDateFiltered2, UtilMisc.toList("sequenceNum", "fromDate"));
 
         String contentAssocTypeId = null;
         List contentAssocsTypeFiltered = new ArrayList();
