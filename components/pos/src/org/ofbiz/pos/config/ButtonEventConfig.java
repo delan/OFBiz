@@ -116,6 +116,9 @@ public class ButtonEventConfig {
     }
 
     public static String getButtonName(PosScreen pos) {
+        if (pos == null) {
+            throw new IllegalArgumentException("PosScreen parameter cannot be null");
+        }
         Object source = pos.getCurrentEvent().getSource();
         if (source instanceof XButton) {
             XButton button = (XButton) source;

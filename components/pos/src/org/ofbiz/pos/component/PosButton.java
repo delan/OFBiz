@@ -31,6 +31,7 @@ import java.util.Iterator;
 import java.util.Map;
 
 import net.xoetrope.swing.XButton;
+import net.xoetrope.xui.helper.SwingWorker;
 
 import org.ofbiz.base.config.GenericConfigException;
 import org.ofbiz.base.util.Debug;
@@ -100,16 +101,22 @@ public class PosButton {
         }
     }
 
-    public void buttonPressed(PosScreen pos) {
-        String buttonName = ButtonEventConfig.getButtonName(pos);
+    public void buttonPressed(final PosScreen pos) {
+        final String buttonName = ButtonEventConfig.getButtonName(pos);
         if (buttonName != null) {
-            try {
-                ButtonEventConfig.invokeButtonEvent(buttonName, pos);
-            } catch (ButtonEventConfig.ButtonEventNotFound e) {
-                Debug.logWarning(e.getMessage(), module);
-            } catch (ButtonEventConfig.ButtonEventException e) {
-                Debug.logError(e, module);
-            }
+            final SwingWorker worker = new SwingWorker() {
+                public Object construct() {
+                    try {
+                        ButtonEventConfig.invokeButtonEvent(buttonName, pos);
+                    } catch (ButtonEventConfig.ButtonEventNotFound e) {
+                        Debug.logWarning(e.getMessage(), module);
+                    } catch (ButtonEventConfig.ButtonEventException e) {
+                        Debug.logError(e, module);
+                    }
+                    return null;
+                }
+            };
+            worker.start();
         }
     }
 }

@@ -145,6 +145,10 @@ public class PosScreen extends NavigationHelper implements Runnable, DialogCallb
     }
 
     public void refresh() {
+        this.refresh(true);
+    }
+
+    public void refresh(boolean updateOutput) {
         PosTransaction trans = PosTransaction.getCurrentTx(this.getSession());
         this.requestFocus();
         if (!isLocked) {
@@ -152,19 +156,23 @@ public class PosScreen extends NavigationHelper implements Runnable, DialogCallb
             this.setVisible(true);
             input.clearInput();
             operator.refresh();
-            if (input.isFunctionSet("PAID")) {
-                output.print(Output.CHANGE + UtilFormatOut.formatPrice(trans.getTotalDue() * -1));
-            } else if (input.isFunctionSet("TOTAL")) {
-                if (trans.getTotalDue() > 0) {
-                    journal.refresh(this);
-                    output.print(Output.TOTALD + UtilFormatOut.formatPrice(trans.getTotalDue()));
+            if (updateOutput) {
+                if (input.isFunctionSet("PAID")) {
+                    output.print(Output.CHANGE + UtilFormatOut.formatPrice(trans.getTotalDue() * -1));
+                } else if (input.isFunctionSet("TOTAL")) {
+                    if (trans.getTotalDue() > 0) {
+                        journal.refresh(this);
+                        output.print(Output.TOTALD + UtilFormatOut.formatPrice(trans.getTotalDue()));
+                    } else {
+                        journal.refresh(this);
+                        output.print(Output.PAYFIN);
+                    }
                 } else {
                     journal.refresh(this);
-                    output.print(Output.PAYFIN);
+                    output.print(Output.ISOPEN);
                 }
             } else {
                 journal.refresh(this);
-                output.print(Output.ISOPEN);
             }
         } else {
             output.print(Output.ULOGIN);
@@ -213,7 +221,7 @@ public class PosScreen extends NavigationHelper implements Runnable, DialogCallb
         this.lastActivity = l;
     }
 
-    // generic button XUI event calls into PosButton to lookup the external reference
+    // generic button XUI event calls into PosButton to lookup the external reference    
     public void buttonPressed() {
         this.setLastActivity(System.currentTimeMillis());
         buttons.buttonPressed(this);
