@@ -38,12 +38,15 @@ import org.w3c.dom.Element;
  * Setting the security implementation className is done in security.xml.
  * If no customiz security name is given, the default implementation will be used (OFBizSecurity)
  *
- * @author <a href="mailto:hermanns@aixcept.de">Rainer Hermanns</a>
- * @version $Revision$
+ * @author     <a href="mailto:hermanns@aixcept.de">Rainer Hermanns</a>
+ * @author     <a href="mailto:jaz@jflow.net">Andy Zeneski</a>
+ * @version    $Revision$
  */
 public class SecurityFactory {
-
+    
+    public static final String module = SecurityFactory.class.getName();
     public final static String DEFAULT_SECURITY = "org.ofbiz.core.security.OFBizSecurity";
+    
     private static String securityName = null;
     private static Element rootElement = null;
     private static SecurityConfigUtil.SecurityInfo securityInfo = null;
@@ -65,7 +68,7 @@ public class SecurityFactory {
             securityName = _securityName;
         }
 
-        if (Debug.verboseOn()) Debug.logVerbose("[SecurityFactory.getInstance] Security implementation context name from security.properties: " + securityName);
+        if (Debug.verboseOn()) Debug.logVerbose("[SecurityFactory.getInstance] Security implementation context name from security.properties: " + securityName, module);
 
         synchronized (SecurityFactory.class) {
             try {
@@ -82,7 +85,7 @@ public class SecurityFactory {
             }
         }
 
-        if (Debug.verboseOn()) Debug.logVerbose("[SecurityFactory.getInstance] Security implementation successfully loaded!!!");
+        if (Debug.verboseOn()) Debug.logVerbose("[SecurityFactory.getInstance] Security implementation successfully loaded!!!", module);
 
         return security;
     }
@@ -100,7 +103,7 @@ public class SecurityFactory {
         String className = null;
 
         if (Debug.verboseOn())
-            Debug.logVerbose("[SecurityFactory.getSecurityClass] Security implementation context name: " + securityName);
+            Debug.logVerbose("[SecurityFactory.getSecurityClass] Security implementation context name: " + securityName, module);
 
         // Only load rootElement again, if not yet loaded (singleton)
         if (rootElement == null) {
@@ -110,7 +113,7 @@ public class SecurityFactory {
 
                 rootElement = _rootElement;
             } catch (GenericConfigException e) {
-                Debug.logError(e, "Error getting Security Config XML root element");
+                Debug.logError(e, "Error getting Security Config XML root element", module);
                 return null;
             }
         }
@@ -133,7 +136,7 @@ public class SecurityFactory {
             className = securityInfo.className;
         }
 
-        if (Debug.verboseOn()) Debug.logVerbose("[SecurityFactory.getSecurity] Security implementation " + className + " for security name " + securityName + " successfully loaded!!!");
+        if (Debug.verboseOn()) Debug.logVerbose("[SecurityFactory.getSecurity] Security implementation " + className + " for security name " + securityName + " successfully loaded!!!", module);
         return className;
     }
 }
