@@ -74,12 +74,12 @@ function lookupOrders() {
               <tr>
                 <td width='25%' align='right'><div class='tableheadtext'>Customer PO#:</div></td>
                 <td width='5%'>&nbsp;</td>
-                <td><input type='text' class='inputBox' name='correspondingPoId'></td>
+                <td><input type='text' class='inputBox' name='correspondingPoId' value='${requestParameters.correspondingPoId?if_exists}'></td>
               </tr>
               <tr>
                 <td width='25%' align='right'><div class='tableheadtext'>Product ID:</div></td>
                 <td width='5%'>&nbsp;</td>
-                <td><input type='text' class='inputBox' name='productId'></td>
+                <td><input type='text' class='inputBox' name='productId' value='${requestParameters.productId?if_exists}'></td>
               </tr>             
               <tr>
                 <td width='25%' align='right'><div class='tableheadtext'>Role Type:</div></td>
