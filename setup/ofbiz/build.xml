@@ -32,7 +32,7 @@
     <!-- Install OFBIZ Components in JBoss & Tomcat                         -->
     <!-- ================================================================== -->
 
-    <target name="install" depends="install-catalina">
+    <target name="install" depends="install-catalina41">
     </target>
 
     <target name="install-catalina">
