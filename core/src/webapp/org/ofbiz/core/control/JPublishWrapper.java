@@ -165,22 +165,11 @@ public class JPublishWrapper {
     }
 
     private boolean optionalRedirect(String redirect, String path, HttpServletResponse response, boolean allowRedirect) throws IOException {
-        if (redirect == null || !allowRedirect) {
-            return false;
-        }
-
-        if (redirect.endsWith("/")) {
+        if (redirect != null && allowRedirect) {
             response.sendRedirect(redirect);
             return true;
         }
-
-        if (redirect.lastIndexOf(".") == -1) {
-            response.sendRedirect(redirect + path.substring(path.lastIndexOf(".")));
-            return true;
-        } else {
-            response.sendRedirect(redirect);
-            return true;
-        }
+        return false;
     }
     
     /**
