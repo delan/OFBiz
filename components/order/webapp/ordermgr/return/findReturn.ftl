@@ -20,7 +20,7 @@
  *  THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  *
  *@author     Andy Zeneski (jaz@ofbiz.org)
- *@version    $Revision: 1.2 $
+ *@version    $Revision: 1.3 $
  *@since      3.0
 -->
 
@@ -127,6 +127,16 @@ function lookupReturn(click) {
                             </td>
                           </tr>
                         </table>
+                      </td>
+                    </tr>
+                    <tr><td colspan="3"><hr class="sepbar"></td></tr>
+                    <tr>
+                      <td width='25%' align='right'>&nbsp;</td>
+                      <td width='5%'>&nbsp;</td>
+                      <td>
+                        <div class="tabletext">
+                          <input type='checkbox' name='showAll' value='Y' onclick="javascript:lookupReturn(true);">&nbsp;Show All Records
+                        </div>
                       </td>
                     </tr>
                   </table>
