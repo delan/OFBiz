@@ -25,7 +25,7 @@
 <ofbiz-component name="opentravelsystem"
         xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" 
         xsi:noNamespaceSchemaLocation="http://www.ofbiz.org/dtds/ofbiz-component.xsd">
-    <!-- define resource loaders; most common is to use the component resource loader -->
+    <!-- define resource loaders; most common is to use the components resource loader -->
     <resource-loader name="main" type="component"/>
     
     <!-- place the config directory on the classpath to access configuration files -->
@@ -43,17 +43,11 @@
     <!--entity-resource type="eca" reader-name="main" loader="main" location="entitydef/eecas.xml"/>
     <entity-resource type="data" reader-name="main" loader="main" location="data/ExampleTypeData.xml"/-->
 
-    <entity-resource type="data" reader-name="main" loader="main" location="data/HotelDemoStoreProduct.xml"/>
-    <entity-resource type="data" reader-name="main" loader="main" location="data/HotelDemoStoreShipping.xml"/>
+    <entity-resource type="data" reader-name="demo" loader="main" location="data/HotelDemoStoreProduct.xml"/>
+    <entity-resource type="data" reader-name="demo" loader="main" location="data/HotelDemoStoreShipping.xml"/>
     
     <!-- service resources: model(s), eca(s) and group definitions -->
     <service-resource type="model" loader="main" location="servicedef/services.xml"/>
-    <!--
-    <service-resource type="eca" loader="main" location="servicedef/secas.xml"/>
-    <service-resource type="group" loader="main" location="servicedef/groups.xml"/>
-    -->
-    
-    <!-- web applications; will be mounted when using the embedded Jetty container -->
 
     <webapp name="OpenTravelSystemWebsite"
         title="Open Travel System Website"

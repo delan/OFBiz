@@ -38,7 +38,7 @@
 
    <SimpleSalesTaxLookup productStoreId="HotelDemoStore" countryGeoId="_NA_" stateProvinceGeoId="_NA_" taxCategory="_NA_" fromDate="2001-01-01 00:00:00.001" description="10% OFB Tax" minPurchase="0.0" taxShipping="N" salesTaxPercentage="0.1"/>
 
-   <WebSite webSiteId="HoteDemoStore" siteName="The Open source Travel System hotel demo store" productStoreId="HotelDemoStore"/>
+   <WebSite webSiteId="HotelDemoStore" siteName="The Open source Travel System hotel demo store" productStoreId="HotelDemoStore"/>
     
 	<!-- product catalog -->
     <ProdCatalog prodCatalogId="HotelDemoStore" catalogName="Hotel Demo Store Catalog" useQuickAdd="N"/>
@@ -69,7 +69,7 @@
 	<FixedAsset fixedAssetId="RoomLux" fixedAssetTypeId="PROPERTY" productionCapacity="10"/>
 	<FixedAssetProduct productId="RoomLux" fixedAssetId="RoomLux" fixedAssetProductTypeId="FAPT_USE" fromDate="2001-05-13 12:00:00.0"/>
 
-    <Product productId="cap" productTypeId="FINISHED_GOOD" productName="HDS-Cap with hotel Logo" internalName="HDS-Cap" description="A cap with the hotel logo" longDescription="This is the nicest cap you have ever seen with the hotel logo in gold!"  taxable="Y" chargeShipping="Y" autoCreateKeywords="Y" isVirtual="N" isVariant="N" createdDate="2004-03-04 18:48:34.612" createdByUserLogin="admin" lastModifiedDate="2004-03-04 18:48:34.612" lastModifiedByUserLogin="admin"/>
+    <Product productId="HDS-cap" productTypeId="FINISHED_GOOD" productName="HDS-Cap with hotel Logo" internalName="HDS-Cap" description="A cap with the hotel logo" longDescription="This is the nicest cap you have ever seen with the hotel logo in gold!"  taxable="Y" chargeShipping="Y" autoCreateKeywords="Y" isVirtual="N" isVariant="N" createdDate="2004-03-04 18:48:34.612" createdByUserLogin="admin" lastModifiedDate="2004-03-04 18:48:34.612" lastModifiedByUserLogin="admin"/>
 
 	<!-- product prices -->
     <ProductPrice productId="HDS-RoomStd" productPriceTypeId="DEFAULT_PRICE" currencyUomId="EUR" productStoreGroupId="_NA_" fromDate="2003-03-04 18:49:03.163" price="15.99" createdDate="2001-05-13 12:00:00.0" createdByUserLogin="admin" lastModifiedDate="2001-05-13 12:00:00.0" lastModifiedByUserLogin="admin"/>
@@ -81,11 +81,11 @@
     <ProductPrice productId="BoatRowSimple" productPriceTypeId="DEFAULT_PRICE" currencyUomId="EUR" productStoreGroupId="_NA_" fromDate="2001-05-13 12:00:00.0" price="549.99" createdDate="2001-05-13 12:00:00.0" createdByUserLogin="admin" lastModifiedDate="2001-05-13 12:00:00.0" lastModifiedByUserLogin="admin"/>
     <ProductPrice productId="BoatRowSimple" productPriceTypeId="LIST_PRICE" currencyUomId="EUR" productStoreGroupId="_NA_" fromDate="2001-05-13 12:00:00.0" price="550.0" createdDate="2001-05-13 12:00:00.0" createdByUserLogin="admin" lastModifiedDate="2001-05-13 12:00:00.0" lastModifiedByUserLogin="admin"/>
     <ProductPrice productId="BoatRowSimple" productPriceTypeId="COMPETITIVE_PRICE" currencyUomId="EUR" productStoreGroupId="_NA_" fromDate="2001-05-13 12:00:00.0" price="922.0" createdDate="2001-05-13 12:00:00.0" createdByUserLogin="admin" lastModifiedDate="2001-05-13 12:00:00.0" lastModifiedByUserLogin="admin"/>
-    <ProductPrice productId="HDS-Cap" productPriceTypeId="DEFAULT_PRICE" currencyUomId="EUR" productStoreGroupId="_NA_" fromDate="2003-03-04 18:50:45.25" price="5.99" createdDate="2001-05-13 12:00:00.0" createdByUserLogin="admin" lastModifiedDate="2001-05-13 12:00:00.0" lastModifiedByUserLogin="admin"/>
+    <ProductPrice productId="HDS-cap" productPriceTypeId="DEFAULT_PRICE" currencyUomId="EUR" productStoreGroupId="_NA_" fromDate="2003-03-04 18:50:45.25" price="5.99" createdDate="2001-05-13 12:00:00.0" createdByUserLogin="admin" lastModifiedDate="2001-05-13 12:00:00.0" lastModifiedByUserLogin="admin"/>
     
 	<!-- allocate products to categories -->
     <ProductCategoryMember productCategoryId="RentalPromo" productId="RoomLux" fromDate="2004-10-18 20:39:58.563" lastUpdatedStamp="2004-10-18 20:40:12.411" lastUpdatedTxStamp="2004-10-18 20:40:12.411" createdStamp="2004-10-18 20:40:12.411" createdTxStamp="2004-10-18 20:40:12.411"/>
     <ProductCategoryMember productCategoryId="RentalPromo" productId="HDS-RoomStd" fromDate="2004-10-18 20:40:12.749" lastUpdatedStamp="2004-10-18 20:40:30.044" lastUpdatedTxStamp="2004-10-18 20:40:30.044" createdStamp="2004-10-18 20:40:30.044" createdTxStamp="2004-10-18 20:40:30.044"/>
-    <ProductCategoryMember productCategoryId="RentalPromo" productId="HDS-HDS-Cap" fromDate="2004-10-18 20:40:12.749" lastUpdatedStamp="2004-10-18 20:40:30.044" lastUpdatedTxStamp="2004-10-18 20:40:30.044" createdStamp="2004-10-18 20:40:30.044" createdTxStamp="2004-10-18 20:40:30.044"/>
+    <ProductCategoryMember productCategoryId="RentalPromo" productId="HDS-cap" fromDate="2004-10-18 20:40:12.749" lastUpdatedStamp="2004-10-18 20:40:30.044" lastUpdatedTxStamp="2004-10-18 20:40:30.044" createdStamp="2004-10-18 20:40:30.044" createdTxStamp="2004-10-18 20:40:30.044"/>
 
 </entity-engine-xml>

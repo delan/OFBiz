@@ -2070,54 +2070,54 @@
     <!-- View Mappings -->
     <!-- Main Screens -->
     <view-map name="error" page="/error/error.jsp"/>
-    <view-map name="main" type="screen" page="component://opentravelsystem/webapp/hotelbackend/screens/MainScreens.xml#main"/>
-    <view-map name="intro" type="screen" page="component://opentravelsystem/webapp/hotelbackend/screens/MainScreens.xml#intro"/>
-    <view-map name="login" type="screen" page="component://opentravelsystem/webapp/hotelbackend/screens/MainScreens.xml#login"/>
+    <view-map name="main" type="screen" page="specialized://opentravelsystem/webapp/hotelbackend/screens/MainScreens.xml#main"/>
+    <view-map name="intro" type="screen" page="specialized://opentravelsystem/webapp/hotelbackend/screens/MainScreens.xml#intro"/>
+    <view-map name="login" type="screen" page="specialized://opentravelsystem/webapp/hotelbackend/screens/MainScreens.xml#login"/>
     <!-- Catalog screens-->
-    <view-map name="mainCatalog" type="screen" page="component://opentravelsystem/webapp/hotelbackend/screens/CatalogScreens.xml#main"/>
-    <view-map name="EditProduct" type="screen" page="component://opentravelsystem/webapp/hotelbackend/screens/CatalogScreens.xml#EditProduct"/>
-    <view-map name="EditProductPrices" type="screen" page="component://opentravelsystem/webapp/hotelbackend/screens/CatalogScreens.xml#EditProductPrices"/>
-    <view-map name="EditProductContent" type="screen" page="component://opentravelsystem/webapp/hotelbackend/screens/CatalogScreens.xml#EditProductContent"/>
-    <view-map name="EditProductCategories" type="screen" page="component://opentravelsystem/webapp/hotelbackend/screens/CatalogScreens.xml#EditProductCategories"/>
-    <view-map name="EditProductAssetUsage" type="screen" page="component://opentravelsystem/webapp/hotelbackend/screens/CatalogScreens.xml#EditProductAssetUsage"/>
-    <view-map name="showFixedAssetProduct" type="screen" page="component://product/widget/catalog/ProductScreens.xml#showFixedAssetProduct"/>
-    <view-map name="newFixedAssetProduct" type="screen" page="component://opentravelsystem/webapp/hotelbackend/screens/CatalogScreens.xml#newFixedAssetProduct"/>
-    <view-map name="EditCategory" type="screen" page="component://opentravelsystem/webapp/hotelbackend/screens/CatalogScreens.xml#EditCategory"/>
-    <view-map name="EditProdCatalogCategories" type="screen" page="component://opentravelsystem/webapp/hotelbackend/screens/CatalogScreens.xml#EditProdCatalogCategories"/>
-    <!--view-map name="EditProductCategory" type="screen" page="component://opentravelsystem/webapp/hotelbackend/screens/CatalogScreens.xml#EditProductCategory"/-->
-    <view-map name="EditProducts" type="screen" page="component://opentravelsystem/webapp/hotelbackend/screens/CatalogScreens.xml#EditProducts"/>
-    <view-map name="EditCategoryProducts" type="screen" page="component://opentravelsystem/webapp/hotelbackend/screens/CatalogScreens.xml#EditCategoryProducts"/>
-    <view-map name="EditFixedAssets" type="screen" page="component://opentravelsystem/webapp/hotelbackend/screens/CatalogScreens.xml#EditFixedAssets"/> 
+    <view-map name="mainCatalog" type="screen" page="specialized://opentravelsystem/webapp/hotelbackend/screens/CatalogScreens.xml#main"/>
+    <view-map name="EditProduct" type="screen" page="specialized://opentravelsystem/webapp/hotelbackend/screens/CatalogScreens.xml#EditProduct"/>
+    <view-map name="EditProductPrices" type="screen" page="specialized://opentravelsystem/webapp/hotelbackend/screens/CatalogScreens.xml#EditProductPrices"/>
+    <view-map name="EditProductContent" type="screen" page="specialized://opentravelsystem/webapp/hotelbackend/screens/CatalogScreens.xml#EditProductContent"/>
+    <view-map name="EditProductCategories" type="screen" page="specialized://opentravelsystem/webapp/hotelbackend/screens/CatalogScreens.xml#EditProductCategories"/>
+    <view-map name="EditProductAssetUsage" type="screen" page="specialized://opentravelsystem/webapp/hotelbackend/screens/CatalogScreens.xml#EditProductAssetUsage"/>
+    <view-map name="showFixedAssetProduct" type="screen" page="applications://product/widget/catalog/ProductScreens.xml#showFixedAssetProduct"/>
+    <view-map name="newFixedAssetProduct" type="screen" page="specialized://opentravelsystem/webapp/hotelbackend/screens/CatalogScreens.xml#newFixedAssetProduct"/>
+    <view-map name="EditCategory" type="screen" page="specialized://opentravelsystem/webapp/hotelbackend/screens/CatalogScreens.xml#EditCategory"/>
+    <view-map name="EditProdCatalogCategories" type="screen" page="specialized://opentravelsystem/webapp/hotelbackend/screens/CatalogScreens.xml#EditProdCatalogCategories"/>
+    <!--view-map name="EditProductCategory" type="screen" page="specialized://opentravelsystem/webapp/hotelbackend/screens/CatalogScreens.xml#EditProductCategory"/-->
+    <view-map name="EditProducts" type="screen" page="specialized://opentravelsystem/webapp/hotelbackend/screens/CatalogScreens.xml#EditProducts"/>
+    <view-map name="EditCategoryProducts" type="screen" page="specialized://opentravelsystem/webapp/hotelbackend/screens/CatalogScreens.xml#EditCategoryProducts"/>
+    <view-map name="EditFixedAssets" type="screen" page="specialized://opentravelsystem/webapp/hotelbackend/screens/CatalogScreens.xml#EditFixedAssets"/> 
     
-    <view-map name="ListFixedAssets" type="screen" page="component://opentravelsystem/webapp/hotelbackend/screens/CatalogScreens.xml#ListFixedAssets"/> 
-    <view-map name="EditFixedAsset" type="screen" page="component://opentravelsystem/webapp/hotelbackend/screens/CatalogScreens.xml#EditFixedAsset"/> 
-    <view-map name="ListFixedAssetProducts" type="screen" page="component://opentravelsystem/webapp/hotelbackend/screens/CatalogScreens.xml#ListFixedAssetProducts"/> 
-    <view-map name="addFixedAssetProduct" type="screen" page="component://opentravelsystem/webapp/hotelbackend/screens/CatalogScreens.xml#addFixedAssetProduct"/> 
-    <view-map name="updateFixedAssetProduct" type="screen" page="component://opentravelsystem/webapp/hotelbackend/screens/CatalogScreens.xml#updateFixedAssetProduct"/> 
-    <view-map name="removeFixedAssetProduct" type="screen" page="component://opentravelsystem/webapp/hotelbackend/screens/CatalogScreens.xml#removeFixedAssetProduct"/> 
-    <view-map name="ListFixedAssetCalendar" type="screen" page="component://opentravelsystem/webapp/hotelbackend/screens/CatalogScreens.xml#ListFixedAssetCalendar"/> 
+    <view-map name="ListFixedAssets" type="screen" page="specialized://opentravelsystem/webapp/hotelbackend/screens/CatalogScreens.xml#ListFixedAssets"/> 
+    <view-map name="EditFixedAsset" type="screen" page="specialized://opentravelsystem/webapp/hotelbackend/screens/CatalogScreens.xml#EditFixedAsset"/> 
+    <view-map name="ListFixedAssetProducts" type="screen" page="specialized://opentravelsystem/webapp/hotelbackend/screens/CatalogScreens.xml#ListFixedAssetProducts"/> 
+    <view-map name="addFixedAssetProduct" type="screen" page="specialized://opentravelsystem/webapp/hotelbackend/screens/CatalogScreens.xml#addFixedAssetProduct"/> 
+    <view-map name="updateFixedAssetProduct" type="screen" page="specialized://opentravelsystem/webapp/hotelbackend/screens/CatalogScreens.xml#updateFixedAssetProduct"/> 
+    <view-map name="removeFixedAssetProduct" type="screen" page="specialized://opentravelsystem/webapp/hotelbackend/screens/CatalogScreens.xml#removeFixedAssetProduct"/> 
+    <view-map name="ListFixedAssetCalendar" type="screen" page="specialized://opentravelsystem/webapp/hotelbackend/screens/CatalogScreens.xml#ListFixedAssetCalendar"/> 
     <!-- Settings  screens -->
-    <view-map name="mainSettings" type="screen" page="component://opentravelsystem/webapp/hotelbackend/screens/SettingsScreens.xml#main"/>
-    <view-map name="EditProductStore" type="screen" page="component://opentravelsystem/webapp/hotelbackend/screens/SettingsScreens.xml#EditProductStore"/>
-    <view-map name="EditProductStoreRoles" type="screen" page="component://opentravelsystem/webapp/hotelbackend/screens/SettingsScreens.xml#EditProductStoreRoles"/>
-    <view-map name="EditProductStoreEmails" type="screen" page="component://opentravelsystem/webapp/hotelbackend/screens/SettingsScreens.xml#EditProductStoreEmails"/>
-    <view-map name="EditProductStoreTaxSetup" type="screen" page="component://opentravelsystem/webapp/hotelbackend/screens/SettingsScreens.xml#EditProductStoreTaxSetup"/>
-    <view-map name="EditProductStorePaySetup" type="screen" page="component://opentravelsystem/webapp/hotelbackend/screens/SettingsScreens.xml#EditProductStorePaySetup"/>
+    <view-map name="mainSettings" type="screen" page="specialized://opentravelsystem/webapp/hotelbackend/screens/SettingsScreens.xml#main"/>
+    <view-map name="EditProductStore" type="screen" page="specialized://opentravelsystem/webapp/hotelbackend/screens/SettingsScreens.xml#EditProductStore"/>
+    <view-map name="EditProductStoreRoles" type="screen" page="specialized://opentravelsystem/webapp/hotelbackend/screens/SettingsScreens.xml#EditProductStoreRoles"/>
+    <view-map name="EditProductStoreEmails" type="screen" page="specialized://opentravelsystem/webapp/hotelbackend/screens/SettingsScreens.xml#EditProductStoreEmails"/>
+    <view-map name="EditProductStoreTaxSetup" type="screen" page="specialized://opentravelsystem/webapp/hotelbackend/screens/SettingsScreens.xml#EditProductStoreTaxSetup"/>
+    <view-map name="EditProductStorePaySetup" type="screen" page="specialized://opentravelsystem/webapp/hotelbackend/screens/SettingsScreens.xml#EditProductStorePaySetup"/>
     <!-- reservations /orders -->
-    <view-map name="findorders" type="screen" page="component://opentravelsystem/webapp/hotelbackend/screens/OrderScreens.xml#main"/>
-    <view-map name="orderview" type="screen" page="component://opentravelsystem/webapp/hotelbackend/screens/OrderScreens.xml#orderview"/>
-    <view-map name="downloadorder" type="screen" page="component://opentravelsystem/webapp/hotelbackend/screens/OrderScreens.xml#downloadorder"/>
-    <view-map name="statistics" type="screen" page="component://opentravelsystem/webapp/hotelbackend/screens/OrderScreens.xml#statistics"/>
-    <view-map name="reports" type="screen" page="component://opentravelsystem/webapp/hotelbackend/screens/OrderScreens.xml#reports"/>
-    <view-map name="OrderPurchaseReportPayment" type="screenfop" page="component://opentravelsystem/webapp/hotelbackend/screens/OrderScreens.xml#OrderPurchaseReportPayment" content-type="application/pdf" encoding="none"/>
-    <view-map name="OrderPurchaseReportProduct" type="screenfop" page="component://opentravelsystem/webapp/hotelbackend/screens/OrderScreens.xml#OrderPurchaseReportProduct" content-type="application/pdf" encoding="none"/>
+    <view-map name="findorders" type="screen" page="specialized://opentravelsystem/webapp/hotelbackend/screens/OrderScreens.xml#main"/>
+    <view-map name="orderview" type="screen" page="specialized://opentravelsystem/webapp/hotelbackend/screens/OrderScreens.xml#orderview"/>
+    <view-map name="downloadorder" type="screen" page="specialized://opentravelsystem/webapp/hotelbackend/screens/OrderScreens.xml#downloadorder"/>
+    <view-map name="statistics" type="screen" page="specialized://opentravelsystem/webapp/hotelbackend/screens/OrderScreens.xml#statistics"/>
+    <view-map name="reports" type="screen" page="specialized://opentravelsystem/webapp/hotelbackend/screens/OrderScreens.xml#reports"/>
+    <view-map name="OrderPurchaseReportPayment" type="screenfop" page="specialized://opentravelsystem/webapp/hotelbackend/screens/OrderScreens.xml#OrderPurchaseReportPayment" content-type="application/pdf" encoding="none"/>
+    <view-map name="OrderPurchaseReportProduct" type="screenfop" page="specialized://opentravelsystem/webapp/hotelbackend/screens/OrderScreens.xml#OrderPurchaseReportProduct" content-type="application/pdf" encoding="none"/>
     <!-- customers -->
-    <view-map name="findparty" type="screen" page="component://opentravelsystem/webapp/hotelbackend/screens/PartyScreens.xml#main"/>
-    <view-map name="viewprofile" type="screen" page="component://opentravelsystem/webapp/hotelbackend/screens/PartyScreens.xml#viewprofile"/>
-    <view-map name="visitdetail" type="screen" page="component://opentravelsystem/webapp/hotelbackend/screens/PartyScreens.xml#visitdetail"/>
-    <view-map name="findordersCust" type="screen" page="component://opentravelsystem/webapp/hotelbackend/screens/PartyScreens.xml#findordersCust"/>
+    <view-map name="findparty" type="screen" page="specialized://opentravelsystem/webapp/hotelbackend/screens/PartyScreens.xml#main"/>
+    <view-map name="viewprofile" type="screen" page="specialized://opentravelsystem/webapp/hotelbackend/screens/PartyScreens.xml#viewprofile"/>
+    <view-map name="visitdetail" type="screen" page="specialized://opentravelsystem/webapp/hotelbackend/screens/PartyScreens.xml#visitdetail"/>
+    <view-map name="findordersCust" type="screen" page="specialized://opentravelsystem/webapp/hotelbackend/screens/PartyScreens.xml#findordersCust"/>
     <!--display by the frontend -->
-    <view-map name="product" type="screen" page="component://opentravelsystem/webapp/hotelfrontend/screens/CatalogScreens.xml#product"/>
+    <view-map name="product" type="screen" page="specialized://opentravelsystem/webapp/hotelfrontend/screens/CatalogScreens.xml#product"/>
     
     <!-- Lookup request mappings -->
     <view-map name="GenericLookup" page="/lookup/GenericLookup.ftl" type="jpublish"/>

@@ -25,7 +25,7 @@
 
 <web-app>
     <display-name>Open For Business - Hotel Webstore Backend application</display-name>
-    <description>Demo Hotel Component of the Open Travel System Project</description>
+    <description>Demo Hotel applications of the Open Travel System Project</description>
     
     <context-param>
         <param-name>webSiteId</param-name>

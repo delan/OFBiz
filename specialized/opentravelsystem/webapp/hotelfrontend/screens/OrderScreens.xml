@@ -30,17 +30,17 @@
     <screen name="anonymoustrail">
         <section>
             <actions>
-                <script location="component://ecommerce/webapp/ecommerce/WEB-INF/actions/order/anonymoustrail.bsh"/>
+                <script location="applications://ecommerce/webapp/ecommerce/WEB-INF/actions/order/anonymoustrail.bsh"/>
             </actions>
             <widgets>
-                <platform-specific><html><html-template location="component://ecommerce/webapp/ecommerce/order/anonymoustrail.ftl"/></html></platform-specific>
+                <platform-specific><html><html-template location="applications://ecommerce/webapp/ecommerce/order/anonymoustrail.ftl"/></html></platform-specific>
             </widgets>
         </section>
     </screen>
     <screen name="genericaddress">
         <section>
             <widgets>
-                <platform-specific><html><html-template location="component://ecommerce/webapp/ecommerce/order/genericaddress.ftl"/></html></platform-specific>
+                <platform-specific><html><html-template location="applications://ecommerce/webapp/ecommerce/order/genericaddress.ftl"/></html></platform-specific>
             </widgets>
         </section>
     </screen>
@@ -48,14 +48,14 @@
     <screen name="orderheader">
         <section>
             <widgets>
-                <platform-specific><html><html-template location="component://ecommerce/webapp/ecommerce/order/orderheader.ftl"/></html></platform-specific>
+                <platform-specific><html><html-template location="applications://ecommerce/webapp/ecommerce/order/orderheader.ftl"/></html></platform-specific>
             </widgets>
         </section>
     </screen>
     <screen name="orderitems">
         <section>
             <widgets>
-                <platform-specific><html><html-template location="component://ecommerce/webapp/ecommerce/order/orderitems.ftl"/></html></platform-specific>
+                <platform-specific><html><html-template location="applications://ecommerce/webapp/ecommerce/order/orderitems.ftl"/></html></platform-specific>
             </widgets>
         </section>
     </screen>
@@ -68,12 +68,12 @@
                 <set field="rightbarScreenName" value="rightbar"/>
 
                 <set field="title" value="Billing Information"/>
-                <script location="component://ecommerce/webapp/ecommerce/WEB-INF/actions/order/billsettings.bsh"/>
+                <script location="applications://ecommerce/webapp/ecommerce/WEB-INF/actions/order/billsettings.bsh"/>
             </actions>
             <widgets>
-                <decorator-screen name="main-decorator" location="component://opentravelsystem/webapp/hotelfrontend/screens/CommonScreens.xml">
+                <decorator-screen name="main-decorator" location="specialized://opentravelsystem/webapp/hotelfrontend/screens/CommonScreens.xml">
                     <decorator-section name="body">
-                        <platform-specific><html><html-template location="component://ecommerce/webapp/ecommerce/order/billsettings.ftl"/></html></platform-specific>
+                        <platform-specific><html><html-template location="applications://ecommerce/webapp/ecommerce/order/billsettings.ftl"/></html></platform-specific>
                     </decorator-section>
                 </decorator-screen>
             </widgets>
@@ -85,12 +85,12 @@
                 <set field="rightbarScreenName" value="rightbar"/>
 
                 <set field="title" value="Shipping Information"/>
-                <script location="component://ecommerce/webapp/ecommerce/WEB-INF/actions/order/shipsettings.bsh"/>
+                <script location="applications://ecommerce/webapp/ecommerce/WEB-INF/actions/order/shipsettings.bsh"/>
             </actions>
             <widgets>
-                <decorator-screen name="main-decorator" location="component://opentravelsystem/webapp/hotelfrontend/screens/CommonScreens.xml">
+                <decorator-screen name="main-decorator" location="specialized://opentravelsystem/webapp/hotelfrontend/screens/CommonScreens.xml">
                     <decorator-section name="body">
-                        <platform-specific><html><html-template location="component://ecommerce/webapp/ecommerce/order/shipsettings.ftl"/></html></platform-specific>
+                        <platform-specific><html><html-template location="applications://ecommerce/webapp/ecommerce/order/shipsettings.ftl"/></html></platform-specific>
                     </decorator-section>
                 </decorator-screen>
             </widgets>
@@ -102,12 +102,12 @@
                 <set field="rightbarScreenName" value="rightbar"/>
 
                 <set field="title" value="Shipping Information"/>
-                <script location="component://ecommerce/webapp/ecommerce/WEB-INF/actions/order/shipsettings.bsh"/>
+                <script location="applications://ecommerce/webapp/ecommerce/WEB-INF/actions/order/shipsettings.bsh"/>
             </actions>
             <widgets>
-                <decorator-screen name="main-decorator" location="component://opentravelsystem/webapp/hotelfrontend/screens/CommonScreens.xml">
+                <decorator-screen name="main-decorator" location="specialized://opentravelsystem/webapp/hotelfrontend/screens/CommonScreens.xml">
                     <decorator-section name="body">
-                        <platform-specific><html><html-template location="component://ecommerce/webapp/ecommerce/order/custsettings.ftl"/></html></platform-specific>
+                        <platform-specific><html><html-template location="applications://ecommerce/webapp/ecommerce/order/custsettings.ftl"/></html></platform-specific>
                     </decorator-section>
                 </decorator-screen>
             </widgets>
@@ -119,12 +119,12 @@
                 <set field="rightbarScreenName" value="rightbar"/>
 
                 <set field="title" value="Shipping Options"/>
-                <script location="component://ecommerce/webapp/ecommerce/WEB-INF/actions/order/optionsettings.bsh"/>
+                <script location="applications://ecommerce/webapp/ecommerce/WEB-INF/actions/order/optionsettings.bsh"/>
             </actions>
             <widgets>
-                <decorator-screen name="main-decorator" location="component://opentravelsystem/webapp/hotelfrontend/screens/CommonScreens.xml">
+                <decorator-screen name="main-decorator" location="specialized://opentravelsystem/webapp/hotelfrontend/screens/CommonScreens.xml">
                     <decorator-section name="body">
-                        <platform-specific><html><html-template location="component://ecommerce/webapp/ecommerce/order/optionsettings.ftl"/></html></platform-specific>
+                        <platform-specific><html><html-template location="applications://ecommerce/webapp/ecommerce/order/optionsettings.ftl"/></html></platform-specific>
                     </decorator-section>
                 </decorator-screen>
             </widgets>
@@ -136,12 +136,12 @@
                 <set field="rightbarScreenName" value="rightbar"/>
 
                 <set field="title" value="Order Confirmation"/>
-                <script location="component://ecommerce/webapp/ecommerce/WEB-INF/actions/order/checkoutreview.bsh"/>
+                <script location="applications://ecommerce/webapp/ecommerce/WEB-INF/actions/order/checkoutreview.bsh"/>
             </actions>
             <widgets>
-                <decorator-screen name="main-decorator" location="component://opentravelsystem/webapp/hotelfrontend/screens/CommonScreens.xml">
+                <decorator-screen name="main-decorator" location="specialized://opentravelsystem/webapp/hotelfrontend/screens/CommonScreens.xml">
                     <decorator-section name="body">
-                        <platform-specific><html><html-template location="component://ecommerce/webapp/ecommerce/order/confirmorder.ftl"/></html></platform-specific>
+                        <platform-specific><html><html-template location="applications://ecommerce/webapp/ecommerce/order/confirmorder.ftl"/></html></platform-specific>
                     </decorator-section>
                 </decorator-screen>
             </widgets>
@@ -152,12 +152,12 @@
         <section>
             <actions>
                 <set field="title-property" value="PageTitleCheckoutOptions"/>
-                <script location="component://ecommerce/webapp/ecommerce/WEB-INF/actions/order/checkoutoptions.bsh"/>
+                <script location="applications://ecommerce/webapp/ecommerce/WEB-INF/actions/order/checkoutoptions.bsh"/>
             </actions>
             <widgets>
-                <decorator-screen name="main-decorator" location="component://opentravelsystem/webapp/hotelfrontend/screens/CommonScreens.xml">
+                <decorator-screen name="main-decorator" location="specialized://opentravelsystem/webapp/hotelfrontend/screens/CommonScreens.xml">
                     <decorator-section name="body">
-                        <platform-specific><html><html-template location="component://ecommerce/webapp/ecommerce/order/checkoutoptions.ftl"/></html></platform-specific>
+                        <platform-specific><html><html-template location="applications://ecommerce/webapp/ecommerce/order/checkoutoptions.ftl"/></html></platform-specific>
                     </decorator-section>
                 </decorator-screen>
             </widgets>
@@ -169,12 +169,12 @@
                 <set field="rightbarScreenName" value="rightbar"/>
 
                 <set field="title-property" value="PageTitleCheckoutOptions"/>
-                <script location="component://ecommerce/webapp/ecommerce/WEB-INF/actions/order/checkoutshippingaddress.bsh"/>
+                <script location="applications://ecommerce/webapp/ecommerce/WEB-INF/actions/order/checkoutshippingaddress.bsh"/>
             </actions>
             <widgets>
-                <decorator-screen name="main-decorator" location="component://opentravelsystem/webapp/hotelfrontend/screens/CommonScreens.xml">
+                <decorator-screen name="main-decorator" location="specialized://opentravelsystem/webapp/hotelfrontend/screens/CommonScreens.xml">
                     <decorator-section name="body">
-                        <platform-specific><html><html-template location="component://ecommerce/webapp/ecommerce/order/checkoutshippingaddress.ftl"/></html></platform-specific>
+                        <platform-specific><html><html-template location="applications://ecommerce/webapp/ecommerce/order/checkoutshippingaddress.ftl"/></html></platform-specific>
                     </decorator-section>
                 </decorator-screen>
             </widgets>
@@ -186,12 +186,12 @@
                 <set field="rightbarScreenName" value="rightbar"/>
 
                 <set field="title-property" value="PageTitleCheckoutOptions"/>
-                <script location="component://ecommerce/webapp/ecommerce/WEB-INF/actions/order/checkoutshippingoptions.bsh"/>
+                <script location="applications://ecommerce/webapp/ecommerce/WEB-INF/actions/order/checkoutshippingoptions.bsh"/>
             </actions>
             <widgets>
-                <decorator-screen name="main-decorator" location="component://opentravelsystem/webapp/hotelfrontend/screens/CommonScreens.xml">
+                <decorator-screen name="main-decorator" location="specialized://opentravelsystem/webapp/hotelfrontend/screens/CommonScreens.xml">
                     <decorator-section name="body">
-                        <platform-specific><html><html-template location="component://ecommerce/webapp/ecommerce/order/checkoutshippingoptions.ftl"/></html></platform-specific>
+                        <platform-specific><html><html-template location="applications://ecommerce/webapp/ecommerce/order/checkoutshippingoptions.ftl"/></html></platform-specific>
                     </decorator-section>
                 </decorator-screen>
             </widgets>
@@ -203,12 +203,12 @@
                 <set field="rightbarScreenName" value="rightbar"/>
 
                 <set field="title-property" value="PageTitleCheckoutOptions"/>
-                <script location="component://ecommerce/webapp/ecommerce/WEB-INF/actions/order/checkoutpayment.bsh"/>
+                <script location="applications://ecommerce/webapp/ecommerce/WEB-INF/actions/order/checkoutpayment.bsh"/>
             </actions>
             <widgets>
-                <decorator-screen name="main-decorator" location="component://opentravelsystem/webapp/hotelfrontend/screens/CommonScreens.xml">
+                <decorator-screen name="main-decorator" location="specialized://opentravelsystem/webapp/hotelfrontend/screens/CommonScreens.xml">
                     <decorator-section name="body">
-                        <platform-specific><html><html-template location="component://ecommerce/webapp/ecommerce/order/checkoutpayment.ftl"/></html></platform-specific>
+                        <platform-specific><html><html-template location="applications://ecommerce/webapp/ecommerce/order/checkoutpayment.ftl"/></html></platform-specific>
                     </decorator-section>
                 </decorator-screen>
             </widgets>
@@ -218,12 +218,12 @@
         <section>
             <actions>
                 <set field="title" value="Split Items For Shipping"/>
-                <script location="component://ecommerce/webapp/ecommerce/WEB-INF/actions/order/splitship.bsh"/>
+                <script location="applications://ecommerce/webapp/ecommerce/WEB-INF/actions/order/splitship.bsh"/>
             </actions>
             <widgets>
-                <decorator-screen name="main-decorator" location="component://opentravelsystem/webapp/hotelfrontend/screens/CommonScreens.xml">
+                <decorator-screen name="main-decorator" location="specialized://opentravelsystem/webapp/hotelfrontend/screens/CommonScreens.xml">
                     <decorator-section name="body">
-                        <platform-specific><html><html-template location="component://ecommerce/webapp/ecommerce/order/splitship.ftl"/></html></platform-specific>
+                        <platform-specific><html><html-template location="applications://ecommerce/webapp/ecommerce/order/splitship.ftl"/></html></platform-specific>
                     </decorator-section>
                 </decorator-screen>
             </widgets>
@@ -234,12 +234,12 @@
         <section>
             <actions>
                 <set field="title-property" value="PageTitleCheckoutReview"/>
-                <script location="component://ecommerce/webapp/ecommerce/WEB-INF/actions/order/checkoutreview.bsh"/>
+                <script location="applications://ecommerce/webapp/ecommerce/WEB-INF/actions/order/checkoutreview.bsh"/>
             </actions>
             <widgets>
-                <decorator-screen name="main-decorator" location="component://opentravelsystem/webapp/hotelfrontend/screens/CommonScreens.xml">
+                <decorator-screen name="main-decorator" location="specialized://opentravelsystem/webapp/hotelfrontend/screens/CommonScreens.xml">
                     <decorator-section name="body">
-                        <platform-specific><html><html-template location="component://ecommerce/webapp/ecommerce/order/checkoutreview.ftl"/></html></platform-specific>
+                        <platform-specific><html><html-template location="applications://ecommerce/webapp/ecommerce/order/checkoutreview.ftl"/></html></platform-specific>
                     </decorator-section>
                 </decorator-screen>
             </widgets>
@@ -249,12 +249,12 @@
         <section>
             <actions>
                 <set field="title-property" value="PageTitleOrderSummary"/>
-                <script location="component://ecommerce/webapp/ecommerce/WEB-INF/actions/order/orderstatus.bsh"/>
+                <script location="applications://ecommerce/webapp/ecommerce/WEB-INF/actions/order/orderstatus.bsh"/>
             </actions>
             <widgets>
-                <decorator-screen name="main-decorator" location="component://opentravelsystem/webapp/hotelfrontend/screens/CommonScreens.xml">
+                <decorator-screen name="main-decorator" location="specialized://opentravelsystem/webapp/hotelfrontend/screens/CommonScreens.xml">
                     <decorator-section name="body">
-                        <platform-specific><html><html-template location="component://ecommerce/webapp/ecommerce/order/ordercomplete.ftl"/></html></platform-specific>
+                        <platform-specific><html><html-template location="applications://ecommerce/webapp/ecommerce/order/ordercomplete.ftl"/></html></platform-specific>
                     </decorator-section>
                 </decorator-screen>
             </widgets>
@@ -267,12 +267,12 @@
                 <!--set field="rightbarScreenName" value="rightbar"/-->
 
                 <set field="title-property" value="PageTitleOrderHistory"/>
-                <script location="component://ecommerce/webapp/ecommerce/WEB-INF/actions/order/orderhistory.bsh"/>
+                <script location="applications://ecommerce/webapp/ecommerce/WEB-INF/actions/order/orderhistory.bsh"/>
             </actions>
             <widgets>
-                <decorator-screen name="main-decorator" location="component://opentravelsystem/webapp/hotelfrontend/screens/CommonScreens.xml">
+                <decorator-screen name="main-decorator" location="specialized://opentravelsystem/webapp/hotelfrontend/screens/CommonScreens.xml">
                     <decorator-section name="body">
-                        <platform-specific><html><html-template location="component://ecommerce/webapp/ecommerce/order/orderhistory.ftl"/></html></platform-specific>
+                        <platform-specific><html><html-template location="applications://ecommerce/webapp/ecommerce/order/orderhistory.ftl"/></html></platform-specific>
                     </decorator-section>
                 </decorator-screen>
             </widgets>
@@ -285,12 +285,12 @@
 
                 <set field="maySelectItems" value="Y"/>
                 <set field="title-property" value="PageTitleOrderStatus"/>
-                <script location="component://ecommerce/webapp/ecommerce/WEB-INF/actions/order/orderstatus.bsh"/>
+                <script location="applications://ecommerce/webapp/ecommerce/WEB-INF/actions/order/orderstatus.bsh"/>
             </actions>
             <widgets>
-                <decorator-screen name="main-decorator" location="component://opentravelsystem/webapp/hotelfrontend/screens/CommonScreens.xml">
+                <decorator-screen name="main-decorator" location="specialized://opentravelsystem/webapp/hotelfrontend/screens/CommonScreens.xml">
                     <decorator-section name="body">
-                        <platform-specific><html><html-template location="component://ecommerce/webapp/ecommerce/order/orderstatus.ftl"/></html></platform-specific>
+                        <platform-specific><html><html-template location="applications://ecommerce/webapp/ecommerce/order/orderstatus.ftl"/></html></platform-specific>
                     </decorator-section>
                 </decorator-screen>
             </widgets>
@@ -302,12 +302,12 @@
                 <set field="rightbarScreenName" value="rightbar"/>
 
                 <set field="title-property" value="PageTitleRequestReturn"/>
-                <script location="component://ecommerce/webapp/ecommerce/WEB-INF/actions/order/requestreturn.bsh"/>
+                <script location="applications://ecommerce/webapp/ecommerce/WEB-INF/actions/order/requestreturn.bsh"/>
             </actions>
             <widgets>
-                <decorator-screen name="main-decorator" location="component://opentravelsystem/webapp/hotelfrontend/screens/CommonScreens.xml">
+                <decorator-screen name="main-decorator" location="specialized://opentravelsystem/webapp/hotelfrontend/screens/CommonScreens.xml">
                     <decorator-section name="body">
-                        <platform-specific><html><html-template location="component://ecommerce/webapp/ecommerce/order/requestreturn.ftl"/></html></platform-specific>
+                        <platform-specific><html><html-template location="applications://ecommerce/webapp/ecommerce/order/requestreturn.ftl"/></html></platform-specific>
                     </decorator-section>
                 </decorator-screen>
             </widgets>

@@ -29,13 +29,13 @@
                 <property-map resource="PartyUiLabels" map-name="uiLabelMap" global="true"/>
             </actions>
             <widgets>
-                <decorator-screen name="common-decorator" location="component://opentravelsystem/webapp/hotelbackend/screens/CommonScreens.xml">
+                <decorator-screen name="common-decorator" location="specialized://opentravelsystem/webapp/hotelbackend/screens/CommonScreens.xml">
                     <decorator-section name="body">
                         <section>
                             <widgets>
                                 <!--platform-specific>
                                     <html>
-                                        <html-template location="component://opentravelsystem/webapp/hotelbackend/includes/appheader.ftl"/>
+                                        <html-template location="specialized://opentravelsystem/webapp/hotelbackend/includes/appheader.ftl"/>
                                     </html>
                                 </platform-specific-->
                                 <container style="contentarea">
@@ -68,7 +68,7 @@
                 <decorator-screen name="CommonPartyDecorator">
                     <decorator-section name="body">
                             <label style="head1">List of customers who placed an order.&lt;br&gt;</label>
-                        <include-form name="ListCustomers" location="component://opentravelsystem/webapp/hotelbackend/screens/PartyForms.xml"/>
+                        <include-form name="ListCustomers" location="specialized://opentravelsystem/webapp/hotelbackend/screens/PartyForms.xml"/>
                     </decorator-section>
                 </decorator-screen>
             </widgets>
@@ -81,7 +81,7 @@
                 <set field="page.headerItem" value="main"/>
                 <set field="productStoreId" from-scope="application" from-field="productStoreId"/>
                 <property-map resource="PartyUiLabels" map-name="uiLabelMap" global="true"/>
-                <script location="component://party/webapp/partymgr/WEB-INF/actions/party/viewprofile.bsh"/>
+                <script location="applications://party/webapp/partymgr/WEB-INF/actions/party/viewprofile.bsh"/>
             </actions>
             <widgets>
                 <decorator-screen name="CommonPartyDecorator">
@@ -89,7 +89,7 @@
                         <container>
                             <platform-specific>
                                 <html>
-                                    <html-template location="component://opentravelsystem/webapp/hotelbackend/party/viewprofile.ftl"/>
+                                    <html-template location="specialized://opentravelsystem/webapp/hotelbackend/party/viewprofile.ftl"/>
                                 </html>
                             </platform-specific>
                         </container>
@@ -105,7 +105,7 @@
                 <set field="page.headerItem" value="main"/>
                 <set field="productStoreId" from-scope="application" from-field="productStoreId"/>
                 <property-map resource="PartyUiLabels" map-name="uiLabelMap" global="true"/>
-                <script location="component://party/webapp/partymgr/WEB-INF/actions/visit/visitdetail.bsh"/>
+                <script location="applications://party/webapp/partymgr/WEB-INF/actions/visit/visitdetail.bsh"/>
             </actions>
             <widgets>
                 <decorator-screen name="CommonPartyDecorator">
@@ -113,7 +113,7 @@
                         <container>
                             <platform-specific>
                                 <html>
-                                    <html-template location="component://party/webapp/partymgr/visit/visitdetail.ftl"/>
+                                    <html-template location="applications://party/webapp/partymgr/visit/visitdetail.ftl"/>
                                 </html>
                             </platform-specific>
                         </container>
@@ -131,14 +131,14 @@
                 <property-map resource="OrderUiLabels" map-name="uiLabelMap" global="true"/>
                 <set field="productStoreId" from-scope="application" from-field="productStoreId"/>
                 <set field="productStoreId" to-scope="user" value="${productStoreId}"/>
-                <script location="component://opentravelsystem/webapp/hotelbackend/WEB-INF/actions/order/findOrders.bsh"/>
+                <script location="specialized://opentravelsystem/webapp/hotelbackend/WEB-INF/actions/order/findOrders.bsh"/>
             </actions>
             <widgets>
                 <decorator-screen name="CommonPartyDecorator">
                     <decorator-section name="body">
                         <platform-specific>
                             <html>
-                                <html-template location="component://opentravelsystem/webapp/hotelbackend/order/findOrders.ftl"/>
+                                <html-template location="specialized://opentravelsystem/webapp/hotelbackend/order/findOrders.ftl"/>
                             </html>
                         </platform-specific>
                     </decorator-section>

@@ -30,14 +30,14 @@
     <screen name="minipoll">
         <section>
             <widgets>
-                <platform-specific><html><html-template location="component://ecommerce/webapp/ecommerce/content/minipoll.ftl"/></html></platform-specific>
+                <platform-specific><html><html-template location="applications://ecommerce/webapp/ecommerce/content/minipoll.ftl"/></html></platform-specific>
             </widgets>
         </section>
     </screen>
     <screen name="content_categories">
         <section>
             <widgets>
-                <platform-specific><html><html-template location="component://ecommerce/webapp/ecommerce/content/content_categories.ftl"/></html></platform-specific>
+                <platform-specific><html><html-template location="applications://ecommerce/webapp/ecommerce/content/content_categories.ftl"/></html></platform-specific>
             </widgets>
         </section>
     </screen>
@@ -45,17 +45,17 @@
     <screen name="factoids">
         <section>
             <widgets>
-                <platform-specific><html><html-template location="component://ecommerce/webapp/ecommerce/content/factoids.ftl"/></html></platform-specific>
+                <platform-specific><html><html-template location="applications://ecommerce/webapp/ecommerce/content/factoids.ftl"/></html></platform-specific>
             </widgets>
         </section>
     </screen>
     <screen name="recentlyviewed">
         <section>
             <actions>
-                <script location="component://ecommerce/webapp/ecommerce/WEB-INF/actions/content/mrv.bsh"/>
+                <script location="applications://ecommerce/webapp/ecommerce/WEB-INF/actions/content/mrv.bsh"/>
             </actions>
             <widgets>
-                <platform-specific><html><html-template location="component://ecommerce/webapp/ecommerce/content/recentlyviewed.ftl"/></html></platform-specific>
+                <platform-specific><html><html-template location="applications://ecommerce/webapp/ecommerce/content/recentlyviewed.ftl"/></html></platform-specific>
             </widgets>
         </section>
     </screen>
@@ -69,13 +69,13 @@
 
                 <set field="title" value="Content Page"/>
                 <set field="headerItem" value="main"/>
-                <script location="component://ecommerce/webapp/ecommerce/WEB-INF/actions/main.bsh"/>
-                <script location="component://ecommerce/webapp/ecommerce/WEB-INF/actions/content/contentprep.bsh"/>
+                <script location="applications://ecommerce/webapp/ecommerce/WEB-INF/actions/main.bsh"/>
+                <script location="applications://ecommerce/webapp/ecommerce/WEB-INF/actions/content/contentprep.bsh"/>
             </actions>
             <widgets>
-                <decorator-screen name="main-decorator" location="component://ecommerce/widget/CommonScreens.xml">
+                <decorator-screen name="main-decorator" location="applications://ecommerce/widget/CommonScreens.xml">
                     <decorator-section name="body">
-                        <platform-specific><html><html-template location="component://ecommerce/webapp/ecommerce/content/defaultcontent.ftl"/></html></platform-specific>
+                        <platform-specific><html><html-template location="applications://ecommerce/webapp/ecommerce/content/defaultcontent.ftl"/></html></platform-specific>
                     </decorator-section>
                 </decorator-screen>
             </widgets>
@@ -92,12 +92,12 @@
                 <set field="formDefFile" value="/BlogForms.xml"/>
                 <set field="entityName" value="Content"/>
                 <set field="permissionType" value="none"/>
-                <script location="component://ecommerce/webapp/ecommerce/WEB-INF/actions/forum/nodetrailprep.bsh"/>
+                <script location="applications://ecommerce/webapp/ecommerce/WEB-INF/actions/forum/nodetrailprep.bsh"/>
             </actions>
             <widgets>
-                <decorator-screen name="main-decorator" location="component://ecommerce/widget/CommonScreens.xml">
+                <decorator-screen name="main-decorator" location="applications://ecommerce/widget/CommonScreens.xml">
                     <decorator-section name="body">
-                        <platform-specific><html><html-template location="component://ecommerce/webapp/ecommerce/content/showcontenttree.ftl"/></html></platform-specific>
+                        <platform-specific><html><html-template location="applications://ecommerce/webapp/ecommerce/content/showcontenttree.ftl"/></html></platform-specific>
                     </decorator-section>
                 </decorator-screen>
             </widgets>
@@ -118,13 +118,13 @@
                 <set field="queryFormName" value="searchQuery"/>
                 <set field="listFormName" value="searchList"/>
                 <set field="defaultSiteId" value="WebStoreCONTENT"/>
-                <script location="component://ecommerce/webapp/ecommerce/WEB-INF/actions/content/advancedsearchprep.bsh"/>
-                <script location="component://ecommerce/webapp/ecommerce/WEB-INF/actions/content/search.bsh"/>
+                <script location="applications://ecommerce/webapp/ecommerce/WEB-INF/actions/content/advancedsearchprep.bsh"/>
+                <script location="applications://ecommerce/webapp/ecommerce/WEB-INF/actions/content/search.bsh"/>
             </actions>
             <widgets>
-                <decorator-screen name="main-decorator" location="component://ecommerce/widget/CommonScreens.xml">
+                <decorator-screen name="main-decorator" location="applications://ecommerce/widget/CommonScreens.xml">
                     <decorator-section name="body">
-                        <platform-specific><html><html-template location="component://ecommerce/webapp/ecommerce/content/searchContent.ftl"/></html></platform-specific>
+                        <platform-specific><html><html-template location="applications://ecommerce/webapp/ecommerce/content/searchContent.ftl"/></html></platform-specific>
                     </decorator-section>
                 </decorator-screen>
             </widgets>
@@ -140,13 +140,13 @@
                 <set field="headerItem" value="Content"/>
                 <set field="entityName" value="ContentAssocDataResourceViewFrom"/>
                 <set field="permissionType" value="none"/>
-                <script location="component://ecommerce/webapp/ecommerce/WEB-INF/actions/forum/nodetrailprep.bsh"/>
-                <script location="component://ecommerce/webapp/ecommerce/WEB-INF/actions/includes/mruadd.bsh"/>
+                <script location="applications://ecommerce/webapp/ecommerce/WEB-INF/actions/forum/nodetrailprep.bsh"/>
+                <script location="applications://ecommerce/webapp/ecommerce/WEB-INF/actions/includes/mruadd.bsh"/>
             </actions>
             <widgets>
-                <decorator-screen name="main-decorator" location="component://ecommerce/widget/CommonScreens.xml">
+                <decorator-screen name="main-decorator" location="applications://ecommerce/widget/CommonScreens.xml">
                     <decorator-section name="body">
-                        <platform-specific><html><html-template location="component://ecommerce/webapp/ecommerce/content/viewcontent.ftl"/></html></platform-specific>
+                        <platform-specific><html><html-template location="applications://ecommerce/webapp/ecommerce/content/viewcontent.ftl"/></html></platform-specific>
                     </decorator-section>
                 </decorator-screen>
             </widgets>
