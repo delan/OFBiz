@@ -1,5 +1,5 @@
 /*
- * $Id: ProductSearchEvents.java,v 1.8 2004/05/08 10:36:50 jonesde Exp $
+ * $Id: ProductSearchEvents.java,v 1.9 2004/07/09 17:04:38 jonesde Exp $
  *
  *  Copyright (c) 2001, 2002 The Open For Business Project - www.ofbiz.org
  *
@@ -26,6 +26,7 @@ package org.ofbiz.product.product;
 import java.sql.Timestamp;
 import java.util.Iterator;
 import java.util.List;
+import java.util.Locale;
 import java.util.Map;
 
 import javax.servlet.http.HttpServletRequest;
@@ -51,13 +52,22 @@ import org.ofbiz.product.product.ProductSearch.ResultSortOrder;
  * Product Search Related Events
  *
  * @author     <a href="mailto:jonesde@ofbiz.org">David E. Jones</a>
- * @version    $Revision: 1.8 $
+ * @version    $Revision: 1.9 $
  * @since      3.0
  */
 public class ProductSearchEvents {
 
     public static final String module = ProductSearchEvents.class.getName();
     public static final String resource = "ProductUiLabels";
+    /**
+     * Contains the property file name for translation of error
+     * messages.
+     */
+    public static final String ERR_RESOURCE = "ProductErrorUiLabel";
+    /**
+     * Language setting.
+     */
+    private static Locale locale;
 
     /** Removes the results of a search from the specified category
      *@param request The HTTPRequest object for the current request
@@ -259,6 +269,7 @@ public class ProductSearchEvents {
     */
    public static String searchAddFeature(HttpServletRequest request, HttpServletResponse response) {
        GenericDelegator delegator = (GenericDelegator) request.getAttribute("delegator");
+       ProductSearchEvents.locale = UtilHttp.getLocale(request); 
 
        String productFeatureId = request.getParameter("productFeatureId");
        String fromDateStr = request.getParameter("fromDate");
@@ -286,9 +297,14 @@ public class ProductSearchEvents {
                sequenceNum= Long.valueOf(sequenceNumStr);
            }
        } catch (RuntimeException e) {
+           String errorMsg = UtilProperties.getMessage(
+           ProductSearchEvents.ERR_RESOURCE,
+                   "productSearchEvents.error_casting_types", (locale != null
+                           ? locale
+                               : Locale.getDefault())) + ": " + e.toString();            
+           request.setAttribute("_ERROR_MESSAGE_", errorMsg);
            errMsg = "Error casting data types: " + e.toString();
            Debug.logError(e, errMsg, module);
-           request.setAttribute("_ERROR_MESSAGE_", errMsg);
            return "error";
        }
 
@@ -318,20 +334,36 @@ public class ProductSearchEvents {
                    pfa.create();
                    numAdded++;
                }
-               request.setAttribute("_EVENT_MESSAGE_", "Added " + numAdded + " features.");
+               Map messageMap = UtilMisc.toMap("numAdded", new Integer(numAdded));               
+               String eventMsg = UtilProperties.getMessage(
+               ProductSearchEvents.ERR_RESOURCE,
+                       "productSearchEvents.added_param_features", (locale != null
+                               ? locale
+                                   : Locale.getDefault())) + ".";               
+               request.setAttribute("_EVENT_MESSAGE_", eventMsg);
                eli.close();
                TransactionUtil.commit(beganTransaction);
            } catch (GenericEntityException e) {
+               String errorMsg = UtilProperties.getMessage(
+               ProductSearchEvents.ERR_RESOURCE,
+                       "productSearchEvents.error_getting_results", (locale != null
+                               ? locale
+                                   : Locale.getDefault())) + ": " + e.toString();            
+               request.setAttribute("_ERROR_MESSAGE_", errorMsg);               
                errMsg = "Error getting search results: " + e.toString();
                Debug.logError(e, errMsg, module);
-               request.setAttribute("_ERROR_MESSAGE_", errMsg);
                TransactionUtil.rollback(beganTransaction);
                return "error";
            }
        } catch (GenericTransactionException e) {
+           String errorMsg = UtilProperties.getMessage(
+           ProductSearchEvents.ERR_RESOURCE,
+                   "productSearchEvents.error_getting_results", (locale != null
+                           ? locale
+                               : Locale.getDefault())) + ": " + e.toString();            
+           request.setAttribute("_ERROR_MESSAGE_", errorMsg);               
            errMsg = "Error getting search results: " + e.toString();
            Debug.logError(e, errMsg, module);
-           request.setAttribute("_ERROR_MESSAGE_", errMsg);
            return "error";
        }
 
