@@ -25,11 +25,8 @@
 package org.ofbiz.core.service.eca;
 
 import java.util.*;
-import java.net.*;
-import java.io.*;
 import org.w3c.dom.*;
 
-import org.ofbiz.core.config.*;
 import org.ofbiz.core.service.*;
 import org.ofbiz.core.util.*;
 
