@@ -23,7 +23,7 @@
  *  THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  *
  * @author     Andy Zeneski (jaz@ofbiz.org)
- * @version    $Revision: 1.3 $
+ * @version    $Revision: 1.4 $
  * @since      2.2
 -->
 
@@ -107,7 +107,9 @@
         
         <make-value value-name="itemLookup" entity-name="OrderItem"/>
         <set-pk-fields map-name="parameters" value-name="itemLookup"/>
-        <find-by-primary-key entity-name="OrderItem" value-name="orderItem" map-name="itemLookup"/>
+        <if-not-empty field-name="orderItemSeqId" map-name="parameters">
+            <find-by-primary-key entity-name="OrderItem" value-name="orderItem" map-name="itemLookup"/>                        
+        </if-not-empty>
         
         <if>
           <condition>
@@ -118,15 +120,33 @@
           </then>
         </if>
         	                    
-        <if-compare-field field-name="returnQuantity" map-name="parameters" operator="greater" to-field-name="quantity" to-map-name="orderItem" type="Double">
-            <add-error><fail-message message="Return quantity cannot exceed the ordered quantity."/></add-error>
-        </if-compare-field>
+        <if-not-empty field-name="orderItem">
+            <field-to-field field-name="orderItem" to-map-name="serviceContext"/>
+            <call-service service-name="getReturnableQuantity" in-map-name="serviceContext">
+                <result-to-field result-name="returnableQuantity" field-name="returnableQuantity"/>
+            </call-service>
+            
+            <if-compare-field field-name="returnQuantity" map-name="parameters" operator="greater" to-field-name="returnableQuantity" type="Double">
+                <add-error><fail-message message="Invalid return quantity; previous returns may exist."/></add-error>
+            </if-compare-field>
+            
+            <if-compare-field field-name="returnQuantity" map-name="parameters" operator="greater" to-field-name="quantity" to-map-name="orderItem" type="Double">
+                <add-error><fail-message message="Return quantity cannot exceed the ordered quantity."/></add-error>
+            </if-compare-field>
         
-        <if-compare-field field-name="returnPrice" map-name="parameters" operator="greater" to-field-name="unitPrice" to-map-name="orderItem" type="Double">
-            <add-error><fail-message message="Return price cannot exceed the ordered price."/></add-error>
-        </if-compare-field>
-        <check-errors/>
-        
+            <if-compare-field field-name="returnPrice" map-name="parameters" operator="greater" to-field-name="unitPrice" to-map-name="orderItem" type="Double">
+                <add-error><fail-message message="Return price cannot exceed the ordered price."/></add-error>
+            </if-compare-field>
+            <check-errors/>
+            
+            <else>
+                <if-compare field-name="returnItemType" map-name="parameters" operator="not-equals" type="String" value="ADJUSTMENT">
+                    <add-error><fail-message message="Illegal returnItemType passed."/></add-error>
+                    <check-errors/>
+                </if-compare>
+            </else>
+        </if-not-empty>
+                    
         <make-value value-name="newEntity" entity-name="ReturnItem"/>
         <field-to-field field-name="returnId" map-name="parameters" to-map-name="newEntity"/>
         
@@ -226,7 +246,10 @@
         <find-by-and entity-name="ReturnItem" map-name="lookupPKMap" list-name="allReturnItems"/>
         <iterate list-name="allReturnItems" entry-name="item">
           <if-compare field-name="statusId" map-name="item" operator="not-equals" value="RETURN_RECEIVED">
-            <string-to-field string="false" field-name="allReceived"/>  
+            <if-not-empty field-name="orderItemSeqId" map-name="item">
+                <!-- non-order items (i.e. adjustments) are not received -->
+                <string-to-field string="false" field-name="allReceived"/>
+            </if-not-empty>
           </if-compare>
         </iterate>
         <if-compare field-name="allReceived" operator="equals" value="true">

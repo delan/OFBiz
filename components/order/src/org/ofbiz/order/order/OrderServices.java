@@ -1,5 +1,5 @@
 /*
- * $Id: OrderServices.java,v 1.14 2003/09/07 15:16:53 ajzeneski Exp $
+ * $Id: OrderServices.java,v 1.15 2003/10/04 21:49:16 ajzeneski Exp $
  *
  *  Copyright (c) 2001, 2002 The Open For Business Project - www.ofbiz.org
  *
@@ -71,7 +71,7 @@ import org.ofbiz.workflow.WfUtil;
  * @author     <a href="mailto:jaz@ofbiz.org">Andy Zeneski</a>
  * @author     <a href="mailto:cnelson@einnovation.com">Chris Nelson</a>
  * @author     <a href="mailto:jonesde@ofbiz.org">David E. Jones</a> 
- * @version    $Revision: 1.14 $
+ * @version    $Revision: 1.15 $
  * @since      2.0
  */
 
@@ -1388,6 +1388,38 @@ public class OrderServices {
         }
         return result;
     }
+    
+    /** Service to get the total shipping for an order. */
+    public static Map getOrderShippingAmount(DispatchContext dctx, Map context) {
+        GenericDelegator delegator = dctx.getDelegator();
+        String orderId = (String) context.get("orderId");
+        
+        GenericValue orderHeader = null;
+        try {
+            orderHeader = delegator.findByPrimaryKey("OrderHeader", UtilMisc.toMap("orderId", orderId));
+        } catch (GenericEntityException e) {
+            Debug.logError(e, module);
+            return ServiceUtil.returnError("ERROR: Could not get order information (" + e.getMessage() + ").");
+        }
+        
+        Map result = null;
+        if (orderHeader != null) {
+            OrderReadHelper orh = new OrderReadHelper(orderHeader);
+            List orderItems = orh.getValidOrderItems();
+            List orderAdjustments = orh.getAdjustments();
+            List orderHeaderAdjustments = orh.getOrderHeaderAdjustments();
+            double orderSubTotal = orh.getOrderItemsSubTotal();
+            
+            double shippingAmount = OrderReadHelper.getAllOrderItemsAdjustmentsTotal(orderItems, orderAdjustments, false, false, true);
+            shippingAmount += OrderReadHelper.calcOrderAdjustments(orderHeaderAdjustments, orderSubTotal, false, false, true);
+            
+            result = ServiceUtil.returnSuccess();
+            result.put("shippingAmount", new Double(shippingAmount));
+        } else {
+            result = ServiceUtil.returnError("Unable to find OrderHeader; cannot get shipping amount");
+        }
+        return result;
+    }    
 
     /** Service to get an order contact mech. */
     public static Map getOrderAddress(DispatchContext dctx, Map context) {
@@ -1597,7 +1629,106 @@ public class OrderServices {
     }  
     
     // return / refund services
-                    
+    
+    // get the returnable quantiy for an order item
+    public static Map getReturnableQuantity(DispatchContext ctx, Map context) {
+        LocalDispatcher dispatcher = ctx.getDispatcher(); 
+        GenericDelegator delegator = ctx.getDelegator();
+        GenericValue orderItem = (GenericValue) context.get("orderItem");
+                
+        String itemStatus = orderItem.getString("statusId");
+        double orderQty = orderItem.getDouble("quantity").doubleValue();
+        
+        double returnableAmount = 0.00;
+        if (itemStatus.equals("ITEM_COMPLETED")) {
+            List returnedItems = null;
+            try {
+                returnedItems = orderItem.getRelated("ReturnItem");
+            } catch (GenericEntityException e) {
+                Debug.logError(e, module);
+                return ServiceUtil.returnError("ERROR: Unable to get return item information.");
+            }
+            if (returnedItems == null || returnedItems.size() == 0) {
+                returnableAmount = orderQty;;
+            } else {                
+                double returnedQty = 0.00;
+                Iterator ri = returnedItems.iterator();
+                while (ri.hasNext()) {
+                    GenericValue returnItem = (GenericValue) ri.next();
+                    GenericValue returnHeader = null;
+                    try {
+                        returnHeader = returnItem.getRelatedOne("ReturnHeader");
+                    } catch (GenericEntityException e) {
+                        Debug.logError(e, module);
+                        return ServiceUtil.returnError("ERROR: Unable to get return header from item.");
+                    }
+                    String returnStatus = returnHeader.getString("statusId");
+                    if (!returnStatus.equals("RETURN_CANCELLED")) {
+                        returnedQty += returnItem.getDouble("returnQuantity").doubleValue();
+                    }
+                }
+                if (returnedQty < orderQty) {
+                    returnableAmount = orderQty - returnedQty;                    
+                } 
+            }                        
+        }
+        Map result = ServiceUtil.returnSuccess();
+        result.put("returnableQuantity", new Double(returnableAmount));
+        return result;
+    }
+    
+    // get a map of returnable items (items not already returned) and quantities
+    public static Map getReturnableItems(DispatchContext ctx, Map context) {
+        LocalDispatcher dispatcher = ctx.getDispatcher(); 
+        GenericDelegator delegator = ctx.getDelegator();
+        String orderId = (String) context.get("orderId");
+        
+        GenericValue orderHeader = null;
+        try {
+            orderHeader = delegator.findByPrimaryKey("OrderHeader", UtilMisc.toMap("orderId", orderId));
+        } catch (GenericEntityException e) {
+            Debug.logError(e, module);
+            return ServiceUtil.returnError("ERROR: Unable to get order information.");
+        }
+               
+        Map returnable = new HashMap();
+        if (orderHeader != null) {
+            List orderItems = null;
+            try {
+                orderItems = orderHeader.getRelatedByAnd("OrderItem", UtilMisc.toMap("statusId", "ITEM_COMPLETED"));
+            } catch (GenericEntityException e) {
+                Debug.logError(e, module);
+                return ServiceUtil.returnError("ERROR: Unable to get order item information.");
+            }
+            if (orderItems != null) {
+                Iterator i = orderItems.iterator();
+                while (i.hasNext()) {
+                    GenericValue item = (GenericValue) i.next();
+                    Map serviceResult = null;
+                    try {
+                        serviceResult = dispatcher.runSync("getReturnableQuantity", UtilMisc.toMap("orderItem", item));
+                    } catch (GenericServiceException e) {
+                        Debug.logError(e, module);
+                        return ServiceUtil.returnError("ERROR: Unable to get the item returnable quantity.");
+                    }
+                    if (serviceResult.containsKey(ModelService.ERROR_MESSAGE)) {
+                        return ServiceUtil.returnError((String) serviceResult.get(ModelService.ERROR_MESSAGE));
+                    } else {
+                        returnable.put(item, serviceResult.get("returnableQuantity"));
+                    }
+                }
+            } else {
+                return ServiceUtil.returnError("ERROR: No order items found.");
+            }
+        } else {
+            return ServiceUtil.returnError("ERROR: Unable to find order header.");
+        }
+        
+        Map result = ServiceUtil.returnSuccess();
+        result.put("returnableItems", returnable);
+        return result;
+    }
+    
     // credit (billingAccount) return
     public static Map processCreditReturn(DispatchContext ctx, Map context) {
         LocalDispatcher dispatcher = ctx.getDispatcher(); 
