@@ -76,37 +76,55 @@ if(security.hasPermission("ENTITY_MAINT", session) || request.getParameter("orig
 
 <!DOCTYPE entitymodel [
     <!-- ====================== Root Element ======================= -->
-    <!ELEMENT entitymodel ( title?, description?, copyright?, author?, version?, entity* )>
+    <!ELEMENT entitymodel ( title?, description?, copyright?, author?, version?, ( entity | view-entity )* )>
     <!-- ================= Children of entitymodel =================== -->
-    <!ELEMENT entity ( description?, field*, prim-key*, relation* )>
     <!ELEMENT title ( #PCDATA  )>
     <!ELEMENT description ( #PCDATA  )>
     <!ELEMENT copyright ( #PCDATA  )>
     <!ELEMENT author ( #PCDATA  )>
     <!ELEMENT version ( #PCDATA  )>
+    <!ELEMENT entity ( description?, field+, prim-key*, relation* )>
+    <!ELEMENT view-entity ( description?, member-entity+, alias+, view-link+, relation* )>
     <!-- ================== Children of entity ===================== -->
     <!-- see the children of entitymodel section for description, etc. -->
     <!ATTLIST entity
-	entity-name CDATA #REQUIRED >
-    <!ATTLIST entity
-	table-name CDATA #IMPLIED >
-    <!ATTLIST entity
-	package-name CDATA #REQUIRED >
-    <!ATTLIST entity
-	dependent-on CDATA #IMPLIED >
-    <!ATTLIST entity
-	title CDATA #IMPLIED >
-    <!ATTLIST entity
-	copyright CDATA #IMPLIED >
-    <!ATTLIST entity
-	author CDATA #IMPLIED >
-    <!ATTLIST entity
+	entity-name CDATA #REQUIRED
+	table-name CDATA #IMPLIED
+	package-name CDATA #REQUIRED
+	dependent-on CDATA #IMPLIED
+	title CDATA #IMPLIED
+	copyright CDATA #IMPLIED
+	author CDATA #IMPLIED
 	version CDATA #IMPLIED >
     <!ELEMENT field ( validate* )>
     <!ELEMENT prim-key EMPTY>
     <!ATTLIST prim-key
 	field CDATA #REQUIRED >
-    <!ELEMENT relation ( key-map* )>
+    <!ELEMENT relation ( key-map+ )>
+    <!-- ================== Children of view-entity ===================== -->
+    <!-- see the children of entitymodel section for description, etc. -->
+    <!ATTLIST view-entity
+	entity-name CDATA #REQUIRED
+	package-name CDATA #REQUIRED
+	dependent-on CDATA #IMPLIED
+	title CDATA #IMPLIED
+	copyright CDATA #IMPLIED
+	author CDATA #IMPLIED
+	version CDATA #IMPLIED >
+    <!ELEMENT member-entity EMPTY>
+    <!ATTLIST member-entity
+	entity-alias CDATA #REQUIRED
+	entity-name CDATA #REQUIRED >
+    <!ELEMENT alias EMPTY>
+    <!ATTLIST alias
+	entity-alias CDATA #REQUIRED
+	name CDATA #REQUIRED
+	field CDATA #IMPLIED 
+        prim-key ( true | false ) "false" >
+    <!ELEMENT view-link ( key-map+ )>
+    <!ATTLIST view-link
+	entity-alias CDATA #REQUIRED
+	rel-entity-alias CDATA #REQUIRED >
     <!-- ==================== Children of field ===================== -->
     <!ATTLIST field
 	name CDATA #REQUIRED >
@@ -120,13 +138,9 @@ if(security.hasPermission("ENTITY_MAINT", session) || request.getParameter("orig
     <!-- ==================== Children of relation ====================== -->
     <!-- specifies whether or not the relation is a dependent one; ie if the related entity can exist without the main entity -->
     <!ATTLIST relation
-	type ( one | many ) #REQUIRED >
-    <!ATTLIST relation
-	title CDATA #IMPLIED >
-    <!ATTLIST relation
+	type ( one | many ) #REQUIRED
+	title CDATA #IMPLIED
 	rel-entity-name CDATA #REQUIRED >
-    <!ATTLIST relation
-	rel-table-name CDATA #IMPLIED >
     <!ELEMENT key-map EMPTY>
     <!-- see definition of relation in entity section above -->
     <!-- ===================== Children of key-map ====================== -->
@@ -199,7 +213,46 @@ if(security.hasPermission("ENTITY_MAINT", session) || request.getParameter("orig
     while ( i.hasNext() ) {
       String entityName = (String)i.next();
       ModelEntity entity = reader.getModelEntity(entityName);
+      if(entity instanceof ModelViewEntity) {
+        ModelViewEntity viewEntity = (ModelViewEntity)entity;
 %>	
+    <view-entity entity-name="<%=entity.entityName%>" 
+            package-name="<%=entity.packageName%>"<%if(entity.dependentOn.length() > 0){%>
+            dependent-on="<%=entity.dependentOn%>"<%}%><%if(!title.equals(entity.title)){%>
+            title="<%=entity.title%>"<%}%><%if(!copyright.equals(entity.copyright)){%>
+            copyright="<%=entity.copyright%>"<%}%><%if(!author.equals(entity.author)){%>
+            author="<%=entity.author%>"<%}%><%if(!version.equals(entity.version)){%>
+            version="<%=entity.version%>"<%}%>><%if(!description.equals(entity.description)){%>
+      <description><%=entity.description%></description><%}%><%
+  Iterator meIter = viewEntity.memberEntities.entrySet().iterator();
+  while(meIter.hasNext()) {
+    Map.Entry entry = (Map.Entry)meIter.next();%>	
+      <member-entity entity-alias="<%=(String)entry.getKey()%>" entity-name="<%=(String)entry.getValue()%>" /><%
+  }
+  for(int y=0; y<viewEntity.aliases.size(); y++) {
+    ModelViewEntity.ModelAlias alias = (ModelViewEntity.ModelAlias)viewEntity.aliases.get(y);%>
+      <alias entity-alias="<%=alias.entityAlias%>" name="<%=alias.name%>"<%if(!alias.name.equals(alias.field)){
+      %> field="<%=alias.field%>"<%}%><%if(alias.isPk){%> prim-key="true"<%}%> /><%
+  }
+  for(int r=0; r<viewEntity.viewLinks.size(); r++) {
+    ModelViewEntity.ModelViewLink viewLink = (ModelViewEntity.ModelViewLink)viewEntity.viewLinks.get(r);%>
+      <view-link entity-alias="<%=viewLink.entityAlias%>" rel-entity-alias="<%=viewLink.relEntityAlias%>"><%for(int km=0; km<viewLink.keyMaps.size(); km++){ ModelKeyMap keyMap = (ModelKeyMap)viewLink.keyMaps.get(km);%>
+        <key-map field-name="<%=keyMap.fieldName%>"<%if(!keyMap.fieldName.equals(keyMap.relFieldName)){%> rel-field-name="<%=keyMap.relFieldName%>"<%}%> /><%}%>
+      </view-link><%
+  }
+  if(entity.relations != null && entity.relations.size() > 0) {
+    for(int r=0; r<entity.relations.size(); r++) {
+      ModelRelation relation = (ModelRelation) entity.relations.get(r);%>
+      <relation type="<%=relation.type%>"<%if(relation.title.length() > 0){%> title="<%=relation.title%>"<%}
+              %> rel-entity-name="<%=relation.relEntityName%>"><%for(int km=0; km<relation.keyMaps.size(); km++){ ModelKeyMap keyMap = (ModelKeyMap)relation.keyMaps.get(km);%>
+        <key-map field-name="<%=keyMap.fieldName%>"<%if(!keyMap.fieldName.equals(keyMap.relFieldName)){%> rel-field-name="<%=keyMap.relFieldName%>"<%}%> /><%}%>
+      </relation><%
+    }
+  }%>
+    </view-entity><%
+      }
+      else {
+%>
     <entity entity-name="<%=entity.entityName%>"<%if(!entity.entityName.equals(ModelUtil.dbNameToClassName(entity.tableName))){
           %> table-name="<%=entity.tableName%>"<%}%> 
             package-name="<%=entity.packageName%>"<%if(entity.dependentOn.length() > 0){%>
@@ -210,7 +263,7 @@ if(security.hasPermission("ENTITY_MAINT", session) || request.getParameter("orig
             version="<%=entity.version%>"<%}%>><%if(!description.equals(entity.description)){%>
       <description><%=entity.description%></description><%}%><%
   for(int y = 0; y < entity.fields.size(); y++) {
-    ModelField field = (ModelField) entity.fields.elementAt(y);%>
+    ModelField field = (ModelField) entity.fields.get(y);%>
       <field name="<%=field.name%>"<%if(!field.name.equals(ModelUtil.dbNameToVarName(field.colName))){
       %> col-name="<%=field.colName%>"<%}%> type="<%=field.type%>"><%
     for(int v = 0; v<field.validators.size(); v++) {
@@ -219,20 +272,20 @@ if(security.hasPermission("ENTITY_MAINT", session) || request.getParameter("orig
     }%></field><%
   }
   for(int y = 0; y < entity.pks.size(); y++) {
-    ModelField field = (ModelField) entity.pks.elementAt(y);%>	
+    ModelField field = (ModelField) entity.pks.get(y);%>	
       <prim-key field="<%=field.name%>" /><%
   }
   if(entity.relations != null && entity.relations.size() > 0) {
     for(int r=0; r<entity.relations.size(); r++) {
-      ModelRelation relation = (ModelRelation) entity.relations.elementAt(r);%>
+      ModelRelation relation = (ModelRelation) entity.relations.get(r);%>
       <relation type="<%=relation.type%>"<%if(relation.title.length() > 0){%> title="<%=relation.title%>"<%}
-              %> rel-entity-name="<%=relation.relEntityName%>"<%if(!relation.relEntityName.equals(ModelUtil.dbNameToClassName(relation.relTableName))) {%>
-                rel-table-name="<%=relation.relTableName%>"<%}%>><%for(int km=0; km<relation.keyMaps.size(); km++){ ModelKeyMap keyMap = (ModelKeyMap)relation.keyMaps.get(km);%>
+              %> rel-entity-name="<%=relation.relEntityName%>"><%for(int km=0; km<relation.keyMaps.size(); km++){ ModelKeyMap keyMap = (ModelKeyMap)relation.keyMaps.get(km);%>
         <key-map field-name="<%=keyMap.fieldName%>"<%if(!keyMap.fieldName.equals(keyMap.relFieldName)){%> rel-field-name="<%=keyMap.relFieldName%>"<%}%> /><%}%>
       </relation><%
     }
   }%>
     </entity><%
+      }
     }
   }%>  
 </entitymodel>
