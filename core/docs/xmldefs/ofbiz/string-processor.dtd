@@ -47,9 +47,9 @@
 
 <!ELEMENT compare ( fail-message | fail-property )>
 <!ATTLIST compare
-    operator CDATA #REQUIRED
     value CDATA #REQUIRED
-    type ( String | Double | Float | Long | Integer | Date | Time | Timestamp ) "String"
+    operator ( less | greater | less-equals | greater-equals | equals | not-equals | contains ) #REQUIRED
+    type ( String | Number | Date | Time | Timestamp ) "String"
     format CDATA #IMPLIED
 >
 
@@ -59,12 +59,6 @@
 >
 
 <!ELEMENT not-empty ( fail-message | fail-property )>
-
-<!ELEMENT equals ( fail-message | fail-property )>
-<!ATTLIST equals
-    value CDATA #REQUIRED
-    type ( String | Double | Float | Long | Integer | Date | Time | Timestamp ) "String"
->
 
 <!-- Copy operation: if no to-field is specified, it is the same as the field on string-process -->
 <!ELEMENT copy EMPTY>
