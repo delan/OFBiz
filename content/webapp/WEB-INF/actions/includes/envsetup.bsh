@@ -41,26 +41,24 @@ if(menuHistory == null){
 	menuHistory	= new HashMap();
 	session.setAttribute("menuHistory", menuHistory);
 }
-String [] levels	= {"topItem", "headerItem", "pageItem"};
 String pageName		= page.getPageName();
+
 // This should not be necessary since Andy changed the logic, but it may get
 // changed back so that a trailing ".ftl" gets appended if there is no trailing "/"
 if(pageName.indexOf("/") != 0){
     pageName	= "/" + pageName;
 }
-String thisPath		= request.getRequestURI();
 
-String menuPath		= null;
-// Skip top level for now
-// and pageItem is probably not used
-for(int i=1; i<levels.length; i++){
-	menuPath	= page.getProperty(levels[i]);
-	if(menuPath != null){
-		menuHistory.put(menuPath, thisPath);
-	}else{
-		break;
-	}
-}
+servletPath = request.getServletPath();
+org.ofbiz.core.util.Debug.logInfo("servletPath" + servletPath);
+queryString = request.getQueryString();
+org.ofbiz.core.util.Debug.logInfo("queryString" + queryString);
+if (queryString != null) queryString = "?" + queryString;
+else queryString = "";
+String thisPath		= request.getRequestURI();
+String menuPath		= page.getProperty("headerItem");
+menuHistory.put(menuPath, thisPath + queryString);
+
 
 person = session.getAttribute(SiteDefs.PERSON);
 partyGroup = session.getAttribute(SiteDefs.PARTY_GROUP);

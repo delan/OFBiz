@@ -33,27 +33,24 @@
  * in the pagedef config file for that menu "view" is checked.
  */
 
-//String path	= page.getPath();
-String pageName	= page.getPageName();
-HashMap menuHistory	= session.getAttribute("menuHistory");
-if(menuHistory == null){
-	menuHistory	= new HashMap();
-	session.setAttribute("menuHistory", menuHistory);
+//String pageName    = page.getPageName();
+String headerItem    = page.getProperty("headerItem");
+HashMap menuHistory    = session.getAttribute("menuHistory");
+org.ofbiz.core.util.Debug.logInfo("menuHistory:" + menuHistory);
+if (menuHistory == null){
+    menuHistory	= new HashMap();
+    session.setAttribute("menuHistory", menuHistory);
 }
-String reqPath	= menuHistory.get(pageName);
-if(reqPath != null){
-		if(reqPath.lastIndexOf("/") < (reqPath.length() - 1)){		
-			reqPath += "/";
-		}
-	context.put("redirect", reqPath);
-}else{
-	String defaultPath	= page.getProperty("defaultSubMenu");
-	if(defaultPath != null){
-		if(defaultPath.lastIndexOf("/") < (defaultPath.length() - 1)){		
-			defaultPath += "/";
-		}
-		context.put("redirect", defaultPath);
-	}else{
-		context.put("redirect", null);
-	}
+String reqPath    = menuHistory.get(headerItem);
+org.ofbiz.core.util.Debug.logInfo("headerItem:" + headerItem);
+org.ofbiz.core.util.Debug.logInfo("reqPath:" + reqPath);
+if (reqPath != null){
+    context.put("redirect", reqPath);
+} else { 
+    String defaultPath	= page.getProperty("defaultSubMenu");
+    if (defaultPath != null){
+    	context.put("redirect", defaultPath);
+    } else {
+    	context.put("redirect", null);
+    }
 }

@@ -55,77 +55,77 @@ import javax.servlet.http.*;
  */
 
     
-	security			= request.getAttribute("security");
-	// Get permission from pagedef config file
-	String permission		= page.getProperty("permission");
-	String singleFormName		= page.getProperty("singleFormName");
-	String listFormName		= page.getProperty("listFormName");
-	if(security.hasEntityPermission(permission, "_VIEW", session)) {
+security			= request.getAttribute("security");
+// Get permission from pagedef config file
+String permission		= page.getProperty("permission");
+String singleFormName		= page.getProperty("singleFormName");
+String listFormName		= page.getProperty("listFormName");
+if(security.hasEntityPermission(permission, "_VIEW", session)) {
     	context.put("hasPermission", Boolean.TRUE);
-	} else {
+} else {
     	context.put("hasPermission", Boolean.FALSE);
-	}
+}
 
-	Map inputFields		= UtilHttp.getParameterMap(request);
-	String entityName		= page.getProperty("entityName");
-	// Can override the listName of "entityList" in the pagedef config file.
-	String listName			= page.getProperty("listName");
-	if(listName == null) listName   = "entityList";
-	String formDefFile		= page.getProperty("formDefFile");
+Map inputFields		= UtilHttp.getParameterMap(request);
+String entityName		= page.getProperty("entityName");
+// Can override the listName of "entityList" in the pagedef config file.
+String listName			= page.getProperty("listName");
+if(listName == null) listName   = "entityList";
+String formDefFile		= page.getProperty("formDefFile");
 
 
-	LocalDispatcher dispatcher	= (LocalDispatcher)request.getAttribute("dispatcher");
+LocalDispatcher dispatcher	= (LocalDispatcher)request.getAttribute("dispatcher");
        	GenericDelegator delegator = (GenericDelegator) request.getAttribute("delegator");
 
 
-	HashMap parameters			= new HashMap();
-	parameters.put("entityName", entityName);
-	parameters.put("inputFields", inputFields);
-	Map result			= null;
-	try{
+HashMap parameters			= new HashMap();
+parameters.put("entityName", entityName);
+parameters.put("inputFields", inputFields);
+Map result			= null;
+try {
            result = dispatcher.runSync("performFind", parameters	);
 
-	} catch (GenericServiceException e) {
+} catch (GenericServiceException e) {
             request.setAttribute(SiteDefs.ERROR_MESSAGE, "ERROR: Error in findLookup service. "  + e.getMessage() + ")");
             Debug.logError(e, "findprep.bsh");
             return "error";
         }
 
 
-	EntityListIterator listIt = (EntityListIterator)result.get("listIt");
+EntityListIterator listIt = (EntityListIterator)result.get("listIt");
 
 
 
-	// This was pretty much hacked from somewhere else in OFBiz
-	int viewIndex	= -1;
-	try{
+// This was pretty much hacked from somewhere else in OFBiz
+int viewIndex	= -1;
+try {
     		viewIndex = Integer.valueOf((String) request.getParameter("VIEW_INDEX")).intValue();
-	}catch(Exception e){
+}catch(Exception e){
     		 viewIndex	= 0;
-	}
+}
 
-	int viewSize	= -1;
-	int listSize	= -1;
-	try{
-		viewSize = Integer.valueOf((String) request.getParameter("VIEW_SIZE")).intValue();
-	}catch(Exception e){
-		try{
-			// If view size is not in page, get it from pagedef .xml file
-			String viewSizePage	= page.getProperty("viewSize");
+int viewSize	= -1;
+int listSize	= -1;
+try {
+	viewSize = Integer.valueOf((String) request.getParameter("VIEW_SIZE")).intValue();
+}catch(Exception e){
+	try {
+		// If view size is not in page, get it from pagedef .xml file
+		String viewSizePage	= page.getProperty("viewSize");
     			viewSize = Integer.valueOf(viewSizePage).intValue();
-		}catch(Exception e2){
+	}catch(Exception e2){
     			 viewSize	= 10; // Not good to have a magic number here
-		}
 	}
+}
 
 
     int lowIndex = viewIndex * viewSize;
     int highIndex = (viewIndex + 1) * viewSize;
 
-	List entityList	= new ArrayList();
+List entityList	= new ArrayList();
     // attempt to get the full size
-	if(listIt != null){
-			try{
+if(listIt != null) {
+		try {
 
     				listIt.last();
     				listSize = listIt.currentIndex(); 
@@ -134,50 +134,50 @@ import javax.servlet.http.*;
     				if (listSize < highIndex) {
         				highIndex = listSize;
     				}
-				if(listSize > 0){
+			if(listSize > 0) {
     					listIt.first();
     					entityList = listIt.getPartialList(lowIndex + 1, viewSize );
-				}
-			}catch(GenericEntityException e){ 
-                       		request.setAttribute(SiteDefs.ERROR_MESSAGE, e.getMessage());
-				return "error";
 			}
-    		if (entityList != null){
-	 		context.put(listName, entityList);
-			// request.setAttribute(listName, entityList);
-	 		request.setAttribute("listName", listName);
+		}catch(GenericEntityException e) { 
+                       		request.setAttribute(SiteDefs.ERROR_MESSAGE, e.getMessage());
+			return "error";
+		}
+    		if (entityList != null) {
+ 		context.put(listName, entityList);
+		// request.setAttribute(listName, entityList);
+ 		request.setAttribute("listName", listName);
     		}
 
-	}
+}
 
-	inputFields.remove("VIEW_INDEX");
+inputFields.remove("VIEW_INDEX");
         String queryString = UtilHttp.urlEncodeArgs(inputFields);
 
 
-	context.put("listSize", new Integer(listSize));
-	context.put("highIndex", new Integer(highIndex));
-	context.put("lowIndex", new Integer(lowIndex));
-	context.put("viewSize", new Integer(viewSize));
-	context.put("viewIndex", new Integer(viewIndex));
-	context.put("queryString", queryString);
+context.put("listSize", new Integer(listSize));
+context.put("highIndex", new Integer(highIndex));
+context.put("lowIndex", new Integer(lowIndex));
+context.put("viewSize", new Integer(viewSize));
+context.put("viewIndex", new Integer(viewIndex));
+context.put("queryString", queryString);
 
 
-	HtmlFormWrapper queryWrapper = new HtmlFormWrapper(formDefFile, 
-					singleFormName, request, response);
-	context.put("queryWrapper", queryWrapper);
+HtmlFormWrapper queryWrapper = new HtmlFormWrapper(formDefFile, 
+				singleFormName, request, response);
+context.put("queryWrapper", queryWrapper);
 
-	HtmlFormWrapper listWrapper = new HtmlFormWrapper(formDefFile, 
-					listFormName, request, response);
-	listWrapper.putInContext(listName, entityList);
-	listWrapper.putInContext("listSize", listSize);
-	listWrapper.putInContext("highIndex", highIndex);
-	listWrapper.putInContext("lowIndex", lowIndex);
-	listWrapper.putInContext("viewSize", viewSize);
-	listWrapper.putInContext("viewIndex", viewIndex);
-	listWrapper.putInContext("queryString", queryString);
-	ModelForm modelForm	= listWrapper.getModelForm();
-	modelForm.setListName(listName);
-	context.put("listWrapper", listWrapper);
+HtmlFormWrapper listWrapper = new HtmlFormWrapper(formDefFile, 
+				listFormName, request, response);
+listWrapper.putInContext(listName, entityList);
+listWrapper.putInContext("listSize", listSize);
+listWrapper.putInContext("highIndex", highIndex);
+listWrapper.putInContext("lowIndex", lowIndex);
+listWrapper.putInContext("viewSize", viewSize);
+listWrapper.putInContext("viewIndex", viewIndex);
+listWrapper.putInContext("queryString", queryString);
+ModelForm modelForm	= listWrapper.getModelForm();
+modelForm.setListName(listName);
+context.put("listWrapper", listWrapper);
 
-	return "success";
+return "success";
 
