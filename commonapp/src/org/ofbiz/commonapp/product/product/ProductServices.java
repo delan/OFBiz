@@ -90,16 +90,20 @@ public class ProductServices {
             return result;
         }
 
-        Collection items = (Collection) prodFindAllVariants(dctx, context).get("assocProducts");
-        if (items == null || items.size() == 0) {
+        Collection variants = (Collection) prodFindAllVariants(dctx, context).get("assocProducts");
+        if (variants == null || variants.size() == 0) {
             result.put(ModelService.RESPONSE_MESSAGE, ModelService.RESPOND_ERROR);
             result.put(ModelService.ERROR_MESSAGE, "Empty list of products returned");
             return result;
         }
+        List items = new ArrayList();
+        Iterator i = variants.iterator();
+        while (i.hasNext())
+            items.add(((GenericValue)i.next()).get("productIdTo"));
 
         Map tree = null;
         try {
-            tree = makeGroup(items, featureOrder, 0);
+            tree = makeGroup(dctx.getDelegator(), items, featureOrder, 0);
         } catch (Exception e) {
             result.put(ModelService.RESPONSE_MESSAGE, ModelService.RESPOND_ERROR);
             result.put(ModelService.ERROR_MESSAGE, e.getMessage());
@@ -223,7 +227,7 @@ public class ProductServices {
     }
 
     // Builds a product feature tree
-    private static Map makeGroup(Collection items, List order, int index)
+    private static Map makeGroup(GenericDelegator delegator, List items, List order, int index)
             throws IllegalArgumentException, IllegalStateException {
         Map group = new HashMap();
         String orderKey = (String) order.get(index);
@@ -239,19 +243,17 @@ public class ProductServices {
             // -------------------------------
             // Gather the necessary data
             // -------------------------------
-            GenericValue thisItem = (GenericValue) itemIterator.next();
+            String thisItem = (String) itemIterator.next();
             Debug.logInfo("ThisItem: " + thisItem);
             Collection features = null;
             try {
-                Map fields = UtilMisc.toMap("productId", thisItem.get("productId"), "productFeatureTypeId", orderKey,
+                Map fields = UtilMisc.toMap("productId", thisItem, "productFeatureTypeId", orderKey,
                         "productFeatureApplTypeId", "STANDARD_FEATURE");
                 List sort = UtilMisc.toList("sequenceNum");
 
                 // get the features and filter out expired dates
-                features = thisItem.getDelegator().findByAndCache("ProductFeatureAndAppl", fields, sort);
-                Debug.logInfo("Features Before Filter: " + features);
+                features = delegator.findByAndCache("ProductFeatureAndAppl", fields, sort);
                 features = EntityUtil.filterByDate(features);
-                Debug.logInfo("Features Afer Filter: " + features);
             } catch (GenericEntityException e) {
                 throw new IllegalStateException("Problem reading relation: " + e.getMessage());
             }
@@ -259,7 +261,7 @@ public class ProductServices {
             Iterator featuresIterator = features.iterator();
             while (featuresIterator.hasNext()) {
                 GenericValue item = (GenericValue) featuresIterator.next();
-                Object itemKey = item.get("productFeatureTypeId");
+                Object itemKey = item.get("description");
                 if (group.containsKey(itemKey)) {
                     List itemList = (List) group.get(itemKey);
                     if (!itemList.contains(thisItem))
@@ -270,6 +272,8 @@ public class ProductServices {
                 }
             }
         }
+
+        Debug.logInfo("Group: " + group);
 
         // no groups; no tree
         if (group.size() == 0)
@@ -285,7 +289,7 @@ public class ProductServices {
             List itemList = (List) group.get(key);
             if (itemList == null || itemList.size() == 0)
                 throw new IllegalStateException("Cannot create tree from an empty list; error on '" + key + "'");
-            Map subGroup = makeGroup(itemList, order, index + 1);
+            Map subGroup = makeGroup(delegator, itemList, order, index + 1);
             group.put(key, subGroup);
         }
         return group;
