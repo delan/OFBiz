@@ -337,9 +337,9 @@
     	<response name="success" type="view" value="changepassword"/>
     </request-map>
 
-    <request-map uri="updatepassword">
+    <request-map uri="updatePassword">
     	<security https="true" auth="true"/>
-    	<event type="java" path="org.ofbiz.commonapp.security.login.LoginEvents" invoke="changePassword"/>
+        <event type="simple" path="org/ofbiz/commonapp/security/login/LoginSimpleEvents.xml" invoke="updatePassword"/>
     	<response name="success" type="view" value="changepassword"/>
     	<response name="error" type="view" value="changepassword"/>
     </request-map>

@@ -36,37 +36,42 @@
 <%@ include file="/includes/header.jsp" %>
 <%@ include file="/includes/onecolumn.jsp" %>
 <%
-  boolean useValues = true;
-  if(request.getAttribute(SiteDefs.ERROR_MESSAGE) != null) useValues = false;
+    boolean tryEntity = true;
+    if(request.getAttribute(SiteDefs.ERROR_MESSAGE) != null) tryEntity = false;
+    pageContext.setAttribute("tryEntity", new Boolean(tryEntity));
 
-  String donePage = request.getParameter("DONE_PAGE");
-  if(donePage == null || donePage.length() <= 0) donePage="viewprofile";
+    String donePage = request.getParameter("DONE_PAGE");
+    if(donePage == null || donePage.length() <= 0) donePage="viewprofile";
 %>
   <p class="head1">Change Password</p>
-  <form method="post" action="<ofbiz:url>/updatepassword/<%=donePage%></ofbiz:url>" name="changepasswordform">
+
+    &nbsp;<a href="<ofbiz:url>/authview/<%=donePage%></ofbiz:url>" class="buttontext">[Done/Cancel]</a>
+    &nbsp;<a href="javascript:document.changepasswordform.submit()" class="buttontext">[Save]</a>
+
+  <form method="post" action="<ofbiz:url>/updatePassword/<%=donePage%></ofbiz:url>" name="changepasswordform">
   <table width="90%" border="0" cellpadding="2" cellspacing="0">
     <tr>
-      <td width="26%" align=right><div class="tabletext">Old Password</div></td>
+      <td width="26%" align=right><div class="tabletext">Current (Old) Password</div></td>
       <td width="74%">
-        <input type="password" name="OLD_PASSWORD" size="20" maxlength="20">
+        <input type="password" name="currentPassword" size="20" maxlength="20">
       *</td>
     </tr>
     <tr>
       <td width="26%" align=right><div class="tabletext">New Password</div></td>
       <td width="74%">
-        <input type="password" name="NEW_PASSWORD" size="20" maxlength="20">
+        <input type="password" name="newPassword" size="20" maxlength="20">
       *</td>
     </tr>
     <tr>
-      <td width="26%" align=right><div class="tabletext">Confirm Password</div></td>
+      <td width="26%" align=right><div class="tabletext">New Password Verify</div></td>
       <td width="74%">
-        <input type="password" name="NEW_PASSWORD_CONFIRM" size="20" maxlength="20">
+        <input type="password" name="newPasswordVerify" size="20" maxlength="20">
       *</td>
     </tr>
     <tr>
       <td width="26%" align=right><div class="tabletext">Password Hint</div></td>
       <td width="74%">
-        <input type="text" name="PASSWORD_HINT" value="<%=UtilFormatOut.checkEmpty(request.getParameter("PASSWORD_HINT"),userLogin.getString("passwordHint"))%>" size="40" maxlength="100">
+        <input type="text" size="40" maxlength="100" <ofbiz:inputvalue field="passwordHint" entityAttr="userLogin" tryEntityAttr="tryEntity" fullattrs="true"/>>
       </td>
     </tr>
   </table>
@@ -74,7 +79,6 @@
 
     &nbsp;<a href="<ofbiz:url>/authview/<%=donePage%></ofbiz:url>" class="buttontext">[Done/Cancel]</a>
     &nbsp;<a href="javascript:document.changepasswordform.submit()" class="buttontext">[Save]</a>
-    <%--  <input type="image" value="[Save]" border="0" src="/commerce/images/btn_save.gif"> --%>
 
 <%@ include file="/includes/onecolumnclose.jsp" %>
 <%@ include file="/includes/footer.jsp" %>
