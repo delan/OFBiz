@@ -22,7 +22,7 @@
  *  THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  *
  *  This is the Open for Business Main build script.
- *  $Id: build.xml,v 1.31 2004/03/19 21:46:51 ajzeneski Exp $
+ *  $Id: build.xml,v 1.32 2004/03/31 02:41:13 ajzeneski Exp $
 -->
 
 <project name="OFBiz Main Build" default="build" basedir=".">
@@ -120,6 +120,12 @@
         <echo message="[clean] ========== Cleaning entityext component ========="/>
         <echo message="[clean] ================================================="/>
         <ant dir="components/entityext" target="clean" inheritAll="false"/>
+
+        <echo message="[clean]"/>
+        <echo message="[clean] ================================================="/>
+        <echo message="[clean] ========= Cleaning appservers component ========="/>
+        <echo message="[clean] ================================================="/>
+        <ant dir="components/appservers" target="clean" inheritAll="false"/>
 
         <echo message="[clean]"/>
         <echo message="[clean] ================================================="/>
@@ -244,13 +250,13 @@
 
         <echo message="[build]"/>
         <echo message="[build] ==============================================="/>
-        <echo message="[build] ========== Building minerva component =========="/>
+        <echo message="[build] ========= Building minerva component =========="/>
         <echo message="[build] ==============================================="/>
         <ant dir="components/minerva" inheritAll="false"/>
 
         <echo message="[build]"/>
         <echo message="[build] ==============================================="/>
-        <echo message="[build] ========== Building jotm component =========="/>
+        <echo message="[build] ========== Building jotm component ==========="/>
         <echo message="[build] ==============================================="/>
         <ant dir="components/jotm" inheritAll="false"/>
 
@@ -262,7 +268,7 @@
 
         <echo message="[build]"/>
         <echo message="[build] ==============================================="/>
-        <echo message="[build] ========== Building jetty component =========="/>
+        <echo message="[build] ========== Building jetty component ==========="/>
         <echo message="[build] ==============================================="/>
         <ant dir="components/jetty" inheritAll="false"/>
 
@@ -284,6 +290,12 @@
         <echo message="[build] ==============================================="/>
         <ant dir="components/entityext" inheritAll="false"/>
 
+        <echo message="[build]"/>
+        <echo message="[build] ==============================================="/>
+        <echo message="[build] ========= Building appservers component ======="/>
+        <echo message="[build] ==============================================="/>
+        <ant dir="components/appservers" inheritAll="false"/>
+
         <echo message="[build]" />
         <echo message="[build] ================================================="/>
         <echo message="[build] ========== Building minilang component =========="/>
@@ -298,13 +310,13 @@
 
         <echo message="[build]" />
         <echo message="[build] ================================================="/>
-        <echo message="[build] ========== Building rules component =========="/>
+        <echo message="[build] =========== Building rules component ============"/>
         <echo message="[build] ================================================="/>
         <ant dir="components/rules" inheritAll="false"/>
 
         <echo message="[build]" />
         <echo message="[build] ================================================="/>
-        <echo message="[build] ========== Building common component =========="/>
+        <echo message="[build] =========== Building common component ==========="/>
         <echo message="[build] ================================================="/>
         <ant dir="components/common" inheritAll="false"/>
 
@@ -328,7 +340,7 @@
 
         <echo message="[build]" />
         <echo message="[build] ================================================="/>
-        <echo message="[build] ========== Building workeffort component =========="/>
+        <echo message="[build] ========= Building workeffort component ========="/>
         <echo message="[build] ================================================="/>
         <ant dir="components/workeffort" inheritAll="false"/>
 
@@ -375,9 +387,9 @@
         <ant dir="components/securityext" inheritAll="false"/>
 
         <echo message="[build]" />
-        <echo message="[build] ===================================================="/>
+        <echo message="[build] ================================================="/>
         <echo message="[build] ========== Building webtools component =========="/>
-        <echo message="[build] ===================================================="/>
+        <echo message="[build] ================================================="/>
         <ant dir="components/webtools" inheritAll="false"/>
 
         <echo message="[build] ========== Done Building (Compile) =========="/>
@@ -397,14 +409,14 @@
         <ant dir="base" target="docs" inheritAll="false"/>
 
         <echo message="[docs]"/>
-        <echo message="[docs] ==============================================="/>
+        <echo message="[docs] ================================================"/>
         <echo message="[docs] ========== Building minerva component =========="/>
-        <echo message="[docs] ==============================================="/>
+        <echo message="[docs] ================================================"/>
         <ant dir="components/minerva" target="docs" inheritAll="false"/>
 
         <echo message="[docs]"/>
         <echo message="[docs] ==============================================="/>
-        <echo message="[docs] ========== Building jotm component =========="/>
+        <echo message="[docs] =========== Building jotm component ==========="/>
         <echo message="[docs] ==============================================="/>
         <ant dir="components/jotm" target="docs" inheritAll="false"/>
 
@@ -416,7 +428,7 @@
 
         <echo message="[docs]"/>
         <echo message="[docs] ==============================================="/>
-        <echo message="[docs] ========== Building jetty component =========="/>
+        <echo message="[docs] ========== Building jetty component ==========="/>
         <echo message="[docs] ==============================================="/>
         <ant dir="components/jetty" target="docs" inheritAll="false"/>
 
@@ -434,9 +446,15 @@
 
         <echo message="[docs]"/>
         <echo message="[docs] ================================================"/>
-        <echo message="[docs] ========== Building entityext component =========="/>
+        <echo message="[docs] ========= Building entityext component ========="/>
         <echo message="[docs] ================================================"/>
         <ant dir="components/entityext" target="docs" inheritAll="false"/>
+
+        <echo message="[docs]"/>
+        <echo message="[docs] ================================================"/>
+        <echo message="[docs] ======== Building appservers component ========="/>
+        <echo message="[docs] ================================================"/>
+        <ant dir="components/appservers" target="docs" inheritAll="false"/>
 
         <echo message="[docs]"/>
         <echo message="[docs] ================================================="/>
@@ -451,15 +469,15 @@
         <ant dir="components/datafile" target="docs" inheritAll="false"/>
 
         <echo message="[docs]"/>
-        <echo message="[docs] ================================================="/>
-        <echo message="[docs] ========== Building rules component =========="/>
-        <echo message="[docs] ================================================="/>
+        <echo message="[docs] ==============================================="/>
+        <echo message="[docs] ========== Building rules component ==========="/>
+        <echo message="[docs] ==============================================="/>
         <ant dir="components/rules" target="docs" inheritAll="false"/>
 
         <echo message="[docs]"/>
-        <echo message="[docs] ================================================="/>
+        <echo message="[docs] ==============================================="/>
         <echo message="[docs] ========== Building common component =========="/>
-        <echo message="[docs] ================================================="/>
+        <echo message="[docs] ==============================================="/>
         <ant dir="components/common" target="docs" inheritAll="false"/>
 
         <echo message="[docs]"/>
@@ -469,39 +487,39 @@
         <ant dir="components/workflow" target="docs" inheritAll="false"/>
 
         <echo message="[docs]"/>
-        <echo message="[docs] ================================================="/>
+        <echo message="[docs] ================================================"/>
         <echo message="[docs] ========== Building content component =========="/>
-        <echo message="[docs] ================================================="/>
+        <echo message="[docs] ================================================"/>
         <ant dir="components/content" target="docs" inheritAll="false"/>
 
         <echo message="[docs]"/>
-        <echo message="[docs] ==============================================="/>
+        <echo message="[docs] =============================================="/>
         <echo message="[docs] ========== Building party component =========="/>
-        <echo message="[docs] ==============================================="/>
+        <echo message="[docs] =============================================="/>
         <ant dir="components/party" target="docs" inheritAll="false"/>
 
         <echo message="[docs]"/>
         <echo message="[docs] ================================================="/>
-        <echo message="[docs] ========== Building workeffort component =========="/>
+        <echo message="[docs] ========= Building workeffort component ========="/>
         <echo message="[docs] ================================================="/>
         <ant dir="components/workeffort" target="docs" inheritAll="false"/>
 
         <echo message="[docs]"/>
         <echo message="[docs] ==============================================="/>
-        <echo message="[docs] ========== Building product component =========="/>
+        <echo message="[docs] ========== Building product component ========="/>
         <echo message="[docs] ==============================================="/>
         <ant dir="components/product" target="docs" inheritAll="false"/>
 
         <echo message="[docs]"/>
-        <echo message="[docs] ==============================================="/>
-        <echo message="[docs] ========== Building marketing component =========="/>
-        <echo message="[docs] ==============================================="/>
+        <echo message="[docs] ================================================"/>
+        <echo message="[docs] ========= Building marketing component ========="/>
+        <echo message="[docs] ================================================"/>
         <ant dir="components/marketing" target="docs" inheritAll="false"/>
 
         <echo message="[docs]"/>
-        <echo message="[docs] ==============================================="/>
+        <echo message="[docs] =============================================="/>
         <echo message="[docs] ========== Building order component =========="/>
-        <echo message="[docs] ==============================================="/>
+        <echo message="[docs] =============================================="/>
         <ant dir="components/order" target="docs" inheritAll="false"/>
 
         <echo message="[docs]"/>
@@ -517,9 +535,9 @@
         <ant dir="components/accounting" target="docs" inheritAll="false"/>
 
         <echo message="[docs]"/>
-        <echo message="[docs] ==================================================="/>
+        <echo message="[docs] =================================================="/>
         <echo message="[docs] ========== Building ecommerce component =========="/>
-        <echo message="[docs] ==================================================="/>
+        <echo message="[docs] =================================================="/>
         <ant dir="components/ecommerce" target="docs" inheritAll="false"/>
 
         <echo message="[docs]"/>
@@ -529,9 +547,9 @@
         <ant dir="components/securityext" target="docs" inheritAll="false"/>
 
         <echo message="[docs]"/>
-        <echo message="[docs] ===================================================="/>
+        <echo message="[docs] ================================================="/>
         <echo message="[docs] ========== Building webtools component =========="/>
-        <echo message="[docs] ===================================================="/>
+        <echo message="[docs] ================================================="/>
         <ant dir="components/webtools" target="docs" inheritAll="false"/>
 
         <echo message="[docs] ========== Done Building (JavaDocs) =========="/>
