@@ -107,8 +107,7 @@
         <string-to-list string="-shoppingListItemSeqId" list-name="orderBy"/>
         <find-by-and entity-name="ShoppingListItem" list-name="currentItems" map-name="lookupMap" order-by-list-name="orderBy"></find-by-and>
         <if-empty field-name="currentItems">
-            <string-to-field string="1" field-name="shoppingListItemSeqId" map-name="newEntity"/>            
-            <log level="error" message="Setting seqID to 1"/>
+            <string-to-field string="1" field-name="shoppingListItemSeqId" map-name="newEntity"/>                        
         <else>
            <first-from-list entry-name="newestItem" list-name="currentItems"/>
            <calculate field-name="shoppingListItemSeqId" map-name="newEntity" type="Integer">
@@ -116,8 +115,7 @@
                    <number value="1"/>
                </calcop>
            </calculate>
-           <to-string field-name="shoppingListItemSeqId" map-name="newEntity"/>
-           <log level="error" message="Calc seqID is ${newEntity.shoppingListItemSeqId}"/>
+           <to-string field-name="shoppingListItemSeqId" map-name="newEntity"/>           
         </else>
         </if-empty>
                         
