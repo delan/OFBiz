@@ -20,7 +20,7 @@
  *  THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  *
  *@author     Andy Zeneski (jaz@ofbiz.org)
- *@version    $Revision: 1.1 $
+ *@version    $Revision: 1.2 $
  *@since      2.1
 -->
 
@@ -55,7 +55,7 @@
                 <td width="10%" align="right"><span class="tableheadtext"><b>Adjustments</b></span></td>
                 <td width="10%" align="right"><span class="tableheadtext"><b>Subtotal</b></span></td>
               </tr>
-              <#list orderItems as orderItem>
+              <#list orderItems?if_exists as orderItem>
                 <#assign itemType = orderItem.getRelatedOne("OrderItemType")>
                 <tr><td colspan="7"><hr class='sepbar'></td></tr>
                 <tr>     
@@ -114,16 +114,16 @@
                   </tr>
                 </#list>
                </#list>
-               <#if orderItems?size == 0 || !orderItems?has_content>
+               <#if !orderItems?has_content>
                  <tr><td><font color="red">ERROR: Sales Order Lines lookup failed.</font></td></tr>
                </#if>
 
               <tr><td colspan="8"><hr class='sepbar'></td></tr>
               <tr>
                 <td align="right" colspan="4"><div class="tabletext"><b>Subtotal</b></div></td>
-                <td align="right" nowrap><div class="tabletext">${orderSubTotal?string.currency}</div></td>
+                <td align="right" nowrap><div class="tabletext">&nbsp;<#if orderSubTotal?exists>${orderSubTotal?string.currency}</#if></div></td>
               </tr>              
-              <#list headerAdjustmentsToShow as orderHeaderAdjustment>                
+              <#list headerAdjustmentsToShow?if_exists as orderHeaderAdjustment>
                 <tr>
                   <td align="right" colspan="4"><div class="tabletext"><b>${localOrderReadHelper.getAdjustmentType(orderHeaderAdjustment)}</b></div></td>
                   <td align="right" nowrap><div class="tabletext">${localOrderReadHelper.getOrderAdjustmentTotal(orderHeaderAdjustment)?string.currency}</div></td>
@@ -131,18 +131,18 @@
               </#list>                 
               <tr>
                 <td align="right" colspan="4"><div class="tabletext"><b>Shipping and Handling</b></div></td>
-                <td align="right" nowrap><div class="tabletext">${orderShippingTotal?string.currency}</div></td>
+                <td align="right" nowrap><div class="tabletext"><#if orderShippingTotal?exists>${orderShippingTotal?string.currency}</#if></div></td>
               </tr>              
               <tr>
                 <td align="right" colspan="4"><div class="tabletext"><b>Sales Tax</b></div></td>
-                <td align="right" nowrap><div class="tabletext">${orderTaxTotal?string.currency}</div></td>
+                <td align="right" nowrap><div class="tabletext"><#if orderShippingTotal?exists>${orderTaxTotal?string.currency}</#if></div></td>
               </tr>
               
               <tr><td colspan=2></td><td colspan="8"><hr class='sepbar'></td></tr>
               <tr>
                 <td align="right" colspan="4"><div class="tabletext"><b>Grand Total</b></div></td>
                 <td align="right" nowrap>
-                  <div class="tabletext">${orderGrandTotal?string.currency}</div>
+                  <div class="tabletext"><#if orderShippingTotal?exists>${orderGrandTotal?string.currency}</#if></div>
                 </td>
               </tr>
             </table>
