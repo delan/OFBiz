@@ -91,6 +91,29 @@ public class BillingAccountWorker {
             }
         }
         
+        // finally apply any non-invoice credits to the balance
+        List credits = null;
+        List exprs3 = new LinkedList();
+        exprs3.add(new EntityExpr("billingAccountId", EntityOperator.EQUALS, billingAccountId));
+        exprs3.add(new EntityExpr("invoiceId", EntityOperator.EQUALS, null));
+        exprs3.add(new EntityExpr("invoiceItemSeqId", EntityOperator.EQUALS, null));
+        try {
+            credits = delegator.findByAnd("PaymentApplication", exprs3);
+        } catch (GenericEntityException e) {
+            Debug.logError(e, "Trouble getting PaymentApplication list", module);
+            return 0.01;
+        }
+        if (credits != null) {
+            Iterator ci = credits.iterator();
+            while (ci.hasNext()) {
+                GenericValue credit = (GenericValue) ci.next();
+                Double amount = credit.getDouble("amountApplied");
+                if (amount != null) {
+                    balance -= amount.doubleValue();
+                }                
+            }
+        }
+        
         return balance;
     }   
     
