@@ -1,5 +1,5 @@
 /*
- * $Id: GenericDelegator.java,v 1.11 2003/12/12 04:02:04 ajzeneski Exp $
+ * $Id: GenericDelegator.java,v 1.12 2003/12/12 04:15:33 jonesde Exp $
  *
  * Copyright (c) 2001, 2002 The Open For Business Project - www.ofbiz.org
  *
@@ -78,7 +78,7 @@ import org.xml.sax.SAXException;
  * @author     <a href="mailto:jonesde@ofbiz.org">David E. Jones</a>
  * @author     <a href="mailto:chris_maurer@altavista.com">Chris Maurer</a>
  * @author     <a href="mailto:jaz@ofbiz.org">Andy Zeneski</a
- * @version    $Revision: 1.11 $
+ * @version    $Revision: 1.12 $
  * @since      1.0
  */
 public class GenericDelegator implements DelegatorInterface {
@@ -1097,7 +1097,13 @@ public class GenericDelegator implements DelegatorInterface {
     }
 
     protected void saveEntitySyncRemoveInfo(GenericEntity dummyPK) throws GenericEntityException {
+        // don't store remove info on entities where it is disabled
         if (dummyPK.getModelEntity().getNoAutoStamp()) {
+            return;
+        }
+        
+        // don't store remove info on things removed on an entity sync
+        if (dummyPK.getIsFromEntitySync()) {
             return;
         }
         

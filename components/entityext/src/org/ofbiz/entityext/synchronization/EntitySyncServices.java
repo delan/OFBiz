@@ -1,5 +1,5 @@
 /*
- * $Id: EntitySyncServices.java,v 1.9 2003/12/12 03:58:34 jonesde Exp $
+ * $Id: EntitySyncServices.java,v 1.10 2003/12/12 04:15:33 jonesde Exp $
  *
  * Copyright (c) 2001, 2002 The Open For Business Project - www.ofbiz.org
  *
@@ -63,7 +63,7 @@ import org.xml.sax.SAXException;
  * Entity Engine Sync Services
  *
  * @author     <a href="mailto:jonesde@ofbiz.org">David E. Jones</a> 
- * @version    $Revision: 1.9 $
+ * @version    $Revision: 1.10 $
  * @since      3.0
  */
 public class EntitySyncServices {
@@ -171,7 +171,7 @@ public class EntitySyncServices {
                 }
                 
                 // make sure tx times are indexed somehow
-                // TODO: keep track of how long these sync runs take and store that info on the history table
+                // keep track of how long these sync runs take and store that info on the history table
                 // save info about removed, all entities that don't have no-auto-stamp set, this will be done in the GenericDAO like the stamp sets
                 
                 // simulate two ordered lists and merge them on-the-fly for faster combined sorting
@@ -451,6 +451,7 @@ public class EntitySyncServices {
                 }
                 
                 // always do a removeByAnd, if it was a removeByAnd great, if it was a removeByPrimaryKey, this will also work and save us a query
+                pkToRemove.setIsFromEntitySync(true);
                 int numRemByAnd = delegator.removeByAnd(pkToRemove.getEntityName(), pkToRemove);
                 if (numRemByAnd == 0) {
                     numAlreadyRemoved++;
