@@ -51,8 +51,8 @@
                 jndi-name="jms/QueueConnectionFactory"
                 topic-queue="jms/OFBQueue"
                 type="queue"
-                username="admin"
-                password="admin"
+                username="ofbiz"
+                password="ofbiz"
                 listen="true"/>
     </jms-service>
     <jms-service name="testTopic" send-mode="all">
@@ -62,6 +62,15 @@
                 type="topic"
                 username="admin"
                 password="admin"
+                listen="true"/>
+    </jms-service>
+    <jms-service name="entityCacheMessenger" send-mode="all">
+        <server jndi-server-name="default"
+                jndi-name="jms/TopicConnectionFactory"
+                topic-queue="jms/OFBTopic"
+                type="queue"
+                username="ofbiz"
+                password="ofbiz"
                 listen="true"/>
     </jms-service>
 
