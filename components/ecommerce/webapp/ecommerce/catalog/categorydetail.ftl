@@ -20,11 +20,14 @@
  *  THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  *
  *@author     Andy Zeneski (jaz@ofbiz.org)
- *@version    $Revision: 1.5 $
+ *@version    $Revision: 1.6 $
  *@since      2.1
 -->
 
 <#assign uiLabelMap = requestAttributes.uiLabelMap>
+
+${pages.get("/catalog/breadcrumbs.ftl")}
+
 <#if productCategory?exists>
 <table border="0" width="100%" cellpadding="3">
   <tr>

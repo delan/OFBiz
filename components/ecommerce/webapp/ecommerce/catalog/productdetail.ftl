@@ -20,7 +20,7 @@
  *  THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  *
  *@author     Andy Zeneski (jaz@ofbiz.org)
- *@version    $Revision: 1.33 $
+ *@version    $Revision: 1.34 $
  *@since      2.1
 -->
 <#-- variable setup -->
@@ -145,6 +145,8 @@ ${requestAttributes.virtualJavaScript?if_exists}
     }
  //-->
  </script>
+
+${pages.get("/catalog/breadcrumbs.ftl")}
 
 <table border="0" width="100%" cellpadding="2" cellspacing='0'>
   <#-- Category next/previous -->
