@@ -42,8 +42,8 @@ import org.ofbiz.core.minilang.operation.*;
  */
 public class SimpleMapProcessor {
 
-    protected static UtilCache simpleMapProcessorsResourceCache = new UtilCache("SimpleMapProcessorsResource", 0, 0);
-    protected static UtilCache simpleMapProcessorsURLCache = new UtilCache("SimpleMapProcessorsURL", 0, 0);
+    protected static UtilCache simpleMapProcessorsResourceCache = new UtilCache("minilang.SimpleMapProcessorsResource", 0, 0);
+    protected static UtilCache simpleMapProcessorsURLCache = new UtilCache("minilang.SimpleMapProcessorsURL", 0, 0);
 
     public static void runSimpleMapProcessor(String xmlResource, String name, Map inMap, Map results, List messages, Locale locale) throws MiniLangException {
         runSimpleMapProcessor(xmlResource, name, inMap, results, messages, locale, null);

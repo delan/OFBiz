@@ -46,8 +46,8 @@ import org.ofbiz.core.minilang.operation.*;
  */
 public class SimpleMethod {
 
-    protected static UtilCache simpleMethodsResourceCache = new UtilCache("SimpleMethodsResource", 0, 0);
-    protected static UtilCache simpleMethodsURLCache = new UtilCache("SimpleMethodsURL", 0, 0);
+    protected static UtilCache simpleMethodsResourceCache = new UtilCache("minilang.SimpleMethodsResource", 0, 0);
+    protected static UtilCache simpleMethodsURLCache = new UtilCache("minilang.SimpleMethodsURL", 0, 0);
 
     // ----- Event Context Invokers -----
     
