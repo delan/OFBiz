@@ -58,6 +58,8 @@
             package-name="org.ofbiz.commonapp.shipment.issuance"
             title="Item Issuance Entity">
       <field name="itemIssuanceId" type="id-ne"></field>
+      <field name="orderId" type="id-ne"></field>
+      <field name="orderItemSeqId" type="id-ne"></field>
       <field name="inventoryItemId" type="id"></field>
       <field name="shipmentId" type="id"></field>
       <field name="shipmentItemSeqId" type="id"></field>
@@ -67,9 +69,19 @@
       <relation type="one" fk-name="ITEM_ISS_INVITM" rel-entity-name="InventoryItem">
         <key-map field-name="inventoryItemId"/>
       </relation>
+      <relation type="one-nofk" rel-entity-name="Shipment">
+        <key-map field-name="shipmentId"/>
+      </relation>
       <relation type="one" fk-name="ITEM_ISS_SHITM" rel-entity-name="ShipmentItem">
         <key-map field-name="shipmentId"/>
         <key-map field-name="shipmentItemSeqId"/>
+      </relation>
+      <relation type="one-nofk" rel-entity-name="OrderHeader">
+        <key-map field-name="orderId"/>
+      </relation>
+      <relation type="one" fk-name="ITEM_ISS_ORITM" rel-entity-name="OrderItem">
+        <key-map field-name="orderId"/>
+        <key-map field-name="orderItemSeqId"/>
       </relation>
       <relation type="many" rel-entity-name="ItemIssuanceRole">
         <key-map field-name="itemIssuanceId"/>
