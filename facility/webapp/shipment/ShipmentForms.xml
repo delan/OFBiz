@@ -66,24 +66,4 @@
 		
 		<field name="submitButton" title="Update" widget-style="standardSubmit"><submit button-type="button"/></field>
 	</form>
-	<form name="CreateShipmentRouteSegment" type="single" 
-		target="createShipmentRouteSegment" title=""
-		default-title-style="tableheadtext" default-widget-style="inputBox" default-tooltip-style="tabletext">
-		<auto-fields-service service-name="createShipmentRouteSegment"/>
-		<field name="shipmentId" map-name="shipment"><hidden/></field>
-		<field name="shipmentRouteSegmentId" map-name="shipment"><ignored/></field>
-		
-		<field name="submitButton" title="Create" widget-style="standardSubmit"><submit button-type="button"/></field>
-	</form>
-	<form name="UpdateShipmentRouteSegment" type="list" 
-		target="updateShipmentRouteSegment" title="" list-name="shipmentRouteSegmentDatas"
-		default-title-style="tableheadtext" default-widget-style="inputBox" default-tooltip-style="tabletext">
-		<auto-fields-service service-name="updateShipmentRouteSegment" map-name="shipmentRouteSegment"/>
-		<field name="shipmentId"><hidden/></field>
-		<field name="submitButton" title="Update" widget-style="standardSubmit"><submit button-type="button"/></field>
-		<field name="deleteLink" title="&amp;nbsp;" widget-style="buttontext">
-			<hyperlink target="removeRouteSegment?shipmentId=${shipmentRouteSegment.shipmentId}&amp;shipmentRouteSegmentId=${shipmentRouteSegment.shipmentRouteSegmentId}"
-				description="[Delete]" also-hidden="false"/>
-		</field>
-	</form>
 </forms>
