@@ -63,16 +63,13 @@
     <classpathentry exported="true" kind="lib" path="jotm/commons-cli.jar"/>
     <classpathentry exported="true" kind="lib" path="jotm/enhydra-jdbc.jar"/>
     <classpathentry exported="true" kind="lib" path="jotm/jonas_timer.jar"/>
-    <classpathentry exported="true" kind="lib" path="jotm/jonathan.jar"/>
     <classpathentry exported="true" kind="lib" path="jotm/jotm_iiop_stubs.jar"/>
     <classpathentry exported="true" kind="lib" path="jotm/jotm_jrmp_stubs.jar"/>
     <classpathentry exported="true" kind="lib" path="jotm/jotm.jar"/>
-    <classpathentry exported="true" kind="lib" path="jotm/kilim.jar"/>
     <classpathentry exported="true" kind="lib" path="jotm/objectweb-datasource.jar"/>
-    <classpathentry exported="true" kind="lib" path="jotm/ow_util_log_file.jar"/>
-    <classpathentry exported="true" kind="lib" path="jotm/ow_util_log_wrp_log4j.jar"/>
     <classpathentry exported="true" kind="lib" path="jasperreports/jasperreports-applet.jar"/>
     <classpathentry exported="true" kind="lib" path="share/EdenLib.jar"/>
     <classpathentry exported="true" kind="lib" path="share/JPublish.jar"/>
+    <classpathentry kind="lib" path="jotm/monolog.jar"/>
     <classpathentry kind="output" path=""/>
 </classpath>
