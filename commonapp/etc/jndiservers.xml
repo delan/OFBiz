@@ -18,9 +18,18 @@
             context-provider-url="rmi://127.0.0.1:1099/JndiServer"
             initial-context-factory="org.exolab.jms.jndi.rmi.RmiJndiInitialContextFactory"/>
 
+	<!-- Note that in most cases this is not necessary or desired for Orion, the default above is easier/better -->
     <jndi-server name="localorion"
             context-provider-url="ormi://localhost/default"
             initial-context-factory="com.evermind.server.ApplicationClientInitialContextFactory"
             security-principal="admin"
             security-credentials="admin"/>
+
+	<!-- Note that in most cases this is not necessary or desired for Weblogic, the default above is easier/better -->
+    <jndi-server name="localweblogic" 
+            context-provider-url="t3://127.0.0.1:7001"
+            initial-context-factory="weblogic.jndi.WLInitialContextFactory"
+            url-pkg-prefixes=""
+            security-principal=""
+            security-credentials=""/>
 </jndi-config>
