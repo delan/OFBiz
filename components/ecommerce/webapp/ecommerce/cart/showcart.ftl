@@ -1,46 +1,46 @@
 <#--
  *  Copyright (c) 2003 The Open For Business Project - www.ofbiz.org
  *
- *  Permission is hereby granted, free of charge, to any person obtaining a 
- *  copy of this software and associated documentation files (the "Software"), 
- *  to deal in the Software without restriction, including without limitation 
- *  the rights to use, copy, modify, merge, publish, distribute, sublicense, 
- *  and/or sell copies of the Software, and to permit persons to whom the 
+ *  Permission is hereby granted, free of charge, to any person obtaining a
+ *  copy of this software and associated documentation files (the "Software"),
+ *  to deal in the Software without restriction, including without limitation
+ *  the rights to use, copy, modify, merge, publish, distribute, sublicense,
+ *  and/or sell copies of the Software, and to permit persons to whom the
  *  Software is furnished to do so, subject to the following conditions:
  *
- *  The above copyright notice and this permission notice shall be included 
+ *  The above copyright notice and this permission notice shall be included
  *  in all copies or substantial portions of the Software.
  *
- *  THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS 
- *  OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF 
- *  MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. 
- *  IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY 
- *  CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT 
- *  OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR 
+ *  THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS
+ *  OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF
+ *  MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT.
+ *  IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY
+ *  CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT
+ *  OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR
  *  THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  *
  *@author     David E. Jones (jonesde@ofbiz.org)
  *@author     Andy Zeneski (jaz@ofbiz.org)
- *@version    $Revision: 1.7 $
+ *@version    $Revision: 1.8 $
  *@since      2.1
 -->
 <#assign uiLabelMap = requestAttributes.uiLabelMap>
 <script language="JavaScript">
 <!--
 function toggle(e) {
-    e.checked = !e.checked;    
+    e.checked = !e.checked;
 }
 function checkToggle(e) {
     var cform = document.cartform;
-    if (e.checked) {      
+    if (e.checked) {
         var len = cform.elements.length;
         var allchecked = true;
         for (var i = 0; i < len; i++) {
             var element = cform.elements[i];
-            if (element.name == "selectedItem" && !element.checked) {              
+            if (element.name == "selectedItem" && !element.checked) {
                 allchecked = false;
             }
-            cform.selectAll.checked = allchecked;            
+            cform.selectAll.checked = allchecked;
         }
     } else {
         cform.selectAll.checked = false;
@@ -50,11 +50,11 @@ function toggleAll(e) {
     var cform = document.cartform;
     var len = cform.elements.length;
     for (var i = 0; i < len; i++) {
-        var element = cform.elements[i];   
+        var element = cform.elements[i];
         if (element.name == "selectedItem" && element.checked != e.checked) {
             toggle(element);
         }
-    }   
+    }
 }
 function removeSelected() {
     var cform = document.cartform;
@@ -68,7 +68,7 @@ function addToList() {
 }
 //-->
 </script>
-            
+
 <TABLE border=0 width='100%' cellspacing='0' cellpadding='0' class='boxoutside'>
   <TR>
     <TD width='100%'>
@@ -78,7 +78,7 @@ function addToList() {
             <div class="boxhead">&nbsp;${uiLabelMap.CommonQuickAdd}</div>
           </td>
           <td valign="middle" align="right">
-            <a href="<@ofbizUrl>/main</@ofbizUrl>" class="submenutext">${uiLabelMap.EcommerceContinueShopping}</a><#if (shoppingCartSize > 0)><a href="<@ofbizUrl>/quickcheckout</@ofbizUrl>" class="submenutextright">${uiLabelMap.EcommerceCheckout}</a><#else><span class="submenutextrightdisabled">${uiLabelMap.EcommerceCheckout}</span></#if>
+            <a href="<@ofbizUrl>/main</@ofbizUrl>" class="submenutext">${uiLabelMap.EcommerceContinueShopping}</a><#if (shoppingCartSize > 0)><a href="<@ofbizUrl>/checkoutoptions</@ofbizUrl>" class="submenutextright">${uiLabelMap.EcommerceCheckout}</a><#else><span class="submenutextrightdisabled">${uiLabelMap.EcommerceCheckout}</span></#if>
           </td>
         </tr>
       </table>
@@ -139,7 +139,7 @@ function addToList() {
     <FORM METHOD="POST" ACTION="<@ofbizUrl>/modifycart</@ofbizUrl>" name='cartform' style='margin: 0;'>
       <input type="hidden" name="removeSelected" value="false">
       <table width='100%' cellspacing="0" cellpadding="1" border="0">
-        <TR> 
+        <TR>
           <TD NOWRAP>&nbsp;</TD>
           <TD NOWRAP><div class='tabletext'><b>${uiLabelMap.EcommerceProduct}</b></div></TD>
           <TD NOWRAP align='center'><div class='tabletext'><b>${uiLabelMap.CommonQuantity}</b></div></TD>
@@ -165,13 +165,13 @@ function addToList() {
                 <#else>
                   &nbsp;
                 </#if>
-            </td> 
+            </td>
             <td>
                 <div class='tabletext'>
                   <#if cartLine.getProductId()?exists>
                     <#-- product item -->
                     <#-- <b>${cartLineIndex}</b> - -->
-                    <a href='<@ofbizUrl>/product?product_id=${cartLine.getProductId()}</@ofbizUrl>' class='buttontext'>${cartLine.getProductId()} - 
+                    <a href='<@ofbizUrl>/product?product_id=${cartLine.getProductId()}</@ofbizUrl>' class='buttontext'>${cartLine.getProductId()} -
                     ${cartLine.getName()?if_exists}</a> : ${cartLine.getDescription()?if_exists}
 
                     <#-- if inventory is not required check to see if it is out of stock and needs to have a message shown about that... -->
@@ -181,11 +181,11 @@ function addToList() {
                     <#if !isStoreInventoryRequired && !isStoreInventoryAvailable && itemProduct.inventoryMessage?has_content>
                         <b>(${itemProduct.inventoryMessage})</b>
                     </#if>
-                    
+
                   <#else>
                     <#-- this is a non-product item -->
                     <b>${cartLine.getItemTypeDescription()?if_exists}</b> : ${cartLine.getName()?if_exists}
-                  </#if>                            
+                  </#if>
                 </div>
             </td>
             <td nowrap align="center">
@@ -220,9 +220,9 @@ function addToList() {
               </tr>
             </#list>
         </#if>
-        
-        <tr> 
-          <td colspan="5" align="right" valign=bottom>             
+
+        <tr>
+          <td colspan="5" align="right" valign=bottom>
             <div class='tabletext'><b>${uiLabelMap.EcommerceCartTotal}:</b></div>
           </td>
           <td align="right" valign=bottom>
@@ -239,7 +239,7 @@ function addToList() {
         <tr>
           <td valign="bottom" colspan="6"><div class="tabletext">P - ${uiLabelMap.EcommercePromotionalItems}.</td>
         </tr>
-        </#if>        
+        </#if>
         <#if !itemsFromList && !promoItems>
         <tr>
           <td colspan="6">&nbsp;</td>
@@ -248,7 +248,7 @@ function addToList() {
         <tr>
           <td colspan="6"><hr class="sepbar"></td>
         </tr>
-        <tr>          
+        <tr>
           <td colspan="6" align="right" valign="bottom">
             <div class="tabletext">
               <#if sessionAttributes.userLogin?has_content>
@@ -262,23 +262,23 @@ function addToList() {
                 <option value="">${uiLabelMap.EcommerceNewShoppingList}</option>
               </select>
               &nbsp;&nbsp;
-              <a href="javascript:addToList();" class="buttontext">[${uiLabelMap.EcommerceAddSelectedtoList}]</a>&nbsp;&nbsp;   
+              <a href="javascript:addToList();" class="buttontext">[${uiLabelMap.EcommerceAddSelectedtoList}]</a>&nbsp;&nbsp;
               <#else>
                ${uiLabelMap.EcommerceYouMust}<a href="<@ofbizUrl>/checkLogin/showcart</@ofbizUrl>" class="buttontext">${uiLabelMap.CommonLogin}</a>
                 ${uiLabelMap.EcommerceToAddSelectedItemsToShoppingList}.&nbsp;
-              </#if>           
+              </#if>
             </div>
           </td>
-        </tr>       
+        </tr>
         <tr>
           <td colspan="6"><hr class="sepbar"></td>
-        </tr>        
+        </tr>
         <tr>
           <td colspan="6" align="center" valign="bottom">
             <div class="tabletext"><input type="checkbox" onChange="javascript:document.cartform.submit()" name="alwaysShowcart" <#if shoppingCart.viewCartOnAdd()>checked</#if>>&nbsp;Always view cart after adding an item.</div>
           </td>
-        </tr>        
-      </table>    
+        </tr>
+      </table>
     </FORM>
   <#else>
     <div class='head2'>${uiLabelMap.EcommerceYourShoppingCartEmpty}.</div>
@@ -288,7 +288,7 @@ function addToList() {
       </table>
     </TD>
   </TR>
-<#-- Un-comment this to include a link bar at the bottom too 
+<#-- Un-comment this to include a link bar at the bottom too
   <TR>
     <TD width='100%'>
       <table width='100%' border='0' cellpadding='<%=boxTopPadding%>' cellspacing='0' bgcolor='<%=boxTopColor%>'>
@@ -386,11 +386,11 @@ function addToList() {
             <td>
     <table width='100%' cellspacing="0" cellpadding="1" border="0">
       <#-- random complementary products -->
-      <#list associatedProducts as assocProduct> 
+      <#list associatedProducts as assocProduct>
         <tr>
           <td>
-            ${setRequestAttribute("optProduct", assocProduct)} 
-            ${setRequestAttribute("listIndex", assocProduct_index)}         
+            ${setRequestAttribute("optProduct", assocProduct)}
+            ${setRequestAttribute("listIndex", assocProduct_index)}
             ${pages.get("/catalog/productsummary.ftl")}
           </td>
         </tr>
