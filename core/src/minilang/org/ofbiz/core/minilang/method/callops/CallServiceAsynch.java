@@ -70,7 +70,7 @@ public class CallServiceAsynch extends MethodOperation {
                 inMap.put("userLogin", userLogin);
         }
         try {
-            methodContext.getDispatcher().runSync(serviceName, inMap);
+            methodContext.getDispatcher().runAsync(serviceName, inMap);
         } catch (GenericServiceException e) {
             Debug.logError(e);
             String errMsg = "ERROR: Could not complete the " + simpleMethod.getShortDescription() + " process [problem invoking the " + serviceName + " service: " + e.getMessage() + "]";
