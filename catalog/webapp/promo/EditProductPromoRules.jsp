@@ -51,6 +51,10 @@
 
     Collection productPromoActionTypes = delegator.findAllCache("ProductPromoActionType", UtilMisc.toList("description"));
     if (productPromoActionTypes != null) pageContext.setAttribute("productPromoActionTypes", productPromoActionTypes);
+
+    Collection orderAdjustmentTypes = delegator.findAllCache("OrderAdjustmentType", UtilMisc.toList("description"));
+    if (orderAdjustmentTypes != null) pageContext.setAttribute("orderAdjustmentTypes", orderAdjustmentTypes);
+
 %>
 <br>
 
@@ -188,7 +192,7 @@
         <table border="1" width="100%" cellpadding='2' cellspacing='0'>
           <tr>
             <td width='5%'><div class="tabletext"><b>SeqId</b></div></td>
-            <td width='85%'><div class="tabletext"><b>Type,&nbsp;Quantity,&nbsp;ProductId&nbsp;&amp;&nbsp;Limit</b></div></td>
+            <td width='85%'><div class="tabletext"><b>ActionType,&nbsp;OrderAdjustmentType,&nbsp;Quantity,&nbsp;ProductId&nbsp;&amp;&nbsp;Limit</b></div></td>
             <td width='10%'><div class="tabletext"><b>&nbsp;</b></div></td>
           </tr>
           <ofbiz:iterator name="productPromoAction" property="productPromoActions">
@@ -208,6 +212,17 @@
                             <%}%>
                             <ofbiz:iterator name="productPromoActionType" property="productPromoActionTypes">
                               <option value='<%=productPromoActionType.getString("productPromoActionTypeId")%>'><%=productPromoActionType.getString("description")%> [<%=productPromoActionType.getString("productPromoActionTypeId")%>]</option>
+                            </ofbiz:iterator>
+                        </select>
+                        <select name='orderAdjustmentTypeId' size=1>
+                            <%if (productPromoAction.get("orderAdjustmentTypeId") != null) {%>
+                              <option value='<%=productPromoAction.getString("orderAdjustmentTypeId")%>'> [<%=productPromoAction.getString("orderAdjustmentTypeId")%>]</option>
+                              <option value='<%=productPromoAction.getString("orderAdjustmentTypeId")%>'>&nbsp;</option>
+                            <%} else {%>
+                              <option value=''>&nbsp;</option>
+                            <%}%>
+                            <ofbiz:iterator name="orderAdjustmentType" property="orderAdjustmentTypes">
+                              <option value='<%=orderAdjustmentType.getString("orderAdjustmentTypeId")%>'><%=orderAdjustmentType.getString("description")%> [<%=orderAdjustmentType.getString("orderAdjustmentTypeId")%>]</option>
                             </ofbiz:iterator>
                         </select>
                         <input type=text size='8' <ofbiz:inputvalue entityAttr="productPromoAction" field="quantity" fullattrs="true"/>>
@@ -232,6 +247,11 @@
                     <select name='productPromoActionTypeId' size=1>
                         <ofbiz:iterator name="productPromoActionType" property="productPromoActionTypes">
                           <option value='<%=productPromoActionType.getString("productPromoActionTypeId")%>'><%=productPromoActionType.getString("description")%> [<%=productPromoActionType.getString("productPromoActionTypeId")%>]</option>
+                        </ofbiz:iterator>
+                    </select>
+                    <select name='orderAdjustmentTypeId' size=1>
+                        <ofbiz:iterator name="orderAdjustmentType" property="orderAdjustmentTypes">
+                          <option value='<%=orderAdjustmentType.getString("orderAdjustmentTypeId")%>'><%=orderAdjustmentType.getString("description")%> [<%=orderAdjustmentType.getString("orderAdjustmentTypeId")%>]</option>
                         </ofbiz:iterator>
                     </select>
                     <input type=text size='8' name='quantity'>
