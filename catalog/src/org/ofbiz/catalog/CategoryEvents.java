@@ -94,7 +94,9 @@ public class CategoryEvents {
       return "error";
     }
 
+    Collection toBeStored = new LinkedList();
     GenericValue category = delegator.makeValue("ProductCategory", null);
+    toBeStored.add(category);
     category.set("productCategoryId", productCategoryId);
     category.set("primaryParentCategoryId", primaryParentCategoryId);
     category.set("description", description);
@@ -102,28 +104,27 @@ public class CategoryEvents {
     category.set("categoryImageUrl", categoryImageUrl);
     
     if(UtilValidate.isNotEmpty(primaryParentCategoryId)) {
-      category.preStoreOther(delegator.makeValue("ProductCategoryRollup", UtilMisc.toMap("productCategoryId", productCategoryId, "parentProductCategoryId", primaryParentCategoryId)));
+      toBeStored.add(delegator.makeValue("ProductCategoryRollup", UtilMisc.toMap("productCategoryId", productCategoryId, "parentProductCategoryId", primaryParentCategoryId)));
       delegator.clearCacheLine("ProductCategoryRollup", UtilMisc.toMap("parentProductCategoryId", primaryParentCategoryId));
     }
     
     if(updateMode.equals("CREATE")) {
-      GenericValue newCategory = null;
-      try { newCategory = delegator.create(category); }
-      catch(GenericEntityException e) { Debug.logWarning(e.getMessage()); newCategory = null; }
-      if(newCategory == null) {
-        request.setAttribute("ERROR_MESSAGE", "Could not create category (write error)");
-        return "error";
+      try {
+          delegator.storeAll(toBeStored);
+      } catch(GenericEntityException e) {
+          request.setAttribute("ERROR_MESSAGE", "Could not create category (write error)");
+          return "error";
       }
     }
     else if(updateMode.equals("UPDATE")) {
-      try { category.store(); }
-      catch(GenericEntityException e) {
+      try {
+          delegator.storeAll(toBeStored);
+      } catch(GenericEntityException e) {
         request.setAttribute("ERROR_MESSAGE", "Could not update category (write error)");
         Debug.logWarning("[CategoryEvents.updateCategory] Could not update category (write error); message: " + e.getMessage());
         return "error";
       }
-    }
-    else {
+    } else {
       request.setAttribute("ERROR_MESSAGE", "Specified update mode: \"" + updateMode + "\" is not supported.");
       return "error";
     }
