@@ -28,6 +28,13 @@
 <br/>
 <p class='tabletext'>${uiLabelMap.PartyAlreadyHaveAccount}, <a href='<@ofbizUrl>/checkLogin/main</@ofbizUrl>' class='buttontext'>${uiLabelMap.CommonLoginHere}</a>.</p>
 
+<#macro fieldErrors fieldName>
+  <#if requestAttributes.errorMsgListReq?has_content>
+    <#assign fieldMessages = Static["org.ofbiz.base.util.MessageString"].getMessagesForField(fieldName, true, requestAttributes.errorMsgListReq)>
+    <ul><#list fieldMessages as errorMsg><li class="errorMessage">${errorMsg}</li></#list></ul>
+  </#if>
+</#macro>
+
 <form method="post" action="<@ofbizUrl>/createcustomer${previousParams}</@ofbizUrl>" name="newuserform" style='margin:0;'>
 <input type="hidden" name="productStoreId" value="${productStoreId}">
 <table border=0 width='100%' cellspacing='0' cellpadding='0' class='boxoutside'>
@@ -51,54 +58,63 @@
   <tr>
     <td width="26%"><div class="tabletext">${uiLabelMap.CommonTitle}</div></td>
     <td width="74%">
+      <@fieldErrors fieldName="USER_TITLE"/>
       <input type="text" class='inputBox' name="USER_TITLE" value="${requestParameters.USER_TITLE?if_exists}" size="10" maxlength="30">
     </td>
   </tr>
   <tr>
     <td width="26%"><div class="tabletext">${uiLabelMap.PartyFirstName}</div></td>
     <td width="74%">
+      <@fieldErrors fieldName="USER_FIRST_NAME"/>
       <input type="text" class='inputBox' name="USER_FIRST_NAME" value="${requestParameters.USER_FIRST_NAME?if_exists}" size="30" maxlength="30">
     * </td>
   </tr>
   <tr>
     <td width="26%"><div class="tabletext">${uiLabelMap.PartyMiddleInitial}</div></td>
     <td width="74%">
-        <input type="text" class='inputBox' name="USER_MIDDLE_NAME" value="${requestParameters.USER_MIDDLE_NAME?if_exists}" size="4" maxlength="4">
+      <@fieldErrors fieldName="USER_MIDDLE_NAME"/>
+      <input type="text" class='inputBox' name="USER_MIDDLE_NAME" value="${requestParameters.USER_MIDDLE_NAME?if_exists}" size="4" maxlength="4">
     </td>
   </tr>
   <tr>
     <td width="26%"><div class="tabletext">${uiLabelMap.PartyLastName} </div></td>
     <td width="74%">
+      <@fieldErrors fieldName="USER_LAST_NAME"/>
       <input type="text" class='inputBox' name="USER_LAST_NAME" value="${requestParameters.USER_LAST_NAME?if_exists}" size="30" maxlength="30">
     * </td>
   </tr>
   <tr>
     <td width="26%"><div class="tabletext">${uiLabelMap.PartySuffix}</div></td>
     <td width="74%">
+      <@fieldErrors fieldName="USER_SUFFIX"/>
       <input type="text" class='inputBox' name="USER_SUFFIX" value="${requestParameters.USER_SUFFIX?if_exists}" size="10" maxlength="30">
     </td>
   </tr>
   <tr>
     <td width="26%"><div class="tabletext">${uiLabelMap.PartyAddressLine1}</div></td>
     <td width="74%">
+      <@fieldErrors fieldName="CUSTOMER_ADDRESS1"/>
       <input type="text" class='inputBox' name="CUSTOMER_ADDRESS1" value="${requestParameters.CUSTOMER_ADDRESS1?if_exists}" size="30" maxlength="30">
     *</td>
   </tr>
   <tr>
     <td width="26%"><div class="tabletext">${uiLabelMap.PartyAddressLine2}</div></td>
     <td width="74%">
-        <input type="text" class='inputBox' name="CUSTOMER_ADDRESS2" value="${requestParameters.CUSTOMER_ADDRESS2?if_exists}" size="30" maxlength="30">
+      <@fieldErrors fieldName="CUSTOMER_ADDRESS2"/>
+      <input type="text" class='inputBox' name="CUSTOMER_ADDRESS2" value="${requestParameters.CUSTOMER_ADDRESS2?if_exists}" size="30" maxlength="30">
     </td>
   </tr>
   <tr>
     <td width="26%"><div class="tabletext">${uiLabelMap.PartyCity}</div></td>
     <td width="74%">
-        <input type="text" class='inputBox' name="CUSTOMER_CITY" value="${requestParameters.CUSTOMER_CITY?if_exists}" size="30" maxlength="30">
+      <@fieldErrors fieldName="CUSTOMER_CITY"/>
+      <input type="text" class='inputBox' name="CUSTOMER_CITY" value="${requestParameters.CUSTOMER_CITY?if_exists}" size="30" maxlength="30">
     * </td>
   </tr>
   <tr>
     <td width="26%"><div class="tabletext">${uiLabelMap.PartyState}</div></td>
     <td width="74%">
+      <@fieldErrors fieldName="CUSTOMER_STATE"/>
       <select name="CUSTOMER_STATE" class='selectBox'>
           <#if requestParameters.CUSTOMER_STATE?exists><option value='${requestParameters.CUSTOMER_STATE}'>${selectedStateName?default(requestParameters.CUSTOMER_STATE)}</option></#if>
           <option value="">${uiLabelMap.PartyNoState}</option>          
@@ -109,12 +125,14 @@
   <tr>
     <td width="26%"><div class="tabletext">${uiLabelMap.PartyZipCode}</div></td>
     <td width="74%">
-        <input type="text" class='inputBox' name="CUSTOMER_POSTAL_CODE" value="${requestParameters.CUSTOMER_POSTAL_CODE?if_exists}" size="12" maxlength="10">
+      <@fieldErrors fieldName="CUSTOMER_POSTAL_CODE"/>
+      <input type="text" class='inputBox' name="CUSTOMER_POSTAL_CODE" value="${requestParameters.CUSTOMER_POSTAL_CODE?if_exists}" size="12" maxlength="10">
     * </td>
   </tr>
   <tr>
       <td width="26%"><div class="tabletext">${uiLabelMap.PartyCountry}</div></td>
       <td width="74%">
+      <@fieldErrors fieldName="CUSTOMER_COUNTRY"/>
           <select name="CUSTOMER_COUNTRY" class='selectBox'>
             <#if requestParameters.CUSTOMER_COUNTRY?exists><option value='${requestParameters.CUSTOMER_COUNTRY}'>${selectedCountryName?default(requestParameters.CUSTOMER_COUNTRY)}</option></#if>
             <#include "../includes/countries.ftl">
@@ -165,6 +183,10 @@
   <tr>
     <td width="26%"><div class="tabletext">${uiLabelMap.PartyHomePhone}<BR>(${uiLabelMap.PartyAllowSolicitation}?)</div></td>
     <td width="74%">
+      <#if requestAttributes.errorMsgListReq?has_content>
+        <#assign fieldMessages = Static["org.ofbiz.base.util.MessageString"].getMessagesForField("CUSTOMER_HOME_COUNTRY", "CUSTOMER_HOME_AREA", "CUSTOMER_HOME_CONTACT", "CUSTOMER_HOME_EXT", true, requestAttributes.errorMsgListReq)>
+        <ul><#list fieldMessages as errorMsg><li class="errorMessage">${errorMsg}</li></#list></ul>
+      </#if>
         <input type="text" class='inputBox' name="CUSTOMER_HOME_COUNTRY" value="${requestParameters.CUSTOMER_HOME_COUNTRY?if_exists}" size="4" maxlength="10">
         -&nbsp;<input type="text" class='inputBox' name="CUSTOMER_HOME_AREA" value="${requestParameters.CUSTOMER_HOME_AREA?if_exists}" size="4" maxlength="10">
         -&nbsp;<input type="text" class='inputBox' name="CUSTOMER_HOME_CONTACT" value="${requestParameters.CUSTOMER_HOME_CONTACT?if_exists}" size="15" maxlength="15">
@@ -179,6 +201,10 @@
   <tr>
     <td width="26%"><div class="tabletext">${uiLabelMap.PartyBusinessPhone}<BR>(${uiLabelMap.PartyAllowSolicitation}?)</div></td>
     <td width="74%">
+      <#if requestAttributes.errorMsgListReq?has_content>
+        <#assign fieldMessages = Static["org.ofbiz.base.util.MessageString"].getMessagesForField("CUSTOMER_WORK_COUNTRY", "CUSTOMER_WORK_AREA", "CUSTOMER_WORK_CONTACT", "CUSTOMER_WORK_EXT", true, requestAttributes.errorMsgListReq)>
+        <ul><#list fieldMessages as errorMsg><li class="errorMessage">${errorMsg}</li></#list></ul>
+      </#if>
         <input type="text" class='inputBox' name="CUSTOMER_WORK_COUNTRY" value="${requestParameters.CUSTOMER_WORK_COUNTRY?if_exists}" size="4" maxlength="10">
         -&nbsp;<input type="text" class='inputBox' name="CUSTOMER_WORK_AREA" value="${requestParameters.CUSTOMER_WORK_AREA?if_exists}" size="4" maxlength="10">
         -&nbsp;<input type="text" class='inputBox' name="CUSTOMER_WORK_CONTACT" value="${requestParameters.CUSTOMER_WORK_CONTACT?if_exists}" size="15" maxlength="15">
@@ -193,6 +219,10 @@
   <tr>
     <td width="26%"><div class="tabletext">${uiLabelMap.PartyFaxNumber}<BR>(${uiLabelMap.PartyAllowSolicitation}?)</div></td>
     <td width="74%">
+      <#if requestAttributes.errorMsgListReq?has_content>
+        <#assign fieldMessages = Static["org.ofbiz.base.util.MessageString"].getMessagesForField("CUSTOMER_FAX_COUNTRY", "CUSTOMER_FAX_AREA", "CUSTOMER_FAX_CONTACT", "", true, requestAttributes.errorMsgListReq)>
+        <ul><#list fieldMessages as errorMsg><li class="errorMessage">${errorMsg}</li></#list></ul>
+      </#if>
         <input type="text" class='inputBox' name="CUSTOMER_FAX_COUNTRY" value="${requestParameters.CUSTOMER_FAX_COUNTRY?if_exists}" size="4" maxlength="10">
         -&nbsp;<input type="text" class='inputBox' name="CUSTOMER_FAX_AREA" value="${requestParameters.CUSTOMER_FAX_AREA?if_exists}" size="4" maxlength="10">
         -&nbsp;<input type="text" class='inputBox' name="CUSTOMER_FAX_CONTACT" value="${requestParameters.CUSTOMER_FAX_CONTACT?if_exists}" size="15" maxlength="15">
@@ -206,6 +236,10 @@
   <tr>
     <td width="26%"><div class="tabletext">${uiLabelMap.PartyMobilePhone}<BR>(${uiLabelMap.PartyAllowSolicitation}?)</div></td>
     <td width="74%">
+      <#if requestAttributes.errorMsgListReq?has_content>
+        <#assign fieldMessages = Static["org.ofbiz.base.util.MessageString"].getMessagesForField("CUSTOMER_MOBILE_COUNTRY", "CUSTOMER_MOBILE_AREA", "CUSTOMER_MOBILE_CONTACT", "", true, requestAttributes.errorMsgListReq)>
+        <ul><#list fieldMessages as errorMsg><li class="errorMessage">${errorMsg}</li></#list></ul>
+      </#if>
         <input type="text" class='inputBox' name="CUSTOMER_MOBILE_COUNTRY" value="${requestParameters.CUSTOMER_MOBILE_COUNTRY?if_exists}" size="4" maxlength="10">
         -&nbsp;<input type="text" class='inputBox' name="CUSTOMER_MOBILE_AREA" value="${requestParameters.CUSTOMER_MOBILE_AREA?if_exists}" size="4" maxlength="10">
         -&nbsp;<input type="text" class='inputBox' name="CUSTOMER_MOBILE_CONTACT" value="${requestParameters.CUSTOMER_MOBILE_CONTACT?if_exists}" size="15" maxlength="15">
@@ -247,6 +281,7 @@
   <tr>
     <td width="26%"><div class="tabletext">${uiLabelMap.PartyEmailAddress}<BR>(${uiLabelMap.PartyAllowSolicitation}?)</div></td>
     <td width="74%">
+      <@fieldErrors fieldName="CUSTOMER_EMAIL"/>
         <input type="text" class='inputBox' name="CUSTOMER_EMAIL" value="${requestParameters.CUSTOMER_EMAIL?if_exists}" size="60" maxlength="255"> *
         <br/>
         <select name="CUSTOMER_EMAIL_ALLOW_SOL" class='selectBox'>
@@ -310,43 +345,47 @@
     <tr>
       <td width="26%"><div class="tabletext">${uiLabelMap.CommonUsername}</div></td>
       <td width="74%">
-          <div class="tabletext">Use Email Address: <input type="CHECKBOX" name="UNUSEEMAIL" value="on" onClick="setEmailUsername();"/></div>
-          <div><input type="text" class='inputBox' name="USERNAME" value="${requestParameters.USERNAME?if_exists}" size="20" maxlength="50"/> *</div>
-       </td>
+        <@fieldErrors fieldName="USERNAME"/>
+        <div class="tabletext">Use Email Address: <input type="CHECKBOX" name="UNUSEEMAIL" value="on" onClick="setEmailUsername();"/></div>
+        <div><input type="text" class='inputBox' name="USERNAME" value="${requestParameters.USERNAME?if_exists}" size="20" maxlength="50"/> *</div>
+     </td>
     </tr>
     </#if>
     <#if createAllowPassword>
       <tr>
         <td width="26%">
-            <div class="tabletext">${uiLabelMap.CommonPassword}</div>
+          <div class="tabletext">${uiLabelMap.CommonPassword}</div>
         </td>
         <td width="74%">
-            <input type="password" class='inputBox' name="PASSWORD" value="" size="20" maxlength="50">
-          * </td>
-      </tr>
-      <tr>
-        <td width="26%">
-            <div class="tabletext">${uiLabelMap.PartyRepeatPassword}</div>
-        </td>
-        <td width="74%">
-            <input type="password" class='inputBox' name="CONFIRM_PASSWORD" value="" size="20" maxlength="50">
+          <@fieldErrors fieldName="PASSWORD"/>
+          <input type="password" class='inputBox' name="PASSWORD" value="" size="20" maxlength="50">
         * </td>
       </tr>
       <tr>
         <td width="26%">
-            <div class="tabletext">${uiLabelMap.PartyPasswordHint}</div>
+          <div class="tabletext">${uiLabelMap.PartyRepeatPassword}</div>
         </td>
         <td width="74%">
-            <input type="text" class='inputBox' name="PASSWORD_HINT" value="${requestParameters.PASSWORD_HINT?if_exists}" size="40" maxlength="100">
+          <@fieldErrors fieldName="CONFIRM_PASSWORD"/>
+          <input type="password" class='inputBox' name="CONFIRM_PASSWORD" value="" size="20" maxlength="50">
+        * </td>
+      </tr>
+      <tr>
+        <td width="26%">
+          <div class="tabletext">${uiLabelMap.PartyPasswordHint}</div>
+        </td>
+        <td width="74%">
+          <@fieldErrors fieldName="PASSWORD_HINT"/>
+          <input type="text" class='inputBox' name="PASSWORD_HINT" value="${requestParameters.PASSWORD_HINT?if_exists}" size="40" maxlength="100">
         </td>
       </tr>
     <#else>
       <tr>
         <td width="26%">
-            <div class="tabletext">${uiLabelMap.CommonPassword}</div>
+          <div class="tabletext">${uiLabelMap.CommonPassword}</div>
         </td>
         <td>
-           <div class="commentary">${uiLabelMap.PartyRecievePasswordByEmail}.</div>
+         <div class="commentary">${uiLabelMap.PartyRecievePasswordByEmail}.</div>
         </td>
       </tr>
     </#if>
