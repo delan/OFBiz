@@ -56,6 +56,12 @@ font-style: normal;
 color: #000000;
 }
 
+DIV.tabletexthidden {
+font-size: 10px;
+font-family: Verdana, Arial, Helvetica, sans-serif;
+visibility: hidden;
+}
+
 .tabletext {
 font-size: 10px;
 font-family: Verdana, Arial, Helvetica, sans-serif;
