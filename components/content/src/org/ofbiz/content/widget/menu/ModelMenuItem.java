@@ -1,5 +1,5 @@
 /*
- * $Id: ModelMenuItem.java,v 1.8 2004/04/19 20:58:45 byersa Exp $
+ * $Id: ModelMenuItem.java,v 1.9 2004/04/25 05:34:57 byersa Exp $
  *
  * Copyright (c) 2003 The Open For Business Project - www.ofbiz.org
  *
@@ -34,7 +34,7 @@ import org.ofbiz.base.util.FlexibleStringExpander;
 import org.ofbiz.base.util.UtilHttp;
 import org.ofbiz.base.util.UtilValidate;
 import org.ofbiz.base.util.UtilXml;
-import org.ofbiz.content.widget.menu.ModelMenuItem.MenuTarget.MenuParamInfo;
+//import org.ofbiz.content.widget.menu.ModelMenuItem.MenuParamInfo;
 import org.w3c.dom.Element;
 
 /**
@@ -42,7 +42,7 @@ import org.w3c.dom.Element;
  *
  * @author     <a href="mailto:jonesde@ofbiz.org">David E. Jones</a>
  * @author     <a href="mailto:byersa@automationgroups.com">Al Byers</a>
- * @version    $Revision: 1.8 $
+ * @version    $Revision: 1.9 $
  * @since      2.2
  */
 public class ModelMenuItem {
@@ -74,7 +74,9 @@ public class ModelMenuItem {
     protected String cellWidth;
     protected Boolean hideIfSelected;
     protected Boolean hasPermission;
+    protected MenuImage menuImage;
 
+    public static String DEFAULT_TARGET_TYPE = "intra-app";
     // ===== CONSTRUCTORS =====
     /** Default Constructor */
     public ModelMenuItem(ModelMenu modelMenu) {
@@ -132,6 +134,13 @@ public class ModelMenuItem {
             MenuTarget target = new MenuTarget(targetElement, this);
             this.addUpdateMenuTarget(target);
             //Debug.logInfo("Added target " + modelMenuItem.getName() + " from def, mapName=" + modelMenuItem.getMapName(), module);
+        }
+        List imgElements = UtilXml.childElementList(fieldElement, "img");
+        Iterator imgElementIter = imgElements.iterator();
+        while (imgElementIter.hasNext()) {
+            Element imgElement = (Element) imgElementIter.next();
+            menuImage = new MenuImage(imgElement);
+            if (Debug.infoOn()) Debug.logInfo("in new ModelMenuItem, menuImage:" + menuImage, module);
         }
 
     }
@@ -357,7 +366,7 @@ public class ModelMenuItem {
     }
 
     public String getCurrentMenuTargetName() {
-        if (Debug.infoOn()) Debug.logInfo("in ModelMenuItem, getCurrentMenuTargetItem:" + currentMenuTargetName, module);
+        //if (Debug.infoOn()) Debug.logInfo("in ModelMenuItem, getCurrentMenuTargetItem:" + currentMenuTargetName, module);
         return this.currentMenuTargetName;
     }
 
@@ -556,6 +565,9 @@ public class ModelMenuItem {
             
         return;
     }
+    public MenuImage getMenuImage() {
+       return this.menuImage;
+    }
 
     public class MenuTarget {
 
@@ -568,10 +580,10 @@ public class ModelMenuItem {
         protected String permissionStatusId;
         protected String permissionEntityAction;
         protected String privilegeEnumId;
+        protected MenuImage menuImage;
     
         protected Map paramMap = new HashMap();
         protected List paramList = new ArrayList();
-
         protected ModelMenuItem modelMenuItem;
 
         public MenuTarget() {
@@ -592,13 +604,18 @@ public class ModelMenuItem {
             this.privilegeEnumId = fieldElement.getAttribute("privilege-enum-id");
     
             // read in add param defs, add/override one by one using the paramList and paramMap
-            List paramElements = UtilXml.childElementList(fieldElement, "param");
-            Iterator paramElementIter = paramElements.iterator();
-            while (paramElementIter.hasNext()) {
-                Element paramElement = (Element) paramElementIter.next();
-                String paramType = paramElement.getAttribute("type");
-                MenuParam param =  new MenuParam(paramElement);
-                this.addUpdateMenuParam(param);
+            List subElements = UtilXml.childElementList(fieldElement, "param");
+            Iterator subElementIter = subElements.iterator();
+            while (subElementIter.hasNext()) {
+                Element subElement = (Element) subElementIter.next();
+                MenuParam sub =  new MenuParam(subElement);
+                this.addUpdateMenuParam(sub);
+            }
+            subElements = UtilXml.childElementList(fieldElement, "img");
+            subElementIter = subElements.iterator();
+            while (subElementIter.hasNext()) {
+                Element subElement = (Element) subElementIter.next();
+                menuImage = new MenuImage(subElement);
             }
     
         }
@@ -696,8 +713,35 @@ public class ModelMenuItem {
             return this.targetTitle;
         }
 
+        public String getMenuTargetTitle(Map context) {
+            if (UtilValidate.isNotEmpty(this.targetTitle)) {
+                return this.targetTitle;
+            } else {
+                return modelMenuItem.getTitle(context);
+            }
+        }
+
         public String getRequestName() {
             return this.requestName;
+        }
+
+        public String getTargetType() {
+            if (UtilValidate.isNotEmpty(this.targetType)) {
+                return this.targetType;
+            } else {
+                return ModelMenuItem.DEFAULT_TARGET_TYPE;
+            }
+        }
+
+        public MenuImage getMenuImage() {
+            if (this.menuImage != null) 
+                return this.menuImage;
+            else
+                return this.modelMenuItem.getMenuImage();
+        }
+
+        public List getParamList() {
+            return this.paramList;
         }
 
         /**
@@ -707,24 +751,7 @@ public class ModelMenuItem {
                 return targetName;
         }
 
-        /**
-         * @return
-         */
-        public String renderAsUrl( Map context) {
-      
-            Map thisParamMap = new HashMap();
-            Iterator iter = paramList.iterator();
-            while (iter.hasNext()) {
-                MenuParam param = (MenuParam)iter.next();
-                Map map = param.getParamMap(context);
-                if (map != null) 
-                    thisParamMap.putAll(map);
-            }
-            String paramStr = UtilHttp.urlEncodeArgs(thisParamMap);
-            String questionMark = UtilValidate.isNotEmpty(paramStr) ? "?" : "";
-            String url = "/" + this.requestName + questionMark + paramStr;
-            return url;
-        }
+    }
 
 
         public class MenuParam {
@@ -855,5 +882,62 @@ public class ModelMenuItem {
            }
 
         }
+
+
+        public class MenuImage {
+
+        protected FlexibleStringExpander requestName;
+        protected String targetType;
+        protected Map paramMap = new HashMap();
+        protected List paramList = new ArrayList();
+        protected ModelMenuItem modelMenuItem;
+
+
+        public MenuImage(Element fieldElement) {
+
+            setRequestName(fieldElement.getAttribute("request-name"));
+                Debug.logInfo("in new MenuImage, requestName:" + requestName.getOriginal(), module);
+            this.targetType = fieldElement.getAttribute("target-type");
+
+            // read in add param defs, add/override one by one using the paramList and paramMap
+            List subElements = UtilXml.childElementList(fieldElement, "param");
+            Iterator subElementIter = subElements.iterator();
+            while (subElementIter.hasNext()) {
+                Element subElement = (Element) subElementIter.next();
+                MenuParam sub =  new MenuParam(subElement);
+                this.addUpdateMenuParam(sub);
+            }
+    
+        }
+
+        /**
+         * @param string
+         */
+        public void setRequestName(String string) {
+            this.requestName = new FlexibleStringExpander(string);
+        }
+
+        public String getRequestName(Map context) {
+            String s = requestName.expandString(context);
+            return s;
+        }
+
+        public String getTargetType() {
+            return this.targetType;
+        }
+
+        public void addUpdateMenuParam(MenuParam param) {
+
+            this.paramList.add(param);
+            this.paramMap.put(param.getName(), param);
+        }
+
+        public List getParamList() {
+            return this.paramList;
+        }
+
+
     }
+
+
 }
