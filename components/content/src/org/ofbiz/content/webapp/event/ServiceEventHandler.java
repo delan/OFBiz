@@ -1,5 +1,5 @@
 /*
- * $Id: ServiceEventHandler.java,v 1.5 2003/11/19 22:03:22 ajzeneski Exp $
+ * $Id: ServiceEventHandler.java,v 1.6 2003/12/13 16:39:55 ajzeneski Exp $
  *
  * Copyright (c) 2001-2003 The Open For Business Project - www.ofbiz.org
  *
@@ -24,10 +24,7 @@
  */
 package org.ofbiz.content.webapp.event;
 
-import java.util.HashMap;
-import java.util.Iterator;
-import java.util.Locale;
-import java.util.Map;
+import java.util.*;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
@@ -50,7 +47,7 @@ import org.ofbiz.service.ServiceUtil;
  *
  * @author     <a href="mailto:jaz@ofbiz.org">Andy Zeneski</a>
  * @author     <a href="mailto:jonesde@ofbiz.org">David E. Jones</a>
- * @version    $Revision: 1.5 $
+ * @version    $Revision: 1.6 $
  * @since      2.0
  */
 public class ServiceEventHandler implements EventHandler {
@@ -117,7 +114,7 @@ public class ServiceEventHandler implements EventHandler {
         Iterator modelParmInIter = model.getInModelParamList().iterator();
         while (modelParmInIter.hasNext()) {
             ModelParam modelParam = (ModelParam) modelParmInIter.next();
-            String name = (String) modelParam.name;
+            String name = modelParam.name;
 
             // don't include userLogin, that's taken care of below
             if ("userLogin".equals(name)) continue;
@@ -129,6 +126,9 @@ public class ServiceEventHandler implements EventHandler {
                 Map paramMap = UtilHttp.makeParamMapWithPrefix(request, modelParam.stringMapPrefix, null);
                 value = paramMap;
                 if (Debug.verboseOn()) Debug.log("Set [" + modelParam.name + "]: " + paramMap, module);
+            } else if (modelParam.stringListSuffix != null && modelParam.stringListSuffix.length() > 0) {
+                List paramList = UtilHttp.makeParamListWithSuffix(request, modelParam.stringListSuffix, null);
+                value = paramList;
             } else {
                 value = request.getParameter(name);
 

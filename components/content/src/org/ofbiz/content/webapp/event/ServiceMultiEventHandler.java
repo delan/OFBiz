@@ -1,5 +1,5 @@
 /*
- * $Id: ServiceMultiEventHandler.java,v 1.3 2003/09/05 21:07:34 ajzeneski Exp $
+ * $Id: ServiceMultiEventHandler.java,v 1.4 2003/12/13 16:39:55 ajzeneski Exp $
  *
  * Copyright (c) 2003 The Open For Business Project - www.ofbiz.org
  *
@@ -53,7 +53,7 @@ import org.ofbiz.service.ServiceUtil;
  * ServiceMultiEventHandler - Event handler for running a service multiple times; for bulk forms
  *
  * @author     <a href="mailto:jaz@ofbiz.org">Andy Zeneski</a>
- * @version    $Revision: 1.3 $
+ * @version    $Revision: 1.4 $
  * @since      2.2
  */
 public class ServiceMultiEventHandler implements EventHandler {
@@ -192,6 +192,9 @@ public class ServiceMultiEventHandler implements EventHandler {
                 if (modelParam.stringMapPrefix != null && modelParam.stringMapPrefix.length() > 0) {
                     Map paramMap = UtilHttp.makeParamMapWithPrefix(request, modelParam.stringMapPrefix, thisSuffix);
                     value = paramMap;
+                } else if (modelParam.stringListSuffix != null && modelParam.stringListSuffix.length() > 0) {
+                    List paramList = UtilHttp.makeParamListWithSuffix(request, modelParam.stringListSuffix, null);
+                    value = paramList;
                 } else {
                     value = request.getParameter(name + thisSuffix);
     

@@ -26,7 +26,7 @@
  *  THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
  *  Service Framework - Service Definition DTD
- *  $Id: services.dtd,v 1.1 2003/08/17 05:12:42 ajzeneski Exp $
+ *  $Id: services.dtd,v 1.2 2003/12/13 16:39:55 ajzeneski Exp $
 -->
 
 <!ELEMENT services (description?, vendor?, version?, created?, service+)>
@@ -63,6 +63,7 @@
 	entity-name CDATA #IMPLIED
 	field-name CDATA #IMPLIED
     string-map-prefix CDATA #IMPLIED
+    string-list-suffix CDATA #IMPLIED
 	form-display (true|false) "true"
 	optional (true|false) "false"
 >

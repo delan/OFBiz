@@ -1,5 +1,5 @@
 /*
- * $Id: ModelParam.java,v 1.1 2003/08/17 05:12:41 ajzeneski Exp $
+ * $Id: ModelParam.java,v 1.2 2003/12/13 16:39:55 ajzeneski Exp $
  *
  * Copyright (c) 2001, 2002 The Open For Business Project - www.ofbiz.org
  *
@@ -29,7 +29,7 @@ package org.ofbiz.service;
  *
  * @author     <a href="mailto:jaz@ofbiz.org">Andy Zeneski</a>
  * @author     <a href="mailto:jonesde@ofbiz.org">David E. Jon</a>
- * @version    $Revision: 1.1 $
+ * @version    $Revision: 1.2 $
  * @since      2.0
  */
 public class ModelParam {
@@ -52,10 +52,13 @@ public class ModelParam {
     /** The entity field name */
     public String fieldName;
 
-    /** A prefix to look for in String parameter Maps when converting to a service call Map */    
+    /** Parameter prefix for creating an attribute Map */
     public String stringMapPrefix;
 
-    /** Is this Parameter required or optional? Default to false, or required. */
+    /** Parameter sufix for creating an attribute List */
+    public String stringListSuffix;
+
+    /** Is this Parameter required or optional? Default to false, or required */
     public boolean optional = false;
     public boolean overrideOptional = false;
     
@@ -76,6 +79,7 @@ public class ModelParam {
         this.entityName = param.entityName;
         this.fieldName = param.fieldName;
         this.stringMapPrefix = param.stringMapPrefix;
+        this.stringListSuffix = param.stringListSuffix;
         this.optional = param.optional;
         this.overrideOptional = param.overrideOptional;
         this.formDisplay = param.formDisplay;
@@ -92,6 +96,7 @@ public class ModelParam {
         buf.append(entityName + "::");
         buf.append(fieldName + "::");
         buf.append(stringMapPrefix + "::");
+        buf.append(stringListSuffix + "::");
         buf.append(optional + "::");
         buf.append(overrideOptional + "::");
         buf.append(formDisplay + "::");
