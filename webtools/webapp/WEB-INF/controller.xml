@@ -216,7 +216,7 @@
     <request-map uri="updateDebugLevel">
         <security https="true" auth="true"/>
         <event type="service" invoke="updateDebugLevel"/>
-        <response name="success" type="view" value="main"/>
+        <response name="success" type="view" value="debuglevels"/>
         <response name="error" type="view" value="debuglevels"/>
     </request-map>
     <!-- end of request mappings -->
