@@ -1,6 +1,9 @@
 /*
  * $Id$
  * $Log$
+ * Revision 1.7  2002/01/30 22:41:26  jonesde
+ * Added order by for new sequenceNum
+ *
  * Revision 1.6  2002/01/30 10:07:25  jonesde
  * Added order by sequenceNum
  *
@@ -109,7 +112,7 @@ public class CategoryWorker {
         ArrayList prodCatMembers = (ArrayList) pageContext.getSession().getAttribute("CACHE_SEARCH_RESULTS");
         String resultArrayName = (String) pageContext.getSession().getAttribute("CACHE_SEARCH_RESULTS_NAME");
 
-        if (prodCatMembers == null || resultArrayName == null || !curFindString.equals(resultArrayName) || viewIndex == 0) {
+        if (prodCatMembers == null || resultArrayName == null || !curFindString.equals(resultArrayName)) { // || viewIndex == 0
             //since cache is invalid, should not use prodCatMembers
             prodCatMembers = null;
 

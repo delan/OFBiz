@@ -1,6 +1,9 @@
 /*
  * $Id$
  * $Log$
+ * Revision 1.4  2002/01/30 06:11:25  jonesde
+ * Formatting changes only, in preparation for other changes
+ *
  * Revision 1.3  2001/10/26 05:04:47  jonesde
  * Added filter by date so that only ProductAssoc entities within date range will be shown
  *
@@ -120,7 +123,7 @@ public class ProductWorker {
 
         ArrayList productIds = (ArrayList) pageContext.getSession().getAttribute("CACHE_SEARCH_RESULTS");
         String resultArrayName = (String) pageContext.getSession().getAttribute("CACHE_SEARCH_RESULTS_NAME");
-        if (productIds == null || resultArrayName == null || !curFindString.equals(resultArrayName) || viewIndex == 0) {
+        if (productIds == null || resultArrayName == null || !curFindString.equals(resultArrayName)) { // || viewIndex == 0
             Debug.logInfo("-=-=-=-=- Current Array not found in session, getting new one...");
             Debug.logInfo("-=-=-=-=- curFindString:" + curFindString + " resultArrayName:" + resultArrayName);
 
