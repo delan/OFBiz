@@ -76,42 +76,12 @@ public class JotmXaPoolTest {
     protected Writer writer = null;
          
     protected int counter = 0;
+    protected int loops = 100;
     
     protected GenericDelegator delegator = null;
     protected TMService jotm = null;
     protected StandardXAPoolDataSource pool = null;
-    
-    public JotmXaPoolTest() throws Exception {
-        this.setLogger(null);
-               
-        // start JOTM
-        jotm = new Jotm(true, false);
-        logger.info("Started JOTM...");  
-        
-        // create the datasource
-        StandardXADataSource ds = new StandardXADataSource();
-        ds.setTransactionManager(jotm.getTransactionManager());
-        
-        // ---- HSQL Settings ----
-        ds.setDriverName("org.hsqldb.jdbcDriver");
-        ds.setUrl("jdbc:hsqldb:data/jotmxapooltext");
-        ds.setUser("sa");
-        ds.setPassword("");
-        ds.setDescription("HSQLDB");
-        ds.setTransactionIsolation(Connection.TRANSACTION_READ_UNCOMMITTED);
-        
-        // ---- PostgreSQL Settings ----
-        //ds.setDriverName("org.postgresql.Driver");       
-        //ds.setUrl("jdbc:postgresql://localhost/jotmxapooltext");
-        //ds.setUser("postgres");
-        //ds.setPassword("");
-        //ds.setDescription("PostgreSQL");          
-        //ds.setTransactionIsolation(Connection.TRANSACTION_READ_COMMITTED);
-        
-        // now create the pool
-        this.createPool(ds);                                               
-    }
-        
+            
     public JotmXaPoolTest(GenericDelegator delegator, Level l) throws Exception {
         this.delegator = delegator;
         this.setLogger(l);
@@ -203,44 +173,121 @@ public class JotmXaPoolTest {
             DatabaseUtil dbUtil = new DatabaseUtil(helper.getHelperName());
             dbUtil.createTable(model, null, false, false, 1, "", false);
         } else {        
-            Connection con = pool.getConnection();
-        
-            // HSQL Create Statement
-            String sql = "CREATE TABLE " + tableName + " (idx BIGINT, col_a VARCHAR(), col_b VARCHAR(), stamp TIMESTAMP)";
-        
-            // PostgreSQL Create Statement
-            //String sql = "CREATE TABLE " + tableName + " (idx NUMERIC(18,0), col_1 VARCHAR(60), col_2 VARCHAR(60), stamp TIMESTAMPTZ)";
-                       
-            Statement s = con.createStatement();
-            s.executeUpdate(sql);
-            s.close();                               
-            con.close();
+            throw new SQLException("No delegator available; cannot create");
         }
         logger.info("Table '" + tableName + "' created.");                    
     }
     
+    /** Tests a loop of inserts using different connections and transaction */
+    public void insertTest() {
+        // start the transaction
+        UserTransaction trans = jotm.getUserTransaction();                   
+        logger.info("Beginning multiple insert with unique transactions/connections...");
+                                
+        for (int i = 0; i < loops; i++) { 
+            try {
+                trans.begin();            
+            } catch (NotSupportedException e1) {            
+                logger.error("Exception", e1);
+            } catch (SystemException e1) {            
+                logger.error("Exception", e1);
+            }
+            
+            Connection con = null;
+            try {
+                con = pool.getConnection();
+            } catch (SQLException e) {            
+                logger.error("Problems getting new connection - Test Failed!", e);
+                return;
+            }    
+            if (con == null) {
+                logger.error("Pool returned null connection with no exception - Test Failed!");
+                return;    
+            }            
+                                                       
+            logger.debug("[A] Looping.. inserting #" + i);
+            try {
+                // insert item            
+                String sql1 = "INSERT INTO " + tableName + " VALUES(?,?,?,?)";
+                PreparedStatement ps1 = con.prepareStatement(sql1);
+                ps1.setInt(1, ++counter);
+                ps1.setString(2, "insTest" + i);
+                ps1.setString(3, "Insert Test");
+                ps1.setTimestamp(4, new Timestamp(new Date().getTime()));
+                ps1.executeUpdate();
+                ps1.close();   
+                // select it back
+                String sql2 = "SELECT * FROM " + tableName + " WHERE idx = ?";
+                PreparedStatement ps2 = con.prepareStatement(sql2);
+                ps2.setInt(1, counter);
+                ResultSet res = ps2.executeQuery();
+                if (res == null || !res.next()) {
+                    logger.error("Could not get inserted item back from select!");
+                } else {
+                    logger.debug(res.getString(1) + " : " + res.getString(2) + "[" + res.getString(3) + "] - " + res.getString(4));
+                }
+                res.close();
+                ps2.close();                 
+            } catch (Exception e) {
+                logger.error("Exception", e);
+                try {
+                    trans.setRollbackOnly();
+                } catch (IllegalStateException e2) {                    
+                    logger.error("Exception", e2);
+                } catch (SystemException e2) {                    
+                    logger.error("Exception", e2);
+                }                
+            } finally {
+                // close the connection
+                try {
+                    con.close();
+                } catch (SQLException e2) {            
+                    logger.error("Exception", e2);
+                }                
+        
+                // commit the transaction
+                try {        
+                    trans.commit();            
+                } catch (Exception e) {
+                    logger.error("Exception", e);
+                }                           
+            }
+        }                        
+    }
+    
     /** Tests a loop of inserts using different connections, same transaction */
-    public void insertTest() throws SQLException {
+    public void connectionTest() {
         // start the transaction
         UserTransaction trans = jotm.getUserTransaction();
         try {
             trans.begin();
         } catch (NotSupportedException e1) {
-            logger.error("", e1);                       
+            logger.error("Exception", e1);                       
         } catch (SystemException e1) {
-            logger.error("", e1);                        
+            logger.error("Exception", e1);                        
         }
         
         logger.info("Beginning multiple insert/connection single transaction...");
-        for (int i = 0; i < 500; i++) {            
-            Connection con = pool.getConnection();
+        for (int i = 0; i < loops; i++) {            
+            Connection con = null;
+            try {
+                con = pool.getConnection();
+            } catch (SQLException e) {            
+                logger.error("Problems getting new connection - Test Failed!", e);
+                return;
+            }    
+            if (con == null) {
+                logger.error("Pool returned null connection with no exception - Test Failed!");
+                return;    
+            }
+            
             logger.debug("Got connection.. inserting #" + i);
             try {            
                 String sql = "INSERT INTO " + tableName + " VALUES(?,?,?,?)";
                 PreparedStatement ps = con.prepareStatement(sql);
                 ps.setInt(1, ++counter);
-                ps.setString(2, "insTest" + i);
-                ps.setString(3, "Insert Test");
+                ps.setString(2, "conTest" + i);
+                ps.setString(3, "Connection Test");
                 ps.setTimestamp(4, new Timestamp(new Date().getTime()));
                 ps.executeUpdate();
                 ps.close();                
@@ -249,39 +296,55 @@ public class JotmXaPoolTest {
                 try {
                     trans.setRollbackOnly();
                 } catch (IllegalStateException e2) {                    
-                    logger.error("", e2);
+                    logger.error("Exception", e2);
                 } catch (SystemException e2) {                    
-                    logger.error("", e2);
+                    logger.error("Exception", e2);
                 }
             } finally {                
-                con.close();
+                try {
+                    con.close();
+                } catch (SQLException e2) {                    
+                    logger.error("Exception", e2);
+                }
             }
         }
         try {        
             trans.commit();
         } catch (Exception e) {
-            logger.error("", e);
+            logger.error("Exception", e);
         }
     }
     
-    public void loopTest() throws SQLException {
+    /** Tests a loop of inserts using same connection & transaction */
+    public void loopTest() {
         // start the transaction
         UserTransaction trans = jotm.getUserTransaction();
         try {
-            trans.begin();
+            trans.begin();            
         } catch (NotSupportedException e1) {            
-            logger.error("", e1);
+            logger.error("Exception", e1);
         } catch (SystemException e1) {            
-            logger.error("", e1);
+            logger.error("Exception", e1);
         }
                                 
         logger.info("Beginning multiple insert single transaction/connection...");
         
-        Connection con = pool.getConnection();        
+        Connection con = null;
+        try {
+            con = pool.getConnection();
+        } catch (SQLException e) {            
+            logger.error("Problems getting new connection - Test Failed!", e);
+            return;
+        }    
+        if (con == null) {
+            logger.error("Pool returned null connection with no exception - Test Failed!");
+            return;    
+        }
+        
         logger.debug("Got connection.. ");
         
-        for (int i = 0; i < 500; i++) {                       
-            logger.debug("Looping.. inserting #" + i);
+        for (int i = 0; i < loops; i++) {                       
+            logger.debug("[B] Looping.. inserting #" + i);
             try {            
                 String sql = "INSERT INTO " + tableName + " VALUES(?,?,?,?)";
                 PreparedStatement ps = con.prepareStatement(sql);
@@ -292,48 +355,64 @@ public class JotmXaPoolTest {
                 ps.executeUpdate();
                 ps.close();                
             } catch (Exception e) {
-                logger.error("", e);
+                logger.error("Exception", e);
                 try {
                     trans.setRollbackOnly();
                 } catch (IllegalStateException e2) {                    
-                    logger.error("", e2);
+                    logger.error("Exception", e2);
                 } catch (SystemException e2) {                    
-                    logger.error("", e2);
+                    logger.error("Exception", e2);
                 }
-            } finally {                
-                con.close();
-            }
+            }            
         }
+        
+        // close the connection
+        try {
+            con.close();
+        } catch (SQLException e2) {            
+            logger.error("Exception", e2);
+        }
+        logger.debug("Closed connection..");
+        
+        // commit the transaction
         try {        
-            trans.commit();
+            trans.commit();            
         } catch (Exception e) {
-            logger.error("", e);
+            logger.error("Exception", e);
         }
     }
     
     /** Tests multiple inserts; suspending before each one, insert in new trans, resuming to continue */
-    public void suspendTest() throws SQLException {
+    public void suspendTest() {
         // start the transaction
         UserTransaction trans = jotm.getUserTransaction();
         TransactionManager tm = jotm.getTransactionManager();
         
+        // set the timeout to something reasonable
+        try {    
+            trans.setTransactionTimeout(300);
+        } catch (SystemException e) {
+            logger.error("Exception", e);
+            return;
+        }
+                
         // begin the parent transaction
         try {
             trans.begin();
         } catch (NotSupportedException e1) {           
-            logger.error("", e1);
+            logger.error("Exception", e1);
         } catch (SystemException e1) {            
-            logger.error("", e1);
+            logger.error("Exception", e1);
         }
         
         logger.info("Beginning multiple insert/connection on suspend main transaction...");
-        for (int i = 0; i < 500; i++) {            
+        for (int i = 0; i < loops; i++) {            
             // suspend the main transaction                    
             Transaction transaction = null;            
             try {
                 transaction = tm.suspend();
             } catch (SystemException e2) {                
-                logger.error("", e2);
+                logger.error("Exception", e2);
             }
             logger.debug("Suspended #" + i);
             
@@ -341,87 +420,133 @@ public class JotmXaPoolTest {
             try {
                 trans.begin();
             } catch (NotSupportedException e3) {               
-                logger.error("", e3);
+                logger.error("Exception", e3);
             } catch (SystemException e3) {                
-                logger.error("", e3);
+                logger.error("Exception", e3);
             }
+            logger.debug("Began new transaction.");
             
             // do some stuff in the new transaction
-            Connection con1 = pool.getConnection();
+            Connection con1 = null;
             try {
-                String sql = "INSERT INTO " + tableName + " VALUES(?,?,?,?)";
-                PreparedStatement ps = con1.prepareStatement(sql);
-                ps.setInt(1, ++counter);
-                ps.setString(2, "susTest" + i);
-                ps.setString(3, "Suspend Test - Main Suspended");
-                ps.setTimestamp(4, new Timestamp(new Date().getTime()));
-                ps.executeUpdate();
-                ps.close();                
+                con1 = pool.getConnection();
+            } catch (SQLException e) {               
+                logger.error("Problems getting new (sub) connection - Test Failed!", e);
+                return;
+            }
+            if (con1 == null) {
+                logger.error("Pool returned null connection with no exception - Test Failed!");
+                return;
+            }
+            logger.debug("Got connection.");
+            
+            try {
+                // insert item            
+                String sql1 = "INSERT INTO " + tableName + " VALUES(?,?,?,?)";
+                PreparedStatement ps1 = con1.prepareStatement(sql1);
+                ps1.setInt(1, ++counter);
+                ps1.setString(2, "susTest" + i);
+                ps1.setString(3, "Suspend Test - Main Suspended");
+                ps1.setTimestamp(4, new Timestamp(new Date().getTime()));
+                ps1.executeUpdate();
+                ps1.close();                              
             } catch (Exception e) {
-                logger.error("", e);
+                logger.error("Exception", e);
                 try {
                     trans.setRollbackOnly();
                 } catch (IllegalStateException e4) {                    
-                    logger.error("", e4);
+                    logger.error("Exception", e4);
                 } catch (SystemException e4) {                    
-                    logger.error("", e4);
+                    logger.error("Exception", e4);
                 }
             } finally {                        
-                con1.close();  
+                try {
+                    con1.close();
+                } catch (SQLException e5) {                   
+                    logger.error("Exception", e5);
+                }  
                 
                 // commit the new transaction              
                 try {
                     trans.commit();
                 } catch (SecurityException e4) {                   
-                    logger.error("", e4);
+                    logger.error("Exception", e4);
                 } catch (IllegalStateException e4) {                    
-                    logger.error("", e4);
+                    logger.error("Exception", e4);
                 } catch (RollbackException e4) {                    
-                    logger.error("", e4);
+                    logger.error("Exception", e4);
                 } catch (HeuristicMixedException e4) {                    
-                    logger.error("", e4);
+                    logger.error("Exception", e4);
                 } catch (HeuristicRollbackException e4) {                    
-                    logger.error("", e4);
+                    logger.error("Exception", e4);
                 } catch (SystemException e4) {                    
-                    logger.error("", e4);
+                    logger.error("Exception", e4);
                 }                                
             }
+            logger.debug("Inserted record.");
             
             // resume the main transaction
             try {
                 tm.resume(transaction);
             } catch (InvalidTransactionException e4) {                
-                logger.error("", e4);
+                logger.error("Exception", e4);
             } catch (IllegalStateException e4) {                
-                logger.error("", e4);
+                logger.error("Exception", e4);
             } catch (SystemException e4) {                
-                logger.error("", e4);
+                logger.error("Exception", e4);
             }
             logger.debug("Resumed #" + i);
             
             // do some stuff in the main transaction
-            Connection con2 = pool.getConnection();            
+            Connection con2 = null;
+            try {
+                con2 = pool.getConnection();
+            } catch (SQLException e) {
+                logger.error("Problems getting new (main) connection - Test Failed!", e);
+                return;              
+            }          
+            if (con2 == null) {
+                logger.error("Pool returned null connection with no exception - Test Failed!");
+                return;  
+            }
+            
             try {            
                 String sql = "INSERT INTO " + tableName + " VALUES(?,?,?,?)";
-                PreparedStatement ps = con2.prepareStatement(sql);
-                ps.setInt(1, ++counter);
-                ps.setString(2, "susTest" + i);
-                ps.setString(3, "Suspend Test - Main");
-                ps.setTimestamp(4, new Timestamp(new Date().getTime()));
-                ps.executeUpdate();
-                ps.close();
+                PreparedStatement ps1 = con2.prepareStatement(sql);
+                ps1.setInt(1, ++counter);
+                ps1.setString(2, "susTest" + i);
+                ps1.setString(3, "Suspend Test - Main");
+                ps1.setTimestamp(4, new Timestamp(new Date().getTime()));
+                ps1.executeUpdate();
+                ps1.close();                
                 logger.debug("Inserted main transaction.");
+                // select it back
+                String sql2 = "SELECT * FROM " + tableName + " WHERE idx = ?";
+                PreparedStatement ps2 = con2.prepareStatement(sql2);
+                ps2.setInt(1, counter);
+                ResultSet res = ps2.executeQuery();
+                if (res == null || !res.next()) {
+                    logger.error("Could not get inserted item back from select!");
+                } else {
+                    logger.debug(res.getString(1) + " : " + res.getString(2) + "[" + res.getString(3) + "] - " + res.getString(4));
+                }       
+                res.close();
+                ps2.close();                                    
             } catch (Exception e) {
-                logger.error("", e);
+                logger.error("Exception", e);
                 try {
                     trans.setRollbackOnly();
                 } catch (IllegalStateException e5) {                   
-                    logger.error("", e5);
+                    logger.error("Exception", e5);
                 } catch (SystemException e5) {                    
-                    logger.error("", e5);
+                    logger.error("Exception", e5);
                 }
             } finally {
-                con2.close();
+                try {
+                    con2.close();
+                } catch (SQLException e5) {                    
+                    logger.error("Exception", e5);
+                }
             }
         }
         
@@ -429,29 +554,29 @@ public class JotmXaPoolTest {
         try {
             trans.commit();
         } catch (SecurityException e) {            
-            logger.error("", e);
+            logger.error("Exception", e);
         } catch (IllegalStateException e) {            
-            logger.error("", e);
+            logger.error("Exception", e);
         } catch (RollbackException e) {            
-            logger.error("", e);
+            logger.error("Exception", e);
         } catch (HeuristicMixedException e) {            
-            logger.error("", e);
+            logger.error("Exception", e);
         } catch (HeuristicRollbackException e) {            
-            logger.error("", e);
+            logger.error("Exception", e);
         } catch (SystemException e) {            
-            logger.error("", e);
+            logger.error("Exception", e);
         }
     }
-    
-    public void rollbackTest() throws SQLException { 
+        
+    public void rollbackOnlyTest() { 
         // start the transaction
         UserTransaction trans = jotm.getUserTransaction();
         try {
             trans.begin();
         } catch (NotSupportedException e1) {            
-            logger.error("", e1);
+            logger.error("Exception", e1);
         } catch (SystemException e1) {            
-            logger.error("", e1);
+            logger.error("Exception", e1);
         }
         
         logger.info("Beginning rollback test...");
@@ -459,7 +584,26 @@ public class JotmXaPoolTest {
         int randomInt = rand.nextInt(9);
         
         for (int i = 0; i < 10; i++) {            
-            Connection con = pool.getConnection();
+            Connection con = null;
+            try {
+                con = pool.getConnection();                
+            } catch (SQLException e) {                
+                logger.error("Problems getting connection - rolling back now.", e);
+                try {
+                    trans.rollback();
+                } catch (IllegalStateException e2) {                  
+                    logger.error("Exception", e2);
+                } catch (SecurityException e2) {                    
+                    logger.error("Exception", e2);
+                } catch (SystemException e2) {                    
+                    logger.error("Exception", e2);
+                }
+            }
+            if (con == null) {
+                logger.error("Pool returned a null connection w/ no exception! Test Failed!");
+                return;
+            }
+            
             logger.debug("Got connection.. inserting #" + i);
             try {            
                 String sql = "INSERT INTO " + tableName + " VALUES(?,?,?,?)";
@@ -467,20 +611,24 @@ public class JotmXaPoolTest {
                 ps.setInt(1, ++counter);
                 ps.setString(2, "rollTest" + i);
                 ps.setString(3, "Rollback Test - This should not show in selectTest!");
-                ps.setTimestamp(4, new Timestamp(new Date().getTime()));
+                ps.setTimestamp(4, new Timestamp(new Date().getTime()));                
                 ps.executeUpdate();
-                ps.close();                
+                ps.close();                                  
             } catch (Exception e) {
-                logger.error("", e);
+                logger.error("Exception", e);
                 try {
                     trans.setRollbackOnly();
                 } catch (IllegalStateException e2) {                   
-                    logger.error("", e2);
+                    logger.error("Exception", e2);
                 } catch (SystemException e2) {                    
-                    logger.error("", e2);
+                    logger.error("Exception", e2);
                 }
             } finally {                
-                con.close();                
+                try {
+                    con.close();
+                } catch (SQLException e2) {                    
+                    logger.error("Exception", e2);
+                }                
             }
             
             // will set rollback only on some random pass
@@ -489,38 +637,100 @@ public class JotmXaPoolTest {
                 try {
                     trans.setRollbackOnly();
                 } catch (IllegalStateException e2) {                   
-                    logger.error("", e2);
+                    logger.error("Exception", e2);
                 } catch (SystemException e2) {                    
-                    logger.error("", e2);
+                    logger.error("Exception", e2);
                 }
             }
             
         }
+        
         try {        
-            trans.commit();
-        } catch (Exception e) {
+            trans.commit();        
+        } catch (SystemException e) {
+            logger.error("Commit failed; RollbackException not thrown!", e);
+        } catch (SecurityException e) {
+            logger.error("Commit failed; RollbackException not thrown!", e);
+        } catch (IllegalStateException e) {            
+            logger.error("Commit failed; RollbackException not thrown!", e);                        
+        } catch (RollbackException re) {                        
             // This SHOULD happen!
-            logger.info("Commit failed (good), now rolling back.");
-            try {
-                trans.rollback();
-            } catch (Exception e1) {
-                logger.error("", e1);
-            }
+            logger.info("Commit failed (good), transaction rolled back by commit().");                                    
+        } catch (HeuristicMixedException e) {            
+            logger.error("Commit failed; RollbackException not thrown!", e);
+        } catch (HeuristicRollbackException e) {          
+            logger.error("Commit failed; RollbackException not thrown!", e);
         }
-    }            
+    }  
+    
+    public void timeoutTest() {
+        // get the transaction
+        UserTransaction trans = jotm.getUserTransaction();
+                                   
+        logger.info("Beginning timeout test...");
+        Random rand = new Random();
+        int randomInt = rand.nextInt(60);
+        randomInt++;
+        
+        logger.info("Setting timeout to: " + randomInt);
+        try {            
+            trans.setTransactionTimeout(randomInt); // set to new value
+        } catch (SystemException e) {            
+            logger.error("Exception", e);
+        }
+        
+        // begin the transaction
+        try {
+            trans.begin();
+        } catch (NotSupportedException e1) {            
+            logger.error("Exception", e1);
+        } catch (SystemException e1) {            
+            logger.error("Exception", e1);
+        }
+        logger.info("Began transaction; now waiting...");           
+        
+        // now wait a few seconds
+        long wait = new Date().getTime() + ((randomInt + 2) * 1000);
+        long now = 0;
+        while ((now = new Date().getTime()) < wait) {
+            //logger.info(now + " != " + wait);                                        
+        }        
+        
+        // attempt to commit the transaction; should fail
+        try {
+            trans.commit();
+            logger.info("Transaction commited; shouldn't have happened!");
+        } catch (SecurityException e) {           
+            logger.error("Exception", e);
+        } catch (IllegalStateException e) {            
+            logger.error("Exception", e);            
+        } catch (RollbackException e) {            
+            logger.info("RollBackException caught! Good! The transaction was rolled back.");            
+        } catch (HeuristicMixedException e) {            
+            logger.error("Exception", e);
+        } catch (HeuristicRollbackException e) {            
+            logger.error("Exception", e);            
+        } catch (SystemException e) {            
+            logger.error("Exception", e);
+        }        
+    }              
     
     public void selectTest() throws SQLException {
+        logger.info("Beginning select test.. We should have exactly " + (loops * 5) + " records.");
         Connection con = pool.getConnection();
-        Statement s = con.createStatement();
+        Statement s = con.createStatement();        
         ResultSet res = s.executeQuery("SELECT * FROM " + tableName + " ORDER BY idx");
         int rowCount = 0;
         while (res.next()) {
             rowCount++;
             logger.debug(res.getString(1) + " : " + res.getString(2) + "[" + res.getString(3) + "] - " + res.getString(4));
         }
-        logger.info("Total Rows: " + rowCount + " of 2000");
-        if (rowCount == 2000) logger.info("Looks good...");        
+        res.close();
+        con.close();
+        logger.info("Total Rows: " + rowCount + " of " + (loops * 5));
+        if (rowCount == (loops * 5)) logger.info("Looks good...");        
     }
+    
     
     public void close() {
         pool.shutdown(true);
@@ -557,33 +767,19 @@ public class JotmXaPoolTest {
             return writeAndClose();
         }
         
-        // test some basic inserts
-        try {                       
-            insertTest();
-        } catch (SQLException e) {
-            logger.error("SQL Error", e);
-        }
+        // test some basic inserts                            
+        insertTest(); 
+               
+        connectionTest();
         
-        // test looping; same connection
-        try {
-            loopTest();
-        } catch (SQLException e) {
-            logger.error("SQL Error", e);            
-        }
+        // test looping; same connection        
+        loopTest();
         
-        // test some suspend/resume inserts
-        try {        
-            suspendTest();
-        } catch (SQLException e) {
-            logger.error("SQL Error", e);            
-        }
+        // test some suspend/resume inserts               
+        suspendTest();        
         
-        // test rollback
-        try {
-            rollbackTest();
-        } catch (SQLException e) {
-            logger.error("SQL Error", e);           
-        }
+        // test rollback        
+        rollbackOnlyTest();        
         
         // show the results
         try {        
@@ -601,11 +797,5 @@ public class JotmXaPoolTest {
         }
         
         return writeAndClose();
-    }
-    
-    public static void main(String[] args) throws Exception {           
-        JotmXaPoolTest test = new JotmXaPoolTest();
-        test.runTests();
-        System.exit(0);
-    }
+    }    
 }
