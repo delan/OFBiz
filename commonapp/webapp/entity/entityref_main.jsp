@@ -208,7 +208,7 @@
         </div>
       </td>
       <td><div align="left" class='relationtext'><%= relation.relTableName %></div></td>
-      <td with="25%" colspan='2'><div align="left" class='relationtext'>
+      <td width="25%" colspan='2'><div align="left" class='relationtext'>
         <%= relation.type %>:<%if(relation.type.length()==3){%>&nbsp;<%}%>
         <%for(int km=0; km<relation.keyMaps.size(); km++){ ModelKeyMap keyMap = (ModelKeyMap)relation.keyMaps.get(km);%>
           <%=km+1%>)&nbsp;
