@@ -66,8 +66,6 @@
     <!-- ==================== Children of relation ====================== -->
     <!-- specifies whether or not the relation is a dependent one; ie if the related entity can exist without the main entity -->
     <!ATTLIST relation
-	dependent ( true | false ) "false" >
-    <!ATTLIST relation
 	type ( one | many ) #REQUIRED >
     <!ATTLIST relation
 	title CDATA #IMPLIED >

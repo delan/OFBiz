@@ -28,12 +28,8 @@ package org.ofbiz.core.entity.model;
  *@version    1.0
  */
 public class ModelKeyMap {
-  /** name of the column in this table */
-  public String colName = "";
   /** name of the field in this entity */
   public String fieldName = "";
-  /** name of the column in related table */
-  public String relColName = "";
   /** name of the field in related entity */
   public String relFieldName = "";
   

@@ -29,6 +29,7 @@ import org.ofbiz.core.util.*;
  *  THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  *
  *@author     <a href="mailto:jonesde@ofbiz.org">David E. Jones</a>
+ *@author     Eric Pabst
  *@created    Wed Aug 08 2001
  *@version    1.0
  */

@@ -43,6 +43,9 @@ public class ModelEntity {
   /** The package-name of the Entity */
   public String packageName = "";
   
+  /** The entity-name of the Entity that this Entity is dependent on, if empty then no dependency */
+  public String dependentOn = "";
+
   //Strings to go in the comment header.
   /** The title for the class JavaDoc comment */
   public String title = "";
@@ -278,7 +281,7 @@ public class ModelEntity {
     else Debug.logWarning("-- -- ENTITYGEN ERROR:httpRelationArgList: Related Key in Key Map not found for name: " + ((ModelField)flds.elementAt(i)).name + " related entity: " + relation.relEntityName + " main entity: " + relation.mainEntity.entityName + " type: " + relation.type);
     return returnString;
   }
-  
+/*  
   public String httpRelationArgList(ModelRelation relation) {
     String returnString = "";
     if(relation.keyMaps.size() < 1) { return ""; }
@@ -293,7 +296,7 @@ public class ModelEntity {
     returnString = returnString + "\"" + tableName + "_" + keyMap.relColName + "=\" + " + ModelUtil.lowerFirstChar(relation.mainEntity.entityName) + ".get" + ModelUtil.upperFirstChar(keyMap.fieldName) + "()";
     return returnString;
   }
-  
+*/  
   public String typeNameStringRelatedNoMapped(Vector flds, ModelRelation relation) {
     String returnString = "";
     if(flds.size() < 1) { return ""; }

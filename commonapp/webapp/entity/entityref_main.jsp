@@ -211,7 +211,7 @@
       </td>
       <td><div align="left" class='relationtext'><%= relation.relTableName %></div></td>
       <td width="25%" colspan='3'><div align="left" class='relationtext'>
-        <%=relation.type%>-<%=relation.dependent?"dependent":"independent"%>:<%if(relation.type.length()==3){%>&nbsp;<%}%>
+        <%=relation.type%>:<%if(relation.type.length()==3){%>&nbsp;<%}%>
         <%for(int km=0; km<relation.keyMaps.size(); km++){ ModelKeyMap keyMap = (ModelKeyMap)relation.keyMaps.get(km);%>
           <br>&nbsp;&nbsp;<%=km+1%>)&nbsp;
           <%if(keyMap.fieldName.equals(keyMap.relFieldName)){%><%=keyMap.fieldName%>

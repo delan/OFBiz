@@ -180,6 +180,7 @@ public class ModelReader {
     entity.entityName = checkEmpty(entityElement.getAttribute("entity-name"));
     entity.tableName = checkEmpty(entityElement.getAttribute("table-name"), ModelUtil.javaNameToDbName(entity.entityName));
     entity.packageName = checkEmpty(entityElement.getAttribute("package-name"));
+    entity.dependentOn = checkEmpty(entityElement.getAttribute("dependent-on"));
     
     if(utilTimer != null) utilTimer.timerString("  createModelEntity: before comments");
     if(docElementValues == null) {
@@ -244,7 +245,6 @@ public class ModelReader {
     ModelRelation relation = new ModelRelation();
     relation.mainEntity = entity;
     
-    relation.dependent = ("true".equals(relationElement.getAttribute("dependent"))?true:false);
     relation.type = checkEmpty(relationElement.getAttribute("type"));
     relation.title = checkEmpty(relationElement.getAttribute("title"));
     relation.relEntityName = checkEmpty(relationElement.getAttribute("rel-entity-name"));
@@ -266,10 +266,8 @@ public class ModelReader {
     ModelKeyMap keyMap = new ModelKeyMap();
     
     keyMap.fieldName = checkEmpty(keyMapElement.getAttribute("field-name"));
-    keyMap.colName = checkEmpty(keyMapElement.getAttribute("col-name"),ModelUtil.javaNameToDbName(checkEmpty(keyMap.fieldName)));
-    //if no relatedColumnName is specified, use the columnName; this is convenient for when they are named the same, which is often the case
+    //if no relFieldName is specified, use the fieldName; this is convenient for when they are named the same, which is often the case
     keyMap.relFieldName = checkEmpty(keyMapElement.getAttribute("rel-field-name"),keyMap.fieldName);
-    keyMap.relColName = checkEmpty(keyMapElement.getAttribute("rel-col-name"),ModelUtil.javaNameToDbName(checkEmpty(keyMap.relFieldName)));
     
     return keyMap;
   }

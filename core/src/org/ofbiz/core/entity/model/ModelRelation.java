@@ -35,8 +35,6 @@ public class ModelRelation {
   public String title = "";
   /** the type: either "one" or "many" */
   public String type = "";
-  /** specifies whether or not the relation is a dependent one; ie if the related entity can exist without the main entity */
-  public boolean dependent = false;
   /** the name of the related table */
   public String relTableName = "";
   /** the name of the related EJB/entity */
@@ -103,7 +101,7 @@ public class ModelRelation {
     returnString = returnString + ModelUtil.upperFirstChar(((ModelKeyMap)keyMaps.elementAt(i)).relFieldName) + afterLast;
     return returnString;
   }
-  
+/*  
   public String keyMapColumnString(String separator, String afterLast) {
     String returnString = "";
     if(keyMaps.size() < 1) { return ""; }
@@ -115,7 +113,8 @@ public class ModelRelation {
     returnString = returnString + ((ModelKeyMap)keyMaps.elementAt(i)).colName + afterLast;
     return returnString;
   }
-  
+*/  
+/*
   public String keyMapRelatedColumnString(String separator, String afterLast) {
     String returnString = "";
     if(keyMaps.size() < 1) { return ""; }
@@ -127,4 +126,5 @@ public class ModelRelation {
     returnString = returnString + ((ModelKeyMap)keyMaps.elementAt(i)).relColName + afterLast;
     return returnString;
   }
+*/
 }

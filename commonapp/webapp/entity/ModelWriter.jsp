@@ -108,8 +108,6 @@ else
     <!-- ==================== Children of relation ====================== -->
     <!-- specifies whether or not the relation is a dependent one; ie if the related entity can exist without the main entity -->
     <!ATTLIST relation
-	dependent ( true | false ) "false" >
-    <!ATTLIST relation
 	type ( one | many ) #REQUIRED >
     <!ATTLIST relation
 	title CDATA #IMPLIED >
@@ -197,7 +195,8 @@ else
 %>	
     <entity entity-name="<%=entity.entityName%>"<%if(!entity.entityName.equals(ModelUtil.dbNameToClassName(entity.tableName))){
           %> table-name="<%=entity.tableName%>"<%}%> 
-            package-name="<%=entity.packageName%>"<%if(!title.equals(entity.title)){%>
+            package-name="<%=entity.packageName%>"<%if(entity.dependentOn.length() > 0){%>
+            dependent-on="<%=entity.dependentOn%>"<%}%><%if(!title.equals(entity.title)){%>
             title="<%=entity.title%>"<%}%><%if(!copyright.equals(entity.copyright)){%>
             copyright="<%=entity.copyright%>"<%}%><%if(!author.equals(entity.author)){%>
             author="<%=entity.author%>"<%}%><%if(!version.equals(entity.version)){%>
@@ -220,7 +219,6 @@ else
     for(int r=0; r<entity.relations.size(); r++) {
       ModelRelation relation = (ModelRelation) entity.relations.elementAt(r);%>
       <relation type="<%=relation.type%>"<%if(relation.title.length() > 0){%> title="<%=relation.title%>"<%}
-              %><%if(relation.dependent){%> dependent="true"<%}
               %> rel-entity-name="<%=relation.relEntityName%>"<%if(!relation.relEntityName.equals(ModelUtil.dbNameToClassName(relation.relTableName))) {%>
                 rel-table-name="<%=relation.relTableName%>"<%}%>><%for(int km=0; km<relation.keyMaps.size(); km++){ ModelKeyMap keyMap = (ModelKeyMap)relation.keyMaps.get(km);%>
         <key-map field-name="<%=keyMap.fieldName%>"<%if(!keyMap.fieldName.equals(keyMap.relFieldName)){%> rel-field-name="<%=keyMap.relFieldName%>"<%}%> /><%}%>
