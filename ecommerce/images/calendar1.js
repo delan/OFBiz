@@ -219,7 +219,7 @@ function fieldLookup1(obj_target) {
 }
 
 function lookup_popup1 (view_name, form_name) {
-	var obj_lookupwindow = window.open(view_name + '?formName=' + form_name + '&id=' + this.id,'FieldLookup', 'width=150,height=150,status=no,resizable=no,top='+my+',left='+mx+',dependent=yes,alwaysRaised=yes');
+	var obj_lookupwindow = window.open(view_name + '?formName=' + form_name + '&id=' + this.id,'FieldLookup', 'width=250,height=200,scrollbars=auto,status=no,resizable=no,top='+my+',left='+mx+',dependent=yes,alwaysRaised=yes');
 	obj_lookupwindow.opener = window;
 	obj_lookupwindow.focus();
 }

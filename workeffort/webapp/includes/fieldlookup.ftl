@@ -1,4 +1,4 @@
-<#--
+<!--
  *  Copyright (c) 2003 The Open For Business Project - www.ofbiz.org
  *
  *  Permission is hereby granted, free of charge, to any person obtaining a 
@@ -33,22 +33,28 @@ var num_id = (re_id.exec(String(window.location))
 var obj_caller = (window.opener ? window.opener.lookups[num_id] : null);
 
 
-// function passing selected date to calling window
+// function passing selected value to calling window
 function set_value(value) {
 	if (!obj_caller) return;
 	window.close();
 	obj_caller.target.value = value;
 }
-
 </script>
+<table width="100%" cellpadding="5" cellspacing="0" border="0" bgcolor="#FFFFFF">
+<tr><td>
 ${lookupFieldWrapper.renderFormString()}
-
+</td></tr></table>
+<table width="100%" cellpadding="5" cellspacing="0" border="0">
+<tr bgcolor="#000000"><td colspan="2"><font color="#FFFFFF"><strong>Result of lookup</strong></font></td></tr>
 <#if resultList?has_content>
-<table>
-<th>Result of lookup</th>
 <#list resultList as result>
-<tr><td><a href="javascript:set_value('${result.value}');">${result.label?if_exists}</a></td></tr>
+<tr><td width="25%"><a href="javascript:set_value('${result.value}');">${result.value?if_exists}</a></td><td nowrap width="75%"><a href="javascript:set_value('${result.value}');">${result.label?if_exists}</a></td></tr>
 </#list>
-
-</table>
+<#else>
+<tr><td width="100%" colspan="2"></td></tr>
 </#if>
+</table>
+
+<script language="JavaScript">
+document.forms[0].elements[3].focus();
+</script>
