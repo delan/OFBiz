@@ -127,12 +127,6 @@
     <entity-group group="org.ofbiz.commonapp" entity="PaymentTypeAttr" />
 
   <!-- ========================================================= -->
-  <!-- org.ofbiz.commonapp.common.currency -->
-  <!-- ========================================================= -->
-	
-    <entity-group group="org.ofbiz.commonapp" entity="CurrencyCode" />
-
-  <!-- ========================================================= -->
   <!-- org.ofbiz.commonapp.common.enum -->
   <!-- ========================================================= -->
 	
