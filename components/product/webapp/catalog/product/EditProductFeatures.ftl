@@ -22,7 +22,7 @@
  *@author     David E. Jones (jonesde@ofbiz.org)
  *@author     Brad Steiner (bsteiner@thehungersite.com)
  *@author     Catherine.Heintz@nereide.biz (migration to UiLabel)
- *@version    $Revision: 1.10 $
+ *@version    $Revision: 1.11 $
  *@since      2.2
 -->
 <#assign uiLabelMap = requestAttributes.uiLabelMap>
@@ -40,7 +40,12 @@ ${pages.get("/product/ProductTabBar.ftl")}
     <br>
     
     <#if productId?exists>    
+
         <table border="1" cellpadding="2" cellspacing="0">
+        <form method=POST action="<@ofbizUrl>/UpdateFeatureToProductApplication</@ofbizUrl>" name="selectAllForm">
+        <input type="hidden" name="_useRowSubmit" value="Y">
+        <input type="hidden" name="_checkGlobalScope" value="Y">
+        <input type=hidden name="productId" value="${productId}">
         <tr>
             <td><div class="tabletext"><b>${uiLabelMap.CommonId}</b></div></td>
             <td><div class="tabletext"><b>${uiLabelMap.CommonDescription}</b></div></td>
@@ -48,20 +53,19 @@ ${pages.get("/product/ProductTabBar.ftl")}
             <td><div class="tabletext"><b>${uiLabelMap.ProductCategory}</b></div></td>
             <td><div class="tabletext"><b>${uiLabelMap.CommonFromDate}</b></div></td>
             <td><div class="tabletext"><b>${uiLabelMap.ProductThruDateAmountSequenceApplicationType}</b></div></td>
+            <td><div class="tabletext"><b>${uiLabelMap.CommonAll}<input type="checkbox" name="selectAll" value="${uiLabelMap.CommonY}" onclick="javascript:toggleAll(this);"></div></td>
             <td><div class="tabletext">&nbsp;</div></td>
         </tr>
-        <#assign line = 0>
+        <#assign rowCount = 0>
         <#list productFeatureAndAppls as productFeatureAndAppl>
-            <#assign line = line + 1>
             <#assign curProductFeatureType = productFeatureAndAppl.getRelatedOneCache("ProductFeatureType")>
             <#assign curProductFeatureApplType = productFeatureAndAppl.getRelatedOneCache("ProductFeatureApplType")>
             <#assign curProductFeatureCategory = productFeatureAndAppl.getRelatedOneCache("ProductFeatureCategory")>
 <!--            <#if curProductFeatureCategory?exists> pageContext.setAttribute("curProductFeatureCategory", curProductFeatureCategory)</#if>	-->
             <tr valign="middle">
-                <form method=POST action="<@ofbizUrl>/UpdateFeatureToProductApplication</@ofbizUrl>" name="lineForm${line}">
-                <input type=hidden name="productId" value="${(productFeatureAndAppl.productId)?if_exists}">
-                <input type=hidden name="productFeatureId" value="${(productFeatureAndAppl.productFeatureId)?if_exists}">
-                <input type=hidden name="fromDate" value="${(productFeatureAndAppl.fromDate)?if_exists}">
+                <input type=hidden name="productId_o_${rowCount}" value="${(productFeatureAndAppl.productId)?if_exists}">
+                <input type=hidden name="productFeatureId_o_${rowCount}" value="${(productFeatureAndAppl.productFeatureId)?if_exists}">
+                <input type=hidden name="fromDate_o_${rowCount}" value="${(productFeatureAndAppl.fromDate)?if_exists}">
                 <td><div class="tabletext">${(productFeatureAndAppl.productFeatureId)?if_exists}</div></td>
                 <td><div class="tabletext">${(productFeatureAndAppl.description)?if_exists}</div></td>
                 <td><div class="tabletext">${(curProductFeatureType.description)?default((productFeatureAndAppl.productFeatureTypeId)?if_exists)}</div></td>
@@ -74,11 +78,11 @@ ${pages.get("/product/ProductTabBar.ftl")}
                 <td>
                     <#assign hasExpired = false>
                     <#if (productFeatureAndAppl.getTimestamp("thruDate"))?exists && Static["org.ofbiz.base.util.UtilDateTime"].nowTimestamp().after(productFeatureAndAppl.getTimestamp("thruDate"))> <#assign hasExpired = true></#if>
-                    <input type='text' size='25' name='thruDate' value='${(productFeatureAndAppl.thruDate)?if_exists}' class='inputBox' <#if hasExpired> style='color: red;'</#if>>
-                    <a href="javascript:call_cal(document.lineForm${line}.thruDate, '${(productFeatureAndAppl.thruDate)?default(nowTimestampString)}');"><img src='/images/cal.gif' width='16' height='16' border='0' alt='Calendar'></a>
-                    <input type=text size='6' name='amount' value='${(productFeatureAndAppl.amount)?if_exists}'  class='inputBox'>
-                    <input type=text size='5' name='sequenceNum' value='${(productFeatureAndAppl.sequenceNum)?if_exists}' class='inputBox'>
-                <select class='selectBox' name='productFeatureApplTypeId' size=1>
+                    <input type='text' size='25' name='thruDate_o_${rowCount}' value='${(productFeatureAndAppl.thruDate)?if_exists}' class='inputBox' <#if hasExpired> style='color: red;'</#if>>
+                    <a href="javascript:call_cal(document.selectAllForm.thruDate_o_${rowCount}, '${(productFeatureAndAppl.thruDate)?default(nowTimestampString)}');"><img src='/images/cal.gif' width='16' height='16' border='0' alt='Calendar'></a>
+                    <input type=text size='6' name='amount_o_${rowCount}' value='${(productFeatureAndAppl.amount)?if_exists}'  class='inputBox'>
+                    <input type=text size='5' name='sequenceNum_o_${rowCount}' value='${(productFeatureAndAppl.sequenceNum)?if_exists}' class='inputBox'>
+                <select class='selectBox' name='productFeatureApplTypeId_o_${rowCount}' size=1>
                     <#if (productFeatureAndAppl.productFeatureApplTypeId)?exists>
                         <option value='${(productFeatureAndAppl.productFeatureApplTypeId)?if_exists}'><#if curProductFeatureApplType?exists> ${(curProductFeatureApplType.description)?if_exists} <#else> [${productFeatureAndAppl.productFeatureApplTypeId}]</#if></option>
                         <option value='${productFeatureAndAppl.productFeatureApplTypeId}'> </option>
@@ -87,16 +91,22 @@ ${pages.get("/product/ProductTabBar.ftl")}
                         <option value='${(productFeatureApplType.productFeatureApplTypeId)?if_exists}'>${(productFeatureApplType.description)?if_exists} </option>
                     </#list>
                 </select>
-                    <input type=submit value='Update' style='font-size: x-small;'/>
                 </td>
-                </form>
+                <td align="right">              
+                    <input type="checkbox" name="_rowSubmit_o_${rowCount}" value="Y" onclick="javascript:checkToggle(this);">
+                </td>
                 <td>
                 <a href='<@ofbizUrl>/RemoveFeatureFromProduct?productId=${(productFeatureAndAppl.productId)?if_exists}&productFeatureId=${(productFeatureAndAppl.productFeatureId)?if_exists}&fromDate=${Static["org.ofbiz.base.util.UtilFormatOut"].encodeQueryValue(productFeatureAndAppl.getTimestamp("fromDate").toString())}</@ofbizUrl>' class="buttontext">
                  [${uiLabelMap.CommonDelete}]</a>
                 </td>
             </tr>
+            <#assign rowCount = rowCount + 1>
         </#list>
+        <input type="hidden" name="_rowCount" value="${rowCount}">
+        <tr><td colspan="8" align="center"><input type=submit value='Update' style='font-size: x-small;'/></td></tr>
+        </form>
         </table>
+
         <br>
         <form method="POST" action="<@ofbizUrl>/EditFeatureCategoryFeatures</@ofbizUrl>" style='margin: 0;'>
         <input type="hidden" name="productId" value="${productId}">
