@@ -1,5 +1,5 @@
 /*
- * $Id: ServiceDispatcher.java,v 1.4 2003/09/03 20:55:01 ajzeneski Exp $
+ * $Id: ServiceDispatcher.java,v 1.5 2003/09/25 21:52:58 ajzeneski Exp $
  *
  * Copyright (c) 2001, 2002 The Open For Business Project - www.ofbiz.org
  *
@@ -55,7 +55,7 @@ import org.ofbiz.service.job.JobManager;
  * Global Service Dispatcher
  *
  * @author     <a href="mailto:jaz@ofbiz.org">Andy Zeneski</a>
- * @version    $Revision: 1.4 $
+ * @version    $Revision: 1.5 $
  * @since      2.0
  */
 public class ServiceDispatcher {
@@ -315,7 +315,7 @@ public class ServiceDispatcher {
                 Debug.logError(te, "Cannot rollback transaction", module);
             }
             checkDebug(service, 0, debugging);
-            throw new GenericServiceException("Service Failed: " , t);
+            throw new GenericServiceException("Service [" + service.name + "] Failed: " , t);
         }
     }
 
@@ -440,7 +440,7 @@ public class ServiceDispatcher {
                 Debug.logError(te, "Cannot rollback transaction", module);
             }
             checkDebug(service, 0, debugging);
-            throw new GenericServiceException("Service Failed: ", t);
+            throw new GenericServiceException("Service [" + service.name + "] Failed: ", t);
         }
     }
 

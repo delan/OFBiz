@@ -1,5 +1,5 @@
 /*
- * $Id: GroupModel.java,v 1.1 2003/08/17 05:12:42 ajzeneski Exp $
+ * $Id: GroupModel.java,v 1.2 2003/09/25 21:52:58 ajzeneski Exp $
  *
  *  Copyright (c) 2001, 2002 The Open For Business Project - www.ofbiz.org
  *
@@ -29,17 +29,18 @@ import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
 
-import org.ofbiz.service.GenericServiceException;
-import org.ofbiz.service.ServiceDispatcher;
 import org.ofbiz.base.util.Debug;
 import org.ofbiz.base.util.UtilXml;
+import org.ofbiz.service.GenericServiceException;
+import org.ofbiz.service.ModelService;
+import org.ofbiz.service.ServiceDispatcher;
 import org.w3c.dom.Element;
 
 /**
  * GroupModel.java
  * 
  * @author     <a href="mailto:jaz@ofbiz.org">Andy Zeneski</a>
- * @version    $Revision: 1.1 $
+ * @version    $Revision: 1.2 $
  * @since      2.0
  */
 public class GroupModel {
@@ -132,6 +133,13 @@ public class GroupModel {
             if (Debug.verboseOn()) Debug.logVerbose("Using Context: " + runContext, module);
             Map thisResult = model.invoke(dispatcher, localName, runContext);
             if (Debug.verboseOn()) Debug.logVerbose("Result: " + thisResult, module);
+            
+            // make sure we didn't fail
+            if (((String) thisResult.get(ModelService.RESPONSE_MESSAGE)).equals(ModelService.RESPOND_ERROR)) {
+                Debug.logError("Grouped service [" + model.getName() + "] failed.", module);
+                return result;
+            }
+            
             result.putAll(thisResult);
             if (model.resultToContext()) {
                 runContext.putAll(thisResult);
@@ -154,11 +162,12 @@ public class GroupModel {
             try {
                 result = model.invoke(dispatcher, localName, context);
             } catch (GenericServiceException e) {
-                if (Debug.verboseOn()) Debug.logVerbose("Service: " + model + " failed.", module);
+                Debug.logError("Service: " + model + " failed.", module);
             }
         }
-        if (result == null) 
+        if (result == null) {
             throw new GenericServiceException("All services failed to run; none available.");
+        }
         return result;
     }            
 }
