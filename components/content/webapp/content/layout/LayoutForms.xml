@@ -224,7 +224,7 @@
         default-tooltip-style="tabletext" default-widget-style="display"
         default-entity-name="ContentAssocDataResourceViewFrom"
         list-name="entityList" target="" paginate-target="FindLayout" title="" type="list">
-        <field name="contentId" title="Edit" widget-style="buttontext">
+        <field name="contentId" title="View" widget-style="buttontext">
             <hyperlink also-hidden="false" description="${contentId}" target="EditLayout?contentId=${contentId}&amp;drDataResourceId=${drDataResourceId}"/>
         </field>
         <field name="contentName"><display/></field>
@@ -288,6 +288,9 @@
         </field>
         <field name="contentIdToDisplay"  title="Parent Content" position="3" map-name="dummy">
             <display description="${contentIdTo}"/>
+        </field>
+        <field name="mapKeyDisplay"  title="MapKey" position="4" map-name="dummy">
+            <display description="${mapKey}"/>
         </field>
         <field name="contentTypeId"  >
             <hidden value="DOCUMENT"/>
@@ -581,11 +584,16 @@
         extends="LayoutSubContentMaster"
         target="updateLayoutSubContent"
         title="" type="single">
-        <field name="drDataResourceTypeId" title="Data Resource Type">
-            <display/>
+        <field name="drDataResourceTypeId" >
+            <drop-down no-current-selected-key="ELECTRONIC_TEXT">
+                <option key="LOCAL_FILE" description="Absolute File"/>
+                <option key="OFBIZ_FILE" description="File Rel. to OFBIZ_HOME"/>
+                <option key="CONTEXT_FILE" description="File Rel. to webapp root"/>
+                <option key="ELECTRONIC_TEXT" description="DataBase Text"/>
+            </drop-down>
         </field>
-        <field name="drDataTemplateTypeId" title="Data Template Type">
-            <drop-down >
+        <field name="drDataTemplateTypeId" >
+            <drop-down no-current-selected-key="NONE">
                 <entity-options description="${description}"
                     entity-name="DataTemplateType" key-field-name="dataTemplateTypeId"/>
             </drop-down>
@@ -627,29 +635,15 @@
         target="createLayoutSubContent"
         title="" type="single">
         <field name="drDataResourceTypeId" >
-            <drop-down no-current-selected-key="LOCAL_FILE">
+            <drop-down no-current-selected-key="ELECTRONIC_TEXT">
                 <option key="LOCAL_FILE" description="Absolute File"/>
                 <option key="OFBIZ_FILE" description="File Rel. to OFBIZ_HOME"/>
                 <option key="CONTEXT_FILE" description="File Rel. to webapp root"/>
-                <option key="ELECTRONIC_TEXT" description="DB TEXT"/>
-            </drop-down>
-        </field>
-        <field name="drMimeTypeId" >
-            <drop-down no-current-selected-key="text/html">
-                <option key="text/html" description="Html Text" />
-                <option key="text/plain" description="Plain Text" />
-            </drop-down>
-        </field>
-        <field name="drDataResourceTypeId" >
-            <drop-down no-current-selected-key="LOCAL_FILE">
-                <option key="LOCAL_FILE" description="Absolute File"/>
-                <option key="OFBIZ_FILE" description="File Rel. to OFBIZ_HOME"/>
-                <option key="CONTEXT_FILE" description="File Rel. to webapp root"/>
-                <option key="ELECTRONIC_TEXT" description="DB TEXT"/>
+                <option key="ELECTRONIC_TEXT" description="DataBase Text"/>
             </drop-down>
         </field>
         <field name="drDataTemplateTypeId" >
-            <drop-down >
+            <drop-down no-current-selected-key="NONE">
                 <entity-options description="${description}"
                     entity-name="DataTemplateType" key-field-name="dataTemplateTypeId"/>
             </drop-down>
