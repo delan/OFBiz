@@ -206,7 +206,7 @@
   <TermType description="Threshold" hasTable="N" parentTypeId="" termTypeId="THRESHOLD"/>
   <TermType description="Clause For Renewal" hasTable="N" parentTypeId="" termTypeId="CLAUSE_FOR_RENEWAL"/>
   <TermType description="Agreement Termination" hasTable="N" parentTypeId="" termTypeId="AGREEMENT_TERMINATIO"/>
-  <TermType description="Idemnification" hasTable="N" parentTypeId="" termTypeId="INDEMNIFICATION"/>
+  <TermType description="Indemnification" hasTable="N" parentTypeId="" termTypeId="INDEMNIFICATION"/>
   <TermType description="Non-Compete" hasTable="N" parentTypeId="" termTypeId="NON_COMPETE"/>
   <TermType description="Exclusive Relationship" hasTable="N" parentTypeId="" termTypeId="EXCLUSIVE_RELATIONSH"/>
   <TermType description="Other" hasTable="N" parentTypeId="" termTypeId="OTHER_TERM"/>

@@ -20,14 +20,16 @@
  *  THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  *
  *@author     Andy Zeneski (jaz@ofbiz.org)
- *@version    $Revision: 1.1 $
+ *@author     Olivier Heintz (olivier.heintz@nereide.biz) 
+ *@version    $Revision: 1.2 $
  *@since      2.2
 -->
 
+<#assign uiLabelMap = requestAttributes.uiLabelMap>
 <#if security.hasEntityPermission("SECURITY", "_VIEW", session)>
   ${pages.get("/security/SecurityGroupTabBar.ftl")}
-  <div class="head1">UserLogins for SecurityGroup with ID "${groupId}"</div>
-  <a href="<@ofbizUrl>/EditSecurityGroup</@ofbizUrl>" class="buttontext">[New Security Group]</a>
+  <div class="head1">${uiLabelMap.PartyUserLoginsForSecurityGroup} "${groupId}"</div>
+  <a href="<@ofbizUrl>/EditSecurityGroup</@ofbizUrl>" class="buttontext">[${uiLabelMap.PartyNewSecurityGroup}]</a>
   <br>
   <#if userLoginSecurityGroups?has_content>
     <table border="0" width="100%" cellpadding="2">
@@ -35,13 +37,13 @@
         <td align='right'>
           <b>
             <#if 0 < viewIndex>
-              <a href="<@ofbizUrl>/EditSecurityGroupUserLogins?groupId=${groupId}&VIEW_SIZE=${viewSize}&VIEW_INDEX=${viewIndex-1}</@ofbizUrl>" class="buttontext">[Previous]</a> |
+              <a href="<@ofbizUrl>/EditSecurityGroupUserLogins?groupId=${groupId}&VIEW_SIZE=${viewSize}&VIEW_INDEX=${viewIndex-1}</@ofbizUrl>" class="buttontext">[${uiLabelMap.CommonPrevious}]</a> |
             </#if>
             <#if 0 < listSize>
               <span class="tabletext">${lowIndex+1} - ${highIndex} of ${listSize}</span>
             </#if>
             <#if highIndex < listSize>
-              | <a href="<@ofbizUrl>/EditSecurityGroupUserLogins?groupId=${groupId}&VIEW_SIZE${viewSize}&VIEW_INDEX=${viewIndex+1}</@ofbizUrl>" class="buttontext">[Next]</a>
+              | <a href="<@ofbizUrl>/EditSecurityGroupUserLogins?groupId=${groupId}&VIEW_SIZE${viewSize}&VIEW_INDEX=${viewIndex+1}</@ofbizUrl>" class="buttontext">[${uiLabelMap.CommonNext}]</a>
             </#if>
           </b>
         </td>
@@ -52,10 +54,10 @@
   </#if>  
   <table border="1" cellpadding='2' cellspacing='0' width='100%'>
     <tr>
-      <td><div class="tabletext"><b>UserLogin&nbsp;ID</b></div></td>
-      <td><div class="tabletext"><b>From&nbsp;Date</b></div></td>
-      <td><div class="tabletext"><b>Thru&nbsp;Date</b></div></td>
-      <td><div class="tabletext"><b>Party&nbsp;ID</b></div></td>
+      <td><div class="tabletext"><b>${uiLabelMap.PartyUserLoginId}</b></div></td>
+      <td><div class="tabletext"><b>${uiLabelMap.CommonFromDate}</b></div></td>
+      <td><div class="tabletext"><b>${uiLabelMap.CommonThruDate}</b></div></td>
+      <td><div class="tabletext"><b>${uiLabelMap.PartyPartyId}</b></div></td>
       <td width='1%'><div class="tabletext">&nbsp;</div></td>
     </tr>
     
@@ -76,12 +78,12 @@
               <input type='hidden' name='fromDate' value='${userLoginSecurityGroup.fromDate?string}'>
               <input type='text' class='inputBox' name='thruDate' size="25" value='${(userLoginSecurityGroup.thruDate?string)?if_exists}'>
               <a href="javascript:call_cal(document.editrec${idx}.thruDate, null);"><img src='/images/cal.gif' width='16' height='16' border='0' alt='Calendar'></a>
-              <input type='submit' class='smallSubmit' value='Update'>
+              <input type='submit' class='smallSubmit' value='${uiLabelMap.CommonUpdate}'>
             </form>
           </td>
           <td><a href='<@ofbizUrl>/viewprofile?partyId=${userLogin.partyId}</@ofbizUrl>' class='buttontext'>${userLogin.partyId}</a></td>
           <td align="center">
-            <a href='<@ofbizUrl>/removeUserLoginFromSecurityGroup?userLoginId=${userLoginSecurityGroup.userLoginId}&groupId=${groupId}&fromDate=${userLoginSecurityGroup.fromDate}</@ofbizUrl>' class="buttontext">[Delete]</a>
+            <a href='<@ofbizUrl>/removeUserLoginFromSecurityGroup?userLoginId=${userLoginSecurityGroup.userLoginId}&groupId=${groupId}&fromDate=${userLoginSecurityGroup.fromDate}</@ofbizUrl>' class="buttontext">[${uiLabelMap.CommonDelete}]</a>
           </td>
         </tr>
       </#list>
@@ -93,13 +95,13 @@
         <td align='right'>
           <b>
             <#if 0 < viewIndex>
-              <a href="<@ofbizUrl>/EditSecurityGroupUserLogins?groupId=${groupId}&VIEW_SIZE=${viewSize}&VIEW_INDEX=${viewIndex-1}</@ofbizUrl>" class="buttontext">[Previous]</a> |
+              <a href="<@ofbizUrl>/EditSecurityGroupUserLogins?groupId=${groupId}&VIEW_SIZE=${viewSize}&VIEW_INDEX=${viewIndex-1}</@ofbizUrl>" class="buttontext">[${uiLabelMap.CommonPrevious}]</a> |
             </#if>
             <#if 0 < listSize>
               <span class="tabletext">${lowIndex+1} - ${highIndex} of ${listSize}</span>
             </#if>
             <#if highIndex < listSize>
-              | <a href="<@ofbizUrl>/EditSecurityGroupUserLogins?groupId=${groupId}&VIEW_SIZE${viewSize}&VIEW_INDEX=${viewIndex+1}</@ofbizUrl>" class="buttontext">[Next]</a>
+              | <a href="<@ofbizUrl>/EditSecurityGroupUserLogins?groupId=${groupId}&VIEW_SIZE${viewSize}&VIEW_INDEX=${viewIndex+1}</@ofbizUrl>" class="buttontext">[${uiLabelMap.CommonNext}]</a>
             </#if>
           </b>
         </td>
@@ -112,14 +114,14 @@
     <input type="hidden" name="groupId" value="${groupId}">
     <input type="hidden" name="useValues" value="true">
   
-    <div class='head2'>Add UserLogin to this Security Group:</div>
+    <div class='head2'>${uiLabelMap.PartyAddUserLoginToSecurityGroup}:</div>
     <table cellpadding="2">
       <tr>
-        <td><span class="tableheadtext">UserLogin ID:</span></td>        
+        <td><span class="tableheadtext">${uiLabelMap.PartyUserLoginId}:</span></td>        
         <td><input type='text' class="inputBox" size='30' name='userLoginId'></td>
       </tr>
       <tr>
-        <td><span class="tableheadtext">From Date:</span>
+        <td><span class="tableheadtext">${uiLabelMap.CommonFromDate}:</span>
         <td>
           <input type='text' class="inputBox" size='25' name='fromDate'>
           <a href="javascript:call_cal(document.addUserLoginToSecurityGroupForm.fromDate, null);"><img src='/images/cal.gif' width='16' height='16' border='0' alt='Calendar'></a>
@@ -127,10 +129,10 @@
       </tr>
       <tr>
         <td>&nbsp;</td>
-        <td><input type="submit" class="smallSubmit" value="Add"></td>
+        <td><input type="submit" class="smallSubmit" value="${uiLabelMap.CommonAdd}"></td>
       </tr>
     </table>
   </form>    
 <#else>
-  <h3>You do not have permission to view this page. ("SECURITY_VIEW" or "SECURITY_ADMIN" needed)</h3>
+  <h3>${uiLabelMap.MsgErr0003}</h3>
 </#if>    

@@ -20,10 +20,12 @@
  *  THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  *
  *@author     Andy Zeneski (jaz@ofbiz.org)
- *@version    $Revision: 1.1 $
+ *@author     Olivier Heintz (olivier.heintz@nereide.biz) 
+ *@version    $Revision: 1.2 $
  *@since      2.2
 -->
 
+<#assign uiLabelMap = requestAttributes.uiLabelMap>
 <#if security.hasEntityPermission("PARTYMGR", "_CREATE", session)> 
 <table width='300' border='0' cellpadding='0' cellspacing='0' align='center'>
   <tr>    
@@ -34,7 +36,7 @@
             <table width='100%' border='0' cellspacing='0' cellpadding='0' class='boxtop'>
               <tr>
                 <td valign='middle' align='center'>
-                  <div class="boxhead">Create New Party Detail</div>
+                  <div class="boxhead">${uiLabelMap.PartyCreateNewParty}</div>
                 </td>
               </tr>
             </table>
@@ -47,16 +49,16 @@
                 <td align="center" valign="center" width='100%'>                  
                   <table width='100%' border='0' cellpadding='0' cellspacing='2'>
                     <tr>        
-                      <td><a href="<@ofbizUrl>/editpartygroup?create_new=Y</@ofbizUrl>" class="buttontextbig">[*] Create New Party Group</a></td>
+                      <td><a href="<@ofbizUrl>/editpartygroup?create_new=Y</@ofbizUrl>" class="buttontextbig">[*] ${uiLabelMap.PartyCreateNewPartyGroup}</a></td>
                     </tr>
                     <tr>        
-                      <td><a href="<@ofbizUrl>/editperson?create_new=Y</@ofbizUrl>" class="buttontextbig">[*] Create New Person</a></td>
+                      <td><a href="<@ofbizUrl>/editperson?create_new=Y</@ofbizUrl>" class="buttontextbig">[*] ${uiLabelMap.PartyCreateNewPerson}</a></td>
                     </tr>                    
                     <tr>        
-                      <td><a href="<@ofbizUrl>/newcustomer</@ofbizUrl>" class="buttontextbig">[*] Create Customer</a></td>
+                      <td><a href="<@ofbizUrl>/newcustomer</@ofbizUrl>" class="buttontextbig">[*] ${uiLabelMap.PartyCreateNewCustomer}</a></td>
                     </tr>
                     <tr>        
-                      <td><a href="#" class="buttontextbigdisabled">[*] Create Employee</a>&nbsp;&nbsp;<span class="tabletext">Coming Soon!</span></td>
+                      <td><a href="#" class="buttontextbigdisabled">[*] ${uiLabelMap.PartyCreateNewEmployee}</a>&nbsp;&nbsp;<span class="tabletext">${uiLabelMap.CommonComingSoon}</span></td>
                     </tr>           
                   </table>  
                 </td>
@@ -69,5 +71,5 @@
   </tr>
 </table>  
 <#else>
-  <h3>You do not have permission to view this page. ("PARTYMGR_CREATE" or "PARTYMGR_ADMIN" needed)</h3>
+  <h3>${uiLabelMap.MsgErr0002}</h3>
 </#if>

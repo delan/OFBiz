@@ -1,7 +1,8 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <page>
     <template>main</template>
-    <property name="title">Find party</property>
+    <property name="title">Edit contact mech</property>
+    <property name="title.property">PageTitleEditcontactmech</property>
     <property name="headerItem">find</property>
     <content-action name="/party/editcontactmech.bsh"/>
 </page>

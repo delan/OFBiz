@@ -20,16 +20,18 @@
  *  THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  *
  *@author     Andy Zeneski (jaz@ofbiz.org)
- *@version    $Revision: 1.3 $
+ *@author     Olivier Heintz (olivier.heintz@nereide.biz) 
+ *@version    $Revision: 1.4 $
  *@since      2.2
 -->
 
+<#assign uiLabelMap = requestAttributes.uiLabelMap>
 <#if security.hasEntityPermission("PARTYMGR", "_VIEW", session)>
 <#-- Main Heading -->
 <table width="100%" cellpadding="0" cellspacing="0" border="0">
   <tr>
     <td align="left">
-      <div class="head1">Communications with
+      <div class="head1">${uiLabelMap.PartyCommunicationsWith}
         <#if lookupPerson?exists>
           ${lookupPerson.personalTitle?if_exists}
           ${lookupPerson.firstName?if_exists}
@@ -38,29 +40,29 @@
           ${lookupPerson.suffix?if_exists}
         <#else>
           <#if lookupGroup?exists>
-            ${lookupGroup.groupName?default("No name (group)")}
+            ${lookupGroup.groupName?default(uiLabelMap.PartyNoNameGroup)}
           <#else>
-          "New User"
+          "${uiLabelMap.PartyNewUser}"
           </#if>
         </#if>
       </div>
     </td>
     <td align="right">
 	  <div class="tabContainer">
-        <a href="<@ofbizUrl>/viewprofile?partyId=${partyId}</@ofbizUrl>" class="tabButton">Profile</a>
-        <a href="<@ofbizUrl>/viewvendor?partyId=${partyId}</@ofbizUrl>" class="tabButton">Vendor</a>
-        <a href="<@ofbizUrl>/viewroles?partyId=${partyId}</@ofbizUrl>" class="tabButton">Roles</a>
-        <a href="<@ofbizUrl>/viewrelationships?partyId=${partyId}</@ofbizUrl>" class="tabButton">Relationships</a>
-        <a href="<@ofbizUrl>/viewcommunications?partyId=${partyId}</@ofbizUrl>" class="tabButtonSelected">Communications</a>
+        <a href="<@ofbizUrl>/viewprofile?partyId=${partyId}</@ofbizUrl>" class="tabButton">${uiLabelMap.PartyProfile}</a>
+        <a href="<@ofbizUrl>/viewvendor?partyId=${partyId}</@ofbizUrl>" class="tabButton">${uiLabelMap.PartyVendor}</a>
+        <a href="<@ofbizUrl>/viewroles?partyId=${partyId}</@ofbizUrl>" class="tabButton">${uiLabelMap.PartyRoles}</a>
+        <a href="<@ofbizUrl>/viewrelationships?partyId=${partyId}</@ofbizUrl>" class="tabButton">${uiLabelMap.PartyRelationships}</a>
+        <a href="<@ofbizUrl>/viewcommunications?partyId=${partyId}</@ofbizUrl>" class="tabButtonSelected">${uiLabelMap.PartyCommunications}</a>
       </div>
     </td>
   </tr>
   <tr>
     <td colspan="2" align="right" nowrap>
-      <a href="<@ofbizUrl>/viewCommunicationEvent?partyId=${partyId}</@ofbizUrl>" class="buttontext">[New Communication]</a>
+      <a href="<@ofbizUrl>/viewCommunicationEvent?partyId=${partyId}</@ofbizUrl>" class="buttontext">[${uiLabelMap.PartyNewCommunication}]</a>
       <#if communicationEvent?has_content>
-        <a href="/workeffort/control/task?communicationEventId=${communicationEvent.communicationEventId}${requestAttributes.externalKeyParam}" class="buttontext">[New Task]</a>
-        <a href="/workeffort/control/event?communicationEventId=${communicationEvent.communicationEventId}${requestAttributes.externalKeyParam}" class="buttontext">[New Event]</a>
+        <a href="/workeffort/control/task?communicationEventId=${communicationEvent.communicationEventId}${requestAttributes.externalKeyParam}" class="buttontext">[${uiLabelMap.PartyNewTask}]</a>
+        <a href="/workeffort/control/event?communicationEventId=${communicationEvent.communicationEventId}${requestAttributes.externalKeyParam}" class="buttontext">[${uiLabelMap.PartyNewEvent}]</a>
       </#if>
     </td>
   </tr>
@@ -69,7 +71,7 @@
 <br>
 <#if communicationEvent?has_content>
   <#assign formAction = "/updateCommunicationEvent">
-  <#assign buttonText = "Update">
+  <#assign buttonText = uiLabelMap.CommonUpdate>
   <#if communicationEvent.statusId?exists && (communicationEvent.statusId == "COM_COMPLETE" || communicationEvent.statusId == "COM_RESOLVED" || communicationEvent.statusId == "COM_REFERRED")>
     <#assign okayToUpdate = false>
   <#else>
@@ -77,14 +79,14 @@
   </#if>
 <#else>
   <#assign formAction = "/createCommunicationEvent">
-  <#assign buttonText = "Create">
+  <#assign buttonText = uiLabelMap.CommonCreate>
   <#assign okayToUpdate = true>
 </#if>  
 <table width="100%" border="0" cellpadding="2" cellspacing="0">
   <#if communicationEvent?has_content>
     <#assign eventPurposes = communicationEvent.getRelated("CommunicationEventPurpose")>             
     <tr>
-      <td width="20%" align="right"><span class="tableheadtext">Event Purpose(s)</span></td>
+      <td width="20%" align="right"><span class="tableheadtext">${uiLabelMap.PartyEventPurpose}</span></td>
       <td width="1">&nbsp;</td>
       <td>
         <table border='0' cellspacing='1' bgcolor='black'>
@@ -97,7 +99,7 @@
                 </td>
                 <#if okayToUpdate>
                 <td bgcolor='white'>
-                  <a href="<@ofbizUrl>/removeCommunicationEventPurpose?partyId=${partyId}&communicationEventPrpTypId=${purposeType.communicationEventPrpTypId}&communicationEventId=${communicationEvent.communicationEventId}</@ofbizUrl>" class="buttontext">Delete</a>
+                  <a href="<@ofbizUrl>/removeCommunicationEventPurpose?partyId=${partyId}&communicationEventPrpTypId=${purposeType.communicationEventPrpTypId}&communicationEventId=${communicationEvent.communicationEventId}</@ofbizUrl>" class="buttontext">${uiLabelMap.CommonDelete}</a>
                 </td>
                 </#if>
               </tr>
@@ -116,7 +118,7 @@
                 </select>
                 <input type="text" class="inputBox" name="description" size="15">
               </td>
-              <td bgcolor="white"><a href="javascript:document.addeventpurpose.submit()" class="buttontext">Add Purpose</a></td>
+              <td bgcolor="white"><a href="javascript:document.addeventpurpose.submit()" class="buttontext">${uiLabelMap.PartyAddPurpose}</a></td>
             </tr>
           </form>
           </#if>
@@ -126,7 +128,7 @@
     <tr><td colspan="3">&nbsp;</td></tr>  
     <#assign eventRoles = communicationEvent.getRelated("CommunicationEventRole")>
     <tr>
-      <td width="20%" align="right"><span class="tableheadtext">Event Role(s)</span></td>
+      <td width="20%" align="right"><span class="tableheadtext">${uiLabelMap.PartyRoles}</span></td>
       <td width="1">&nbsp;</td>
       <td>
         <table border='0' cellspacing='1' bgcolor='black'>
@@ -139,7 +141,7 @@
                 </td>
                 <#if okayToUpdate>
                 <td bgcolor='white'>
-                  <a href="<@ofbizUrl>/removeCommunicationEventRole?party_id=${partyId}&partyId=${eventRole.partyId}&roleTypeId=${eventRole.roleTypeId}&communicationEventId=${communicationEvent.communicationEventId}</@ofbizUrl>" class="buttontext">Delete</a>
+                  <a href="<@ofbizUrl>/removeCommunicationEventRole?party_id=${partyId}&partyId=${eventRole.partyId}&roleTypeId=${eventRole.roleTypeId}&communicationEventId=${communicationEvent.communicationEventId}</@ofbizUrl>" class="buttontext">${uiLabelMap.CommonDelete}</a>
                 </td>
                 </#if>
               </tr>
@@ -158,7 +160,7 @@
                 </select>
                 <input type="text" class="inputBox" name="partyId" size="10">
               </td>
-              <td bgcolor="white"><a href="javascript:document.addeventrole.submit()" class="buttontext">Add Role</a></td>          
+              <td bgcolor="white"><a href="javascript:document.addeventrole.submit()" class="buttontext">${uiLabelMap.PartyAddRole}</a></td>     
             </form>
           </tr>
           </#if>
@@ -175,7 +177,7 @@
       <input type="hidden" name="communicationEventId" value="${communicationEvent.communicationEventId}">      
     </#if>
     <tr>
-      <td width="20%" align="right"><span class="tableheadtext">Event Type</span></td>
+      <td width="20%" align="right"><span class="tableheadtext">${uiLabelMap.PartyEventType}</span></td>
       <td width="1">&nbsp;</td>
       <td>
         <#if okayToUpdate>
@@ -198,7 +200,7 @@
       </td>
     </tr>
     <tr>
-      <td width="20%" align="right"><span class="tableheadtext">Status</span></td>
+      <td width="20%" align="right"><span class="tableheadtext">${uiLabelMap.PartyStatus}</span></td>
       <td width="1">&nbsp;</td>
       <td>
         <#if okayToUpdate>
@@ -221,7 +223,7 @@
       </td>
     </tr>
     <tr>
-      <td width="20%" align="right"><span class="tableheadtext">Contact Type</span></td>
+      <td width="20%" align="right"><span class="tableheadtext">${uiLabelMap.PartyContactType}</span></td>
       <td width="1">&nbsp;</td>
       <td>
         <#if okayToUpdate>
@@ -244,7 +246,7 @@
       </td>
     </tr>
     <tr>
-      <td width="20%" align="right"><span class="tableheadtext">RoleType From</span></td>
+      <td width="20%" align="right"><span class="tableheadtext">${uiLabelMap.PartyRoleTypeFrom}</span></td>
       <td width="1">&nbsp;</td>
       <td>
         <#if okayToUpdate>
@@ -262,13 +264,13 @@
         <#else>
           <#if communicationEvent?has_content && communicationEvent.communicationEventTypeId?exists>
             <#assign roleType = (communicationEvent.getRelatedOne("FromRoleType"))?if_exists>
-            <div class="tabletext">${(roleType.description)?default("None")}</div>
+            <div class="tabletext">${(roleType.description)?default(uiLabelMap.CommonNone)}</div>
           </#if>
         </#if>
       </td>
     </tr>
     <tr>
-      <td width="20%" align="right"><span class="tableheadtext">RoleType To</span></td>
+      <td width="20%" align="right"><span class="tableheadtext">${uiLabelMap.PartyRoleTypeTo}</span></td>
       <td width="1">&nbsp;</td>
       <td>
         <#if okayToUpdate>
@@ -286,13 +288,13 @@
         <#else>
           <#if communicationEvent?has_content && communicationEvent.communicationEventTypeId?exists>
             <#assign roleType = (communicationEvent.getRelatedOne("ToRoleType"))?if_exists>
-            <div class="tabletext">${(roleType.description)?default("None")}</div>
+            <div class="tabletext">${(roleType.description)?default(uiLabelMap.CommonNone)}</div>
           </#if>
         </#if>
       </td>
     </tr>
     <tr>
-      <td width="20%" align="right"><span class="tableheadtext">Request #</span></td>
+      <td width="20%" align="right"><span class="tableheadtext">${uiLabelMap.PartyCustomerRequest} #</span></td>
       <td width="1">&nbsp;</td>
       <td>
         <#if okayToUpdate>
@@ -303,7 +305,7 @@
       </td>
     </tr>
     <tr>
-      <td width="20%" align="right"><span class="tableheadtext">Start Date/Time</span></td>
+      <td width="20%" align="right"><span class="tableheadtext">${uiLabelMap.CommonStartDate}</span></td>
       <td width="1">&nbsp;</td>
       <td>
         <#if okayToUpdate>
@@ -315,7 +317,7 @@
       </td>
     </tr> 
     <tr>
-      <td width="20%" align="right"><span class="tableheadtext">Finish Date/Time</span></td>
+      <td width="20%" align="right"><span class="tableheadtext">${uiLabelMap.CommonFinishDate}</span></td>
       <td width="1">&nbsp;</td>
       <td>
         <#if okayToUpdate>
@@ -327,7 +329,7 @@
       </td>
     </tr>
     <tr>
-      <td width="20%" align="right"><span class="tableheadtext">Note</span></td>
+      <td width="20%" align="right"><span class="tableheadtext">${uiLabelMap.CommonNote}</span></td>
       <td width="1">&nbsp;</td>
       <td>
         <#if okayToUpdate>
@@ -348,5 +350,5 @@
 
 
 <#else>
-  <h3>You do not have permission to view this page. ("PARTYMGR_VIEW" or "PARTYMGR_ADMIN" needed)</h3>
+  <h3>${Uilabel.MsgErr0002}</h3>
 </#if>

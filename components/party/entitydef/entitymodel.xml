@@ -26,7 +26,7 @@
  *
  * @author     David E. Jones (jonesde@ofbiz.org)
  * @author     Andy Zeneski (jaz@ofbiz.org)
- * @version    $Revision: 1.2 $
+ * @version    $Revision: 1.3 $
  */
 -->
 
@@ -414,7 +414,7 @@
     </entity>
     <entity entity-name="TermType"
             package-name="org.ofbiz.party.agreement"
-            title="Term Type Entity">
+            title="Term Type Entity" default-resource-name="PartyEntityLabels">
       <field name="termTypeId" type="id-ne"></field>
       <field name="parentTypeId" type="id-ne"></field>
       <field name="hasTable" type="indicator"></field>

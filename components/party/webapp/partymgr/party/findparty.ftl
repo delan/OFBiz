@@ -20,78 +20,80 @@
  *  THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  *
  *@author     Andy Zeneski (jaz@ofbiz.org)
- *@version    $Revision: 1.2 $
+ *@author     Olivier Heintz (olivier.heintz@nereide.biz) 
+ *@version    $Revision: 1.3 $
  *@since      2.2
 -->
 
+<#assign uiLabelMap = requestAttributes.uiLabelMap>
 <#if security.hasEntityPermission("PARTYMGR", "_VIEW", session)>
 <TABLE border=0 width='100%' cellspacing='0' cellpadding='0' class='boxoutside'>
   <TR>
     <TD width='100%'>
       <table width='100%' border='0' cellspacing='0' cellpadding='0' class='boxtop'>
         <tr>
-          <td width="100%"><div class="boxhead">Find Parties</div></td>         
+          <td width="100%"><div class="boxhead">${uiLabelMap.PartyFindParties}</div></td>         
         </tr>
       </table>
       <table width='100%' border='0' cellspacing='0' cellpadding='2' class='boxbottom'>
           <form method="post" action="<@ofbizUrl>/viewprofile</@ofbizUrl>" name="viewprofileform">
             <tr>
-              <td width="25%" align=right><div class="tabletext">Party ID</div></td>
+              <td width="25%" align=right><div class="tabletext">${uiLabelMap.PartyPartyId}</div></td>
               <td width="40%">
                 <input type="text" name="party_id" size="20" class="inputBox" value='${requestParameters.party_id?if_exists}'>
               </td>
               <td width="35%">
-                <a href="javascript:document.viewprofileform.submit()" class="buttontext">[Lookup]</a>
+                <a href="javascript:document.viewprofileform.submit()" class="buttontext">[${uiLabelMap.CommonLookup}]</a>
                 &nbsp;
-                <a href="<@ofbizUrl>/findparty?findAll=true</@ofbizUrl>" class="buttontext">[Find All]</a>
+                <a href="<@ofbizUrl>/findparty?findAll=true</@ofbizUrl>" class="buttontext">[${uiLabelMap.CommonFindAll}]</a>
               </td>
             </tr>
           </form>
 
           <form method="post" action="<@ofbizUrl>/findparty</@ofbizUrl>" name="findnameform">
             <tr>
-              <td width="25%" align=right><div class="tabletext">First Name</div></td>
+              <td width="25%" align=right><div class="tabletext">${uiLabelMap.PartyFirstName}</div></td>
               <td width="40%">
                 <input type="text" name="first_name" size="30" class="inputBox" value='${requestParameters.first_name?if_exists}'>
               </td>
               <td width="35%">&nbsp;</td>
             </tr>
             <tr>
-              <td width="25%" align=right><div class="tabletext">Last Name</div></td>
+              <td width="25%" align=right><div class="tabletext">${uiLabelMap.PartyLastName}</div></td>
               <td width="40%">
                 <input type="text" name="last_name" size="30" class="inputBox" value='${requestParameters.last_name?if_exists}'>
               </td>
-              <td width="35%"><a href="javascript:document.findnameform.submit()" class="buttontext">[Lookup]</a></td>
+              <td width="35%"><a href="javascript:document.findnameform.submit()" class="buttontext">[${uiLabelMap.CommonLookup}]</a></td>
             </tr>
           </form>
 
           <form method="post" action="<@ofbizUrl>/findparty</@ofbizUrl>" name="findgroupnameform">
             <tr>
-              <td width="25%" align=right><div class="tabletext">Party Group Name</div></td>
+              <td width="25%" align=right><div class="tabletext">${uiLabelMap.PartyPartyGroupName}</div></td>
               <td width="40%">
                 <input type="text" name="group_name" size="30" class="inputBox" value='${requestParameters.group_name?if_exists}'>
               </td>
-              <td width="35%"><a href="javascript:document.findgroupnameform.submit()" class="buttontext">[Lookup]</a></td>
+              <td width="35%"><a href="javascript:document.findgroupnameform.submit()" class="buttontext">[${uiLabelMap.CommonLookup}]</a></td>
             </tr>
           </form>
 
           <form method="post" action="<@ofbizUrl>/findparty</@ofbizUrl>" name="findemailform">
             <tr>
-              <td width="25%" align=right><div class="tabletext">E-Mail Address</div></td>
+              <td width="25%" align=right><div class="tabletext">${uiLabelMap.PartyEmailAddress}</div></td>
               <td width="40%">
                 <input type="text" name="email" size="30" class="inputBox" value='${requestParameters.email?if_exists}'>
               </td>
-              <td width="35%"><a href="javascript:document.findemailform.submit()" class="buttontext">[Lookup]</a></td>
+              <td width="35%"><a href="javascript:document.findemailform.submit()" class="buttontext">[${uiLabelMap.CommonLookup}]</a></td>
             </tr>
           </form>
 
           <form method="post" action="<@ofbizUrl>/viewprofile</@ofbizUrl>" name="findloginform">
             <tr>
-              <td width="25%" align=right><div class="tabletext">User Login ID</div></td>
+              <td width="25%" align=right><div class="tabletext">${uiLabelMap.PartyUserLogin}</div></td>
               <td width="40%">
                 <input type="text" name="userlogin_id" size="30" class="inputBox" value='${requestParameters.userlogin_id?if_exists}'>
               </td>
-              <td width="35%"><a href="javascript:document.findloginform.submit()" class="buttontext">[Lookup]</a></td>
+              <td width="35%"><a href="javascript:document.findloginform.submit()" class="buttontext">[${uiLabelMap.CommonLookup}]</a></td>
             </tr>
           </form>
     </table>
@@ -108,18 +110,18 @@
     <TD width='100%'>
       <table width='100%' border='0' cellspacing='0' cellpadding='0' class='boxtop'>
         <tr>
-          <td width="50%"><div class="boxhead">Parties Found</div></td>
+          <td width="50%"><div class="boxhead">${uiLabelMap.PartyPartiesFound}</div></td>
           <td width="50%">
             <div class="boxhead" align=right>
               <#if parties?has_content>
                 <#if (viewIndex > 0)>
-                  <a href="<@ofbizUrl>/findparty?${searchString + "&VIEW_SIZE=" + viewSize + "&VIEW_INDEX=" + (viewIndex-1)}</@ofbizUrl>" class="lightbuttontext">[Previous]</a> |
+                  <a href="<@ofbizUrl>/findparty?${searchString + "&VIEW_SIZE=" + viewSize + "&VIEW_INDEX=" + (viewIndex-1)}</@ofbizUrl>" class="lightbuttontext">[${uiLabelMap.CommonPrevious}]</a> |
                 </#if>
                 <#if (parties?size > 0)>
                   ${lowIndex+1} - ${highIndex} of ${parties?size}
                 </#if>
                 <#if (parties?size > highIndex)>
-                  | <a href="<@ofbizUrl>/findparty?${searchString + "&VIEW_SIZE=" + viewSize + "&VIEW_INDEX=" + (viewIndex+1)}</@ofbizUrl>" class="lightbuttontext">[Next]</a>
+                  | <a href="<@ofbizUrl>/findparty?${searchString + "&VIEW_SIZE=" + viewSize + "&VIEW_INDEX=" + (viewIndex+1)}</@ofbizUrl>" class="lightbuttontext">[${uiLabelMap.CommonNext}]</a>
                 </#if>
               </#if>
               &nbsp;
@@ -129,15 +131,15 @@
       </table>
       <table width='100%' border='0' cellspacing='0' cellpadding='0' class='boxbottom'>
         <tr>
-          <td width="10%"><div class="head3">PartyID</div></td>
-          <td width="20%"><div class="head3">User Login</div></td>
+          <td width="10%"><div class="head3">${uiLabelMap.PartyPartyId}</div></td>
+          <td width="20%"><div class="head3">${uiLabelMap.PartyUserLogin}</div></td>
           <#if group_name?has_content>
-            <td colspan="2" width="40%"><div class="head3">Party Group Name</div></td>
+            <td colspan="2" width="40%"><div class="head3">${uiLabelMap.PartyPartyGroupName}</div></td>
           <#else>
-            <td width="20%"><div class="head3">Last Name</div></td>
-            <td width="20%"><div class="head3">First Name</div></td>
+            <td width="20%"><div class="head3">${uiLabelMap.PartyLastName}</div></td>
+            <td width="20%"><div class="head3">${uiLabelMap.PartyFirstName}</div></td>
           </#if>
-          <td width="15%"><div class="head3">Type</div></td>
+          <td width="15%"><div class="head3">${uiLabelMap.PartyType}</div></td>
           <td width="15%">&nbsp;</td>
         </tr>
         <tr>
@@ -174,12 +176,12 @@
                 <td align="right">
                   <!-- this is all on one line so that no break will be inserted -->
                   <div class="tabletext"><nobr>
-                    <a href='<@ofbizUrl>/viewprofile?party_id=${partyMap.party.partyId}</@ofbizUrl>' class="buttontext">[View&nbsp;Profile]</a>&nbsp;
+                    <a href='<@ofbizUrl>/viewprofile?party_id=${partyMap.party.partyId}</@ofbizUrl>' class="buttontext">[${uiLabelMap.CommonDetails}]</a>&nbsp;
                     <#if security.hasRolePermission("ORDERMGR", "_VIEW", "", "", session)>
-                      <a href='/ordermgr/control/findorders?lookupFlag=Y&partyId=${partyMap.party.partyId + externalKeyParam}' class="buttontext">[Orders]</a>&nbsp;
+                      <a href='/ordermgr/control/findorders?lookupFlag=Y&partyId=${partyMap.party.partyId + externalKeyParam}' class="buttontext">[${uiLabelMap.OrderOrders}]</a>&nbsp;
                     </#if>
                     <#if security.hasEntityPermission("ORDERMGR", "_CREATE", session)>
-                      <a href='/ordermgr/control/orderentry?mode=SALES_ORDER&partyId=${partyMap.party.partyId + externalKeyParam}' class="buttontext">[New Order]</a>&nbsp;
+                      <a href='/ordermgr/control/orderentry?mode=SALES_ORDER&partyId=${partyMap.party.partyId + externalKeyParam}' class="buttontext">[${uiLabelMap.OrderNewOrder}]</a>&nbsp;
                     </#if>
                   </nobr></div>
                 </td>
@@ -193,7 +195,7 @@
         </#if>
         <#if !parties?has_content>
           <tr>
-            <td colspan='4'><div class='head3'>No parties found.</div></td>
+            <td colspan='4'><div class='head3'>${uiLabelMap.PartyNoPartiesFound}</div></td>
           </tr>
         </#if>
       </table>
@@ -201,5 +203,5 @@
   </TR>
 </TABLE>
 <#else>
-  <h3>You do not have permission to view this page. ("PARTYMGR_VIEW" or "PARTYMGR_ADMIN" needed)</h3>
+  <h3>${uiLabelMap.MsgErr0002}</h3>
 </#if>

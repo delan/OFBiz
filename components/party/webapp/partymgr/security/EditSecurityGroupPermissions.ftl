@@ -20,14 +20,16 @@
  *  THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  *
  *@author     Andy Zeneski (jaz@ofbiz.org)
- *@version    $Revision: 1.1 $
+ *@author     Olivier Heintz (olivier.heintz@nereide.biz) 
+ *@version    $Revision: 1.2 $
  *@since      2.2
 -->
 
+<#assign uiLabelMap = requestAttributes.uiLabelMap>
 <#if security.hasEntityPermission("SECURITY", "_VIEW", session)>
   ${pages.get("/security/SecurityGroupTabBar.ftl")}
-  <div class="head1">Permissions for SecurityGroup with ID "${groupId}"</div>
-  <a href="<@ofbizUrl>/EditSecurityGroup</@ofbizUrl>" class="buttontext">[New Security Group]</a>
+  <div class="head1">${uiLabelMap.PartyPermissionSecurityGroupWithId}&nbsp;"${groupId}"</div>
+  <a href="<@ofbizUrl>/EditSecurityGroup</@ofbizUrl>" class="buttontext">[${uiLabelMap.PartyNewSecurityGroup}]</a>
   <br>
   <#if securityGroupPermissions?has_content>
     <table border="0" width="100%" cellpadding="2">
@@ -35,13 +37,13 @@
         <td align='right'>
           <b>
             <#if 0 < viewIndex>
-              <a href="<@ofbizUrl>/EditSecurityGroupPermissions?groupId=${groupId}&VIEW_SIZE=${viewSize}&VIEW_INDEX=${viewIndex-1}</@ofbizUrl>" class="buttontext">[Previous]</a> |
+              <a href="<@ofbizUrl>/EditSecurityGroupPermissions?groupId=${groupId}&VIEW_SIZE=${viewSize}&VIEW_INDEX=${viewIndex-1}</@ofbizUrl>" class="buttontext">[${uiLabelMap.CommonPrevious}]</a> |
             </#if>
             <#if 0 < listSize>
               <span class="tabletext">${lowIndex+1} - ${highIndex} of ${listSize}</span>
             </#if>
             <#if highIndex < listSize>
-              | <a href="<@ofbizUrl>/EditSecurityGroupPermissions?groupId=${groupId}&VIEW_SIZE${viewSize}&VIEW_INDEX=${viewIndex+1}</@ofbizUrl>" class="buttontext">[Next]</a>
+              | <a href="<@ofbizUrl>/EditSecurityGroupPermissions?groupId=${groupId}&VIEW_SIZE${viewSize}&VIEW_INDEX=${viewIndex+1}</@ofbizUrl>" class="buttontext">[${uiLabelMap.CommonNext}]</a>
             </#if>
           </b>
         </td>
@@ -52,8 +54,8 @@
   </#if>
   <table border="1" cellpadding='2' cellspacing='0' width='100%'>
     <tr>
-      <td><div class="tabletext"><b>Permission&nbsp;ID</b></div></td>
-      <td><div class="tabletext"><b>Description</b></div></td>
+      <td><div class="tabletext"><b>${uiLabelMap.PartyPermissionId}</b></div></td>
+      <td><div class="tabletext"><b>${uiLabelMap.CommonDescription}</b></div></td>
       <td width='1%'><div class="tabletext">&nbsp;</div></td>
     </tr>
     
@@ -63,7 +65,7 @@
         <td><div class='tabletext'>&nbsp;${securityGroupPermission.permissionId}</div></td>
         <td><div class='tabletext'>&nbsp;${securityPermission.description?default("[" + securityGroupPermission.permissionId + "]")}</div></td>
         <td align="center">
-          <a href='<@ofbizUrl>/removeSecurityPermissionFromSecurityGroup?permissionId=${securityGroupPermission.permissionId}&groupId=${groupId}</@ofbizUrl>' class="buttontext">[Delete]</a>
+          <a href='<@ofbizUrl>/removeSecurityPermissionFromSecurityGroup?permissionId=${securityGroupPermission.permissionId}&groupId=${groupId}</@ofbizUrl>' class="buttontext">[${uiLabelMap.CommonDelete}]</a>
         </td>
       </tr>
     </#list>
@@ -74,13 +76,13 @@
         <td align='right'>
           <b>
             <#if 0 < viewIndex>
-              <a href="<@ofbizUrl>/EditSecurityGroupPermissions?groupId=${groupId}&VIEW_SIZE=${viewSize}&VIEW_INDEX=${viewIndex-1}</@ofbizUrl>" class="buttontext">[Previous]</a> |
+              <a href="<@ofbizUrl>/EditSecurityGroupPermissions?groupId=${groupId}&VIEW_SIZE=${viewSize}&VIEW_INDEX=${viewIndex-1}</@ofbizUrl>" class="buttontext">[${uiLabelMap.CommonPrevious}]</a> |
             </#if>
             <#if 0 < listSize>
               <span class="tabletext">${lowIndex+1} - ${highIndex} of ${listSize}</span>
             </#if>
             <#if highIndex < listSize>
-              | <a href="<@ofbizUrl>/EditSecurityGroupPermissions?groupId=${groupId}&VIEW_SIZE${viewSize}&VIEW_INDEX=${viewIndex+1}</@ofbizUrl>" class="buttontext">[Next]</a>
+              | <a href="<@ofbizUrl>/EditSecurityGroupPermissions?groupId=${groupId}&VIEW_SIZE${viewSize}&VIEW_INDEX=${viewIndex+1}</@ofbizUrl>" class="buttontext">[${uiLabelMap.CommonNext}]</a>
             </#if>
           </b>
         </td>
@@ -92,15 +94,15 @@
     <input type="hidden" name="groupId" value="${groupId}">
     <input type="hidden" name="useValues" value="true">
 
-    <div class='head2'>Add Permission (from list) to SecurityGroup:</div>
+    <div class='head2'>${uiLabelMap.PartyAddPermissionToSecurityGroup}:</div>
     <div class='tabletext'>
-      Permission:
+      ${uiLabelMap.PartyPermission}:
       <select name="permissionId" class='selectBox'>
         <#list securityPermissions as securityPermission>
           <option value="${securityPermission.permissionId}">${securityPermission.description}</option>
         </#list>
       </select>
-      <input type="submit" class="smallSubmit" value="Add">
+      <input type="submit" class="smallSubmit" value="${uiLabelMap.CommonAdd}">
     </div>
   </form>
   <br>
@@ -108,12 +110,12 @@
     <input type="hidden" name="groupId" value="${groupId}">
     <input type="hidden" name="useValues" value="true">
 
-    <div class='head2'>Add Permission (manually) to SecurityGroup:</div>
+    <div class='head2'>${uiLabelMap.PartyAddPermissionManuallyToSecurityGroup}:</div>
     <div class='tabletext'>
       Permission: <input type='text' class='inputBox' size='60' name='permissionId'>
-      <input type="submit" class="smallSubmit" value="Add">
+      <input type="submit" class="smallSubmit" value="${uiLabelMap.CommonAdd}">
     </div>
   </form>
 <#else>
-  <h3>You do not have permission to view this page. ("SECURITY_VIEW" or "SECURITY_ADMIN" needed)</h3>
+  <h3>${uiLabelMap.MesgErr0003}</h3>
 </#if>  
