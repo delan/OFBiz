@@ -325,16 +325,80 @@ public class RecurrenceRule {
                 return false;
         }
         if ( byMonthDayList != null && byMonthDayList.size() > 0 ) {
-            return false;
+            Iterator iter = byMonthDayList.iterator();
+            boolean foundDay = false;
+            while ( iter.hasNext() && !foundDay ) {
+                int day = 0;
+                String dayStr = (String) iter.next();
+                try {
+                    day = Integer.parseInt(dayStr);
+                }
+                catch ( NumberFormatException nfe ) { }
+                int maxDay = cal.getActualMaximum(Calendar.DAY_OF_MONTH);
+                int currentDay = cal.get(Calendar.DAY_OF_MONTH);
+                if ( day > 0 && day == currentDay )
+                    foundDay = true;
+                if ( day < 0  && day == ((currentDay - maxDay) - 1) ) 
+                    foundDay = true;
+            }
+            if ( !foundDay )
+                return false;
         }
         if ( byYearDayList != null && byYearDayList.size() > 0 ) {
-            return false;
+            Iterator iter = byYearDayList.iterator();
+            boolean foundDay = false;
+            while ( iter.hasNext() && !foundDay ) {
+                int day = 0;
+                String dayStr = (String) iter.next();
+                try {
+                    day = Integer.parseInt(dayStr);
+                }
+                catch ( NumberFormatException nfe ) { }
+                int maxDay = cal.getActualMaximum(Calendar.DAY_OF_YEAR);
+                int currentDay = cal.get(Calendar.DAY_OF_YEAR);
+                if ( day > 0 && day == currentDay )
+                    foundDay = true;
+                if ( day < 0  && day == ((currentDay - maxDay) - 1) ) 
+                    foundDay = true;
+            }
+            if ( !foundDay )
+                return false;
         }
         if ( byWeekNoList != null && byWeekNoList.size() > 0 ) {
-            return false;
+            Iterator iter = byWeekNoList.iterator();
+            boolean foundWeek = false;
+            while ( iter.hasNext() && !foundWeek ) {
+                int week = 0;
+                String weekStr = (String) iter.next();
+                try {
+                    week = Integer.parseInt(weekStr);
+                }
+                catch ( NumberFormatException nfe ) { }
+                int maxWeek = cal.getActualMaximum(Calendar.WEEK_OF_YEAR);
+                int currentWeek = cal.get(Calendar.WEEK_OF_YEAR);
+                if ( week > 0 && week == currentWeek )
+                    foundWeek = true;
+                if ( week < 0 && week == ((currentWeek - maxWeek) - 1) )
+                    foundWeek = true;
+            }
+            if ( !foundWeek )
+                return false;
         }
-        if ( byMonthList != null && byMonthList.size() > 0 ) {
-            return false;
+        if ( byMonthList != null && byMonthList.size() > 0 ) {            
+            Iterator iter = byMonthList.iterator();
+            boolean foundMonth = false; 
+            while ( iter.hasNext() && !foundMonth ) {
+                int month = 0;
+                String monthStr = (String) iter.next();
+                try {
+                    month = Integer.parseInt(monthStr);
+                }
+                catch ( NumberFormatException nfe ) { }
+                if ( month == cal.get(Calendar.MONTH) )
+                    foundMonth = true;                    
+            }
+            if ( !foundMonth )                
+                return false;
         }
         
         return true;
