@@ -1,5 +1,5 @@
 /*
- * $Id: Start.java,v 1.10 2003/09/28 18:32:34 ajzeneski Exp $
+ * $Id: Start.java,v 1.11 2003/12/02 03:14:01 ajzeneski Exp $
  *
  * Copyright (c) 2003 The Open For Business Project - www.ofbiz.org
  *
@@ -44,7 +44,7 @@ import java.util.Properties;
  * Start - OFBiz Container(s) Startup Class
  *
  * @author     <a href="mailto:jaz@ofbiz.org">Andy Zeneski</a> 
-  *@version    $Revision: 1.10 $
+  *@version    $Revision: 1.11 $
  * @since      2.1
  */
 public class Start implements Runnable {
@@ -178,6 +178,7 @@ public class Start implements Runnable {
                 loaders.add(loader);
             } catch (Exception e) {
                 e.printStackTrace();
+                System.exit(99);
             }
         }                                   
     } 
