@@ -24,7 +24,7 @@
  *
  *@author     David E. Jones (jonesde@ofbiz.org)
  *@author     thierry.grauss@etu.univ-tours.fr (migration to uiLabelMap)
- *@version    $Revision: 1.3 $
+ *@version    $Revision: 1.4 $
  *@since      3.0
 -->
 
@@ -65,6 +65,7 @@
             <#if facilityLocationInfoList?has_content || inventoryItemInfoList?has_content>
                 <#assign rowColor = "white">
                 <#-- facilityLocationInfoList: facilityLocation, productInfoList (product, quantity, inventoryItemList, orderItemList) -->
+                <#if facilityLocationInfoList?has_content>
                 <#list facilityLocationInfoList as facilityLocationInfo>
                     <#assign facilityLocation = facilityLocationInfo.facilityLocation>
                     <#assign productInfoList = facilityLocationInfo.productInfoList>
@@ -108,6 +109,8 @@
                         </#if>
                     </#list>
                 </#list>
+                </#if>
+                <#if inventoryItemInfoList?has_content>
                 <#list inventoryItemInfoList as inventoryItemInfo>
                     <#-- inventoryItemInfoList: List of Maps with inventoryItem, facilityLocation, orderItems, product, quantity, statusItem -->
                     <#-- for this list, only display for inventoryItems with no location since those with locations will be displayed above -->
@@ -153,6 +156,7 @@
                         </#if>
                     </#if>
                 </#list>
+                </#if>
             <#else>
                 <fo:table-row font-weight="bold">
                     <fo:table-cell><fo:block>${uiLabelMap.ProductNoInventoryFoundToPick}.</fo:block></fo:table-cell>
