@@ -776,6 +776,7 @@
                 <env-to-env env-name="quantity" to-env-name="picklistBinInfo.quantity"/>
                 <env-to-env env-name="picklistBinInfo" to-env-name="facilityLocationInfo.picklistBinInfoList[]"/>
             </iterate-map>
+            <order-map-list list-name="facilityLocationInfo.picklistBinInfoList"><order-by field-name="picklistBin.binLocationNumber"/></order-map-list>
             
             <env-to-env env-name="facilityLocationInfo" to-env-name="facilityLocationInfoList[]"/>
         </iterate>
@@ -816,6 +817,7 @@
                 <env-to-env env-name="quantity" to-env-name="picklistBinInfo.quantity"/>
                 <env-to-env env-name="picklistBinInfo" to-env-name="productInfo.picklistBinInfoList[]"/>
             </iterate-map>
+            <order-map-list list-name="productInfo.picklistBinInfoList"><order-by field-name="picklistBin.binLocationNumber"/></order-map-list>
             
             <env-to-env env-name="productInfo" to-env-name="noLocationProductInfoList[]"/>
         </iterate>
@@ -862,7 +864,8 @@
         </iterate>
 
         <clear-field field-name="picklistBinInfoList"/>
-        <get-related value-name="picklist" relation-name="PicklistBin" list-name="picklistBinList"/>
+        <string-to-list string="+binLocationNumber" list-name="picklistBinOrderList"/>
+        <get-related value-name="picklist" relation-name="PicklistBin" list-name="picklistBinList" order-by-list-name="picklistBinOrderList"/>
         <iterate entry-name="picklistBin" list-name="picklistBinList">
             <clear-field field-name="picklistBinInfo"/>
             <get-related-one value-name="picklistBin" relation-name="PrimaryOrderHeader" to-value-name="picklistBinInfo.primaryOrderHeader"/>
@@ -888,7 +891,6 @@
         </iterate>
 
         <clear-field field-name="picklistInfo"/>
-
         <env-to-env env-name="picklist" to-env-name="picklistInfo.picklist"/>
         <env-to-env env-name="picklistRoleInfoList" to-env-name="picklistInfo.picklistRoleInfoList"/>
         <env-to-env env-name="picklistStatusHistoryInfoList" to-env-name="picklistInfo.picklistStatusHistoryInfoList"/>
