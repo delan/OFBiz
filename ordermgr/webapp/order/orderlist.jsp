@@ -69,6 +69,7 @@
         }
     } else if (minDate != null || maxDate != null) {
         // lookup by date
+        pageParamString = "minDate=" + minDate + "&maxDate=" + maxDate;
         pageContext.setAttribute("DATE_MODE", "YES");
         List exprs = new ArrayList();
         try {
