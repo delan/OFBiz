@@ -132,7 +132,7 @@
     <!-- ================================================================== -->
 
     <target name="classes" depends="prepare">
-        <javac debug="on" srcdir="${src.dir}" classpath="${classpath}" destdir="${build.dir}/jar">
+        <javac debug="on" deprecation="on" srcdir="${src.dir}" classpath="${classpath}" destdir="${build.dir}/jar">
             <!-- exclude the payment processor packages; comment if you have libs -->
             <exclude name="org/ofbiz/commonapp/thirdparty/cybersource/**" />
             <exclude name="org/ofbiz/commonapp/thirdparty/verisign/**" />
