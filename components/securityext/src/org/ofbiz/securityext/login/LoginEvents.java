@@ -1,5 +1,5 @@
 /*
- * $Id: LoginEvents.java,v 1.9 2004/01/28 21:05:31 ajzeneski Exp $
+ * $Id: LoginEvents.java,v 1.10 2004/01/28 21:34:12 ajzeneski Exp $
  *
  *  Copyright (c) 2001, 2002 The Open For Business Project - www.ofbiz.org
  *
@@ -61,7 +61,7 @@ import org.ofbiz.service.ModelService;
  * @author     <a href="mailto:jonesde@ofbiz.org">David E. Jones</a>
  * @author     <a href="">Dustin Caldwell</a>
  * @author     <a href="mailto:therrick@yahoo.com">Tom Herrick</a>
- * @version    $Revision: 1.9 $
+ * @version    $Revision: 1.10 $
  * @since      2.0
  */
 public class LoginEvents {
@@ -212,7 +212,9 @@ public class LoginEvents {
         }
 
         if ("true".equalsIgnoreCase(UtilProperties.getPropertyValue("security.properties", "login.lock.active"))) {
-            if (isLoggedInSession(username, request, false)) {
+            boolean userIdLoggedIn = isLoggedInSession(username, request, false);
+            boolean thisUserLoggedIn = isLoggedInSession(username, request, true);
+            if (userIdLoggedIn && !thisUserLoggedIn) {
                 request.setAttribute("_ERROR_MESSAGE_", "<b>This user is already logged in.</b><br>");
                 return "error";
             }
@@ -666,6 +668,16 @@ public class LoginEvents {
                 // ignore the return value; even if the operation failed we want to set the new UserLogin
             }
 
+            if ("true".equalsIgnoreCase(UtilProperties.getPropertyValue("security.properties", "login.lock.active"))) {
+                String username = userLogin.getString("userLoginId");
+                boolean userIdLoggedIn = isLoggedInSession(username, request, false);
+                boolean thisUserLoggedIn = isLoggedInSession(username, request, true);
+                if (userIdLoggedIn && !thisUserLoggedIn) {
+                    request.setAttribute("_ERROR_MESSAGE_", "<b>This user is already logged in.</b><br>");
+                    return "error";
+                }
+            }
+
             doBasicLogin(userLogin, request);
         } else {
             Debug.logWarning("Could not find userLogin for external login key: " + externalKey, module);
@@ -692,8 +704,14 @@ public class LoginEvents {
                 return false;
             } else {
                 String sessionId = (String) webappMap.get(UtilHttp.getApplicationName(request));
-                if (checkSessionId && (sessionId == null || !sessionId.equals(request.getSession().getId()))) {
-                    return false;
+                if (!checkSessionId) {
+                    if (sessionId == null) {
+                        return false;
+                    }
+                } else {
+                    if (sessionId == null || !sessionId.equals(request.getSession().getId())) {
+                        return false;
+                    }
                 }
             }
             return true;
