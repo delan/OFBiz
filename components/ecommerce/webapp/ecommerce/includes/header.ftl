@@ -21,12 +21,11 @@
  *
  *@author     David E. Jones (jonesde@ofbiz.org)
  *@author     Andy Zeneski (jaz@ofbiz.org)
- *@version    $Revision: 1.8 $
+ *@version    $Revision: 1.9 $
  *@since      2.1
 -->
 <!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN">
 <#assign uiLabelMap = requestAttributes.uiLabelMap>
-
 
 <html>
 <head>
@@ -51,7 +50,8 @@
     <meta name="keywords" content="${metaKeywords}">
     </#if>
 </head>
-<body>
+
+<body class="ecbody">
 
 <table border="0" width="100%" cellspacing="0" cellpadding="0" class="headerboxoutside">
   <tr>
