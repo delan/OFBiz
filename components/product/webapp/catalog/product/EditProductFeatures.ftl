@@ -22,7 +22,7 @@
  *@author     David E. Jones (jonesde@ofbiz.org)
  *@author     Brad Steiner (bsteiner@thehungersite.com)
  *@author     Catherine.Heintz@nereide.biz (migration to UiLabel)
- *@version    $Revision: 1.11 $
+ *@version    $Revision: 1.12 $
  *@since      2.2
 -->
 <#assign uiLabelMap = requestAttributes.uiLabelMap>
@@ -108,7 +108,7 @@ ${pages.get("/product/ProductTabBar.ftl")}
         </table>
 
         <br>
-        <form method="POST" action="<@ofbizUrl>/EditFeatureCategoryFeatures</@ofbizUrl>" style='margin: 0;'>
+        <form method="POST" action="<@ofbizUrl>/ApplyFeaturesFromCategory</@ofbizUrl>" style='margin: 0;'>
         <input type="hidden" name="productId" value="${productId}">
         <div class='head2'>${uiLabelMap.ProductAddProductFeatureFromCategory}:</div>
         <br>
