@@ -750,12 +750,11 @@ public class CatalogWorker {
             cartiter = cart.iterator();
             while (cartiter != null && cartiter.hasNext()) {
                 ShoppingCartItem item = (ShoppingCartItem) cartiter.next();
-
                 products.remove(item.getProductId());
             }
 
             cartAssocs = new ArrayList(products.values());
-
+            
             // randomly remove products while there are more than 3
             while (cartAssocs.size() > 3) {
                 int toRemove = (int) (Math.random() * (double) (cartAssocs.size()));
@@ -861,19 +860,35 @@ public class CatalogWorker {
 
             // remove all products that are already in the cart
             ShoppingCart cart = (ShoppingCart) httpRequest.getSession().getAttribute(SiteDefs.SHOPPING_CART);
-
             if (cart != null && cart.size() > 0) {
                 Iterator cartiter = cart.iterator();
-
                 while (cartiter.hasNext()) {
                     ShoppingCartItem item = (ShoppingCartItem) cartiter.next();
-
-                    products.remove(item.getProductId());
-                    productQuantities.remove(item.getProductId());
-                    productOccurances.remove(item.getProductId());
+                    String productId = item.getProductId();
+                    products.remove(productId);
+                    productQuantities.remove(productId);
+                    productOccurances.remove(productId);
                 }
             }
 
+            // if desired check view allow category
+            //if (checkViewAllow) {
+                Set prodKeySet = products.keySet();
+                String currentCatalogId = CatalogWorker.getCurrentCatalogId(request);
+                String viewProductCategoryId = CatalogWorker.getCatalogViewAllowCategoryId(delegator, currentCatalogId);
+                if (viewProductCategoryId != null) {
+                    Iterator valIter = prodKeySet.iterator();
+                    while (valIter.hasNext()) {
+                        String productId = (String) valIter.next();
+                        if (!CategoryWorker.isProductInCategory(delegator, productId, viewProductCategoryId)) {
+                            products.remove(productId);
+                            productQuantities.remove(productId);
+                            productOccurances.remove(productId);
+                        }
+                    }
+                }
+            //}
+            
             List reorderProds = new ArrayList(products.values());
 
             /*

@@ -25,10 +25,6 @@
  *@since      2.1
 -->
 
-<#assign reorderProductResults = Static["org.ofbiz.commonapp.product.catalog.CatalogWorker"].getQuickReorderProducts(request)?if_exists>
-<#assign reorderProducts = reorderProductResults.products?if_exists> 
-<#assign reorderQuantities = reorderProductResults.quantities?if_exists> 
-
 <#if reorderProducts?has_content>
   <table border=0 width='100%' cellspacing='0' cellpadding='0' class='boxoutside'>
     <tr>
