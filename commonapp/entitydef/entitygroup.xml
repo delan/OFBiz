@@ -145,6 +145,9 @@
   <!-- org.ofbiz.commonapp.common.geo -->
   <!-- ========================================================= -->
 	
+    <entity-group group="org.ofbiz.commonapp" entity="CountryCode"/>
+	<entity-group group="org.ofbiz.commonapp" entity="CountryTeleCode"/>
+	<entity-group group="org.ofbiz.commonapp" entity="CountryCapital"/>
     <entity-group group="org.ofbiz.commonapp" entity="Geo" />	
     <entity-group group="org.ofbiz.commonapp" entity="GeoAssoc" />	
     <entity-group group="org.ofbiz.commonapp" entity="GeoAssocType" />	

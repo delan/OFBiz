@@ -24,7 +24,7 @@
  *  THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  *
  *@author David E. Jones (jonesde@ofbiz.org)
- *@created    Wed Oct 17 12:53:37 EDT 2001
+ *@created    Wed Oct 17 15:55:21 EDT 2001
  *@version    1.0
  */
 -->
@@ -128,18 +128,48 @@
   <!-- org.ofbiz.commonapp.common.geo -->
   <!-- ========================================================= -->
 	
+    <entity entity-name="CountryCapital" 
+            package-name="org.ofbiz.commonapp.common.geo"
+            dependent-on="CountryCode"
+            title="Country Capital Entity"
+            author="Andy Zeneski (jaz@zsolv.com)">
+      <description></description>
+      <field name="countryCode" type="id-ne"></field>
+      <field name="countryCapital" type="description"></field>	
+      <prim-key field="countryCode" />
+      <relation type="one" rel-entity-name="CountryCode">
+        <key-map field-name="countryCode" />
+      </relation>
+    </entity>	
     <entity entity-name="CountryCode" 
             package-name="org.ofbiz.commonapp.common.geo"
-            title="Country Code Mapping Entity"
+            title="ISO Country Code Entity"
             author="Andy Zeneski (jaz@zsolv.com)">
-      <description>Maps Country Names to Country Codes and Abbreviations</description>
-      <field name="CountryCode" col-name="COUNTRY_CODE" type="id-ne"></field>
-      <field name="PartyId" col-name="PARTY_ID" type="id-ne"></field>
-      <field name="CountryName" col-name="COUNTRY_NAME" type="description"></field>
-      <field name="CountryAbbr1" col-name="COUNTRY_ABBR1" type="short-varchar"></field>
-      <field name="CountryAbbr2" col-name="COUNTRY_ABBR2" type="short-varchar"></field>	
-      <prim-key field="CountryCode" />	
-      <prim-key field="PartyId" />
+      <description></description>
+      <field name="countryCode" type="id-ne"></field>
+      <field name="countryAbbr" type="short-varchar"></field>
+      <field name="countryNumber" type="short-varchar"></field>
+      <field name="countryName" type="description"></field>	
+      <prim-key field="countryCode" />
+      <relation type="one" rel-entity-name="CountryCapital">
+        <key-map field-name="countryCode" />
+      </relation>
+      <relation type="one" rel-entity-name="CountryTeleCode">
+        <key-map field-name="countryCode" />
+      </relation>
+    </entity>	
+    <entity entity-name="CountryTeleCode" 
+            package-name="org.ofbiz.commonapp.common.geo"
+            dependent-on="CountryCode"
+            title="Telephone Country Code Entity"
+            author="Andy Zeneski (jaz@zsolv.com)">
+      <description></description>
+      <field name="countryCode" type="id-ne"></field>
+      <field name="teleCode" type="short-varchar"></field>	
+      <prim-key field="countryCode" />
+      <relation type="one" rel-entity-name="CountryCode">
+        <key-map field-name="countryCode" />
+      </relation>
     </entity>	
     <entity entity-name="Geo" 
             package-name="org.ofbiz.commonapp.common.geo"
