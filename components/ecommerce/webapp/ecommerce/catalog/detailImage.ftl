@@ -20,7 +20,7 @@
  *  THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  *
  *@author     Andy Zeneski (jaz@ofbiz.org)
- *@version    $Revision: 1.2 $
+ *@version    $Revision: 1.3 $
  *@since      3.0
 -->
 <html>
@@ -28,7 +28,7 @@
     <center>
       <#if requestParameters.detail?has_content>
         <#assign detailImage = Static["org.ofbiz.base.util.Base64"].base64Decode(requestParameters.detail)>
-        <img src="detailImage" border="0" width='500'>
+        <img src="${detailImage}" border="0" width='500'>
       <#else>
         <script language="javascript">
         <!-- //
