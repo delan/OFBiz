@@ -147,7 +147,7 @@ public class PosTransaction {
 
     public double getTotalDue() {
         double grandTotal = this.getGrandTotal();
-        double paymentAmt = this.getPaymentTotal();       
+        double paymentAmt = this.getPaymentTotal();
         return (grandTotal - paymentAmt);
     }
 
@@ -162,9 +162,11 @@ public class PosTransaction {
         itemInfo.put("description", item.getDescription());
         itemInfo.put("quantity", UtilFormatOut.formatQuantity(item.getQuantity()));
         itemInfo.put("basePrice", UtilFormatOut.formatPrice(item.getBasePrice()));
-        itemInfo.put("adjustments", UtilFormatOut.formatPrice(item.getOtherAdjustments()));
         itemInfo.put("subtotal", UtilFormatOut.formatPrice(item.getItemSubTotal()));
-        itemInfo.put("isTaxable", item.taxApplies() ? "T" : "");
+        itemInfo.put("isTaxable", item.taxApplies() ? "T" : " ");
+        itemInfo.put("adjustments", item.getOtherAdjustments() > 0 ?
+                UtilFormatOut.formatPrice(item.getOtherAdjustments()) : "");
+
         return itemInfo;
     }
 

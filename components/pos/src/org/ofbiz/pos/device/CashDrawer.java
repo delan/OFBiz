@@ -72,12 +72,16 @@ public class CashDrawer extends GenericDevice implements Runnable {
         return false;
     }
 
-    private void startWaiter() {
-        this.waiter = new Thread(this);
-        this.waiter.setDaemon(false);
-        this.waiter.setName(this.getClass().getName());
-        this.waiting = true;
-        this.waiter.start();
+    private synchronized void startWaiter() {
+        if (!this.isDrawerOpen()) {
+            this.waiter = new Thread(this);
+            this.waiter.setDaemon(false);
+            this.waiter.setName(this.getClass().getName());
+            this.waiting = true;
+            this.waiter.start();
+        } else {
+            Debug.logWarning("Drawer already open!", module);
+        }
     }
 
     public void run() {

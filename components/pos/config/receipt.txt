@@ -1,4 +1,5 @@
-#description.length=25
+#description.length=28
+#productId.length=27
 #quantity.length=6
 #price.length=10
 ${CENTER}${DOUBLE_HEIGHT}${BOLD}Company XYZ
@@ -6,16 +7,16 @@ ${CENTER}${BOLD}7 E. 8th St. #308
 ${CENTER}${BOLD}New York, NY 10003
 ${CENTER}${BOLD}212.655.3052
 
-DESC                           PRICE    QTY
-===========================================
+DESC                              PRICE    QTY
+==============================================
 [BEGIN LOOP]
-${description} ${basePrice} ${quantity}
-${productId}
+${productId} ${isTaxable}${basePrice} ${quantity}
+${description} ${basePrice}
 [END LOOP]
 
 
-                          TOTAL: ${grandTotal}
-                         CHANGE: ${change}
+                             TOTAL: ${grandTotal}
+                            CHANGE: ${change}
 
 
 [ORDER BARCODE]
