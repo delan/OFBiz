@@ -536,7 +536,7 @@
       <alias entity-alias="OI" name="quantity"/>
       <alias entity-alias="OI" name="unitPrice"/>
       <alias entity-alias="OI" name="unitListPrice"/>
-      <alias entity-alias="OI" name="estimateShipDate"/>
+      <alias entity-alias="OI" name="estimatedShipDate"/>
       <alias entity-alias="OI" name="autoCancelDate"/>
       <alias entity-alias="OI" name="correspondingPoId"/>
       <view-link entity-alias="OT" rel-entity-alias="OH">
