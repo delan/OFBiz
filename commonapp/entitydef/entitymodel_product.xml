@@ -857,14 +857,14 @@
       <prim-key field="productPriceTypeId"/>
       <prim-key field="currencyUomId"/>
       <prim-key field="fromDate"/>
-      <relation type="one" rel-entity-name="Product">
+      <relation type="one" fk-name="PROD_PRICE_PROD" rel-entity-name="Product">
         <key-map field-name="productId"/>
       </relation>
-      <relation type="one" rel-entity-name="ProductPriceType">
+      <relation type="one" fk-name="PROD_PRICE_TYPE" rel-entity-name="ProductPriceType">
         <key-map field-name="productPriceTypeId"/>
       </relation>
-      <relation type="one" title="Currency" rel-entity-name="Uom">
-        <key-map field-name="currencyUomId" to-field-name="uomId"/>
+      <relation type="one" fk-name="PROD_PRICE_CUOM" title="Currency" rel-entity-name="Uom">
+        <key-map field-name="currencyUomId" rel-field-name="uomId"/>
       </relation>
     </entity>
     <entity entity-name="ProductPriceAction"
