@@ -26,6 +26,7 @@ package org.ofbiz.webapp.event;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+import javax.servlet.ServletContext;
 
 /**
  * EventHandler - Event Handler Interface
@@ -38,7 +39,17 @@ import javax.servlet.http.HttpServletResponse;
 
 public interface EventHandler {
 
-    /** 
+    /**
+     * Initializes the handler. Since handlers use the singleton pattern this method should only be called
+     * the first time the handler is used.
+     * 
+     * @param context ServletContext This may be needed by the handler in order to lookup properties or XML
+     * definition files for rendering pages or handler options.
+     * @throws EventHandlerException
+     */
+    public void init(ServletContext context) throws EventHandlerException;
+
+    /**
      * Invoke the web event
      * 
      *@param eventPath The path or location of this event

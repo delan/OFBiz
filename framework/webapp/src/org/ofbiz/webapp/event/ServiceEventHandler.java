@@ -33,6 +33,7 @@ import java.util.Map;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
+import javax.servlet.ServletContext;
 
 import org.ofbiz.base.util.Debug;
 import org.ofbiz.base.util.UtilHttp;
@@ -69,6 +70,12 @@ public class ServiceEventHandler implements EventHandler {
     public static final String SYNC = "sync";
     public static final String ASYNC = "async";
 
+    /**
+     * @see org.ofbiz.webapp.event.EventHandler#init(javax.servlet.ServletContext)
+     */
+    public void init(ServletContext context) throws EventHandlerException {
+    }
+    
     /**
      * @see org.ofbiz.webapp.event.EventHandler#invoke(java.lang.String, java.lang.String, javax.servlet.http.HttpServletRequest, javax.servlet.http.HttpServletResponse)
      */

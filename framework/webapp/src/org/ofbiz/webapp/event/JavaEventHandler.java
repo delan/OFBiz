@@ -29,6 +29,7 @@ import java.util.HashMap;
 import java.util.Map;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+import javax.servlet.ServletContext;
 
 import org.ofbiz.base.util.Debug;
 
@@ -45,7 +46,13 @@ public class JavaEventHandler implements EventHandler {
     public static final String module = JavaEventHandler.class.getName();
 
     private Map eventClassMap = new HashMap();
-   
+
+    /**
+     * @see org.ofbiz.webapp.event.EventHandler#init(javax.servlet.ServletContext)
+     */
+    public void init(ServletContext context) throws EventHandlerException {
+    }
+    
     /**
      * @see org.ofbiz.webapp.event.EventHandler#invoke(java.lang.String, java.lang.String, javax.servlet.http.HttpServletRequest, javax.servlet.http.HttpServletResponse)
      */
