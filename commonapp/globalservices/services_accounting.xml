@@ -70,7 +70,7 @@
         </description>
         <attribute name="orderId" type="String" mode="IN" optional="false"/>
         <attribute name="billItems" type="List" mode="IN" optional="false"/>
-        <attribute name="invoiceId" type="String" mode="OUT" optional="false"/>
+        <attribute name="invoiceId" type="String" mode="OUT" optional="true"/>
     </service>
     <service name="createInvoicesFromShipment" engine="java"
             location="org.ofbiz.commonapp.accounting.invoice.InvoiceServices" invoke="createInvoicesFromShipment">
@@ -79,7 +79,7 @@
             invoicesCreated = List of invoiceIds which were created by this service
         </description>
         <attribute name="shipmentId" type="String" mode="IN" optional="false"/>
-        <attribute name="invoicesCreated" type="List" mode="OUT" optional="false"/>
+        <attribute name="invoicesCreated" type="List" mode="OUT" optional="true"/>
     </service>
     
     <service name="checkInvoicePaymentApplications" engine="java"
