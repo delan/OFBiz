@@ -935,8 +935,11 @@ public class GenericDelegator {
 
         if (entityCondition != null) entityCondition.checkCondition(modelEntity);
         GenericHelper helper = getEntityHelper(entityName);
+        List list = null;
+        list = helper.findByCondition(modelEntity, entityCondition, fieldsToSelect, orderBy);
+        absorbList(list);
 
-        return helper.findByCondition(modelEntity, entityCondition, fieldsToSelect, orderBy);
+        return list;
     }
 
     /** Finds GenericValues by the conditions specified in the EntityCondition object, the the EntityCondition javadoc for more details.
