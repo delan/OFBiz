@@ -1,0 +1,24 @@
+import java.util.*;
+import java.io.*;
+import java.sql.Timestamp;
+import java.lang.Integer;
+import org.ofbiz.core.entity.*;
+import org.ofbiz.core.util.*;
+import org.ofbiz.core.widgetimpl.*;
+
+security = request.getAttribute("security");
+delegator = request.getAttribute("delegator");
+
+if(security.hasEntityPermission("CATALOG", "_VIEW", session)) {
+    context.put("hasPermission", Boolean.TRUE);
+} else {
+    context.put("hasPermission", Boolean.FALSE);
+}
+
+boolean activeOnly = true;
+if ("false".equals(request.getParameter("activeOnly"))) activeOnly = false;
+context.put("activeOnly", activeOnly);
+
+List productPriceRules = delegator.findAll("ProductPriceRule");
+if (activeOnly) productPriceRules = EntityUtil.filterByDate(productPriceRules, true);
+if (productPriceRules != null && productPriceRules.size() > 0) context.put("productPriceRules", productPriceRules);

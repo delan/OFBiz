@@ -1,0 +1,46 @@
+import java.util.*;
+import java.io.*;
+import org.ofbiz.core.entity.*;
+import org.ofbiz.core.util.*;
+
+security = request.getAttribute("security");
+delegator = request.getAttribute("delegator");
+
+if(security.hasEntityPermission("CATALOG", "_VIEW", session)) {
+    context.put("hasPermission", Boolean.TRUE);
+} else {
+    context.put("hasPermission", Boolean.FALSE);
+}
+
+tryEntity = true;
+if (request.getAttribute(SiteDefs.ERROR_MESSAGE) != null) 
+    tryEntity = false;
+
+prodCatalogId = request.getParameter("prodCatalogId");
+context.put("prodCatalogId", prodCatalogId);
+
+prodCatalog = delegator.findByPrimaryKey("ProdCatalog", UtilMisc.toMap("prodCatalogId", prodCatalogId));
+context.put("prodCatalog", prodCatalog);
+
+prodCatalogCategories = null;
+    
+if (prodCatalog == null) {
+    tryEntity = false;
+} else {
+    prodCatalogCategories = prodCatalog.getRelated("ProdCatalogCategory", null, UtilMisc.toList("prodCatalogCategoryTypeId", "sequenceNum", "productCategoryId"));
+    if (prodCatalogCategories != null) 
+        context.put("prodCatalogCategories", prodCatalogCategories);
+}
+
+productCategories = delegator.findAll("ProductCategory", UtilMisc.toList("description"));
+if (productCategories != null) 
+    context.put("productCategories", productCategories);
+
+prodCatalogCategoryTypes = delegator.findAll("ProdCatalogCategoryType", UtilMisc.toList("description"));
+
+if (prodCatalogCategoryTypes != null) 
+    context.put("prodCatalogCategoryTypes", prodCatalogCategoryTypes);
+
+if ("true".equalsIgnoreCase((String)request.getParameter("tryEntity"))) 
+    tryEntity = true;
+

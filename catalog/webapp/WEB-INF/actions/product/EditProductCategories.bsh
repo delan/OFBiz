@@ -1,0 +1,38 @@
+import java.util.*;
+import java.io.*;
+import org.ofbiz.core.entity.*;
+import org.ofbiz.core.util.*;
+import org.ofbiz.core.widgetimpl.*;
+
+security = request.getAttribute("security");
+delegator = request.getAttribute("delegator");
+
+if(security.hasEntityPermission("CATALOG", "_VIEW", session)) {
+    context.put("hasPermission", Boolean.TRUE);
+} else {
+    context.put("hasPermission", Boolean.FALSE);
+}
+productId = request.getParameter("productId");
+context.put("productId", productId);
+
+product = delegator.findByPrimaryKey("Product", UtilMisc.toMap("productId", productId));
+context.put("product", product);
+
+productCategoryMembers = product.getRelated("ProductCategoryMember", null, UtilMisc.toList("sequenceNum", "productCategoryId"));
+if (productCategoryMembers != null) context.put("productCategoryMembers", productCategoryMembers);
+
+List productCategoryMemberDatas = new LinkedList();
+Iterator productCategoryMemberIter = productCategoryMembers.iterator();
+while (productCategoryMemberIter.hasNext()) {
+    GenericValue productCategoryMember = (GenericValue) productCategoryMemberIter.next();
+    GenericValue productCategory = productCategoryMember.getRelatedOne("ProductCategory");
+    productCategoryMemberDatas.add(UtilMisc.toMap("productCategoryMember", productCategoryMember, "productCategory", productCategory));
+}
+
+HtmlFormWrapper updateProductCategoryMemberWrapper = new HtmlFormWrapper("/product/ProductForms.xml", "UpdateProductCategoryMemeber", request, response);
+context.put("updateProductCategoryMemberWrapper", updateProductCategoryMemberWrapper);
+updateProductCategoryMemberWrapper.putInContext("productCategoryMemberDatas", productCategoryMemberDatas);
+
+HtmlFormWrapper addProductCategoryMemberWrapper = new HtmlFormWrapper("/product/ProductForms.xml", "AddProductCategoryMember", request, response);
+context.put("addProductCategoryMemberWrapper", addProductCategoryMemberWrapper);
+addProductCategoryMemberWrapper.putInContext("product", product);

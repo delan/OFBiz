@@ -1,0 +1,38 @@
+import java.util.*;
+import java.io.*;
+import org.ofbiz.core.entity.*;
+import org.ofbiz.core.util.*;
+import org.ofbiz.core.widgetimpl.*;
+
+security = request.getAttribute("security");
+delegator = request.getAttribute("delegator");
+
+if(security.hasEntityPermission("CATALOG", "_VIEW", session)) {
+    context.put("hasPermission", Boolean.TRUE);
+} else {
+    context.put("hasPermission", Boolean.FALSE);
+}
+String nowTimestampString = UtilDateTime.nowTimestamp().toString();
+context.put("nowTimestampString", nowTimestampString);
+
+boolean tryEntity = true;
+if (request.getAttribute(SiteDefs.ERROR_MESSAGE) != null) tryEntity = false;
+
+String prodCatalogId = request.getParameter("prodCatalogId");
+if (prodCatalogId != null) context.put("prodCatalogId", prodCatalogId);
+
+GenericValue prodCatalog = delegator.findByPrimaryKey("ProdCatalog", UtilMisc.toMap("prodCatalogId", prodCatalogId));
+if (prodCatalog != null) context.put("prodCatalog", prodCatalog);
+
+Collection prodCatalogPromoAppls = null;
+if (prodCatalog == null) {
+    tryEntity = false;
+} else {
+    prodCatalogPromoAppls = prodCatalog.getRelated("ProdCatalogPromoAppl", null, UtilMisc.toList("sequenceNum", "productPromoId"));
+    if (prodCatalogPromoAppls != null) context.put("prodCatalogPromoAppls", prodCatalogPromoAppls);
+}
+
+Collection productPromos = delegator.findAll("ProductPromo", UtilMisc.toList("promoName"));
+if (productPromos != null) context.put("productPromos", productPromos);
+
+if ("true".equalsIgnoreCase((String)request.getParameter("tryEntity"))) tryEntity = true;

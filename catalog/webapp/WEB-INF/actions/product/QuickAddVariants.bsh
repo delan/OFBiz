@@ -1,0 +1,57 @@
+import java.util.*;
+import java.io.*;
+import java.sql.Timestamp;
+import java.lang.Integer;
+import org.ofbiz.core.entity.*;
+import org.ofbiz.core.util.*;
+import org.ofbiz.core.widgetimpl.*;
+
+security = request.getAttribute("security");
+delegator = request.getAttribute("delegator");
+
+if(security.hasEntityPermission("CATALOG", "_VIEW", session)) {
+    context.put("hasPermission", Boolean.TRUE);
+} else {
+    context.put("hasPermission", Boolean.FALSE);
+}
+
+String productId = request.getParameter("productId");
+if (productId != null) context.put("productId", productId);
+
+GenericValue product = delegator.findByPrimaryKey("Product", UtilMisc.toMap("productId", productId));
+if (product != null) context.put("product", product);
+
+List featureTypes = new ArrayList();
+
+//just get the selectable features
+List productFeatureAndAppls = EntityUtil.filterByDate(delegator.findByAnd("ProductFeatureAndAppl", 
+        UtilMisc.toMap("productId", productId, "productFeatureApplTypeId", "SELECTABLE_FEATURE"), 
+        UtilMisc.toList("sequenceNum", "productFeatureApplTypeId", "productFeatureTypeId", "description")), true);
+if (productFeatureAndAppls != null) {
+    context.put("productFeatureAndAppls", productFeatureAndAppls);
+
+    //get the list of unique feature types in the order they came from the db
+    Iterator productFeatureAndApplIter = productFeatureAndAppls.iterator();
+    while (productFeatureAndApplIter.hasNext()) {
+        GenericValue productFeatureAndAppl = (GenericValue) productFeatureAndApplIter.next();
+        String featureType = productFeatureAndAppl.getString("productFeatureTypeId");
+        if (!featureTypes.contains(featureType)) {
+            featureTypes.add(featureType);
+        }
+    }
+}
+if (featureTypes.size() > 0) context.put("featureTypes", featureTypes);
+
+int featureTypeSize = featureTypes.size();
+int[] indices = new int[featureTypeSize];
+
+//this will contain a list of ProductFeatureAndAppls for each feature type
+List featureTypeValues = new ArrayList();\
+
+//for each feature type get the list of features
+for (int i = 0; i < featureTypes.size(); i++) {
+    String featureType = (String) featureTypes.get(i);
+    featureTypeValues.add(i, EntityUtil.filterByAnd(productFeatureAndAppls, UtilMisc.toMap("productFeatureTypeId", featureType)));
+    indices[i] = 0;
+}
+if (featureTypeValues.size() > 0) context.put("featureTypeValues", featureTypeValues);

@@ -1,0 +1,62 @@
+import java.util.*;
+import java.sql.*;
+import java.io.*;
+import org.ofbiz.core.entity.*;
+import org.ofbiz.core.util.*;
+import org.ofbiz.core.widgetimpl.*;
+
+security = request.getAttribute("security");
+delegator = request.getAttribute("delegator");
+
+if(security.hasEntityPermission("CATALOG", "_VIEW", session)) {
+    context.put("hasPermission", Boolean.TRUE);
+} else {
+    context.put("hasPermission", Boolean.FALSE);
+}
+nowDate = UtilDateTime.nowDate();
+context.put("nowDate", nowDate);
+
+String nowTimestampString = UtilDateTime.nowTimestamp().toString();
+context.put("nowTimestampString", nowTimestampString);
+
+boolean useValues = true;
+if (request.getAttribute(SiteDefs.ERROR_MESSAGE) != null) useValues = false;
+
+String productId = request.getParameter("PRODUCT_ID");
+if (productId != null) context.put("productId", productId);
+
+String productIdTo = request.getParameter("PRODUCT_ID_TO");
+if (productIdTo != null) context.put("productIdTo", productIdTo);
+
+String productAssocTypeId = request.getParameter("PRODUCT_ASSOC_TYPE_ID");
+if (productAssocTypeId != null) context.put("productAssocTypeId", productAssocTypeId);
+
+String fromDateStr = request.getParameter("FROM_DATE");
+
+Timestamp fromDate = null;
+if (fromDateStr != null && fromDateStr.length() > 0) fromDate = Timestamp.valueOf(fromDateStr);
+if (fromDate == null) fromDate = (Timestamp)request.getAttribute("ProductAssocCreateFromDate");
+if (fromDate != null) context.put("fromDate", fromDate);
+
+GenericValue product = delegator.findByPrimaryKey("Product", UtilMisc.toMap("productId", productId));
+if (product != null) context.put("product", product);
+
+GenericValue productAssoc = delegator.findByPrimaryKey("ProductAssoc", UtilMisc.toMap("productId", productId, "productIdTo", productIdTo, "productAssocTypeId", productAssocTypeId, "fromDate", fromDate));
+if (productAssoc != null) context.put("productAssoc", productAssoc);
+
+if("true".equalsIgnoreCase((String)request.getParameter("useValues"))) useValues = true;
+if(productAssoc == null) useValues = false;
+
+context.put("useValues", useValues);
+boolean isCreate = true;
+context.put("isCreate", isCreate);
+
+Collection assocTypes = delegator.findAll("ProductAssocType");
+context.put("assocTypes", assocTypes);
+
+List assocFromProducts = product.getRelated("MainProductAssoc", null, UtilMisc.toList("sequenceNum"));
+if (assocFromProducts != null) context.put("assocFromProducts", assocFromProducts);
+
+List assocToProducts = product.getRelated("AssocProductAssoc");
+if (assocTOProducts != null) context.put("assocToProducts", assocToProducts);
+
