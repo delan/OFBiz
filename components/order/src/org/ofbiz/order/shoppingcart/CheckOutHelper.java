@@ -441,8 +441,8 @@ public class CheckOutHelper {
         context.put("userLogin", userLogin);
         context.put("partyId", partyId);
         context.put("productStoreId", productStoreId);
-        context.put("visitId", visitId);
-        context.put("facilityId", facilityId);
+        context.put("originFacilityId", facilityId);
+        context.put("visitId", visitId);        
         context.put("webSiteId", webSiteId);
 
         // store the order - invoke the service
