@@ -28,15 +28,22 @@
             <exclude field-name="lastModifiedDate"/>
             <exclude field-name="lastModifiedByUserLogin"/>
         </auto-attributes>
+        <attribute name="oldStatusId" type="String" mode="OUT" optional="true"/>
+        <attribute name="oldPrimaryOrderId" type="String" mode="OUT" optional="true"/>
     </service>
     <service name="deleteShipment" default-entity-name="Shipment" engine="simple"
             location="org/ofbiz/commonapp/shipment/shipment/ShipmentServices.xml" invoke="deleteShipment" auth="true">
         <description>Delete Shipment</description>
         <auto-attributes include="pk" mode="IN" optional="false"/>
     </service>
-    <service name="setShipmentSettingsFromPrimaryOrder" default-entity-name="Shipment" engine="simple"
+    <service name="setShipmentSettingsFromPrimaryOrder" engine="simple"
             location="org/ofbiz/commonapp/shipment/shipment/ShipmentServices.xml" invoke="setShipmentSettingsFromPrimaryOrder" auth="true">
-        <description>Create Shipment</description>
+        <description>Set Shipment Settings From Primary Order</description>
+        <attribute name="shipmentId" type="String" mode="IN" optional="false"/>
+    </service>
+    <service name="sendShipmentScheduledNotification" engine="simple"
+            location="org/ofbiz/commonapp/shipment/shipment/ShipmentServices.xml" invoke="sendShipmentScheduledNotification" auth="true">
+        <description>Send Shipment Scheduled Notification</description>
         <attribute name="shipmentId" type="String" mode="IN" optional="false"/>
     </service>
 

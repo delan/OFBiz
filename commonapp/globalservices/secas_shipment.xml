@@ -3,8 +3,31 @@
 
 <service-eca>	
 	<eca service="updateShipment" event="commit">
+        <condition-field field-name="statusId" operator="not-equals" to-field-name="oldStatusId"/>
 		<condition field-name="statusId" operator="equals" value="SHIPMENT_PACKED"/>
 		<action service="createInvoicesFromShipment" mode="async"/>
+	</eca>
+
+	<eca service="createShipment" event="commit">
+		<condition field-name="statusId" operator="equals" value="SHIPMENT_SCHEDULED"/>
+		<action service="sendShipmentScheduledNotification" mode="async"/>
+	</eca>
+	<eca service="updateShipment" event="commit">
+        <!-- only send if status changed to SHIPMENT_SCHEDULED -->
+        <condition-field field-name="statusId" operator="not-equals" to-field-name="oldStatusId"/>
+		<condition field-name="statusId" operator="equals" value="SHIPMENT_SCHEDULED"/>
+		<action service="sendShipmentScheduledNotification" mode="async"/>
+	</eca>
+
+	<eca service="createShipment" event="commit">
+		<condition field-name="primaryOrderId" operator="is-not-empty"/>
+		<action service="setShipmentSettingsFromPrimaryOrder" mode="sync"/>
+	</eca>
+	<eca service="updateShipment" event="commit">
+        <!-- only send if status changed to SHIPMENT_SCHEDULED -->
+        <condition-field field-name="primaryOrderId" operator="not-equals" to-field-name="oldPrimaryOrderId"/>
+		<condition field-name="primaryOrderId" operator="is-not-empty"/>
+		<action service="setShipmentSettingsFromPrimaryOrder" mode="sync"/>
 	</eca>
 	
     <eca service="createShipmentReceipt" event="commit">

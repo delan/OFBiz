@@ -224,6 +224,10 @@
             </then>
         </if>
         
+        <!-- finally before setting nonpk fields, set the oldStatusId, oldPrimaryOrderId -->
+        <field-to-result field-name="statusId" map-name="lookedUpValue" result-name="oldStatusId"/>
+        <field-to-result field-name="primaryOrderId" map-name="lookedUpValue" result-name="oldPrimaryOrderId"/>
+        
         <!-- now that all changes have been checked, set the nonpks -->
         <set-nonpk-fields map-name="parameters" value-name="lookedUpValue"/>
         <now-timestamp-to-env env-name="lookedUpValue.lastModifiedDate"/>
@@ -384,6 +388,69 @@
 
         <set-service-fields service-name="updateShipment" map-name="shipment" to-map-name="shipmentUpdateMap"/>
         <call-service service-name="updateShipment" in-map-name="shipmentUpdateMap"/>
+    </simple-method>
+    <simple-method method-name="sendShipmentScheduledNotification" short-description="Send Shipment Scheduled Notification">
+        <check-permission permission="FACILITY" action="_CREATE">
+            <alt-permission permission="FACILITY" action="_UPDATE"/>
+            <fail-message message="Security Error: to run createShipmentItem you must have the FACILITY_CREATE, FACILITY_UPDATE or FACILITY_ADMIN permission"/>
+        </check-permission>
+        <check-errors/>
+
+        <make-value entity-name="Shipment" value-name="shipment"/>
+        <set-pk-fields value-name="shipment" map-name="parameters"/>
+        <find-by-primary-key map-name="shipment" value-name="shipment"/>
+        
+        <!-- find email address for currently logged in user, set as sendFrom -->
+        <field-to-field field-name="partyId" map-name="userLogin" to-map-name="curUserPcmFindMap"/>
+        <string-to-field string="EMAIL_ADDRESS" field-name="contactMechTypeId" map-name="curUserPcmFindMap"/>
+        <find-by-and entity-name="PartyAndContactMech" map-name="curUserPcmFindMap" list-name="curUserPartyAndContactMechs"/>
+        <first-from-list entry-name="curUserPartyAndContactMech" list-name="curUserPartyAndContactMechs"/>
+        <string-append field-name="sendEmailMap.sendFrom" string="${curUserPartyAndContactMech.infoString}" prefix=","/>
+        
+        <!-- find email addresses of partyIdFrom, set as sendTo -->
+        <env-to-env env-name="shipment.partyIdFrom" to-env-name="sendToPartyIdMap.${shipment.partyIdFrom}"/>
+
+        <!-- find email addresses of all parties not equal to partyIdFrom in SUPPLIER_AGENT roleTypeId associated with primary order, set as sendTo -->
+        <field-to-field field-name="primaryOrderId" map-name="shipment" to-field-name="orderId" to-map-name="supplierAgentOrderRoleFindMap"/>
+        <string-to-field string="SUPPLIER_AGENT" field-name="roleTypeId" map-name="supplierAgentOrderRoleFindMap"/>
+        <find-by-and entity-name="OrderRole" map-name="supplierAgentOrderRoleFindMap" list-name="supplierAgentOrderRoles"/>
+        <iterate entry-name="supplierAgentOrderRole" list-name="supplierAgentOrderRoles">
+            <env-to-env env-name="supplierAgentOrderRole.partyId" to-env-name="sendToPartyIdMap.${supplierAgentOrderRole.partyId}"/>
+        </iterate>
+        
+        <!-- go through all send to parties and get email addresses -->
+        <iterate-map key-name="sendToPartyId" value-name="sendToPartyIdValue" map-name="sendToPartyIdMap">
+            <env-to-field env-name="sendToPartyId" field-name="partyId" map-name="sendToPartyPcmFindMap"/>
+            <string-to-field string="EMAIL_ADDRESS" field-name="contactMechTypeId" map-name="sendToPartyPcmFindMap"/>
+            <find-by-and entity-name="PartyAndContactMech" map-name="sendToPartyPcmFindMap" list-name="sendToPartyPartyAndContactMechs"/>
+            <iterate entry-name="sendToPartyPartyAndContactMech" list-name="sendToPartyPartyAndContactMechs">
+                <string-append field-name="sendEmailMap.sendTo" string="${sendToPartyPartyAndContactMech.infoString}" prefix=","/>
+            </iterate>
+        </iterate-map>
+        
+        <!-- set subject, contentType, templateName, templateData -->
+        <string-to-field string="Scheduled Notification for Shipment ${shipment.shipmentId}" field-name="subject" map-name="sendEmailMap"/>
+        <if-not-empty field-name="shipment.primaryOrderId">
+            <string-append string=" for Primary Order ${shipment.primaryOrderId}" field-name="subject" map-name="sendEmailMap"/>
+        </if-not-empty>
+        <string-to-field string="text/html" field-name="contentType" map-name="sendEmailMap"/>
+        <string-to-field string="org/ofbiz/commonapp/shipment/shipment/ShipmentScheduledNotice.ftl" field-name="templateName" map-name="sendEmailMap"/>
+        <env-to-env env-name="shipment" to-env-name="sendEmailMap.templateData.shipment"/>
+        
+        <!-- call sendGenericNotificationEmail service, if enough information was found -->
+        <log level="info" message="Sending generic notification email (if all info is in place): ${sendEmailMap}"/>
+        <if>
+            <condition>
+                <not><if-empty field-name="sendTo" map-name="sendEmailMap"/></not>
+                <not><if-empty field-name="sendFrom" map-name="sendEmailMap"/></not>
+            </condition>
+            <then>
+                <call-service service-name="sendGenericNotificationEmail" in-map-name="sendEmailMap"/>
+            </then>
+            <else>
+                <log level="error" message="Insufficient data to send notice email: ${sendEmailMap}"/>
+            </else>
+        </if>
     </simple-method>
 
     <!-- ShipmentItem services -->
