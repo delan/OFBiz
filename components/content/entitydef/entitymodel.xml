@@ -26,7 +26,7 @@
  *
  * @author     David E. Jones (jonesde@ofbiz.org)
  * @author     Andy Zeneski (jaz@ofbiz.org)
- * @version    $Revision: 1.44 $
+ * @version    $Revision: 1.45 $
  */
 -->
 
@@ -1443,7 +1443,7 @@
       <field name="cookie" type="short-varchar"></field>
       <field name="fromDate" type="date-time"></field>
       <field name="thruDate" type="date-time"></field>
-      <prim-key field="visitId"/>
+      <prim-key field="visitId"/>       
       <relation type="one" fk-name="VISIT_CONT_MECH" rel-entity-name="ContactMech">
         <key-map field-name="contactMechId"/>
       </relation>
@@ -1459,7 +1459,10 @@
       <relation type="one" fk-name="VISIT_PARTY_ROLE" rel-entity-name="PartyRole">
         <key-map field-name="partyId"/>
         <key-map field-name="roleTypeId"/>
-      </relation>
+      </relation>      
+      <index name="VISIT_THRU_IDX" unique="false">
+        <index-field name="thruDate"/>
+      </index>
     </entity>
 
   <!-- ========================================================= -->
