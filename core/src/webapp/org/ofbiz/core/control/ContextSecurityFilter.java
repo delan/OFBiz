@@ -1,6 +1,9 @@
 /*
  * $Id$
  * $Log$
+ * Revision 1.1  2001/09/28 22:56:44  jonesde
+ * Big update for fromDate PK use, organization stuff
+ *
  * Revision 1.1  2001/09/23 20:01:18  azeneski
  * Added new servlet filter to secure raw JSPs.
  * 
@@ -80,6 +83,9 @@ public class ContextSecurityFilter implements Filter {
                 requestPath = requestPath.substring(1,requestPath.indexOf("/"));
         }
         
+        String requestInfo = httpRequest.getServletPath();
+        requestInfo = requestInfo.substring(0,requestInfo.lastIndexOf("/")) + "/*";
+        
         StringBuffer contextUriBuffer = new StringBuffer();
         if ( httpRequest.getContextPath() != null )
             contextUriBuffer.append(httpRequest.getContextPath());
@@ -89,7 +95,16 @@ public class ContextSecurityFilter implements Filter {
             contextUriBuffer.append(httpRequest.getPathInfo());        
         String contextUri = contextUriBuffer.toString();        
                 
-        if ( !allowList.contains(requestPath) && !allowList.contains(httpRequest.getServletPath()) ) {    
+        /*  Debugging
+        for ( int i = 0; i < allowList.size(); i++ ) {
+            Debug.logInfo("[ContextSecurityFilter.debug] : allow - " + ((String)allowList.get(i)));
+        }
+        Debug.logInfo("[ContextSecurityFilter.debug] : request path - " + requestPath);
+        Debug.logInfo("[ContextSecurityFilter.debug] : request info - " + requestInfo);
+        Debug.logInfo("[ContextSecurityFilter.debug] : servlet path - " + httpRequest.getServletPath());
+        */
+                
+        if ( !allowList.contains(requestPath) && !allowList.contains(requestInfo) && !allowList.contains(httpRequest.getServletPath()) ) {    
             String filterMessage = "[ContextSecurityFilter] : Filtered request - " + contextUri;
             if ( redirectPath == null ) {
                 int error;
