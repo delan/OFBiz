@@ -68,7 +68,7 @@
         <server jndi-server-name="default"
                 jndi-name="jms/TopicConnectionFactory"
                 topic-queue="jms/OFBTopic"
-                type="queue"
+                type="topic"
                 username="ofbiz"
                 password="ofbiz"
                 listen="true"/>
