@@ -1608,6 +1608,19 @@
     </entity>
 
   <!-- ========================================================= -->
+  <!-- org.ofbiz.commonapp.common.sequence -->
+  <!-- ========================================================= -->
+	
+    <entity>
+      <title>Sequence Entity</title>
+      <package-name>org.ofbiz.commonapp.common.sequence</package-name>
+      <table-name>SEQUENCE</table-name>
+      <field><col-name>SEQ_NAME</col-name><type>id-ne</type></field>
+      <field><col-name>SEQ_ID</col-name><type>id</type></field>
+      <prim-key-col>SEQ_NAME</prim-key-col>
+    </entity>	
+
+  <!-- ========================================================= -->
   <!-- org.ofbiz.commonapp.common.status -->
   <!-- ========================================================= -->
 	
