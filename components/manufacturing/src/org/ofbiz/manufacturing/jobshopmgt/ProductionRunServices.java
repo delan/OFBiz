@@ -1,5 +1,5 @@
 /*
- * $Id: ProductionRunServices.java,v 1.2 2003/12/09 20:49:17 holivier Exp $
+ * $Id: ProductionRunServices.java,v 1.3 2004/04/07 15:39:22 holivier Exp $
  *
  * Copyright (c) 2001, 2002, 2003 The Open For Business Project - www.ofbiz.org
  *
@@ -58,7 +58,7 @@ import org.ofbiz.manufacturing.techdata.TechDataServices;
  * Services for Production Run maintenance
  *
  * @author     <a href="mailto:olivier.heintz@nereide.biz">Olivier Heintz</a>
- * @version    $Revision: 1.2 $
+ * @version    $Revision: 1.3 $
  * @since      3.0
  */
 public class ProductionRunServices {
@@ -117,7 +117,7 @@ public class ProductionRunServices {
 */
         String productId = (String) context.get("productId");
 		String workEffortId = (String) context.get("routingId");
-		java.sql.Timestamp  startDate =  (java.sql.Timestamp) context.get("startDate");
+		Timestamp  startDate =  (Timestamp) context.get("startDate");
 		String statusId = "PRUN_CREATED";
 		GenericValue routing = null, product = null;
 		List workEffortProducts = null, productBoms = null, routingTaskAssocs = null ;
@@ -127,23 +127,21 @@ public class ProductionRunServices {
 			routing = delegator.findByPrimaryKey("WorkEffort", UtilMisc.toMap("workEffortId",workEffortId));
 			product = delegator.findByPrimaryKey("Product", UtilMisc.toMap("productId", productId));
 // TODO: sort by seq and filter by date, pour ne prendre que les composants valide à la date de lancement de l'OF
-			productBoms = delegator.findByAnd("ProductAssoc", UtilMisc.toMap("productId", productId,"productAssocTypeId","MANUF_COMPONENT"));
+			productBoms = product.getRelatedByAnd("MainProductAssoc",UtilMisc.toMap("productAssocTypeId","MANUF_COMPONENT"));
 // TODO:   filter by date, pour ne prendre que les opérations valide à la date de lancement de l'OF
-			routingTaskAssocs = delegator.findByAnd("WorkEffortAssoc", UtilMisc.toMap("workEffortIdFrom", workEffortId,"workEffortAssocTypeId","ROUTING_COMPONENT"), 
-			                                                                                                   UtilMisc.toList("sequenceNum","fromDate"));
+			routingTaskAssocs = routing.getRelated("FromWorkEffortAssoc",UtilMisc.toMap("workEffortAssocTypeId","ROUTING_COMPONENT"), UtilMisc.toList("sequenceNum","fromDate"));
 		} catch (GenericEntityException e) {
 			Debug.logWarning(e.getMessage(), module);
 		}
 //TODO: test sur quantité vide et choix de la bonne gamme
 		if (workEffortProducts == null) 
 				return ServiceUtil.returnError(UtilProperties.getMessage(resource, "ManufacturingProductRoutingNotExist", locale));
-		if (productBoms == null) 
+		if (productBoms == null || productBoms.size() == 0) 
 				return ServiceUtil.returnError(UtilProperties.getMessage(resource, "ManufacturingProductHasNoBom", locale));
-		if (routingTaskAssocs == null) 
+		if (routingTaskAssocs == null || routingTaskAssocs.size()==0) 
 				return ServiceUtil.returnError(UtilProperties.getMessage(resource, "ManufacturingRoutingHasNoRoutingTask", locale));
 
 // ProductionRun header creation,   
-//TODO: Calculate the estimatedCompletionDate 
         String workEffortName = (String) context.get("workEffortName");
 		String description = (String) context.get("description");
 		Double pRQuantity = (Double) context.get("pRQuantity");
@@ -178,15 +176,22 @@ public class ProductionRunServices {
 				} catch (GenericEntityException e) {
 				Debug.logError(e.getMessage(),  module);
 			    }   
-//				TODO: Calculate the estimatedCompletionDate 
+ // Calculate the estimatedCompletionDate 
+                long duringTime = (long)  (routingTask.getDouble("estimatedSetupMillis").doubleValue() + (routingTask.getDouble("estimatedMilliSeconds").doubleValue() * pRQuantity.doubleValue()));
+                Timestamp endDate = TechDataServices.addForward(TechDataServices.getTechDataCalendar(routingTask),startDate, duringTime);
+
 				serviceContext.clear();
+                serviceContext.put("workEffortPurposeTypeId", routingTask.getString("workEffortPurposeTypeId"));
+                serviceContext.put("workEffortName",routingTask.getString("workEffortName"));
+                serviceContext.put("description",routingTask.getString("description"));
+                serviceContext.put("fixedAssetId",routingTask.getString("fixedAssetId"));
+                serviceContext.put("estimatedSetupMillis",routingTask.getDouble("estimatedSetupMillis"));
+                serviceContext.put("estimatedMilliSeconds",routingTask.getDouble("estimatedMilliSeconds"));
 				serviceContext.put("workEffortTypeId", "PROD_ORDER_TASK");
-				serviceContext.put("workEffortPurposeTypeId", routingTask.getString("workEffortPurposeTypeId"));
 				serviceContext.put("currentStatusId","PRUN_CREATED");
 				serviceContext.put("workEffortParentId", productionRunId);
-				serviceContext.put("workEffortName", routingTask.getString("workEffortName"));
-				serviceContext.put("description",routingTask.getString("description"));
 				serviceContext.put("estimatedStartDate",startDate);
+                serviceContext.put("estimatedCompletionDate",endDate);
 				serviceContext.put("quantityToProduce", pRQuantity);
 				serviceContext.put("userLogin", userLogin);
 				resultService = null;
@@ -202,8 +207,8 @@ public class ProductionRunServices {
 					Iterator  pb = productBoms.iterator();
 					while (pb.hasNext()) {
 						GenericValue productBom = (GenericValue) pb.next();
-						if (TechDataServices.productBomIsValid(productBom, startDate) 
-					    && productBom.getString("routingWorkEffortId") == null ) {
+						if (TechDataServices.productBomIsValid(productBom, startDate)  && 
+                        (productBom.getString("routingWorkEffortId") == null || productBom.getString("routingWorkEffortId").equals(productionRunTaskId))) {
 							serviceContext.clear();
 							serviceContext.put("workEffortId", productionRunTaskId);
 							serviceContext.put("productId", productBom.getString("productIdTo"));
@@ -222,14 +227,23 @@ public class ProductionRunServices {
 						}
 					}
 				}
-//				TODO: generate the WorkEffortGoodStandard if there are some BOM at this RoutingTask pour ça il faut une jointure de table BOM et ROU
-//				TODO: startDate = estimatedCompletionDate
+//              TODO: generate the WorkEffortGoodStandard if there are some BOM at this RoutingTask pour ça il faut une jointure de table BOM et ROU
+                startDate = endDate;
 	 		}
  		}
-//		TODO: out param must be productionRunId and not list of message
- 		msgResult.add("réussi");
-
-        result.put("msgResult", msgResult);
+// update the estimatedCompletionDate field for the productionRun
+        serviceContext.clear();
+        serviceContext.put("workEffortId",productionRunId);
+        serviceContext.put("estimatedCompletionDate",startDate);
+        serviceContext.put("userLogin", userLogin);
+        resultService = null;
+        try {
+            resultService = dispatcher.runSync("updateWorkEffort", serviceContext);
+        } catch (GenericServiceException e) {
+            Debug.logError(e, "Problem calling the updateWorkEffort service", module);
+        }
+      
+        result.put("productionRunId", productionRunId);
 		result.put(ModelService.SUCCESS_MESSAGE, UtilProperties.getMessage(resource, "ManufacturingProductionRunCreated",UtilMisc.toMap("productionRunId", productionRunId), locale));
         return result;
     }
