@@ -94,6 +94,10 @@ public class CacheLineTable implements Serializable {
     }
 
     public synchronized Object put(Object key, Object value) {
+        if (key == null) {
+            if (Debug.verboseOn()) Debug.logVerbose("In CacheLineTable tried to put with null key, using NullObject" + this.cacheName, module);
+            key = ObjectType.NULL;
+        }
         memoryTable.put(key, value);
         if (fileTable != null) {
             try {
@@ -107,6 +111,10 @@ public class CacheLineTable implements Serializable {
     }
 
     public Object get(Object key) {
+        if (key == null) {
+            if (Debug.verboseOn()) Debug.logVerbose("In CacheLineTable tried to get with null key, using NullObject" + this.cacheName, module);
+            key = ObjectType.NULL;
+        }
         Object value = memoryTable.get(key);
         if (value == null) {
             if (fileTable != null) {
@@ -121,6 +129,10 @@ public class CacheLineTable implements Serializable {
     }
 
     public synchronized Object remove(Object key) {
+        if (key == null) {
+            if (Debug.verboseOn()) Debug.logVerbose("In CacheLineTable tried to remove with null key, using NullObject" + this.cacheName, module);
+            key = ObjectType.NULL;
+        }
         Object value = this.get(key);
         if (fileTable != null) {
             try {

@@ -383,6 +383,10 @@ public class UtilCache implements Serializable {
     
     /** This is used for internal remove calls because we only want to count external calls */
     protected synchronized Object removeInternal(Object key, boolean countRemove) {        
+        if (key == null) {
+            if (Debug.verboseOn()) Debug.logVerbose("In UtilCache tried to remove with null key, using NullObject for cache " + this.getName(), module);
+            key = ObjectType.NULL;
+        }
         CacheLine line = (CacheLine) cacheLineTable.remove(key);
         if (line != null) {
             noteRemoval(key, line.getValue());
