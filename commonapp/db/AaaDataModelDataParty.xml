@@ -102,7 +102,7 @@
   <RoleType description="Division" hasTable="N" parentTypeId="ORGANIZATION_UNIT" roleTypeId="DIVISION"/>
   <RoleType description="Subsidiary" hasTable="N" parentTypeId="ORGANIZATION_UNIT" roleTypeId="SUBSIDIARY"/>
   <RoleType description="Automated Agent" hasTable="N" parentTypeId="" roleTypeId="AUTOMATED_AGENT_ROLE"/>
-  <RoleType description="Customer" hasTable="N" parentTypeId="" roleTypeId="CONSUMER"/>
+  <RoleType description="Consumer" hasTable="N" parentTypeId="" roleTypeId="CONSUMER"/>
   <RoleType description="Hosting Server" hasTable="N" parentTypeId="" roleTypeId="HOSTING_SERVER"/>
   <RoleType description="ISP" hasTable="N" parentTypeId="" roleTypeId="ISP"/>
   <RoleType description="Referrer" hasTable="N" parentTypeId="" roleTypeId="REFERRER"/>
