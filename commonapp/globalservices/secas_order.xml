@@ -34,9 +34,11 @@
     	<action service="prepareOrderNotification" mode="sync" result-to-context="true"/>
     	<action service="prepareOrderEmailData" mode="sync" result-to-context="false" result-map-name="templateData"/>        
     </eca>
+    <!--
     <eca service="sendOrderNotification" event="commit">
     	<action service="createOrderNotificationLog" mode="sync"/>
     </eca>    
+    -->
     
     <!-- Return ECAs -->
     <eca service="updateReturnStatusFromReceipt" event="commit">

@@ -16,8 +16,7 @@
     <service name="prepareOrderEmailData" engine="java"
             location="org.ofbiz.commonapp.order.order.OrderServices" invoke="prepareOrderEmailData">
         <description>Prepares the data for a order notification email</description>
-        <attribute name="orderId" type="String" mode="INOUT" optional="false"/>
-        <attribute name="extraFields" type="Map" mode="IN" optional="true"/>
+        <attribute name="orderId" type="String" mode="INOUT" optional="false"/>        
         <attribute name="orderItemSeqId" type="String" mode="INOUT" optional="true"/>
         <attribute name="orderHeader" type="Map" mode="OUT" optional="false"/>
         <attribute name="orderItems" type="List" mode="OUT" optional="false"/>
@@ -45,10 +44,7 @@
         <attribute name="giftMessage" type="String" mode="OUT" optional="true"/>
         <attribute name="isGift" type="Boolean" mode="OUT" optional="true"/>
         <attribute name="trackingNumber" type="String" mode="OUT" optional="true"/>
-        <attribute name="customerPoNumber" type="String" mode="OUT" optional="true"/>
-        <attribute name="itemsPromised" type="Map" mode="OUT" optional="true"/>
-        <attribute name="backOrderedItems" type="Map" mode="OUT" optional="true"/>
-        <attribute name="cancelDateItems" type="Map" mode="OUT" optional="true"/>              
+        <attribute name="customerPoNumber" type="String" mode="OUT" optional="true"/>                  
     </service>
     
     <service name="prepareOrderConfirmation" engine="java"
@@ -82,8 +78,7 @@
         <description>Send a order confirmation</description>
         <implements service="sendNotificationInterface"/>
         <attribute name="orderId" type="String" mode="IN" optional="false"/>
-        <attribute name="emailType" type="String" mode="IN" optional="false"/>
-        <attribute name="extraFields" type="Map" mode="IN" optional="true"/>    
+        <attribute name="emailType" type="String" mode="IN" optional="false"/>        
     </service>
                 	
     <service name="sendOrderNotification" engine="java"
@@ -92,8 +87,7 @@
         <implements service="sendNotificationInterface"/>
         <attribute name="orderId" type="String" mode="IN" optional="false"/>
         <attribute name="orderItemSeqId" type="String" mode="IN" optional="true"/>
-        <attribute name="emailType" type="String" mode="IN" optional="false"/>
-        <attribute name="extraFields" type="Map" mode="IN" optional="true"/>
+        <attribute name="emailType" type="String" mode="IN" optional="false"/>        
     </service>
 
     <service name="sendProcessNotification" engine="java"

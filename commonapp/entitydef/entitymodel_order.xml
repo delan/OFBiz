@@ -581,6 +581,7 @@
       <field name="correspondingPoId" type="id"></field>
       <field name="statusId" type="id"></field>
       <field name="syncStatusId" type="id"></field>
+      <field name="estimatedShipDate" type="date-time"></field>
       <field name="autoCancelDate" type="date-time"></field>
       <field name="dontCancelSetDate" type="date-time"></field>
       <field name="dontCancelSetUserLogin" type="id-vlong"></field>
