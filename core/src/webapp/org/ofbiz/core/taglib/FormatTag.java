@@ -68,6 +68,7 @@ public class FormatTag extends BodyTagSupport {
         DateFormat df = null;
         BodyContent body = getBodyContent();
         String value = body.getString();
+        body.clearBody();
 
         if (value == null || value.length() == 0)
             return SKIP_BODY;

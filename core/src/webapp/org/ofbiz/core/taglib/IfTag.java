@@ -240,8 +240,10 @@ public class IfTag extends BodyTagSupport {
 
             if (body != null) {
                 JspWriter out = body.getEnclosingWriter();
-
-                out.print(body.getString());
+                String bodyString = body.getString();
+                body.clearBody();
+                //Debug.logInfo("printing string: " + bodyString);
+                out.print(bodyString);
             }
         } catch (IOException e) {
             Debug.logError(e, "IfTag Error.");

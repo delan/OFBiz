@@ -122,8 +122,9 @@ public class IterateNextTag extends BodyTagSupport {
 
             if (body != null) {
                 JspWriter out = body.getEnclosingWriter();
-
-                out.print(body.getString());
+                String bodyString = body.getString();
+                body.clearBody();
+                out.print(bodyString);
             }
         } catch (IOException e) {
             System.out.println("IterateNext Tag error: " + e);

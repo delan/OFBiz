@@ -132,10 +132,11 @@ public class IteratorTag extends BodyTagSupport {
     }
 
     public int doAfterBody() {
-        if (defineElement())
+        if (defineElement()) {
             return EVAL_BODY_AGAIN;
-        else
+        } else {
             return SKIP_BODY;
+        }
     }
 
     public int doEndTag() {
@@ -144,8 +145,9 @@ public class IteratorTag extends BodyTagSupport {
 
             if (body != null) {
                 JspWriter out = body.getEnclosingWriter();
-
-                out.print(body.getString());
+                String bodyString = body.getString();
+                body.clearBody();
+                out.print(bodyString);
             }
         } catch (IOException e) {
             Debug.logInfo("IteratorTag IO Error");
