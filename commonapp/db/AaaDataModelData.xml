@@ -215,8 +215,8 @@
   <GoodIdentificationType description="" goodIdentificationTypeId="UPCA" hasTable="N" parentTypeId=""/>
   <GoodIdentificationType description="" goodIdentificationTypeId="UPCE" hasTable="N" parentTypeId=""/>
 
-  <InventoryItemType description="" hasTable="N" inventoryItemTypeId="SERIALIZED_INV_ITEM" parentTypeId=""/>
-  <InventoryItemType description="" hasTable="N" inventoryItemTypeId="NON_SERIAL_INV_ITEM" parentTypeId=""/>
+  <InventoryItemType description="Serialized" hasTable="N" inventoryItemTypeId="SERIALIZED_INV_ITEM" parentTypeId=""/>
+  <InventoryItemType description="Non-Serialized" hasTable="N" inventoryItemTypeId="NON_SERIAL_INV_ITEM" parentTypeId=""/>
 
   <InvoiceItemType description="" hasTable="N" invoiceItemTypeId="PURCHASE_INVOICE_ITE" parentTypeId=""/>
   <InvoiceItemType description="" hasTable="N" invoiceItemTypeId="SALES_INVOICE_ITEM" parentTypeId=""/>
