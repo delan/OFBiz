@@ -109,6 +109,10 @@
         <put section='title'>Edit Credit Card</put>
         <put section='content' content='/customer/editcreditcard.jsp'/>
     </define>
+    <define id='editeftaccount' region='MAIN_REGION'>
+        <put section='title'>Edit EFT Account</put>
+        <put section='content' content='/customer/editeftaccount.jsp'/>
+    </define>
     <define id='changepassword' region='MAIN_REGION'>
         <put section='title'>Change Password</put>
         <put section='content' content='/customer/changepassword.jsp'/>

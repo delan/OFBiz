@@ -139,6 +139,7 @@ public class PaymentServices {
         newCc.set("contactMechId", context.get("contactMechId"));
 
         newPm.set("paymentMethodId", newPmId.toString());
+        newPm.set("paymentMethodTypeId", "CREDIT_CARD");
         newCc.set("paymentMethodId", newPmId.toString());
 
         GenericValue newPartyContactMechPurpose = null;
@@ -224,7 +225,7 @@ public class PaymentServices {
         }
 
         if (creditCard == null || paymentMethod == null) {
-            return ServiceUtil.returnError("ERROR: Could not find credit card to update with id " + paymentMethodId);
+            return ServiceUtil.returnError("ERROR: Could not find credit card to update with payment method id " + paymentMethodId);
         }
         
         newPm = new GenericValue(paymentMethod);
@@ -341,6 +342,7 @@ public class PaymentServices {
         newEa.set("contactMechId", context.get("contactMechId"));
 
         newPm.set("paymentMethodId", newPmId.toString());
+        newPm.set("paymentMethodTypeId", "EFT_ACCOUNT");
         newEa.set("paymentMethodId", newPmId.toString());
 
         GenericValue newPartyContactMechPurpose = null;

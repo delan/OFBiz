@@ -38,20 +38,36 @@ import org.ofbiz.core.util.*;
  *@created January 22, 2002
  */
 public class PaymentWorker {
-    public static void getPartyCreditCardInfos(PageContext pageContext, String partyId, boolean showOld, String creditCardInfosAttr) {
+    public static void getPartyPaymentMethodValueMaps(PageContext pageContext, String partyId, boolean showOld, String paymentMethodValueMapsAttr) {
         GenericDelegator delegator = (GenericDelegator) pageContext.getRequest().getAttribute("delegator");
         try {
-            Collection creditCardInfos = delegator.findByAnd("CreditCardInfo", UtilMisc.toMap("partyId", partyId));
-            if (!showOld) creditCardInfos = EntityUtil.filterByDate(creditCardInfos);
-            if (creditCardInfos != null)
-                pageContext.setAttribute(creditCardInfosAttr, creditCardInfos);
+            List paymentMethodValueMaps = new LinkedList();
+            Collection paymentMethods = delegator.findByAnd("PaymentMethod", UtilMisc.toMap("partyId", partyId));
+            if (!showOld) paymentMethods = EntityUtil.filterByDate(paymentMethods);
+            if (paymentMethods != null) {
+                Iterator pmIter = paymentMethods.iterator();
+                while (pmIter.hasNext()) {
+                    GenericValue paymentMethod = (GenericValue) pmIter.next();
+                    Map valueMap = new HashMap();
+                    paymentMethodValueMaps.add(valueMap);
+                    valueMap.put("paymentMethod", paymentMethod);
+                    if ("CREDIT_CARD".equals(paymentMethod.getString("paymentMethodTypeId"))) {
+                        GenericValue creditCard = paymentMethod.getRelatedOne("CreditCard");
+                        if (creditCard != null) valueMap.put("creditCard", creditCard);
+                    } else if ("EFT_ACCOUNT".equals(paymentMethod.getString("paymentMethodTypeId"))) {
+                        GenericValue eftAccount = paymentMethod.getRelatedOne("EftAccount");
+                        if (eftAccount != null) valueMap.put("eftAccount", eftAccount);
+                    }
+                }
+            }
+            pageContext.setAttribute(paymentMethodValueMapsAttr, paymentMethodValueMaps);
         } catch (GenericEntityException e) {
             Debug.logWarning(e);
         }
     }
     
-    public static void getCreditCardInfoAndRelated(PageContext pageContext, String partyId, 
-            String creditCardAttr, String creditCardIdAttr, String curContactMechIdAttr, 
+    public static void getCreditCardAndRelated(PageContext pageContext, String partyId, 
+            String paymentMethodAttr, String creditCardAttr, String paymentMethodIdAttr, String curContactMechIdAttr, 
             String curPartyContactMechAttr, String curContactMechAttr, String curPostalAddressAttr, 
             String curPartyContactMechPurposesAttr, String donePageAttr, String tryEntityAttr) {
 
@@ -67,24 +83,28 @@ public class PaymentWorker {
             donePage = "viewprofile";
         pageContext.setAttribute(donePageAttr, donePage);
 
-        String creditCardId = request.getParameter("creditCardId");
-        if (request.getAttribute("creditCardId") != null)
-            creditCardId = (String)request.getAttribute("creditCardId");
-        if (creditCardId != null)
-            pageContext.setAttribute(creditCardIdAttr, creditCardId);
+        String paymentMethodId = request.getParameter("paymentMethodId");
+        if (request.getAttribute("paymentMethodId") != null)
+            paymentMethodId = (String)request.getAttribute("paymentMethodId");
+        if (paymentMethodId != null)
+            pageContext.setAttribute(paymentMethodIdAttr, paymentMethodId);
 
+        GenericValue paymentMethod = null;
         GenericValue creditCard = null;
-        if (UtilValidate.isNotEmpty(creditCardId)) {
+        if (UtilValidate.isNotEmpty(paymentMethodId)) {
             try {
-                creditCard = delegator.findByPrimaryKey("CreditCardInfo", UtilMisc.toMap("creditCardId", creditCardId));
+                paymentMethod = delegator.findByPrimaryKey("PaymentMethod", UtilMisc.toMap("paymentMethodId", paymentMethodId));
+                creditCard = delegator.findByPrimaryKey("CreditCard", UtilMisc.toMap("paymentMethodId", paymentMethodId));
             } catch (GenericEntityException e) {
                 Debug.logWarning(e);
             }
         }
-        if (creditCard != null)
+        if (paymentMethod != null && creditCard != null) {
+            pageContext.setAttribute(paymentMethodAttr, paymentMethod);
             pageContext.setAttribute(creditCardAttr, creditCard);
-        else
+        } else {
             tryEntity = false;
+        }
 
 
         String curContactMechId = UtilFormatOut.checkNull(tryEntity?creditCard.getString("contactMechId"):request.getParameter("contactMechId"));

@@ -34,6 +34,7 @@
 <%@ page import="org.ofbiz.core.util.*, org.ofbiz.core.pseudotag.*" %>
 <%@ page import="org.ofbiz.core.entity.*" %>
 <%@ page import="org.ofbiz.commonapp.party.contact.*, org.ofbiz.commonapp.party.party.*" %>
+<%@ page import="org.ofbiz.commonapp.accounting.payment.*" %>
 <ofbiz:object name="userLogin" property="userLogin" type="org.ofbiz.core.entity.GenericValue" />  
 
 <%
@@ -41,7 +42,7 @@
     boolean showOld = "true".equals(request.getParameter("SHOW_OLD"));
     pageContext.setAttribute("showOld", new Boolean(showOld));
     ContactMechWorker.getPartyContactMechValueMaps(pageContext, userLogin.getString("partyId"), showOld, "partyContactMechValueMaps");
-    ContactMechWorker.getPartyCreditCardInfos(pageContext, userLogin.getString("partyId"), showOld, "creditCardInfos");
+    PaymentWorker.getPartyPaymentMethodValueMaps(pageContext, userLogin.getString("partyId"), showOld, "paymentMethodValueMaps");
 %>
 <%EntityField entityField = new EntityField(pageContext);%>
 
@@ -267,11 +268,11 @@
       <table width='100%' border='0' cellspacing='0' cellpadding='0' class='boxtop'>
         <tr>
           <td valign="middle" align="left">
-            <div class="boxhead">&nbsp;Credit Card Information</div>
+            <div class="boxhead">&nbsp;Payment Method Information</div>
           </td>
           <td valign="middle" align="right">
             <a href="<ofbiz:url>/editcreditcard</ofbiz:url>" class="lightbuttontext">
-            [Create New]</a>&nbsp;&nbsp;
+            [Create New Credit Card]</a>&nbsp;&nbsp;
           </td>
         </tr>
       </table>
@@ -285,34 +286,52 @@
               <table width="100%" border="0" cellpadding="1">
                 <tr>
                   <td align="left">
-                    <ofbiz:if name="creditCardInfos" size="0">
+                    <ofbiz:if name="paymentMethodValueMaps" size="0">
                       <table width="100%" cellpadding="2" cellspacing="0" border="0">
-                        <ofbiz:iterator name="creditCardInfo" property="creditCardInfos">
+                        <ofbiz:iterator name="paymentMethodValueMap" property="paymentMethodValueMaps" type="java.util.Map" expandMap="true">
+                            <%GenericValue paymentMethod = (GenericValue) pageContext.getAttribute("paymentMethod");%>
                             <tr>
-                              <td width="90%" valign="top">
-                                <div class="tabletext">
-                                  <b>
-                                    <%entityField.run("creditCardInfo", "nameOnCard");%> - <%=ContactHelper.formatCreditCard(creditCardInfo)%>
-                                  </b>
-                                  (Updated:&nbsp;<%entityField.run("creditCardInfo", "fromDate");%>)
-                                  <%entityField.run("creditCardInfo", "thruDate", "(Delete:&nbsp;", ")");%>
-                                </div>
-                              </td>
-                              <td width="5">&nbsp;</td>
-                              <td align="right" valign="top" width='1%' nowrap>
-                                <div><a href='<ofbiz:url>/editcreditcard?creditCardId=<%entityField.run("creditCardInfo", "creditCardId");%></ofbiz:url>' class="buttontext">
-                                [Update]</a></div>
-                              </td>
+                              <%if ("CREDIT_CARD".equals(paymentMethod.getString("paymentMethodTypeId"))) {%>
+                                  <td width="90%" valign="top">
+                                    <div class="tabletext">
+                                      <b>
+                                        Credit Card: <%entityField.run("creditCard", "nameOnCard");%> - <%=ContactHelper.formatCreditCard((GenericValue) pageContext.getAttribute("creditCard"))%>
+                                      </b>
+                                      (Updated:&nbsp;<%entityField.run("paymentMethod", "fromDate");%>)
+                                      <%entityField.run("paymentMethod", "thruDate", "(Delete:&nbsp;", ")");%>
+                                    </div>
+                                  </td>
+                                  <td width="5">&nbsp;</td>
+                                  <td align="right" valign="top" width='1%' nowrap>
+                                    <div><a href='<ofbiz:url>/editcreditcard?paymentMethodId=<%entityField.run("paymentMethod", "paymentMethodId");%></ofbiz:url>' class="buttontext">
+                                    [Update]</a></div>
+                                  </td>
+                              <%} else if ("EFT_ACCOUNT".equals(paymentMethod.getString("paymentMethodTypeId"))) {%>
+                                  <td width="90%" valign="top">
+                                    <div class="tabletext">
+                                      <b>
+                                        EFT Account: <%entityField.run("eftAccount", "nameOnAccount");%> - <%entityField.run("eftAccount", "bankName", "Bank: ", "");%> <%entityField.run("eftAccount", "accountNumber", "Account #: ", "");%>
+                                      </b>
+                                      (Updated:&nbsp;<%entityField.run("paymentMethod", "fromDate");%>)
+                                      <%entityField.run("paymentMethod", "thruDate", "(Delete:&nbsp;", ")");%>
+                                    </div>
+                                  </td>
+                                  <td width="5">&nbsp;</td>
+                                  <td align="right" valign="top" width='1%' nowrap>
+                                    <div><a href='<ofbiz:url>/editeftaccount?paymentMethodId=<%entityField.run("creditCardInfo", "paymentMethodId");%></ofbiz:url>' class="buttontext">
+                                    [Update]</a></div>
+                                  </td>
+                              <%}%>
                               <td align="right" valign="top" width='1%'>
-                                <div><a href='<ofbiz:url>/deleteCreditCardInfo/viewprofile?creditCardId=<%entityField.run("creditCardInfo", "creditCardId");%></ofbiz:url>' class="buttontext">
+                                <div><a href='<ofbiz:url>/deletePaymentMethod/viewprofile?paymentMethodId=<%entityField.run("paymentMethod", "paymentMethodId");%></ofbiz:url>' class="buttontext">
                                 [Delete]</a></div>
                               </td>
                             </tr>
                         </ofbiz:iterator>
                       </table>
                     </ofbiz:if>
-                    <ofbiz:unless name="creditCardInfos" size="0">
-                      <p>No credit card information on file.</p>
+                    <ofbiz:unless name="paymentMethodValueMaps" size="0">
+                      <p>No payment method information on file.</p>
                     </ofbiz:unless>
                   </td>
                 </tr>

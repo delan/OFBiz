@@ -33,16 +33,17 @@
 <%@ page import="java.util.*" %>
 <%@ page import="org.ofbiz.core.util.*, org.ofbiz.core.pseudotag.*" %>
 <%@ page import="org.ofbiz.core.entity.*, org.ofbiz.commonapp.party.contact.*" %>
+<%@ page import="org.ofbiz.commonapp.accounting.payment.*" %>
 <jsp:useBean id="security" type="org.ofbiz.core.security.Security" scope="request" />
 <ofbiz:object name="userLogin" property="userLogin" type="org.ofbiz.core.entity.GenericValue" />  
 
-<%ContactMechWorker.getCreditCardInfoAndRelated(pageContext, userLogin.getString("partyId"), "creditCard", "creditCardId",
+<%PaymentWorker.getCreditCardAndRelated(pageContext, userLogin.getString("partyId"), "paymentMethod", "creditCard", "paymentMethodId",
     "curContactMechId", "curPartyContactMech", "curContactMech", "curPostalAddress", "curPartyContactMechPurposes", "donePage", "tryEntity");%>
 
 <%ContactMechWorker.getPartyPostalAddresses(pageContext, userLogin.getString("partyId"), (String) pageContext.getAttribute("curContactMechId"), "postalAddressInfos");%>
 
-<%if (!security.hasPermission("USER_ADMIN", session) && pageContext.getAttribute("creditCard") != null && 
-      !userLogin.getString("partyId").equals(((GenericValue) pageContext.getAttribute("creditCard")).getString("partyId"))) {%>
+<%if (!security.hasPermission("USER_ADMIN", session) && pageContext.getAttribute("creditCard") != null && pageContext.getAttribute("paymentMethod") != null && 
+      !userLogin.getString("partyId").equals(((GenericValue) pageContext.getAttribute("paymentMethod")).getString("partyId"))) {%>
   <p><h3>The credit card specified does not belong to you, you may not view or edit it.</h3></p>
 &nbsp;<a href='<ofbiz:url>/authview/<ofbiz:print attribute="donePage"/></ofbiz:url>' class="buttontext">[Back]</a>
 <%} else {%>
@@ -50,16 +51,16 @@
       <p class="head1">Add New Credit Card</p>
       &nbsp;<a href='<ofbiz:url>/authview/<ofbiz:print attribute="donePage"/></ofbiz:url>' class="buttontext">[Done/Cancel]</a>
       &nbsp;<a href="javascript:document.editcreditcardform.submit()" class="buttontext">[Save]</a>
-      <form method="post" action='<ofbiz:url>/createCreditCardInfo?DONE_PAGE=<ofbiz:print attribute="donePage"/></ofbiz:url>' name="editcreditcardform" style='margin: 0;'>
+      <form method="post" action='<ofbiz:url>/createCreditCard?DONE_PAGE=<ofbiz:print attribute="donePage"/></ofbiz:url>' name="editcreditcardform" style='margin: 0;'>
       <table width="90%" border="0" cellpadding="2" cellspacing="0">
     </ofbiz:unless>
     <ofbiz:if name="creditCard">
       <p class="head1">Edit Credit Card</p>
       &nbsp;<a href='<ofbiz:url>/authview/<ofbiz:print attribute="donePage"/></ofbiz:url>' class="buttontext">[Done/Cancel]</a>
       &nbsp;<a href="javascript:document.editcreditcardform.submit()" class="buttontext">[Save]</a>
-      <form method="post" action='<ofbiz:url>/updateCreditCardInfo?DONE_PAGE=<ofbiz:print attribute="donePage"/></ofbiz:url>' name="editcreditcardform" style='margin: 0;'>
+      <form method="post" action='<ofbiz:url>/updateCreditCard?DONE_PAGE=<ofbiz:print attribute="donePage"/></ofbiz:url>' name="editcreditcardform" style='margin: 0;'>
       <table width="90%" border="0" cellpadding="2" cellspacing="0">
-        <input type=hidden name='creditCardId' value='<ofbiz:print attribute="creditCardId"/>'>
+        <input type=hidden name='paymentMethodId' value='<ofbiz:print attribute="paymentMethodId"/>'>
     </ofbiz:if>
 
     <tr>
