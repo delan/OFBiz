@@ -81,7 +81,9 @@
       <field name="blockBeginActivityId" type="id-long"></field>
       <field name="blockEndActivityId" type="id-long"></field>
       <field name="joinTypeEnumId" type="id"></field>
-      <field name="splitTypeEnumId" type="id"></field>	
+      <field name="splitTypeEnumId" type="id"></field>
+      <field name="acceptAllAssignments" type="indicator"></field>
+      <field name="completeAllAssignments" type="indicator"></field>	
       <prim-key field="packageId" />	
       <prim-key field="processId" />	
       <prim-key field="activityId" />

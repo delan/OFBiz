@@ -396,6 +396,7 @@
       <alias entity-alias="WE" name="recurrenceInfoId" />
       <alias entity-alias="WE" name="runtimeDataId" />
       <alias entity-alias="WE" name="noteId" />
+      <alias entity-alias="WE" name="serviceLoaderName" />
       <alias entity-alias="WEPA" name="partyId" prim-key="true" />
       <alias entity-alias="WEPA" name="roleTypeId" prim-key="true" />
       <alias entity-alias="WEPA" name="fromDate" prim-key="true" />
