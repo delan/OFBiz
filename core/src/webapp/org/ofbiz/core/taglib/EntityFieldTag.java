@@ -49,6 +49,11 @@ public class EntityFieldTag extends TagSupport {
     String prefix = null;
     String suffix = null;
 
+    //public EntityFieldTag() {
+    //    super();
+    //    Debug.logInfo("Creating new EntityFieldTag");
+    //}
+    
     public String getAttribute() {
         return attribute;
     }
@@ -103,8 +108,7 @@ public class EntityFieldTag extends TagSupport {
         // We should be a ValueObject
         if (type == null) {
             // Get the ValueObject from PageContext.
-            GenericValue valueObject =
-                    (GenericValue) pageContext.findAttribute(attribute);
+            GenericValue valueObject = (GenericValue) pageContext.findAttribute(attribute);
             if (valueObject == null) {
                 fieldObject = defaultStr;
                 fieldObjectType = "comment"; // Default for NULL objects.
@@ -149,8 +153,7 @@ public class EntityFieldTag extends TagSupport {
                     javaType = "java.lang.String";
                 }
             }
-        }
-        else {
+        } else {
             // We should be either a 'currency' or a java type.
             fieldObject = pageContext.findAttribute(attribute);
             javaType = type;
