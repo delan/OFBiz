@@ -1610,11 +1610,15 @@
       <field name="facilityId" type="id-ne"></field>
       <field name="facilityTypeId" type="id"></field>
       <field name="facilityName" type="name"></field>
+      <field name="primaryFacilityGroupId" type="id"></field>
       <field name="squareFootage" type="numeric"></field>
       <field name="description" type="description"></field>
       <prim-key field="facilityId"/>
       <relation type="one" fk-name="FACILITY_FCTYP" rel-entity-name="FacilityType">
         <key-map field-name="facilityTypeId"/>
+      </relation>
+      <relation type="one" fk-name="FACILITY_PGRP" rel-entity-name="FacilityGroup">
+        <key-map field-name="primaryFacilityGroupId" rel-field-name="facilityGroupId"/>
       </relation>
       <relation type="many" rel-entity-name="FacilityTypeAttr">
         <key-map field-name="facilityTypeId"/>
@@ -1631,7 +1635,7 @@
       <relation type="many" rel-entity-name="FacilityContactMech">
         <key-map field-name="facilityId"/>
       </relation>
-      <relation type="many" rel-entity-name="PartyFacility">
+      <relation type="many" rel-entity-name="FacilityRole">
         <key-map field-name="facilityId"/>
       </relation>
       <relation type="many" rel-entity-name="WorkEffort">
@@ -1706,14 +1710,110 @@
         <key-map field-name="contactMechId"/>
       </relation>
     </entity>
-    <entity entity-name="FacilityRoleType"
+    <entity entity-name="FacilityGroup"
             package-name="org.ofbiz.commonapp.product.storage"
-            title="Facility Role Type Entity">
-      <field name="facilityRoleTypeId" type="id-ne"></field>
+            title="Facility Group Entity">
+      <field name="facilityGroupId" type="id-ne"></field>
+      <field name="facilityGroupTypeId" type="id"></field>
+      <field name="primaryParentGroupId" type="id"></field>
       <field name="description" type="description"></field>
-      <prim-key field="facilityRoleTypeId"/>
-      <relation type="many" rel-entity-name="PartyFacility">
-        <key-map field-name="facilityRoleTypeId"/>
+      <prim-key field="facilityGroupId"/>
+      <relation type="one" fk-name="FACILITY_GP_TYPE" rel-entity-name="FacilityGroupType">
+        <key-map field-name="facilityGroupTypeId"/>
+      </relation>
+      <relation type="one" fk-name="FACILITY_GP_PGRP" rel-entity-name="FacilityGroup">
+        <key-map field-name="primaryParentGroupId" rel-field-name="facilityGroupId"/>
+      </relation>
+    </entity>
+    <entity entity-name="FacilityGroupMember"
+            package-name="org.ofbiz.commonapp.product.storage"
+            title="Facility Group Entity">
+      <field name="facilityId" type="id-ne"></field>
+      <field name="facilityGroupId" type="id-ne"></field>
+      <field name="fromDate" type="date-time"></field>
+      <field name="thruDate" type="date-time"></field>
+      <prim-key field="facilityId"/>
+      <prim-key field="facilityGroupId"/>
+      <prim-key field="fromDate"/>
+      <relation type="one" fk-name="FACILITY_MEM_FACILITY" rel-entity-name="Facility">
+        <key-map field-name="facilityId"/>
+      </relation>
+      <relation type="one" fk-name="FACILITY_MEM_FGROUP" rel-entity-name="FacilityGroup">
+        <key-map field-name="facilityGroupId"/>
+      </relation>
+    </entity>
+    <entity entity-name="FacilityGroupRole"
+            package-name="org.ofbiz.commonapp.product.storage"
+            title="Facility Group Role Entity">
+      <field name="facilityGroupId" type="id-ne"></field>
+      <field name="partyId" type="id"></field>
+      <field name="roleTypeId" type="id"></field>
+      <prim-key field="facilityGroupId"/>
+      <prim-key field="partyId"/>
+      <prim-key field="roleTypeId"/>
+      <relation type="one" rel-entity-name="FacilityGroup">
+        <key-map field-name="facilityGroupId"/>
+      </relation>
+      <relation type="one" fk-name="FGROUP_RLE_PARTY" rel-entity-name="Party">
+        <key-map field-name="partyId"/>
+      </relation>
+      <relation type="one" fk-name="FGROUP_RLE_ROLE" rel-entity-name="RoleType">
+        <key-map field-name="roleTypeId"/>
+      </relation>
+    </entity>
+    <entity entity-name="FacilityGroupRollup"
+            package-name="org.ofbiz.commonapp.product.storage"
+            title="Facility Group Rollup Entity">
+      <field name="facilityGroupId" type="id-ne"></field>
+      <field name="parentFacilityGroupId" type="id-ne"></field>
+      <field name="fromDate" type="date-time"></field>
+      <field name="thruDate" type="date-time"></field>
+      <prim-key field="facilityGroupId"/>
+      <prim-key field="parentFacilityGroupId"/>
+      <prim-key field="fromDate"/>
+      <relation type="one" fk-name="FGRP_FRLP_CURRENT" title="Current" rel-entity-name="FacilityGroup">
+        <key-map field-name="facilityGroupId"/>
+      </relation>
+      <relation type="one" fk-name="FGRP_FRLP_PARENT" title="Parent" rel-entity-name="FacilityGroup">
+        <key-map field-name="parentFacilityGroupId" rel-field-name="facilityGroupId"/>
+      </relation>
+      <relation type="many" title="Child" rel-entity-name="FacilityGroupRollup">
+        <key-map field-name="facilityGroupId" rel-field-name="parentFacilityGroupId"/>
+      </relation>
+      <relation type="many" title="Parent" rel-entity-name="FacilityGroupRollup">
+        <key-map field-name="parentFacilityGroupId" rel-field-name="facilityGroupId"/>
+      </relation>
+      <relation type="many" title="Sibling" rel-entity-name="FacilityGroupRollup">
+        <key-map field-name="parentFacilityGroupId"/>
+      </relation>
+    </entity>
+    <entity entity-name="FacilityGroupType"
+            package-name="org.ofbiz.commonapp.product.storage"
+            title="Facility Group Type Entity">
+      <field name="facilityGroupTypeId" type="id-ne"></field>
+      <field name="description" type="description"></field>
+      <prim-key field="facilityGroupTypeId"/>
+      <relation type="many" rel-entity-name="FacilityGroup">
+        <key-map field-name="facilityGroupTypeId"/>
+      </relation>
+    </entity>
+    <entity entity-name="FacilityRole"
+            package-name="org.ofbiz.commonapp.product.storage"
+            title="Facility Role Entity">
+      <field name="facilityId" type="id-ne"></field>
+      <field name="partyId" type="id"></field>
+      <field name="roleTypeId" type="id"></field>
+      <prim-key field="facilityId"/>
+      <prim-key field="partyId"/>
+      <prim-key field="roleTypeId"/>
+      <relation type="one" rel-entity-name="Facility">
+        <key-map field-name="facilityId"/>
+      </relation>
+      <relation type="one" fk-name="FACILITY_RLE_PARTY" rel-entity-name="Party">
+        <key-map field-name="partyId"/>
+      </relation>
+      <relation type="one" fk-name="FACILITY_RLE_ROLE" rel-entity-name="RoleType">
+        <key-map field-name="roleTypeId"/>
       </relation>
     </entity>
     <entity entity-name="FacilityType"
@@ -1752,24 +1852,6 @@
       </relation>
       <relation type="many" rel-entity-name="Facility">
         <key-map field-name="facilityTypeId"/>
-      </relation>
-    </entity>
-    <entity entity-name="PartyFacility"
-            package-name="org.ofbiz.commonapp.product.storage"
-            title="Party Facility Entity">
-      <field name="partyId" type="id-ne"></field>
-      <field name="facilityId" type="id-ne"></field>
-      <field name="facilityRoleTypeId" type="id"></field>
-      <prim-key field="partyId"/>
-      <prim-key field="facilityId"/>
-      <relation type="one" fk-name="PARTY_FAC_PARTY" rel-entity-name="Party">
-        <key-map field-name="partyId"/>
-      </relation>
-      <relation type="one" fk-name="PARTY_FAC_FAC" rel-entity-name="Facility">
-        <key-map field-name="facilityId"/>
-      </relation>
-      <relation type="one" fk-name="PARTY_FAC_ROLET" rel-entity-name="FacilityRoleType">
-        <key-map field-name="facilityRoleTypeId"/>
       </relation>
     </entity>
 

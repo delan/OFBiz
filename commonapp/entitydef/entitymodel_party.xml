@@ -1058,9 +1058,12 @@
       <relation type="many" rel-entity-name="InventoryItem">
         <key-map field-name="partyId"/>
       </relation>
-      <relation type="many" rel-entity-name="PartyFacility">
+      <relation type="many" rel-entity-name="FacilityRole">
         <key-map field-name="partyId"/>
       </relation>
+      <relation type="many" rel-entity-name="FacilityGroupRole">
+        <key-map field-name="partyId"/>
+      </relation>      
       <relation type="many" rel-entity-name="ReorderGuideline">
         <key-map field-name="partyId"/>
       </relation>
