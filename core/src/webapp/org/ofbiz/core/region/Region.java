@@ -30,6 +30,8 @@ import java.net.*;
 import java.util.*;
 import javax.servlet.jsp.PageContext;
 import javax.servlet.jsp.JspException;
+import javax.servlet.*;
+import javax.servlet.http.*;
 import org.w3c.dom.*;
 
 /**
@@ -76,6 +78,13 @@ public class Region extends Content {
             // IOException or ServletException
             throw new JspException(ex.getMessage());
         }
+    }
+    
+    public void render(HttpServletRequest request, HttpServletResponse response) throws java.io.IOException, ServletException {
+        RequestDispatcher rd = request.getRequestDispatcher(content);
+        if (rd == null)
+            throw new IllegalArgumentException("Source returned a null dispatcher (" + content + ")");
+        rd.include(request, response);
     }
     
     public String toString() {
