@@ -172,8 +172,7 @@ public class CheckOutHelper {
 
     // Create order event - uses createOrder service for processing
     public Map createOrder(GenericValue userLogin, String distributorId, String affiliateId, 
-        List trackingCodeOrders, boolean areOrderItemsExploded, String visitId,
-        String webSiteId, String productStoreId) {
+            List trackingCodeOrders, boolean areOrderItemsExploded, String visitId, String webSiteId) {
         String orderId = this.cart.getOrderId();
         Map result;
         
@@ -201,7 +200,8 @@ public class CheckOutHelper {
         if (affiliateId != null) context.put("affiliateId", affiliateId);
         
         // need the partyId; don't use userLogin in case of an order via order mgr
-        String partyId = this.cart.getPartyId();             
+        String partyId = this.cart.getPartyId();
+        String productStoreId = cart.getProductStoreId();           
                
         context.put("grandTotal", grandTotal);
         context.put("userLogin", userLogin);
@@ -300,13 +300,14 @@ public class CheckOutHelper {
         return result;
     }
 
-    public void calcAndAddTax(String productStoreId) throws GeneralException {
+    public void calcAndAddTax() throws GeneralException {
         if (!"SALES_ORDER".equals(cart.getOrderType())) {
             return;
         }
         List items = this.cart.makeOrderItems();
         List adjs = this.cart.makeAllAdjustments();
         GenericValue shipAddress = this.cart.getShippingAddress();
+        String productStoreId = cart.getProductStoreId();
 
         if (shipAddress == null) {
             throw new GeneralException("Shipping address is not set in the shopping cart.");

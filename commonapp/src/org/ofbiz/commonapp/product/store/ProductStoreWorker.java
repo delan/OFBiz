@@ -27,7 +27,9 @@ import java.util.HashMap;
 import java.util.Map;
 
 import javax.servlet.ServletRequest;
+import javax.servlet.http.HttpServletRequest;
 
+import org.ofbiz.commonapp.order.shoppingcart.ShoppingCart;
 import org.ofbiz.commonapp.order.shoppingcart.ShoppingCartItem;
 import org.ofbiz.commonapp.product.catalog.CatalogWorker;
 import org.ofbiz.core.entity.GenericDelegator;
@@ -63,20 +65,20 @@ public class ProductStoreWorker {
             
     public static GenericValue getProductStore(ServletRequest request) {
         GenericDelegator delegator = (GenericDelegator) request.getAttribute("delegator");
-        GenericValue webSite = CatalogWorker.getWebSite(request);
-        if (webSite != null && delegator != null) {
-            String productStoreId = webSite.getString("productStoreId");            
-            if (productStoreId != null) {
-                return getProductStore(productStoreId, delegator);
-            }
-        }
-        return null;        
+        String productStoreId = ProductStoreWorker.getProductStoreId(request);
+        return ProductStoreWorker.getProductStore(productStoreId, delegator);               
     }
     
     public static String getProductStoreId(ServletRequest request) {
-        GenericValue webSite = CatalogWorker.getWebSite(request);
-        if (webSite != null) {
-            return webSite.getString("productStoreId");
+        HttpServletRequest httpRequest = (HttpServletRequest) request;
+        ShoppingCart cart = (ShoppingCart) httpRequest.getSession().getAttribute("shoppingCart");
+        if (cart != null && cart.getProductStoreId() != null) {
+            return cart.getProductStoreId();
+        } else {
+            GenericValue webSite = CatalogWorker.getWebSite(request);
+            if (webSite != null) {
+                return webSite.getString("productStoreId");
+            }
         }
         return null;        
     }

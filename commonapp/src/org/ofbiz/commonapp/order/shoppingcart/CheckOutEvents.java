@@ -35,6 +35,7 @@ import org.ofbiz.commonapp.marketing.tracking.TrackingCodeEvents;
 import org.ofbiz.commonapp.product.catalog.CatalogWorker;
 import org.ofbiz.commonapp.product.store.ProductStoreWorker;
 import org.ofbiz.core.entity.GenericDelegator;
+import org.ofbiz.core.entity.GenericEntityException;
 import org.ofbiz.core.entity.GenericValue;
 import org.ofbiz.core.service.LocalDispatcher;
 import org.ofbiz.core.service.ModelService;
@@ -44,6 +45,7 @@ import org.ofbiz.core.util.Debug;
 import org.ofbiz.core.util.GeneralException;
 import org.ofbiz.core.util.SiteDefs;
 import org.ofbiz.core.util.UtilHttp;
+import org.ofbiz.core.util.UtilMisc;
 
 /**
  * Events used for processing checkout and orders.
@@ -117,18 +119,17 @@ public class CheckOutEvents {
         // remove this whenever creating an order so quick reorder cache will refresh/recalc
         session.removeAttribute("_QUICK_REORDER_PRODUCTS_");
 
-        boolean areOrderItemsExploded = explodeOrderItems(request);
+        boolean areOrderItemsExploded = explodeOrderItems(delegator, cart);
         
         //get the TrackingCodeOrder List        
         List trackingCodeOrders = TrackingCodeEvents.makeTrackingCodeOrders(request);
         String distributorId = (String) session.getAttribute("_DISTRIBUTOR_ID_");
         String affiliateId = (String) session.getAttribute("_AFFILIATE_ID_");
         String visitId = VisitHandler.getVisitId(session);
-        String webSiteId = CatalogWorker.getWebSiteId(request);
-        String productStoreId = ProductStoreWorker.getProductStoreId(request);
+        String webSiteId = CatalogWorker.getWebSiteId(request);        
         
         callResult = checkOutHelper.createOrder(userLogin, distributorId, affiliateId, trackingCodeOrders, areOrderItemsExploded, 
-            visitId, webSiteId, productStoreId);
+            visitId, webSiteId);
         
         ServiceUtil.getMessages(request, callResult, null, "<li>", "</li>", "<ul>", "</ul>", null, null);
         
@@ -160,18 +161,15 @@ public class CheckOutEvents {
         LocalDispatcher dispatcher = (LocalDispatcher) request.getAttribute("dispatcher");
         GenericDelegator delegator = (GenericDelegator) request.getAttribute("delegator");
         ShoppingCart cart = (ShoppingCart) request.getSession().getAttribute(SiteDefs.SHOPPING_CART);
-        CheckOutHelper checkOutHelper = new CheckOutHelper(dispatcher, delegator, cart);
-        String productStoreId = ProductStoreWorker.getProductStoreId(request);
+        CheckOutHelper checkOutHelper = new CheckOutHelper(dispatcher, delegator, cart);       
         
         //Calculate and add the tax adjustments
-        checkOutHelper.calcAndAddTax(productStoreId);
+        checkOutHelper.calcAndAddTax();
     }
 
-    public static boolean explodeOrderItems(HttpServletRequest request) {
-        ServletContext application = ((ServletContext) request.getAttribute("servletContext"));
-                
-        GenericValue productStore = ProductStoreWorker.getProductStore(request);
-        if (productStore.get("explodeOrderItems") == null) {
+    public static boolean explodeOrderItems(GenericDelegator delegator, ShoppingCart cart) {                                  
+        GenericValue productStore = ProductStoreWorker.getProductStore(cart.getProductStoreId(), delegator);        
+        if (productStore == null || productStore.get("explodeOrderItems") == null) {
         	return false;
         }
         return productStore.getBoolean("explodeOrderItems").booleanValue();
@@ -199,8 +197,8 @@ public class CheckOutEvents {
         GenericValue userLogin = (GenericValue) session.getAttribute(SiteDefs.USER_LOGIN);
         CheckOutHelper checkOutHelper = new CheckOutHelper(dispatcher, delegator, cart);
 
-        // Load the ProductStore settings
-        GenericValue productStore = ProductStoreWorker.getProductStore(request);
+        // Load the ProductStore settings       
+        GenericValue productStore = ProductStoreWorker.getProductStore(cart.getProductStoreId(), delegator);
         Map callResult = checkOutHelper.processPayment(productStore, userLogin);    
         
         //Generate any messages required
@@ -237,7 +235,7 @@ public class CheckOutEvents {
         String result;               
                                     
         // Load the properties store
-        GenericValue productStore = ProductStoreWorker.getProductStore(request);
+        GenericValue productStore = ProductStoreWorker.getProductStore(cart.getProductStoreId(), delegator);
         CheckOutHelper checkOutHelper = new CheckOutHelper(dispatcher, delegator, cart);
         Map callResult = checkOutHelper.failedBlacklistCheck(userLogin, productStore);    
         
