@@ -124,20 +124,21 @@ public class StringProcessor {
                 Iterator operElemIter = operationElements.iterator();
                 while (operElemIter.hasNext()) {
                     Element curOperElem = (Element) operElemIter.next();
-                    if ("validate-method".equals(curOperElem.getNodeName())) {
+                    String nodeName = curOperElem.getNodeName();
+                    if ("validate-method".equals(nodeName)) {
                         stringOperations.add(new StringProcessor.ValidateMethod(curOperElem));
-                    } else if ("compare".equals(curOperElem.getNodeName())) {
+                    } else if ("compare".equals(nodeName)) {
                         stringOperations.add(new StringProcessor.Compare(curOperElem));
-                    } else if ("regexp".equals(curOperElem.getNodeName())) {
+                    } else if ("regexp".equals(nodeName)) {
                         stringOperations.add(new StringProcessor.Regexp(curOperElem));
-                    } else if ("not-empty".equals(curOperElem.getNodeName())) {
-                        //stringOperations.add(new StringProcessor.NotEmpty(curOperElem));
-                    } else if ("copy".equals(curOperElem.getNodeName())) {
-                        //stringOperations.add(new StringProcessor.Copy(curOperElem));
-                    } else if ("convert".equals(curOperElem.getNodeName())) {
-                        //stringOperations.add(new StringProcessor.Convert(curOperElem));
+                    } else if ("not-empty".equals(nodeName)) {
+                        stringOperations.add(new StringProcessor.NotEmpty(curOperElem));
+                    } else if ("copy".equals(nodeName)) {
+                        stringOperations.add(new StringProcessor.Copy(curOperElem));
+                    } else if ("convert".equals(nodeName)) {
+                        stringOperations.add(new StringProcessor.Convert(curOperElem));
                     } else {
-                        //for now ignore it if unknown...
+                        Debug.logWarning("[StringProcessor.StringProcess.readOperations] Operation element \"" + nodeName + "\" no recognized");
                     }
                 }
             }
@@ -330,6 +331,8 @@ public class StringProcessor {
                     return;
                 }
                 result = valueDate.compareTo(fieldDate);
+            } else {
+                messages.add("Specified compare conversion type \"" + type + "\" not known.");
             }
             
             if ("less".equals(operator)) {
@@ -351,7 +354,7 @@ public class StringProcessor {
                 if (result == 0)
                     addMessage(messages, contextClass);
             } else {
-                //for now do nothing
+                messages.add("Specified compare operator \"" + operator + "\" not known.");
             }
         }
     }
@@ -380,6 +383,151 @@ public class StringProcessor {
             
             if (!matcher.matches(fieldValue, pattern)) {
                 addMessage(messages, contextClass);
+            }
+        }
+    }
+
+    public static class NotEmpty extends StringOperation {
+        public NotEmpty(Element element) {
+            super(element);
+        }
+        
+        public void exec(String fieldValue, Map results, List messages, Class contextClass) {
+            if (!UtilValidate.isNotEmpty(fieldValue)) {
+                addMessage(messages, contextClass);
+            }
+        }
+    }
+
+    public static class Copy extends StringOperation {
+        boolean replace = true;
+        String toField;
+        
+        public Copy(Element element) {
+            super(element);
+            toField = element.getAttribute("to-field");
+            replace = "true".equals(element.getAttribute("replace"));
+        }
+        
+        public void exec(String fieldValue, Map results, List messages, Class contextClass) {
+            if (replace) {
+                results.put(toField, fieldValue);
+            } else {
+                if (results.containsKey(toField)) {
+                    //do nothing
+                } else {
+                    results.put(toField, fieldValue);
+                }
+            }
+        }
+    }
+
+    public static class Convert extends StringOperation {
+        String toField;
+        String type;
+        boolean replace = true;
+        String format;
+        
+        public Convert(Element element) {
+            super(element);
+            this.toField = element.getAttribute("to-field");
+            this.type = element.getAttribute("type");
+            this.replace = "true".equals(element.getAttribute("replace"));
+
+            this.format = element.getAttribute("format");
+            if (this.format == null || this.format.length() == 0) {
+                if ("Date".equals(type)) {
+                    this.format = "yyyy-MM-dd";
+                } else if ("Time".equals(type)) {
+                    this.format = "HH:mm:ss";
+                } else if ("Timestamp".equals(type)) {
+                    this.format = "yyyy-MM-dd HH:mm:ss";
+                }
+            }
+        }
+        
+        public void exec(String fieldValue, Map results, List messages, Class contextClass) {
+            Object fieldObject = null;
+                        
+            if ("String".equals(type)) {
+                fieldObject = fieldValue;
+            } else if ("Double".equals(type)) {
+                try {
+                    NumberFormat nf = NumberFormat.getNumberInstance();
+                    Number tempNum = nf.parse(fieldValue);
+                    fieldObject = new Double(tempNum.doubleValue());
+                } catch (ParseException e) {
+                    addMessage(messages, contextClass);
+                    return;
+                }
+            } else if ("Float".equals(type)) {
+                try {
+                    NumberFormat nf = NumberFormat.getNumberInstance();
+                    Number tempNum = nf.parse(fieldValue);
+                    fieldObject = new Float(tempNum.floatValue());
+                } catch (ParseException e) {
+                    addMessage(messages, contextClass);
+                    return;
+                }
+            } else if ("Long".equals(type)) {
+                try {
+                    NumberFormat nf = NumberFormat.getNumberInstance();
+                    nf.setMaximumFractionDigits(0);
+                    Number tempNum = nf.parse(fieldValue);
+                    fieldObject = new Long(tempNum.longValue());
+                } catch (ParseException e) {
+                    addMessage(messages, contextClass);
+                    return;
+                }
+            } else if ("Integer".equals(type)) {
+                try {
+                    NumberFormat nf = NumberFormat.getNumberInstance();
+                    nf.setMaximumFractionDigits(0);
+                    Number tempNum = nf.parse(fieldValue);
+                    fieldObject = new Integer(tempNum.intValue());
+                } catch (ParseException e) {
+                    addMessage(messages, contextClass);
+                    return;
+                }
+            } else if ("Date".equals(type)) {
+                try {
+                    SimpleDateFormat sdf = new SimpleDateFormat(format);
+                    java.util.Date fieldDate = sdf.parse(fieldValue);
+                    fieldObject = new java.sql.Date(fieldDate.getTime());
+                } catch (ParseException e) {
+                    addMessage(messages, contextClass);
+                    return;
+                }
+            } else if ("Time".equals(type)) {
+                try {
+                    SimpleDateFormat sdf = new SimpleDateFormat(format);
+                    java.util.Date fieldDate = sdf.parse(fieldValue);
+                    fieldObject = new java.sql.Time(fieldDate.getTime());
+                } catch (ParseException e) {
+                    addMessage(messages, contextClass);
+                    return;
+                }
+            } else if ("Timestamp".equals(type)) {
+                try {
+                    SimpleDateFormat sdf = new SimpleDateFormat(format);
+                    java.util.Date fieldDate = sdf.parse(fieldValue);
+                    fieldObject = new java.sql.Timestamp(fieldDate.getTime());
+                } catch (ParseException e) {
+                    addMessage(messages, contextClass);
+                    return;
+                }
+            } else {
+                messages.add("Specified type \"" + type + "\" not known in conversion operation.");
+            }
+            
+            if (replace) {
+                results.put(toField, fieldObject);
+            } else {
+                if (results.containsKey(toField)) {
+                    //do nothing
+                } else {
+                    results.put(toField, fieldObject);
+                }
             }
         }
     }
