@@ -1,0 +1,45 @@
+import java.util.*;
+import org.ofbiz.core.entity.*;
+import org.ofbiz.core.util.*;
+import org.ofbiz.commonapp.security.login.*;
+import org.ofbiz.commonapp.common.*;
+import org.ofbiz.commonapp.party.contact.*;
+
+String externalLoginKey = LoginEvents.getExternalLoginKey(request);
+String externalKeyParam = externalLoginKey == null ? "" : "&externalLoginKey=" + externalLoginKey;
+context.put("externalKeyParam",externalKeyParam);
+
+delegator = request.getAttribute("delegator");
+
+String partyId = request.getParameter("party_id");
+if (partyId == null) partyId = (String) request.getSession().getAttribute("partyId");
+else request.getSession().setAttribute("partyId", partyId);
+context.put("partyId", partyId);
+
+Map mechMap = new HashMap();
+ContactMechWorker.getContactMechAndRelated(request, partyId, mechMap);
+
+context.put("mechMap", mechMap);
+
+String contactMechId = (String) mechMap.get("contactMechId");
+if(contactMechId != null) context.put("contactMechId", contactMechId);
+
+String preContactMechTypeId = request.getParameter("preContactMechTypeId");
+if(preContactMechTypeId != null) context.put("preContactMechTypeId", preContactMechTypeId);
+
+String paymentMethodId = request.getParameter("paymentMethodId");
+if(paymentMethodId == null) paymentMethodId = (String) request.getAttribute("paymentMethodId");
+if(paymentMethodId != null) context.put("paymentMethodId", paymentMethodId);
+
+String donePage = request.getParameter("DONE_PAGE");
+if (donePage == null) donePage = (String) request.getAttribute("DONE_PAGE");
+if (donePage == null || donePage.length() <= 0) donePage = "viewprofile";
+context.put("donePage", donePage);
+
+String cmNewPurposeTypeId = request.getParameter("contactMechPurposeTypeId");
+if (cmNewPurposeTypeId == null) cmNewPurposeTypeId = (String) mechMap.get("contactMechPurposeTypeId");
+if (cmNewPurposeTypeId != null) {
+    context.put("contactMechPurposeTypeId", cmNewPurposeTypeId);
+    GenericValue contactMechPurposeType = delegator.findByPrimaryKey("ContactMechPurposeType", UtilMisc.toMap("contactMechPurposeTypeId", cmNewPurposeTypeId));
+    if(contactMechPurposeType != null) context.put("contactMechPurposeType", contactMechPurposeType);
+}
