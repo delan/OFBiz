@@ -20,7 +20,7 @@
  *  THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  *
  *@author     Andy Zeneski (jaz@ofbiz.org)
- *@version    $Revision: 1.1 $
+ *@version    $Revision: 1.2 $
  *@since      3.0
 -->
 
@@ -53,7 +53,7 @@
     </tr>
     <tr><td colspan="2">&nbsp;</td></tr>
   </#if>
-  <form method="post" action="<@ofbizUrl>/querybalance</@ofbizUrl>">
+  <form method="post" action="<@ofbizUrl>/querygcbalance</@ofbizUrl>">
     <input type="hidden" name="currency" value="USD">
     <input type="hidden" name="paymentConfig" value="${paymentProperties?default("payment.properties")}">
     <tr>
