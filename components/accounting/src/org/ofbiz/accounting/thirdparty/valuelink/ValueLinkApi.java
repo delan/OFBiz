@@ -1,5 +1,5 @@
 /*
- * $Id: ValueLinkApi.java,v 1.4 2004/03/11 16:36:02 ajzeneski Exp $
+ * $Id: ValueLinkApi.java,v 1.5 2004/03/12 21:53:57 ajzeneski Exp $
  *
  * Copyright (c) 2003 The Open For Business Project - www.ofbiz.org
  *
@@ -40,6 +40,7 @@ import javax.crypto.spec.IvParameterSpec;
 import javax.crypto.spec.DESedeKeySpec;
 import javax.crypto.spec.DHParameterSpec;
 import javax.crypto.spec.DHPublicKeySpec;
+import javax.crypto.spec.DHPrivateKeySpec;
 import java.security.*;
 import java.security.spec.InvalidKeySpecException;
 import java.security.spec.X509EncodedKeySpec;
@@ -53,7 +54,7 @@ import java.text.ParseException;
  * ValueLinkApi - Implementation of ValueLink Encryption & Transport
  *
  * @author     <a href="mailto:jaz@ofbiz.org">Andy Zeneski</a>
- * @version    $Revision: 1.4 $
+ * @version    $Revision: 1.5 $
  * @since      3.0
  */
 public class ValueLinkApi {
@@ -258,11 +259,11 @@ public class ValueLinkApi {
     /**
      * Output the creation of public/private keys + KEK to the console for manual database update
      */
-    public StringBuffer outputKeyCreation() {
-        return this.outputKeyCreation(0);
+    public StringBuffer outputKeyCreation(boolean kekOnly, String kekTest) {
+        return this.outputKeyCreation(0, kekOnly, kekTest);
     }
 
-    private StringBuffer outputKeyCreation(int loop) {
+    private StringBuffer outputKeyCreation(int loop, boolean kekOnly, String kekTest) {
         StringBuffer buf = new StringBuffer();
         loop++;
 
@@ -271,72 +272,113 @@ public class ValueLinkApi {
             throw new IllegalStateException("Unable to create 128 byte keys in 100 tries");
         }
 
-        KeyPair keyPair = null;
-        try {
-            keyPair = this.createKeys();
-        } catch (NoSuchAlgorithmException e) {
-            Debug.logError(e, module);
-        } catch (InvalidAlgorithmParameterException e) {
-            Debug.logError(e, module);
-        } catch (InvalidKeySpecException e) {
-            Debug.logError(e, module);
-        }
+        // place holder for the keys
+        DHPrivateKey privateKey = null;
+        DHPublicKey publicKey = null;
 
-        if (keyPair != null) {
-            // the public key (just Y)
-            DHPublicKey publicKey = (DHPublicKey) keyPair.getPublic();
-            BigInteger y = publicKey.getY();
-            byte[] publicBytes = y.toByteArray();
-            String publicHex = StringUtil.toHexString(publicBytes);
-
-            // the private key -- FULL
-            DHPrivateKey privateKey = (DHPrivateKey) keyPair.getPrivate();
-            byte[] privateBytes = privateKey.getEncoded();
-            String privateHex = StringUtil.toHexString(privateBytes);
-
-            // the private key (just Y)
-            BigInteger x = privateKey.getX();
-            byte[] xBytes = x.toByteArray();
-            String xHex = StringUtil.toHexString(xBytes);
-
-            if (publicBytes.length != 128) {
-                // run again until we get a 128 byte public key for VL
-                return this.outputKeyCreation(loop);
-            }
-
-            // the KEK
-            byte[] kekBytes = null;
+        if (!kekOnly) {
+            KeyPair keyPair = null;
             try {
-                kekBytes = this.generateKek(privateKey);
+                keyPair = this.createKeys();
             } catch (NoSuchAlgorithmException e) {
+                Debug.logError(e, module);
+            } catch (InvalidAlgorithmParameterException e) {
                 Debug.logError(e, module);
             } catch (InvalidKeySpecException e) {
                 Debug.logError(e, module);
-            } catch (InvalidKeyException e) {
-                Debug.logError(e, module);
             }
 
-            buf.append("======== Begin Public Key (Y @ " + publicBytes.length + " / " + publicHex.length() + ") ========\n");
-            buf.append(publicHex + "\n");
+            if (keyPair != null) {
+                publicKey = (DHPublicKey) keyPair.getPublic();
+                privateKey = (DHPrivateKey) keyPair.getPrivate();
+
+                if (publicKey == null || publicKey.getY().toByteArray().length != 128) {
+                    // run again until we get a 128 byte public key for VL
+                    return this.outputKeyCreation(loop, kekOnly, kekTest);
+                }
+            } else {
+                Debug.log("Returned a null KeyPair", module);
+                return this.outputKeyCreation(loop, kekOnly, kekTest);
+            }
+        } else {
+            // use our existing private key to generate a KEK
+            try {
+                privateKey = (DHPrivateKey) this.getPrivateKey();
+            } catch (Exception e) {
+                Debug.logError(e, module);
+            }
+        }
+
+        // the KEK
+        byte[] kekBytes = null;
+        try {
+            kekBytes = this.generateKek(privateKey);
+        } catch (NoSuchAlgorithmException e) {
+            Debug.logError(e, module);
+        } catch (InvalidKeySpecException e) {
+            Debug.logError(e, module);
+        } catch (InvalidKeyException e) {
+            Debug.logError(e, module);
+        }
+
+        // the 3DES KEK value
+        SecretKey loadedKek = this.getDesEdeKey(kekBytes);
+        byte[] loadKekBytes = loadedKek.getEncoded();
+
+        // test the KEK
+        Cipher cipher = this.getCipher(this.getKekKey(), Cipher.ENCRYPT_MODE);
+        byte[] kekTestB = { 0, 0, 0, 0, 0, 0, 0, 0 };
+        byte[] kekTestC = new byte[0];
+        if (kekTest != null) {
+            kekTestB = StringUtil.fromHexString(kekTest);
+        }
+
+        // encrypt the test bytes
+        try {
+            kekTestC = cipher.doFinal(kekTestB);
+        } catch (Exception e) {
+            Debug.logError(e, module);
+        }
+
+        if (!kekOnly) {
+            // public key (just Y)
+            BigInteger y = publicKey.getY();
+            byte[] yBytes = y.toByteArray();
+            String yHex = StringUtil.toHexString(yBytes);
+            buf.append("======== Begin Public Key (Y @ " + yBytes.length + " / " + yHex.length() + ") ========\n");
+            buf.append(yHex + "\n");
             buf.append("======== End Public Key ========\n\n");
 
+            // private key (just X)
+            BigInteger x = privateKey.getX();
+            byte[] xBytes = x.toByteArray();
+            String xHex = StringUtil.toHexString(xBytes);
             buf.append("======== Begin Private Key (X @ " + xBytes.length + " / " + xHex.length() + ") ========\n");
             buf.append(xHex + "\n");
             buf.append("======== End Private Key ========\n\n");
 
+            // private key (full)
+            byte[] privateBytes = privateKey.getEncoded();
+            String privateHex = StringUtil.toHexString(privateBytes);
             buf.append("======== Begin Private Key (Full @ " + privateBytes.length + " / " + privateHex.length() + ") ========\n");
             buf.append(privateHex + "\n");
             buf.append("======== End Private Key ========\n\n");
+        }
 
-            if (kekBytes != null) {
-                buf.append("======== Begin KEK ========\n");
-                buf.append(StringUtil.toHexString(kekBytes) + "\n");
-                buf.append("======== End KEK ========\n\n");
-            } else {
-                Debug.logError("KEK came back empty", module);
-            }
+        if (kekBytes != null) {
+            buf.append("======== Begin KEK (" + kekBytes.length + ") ========\n");
+            buf.append(StringUtil.toHexString(kekBytes) + "\n");
+            buf.append("======== End KEK ========\n\n");
+
+            buf.append("======== Begin KEK (DES) (" + loadKekBytes.length + ") ========\n");
+            buf.append(StringUtil.toHexString(loadKekBytes) + "\n");
+            buf.append("======== End KEK (DES) ========\n\n");
+
+            buf.append("======== Begin KEK Test (" + kekTestC.length + ") ========\n");
+            buf.append(StringUtil.toHexString(kekTestC) + "\n");
+            buf.append("======== End KEK Test ========\n\n");
         } else {
-            Debug.logError("Received a null KeyPair", module);
+            Debug.logError("KEK came back empty", module);
         }
 
         return buf;
@@ -380,6 +422,10 @@ public class ValueLinkApi {
         ka.doPhase(vlPublic, true);
         byte[] secretKey = ka.generateSecret();
 
+        if (debug) {
+            Debug.log("Secret Key : " + StringUtil.toHexString(secretKey) + " / " + secretKey.length,  module);
+        }
+
         // generate 3DES from secret key using VL algorithm (KEK)
         MessageDigest md = MessageDigest.getInstance("SHA1");
         byte[] digest = md.digest(secretKey);
@@ -388,7 +434,7 @@ public class ValueLinkApi {
         byte[] kek = copyBytes(des2, first8, 0);
 
         if (debug) {
-            Debug.log("Generated KEK : " + StringUtil.toHexString(kek), module);
+            Debug.log("Generated KEK : " + StringUtil.toHexString(kek) + " / " + kek.length, module);
         }
 
         return kek;
@@ -422,9 +468,18 @@ public class ValueLinkApi {
      * @return PrivateKey object for the merchant
      */
     public PrivateKey getPrivateKey() throws InvalidKeySpecException, NoSuchAlgorithmException {
-        X509EncodedKeySpec x509KeySpec = new X509EncodedKeySpec(this.getPrivateKeyBytes());
+        byte[] privateKeyBytes = this.getPrivateKeyBytes();
+
+        // initialize the parameter spec
+        DHParameterSpec dhParamSpec = this.getDHParameterSpec();
+
+        // load the private key
         KeyFactory keyFactory = KeyFactory.getInstance("DH");
-        return keyFactory.generatePrivate(x509KeySpec);
+        BigInteger privateKeyInt = new BigInteger(privateKeyBytes);
+        DHPrivateKeySpec dhPrivateSpec = new DHPrivateKeySpec(privateKeyInt, dhParamSpec.getP(), dhParamSpec.getG());
+        PrivateKey privateKey = keyFactory.generatePrivate(dhPrivateSpec);
+
+        return privateKey;
     }
 
     /**
@@ -432,7 +487,6 @@ public class ValueLinkApi {
      * @return Hex String of the new encrypted MWK ready for transmission to ValueLink
      */
     public byte[] generateMwk() {
-        byte[] zeros = { 0, 0, 0, 0, 0, 0, 0, 0 };
         KeyGenerator keyGen = null;
         try {
             keyGen = KeyGenerator.getInstance("DESede");
@@ -443,10 +497,59 @@ public class ValueLinkApi {
         // generate the DESede key
         SecretKey mwkdes3 = keyGen.generateKey();
 
+        return generateMwk(mwkdes3);
+    }
+
+    /**
+     * Generate a new MWK
+     * @param desBytes byte array of the DES key (24 bytes)
+     * @return Hex String of the new encrypted MWK ready for transmission to ValueLink
+     */
+    public byte[] generateMwk(byte[] desBytes) {
+        if (debug) {
+            Debug.log("DES Key : " + StringUtil.toHexString(desBytes) + " / " + desBytes.length, module);
+        }
+        SecretKeyFactory skf1 = null;
+        SecretKey mwk = null;
+        try {
+            skf1 = SecretKeyFactory.getInstance("DESede");
+        } catch (NoSuchAlgorithmException e) {
+            Debug.logError(e, module);
+        }
+        DESedeKeySpec desedeSpec2 = null;
+        try {
+            desedeSpec2 = new DESedeKeySpec(desBytes);
+        } catch (InvalidKeyException e) {
+            Debug.logError(e, module);
+        }
+        if (skf1 != null && desedeSpec2 != null) {
+            try {
+                mwk = skf1.generateSecret(desedeSpec2);
+            } catch (InvalidKeySpecException e) {
+                Debug.logError(e, module);
+            }
+        }
+        if (mwk != null) {
+            return generateMwk(mwk);
+        } else {
+            return null;
+        }
+    }
+
+    /**
+     * Generate a new MWK
+     * @param mwkdes3 pre-generated DES3 SecretKey
+     * @return Hex String of the new encrypted MWK ready for transmission to ValueLink
+     */
+    public byte[] generateMwk(SecretKey mwkdes3) {
+        // zeros for checksum
+        byte[] zeros = { 0, 0, 0, 0, 0, 0, 0, 0 };
+
         // 8 bytes random data
         byte[] random = new byte[8];
         Random ran = new Random();
         ran.nextBytes(random);
+
 
         // open a cipher using the new mwk
         Cipher cipher = this.getCipher(mwkdes3, Cipher.ENCRYPT_MODE);
@@ -468,8 +571,10 @@ public class ValueLinkApi {
         newMwk = copyBytes(random, newMwk, 0);
 
         if (debug) {
-            Debug.log("Decrypted MWK : " + StringUtil.toHexString(mwkdes3.getEncoded()), module);
-            Debug.log("Encrypted MWK : " + newMwk, module);
+            Debug.log("Random 8 byte : " + StringUtil.toHexString(random), module);
+            Debug.log("Encrypted 0's : " + StringUtil.toHexString(encryptedZeros), module);
+            Debug.log("Decrypted MWK : " + StringUtil.toHexString(mwkdes3.getEncoded()) + " / " + mwkdes3.getEncoded().length, module);
+            Debug.log("Encrypted MWK : " + StringUtil.toHexString(newMwk) + " / " + newMwk.length, module);
         }
 
         return newMwk;
@@ -715,6 +820,7 @@ public class ValueLinkApi {
         }
 
         if (debug) {
+            Debug.log("Raw MWK : " + StringUtil.toHexString(getMwk()), module);
             Debug.log("MWK : " + StringUtil.toHexString(mwk.getEncoded()), module);
         }
 
@@ -727,6 +833,7 @@ public class ValueLinkApi {
         }
 
         if (debug) {
+            Debug.log("Raw KEK : " + StringUtil.toHexString(getKek()), module);
             Debug.log("KEK : " + StringUtil.toHexString(kek.getEncoded()), module);
         }
 

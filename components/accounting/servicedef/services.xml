@@ -678,12 +678,23 @@
             location="org.ofbiz.accounting.thirdparty.valuelink.ValueLinkServices" invoke="createKeys" auth="true">
         <description>Create Public/Private Keys + KEK and Display Them</description>
         <attribute name="paymentConfig" type="String" mode="IN" optional="false"/>
+        <attribute name="kekOnly" type="Boolean" mode="IN" optional="true"/>
+        <attribute name="kekTest" type="String" mode="IN" optional="true"/>
+        <attribute name="output" type="String" mode="OUT" optional="false"/>
+    </service>
+    <service name="testKekEncryption" engine="java"
+            location="org.ofbiz.accounting.thirdparty.valuelink.ValueLinkServices" invoke="testKekEncryption" auth="true">
+        <description>Test KEK Encryption</description>
+        <attribute name="paymentConfig" type="String" mode="IN" optional="false"/>
+        <attribute name="kekTest" type="String" mode="IN" optional="false"/>
+        <attribute name="mode" type="Integer" mode="IN" optional="false"/>
         <attribute name="output" type="String" mode="OUT" optional="false"/>
     </service>
     <service name="assignWorkingKey" engine="java"
             location="org.ofbiz.accounting.thirdparty.valuelink.ValueLinkServices" invoke="assignWorkingKey" auth="true">
         <description>Assign a new working key to ValueLink</description>
         <attribute name="paymentConfig" type="String" mode="IN" optional="false"/>
+        <attribute name="desHexString" type="String" mode="IN" optional="true"/>
     </service>
     <service name="activateGiftCard" engine="java"
             location="org.ofbiz.accounting.thirdparty.valuelink.ValueLinkServices" invoke="activate" auth="true">
