@@ -131,6 +131,7 @@ public class GenericDelegator implements DelegatorInterface {
                 // must check if null again as one of the blocked threads can still enter
                 delegator = (GenericDelegator) delegatorCache.get(delegatorName);
                 if (delegator == null) {
+                    if (Debug.infoOn()) Debug.logInfo("Creating new delegator [" + delegatorName + "] (" + Thread.currentThread().getName() + ")", module);
                     try {
                         delegator = new GenericDelegator(delegatorName);
                     } catch (GenericEntityException e) {
@@ -150,7 +151,7 @@ public class GenericDelegator implements DelegatorInterface {
 
     /** Only allow creation through the factory method */
     protected GenericDelegator(String delegatorName) throws GenericEntityException {
-        if (Debug.infoOn()) Debug.logInfo("Creating new Delegator with name \"" + delegatorName + "\".", module);
+        //if (Debug.infoOn()) Debug.logInfo("Creating new Delegator with name \"" + delegatorName + "\".", module);
 
         this.delegatorName = delegatorName;
         if (keepLocalReaders) {
