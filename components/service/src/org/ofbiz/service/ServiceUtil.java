@@ -58,7 +58,7 @@ public class ServiceUtil {
 
     /** A little short-cut method to check to see if a service returned an error */
     public static boolean isError(Map results) {
-        if (results == null) {
+        if (results == null || results.get(ModelService.RESPONSE_MESSAGE) == null) {
             return false;
         }
         return ModelService.RESPOND_ERROR.equals(results.get(ModelService.RESPONSE_MESSAGE));
