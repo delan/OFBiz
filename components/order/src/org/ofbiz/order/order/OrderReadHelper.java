@@ -1,5 +1,5 @@
 /*
- * $Id: OrderReadHelper.java,v 1.3 2003/08/25 20:54:31 ajzeneski Exp $
+ * $Id: OrderReadHelper.java,v 1.4 2003/08/26 14:06:57 ajzeneski Exp $
  *
  *  Copyright (c) 2002 The Open For Business Project - www.ofbiz.org
  *
@@ -54,7 +54,7 @@ import org.ofbiz.security.Security;
  * @author     <a href="mailto:jonesde@ofbiz.org">David E. Jones</a>
  * @author     Eric Pabst
  * @author     <a href="mailto:ray.barlow@whatsthe-point.com">Ray Barlow</a>
- * @version    $Revision: 1.3 $
+ * @version    $Revision: 1.4 $
  * @since      2.0
  */
 public class OrderReadHelper {
@@ -234,10 +234,9 @@ public class OrderReadHelper {
         return null;
     }
 
-    public GenericValue getBillingAddress() {
-        // TODO: if null; get address from payment
+    public GenericValue getBillingAddress() {        
         GenericDelegator delegator = orderHeader.getDelegator();
-
+        GenericValue billingAddress = null;
         try {
             GenericValue orderContactMech = EntityUtil.getFirst(orderHeader.getRelatedByAnd("OrderContactMech", UtilMisc.toMap("contactMechPurposeTypeId", "BILLING_LOCATION")));
 
@@ -245,13 +244,42 @@ public class OrderReadHelper {
                 GenericValue contactMech = orderContactMech.getRelatedOne("ContactMech");
 
                 if (contactMech != null) {
-                    return contactMech.getRelatedOne("PostalAddress");
+                    billingAddress = contactMech.getRelatedOne("PostalAddress");
                 }
             }
         } catch (GenericEntityException e) {
             Debug.logWarning(e, module);
         }
-        return null;
+        
+        if (billingAddress == null) {
+            // get the address from the billing account
+            GenericValue billingAccount = getBillingAccount();
+            if (billingAccount != null) {
+                try {
+                    billingAddress = billingAccount.getRelatedOne("PostalAddress");
+                } catch (GenericEntityException e) {
+                    Debug.logWarning(e, module);
+                }
+            } else {
+                // get the address from the first payment method
+                GenericValue paymentPreference = EntityUtil.getFirst(getPaymentPreferences());
+                try {
+                    GenericValue paymentMethod = paymentPreference.getRelatedOne("PaymentMethod");
+                    GenericValue creditCard = paymentMethod.getRelatedOne("CreditCard");
+                    if (creditCard != null) {
+                        billingAddress = creditCard.getRelatedOne("PostalAddress");
+                    } else {
+                        GenericValue eftAccount = paymentMethod.getRelatedOne("EftAccount");
+                        if (eftAccount != null) {
+                            billingAddress = eftAccount.getRelatedOne("PostalAddress");
+                        }
+                    }                     
+                } catch (GenericEntityException e) {
+                    Debug.logWarning(e, module);
+                }
+            }
+        }
+        return billingAddress;
     }
 
     public String getCurrentStatusString() {
@@ -304,6 +332,16 @@ public class OrderReadHelper {
         return orderStatusIds.toString();
     }
 
+    public GenericValue getBillingAccount() {
+        GenericValue billingAccount = null;
+        try {
+            billingAccount = orderHeader.getRelatedOne("BillingAccount");
+        } catch (GenericEntityException e) {
+            Debug.logWarning(e, module);
+        }
+        return billingAccount;
+    }
+    
     public GenericValue getBillToPerson() {
         GenericDelegator delegator = orderHeader.getDelegator();
 
@@ -671,7 +709,7 @@ public class OrderReadHelper {
     }
 
     public double getOrderItemsTotal() {
-        return getOrderItemsTotal(getOrderItems(), getAdjustments());
+        return getOrderItemsTotal(getValidOrderItems(), getAdjustments());
     }
 
     public double getOrderItemTotal(GenericValue orderItem) {
