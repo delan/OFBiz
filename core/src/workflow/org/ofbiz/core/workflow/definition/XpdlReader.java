@@ -887,6 +887,11 @@ public class XpdlReader {
 
         // Description?
         transitionValue.set("description", UtilXml.childElementValue(transitionElement, "Description"));
+        
+        // ExtendedAttributes?        
+        Element extendedAttributesElement = UtilXml.firstChildElement(transitionElement, "ExtendedAttributes");      
+        List extendedAttributes = UtilXml.childElementList(extendedAttributesElement, "ExtendedAttribute");      
+        transitionValue.set("extendedAttributes", readExtendedAttributes(extendedAttributes), false);        
     }
 
     protected void readTransitionRestrictions(List transitionRestrictions, GenericValue activityValue) throws DefinitionParserException {
