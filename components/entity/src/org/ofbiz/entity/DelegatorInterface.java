@@ -1,5 +1,5 @@
 /*
- * $Id: DelegatorInterface.java,v 1.6 2004/07/03 19:54:20 jonesde Exp $
+ * $Id: DelegatorInterface.java,v 1.7 2004/07/07 07:37:05 doogie Exp $
  *
  * Copyright (c) 2001-2004 The Open For Business Project - www.ofbiz.org
  *
@@ -44,7 +44,7 @@ import org.ofbiz.entity.util.SequenceUtil;
  * Delegator Interface
  *
  * @author     <a href="mailto:plightbo@cisco.com">Patrick Lightbody</a>
- * @version    $Revision: 1.6 $
+ * @version    $Revision: 1.7 $
  * @since      2.0
  */
 public interface DelegatorInterface {
@@ -166,6 +166,10 @@ public interface DelegatorInterface {
 
     int removeByAnd(String entityName, Map fields, boolean doCacheClear) throws GenericEntityException;
 
+    int removeByCondition(String entityName, EntityCondition condition) throws GenericEntityException;
+
+    int removeByCondition(String entityName, EntityCondition condition, boolean doCacheClear) throws GenericEntityException;
+
     List getMultiRelation(GenericValue value, String relationNameOne, String relationNameTwo, List orderBy) throws GenericEntityException;
 
     List getMultiRelation(GenericValue value, String relationNameOne, String relationNameTwo) throws GenericEntityException;
@@ -225,6 +229,8 @@ public interface DelegatorInterface {
     void clearCacheLine(GenericValue value, boolean distribute);
 
     Set getFieldNameSetsCopy(String entityName);
+
+    void clearCacheLineByCondition(String entityName, EntityCondition condition);
 
     void clearAllCacheLinesByDummyPK(Collection dummyPKs);
 

@@ -1,5 +1,5 @@
 /*
- * $Id: DistributedCacheClear.java,v 1.1 2003/08/17 04:56:26 jonesde Exp $
+ * $Id: DistributedCacheClear.java,v 1.2 2004/07/07 07:37:07 doogie Exp $
  *
  *  Copyright (c) 2001, 2002 The Open For Business Project - www.ofbiz.org
  *
@@ -27,12 +27,13 @@ import org.ofbiz.entity.GenericDelegator;
 import org.ofbiz.entity.GenericEntity;
 import org.ofbiz.entity.GenericPK;
 import org.ofbiz.entity.GenericValue;
+import org.ofbiz.entity.condition.EntityCondition;
 
 /**
  * Distributed Cache Clear interface definition
  *
  * @author     <a href="mailto:jonesde@ofbiz.org">David E. Jones</a>
- * @version    $Revision: 1.1 $
+ * @version    $Revision: 1.2 $
  * @since      2.0
  */
 public interface DistributedCacheClear {
@@ -42,6 +43,8 @@ public interface DistributedCacheClear {
     public void distributedClearCacheLine(GenericValue value);
 
     public void distributedClearCacheLineFlexible(GenericEntity dummyPK);
+
+    public void distributedClearCacheLineByCondition(String entityName, EntityCondition condition);
 
     public void distributedClearCacheLine(GenericPK primaryKey);
     

@@ -1,5 +1,5 @@
 /*
- * $Id: GenericDAO.java,v 1.16 2004/06/11 16:40:25 ajzeneski Exp $
+ * $Id: GenericDAO.java,v 1.17 2004/07/07 07:37:06 doogie Exp $
  *
  * Copyright (c) 2001, 2002 The Open For Business Project - www.ofbiz.org
  *
@@ -59,7 +59,7 @@ import org.ofbiz.entity.util.EntityListIterator;
  * @author     <a href="mailto:jdonnerstag@eds.de">Juergen Donnerstag</a>
  * @author     <a href="mailto:gielen@aixcept.de">Rene Gielen</a>
  * @author     <a href="mailto:john_nutting@telluridetechnologies.com">John Nutting</a>
- * @version    $Revision: 1.16 $
+ * @version    $Revision: 1.17 $
  * @since      1.0
  */
 public class GenericDAO {
@@ -1145,6 +1145,39 @@ public class GenericDAO {
             if (fields != null && fields.size() > 0) {
                 SqlJdbcUtil.setValuesWhereClause(sqlP, whereFields, dummyValue, modelFieldTypeReader);
             }
+
+            return sqlP.executeUpdate();
+        } finally {
+            sqlP.close();
+        }
+    }
+
+    public int deleteByCondition(ModelEntity modelEntity, EntityCondition condition) throws GenericEntityException {
+        SQLProcessor sqlP = new SQLProcessor(helperName);
+
+        try {
+            return deleteByCondition(modelEntity, condition, sqlP);
+        } catch (GenericDataSourceException e) {
+            sqlP.rollback();
+            throw new GenericDataSourceException("Generic Entity Exception occured in deleteByCondition", e);
+        } finally {
+            sqlP.close();
+        }
+    }
+
+    public int deleteByCondition(ModelEntity modelEntity, EntityCondition condition, SQLProcessor sqlP) throws GenericEntityException {
+        if (modelEntity == null || condition == null)
+            return 0;
+        if (modelEntity instanceof ModelViewEntity) {
+            throw new org.ofbiz.entity.GenericNotImplementedException("Operation deleteByCondition not supported yet for view entities");
+        }
+
+        String sql = "DELETE FROM " + modelEntity.getTableName(datasourceInfo);
+
+        sql += " WHERE " + condition.makeWhereString(modelEntity, null);
+
+        try {
+            sqlP.prepareStatement(sql);
 
             return sqlP.executeUpdate();
         } finally {

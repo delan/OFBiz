@@ -137,6 +137,13 @@ public interface GenericHelper {
      */
     public int removeByAnd(ModelEntity modelEntity, Map fields) throws GenericEntityException;
 
+    /** Removes/deletes Generic Entity records found by all the specified condition
+     *@param modelEntity The ModelEntity of the Entity as defined in the entity XML file
+     *@param condition The condition that restricts the list of removed values
+     *@return int representing number of rows effected by this operation
+     */
+    public int removeByCondition(ModelEntity modelEntity, EntityCondition condition) throws GenericEntityException;
+
     /** Store the Entity from the GenericValue to the persistent store
      *@param value GenericValue instance containing the entity
      *@return int representing number of rows effected by this operation

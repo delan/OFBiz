@@ -1,5 +1,5 @@
 /*
- * $Id: GenericHelperDAO.java,v 1.4 2004/02/03 08:14:41 jonesde Exp $
+ * $Id: GenericHelperDAO.java,v 1.5 2004/07/07 07:37:06 doogie Exp $
  *
  * Copyright (c) 2001, 2002 The Open For Business Project - www.ofbiz.org
  *
@@ -46,7 +46,7 @@ import org.ofbiz.entity.util.EntityListIterator;
  *
  * @author     <a href="mailto:jonesde@ofbiz.org">David E. Jones</a>
  * @author     <a href='mailto:chris_maurer@altavista.com'>Chris Maurer</a>
- * @version    $Revision: 1.4 $
+ * @version    $Revision: 1.5 $
  * @since      2.0
  */
 public class GenericHelperDAO implements GenericHelper {
@@ -205,6 +205,18 @@ public class GenericHelperDAO implements GenericHelper {
             return 0;
         }
         return genericDAO.deleteByAnd(modelEntity, fields);
+    }
+
+    /** Removes/deletes Generic Entity records found by all the specified condition
+     *@param modelEntity The ModelEntity of the Entity as defined in the entity XML file
+     *@param condition The condition that restricts the list of removed values
+     *@return int representing number of rows effected by this operation
+     */
+    public int removeByCondition(ModelEntity modelEntity, EntityCondition condition) throws GenericEntityException {
+        if (modelEntity == null || condition == null) {
+            return 0;
+        }
+        return genericDAO.deleteByCondition(modelEntity, condition);
     }
 
     /** Store the Entity from the GenericValue to the persistent store
