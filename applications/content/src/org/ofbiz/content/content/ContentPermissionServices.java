@@ -41,6 +41,9 @@ import org.ofbiz.security.Security;
 import org.ofbiz.service.DispatchContext;
 import org.ofbiz.service.ModelService;
 import org.ofbiz.service.ServiceUtil;
+import org.ofbiz.service.GenericServiceException;
+import org.ofbiz.service.LocalDispatcher;
+
 
 /**
  * ContentPermissionServices Class
@@ -261,4 +264,88 @@ public class ContentPermissionServices {
         results.put(ModelService.ERROR_MESSAGE, errBuf.toString());
         return results;
     }
+    
+    public static Map checkAssocPermission(DispatchContext dctx, Map context) {
+    
+        Map results = new HashMap();
+        Security security = dctx.getSecurity();
+        GenericDelegator delegator = dctx.getDelegator();
+        LocalDispatcher dispatcher = dctx.getDispatcher();
+        Boolean bDisplayFailCond = (Boolean)context.get("displayFailCond");
+        String contentIdFrom = (String) context.get("contentIdFrom");
+        String contentIdTo = (String) context.get("contentIdTo");
+        GenericValue userLogin = (GenericValue) context.get("userLogin"); 
+        String entityAction = (String) context.get("entityOperation");
+        if (entityAction == null) entityAction = "_ADMIN";
+        List roleIds = null;
+        String permissionStatus = null;
+    
+        GenericValue contentTo = null;
+        GenericValue contentFrom = null;
+        try {
+            contentTo = delegator.findByPrimaryKeyCache("Content", UtilMisc.toMap("contentId", contentIdTo) );
+            contentFrom = delegator.findByPrimaryKeyCache("Content",  UtilMisc.toMap("contentId", contentIdFrom) );
+        } catch (GenericEntityException e) {
+            return ServiceUtil.returnError("Error in retrieving content To or From. " + e.getMessage());
+        }
+        if (contentTo == null || contentFrom == null) {
+            return ServiceUtil.returnError("contentTo[" + contentTo + "]/From[" + contentFrom + "] is null. ");
+        }
+        Map resultsMap = null;
+        boolean isMatch = false;
+    
+        boolean isMatchTo = false;
+        boolean isMatchFrom = false;
+        Map permResults = new HashMap();
+        String skipPermissionCheck = null;
+    
+        if (skipPermissionCheck == null
+            || skipPermissionCheck.length() == 0
+            || (!skipPermissionCheck.equalsIgnoreCase("true") && !skipPermissionCheck.equalsIgnoreCase("granted"))) {
+            // Use the purposes from the from entity for both cases.
+            List relatedPurposes = EntityPermissionChecker.getRelatedPurposes(contentFrom, null);
+            List relatedPurposesTo = EntityPermissionChecker.getRelatedPurposes(contentTo, relatedPurposes);
+            Map serviceInMap = new HashMap();
+            serviceInMap.put("userLogin", userLogin);
+            serviceInMap.put("targetOperationList", UtilMisc.toList("CONTENT_LINK_TO"));
+            serviceInMap.put("contentPurposeList", relatedPurposesTo);
+            serviceInMap.put("currentContent", contentTo);
+            serviceInMap.put("displayFailCond", bDisplayFailCond);
+    
+            try {
+                permResults = dispatcher.runSync("checkContentPermission", serviceInMap);
+            } catch (GenericServiceException e) {
+                Debug.logError(e, "Problem checking permissions", "ContentServices");
+            }
+            permissionStatus = (String)permResults.get("permissionStatus");
+            if(permissionStatus == null || !permissionStatus.equals("granted") ) {
+                if (bDisplayFailCond != null && bDisplayFailCond.booleanValue()) {
+                     String errMsg = (String)permResults.get(ModelService.ERROR_MESSAGE);
+                     results.put(ModelService.ERROR_MESSAGE, errMsg);
+                }
+                return results;
+            }
+            serviceInMap.put("currentContent", contentFrom);
+            serviceInMap.put("targetOperationList", UtilMisc.toList("CONTENT_LINK_FROM"));
+            serviceInMap.put("contentPurposeList", relatedPurposes);
+            try {
+                permResults = dispatcher.runSync("checkContentPermission", serviceInMap);
+            } catch (GenericServiceException e) {
+                Debug.logError(e, "Problem checking permissions", "ContentServices");
+            }
+            permissionStatus = (String)permResults.get("permissionStatus");
+            if(permissionStatus != null && permissionStatus.equals("granted") ) {
+                results.put("permissionStatus", "granted");   
+            } else {
+                if (bDisplayFailCond != null && bDisplayFailCond.booleanValue()) {
+                     String errMsg = (String)permResults.get(ModelService.ERROR_MESSAGE);
+                     results.put(ModelService.ERROR_MESSAGE, errMsg);
+                }
+            }
+        } else {
+            results.put("permissionStatus", "granted");   
+        }
+        return results;
+    }
+    
 }
