@@ -47,64 +47,76 @@
 Founders and Lead Architects: David E. Jones &amp; Andy Zeneski<br>
 <hr>
 <br>
-The Open For Business Project released the newest version (1.0 Beta 1) of its business automation 
-  tools, components, and applications on Monday October 29, 2001. More information 
-  can be found on the Open For Business web site at http://www.ofbiz.org or on 
+The Open For Business Project released the newest version (2.0 Alpha 1) of its business automation 
+  tools, components, and applications on Wednesday January 15, 2002. This is an alpha release
+  because even though most of the components are stable, many are just being introduced. This
+  release features the introduction of the service, workflow and rule engines, a couple of
+  mini-languages, and major improvements to various existing applications and tools.
+  More information can be found on the Open For Business web site at http://www.ofbiz.org or on 
   the Open For Business SourceForge project site at http://sf.net/projects/ofbiz.
-<p>The
-over-arching vision of the Open For Business Project is to embrace and enable
+<p>The vision of the Open For Business Project is to embrace and enable
 the 5 E's: Ease of Cost, Ease of Installation, Ease of Customization, Ease of
 Integration, and Ease of Use.
 <p>The tools and components available can shorten J2EE business project cycles by months through a well designed architecture, pre-built components, and
 a dynamic entity model based data source abstraction layer. The goal of the Open
 For Business project is to provide useful, standards compliant tools and
 applications. These standards will include: XML; J2EE; WfMC's XPDL; BPML; ebXML;
-GAAP &amp; FASB; OMG's GL, Party, etc; ArapXML; and other leading standards that
+UNSPSC; GAAP &amp; FASB; OMG's GL, Party, etc; ArapXML; qbXML; and other leading standards that
 relate to the various tools, components and applications of Open For Business
 (see http://www.ofbiz.org for more details).
-<p>The Open For Business Project currently includes the following features:
+<p>The Open For Business Project features the following:
 <ul>
-<li>-- Data Model -- A work-in-progress data model with nearly 400 entities providing for business data needs such as content, party (person and organization), product, order, shipment, work effort, accounting, human resources, and security data. All main entities have related tables making them extensible for flexibility.
-  Around 30% of the data model is in a stable state where application flows have
-  been implemented on the data model and missing features added that were
-  required for the flows. The rest of the data model will be refined as
-  applications are implemented.
-<li>-- eCommerce -- An eCommerce application that is based on this flexible and
-  enterprise wide data model allowing it to be surpisingly easy to customize and
-  easy to integrate with enterprise systems, that is until Open For Business can
+<li>-- <b>Data Model</b> -- A work-in-progress data model with over 425 entities providing 
+    for business data needs such as content, party (person and organization), product, 
+    order, shipment, work effort, accounting, human resources, and security data. 
+    All major entities have related tables making them extensible for flexibility.
+    The data model will be refined as applications are implemented.
+<li>-- <b>eCommerce</b> -- An eCommerce application that is based on our flexible and
+  enterprise wide data model making it surpisingly easy to customize and
+  integrate with enterprise systems, that is until Open For Business can
   provide those enterprise systems in addition to an eCommerce application. The
   template site has a clean look and feel and provides all of the basic needs
   for eCommerce including a dynamic catalog, customer information management,
   and order history and status.
-<li>-- Entity Engine -- The OFBiz Entity Engine provides a simple and
-  powerful API for data source independent retrieval and manipulation of data.
-  The API is dynamic so that no entity specific persistence or encoding/decoding
-  code ever needs to be written, not even an entity bean of some sort like the
-  EJB CMP and JDO specifications require. Changing entity definitions is as easy
-  as changing an XML file, or using the entity editor, running a data source
-  synchronization routine (to automatically create tables or columns or a
-  database), and then change the user facing code that displays or handles the
-  input of that data. Integrating with other systems is as easy as writing a
-  data layout contract in XML in the form of entity definitions, and then moving
-  on to your business and display logic, or reusing existing business and
-  display logic based on existing entity definitions. The patterns used in
-the Entity Engine include: Business Delegate, Value Object, Composite Entity
-(variation), Value Object Assembler, Service Locator, Data Access Object, Data Transfer HashMap and
-Generic Attribute Access.
-<li>-- Servlet Controller -- A servlet controller to abstract non-presentation logic, security and
-  web application flow. It implements the following J2EE patterns: Intercepting
-  Filter, Front Controller, View Helper, and Dispatcher View. The Composite View
-  pattern is used for organization of views in the JSPs of the project.
-<li>An event scheduler along with the controller to provide asynchronous repeated actions
+<li>-- <b>Applications</b> -- Other Applications now available include catalog management,
+party management, order management and work effort (task, calendar, etc) management.
+<li>-- <b>Service Engine</b> -- The OFBiz Service Engine is the tool that allows us to
+  organize our applications around internal services that can seamlessly be exposed
+  as web services, or can be implemented using remote web services. It provides a
+  simple interface so that the caller does not have to know what language the service
+  is implemented in or where that service is located. Service definitions are done in XML.
+<li>-- <b>Entity Engine</b> -- The OFBiz Entity Engine provides a simple and
+  powerful API for data source independent retrieval and manipulation of relational data.
+  The Entity Engine is far more efficient for developers to use than conventional persistence
+  tools like EJB CMP, JDO, or straight JDBC. Entity definitions are done in XML.
+<li>-- <b>Workflow Engine</b> -- The OFBiz Workflow Engine makes it easy to layout and
+execute business processes as part of a J2EE application. It is based in the XPDL and other
+specifications from WfMC and the Workflow Management Facility Specification from OMG. It takes
+advantage of and is well integrated with the OFBiz Service and Entity Engines. Workflows can be
+invoked synchronously or asynchronously and locally or remotely through the Service Engine, and
+any activity in a process can be implemented as a service.
+<li>-- <b>Message Engine</b> -- The OFBiz Message Engine makes it easy to model and organize
+messages passing between various organizations or systems. Message digesters and producers are specified
+and executed in response to incoming messages. The Message Engine is based on the BPML specification
+from BPMI. The Message Engine has not yet been implemented.
+<li>-- <b>Rule Engine</b> -- The OFBiz Rule Engine makes it easy to express and execute business
+rules and constraints. It is based on modern standards like RuleML and the mature language Prolog.
+It is written in Java and runs with an application in the same JVM, and can be invoked locally or 
+remotely through the Service or Entity Engines. It can also call back into Services as sensors or
+effectors and integrates seamlessly with the Entity Engine to expand your knowledgebase in a ruleset
+to all of the data in your relational database. The Rule Engine is only partially in place
+and certain features are still in planning.
+<li>-- <b>Mini-Languages</b> -- The OFBiz Mini-Languages are XML files that describe simple
+  processes making common operations fast and easy to write and maintain. At the moment
+  the existing languages make it easy to create events to validate and convert form input
+  and pass it on to a service. Future extensions will allow complete applications to be
+  written using JSP, XML Mini-Languages, and Entity and Service definitions. This will be
+  anywhere from 5-10 times as efficient as coding these common components in Java.
+<li>-- <b>Servlet Controller</b> -- A servlet controller to abstract non-presentation logic, security and
+  web application flow.
 <li>Core utilities to provide services such as input validation, output formatting, property file access and caching, conditional debug logging, and date and time handling
 <li>A cache utility which supports caches of limited or unlimited size, element expiration, least recently used (LRU) element removal, and a web based cache management application
-<li>The default database is MySQL and the default application server is Tomcat
-  4.0, or Catalina Optional portions of the project which need an EJB container
-  include build and deployment scripts for JBoss. Deployment on other databases and application servers is easily done, including commercial databases and application servers. MySQL, Tomcat
-  and JBoss were chosen because they are freely avaiable, facilitating evaluation and proof of concept,
-  and initial product development. They are also sufficient for many final
-  deployment circumstances.
-  <li>The Open For Business Project currently has 52 developers involved from 
+<li>The Open For Business Project currently has 9 developers involved from 
     around the world. More are joining all the time. There is a large need for 
     developers because of the wide variety and large number of applications that 
     will be built. The SourceForge site statistics currently report almost 27,000 
@@ -115,8 +127,9 @@ Generic Attribute Access.
 </ul>
 <p>So what does the future of Open For Business look like? A quick glance at the
 architecture diagrams on our web site will reveal that we have barely begun to
-implement all of the planned components and applications that are planned. The
-future will bring rules, contraint and workflow engines, data analysis and
+implement all of the components and applications that are planned. The
+future will bring improvements to the rule, constraint and workflow engines, and the
+introduction of the message engine, data analysis and
 content and knowledge management tools, and a whole suite of enterprise
 applications ranging everywhere from eCommerce to Warehouse Management to
 Accounting to Human Resources to Sales Force and Marketing Automation.&nbsp;
@@ -125,7 +138,6 @@ Business. And if it's not done in general business, but is specific to your
 industry or particular company, it will be easy to build and integrate with Open
 For Business.
 <p>Services based on the Open For Business Project are available through affiliated consultants and companies. For more information see Services tab of the Open For Business site at www.ofbiz.org.
- 
 
  </BODY>
 
