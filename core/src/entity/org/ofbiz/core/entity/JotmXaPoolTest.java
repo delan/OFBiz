@@ -22,8 +22,11 @@
  *  THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  */
 
-package org.ofbiz.core.util;
+package org.ofbiz.core.entity;
 
+import java.io.IOException;
+import java.io.StringWriter;
+import java.io.Writer;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
@@ -44,13 +47,18 @@ import javax.transaction.Transaction;
 import javax.transaction.TransactionManager;
 import javax.transaction.UserTransaction;
 
+import org.apache.log4j.HTMLLayout;
+import org.apache.log4j.Level;
 import org.apache.log4j.Logger;
 import org.apache.log4j.Priority;
+import org.apache.log4j.WriterAppender;
 import org.enhydra.jdbc.pool.StandardXAPoolDataSource;
 import org.enhydra.jdbc.standard.StandardXADataSource;
 import org.objectweb.jotm.Jotm;
 import org.objectweb.transaction.jta.TMService;
 import org.w3c.dom.Element;
+
+import org.ofbiz.core.entity.config.EntityConfigUtil;
 
 /**
  * JotmXaPoolTest - Program For Testing Connections (pooled) and Transactions
@@ -61,14 +69,18 @@ import org.w3c.dom.Element;
  */
 public class JotmXaPoolTest {
 
-    protected static Logger logger = Logger.getLogger("jotm.test");
-    protected static String tableName = "jotm_xapool_test"; 
-    
+    private final static String tableName = "jotm_xapool_test";
+    protected Logger logger = null;
+    protected Writer writer = null;
+         
     protected int counter = 0;
+        
     protected TMService jotm = null;
     protected StandardXAPoolDataSource pool = null;
     
     public JotmXaPoolTest() throws Exception {
+        this.setLogger(null);
+               
         // start JOTM
         jotm = new Jotm(true, false);
         logger.info("Started JOTM...");  
@@ -97,9 +109,18 @@ public class JotmXaPoolTest {
         this.createPool(ds);                                               
     }
         
-    public JotmXaPoolTest(Element jotmJdbcElement) throws Exception {
+    public JotmXaPoolTest(GenericDelegator delegator, Level l) throws Exception {
+        this.setLogger(l);
+        
+        GenericHelper helper = delegator.getEntityHelper("JobSandbox");
+        EntityConfigUtil.DatasourceInfo datasourceInfo = EntityConfigUtil.getDatasourceInfo(helper.getHelperName());
+        if (datasourceInfo.inlineJdbcElement == null) {
+            throw new Exception("No inline jdbc element found for this helper : " + helper.getHelperName());
+        }
+        Element jotmJdbcElement = datasourceInfo.inlineJdbcElement;        
+        
         // start JOTM
-        jotm = new Jotm(true, false);
+        jotm = new Jotm(true, false);       
         logger.info("Started JOTM...");
                  
         String wrapperClass = jotmJdbcElement.getAttribute("pool-xa-wrapper-class");
@@ -142,6 +163,18 @@ public class JotmXaPoolTest {
         pool.setTransactionManager(jotm.getTransactionManager());                   
     }
     
+    private void setLogger(Level l) {
+        writer = new StringWriter();
+        logger = Logger.getLogger("jotm.test");
+        if (l != null) {            
+            logger.setLevel(l);
+        }
+        
+        // create an appender
+        WriterAppender wa = new WriterAppender(new HTMLLayout(), writer);
+        logger.addAppender(wa);        
+    }
+    
     public void dropTest() throws SQLException {        
         Connection con = pool.getConnection();
         Statement s = con.createStatement();
@@ -175,11 +208,9 @@ public class JotmXaPoolTest {
         try {
             trans.begin();
         } catch (NotSupportedException e1) {
-            // TODO Auto-generated catch block
-            e1.printStackTrace();
+            logger.error("", e1);                       
         } catch (SystemException e1) {
-            // TODO Auto-generated catch block
-            e1.printStackTrace();
+            logger.error("", e1);                        
         }
         
         logger.info("Beginning multiple insert/connection single transaction...");
@@ -199,12 +230,10 @@ public class JotmXaPoolTest {
                 e.printStackTrace();
                 try {
                     trans.setRollbackOnly();
-                } catch (IllegalStateException e2) {
-                    // TODO Auto-generated catch block
-                    e2.printStackTrace();
-                } catch (SystemException e2) {
-                    // TODO Auto-generated catch block
-                    e2.printStackTrace();
+                } catch (IllegalStateException e2) {                    
+                    logger.error("", e2);
+                } catch (SystemException e2) {                    
+                    logger.error("", e2);
                 }
             } finally {                
                 con.close();
@@ -213,7 +242,7 @@ public class JotmXaPoolTest {
         try {        
             trans.commit();
         } catch (Exception e) {
-            e.printStackTrace();
+            logger.error("", e);
         }
     }
     
@@ -222,12 +251,10 @@ public class JotmXaPoolTest {
         UserTransaction trans = jotm.getUserTransaction();
         try {
             trans.begin();
-        } catch (NotSupportedException e1) {
-            // TODO Auto-generated catch block
-            e1.printStackTrace();
-        } catch (SystemException e1) {
-            // TODO Auto-generated catch block
-            e1.printStackTrace();
+        } catch (NotSupportedException e1) {            
+            logger.error("", e1);
+        } catch (SystemException e1) {            
+            logger.error("", e1);
         }
                                 
         logger.info("Beginning multiple insert single transaction/connection...");
@@ -247,15 +274,13 @@ public class JotmXaPoolTest {
                 ps.executeUpdate();
                 ps.close();                
             } catch (Exception e) {
-                e.printStackTrace();
+                logger.error("", e);
                 try {
                     trans.setRollbackOnly();
-                } catch (IllegalStateException e2) {
-                    // TODO Auto-generated catch block
-                    e2.printStackTrace();
-                } catch (SystemException e2) {
-                    // TODO Auto-generated catch block
-                    e2.printStackTrace();
+                } catch (IllegalStateException e2) {                    
+                    logger.error("", e2);
+                } catch (SystemException e2) {                    
+                    logger.error("", e2);
                 }
             } finally {                
                 con.close();
@@ -264,7 +289,7 @@ public class JotmXaPoolTest {
         try {        
             trans.commit();
         } catch (Exception e) {
-            e.printStackTrace();
+            logger.error("", e);
         }
     }
     
@@ -277,12 +302,10 @@ public class JotmXaPoolTest {
         // begin the parent transaction
         try {
             trans.begin();
-        } catch (NotSupportedException e1) {
-            // TODO Auto-generated catch block
-            e1.printStackTrace();
-        } catch (SystemException e1) {
-            // TODO Auto-generated catch block
-            e1.printStackTrace();
+        } catch (NotSupportedException e1) {           
+            logger.error("", e1);
+        } catch (SystemException e1) {            
+            logger.error("", e1);
         }
         
         logger.info("Beginning multiple insert/connection on suspend main transaction...");
@@ -291,21 +314,18 @@ public class JotmXaPoolTest {
             Transaction transaction = null;            
             try {
                 transaction = tm.suspend();
-            } catch (SystemException e2) {
-                // TODO Auto-generated catch block
-                e2.printStackTrace();
+            } catch (SystemException e2) {                
+                logger.error("", e2);
             }
             logger.debug("Suspended #" + i);
             
             // begin a new transaction
             try {
                 trans.begin();
-            } catch (NotSupportedException e3) {
-                // TODO Auto-generated catch block
-                e3.printStackTrace();
-            } catch (SystemException e3) {
-                // TODO Auto-generated catch block
-                e3.printStackTrace();
+            } catch (NotSupportedException e3) {               
+                logger.error("", e3);
+            } catch (SystemException e3) {                
+                logger.error("", e3);
             }
             
             // do some stuff in the new transaction
@@ -320,15 +340,13 @@ public class JotmXaPoolTest {
                 ps.executeUpdate();
                 ps.close();                
             } catch (Exception e) {
-                e.printStackTrace();
+                logger.error("", e);
                 try {
                     trans.setRollbackOnly();
-                } catch (IllegalStateException e4) {
-                    // TODO Auto-generated catch block
-                    e4.printStackTrace();
-                } catch (SystemException e4) {
-                    // TODO Auto-generated catch block
-                    e4.printStackTrace();
+                } catch (IllegalStateException e4) {                    
+                    logger.error("", e4);
+                } catch (SystemException e4) {                    
+                    logger.error("", e4);
                 }
             } finally {                        
                 con1.close();  
@@ -336,39 +354,30 @@ public class JotmXaPoolTest {
                 // commit the new transaction              
                 try {
                     trans.commit();
-                } catch (SecurityException e4) {
-                    // TODO Auto-generated catch block
-                    e4.printStackTrace();
-                } catch (IllegalStateException e4) {
-                    // TODO Auto-generated catch block
-                    e4.printStackTrace();
-                } catch (RollbackException e4) {
-                    // TODO Auto-generated catch block
-                    e4.printStackTrace();
-                } catch (HeuristicMixedException e4) {
-                    // TODO Auto-generated catch block
-                    e4.printStackTrace();
-                } catch (HeuristicRollbackException e4) {
-                    // TODO Auto-generated catch block
-                    e4.printStackTrace();
-                } catch (SystemException e4) {
-                    // TODO Auto-generated catch block
-                    e4.printStackTrace();
+                } catch (SecurityException e4) {                   
+                    logger.error("", e4);
+                } catch (IllegalStateException e4) {                    
+                    logger.error("", e4);
+                } catch (RollbackException e4) {                    
+                    logger.error("", e4);
+                } catch (HeuristicMixedException e4) {                    
+                    logger.error("", e4);
+                } catch (HeuristicRollbackException e4) {                    
+                    logger.error("", e4);
+                } catch (SystemException e4) {                    
+                    logger.error("", e4);
                 }                                
             }
             
             // resume the main transaction
             try {
                 tm.resume(transaction);
-            } catch (InvalidTransactionException e4) {
-                // TODO Auto-generated catch block
-                e4.printStackTrace();
-            } catch (IllegalStateException e4) {
-                // TODO Auto-generated catch block
-                e4.printStackTrace();
-            } catch (SystemException e4) {
-                // TODO Auto-generated catch block
-                e4.printStackTrace();
+            } catch (InvalidTransactionException e4) {                
+                logger.error("", e4);
+            } catch (IllegalStateException e4) {                
+                logger.error("", e4);
+            } catch (SystemException e4) {                
+                logger.error("", e4);
             }
             logger.debug("Resumed #" + i);
             
@@ -385,15 +394,13 @@ public class JotmXaPoolTest {
                 ps.close();
                 logger.debug("Inserted main transaction.");
             } catch (Exception e) {
-                e.printStackTrace();
+                logger.error("", e);
                 try {
                     trans.setRollbackOnly();
-                } catch (IllegalStateException e5) {
-                    // TODO Auto-generated catch block
-                    e5.printStackTrace();
-                } catch (SystemException e5) {
-                    // TODO Auto-generated catch block
-                    e5.printStackTrace();
+                } catch (IllegalStateException e5) {                   
+                    logger.error("", e5);
+                } catch (SystemException e5) {                    
+                    logger.error("", e5);
                 }
             } finally {
                 con2.close();
@@ -403,24 +410,18 @@ public class JotmXaPoolTest {
         // commit the main transaction - outside the loop
         try {
             trans.commit();
-        } catch (SecurityException e) {
-            // TODO Auto-generated catch block
-            e.printStackTrace();
-        } catch (IllegalStateException e) {
-            // TODO Auto-generated catch block
-            e.printStackTrace();
-        } catch (RollbackException e) {
-            // TODO Auto-generated catch block
-            e.printStackTrace();
-        } catch (HeuristicMixedException e) {
-            // TODO Auto-generated catch block
-            e.printStackTrace();
-        } catch (HeuristicRollbackException e) {
-            // TODO Auto-generated catch block
-            e.printStackTrace();
-        } catch (SystemException e) {
-            // TODO Auto-generated catch block
-            e.printStackTrace();
+        } catch (SecurityException e) {            
+            logger.error("", e);
+        } catch (IllegalStateException e) {            
+            logger.error("", e);
+        } catch (RollbackException e) {            
+            logger.error("", e);
+        } catch (HeuristicMixedException e) {            
+            logger.error("", e);
+        } catch (HeuristicRollbackException e) {            
+            logger.error("", e);
+        } catch (SystemException e) {            
+            logger.error("", e);
         }
     }
     
@@ -429,12 +430,10 @@ public class JotmXaPoolTest {
         UserTransaction trans = jotm.getUserTransaction();
         try {
             trans.begin();
-        } catch (NotSupportedException e1) {
-            // TODO Auto-generated catch block
-            e1.printStackTrace();
-        } catch (SystemException e1) {
-            // TODO Auto-generated catch block
-            e1.printStackTrace();
+        } catch (NotSupportedException e1) {            
+            logger.error("", e1);
+        } catch (SystemException e1) {            
+            logger.error("", e1);
         }
         
         logger.info("Beginning rollback test...");
@@ -454,15 +453,13 @@ public class JotmXaPoolTest {
                 ps.executeUpdate();
                 ps.close();                
             } catch (Exception e) {
-                e.printStackTrace();
+                logger.error("", e);
                 try {
                     trans.setRollbackOnly();
-                } catch (IllegalStateException e2) {
-                    // TODO Auto-generated catch block
-                    e2.printStackTrace();
-                } catch (SystemException e2) {
-                    // TODO Auto-generated catch block
-                    e2.printStackTrace();
+                } catch (IllegalStateException e2) {                   
+                    logger.error("", e2);
+                } catch (SystemException e2) {                    
+                    logger.error("", e2);
                 }
             } finally {                
                 con.close();                
@@ -473,12 +470,10 @@ public class JotmXaPoolTest {
                 logger.info("Setting rollback only on pass #" + i);
                 try {
                     trans.setRollbackOnly();
-                } catch (IllegalStateException e2) {
-                    // TODO Auto-generated catch block
-                    e2.printStackTrace();
-                } catch (SystemException e2) {
-                    // TODO Auto-generated catch block
-                    e2.printStackTrace();
+                } catch (IllegalStateException e2) {                   
+                    logger.error("", e2);
+                } catch (SystemException e2) {                    
+                    logger.error("", e2);
                 }
             }
             
@@ -491,7 +486,7 @@ public class JotmXaPoolTest {
             try {
                 trans.rollback();
             } catch (Exception e1) {
-                e1.printStackTrace();
+                logger.error("", e1);
             }
         }
     }            
@@ -512,70 +507,87 @@ public class JotmXaPoolTest {
     public void close() {
         pool.shutdown(true);
         jotm.stop();
+        try {
+            writer.close();
+        } catch (IOException e) {            
+            logger.error("", e);
+        }
     }
     
-    public static void main(String[] args) throws Exception {           
-        JotmXaPoolTest test = new JotmXaPoolTest();
-        
+    public String write() {
+        return writer.toString();
+    }
+    
+    public String writeAndClose() {
+        String write = write();
+        this.close();
+        return write;
+    }
+    
+    public String runTests() {       
         // try to drop the table
         try {       
-            test.dropTest();
-        } catch (Exception e) {
-            // ok might not be there yet
+            dropTest();
+        } catch (SQLException e) {            
         }
         
         // try to create the table
         try {        
-            test.createTest();
-        } catch (Exception e) {
-            e.printStackTrace();
-            System.exit(-1);
+            createTest();
+        } catch (SQLException e) {
+            logger.error("Fatal SQL Error", e);
+            return writeAndClose();
         }
         
         // test some basic inserts
         try {                       
-            test.insertTest();
-        } catch (Exception e) {
-            e.printStackTrace();
+            insertTest();
+        } catch (SQLException e) {
+            logger.error("SQL Error", e);
         }
         
         // test looping; same connection
         try {
-            test.loopTest();
-        } catch (Exception e) {
-            e.printStackTrace();            
+            loopTest();
+        } catch (SQLException e) {
+            logger.error("SQL Error", e);            
         }
         
         // test some suspend/resume inserts
         try {        
-            test.suspendTest();
-        } catch (Exception e) {
-            e.printStackTrace();            
+            suspendTest();
+        } catch (SQLException e) {
+            logger.error("SQL Error", e);            
         }
         
         // test rollback
         try {
-            test.rollbackTest();
-        } catch (Exception e) {
-            e.printStackTrace();            
+            rollbackTest();
+        } catch (SQLException e) {
+            logger.error("SQL Error", e);           
         }
         
         // show the results
         try {        
-            test.selectTest();
-        } catch (Exception e) {
-            e.printStackTrace();
+            selectTest();
+        } catch (SQLException e) {
+            logger.error("SQL Error", e);
         }
         
         // drop the table
         try {       
-            test.dropTest();
-        } catch (Exception e) {
-            e.printStackTrace();
-            System.exit(-1);
+            dropTest();
+        } catch (SQLException e) {
+            logger.error("Fatal SQL Error", e);
+            return writeAndClose();
         }
         
-        test.close(); 
-        System.exit(0);    
+        return writeAndClose();
+    }
+    
+    public static void main(String[] args) throws Exception {           
+        JotmXaPoolTest test = new JotmXaPoolTest();
+        test.runTests();
+        System.exit(0);
     }
 }

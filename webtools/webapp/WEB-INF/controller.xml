@@ -327,6 +327,7 @@
 
     <view-map name="EditEntity" type="region"/>
     <view-map name="checkdb" type="region"/>
+    <view-map name="jotmTest" type="region"/>
     <view-map name="xmldsdump" type="region"/>
     <view-map name="xmldsrawdump" page="/entity/xmldsrawdump.jsp"/>
     <view-map name="xmldsimport" type="region"/>
