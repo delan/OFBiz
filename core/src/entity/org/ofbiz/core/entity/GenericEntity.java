@@ -223,9 +223,11 @@ public class GenericEntity extends Observable implements Map, Serializable, Comp
     }
     
     public void dangerousSetNoCheckButFast(ModelField modelField, Object value) {
+        if (modelField == null) throw new IllegalArgumentException("Cannot set field with a null modelField");
         this.fields.put(modelField.getName(), value);
     }
     public Object dangerousGetNoCheckButFast(ModelField modelField) {
+        if (modelField == null) throw new IllegalArgumentException("Cannot get field with a null modelField");
         return this.fields.get(modelField.getName());
     }
 

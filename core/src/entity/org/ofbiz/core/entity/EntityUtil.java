@@ -337,6 +337,9 @@ public class EntityUtil {
         private int compareAsc(GenericEntity obj, GenericEntity obj2) {
             if (this.modelField == null) {
                 this.modelField = obj.getModelEntity().getField(field);
+                if (this.modelField == null) {
+                    throw new IllegalArgumentException("The field " + field + " could not be found in the entity " + obj.getEntityName());
+                }
             }
             Object value = obj.dangerousGetNoCheckButFast(this.modelField);
             Object value2 = obj2.dangerousGetNoCheckButFast(this.modelField);
