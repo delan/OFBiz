@@ -56,9 +56,12 @@
 <p class='contenttext'>No overview available.</p>
 
 <h4>Bug Fixes</h4>
-<!--<p class='contenttext'>Bug Fixes include:</p>-->
-<p class='contenttext'>No bug fixes available.</p>
+<p class='contenttext'>Bug Fixes include:</p>
 <ul>
+  <li class='contenttext'>Bug fixes in interface implementation; parameters were being inherited wrong (SE)</li>
+  <li class='contenttext'>Bug fixes in getting parameters for limitService (WF)</li>
+  <li class='contenttext'>Bug fixes in creating dynamic assignments (WF)</li>
+  <li class='contenttext'>Bug fixes in completing multiple assignments (WF)</li>	
 </ul>
 
 <h4>New Features & Improvements</h4>
@@ -98,13 +101,9 @@
   <li class='contenttext'>Process/Activity names/description can include variables from the context '${variable}'</li>
   <li class='contenttext'>Changed some workflow exceptions to be more informative</li>
   <li class='contenttext'>Implemented activity/process functionality</li>
-  <li class='contenttext'>Bug fixes in getting parameters for limitService</li>
-  <li class='contenttext'>Bug fixes in creating dynamic assignments</li>
-  <li class='contenttext'>Bug fixes in completing multiple assignments</li>
   <li class='contenttext'>New participantId can be used as the partyId or roleTypeId depending on the participantTypeId</li>
   <li class='contenttext'>Refactor of WfFactory to no longer hold created objects; fixes many bugs with caching deleted assignments and re-loading new versions of workflows</li>
-  <li class='contenttext'>New auto-attributes functionality; will import fields from entities into service definitions; also can exclude and override attributes now</li>
-  <li class='contenttext'>Bug fixes in interface implementation; parameters were being inherited wrong</li>
+  <li class='contenttext'>New auto-attributes functionality; will import fields from entities into service definitions; also can exclude and override attributes now</li>  
   <li class='contenttext'>Updated TransactionUtil.begin() to accept the transaction timeout in seconds</li>
   <li class='contenttext'>New option in service definition to set the timeout for the transaction; only if the service starts a transaction</li>
   <li class='contenttext'>New debug mode on services; will enable verbose debugging until the service completes</li>
