@@ -20,7 +20,7 @@
  *  THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  *
  *@author     David E. Jones (jonesde@ofbiz.org)
- *@version    $Revision: 1.3 $
+ *@version    $Revision: 1.4 $
  *@since      2.1
 */
 
@@ -39,9 +39,9 @@ if (searchCategoryId == null || searchCategoryId.length() == 0) {
 searchCategory = delegator.findByPrimaryKey("ProductCategory", UtilMisc.toMap("productCategoryId", searchCategoryId));
 
 if (UtilValidate.isNotEmpty(searchCategoryId)) {
-    productFeaturesByTypeMap = ParametricSearch.makeCategoryFeatureLists(searchCategoryId, delegator, 1500);
+    productFeaturesByTypeMap = ParametricSearch.makeCategoryFeatureLists(searchCategoryId, delegator, 2000);
 } else {
-    productFeaturesByTypeMap = ParametricSearch.getAllFeaturesByType(delegator, 1500);
+    productFeaturesByTypeMap = ParametricSearch.getAllFeaturesByType(delegator, 2000);
 }
 productFeatureTypeIdsOrdered = new ArrayList(new TreeSet(productFeaturesByTypeMap.keySet()));
 

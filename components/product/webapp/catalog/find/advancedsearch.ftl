@@ -20,7 +20,7 @@
  *  THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  *
  *@author     Andy Zeneski (jaz@ofbiz.org)
- *@version    $Revision: 1.3 $
+ *@version    $Revision: 1.4 $
  *@since      2.1
 -->
 <#assign uiLabelMap = requestAttributes.uiLabelMap>
@@ -76,6 +76,18 @@
           <input type="text" class="inputBox" name="SEARCH_STRING" size="40" value="${requestParameters.SEARCH_STRING?if_exists}">&nbsp;
           ${uiLabelMap.CommonAny}<input type="RADIO" name="SEARCH_OPERATOR" value="OR" <#if searchOperator == "OR">checked</#if>>
           ${uiLabelMap.CommonAll}<input type="RADIO" name="SEARCH_OPERATOR" value="AND" <#if searchOperator == "AND">checked</#if>>
+        </div>
+      </td>
+    </tr>
+    <tr>
+      <td align="right" valign="middle">
+        <div class="tabletext">Feature IDs:</div>
+      </td>
+      <td valign="middle">
+        <div class="tabletext">
+          <input type="text" class="inputBox" name="SEARCH_FEAT" size="15" value="${requestParameters.SEARCH_FEAT?if_exists}">&nbsp;
+          <input type="text" class="inputBox" name="SEARCH_FEAT2" size="15" value="${requestParameters.SEARCH_FEAT?if_exists}">&nbsp;
+          <input type="text" class="inputBox" name="SEARCH_FEAT3" size="15" value="${requestParameters.SEARCH_FEAT?if_exists}">&nbsp;
         </div>
       </td>
     </tr>
