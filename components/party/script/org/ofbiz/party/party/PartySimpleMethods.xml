@@ -70,7 +70,7 @@
         <if-empty field-name="parameters.roleTypeId">
             <string-to-field string="_NA_" field-name="lookupPKMap.roleTypeId"/>
         <else>
-            <env-to-env to-env-name="parameters.roleTypeId" env-name="lookupPKMap.roleTypeId"/>
+            <env-to-env env-name="parameters.roleTypeId" to-env-name="lookupPKMap.roleTypeId"/>
         </else>
         </if-empty>
         <find-by-primary-key entity-name="PartyRole" map-name="lookupPKMap" value-name="lookedUpValue"/>
