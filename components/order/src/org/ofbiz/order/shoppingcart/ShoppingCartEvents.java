@@ -258,14 +258,16 @@ public class ShoppingCartEvents {
         controlDirective = processResult(result, request);
 
         // Determine where to send the browser
-        if (controlDirective.equals(NON_CRITICAL_ERROR)) {
-            return "success";
-        } else if (controlDirective.equals(ERROR)) {
+        if (controlDirective.equals(ERROR)) {
             return "error";
-        } else if (cart.viewCartOnAdd()) {
-            return "viewcart";
         } else {
-            return "success";
+            if (cart.viewCartOnAdd()) {
+                Debug.log("Returning viewcart", module);
+                return "viewcart";
+            } else {
+                Debug.log("Returning success", module);
+                return "success";
+            }
         }
     }
 
