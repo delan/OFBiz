@@ -294,7 +294,16 @@ public class WfActivityImpl extends WfExecutionObjectImpl implements WfActivity 
         if ( subFlow.get("executionEnumId") != null )
             type = subFlow.getString("executionEnumId");           
         
-        GenericResultWaiter waiter = this.runService(subFlow.getString("subFlowProcessId")); // fixme
+        // Build a model service
+        ModelService service = new ModelService();
+        service.name = service.toString();
+        service.engineName = "workflow";
+        service.location = subFlow.getString("packageId");
+        service.invoke = subFlow.getString("subFlowProcessId");        
+        service.contextInfo = null;  // TODO FIXME
+        service.resultInfo = null;     // TODO FIXME
+                
+        GenericResultWaiter waiter = this.runService(service); 
         if ( type.equals("WSE_SYNCHR") ) 
             waiter.waitForResult();
         
@@ -317,12 +326,24 @@ public class WfActivityImpl extends WfExecutionObjectImpl implements WfActivity 
     }
     
     // Invoke the procedure (service) -- This will include sub-workflows
-    private GenericResultWaiter runService(String serviceName) throws WfException {
-        GenericResultWaiter waiter = new GenericResultWaiter();
+    private GenericResultWaiter runService(String serviceName) throws WfException {        
         DispatchContext dctx = dispatcher.getLocalContext(serviceLoader);        
+        ModelService service = null;
         try {
-            ModelService service = dctx.getModelService(serviceName);
-            dispatcher.runAsync(serviceLoader,service,context,waiter);
+            service = dctx.getModelService(serviceName);            
+        }
+        catch ( GenericServiceException e ) {
+            throw new WfException(e.getMessage(),e);
+        }
+        if ( service == null )
+            throw new WfException("Cannot determine model service for service name");
+        return runService(service);
+    }
+    
+    private GenericResultWaiter runService(ModelService service) throws WfException {
+        GenericResultWaiter waiter = new GenericResultWaiter();
+        try {
+           dispatcher.runAsync(serviceLoader,service,context,waiter);
         }
         catch ( GenericServiceException e ) {
             throw new WfException(e.getMessage(),e);
