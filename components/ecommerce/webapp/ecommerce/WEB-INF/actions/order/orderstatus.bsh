@@ -20,7 +20,7 @@
  *  THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  *
  *@author     Andy Zeneski
- *@version    $Revision: 1.5 $
+ *@version    $Revision: 1.6 $
  *@since      2.1
 */
 
@@ -53,7 +53,7 @@ if (orderId != null && orderId.length() > 0) {
 }
 
 if (orderHeader != null) {
-    //context.put("orderHeader", orderHeader);
+    //context.put("orderHeader", orderHeader);   
     orderReadHelper = new OrderReadHelper(orderHeader);
     orderItems = orderReadHelper.getOrderItems();
     orderAdjustments = orderReadHelper.getAdjustments();
@@ -61,6 +61,7 @@ if (orderHeader != null) {
     orderSubTotal = orderReadHelper.getOrderItemsSubTotal();
     headerAdjustmentsToShow = orderReadHelper.getOrderHeaderAdjustmentsToShow();
 
+	context.put("orderId", orderId);
     context.put("orderHeader", orderHeader);
     context.put("localOrderReadHelper", orderReadHelper);
     context.put("orderItems", orderReadHelper.getOrderItems());

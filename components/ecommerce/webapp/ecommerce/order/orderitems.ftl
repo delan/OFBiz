@@ -20,7 +20,7 @@
  *  THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  *
  *@author     Andy Zeneski (jaz@ofbiz.org)
- *@version    $Revision: 1.1 $
+ *@version    $Revision: 1.2 $
  *@since      2.1
 -->
 
@@ -66,7 +66,7 @@
                 </#if>
               </tr>
               <#list orderItems as orderItem>
-                <tr><td colspan="9"><hr class='sepbar'></td></tr>
+                <tr><td colspan="10"><hr class='sepbar'></td></tr>
                 <tr>
                   <#if orderItem.productId == "_?_">
                     <td colspan="1" valign="top">
@@ -106,6 +106,11 @@
                     </td>                    
                     <#if maySelectItems?default(false)>
                       <td>&nbsp;</td>
+                      <#if orderItem.statusId != "ITEM_COMPLETED" && orderItem.statusId != "ITEM_CANCELLED">
+                        <td><a href="<@ofbizUrl>/cancelOrderItem?order_id=${orderItem.orderId}&item_seq=${orderItem.orderItemSeqId}</@ofbizUrl>" class="buttontext">Cancel</a></td>
+                      <#else>
+                        <td>&nbsp;</td>
+                      </#if>
                       <td>
                         <input name="item_id" value="${orderItem.orderItemSeqId}" type="checkbox">
                       </td>
@@ -135,7 +140,7 @@
                  <tr><td><font color="red">ERROR: Sales Order Lines lookup failed.</font></td></tr>
                </#if>
 
-              <tr><td colspan="9"><hr class='sepbar'></td></tr>
+              <tr><td colspan="10"><hr class='sepbar'></td></tr>
               <tr>
                 <td align="right" colspan="6"><div class="tabletext"><b>Subtotal</b></div></td>
                 <td align="right" nowrap><div class="tabletext">${orderSubTotal?string.currency}</div></td>
