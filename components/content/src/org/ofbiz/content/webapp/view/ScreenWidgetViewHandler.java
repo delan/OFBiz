@@ -45,6 +45,7 @@ import org.ofbiz.base.util.UtilFormatOut;
 import org.ofbiz.base.util.UtilHttp;
 import org.ofbiz.base.util.UtilJ2eeCompat;
 import org.ofbiz.base.util.UtilMisc;
+import org.ofbiz.base.util.UtilValidate;
 import org.ofbiz.base.util.collections.MapStack;
 import org.ofbiz.content.webapp.control.LoginWorker;
 import org.ofbiz.content.widget.html.HtmlFormRenderer;
@@ -144,6 +145,23 @@ public class ScreenWidgetViewHandler implements ViewHandler {
             context.put("response", response);
             context.put("session", session);
             context.put("application", servletContext);
+            if (servletContext != null) {
+        		String rootDir = (String)context.get("rootDir");
+        		String webSiteId = (String)context.get("webSiteId");
+        		String https = (String)context.get("https");
+        		if (UtilValidate.isEmpty(rootDir)) {
+            		rootDir = servletContext.getRealPath("/");
+            		context.put("rootDir", rootDir);
+        		}
+        		if (UtilValidate.isEmpty(webSiteId)) {
+            		webSiteId = (String) servletContext.getAttribute("webSiteId");
+            		context.put("webSiteId", webSiteId);
+        		}
+        		if (UtilValidate.isEmpty(https)) {
+            		https = (String) servletContext.getAttribute("https");
+            		context.put("https", https);
+        		}
+        	}
 
             // these ones are FreeMarker specific and will only work in FTL templates, mainly here for backward compatibility
             BeansWrapper wrapper = BeansWrapper.getDefaultInstance();

@@ -257,6 +257,7 @@ public abstract class ModelScreenWidget {
             // read sub-widgets
             List subElementList = UtilXml.childElementList(containerElement);
             this.subWidgets = ModelScreenWidget.readSubWidgets(this.modelScreen, subElementList);
+            return;
         }
 
         public void renderWidgetString(Writer writer, Map context, ScreenStringRenderer screenStringRenderer) {
@@ -668,7 +669,7 @@ public abstract class ModelScreenWidget {
 
             // put the text attribute first, then the pcdata under the element, if both are there of course
             this.contentId = new FlexibleStringExpander(UtilFormatOut.checkNull(subContentElement.getAttribute("content-id")));
-
+            return;
         }
 
         public void renderWidgetString(Writer writer, Map context, ScreenStringRenderer screenStringRenderer) {
