@@ -133,9 +133,10 @@
     </service>
 
      <service name="makeALotOfVisits" engine="java" auth="true"
-			location="org.ofbiz.common.CommonServices" invoke="makeALotOfVisits">
-    	<description>Test JavaScript Service</description>
-    	<attribute name="count" type="Integer" mode="IN" optional="false"/>
+            location="org.ofbiz.common.CommonServices" invoke="makeALotOfVisits">
+        <description>Test JavaScript Service</description>
+        <attribute name="count" type="Integer" mode="IN" optional="false"/>
+        <attribute name="rollback" type="Boolean" mode="IN" optional="true"/>     
     </service>
     
     <service name="byteWrapperTest" engine="java" auth="true"
