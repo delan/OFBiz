@@ -112,8 +112,8 @@ public class ModelGroupReader {
             do {
               if(curChild.getNodeType() == Node.ELEMENT_NODE && "entity-group".equals(curChild.getNodeName())) {
                 Element curEntity = (Element)curChild;
-                String entityName = checkNull(curEntity.getAttribute("entity"));
-                String groupName = checkNull(curEntity.getAttribute("group"));
+                String entityName = UtilXml.checkEmpty(curEntity.getAttribute("entity"));
+                String groupName = UtilXml.checkEmpty(curEntity.getAttribute("group"));
                 if(groupName == null || entityName == null) continue;
                 groupNames.add(groupName);
                 groupCache.put(entityName, groupName);
@@ -166,25 +166,10 @@ public class ModelGroupReader {
     return enames;
   }
   
-  String checkNull(String string) {
-    if(string != null) return string;
-    else return "";
-  }
-  
-  Document getDocument(String filename) {
-    if(filename == null || filename.length() <=0) return null;
+  protected Document getDocument(String filename) {
+    if(filename == null) return null;
     Document document = null;
-    DocumentBuilderFactory factory = DocumentBuilderFactory.newInstance();
-    factory.setValidating(true);
-    //factory.setNamespaceAware(true);
-    try {
-      //if(documentCache.containsKey(filename + ":document")) document = (Document)documentCache.get(filename + ":document");
-      //else {
-      DocumentBuilder builder = factory.newDocumentBuilder();
-      document = builder.parse(new File(filename));
-      //documentCache.put(filename + ":document", document);
-      //}
-    }
+    try { document = UtilXml.readXmlDocument(UtilURL.fromFilename(filename)); }
     catch (SAXException sxe) {
       // Error generated during parsing)
       Exception  x = sxe;

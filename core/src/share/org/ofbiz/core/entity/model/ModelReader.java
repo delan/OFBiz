@@ -154,7 +154,7 @@ public class ModelReader {
                 if((isEntity || isViewEntity) && curChild.getNodeType() == Node.ELEMENT_NODE) {
                   i++;
                   Element curEntity = (Element)curChild;
-                  String entityName = checkEmpty(curEntity.getAttribute("entity-name"));
+                  String entityName = UtilXml.checkEmpty(curEntity.getAttribute("entity-name"));
                   
                   //add entityName to appropriate fileNameEntities collection
                   Collection fileEntityNames = (Collection)fileNameEntities.get(entityFileName);
@@ -264,29 +264,29 @@ public class ModelReader {
   }
   
   protected void populateBasicInfo(ModelEntity entity, Element entityElement, Element docElement, Hashtable docElementValues) {
-    entity.entityName = checkEmpty(entityElement.getAttribute("entity-name"));
-    entity.tableName = checkEmpty(entityElement.getAttribute("table-name"), ModelUtil.javaNameToDbName(entity.entityName));
-    entity.packageName = checkEmpty(entityElement.getAttribute("package-name"));
-    entity.dependentOn = checkEmpty(entityElement.getAttribute("dependent-on"));
+    entity.entityName = UtilXml.checkEmpty(entityElement.getAttribute("entity-name"));
+    entity.tableName = UtilXml.checkEmpty(entityElement.getAttribute("table-name"), ModelUtil.javaNameToDbName(entity.entityName));
+    entity.packageName = UtilXml.checkEmpty(entityElement.getAttribute("package-name"));
+    entity.dependentOn = UtilXml.checkEmpty(entityElement.getAttribute("dependent-on"));
     
     if(docElementValues == null) {
-      entity.title = checkEmpty(entityElement.getAttribute("title"),childElementValue(docElement, "title"),"None");
-      entity.description = checkEmpty(childElementValue(entityElement, "description"),childElementValue(docElement, "description"),"None");
-      entity.copyright = checkEmpty(entityElement.getAttribute("copyright"),childElementValue(docElement, "copyright"),"Copyright (c) 2001 The Open For Business Project - www.ofbiz.org");
-      entity.author = checkEmpty(entityElement.getAttribute("author"),childElementValue(docElement, "author"),"None");
-      entity.version = checkEmpty(entityElement.getAttribute("version"),childElementValue(docElement, "version"),"1.0");
+      entity.title = UtilXml.checkEmpty(entityElement.getAttribute("title"),UtilXml.childElementValue(docElement, "title"),"None");
+      entity.description = UtilXml.checkEmpty(UtilXml.childElementValue(entityElement, "description"),UtilXml.childElementValue(docElement, "description"),"None");
+      entity.copyright = UtilXml.checkEmpty(entityElement.getAttribute("copyright"),UtilXml.childElementValue(docElement, "copyright"),"Copyright (c) 2001 The Open For Business Project - www.ofbiz.org");
+      entity.author = UtilXml.checkEmpty(entityElement.getAttribute("author"),UtilXml.childElementValue(docElement, "author"),"None");
+      entity.version = UtilXml.checkEmpty(entityElement.getAttribute("version"),UtilXml.childElementValue(docElement, "version"),"1.0");
     }
     else {
-      if(!docElementValues.containsKey("title")) docElementValues.put("title", childElementValue(docElement, "title"));
-      if(!docElementValues.containsKey("description")) docElementValues.put("description", childElementValue(docElement, "description"));
-      if(!docElementValues.containsKey("copyright")) docElementValues.put("copyright", childElementValue(docElement, "copyright"));
-      if(!docElementValues.containsKey("author")) docElementValues.put("author", childElementValue(docElement, "author"));
-      if(!docElementValues.containsKey("version")) docElementValues.put("version", childElementValue(docElement, "version"));
-      entity.title = checkEmpty(entityElement.getAttribute("title"),(String)docElementValues.get("title"),"None");
-      entity.description = checkEmpty(childElementValue(entityElement, "description"),(String)docElementValues.get("description"),"None");
-      entity.copyright = checkEmpty(entityElement.getAttribute("copyright"),(String)docElementValues.get("copyright"),"Copyright (c) 2001 The Open For Business Project - www.ofbiz.org");
-      entity.author = checkEmpty(entityElement.getAttribute("author"),(String)docElementValues.get("author"),"None");
-      entity.version = checkEmpty(entityElement.getAttribute("version"),(String)docElementValues.get("version"),"1.0");
+      if(!docElementValues.containsKey("title")) docElementValues.put("title", UtilXml.childElementValue(docElement, "title"));
+      if(!docElementValues.containsKey("description")) docElementValues.put("description", UtilXml.childElementValue(docElement, "description"));
+      if(!docElementValues.containsKey("copyright")) docElementValues.put("copyright", UtilXml.childElementValue(docElement, "copyright"));
+      if(!docElementValues.containsKey("author")) docElementValues.put("author", UtilXml.childElementValue(docElement, "author"));
+      if(!docElementValues.containsKey("version")) docElementValues.put("version", UtilXml.childElementValue(docElement, "version"));
+      entity.title = UtilXml.checkEmpty(entityElement.getAttribute("title"),(String)docElementValues.get("title"),"None");
+      entity.description = UtilXml.checkEmpty(UtilXml.childElementValue(entityElement, "description"),(String)docElementValues.get("description"),"None");
+      entity.copyright = UtilXml.checkEmpty(entityElement.getAttribute("copyright"),(String)docElementValues.get("copyright"),"Copyright (c) 2001 The Open For Business Project - www.ofbiz.org");
+      entity.author = UtilXml.checkEmpty(entityElement.getAttribute("author"),(String)docElementValues.get("author"),"None");
+      entity.version = UtilXml.checkEmpty(entityElement.getAttribute("version"),(String)docElementValues.get("version"),"1.0");
     }
   }
 
@@ -356,8 +356,8 @@ public class ModelReader {
     NodeList membEntList = entityElement.getElementsByTagName("member-entity");
     for(int i=0; i<membEntList.getLength(); i++) {
       Element membEnt = (Element)membEntList.item(i);
-      String alias = checkEmpty(membEnt.getAttribute("entity-alias"));
-      String name = checkEmpty(membEnt.getAttribute("entity-name"));
+      String alias = UtilXml.checkEmpty(membEnt.getAttribute("entity-alias"));
+      String name = UtilXml.checkEmpty(membEnt.getAttribute("entity-name"));
       if(name.length() <= 0 || alias.length() <= 0) {
         Debug.logWarning("[ModelReader.createModelViewEntity] Warning: entity-alias or entity-name missing on member-entity element");
       }
@@ -371,9 +371,9 @@ public class ModelReader {
     for(int i=0; i<aliasList.getLength(); i++) {
       ModelViewEntity.ModelAlias alias = entity.makeModelAlias();
       Element aliasElement = (Element)aliasList.item(i);
-      alias.entityAlias = checkEmpty(aliasElement.getAttribute("entity-alias"));
-      alias.name = checkEmpty(aliasElement.getAttribute("name"));
-      alias.field = checkEmpty(aliasElement.getAttribute("field"), alias.name);
+      alias.entityAlias = UtilXml.checkEmpty(aliasElement.getAttribute("entity-alias"));
+      alias.name = UtilXml.checkEmpty(aliasElement.getAttribute("name"));
+      alias.field = UtilXml.checkEmpty(aliasElement.getAttribute("field"), alias.name);
       alias.isPk = "true".equals(aliasElement.getAttribute("prim-key"));
       entity.aliases.add(alias);
     }
@@ -382,8 +382,8 @@ public class ModelReader {
     for(int i=0; i<viewLinkList.getLength(); i++) {
       Element viewLinkElement = (Element)viewLinkList.item(i);
       ModelViewEntity.ModelViewLink viewLink = entity.makeModelViewLink();
-      viewLink.entityAlias = checkEmpty(viewLinkElement.getAttribute("entity-alias"));
-      viewLink.relEntityAlias = checkEmpty(viewLinkElement.getAttribute("rel-entity-alias"));
+      viewLink.entityAlias = UtilXml.checkEmpty(viewLinkElement.getAttribute("entity-alias"));
+      viewLink.relEntityAlias = UtilXml.checkEmpty(viewLinkElement.getAttribute("rel-entity-alias"));
 
       NodeList keyMapList = viewLinkElement.getElementsByTagName("key-map");
       for(int j=0; j<keyMapList.getLength(); j++) {
@@ -408,9 +408,9 @@ public class ModelReader {
     ModelRelation relation = new ModelRelation();
     relation.mainEntity = entity;
     
-    relation.type = checkEmpty(relationElement.getAttribute("type"));
-    relation.title = checkEmpty(relationElement.getAttribute("title"));
-    relation.relEntityName = checkEmpty(relationElement.getAttribute("rel-entity-name"));
+    relation.type = UtilXml.checkEmpty(relationElement.getAttribute("type"));
+    relation.title = UtilXml.checkEmpty(relationElement.getAttribute("title"));
+    relation.relEntityName = UtilXml.checkEmpty(relationElement.getAttribute("rel-entity-name"));
     
     NodeList keyMapList = relationElement.getElementsByTagName("key-map");
     for(int i=0; i<keyMapList.getLength(); i++) {
@@ -427,9 +427,9 @@ public class ModelReader {
   ModelKeyMap createKeyMap(Element keyMapElement) {
     ModelKeyMap keyMap = new ModelKeyMap();
     
-    keyMap.fieldName = checkEmpty(keyMapElement.getAttribute("field-name"));
+    keyMap.fieldName = UtilXml.checkEmpty(keyMapElement.getAttribute("field-name"));
     //if no relFieldName is specified, use the fieldName; this is convenient for when they are named the same, which is often the case
-    keyMap.relFieldName = checkEmpty(keyMapElement.getAttribute("rel-field-name"),keyMap.fieldName);
+    keyMap.relFieldName = UtilXml.checkEmpty(keyMapElement.getAttribute("rel-field-name"),keyMap.fieldName);
     
     return keyMap;
   }
@@ -448,73 +448,24 @@ public class ModelReader {
     numFields++;
     ModelField field = new ModelField();
     
-    field.type = checkEmpty(fieldElement.getAttribute("type"));
-    field.name = checkEmpty(fieldElement.getAttribute("name"));
-    field.colName = checkEmpty(fieldElement.getAttribute("col-name"), ModelUtil.javaNameToDbName(checkEmpty(field.name)));
+    field.type = UtilXml.checkEmpty(fieldElement.getAttribute("type"));
+    field.name = UtilXml.checkEmpty(fieldElement.getAttribute("name"));
+    field.colName = UtilXml.checkEmpty(fieldElement.getAttribute("col-name"), ModelUtil.javaNameToDbName(UtilXml.checkEmpty(field.name)));
     field.isPk = false; //is set elsewhere
     
     NodeList validateList = fieldElement.getElementsByTagName("validate");
     for(int i=0; i<validateList.getLength(); i++) {
       Element element = (Element)validateList.item(i);
-      field.validators.add(checkEmpty(element.getAttribute("name")));
+      field.validators.add(UtilXml.checkEmpty(element.getAttribute("name")));
     }
     
     return field;
   }
   
-  String childElementValue(Element element, String childElementName) {
-    if(element == null || childElementName == null) return null;
-    //get the value of the first element with the given name
-    Node node = element.getFirstChild();
-    if(node != null) {
-      do {
-        if(node.getNodeType() == Node.ELEMENT_NODE && childElementName.equals(node.getNodeName())) {
-          Element childElement = (Element)node;
-          return elementValue(childElement);
-        }
-      } while((node = node.getNextSibling()) != null);
-    }
-    return null;
-  }
-  
-  String elementValue(Element element) {
-    Node textNode = element.getFirstChild();
-    if(textNode == null) return null;
-    //should be of type text
-    return textNode.getNodeValue();
-  }
-  
-  String checkEmpty(String string) {
-    if(string != null && string.length() > 0) return string;
-    else return "";
-  }
-  
-  String checkEmpty(String string1, String string2) {
-    if(string1 != null && string1.length() > 0) return string1;
-    else if(string2 != null && string2.length() > 0) return string2;
-    else return "";
-  }
-  String checkEmpty(String string1, String string2, String string3) {
-    if(string1 != null && string1.length() > 0) return string1;
-    else if(string2 != null && string2.length() > 0) return string2;
-    else if(string3 != null && string3.length() > 0) return string3;
-    else return "";
-  }
-  
-  Document getDocument(String filename) {
-    if(filename == null || filename.length() <=0) return null;
+  protected Document getDocument(String filename) {
+    if(filename == null) return null;
     Document document = null;
-    DocumentBuilderFactory factory = DocumentBuilderFactory.newInstance();
-    factory.setValidating(true);
-    //factory.setNamespaceAware(true);
-    try {
-      //if(documentCache.containsKey(filename + ":document")) document = (Document)documentCache.get(filename + ":document");
-      //else {
-      DocumentBuilder builder = factory.newDocumentBuilder();
-      document = builder.parse(new File(filename));
-      //documentCache.put(filename + ":document", document);
-      //}
-    }
+    try { document = UtilXml.readXmlDocument(UtilURL.fromFilename(filename)); }
     catch (SAXException sxe) {
       // Error generated during parsing)
       Exception  x = sxe;

@@ -115,7 +115,7 @@ public class ModelFieldTypeReader {
                 i++;
                 //utilTimer.timerString("Start loop -- " + i + " --");
                 Element curFieldType = (Element)curChild;
-                String fieldTypeName = checkNull(curFieldType.getAttribute("type"), "[No type name]");
+                String fieldTypeName = UtilXml.checkEmpty(curFieldType.getAttribute("type"), "[No type name]");
                 //utilTimer.timerString("  After fieldTypeName -- " + i + " --");
                 ModelFieldType fieldType = createModelFieldType(curFieldType, docElement, null);
                 //utilTimer.timerString("  After createModelFieldType -- " + i + " --");
@@ -167,72 +167,23 @@ public class ModelFieldTypeReader {
     if(fieldTypeElement == null) return null;
     
     ModelFieldType field = new ModelFieldType();
-    field.type = checkNull(fieldTypeElement.getAttribute("type"));
-    field.javaType = checkNull(fieldTypeElement.getAttribute("java-type"));
-    field.sqlType = checkNull(fieldTypeElement.getAttribute("sql-type"));
+    field.type = UtilXml.checkEmpty(fieldTypeElement.getAttribute("type"));
+    field.javaType = UtilXml.checkEmpty(fieldTypeElement.getAttribute("java-type"));
+    field.sqlType = UtilXml.checkEmpty(fieldTypeElement.getAttribute("sql-type"));
     
     NodeList validateList = fieldTypeElement.getElementsByTagName("validate");
     for(int i=0; i<validateList.getLength(); i++) {
       Element element = (Element)validateList.item(i);
-      field.validators.add(checkNull(element.getAttribute("name")));
+      field.validators.add(UtilXml.checkEmpty(element.getAttribute("name")));
     }
     
     return field;
   }
   
-  String childElementValue(Element element, String childElementName) {
-    if(element == null || childElementName == null) return null;
-    //get the value of the first element with the given name
-    Node node = element.getFirstChild();
-    if(node != null) {
-      do {
-        if(node.getNodeType() == Node.ELEMENT_NODE && childElementName.equals(node.getNodeName())) {
-          Element childElement = (Element)node;
-          return elementValue(childElement);
-        }
-      } while((node = node.getNextSibling()) != null);
-    }
-    return null;
-  }
-  
-  String elementValue(Element element) {
-    Node textNode = element.getFirstChild();
-    if(textNode == null) return null;
-    //should be of type text
-    return textNode.getNodeValue();
-  }
-  
-  String checkNull(String string) {
-    if(string != null) return string;
-    else return "";
-  }
-  
-  String checkNull(String string1, String string2) {
-    if(string1 != null) return string1;
-    else if(string2 != null) return string2;
-    else return "";
-  }
-  String checkNull(String string1, String string2, String string3) {
-    if(string1 != null) return string1;
-    else if(string2 != null) return string2;
-    else if(string3 != null) return string3;
-    else return "";
-  }
-  
-  Document getDocument(String filename) {
-    if(filename == null || filename.length() <=0) return null;
+  protected Document getDocument(String filename) {
+    if(filename == null) return null;
     Document document = null;
-    DocumentBuilderFactory factory = DocumentBuilderFactory.newInstance();
-    factory.setValidating(true);
-    //factory.setNamespaceAware(true);
-    try {
-      //if(documentCache.containsKey(filename + ":document")) document = (Document)documentCache.get(filename + ":document");
-      //else {
-      DocumentBuilder builder = factory.newDocumentBuilder();
-      document = builder.parse(new File(filename));
-      //documentCache.put(filename + ":document", document);
-      //}
-    }
+    try { document = UtilXml.readXmlDocument(UtilURL.fromFilename(filename)); }
     catch (SAXException sxe) {
       // Error generated during parsing)
       Exception  x = sxe;
