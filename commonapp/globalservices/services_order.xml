@@ -7,10 +7,9 @@
     <version>1.0</version>
 
     <!-- Order processing services -->
-    <service name="processOrder" engine="workflow" location="TEST" invoke="ProcessOrder">
+    <service name="processOrder" engine="workflow" location="org.ofbiz.commonapp.order.order" invoke="ProcessOrder">
         <description>Service for testing the workflow engine</description>
-        <attribute name="orderId" type="String" mode="IN"/>
-        <attribute name="partyId" type="String" mode="IN"/>
+        <attribute name="orderId" type="String" mode="IN" optional="false"/>         
         <attribute name="orderStatusId" type="String" mode="OUT"/>
     </service>
 
