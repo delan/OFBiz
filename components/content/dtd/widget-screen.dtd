@@ -25,17 +25,17 @@
  *  OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR
  *  THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
- *  $Id: widget-screen.dtd,v 1.4 2004/06/28 17:51:14 jonesde Exp $
+ *  $Id: widget-screen.dtd,v 1.5 2004/06/28 23:30:17 jonesde Exp $
 -->
 
-<!ENTITY % AllWidgets "container | include-screen | decorator-screen | decorator-parent | composite-screen | composite-section | composite-parent | label | form | menu | tree | content | sub-content | platform-specific">
+<!ENTITY % AllWidgets "section | container | include-screen | decorator-screen | decorator-section | decorator-section-include | label | form | menu | tree | content | sub-content | platform-specific">
 
-<!ENTITY % AllActions "script | service | entity-one | entity-many">
+<!ENTITY % AllActions "script | service | entity-one | entity-and | entity-condition">
 
 
 <!ELEMENT screens ( screen+ )>
 
-<!ELEMENT screen ( actions?, container )>
+<!ELEMENT screen ( actions?, section )>
 <!ATTLIST screen
     name CDATA #REQUIRED
 >
@@ -56,34 +56,63 @@
         auto-field-map ( true | false ) "true"
     >
     
-    <!ELEMENT entity-many ( constraint*, order-by*, field-map+ )>
-    <!ATTLIST entity-many
+    <!ELEMENT entity-and ( field-map+, order-by* )>
+    <!ATTLIST entity-and
         entity-name CDATA #REQUIRED
-        cache ( true | false ) "true"
-        filter-by-date ( true | false | by-name ) "by-name"
+        cache ( true | false ) "false"
+        filter-by-date ( true | false | by-name ) "false"
     >
 
-    <!ELEMENT constraint EMPTY>
-    <!ATTLIST constraint
-        field-name CDATA #REQUIRED
-        value CDATA #REQUIRED
+    <!ELEMENT entity-condition ( condition-list, order-by* )>
+    <!ATTLIST entity-condition
+        entity-name CDATA #REQUIRED
+        filter-by-date ( true | false | by-name ) "false"
     >
-    
-    <!ELEMENT order-by EMPTY>
-    <!ATTLIST order-by
-        field-name CDATA #REQUIRED
-    >
-    
-    <!ELEMENT field-map EMPTY>
-    <!ATTLIST field-map
-        field-name CDATA #REQUIRED
-        to-field-name CDATA #IMPLIED
-    >
+
+		<!ELEMENT condition-list ( ( condition | condition-list )+ )>
+		<!ATTLIST condition-list
+			cache ( and | or ) "and"
+		>
+	
+		<!ELEMENT condition EMPTY>
+		<!ATTLIST condition
+			field-name CDATA #REQUIRED
+			operator ( less | greater | less-equals | greater-equals | equals | not-equals | in | between | like ) #REQUIRED
+			env-name CDATA #REQUIRED
+		>
+		
+		<!ELEMENT order-by EMPTY>
+		<!ATTLIST order-by
+			field-name CDATA #REQUIRED
+		>
+		
+		<!ELEMENT limit-range EMPTY>
+		<!ATTLIST limit-range
+			start-env-name CDATA #REQUIRED
+			size-env-name CDATA #REQUIRED
+		>
+		
+		<!ELEMENT limit-view EMPTY>
+		<!ATTLIST limit-view
+			view-index-env-name CDATA #REQUIRED
+			view-size-env-name CDATA #REQUIRED
+		>
+		
+		<!ELEMENT field-map EMPTY>
+		<!ATTLIST field-map
+			env-name CDATA #REQUIRED
+			field-name CDATA #IMPLIED
+		>
 
     <!ELEMENT script EMPTY>
     <!ATTLIST script
         location CDATA #REQUIRED
     >
+
+<!ELEMENT section ( (%AllWidgets;)* )>
+<!ATTLIST section
+    name CDATA #IMPLIED
+>
 
 <!ELEMENT container ( (%AllWidgets;)* )>
 <!ATTLIST container
@@ -98,15 +127,6 @@
 >
 
 <!-- renders the named screen and includes the children of this elements at the point where it finds the decorator-parent tag -->
-<!ELEMENT decorator-screen ( (%AllWidgets;)* )>
-<!ATTLIST decorator-screen
-    name CDATA #REQUIRED
-    location CDATA #IMPLIED
->
-
-<!-- this is just a place holder to tell the renderer to include the parent container's contents at this point -->
-<!ELEMENT decorator-parent EMPTY>
-
 <!ELEMENT composite-screen ( composite-section+ )>
 <!ATTLIST composite-screen
     name CDATA #REQUIRED
@@ -118,8 +138,9 @@
     name CDATA #REQUIRED
 >
 
-<!ELEMENT composite-parent EMPTY>
-<!ATTLIST composite-parent
+<!-- this is just a place holder to tell the renderer to include the parent container's contents at this point -->
+<!ELEMENT composite-section-include EMPTY>
+<!ATTLIST composite-section-include
     name CDATA #REQUIRED
 >
 

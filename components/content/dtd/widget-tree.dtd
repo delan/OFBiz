@@ -25,7 +25,7 @@
  *  OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR
  *  THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
- *  $Id: widget-tree.dtd,v 1.2 2004/06/28 17:51:14 jonesde Exp $
+ *  $Id: widget-tree.dtd,v 1.3 2004/06/28 23:30:17 jonesde Exp $
 -->
 
 <!ELEMENT trees ( tree+ )>
@@ -54,7 +54,7 @@
         style CDATA #IMPLIED
     >
 
-<!ELEMENT sub-node (entity-many | service)>
+<!ELEMENT sub-node ( (entity-and | service), out-field-map*)>
 <!ATTLIST sub-node
     node-name CDATA #REQUIRED
 >
@@ -73,19 +73,13 @@
         auto-field-map ( true | false ) "true"
     >
     
-    <!ELEMENT entity-many ( constraint*, order-by*, field-map+ )>
-    <!ATTLIST entity-many
+    <!ELEMENT entity-and ( field-map+, order-by* )>
+    <!ATTLIST entity-and
         entity-name CDATA #REQUIRED
         cache ( true | false ) "true"
         filter-by-date ( true | false | by-name ) "by-name"
     >
 
-    <!ELEMENT constraint EMPTY>
-    <!ATTLIST constraint
-        field-name CDATA #REQUIRED
-        value CDATA #REQUIRED
-    >
-    
     <!ELEMENT order-by EMPTY>
     <!ATTLIST order-by
         field-name CDATA #REQUIRED
@@ -94,9 +88,14 @@
     <!ELEMENT field-map EMPTY>
     <!ATTLIST field-map
         field-name CDATA #REQUIRED
-        to-field-name CDATA #IMPLIED
+        env-name CDATA #IMPLIED
     >
 
+    <!ELEMENT out-field-map EMPTY>
+    <!ATTLIST out-field-map
+        field-name CDATA #REQUIRED
+        to-field-name CDATA #IMPLIED
+    >
 
 <!-- examples
 <trees>
@@ -104,11 +103,13 @@
         <node name="ChildProductCategory">
             <entity-one entity-name="ProductCategory"/>
             <label text="${description} [${productCategoryId}]" style="tabletext"/>
-            <sub-node node-name="ChildProductCategory" entity-name="ProductCategoryRollup">
-                <constraint field-name="parentProductCategoryId" value="${productCategoryId}"/>
-                <order-by field-name="sequenceNum"/>
-                <field-map field-name="productCategoryId"/>
+            <sub-node node-name="ChildProductCategory">
+                <entity-and entity-name="ProductCategoryRollup">
+                    <constraint field-name="parentProductCategoryId" env-name="productCategoryId"/>
+                    <order-by field-name="sequenceNum"/>
+                </entity-many>
             </sub-node>
+            <out-field-map field-name="productCategoryId"/>
         </node>
     </tree>
     <tree name="ProductCategoryAndProductsTree" root-node-name="ChildProductCategory">
@@ -116,18 +117,18 @@
             <entity-one entity-name="ProductCategory"/>
             <label text="${description} [${productCategoryId}]" style="tableheadtext"/>
             <sub-node node-name="ChildProductCategory">
-                <entity-many entity-name="ProductCategoryRollup">
-                    <constraint field-name="parentProductCategoryId" value="${productCategoryId}"/>
+                <entity-and entity-name="ProductCategoryRollup">
+                    <constraint field-name="parentProductCategoryId" env-name="productCategoryId"/>
                     <order-by field-name="sequenceNum"/>
-                    <field-map field-name="productCategoryId"/>
                 </entity-many>
+                <out-field-map field-name="productCategoryId"/>
             </sub-node>
             <sub-node node-name="ChildProduct">
-                <entity-many entity-name="ProductCategoryMember">
-                    <constraint field-name="productCategoryId" value="${productCategoryId}"/>
+                <entity-and entity-name="ProductCategoryMember">
+                    <constraint field-name="productCategoryId"/>
                     <order-by field-name="sequenceNum"/>
-                    <field-map field-name="productId"/>
                 </entity-many>
+                <out-field-map field-name="productId"/>
             </sub-node>
         </node>
         <node name="ChildProduct">
