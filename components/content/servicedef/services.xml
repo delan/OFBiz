@@ -1230,6 +1230,7 @@
         <attribute mode="IN" name="contentPurposeString" optional="true" type="String"/>
         <attribute mode="IN" name="userLogin" optional="true" type="GenericValue"/>
         <attribute mode="IN" name="imageData" optional="true" type="org.ofbiz.entity.util.ByteWrapper"/>
+        <attribute mode="IN" name="deactivateExisting" optional="true" type="String"/>
         <attribute mode="INOUT" name="roleTypeList" optional="true" type="List"/>
     </service>
     <service name="deactivateAssocs" engine="java"
