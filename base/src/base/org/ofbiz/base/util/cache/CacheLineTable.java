@@ -31,7 +31,7 @@ import java.util.Iterator;
 import java.util.LinkedList;
 import java.util.Map;
 import java.util.Set;
-import java.util.TreeSet;
+import java.util.HashSet;
 
 import org.ofbiz.base.util.Debug;
 
@@ -131,9 +131,9 @@ public class CacheLineTable implements Serializable {
     }
 
     public Collection values() {
-        Collection values = null;
+        LinkedList values = new LinkedList();
+
         if (fileTable != null) {
-            values = new LinkedList();
             try {
                 jdbm.helper.FastIterator iter = fileTable.values();
                 Object value = iter.next();
@@ -145,17 +145,16 @@ public class CacheLineTable implements Serializable {
                 Debug.logError(e, module);
             }
         } else {
-            values = memoryTable.values();
+            ((LinkedList) values).addAll(memoryTable.values());
         }
 
         return values;
     }
 
     public Set keySet() {
-        Set keys = null;
+        HashSet keys = new HashSet();
 
         if (fileTable != null) {
-            keys = new TreeSet();
             try {
                 jdbm.helper.FastIterator iter = fileTable.keys();
                 Object key = iter.next();
@@ -167,7 +166,7 @@ public class CacheLineTable implements Serializable {
                 Debug.logError(e, module);
             }
         } else {
-            keys = memoryTable.keySet();
+            keys.addAll(memoryTable.keySet());
         }
 
         return keys;
