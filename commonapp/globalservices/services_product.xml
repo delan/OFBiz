@@ -264,6 +264,16 @@
         <attribute name="validDate" type="Timestamp" mode="IN" optional="true"/>
     </service>
 
+    <service name="safeAddProductCategoryToCategory" engine="simple"
+                location="org/ofbiz/commonapp/product/category/CategoryServices.xml" invoke="addProductCategoryToCategory" auth="true">
+        <description>Add ProductCatalog To Catalog</description>
+        <attribute name="productCategoryId" type="String" mode="IN" optional="false"/>
+        <attribute name="parentProductCategoryId" type="String" mode="IN" optional="false"/>
+        <attribute name="fromDate" type="Timestamp" mode="IN" optional="false"/>
+        <attribute name="thruDate" type="Timestamp" mode="IN" optional="true"/>
+        <attribute name="sequenceNum" type="Long" mode="IN" optional="true"/>
+    </service>
+
     <service name="addProductCategoryToCategory" engine="simple"
                 location="org/ofbiz/commonapp/product/category/CategoryServices.xml" invoke="addProductCategoryToCategory" auth="true">
         <description>Add ProductCatalog To Catalog</description>

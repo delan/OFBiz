@@ -112,7 +112,7 @@
     	<response name="success" type="view" value="EditCategoryRollup"/>
     </request-map>
     <request-map uri="addProductCategoryToCategory"><security https="true" auth="true"/>
-        <event type="service" path="" invoke="addProductCategoryToCategory"/>
+        <event type="service" path="" invoke="safeAddProductCategoryToCategory"/>
         <response name="success" type="view" value="EditCategoryRollup"/>
         <response name="error" type="view" value="EditCategoryRollup"/>
     </request-map>

@@ -174,10 +174,10 @@
 </ofbiz:unless>
 </table>
 <br>
-<form method="POST" action="<ofbiz:url>/addProductCategoryToCategory</ofbiz:url>" style='margin: 0;'>
+<form method="POST" action="<ofbiz:url>/addProductCategoryToCategory</ofbiz:url>" style='margin: 0;' name='addProductCategoryToCategoryForm'>
   <input type="hidden" name="showProductCategoryId" value="<%=productCategoryId%>">
   <input type="hidden" name="parentProductCategoryId" value="<%=productCategoryId%>">
-  <div class='tabletext'>Add <b>Child</b> Category (select Category and enter optional From Date):</div>
+  <div class='tabletext'>Add <b>Child</b> Category (select Category and enter From Date):</div>
     <select name="productCategoryId">
     <%Iterator cit = UtilMisc.toIterator(productCategoryCol);%>
     <%while (cit != null && cit.hasNext()) {%>
@@ -187,7 +187,11 @@
       <%}%>
     <%}%>
     </select>
-  <input type=text size='20' name='fromDate'>
+  <script language='JavaScript'>
+      function setPctcFromDate() { document.addProductCategoryToCategoryForm.fromDate.value="<%=UtilDateTime.nowTimestamp().toString()%>"; }
+  </script>
+  <a href='#' onclick='setPctcFromDate()' class='buttontext'>[Now]</a>
+  <input type=text size='22' name='fromDate'>
   <input type="submit" value="Add">
 </form>
 <%}%>
