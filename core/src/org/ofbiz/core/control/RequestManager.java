@@ -1,6 +1,9 @@
 /*
  * $Id$
  * $Log$
+ * Revision 1.4  2001/07/17 08:51:37  jonesde
+ * Updated for auth implementation & small fixes.
+ *
  * Revision 1.3  2001/07/17 03:45:09  azeneski
  * Changed request and view config to NOT use the leading '/'. All request and
  * view mappings should now leave be 'request' instead of '/request'.
@@ -25,6 +28,7 @@ import java.util.HashMap;
 import java.util.Set;
 import javax.servlet.ServletContext;
 
+import org.ofbiz.core.util.ConfigXMLReader;
 import org.ofbiz.core.util.SiteDefs;
 import org.ofbiz.core.util.Debug;
 
@@ -73,9 +77,9 @@ public class RequestManager implements Serializable {
         catch ( Exception e ) {
             Debug.log(e,"Error Reading XML Config File: " + configFileUrl);
         }
-        requestMap = RequestXMLReader.getRequestMap(configFileUrl);
-        configMap = RequestXMLReader.getConfigMap(configFileUrl);
-        viewMap = RequestXMLReader.getViewMap(configFileUrl);
+        requestMap = ConfigXMLReader.getRequestMap(configFileUrl);
+        configMap = ConfigXMLReader.getConfigMap(configFileUrl);
+        viewMap = ConfigXMLReader.getViewMap(configFileUrl);
         
         /** Debugging */
         Debug.log("----------------------------------");
@@ -122,8 +126,8 @@ public class RequestManager implements Serializable {
     public String getEventPath(String uriStr) {
         if ( requestMap != null && requestMap.containsKey(uriStr) ) {
             HashMap uri = (HashMap) requestMap.get(uriStr);
-            if ( uri != null && uri.containsKey(RequestXMLReader.EVENT_PATH) )
-                return (String) uri.get(RequestXMLReader.EVENT_PATH);
+            if ( uri != null && uri.containsKey(ConfigXMLReader.EVENT_PATH) )
+                return (String) uri.get(ConfigXMLReader.EVENT_PATH);
         }
         return null;
     }
@@ -132,8 +136,8 @@ public class RequestManager implements Serializable {
     public String getEventType(String uriStr) {
         if ( requestMap != null && requestMap.containsKey(uriStr) ) {
             HashMap uri = (HashMap) requestMap.get(uriStr);
-            if ( uri != null && uri.containsKey(RequestXMLReader.EVENT_TYPE) )
-                return (String) uri.get(RequestXMLReader.EVENT_TYPE);
+            if ( uri != null && uri.containsKey(ConfigXMLReader.EVENT_TYPE) )
+                return (String) uri.get(ConfigXMLReader.EVENT_TYPE);
         }
         return null;
     }
@@ -142,8 +146,8 @@ public class RequestManager implements Serializable {
     public String getEventMethod(String uriStr) {
         if ( requestMap != null && requestMap.containsKey(uriStr) ) {
             HashMap uri = (HashMap) requestMap.get(uriStr);
-            if ( uri != null && uri.containsKey(RequestXMLReader.EVENT_METHOD) )
-                return (String) uri.get(RequestXMLReader.EVENT_METHOD);
+            if ( uri != null && uri.containsKey(ConfigXMLReader.EVENT_METHOD) )
+                return (String) uri.get(ConfigXMLReader.EVENT_METHOD);
         }
         return null;
     }
@@ -152,8 +156,8 @@ public class RequestManager implements Serializable {
     public String getViewName(String uriStr) {
         if ( requestMap != null && requestMap.containsKey(uriStr) ) {
             HashMap uri = (HashMap) requestMap.get(uriStr);
-            if ( uri != null && uri.containsKey(RequestXMLReader.NEXT_PAGE) )
-                return (String) uri.get(RequestXMLReader.NEXT_PAGE);
+            if ( uri != null && uri.containsKey(ConfigXMLReader.NEXT_PAGE) )
+                return (String) uri.get(ConfigXMLReader.NEXT_PAGE);
         }
         return null;
     }
@@ -164,8 +168,8 @@ public class RequestManager implements Serializable {
             viewStr = viewStr.substring(viewStr.indexOf(':'));
         if ( viewMap != null && viewMap.containsKey(viewStr) ) {
             HashMap page = (HashMap) viewMap.get(viewStr);
-            if ( page != null && page.containsKey(RequestXMLReader.MAPPED_PAGE) )
-                return (String) page.get(RequestXMLReader.MAPPED_PAGE);
+            if ( page != null && page.containsKey(ConfigXMLReader.MAPPED_PAGE) )
+                return (String) page.get(ConfigXMLReader.MAPPED_PAGE);
         }
         return null;
     }
@@ -174,8 +178,8 @@ public class RequestManager implements Serializable {
     public String getErrorPage(String uriStr) {
         if ( requestMap != null && requestMap.containsKey(uriStr) ) {
             HashMap uri = (HashMap) requestMap.get(uriStr);
-            if ( uri != null && uri.containsKey(RequestXMLReader.ERROR_PAGE) ) {
-                String returnPage = getViewPage((String) uri.get(RequestXMLReader.ERROR_PAGE));
+            if ( uri != null && uri.containsKey(ConfigXMLReader.ERROR_PAGE) ) {
+                String returnPage = getViewPage((String) uri.get(ConfigXMLReader.ERROR_PAGE));
                 if ( returnPage != null )
                     return returnPage;
             }
@@ -186,8 +190,8 @@ public class RequestManager implements Serializable {
     /** Gets the default error page from the configMap or static site default */
     public String getDefaultErrorPage() {
         String errorPage = null;
-        if ( configMap.containsKey(RequestXMLReader.DEFAULT_ERROR_PAGE) )
-            errorPage = (String) configMap.get(RequestXMLReader.DEFAULT_ERROR_PAGE);
+        if ( configMap.containsKey(ConfigXMLReader.DEFAULT_ERROR_PAGE) )
+            errorPage = (String) configMap.get(ConfigXMLReader.DEFAULT_ERROR_PAGE);
         if ( errorPage != null )
             return errorPage;
         return SiteDefs.ERROR_PAGE;
@@ -196,8 +200,8 @@ public class RequestManager implements Serializable {
     public boolean requiresAuth(String uriStr) {
         if ( requestMap != null && requestMap.containsKey(uriStr) ) {
             HashMap uri = (HashMap) requestMap.get(uriStr);
-            if ( uri != null && uri.containsKey(RequestXMLReader.REQ_AUTH) ) {
-                String value = (String) uri.get(RequestXMLReader.REQ_AUTH);
+            if ( uri != null && uri.containsKey(ConfigXMLReader.REQ_AUTH) ) {
+                String value = (String) uri.get(ConfigXMLReader.REQ_AUTH);
                 if ( value.equalsIgnoreCase("true") )
                     return true;
             }
@@ -208,8 +212,8 @@ public class RequestManager implements Serializable {
     public boolean requiresHttps(String uriStr) {
         if ( requestMap != null && requestMap.containsKey(uriStr) ) {
             HashMap uri = (HashMap) requestMap.get(uriStr);
-            if ( uri != null && uri.containsKey(RequestXMLReader.REQ_HTTPS) ) {
-                String value = (String) uri.get(RequestXMLReader.REQ_HTTPS);
+            if ( uri != null && uri.containsKey(ConfigXMLReader.REQ_HTTPS) ) {
+                String value = (String) uri.get(ConfigXMLReader.REQ_HTTPS);
                 if ( value.equalsIgnoreCase("true") )
                     return true;
             }

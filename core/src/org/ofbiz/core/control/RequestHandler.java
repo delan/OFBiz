@@ -1,6 +1,9 @@
 /*
  * $Id$
  * $Log$
+ * Revision 1.5  2001/07/17 22:17:21  jonesde
+ * Updates for improved login: no extra redirect, and can login staying on same page
+ *
  * Revision 1.4  2001/07/17 08:51:37  jonesde
  * Updated for auth implementation & small fixes.
  *
@@ -223,6 +226,11 @@ public class RequestHandler implements Serializable {
     public String getDefaultErrorPage( HttpServletRequest request ) {        
         String requestUri = getRequestUri(request.getPathInfo());
         return rm.getErrorPage(requestUri);
+    }
+    
+    /** Returns the RequestManager Object. */
+    public RequestManager getRequestManager() {
+        return rm;
     }
     
     /** Gets the mapped request URI from path_info */

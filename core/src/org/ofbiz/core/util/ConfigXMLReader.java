@@ -1,12 +1,9 @@
 /*
  * $Id$
  * $Log$
- * Revision 1.1  2001/07/15 16:36:42  azeneski
- * Initial Import
- *
  */
 
-package org.ofbiz.core.control;
+package org.ofbiz.core.util;
 
 import javax.xml.parsers.DocumentBuilderFactory;
 import javax.xml.parsers.DocumentBuilder;
@@ -19,32 +16,32 @@ import java.net.URL;
 import org.ofbiz.core.util.Debug;
 
 /**
- * <p><b>Title:</b> RequestXMLReader.java
+ * <p><b>Title:</b> ConfigXMLReader.java
  * <p><b>Description:</b> Reads and parses the XML site config files.
  * <p>Copyright (c) 2001 The Open For Business Project and repected authors.
- * <p>Permission is hereby granted, free of charge, to any person obtaining a 
- *  copy of this software and associated documentation files (the "Software"), 
- *  to deal in the Software without restriction, including without limitation 
- *  the rights to use, copy, modify, merge, publish, distribute, sublicense, 
- *  and/or sell copies of the Software, and to permit persons to whom the 
+ * <p>Permission is hereby granted, free of charge, to any person obtaining a
+ *  copy of this software and associated documentation files (the "Software"),
+ *  to deal in the Software without restriction, including without limitation
+ *  the rights to use, copy, modify, merge, publish, distribute, sublicense,
+ *  and/or sell copies of the Software, and to permit persons to whom the
  *  Software is furnished to do so, subject to the following conditions:
  *
- * <p>The above copyright notice and this permission notice shall be included 
+ * <p>The above copyright notice and this permission notice shall be included
  *  in all copies or substantial portions of the Software.
  *
- * <p>THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS 
- *  OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF 
- *  MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. 
- *  IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY 
- *  CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT 
- *  OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR 
+ * <p>THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS
+ *  OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF
+ *  MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT.
+ *  IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY
+ *  CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT
+ *  OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR
  *  THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  *
  * @author Andy Zeneski (jaz@zsolv.com)
  * @version 1.0
  * Created on June 29, 2001, 6:18 PM
  */
-public class RequestXMLReader {
+public class ConfigXMLReader {
     
     /** Site Config Variables */
     public static final String DATASOURCE = "datasource";
@@ -68,6 +65,20 @@ public class RequestXMLReader {
     public static final String VIEW = "view";
     public static final String MAPPED_PAGE = "mapped-page";
     
+    /** Scheduler Config Variables */
+    public static final String SCHEDULER_MAPPING = "schedule";
+    public static final String SCHEDULER_JOB_NAME = "name";
+    public static final String SCHEDULER_STARTDATE = "start-date";
+    public static final String SCHEDULER_ENDDATE = "end-date";
+    public static final String SCHEDULER_INTERVAL = "interval";
+    public static final String SCHEDULER_INTERVAL_TYPE = "interval-type";
+    public static final String SCHEDULER_EVENT_TYPE = "event-type";
+    public static final String SCHEDULER_EVENT_PATH = "event-path";
+    public static final String SCHEDULER_EVENT_METHOD = "event-invoke";
+    public static final String SCHEDULER_REPEAT = "repeat";
+    public static final String SCHEDULER_PARAMETERS = "parameter";
+    public static final String SCHEDULER_HEADERS = "header";
+    
     /** Loads the XML file and returns the root element */
     public static Element loadDocument(String location) {
         Document document = null;
@@ -82,7 +93,7 @@ public class RequestXMLReader {
             return rootElement;
         }
         catch ( Exception e ) {
-            Debug.log(e,"RequestXMLReader Error");
+            Debug.log(e,"ConfigXMLReader Error");
         }
         
         return null;
@@ -173,7 +184,7 @@ public class RequestXMLReader {
         Debug.log("ConfigMap Created: (" + map.size() +") records.");
         return map;
     }
- 
+    
     /** Gets a HashMap of view mappings. */
     public static HashMap getViewMap(String xml) {
         HashMap map = new HashMap();
@@ -206,7 +217,59 @@ public class RequestXMLReader {
         }
         Debug.log("ViewMap Created: (" + map.size() + ") records.");
         return map;
-    }    
+    }
+    
+    /** Gets a HashMap of scheduler mappings. */
+    public static HashMap getSchedulerMap(String xml) {
+        HashMap map = new HashMap();
+        Element root = loadDocument(xml);
+        if ( root != null ) {
+            // schedule elements
+            NodeList list = root.getElementsByTagName(SCHEDULER_MAPPING);
+            for ( int rootCount = 0; rootCount < list.getLength(); rootCount++ ) {
+                Node node = list.item(rootCount);
+                if ( node instanceof Element ) {
+                    Element element = (Element) node;
+                    NodeList subList = element.getElementsByTagName("*");
+                    HashMap mainMap = new HashMap();       // for the main attributes
+                    HashMap paramMap = new HashMap();     // for the parameter list
+                    HashMap headerMap = new HashMap();    // for the header list
+                    String job = null;
+                    for ( int subCount = 0; subCount < subList.getLength(); subCount++ ) {
+                        Node subNode = subList.item(subCount);                        
+                        if ( subNode.getNodeName().equals(SCHEDULER_PARAMETERS) ) {
+                            Element thisElement = (Element) subNode;
+                            paramMap.put(thisElement.getAttribute("name"),thisElement.getAttribute("value"));
+                        }
+                        else if ( subNode.getNodeName().equals(SCHEDULER_HEADERS) ) {
+                            Element thisElement = (Element) subNode;
+                            headerMap.put(thisElement.getAttribute("name"),thisElement.getAttribute("value"));
+                        }
+                        else {
+                            NodeList children = subNode.getChildNodes();
+                            Node childNode = children.item(0);
+                            
+                            if ( childNode.getNodeValue() != null ) {
+                                
+                                if ( subNode.getNodeName().equals(SCHEDULER_JOB_NAME) ) {
+                                    job = childNode.getNodeValue();
+                                }
+                                else {
+                                    mainMap.put(subNode.getNodeName(),childNode.getNodeValue());
+                                }
+                            }
+                        }
+                    }
+                    mainMap.put(SCHEDULER_PARAMETERS, paramMap);
+                    mainMap.put(SCHEDULER_HEADERS, headerMap);
+                    if ( job != null )
+                        map.put(job,mainMap);
+                }
+            }
+        }
+        Debug.log("SchedulerMap Created: (" + map.size() + ") records.");
+        return map;
+    }
     
     /** Gets the datasource associated with this config file. */
     public static String getDataSource(String xml) {
