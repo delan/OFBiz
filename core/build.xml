@@ -132,7 +132,7 @@
     	<javac destdir="${build.dir}/share" classpath="${classpath}">
     		<src path="${src.dir}/share" />
         </javac>
-   
+		
     	<javac destdir="${build.dir}/webapp" classpath="${classpath}:${build.dir}/share">
     		<src path="${src.dir}/webapp" />
         </javac>
