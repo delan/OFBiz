@@ -122,10 +122,13 @@
                       Iterator tli = topLevelKeys.iterator();
                       int topLevelKeysCt=0;
                       while (tli.hasNext()) {
-                          String cnt = "" + topLevelKeysCt;
+                          String cnt = "" + topLevelKeysCt; 
+                          Object varTree = variantTree.get(tli.next());
+                          if (varTree instanceof Map) {
                 %>
-                <%=buildNext((Map)variantTree.get(tli.next()), featureOrder, (String)featureOrder.get(1), cnt)%>
+                            <%=buildNext((Map)varTree, featureOrder, (String)featureOrder.get(1), cnt)%>
                 <%
+                         }
                           topLevelKeysCt++;
                       }
                   }
