@@ -1,132 +1,19 @@
-body {
-margin: 0;
-font: medium verdana, arial, sans-serif;
-color: #000000;
+
+BODY {
 background-color: #D4D0C8;
-}
-
-body.ecbody {
-background-color: white;
-}
-
-#header, #footer {
-background-color: white;
-text-align: center;
-margin: 0;
-}
-#header {
-height: 72px;
-padding: 0px 0 0 0;
-}
-#footer {
-height: 25px;
-padding: 8px 0 0 0;
-font-size: small;
-font-weight: bold;
-}
-#centerColumnLR, #centerColumnR, #centerColumnL, #centerColumn {
-background-color: white;
-padding: 0;
-margin: 0;
-margin-left: 180px;
-margin-right: 200px;
-padding: 0px 10px 0px 10px;
-}
-#centerColumnLR {
-margin-left: 180px;
-margin-right: 200px;
-}
-#centerColumnR {
-margin-left: 0px;
-margin-right: 200px;
-}
-#centerColumnL {
-margin-left: 180px;
+margin-top: 0px;
 margin-right: 0px;
-}
-#centerColumn {
+margin-bottom: 0px;
 margin-left: 0px;
-margin-right: 0px;
-}
-#leftColumn, #rightColumn {
-background-color: white;
-position: absolute;
-top: 90px;
-margin: 0;
-font-size: small;
-padding: 0;
-}
-#leftColumn {
-width: 180px;
-left: 0;
-}
-#rightColumn {
-width: 200px;
-right: 0;
-}
-#leftColumnContent {
-margin: 0;
-padding: 0px 0px 0px 10px;
-}
-#rightColumnContent {
-margin: 0;
-padding: 0px 10px 0px 0px;
-}
-#centerColumnContent {
-margin: 0;
-padding: 0;
-}
-h1 {
-margin: 0;
-padding: 0;
-font-size: large;
-}
-h2 {
-margin: 0;
-padding: 0;
-font-size: small;
-font-weight: normal;
-}
-h3 {
-font-family: Verdana, Arial, Helvetica, sans-serif;
-font-size: 8pt;
-margin: 0px;
-color: #FFFFFF;
-background-color: #000099;
-padding-top: 1px;
-padding-bottom: 1px;
-padding-right: 4px;
-padding-left: 4px;
-border-color: #999999;
-border-style: solid;
-border-width: 1px 1px 0px 1px;
-text-align: center;
-}
-p {
-margin-top: 1em;
-margin-bottom: 0;
-}
-.fw {
-font-weight:bold;
-}
-li {
-margin-bottom:.5em;
 }
 
-.boxbottomC, .boxbottomL {
-text-align: center;
-color: #333;
-background-color: #fff;
-padding: 4px;
-border-color: #999999;
-border-style: solid;
-border-width: 0px 1px 1px 1px;
+BODY.ecbody {
+background-color: #FFFFFF;
+margin-top: 10px;
+margin-right: 10px;
+margin-bottom: 10px;
+margin-left: 10px;
 }
-.boxbottomL {
-text-align: left;
-}
-
-/* Original styles, move them up as they are checked */
 
 FORM {
 margin: 0px;
@@ -203,8 +90,6 @@ font-size: 8pt;
 font-family: Verdana, Arial, Helvetica, sans-serif;
 }
 
-/*  From here to the end of file these are likely to be deprecated */
-
 .headerboxoutside {
 background-color: #FFFFFF;
 padding: 0;
@@ -212,7 +97,7 @@ padding: 0;
 
 .headerboxtop {
 background-color: #FFFFFF;
-padding: 0px 10px 0px 10px;
+padding: 4;
 border-color: #FFFFFF;
 border-style: solid;
 border-width: 1px 1px 0px 1px;
@@ -220,7 +105,7 @@ border-width: 1px 1px 0px 1px;
 
 .headerboxbottom {
 background-color: #FFFFFF;
-padding: 0px 10px 0px 10px;
+padding: 0;
 border-color: #FFFFFF;
 border-style: solid;
 border-width: 0px 1px 1px 1px;
