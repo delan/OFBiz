@@ -10,7 +10,7 @@
         <action service="recalcTaxTotal" mode="sync"/>
         <action service="resetGrandTotal" mode="sync"/>
         <action service="checkOrderItemStatus" mode="sync"/>
-        <action service="sendOrderChangeNotification" mode="async"/>
+        <action service="sendOrderChangeNotification" mode="async" persist="true"/>
     </eca>
     <eca service="changeOrderItemStatus" event="commit">
         <condition field-name="statusId" operator="equals" value="ITEM_COMPLETED"/>
@@ -28,7 +28,7 @@
     </eca>
     <eca service="changeOrderStatus" event="global-commit" run-on-error="false">
         <condition field-name="statusId" operator="equals" value="ORDER_COMPLETED"/>
-        <action service="sendOrderCompleteNotification" mode="async"/>
+        <action service="sendOrderCompleteNotification" mode="async" persist="true"/>
     </eca>
     <eca service="changeOrderStatus" event="commit" run-on-error="false">
         <condition field-name="statusId" operator="equals" value="ORDER_PROCESSING"/>
@@ -79,10 +79,10 @@
 
 	<!-- Order Delivery Schedule ECAs -->
     <eca service="createOrderDeliverySchedule" event="commit">
-    	<action service="sendOrderDeliveryScheduleNotification" mode="async"/>
+    	<action service="sendOrderDeliveryScheduleNotification" mode="async" persist="true"/>
     </eca>
     <eca service="updateOrderDeliverySchedule" event="commit">
-    	<action service="sendOrderDeliveryScheduleNotification" mode="async"/>
+    	<action service="sendOrderDeliveryScheduleNotification" mode="async" persist="true"/>
     </eca>
 
     <!-- Return ECAs -->
