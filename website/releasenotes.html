@@ -10,8 +10,8 @@ Founders and Lead Architects: David E. Jones &amp; Andy Zeneski<br>
 <hr>
 <h3>Table of Contents</h3>
 <ul>
-  <li><a href="#Release 2.0 Alpha 1">Release 2.0 Alpha 1</a> 
-  <li><a href="#Release 1.0 Beta 1">Release 1.0 Beta 1</a> 
+  <li><a href="#Release 2.0 Alpha 1">Release 2.0 Alpha 1 - January 16, 2002</a> 
+  <li><a href="#Release 1.0 Beta 1">Release 1.0 Beta 1 - October 29, 2001</a> 
   <li><a href="#Release 2001.09.29">Release 2001.09.29</a> 
   <li><a href="#Release 2001.07.20">Release 2001.07.20</a>
   <li><a href="#Release 2001.06.30">Release 2001.06.30</a>
@@ -22,7 +22,7 @@ Founders and Lead Architects: David E. Jones &amp; Andy Zeneski<br>
 </ul>
 
 <hr>
-<h3><a name="Release 2.0 Alpha 1">Release 2.0 Alpha 1</a></h3>
+<h3><a name="Release 2.0 Alpha 1">Release 2.0 Alpha 1 - January 16, 2002</a></h3>
 <hr>
 <h4>Overview</h4>
 <p>The 2.0 Alpha 1 release represents a MAJOR step forward for Open For Business,
@@ -77,12 +77,89 @@ to the many smaller refinements and changes that have been done. These tasks inc
 <ul>
 <li><b>Core Subproject</b>
   <ul>
-  <li>
+  <li>41462 - Have GenericEntity Implement Comparable & Cloneable
+  <li>40657 - Get properties and xml files to relead when removed from cache
+  <li>41692 - Improve GenericEntity serialization/deserialization
+  <li>41463 - Add change notification listeners to GenericEntity
+  <li>41679 - Find By And with operator list
+  <li>41678 - Find By Like
+  <li>41891 - Calendar Recurrence Rules
+  <li>41892 - Job Scheduler Overhaul
+  <li>39716 - View Entities (Really Cool)
+  <li>42176 - Data File read Utilities
+  <li>40656 - Entity - XML String & Stream in and out routines
+  <li>42495 - Add string/stream in/out routines to DataFile
+  <li>42493 - Add code to write a DataFile object out to a file
+  <li>42199 - Document View Entities
+  <li>42200 - Document findByAnd using EntityExpr & other new finds
+  <li>40013 - Services Engine (Framework)
+  <li>43044 - Update Entity Engine BMP Entity Bean
+  <li>43465 - BeanShell Script Service Engine
+  <li>43464 - SOAP Interface to the Services Framework
+  <li>43524 - Event Processing Overhaul
+  <li>43638 - SOAP Client Service Engine
+  <li>44084 - removeAll method on delegator, etc
+  <li>44085 - JTA Transaction support with XADataSources
+  <li>44276 - Use JTA in delegator storeAll and removeAll
+  <li>44379 - Add security methods for service dispatcher
+  <li>44377 - Remove preStoreOther and change all code using it
+  <li>44466 - Add environment access to FlexibleProperties
+  <li>44889 - Change StringProcessor to SimpleMapProcessor
+  <li>44862 - MiniLang: SimpleEvent
+  <li>45593 - Add use-transaction to SimpleEvent
+  <li>45860 - Add security check to change delegator/dispatcher events.
+  <li>45859 - Change delegator event for webapps
+  <li>45855 - New Request Processing Response Types
+  <li>45853 - Add basic job scheduling to the dispatcher
+  <li>45807 - inputvalue tag: param optional, fullattrs attribute
+  </ul>
+<li><b>CommonApp Subproject</b>
+  <ul>
+  <li>42494 - Create a page to view Data File records
+  <li>41350 - Entity definitions for Workflow Persisted Entities
+  <li>43241 - Create page to import/read/update XPDL files
+  <li>40658 - Add string in/out to the XML import/export pages
+  <li>43243 - Rule engine interaction page - backward chaining
+  <li>43639 - Order Processing Services
+  <li>40545 - Finish GenericView Page
+  <li>45771 - Fix add order role service
+  </ul>
+<li><b>Workflow Subproject</b>
+  <ul>
+  <li>41351 - Create Interfaces from OMG IDL
+  <li>41523 - Create simple interface implementations
+  <li>41711 - Create workmgr webapp skeleton
+  <li>41896 - Create Workflow Service Engine
+  <li>41762 - Work Effort Manager - Scheduled event editor page
+  <li>42173 - Upcoming events view, separated by day
+  <li>41754 - Context & Results Map serialization to XML
+  <li>41354 - XPDL Parser to Create Process Def Entities
+  <li>41760 - Work Effort Manager - "Task" viewing & editing
+  <li>43641 - Create Client API
+  <li>44368 - Read all assignments params from XPDL
+  <li>44381 - Refactor workeffort events to make services
+  <li>44380 - Call workflow services in Activty page events
+  <li>44800 - Update WorkEffort Events for StringProcessor & SimpleEvent
+  <li>45770 - Update Context on Manual Activities
+  <li>45405 - Add Role and Group Activities to Task List
+  </ul>
+<li><b>Rule Subproject</b>
+  <ul>
+  <li>42496 - Import Building Parsers with Java code
+  <li>45911 - Create webtools page to run rulesets
+  </ul>
+<li><b>Documentation Subproject</b>
+  <ul>
+  <li>45914 - Create Service Engine Guide
+  <li>45912 - Update control servlet docs for new features
+  <li>45360 - Update website for release: blurb and rel notes
+  <li>45402 - MiniLang Guide with sections for SimpleMapProcessor, SimpleEvent
+  <li>45358 - Update setup docs for 2.0 alpha 1
   </ul>
 </ul>
 
 <hr>
-<h3><a name="Release 1.0 Beta 1">Release 1.0 Beta 1</a></h3>
+<h3><a name="Release 1.0 Beta 1">Release 1.0 Beta 1 - October 29, 2001</a></h3>
 <hr>
 <h4>Major Cleanups and Feature Enhancements</h4>
 <p>This release includes a number of clean ups and refactorings in addition to
