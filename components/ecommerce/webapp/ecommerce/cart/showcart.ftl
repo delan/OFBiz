@@ -21,7 +21,7 @@
  *
  *@author     David E. Jones (jonesde@ofbiz.org)
  *@author     Andy Zeneski (jaz@ofbiz.org)
- *@version    $Revision: 1.16 $
+ *@version    $Revision: 1.17 $
  *@since      2.1
 -->
 <#assign uiLabelMap = requestAttributes.uiLabelMap>
@@ -257,7 +257,7 @@ function addToList() {
         <tr>
           <td colspan="7" align="right" valign="bottom">
             <div class="tabletext">
-              <#if sessionAttributes.userLogin?has_content>
+              <#if sessionAttributes.userLogin?has_content && sessionAttributes.userLogin.userLoginId != "anonymous">
               <select name="shoppingListId" class="selectBox">
                 <#if shoppingLists?has_content>
                   <#list shoppingLists as shoppingList>
