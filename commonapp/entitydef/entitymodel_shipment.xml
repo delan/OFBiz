@@ -251,6 +251,21 @@
         <key-map field-name="roleTypeId"/>
       </relation>
     </entity>
+    <entity entity-name="CarrierShipmentBoxType"
+            package-name="org.ofbiz.commonapp.shipment.shipment"
+            title="Carrier Shipment Method Entity">
+      <field name="shipmentBoxTypeId" type="id-ne"></field>
+      <field name="partyId" type="id-ne"></field>
+      <field name="packagingTypeCode" type="very-short"></field>
+      <prim-key field="shipmentBoxTypeId"/>
+      <prim-key field="partyId"/>
+      <relation type="one" fk-name="CARR_SHBX_TYPE" rel-entity-name="ShipmentBoxType">
+        <key-map field-name="shipmentBoxTypeId"/>
+      </relation>
+      <relation type="one" fk-name="CARR_SHBX_PARTY" rel-entity-name="Party">
+        <key-map field-name="partyId"/>
+      </relation>
+    </entity>
     <entity entity-name="Delivery"
             package-name="org.ofbiz.commonapp.shipment.shipment"
             title="Delivery Entity">
@@ -458,6 +473,26 @@
       </relation>
       <relation type="many" rel-entity-name="ShipmentTypeAttr">
         <key-map field-name="attrName"/>
+      </relation>
+    </entity>
+    <entity entity-name="ShipmentBoxType"
+            package-name="org.ofbiz.commonapp.shipment.shipment"
+            title="Shipment Contact Mechanism Type Entity">
+      <field name="shipmentBoxTypeId" type="id-ne"></field>
+      <field name="description" type="description"></field>
+      <field name="dimensionUomId" type="id"></field>
+      <field name="boxLength" type="floating-point"></field>
+      <field name="boxWidth" type="floating-point"></field>
+      <field name="boxHeight" type="floating-point"></field>
+      <prim-key field="shipmentBoxTypeId"/>
+      <relation type="one" fk-name="SHMT_BXTP_DUOM" rel-entity-name="Uom">
+        <key-map field-name="dimensionUomId" rel-field-name="uomId"/>
+      </relation>
+      <relation type="many" rel-entity-name="CarrierShipmentBoxType">
+        <key-map field-name="shipmentBoxTypeId"/>
+      </relation>
+      <relation type="many" rel-entity-name="ShipmentPackage">
+        <key-map field-name="shipmentBoxTypeId"/>
       </relation>
     </entity>
     <entity entity-name="ShipmentContactMech"
@@ -802,6 +837,7 @@
             title="Shipment Package Entity">
       <field name="shipmentId" type="id-ne"></field>
       <field name="shipmentPackageSeqId" type="id-ne"></field>
+      <field name="shipmentBoxTypeId" type="id"></field>
       <field name="dateCreated" type="date-time"></field>
       <field name="weight" type="floating-point"></field>
       <field name="weightUomId" type="id"></field>
@@ -809,6 +845,9 @@
       <prim-key field="shipmentPackageSeqId"/>
       <relation type="one" fk-name="SHPKG_SHPMNT" rel-entity-name="Shipment">
         <key-map field-name="shipmentId"/>
+      </relation>
+      <relation type="one" fk-name="SHPKG_BXTYP" rel-entity-name="ShipmentBoxType">
+        <key-map field-name="shipmentBoxTypeId"/>
       </relation>
       <relation type="many" rel-entity-name="ShipmentReceipt">
         <key-map field-name="shipmentId"/>

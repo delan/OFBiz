@@ -765,9 +765,11 @@
     <entity-group group="org.ofbiz.commonapp" entity="Delivery" />
     <entity-group group="org.ofbiz.commonapp" entity="CarrierAndShipmentMethod" />
     <entity-group group="org.ofbiz.commonapp" entity="CarrierShipmentMethod" />
+    <entity-group group="org.ofbiz.commonapp" entity="CarrierShipmentBoxType" />
     <entity-group group="org.ofbiz.commonapp" entity="Shipment" />
     <entity-group group="org.ofbiz.commonapp" entity="ShipmentAndItem" />
     <entity-group group="org.ofbiz.commonapp" entity="ShipmentAttribute" />
+    <entity-group group="org.ofbiz.commonapp" entity="ShipmentBoxType" />
     <entity-group group="org.ofbiz.commonapp" entity="ShipmentContactMech" />
     <entity-group group="org.ofbiz.commonapp" entity="ShipmentContactMechType" />
     <entity-group group="org.ofbiz.commonapp" entity="ShipmentCostEstimate" />
