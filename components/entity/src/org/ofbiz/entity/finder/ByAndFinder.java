@@ -48,6 +48,7 @@ import org.ofbiz.entity.model.ModelEntity;
 import org.ofbiz.entity.util.EntityFindOptions;
 import org.ofbiz.entity.util.EntityListIterator;
 import org.w3c.dom.Element;
+import java.sql.ResultSet;
 
 /**
  * Uses the delegator to find entity values by a and
@@ -66,6 +67,7 @@ public class ByAndFinder {
     protected FlexibleStringExpander distinctStrExdr;
     protected FlexibleStringExpander delegatorNameExdr;
     protected FlexibleMapAccessor listAcsr;
+    protected FlexibleStringExpander resultSetTypeExdr;
     
     protected Map fieldMap;
     protected List selectFieldExpanderList;
@@ -79,6 +81,7 @@ public class ByAndFinder {
         this.distinctStrExdr = new FlexibleStringExpander(element.getAttribute("distinct"));
         this.delegatorNameExdr = new FlexibleStringExpander(element.getAttribute("delegator-name"));
         this.listAcsr = new FlexibleMapAccessor(element.getAttribute("list-name"));
+        this.resultSetTypeExdr = new FlexibleStringExpander(element.getAttribute("result-set-type"));
         
         // process field-map
         this.fieldMap = EntityFinderUtil.makeFieldMap(element);
@@ -123,10 +126,14 @@ public class ByAndFinder {
         String distinctStr = this.distinctStrExdr.expandString(context);
         String delegatorName = this.delegatorNameExdr.expandString(context);
         ModelEntity modelEntity = delegator.getModelEntity(entityName);
+        String resultSetTypeString = this.resultSetTypeExdr.expandString(context);
         
         boolean useCache = "true".equals(useCacheStr);
         boolean filterByDate = "true".equals(filterByDateStr);
         boolean distinct = "true".equals(distinctStr);
+        int resultSetType = ResultSet.TYPE_SCROLL_INSENSITIVE;
+        if ("forward".equals(resultSetTypeString))
+            resultSetType = ResultSet.TYPE_FORWARD_ONLY;
         
         if (delegatorName != null && delegatorName.length() > 0) {
             delegator = GenericDelegator.getGenericDelegator(delegatorName);
@@ -167,6 +174,7 @@ public class ByAndFinder {
             } else {
                 EntityFindOptions options = new EntityFindOptions();
                 options.setDistinct(distinct);
+                options.setResultSetType(resultSetType);
                 EntityListIterator eli = delegator.findListIteratorByCondition(entityName, new EntityFieldMap(entityContext, EntityOperator.AND), null, fieldsToSelect, orderByFields, options);
                 this.outputHandler.handleOutput(eli, context, listAcsr);
             }
