@@ -314,11 +314,15 @@ public class HtmlFormRenderer implements FormStringRenderer {
             buffer.append(ModelFormField.FieldInfoWithOptions.getDescriptionForOptionKey(currentValue, allOptionValues));
             buffer.append("</option>");
             
+            // add a "separator" option
+            buffer.append("<option value=\"");
+            buffer.append(currentValue);
+            buffer.append("\">---</option>");
         }
         
         // if allow empty is true, add an empty option
         if (dropDownField.isAllowEmpty()) {
-            buffer.append("<option value=\"\">---</option>");
+            buffer.append("<option value=\"\">&nbsp;</option>");
         }
         
         // list out all options according to the option list
