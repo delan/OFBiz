@@ -4,13 +4,13 @@
 <services>
     <description>Entity Extension Services</description>
     <vendor>OFBiz</vendor>
-    <version>1.0</version>	
-    
+    <version>1.0</version>
+
     <!-- Entity Engine Extension Services -->
     <service name="distributedClearAllEntityCaches" engine="jms" location="serviceMessenger" invoke="clearAllEntityCaches" auth="true">
         <description>Clear All Entity Engine Caches for all Servers listening to the topic</description>
     </service>
-    <!-- Below uses Group/HTTP engine 
+    <!-- Below uses Group/HTTP engine
     <service name="distributedClearAllEntityCaches" engine="group" location="distributedClearAllEntityCaches" invoke=""/>
     -->
     <service name="clearAllEntityCaches" engine="java"
@@ -46,7 +46,7 @@
         <attribute name="dummyPK" type="GenericEntity" mode="IN" optional="false"/>
         <attribute name="distribute" type="Boolean" mode="IN" optional="true"/>
     </service>
-    
+
     <service name="distributedClearCacheLineByPrimaryKey" engine="jms" location="serviceMessenger" invoke="clearCacheLineByPrimaryKey" auth="true">
         <description>Clear Cache Line by primaryKey for all Servers listening to the topic</description>
         <attribute name="primaryKey" type="GenericPK" mode="IN" optional="false"/>
@@ -61,7 +61,7 @@
         <attribute name="primaryKey" type="GenericPK" mode="IN" optional="false"/>
         <attribute name="distribute" type="Boolean" mode="IN" optional="true"/>
     </service>
-    
+
     <!-- HTTP Engine localhost cache clearing (example: duplicate entire block for each server) -->
     <service name="localhostClearAllEntityCaches" engine="http"
             location="http://localhost:8080/webtools/control/httpService" invoke="clearAllEntityCaches">
@@ -80,12 +80,19 @@
         <implements service="clearCacheLineByPrimaryKey"/>
     </service>
 
-    <!-- Entity Delimited File Import Service -->
-    <service name="importEntityFileDirectory" engine="java" auth="true" transaction-timout="14400" require-new-transaction="true"
+    <!-- Entity Delimited File Import Services -->
+    <service name="importEntityFileDirectory" engine="java" auth="true" use-transaction="false"
             location="org.ofbiz.entityext.data.EntityDataServices" invoke="importDelimitedFromDirectory">
         <description>Read a directory for .txt files with entity names; read each line as a record</description>
         <attribute name="rootDirectory" type="String" mode="IN" optional="false"/>
         <attribute name="delimiter" type="String" mode="IN" optional="true"/>
+    </service>
+    <service name="importDelimitedEntityFile" engine="java" auth="true" transaction-timout="7200" require-new-transaction="true"
+            location="org.ofbiz.entityext.data.EntityDataServices" invoke="importDelimitedFile">
+        <description>Import delimited file</description>
+        <attribute name="file" type="java.io.File" mode="IN" optional="false"/>
+        <attribute name="delimiter" type="String" mode="IN" optional="true"/>
+        <attribute name="records" type="Integer" mode="OUT" optional="false"/>
     </service>
 
     <!-- EntitySync Services -->
@@ -149,7 +156,7 @@
         <description>Run Entity Sync</description>
         <attribute name="entitySyncId" type="String" mode="IN" optional="false"/>
     </service>
-    <service name="storeEntitySyncData" engine="java" location="org.ofbiz.entityext.synchronization.EntitySyncServices" invoke="storeEntitySyncData" 
+    <service name="storeEntitySyncData" engine="java" location="org.ofbiz.entityext.synchronization.EntitySyncServices" invoke="storeEntitySyncData"
     	    export="true" auth="true" require-new-transaction="true" transaction-timout="300">
         <description>Run Entity Sync</description>
         <attribute name="entitySyncId" type="String" mode="IN" optional="false"/>
@@ -166,7 +173,7 @@
             location="org.ofbiz.entityext.synchronization.EntitySyncServices" invoke="cleanSyncRemoveInfo" auth="true">
         <description>Clean EntitySyncRemove Info - Generally should be run asynchronously after each sync run</description>
     </service>
-    
+
     <!-- Services to call store remotely -->
     <service name="remoteStoreEntitySyncDataHttp" engine="http"
             location="http://localhost:8080/webtools/control/httpService" invoke="storeEntitySyncData" auth="true" require-new-transaction="true" transaction-timout="300">
