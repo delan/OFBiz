@@ -184,6 +184,20 @@ public class OrderServices {
         String statusId = (String) context.get("statusId");        
         try {
             GenericValue orderHeader = delegator.findByPrimaryKey("OrderHeader",UtilMisc.toMap("orderId",orderId));
+            try {
+                Map statusFields = UtilMisc.toMap("statusId",orderHeader.getString("statusId"),"statusIdTo",statusId);
+                GenericValue statusChange = delegator.findByPrimaryKeyCache("StatusValidChange",statusFields);
+                if  ( statusChange == null ) {
+                    result.put(ModelService.RESPONSE_MESSAGE, ModelService.RESPOND_ERROR);
+                    result.put(ModelService.ERROR_MESSAGE,"ERROR: Could change order status; status is not a valid change.");
+                    return result;
+                }
+            }
+            catch ( GenericEntityException e ) {
+                result.put(ModelService.RESPONSE_MESSAGE, ModelService.RESPOND_ERROR);
+                result.put(ModelService.ERROR_MESSAGE,"ERROR: Could change order status (" + e.getMessage() + ").");
+                return result;
+            }
             orderHeader.set("statusId",statusId);
             Map fields = new HashMap();
             fields.put("orderStatusId", delegator.getNextSeqId("OrderStatus").toString());
