@@ -36,6 +36,7 @@ import java.util.*;
  */
 public class FlexibleMapAccessor {
 
+    protected String original;
     protected String extName;
     protected boolean isListReference = false;
     protected boolean isAddAtIndex = false;
@@ -44,6 +45,7 @@ public class FlexibleMapAccessor {
     protected SubMapAccessor subMapAccessor = null;
 
     public FlexibleMapAccessor(String name) {
+        this.original = name;
         int dotIndex = name.lastIndexOf('.');
         if (dotIndex != -1) {
             extName = name.substring(dotIndex+1);
@@ -70,6 +72,18 @@ public class FlexibleMapAccessor {
             }
             extName = extName.substring(0, openBrace);
             isListReference = true;
+        }
+    }
+    
+    public String getOriginalName() {
+        return this.original;
+    }
+    
+    public boolean isEmpty() {
+        if (this.original == null || this.original.length() == 0) {
+            return true;
+        } else {
+            return false;
         }
     }
     
@@ -124,6 +138,10 @@ public class FlexibleMapAccessor {
         } else {
             return base.remove(extName);
         }
+    }
+    
+    public String toString() {
+        return this.original;
     }
     
     public class SubMapAccessor {
