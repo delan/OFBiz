@@ -1,0 +1,1 @@
+NOTE: not importing these because they are VERY large, see www.openapplications.org and get the OAGIS 8.0 GA archive for these files and also documentation, utilities, etc
