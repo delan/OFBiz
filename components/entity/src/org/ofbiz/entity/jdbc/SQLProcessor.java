@@ -1,5 +1,5 @@
 /*
- * $Id: SQLProcessor.java,v 1.7 2004/02/05 09:49:33 jonesde Exp $
+ * $Id: SQLProcessor.java,v 1.8 2004/02/16 19:07:58 jonesde Exp $
  *
  * Copyright (c) 2001, 2002 The Open For Business Project - www.ofbiz.org
  *
@@ -27,16 +27,7 @@ import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.io.ObjectOutputStream;
-import java.io.StringReader;
 import java.sql.*;
-import java.sql.Blob;
-import java.sql.Clob;
-import java.sql.Connection;
-import java.sql.PreparedStatement;
-import java.sql.ResultSet;
-import java.sql.SQLException;
-import java.sql.Statement;
-import java.sql.Types;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
@@ -51,7 +42,7 @@ import org.ofbiz.entity.transaction.TransactionUtil;
  * SQLProcessor - provides utitlity functions to ease database access
  * 
  * @author     <a href="mailto:jonesde@ofbiz.org">David E. Jones</a> 
- * @version    $Revision: 1.7 $
+ * @version    $Revision: 1.8 $
  * @since      2.0
  */
 public class SQLProcessor {
@@ -548,11 +539,11 @@ public class SQLProcessor {
      * @throws SQLException
      */
     public void setValue(java.sql.Timestamp field) throws SQLException {
-        if (field != null)
+        if (field != null) {
             _ps.setTimestamp(_ind, field);
-        else
+        } else {
             _ps.setNull(_ind, Types.TIMESTAMP);
-
+        }
         _ind++;
     }
 
@@ -564,11 +555,11 @@ public class SQLProcessor {
      * @throws SQLException
      */
     public void setValue(java.sql.Time field) throws SQLException {
-        if (field != null)
+        if (field != null) {
             _ps.setTime(_ind, field);
-        else
+        } else {
             _ps.setNull(_ind, Types.TIME);
-
+        }
         _ind++;
     }
 
@@ -580,11 +571,11 @@ public class SQLProcessor {
      * @throws SQLException
      */
     public void setValue(java.sql.Date field) throws SQLException {
-        if (field != null)
+        if (field != null) {
             _ps.setDate(_ind, field);
-        else
+        } else {
             _ps.setNull(_ind, Types.DATE);
-
+        }
         _ind++;
     }
 
@@ -596,11 +587,11 @@ public class SQLProcessor {
      * @throws SQLException
      */
     public void setValue(Integer field) throws SQLException {
-        if (field != null)
+        if (field != null) {
             _ps.setInt(_ind, field.intValue());
-        else
+        } else {
             _ps.setNull(_ind, Types.NUMERIC);
-
+        }
         _ind++;
     }
 
@@ -612,11 +603,11 @@ public class SQLProcessor {
      * @throws SQLException
      */
     public void setValue(Long field) throws SQLException {
-        if (field != null)
+        if (field != null) {
             _ps.setLong(_ind, field.longValue());
-        else
+        } else {
             _ps.setNull(_ind, Types.NUMERIC);
-
+        }
         _ind++;
     }
 
@@ -628,11 +619,11 @@ public class SQLProcessor {
      * @throws SQLException
      */
     public void setValue(Float field) throws SQLException {
-        if (field != null)
+        if (field != null) {
             _ps.setFloat(_ind, field.floatValue());
-        else
+        } else {
             _ps.setNull(_ind, Types.NUMERIC);
-
+        }
         _ind++;
     }
 
@@ -644,11 +635,11 @@ public class SQLProcessor {
      * @throws SQLException
      */
     public void setValue(Double field) throws SQLException {
-        if (field != null)
+        if (field != null) {
             _ps.setDouble(_ind, field.doubleValue());
-        else
+        } else {
             _ps.setNull(_ind, Types.NUMERIC);
-
+        }
         _ind++;
     }
 
@@ -660,11 +651,11 @@ public class SQLProcessor {
      * @throws SQLException
      */
     public void setValue(Boolean field) throws SQLException {
-        if (field != null)
+        if (field != null) {
             _ps.setBoolean(_ind, field.booleanValue());
-        else
+        } else {
             _ps.setNull(_ind, Types.NULL); // TODO: really should be Types.BOOLEAN, but that wasn't introduced until Java 1.4... hmmm what to do?
-
+        }
         _ind++;
     }
 
@@ -695,7 +686,7 @@ public class SQLProcessor {
         if (field != null) {
             _ps.setBlob(_ind, field);
         } else {
-            _ps.setNull(_ind, Types.JAVA_OBJECT);
+            _ps.setNull(_ind, Types.BLOB);
         }
         _ind++;
     }
@@ -711,7 +702,7 @@ public class SQLProcessor {
         if (field != null) {
             _ps.setClob(_ind, field);
         } else {
-            _ps.setNull(_ind, Types.JAVA_OBJECT);
+            _ps.setNull(_ind, Types.CLOB);
         }
         _ind++;
     }
@@ -741,7 +732,7 @@ public class SQLProcessor {
                 throw new SQLException(ex.getMessage());
             }
         } else {
-            _ps.setNull(_ind, Types.JAVA_OBJECT);
+            _ps.setNull(_ind, Types.BLOB);
         }
 
         _ind++;
