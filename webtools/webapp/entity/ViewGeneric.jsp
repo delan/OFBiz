@@ -495,9 +495,8 @@ function ShowTab(lname)
 <%-- Start ModelRelation for <%=relation.relatedEjbName%>, type: many --%>
 
 <%if(value != null){%>
-  <%if(hasAllView || security.hasEntityPermission(relatedEntity.getPlainTableName(), "_VIEW", session)){%>    
-    <%-- Iterator relatedIterator = UtilMisc.toIterator(delegator.findBy<%=relation.keyMapRelatedUpperString("And","")%>(value.get<%=relation.keyMapUpperString("(), " + GenUtil.lowerFirstChar(entity.getEntityName()) + ".get", "()")%>)); --%>
-    <%Iterator relatedIterator = UtilMisc.toIterator(value.getRelated(relation.getTitle() + relatedEntity.getEntityName()));%>
+  <%if(hasAllView || security.hasEntityPermission(relatedEntity.getPlainTableName(), "_VIEW", session)){%>
+    <%-- Iterator relatedIterator = UtilMisc.toIterator(value.getRelated(relation.getTitle() + relatedEntity.getEntityName())); --%>
   <DIV id=area<%=relIndex+3%> class='topcontainerhidden' width="100%">
     <div class=areaheader>
       <b><%=relation.getTitle()%></b> Related Entities: <b><%=relatedEntity.getEntityName()%></b> with 
