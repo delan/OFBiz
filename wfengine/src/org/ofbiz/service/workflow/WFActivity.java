@@ -28,6 +28,9 @@
 
 /*
  * $Log$
+ * Revision 1.1.1.1  2001/08/10 10:33:40  owieland
+ * Initial import
+ *
  */
 /*
  * (#)WFActivity.java 
@@ -48,7 +51,7 @@ import java.io.Serializable;
  */
  
 public interface WFActivity  extends Serializable  {
-	// Methoden
+	
 
 	/**	 
 	 * Liefert die eindeutige Identifikationsnummer der Aktivität
@@ -93,25 +96,25 @@ public interface WFActivity  extends Serializable  {
 	public long getCreationTime() ;
 
 	/**	 
-	 * Methode getCompletionTime
+	 * Method getCompletionTime
 	 * @return long
 	 */
 	public long getCompletionTime() ;
 
 	/**	 
-	 * Methode getStartTime
+	 * Method getStartTime
 	 * @return long
 	 */
 	public long getStartTime() ;
 
 	/**	 
-	 * Methode getDuration
+	 * Method getDuration
 	 * @return long
 	 */
 	public long getDuration() ;
 
 	/**	 
-	 * Methode getDurationUnit
+	 * Method getDurationUnit
 	 * @return WFDurationUnit
 	 */
 	public WFDurationUnit getDurationUnit() ;

@@ -28,6 +28,9 @@
 
 /*
  * $Log$
+ * Revision 1.1.1.1  2001/08/10 10:33:40  owieland
+ * Initial import
+ *
  */
 /*
  * (#)WFPrincipal.java 
@@ -48,16 +51,16 @@ import java.io.Serializable;
  */
  
 public interface WFPrincipal  extends Serializable  {
-	// Methoden
+	
 
 	/**	 
-	 * Methode getId
+	 * Method getId
 	 * @return String
 	 */
 	public String getId() ;
 
 	/**	 
-	 * Methode isValid
+	 * Method isValid
 	 * @return boolean
 	 */
 	public boolean isValid() ;

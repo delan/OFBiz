@@ -28,6 +28,9 @@
 
 /*
  * $Log$
+ * Revision 1.1.1.1  2001/08/10 10:33:40  owieland
+ * Initial import
+ *
  */
 /*
  * (#)WFActivityFilter.java 
@@ -48,13 +51,13 @@ import java.io.Serializable;
  */
  
 public interface WFActivityFilter  extends Serializable  {
-	// Methoden
+	
 
 	/**	 
-	 * Wenn ein Eintrag in der Worklist erschienen soll, muß die Methode true zurückliefern, sonst false.
+	 * Wenn ein Eintrag in der Worklist erschienen soll, muß die Method true zurückliefern, sonst false.
 
-Diese Methode muß von einem konkreten Filter überschreiben werden
-	 * @param pActivity Wert für Activity
+Diese Method muß von einem konkreten Filter überschreiben werden
+	 * @param pActivity Value for  Activity
 	 * @return boolean
 	 */
 	public boolean accept(WFActivity pActivity) ;

@@ -28,6 +28,9 @@
 
 /*
  * $Log$
+ * Revision 1.1.1.1  2001/08/10 10:33:41  owieland
+ * Initial import
+ *
  */
 /*
  * (#)Workflow.java 
@@ -44,77 +47,75 @@ import java.util.Collection;
 import java.io.Serializable;
 
 /**
- * Schnittstelle der Workflow-Engine. Sie stellt Methode für das Erzeugen und Ausführen von Workflowprozessen zur Verfügung.<p> Für die Benutzer- und Prozesszuordnung gibt es jeweils ein Sessionobjekt, welche beim Aufruf der Methoden
-
-übergeben werden müssen.<p>
+ * Interface (facade) for the workflow engine. Currently it is not j2ee aware.
  * @author Oliver Wieland
  * @version 1.0
  */
  
 public interface Workflow  extends Serializable  {
-	// Methoden
+	
 
 	/**	 
 	 * Cancel a running process on user request
-	 * @param pId Wert für Id
-	 * @param pReason Wert für Reason
+	 * @param pId Value for  Id
+	 * @param pReason Value for  Reason
 	 */
 	public void abortProcess(WFProcessID pId, String pReason)  throws WFException;
 
 	/**	 
 	 * Adds a listener
-	 * @param pListener Wert für Listener
+	 * @param pListener Value for  Listener
 	 */
 	public void addListener(WFListener pListener) ;
 
 	/**	 
 	 * Creates a new workflow process. The invoker must have the right to do that.
-	 * @param pInitiator Wert für Initiator
-	 * @param pName Wert für Name
+	 * @param pInitiator Value for  Initiator
+	 * @param pName Value for  Name
 	 * @return WFProcessID
 	 */
 	public WFProcessID createProcess(WFPrincipal pInitiator, String pName)  throws WFException;
 
 	/**	 
-	 * Methode getActiveProcesses
-	 * @param pUser Wert für User
+	 * Method getActiveProcesses
+	 * @param pUser Value for  User
 	 * @return Collection
 	 */
 	public Collection getActiveProcesses(WFPrincipal pUser) ;
 
 	/**	 
-	 * Methode getProcesses
-	 * @param pUser Wert für User
+	 * Method getProcesses
+	 * @param pUser Value for  User
 	 * @return Collection
 	 */
 	public Collection getProcesses(WFPrincipal pUser) ;
 
 	/**	 
 	 * Returns the worklist of the user
-	 * @param pUser Wert für User
+	 * @param pUser Value for  User
 	 * @return Collection
 	 */
 	public Collection getWorklist(WFPrincipal pUser) ;
 
 	/**	 
 	 * Returns the worklist of the user
-	 * @param pUser Wert für User
-	 * @param pFilter Wert für Filter
+	 * @param pUser Value for  User
+	 * @param pFilter Value for  Filter
 	 * @return Collection
 	 */
 	public Collection getWorklist(WFPrincipal pUser, WFActivityFilter pFilter) ;
 
 	/**	 
 	 * Logs in a user and returns a user session object
-	 * @param pUser Wert für User
-	 * @param pPassword Wert für Password
+	 * @param pUser Value for  User
+	 * @param pPassword Value for  Password
 	 * @return WFPrincipal
 	 */
 	public WFPrincipal login(String pUser, String pPassword) ;
 
 	/**	 
 	 * Removes an existing listener
-	 * @param pListener Wert für Listener
+	 * @param pListener Value for  Listener
 	 */
 	public void removeListener(WFListener pListener) ;
 
@@ -134,8 +135,8 @@ public interface Workflow  extends Serializable  {
 
 	/**	 
 	 * Marks the given activity as 'completed' and returns the next activity, if unique and the same user can perform this activity. Otherwise null
-	 * @param pId Wert für Id
-	 * @param pContext Wert für Context
+	 * @param pId Value for  Id
+	 * @param pContext Value for  Context
 	 * @return WFActivity
 	 */
 	public WFActivity updateProcess(WFProcessID pId, WFContext pContext)  throws WFException;
@@ -144,31 +145,31 @@ public interface Workflow  extends Serializable  {
 	 * Markiert die aktuelle Aktivität als beendet und liefert die nächste Aktivität. Wenn es keine weiteren Aktivitäten mehr gibt oder der Prozess sich aufteilt, wird null zurückgegeben.
 
 Zusätzlich kann hier die Aktivität vorgegeben werden (notwendig bei Verzweigungen)
-	 * @param pId Wert für Id
-	 * @param pContext Wert für Context
-	 * @param pActivity Wert für Activity
+	 * @param pId Value for  Id
+	 * @param pContext Value for  Context
+	 * @param pActivity Value for  Activity
 	 * @return WFActivity
 	 */
 	public WFActivity updateProcess(WFProcessID pId, WFContext pContext, WFActivity pActivity) ;
 
 	/**	 
-	 * Methode getRealName
-	 * @param pUser Wert für User
+	 * Method getRealName
+	 * @param pUser Value for  User
 	 * @return String
 	 */
 	public String getRealName(WFPrincipal pUser) ;
 
 	/**	 
-	 * Methode getHistory
-	 * @param pUser Wert für User
-	 * @param pActivity Wert für Activity
+	 * Method getHistory
+	 * @param pUser Value for  User
+	 * @param pActivity Value for  Activity
 	 * @return Collection
 	 */
 	public Collection getHistory(WFPrincipal pUser, WFActivity pActivity) ;
 
 	/**	 
-	 * Methode getGroupName
-	 * @param pUser Wert für User
+	 * Method getGroupName
+	 * @param pUser Value for  User
 	 * @return String
 	 */
 	public String getGroupName(WFPrincipal pUser) ;

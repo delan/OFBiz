@@ -28,6 +28,9 @@
 
 /*
  * $Log$
+ * Revision 1.1  2001/08/10 10:43:15  owieland
+ * Add missing files from import
+ *
  */
 package org.ofbiz.core.workflow;
 
@@ -98,17 +101,17 @@ public class WFLightweightActivity implements WFActivity {
 
 	/**
 	 * Konstruktor mit allen Attributen 
-	 * @param pName Wert für Attibut 'name'
-	 * @param pId Wert für Attibut 'id'
-	 * @param pInitiator Wert für Attibut 'initiator'
-	 * @param pContext Wert für Attibut 'context'
-	 * @param pState Wert für Attibut 'state'
-	 * @param pCreationTime Wert für Attibut 'creationTime'
-	 * @param pLastModified Wert für Attibut 'lastModified'
-	 * @param pCompletionTime Wert für Attibut 'completionTime'
-	 * @param pStartTime Wert für Attibut 'startTime'
-	 * @param pDurationUnit Wert für Attibut 'durationUnit'
-	 * @param pDuration Wert für Attibut 'duration'
+	 * @param pName Value for  Attibut 'name'
+	 * @param pId Value for  Attibut 'id'
+	 * @param pInitiator Value for  Attibut 'initiator'
+	 * @param pContext Value for  Attibut 'context'
+	 * @param pState Value for  Attibut 'state'
+	 * @param pCreationTime Value for  Attibut 'creationTime'
+	 * @param pLastModified Value for  Attibut 'lastModified'
+	 * @param pCompletionTime Value for  Attibut 'completionTime'
+	 * @param pStartTime Value for  Attibut 'startTime'
+	 * @param pDurationUnit Value for  Attibut 'durationUnit'
+	 * @param pDuration Value for  Attibut 'duration'
 	 */
 	WFLightweightActivity(
 		String pName,

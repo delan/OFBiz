@@ -28,6 +28,9 @@
 
 /*
  * $Log$
+ * Revision 1.1.1.1  2001/08/10 10:33:40  owieland
+ * Initial import
+ *
  */
 /*
  * (#)WFProcessID.java 
@@ -48,7 +51,7 @@ import java.io.Serializable;
  */
  
 public interface WFProcessID  extends Serializable  {
-	// Methoden
+	
 
 	/**	 
 	 * Liefert die eindeutige ID des Prozesses

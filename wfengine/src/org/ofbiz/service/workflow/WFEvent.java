@@ -28,6 +28,9 @@
 
 /*
  * $Log$
+ * Revision 1.1.1.1  2001/08/10 10:33:40  owieland
+ * Initial import
+ *
  */
 /*
  * (#)WFEvent.java 
@@ -48,7 +51,7 @@ import java.io.Serializable;
  */
  
 public interface WFEvent  extends Serializable  {
-	// Methoden
+	
 
 	/**	 
 	 * Liefert die Ereignisquelle. Wenn null, ist die Workflowengine selbst die Quelle (Systemmeldung)

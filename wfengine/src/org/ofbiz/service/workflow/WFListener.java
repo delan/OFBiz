@@ -28,6 +28,9 @@
 
 /*
  * $Log$
+ * Revision 1.1.1.1  2001/08/10 10:33:40  owieland
+ * Initial import
+ *
  */
 /*
  * (#)WFListener.java 
@@ -48,11 +51,11 @@ import java.io.Serializable;
  */
  
 public interface WFListener  extends Serializable  {
-	// Methoden
+	
 
 	/**	 
-	 * Methode handleEvent
-	 * @param pEvent Wert für Event
+	 * Method handleEvent
+	 * @param pEvent Value for  Event
 	 */
 	public void handleEvent(WFEvent pEvent) ;
 
