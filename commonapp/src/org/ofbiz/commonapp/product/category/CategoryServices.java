@@ -79,12 +79,14 @@ public class CategoryServices {
             return result;
         }
 
-        List memberList = new ArrayList((Collection) result.get("categoryMembers"));
-        if (memberList == null) {
+        Collection memberCol = (Collection) result.get("categoryMembers");
+        if (memberCol == null || memberCol.size() == 0) {
             result.put(ModelService.RESPONSE_MESSAGE, ModelService.RESPOND_ERROR);
             result.put(ModelService.ERROR_MESSAGE, "Problem reading category member data.");
             return result;
         }
+
+        List memberList = new ArrayList(memberCol);
 
         if (productId != null && index == null) {
             Iterator i = memberList.iterator();
