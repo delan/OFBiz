@@ -257,7 +257,7 @@ public class MsrKybService extends BaseService implements jpos.services.MSRServi
         try {
             // parse the tracks from the character string
             String track1 = str.substring(0, str.indexOf(";"));
-            String track2 = str.substring((str.indexOf(";") + 1), str.length() - 1);
+            String track2 = str.substring(str.indexOf(";"), str.length() - 1);
             Debug.log("Track1 - " + track1, module);
             Debug.log("Track2 - " + track2, module);
 
