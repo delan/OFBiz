@@ -145,7 +145,14 @@ function submitForm(form, mode, value) {
                           <textarea class='textAreaBox' cols="30" rows="3" name="shipping_instructions">${cart.getShippingInstructions()?if_exists}</textarea>
                         </td>
                       </tr>
-                      <tr><td colspan="2"><hr class='sepbar'></td></tr>
+                      <tr><td colspan="2"><hr class='sepbar'></td></tr>       
+                      <tr>
+                        <td colspan="2">
+                          <span class="head2"><b>PO Number</b></span>&nbsp;
+                          <input type="text" class='inputBox' name="corresponding_po_id" size="15" value='${cart.getPoNumber()?if_exists}'>
+                        </td>
+                      </tr>                                                           
+                      <tr><td colspan="2"><hr class='sepbar'></td></tr>                      
                       <tr>
                         <td colspan="2">
                           <div>
@@ -337,9 +344,7 @@ function submitForm(form, mode, value) {
                       <div class='tabletext'><b>There are no payment methods on file.</b></div>
                     </#if>
                     <#if billingAccountRoleList?has_content>
-                      <div class="tabletext">To pay with store credit, enter your Purchase Order (PO) number here and select the billing account:</div>
-                      <input type="text" class='inputBox' name="corresponding_po_id" size="20" value='${cart.getPoNumber()?if_exists}'>
-                      <br>
+                      <div class="tabletext">To pay with store credit, select the billing account:</div>                     
                       <table width="90%" border="0" cellpadding="0" cellspacing="0">
                         <tr><td colspan="2"><hr class='sepbar'></td></tr>
                         <#list billingAccountRoleList as billingAccountRole>

@@ -133,15 +133,16 @@ public class CheckOutEvents {
                     cart.addPaymentMethodId(checkOutPaymentId);
                 }
             }
-            if (UtilValidate.isNotEmpty(billingAccountId)) {
-                cart.setBillingAccountId(billingAccountId);
+            if (UtilValidate.isNotEmpty(correspondingPoId)) {
                 cart.setPoNumber(correspondingPoId);
-                if (UtilValidate.isEmpty(cart.getPoNumber())) {
-                    cart.setPoNumber("(none)");
-                }// else ok
+            } else {
+                cart.setPoNumber("(none)");
+            }
+            if (UtilValidate.isNotEmpty(billingAccountId)) {
+                cart.setBillingAccountId(billingAccountId);               
             } else if (UtilValidate.isEmpty(checkOutPaymentId)) {
                 errorMessage.append("<li>Please Select a Method of Billing");
-            }
+            }                       
         } else {
             errorMessage.append("<li>There are no items in the cart.");
         }
