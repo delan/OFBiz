@@ -100,8 +100,8 @@
     <td width="74%">
       <select name="CUSTOMER_STATE" class='selectBox'>
           <#if requestParameters.CUSTOMER_STATE?exists><option>${requestParameters.CUSTOMER_STATE}</option></#if>
-          <option value="">No State/Province</option>
-          <#include "/includes/states.ftl">
+          <option value="">No State/Province</option>          
+          <#include "../includes/states.ftl">
       </select>
     * </td>
   </tr>
@@ -116,7 +116,7 @@
       <td width="74%">
           <select name="CUSTOMER_COUNTRY" class='selectBox'>
             <#if requestParameters.CUSTOMER_COUNTRY?exists><option>${requestParameters.CUSTOMER_COUNTRY}</option></#if>
-            <#include "/includes/countries.ftl">
+            <#include "../includes/countries.ftl">
           </select>
       * </td>
   </tr>

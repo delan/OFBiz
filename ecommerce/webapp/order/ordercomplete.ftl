@@ -28,9 +28,9 @@
 <p>NOTE: This is a DEMO store-front.  Orders placed here will NOT be billed, and will NOT be fulfilled.</p>
 
 <#if orderHeader?has_content>
-  ${pages.get("/order/orderheader.ftl")}
+  <#include "orderheader.ftl">
   <br>
-  ${pages.get("/order/orderitems.ftl")}
+  <#include "orderitems.ftl">
   <table border="0" cellpadding="1" width="100%">
    <tr>
       <td colspan="4" align="left">

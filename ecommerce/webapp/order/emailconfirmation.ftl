@@ -41,9 +41,9 @@
 
 <#assign urlPrefix="http://localhost:8080/ecommerce/control">
 <#-- display the standard order status page header and items -->
-<#include "/order/orderheader.ftl">
+<#include "orderheader.ftl">
 <br>
-<#include "/order/orderitems.ftl">
+<#include "orderitems.ftl">
 <div align='right'>  
   <#-- change this to not display when no account was created -->
   <a href="<@ofbizUrl>/orderstatus?order_id=${orderHeader.orderId}</@ofbizUrl>" class="buttontextbig">[View&nbsp;Order]&nbsp;</a>
