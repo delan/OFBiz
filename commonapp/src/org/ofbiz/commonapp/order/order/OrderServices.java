@@ -159,12 +159,6 @@ public class OrderServices {
             toBeStored.add(orderAdjustment);
         }
 
-        // set the shipping address
-        String shippingContactMechId = (String) context.get("shippingContactMechId");
-        toBeStored.add(delegator.makeValue("OrderContactMech",
-                UtilMisc.toMap("contactMechId", shippingContactMechId,
-                        "contactMechPurposeTypeId", "SHIPPING_LOCATION", "orderId", orderId)));
-
         // set the order contact mechs
         List orderContactMechs = (List) context.get("orderContactMechs");
         if (orderContactMechs != null && orderContactMechs.size() > 0) {

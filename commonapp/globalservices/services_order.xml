@@ -26,7 +26,6 @@
         <attribute name="billingAccountId" type="String" mode="IN"/>
         <attribute name="shippingAmount" type="Double" mode="IN" optional="true"/>
         <attribute name="taxAmount" type="Double" mode="IN" optional="true"/>
-        <attribute name="shippingContactMechId" type="String" mode="IN"/>
         <attribute name="shipmentMethodTypeId" type="String" mode="IN"/>
         <attribute name="carrierPartyId" type="String" mode="IN"/>
         <attribute name="maySplit" type="Boolean" mode="IN"/>

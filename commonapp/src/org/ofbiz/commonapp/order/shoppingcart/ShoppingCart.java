@@ -50,7 +50,6 @@ public class ShoppingCart implements java.io.Serializable {
     private String poNumber = null;
     private String orderId = null;
 
-    private String shippingContactMechId = null;
     private String billingAccountId = null;
     private String shippingInstructions = null;
     private Boolean maySplit = null;
@@ -271,11 +270,12 @@ public class ShoppingCart implements java.io.Serializable {
 
     /** Sets the shipping contact mech id. */
     public void setShippingContactMechId(String shippingContactMechId) {
-        this.shippingContactMechId = shippingContactMechId;
+        // set the shipping address
+        this.addContactMech("SHIPPING_LOCATION", shippingContactMechId);
     }
     /** Returns the shipping message string. */
     public String getShippingContactMechId() {
-        return shippingContactMechId;
+        return this.getContactMech("SHIPPING_LOCATION");
     }
 
     /** Sets the shipment method type. */
@@ -354,9 +354,9 @@ public class ShoppingCart implements java.io.Serializable {
     }
 
     public GenericValue getShippingAddress(GenericDelegator delegator) {
-        if (this.shippingContactMechId != null) {
+        if (this.getShippingContactMechId() != null) {
             try {
-                return delegator.findByPrimaryKey("PostalAddress", UtilMisc.toMap("contactMechId", this.shippingContactMechId));
+                return delegator.findByPrimaryKey("PostalAddress", UtilMisc.toMap("contactMechId", this.getShippingContactMechId()));
             } catch (GenericEntityException e) {
                 Debug.logWarning(e.toString());
                 return null;
@@ -723,7 +723,6 @@ public class ShoppingCart implements java.io.Serializable {
         result.put("orderAdjustments", makeAllAdjustments(delegator));
         result.put("orderItemPriceInfos", makeAllOrderItemPriceInfos(delegator));
 
-        result.put("shippingContactMechId", getShippingContactMechId());
         result.put("orderContactMechs", makeAllOrderContactMechs(delegator));
         result.put("orderItemContactMechs", makeAllOrderItemContactMechs(delegator));
         
