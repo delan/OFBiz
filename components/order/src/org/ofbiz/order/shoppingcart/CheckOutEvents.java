@@ -1,5 +1,5 @@
 /*
- * $Id: CheckOutEvents.java,v 1.20 2003/12/06 23:57:46 ajzeneski Exp $
+ * $Id: CheckOutEvents.java,v 1.21 2003/12/12 23:07:07 ajzeneski Exp $
  *
  *  Copyright (c) 2001, 2002 The Open For Business Project - www.ofbiz.org
  *
@@ -59,7 +59,7 @@ import org.ofbiz.service.ServiceUtil;
  * @author     <a href="mailto:cnelson@einnovation.com">Chris Nelson</a>
  * @author     <a href="mailto:jonesde@ofbiz.org">David E. Jones</a>
  * @author     <a href="mailto:tristana@twibble.org">Tristan Austin</a>
- * @version    $Revision: 1.20 $
+ * @version    $Revision: 1.21 $
  * @since      2.0
  */
 public class CheckOutEvents {
@@ -139,8 +139,8 @@ public class CheckOutEvents {
         String maySplit = request.getParameter("may_split");
         String giftMessage = request.getParameter("gift_message");
         String isGift = request.getParameter("is_gift");
-        callResult = checkOutHelper.setCheckOutShippingOptions( shippingMethod, correspondingPoId,
-            shippingInstructions, orderAdditionalEmails, maySplit, giftMessage, isGift );
+        callResult = checkOutHelper.setCheckOutShippingOptions(shippingMethod, correspondingPoId,
+            shippingInstructions, orderAdditionalEmails, maySplit, giftMessage, isGift);
 
         ServiceUtil.getMessages(request, callResult, null, "<li>", "</li>", "<ul>", "</ul>", null, null);
 
@@ -173,7 +173,26 @@ public class CheckOutEvents {
             }
         }
 
-        callResult = checkOutHelper.setCheckOutPayment(selectedPaymentMethods, billingAccountId, billingAccountAmt);
+        List singleUsePayments = new ArrayList();
+
+        // check for gift card not on file
+        Map params = UtilHttp.getParameterMap(request);
+        Map gcResult = checkOutHelper.checkGiftCard(params, selectedPaymentMethods);
+        ServiceUtil.getMessages(request, gcResult, null, "<li>", "</li>", "<ul>", "</ul>", null, null);
+        if (gcResult.get(ModelService.RESPONSE_MESSAGE).equals(ModelService.RESPOND_ERROR)) {
+            return "error";
+        } else {
+            String gcPaymentMethodId = (String) gcResult.get("paymentMethodId");
+            Double gcAmount = (Double) gcResult.get("amount");
+            if (gcPaymentMethodId != null) {
+                selectedPaymentMethods.put(gcPaymentMethodId, gcAmount);
+                if ("Y".equalsIgnoreCase(request.getParameter("singleUseGiftCard"))) {
+                    singleUsePayments.add(gcPaymentMethodId);
+                }
+            }
+        }
+
+        callResult = checkOutHelper.setCheckOutPayment(selectedPaymentMethods, singleUsePayments, billingAccountId, billingAccountAmt);
 
         ServiceUtil.getMessages(request, callResult, null, "<li>", "</li>", "<ul>", "</ul>", null, null);
 
@@ -304,6 +323,7 @@ public class CheckOutEvents {
         String maySplit = request.getParameter("may_split");
         String giftMessage = request.getParameter("gift_message");
         String isGift = request.getParameter("is_gift");
+        List singleUsePayments = new ArrayList();
 
         // get the billing account and amount
         String billingAccountId = request.getParameter("billingAccountId");
@@ -334,12 +354,15 @@ public class CheckOutEvents {
             Double gcAmount = (Double) gcResult.get("amount");
             if (gcPaymentMethodId != null) {
                 selectedPaymentMethods.put(gcPaymentMethodId, gcAmount);
+                if ("Y".equalsIgnoreCase(request.getParameter("singleUseGiftCard"))) {
+                    singleUsePayments.add(gcPaymentMethodId);
+                }
             }
         }
 
         Map optResult = checkOutHelper.setCheckOutOptions(shippingMethod, shippingContactMechId, selectedPaymentMethods,
-            billingAccountId, billingAccountAmt, correspondingPoId, shippingInstructions, orderAdditionalEmails,
-            maySplit, giftMessage, isGift);
+            singleUsePayments, billingAccountId, billingAccountAmt, correspondingPoId, shippingInstructions,
+            orderAdditionalEmails, maySplit, giftMessage, isGift);
 
        ServiceUtil.getMessages(request, optResult, null, "<li>", "</li>", "<ul>", "</ul>", null, null);
         if (optResult.get(ModelService.RESPONSE_MESSAGE).equals(ModelService.RESPOND_ERROR)) {

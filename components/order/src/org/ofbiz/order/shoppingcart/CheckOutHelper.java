@@ -1,5 +1,5 @@
 /*
- * $Id: CheckOutHelper.java,v 1.14 2003/11/25 00:17:19 ajzeneski Exp $
+ * $Id: CheckOutHelper.java,v 1.15 2003/12/12 23:07:07 ajzeneski Exp $
  *
  *  Copyright (c) 2001, 2002 The Open For Business Project - www.ofbiz.org
  *
@@ -63,7 +63,7 @@ import org.ofbiz.service.ServiceUtil;
  * @author     <a href="mailto:cnelson@einnovation.com">Chris Nelson</a>
  * @author     <a href="mailto:jonesde@ofbiz.org">David E. Jones</a>
  * @author     <a href="mailto:tristana@twibble.org">Tristan Austin</a>
- * @version    $Revision: 1.14 $
+ * @version    $Revision: 1.15 $
  * @since      2.0
  */
 public class CheckOutHelper {
@@ -81,197 +81,200 @@ public class CheckOutHelper {
     }
 
     public Map setCheckOutShippingAddress(String shippingContactMechId) {
-      List errorMessages = new ArrayList();
-      Map result;
+        List errorMessages = new ArrayList();
+        Map result;
 
-      if (this.cart != null && this.cart.size() > 0) {
-        errorMessages.addAll(setCheckOutShippingAddressInternal(shippingContactMechId));
-      } else {
-        errorMessages.add("There are no items in the cart.");
-      }
+        if (this.cart != null && this.cart.size() > 0) {
+            errorMessages.addAll(setCheckOutShippingAddressInternal(shippingContactMechId));
+        } else {
+            errorMessages.add("There are no items in the cart.");
+        }
 
-      if (errorMessages.size() == 1) {
-          result = ServiceUtil.returnError(errorMessages.get(0).toString());
-      }else if (errorMessages.size() > 0) {
-          result = ServiceUtil.returnError(errorMessages);
-      } else {
-          result = ServiceUtil.returnSuccess();
-      }
+        if (errorMessages.size() == 1) {
+            result = ServiceUtil.returnError(errorMessages.get(0).toString());
+        } else if (errorMessages.size() > 0) {
+            result = ServiceUtil.returnError(errorMessages);
+        } else {
+            result = ServiceUtil.returnSuccess();
+        }
 
-      return result;
-   }
+        return result;
+    }
 
     private List setCheckOutShippingAddressInternal(String shippingContactMechId) {
-      List errorMessages = new ArrayList();
+        List errorMessages = new ArrayList();
 
-      // set the shipping address
-      if (UtilValidate.isNotEmpty(shippingContactMechId)) {
-        this.cart.setShippingContactMechId(shippingContactMechId);
-      } else {
-        errorMessages.add("Please Select a Shipping Destination");
-      }
+        // set the shipping address
+        if (UtilValidate.isNotEmpty(shippingContactMechId)) {
+            this.cart.setShippingContactMechId(shippingContactMechId);
+        } else {
+            errorMessages.add("Please Select a Shipping Destination");
+        }
 
-      return errorMessages;
-   }
+        return errorMessages;
+    }
 
-    public Map setCheckOutShippingOptions(String shippingMethod, String correspondingPoId,
-            String shippingInstructions, String orderAdditionalEmails, String maySplit, String giftMessage,
-            String isGift) {
-      List errorMessages = new ArrayList();
-      Map result;
+    public Map setCheckOutShippingOptions(String shippingMethod, String correspondingPoId, String shippingInstructions,
+            String orderAdditionalEmails, String maySplit, String giftMessage, String isGift) {
+        List errorMessages = new ArrayList();
+        Map result;
 
-      if (this.cart != null && this.cart.size() > 0) {
-        errorMessages.addAll(setCheckOutShippingOptionsInternal(shippingMethod, correspondingPoId,
-            shippingInstructions, orderAdditionalEmails, maySplit, giftMessage, isGift));
-      } else {
-        errorMessages.add("There are no items in the cart.");
-      }
+        if (this.cart != null && this.cart.size() > 0) {
+            errorMessages.addAll(setCheckOutShippingOptionsInternal(shippingMethod, correspondingPoId,
+                    shippingInstructions, orderAdditionalEmails, maySplit, giftMessage, isGift));
+        } else {
+            errorMessages.add("There are no items in the cart.");
+        }
 
-      if (errorMessages.size() == 1) {
-          result = ServiceUtil.returnError(errorMessages.get(0).toString());
-      }else if (errorMessages.size() > 0) {
-          result = ServiceUtil.returnError(errorMessages);
-      } else {
-          result = ServiceUtil.returnSuccess();
-      }
+        if (errorMessages.size() == 1) {
+            result = ServiceUtil.returnError(errorMessages.get(0).toString());
+        } else if (errorMessages.size() > 0) {
+            result = ServiceUtil.returnError(errorMessages);
+        } else {
+            result = ServiceUtil.returnSuccess();
+        }
 
-      return result;
-   }
+        return result;
+    }
 
-    private List setCheckOutShippingOptionsInternal(String shippingMethod, String correspondingPoId,
-            String shippingInstructions, String orderAdditionalEmails, String maySplit, String giftMessage,
-            String isGift) {
-      List errorMessages = new ArrayList();
+    private List setCheckOutShippingOptionsInternal(String shippingMethod, String correspondingPoId, String shippingInstructions,
+            String orderAdditionalEmails, String maySplit, String giftMessage, String isGift) {
+        List errorMessages = new ArrayList();
 
-      // set the general shipping options
-      if (UtilValidate.isNotEmpty(shippingMethod)) {
-          int delimiterPos = shippingMethod.indexOf('@');
-          String shipmentMethodTypeId = null;
-          String carrierPartyId = null;
+        // set the general shipping options
+        if (UtilValidate.isNotEmpty(shippingMethod)) {
+            int delimiterPos = shippingMethod.indexOf('@');
+            String shipmentMethodTypeId = null;
+            String carrierPartyId = null;
 
-          if (delimiterPos > 0) {
-              shipmentMethodTypeId = shippingMethod.substring(0, delimiterPos);
-              carrierPartyId = shippingMethod.substring(delimiterPos + 1);
-          }
+            if (delimiterPos > 0) {
+                shipmentMethodTypeId = shippingMethod.substring(0, delimiterPos);
+                carrierPartyId = shippingMethod.substring(delimiterPos + 1);
+            }
 
-          this.cart.setShipmentMethodTypeId(shipmentMethodTypeId);
-          this.cart.setCarrierPartyId(carrierPartyId);
-      } else {
-          errorMessages.add("Please Select a Shipping Method");
-      }
-      this.cart.setShippingInstructions(shippingInstructions);
-      if (UtilValidate.isNotEmpty(maySplit)) {
-          cart.setMaySplit(Boolean.valueOf(maySplit));
-      } else {
-          errorMessages.add("Please Select a Splitting Preference");
-      }
-      this.cart.setGiftMessage(giftMessage);
-      if (UtilValidate.isNotEmpty(isGift)) {
-          cart.setIsGift(Boolean.valueOf(isGift));
-      } else {
-          errorMessages.add("Please Specify Whether or Not This Order is a Gift");
-      }
+            this.cart.setShipmentMethodTypeId(shipmentMethodTypeId);
+            this.cart.setCarrierPartyId(carrierPartyId);
+        } else {
+            errorMessages.add("Please Select a Shipping Method");
+        }
+        this.cart.setShippingInstructions(shippingInstructions);
+        if (UtilValidate.isNotEmpty(maySplit)) {
+            cart.setMaySplit(Boolean.valueOf(maySplit));
+        } else {
+            errorMessages.add("Please Select a Splitting Preference");
+        }
+        this.cart.setGiftMessage(giftMessage);
+        if (UtilValidate.isNotEmpty(isGift)) {
+            cart.setIsGift(Boolean.valueOf(isGift));
+        } else {
+            errorMessages.add("Please Specify Whether or Not This Order is a Gift");
+        }
 
-      this.cart.setOrderAdditionalEmails(orderAdditionalEmails);
+        this.cart.setOrderAdditionalEmails(orderAdditionalEmails);
 
-      // set the PO number
-      if (UtilValidate.isNotEmpty(correspondingPoId)) {
-          this.cart.setPoNumber(correspondingPoId);
-      } else {
-          this.cart.setPoNumber("(none)");
-      }
+        // set the PO number
+        if (UtilValidate.isNotEmpty(correspondingPoId)) {
+            this.cart.setPoNumber(correspondingPoId);
+        } else {
+            this.cart.setPoNumber("(none)");
+        }
 
-      return errorMessages;
-   }
+        return errorMessages;
+    }
 
-    public Map setCheckOutPayment(Map selectedPaymentMethods, String billingAccountId, Double billingAccountAmt) {
-      List errorMessages = new ArrayList();
-      Map result;
+    public Map setCheckOutPayment(Map selectedPaymentMethods, List singleUsePayments, String billingAccountId, Double billingAccountAmt) {
+        List errorMessages = new ArrayList();
+        Map result;
 
-      if (this.cart != null && this.cart.size() > 0) {
-        errorMessages.addAll(setCheckOutPaymentInternal(selectedPaymentMethods, billingAccountId, billingAccountAmt));
-      } else {
-        errorMessages.add("There are no items in the cart.");
-      }
+        if (this.cart != null && this.cart.size() > 0) {
+            errorMessages.addAll(setCheckOutPaymentInternal(selectedPaymentMethods, singleUsePayments, billingAccountId, billingAccountAmt));
+        } else {
+            errorMessages.add("There are no items in the cart.");
+        }
 
-      if (errorMessages.size() == 1) {
-          result = ServiceUtil.returnError(errorMessages.get(0).toString());
-      }else if (errorMessages.size() > 0) {
-          result = ServiceUtil.returnError(errorMessages);
-      } else {
-          result = ServiceUtil.returnSuccess();
-      }
+        if (errorMessages.size() == 1) {
+            result = ServiceUtil.returnError(errorMessages.get(0).toString());
+        } else if (errorMessages.size() > 0) {
+            result = ServiceUtil.returnError(errorMessages);
+        } else {
+            result = ServiceUtil.returnSuccess();
+        }
 
-      return result;
-   }
+        return result;
+    }
 
-    private List setCheckOutPaymentInternal(Map selectedPaymentMethods, String billingAccountId, Double billingAccountAmt) {
-      List errorMessages = new ArrayList();
+    private List setCheckOutPaymentInternal(Map selectedPaymentMethods, List singleUsePayments, String billingAccountId, Double billingAccountAmt) {
+        List errorMessages = new ArrayList();
 
-      // set the billing account amount
-      if (billingAccountId != null && billingAccountAmt != null && !billingAccountId.equals("_NA_")) {
-          cart.setBillingAccount(billingAccountId, billingAccountAmt.doubleValue());
-      } else {
-          cart.setBillingAccount(null, 0.00);
-      }
+        if (singleUsePayments == null) {
+            singleUsePayments = new ArrayList();
+        }
 
-      // set the payment method option
-      if (selectedPaymentMethods != null && selectedPaymentMethods.size() > 0) {
-          // clear out the old payments
-          this.cart.clearPaymentMethodTypeIds();
-          this.cart.clearPaymentMethodIds();
+        // set the billing account amount
+        if (billingAccountId != null && billingAccountAmt != null && !billingAccountId.equals("_NA_")) {
+            cart.setBillingAccount(billingAccountId, billingAccountAmt.doubleValue());
+        } else {
+            cart.setBillingAccount(null, 0.00);
+        }
 
-          // if we are EXT_BILLACT (billing account only) then we need to make sure we have enough credit
-          if (selectedPaymentMethods.containsKey("EXT_BILLACT")) {
-              double accountCredit = this.availableAccountBalance(cart.getBillingAccountId());
-              // make sure we have enough to cover; if this is selected we don't have other payment methods
-              if (cart.getGrandTotal() > accountCredit) {
-                  errorMessages.add("Insufficient credit available on account.");
-              }
-          }
+        // set the payment method option
+        if (selectedPaymentMethods != null && selectedPaymentMethods.size() > 0) {
+            // clear out the old payments
+            this.cart.clearPaymentMethodTypeIds();
+            this.cart.clearPaymentMethodIds();
 
-          Set paymentMethods = selectedPaymentMethods.keySet();
-          Iterator i = paymentMethods.iterator();
-          while (i.hasNext()) {
-              String checkOutPaymentId = (String) i.next();
+            // if we are EXT_BILLACT (billing account only) then we need to make sure we have enough credit
+            if (selectedPaymentMethods.containsKey("EXT_BILLACT")) {
+                double accountCredit = this.availableAccountBalance(cart.getBillingAccountId());
+                // make sure we have enough to cover; if this is selected we don't have other payment methods
+                if (cart.getGrandTotal() > accountCredit) {
+                    errorMessages.add("Insufficient credit available on account.");
+                }
+            }
 
-              // get the selected amount to use
-              Double paymentAmount = null;
-              if (selectedPaymentMethods.get(checkOutPaymentId) != null) {
-                  paymentAmount = (Double) selectedPaymentMethods.get(checkOutPaymentId);
-              }
+            Set paymentMethods = selectedPaymentMethods.keySet();
+            Iterator i = paymentMethods.iterator();
+            while (i.hasNext()) {
+                String checkOutPaymentId = (String) i.next();
 
-              // all payment method ids will be numeric, type ids will start with letter
-              if (Character.isLetter(checkOutPaymentId.charAt(0))) {
-                  this.cart.addPaymentMethodTypeId(checkOutPaymentId);
-              } else {
-                  this.cart.setPaymentMethodAmount(checkOutPaymentId, paymentAmount);
-                  Debug.logInfo("Set Payment Method : " + checkOutPaymentId + " @ " + paymentAmount, module);
-              }
-          }
-      } else {
-          errorMessages.add("Please select a method of payment.");
-      }
+                // get the selected amount to use
+                Double paymentAmount = null;
+                if (selectedPaymentMethods.get(checkOutPaymentId) != null) {
+                    paymentAmount = (Double) selectedPaymentMethods.get(checkOutPaymentId);
+                }
 
-      return errorMessages;
-   }
+                // all payment method ids will be numeric, type ids will start with letter
+                if (Character.isLetter(checkOutPaymentId.charAt(0))) {
+                    this.cart.addPaymentMethodTypeId(checkOutPaymentId);
+                } else {
+                    boolean singleUse = singleUsePayments.contains(checkOutPaymentId);
+                    this.cart.setPaymentMethodAmount(checkOutPaymentId, paymentAmount, singleUse);
+                    //Debug.logInfo("Set Payment Method : " + checkOutPaymentId + " @ " + paymentAmount, module);
+                }
+            }
+        } else {
+            errorMessages.add("Please select a method of payment.");
+        }
+
+        return errorMessages;
+    }
 
     public Map setCheckOutOptions(String shippingMethod, String shippingContactMechId, Map selectedPaymentMethods,
-            String billingAccountId, Double billingAccountAmt, String correspondingPoId, String shippingInstructions,
-            String orderAdditionalEmails, String maySplit, String giftMessage, String isGift) {
+            List singleUsePayments, String billingAccountId, Double billingAccountAmt, String correspondingPoId,
+            String shippingInstructions, String orderAdditionalEmails, String maySplit, String giftMessage, String isGift) {
         List errorMessages = new ArrayList();
         Map result = null;
 
         if (this.cart != null && this.cart.size() > 0) {
             // set the general shipping options and method
             errorMessages.addAll(setCheckOutShippingOptionsInternal(shippingMethod, correspondingPoId,
-                shippingInstructions, orderAdditionalEmails, maySplit, giftMessage, isGift));
+                    shippingInstructions, orderAdditionalEmails, maySplit, giftMessage, isGift));
 
             // set the shipping address
             errorMessages.addAll(setCheckOutShippingAddressInternal(shippingContactMechId));
 
             // set the payment method(s) option
-            errorMessages.addAll(setCheckOutPaymentInternal(selectedPaymentMethods, billingAccountId, billingAccountAmt));
+            errorMessages.addAll(setCheckOutPaymentInternal(selectedPaymentMethods, singleUsePayments, billingAccountId, billingAccountAmt));
 
         } else {
             errorMessages.add("There are no items in the cart.");
@@ -279,7 +282,7 @@ public class CheckOutHelper {
 
         if (errorMessages.size() == 1) {
             result = ServiceUtil.returnError(errorMessages.get(0).toString());
-        }else if (errorMessages.size() > 0) {
+        } else if (errorMessages.size() > 0) {
             result = ServiceUtil.returnError(errorMessages);
         } else {
             result = ServiceUtil.returnSuccess();
@@ -386,15 +389,15 @@ public class CheckOutHelper {
         String currencyFormat = UtilProperties.getPropertyValue("general.properties", "currency.decimal.format", "##0.00");
         DecimalFormat formatter = new DecimalFormat(currencyFormat);
         double cartTotal = this.cart.getGrandTotal();
-                String grandTotalString = formatter.format(cartTotal);
+        String grandTotalString = formatter.format(cartTotal);
         Double grandTotal = null;
-                try {
-                        grandTotal = new Double(formatter.parse(grandTotalString).doubleValue());
-                } catch (ParseException e) {
+        try {
+            grandTotal = new Double(formatter.parse(grandTotalString).doubleValue());
+        } catch (ParseException e) {
             Debug.logError(e, "Problem getting parsed currency amount from DecimalFormat", module);
             result = ServiceUtil.returnError("ERROR: Could not create order (problem parsing order totals");
             return result;
-                }
+        }
 
         // store the order - build the context
         Map context = this.cart.makeCartMap(this.dispatcher, areOrderItemsExploded);
@@ -436,8 +439,8 @@ public class CheckOutHelper {
 
         // check for error message(s)
         if (ModelService.RESPOND_ERROR.equals(storeResult.get(ModelService.RESPONSE_MESSAGE)) ||
-            storeResult.containsKey(ModelService.ERROR_MESSAGE) ||
-            storeResult.containsKey(ModelService.ERROR_MESSAGE)) {
+                storeResult.containsKey(ModelService.ERROR_MESSAGE) ||
+                storeResult.containsKey(ModelService.ERROR_MESSAGE)) {
 
             result = ServiceUtil.returnError("Did not complete the order, the following occurred:");
             return result;
@@ -535,7 +538,7 @@ public class CheckOutHelper {
             Iterator oai = orderAdj.iterator();
 
             while (oai.hasNext())
-            this.cart.addAdjustment((GenericValue) oai.next());
+                this.cart.addAdjustment((GenericValue) oai.next());
         }
 
         // return the order item adjustments
@@ -555,7 +558,7 @@ public class CheckOutHelper {
 
     // Calc the tax adjustments.
     private List getTaxAdjustments(LocalDispatcher dispatcher, String taxService, String productStoreId,
-        List orderItems, List allAdjustments, GenericValue shipAddress) throws GeneralException {
+            List orderItems, List allAdjustments, GenericValue shipAddress) throws GeneralException {
         List products = new ArrayList(orderItems.size());
         List amounts = new ArrayList(orderItems.size());
         List shipAmts = new ArrayList(orderItems.size());
@@ -902,7 +905,7 @@ public class CheckOutHelper {
      * any error messages
      */
     public Map finalizeOrderEntryOptions(String shippingMethod,
-            String shippingInstructions, String maySplit, String giftMessage, String isGift) {
+                                         String shippingInstructions, String maySplit, String giftMessage, String isGift) {
         Map result;
 
         //Verify the shipping method is valid
@@ -1027,7 +1030,7 @@ public class CheckOutHelper {
                 // get the amount by type
                 double paymentAmount = 0.00;
                 if (paymentType != null && !paymentType.equals("OFFLINE")) {
-                    String amount = (String)params.get(paymentMethodType.getString("paymentMethodTypeId"));
+                    String amount = (String) params.get(paymentMethodType.getString("paymentMethodTypeId"));
                     if (amount != null && amount.length() > 0) {
                         try {
                             paymentAmount = NumberFormat.getNumberInstance().parse(amount).doubleValue();
@@ -1040,8 +1043,8 @@ public class CheckOutHelper {
 
                 // only worry about types w/ an amount
                 if (paymentAmount > 0.00) {
-                   paymentPrefs.put(paymentType, new Double(paymentAmount));
-                   paymentTally += paymentAmount;
+                    paymentPrefs.put(paymentType, new Double(paymentAmount));
+                    paymentTally += paymentAmount;
                 }
             }
 
@@ -1080,8 +1083,8 @@ public class CheckOutHelper {
      * @see CheckOutHelper#finalizeOrderEntryShip(String)
      */
     public Map finalizeOrderEntry(String finalizeMode, String shippingContactMechId, String shippingMethod,
-            String shippingInstructions, String maySplit, String giftMessage, String isGift, String methodType,
-            String checkOutPaymentId, boolean isSingleUsePayment, boolean appendPayment, Map params) {
+                                  String shippingInstructions, String maySplit, String giftMessage, String isGift, String methodType,
+                                  String checkOutPaymentId, boolean isSingleUsePayment, boolean appendPayment, Map params) {
         Map result = ServiceUtil.returnSuccess();
         Map errorMaps = new HashMap();
         Map callResult;
@@ -1165,13 +1168,13 @@ public class CheckOutHelper {
 
         //See if there is a message list
         if (callResult.containsKey(ModelService.ERROR_MESSAGE_LIST)) {
-            newList = (List)callResult.get(ModelService.ERROR_MESSAGE_LIST);
+            newList = (List) callResult.get(ModelService.ERROR_MESSAGE_LIST);
             targetList.addAll(newList);
         }
 
         //See if there are an error message map
         if (callResult.containsKey(ModelService.ERROR_MESSAGE_MAP)) {
-            errorMsgMap = (Map)callResult.get(ModelService.ERROR_MESSAGE_MAP);
+            errorMsgMap = (Map) callResult.get(ModelService.ERROR_MESSAGE_MAP);
             targetMap.putAll(errorMsgMap);
         }
     }
