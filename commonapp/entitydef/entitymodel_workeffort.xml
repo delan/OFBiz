@@ -584,7 +584,7 @@
       <alias entity-alias="REQ" name="requirementCreationDate"/>
       <alias entity-alias="REQ" name="requiredByDate"/>
       <alias entity-alias="REQ" name="quantity"/>
-      <alias entity-alias="REQ" name="story"/>
+      <alias entity-alias="REQ" name="useCase"/>
       <alias entity-alias="REQ" name="reason"/>
       <view-link entity-alias="WEF" rel-entity-alias="WRF">
         <key-map field-name="workEffortId"/>
