@@ -65,6 +65,8 @@ public class ProductPromoWorker {
             return;
         }
         
+        //TODO: GET RELATED SORTED BY SEQ IDS...
+        
         //there will be a ton of db access, so just do a big catch entity exception block
         try {
             //loop through promotions
@@ -101,6 +103,16 @@ public class ProductPromoWorker {
                             GenericValue productPromoAction = (GenericValue) productPromoActions.next();
                             
                             //TODO: perform action
+                            if ("PROMO_GWP".equals(productPromoAction.getString("productPromoActionTypeId"))) {
+                                if (apply) {
+                                } else {
+                                }
+                            } else if ("PROMO_FREE_SHIPPING".equals(productPromoAction.getString("productPromoActionTypeId"))) {
+                            } else if ("PROMO_ITEM_PERCENT".equals(productPromoAction.getString("productPromoActionTypeId"))) {
+                            } else if ("PROMO_ITEM_AMOUNT".equals(productPromoAction.getString("productPromoActionTypeId"))) {
+                            } else if ("PROMO_ORDER_PERCENT".equals(productPromoAction.getString("productPromoActionTypeId"))) {
+                            } else if ("PROMO_ORDER_AMOUNT".equals(productPromoAction.getString("productPromoActionTypeId"))) {
+                            }
                         }
                     }
                 }
@@ -112,75 +124,38 @@ public class ProductPromoWorker {
     }
     
     public static boolean checkCondition(GenericValue productPromoCond, ShoppingCart cart, ShoppingCartItem cartItem, double newQuantity) {
+        int compare = 0;
+        if ("PPIP_PRODUCT_ID".equals(productPromoCond.getString("inputParamEnumId"))) {
+            compare = cartItem.getProductId().compareTo(productPromoCond.getString("condValue"));
+        } else if ("PPIP_ORDER_TOTAL".equals(productPromoCond.getString("inputParamEnumId"))) {
+            Double orderSubTotal = new Double(cart.getSubTotal());
+            compare = orderSubTotal.compareTo(Double.valueOf(productPromoCond.getString("condValue")));
+        } else if ("PPIP_QUANTITY_ADDED".equals(productPromoCond.getString("inputParamEnumId"))) {
+            Double quantityAdded = new Double(newQuantity - cartItem.getQuantity());
+            compare = quantityAdded.compareTo(Double.valueOf(productPromoCond.getString("condValue")));
+        } else if ("PPIP_NEW_PROD_QUANT".equals(productPromoCond.getString("inputParamEnumId"))) {
+            compare = (new Double(newQuantity)).compareTo(Double.valueOf(productPromoCond.getString("condValue")));
+        } else {
+            Debug.logWarning("An un-supported productPromoCond input parameter (lhs) was used: " + productPromoCond.getString("inputParamEnumId") + ", returning false, ie check failed");
+            return false;
+        }
+
+        if ("PPC_EQ".equals(productPromoCond.getString("operatorEnumId"))) {
+            if (compare == 0) return true;
+        } else if ("PPC_NEQ".equals(productPromoCond.getString("operatorEnumId"))) {
+            if (compare != 0) return true;
+        } else if ("PPC_LT".equals(productPromoCond.getString("operatorEnumId"))) {
+            if (compare < 0) return true;
+        } else if ("PPC_LTE".equals(productPromoCond.getString("operatorEnumId"))) {
+            if (compare <= 0) return true;
+        } else if ("PPC_GT".equals(productPromoCond.getString("operatorEnumId"))) {
+            if (compare > 0) return true;
+        } else if ("PPC_GTE".equals(productPromoCond.getString("operatorEnumId"))) {
+            if (compare >= 0) return true;
+        } else {
+            Debug.logWarning("An un-supported productPromoCond condition was used: " + productPromoCond.getString("operatorEnumId") + ", returning false, ie check failed");
+            return false;
+        }
         return false;
-        //TODO: check condition
     }
-/* What's left of Alex's code    
-    public static Map determinePromos(Collection colActions, Collection colConds, String currentProductId){
-        Map promoFlagsMap = new HashMap();
-        Iterator actionsIt = colActions.iterator();
-        GenericValue gvActions = null;
-        String promoFocusProdId = null;
-        String promoProdRuleId = null;
-        String productPromoActionTypeId = null;
-        
-        while(actionsIt.hasNext()){
-            gvActions = (GenericValue)actionsIt.next();
-            promoFocusProdId = gvActions.getString("productId");
-            promoProdRuleId = gvActions.getString("productPromoRuleId");
-            productPromoActionTypeId = gvActions.getString("productPromoActionTypeId");
-            Debug.logInfo("PROD ID ="+promoFocusProdId);
-        }
-        
-        Iterator condsIt = colConds.iterator();
-        GenericValue gvConds = null;
-        String condValue = null;
-        double valueOfCond = 0.0;
-        String inputParamEnumId = null;
-        String operatorEnumId = null;
-        String doesQualifyForPromo = "N";
-        String key = null;
-        while(condsIt.hasNext()){
-            gvConds = (GenericValue)condsIt.next();
-            condValue = gvConds.getString("condValue");
-            inputParamEnumId = gvConds.getString("inputParamEnumId");
-            operatorEnumId = gvConds.getString("operatorEnumId");
-            
-            if("PPIP_PRODUCT_ID".equals(inputParamEnumId)){
-                key = "PROMO_AGAINST_PRODUCT_ID";
-                if(condValue.equals(currentProductId)){
-                    doesQualifyForPromo = "Y"; promoFlagsMap.put(key,doesQualifyForPromo);
-                }
-                
-            } else if("PPIP_ORDER_TOTAL".equals(inputParamEnumId)){
-                valueOfCond = Double.valueOf(condValue).doubleValue();
-                key = "PROMO_AGAINST_ORDER_TOTAL";
-                if ("PPC_EQ".equals(operatorEnumId)){
-                    //if(valueOfCond == ORDER_TOTAL){ doesQualifyForPromo = "Y"; promoFlagsMap.put(key,doesQualifyForPromo);}
-                } else if ("PPC_NEQ".equals(operatorEnumId)){
-                    //if(valueOfCond != ORDER_TOTAL){ doesQualifyForPromo = "Y"; promoFlagsMap.put(key,doesQualifyForPromo);}
-                } else if ("PPC_LT".equals(operatorEnumId)){
-                    //if(valueOfCond < ORDER_TOTAL){ doesQualifyForPromo = "Y"; promoFlagsMap.put(key,doesQualifyForPromo);}
-                } else if ("PPC_LTE".equals(operatorEnumId)){
-                    //if(valueOfCond <= ORDER_TOTAL){ doesQualifyForPromo = "Y"; promoFlagsMap.put(key,doesQualifyForPromo);}
-                } else if ("PPC_GT".equals(operatorEnumId)){
-                    //if(valueOfCond <= ORDER_TOTAL){ doesQualifyForPromo = "Y"; promoFlagsMap.put(key,doesQualifyForPromo);}
-                } else if ("PPC_GTE".equals(operatorEnumId)){
-                    //if(valueOfCond >= ORDER_TOTAL){ doesQualifyForPromo = "Y"; promoFlagsMap.put(key,doesQualifyForPromo);}
-                }
-                
-            } else if("PPIP_QUANTITY_ADDED".equals(inputParamEnumId)){
-                valueOfCond = Double.valueOf(condValue).doubleValue();
-                key = "PROMO_AGAINST_QUANTITY_ADDED";
-                
-            } else if("PPIP_NEW_PROD_QUANT".equals(inputParamEnumId)){
-                valueOfCond = Double.valueOf(condValue).doubleValue();
-                key = "PROMO_AGAINST_NEW_PROD_QUANT";
-                
-            }
-        }
-        
-        return promoFlagsMap;
-    }
- */
 }
