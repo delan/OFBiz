@@ -150,26 +150,29 @@ public class LoginEvents {
 
             // in this condition log them in if not already; if not logged in or can't log in, save parameters and return error
             if ((username == null) || (password == null) || ("error".equals(login(request, response)))) {
-                String queryString = null;
-                Enumeration params = request.getParameterNames();
-
-                while (params != null && params.hasMoreElements()) {
-                    String paramName = (String) params.nextElement();
+                StringBuffer queryStringBuffer = new StringBuffer();
+                
+                Map reqParams = UtilHttp.getParameterMap(request);
+                Iterator paramEntryIter = reqParams.entrySet().iterator();
+                while (paramEntryIter.hasNext()) {
+                    Map.Entry paramEntry = (Map.Entry) paramEntryIter.next();
+                    String paramName = (String) paramEntry.getKey();
+                    String paramValue = (String) paramEntry.getValue();
 
                     if (paramName != null) {
-                        if (queryString == null) {
-                            queryString = paramName + "=" + request.getParameter(paramName);
-                        } else {
-                            queryString = queryString + "&" + paramName + "=" + request.getParameter(paramName);
-                        }
+                        if (queryStringBuffer.length() > 0) queryStringBuffer.append('&');
+                        queryStringBuffer.append(paramName);
+                        queryStringBuffer.append('=');
+                        queryStringBuffer.append(paramValue);
                     }
                 }
 
                 session.setAttribute(SiteDefs.PREVIOUS_REQUEST, request.getPathInfo());
-                if (queryString != null)
-                    session.setAttribute(SiteDefs.PREVIOUS_PARAMS, queryString);
+                if (queryStringBuffer.length() > 0) {
+                    session.setAttribute(SiteDefs.PREVIOUS_PARAMS, queryStringBuffer.toString());
+                }
 
-                if (Debug.infoOn()) Debug.logInfo("SecurityEvents.checkLogin: queryString=" + queryString);
+                if (Debug.infoOn()) Debug.logInfo("SecurityEvents.checkLogin: queryString=" + queryStringBuffer.toString());
                 if (Debug.infoOn()) Debug.logInfo("SecurityEvents.checkLogin: PathInfo=" + request.getPathInfo());
 
                 return "error";
