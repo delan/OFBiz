@@ -53,7 +53,7 @@
             </else>	
 		</if-empty>   
         <log level="info" message="Creating a PartyContactMech"/>
-        <env-to-field env-name="partyId" map-name="newValue"/>
+        <field-to-field field-name="partyId" map-name="parameters" to-map-name="newValue"/>
         <field-to-result field-name="contactMechId" map-name="newValue"/>
         <field-to-request field-name="contactMechId" map-name="newValue"/>
         <set-nonpk-fields map-name="parameters" value-name="newValue"/>
