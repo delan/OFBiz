@@ -22,7 +22,7 @@
 <center><h2>The Open For Business Project - Best Practices Guide</h2></center>
  
 <div class='contenttext'>Written By: David E. Jones, <a href="mailto:jonesde@ofbiz.org">jonesde@ofbiz.org</a></div>
-<div class='contenttext'>Last Updated: 1 Mar 2003</div>
+<div class='contenttext'>Last Updated: 12 June 2003</div>
 
 <p class='contenttext'><b><u><a name="TOC">Table of Contents</a></u></b></p>
 
@@ -136,6 +136,12 @@ leverage remote services and services written using different languages. Being a
 to transparently call logic in different languages through the Service Engine is 
 important for the effective use of special purpose languages.</p>
 
+<p class='contenttext'>When defining your services try to keep them as simple as
+possible using interface services or other techniques. Whenever you service is based
+on an entity be sure to use the auto-attributes tag to create attributes from the 
+entity fields. Rather than redefining attributes using the attribute tag, use the
+override tag to only specify the information you want to change.</p>
+
 <p class='contenttext'>Always implement your service using the easiest and most appropriate
 language or tool. You can implement services with many different languages
 including Java, BeanShell or any BSF compliant scripting language (Jython, Jacl, 
@@ -247,10 +253,15 @@ you want it to be decorated and have actions run to prepare for the templates.</
 <p class='contenttext'>If you have UI patterns that are repeated frequently
 such as forms, query data displays, tab or menu bars, expanding tree views, and
 so forth we currently recommend using an XML file to describe the UI pattern
-and then transform it using XSLT into a FreeMarker template which will be run
-to merge the resulting template with data from the context. Note that this
-recommendation may change as other methods are tried and refined. This is a
-problem with many possible solutions.</p>
+and then transform it to HTML or other output using a rendering engine for that
+specific XML format, or using XSLT/FreeMarker/etc to transform it into the 
+desired output.</p>
+
+<p class='contenttext'>For most forms the best way to represent them is to use
+the OFBiz Form Widget which accepts a generic form definition in XML that is
+usable with multiple user interface types, and that takes advantage of existing
+assets in your OFBiz based code such as Service and Entity definitions. This
+results in code that is much smaller and easier to maintain.</p>
 
 <p class='contenttext'>When using FreeMarker is not possible or practical we
 recommend using another dynamic templating language such as Velocity. When
