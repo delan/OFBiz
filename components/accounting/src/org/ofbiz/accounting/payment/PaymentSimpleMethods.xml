@@ -25,7 +25,8 @@
  *
  * @author     Andy Zeneski (jaz@ofbiz.org)
  * @author     David E. Jones (jonesde@ofbiz.org)
- * @version    $Revision: 1.6 $
+ * @author     Olivier Heintz (olivier.heintz@nereide.biz)
+ * @version    $Revision: 1.7 $
  * @since      2.0
 -->
 
@@ -50,7 +51,7 @@
         <create-value value-name="newEntity"/>
     </simple-method>
     <simple-method method-name="updateBillingAccount" short-description="Update Billing Account">
-        <check-permission permission="ACCOUNTING" action="_UPDATE"><fail-message message="Security Error: to run updateAcctgTrans you must have the ACCOUNTING_UPDATE or ACCOUNTING_ADMIN permission"/></check-permission>
+        <check-permission permission="ACCOUNTING" action="_UPDATE"><fail-property resource="AccountingUiLabels" property="AccountingUpdateBillingAccountPermissionError"/></check-permission>
         <check-errors/>
         
         <make-value value-name="lookupPKMap" entity-name="BillingAccount"/>
@@ -60,7 +61,7 @@
         <store-value value-name="lookedUpValue"/>
     </simple-method>
     <simple-method method-name="createBillingAccountRole" short-description="Create Billing Account Role">
-    	<check-permission permission="ACCOUNTING" action="_CREATE"><fail-message message="Security Error: to run createBillingAccountRole you must have the ACCOUNTING_CREATE or ACCOUNTING_ADMIN permission"/></check-permission>
+    	<check-permission permission="ACCOUNTING" action="_CREATE"><fail-property resource="AccountingUiLabels" property="AccountingCreateBillingAccountRolePermissionError"/></check-permission>
     	<check-errors/>
     	
         <make-value value-name="newEntity" entity-name="BillingAccountRole"/>
@@ -73,7 +74,7 @@
         <create-value value-name="newEntity"/>
     </simple-method>
     <simple-method method-name="updateBillingAccountRole" short-description="Update Billing Account Role">
-        <check-permission permission="ACCOUNTING" action="_UPDATE"><fail-message message="Security Error: to run updateBillingAccountRole you must have the ACCOUNTING_UPDATE or ACCOUNTING_ADMIN permission"/></check-permission>
+        <check-permission permission="ACCOUNTING" action="_UPDATE"><fail-property resource="AccountingUiLabels" property="AccountingUpdateBillingAccountRolePermissionError"/></check-permission>
         <check-errors/>
         
         <make-value value-name="lookupPKMap" entity-name="BillingAccountRole"/>
@@ -83,7 +84,7 @@
         <store-value value-name="lookedUpValue"/>
     </simple-method>    
     <simple-method method-name="createBillingAccountTerm" short-description="Create Billing Account Term">
-    	<check-permission permission="ACCOUNTING" action="_CREATE"><fail-message message="Security Error: to run createBillingAccountTerm you must have the ACCOUNTING_CREATE or ACCOUNTING_ADMIN permission"/></check-permission>
+    	<check-permission permission="ACCOUNTING" action="_CREATE"><fail-property resource="AccountingUiLabels" property="AccountingCreateBillingAccountTermPermissionError"/></check-permission>
     	<check-errors/>
     	
         <make-value value-name="newEntity" entity-name="BillingAccountTerm"/>
@@ -97,7 +98,7 @@
         <create-value value-name="newEntity"/>
     </simple-method>
     <simple-method method-name="updateBillingAccountTerm" short-description="Update Billing Account Term">
-        <check-permission permission="ACCOUNTING" action="_UPDATE"><fail-message message="Security Error: to run updateBillingAccountTerm you must have the ACCOUNTING_UPDATE or ACCOUNTING_ADMIN permission"/></check-permission>
+        <check-permission permission="ACCOUNTING" action="_UPDATE"><fail-property resource="AccountingUiLabels" property="AccountingUpdateBillingAccountTermPermissionError"/></check-permission>
         <check-errors/>
         
         <make-value value-name="lookupPKMap" entity-name="BillingAccountTerm"/>
@@ -107,7 +108,7 @@
         <store-value value-name="lookedUpValue"/>
     </simple-method>    
     <simple-method method-name="removeBillingAccountTerm" short-description="Remove Billing Account Term">
-        <check-permission permission="ACCOUNTING" action="_DELETE"><fail-message message="Security Error: to run removeBillingAccountTerm you must have the ACCOUNTING_DELETE or ACCOUNTING_ADMIN permission"/></check-permission>
+        <check-permission permission="ACCOUNTING" action="_DELETE"><fail-property resource="AccountingUiLabels" property="AccountingDeleteBillingAccountTermPermissionError"/></check-permission>
         <check-errors/>
         
         <make-value entity-name="BillingAccountTerm" value-name="lookupPKMap"/>
@@ -274,7 +275,7 @@
     	  </condition>
     	  <then>
     	    <add-error>
-    	      <fail-message message="Security Error: To Create a Payment you must either be the to or from party or have the PAY_INFO_CREATE or PAY_INFO_ADMIN permissions."/>
+    	      <fail-property resource="AccountingUiLabels" property="AccountingCreatePaymentPermissionError"/>
     	    </add-error>
     	  </then>
     	</if>
@@ -316,7 +317,7 @@
     	  </condition>
     	  <then>
     	    <add-error>
-    	      <fail-message message="Security Error: To Update a Payment you must either be the to or from party or have the PAY_INFO_UPDATE or PAY_INFO_ADMIN permissions."/>
+    	      <fail-property resource="AccountingUiLabels" property="AccountingUpdatePaymentPermissionError"/>
     	    </add-error>
     	  </then>
     	</if>
@@ -329,7 +330,7 @@
     <simple-method method-name="createPaymentApplication" short-description="Create a Payment Application">
     	<if-empty field-name="invoiceId" map-name="parameters">
     		<if-empty field-name="billingAccountId" map-name="parameters">
-    			<add-error><fail-message message="Both invoiceId and billingAccountId cannot be empty"/></add-error>
+    			<add-error><fail-property resource="AccountingUiLabels" property="AccountingBothInvoiceIdBillingAccountIdEmptyError"/></add-error>
     			<check-errors/>
     		</if-empty>
     	</if-empty>
