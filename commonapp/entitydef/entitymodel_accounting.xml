@@ -1103,13 +1103,12 @@
     <entity entity-name="PaymentApplication" 
             package-name="org.ofbiz.commonapp.accounting.payment"
             title="Payment Application Entity">
-      <field name="paymentId" type="id-ne"></field>
       <field name="paymentApplicationId" type="id-ne"></field>
+      <field name="paymentId" type="id"></field>
       <field name="invoiceId" type="id"></field>
       <field name="invoiceItemSeqId" type="id"></field>
       <field name="billingAccountId" type="id"></field>
       <field name="amountApplied" type="currency-amount"></field>	
-      <prim-key field="paymentId" />	
       <prim-key field="paymentApplicationId" />
     </entity>
     <entity entity-name="PaymentAttribute" 
