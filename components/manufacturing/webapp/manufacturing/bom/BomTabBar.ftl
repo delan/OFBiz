@@ -20,7 +20,7 @@
  *  THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  *
  *@author     Olivier.Heintz@nereide.biz
- *@version    $Revision: 1.1 $
+ *@version    $Revision: 1.2 $
  *@since      3.0
 -->
 
@@ -31,6 +31,7 @@
 <div class='tabContainer'>
         <a href="<@ofbizUrl>/findParts</@ofbizUrl>" class="${selectedClassMap.findParts?default(unselectedClassName)}">${uiLabelMap.ManufacturingParts}</a>
         <a href="<@ofbizUrl>/findBom</@ofbizUrl>" class="${selectedClassMap.findBom?default(unselectedClassName)}">${uiLabelMap.ManufacturingBillOfMaterials}</a>
+        <a href="<@ofbizUrl>/InitLowLevelCode</@ofbizUrl>" class="${selectedClassMap.ManufacturingLLCInit?default(unselectedClassName)}">${uiLabelMap.ManufacturingLLCInit}</a>
         <a href="<@ofbizUrl>/EditProductBom</@ofbizUrl>" class="${selectedClassMap.EditProductBom?default(unselectedClassName)}">${uiLabelMap.ManufacturingEditProductBom}</a>
         <a href="<@ofbizUrl>/EditProductManufacturingRules</@ofbizUrl>" class="${selectedClassMap.productManufacturingRules?default(unselectedClassName)}">${uiLabelMap.ManufacturingManufacturingRules}</a>
 </div>
