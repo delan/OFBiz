@@ -23,8 +23,7 @@
  * @version 1.0
 --%>
 
-<%@ page import="java.util.*, java.io.*, java.net.*,
-                 org.ofbiz.base.util.collections.OrderedSet" %>
+<%@ page import="java.util.*, java.io.*, java.net.*, org.ofbiz.base.util.collections.OrderedSet" %>
 <%@ page import="org.w3c.dom.*" %>
 <%@ page import="org.ofbiz.security.*, org.ofbiz.entity.*, org.ofbiz.base.util.*, org.ofbiz.content.webapp.pseudotag.*" %>
 <%@ page import="org.ofbiz.entity.model.*, org.ofbiz.entity.util.*, org.ofbiz.entity.transaction.*, org.ofbiz.entity.condition.*" %>
@@ -245,8 +244,10 @@
             fileName = fileName + curEntityName;
 
             EntityListIterator values = null;
-            boolean beganTransaction = TransactionUtil.begin(3600);
+            boolean beganTransaction = false;
             try{
+                beganTransaction = TransactionUtil.begin(3600);
+                
                 ModelEntity me = delegator.getModelEntity(curEntityName);
                 if (me instanceof ModelViewEntity) {
                     results.add("["+fileNumber +"] [vvv] " + curEntityName + " skipping view entity");
@@ -297,7 +298,6 @@
                     results.add(thisResult);
                 }
                 values.close();
-                TransactionUtil.commit(beganTransaction);
             } catch (Exception ex) {
                 if (values != null) {
                     values.close();
@@ -306,7 +306,10 @@
                 Debug.log(thisResult);
                 results.add(thisResult);
                 TransactionUtil.rollback(beganTransaction);
-            }            
+            } finally {
+                // only commit the transaction if we started one... this will throw an exception if it fails
+                TransactionUtil.commit(beganTransaction);
+            }
             fileNumber++;
         }
     }

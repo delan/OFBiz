@@ -26,7 +26,7 @@
 
 <%@ page import="java.text.*, java.util.*, java.net.*" %>
 <%@ page import="org.ofbiz.security.*, org.ofbiz.entity.*, org.ofbiz.base.util.*, org.ofbiz.content.webapp.pseudotag.*" %>
-<%@ page import="org.ofbiz.entity.model.*, org.ofbiz.entity.util.*, org.ofbiz.entity.condition.*" %>
+<%@ page import="org.ofbiz.entity.model.*, org.ofbiz.entity.util.*, org.ofbiz.entity.condition.*, org.ofbiz.entity.transaction.*" %>
 
 <%@ taglib uri="ofbizTags" prefix="ofbiz" %>
 
@@ -94,13 +94,31 @@
     arraySize = (int) delegator.findCountByCondition(findByEntity.getEntityName(), condition, null);
     if (arraySize < highIndex) highIndex = arraySize;
     if ((highIndex - lowIndex + 1) > 0) {
-      EntityFindOptions efo = new EntityFindOptions();
-      efo.setResultSetType(EntityFindOptions.TYPE_SCROLL_INSENSITIVE);
-      EntityListIterator resultEli = null;
-      //new ArrayList(findByEntity.getPrimaryKey().keySet())
-      resultEli = delegator.findListIteratorByCondition(findByEntity.getEntityName(), condition, null, null, null, efo);
-      resultPartialList = resultEli.getPartialList(lowIndex, highIndex - lowIndex + 1);
-      resultEli.close();
+        boolean beganTransaction = false;
+        try {
+            beganTransaction = TransactionUtil.begin();
+
+            EntityFindOptions efo = new EntityFindOptions();
+            efo.setResultSetType(EntityFindOptions.TYPE_SCROLL_INSENSITIVE);
+            EntityListIterator resultEli = null;
+            //new ArrayList(findByEntity.getPrimaryKey().keySet())
+            resultEli = delegator.findListIteratorByCondition(findByEntity.getEntityName(), condition, null, null, null, efo);
+            resultPartialList = resultEli.getPartialList(lowIndex, highIndex - lowIndex + 1);
+            resultEli.close();
+        } catch (GenericEntityException e) {
+            Debug.logError(e, "Failure in operation, rolling back transaction", "FindGeneric.jsp");
+            try {
+                // only rollback the transaction if we started one...
+                TransactionUtil.rollback(beganTransaction);
+            } catch (GenericEntityException e2) {
+                Debug.logError(e2, "Could not rollback transaction: " + e2.toString(), "FindGeneric.jsp");
+            }
+            // after rolling back, rethrow the exception
+            throw e;
+        } finally {
+            // only commit the transaction if we started one... this will throw an exception if it fails
+            TransactionUtil.commit(beganTransaction);
+        }
     }
   }
 //--------------
