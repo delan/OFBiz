@@ -29,6 +29,7 @@ import java.util.*;
 
 import org.ofbiz.core.entity.*;
 import org.ofbiz.core.service.*;
+import org.ofbiz.core.service.engine.*;
 import org.ofbiz.core.util.*;
 
 /**
@@ -84,8 +85,11 @@ public class GenericServiceJob extends AbstractJob {
         }
 
         try {
-            LocalDispatcher dispatcher = dctx.getDispatcher();
-            Map result = dispatcher.runSync(getServiceName(), getContext());
+            ModelService modelService = dctx.getModelService(getServiceName());
+            ServiceDispatcher dispatcher = ServiceDispatcher.getInstance(dctx.getName(), dctx.getDelegator());
+            GenericEngine engine = GenericEngineFactory.getGenericEngine(modelService.engineName, dispatcher);
+            engine.setLoader(dctx.getName());
+            Map result = engine.runSync(modelService, getContext());
             if (requester != null)
                 requester.receiveResult(result);
         } catch (Exception e) {
