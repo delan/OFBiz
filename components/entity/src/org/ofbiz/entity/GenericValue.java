@@ -424,13 +424,20 @@ public class GenericValue extends GenericEntity {
                         // create the new related value (dummy)
                         GenericValue newValue = this.getDelegator().makeValue(relation.getRelEntityName(), null);
                         Iterator keyMapIter = relation.getKeyMapsIterator();
+                        boolean allFieldsSet = true;
                         while (keyMapIter.hasNext()) {
                             ModelKeyMap mkm = (ModelKeyMap) keyMapIter.next();
-                            newValue.set(mkm.getRelFieldName(), this.get(mkm.getFieldName()));
-                            if (Debug.infoOn()) Debug.logInfo("Set [" + mkm.getRelFieldName() + "] to - " + this.get(mkm.getFieldName()), module);
+                            if (this.get(mkm.getFieldName()) != null) {
+                                newValue.set(mkm.getRelFieldName(), this.get(mkm.getFieldName()));
+                                if (Debug.infoOn()) Debug.logInfo("Set [" + mkm.getRelFieldName() + "] to - " + this.get(mkm.getFieldName()), module);
+                            } else {
+                                allFieldsSet = false;
+                            }
                         }
-                        if (Debug.infoOn()) Debug.logInfo("Creating place holder value : " + newValue, module);
-                        newValue.create();
+                        if (allFieldsSet) {
+                            if (Debug.infoOn()) Debug.logInfo("Creating place holder value : " + newValue, module);
+                            newValue.create();
+                        }
                     } else {
                         return false;
                     }
