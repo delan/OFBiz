@@ -1,5 +1,5 @@
 /*
- * $Id: ShoppingCartItem.java,v 1.14 2003/11/22 23:51:54 jonesde Exp $
+ * $Id: ShoppingCartItem.java,v 1.15 2003/11/23 01:17:04 jonesde Exp $
  *
  *  Copyright (c) 2001, 2002 The Open For Business Project - www.ofbiz.org
  *
@@ -47,7 +47,7 @@ import org.ofbiz.service.ModelService;
  *
  * @author     <a href="mailto:jaz@ofbiz.org.com">Andy Zeneski</a>
  * @author     <a href="mailto:jonesde@ofbiz.org">David E. Jones</a>
- * @version    $Revision: 1.14 $
+ * @version    $Revision: 1.15 $
  * @since      2.0
  */
 public class ShoppingCartItem implements java.io.Serializable {
@@ -436,7 +436,7 @@ public class ShoppingCartItem implements java.io.Serializable {
         return this.quantityUsedPerPromoFailed.entrySet().iterator();
     }
 
-    public synchronized double addPromoQuantityCandidateUse(double quantityDesired, GenericValue productPromoCond) {
+    public synchronized double addPromoQuantityCandidateUse(double quantityDesired, GenericValue productPromoCondAction) {
         if (quantityDesired == 0) return 0;
         double promoQuantityAvailable = this.getPromoQuantityAvailable();
         double promoQuantityToUse = quantityDesired;
@@ -446,15 +446,17 @@ public class ShoppingCartItem implements java.io.Serializable {
             }
 
             // keep track of candidate promo uses on cartItem
-            GenericPK productPromoCondPK = productPromoCond.getPrimaryKey();
-            Double existingValue = (Double) this.quantityUsedPerPromoCandidate.get(productPromoCondPK);
+            GenericPK productPromoCondActionPK = productPromoCondAction.getPrimaryKey();
+            Double existingValue = (Double) this.quantityUsedPerPromoCandidate.get(productPromoCondActionPK);
             if (existingValue == null) {
-                this.quantityUsedPerPromoCandidate.put(productPromoCondPK, new Double(promoQuantityToUse));
+                this.quantityUsedPerPromoCandidate.put(productPromoCondActionPK, new Double(promoQuantityToUse));
             } else {
-                this.quantityUsedPerPromoCandidate.put(productPromoCondPK, new Double(promoQuantityToUse + existingValue.doubleValue()));
+                this.quantityUsedPerPromoCandidate.put(productPromoCondActionPK, new Double(promoQuantityToUse + existingValue.doubleValue()));
             }
 
             this.promoQuantityUsed += promoQuantityToUse;
+            //Debug.logInfo("promoQuantityToUse=" + promoQuantityToUse + ", quantityDesired=" + quantityDesired + ", for promoCondAction: " + productPromoCondAction, module);
+            //Debug.logInfo("promoQuantityUsed now=" + promoQuantityUsed, module);
             return promoQuantityToUse;
         } else {
             return 0;
@@ -465,15 +467,15 @@ public class ShoppingCartItem implements java.io.Serializable {
         Iterator entryIter = this.quantityUsedPerPromoCandidate.entrySet().iterator();
         while (entryIter.hasNext()) {
             Map.Entry entry = (Map.Entry) entryIter.next();
-            GenericPK productPromoCondPK = (GenericPK) entry.getKey();
+            GenericPK productPromoCondActionPK = (GenericPK) entry.getKey();
             Double quantityUsed = (Double) entry.getValue();
-            if (productPromoId.equals(productPromoCondPK.getString("productPromoId")) && productPromoRuleId.equals(productPromoCondPK.getString("productPromoRuleId"))) {
+            if (productPromoId.equals(productPromoCondActionPK.getString("productPromoId")) && productPromoRuleId.equals(productPromoCondActionPK.getString("productPromoRuleId"))) {
                 entryIter.remove();
-                Double existingValue = (Double) this.quantityUsedPerPromoFailed.get(productPromoCondPK);
+                Double existingValue = (Double) this.quantityUsedPerPromoFailed.get(productPromoCondActionPK);
                 if (existingValue == null) {
-                    this.quantityUsedPerPromoFailed.put(productPromoCondPK, quantityUsed);
+                    this.quantityUsedPerPromoFailed.put(productPromoCondActionPK, quantityUsed);
                 } else {
-                    this.quantityUsedPerPromoFailed.put(productPromoCondPK, new Double(quantityUsed.doubleValue() + existingValue.doubleValue()));
+                    this.quantityUsedPerPromoFailed.put(productPromoCondActionPK, new Double(quantityUsed.doubleValue() + existingValue.doubleValue()));
                 }
                 this.promoQuantityUsed -= quantityUsed.doubleValue();
             }
@@ -484,18 +486,25 @@ public class ShoppingCartItem implements java.io.Serializable {
         Iterator entryIter = this.quantityUsedPerPromoCandidate.entrySet().iterator();
         while (entryIter.hasNext()) {
             Map.Entry entry = (Map.Entry) entryIter.next();
-            GenericPK productPromoCondPK = (GenericPK) entry.getKey();
+            GenericPK productPromoCondActionPK = (GenericPK) entry.getKey();
             Double quantityUsed = (Double) entry.getValue();
-            if (productPromoId.equals(productPromoCondPK.getString("productPromoId")) && productPromoRuleId.equals(productPromoCondPK.getString("productPromoRuleId"))) {
+            if (productPromoId.equals(productPromoCondActionPK.getString("productPromoId")) && productPromoRuleId.equals(productPromoCondActionPK.getString("productPromoRuleId"))) {
                 entryIter.remove();
-                Double existingValue = (Double) this.quantityUsedPerPromoActual.get(productPromoCondPK);
+                Double existingValue = (Double) this.quantityUsedPerPromoActual.get(productPromoCondActionPK);
                 if (existingValue == null) {
-                    this.quantityUsedPerPromoActual.put(productPromoCondPK, quantityUsed);
+                    this.quantityUsedPerPromoActual.put(productPromoCondActionPK, quantityUsed);
                 } else {
-                    this.quantityUsedPerPromoActual.put(productPromoCondPK, new Double(quantityUsed.doubleValue() + existingValue.doubleValue()));
+                    this.quantityUsedPerPromoActual.put(productPromoCondActionPK, new Double(quantityUsed.doubleValue() + existingValue.doubleValue()));
                 }
             }
         }
+    }
+
+    public synchronized void clearPromoRuleUseInfo() {
+        this.quantityUsedPerPromoActual.clear();
+        this.quantityUsedPerPromoCandidate.clear();
+        this.quantityUsedPerPromoFailed.clear();
+        this.promoQuantityUsed = 0;
     }
 
     /** Sets the item comment. */
