@@ -61,9 +61,9 @@ public class DefReader
   public static Entity getEntity(String defFileName, String ejbName)
   {
     Entity entity = null;
-    if(entityCache.containsKey(defFileName + "::" + ejbName))
+    if(entityCache.containsKey(ejbName + "::" + defFileName))
     {
-      entity = (Entity)entityCache.get(defFileName + "::" + ejbName);
+      entity = (Entity)entityCache.get(ejbName + "::" + defFileName);
     }
     else
     {
@@ -85,7 +85,7 @@ public class DefReader
       docElement.normalize();
 
       entity = createEntity(findEntity(docElement, ejbName), docElement, null, docElementValues);
-      if(entity != null) entityCache.put(defFileName + "::" + ejbName, entity);
+      if(entity != null) entityCache.put(ejbName + "::" + defFileName, entity);
       else Debug.logWarning("-- -- ENTITYGEN ERROR:getEntity: Could not create entity for ejbName: " + ejbName);
     }
     return entity;
@@ -177,7 +177,7 @@ public class DefReader
       utilTimer.timerString("  After createEntity -- " + i + " --");
       if(entity != null) 
       {
-        entityCache.put(defFileName + "::" + ejbName, entity);
+        entityCache.put(ejbName + "::" + defFileName, entity);
         //utilTimer.timerString("  After entityCache.put -- " + i + " --");
         Debug.logInfo("-- getEntity: Created entity for ejbName: " + ejbName);
       }

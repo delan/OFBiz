@@ -3,6 +3,7 @@ package <%=entity.packageName%>;
 
 import java.sql.*;
 import java.util.*;
+import org.ofbiz.core.util.*;
 
 /**
  * <p><b>Title:</b> <%=entity.title%>
@@ -38,14 +39,14 @@ public class <%=entity.ejbName%>DAO
   public static boolean insert(<%=entity.ejbName%> value)
   {
     if(value == null || value.<%=entity.pkNameString(" == null || value."," == null")%>) {
-      System.out.println("ERROR [<%=entity.ejbName%>DAO.insert]: Cannot insert <%=entity.ejbName%>: required primary key field(s) missing.");
+      Debug.logWarning("ERROR [<%=entity.ejbName%>DAO.insert]: Cannot insert <%=entity.ejbName%>: required primary key field(s) missing.");
       return false;
     }
     
     Connection connection = null;
     PreparedStatement ps = null;
     try { connection = getConnection(); } 
-    catch (SQLException sqle) { System.out.println("ERROR [<%=entity.ejbName%>DAO.insert]: Unable to esablish a connection with the database... Error was:\n" + sqle.toString() ); }
+    catch (SQLException sqle) { Debug.logWarning("ERROR [<%=entity.ejbName%>DAO.insert]: Unable to esablish a connection with the database... Error was:\n"); Debug.logWarning(sqle); }
     
     String sql = "INSERT INTO <%=entity.tableName%> (<%=entity.colNameString(entity.fields)%>) VALUES (<%=entity.fieldsStringList(entity.fields, "?", ", ")%>)";
     try {
@@ -63,8 +64,8 @@ public class <%=entity.ejbName%>DAO
       ps.executeUpdate();
       value.modified = false;
     } catch (SQLException sqle) {
-      System.out.println("ERROR [<%=entity.ejbName%>DAO.insert]: SQL Exception while executing the following:\n" + sql + "\nError was:\n");
-      sqle.printStackTrace();
+      Debug.logWarning("ERROR [<%=entity.ejbName%>DAO.insert]: SQL Exception while executing the following:\n" + sql + "\nError was:\n");
+      Debug.logWarning(sqle);
       return false;
     } finally {
       try { if (ps != null) ps.close(); } catch (SQLException sqle) { }
@@ -76,14 +77,14 @@ public class <%=entity.ejbName%>DAO
   public static boolean update(<%=entity.ejbName%> value)
   {
     if(value == null || value.<%=entity.pkNameString(" == null || value."," == null")%>) {
-      System.out.println("ERROR [<%=entity.ejbName%>DAO.update]: Cannot update <%=entity.ejbName%>: required primary key field(s) missing.");
+      Debug.logWarning("ERROR [<%=entity.ejbName%>DAO.update]: Cannot update <%=entity.ejbName%>: required primary key field(s) missing.");
       return false;
     }
     
     Connection connection = null;
     PreparedStatement ps = null;
     try { connection = getConnection(); } 
-    catch (SQLException sqle) { System.out.println("ERROR [<%=entity.ejbName%>DAO.update]: Unable to esablish a connection with the database... Error was:\n" + sqle.toString() ); }
+    catch (SQLException sqle) { Debug.logWarning("ERROR [<%=entity.ejbName%>DAO.update]: Unable to esablish a connection with the database... Error was:\n"); Debug.logWarning(sqle); }
 
     String sql = "UPDATE <%=entity.tableName%> SET <%=entity.colNameString(nopks, "=?, ", "=?")%> WHERE <%=entity.colNameString(entity.pks, "=? AND ", "=?")%>";
     try {
@@ -111,8 +112,8 @@ public class <%=entity.ejbName%>DAO
       ps.executeUpdate();
       value.modified = false;
     } catch (SQLException sqle) {
-      System.out.println("ERROR [<%=entity.ejbName%>DAO.update]: SQL Exception while executing the following:\n" + sql + "\nError was:\n");
-      sqle.printStackTrace();
+      Debug.logWarning("ERROR [<%=entity.ejbName%>DAO.update]: SQL Exception while executing the following:\n" + sql + "\nError was:\n");
+      Debug.logWarning(sqle);
       return false;
     } finally {
       try { if (ps != null) ps.close(); } catch (SQLException sqle) { }
@@ -124,7 +125,7 @@ public class <%=entity.ejbName%>DAO
   public static boolean select(<%=entity.ejbName%> value)
   {
     if(value == null || value.<%=entity.pkNameString(" == null || value."," == null")%>) {
-      System.out.println("ERROR [<%=entity.ejbName%>DAO.select]: Cannot select <%=entity.ejbName%>: required primary key field(s) missing.");
+      Debug.logWarning("ERROR [<%=entity.ejbName%>DAO.select]: Cannot select <%=entity.ejbName%>: required primary key field(s) missing.");
       return false;
     }
     
@@ -132,7 +133,7 @@ public class <%=entity.ejbName%>DAO
     PreparedStatement ps = null; 
     ResultSet rs = null;
     try { connection = getConnection(); } 
-    catch (SQLException sqle) { System.out.println("ERROR [<%=entity.ejbName%>DAO.select]: Unable to esablish a connection with the database... Error was:\n" + sqle.toString() ); }
+    catch (SQLException sqle) { Debug.logWarning("ERROR [<%=entity.ejbName%>DAO.select]: Unable to esablish a connection with the database... Error was:\n"); Debug.logWarning(sqle); }
     
     String sql = "SELECT <%=entity.colNameString(nopks, ", ", "")%> FROM <%=entity.tableName%> WHERE <%=entity.colNameString(entity.pks, "=? AND ", "=?")%>";
     try {
@@ -162,12 +163,12 @@ public class <%=entity.ejbName%>DAO
         if(rs.getObject("<%=curField.columnName%>") == null) value.<%=curField.fieldName%> = null; else value.<%=curField.fieldName%> = new Double(rs.getDouble("<%=curField.columnName%>"));<%}%><%}%>
         value.modified = false;
       } else {
-        System.out.println("ERROR [<%=entity.ejbName%>DAO.select]: select failed, result set was empty.");
+        Debug.logWarning("ERROR [<%=entity.ejbName%>DAO.select]: select failed, result set was empty.");
         return false;
       }
     } catch (SQLException sqle) {
-      System.out.println("ERROR [<%=entity.ejbName%>DAO]: SQL Exception while executing the following:\n" + sql + "\nError was:\n");
-      sqle.printStackTrace();
+      Debug.logWarning("ERROR [<%=entity.ejbName%>DAO]: SQL Exception while executing the following:\n" + sql + "\nError was:\n");
+      Debug.logWarning(sqle);
       return false;
     } finally {
       try { if (rs != null) rs.close(); } catch (SQLException sqle) { }
@@ -180,14 +181,14 @@ public class <%=entity.ejbName%>DAO
   public static boolean delete(<%=entity.ejbName%> value)
   {
     if(value == null || value.<%=entity.pkNameString(" == null || value."," == null")%>) {
-      System.out.println("ERROR [<%=entity.ejbName%>DAO.delete]: Cannot delete <%=entity.ejbName%>: required primary key field(s) missing.");
+      Debug.logWarning("ERROR [<%=entity.ejbName%>DAO.delete]: Cannot delete <%=entity.ejbName%>: required primary key field(s) missing.");
       return false;
     }
     
     Connection connection = null;
     PreparedStatement ps = null;
     try { connection = getConnection(); } 
-    catch (SQLException sqle) { System.out.println("ERROR [<%=entity.ejbName%>DAO.delete]: Unable to esablish a connection with the database... Error was:\n" + sqle.toString() ); }
+    catch (SQLException sqle) { Debug.logWarning("ERROR [<%=entity.ejbName%>DAO.delete]: Unable to esablish a connection with the database... Error was:\n"); Debug.logWarning(sqle); }
     
     String sql = "DELETE FROM <%=entity.tableName%> WHERE <%=entity.colNameString(entity.pks, "=? AND ", "=?")%>";
     try {
@@ -203,8 +204,8 @@ public class <%=entity.ejbName%>DAO
       if(value.<%=curField.fieldName%> != null) ps.setDouble(<%=i+1%>, value.<%=curField.fieldName%>.doubleValue()); else ps.setNull(<%=i+1%>, Types.NULL);<%}%><%}%>
       ps.executeUpdate();
     } catch (SQLException sqle) {
-      System.out.println("ERROR [<%=entity.ejbName%>DAO.delete]: SQL Exception while executing the following:\n" + sql + "\nError was:\n");
-      sqle.printStackTrace();
+      Debug.logWarning("ERROR [<%=entity.ejbName%>DAO.delete]: SQL Exception while executing the following:\n" + sql + "\nError was:\n");
+      Debug.logWarning(sqle);
       return false;
     } finally {
       try { if (ps != null) ps.close(); } catch (SQLException sqle) { }
@@ -216,7 +217,7 @@ public class <%=entity.ejbName%>DAO
   public static <%=entity.ejbName%> create(<%=entity.primKeyClassNameString()%>)
   {
     if(<%=entity.pkNameString(" == null || "," == null")%>) {
-      System.out.println("ERROR [<%=entity.ejbName%>DAO.create]: Cannot create <%=entity.ejbName%>: required primary key field(s) missing.");
+      Debug.logWarning("ERROR [<%=entity.ejbName%>DAO.create]: Cannot create <%=entity.ejbName%>: required primary key field(s) missing.");
       return null;
     }
     <%=entity.ejbName%> <%=GenUtil.lowerFirstChar(entity.ejbName)%> = new <%=entity.ejbName%>(<%=entity.pkNameString()%>);
@@ -227,7 +228,7 @@ public class <%=entity.ejbName%>DAO
   public static <%=entity.ejbName%> create(<%=entity.fieldTypeNameString()%>)
   {
     if(<%=entity.pkNameString(" == null || "," == null")%>) {
-      System.out.println("ERROR [<%=entity.ejbName%>DAO.create]: Cannot create <%=entity.ejbName%>: required primary key field(s) missing.");
+      Debug.logWarning("ERROR [<%=entity.ejbName%>DAO.create]: Cannot create <%=entity.ejbName%>: required primary key field(s) missing.");
       return null;
     }
     <%=entity.ejbName%> <%=GenUtil.lowerFirstChar(entity.ejbName)%> = new <%=entity.ejbName%>(<%=entity.fieldNameString()%>);
@@ -238,7 +239,7 @@ public class <%=entity.ejbName%>DAO
   public static <%=entity.ejbName%> findByPrimaryKey(<%=entity.primKeyClassNameString()%>)
   {
     if(<%=entity.pkNameString(" == null || "," == null")%>) {
-      System.out.println("ERROR [<%=entity.ejbName%>DAO.findByPrimaryKey]: Cannot findByPrimaryKey <%=entity.ejbName%>: required primary key field(s) missing.");
+      Debug.logWarning("ERROR [<%=entity.ejbName%>DAO.findByPrimaryKey]: Cannot findByPrimaryKey <%=entity.ejbName%>: required primary key field(s) missing.");
       return null;
     }
     <%=entity.ejbName%> <%=GenUtil.lowerFirstChar(entity.ejbName)%> = new <%=entity.ejbName%>(<%=entity.pkNameString()%>);
@@ -255,7 +256,7 @@ public class <%=entity.ejbName%>DAO
   {
     Collection collection = new LinkedList();
     if(<%=entity.nameString(finderDesc.fields, " == null || ", " == null")%>) {
-      System.out.println ("ERROR [<%=entity.ejbName%>DAO.findBy<%=entity.classNameString(finderDesc.fields,"And","")%>]: Cannot load <%=entity.ejbName%>DAO: parameter missing.");
+      Debug.logWarning ("ERROR [<%=entity.ejbName%>DAO.findBy<%=entity.classNameString(finderDesc.fields,"And","")%>]: Cannot load <%=entity.ejbName%>DAO: parameter missing.");
       return null;
     }
     
@@ -263,7 +264,7 @@ public class <%=entity.ejbName%>DAO
     PreparedStatement ps = null;
     ResultSet rs = null;
     try { connection = getConnection(); } 
-    catch (SQLException sqle) { System.out.println("ERROR [<%=entity.ejbName%>DAO.findBy<%=entity.classNameString(finderDesc.fields,"And","")%>]: Unable to esablish a connection with the database... Error was:\n" + sqle.toString() ); }
+    catch (SQLException sqle) { Debug.logWarning("ERROR [<%=entity.ejbName%>DAO.findBy<%=entity.classNameString(finderDesc.fields,"And","")%>]: Unable to esablish a connection with the database... Error was:\n" + sqle.toString() ); }
     
     String sql = "SELECT <%=entity.colNameString(nofindby, ", ", "")%> FROM <%=entity.tableName%> WHERE <%=entity.colNameString(finderDesc.fields, "=? AND ", "=?")%>";
     try {
@@ -298,7 +299,7 @@ public class <%=entity.ejbName%>DAO
         collection.add(value);
       }
     } catch (SQLException sqle) {
-      System.out.println("ERROR [<%=entity.ejbName%>DAO.findBy<%=entity.classNameString(finderDesc.fields,"And","")%>]: SQL Exception while executing the following:\n" + sql + "\nError was:\n");
+      Debug.logWarning("ERROR [<%=entity.ejbName%>DAO.findBy<%=entity.classNameString(finderDesc.fields,"And","")%>]: SQL Exception while executing the following:\n" + sql + "\nError was:\n");
       sqle.printStackTrace();
       return null;
     } finally {
