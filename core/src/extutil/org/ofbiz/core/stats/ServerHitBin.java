@@ -101,6 +101,10 @@ public class ServerHitBin {
     
     protected static void countHit(String id, int type, String visitId, long startTime, long runningTime, GenericValue userLogin, 
             GenericDelegator delegator, boolean isOriginal) {
+        if (delegator == null) {
+            throw new IllegalArgumentException("The delgator passed to countHit cannot be null");
+        }
+
         ServerHitBin bin = null;
         LinkedList binList = null;
         
@@ -169,6 +173,10 @@ public class ServerHitBin {
     
     static void countHitSinceStart(String id, int type, long startTime, long runningTime, boolean isOriginal, 
             GenericDelegator delegator) {
+        if (delegator == null) {
+            throw new IllegalArgumentException("The delgator passed to countHitSinceStart cannot be null");
+        }
+
         ServerHitBin bin = null;
         
         //save in global, and try to get bin by id
@@ -224,6 +232,7 @@ public class ServerHitBin {
     public static Map serviceSinceStarted = new HashMap();
 
     GenericDelegator delegator;
+    String delegatorName;
     String id;
     int type;
     boolean limitLength;
@@ -236,12 +245,27 @@ public class ServerHitBin {
     
     public ServerHitBin(String id, int type, boolean limitLength, GenericDelegator delegator) {
         super();
+        if (delegator == null) {
+            throw new IllegalArgumentException("The delgator passed to countHitSinceStart cannot be null");
+        }
         
         this.id = id;
         this.type = type;
         this.limitLength = limitLength;
         this.delegator = delegator;
+        this.delegatorName = delegator.getDelegatorName();
         reset(getEvenStartingTime());
+    }
+    
+    public GenericDelegator getDelegator() {
+        if (this.delegator == null) {
+            this.delegator = GenericDelegator.getGenericDelegator(this.delegatorName);
+        }
+        //if still null, then we have a problem
+        if (this.delegator == null) {
+            throw new IllegalArgumentException("Could not perform stats operation: could not find delegator with name: " + this.delegatorName);
+        }
+        return this.delegator;
     }
     
     long getEvenStartingTime() {
@@ -293,7 +317,8 @@ public class ServerHitBin {
         this.id = oldBin.id;
         this.type = oldBin.type;
         this.limitLength = oldBin.limitLength;
-        this.delegator = delegator;
+        this.delegator = oldBin.delegator;
+        this.delegatorName = oldBin.delegatorName;
         this.startTime = oldBin.startTime;
         this.endTime = oldBin.endTime;
         this.numberHits = oldBin.numberHits;
@@ -389,7 +414,7 @@ public class ServerHitBin {
                     binData.put("minTimeMillis", new Long(this.minTime));
                     binData.put("maxTimeMillis", new Long(this.maxTime));
                     try {
-                        delegator.create("ServerHitBin", binData);
+                        getDelegator().create("ServerHitBin", binData);
                     } catch (GenericEntityException e) {
                         Debug.logError(e, "Could not save ServerHitBin:", module);
                     }
@@ -424,7 +449,7 @@ public class ServerHitBin {
             hitData.put("runningTimeMillis", new Long(runningTime));
             
             try {
-                delegator.create("ServerHit", hitData);
+                getDelegator().create("ServerHit", hitData);
             } catch (GenericEntityException e) {
                 Debug.logError(e, "Could not save ServerHit:", module);
             }
