@@ -3,7 +3,7 @@
 
 <!--
 /**
- *  $Id: fieldtypehsql.xml,v 1.1 2003/08/16 22:05:48 ajzeneski Exp $
+ *  $Id: fieldtypehsql.xml,v 1.2 2003/10/27 10:34:35 jonesde Exp $
  *  Title: Entity Generator Definitions for the General Data Model
  *  Description: None
  *  Copyright (c) 2002 The Open For Business Project - www.ofbiz.org
@@ -35,7 +35,7 @@
 <fieldtypemodel>
   <!-- ===================== field-type-def ==================== -->
    <!-- General Types -->    
-    <field-type-def type="blob" sql-type="OBJECT" java-type="java.lang.Object"></field-type-def>
+    <field-type-def type="blob" sql-type="OBJECT" sql-type-alias="OTHER" java-type="java.lang.Object"></field-type-def>
     
     <field-type-def type="date-time" sql-type="TIMESTAMP" java-type="java.sql.Timestamp"></field-type-def>
     <field-type-def type="date" sql-type="DATE" java-type="java.sql.Date"></field-type-def>
