@@ -36,6 +36,8 @@
 
 <%
 	String visitId = request.getParameter("visitId");
+	if (visitId == null) visitId = (String) request.getAttribute("visitId");
+	
 	GenericValue visit = null;
 	List serverHits = null;
 	if (visitId != null) {
@@ -176,6 +178,37 @@
   </tr>
   </ofbiz:iterator>
 </table>  
+
+<%if (security.hasPermission("SEND_CONTROL_APPLET", session)) {%>
+<br>
+<div class="head1">Page Push/Following</div>
+<br>
+<table border="0" cellpadding="5" cellspacing="5">
+  <tr>
+    <form name="pushPage" method="get" action="<ofbiz:url>/pushPage</ofbiz:url>">
+    <td><div class="tableheadtext">Push URL</div></td>    
+    <td>
+      <input type="hidden" name="followerSid" value="<%=visit.getString("sessionId")%>">
+      <input type="hidden" name="visitId" value="<%=visitId%>">
+      <input type="input" name="pageUrl" class="inputBox">
+    </td>
+    <td><input type="submit" value="Submit" style="font-size: x-small;"></td>
+  </tr>
+  <tr>
+    <td colspan="3"><hr class="sepbar"></td>
+  </tr>
+  <tr>
+    <form name="setFollower" method="get" action="<ofbiz:url>/setAppletFollower</ofbiz:url>">
+    <td><div class="tableheadtext">Follow Session</div></td>
+    <td>
+      <input type="hidden" name="followerSid" value="<%=visit.getString("sessionId")%>">
+      <input type="hidden" name="visitId" value="<%=visitId%>">
+      <input type="text" name=followSid" class="inputBox">
+    </td>
+    <td><input type="submit" value="Submit" style="font-size: x-small;"></td>
+  </tr>
+</table>
+<%}%>
 
 <%}else{%>
   <h3>You do not have permission to view this page. ("PARTYMGR_VIEW" or "PARTYMGR_ADMIN" needed)</h3>

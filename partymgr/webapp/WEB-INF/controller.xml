@@ -461,6 +461,17 @@
     	<security https="true" auth="true"/>
     	<response name="success" type="view" value="visitdetail"/>
     </request-map>    
+    
+    <request-map uri="pushPage">
+    	<security https="true" auth="true"/>
+    	<event type="java" path="org.ofbiz.commonapp.common.CommonEvents" invoke="setFollowerPage"/>
+    	<response name="success" type="view" value="visitdetail"/>    	
+    </request-map>
+    <request-map uri="setAppletFollower">
+    	<security https="true" auth="true"/>
+    	<event type="java" path="org.ofbiz.commonapp.common.CommonEvents" invoke="setAppletFollower"/>
+    	<response name="success" type="view" value="visitdetail"/>
+    </request-map>
 
     <!-- end of request mappings -->
 
