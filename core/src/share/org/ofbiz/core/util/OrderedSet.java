@@ -73,10 +73,16 @@ public class OrderedSet extends AbstractSet {
      * Appends the specified element to the end of this set.
 
      * @param obj element to be appended to this set.
-     * @return <tt>true</tt> (as per the general contract of
-     * <tt>Collection.add</tt>).
+     * @return <tt>true</tt> if this set did not already
+     * contain the specified element.
      */
     public boolean add(Object obj) {
-        return backedList.add(obj);
+        int index = backedList.indexOf(obj);
+        if (index == -1)
+            return backedList.add(obj);
+        else {
+            backedList.add(index, obj);
+            return false;
+        }
     }
 }
