@@ -33,6 +33,7 @@ import java.util.Map;
 import java.util.HashMap;
 
 import net.xoetrope.xui.data.XModel;
+import net.xoetrope.xui.helper.SwingWorker;
 
 import org.ofbiz.base.util.Debug;
 import org.ofbiz.base.util.Log4jLoggerWriter;
@@ -626,11 +627,20 @@ public class PosTransaction implements Serializable {
         // notify the change due
         output.print(Output.CHANGE + UtilFormatOut.formatPrice(this.getTotalDue() * -1));
 
-        // open the drawer
-        this.popDrawer();
+        // threaded drawer/receipt printing
+        final PosTransaction currentTrans = this;
+        final SwingWorker worker = new SwingWorker() {
+            public Object construct() {
+                // open the drawer
+                currentTrans.popDrawer();
 
-        // print the receipt
-        DeviceLoader.receipt.printReceipt(this, true);
+                // print the receipt
+                DeviceLoader.receipt.printReceipt(currentTrans, true);
+
+                return null;
+            }
+        };
+        worker.start();
 
         // save the TX Log
         txLog.set("statusId", "POSTX_SOLD");
