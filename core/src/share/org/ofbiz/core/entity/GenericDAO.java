@@ -474,7 +474,11 @@ public class GenericDAO {
         if(meIter.hasNext()) sql += ", ";
       }
     }
-    if(fields != null && fields.size() > 0) sql = sql + " WHERE " + makeWhereStringAnd(whereFields, dummyValue);
+    
+    String whereString = "";
+    if(fields != null && fields.size() > 0) {
+      whereString += makeWhereStringAnd(whereFields, dummyValue);
+    }
     if(modelViewEntity != null) {
       for(int i=0; i<modelViewEntity.viewLinks.size(); i++) {
         ModelViewEntity.ModelViewLink viewLink = (ModelViewEntity.ModelViewLink)modelViewEntity.viewLinks.get(i);
@@ -487,10 +491,14 @@ public class GenericDAO {
           ModelField linkField = linkEntity.getField(keyMap.fieldName);
           ModelField relLinkField = relLinkEntity.getField(keyMap.relFieldName);
         
-          sql += " " + viewLink.entityAlias + "." + linkField.colName;
-          sql += "=" + viewLink.relEntityAlias + "." + relLinkField.colName;
+          if(whereString.length() > 0) whereString += " AND ";
+          whereString += viewLink.entityAlias + "." + linkField.colName;
+          whereString += "=" + viewLink.relEntityAlias + "." + relLinkField.colName;
         }
       }
+    }
+    if(whereString.length() > 0) {
+      sql += " WHERE " + whereString;
     }
     
     if(orderBy != null && orderBy.size() > 0) {
@@ -605,14 +613,14 @@ public class GenericDAO {
         if(meIter.hasNext()) sql += ", ";
       }
     }
-    sql = sql + " WHERE ";
     
+    String whereString = "";
     if(whereFields != null && whereFields.size() > 0) {
       int i = 0;
       for(; i < whereFields.size() - 1; i++) {
-        sql = sql + ((ModelField)whereFields.elementAt(i)).colName + ((EntityOperator)intraFieldOperations.get(i)).getCode() + " ? AND ";
+        whereString += ((ModelField)whereFields.elementAt(i)).colName + ((EntityOperator)intraFieldOperations.get(i)).getCode() + " ? AND ";
       }
-      sql = sql + ((ModelField)whereFields.elementAt(i)).colName + ((EntityOperator)intraFieldOperations.get(i)).getCode() + " ? ";
+      whereString += ((ModelField)whereFields.elementAt(i)).colName + ((EntityOperator)intraFieldOperations.get(i)).getCode() + " ? ";
     }
     
     if(modelViewEntity != null) {
@@ -627,11 +635,16 @@ public class GenericDAO {
           ModelField linkField = linkEntity.getField(keyMap.fieldName);
           ModelField relLinkField = relLinkEntity.getField(keyMap.relFieldName);
         
-          sql += " " + viewLink.entityAlias + "." + linkField.colName;
-          sql += "=" + viewLink.relEntityAlias + "." + relLinkField.colName;
+          if(whereString.length() > 0) whereString += " AND ";
+          whereString += viewLink.entityAlias + "." + linkField.colName;
+          whereString += "=" + viewLink.relEntityAlias + "." + relLinkField.colName;
         }
       }
     }
+    if(whereString.length() > 0) {
+      sql += " WHERE " + whereString;
+    }
+    
 
     if(orderBy != null && orderBy.size() > 0) {
       Vector orderByStrings = new Vector();
