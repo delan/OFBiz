@@ -20,7 +20,7 @@
  *  THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  *
  *@author     Andy Zeneski (jaz@ofbiz.org)
- *@version    $Revision: 1.8 $
+ *@version    $Revision: 1.9 $
  *@since      2.1
 -->
 <#assign uiLabelMap = requestAttributes.uiLabelMap>
@@ -112,6 +112,12 @@ ${requestAttributes.virtualJavaScript?if_exists}
       <#if daysToShip?exists>
         <div class="tabletext"><b>${uiLabelMap.ProductUsuallyShipsIn} <font color='red'>${daysToShip}</font> ${uiLabelMap.CommonDays}!<b></div>
       </#if>
+
+      <#-- tell a friend -->
+      <div class="tabletext">&nbsp;</div>
+      <div class="tabletext">
+        <a href="javascript:popUp('<@ofbizUrl>/tellafriend</@ofbizUrl>','tellafriend','300','450');" class="buttontext">Tell-A-Friend</a>
+      </div>
                 
       <form method="POST" action="<@ofbizUrl>/additem<#if requestAttributes._CURRENT_VIEW_?exists>/${requestAttributes._CURRENT_VIEW_}</#if></@ofbizUrl>" name="addform" style='margin: 0;'>
         <#assign inStock = true>     
