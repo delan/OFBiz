@@ -54,7 +54,7 @@ import org.w3c.dom.NodeList;
  *@created    Wed Aug 08 2001
  *@version    1.0
  */
-public class GenericEntity extends Observable implements Serializable, Comparable, Cloneable {
+public class GenericEntity extends Observable implements Map, Serializable, Comparable, Cloneable {
 
     /** Name of the GenericDelegator, used to reget the GenericDelegator when deserialized */
     public String delegatorName = null;
@@ -198,7 +198,7 @@ public class GenericEntity extends Observable implements Serializable, Comparabl
      * @param value The value to set
      * @param setIfNull Specifies whether or not to set the value if it is null
      */
-    public synchronized void set(String name, Object value, boolean setIfNull) {
+    public synchronized Object set(String name, Object value, boolean setIfNull) {
         if (getModelEntity().getField(name) == null) {
             throw new IllegalArgumentException("[GenericEntity.set] \"" + name + "\" is not a field of " + entityName);
             //Debug.logWarning("[GenericEntity.set] \"" + name + "\" is not a field of " + entityName + ", but setting anyway...");
@@ -207,10 +207,13 @@ public class GenericEntity extends Observable implements Serializable, Comparabl
             if (value instanceof Boolean) {
                 value = ((Boolean) value).booleanValue() ? "Y" : "N";
             }
-            fields.put(name, value);
+            Object old = fields.put(name, value);
             modified = true;
             this.setChanged();
             this.notifyObservers(name);
+            return old;
+        } else {
+            return fields.get(name);
         }
     }
 
@@ -576,5 +579,55 @@ public class GenericEntity extends Observable implements Serializable, Comparabl
         GenericEntity newEntity = new GenericEntity(this);
         newEntity.setDelegator(internalDelegator);
         return newEntity;
+    }
+    
+    // ---- Methods added to implement the Map interface: ----
+    
+    public Object remove(Object key) {
+        return fields.remove(key);
+    }
+    
+    public boolean containsKey(Object key) {
+        return fields.containsKey(key);
+    }
+    
+    public java.util.Set entrySet() {
+        return fields.entrySet();
+    }
+    
+    public Object put(Object key, Object value) {
+        return this.set((String) key, value, true);
+    }
+    
+    public void putAll(java.util.Map map) {
+        this.setFields(map);
+    }
+    
+    public void clear() {
+        this.fields.clear();
+    }
+    
+    public Object get(Object key) {
+        return this.get((String) key);
+    }
+    
+    public java.util.Set keySet() {
+        return this.fields.keySet();
+    }
+    
+    public boolean isEmpty() {
+        return this.fields.isEmpty();
+    }
+    
+    public java.util.Collection values() {
+        return this.fields.values();
+    }
+    
+    public boolean containsValue(Object value) {
+        return this.fields.containsValue(value);
+    }
+    
+    public int size() {
+        return this.fields.size();
     }
 }
