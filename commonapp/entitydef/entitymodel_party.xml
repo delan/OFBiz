@@ -1098,8 +1098,8 @@
     <view-entity entity-name="PartyAndContactMech"
             package-name="org.ofbiz.commonapp.party.party"
             title="Party and Contact Mech View Entity">
-      <member-entity entity-alias="PCM" entity-name="PartyContactMech"/>
       <member-entity entity-alias="CM" entity-name="ContactMech"/>
+      <member-entity entity-alias="PCM" entity-name="PartyContactMech"/>
       <member-entity entity-alias="PTY" entity-name="Party"/>
       <alias entity-alias="CM" name="contactMechId" prim-key="true"/>
       <alias entity-alias="PTY" name="partyId" prim-key="true"/>
@@ -1644,8 +1644,8 @@
     <view-entity entity-name="RoleTypeAndParty"
             package-name="org.ofbiz.commonapp.party.party"
             title="Party Role View Entity">
-      <member-entity entity-alias="RT" entity-name="RoleType"/>
       <member-entity entity-alias="PR" entity-name="PartyRole"/>
+      <member-entity entity-alias="RT" entity-name="RoleType"/>
       <alias entity-alias="PR" name="partyId" prim-key="true"/>
       <alias entity-alias="RT" name="roleTypeId" prim-key="true"/>
       <alias entity-alias="RT" name="description"/>

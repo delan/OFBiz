@@ -233,6 +233,13 @@
       <prim-key field="partyId"/>
       <prim-key field="roleTypeId"/>
       <prim-key field="fromDate"/>
+      <relation type="one" fk-name="PERF_NOTE_PRTY" rel-entity-name="Party">
+        <key-map field-name="partyId"/>
+      </relation>
+      <relation type="one" fk-name="PERF_NOTE_PRLE" rel-entity-name="PartyRole">
+        <key-map field-name="partyId"/>
+        <key-map field-name="roleTypeId"/>
+      </relation>
     </entity>
     <entity entity-name="PersonTraining"
             package-name="org.ofbiz.commonapp.humanres.ability"
