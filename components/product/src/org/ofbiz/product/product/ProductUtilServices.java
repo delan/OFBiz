@@ -1,5 +1,5 @@
 /*
- * $Id: ProductUtilServices.java,v 1.3 2004/01/27 01:00:59 jonesde Exp $
+ * $Id: ProductUtilServices.java,v 1.4 2004/01/27 06:16:10 jonesde Exp $
  *
  *  Copyright (c) 2002 The Open For Business Project (www.ofbiz.org)
  *  Permission is hereby granted, free of charge, to any person obtaining a
@@ -39,12 +39,14 @@ import org.ofbiz.base.util.UtilProperties;
 import org.ofbiz.base.util.UtilValidate;
 import org.ofbiz.entity.GenericDelegator;
 import org.ofbiz.entity.GenericEntityException;
+import org.ofbiz.entity.GenericPK;
 import org.ofbiz.entity.GenericValue;
 import org.ofbiz.entity.condition.EntityCondition;
 import org.ofbiz.entity.condition.EntityConditionList;
 import org.ofbiz.entity.condition.EntityExpr;
 import org.ofbiz.entity.condition.EntityOperator;
 import org.ofbiz.entity.model.DynamicViewEntity;
+import org.ofbiz.entity.model.ModelEntity;
 import org.ofbiz.entity.model.ModelKeyMap;
 import org.ofbiz.entity.util.EntityListIterator;
 import org.ofbiz.entity.util.EntityUtil;
@@ -56,14 +58,14 @@ import org.ofbiz.service.ServiceUtil;
  *
  * @author     <a href="mailto:jaz@ofbiz.org">Andy Zeneski</a>
  * @author     <a href="mailto:jonesde@ofbiz.org">David E. Jones</a>
- * @version    $Revision: 1.3 $
+ * @version    $Revision: 1.4 $
  * @since      2.0
  */
 public class ProductUtilServices {
     
     public static final String module = ProductUtilServices.class.getName();
 
-    // disc all virtuals that have all disc variants
+    /** First expirt all ProductAssocs for all disc variants, then disc all virtuals that have all expired variant ProductAssocs */
     public static Map discVirtualsWithDiscVariants(DispatchContext dctx, Map context) {
         GenericDelegator delegator = dctx.getDelegator();
         Timestamp nowTimestamp = UtilDateTime.nowTimestamp();
@@ -100,39 +102,26 @@ public class ProductUtilServices {
                 }
             }
 
-            // TODO: get all non-discontinued virtuals, see if all variant ProductAssocs are expired, if discontinue
-            /*
+            // get all non-discontinued virtuals, see if all variant ProductAssocs are expired, if discontinue
             EntityCondition condition = new EntityConditionList(UtilMisc.toList(
-                    new EntityExpr("isVariant", EntityOperator.EQUALS, "Y"),
-                    new EntityExpr("salesDiscontinuationDate", EntityOperator.NOT_EQUAL, null),
-                    new EntityExpr("salesDiscontinuationDate", EntityOperator.LESS_THAN_EQUAL_TO, nowTimestamp)
-            ), EntityOperator.AND);
+                    new EntityExpr("isVirtual", EntityOperator.EQUALS, "Y"),
+                    new EntityExpr(new EntityExpr("salesDiscontinuationDate", EntityOperator.EQUALS, null), EntityOperator.OR, new EntityExpr("salesDiscontinuationDate", EntityOperator.GREATER_THAN_EQUAL_TO, nowTimestamp))
+                    ), EntityOperator.AND);
             EntityListIterator eli = delegator.findListIteratorByCondition("Product", condition, null, null);
             GenericValue product = null;
             int numSoFar = 0;
             while ((product = (GenericValue) eli.next()) != null) {
-                String virtualProductId = ProductWorker.getVariantVirtualId(product);
-                GenericValue virtualProduct = delegator.findByPrimaryKey("Product", UtilMisc.toMap("productId", virtualProductId));
-                if (virtualProduct == null) {
-                    continue;
-                }
-                List passocList = delegator.findByAnd("ProductAssoc", UtilMisc.toMap("productId", virtualProductId, "productIdTo", product.get("productId"), "productAssocTypeId", "PRODUCT_VARIANT"));
+                List passocList = delegator.findByAnd("ProductAssoc", UtilMisc.toMap("productId", product.get("productId"), "productAssocTypeId", "PRODUCT_VARIANT"));
                 passocList = EntityUtil.filterByDate(passocList, nowTimestamp);
-                if (passocList.size() > 0) {
-                    Iterator passocIter = passocList.iterator();
-                    while (passocIter.hasNext()) {
-                        GenericValue passoc = (GenericValue) passocIter.next();
-                        passoc.set("thruDate", nowTimestamp);
-                        passoc.store();
-                    }
+                if (passocList.size() == 0) {
+                    product.set("salesDiscontinuationDate", nowTimestamp);
                     
                     numSoFar++;
                     if (numSoFar % 500 == 0) {
-                        Debug.logInfo("Expired variant ProductAssocs for " + numSoFar + " sales discontinued variant products.", module);
+                        Debug.logInfo("Sales discontinued " + numSoFar + " virtual products that have no valid variants.", module);
                     }
                 }
             }
-            */
         } catch (GenericEntityException e) {
             String errMsg = "Entity error running salesDiscontinuationDate: " + e.toString();
             Debug.logError(e, errMsg, module);
@@ -142,7 +131,7 @@ public class ProductUtilServices {
         return ServiceUtil.returnSuccess();
     }
     
-    // for all disc products, remove from category memberships
+    /** for all disc products, remove from category memberships */
     public static Map removeCategoryMembersOfDiscProducts(DispatchContext dctx, Map context) {
         GenericDelegator delegator = dctx.getDelegator();
         Timestamp nowTimestamp = UtilDateTime.nowTimestamp();
@@ -185,6 +174,8 @@ public class ProductUtilServices {
         GenericDelegator delegator = dctx.getDelegator();
         Timestamp nowTimestamp = UtilDateTime.nowTimestamp();
 
+        Debug.logInfo("Starting makeStandAloneFromSingleVariantVirtuals", module);
+        
         DynamicViewEntity dve = new DynamicViewEntity();
         dve.addMemberEntity("PVIRT", "Product");
         dve.addMemberEntity("PVA", "ProductAssoc");
@@ -199,42 +190,121 @@ public class ProductUtilServices {
         //dve.addAlias("PVAR", "variantProductId", "productId", null, null, null, null);
         
         try {
+            EntityCondition condition = new EntityConditionList(UtilMisc.toList(
+                    new EntityExpr("productAssocTypeId", EntityOperator.EQUALS, "PRODUCT_VARIANT")
+                    ), EntityOperator.AND);
+            EntityCondition havingCond = new EntityExpr("productIdToCount", EntityOperator.EQUALS, new Long(1));
+            EntityListIterator eliOne = delegator.findListIteratorByCondition(dve, condition, havingCond, UtilMisc.toList("productId", "productIdToCount"), null, null);
+            GenericValue value = null;
+            int numWithOneOnly = 0;
+            while ((value = (GenericValue) eliOne.next()) != null) {
+                // has only one variant period, is it valid? should already be discontinued if not
+                
+                String productId = value.getString("productId");
+                GenericValue product = delegator.findByPrimaryKey("Product", UtilMisc.toMap("productId", productId));
+                
+                List paList = delegator.findByAnd("ProductAssoc", UtilMisc.toMap("productId", productId, "productAssocTypeId", "PRODUCT_VARIANT"));
+                // verify the query; tested on a bunch, looks good
+                if (paList.size() != 1) {
+                    Debug.logInfo("Virtual product with ID " + productId + " should have 1 assoc, has " + paList.size(), module);
+                } else {
+                    // for all virtuals with one variant move all info from virtual to variant and remove virtual, make variant as not a variant
+                    GenericValue productAssoc = EntityUtil.getFirst(paList);
+                    // remove the productAssoc before getting down so it isn't copied over...
+                    productAssoc.remove();
+                    String variantProductId = productAssoc.getString("productIdTo");
+                    
+                    // Product
+                    GenericValue variantProduct = delegator.findByPrimaryKey("Product", UtilMisc.toMap("productId", variantProductId));
+                    // start with the values from the virtual product, override from the variant...
+                    GenericValue newVariantProduct = delegator.makeValue("Product", product);
+                    newVariantProduct.setAllFields(variantProduct, false, "", null);
+                    newVariantProduct.store();
+                    
+                    // ProductCategoryMember
+                    duplicateRelated(product, "ProductCategoryMember", variantProductId, nowTimestamp, true, delegator);
+                    
+                    // ProductFeature
+                    duplicateRelated(product, "ProductFeature", variantProductId, nowTimestamp, true, delegator);
+                    
+                    // ProductContent
+                    duplicateRelated(product, "ProductContent", variantProductId, nowTimestamp, true, delegator);
+                    
+                    // ProductPrice
+                    duplicateRelated(product, "ProductPrice", variantProductId, nowTimestamp, true, delegator);
+                    
+                    // GoodIdentification
+                    duplicateRelated(product, "GoodIdentification", variantProductId, nowTimestamp, true, delegator);
+                    
+                    // ProductAttribute
+                    duplicateRelated(product, "ProductAttribute", variantProductId, nowTimestamp, true, delegator);
+                    
+                    // ProductAssoc
+                    duplicateRelated(product, "ProductAssoc", variantProductId, nowTimestamp, true, delegator);
+                    
+                    product.remove();
+                    
+                    numWithOneOnly++;
+                    if (numWithOneOnly % 100 == 0) {
+                        Debug.logInfo("Made " + numWithOneOnly + " virtual products with only one valid variant stand-alone products.", module);
+                    }
+                }
+            }
+            
             EntityCondition conditionWithDates = new EntityConditionList(UtilMisc.toList(
                     new EntityExpr("productAssocTypeId", EntityOperator.EQUALS, "PRODUCT_VARIANT"),
                     new EntityExpr("fromDate", EntityOperator.LESS_THAN_EQUAL_TO, nowTimestamp),
                     new EntityExpr(new EntityExpr("thruDate", EntityOperator.EQUALS, null), EntityOperator.OR, new EntityExpr("thruDate", EntityOperator.GREATER_THAN_EQUAL_TO, nowTimestamp))
                     ), EntityOperator.AND);
-            EntityCondition havingCond = new EntityExpr("productIdToCount", EntityOperator.EQUALS, new Long(1));
             EntityListIterator eliMulti = delegator.findListIteratorByCondition(dve, conditionWithDates, havingCond, UtilMisc.toList("productId", "productIdToCount"), null, null);
-            GenericValue value = null;
             int numWithOneValid = 0;
             while ((value = (GenericValue) eliMulti.next()) != null) {
                 // has only one valid variant
                 String productId = value.getString("productId");
                 
-                // for all virtuals with one variant move all info from virtual to variant and remove virtual, make variant as not a variant
-
-                numWithOneValid++;
-                if (numWithOneValid % 100 == 0) {
-                    Debug.logInfo("Made " + numWithOneValid + " virtual products with one valid variant stand-along products.", module);
-                }
-            }
-
-            EntityCondition condition = new EntityConditionList(UtilMisc.toList(
-                    new EntityExpr("productAssocTypeId", EntityOperator.EQUALS, "PRODUCT_VARIANT")
-                    ), EntityOperator.AND);
-            EntityListIterator eliMultiple = delegator.findListIteratorByCondition(dve, condition, havingCond, UtilMisc.toList("productId", "productIdToCount"), null, null);
-            int numWithOneOnly = 0;
-            while ((value = (GenericValue) eliMultiple.next()) != null) {
-                // has only one variant period, is it valid?
+                GenericValue product = delegator.findByPrimaryKey("Product", UtilMisc.toMap("productId", productId));
                 
-                String productId = value.getString("productId");
-                
-                // for all virtuals with one valid variant move info from virtual to variant, put variant in categories from virtual, remove virtual from all categories but leave "family" otherwise intact, mark variant as not a variant
-                
-                numWithOneOnly++;
-                if (numWithOneOnly % 100 == 0) {
-                    Debug.logInfo("Made " + numWithOneOnly + " virtual products with only one valid variant stand-along products.", module);
+                List paList = delegator.findByAnd("ProductAssoc", UtilMisc.toMap("productId", productId, "productAssocTypeId", "PRODUCT_VARIANT"));
+                // verify the query; tested on a bunch, looks good
+                if (paList.size() != 1) {
+                    Debug.logInfo("Virtual product with ID " + productId + " should have 1 assoc, has " + paList.size(), module);
+                } else {
+                    // for all virtuals with one valid variant move info from virtual to variant, put variant in categories from virtual, remove virtual from all categories but leave "family" otherwise intact, mark variant as not a variant
+                    GenericValue productAssoc = EntityUtil.getFirst(paList);
+                    String variantProductId = productAssoc.getString("productIdTo");
+                    
+                    // Product
+                    GenericValue variantProduct = delegator.findByPrimaryKey("Product", UtilMisc.toMap("productId", variantProductId));
+                    // start with the values from the virtual product, override from the variant...
+                    GenericValue newVariantProduct = delegator.makeValue("Product", product);
+                    newVariantProduct.setAllFields(variantProduct, false, "", null);
+                    newVariantProduct.store();
+                    
+                    // ProductCategoryMember
+                    duplicateRelated(product, "ProductCategoryMember", variantProductId, nowTimestamp, false, delegator);
+                    
+                    // ProductFeature
+                    duplicateRelated(product, "ProductFeature", variantProductId, nowTimestamp, false, delegator);
+                    
+                    // ProductContent
+                    duplicateRelated(product, "ProductContent", variantProductId, nowTimestamp, false, delegator);
+                    
+                    // ProductPrice
+                    duplicateRelated(product, "ProductPrice", variantProductId, nowTimestamp, false, delegator);
+                    
+                    // GoodIdentification
+                    duplicateRelated(product, "GoodIdentification", variantProductId, nowTimestamp, false, delegator);
+                    
+                    // ProductAttribute
+                    duplicateRelated(product, "ProductAttribute", variantProductId, nowTimestamp, false, delegator);
+                    
+                    // ProductAssoc
+                    duplicateRelated(product, "ProductAssoc", variantProductId, nowTimestamp, false, delegator);
+                    
+                    numWithOneValid++;
+                    if (numWithOneValid % 100 == 0) {
+                        Debug.logInfo("Made " + numWithOneValid + " virtual products with one valid variant stand-alone products.", module);
+                    }
                 }
             }
             
@@ -248,8 +318,34 @@ public class ProductUtilServices {
         return ServiceUtil.returnSuccess();
     }
     
+    public static void duplicateRelated(GenericValue product, String relatedEntityName, String variantProductId, Timestamp nowTimestamp, boolean removeOld, GenericDelegator delegator) throws GenericEntityException {
+        List relatedList = EntityUtil.filterByDate(product.getRelated(relatedEntityName), nowTimestamp);
+        Iterator relatedIter = relatedList.iterator();
+        while (relatedIter.hasNext()) {
+            GenericValue relatedValue = (GenericValue) relatedIter.next();
+            
+            // create a new one? see if one already exists with different from/thru dates
+            ModelEntity modelEntity = relatedValue.getModelEntity();
+            if (modelEntity.isField("fromDate")) {
+                GenericPK findValue = relatedValue.getPrimaryKey();
+                findValue.set("fromDate", null);
+                List existingValueList = EntityUtil.filterByDate(delegator.findByAnd(relatedEntityName, findValue));
+                if (existingValueList.size() > 0) {
+                    continue;
+                }
+            }
+            
+            GenericValue newRelatedValue = (GenericValue) relatedValue.clone();
+            newRelatedValue.set("productId", variantProductId);
+            newRelatedValue.create();
+        }
+        if (removeOld) {
+            product.removeRelated(relatedEntityName);
+        }
+    }
     
-    /* reset all product image names with a certain pattern, ex: /images/products/${sizeStr}/${productId}.jpg
+    
+    /** reset all product image names with a certain pattern, ex: /images/products/${sizeStr}/${productId}.jpg
      * NOTE: only works on fields of Product right now
      */
     public static Map setAllProductImageNames(DispatchContext dctx, Map context) {
