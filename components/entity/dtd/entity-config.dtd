@@ -26,12 +26,12 @@
  *  THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
  *  This is the DTD for the Open For Business Entity Engine configuration XML file.
- *  $Id: entity-config.dtd,v 1.4 2003/08/19 11:00:47 jonesde Exp $
+ *  $Id: entity-config.dtd,v 1.5 2003/08/20 03:20:19 ajzeneski Exp $
 -->
 
 <!-- ====================== Root Element ======================= -->
-<!ELEMENT entity-config ( resource-loader+, transaction-factory, delegator+,
-        entity-model-reader+, entity-group-reader+, entity-eca-reader*, field-type+, datasource+ )>
+<!ELEMENT entity-config ( resource-loader+, transaction-factory, delegator+, entity-model-reader+,
+        entity-group-reader+, entity-eca-reader*, entity-data-reader*, field-type+, datasource+ )>
 
 <!ELEMENT resource-loader EMPTY>
 <!ATTLIST resource-loader
