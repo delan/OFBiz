@@ -75,8 +75,7 @@ access. For a detailed description see the core/docs/entityconfig.html file.
      * RepeatableRead
      * Serializable (default)
     -->
-    <datasource name="localhsql"
-    		data-reader-name="main"
+    <datasource name="localhsql"    		
             helper-class="org.ofbiz.entity.datasource.GenericHelperDAO"
             field-type-name="hsql"
             check-on-start="true"
