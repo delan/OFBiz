@@ -21,10 +21,10 @@
  *  THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  *
  *  This is the Open for Business Security Extensions Build Script.
- *  $Id: build.xml,v 1.1 2003/08/17 10:51:03 jonesde Exp $
+ *  $Id: build.xml,v 1.2 2003/08/17 17:50:18 ajzeneski Exp $
 -->
 
-<project name="OFBiz - Security" default="jar" basedir=".">
+<project name="OFBiz - Security Ext" default="jar" basedir=".">
 
     <!-- ================================================================== -->
     <!-- Initialization of all property settings                            -->
@@ -76,7 +76,7 @@
     </target>
     
     <target name="prepare-docs" depends="init">
-        <mkdir dir="${build.dir}/javadocs" />        
+        <mkdir dir="${build.dir}/javadocs"/>        
     </target>
     
     <!-- ================================================================== -->
@@ -91,12 +91,10 @@
             <src path="${src.dir}"/>
         </javac>
         <!-- also put the DTDs in the jar file... -->
-        <!--
         <copy todir="${build.dir}/classes">
-            <fileset dir="${dtd.dir}" includes="*.dtd" />
+            <!--<fileset dir="${dtd.dir}" includes="*.dtd"/>-->
             <fileset dir="${src.dir}" includes="**/*.properties,**/*.xml,**/*.bsh,**/*.logic,**/*.js,**/*.jacl,**/*.py"/>
         </copy>
-        -->
     </target>
     
     <target name="jar" depends="classes">
@@ -116,5 +114,5 @@
         </javadoc>
     </target>
     
-    <target name="all" depends="jar,docs" />   
+    <target name="all" depends="jar,docs"/>   
 </project>

@@ -21,7 +21,7 @@
  *  THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  *
  *  This is the Open for Business Entity Build Script.
- *  $Id: build.xml,v 1.4 2003/08/17 08:37:22 ajzeneski Exp $
+ *  $Id: build.xml,v 1.5 2003/08/17 17:50:18 ajzeneski Exp $
 -->
 
 <project name="OFBiz - Entity" default="jar" basedir=".">
@@ -71,7 +71,7 @@
     </target>
     
     <target name="prepare-docs" depends="init">
-        <mkdir dir="${build.dir}/javadocs" />        
+        <mkdir dir="${build.dir}/javadocs"/>        
     </target>
     
     <!-- ================================================================== -->
@@ -87,7 +87,7 @@
         </javac>
         <!-- also put the DTDs in the jar file... -->
         <copy todir="${build.dir}/classes">
-            <fileset dir="${dtd.dir}" includes="*.dtd" />            
+            <fileset dir="${dtd.dir}" includes="*.dtd"/>
             <fileset dir="${src.dir}" includes="**/*.properties,**/*.xml,**/*.bsh,**/*.logic,**/*.js,**/*.jacl,**/*.py"/>
         </copy>                	
     </target>
@@ -109,5 +109,5 @@
         </javadoc>
     </target>
     
-    <target name="all" depends="jar,docs" />   
+    <target name="all" depends="jar,docs"/>   
 </project>

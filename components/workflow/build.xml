@@ -21,10 +21,10 @@
  *  THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  *
  *  This is the Open for Business Service Build Script.
- *  $Id: build.xml,v 1.1 2003/08/17 09:29:35 ajzeneski Exp $
+ *  $Id: build.xml,v 1.2 2003/08/17 17:50:18 ajzeneski Exp $
 -->
 
-<project name="OFBiz - MiniLang Component" default="jar" basedir=".">
+<project name="OFBiz - Workflow Component" default="jar" basedir=".">
 
     <!-- ================================================================== -->
     <!-- Initialization of all property settings                            -->
@@ -32,8 +32,8 @@
 
     <target name="init">                
         <property environment="env"/>
-        <property name="desc" value="MiniLang Component"/>
-        <property name="name" value="ofbiz-minilang"/>
+        <property name="desc" value="Workflow Component"/>
+        <property name="name" value="ofbiz-workflow"/>
         <property name="src.dir" value="src"/>
         <property name="dtd.dir" value="dtd"/>
         <property name="lib.dir" value="lib"/>        
@@ -74,7 +74,7 @@
     </target>
     
     <target name="prepare-docs" depends="init">
-        <mkdir dir="${build.dir}/javadocs" />        
+        <mkdir dir="${build.dir}/javadocs"/>        
     </target>
     
     <!-- ================================================================== -->
@@ -90,7 +90,7 @@
         </javac>
         <!-- also put the DTDs in the jar file... -->
         <copy todir="${build.dir}/classes">
-            <fileset dir="${dtd.dir}" includes="*.dtd" />            
+            <fileset dir="${dtd.dir}" includes="*.dtd"/>
             <fileset dir="${src.dir}" includes="**/*.properties,**/*.xml,**/*.bsh,**/*.logic,**/*.js,**/*.jacl,**/*.py"/>
         </copy>                	
     </target>
@@ -112,5 +112,5 @@
         </javadoc>
     </target>
     
-    <target name="all" depends="jar,docs" />   
+    <target name="all" depends="jar,docs"/>   
 </project>
