@@ -1,5 +1,5 @@
 /*
- * $Id: ZipSalesServices.java,v 1.7 2004/01/16 21:17:11 ajzeneski Exp $
+ * $Id: ZipSalesServices.java,v 1.8 2004/01/21 14:07:30 ajzeneski Exp $
  *
  *  Copyright (c) 2001-2003 The Open For Business Project - www.ofbiz.org
  *
@@ -51,7 +51,7 @@ import java.io.File;
  * Zip-Sales Database Services
  *
  * @author     <a href="mailto:jaz@ofbiz.org">Andy Zeneski</a>
- * @version    $Revision: 1.7 $
+ * @version    $Revision: 1.8 $
  * @since      3.0
  */
 public class ZipSalesServices {
@@ -232,8 +232,8 @@ public class ZipSalesServices {
         List itemAdjustments = new ArrayList();
 
         // check for a valid state/province geo
-        String validStates = UtilProperties.getPropertyValue("zipsales.properties", "valid.state");
-        if (validStates != null) {
+        String validStates = UtilProperties.getPropertyValue("zipsales.properties", "zipsales.valid.states");
+        if (validStates != null && validStates.length() > 0) {
             List stateSplit = StringUtil.split(validStates, "|");
             if (!stateSplit.contains(stateProvince)) {
                 Map result = ServiceUtil.returnSuccess();
