@@ -323,6 +323,7 @@ public class EntityConfigUtil {
         public Element tyrexDataSourceElement;
         public Element inlineJdbcElement;
 
+        public String schemaName = null;
         public boolean checkOnStart = true;
         public boolean addMissingOnStart = false;
         public boolean useFks = true;
@@ -344,6 +345,7 @@ public class EntityConfigUtil {
             datasourceElement = element;
 
             if (datasourceElement == null) {
+                Debug.logWarning("datasource def not found with name " + this.name + ", using default for schema-name (none)");
                 Debug.logWarning("datasource def not found with name " + this.name + ", using default for check-on-start (true)");
                 Debug.logWarning("datasource def not found with name " + this.name + ", using default for add-missing-on-start (false)");
                 Debug.logWarning("datasource def not found with name " + this.name + ", using default for use-foreign-keys (true)");
@@ -356,6 +358,7 @@ public class EntityConfigUtil {
                 Debug.logWarning("datasource def not found with name " + this.name + ", using default for use-fk-initially-deferred (true)");
                 Debug.logWarning("datasource def not found with name " + this.name + ", using default for join-style (ansi)");
             } else {
+                schemaName = datasourceElement.getAttribute("schema-name");
                 // anything but false is true
                 checkOnStart = !"false".equals(datasourceElement.getAttribute("check-on-start"));
                 // anything but true is false

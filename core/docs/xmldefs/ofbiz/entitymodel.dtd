@@ -38,7 +38,7 @@
 <!ELEMENT author ( #PCDATA  )>
 <!ELEMENT version ( #PCDATA  )>
 <!-- ================== entity ===================== -->
-<!ELEMENT entity ( description?, field+, prim-key*, relation* )>
+<!ELEMENT entity ( description?, field+, prim-key*, relation*, index* )>
 <!-- see the children of entitymodel section for description, etc. -->
 <!ATTLIST entity
 entity-name CDATA #REQUIRED
@@ -51,11 +51,38 @@ title CDATA #IMPLIED
 copyright CDATA #IMPLIED
 author CDATA #IMPLIED
 version CDATA #IMPLIED >
-<!ELEMENT field ( validate* )>
 <!ELEMENT prim-key EMPTY>
 <!ATTLIST prim-key
 field CDATA #REQUIRED >
+<!-- ==================== field ===================== -->
+<!ELEMENT field ( validate* )>
+<!ATTLIST field
+name CDATA #REQUIRED
+col-name CDATA #IMPLIED
+type CDATA #REQUIRED >
+<!ELEMENT validate EMPTY>
+<!ATTLIST validate
+name CDATA #REQUIRED >
+<!-- ==================== relation ====================== -->
+<!-- specifies whether or not the relation is a dependent one; ie if the related entity can exist without the main entity -->
 <!ELEMENT relation ( key-map+ )>
+<!ATTLIST relation
+type ( one | many | one-nofk ) #REQUIRED
+title CDATA #IMPLIED
+rel-entity-name CDATA #REQUIRED
+fk-name CDATA #IMPLIED >
+<!ELEMENT key-map EMPTY>
+<!ATTLIST key-map
+field-name CDATA #REQUIRED
+rel-field-name CDATA #IMPLIED >
+<!-- ==================== index ===================== -->
+<!ELEMENT index ( index-field+ )>
+<!ATTLIST index
+name CDATA #REQUIRED
+unique ( true | false ) "false" >
+<!ELEMENT index-field EMPTY>
+<!ATTLIST index-field
+name CDATA #REQUIRED >
 <!-- ================== view-entity ===================== -->
 <!ELEMENT view-entity ( description?, member-entity+, alias+, view-link*, relation* )>
 <!-- see the children of entitymodel section for description, etc. -->
@@ -85,25 +112,4 @@ function ( min | max | sum | avg | count | count-distinct | upper | lower ) #IMP
 entity-alias CDATA #REQUIRED
 rel-entity-alias CDATA #REQUIRED
 rel-optional ( true | false ) "false" >
-<!-- ==================== Children of field ===================== -->
-<!ATTLIST field
-name CDATA #REQUIRED
-col-name CDATA #IMPLIED
-type CDATA #REQUIRED >
-<!ELEMENT validate EMPTY>
-<!ATTLIST validate
-name CDATA #REQUIRED >
-<!-- ==================== Children of relation ====================== -->
-<!-- specifies whether or not the relation is a dependent one; ie if the related entity can exist without the main entity -->
-<!ATTLIST relation
-type ( one | many | one-nofk ) #REQUIRED
-title CDATA #IMPLIED
-rel-entity-name CDATA #REQUIRED
-fk-name CDATA #IMPLIED >
-<!ELEMENT key-map EMPTY>
-<!-- see definition of relation in entity section above -->
-<!-- ===================== Children of key-map ====================== -->
-<!ATTLIST key-map
-field-name CDATA #REQUIRED >
-<!ATTLIST key-map
-rel-field-name CDATA #IMPLIED >
+
