@@ -30,7 +30,10 @@
 
 <simple-methods>
 	<simple-method method-name="createCustomer" short-description="Create Customer" login-required="true">
-		<!-- first create the person -->
+		<!-- timestamp to be used -->
+		<now-timestamp-to-env env-name="nowStamp"/>
+		
+		<!-- create the party/person -->
 		<field-to-field field-name="personalTitle" map-name="parameters" to-map-name="personMap"/>
 		<field-to-field field-name="firstName" map-name="parameters" to-map-name="personMap"/>
 		<field-to-field field-name="middleName" map-name="parameters" to-map-name="personMap"/>
@@ -41,6 +44,11 @@
         	<result-to-field result-name="partyId" map-name="tmpMap"/>
         	<result-to-request result-name="partyId"/>
         </call-service>
+        
+        <!-- add the party to the customer role -->
+        <string-to-field field-name="roleTypeId" map-name="roleMap" string="CUSTOMER"/>
+        <field-to-field field-name="partyId" map-name="tmpMap" to-map-name="roleMap"/>
+        <call-service service-name="createPartyRole" in-map-name="roleMap"/>
         
         <!-- create the email address -->
         <field-to-field field-name="emailAddress" map-name="parameters" to-field-name="emailAddress" to-map-name="emailMap"/>
