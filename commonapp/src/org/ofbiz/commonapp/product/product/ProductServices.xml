@@ -28,6 +28,7 @@
 <simple-methods>
     <simple-method method-name="createProduct" short-description="Create an Product">
         <check-permission permission="CATALOG" action="_CREATE"><fail-message message="Security Error: to run createProduct you must have the CATALOG_CREATE or CATALOG_ADMIN permission"/></check-permission>
+		<check-id field-name="productId" map-name="parameters"/>
         <check-errors/>
 
         <make-value value-name="newEntity" entity-name="Product"/>
