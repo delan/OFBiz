@@ -1,5 +1,5 @@
 /*
- * $Id: OFBizSecurity.java,v 1.1 2003/08/17 04:39:05 ajzeneski Exp $
+ * $Id: OFBizSecurity.java,v 1.2 2003/08/17 05:12:42 ajzeneski Exp $
  *
  * Copyright (c) 2001, 2002 The Open For Business Project - www.ofbiz.org
  *
@@ -24,7 +24,6 @@
  */
 package org.ofbiz.security;
 
-import java.security.Security;
 import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.LinkedList;
@@ -35,15 +34,15 @@ import javax.servlet.http.HttpSession;
 
 import org.ofbiz.base.util.Debug;
 import org.ofbiz.base.util.UtilMisc;
-import org.ofbiz.entity.EntityCondition;
-import org.ofbiz.entity.EntityConditionList;
-import org.ofbiz.entity.EntityExpr;
-import org.ofbiz.entity.EntityExprList;
-import org.ofbiz.entity.EntityOperator;
-import org.ofbiz.entity.EntityUtil;
 import org.ofbiz.entity.GenericDelegator;
 import org.ofbiz.entity.GenericEntityException;
 import org.ofbiz.entity.GenericValue;
+import org.ofbiz.entity.condition.EntityCondition;
+import org.ofbiz.entity.condition.EntityConditionList;
+import org.ofbiz.entity.condition.EntityExpr;
+import org.ofbiz.entity.condition.EntityExprList;
+import org.ofbiz.entity.condition.EntityOperator;
+import org.ofbiz.entity.util.EntityUtil;
 
 /**
  * <code>OFBizSecurity</code>
@@ -53,7 +52,7 @@ import org.ofbiz.entity.GenericValue;
  * @author     <a href="mailto:jonesde@ofbiz.org">David E. Jones</a>
  * @author     <a href="mailto:hermanns@aixcept.de">Rainer Hermanns</a>
  * @author     <a href="mailto:jaz@ofbiz.org">Andy Zeneski</a>
- * @version    $Revision: 1.1 $
+ * @version    $Revision: 1.2 $
  * @since      2.0
  */
 public class OFBizSecurity extends org.ofbiz.security.Security {

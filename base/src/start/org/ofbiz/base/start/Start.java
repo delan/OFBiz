@@ -1,5 +1,5 @@
 /*
- * $Id: Start.java,v 1.3 2003/08/17 03:11:29 ajzeneski Exp $
+ * $Id: Start.java,v 1.4 2003/08/17 05:12:42 ajzeneski Exp $
  *
  * Copyright (c) 2003 The Open For Business Project - www.ofbiz.org
  *
@@ -43,7 +43,7 @@ import java.util.Properties;
  * Start - OFBiz Container(s) Startup Class
  *
  * @author     <a href="mailto:jaz@ofbiz.org">Andy Zeneski</a> 
-  *@version    $Revision: 1.3 $
+  *@version    $Revision: 1.4 $
  * @since      2.1
  */
 public class Start implements Runnable {
@@ -126,16 +126,14 @@ public class Start implements Runnable {
             }
         }
         
-        // load the ofbiz-base.jar
-        System.out.println(config.baseJar);
+        // load the ofbiz-base.jar        
         classPath.addComponent(config.baseJar);
         
         // load the config directory
         classPath.addComponent(config.baseConfig);
                 
         // set the classpath/classloader
-        System.setProperty("java.class.path", classPath.toString());
-        System.out.println(classPath.toString());
+        System.setProperty("java.class.path", classPath.toString());        
         ClassLoader classloader = classPath.getClassLoader();
         Thread.currentThread().setContextClassLoader(classloader);
         
