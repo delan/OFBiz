@@ -89,8 +89,8 @@ public class EntityField {
     /** Run the EntityField Pseudo-Tag, all fields except attribute, field, and pageContext can be null */
     public static void run(String attribute, String field, String prefix, String suffix, 
             String defaultStr, String type, PageContext pageContext) throws IOException, GenericEntityException {
-        if (attribute == null || field == null || pageContext == null) {
-            throw new RuntimeException("Required parameter (attribute || field || pageContext) missing");
+        if (attribute == null || pageContext == null) {
+            throw new IllegalArgumentException("Required parameter (attribute or pageContext) missing");
         }
         
         if (defaultStr == null) defaultStr = "";
@@ -98,7 +98,7 @@ public class EntityField {
         Object fieldObject = null;
 
         /* TYPE and FIELD should not be used together. TYPE defines the type of an object.
-         *  When FIELD is defined, type is assumed to be 'ValueObject'.
+         *  When FIELD is defined, type is assumed to be a GenericValue or a Map.
          */
 
         // We should be a ValueObject
@@ -129,8 +129,8 @@ public class EntityField {
                     fieldObject = valueMap.get(field);
                     fieldObjectType = "comment"; // Default for NULL objects.
                 } else {
-                    //kind of weird, but try to do something that will always work:
-                    fieldObject = attrObject.toString();
+                    //handle non-composite types directly
+                    fieldObject = attrObject;
                     fieldObjectType = "comment"; // Default for Strings.
                 }
             }
