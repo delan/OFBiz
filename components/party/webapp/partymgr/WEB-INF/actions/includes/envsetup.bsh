@@ -21,7 +21,7 @@
  *
  *@author     Andy Zeneski (jaz@ofbiz.org)
  *@author     Olivier Heintz (olivier.heintz@nereide.biz)
- *@version    $Revision: 1.7 $
+ *@version    $Revision: 1.8 $
  *@since      2.2
  */
 
@@ -88,20 +88,10 @@ if (eventMsgReq != null) {
     request.removeAttribute("_EVENT_MESSAGE_");
 }
 if (errorMsgReq != null) {
-    int indiceMsgCode = (errorMsgReq.indexOf("Msg")>0)?errorMsgReq.indexOf("Msg"):0;
-    String errorMsgReqUi = errorMsgReq.substring(indiceMsgCode,indiceMsgCode+10); 
-    if (uiLabelProp.getProperty(errorMsgReqUi) != null) 
-         request.setAttribute("errorMsgReq", errorMsgReq.substring(0,indiceMsgCode) + uiLabelProp.getProperty(errorMsgReqUi));
-    else
-         request.setAttribute("errorMsgReq", UtilFormatOut.replaceString(errorMsgReq, "\n", "<br>") );
+    request.setAttribute("errorMsgReq", UtilFormatOut.replaceString(errorMsgReq, "\n", "<br>"));
     request.removeAttribute("_ERROR_MESSAGE_");
 }
 if (errorMsgSes != null) {
-    int indiceMsgCode = (errorMsgSec.indexOf("Msg")>0)?errorMsgSes.indexOf("Msg"):0;
-    String errorMsgSesUi = errorMsgSes.substring(indiceMsgCode,indiceMsgCode+10); 
-    if (uiLabelProp.getProperty(errorMsgSesUi) != null) 
-         request.setAttribute("errorMsgSes", errorMsgSes.substring(0,indiceMsgCode) + uiLabelProp.getProperty(errorMsgSesUi));
-    else
-         request.setAttribute("errorMsgReq", UtilFormatOut.replaceString(errorMsgReq, "\n", "<br>"));
+    request.setAttribute("errorMsgSes", UtilFormatOut.replaceString(errorMsgSes, "\n", "<br>"));
     session.removeAttribute("_ERROR_MESSAGE_");
 }
