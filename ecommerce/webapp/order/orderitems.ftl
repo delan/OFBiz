@@ -62,9 +62,7 @@
                     <td colspan="1" valign="top">    
                       <b><div class="tabletext"> &gt;&gt; ${orderItem.itemDescription}</div></b>
                     </td>
-                  <#else>  
-                    <#assign itemAdjTotal = Static["org.ofbiz.commonapp.order.order.OrderReadHelper"].getOrderItemAdjustmentsTotal(orderItem, orderAdjustments, true, false, false)>
-                    <#assign itemSubTotal = Static["org.ofbiz.commonapp.order.order.OrderReadHelper"].getOrderItemSubTotal(orderItem, orderAdjustments)>                  
+                  <#else>                  
                     <td valign="top">
                       <div class="tabletext">                        
                         <a href="<@ofbizUrl>/product?product_id=${orderItem.productId}</@ofbizUrl>" class="buttontext">${orderItem.productId} - ${orderItem.itemDescription}</a>
@@ -77,11 +75,11 @@
                       <div class="tabletext" nowrap>${orderItem.unitPrice?string.currency}</div>
                     </td>
                     <td align="right" valign="top">
-                      <div class="tabletext" nowrap>${itemAdjTotal?string.currency}</div>
+                      <div class="tabletext" nowrap>${orderItem.itemAdjTotal?string.currency}</div>
                     </td>
                     <td align="right" valign="top" nowrap>
-                      <div class="tabletext">${itemSubTotal?string.currency}</div>
-                    </td>                  
+                      <div class="tabletext">${orderItem.itemSubTotal?string.currency}</div>
+                    </td>
                     <#if maySelectItems?default(false)>
                       <td>                                 
                         <input name="item_id" value="${orderItem.orderItemSeqId}" type="checkbox">
@@ -90,22 +88,19 @@
                   </#if>
                 </tr>
                 
-                <#-- now show adjustment details per line item -->
-                <#assign orderItemAdjustments = Static["org.ofbiz.commonapp.order.order.OrderReadHelper"].getOrderItemAdjustmentList(orderItem, orderAdjustments)>
-                <#list orderItemAdjustments as orderItemAdjustment>
-                  <#assign calcItemAdjustment = Static["org.ofbiz.commonapp.order.order.OrderReadHelper"].calcItemAdjustment(orderItemAdjustment, orderItem)>
-                  <#assign adjustmentType = orderItemAdjustment.getRelatedOneCache("OrderAdjustmentType")>
+                <#-- now show adjustment details per line item -->                
+                <#list orderItem.itemAdjustments as orderItemAdjustment>                                    
                   <tr>
                     <td align="right">
                       <div class="tabletext" style='font-size: xx-small;'>
-                        <b><i>Adjustment</i>:</b> <b>${adjustmentType.description}</b>&nbsp;
+                        <b><i>Adjustment</i>:</b> <b>${orderItemAdjustment.typeDescription}</b>&nbsp;
                         <#if orderItemAdjustment.description?has_content>: ${orderItemAdjustment.description}</#if>
                       </div>
                     </td>
                     <td>&nbsp;</td>
                     <td>&nbsp;</td>
                     <td align="right">
-                      <div class="tabletext" style='font-size: xx-small;'>${calcItemAdjustment?string.currency}</div>                      
+                      <div class="tabletext" style='font-size: xx-small;'>${orderItemAdjustment.itemAdjTotal?string.currency}</div>                      
                     </td>
                     <td>&nbsp;</td>
                     <#if maySelectItems?default(false)><td>&nbsp;</td></#if>
@@ -120,16 +115,13 @@
               <tr>
                 <td align="right" colspan="4"><div class="tabletext"><b>Subtotal</b></div></td>
                 <td align="right" nowrap><div class="tabletext">${orderSubTotal?string.currency}</div></td>
-              </tr>
-              
-              <#list headerAdjustmentsToShow as orderHeaderAdjustment>
-                <#assign adjustmentAmount = Static["org.ofbiz.commonapp.order.order.OrderReadHelper"].calcOrderAdjustment(orderHeaderAdjustment, orderSubTotal)>
-                <#assign adjustmentType = orderHeaderAdjustment.getRelatedOneCache("OrderAdjustmentType")>                
+              </tr>              
+              <#list headerAdjustmentsToShow as orderHeaderAdjustment>                
                 <tr>
-                  <td align="right" colspan="4"><div class="tabletext"><b>${adjustmentType.description}</b></div></td>
-                  <td align="right" nowrap><div class="tabletext">${adjustmentAmount?string.currency}</div></td>
+                  <td align="right" colspan="4"><div class="tabletext"><b>${orderHeaderAdjustment.typeDescription}</b></div></td>
+                  <td align="right" nowrap><div class="tabletext">${orderHeaderAdjustment.adjustmentCalc?string.currency}</div></td>
                 </tr>
-              </#list>                          
+              </#list>                 
               <tr>
                 <td align="right" colspan="4"><div class="tabletext"><b>Shipping and Handling</b></div></td>
                 <td align="right" nowrap><div class="tabletext">${orderShippingTotal?string.currency}</div></td>

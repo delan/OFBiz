@@ -49,16 +49,17 @@ if (orderId != null && orderId.length() > 0) {
 }
 
 if (orderHeader != null) {
-    context.put("orderHeader", orderHeader);
+    //context.put("orderHeader", orderHeader);
     var orderReadHelper = new OrderReadHelper(orderHeader);
     var orderItems = orderReadHelper.getOrderItems();
     var orderAdjustments = orderReadHelper.getAdjustments();
     var orderHeaderAdjustments = orderReadHelper.getOrderHeaderAdjustments();
     var orderSubTotal = orderReadHelper.getOrderItemsSubTotal();
-    var headerAdjustmentsToShow = OrderReadHelper.filterOrderAdjustments(orderHeaderAdjustments, true, false, false, false, false);
+    var headerAdjustmentsToShow = OrderReadHelper.getOrderHeaderAdjustmentToShow(orderHeaderAdjustments, orderSubTotal);
 
+    context.put("orderHeader", OrderReadHelper.getOrderHeaderDisplay(orderHeader, orderHeaderAdjustments, orderSubTotal));
     context.put("localOrderReadHelper", orderReadHelper);
-    context.put("orderItems", orderItems);
+    context.put("orderItems", OrderReadHelper.getOrderItemDisplay(orderItems, orderAdjustments));
     context.put("orderAdjustments", orderAdjustments);
     context.put("orderHeaderAdjustments", orderHeaderAdjustments);
     context.put("orderSubTotal", orderSubTotal);

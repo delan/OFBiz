@@ -35,11 +35,12 @@ var userLogin = session.getAttribute("userLogin");
 var cart = session.getAttribute(SiteDefs.SHOPPING_CART);
 context.put("cart", cart);
 
-var orderItems = cart.makeOrderItems();
-context.put("orderItems", orderItems);
-
 var orderAdjustments = cart.makeAllAdjustments();
 context.put("orderAdjustments", orderAdjustments);
+
+var orderItems = cart.makeOrderItems();
+var orderDisplayItems = OrderReadHelper.getOrderItemDisplay(orderItems, orderAdjustments);
+context.put("orderItems", orderDisplayItems);
 
 var orderHeaderAdjustments = OrderReadHelper.getOrderHeaderAdjustments(orderAdjustments);
 context.put("orderHeaderAdjustments", orderHeaderAdjustments);
@@ -95,8 +96,7 @@ context.put("isGift", cart.getIsGift());
 var shipmentMethodType = delegator.findByPrimaryKey("ShipmentMethodType", UtilMisc.toMap("shipmentMethodTypeId", cart.getShipmentMethodTypeId()));
 if (shipmentMethodType != null) context.put("shipMethDescription", shipmentMethodType.getString("description"));
 
-var headerAdjustmentsToShow = OrderReadHelper.filterOrderAdjustments(orderHeaderAdjustments, true, false, false, false, false);
-context.put("headerAdjustmentsToShow", headerAdjustmentsToShow);
+context.put("headerAdjustmentsToShow", OrderReadHelper.getOrderHeaderAdjustmentToShow(orderHeaderAdjustments, orderSubTotal));
 
 var shippingAmount = OrderReadHelper.getAllOrderItemsAdjustmentsTotal(orderItems, orderAdjustments, false, false, true);
 shippingAmount += OrderReadHelper.calcOrderAdjustments(orderHeaderAdjustments, orderSubTotal, false, false, true);
