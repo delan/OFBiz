@@ -70,12 +70,17 @@ NOTE: Document and Entity objects are cached for performance. You can use the co
 <hr>
 <%if(classNamesIterator != null){%>
 <B><U>Generate all Java files in this directory (enter the path on the SERVER):</U></B>
-<FORM method="POST" action="genalljavafiles.jsp?defFileName=<%=defFileName%>">
+<FORM method="POST" action="genalljavafiles.jsp?defFileName=<%=defFileName%>" style='margin:0;'>
   <input type="text" size="50" name="outPathName">
   <input type="submit" value="Go!">
 </FORM>
 <B><U>Generate all JSP files in this directory (enter the path on the SERVER):</U></B>
-<FORM method="POST" action="genalljspfiles.jsp?defFileName=<%=defFileName%>">
+<FORM method="POST" action="genalljspfiles.jsp?defFileName=<%=defFileName%>" style='margin:0;'>
+  <input type="text" size="50" name="outPathName">
+  <input type="submit" value="Go!">
+</FORM>
+<B><U>Generate all Combined Snippet files in this directory (enter the path on the SERVER):</U></B>
+<FORM method="POST" action="genallsnippetfiles.jsp?defFileName=<%=defFileName%>" style='margin:0;'>
   <input type="text" size="50" name="outPathName">
   <input type="submit" value="Go!">
 </FORM>
@@ -86,11 +91,11 @@ NOTE: Document and Entity objects are cached for performance. You can use the co
     <li><a href="SnippetWebEvent.properties.jsp?defFileName=<%=defFileName%>">webevent.properties</a>
     <li><a href="SnippetMySql.sql.jsp?defFileName=<%=defFileName%>">mysql.sql</a>
     <li><a href="SnippetDataMySql.sql.jsp?defFileName=<%=defFileName%>">data-mysql.sql</a>
-    <li><a href="SnippetEjbJar.xml.enterprise-beans.jsp?defFileName=<%=defFileName%>">ejb-jar.xml.enterprise-beans</a>
-    <li><a href="SnippetEjbJar.xml.assembly-descriptor.jsp?defFileName=<%=defFileName%>">ejb-jar.xml.assembly-descriptor</a>
+    <li><a href="SnippetEjbJar.xml.enterprise-beans.jsp?defFileName=<%=defFileName%>">ejb-jar.enterprise-beans.xml</a>
+    <li><a href="SnippetEjbJar.xml.assembly-descriptor.jsp?defFileName=<%=defFileName%>">ejb-jar.assembly-descriptor.xml</a>
     <li><a href="SnippetJboss.xml.jsp?defFileName=<%=defFileName%>">jboss.xml</a>
     <li><a href="SnippetJaws.xml.jsp?defFileName=<%=defFileName%>">jaws.xml</a>
-    <li><a href="Snippeteventmaint.jsp.jsp?defFileName=<%=defFileName%>">eventmaint.jsp</a>
+    <li><a href="Snippeteventmaint.jsp.jsp?defFileName=<%=defFileName%>">entitymaint.jsp</a>
   </ul>
 </ul>
 <hr>
@@ -110,12 +115,17 @@ Select Entity for Entity specific code:
 <hr>
 <%if(ejbName != null && ejbName.length() > 0){%>
 <B><U>Generate <%=ejbName%> Java files in this directory (enter the path on the SERVER):</U></B>
-<FORM method="POST" action="genalljavafiles.jsp?defFileName=<%=defFileName%>&ejbName=<%=ejbName%>">
+<FORM method="POST" action="genalljavafiles.jsp?defFileName=<%=defFileName%>&ejbName=<%=ejbName%>" style='margin:0;'>
   <input type="text" size="50" name="outPathName">
   <input type="submit" value="Go!">
 </FORM>
 <B><U>Generate <%=ejbName%> JSP files in this directory (enter the path on the SERVER):</U></B>
-<FORM method="POST" action="genalljspfiles.jsp?defFileName=<%=defFileName%>&ejbName=<%=ejbName%>">
+<FORM method="POST" action="genalljspfiles.jsp?defFileName=<%=defFileName%>&ejbName=<%=ejbName%>" style='margin:0;'>
+  <input type="text" size="50" name="outPathName">
+  <input type="submit" value="Go!">
+</FORM>
+<B><U>Generate all Snippet files in this directory (enter the path on the SERVER):</U></B>
+<FORM method="POST" action="genallsnippetfiles.jsp?defFileName=<%=defFileName%>&ejbName=<%=ejbName%>" style='margin:0;'>
   <input type="text" size="50" name="outPathName">
   <input type="submit" value="Go!">
 </FORM>

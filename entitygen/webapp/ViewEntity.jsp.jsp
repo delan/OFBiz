@@ -77,8 +77,11 @@
   <%=entity.ejbName%> <%=GenUtil.lowerFirstChar(entity.ejbName)%> = <%=entity.ejbName%>Helper.findByPrimaryKey(<%=entity.pkNameString()%>);
 %>
 
-<b><u>View Entity: <%=entity.ejbName%> with (<%=entity.colNameString(entity.pks)%>: [ltp]=<%=entity.pkNameString("%" + ">, [ltp]=", "%" + ">")%>).</u></b>
 <br>
+<div style='color:yellow;width:100%;background-color:#330033;padding:3;'>
+  <b>View Entity: <%=entity.ejbName%> with (<%=entity.colNameString(entity.pks)%>: [ltp]=<%=entity.pkNameString("%" + ">, [ltp]=", "%" + ">")%>).</b>
+</div>
+
 <a href="[ltp]=response.encodeURL("Find<%=entity.ejbName%>.jsp")%>" class="buttontext">[Find <%=entity.ejbName%>]</a>
 [ltp]if(hasCreatePermission){%>
   <a href="[ltp]=response.encodeURL("Edit<%=entity.ejbName%>.jsp")%>" class="buttontext">[Create <%=entity.ejbName%>]</a>
@@ -165,6 +168,7 @@
     <a href="[ltp]=response.encodeURL("Edit<%=entity.ejbName%>.jsp?" + <%=entity.httpArgList(entity.pks)%>)%>" class="buttontext">[Edit <%=entity.ejbName%>]</a>
   [ltp]}%>
 [ltp]}%>
+<br>
 <%for(int relIndex=0;relIndex<entity.relations.size();relIndex++){%>
   <%Relation relation = (Relation)entity.relations.elementAt(relIndex);%>
   <%Entity relatedEntity = DefReader.getEntity(defFileName,relation.relatedEjbName);%>
@@ -172,10 +176,11 @@
 [ltp]-- Start Relation for <%=relation.relatedEjbName%>, type: <%=relation.relationType%> --%>
 [ltp]if(<%=GenUtil.lowerFirstChar(entity.ejbName)%> != null){%>
   [ltp]if(Security.hasEntityPermission("<%=relatedEntity.tableName%>", "_VIEW", session)){%>
-    [ltp]<%=relatedEntity.ejbName%> <%=GenUtil.lowerFirstChar(relatedEntity.ejbName)%> = <%=relatedEntity.ejbName%>Helper.findByPrimaryKey(<%=GenUtil.lowerFirstChar(entity.ejbName)%>.get<%=relation.keyMapUpperString("(), " + GenUtil.lowerFirstChar(entity.ejbName) + ".get", "()")%>);%>
-    <hr>
-    <b>Related Entity: <%=relatedEntity.ejbName%> with (<%=relatedEntity.colNameString(relatedEntity.pks)%>: [ltp]=<%=GenUtil.lowerFirstChar(entity.ejbName)%>.get<%=relation.keyMapUpperString("()%" + ">, [ltp]=" + GenUtil.lowerFirstChar(entity.ejbName) + ".get", "()%" + ">")%>)</b>
+    [ltp]<%=relatedEntity.ejbName%> <%=GenUtil.lowerFirstChar(relatedEntity.ejbName)%>Related = <%=relatedEntity.ejbName%>Helper.findByPrimaryKey(<%=GenUtil.lowerFirstChar(entity.ejbName)%>.get<%=relation.keyMapUpperString("(), " + GenUtil.lowerFirstChar(entity.ejbName) + ".get", "()")%>);%>
     <br>
+    <div style='color:yellow;width:100%;background-color:#660066;padding:2;'>
+     <b><%=relation.relationTitle%></b> Related Entity: <b><%=relatedEntity.ejbName%></b> with (<%=relatedEntity.colNameString(relatedEntity.pks)%>: [ltp]=<%=GenUtil.lowerFirstChar(entity.ejbName)%>.get<%=relation.keyMapUpperString("()%" + ">, [ltp]=" + GenUtil.lowerFirstChar(entity.ejbName) + ".get", "()%" + ">")%>)
+    </div>
     [ltp]if(<%=GenUtil.lowerFirstChar(entity.ejbName)%>.get<%=relation.keyMapUpperString("() != null && " + GenUtil.lowerFirstChar(entity.ejbName) + ".get", "() != null")%>){%>
       <%
         String packagePath = relatedEntity.packageName.replace('.','/');
@@ -184,9 +189,19 @@
         packagePath = packagePath.substring(packagePath.indexOf("/")+1);
       %>
       <a href="[ltp]=response.encodeURL("/<%=packagePath%>/View<%=relatedEntity.ejbName%>.jsp?" + <%=relatedEntity.httpRelationArgList(relatedEntity.pks, relation)%>)%>" class="buttontext">[View <%=relatedEntity.ejbName%> Details]</a>
+      
+    [ltp]if(<%=GenUtil.lowerFirstChar(relatedEntity.ejbName)%>Related != null){%>
+      [ltp]if(Security.hasEntityPermission("<%=relatedEntity.tableName%>", "_EDIT", session)){%>
+        <a href="[ltp]=response.encodeURL("/<%=packagePath%>/Edit<%=relatedEntity.ejbName%>.jsp?" + <%=relatedEntity.httpRelationArgList(relatedEntity.pks, relation)%>)%>" class="buttontext">[Edit <%=relatedEntity.ejbName%>]</a>
+      [ltp]}%>
+    [ltp]}else{%>
+      [ltp]if(Security.hasEntityPermission("<%=relatedEntity.tableName%>", "_CREATE", session)){%>
+        <a href="[ltp]=response.encodeURL("/<%=packagePath%>/Edit<%=relatedEntity.ejbName%>.jsp?" + <%=relatedEntity.httpRelationArgList(relatedEntity.pks, relation)%>)%>" class="buttontext">[Create <%=relatedEntity.ejbName%>]</a>
+      [ltp]}%>
+    [ltp]}%>
     [ltp]}%>
     <table border="0" cellspacing="2" cellpadding="2">
-    [ltp]if(<%=GenUtil.lowerFirstChar(relatedEntity.ejbName)%> == null){%>
+    [ltp]if(<%=GenUtil.lowerFirstChar(relatedEntity.ejbName)%>Related == null){%>
     <tr bgcolor="[ltp]=rowColor1%>"><td><h3>Specified <%=relatedEntity.ejbName%> was not found.</h3></td></tr>
     [ltp]}else{%>
 <%for(i=0;i<relatedEntity.fields.size();i++){%>
@@ -199,9 +214,9 @@
       [ltp]{
         String dateString = null;
         String timeString = null;
-        if(<%=GenUtil.lowerFirstChar(relatedEntity.ejbName)%> != null)
+        if(<%=GenUtil.lowerFirstChar(relatedEntity.ejbName)%>Related != null)
         {
-          java.sql.Timestamp timeStamp = <%=GenUtil.lowerFirstChar(relatedEntity.ejbName)%>.get<%=GenUtil.upperFirstChar(((Field)relatedEntity.fields.elementAt(i)).fieldName)%>();
+          java.sql.Timestamp timeStamp = <%=GenUtil.lowerFirstChar(relatedEntity.ejbName)%>Related.get<%=GenUtil.upperFirstChar(((Field)relatedEntity.fields.elementAt(i)).fieldName)%>();
           if(timeStamp  != null)
           {
             dateString = UtilDateTime.toDateString(timeStamp);
@@ -216,9 +231,9 @@
       [ltp]{
         String dateString = null;
         String timeString = null;
-        if(<%=GenUtil.lowerFirstChar(relatedEntity.ejbName)%> != null)
+        if(<%=GenUtil.lowerFirstChar(relatedEntity.ejbName)%>Related != null)
         {
-          java.util.Date date = <%=GenUtil.lowerFirstChar(relatedEntity.ejbName)%>.get<%=GenUtil.upperFirstChar(((Field)relatedEntity.fields.elementAt(i)).fieldName)%>();
+          java.util.Date date = <%=GenUtil.lowerFirstChar(relatedEntity.ejbName)%>Related.get<%=GenUtil.upperFirstChar(((Field)relatedEntity.fields.elementAt(i)).fieldName)%>();
           if(date  != null)
           {
             dateString = UtilDateTime.toDateString(date);
@@ -232,14 +247,14 @@
                ((Field)relatedEntity.fields.elementAt(i)).javaType.indexOf("Long") >= 0 || 
                ((Field)relatedEntity.fields.elementAt(i)).javaType.indexOf("Double") >= 0 || 
                ((Field)relatedEntity.fields.elementAt(i)).javaType.indexOf("Float") >= 0){%>
-      [ltp]=UtilFormatOut.formatQuantity(<%=GenUtil.lowerFirstChar(relatedEntity.ejbName)%>.get<%=GenUtil.upperFirstChar(((Field)relatedEntity.fields.elementAt(i)).fieldName)%>())%>
+      [ltp]=UtilFormatOut.formatQuantity(<%=GenUtil.lowerFirstChar(relatedEntity.ejbName)%>Related.get<%=GenUtil.upperFirstChar(((Field)relatedEntity.fields.elementAt(i)).fieldName)%>())%>
     <%}else{%>
-      [ltp]=UtilFormatOut.checkNull(<%=GenUtil.lowerFirstChar(relatedEntity.ejbName)%>.get<%=GenUtil.upperFirstChar(((Field)relatedEntity.fields.elementAt(i)).fieldName)%>())%>
+      [ltp]=UtilFormatOut.checkNull(<%=GenUtil.lowerFirstChar(relatedEntity.ejbName)%>Related.get<%=GenUtil.upperFirstChar(((Field)relatedEntity.fields.elementAt(i)).fieldName)%>())%>
     <%}%>
     </td>
   </tr>
 <%}%>
-    [ltp]} //end if <%=GenUtil.lowerFirstChar(relatedEntity.ejbName)%> == null %>
+    [ltp]} //end if <%=GenUtil.lowerFirstChar(relatedEntity.ejbName)%>Related == null %>
     </table>
   [ltp]}%>
 [ltp]}%>
@@ -248,10 +263,11 @@
 [ltp]-- Start Relation for <%=relation.relatedEjbName%>, type: <%=relation.relationType%> --%>
 [ltp]if(<%=GenUtil.lowerFirstChar(entity.ejbName)%> != null){%>
   [ltp]if(Security.hasEntityPermission("<%=relatedEntity.tableName%>", "_VIEW", session)){%>    
-    [ltp]Iterator relatedIterator = <%=relatedEntity.ejbName%>Helper.findBy<%=relation.keyMapUpperString("And","")%>Iterator(<%=GenUtil.lowerFirstChar(entity.ejbName)%>.get<%=relation.keyMapUpperString("(), " + GenUtil.lowerFirstChar(entity.ejbName) + ".get", "()")%>);%>
-    <hr>
-    <b>Related Entities: <%=relatedEntity.ejbName%> with (<%=relation.keyMapRelatedColumnString(", ", "")%>: [ltp]=<%=GenUtil.lowerFirstChar(entity.ejbName)%>.get<%=relation.keyMapUpperString("()%" + ">, [ltp]=" + GenUtil.lowerFirstChar(entity.ejbName) + ".get", "()%" + ">")%>)</b>
+    [ltp]Iterator relatedIterator = <%=relatedEntity.ejbName%>Helper.findBy<%=relation.keyMapRelatedUpperString("And","")%>Iterator(<%=GenUtil.lowerFirstChar(entity.ejbName)%>.get<%=relation.keyMapUpperString("(), " + GenUtil.lowerFirstChar(entity.ejbName) + ".get", "()")%>);%>
     <br>
+    <div style='color:yellow;width:100%;background-color:#660066;padding:2;'>
+      <b><%=relation.relationTitle%></b> Related Entities: <b><%=relatedEntity.ejbName%></b> with (<%=relation.keyMapRelatedColumnString(", ", "")%>: [ltp]=<%=GenUtil.lowerFirstChar(entity.ejbName)%>.get<%=relation.keyMapUpperString("()%" + ">, [ltp]=" + GenUtil.lowerFirstChar(entity.ejbName) + ".get", "()%" + ">")%>)
+    </div>
     [ltp]boolean relatedCreatePerm = Security.hasEntityPermission("<%=relatedEntity.tableName%>", "_CREATE", session);%>
     [ltp]boolean relatedUpdatePerm = Security.hasEntityPermission("<%=relatedEntity.tableName%>", "_UPDATE", session);%>
     [ltp]boolean relatedDeletePerm = Security.hasEntityPermission("<%=relatedEntity.tableName%>", "_DELETE", session);%>
@@ -261,15 +277,19 @@
       String rowColorResult2 = "CCFFCC"; 
       String rowColorResult = "";
     %>
-    [ltp]if(relatedCreatePerm){%>
       <%
         String packagePath = relatedEntity.packageName.replace('.','/');
         //remove the first two folders (usually org/ and ofbiz/)
         packagePath = packagePath.substring(packagePath.indexOf("/")+1);
         packagePath = packagePath.substring(packagePath.indexOf("/")+1);
       %>
+    [ltp]if(relatedCreatePerm){%>
       <a href="[ltp]=response.encodeURL("/<%=packagePath%>/Edit<%=relatedEntity.ejbName%>.jsp?" + <%=relatedEntity.httpRelationArgList(relation)%>)%>" class="buttontext">[Create <%=relatedEntity.ejbName%>]</a>
     [ltp]}%>
+    
+    [ltp]String curFindString = "SEARCH_TYPE=<%=relation.keyMapRelatedUpperString("And","")%>";%>
+    <%for(int j=0;j<relation.keyMaps.size();j++){%>[ltp]curFindString = curFindString + "&SEARCH_PARAMETER<%=j+1%>=" + <%=GenUtil.lowerFirstChar(entity.ejbName)%>.get<%=GenUtil.upperFirstChar(((KeyMap)relation.keyMaps.elementAt(j)).fieldName)%><%}%>();%>
+    <a href="[ltp]=response.encodeURL("/<%=packagePath%>/Find<%=entity.ejbName%>.jsp?" + UtilFormatOut.encodeQuery(curFindString))%>" class="buttontext">[Find <%=relatedEntity.ejbName%>]</a>
 
   <table width="100%" cellpadding="2" cellspacing="2" border="0">
     <tr bgcolor="[ltp]=rowColorResultHeader%>">
@@ -286,10 +306,12 @@
     [ltp]
      if(relatedIterator != null && relatedIterator.hasNext())
      {
+      int relatedLoopCount = 0;
       while(relatedIterator != null && relatedIterator.hasNext())
       {
-        <%=relatedEntity.ejbName%> <%=GenUtil.lowerFirstChar(relatedEntity.ejbName)%> = (<%=relatedEntity.ejbName%>)relatedIterator.next();
-        if(<%=GenUtil.lowerFirstChar(relatedEntity.ejbName)%> != null)
+        relatedLoopCount++; if(relatedLoopCount > 10) break;
+        <%=relatedEntity.ejbName%> <%=GenUtil.lowerFirstChar(relatedEntity.ejbName)%>Related = (<%=relatedEntity.ejbName%>)relatedIterator.next();
+        if(<%=GenUtil.lowerFirstChar(relatedEntity.ejbName)%>Related != null)
         {
     %>
     [ltp]rowColorResult=(rowColorResult==rowColorResult1?rowColorResult2:rowColorResult1);%><tr bgcolor="[ltp]=rowColorResult%>">
@@ -301,9 +323,9 @@
       [ltp]{
         String dateString = null;
         String timeString = null;
-        if(<%=GenUtil.lowerFirstChar(relatedEntity.ejbName)%> != null)
+        if(<%=GenUtil.lowerFirstChar(relatedEntity.ejbName)%>Related != null)
         {
-          java.sql.Timestamp timeStamp = <%=GenUtil.lowerFirstChar(relatedEntity.ejbName)%>.get<%=GenUtil.upperFirstChar(((Field)relatedEntity.fields.elementAt(i)).fieldName)%>();
+          java.sql.Timestamp timeStamp = <%=GenUtil.lowerFirstChar(relatedEntity.ejbName)%>Related.get<%=GenUtil.upperFirstChar(((Field)relatedEntity.fields.elementAt(i)).fieldName)%>();
           if(timeStamp  != null)
           {
             dateString = UtilDateTime.toDateString(timeStamp);
@@ -318,9 +340,9 @@
       [ltp]{
         String dateString = null;
         String timeString = null;
-        if(<%=GenUtil.lowerFirstChar(relatedEntity.ejbName)%> != null)
+        if(<%=GenUtil.lowerFirstChar(relatedEntity.ejbName)%>Related != null)
         {
-          java.util.Date date = <%=GenUtil.lowerFirstChar(relatedEntity.ejbName)%>.get<%=GenUtil.upperFirstChar(((Field)relatedEntity.fields.elementAt(i)).fieldName)%>();
+          java.util.Date date = <%=GenUtil.lowerFirstChar(relatedEntity.ejbName)%>Related.get<%=GenUtil.upperFirstChar(((Field)relatedEntity.fields.elementAt(i)).fieldName)%>();
           if(date  != null)
           {
             dateString = UtilDateTime.toDateString(date);
@@ -334,25 +356,25 @@
                ((Field)relatedEntity.fields.elementAt(i)).javaType.indexOf("Long") >= 0 || 
                ((Field)relatedEntity.fields.elementAt(i)).javaType.indexOf("Double") >= 0 || 
                ((Field)relatedEntity.fields.elementAt(i)).javaType.indexOf("Float") >= 0){%>
-      [ltp]=UtilFormatOut.formatQuantity(<%=GenUtil.lowerFirstChar(relatedEntity.ejbName)%>.get<%=GenUtil.upperFirstChar(((Field)relatedEntity.fields.elementAt(i)).fieldName)%>())%>
+      [ltp]=UtilFormatOut.formatQuantity(<%=GenUtil.lowerFirstChar(relatedEntity.ejbName)%>Related.get<%=GenUtil.upperFirstChar(((Field)relatedEntity.fields.elementAt(i)).fieldName)%>())%>
     <%}else{%>
-      [ltp]=UtilFormatOut.checkNull(<%=GenUtil.lowerFirstChar(relatedEntity.ejbName)%>.get<%=GenUtil.upperFirstChar(((Field)relatedEntity.fields.elementAt(i)).fieldName)%>())%>
+      [ltp]=UtilFormatOut.checkNull(<%=GenUtil.lowerFirstChar(relatedEntity.ejbName)%>Related.get<%=GenUtil.upperFirstChar(((Field)relatedEntity.fields.elementAt(i)).fieldName)%>())%>
     <%}%>
         &nbsp;</div>
       </td>
   <%}%>
       <td>
-        <a href="[ltp]=response.encodeURL("/<%=packagePath%>/View<%=relatedEntity.ejbName%>.jsp?" + <%=relatedEntity.httpArgListFromClass(relatedEntity.pks)%>)%>" class="buttontext">[View]</a>
+        <a href="[ltp]=response.encodeURL("/<%=packagePath%>/View<%=relatedEntity.ejbName%>.jsp?" + <%=relatedEntity.httpArgListFromClass(relatedEntity.pks, "Related")%>)%>" class="buttontext">[View]</a>
       </td>
       [ltp]if(relatedUpdatePerm){%>
         <td>
-          <a href="[ltp]=response.encodeURL("/<%=packagePath%>/Edit<%=relatedEntity.ejbName%>.jsp?" + <%=relatedEntity.httpArgListFromClass(relatedEntity.pks)%>)%>" class="buttontext">[Edit]</a>
+          <a href="[ltp]=response.encodeURL("/<%=packagePath%>/Edit<%=relatedEntity.ejbName%>.jsp?" + <%=relatedEntity.httpArgListFromClass(relatedEntity.pks, "Related")%>)%>" class="buttontext">[Edit]</a>
         </td>
       [ltp]}%>
       [ltp]if(relatedDeletePerm){%>
         <td>
           [ltp]-- <a href="[ltp]=response.encodeURL("ViewPersonSecurityGroup.jsp?" + "PERSON_SECURITY_GROUP_USERNAME=" + username + "&" + "PERSON_SECURITY_GROUP_GROUP_ID=" + groupId + "&" + "WEBEVENT=UPDATE_SECURITY_GROUP_PERMISSION&UPDATE_MODE=DELETE&" + "SECURITY_GROUP_PERMISSION_GROUP_ID=" + securityGroupPermission.getGroupId() + "&" + "SECURITY_GROUP_PERMISSION_PERMISSION_ID=" + securityGroupPermission.getPermissionId())%>" class="buttontext">[Delete]</a> --%>
-          <a href="[ltp]=response.encodeURL("View<%=relatedEntity.ejbName%>.jsp?" + <%=entity.httpArgList(entity.pks)%> + "&WEBEVENT=UPDATE_<%=relatedEntity.tableName%>&UPDATE_MODE=DELETE&" + <%=relatedEntity.httpArgListFromClass(relatedEntity.pks)%>)%>" class="buttontext">[Delete]</a>
+          <a href="[ltp]=response.encodeURL("View<%=relatedEntity.ejbName%>.jsp?" + <%=relatedEntity.httpArgListFromClass(relatedEntity.pks, "Related")%> + "&" + <%=entity.httpArgList(entity.pks)%> + "&WEBEVENT=UPDATE_<%=relatedEntity.tableName%>&UPDATE_MODE=DELETE")%>" class="buttontext">[Delete]</a>
         </td>
       [ltp]}%>
     </tr>
@@ -366,9 +388,6 @@
 </tr>
 [ltp]}%>
 </table>
-    [ltp]if(relatedCreatePerm){%>
-      <a href="[ltp]=response.encodeURL("/<%=packagePath%>/Edit<%=relatedEntity.ejbName%>.jsp?" + <%=relatedEntity.httpRelationArgList(relation)%>)%>" class="buttontext">[Create <%=relatedEntity.ejbName%>]</a>
-    [ltp]}%>
   [ltp]}%>
 [ltp]}%>
 [ltp]-- End Relation for <%=relation.relatedEjbName%>, type: <%=relation.relationType%> --%>

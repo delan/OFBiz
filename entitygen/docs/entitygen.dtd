@@ -38,31 +38,32 @@ Example:
     <validate>isNotEmpty</validate>
   </field-type-def>
   <entity>
-    <title>Entity Title</title>                     <!-- optional, file default used -->
-    <description>Entity Description</description>   <!-- optional, file default used -->
-    <copyright>Entity Copyright</copyright>         <!-- optional, file default used -->
-    <author>Entity Author</author>                  <!-- optional, file default used -->
-    <version>Entity Version Number</version>        <!-- optional, file default used -->
+    <title>Entity Title</title>                     <!- optional, file default used ->
+    <description>Entity Description</description>   <!- optional, file default used ->
+    <copyright>Entity Copyright</copyright>         <!- optional, file default used ->
+    <author>Entity Author</author>                  <!- optional, file default used ->
+    <version>Entity Version Number</version>        <!- optional, file default used ->
     <package-name>org.domain.package</package-name>
-    <ejb-name>SomeName</ejb-name>                   <!-- optional, can be derived from the table-name -->
+    <ejb-name>SomeName</ejb-name>                   <!- optional, can be derived from the table-name ->
     <table-name>SOME_NAME</table-name>
-    <use-cache>true</use-cache>                     <!-- optional, defaults to false -->
+    <use-cache>true</use-cache>                     <!- optional, defaults to false ->
     <cmp-field>
       <column-name>KEY_FIELD</column-name>
       <sql-type>VARCHAR(20)</sql-type>
-      <field-name>keyField</field-name>             <!-- optional, can be derived from the column-name -->
+      <field-name>keyField</field-name>             <!- optional, can be derived from the column-name ->
       <java-type>String</java-type>
       <validate>isNotEmpty</validate>
     </cmp-field>
     <cmp-field>
       <column-name>KEY_FIELD2</column-name>
-      <field-type>ID</field-type>                   <!-- field-type can be used in place of java-type, sql-type, and validate elements, using those defined in the corresponding field-type-def element -->
+      <field-type>ID</field-type>                   <!- field-type can be used in place of java-type, sql-type, and validate elements, using those defined in the corresponding field-type-def element ->
     </cmp-field>
     <cmp-field><column-name>FIRST_FIELD</column-name><sql-type>VARCHAR(80)</sql-type><java-type>String</java-type></cmp-field>
     <cmp-field><column-name>SECOND_FIELD</column-name><sql-type>NUMERIC</sql-type><java-type>Double</java-type></cmp-field>
-    <prim-key-class>java.lang.String</prim-key-class> <!-- optional, can be derived from the java-type if single primary key, else is "<<package-name>>.<<ejb-name>>PK" -->
+    <prim-key-class>java.lang.String</prim-key-class> <!- optional, can be derived from the java-type if single primary key, else is "<<package-name>>.<<ejb-name>>PK" ->
     <prim-key-column>KEY_FIELD</prim-key-column>
-    <finder><column-name>FIRST_FIELD</column-name></finder>
+    <all-order-by>KEY_FIELD</all-order-by>
+    <finder><column-name>FIRST_FIELD</column-name><order-by>KEY_FIELD</order-by></finder>
     <finder><column-name>FIRST_FIELD</column-name><column-name>SECOND_FIELD</column-name></finder>
   </entity>
 </entitygen>
@@ -74,7 +75,7 @@ Example:
 <!-- ================= Children of entitygen =================== -->
 <!ELEMENT entity (title?, description?, copyright?, author?, version?, 
                   package-name?, ejb-name?, table-name?, use-cache?, cmp-field*,
-                  prim-key-class?, prim-key-column*, finder*, relation*)>
+                  prim-key-class?, prim-key-column*, all-order-by?, finder*, relation*)>
 <!ELEMENT title (#PCDATA)>
 <!ELEMENT description (#PCDATA)>
 <!ELEMENT copyright (#PCDATA)>
@@ -91,8 +92,9 @@ Example:
 <!ELEMENT cmp-field (column-name?, sql-type?, field-name?, java-type?, validate*)>
 <!ELEMENT prim-key-class (#PCDATA)>
 <!ELEMENT prim-key-column (#PCDATA)>
-<!ELEMENT finder (column-name*)>
-<!ELEMENT relation (relation-type?,related-table-name?,related-ejb-name?,key-map*, relation*)>
+<!ELEMENT all-order-by (#PCDATA)>
+<!ELEMENT finder (column-name*,order-by?)>
+<!ELEMENT relation (relation-title?,relation-type?,related-table-name?,related-ejb-name?,key-map*, relation*)>
 
 <!-- ==================== Children of cmp-field ===================== -->
 <!ELEMENT column-name (#PCDATA)>
@@ -103,13 +105,15 @@ Example:
 <!-- see definition of field-type in field-type-def section below -->
 
 <!-- ===================== Children of finder ======================= -->
-<!-- the only child of finder is column-name, defined the same as in cmp-field -->
+<!-- column-name, defined the same as in cmp-field -->
+<!ELEMENT order-by (#PCDATA)>
 
 <!-- ================= Children of field-type-def =================== -->
 <!-- see definitions of sql-type, java-type, and validate in cmp-field section above -->
 <!ELEMENT field-type (#PCDATA)>
 
 <!-- ==================== Children of relation ====================== -->
+<!ELEMENT relation-title (#PCDATA)>
 <!ELEMENT relation-type (#PCDATA)>  <!-- this can be one or many depending on the cardinality of the related table compared to this table -->
 <!ELEMENT related-table-name (#PCDATA)>
 <!ELEMENT related-ejb-name (#PCDATA)>

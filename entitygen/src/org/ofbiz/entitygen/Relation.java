@@ -32,6 +32,8 @@ import java.util.*;
 
 public class Relation
 {
+  /** the relation-title, gives a name/description to the relation */
+  public String relationTitle = "";
   /** the relation-type: either "one" or "many" */
   public String relationType = "";
   /** the name of the related table */

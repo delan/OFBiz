@@ -40,6 +40,8 @@ public class Entity
   public String packageName = "";
   /** The prim-key-class of the Entity */  
   public String primKeyClass = "";
+  /** The order string for a findAll */  
+  public String allOrderBy = "";
   /** Use the Value object cache in the Helper? */
   public boolean useCache = false;
 
@@ -215,6 +217,20 @@ public class Entity
       returnString = returnString + "\"" + tableName + "_" + ((Field)flds.elementAt(i)).columnName + "=\" + " + GenUtil.lowerFirstChar(ejbName) + ".get" + GenUtil.upperFirstChar(((Field)flds.elementAt(i)).fieldName) + "() + \"&\" + ";
     }
     returnString = returnString + "\"" + tableName + "_" + ((Field)flds.elementAt(i)).columnName + "=\" + " + GenUtil.lowerFirstChar(ejbName) + ".get" + GenUtil.upperFirstChar(((Field)flds.elementAt(i)).fieldName) + "()";
+    return returnString;
+  }
+
+  public String httpArgListFromClass(Vector flds, String ejbNameSuffix)
+  {
+    String returnString = "";
+    if(flds.size() < 1) { return ""; }
+
+    int i = 0;
+    for(; i < flds.size() - 1; i++)
+    {
+      returnString = returnString + "\"" + tableName + "_" + ((Field)flds.elementAt(i)).columnName + "=\" + " + GenUtil.lowerFirstChar(ejbName) + ejbNameSuffix + ".get" + GenUtil.upperFirstChar(((Field)flds.elementAt(i)).fieldName) + "() + \"&\" + ";
+    }
+    returnString = returnString + "\"" + tableName + "_" + ((Field)flds.elementAt(i)).columnName + "=\" + " + GenUtil.lowerFirstChar(ejbName) + ejbNameSuffix + ".get" + GenUtil.upperFirstChar(((Field)flds.elementAt(i)).fieldName) + "()";
     return returnString;
   }
 

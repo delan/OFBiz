@@ -134,6 +134,7 @@ public class DefReader
     entity.tableName = checkNull(childElementValue(entityElement, "table-name"));
     entity.packageName = checkNull(childElementValue(entityElement, "package-name"));
     entity.useCache = ("true".compareToIgnoreCase(checkNull(childElementValue(entityElement, "use-cache"))) == 0);
+    entity.allOrderBy = checkNull(childElementValue(entityElement, "all-order-by"));
 
     entity.title = checkNull(childElementValue(entityElement, "title"),childElementValue(docElement, "title"),"None");
     entity.description = checkNull(childElementValue(entityElement, "description"),childElementValue(docElement, "description"),"None");
@@ -205,6 +206,7 @@ public class DefReader
     Relation relation = new Relation(parent);
     relation.mainEntity = entity;
 
+    relation.relationTitle = checkNull(childElementValue(relationElement, "relation-title"));
     relation.relationType = checkNull(childElementValue(relationElement, "relation-type"));
     relation.relatedTableName = checkNull(childElementValue(relationElement, "related-table-name"));
     relation.relatedEjbName = checkNull(childElementValue(relationElement, "related-ejb-name"),GenUtil.dbNameToClassName(checkNull(relation.relatedTableName)));
@@ -250,6 +252,9 @@ public class DefReader
   static Finder createFinder(org.ofbiz.entitygen.Entity entity, Element finderElement)
   {
     Finder finder = new Finder();
+
+    finder.orderBy = checkNull(childElementValue(finderElement, "order-by"));
+
     NodeList columnNameString = finderElement.getElementsByTagName("column-name");
     for(int i=0; i<columnNameString.getLength(); i++)
     {

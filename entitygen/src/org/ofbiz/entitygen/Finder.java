@@ -32,7 +32,8 @@ import java.util.*;
 
 public class Finder
 {
-    /** A Vector of Field objects which define a Finder. The finder does a find by all fields combined using AND.
-     */    
+  /** A Vector of Field objects which define a Finder. The finder does a find by all fields combined using AND. */    
   public Vector fields = new Vector();
+  /** The name of the table column to order the results by */    
+  public String orderBy = "";
 }
