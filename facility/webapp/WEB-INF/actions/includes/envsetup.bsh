@@ -63,7 +63,7 @@ layoutSettings.put("headerRightBackgroundUrl", null);
 request.setAttribute("checkLoginUrl", CommonWorkers.makeLoginUrl(request, "checkLogin"));
 
 externalLoginKey = LoginEvents.getExternalLoginKey(request);
-externalKeyParam = externalLoginKey == null ? "" : "?externalLoginKey=" + externalLoginKey;
+externalKeyParam = externalLoginKey == null ? "" : "&externalLoginKey=" + externalLoginKey;
 request.setAttribute("externalKeyParam", externalKeyParam);
 request.setAttribute("isFacilityMgrActive", new Boolean(true));
 

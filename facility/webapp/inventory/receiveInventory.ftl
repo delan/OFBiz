@@ -90,7 +90,7 @@
         <td width='6%' align='right' nowrap><div class="tabletext">Product Name</div></td>
         <td width='6%'>&nbsp;</td>
         <td width='74%'>
-          <div class="tabletext">${product.productName?if_exists}</div>
+          <div class="tabletext"><a href="/catalog/control/EditProduct?productId=${product.productId}${requestAttributes.externalKeyParam?if_exists}" target="catalog" class="buttontext">${product.productName?if_exists}</a></div>
         </td>                
       </tr>
       <tr>
@@ -189,11 +189,115 @@
   </form>
 <#elseif requestParameters.initialSelected?exists && purchaseOrder?has_content>
   <form method="post" action="<@ofbizUrl>/receiveInventoryProduct</@ofbizUrl>" name='receiveform' style='margin: 0;'>
-    <table border='0' cellpadding='2' cellspacing='0'>
-      <tr>
-        <td><div class="tabletext">Not implemented yet.</div></td>
-      </tr>
+    <#-- general request fields -->
+    <input type="hidden" name="facilityId" value="${requestParameters.facilityId?if_exists}">   
+    <input type="hidden" name="purchaseOrderId" value="${requestParameters.purchaseOrderId?if_exists}">
+    <input type="hidden" name="_useRowSubmit" value="Y">
+    <#assign now = Static["org.ofbiz.core.util.UtilDateTime"].nowTimestamp().toString()>
+    <#assign rowCount = 0>     
+    <table width="100%" border='0' cellpadding='2' cellspacing='0'>
+      <#if !purchaseOrderItems?exists || purchaseOrderItemsSize == 0>
+        <tr>
+          <td colspan="2"><div class="tableheadtext">There are no items in the PO to receive.</div></td>
+        </tr>
+      <#else>
+        <tr>
+          <td>
+            <div class="head3">Receive Purchase Order #${purchaseOrder.orderId}</div>
+          </td>
+          <td align="right">
+            <input type="checkbox" name="selectAll" value="Y" checked>
+          </td>
+        </tr>
+               
+        <#list purchaseOrderItems as orderItem>
+          <#if orderItem.productId?exists>
+            <#assign product = orderItem.getRelatedOneCache("Product")>  
+            <input type="hidden" name="productId|${rowCount}" value="${product.productId}">  
+            <input type="hidden" name="orderId|${rowCount}" value="${orderItem.orderId}">
+            <input type="hidden" name="orderItemSeqId|${rowCount}" value="${orderItem.orderItemSeqId}"> 
+            <input type="hidden" name="facilityId|${rowCount}" value="${requestParameters.facilityId?if_exists}">       
+            <input type="hidden" name="datetimeReceived|${rowCount}" value="${now}">
+            <tr>
+              <td colspan="2"><hr class="sepbar"></td>
+            </tr>
+            <tr>
+              <td>
+                <table width="100%" border='0' cellpadding='2' cellspacing='0'>
+                  <tr>
+                    <td width="45%">
+                      <div class="tabletext">
+                        ${orderItem.orderItemSeqId}:&nbsp;<a href="/catalog/control/EditProduct?productId=${product.productId}${requestAttributes.externalKeyParam?if_exists}" target="catalog" class="buttontext">${product.productId}&nbsp;-&nbsp;${product.productName?if_exists}</a> : ${product.description?if_exists}
+                      </div>                       
+                    </td>                
+                    <td align="right">
+                      <div class="tableheadtext">Location:</div>
+                    </td>
+                    <td align="right">
+                      <input type="text" class="inputBox" name="locationSeqId|${rowCount}" size="12">
+                    </td>
+                    <td align="right">
+                      <div class="tableheadtext">Qty Received:</div>
+                    </td>
+                    <td align="right">
+                      <input type="text" class="inputBox" name="quantityAccepted|${rowCount}" size="6" value="${orderItem.quantity?string.number}">
+                    </td>                                                      
+                  </tr>
+                  <tr>
+                    <td width="45%">
+                      <span class="tableheadtext">Inventory Item Type:</span>&nbsp;&nbsp;
+                      <select name="inventoryItemTypeId|${rowCount}" size='1' class="selectBox">  
+                        <#list inventoryItemTypes as nextInventoryItemType>                      
+                        <option value='${nextInventoryItemType.inventoryItemTypeId}'>${nextInventoryItemType.description?default(nextInventoryItemType.inventoryItemTypeId)}</option>
+                        </#list>
+                      </select>                    
+                    </td>                    
+                    <td align="right">
+                      <div class="tableheadtext">Rejection Reason:</div>
+                    </td>
+                    <td align="right">
+                      <select name="rejectionId|${rowCount}" size='1' class='selectBox'>   
+                        <option></option>    
+                        <#list rejectReasons as nextRejection>                 
+                        <option value='${nextRejection.rejectionId}'>${nextRejection.description?default(nextRejection.rejectionId)}</option>
+                        </#list>
+                      </select>
+                    </td>
+                    <td align="right">
+                      <div class="tableheadtext">Qty Rejected:</div>
+                    </td>
+                    <td align="right">
+                      <input type="text" class="inputBox" name="quantityRejected|${rowCount}" size="6">
+                    </td>
+                  </tr>
+                </table>
+              </td>
+              <td align="right">              
+                <input type="checkbox" name="_rowSubmit|${rowCount}" value="Y" checked>
+              </td>
+            </tr>
+          <#else>
+            <tr>
+              <td colspan="2">
+                <div class="tabletext">No Product Available</div>
+              </td>
+            </tr>
+          </#if>
+          <#assign rowCount = rowCount + 1>
+        </#list> 
+        <tr>
+          <td colspan="2">
+            <hr class="sepbar">
+          </td>
+        </tr>
+        <tr>
+          <td colspan="2" align="right">
+            <a href="javascript:document.receiveform.submit();" class="buttontext">Receive Selected Product(s)</a>
+          </td>
+        </tr>     
+      </#if>
     </table>
+    <input type="hidden" name="_rowCount" value="${rowCount}">
   </form>
 <#else>
   <form name="receiveform" method="post" action="<@ofbizUrl>/ReceiveInventory</@ofbizUrl>" style='margin: 0;'>
