@@ -267,7 +267,7 @@
     <request-map uri="payPalCancel">
     	<security https="true" auth="true"/>
     	<event type="java" path="org.ofbiz.commonapp.thirdparty.paypal.PayPalEvents" invoke="cancelPayPalOrder"/>
-    	<response name="success" type="view" value="main/>
+    	<response name="success" type="view" value="main"/>
     	<response name="error" type="view" value="main"/>
     </request-map>                      
     
