@@ -26,7 +26,7 @@
  *
  * @author     David E. Jones (jonesde@ofbiz.org)
  * @author     Andy Zeneski (jaz@ofbiz.org)
- * @version    $Revision: 1.4 $
+ * @version    $Revision: 1.5 $
  */
 -->
 
@@ -144,7 +144,7 @@
       <field name="returnId" type="id"></field>
       <field name="returnItemSeqId" type="id"></field>
       <field name="rejectionId" type="id"></field>
-      <field name="receivedByUserLoginId" type="id"></field>
+      <field name="receivedByUserLoginId" type="id-vlong"></field>
       <field name="datetimeReceived" type="date-time"></field>
       <field name="itemDescription" type="description"></field>
       <field name="quantityAccepted" type="floating-point"></field>
@@ -825,6 +825,7 @@
             title="Shipment Method Type Entity">
       <field name="shipmentMethodTypeId" type="id-ne"></field>
       <field name="description" type="description"></field>
+      <field name="sequenceNum" type="numeric"></field>
       <prim-key field="shipmentMethodTypeId"/>
       <relation type="many" rel-entity-name="OrderShipmentPreference">
         <key-map field-name="shipmentMethodTypeId"/>

@@ -21,7 +21,7 @@
  *
  *@author     David E. Jones
  *@author     Brad Steiner
- *@version    $Revision: 1.3 $
+ *@version    $Revision: 1.4 $
  *@since      2.2
  */
 
@@ -52,23 +52,24 @@ if (request.getAttribute("_ERROR_MESSAGE_") != null) useValues = false;
 productId = request.getParameter("productId");
 context.put("productId", productId);
 
-GenericValue product = delegator.findByPrimaryKey("Product", UtilMisc.toMap("productId", productId));
+product = delegator.findByPrimaryKey("Product", UtilMisc.toMap("productId", productId));
 
-if (product == null) 
+if (product == null) {
     useValues = false; 
-else 
+} else {
     context.put("product", product);
+}
     
 productPrices = product.getRelated("ProductPrice", null, UtilMisc.toList("facilityGroupId", "productPriceTypeId", "currencyUomId", "fromDate"));
-if (productPrices != null) context.put("productPrices", productPrices);
+context.put("productPrices", productPrices);
 
 productPriceTypes = delegator.findAllCache("ProductPriceType", UtilMisc.toList("description"));
-if (productPriceTypes != null) context.put("productPriceTypes", productPriceTypes);
+context.put("productPriceTypes", productPriceTypes);
 
 currencyUoms = delegator.findByAndCache("Uom", UtilMisc.toMap("uomTypeId", "CURRENCY_MEASURE"), UtilMisc.toList("description"));
-if (currencyUoms != null) context.put("currencyUoms", currencyUoms);
+context.put("currencyUoms", currencyUoms);
 
-facilityGroups = delegator.findByAndCache("FacilityGroup", null, UtilMisc.toList("facilityGroupName"));
-if (facilityGroups != null) context.put("facilityGroups", facilityGroups);
+productStoreGroups = delegator.findByAndCache("ProductStoreGroup", null, UtilMisc.toList("productStoreGroupName"));
+context.put("productStoreGroups", productStoreGroups);
 
 if ("true".equalsIgnoreCase((String)request.getParameter("useValues"))) useValues = true;

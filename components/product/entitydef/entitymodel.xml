@@ -26,7 +26,7 @@
  *
  * @author     David E. Jones (jonesde@ofbiz.org)
  * @author     Andy Zeneski (jaz@ofbiz.org)
- * @version    $Revision: 1.12 $
+ * @version    $Revision: 1.13 $
  */
 -->
 
@@ -1163,7 +1163,7 @@
       <field name="productId" type="id-ne"></field>
       <field name="productPriceTypeId" type="id-ne"></field>
       <field name="currencyUomId" type="id"></field>
-      <field name="facilityGroupId" type="id"></field>
+      <field name="productStoreGroupId" type="id"></field>
       <field name="fromDate" type="date-time"></field>
       <field name="thruDate" type="date-time"></field>
       <field name="price" type="currency-amount"></field>
@@ -1174,7 +1174,7 @@
       <prim-key field="productId"/>
       <prim-key field="productPriceTypeId"/>
       <prim-key field="currencyUomId"/>
-      <prim-key field="facilityGroupId"/>
+      <prim-key field="productStoreGroupId"/>
       <prim-key field="fromDate"/>
       <relation type="one" fk-name="PROD_PRICE_PROD" rel-entity-name="Product">
         <key-map field-name="productId"/>
@@ -1185,8 +1185,8 @@
       <relation type="one" fk-name="PROD_PRICE_CUOM" title="Currency" rel-entity-name="Uom">
         <key-map field-name="currencyUomId" rel-field-name="uomId"/>
       </relation>
-      <relation type="one" fk-name="PROD_PRICE_FACG" rel-entity-name="FacilityGroup">
-        <key-map field-name="facilityGroupId"/>
+      <relation type="one" fk-name="PROD_PRICE_PSTG" rel-entity-name="ProductStoreGroup">
+        <key-map field-name="productStoreGroupId"/>
       </relation>
       <relation type="one" fk-name="PROD_PRICE_CBUL" title="CreatedBy" rel-entity-name="UserLogin">
         <key-map field-name="createdByUserLogin" rel-field-name="userLoginId"/>
@@ -1198,7 +1198,7 @@
         <key-map field-name="productId"/>
         <key-map field-name="productPriceTypeId"/>
         <key-map field-name="currencyUomId"/>
-        <key-map field-name="facilityGroupId"/>
+        <key-map field-name="productStoreGroupId"/>
         <key-map field-name="fromDate"/>
       </relation>
     </entity>
@@ -1245,7 +1245,7 @@
       <field name="productId" type="id-ne"></field>
       <field name="productPriceTypeId" type="id-ne"></field>
       <field name="currencyUomId" type="id"></field>
-      <field name="facilityGroupId" type="id"></field>
+      <field name="productStoreGroupId" type="id"></field>
       <field name="fromDate" type="date-time"></field>
       <field name="thruDate" type="date-time"></field>
       <field name="price" type="currency-amount"></field>
@@ -1257,7 +1257,7 @@
         <key-map field-name="productId"/>
         <key-map field-name="productPriceTypeId"/>
         <key-map field-name="currencyUomId"/>
-        <key-map field-name="facilityGroupId"/>
+        <key-map field-name="productStoreGroupId"/>
         <key-map field-name="fromDate"/>
       </relation>
       <relation type="one" fk-name="PROD_PRCHNG_CHUL" title="ChangedBy" rel-entity-name="UserLogin">
@@ -2334,6 +2334,7 @@
             package-name="org.ofbiz.product.store"
             title="Product Store Entity">
       <field name="productStoreId" type="id-ne"></field>
+      <field name="primaryStoreGroupId" type="id"></field>
       <field name="storeName" type="name"></field>
       <field name="companyName" type="name"></field>
       <field name="title" type="name"></field>
@@ -2367,11 +2368,17 @@
       <field name="headerMiddleBackground" type="url"></field>
       <field name="headerRightBackground" type="url"></field>
       <prim-key field="productStoreId"/>
+      <relation type="one" fk-name="PROD_STR_PRSTRGP" title="Primary" rel-entity-name="ProductStoreGroup">
+        <key-map field-name="primaryStoreGroupId" rel-field-name="productStoreGroupId"/>
+      </relation>
       <relation type="one" fk-name="PROD_STR_FACILITY" rel-entity-name="Facility">
         <key-map field-name="inventoryFacilityId" rel-field-name="facilityId"/>
       </relation>
       <relation type="one" fk-name="PROD_STR_RORDENUM" title="ReserveOrder" rel-entity-name="Enumeration">
         <key-map field-name="reserveOrderEnumId" rel-field-name="enumId"/>
+      </relation>
+      <relation type="many" rel-entity-name="ProductStoreGroupMember">
+        <key-map field-name="productStoreId"/>
       </relation>
       <relation type="many" rel-entity-name="ProductStoreFacility">
         <key-map field-name="productStoreId"/>
@@ -2474,6 +2481,105 @@
             <key-map field-name="facilityId"/>
         </view-link>        
     </view-entity>
+    <entity entity-name="ProductStoreGroup"
+            package-name="org.ofbiz.product.store"
+            title="ProductStore Group Entity">
+      <field name="productStoreGroupId" type="id-ne"></field>
+      <field name="productStoreGroupTypeId" type="id"></field>
+      <field name="primaryParentGroupId" type="id"></field>
+      <field name="productStoreGroupName" type="name"></field>
+      <field name="description" type="description"></field>
+      <prim-key field="productStoreGroupId"/>
+      <relation type="one" fk-name="PRDSTR_GP_TYPE" rel-entity-name="ProductStoreGroupType">
+        <key-map field-name="productStoreGroupTypeId"/>
+      </relation>
+      <relation type="one" fk-name="PRDSTR_GP_PGRP" title="PrimaryParent" rel-entity-name="ProductStoreGroup">
+        <key-map field-name="primaryParentGroupId" rel-field-name="productStoreGroupId"/>
+      </relation>
+      <relation type="many" title="Current" rel-entity-name="ProductStoreGroupRollup">
+        <key-map field-name="productStoreGroupId"/>
+      </relation>
+      <relation type="many" title="Parent" rel-entity-name="ProductStoreGroupRollup">
+        <key-map field-name="productStoreGroupId" rel-field-name="parentGroupId"/>
+      </relation>
+      <relation type="many" rel-entity-name="ProductStoreGroupMember">
+        <key-map field-name="productStoreGroupId"/>
+      </relation>
+    </entity>
+    <entity entity-name="ProductStoreGroupMember"
+            package-name="org.ofbiz.product.store"
+            title="ProductStore Group Member Entity">
+      <field name="productStoreId" type="id-ne"></field>
+      <field name="productStoreGroupId" type="id-ne"></field>
+      <field name="fromDate" type="date-time"></field>
+      <field name="thruDate" type="date-time"></field>
+      <field name="sequenceNum" type="numeric"></field>
+      <prim-key field="productStoreId"/>
+      <prim-key field="productStoreGroupId"/>
+      <prim-key field="fromDate"/>
+      <relation type="one" fk-name="PRDSTR_MEM_PRDSTR" rel-entity-name="ProductStore">
+        <key-map field-name="productStoreId"/>
+      </relation>
+      <relation type="one" fk-name="PRDSTR_MEM_PSGRP" rel-entity-name="ProductStoreGroup">
+        <key-map field-name="productStoreGroupId"/>
+      </relation>
+    </entity>
+    <entity entity-name="ProductStoreGroupRole"
+            package-name="org.ofbiz.product.store"
+            title="ProductStore Group Role Entity">
+      <field name="productStoreGroupId" type="id-ne"></field>
+      <field name="partyId" type="id"></field>
+      <field name="roleTypeId" type="id"></field>
+      <prim-key field="productStoreGroupId"/>
+      <prim-key field="partyId"/>
+      <prim-key field="roleTypeId"/>
+      <relation type="one" rel-entity-name="ProductStoreGroup">
+        <key-map field-name="productStoreGroupId"/>
+      </relation>
+      <relation type="one" fk-name="PSGRP_RLE_PARTY" rel-entity-name="Party">
+        <key-map field-name="partyId"/>
+      </relation>
+      <relation type="one" fk-name="PSGRP_RLE_ROLE" rel-entity-name="RoleType">
+        <key-map field-name="roleTypeId"/>
+      </relation>
+    </entity>
+    <entity entity-name="ProductStoreGroupRollup"
+            package-name="org.ofbiz.product.store"
+            title="ProductStore Group Rollup Entity">
+      <field name="productStoreGroupId" type="id-ne"></field>
+      <field name="parentGroupId" type="id-ne"></field>
+      <field name="fromDate" type="date-time"></field>
+      <field name="thruDate" type="date-time"></field>
+      <field name="sequenceNum" type="numeric"></field>
+      <prim-key field="productStoreGroupId"/>
+      <prim-key field="parentGroupId"/>
+      <prim-key field="fromDate"/>
+      <relation type="one" fk-name="PSGRP_RLP_CURRENT" title="Current" rel-entity-name="ProductStoreGroup">
+        <key-map field-name="productStoreGroupId"/>
+      </relation>
+      <relation type="one" fk-name="PSGRP_RLP_PARENT" title="Parent" rel-entity-name="ProductStoreGroup">
+        <key-map field-name="parentGroupId" rel-field-name="productStoreGroupId"/>
+      </relation>
+      <relation type="many" title="Child" rel-entity-name="ProductStoreGroupRollup">
+        <key-map field-name="productStoreGroupId" rel-field-name="parentGroupId"/>
+      </relation>
+      <relation type="many" title="Parent" rel-entity-name="ProductStoreGroupRollup">
+        <key-map field-name="parentGroupId" rel-field-name="productStoreGroupId"/>
+      </relation>
+      <relation type="many" title="Sibling" rel-entity-name="ProductStoreGroupRollup">
+        <key-map field-name="parentGroupId"/>
+      </relation>
+    </entity>
+    <entity entity-name="ProductStoreGroupType"
+            package-name="org.ofbiz.product.store"
+            title="ProductStore Group Type Entity">
+      <field name="productStoreGroupTypeId" type="id-ne"></field>
+      <field name="description" type="description"></field>
+      <prim-key field="productStoreGroupTypeId"/>
+      <relation type="many" rel-entity-name="ProductStoreGroup">
+        <key-map field-name="productStoreGroupTypeId"/>
+      </relation>
+    </entity>
     <entity entity-name="ProductStorePaymentSetting"
             package-name="org.ofbiz.product.store"
             title="Product Store Payment Settings Entity">

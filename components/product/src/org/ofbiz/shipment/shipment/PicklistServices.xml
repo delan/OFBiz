@@ -23,10 +23,34 @@
  *  THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  *
  * @author     David E. Jones (jonesde@ofbiz.org)
- * @version    $Revision: 1.1 $
+ * @version    $Revision: 1.2 $
  * @since      2.2
  -->
 <simple-methods>
+    <simple-method method-name="findOrdersToPickMove" short-description="Find Orders Ready to Pick or that need Stock Moves">
+    	<!-- filter on:
+		 - OrderHeader.orderType = SALES_ORDER
+		 - OrderHeader.statusId = ORDER_APPROVED
+		 - OrderItem.statusId = ITEM_APPROVED
+		 - OrderShipmentPreference.shipmentMethodTypeId = group by
+		 - ShipmentMethodType.sequenceNum = order display of methods by
+		 - OrderShipmentPreference.carrierPartyId = group by along with ship method?
+		 - OrderShipmentPreference.maySplit = decide to include based on whether all items available or not
+		 - OrderShipmentPreference.shipAfterDate is null or <= now
+		 - OrderItemInventoryRes.reservedDatetime = sort by, or by order date?
+		 - OrderItemInventoryRes.quantityNotAvailable = if not null and not 0, and maySplit is N, exclude whole order
+		 - OrderItemInventoryRes.pickStartDate = if not null already being picked, set when creating the pick list
+		 - InventoryItem.facilityId = passed facilityId
+		 - FacilityLocation.locationTypeEnumId = FLT_PICKLOC, can be picked now
+		 - FacilityLocation.locationTypeEnumId = FLT_BULK, stock move needed, remove whole order from list to be picked, add to list needing stock move
+    	-->
+    	<!-- lists to create - in Map in List orderDataByShipmentMethod
+		 - ordersReadyToPick
+		 - ordersNeedStockMove
+    	-->
+    	
+    </simple-method>
+	
     <simple-method method-name="getPicklistData" short-description="Get Picklist Data">
     	<!-- 
     		Parameters:
