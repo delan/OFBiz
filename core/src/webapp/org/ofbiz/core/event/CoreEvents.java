@@ -325,9 +325,9 @@ public class CoreEvents {
         if (UtilValidate.isEmpty(mode)) {
             mode = "sync";
         }
-
         
         // now do a security check
+        
         Security security = (Security) request.getAttribute("security");
         LocalDispatcher dispatcher = (LocalDispatcher) request.getAttribute("dispatcher");
         

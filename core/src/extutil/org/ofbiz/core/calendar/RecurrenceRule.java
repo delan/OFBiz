@@ -195,7 +195,7 @@ public class RecurrenceRule {
     }
 
     /** 
-     * Get the number of times this recurrence will run.
+     * Get the number of times this recurrence will run (-1 until end time).
      *@return long The number of time this recurrence will run.
      */
     public long getCount() {
