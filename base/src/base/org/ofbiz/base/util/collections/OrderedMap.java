@@ -35,7 +35,7 @@ import java.util.Set;
  * OrderedMap - HashMap backed by a linked list.
  *
  * @author     <a href="mailto:jaz@ofbiz.org">Andy Zeneski</a>
- * @version    $Rev:$
+ * @version    $Rev$
  * @since      2.0
  */
 public class OrderedMap extends HashMap {
@@ -96,5 +96,9 @@ public class OrderedMap extends HashMap {
             values.add(this.get(i.next()));
         }
         return (Collection) values;
+    }
+
+    public int indexOf(Object key) {
+        return orderedKeys.indexOf(key);
     }
 }
