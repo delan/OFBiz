@@ -120,7 +120,7 @@ public class JobPoller implements Runnable {
         while (!threadStopped) {
             Debug.logInfo("Waiting for thread to stop.");
             try {
-                Thread.sleep(1000);
+                Thread.sleep(500);
             } catch(Exception e) {
                 Debug.logError(e, "Error putting job poller thread to sleep");
             }
