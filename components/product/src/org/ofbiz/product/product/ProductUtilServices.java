@@ -1,5 +1,5 @@
 /*
- * $Id: ProductUtilServices.java,v 1.18 2004/01/27 23:07:47 jonesde Exp $
+ * $Id: ProductUtilServices.java,v 1.19 2004/01/27 23:10:47 jonesde Exp $
  *
  *  Copyright (c) 2002 The Open For Business Project (www.ofbiz.org)
  *  Permission is hereby granted, free of charge, to any person obtaining a
@@ -60,7 +60,7 @@ import org.ofbiz.service.ServiceUtil;
  *
  * @author     <a href="mailto:jaz@ofbiz.org">Andy Zeneski</a>
  * @author     <a href="mailto:jonesde@ofbiz.org">David E. Jones</a>
- * @version    $Revision: 1.18 $
+ * @version    $Revision: 1.19 $
  * @since      2.0
  */
 public class ProductUtilServices {
@@ -338,7 +338,7 @@ public class ProductUtilServices {
             // Product
             GenericValue variantProduct = delegator.findByPrimaryKey("Product", UtilMisc.toMap("productId", variantProductId));
     
-            Debug.logInfo("--variant has ID: " + productId + " and name: " + product.getString("internalName"), module);
+            Debug.logInfo("--variant has ID: " + variantProductId + " and name: " + variantProduct.getString("internalName"), module);
             
             // start with the values from the virtual product, override from the variant...
             GenericValue newVariantProduct = delegator.makeValue("Product", product);
