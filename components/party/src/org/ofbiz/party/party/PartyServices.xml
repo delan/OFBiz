@@ -83,7 +83,7 @@
     </simple-method>
 
     <!-- PartyClassification methods -->
-    <simple-method method-name="createPartyClassification" short-description="create a Party classification">
+    <simple-method method-name="createPartyClassification" short-description="create a PartyClassification">
         <check-permission permission="PARTYMGR" action="_CREATE"><fail-property resource="PartyUiLabels" property="PartyCreatePartyClassificationPermissionError"/></check-permission>
         <check-errors/>
         
@@ -95,7 +95,7 @@
         <set-nonpk-fields map-name="parameters" value-name="PartyClassificationValue" />        
         <create-value value-name="PartyClassificationValue" />  
     </simple-method>   
-    <simple-method method-name="deletePartyClassification" short-description="delete a Party classification">
+    <simple-method method-name="deletePartyClassification" short-description="delete a PartyClassification">
         <check-permission permission="PARTYMGR" action="_DELETE"><fail-property resource="PartyUiLabels" property="PartyRemovePartyClassificationPermissionError"/></check-permission>
         <check-errors/>
         <make-value entity-name="PartyClassification" value-name="PartyClassificationMap"/>
@@ -107,8 +107,8 @@
     </simple-method>
     
     <!-- PartyRelationship methods -->
-    <simple-method method-name="removePartyRelationship" short-description="Borrar una relación">      
-        <check-permission permission="PARTYMGR" action="_DELETE"><fail-message message="Security Error: to run removePartyRelationship you must have the PARTY_DELETE or PARTY_ADMIN permission"/></check-permission>
+    <simple-method method-name="removePartyRelationship" short-description="Remove PartyRelationship">      
+        <check-permission permission="PARTYMGR" action="_DELETE"><fail-property resource="PartyUiLabels" property="PartyRemovePartyRelationshipPermissionError"/></check-permission>
         <check-errors/>   
     
         <make-value entity-name="PartyRelationship" value-name="relationshipMap"/>
