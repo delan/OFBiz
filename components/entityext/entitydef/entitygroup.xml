@@ -26,7 +26,7 @@
  *
  *@author     David E. Jones (jonesde@ofbiz.org)
  *@author     Andy Zeneski (jaz@ofbiz.org)
- *@version    $Revision: 1.1 $
+ *@version    $Revision: 1.2 $
  */
 -->
 
@@ -39,5 +39,6 @@
     <entity-group group="org.ofbiz" entity="EntitySync" />
     <entity-group group="org.ofbiz" entity="EntitySyncHistory" />
     <entity-group group="org.ofbiz" entity="EntitySyncInclude" />
+    <entity-group group="org.ofbiz" entity="EntitySyncRemove" />
 </entitygroup>
 
