@@ -34,7 +34,8 @@
 <jsp:useBean id="delegator" type="org.ofbiz.entity.GenericDelegator" scope="request" />
 <%
   String filename = request.getParameter("filename");
-  boolean isUrl = request.getParameter("IS_URL")!=null?true:false;
+  boolean isUrl = request.getParameter("IS_URL") != null;
+  boolean mostlyInserts = request.getParameter("mostlyInserts") != null;
   String fulltext = request.getParameter("fulltext");
 %>
 
@@ -46,7 +47,7 @@
 
   <FORM method=POST action='<ofbiz:url>/xmldsimport</ofbiz:url>'>
     <div>Absolute Filename or URL:</div>
-    <INPUT type=text class='inputBox' size='60' name='filename' value='<%=UtilFormatOut.checkNull(filename)%>'> Is URL?:<INPUT type=checkbox name='IS_URL' <%=isUrl?"checked":""%>>
+    <INPUT type=text class='inputBox' size='60' name='filename' value='<%=UtilFormatOut.checkNull(filename)%>'> Is URL?:<INPUT type=checkbox name='IS_URL' <%=isUrl?"checked":""%>> Mostly Inserts?:<INPUT type=checkbox name='mostlyInserts' <%=mostlyInserts?"checked":""%>>
     <INPUT type=submit value='Import File'>
   </FORM>
   <FORM method=POST action='<ofbiz:url>/xmldsimport</ofbiz:url>'>
@@ -65,9 +66,13 @@
     catch(java.net.MalformedURLException e) { %><div>ERROR: <%=e.toString()%></div><% }
 
     EntitySaxReader reader = new EntitySaxReader(delegator);
+    if (mostlyInserts) {
+      reader.setUseTryInsertMethod(true);
+    }
     long numberRead = reader.parse(url);
   %>
       <div>Got <%=numberRead%> entities to write to the datasource.</div>
+
 <%-- The OLD way:
   <%
     List toBeStored = null;
@@ -84,12 +89,14 @@
       <div>Could not get any toBeStored from the XML file.</div>
     <%}%>
 --%>
+
   <%} else if (fulltext != null && fulltext.length() > 0) {%>
   <%
     EntitySaxReader reader = new EntitySaxReader(delegator);
     long numberRead = reader.parse(fulltext);
   %>
       <div>Got <%=numberRead%> entities to write to the datasource.</div>
+
 <%-- The OLD way:
   <%
     List toBeStored = null;
@@ -108,6 +115,7 @@
       <div>Could not get any toBeStored from the XML text.</div>
     <%}%>
 --%>
+
   <%} else {%>
     <div>No filename/URL or complete XML document specified, doing nothing.</div>
   <%}%>
