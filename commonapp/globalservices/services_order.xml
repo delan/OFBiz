@@ -10,6 +10,7 @@
     <service name="processOrder" engine="workflow" location="TEST" invoke="ProcessOrder">
         <description>Service for testing the workflow engine</description>
         <attribute name="orderId" type="String" mode="IN"/>
+        <attribute name="partyId" type="String" mode="IN"/>
         <attribute name="orderStatusId" type="String" mode="OUT"/>
     </service>
 
