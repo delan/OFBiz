@@ -358,13 +358,13 @@
     </service>
 
     <service name="retryFailedAuths" engine="java"
-            location="org.ofbiz.accounting.payment.PaymentGatewayServices" invoke="retryFailedAuths" auth="false">
+            location="org.ofbiz.accounting.payment.PaymentGatewayServices" invoke="retryFailedAuths" auth="true">
         <description>(Batch) Retries failed authorizations due to processor/connection problems</description>
         <!-- this service has no parameters IN or OUT -->
     </service>
 
     <service name="retryFailedOrderAuth" engine="java"
-            location="org.ofbiz.accounting.payment.PaymentGatewayServices" invoke="retryFailedOrderAuth" auth="false">
+            location="org.ofbiz.accounting.payment.PaymentGatewayServices" invoke="retryFailedOrderAuth" auth="true">
         <description>Retries failed authorizations due to processor/connection problems for an order</description>
         <attribute name="orderId" type="String" mode="IN" optional="false"/>
     </service>
