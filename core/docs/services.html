@@ -10,7 +10,7 @@
 <h2 align="Center">The Open For Business Project: Services Framework</h2>
 <br>
   Written By: Andy Zeneski<br>
-  E-mail: <a href="mailto:jaz@zsolv.com">jaz@zsolv.com</a>
+  E-mail: <a href="mailto:jaz@ofbiz.org">jaz@ofbiz.org</a>
 <br>
   Open For Business Site: <a href="http://www.ofbiz.org/">http://www.ofbiz.org</a>
 <br>
@@ -18,7 +18,7 @@
 </a>
 <br>
   Founders and Lead Architects: David E. Jones &amp; Andy Zeneski <br>
-  Last Updated: February 11, 2002<br>
+  Last Updated: January 16, 2003<br>
   $Id$<br>
 <hr><br>
 <h3>Table of Contents</h3>
@@ -30,14 +30,23 @@
   <li><a href="#ServiceEngine">Service Engine</a> </li>
   <li><a href="#JobScheduler">Job Scheduler</a> </li>
   <li><a href="#ServiceDefinition">Service Definition</a></li>
-  <li><a href="#Usage">Usage</a> <br>
-  </li>
+  <li><a href="#Usage">Usage</a></li>
+  <li><a href="#Advanced">Advanced:</a></li>
+  <ul>
+    <li><a href="#Interfaces">Interfaces</a></li>    
+    <li><a href="#ECAs">ECAs</a></li>
+    <li><a href="#Groups">Service Groups</a></li>
+    <li><a href="#Route">Route Services</a></li>
+    <li><a href="#HTTP">HTTP Services</a></li>
+    <li><a href="#JMS">JMS Services</a></li>    
+  </ul>
 </ul>
 <hr>
 <h3><a name="Related_Documents">Related Documents:</a></h3>
 <hr>
 <ul>
   <li><a href="api/index.html">Core JavaDoc (including Service Engine)</a></li>
+  <li><a href="serviceconfig.html">Service Engine Configuration Guild</a></li>
   <li><a href="/dtds/services.dtd">Services Definition DTD</a></li>
 </ul>
 <hr>
@@ -173,7 +182,7 @@
   <li><b>location </b>- The location or package of the service's class</li>
   <li><b>invoke</b> - The method name of the service</li>
   <li><b>auth</b> - Does this service require authorization (true/<u>false</u>)</li>
-  <li><b>export</b> - Is this service allowed to be accessed via SOAP (true/<u>false</u>)</li>
+  <li><b>export</b> - Is this service allowed to be accessed via SOAP/HTTP/JMS (true/<u>false</u>)</li>
   <li><b>validate</b> - Do we validate the attributes found below for name and
     type matching (<u>true</u>/false)</li>
 </ul>
@@ -258,6 +267,299 @@ catch (GenericServiceException e) {
 }
 </pre>
 
+<hr>
+<h3><a name="Advanced">Advanced</a></h3>
+<hr>
+<p>There have been a number of 'Advanced' features added to the service engine. You will find examples,
+definitions and information on each below.</p>
+  
+<hr>
+<h3><a name="Interfaces">Interfaces</a></h3>
+<hr>
+<p>The <code>interface</code> service engine has been implemented to help with defining services which share
+a number of the same parameters. An <code>interface</code> service cannot be invoked, but rather is a 
+defined service which other services inherit from. Each <code>interface</code> service will be defined
+using the <code>interface</code> engine for example:</p>  
+<pre>
+&lt;service name=&quot;testInterface&quot; engine=&quot;interface&quot; location=&quot;&quot; invoke=&quot;&quot;&gt;
+    &lt;description&gt;A test interface service&lt;/description&gt;
+    &lt;attribute name=&quot;partyId&quot; type=&quot;String&quot; mode=&quot;IN&quot;/&gt;
+    &lt;attribute name=&quot;partyTypeId&quot; type=&quot;String&quot; mode=&quot;IN&quot;/&gt;
+    &lt;attribute name=&quot;userLoginId&quot; type=&quot;org.ofbiz.core.entity.GenericValue&quot; mode=&quot;OUT&quot; optional=&quot;true&quot;/&gt;
+&lt;/service&gt;
+</pre>
+<p> **Note that the <code>location</code> and the <code>invoke</code> fields are required in the DTD, so we
+simply leave these as empty strings when used as an <code>interface</code>.</p>
+
+<p>Now, that we have an <code>interface</code> we need to defined a service which <code>implements</code> 
+this <code>interface</code></p>
+
+<pre>
+&lt;service name=&quot;testExample1&quot; engine=&quot;simple&quot; 
+		location=&quot;org/ofbiz/commonapp/common/SomeTestFile.xml&quot; invoke=&quot;testExample1&quot;&gt;
+    &lt;description&gt;A test service which implements testInterface&lt;/description&gt;
+    &lt;implements service=&quot;testInterface&quot;/&gt;   
+&lt;/service&gt;
+</pre>
+
+<p>The <code>testExample1</code> service will have the exact same required and optional attributes as the
+<code>testInterface</code> service. Any service which implements <code>testInterface</code> will also inherit
+the parameters/attributes. If needed additional attributes can be added to a specific service by including
+the <code>attribute</code> tag along with the <code>implements</code> tag. You may also override an attribute
+by re-defining it after the <code>implements</code> tag.</p>
+  
+<hr>
+<h3><a name="ECAs">ECAs</a></h3>
+<hr>
+<p>ECA (Event Condition Action) is much like a trigger. When a service is called a lookup is preformed to see
+if any ECAs are defined for this <code>event</code>. Events include before authentication, before IN parameter 
+validation, before actual service invocation, before OUT parameter validation, before transaction commit, or 
+before the service returns. Next each <code>condition</code> in the ECA definition is evaluated and if all 
+come back as true, each <code>action</code> is preformed. An <code>action</code> is just a service which must 
+be defined to work with the parameters already in the service's context. There are no limit to the number
+of conditions or actions each ECA may define.</p>
+
+<pre>
+&lt;service-eca&gt;
+    &lt;eca service=&quot;testScv&quot; event=&quot;commit&quot;&gt;
+        &lt;condition field-name=&quot;message&quot; operator=&quot;equals&quot; value=&quot;12345&quot;/&gt;
+        &lt;action service=&quot;testBsh&quot; mode=&quot;sync&quot;/&gt;
+    &lt;/eca&gt;
+&lt;/service-eca&gt;
+</pre>
+
+<p><code><b><u>eca</u></b></code> tag:</p>
+<table cellpadding='2' cellspacing='0' border='1'>
+<tr>
+    <td><b>Attribute&nbsp;Name</b></td>
+    <td><b>Required?</b></td>
+    <td><b>Description</b></td>
+</tr>
+<tr>
+    <td>service</td><td>Y</td>
+    <td>The name of the service this ECA is attached to.</td>
+</tr>
+<tr>
+    <td>event</td><td>Y</td>
+    <td>The event on which this ECA will run can be (before):
+    <code>auth, in-validate, out-validate, invoke, commit, or return</code>.</td>
+</tr>
+<tr>
+    <td>run-on-error</td><td>N</td>
+    <td>Should this ECA run if there is an error in the service (default <u>false</u>)</td>
+</tr>
+</table>
+
+<p>The <code>eca</code> element should also have 0 or more <code>condition</code> or <code>condition-field</code>
+elements and 1 or more <code>action</code> elements.</p>
+
+<p><code><b><u>condition</u></b></code> tag</p>
+<table cellpadding='2' cellspacing='0' border='1'>
+<tr>
+    <td><b>Attribute&nbsp;Name</b></td>
+    <td><b>Required?</b></td>
+    <td><b>Description</b></td>
+</tr>
+<tr>
+    <td>map-name</td><td>N</td>
+    <td>The name of the service context field that contains the map that the 
+    field to be validated will come from. If not specified the field-name will
+    be treated as a service context field name (an env-name).</td>
+</tr>
+<tr>
+    <td>field-name</td><td>Y</td>
+    <td>The name of the map field that will be compared.</td>
+</tr>
+<tr>
+    <td>operator</td><td>Y</td>
+    <td>Specified the comparison operator must be one of the following:
+    less, greater, less-equals, greater-equals, equals, not-equals, or contains.</td>
+</tr>
+<tr>
+    <td>value</td><td>Y</td>
+    <td>The value that the field will compared to. Must be a String, but can be
+    converted to other types.</td>
+</tr>
+<tr>
+    <td>type</td><td>N</td>
+    <td>The data type to use for the comparison. Must be one of the following:
+    String, Double, Float, Long, Integer, Date, Time, or Timestamp. If no type
+    is specified the default will be String.</td>
+</tr>
+<tr>
+    <td>format</td><td>N</td>
+    <td>A format specifier to use when converting String objects to other data
+    types, mainly Date, Time and Timestamp.</td>
+</tr>
+</table>
+
+<p><code><b><u>condition-field</u></b></code> tag</p>
+<table cellpadding='2' cellspacing='0' border='1'>
+<tr>
+    <td><b>Attribute&nbsp;Name</b></td>
+    <td><b>Required?</b></td>
+    <td><b>Description</b></td>
+</tr>
+<tr>
+    <td>map-name</td><td>N</td>
+    <td>The name of the service context field that contains the map that the 
+    field to be validated will come from. If not specified the field-name will
+    be treated as a method environment field name (an env-name).</td>
+</tr>
+<tr>
+    <td>field-name</td><td>Y</td>
+    <td>The name of the map field that will be compared.</td>
+</tr>
+<tr>
+    <td>operator</td><td>Y</td>
+    <td>Specified the comparison operator must be one of the following:
+    less, greater, less-equals, greater-equals, equals, not-equals, or contains.</td>
+</tr>
+<tr>
+    <td>to-map-name</td><td>N</td>
+    <td>The name of the service context field that contains the map that the 
+    field to be compared will come from. If left empty will default to the map-name, 
+    or the method environment if map-name is also unspecified.</td>
+</tr>
+<tr>
+    <td>to-field-name</td><td>N</td>
+    <td>The name of the to-map field that the main field will be compared to.
+    If left empty will default to the field-name.</td>
+</tr>
+<tr>
+    <td>type</td><td>N</td>
+    <td>The data type to use for the comparison. Must be one of the following:
+    String, Double, Float, Long, Integer, Date, Time, or Timestamp. If no type
+    is specified the default will be String.</td>
+</tr>
+<tr>
+    <td>format</td><td>N</td>
+    <td>A format specifier to use when converting String objects to other data
+    types, mainly Date, Time and Timestamp.</td>
+</tr>
+</table>
+
+<p><code><b><u>action</u></b></code> tag</p>
+<table cellpadding='2' cellspacing='0' border='1'>
+<tr>
+    <td><b>Attribute&nbsp;Name</b></td>
+    <td><b>Required?</b></td>
+    <td><b>Description</b></td>
+</tr>
+<tr>
+    <td>service</td><td>N</td>
+    <td>The name of the service this <code>action</code> will invoke.</td>
+</tr>
+<tr>
+    <td>mode</td><td>Y</td>
+    <td>The mode in which this service should be invoked. Can be sync or async. Note
+    that async actions will not update the context even when set to true.</td>
+</tr>
+<tr>
+    <td>result-to-context</td><td>N</td>
+    <td>Should the results of the <code>action service</code> update the main service's context.
+    Default <code><u>true</u></code>.</td>
+</tr>
+<tr>
+    <td>ignore-error</td><td>N</td>
+    <td>Ignore any errors caused by the action service. If <code> the error will cause the 
+    origional service to fail. Default <code><u>true</u></code>.</td>
+</tr>
+</table>
+  
+<hr>
+<h3><a name="Groups">Service Groups</a></h3>
+<hr>
+<p>Service groups are a set of services which should run when calling the initial service. You define
+a service using the <code>group</code> service engine, and include all the parameters/attributes needed
+for all the services in the group. The <code>location</code> attribute is not needed for <code>group</code>
+services, the <code>invoke</code> attribute defines the name of the <code>group</code> to run. 
+When this service is invoked the group is called and the services defined in the group are called as defined. </p>  
+
+<p>The group definition is very simple, it contains a group elements along with 1 or more service elements.
+The group element contains a <code>name</code> attribute and a <code>mode</code> attribute used to define how
+the group will function. The service element is much like the <code>action</code> element in an ECA,
+the difference being the default value for result-to-context.</p>
+
+<pre>
+&lt;service-group&gt;
+    &lt;group name=&quot;testGroup&quot; send-mode=&quot;all&quot;&gt;
+        &lt;service name=&quot;testScv&quot; mode=&quot;sync&quot;/&gt;
+        &lt;service name=&quot;testBsh&quot; mode=&quot;sync&quot;/&gt;
+    &lt;/group&gt;
+&lt;/service-group&gt;
+</pre>
+  
+<p><code><b><u>group</u></b></code> tag</p>
+<table cellpadding='2' cellspacing='0' border='1'>
+<tr>
+    <td><b>Attribute&nbsp;Name</b></td>
+    <td><b>Required?</b></td>
+    <td><b>Description</b></td>
+</tr>
+<tr>
+    <td>name</td><td>Y</td>
+    <td>The name of the service this <code>action</code> will invoke.</td>
+</tr>
+<tr>
+    <td>send-mode</td><td>N</td>
+    <td>The mode in which the service(s) should be invoked. The options are:
+    none, all, first-available, random, or round-robin. The default is <code><u>all</u></code>.</td>
+</tr>
+</table>
+
+<p><code><b><u>service</u></b></code> tag</p>
+<table cellpadding='2' cellspacing='0' border='1'>
+<tr>
+    <td><b>Attribute&nbsp;Name</b></td>
+    <td><b>Required?</b></td>
+    <td><b>Description</b></td>
+</tr>
+<tr>
+    <td>service</td><td>N</td>
+    <td>The name of the service this <code>action</code> will invoke.</td>
+</tr>
+<tr>
+    <td>mode</td><td>Y</td>
+    <td>The mode in which this service should be invoked. Can be sync or async. Note
+    that async actions will not update the context even when set to true.</td>
+</tr>
+<tr>
+    <td>result-to-context</td><td>N</td>
+    <td>Should the results of the <code>action service</code> update the main service's context.
+    Default <code><u>false</u></code>.</td>
+</tr>
+</table>
+  
+<hr>
+<h3><a name="Route">Route Services</a></h3>
+<hr>
+<p>Route services are defined using the <code>route</code> service engine. When a <code>route</code> 
+service is called, there is no invoke preformed, but all ECAs defined will run during the proper events.
+This type of serivce is not used very often, but can be used to 'route' to other services by utilizing the 
+ECA options available to services.</p>
+
+<hr>
+<h3><a name="HTTP">HTTP Services</a></h3>
+<hr>
+<p>Using HTTP services is a way of invoking remote services defined on other systems. The local definition 
+should match that of the remote definition, but the <code>engine</code> used should be <code>http</code>, 
+the <code>location</code> should be a fully qualified URL to the httpService event running on the remote
+system, and the <code>invoke</code> should be the name of the service on the remote system you are requesting 
+to be run. The remote system must have the httpService event mounted for HTTP services to be accepted. 
+By default the commonapp web application has this event mounted to recieve requests for services. 
+Services on the remote system must have <code>export</code> set to <code>true</code> in order to allow the 
+service to be run remotely. HTTP services by nature are synchronous.</p>
+  
+<hr>
+<h3><a name="JMS">JMS Services</a></h3>
+<hr>
+<p>JMS services are much like HTTP services, except the service request is sent to a JMS topic/queue. 
+The <code>engine</code> should be set to <code>jms</code>, the <code>location</code> should be the 
+name of the jms-service defined in the serviceengine.xml file (see <a href="serviceconfig.html#JMS">Service
+Config</a> document), and the <code>invoke</code> should be the name of the service on the remote system
+you are requesting to run. JMS services by nature are asynchronous.</p>
+    
 <hr>
 <p><br>
 </p>

@@ -14,7 +14,7 @@
 <A href="http://sf.net/projects/ofbiz"> <IMG src="http://sourceforge.net/sflogo.php?group_id=27173" border="0" alt="SourceForge Logo"></A> 
 <br>
 Founders and Lead Architects: David E. Jones &amp; Andy Zeneski <br>
-Last Updated: January 8, 2003<br>
+Last Updated: January 16, 2003<br>
 $Id$ <br>
 <hr>
 <br>
@@ -289,44 +289,10 @@ which contain the following attributes:</p>
 </tr>
 </table>
 
-<!-- 
-  - Just commenting this out for now, this is now in an XML file and is much
-  - more complex, so a separate document should probably be used to describe that 
-
-<hr>
-<h3><a name="servicesengine">servicesengine.properties</a></h3>
-<hr>
-<p>The servicesengine.properties file contains some global settings for 
-the Service Engine.</p>
-
-<p>The Service Engine allows services to be attached to different contexts where
-each context has its own class loader. In addition to these local contexts there
-is a single global context that also has its own class loader and the service
-definition files for the global context are specified using the 
-<b><code>global.paths</code></b> property. The value of this property should be
-a semicolon separated list of full path and filenames for the service
-definition XML files.</p>
-
-<p>The Service Engine also allows either a username/password combination or a 
-UserLogin GenericValue object to be passed in for authentication. When a 
-UserLogin GenericValue object is passed in the user is assumed to be authenticated,
-but when a username/password is specified the user will be authenticated and a 
-UserLogin GenericValue object will be created and place in the context for the
-service to be called. To specify the name of the service which will be called
-to authenticate users when a username/password is specified use the 
-<b><code>auth.service</code></b> property where the value is simply the name
-of the desired service.</p>
-
-<p>One of the more important uses of this properties file is to specify the class
-names for the engine wrappers for various type of services. The format of these
-properties is <b><code>{engine-name}.engine={class-name}</code></b> where engine-name
-is the value of the 'engine' attribute of the 'service' tag in a service definition 
-XML file and class-name is the fully-qualified class name for a class that 
-implements the <b><code>org.ofbiz.core.service.GenericEngine</code></b> interface.
-Valid engine-names include: <b><code>java</code></b>, <b><code>workflow</code></b>,
-<b><code>bsh</code></b>, and <b><code>soap</code></b>.</p>
--->
-
+<p>The jndi-server definition in the jndiservers.xml file should point to where the JMS client APIs can
+be located. This will be used to get either a TopicConnectionFactory or a QueueConnectionFactory depending
+on the <code>type</code> which is defined. The jndi-name should point to the name of the object in JNDI 
+which contains this connection factory instance.</p>
 <br>
 </body>
 </html>
