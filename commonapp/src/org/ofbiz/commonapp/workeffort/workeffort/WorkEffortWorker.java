@@ -1,89 +1,46 @@
 /*
  * $Id$
- * $Log$
- * Revision 1.16  2002/01/16 05:51:12  jonesde
- * Added workers to get work effort party assignments by group and role
  *
- * Revision 1.15  2002/01/02 04:23:24  jonesde
- * Changed parameter names from SQL style to Java field style
+ * Copyright (c) 2002 The Open For Business Project - www.ofbiz.org
  *
- * Revision 1.14  2001/12/30 04:26:18  jonesde
- * Fixed naming bug in query to get workeffort party assignments
+ * Permission is hereby granted, free of charge, to any person obtaining a
+ * copy of this software and associated documentation files (the "Software"),
+ * to deal in the Software without restriction, including without limitation
+ * the rights to use, copy, modify, merge, publish, distribute, sublicense,
+ * and/or sell copies of the Software, and to permit persons to whom the
+ * Software is furnished to do so, subject to the following conditions:
  *
- * Revision 1.13  2001/12/22 03:55:14  jonesde
- * Refactored status stuff to be more general
+ * The above copyright notice and this permission notice shall be included
+ * in all copies or substantial portions of the Software.
  *
- * Revision 1.12  2001/12/21 16:28:52  jonesde
- * Added exclusion of new cancelled state to activity and task stuff
- *
- * Revision 1.11  2001/12/10 16:45:52  jonesde
- * Fixed wrong status ids
- *
- * Revision 1.10  2001/12/09 12:44:20  jonesde
- * Added status filtering for all non wanted status
- *
- * Revision 1.9  2001/12/09 12:18:12  jonesde
- * Added some task/activity workers
- *
- * Revision 1.8  2001/11/14 13:51:37  jonesde
- * Fixed tryEntity bug on error
- *
- * Revision 1.7  2001/11/14 12:38:58  jonesde
- * Refactored upcoming work efforts worker to use UtilDateTime methods and use a period (day) based approach, much simpler
- *
- * Revision 1.6  2001/11/13 15:47:15  jonesde
- * Updated upcoming events, though one small todo left there
- *
- * Revision 1.5  2001/11/13 02:18:27  jonesde
- * Added some stuff, fixed problems
- *
- * Revision 1.4  2001/11/11 14:50:36  jonesde
- * Finished initial working versions of work effort workers and events
- *
- * Revision 1.3  2001/11/11 03:35:48  jonesde
- * Updated upcoming events worker to use view entity, left old code in as an example (of inefficiency...)
- *
- * Revision 1.2  2001/11/09 01:28:07  jonesde
- * More progress on event and workers, upcoming events worker mostly there
- *
- * Revision 1.1  2001/11/08 03:03:46  jonesde
- * Initial WorkEffort event and worker files, very little functionality in place so far
+ * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS
+ * OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF
+ * MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT.
+ * IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY
+ * CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT
+ * OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR
+ * THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  *
  */
+
 package org.ofbiz.commonapp.workeffort.workeffort;
 
-import org.ofbiz.core.entity.*;
-import org.ofbiz.core.security.*;
-import org.ofbiz.core.util.*;
-import javax.servlet.jsp.*;
 import java.sql.*;
 import java.util.*;
+import javax.servlet.jsp.*;
+
+import org.ofbiz.core.entity.*;
+import org.ofbiz.core.service.*;
+import org.ofbiz.core.security.*;
+import org.ofbiz.core.util.*;
 
 /**
- * <p><b>Title:</b> WorkEffortWorker.java
- * <p><b>Description:</b> Worker class to reduce code in JSPs & make it more reusable
- * <p>Copyright (c) 2001 The Open For Business Project and repected authors.
- * <p>Permission is hereby granted, free of charge, to any person obtaining a
- *  copy of this software and associated documentation files (the "Software"),
- *  to deal in the Software without restriction, including without limitation
- *  the rights to use, copy, modify, merge, publish, distribute, sublicense,
- *  and/or sell copies of the Software, and to permit persons to whom the
- *  Software is furnished to do so, subject to the following conditions:
+ * WorkEffortWorker - Worker class to reduce code in JSPs & make it more reusable
  *
- * <p>The above copyright notice and this permission notice shall be included
- *  in all copies or substantial portions of the Software.
- *
- * <p>THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS
- *  OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF
- *  MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT.
- *  IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY
- *  CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT
- *  OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR
- *  THE USE OR OTHER DEALINGS IN THE SOFTWARE.
- *
- * @author <a href="mailto:jonesde@ofbiz.org">David E. Jones</a>
- * @version 1.0
- * Created on November 7, 2001
+ *@author     <a href="mailto:jonesde@ofbiz.org">David E. Jones</a>
+ *@author     <a href="mailto:jaz@zsolv.com">Andy Zeneski</a>
+ *@version    1.0
+ *@created    November 7, 2001
  */
 public class WorkEffortWorker {
     public static void getWorkEffort(PageContext pageContext, String workEffortIdAttrName, String workEffortAttrName, String partyAssignsAttrName,
@@ -383,4 +340,22 @@ public class WorkEffortWorker {
 
         pageContext.setAttribute(tasksAttrName, validWorkEfforts);
     }
+
+    public static void getActivityContext(PageContext pageContext, String workEffortId) {
+        GenericDelegator delegator = (GenericDelegator) pageContext.getRequest().getAttribute("delegator");
+        LocalDispatcher dispatcher = (LocalDispatcher) pageContext.getRequest().getAttribute("dispatcher");
+        GenericValue userLogin = (GenericValue) pageContext.getSession().getAttribute(SiteDefs.USER_LOGIN);
+        Map svcCtx = UtilMisc.toMap("workEffortId", workEffortId, "userLogin", userLogin);
+        Map result = null;
+        try {
+            result = dispatcher.runSync("wfGetActivityContext", svcCtx);
+        } catch (GenericServiceException e) {
+            Debug.logError(e);
+        }
+        if (result != null && result.containsKey("activityContext")) {
+            Map aC = (Map) result.get("activityContext");
+            pageContext.setAttribute("activityContext", aC);
+        }
+    }
+
 }

@@ -90,6 +90,13 @@
         <attribute name="workEffortId" type="String" mode="IN"/>
     </service>
 
+    <service name="wfGetActivityContext" engine="java"
+            location="org.ofbiz.core.workflow.WorkflowServices" invoke="getActivityContext">
+        <description>Returns the current context of the requested activity</description>
+        <attribute name="workEffortId" type="String" mode="IN"/>
+        <attribute name="activityContext" type="java.util.Map" mode="OUT"/>
+    </service>
+
     <service name="assignActivity" engine="java"
             location="org.ofbiz.core.workflow.WorkflowServices" invoke="assignActivity">
         <description>Assign a new party or role to a workflow activity</description>
