@@ -1,5 +1,5 @@
 /*
- * $Id: EntityExpr.java,v 1.15 2004/07/14 15:23:19 doogie Exp $
+ * $Id: EntityExpr.java,v 1.16 2004/07/21 03:06:37 doogie Exp $
  *
  * Copyright (c) 2001, 2002 The Open For Business Project - www.ofbiz.org
  *
@@ -29,6 +29,7 @@ import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 
+import org.ofbiz.base.util.Debug;
 import org.ofbiz.entity.GenericDelegator;
 import org.ofbiz.entity.GenericEntity;
 import org.ofbiz.entity.GenericModelException;
@@ -39,10 +40,11 @@ import org.ofbiz.entity.model.ModelField;
  * Encapsulates simple expressions used for specifying queries
  *
  * @author     <a href="mailto:jonesde@ofbiz.org">David E. Jones</a>
- * @version    $Revision: 1.15 $
+ * @version    $Revision: 1.16 $
  * @since      2.0
  */
 public class EntityExpr extends EntityCondition {
+    public static final String module = EntityExpr.class.getName();
 
     private Object lhs;
     private EntityOperator operator;
@@ -53,6 +55,9 @@ public class EntityExpr extends EntityCondition {
     public EntityExpr(Object lhs, EntityComparisonOperator operator, Object rhs) {
         if (lhs == null) {
             throw new IllegalArgumentException("The field value cannot be null");
+        }
+        if (lhs instanceof String) {
+            Debug.logError(new Exception(), "EntityExpr called with lhs as a String; consider recompiling", module);
         }
         if (operator == null) {
             throw new IllegalArgumentException("The operator argument cannot be null");
