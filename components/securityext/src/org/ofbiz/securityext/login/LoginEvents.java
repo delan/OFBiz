@@ -32,10 +32,6 @@ import javax.servlet.http.Cookie;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
-import javax.transaction.InvalidTransactionException;
-import javax.transaction.SystemException;
-import javax.transaction.Transaction;
-import javax.transaction.TransactionManager;
 
 import org.ofbiz.base.component.ComponentConfig;
 import org.ofbiz.base.util.Debug;
@@ -50,9 +46,6 @@ import org.ofbiz.content.webapp.control.LoginWorker;
 import org.ofbiz.entity.GenericDelegator;
 import org.ofbiz.entity.GenericEntityException;
 import org.ofbiz.entity.GenericValue;
-import org.ofbiz.entity.transaction.GenericTransactionException;
-import org.ofbiz.entity.transaction.TransactionFactory;
-import org.ofbiz.entity.transaction.TransactionUtil;
 import org.ofbiz.party.contact.ContactHelper;
 import org.ofbiz.product.store.ProductStoreWorker;
 import org.ofbiz.security.Security;
@@ -297,7 +290,7 @@ public class LoginEvents {
         }
 
         // set the logged out flag
-        setLoggedOut(userLogin);
+        LoginWorker.setLoggedOut(userLogin);
 
         // this is a setting we don't want to lose, although it would be good to have a more general solution here...
         String currCatalog = (String) session.getAttribute("CURRENT_CATALOG_ID");
@@ -313,53 +306,6 @@ public class LoginEvents {
         if (currCatalog != null) session.setAttribute("CURRENT_CATALOG_ID", currCatalog);
         if (delegatorName != null) session.setAttribute("delegatorName", delegatorName);
         // DON'T save the cart, causes too many problems: if (shoppingCart != null) session.setAttribute("shoppingCart", new WebShoppingCart(shoppingCart, session));
-    }
-
-    public static void setLoggedOut(GenericValue userLogin) {
-        // set the logged out flag - need a mutable object first
-        userLogin = new GenericValue(userLogin);
-        userLogin.set("hasLoggedOut", "Y");
-
-        TransactionManager txMgr = TransactionFactory.getTransactionManager();
-        Transaction parentTx = null;
-        boolean beganTransaction = false;
-
-        try {
-            if (txMgr != null) {
-                try {
-                    parentTx = txMgr.suspend();
-                    beganTransaction = TransactionUtil.begin();
-                } catch (SystemException se) {
-                    Debug.logError(se, "Cannot suspend transaction: " + se.getMessage(), module);
-                } catch (GenericTransactionException e) {
-                    Debug.logError(e, "Cannot begin nested transaction: " + e.getMessage(), module);
-                }
-            }
-
-            try {
-                userLogin.store();
-            } catch (GenericEntityException e) {
-                Debug.logWarning(e, "Unable to set logged out flag on UserLogin", module);
-            }
-
-            try {
-                TransactionUtil.commit(beganTransaction);
-            } catch (GenericTransactionException e) {
-                Debug.logError(e, "Could not commit nested transaction: " + e.getMessage(), module);
-            }
-        } finally {
-            // resume/restore parent transaction
-            if (parentTx != null) {
-                try {
-                    txMgr.resume(parentTx);
-                    Debug.logVerbose("Resumed the parent transaction.", module);
-                } catch (InvalidTransactionException ite) {
-                    Debug.logError(ite, "Cannot resume transaction: " + ite.getMessage(), module);
-                } catch (SystemException se) {
-                    Debug.logError(se, "Unexpected transaction error: " + se.getMessage(), module);
-                }
-            }
-        }
     }
 
     /**

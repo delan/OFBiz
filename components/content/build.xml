@@ -47,10 +47,9 @@
             <fileset dir="../../base/lib/commons" includes="*.jar"/>
             <fileset dir="../../base/lib/scripting" includes="*.jar"/>
             <fileset dir="../../base/build/lib" includes="*.jar"/>
-            <fileset dir="../entity/lib" includes="*.jar"/>
+            <fileset dir="../minerva/lib" includes="*.jar"/>
             <fileset dir="../entity/build/lib" includes="*.jar"/>
             <fileset dir="../security/build/lib" includes="*.jar"/>
-            <fileset dir="../securityext/build/lib" includes="*.jar"/>
             <fileset dir="../service/lib" includes="*.jar"/>
             <fileset dir="../service/build/lib" includes="*.jar"/>
             <fileset dir="../minilang/build/lib" includes="*.jar"/>
