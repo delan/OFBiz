@@ -448,16 +448,16 @@ public class CatalinaContainer implements Container {
             protocol = "http";
         }
 
-        Connector connector = embedded.createConnector(address, port, protocol);
+        Connector connector = null;
         if (connectorProp.properties != null && connectorProp.properties.size() > 0) {
-            try {                
+            connector = embedded.createConnector(address, port, protocol);
+            try {
                 Iterator i = connectorProp.properties.values().iterator();
                 while (i.hasNext()) {
                     ContainerConfig.Container.Property prop = (ContainerConfig.Container.Property) i.next();
                     connector.setProperty(prop.name, prop.value);
                     //connector.setAttribute(prop.name, prop.value);
                 }
-                connector.initialize();
                 embedded.addConnector(connector);
             } catch (Exception e) {
                 throw new ContainerException(e);
