@@ -524,6 +524,12 @@
         <response name="success" type="view" value="product"/>
     </request-map>
 
+    <request-map uri="clearLastViewed">
+        <event type="java" path="org.ofbiz.product.product.ProductEvents" invoke="clearAllLastViewed"/>
+        <response name="success" type="view" value="main"/>
+        <response name="error" type="view" value="main"/>
+    </request-map>
+
     <request-map uri="lastviewedproducts">
         <response name="success" type="view" value="lastviewedproducts"/>
     </request-map>

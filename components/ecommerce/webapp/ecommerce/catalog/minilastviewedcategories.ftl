@@ -20,7 +20,7 @@
  *  THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  *
  *@author     Andy Zeneski (jaz@ofbiz.org)
- *@version    $Revision: 1.1 $
+ *@version    $Revision: 1.2 $
  *@since      3.1
 -->
 <#assign uiLabelMap = requestAttributes.uiLabelMap>
@@ -33,13 +33,9 @@
             <td valign="middle" align="center">
               <div class="boxhead">${uiLabelMap.EcommerceLastCategories}...</div>
             </td>
-            <#--
-            <#if 4 < sessionAttributes.lastViewedCategories?size>
             <td valign="middle" align="right">
-              <a href="<@ofbizUrl>/lastviewedproducts</@ofbizUrl>" class="lightbuttontextsmall">${uiLabelMap.CommonMore}</a>
+              <a href="<@ofbizUrl>/clearLastViewed</@ofbizUrl>" class="lightbuttontextsmall">${uiLabelMap.CommonClear}</a>
             </td>
-            </#if>
-            -->
           </tr>
         </table>
       </td>
