@@ -392,11 +392,9 @@
                     
            	        <!-- get the promiseDatetime -->           	
             		<get-related-one value-name="newNonSerInventoryItem" relation-name="ProductFacility" to-value-name="productFacility"/>
-            		<field-to-env env-name="daysToShip" field-name="daysToShip" map-name="productFacility"/>
+            		<field-to-env field-name="daysToShip" map-name="productFacility" env-name="daysToShip"/>
             		<if-empty field-name="daysToShip">
-            			<calculate field-name="daysToShip" type="Long">
-            	    		<number value="30"/>
-            	    	</calculate>           		
+            			<calculate field-name="daysToShip" type="Long"><number value="30"/></calculate>           		
             		</if-empty>
             		<call-bsh><![CDATA[
             		java.sql.Timestamp orderDate = orderHeader.getTimestamp("orderDate");
@@ -412,6 +410,7 @@
                     <field-to-field field-name="inventoryItemId" map-name="newNonSerInventoryItem" to-map-name="reserveOiiMap"/>
                     <field-to-field field-name="reserveOrderEnumId" map-name="parameters" to-map-name="reserveOiiMap"/>
                     <field-to-field field-name="quantityNotReserved" map-name="parameters" to-field-name="quantity" to-map-name="reserveOiiMap"/>
+                    <field-to-field field-name="quantityNotReserved" map-name="parameters" to-field-name="quantityNotAvailable" to-map-name="reserveOiiMap"/>
                     <field-to-field field-name="reservedDatetime" map-name="parameters" to-map-name="reserveOiiMap"/>
                     <env-to-field env-name="promisedDatetime" field-name="promisedDatetime" map-name="reserveOiiMap"/>
                     <call-service service-name="reserveOrderItemInventory" in-map-name="reserveOiiMap"/>
@@ -444,6 +443,11 @@
             <calculate field-name="quantity" map-name="checkOiirEntity">
                 <calcop operator="add" field-name="quantity" map-name="checkOiirEntity">
                     <calcop operator="get" field-name="quantity" map-name="parameters"/>
+                </calcop>
+            </calculate>
+            <calculate field-name="quantityNotAvailable" map-name="checkOiirEntity">
+                <calcop operator="add" field-name="quantityNotAvailable" map-name="checkOiirEntity">
+                    <calcop operator="get" field-name="quantityNotAvailable" map-name="parameters"/>
                 </calcop>
             </calculate>
             <store-value value-name="checkOiirEntity"/>
