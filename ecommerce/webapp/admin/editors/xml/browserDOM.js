@@ -16,12 +16,13 @@ function XMLNode(node, doc)
 	this.doc.gidcount++;
 	this.gid = this.doc.gidcount;
 	this.doc.allNodes[ this.gid ] = this;
-
+	this.modified = false;
 	this.children = new Array();
 	this.parent;
 
 	// configure the methods
-
+	this.setModified = _XMLNode_setModified;
+	this.isModified = _XMLNode_isModified;
 	this.getName = _XMLNode_getName;
 	this.getNodeType = _XMLNode_getNodeType;
 	this.getText = _XMLNode_getText;
@@ -50,7 +51,28 @@ function XMLNode(node, doc)
  
 	this.parse();
 }
-
+function _XMLNode_isModified()
+{	
+	if ( this.modified )
+	{
+		return true;
+	}
+	if ( this.children != null )
+	{
+		for ( var i = 0; i < this.children.length; i++ )
+		{
+			if ( this.children[i].isModified() )
+			{
+				return true;
+			}
+		}
+	}
+	return false;	
+}
+function _XMLNode_setModified( inMod )
+{
+	this.modified = inMod;
+}
 /**
  * Set the content of this node to the given fragment of XML text.  Any elements
  * in the text will be converted into XMLNodes and added to the DOM proper.
@@ -58,7 +80,7 @@ function XMLNode(node, doc)
 function _XMLNode_setText( newmixedxml )
 {
 	// Make a temp node so that we can parse it and grab any children we find.
-	
+	this.setModified( true );
 	var tmpdom = buildDom( "<tmp2>" + newmixedxml + "</tmp2>");
 	
 	var basedoc = this.domNode.ownerDocument;
@@ -86,7 +108,7 @@ function _XMLNode_setText( newmixedxml )
 function _XMLNode_setXml( newmixedxml )
 {
 	// Make a temp node so that we can parse it and grab any children we find.
-	
+	this.setModified( true );
 	var tmpdom = buildDom( newmixedxml);
 	
 	var basedoc = this.domNode.ownerDocument;
@@ -100,6 +122,7 @@ function _XMLNode_setXml( newmixedxml )
 
 function _XMLNode_addXmlAsChild( newmixedxml , belowNode)
 {
+	this.setModified( true );
 	var tmpdom = buildDom( newmixedxml );
 	var newNode = tmpdom.firstChild.cloneNode( true ); //removed the parent
 	
@@ -200,19 +223,23 @@ function _XMLNode_parse()
 			var node = new XMLNode( domNode,this.doc );
 			node.parent = this;
 			this.children[this.children.length] = node;
+			node.modified = false;
 		}
 	}  
 }
 
 function _XMLNode_setAttribute(name, value)
 {
+	this.setModified( true );
 	this.domNode.setAttribute(name,value);
 }
 
 function _XMLNode_deleteFromParent()
 {
+	this.setModified( true );
 	if ( this.parent != null )
 	{
+		this.parent.modified = true;
 		var idx = this.parent.indexOf( this );
 
 		this.domNode.parentNode.removeChild( this.domNode ); //remove myself for now
@@ -227,6 +254,7 @@ function _XMLNode_deleteFromParent()
  */
 function _XMLNode_clear()
 {
+	this.setModified( true );
 	this.children = new Array();
 	for( ;this.domNode.childNodes.length > 0 ; )
 	{
@@ -395,6 +423,7 @@ function _XMLNode_moveLeft()
  */
 function _XMLNode_appendChild( child )
 {
+	this.setModified( true );
 	// Make the new child the last child.
 	this.children[this.children.length] = child;
 	child.parent = this;
@@ -408,6 +437,7 @@ function _XMLNode_appendChild( child )
  */
 function _XMLNode_prependChild( child )
 {
+	this.setModified( true );
 	// Make the new child the first child.
 	this.children.unshift( child );	
 	child.parent = this;
@@ -455,10 +485,9 @@ function _XMLNode_getText()
  if(this.getNodeType()== this.doc.ELEMENT_NODE)
  {
  	//should this be XML?
- 	/*
-  var str = "";
-  if(this.children==null)
-   return null;
+ /*	var str = "";
+  	if(this.children==null)
+   		return null;
   
   for(var i=0; i < this.children.length; i++)
   {
@@ -621,6 +650,7 @@ function buildDom( src )
 			new ActiveXObject( getControlPrefix() + ".XmlDom" );//
 		xmlDocument.async = false;
 		xmlDocument.validateOnParse = false;
+		xmlDocument.resolveExternals = false;
 		xmlDocument.loadXML( src );
 		
 	}
@@ -705,11 +735,12 @@ function firstWhiteChar(str,pos)
  return str.length;
 }
 
+
 /**
  * This function takes a string as input and outputs a valid XML-escaped string
  * as output.
  */
-function xmlEscape( str )
+function xmlEscape( str , keepangles)
 {
 	var result = "";
 	var c = '';
@@ -717,17 +748,34 @@ function xmlEscape( str )
 	for ( var i = 0; i < str.length; i++ )
 	{
 		c = str.charAt( i );
-		if ( c == '<' )
+		if ( !keepangles && c == '<' )
 		{
 			result += '&lt;';
 		}
-		else if ( c == '>' )
+		else if ( !keepangles && c == '>' )
 		{
 			result += '&gt;';
 		}
 		else if ( c == '&' )
 		{
-			result += '&amp;';
+			if ( str.length > i+3 )
+			{
+				var chunk =  str.substring( i, i+5 );
+				if ( str.charAt( i+1 ) == '#' || chunk == "&amp;" || chunk == "&apos" || chunk == "&quot" || chunk == "&nbsp" )
+				{
+					//do nothing
+					result += '&';
+					
+				}
+				else
+				{
+					result += '&amp;';
+				}				
+			}
+			else
+			{
+				result += '&amp;';
+			}
 		}
 		else if ( c == '"' )
 		{

@@ -1,7 +1,7 @@
 <?xml version="1.0"?>
 
 <page xmlns="http://www.einnovation.com/xmlns/WSP/Admin/Content"
-    xmlns:html="http://www.w3.org/1999/xhtml" onload="processText();">
+    xmlns:html="http://www.w3.org/1999/xhtml" onload="processText();" onUnLoad="checkSave();">
   <title>Online XML Editor</title>
   <content>
     #set ( $parentPage = $request.getParameter( "parentPage" ) )
@@ -27,7 +27,17 @@
         }
         
         var editor;
-        
+        function checkSave()
+        {
+        	if( editor.xmlDoc.rootElement.isModified() )
+        	{
+        		var save = confirm("Click OK to save your changes.");
+        		if ( save )
+        		{
+        			saveAndClose();
+        		}
+        	}
+        }
         function processText()
         {
         	window.focus();
@@ -49,7 +59,10 @@
             document.wizard.action = "$origURL";
             document.wizard.target = "$parentPage";
             document.wizard.submit();
+            
             window.close();
+            
+
         }
     </html:script>
 
@@ -163,8 +176,9 @@
 								</html:table>		      
 								
 								<html:div id="attriblist" />
-		                  
-
+		                  		<html:center>
+		                  		 <html:textarea id="elementAttribText" name="elementAttribText" cols="40" rows="6" />
+								</html:center>
 								<html:table cellspacing="0" width="350">
 		                        <html:tr>
 		      					  <html:td valign="top"  align="right" >

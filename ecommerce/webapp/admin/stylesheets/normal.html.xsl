@@ -44,7 +44,7 @@
       </head>
       
       <body bgcolor="#c6d3de">
-       	<xsl:copy-of select="@onload"/>        	
+       	<xsl:copy-of select="@onload|@onUnLoad"/>        	
         <xsl:apply-templates select="page:content"/>
       </body>
     </html>

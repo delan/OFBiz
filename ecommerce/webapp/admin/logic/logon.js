@@ -24,14 +24,14 @@ if ( account != null )
 	
 	if ( userok == false )
 	{
-	    System.out.println( "User " + account + " could not be logged in" );
+	    //System.out.println( "User " + account + " could not be logged in" );
 	    request.setAttribute("wsp-exception","Invalid Logon");
 	    
 	}
 	else
 	{
 	    session.setAttribute( "username", account );
-	    System.out.println("Test");
+	    //System.out.println("Test");
 	    url_util.redirect("/index.html?wsp-action=setEditMode&editMode=true" );
 	    
 	}

@@ -757,7 +757,7 @@ function _XMLEditor_saveText()
 		var node = this.getNode( this.selectedGID );
 		if ( node != null && textArea != null )
 		{
-			node.setText( textArea.value );
+			node.setText( xmlEscape( textArea.value , true ) );
 		}
 	}
 }
@@ -860,6 +860,19 @@ function _XMLEditor_editAttributes( )
 		
 		listofAttributes.innerHTML = trs; //Under IE 6.0 this gives an undefined error? I guess tables dont work here?
 		
+		var xml = "";
+		if ( node.children != null )
+		{
+			for ( var i = 0; i < node.children.length; i++ )
+			{
+				xml += node.children[i].asXML();
+			}
+		}
+		xml = trim( xml, true, true );
+		var elementXML = document.getElementById( "elementAttribText");	
+		
+		elementXML.value = xml;
+		
 		this.domStrategy.focus( elementName );
 	}	
 }
@@ -886,11 +899,20 @@ function _XMLEditor_editAttributesOk( )
 			xml += " " + name + "=\"" + valuep +"\"";
 		}
 	}
-	xml += ">\n";
+	
+	xml += ">";
+	/*
 	for( var i=0;i< node.domNode.childNodes.length;i++ )
 	{
 		xml += node.domNode.childNodes[i].xml;
 		xml += "\n";
+	}
+	*/
+	var elementXML = document.getElementById( "elementAttribText");	
+	var text = elementXML.value;	
+	if ( text != null )
+	{
+		xml += xmlEscape( text, true );
 	}
 	xml += "</" + elementName.value +">";
 	node.setXml( xml ); 
@@ -923,7 +945,7 @@ function _XMLEditor_insertXML(elementName, elementContent, attributes)
     	xml += a + "='" + xmlEscape( attributes[a] ) + "' ";
     }
         
-    xml += ">" + elementContent + "</"+ elementName +">";
+    xml += ">" + xmlEscape( elementContent, true ) + "</"+ elementName +">";
     
     var selectedNode = this.getNode( this.selectedGID );
     var parentNode;
