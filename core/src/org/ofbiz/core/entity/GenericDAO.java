@@ -44,12 +44,12 @@ public class GenericDAO
     ModelReader.getEntityCache();
   }
   
-  public static boolean insert(GenericEntity value)
+  public static boolean insert(GenericEntity entity)
   {
-    ModelEntity entity = value.getModelEntity();
-    if(entity == null) return false;
+    ModelEntity modelEntity = entity.getModelEntity();
+    if(modelEntity == null) return false;
 /*    
-    if(value == null || value.<%=entity.pkNameString(" == null || value."," == null")%>) {
+    if(entity == null || entity.<%=modelEntity.pkNameString(" == null || entity."," == null")%>) {
       Debug.logWarning("ERROR [GenericDAO.insert]: Cannot insert GenericEntity: required primary key field(s) missing.");
       return false;
     }
@@ -59,19 +59,19 @@ public class GenericDAO
     try { connection = getConnection(); } 
     catch (SQLException sqle) { Debug.logWarning("ERROR [GenericDAO.insert]: Unable to esablish a connection with the database... Error was:\n"); Debug.logWarning(sqle); }
     
-    String sql = "INSERT INTO " + entity.tableName + " (" + entity.colNameString(entity.fields) + ") VALUES (" + entity.fieldsStringList(entity.fields, "?", ", ") + ")";
+    String sql = "INSERT INTO " + modelEntity.tableName + " (" + modelEntity.colNameString(modelEntity.fields) + ") VALUES (" + modelEntity.fieldsStringList(modelEntity.fields, "?", ", ") + ")";
     try 
     {
       ps = connection.prepareStatement(sql);
 
-      for(int i=0;i<entity.fields.size();i++)
+      for(int i=0;i<modelEntity.fields.size();i++)
       { 
-        ModelField curField=(ModelField)entity.fields.elementAt(i);
-        setValue(ps, i+1, curField, value);
+        ModelField curField=(ModelField)modelEntity.fields.elementAt(i);
+        setValue(ps, i+1, curField, entity);
       }
 
       ps.executeUpdate();
-      value.modified = false;
+      entity.modified = false;
     } catch (SQLException sqle) {
       Debug.logWarning("ERROR [GenericDAO.insert]: SQL Exception while executing the following:\n" + sql + "\nError was:\n");
       Debug.logWarning(sqle);
@@ -83,12 +83,12 @@ public class GenericDAO
     return true;
   }
 
-  public static boolean update(GenericEntity value)
+  public static boolean update(GenericEntity entity)
   {
-    ModelEntity entity = value.getModelEntity();
-    if(entity == null) return false;
+    ModelEntity modelEntity = entity.getModelEntity();
+    if(modelEntity == null) return false;
 /*
-    if(value == null || value.<%=entity.pkNameString(" == null || value."," == null")%>) {
+    if(entity == null || entity.<%=modelEntity.pkNameString(" == null || entity."," == null")%>) {
       Debug.logWarning("ERROR [GenericDAO.update]: Cannot update GenericEntity: required primary key field(s) missing.");
       return false;
     }
@@ -98,23 +98,24 @@ public class GenericDAO
     try { connection = getConnection(); } 
     catch (SQLException sqle) { Debug.logWarning("ERROR [GenericDAO.update]: Unable to esablish a connection with the database... Error was:\n"); Debug.logWarning(sqle); }
 
-    String sql = "UPDATE " + entity.tableName + " SET " + entity.colNameString(entity.nopks, "=?, ", "=?") + " WHERE " + entity.colNameString(entity.pks, "=? AND ", "=?") + "";
+    String sql = "UPDATE " + modelEntity.tableName + " SET " + modelEntity.colNameString(modelEntity.nopks, "=?, ", "=?") + " WHERE " + modelEntity.colNameString(modelEntity.pks, "=? AND ", "=?") + "";
     try {
       ps = connection.prepareStatement(sql);
 
-      for(int i=0;i<entity.nopks.size();i++)
+      int i;
+      for(i=0;i<modelEntity.nopks.size();i++)
       {
-        ModelField curField=(ModelField)entity.nopks.elementAt(i);
-        setValue(ps, i+1, curField, value);
+        ModelField curField=(ModelField)modelEntity.nopks.elementAt(i);
+        setValue(ps, i+1, curField, entity);
       }
-      for(int j=0;j<entity.pks.size();j++)
+      for(int j=0;j<modelEntity.pks.size();j++)
       {
-        ModelField curField=(ModelField)entity.pks.elementAt(j);
-        setValue(ps, j+1, curField, value);
+        ModelField curField=(ModelField)modelEntity.pks.elementAt(j);
+        setValue(ps, i+j+1, curField, entity);
       }
 
       ps.executeUpdate();
-      value.modified = false;
+      entity.modified = false;
     } catch (SQLException sqle) {
       Debug.logWarning("ERROR [GenericDAO.update]: SQL Exception while executing the following:\n" + sql + "\nError was:\n");
       Debug.logWarning(sqle);
@@ -126,12 +127,12 @@ public class GenericDAO
     return true;
   }
 
-  public static boolean select(GenericEntity value)
+  public static boolean select(GenericEntity entity)
   {
-    ModelEntity entity = value.getModelEntity();
-    if(entity == null) return false;
+    ModelEntity modelEntity = entity.getModelEntity();
+    if(modelEntity == null) return false;
 /*
-    if(value == null || value.<%=entity.pkNameString(" == null || value."," == null")%>) {
+    if(entity == null || entity.<%=modelEntity.pkNameString(" == null || entity."," == null")%>) {
       Debug.logWarning("ERROR [GenericDAO.select]: Cannot select GenericEntity: required primary key field(s) missing.");
       return false;
     }
@@ -142,27 +143,27 @@ public class GenericDAO
     try { connection = getConnection(); } 
     catch (SQLException sqle) { Debug.logWarning("ERROR [GenericDAO.select]: Unable to esablish a connection with the database... Error was:\n"); Debug.logWarning(sqle); }
     
-    String sql = "SELECT " + entity.colNameString(entity.nopks, ", ", "") + " FROM " + entity.tableName + " WHERE " + entity.colNameString(entity.pks, "=? AND ", "=?") + "";
+    String sql = "SELECT " + modelEntity.colNameString(modelEntity.nopks, ", ", "") + " FROM " + modelEntity.tableName + " WHERE " + modelEntity.colNameString(modelEntity.pks, "=? AND ", "=?") + "";
     try {
       ps = connection.prepareStatement(sql);
       
-      for(int i=0;i<entity.pks.size();i++)
+      for(int i=0;i<modelEntity.pks.size();i++)
       {
-        ModelField curField=(ModelField)entity.pks.elementAt(i);
-        setValue(ps, i+1, curField, value);
+        ModelField curField=(ModelField)modelEntity.pks.elementAt(i);
+        setValue(ps, i+1, curField, entity);
       }
 
       rs = ps.executeQuery();
       
       if(rs.next())
       {
-        for(int j=0;j<entity.nopks.size();j++)
+        for(int j=0;j<modelEntity.nopks.size();j++)
         {
-          ModelField curField=(ModelField)entity.nopks.elementAt(j);
-          getValue(rs, curField, value);
+          ModelField curField=(ModelField)modelEntity.nopks.elementAt(j);
+          getValue(rs, curField, entity);
         }
 
-        value.modified = false;
+        entity.modified = false;
       } else {
         Debug.logWarning("ERROR [GenericDAO.select]: select failed, result set was empty.");
         return false;
@@ -179,12 +180,12 @@ public class GenericDAO
     return true;
   }
     
-  public static boolean delete(GenericEntity value)
+  public static boolean delete(GenericEntity entity)
   {
-    ModelEntity entity = value.getModelEntity();
-    if(entity == null) return false;
+    ModelEntity modelEntity = entity.getModelEntity();
+    if(modelEntity == null) return false;
 /*
-    if(value == null || value.<%=entity.pkNameString(" == null || value."," == null")%>) {
+    if(entity == null || entity.<%=modelEntity.pkNameString(" == null || entity."," == null")%>) {
       Debug.logWarning("ERROR [GenericDAO.delete]: Cannot delete GenericEntity: required primary key field(s) missing.");
       return false;
     }
@@ -194,18 +195,18 @@ public class GenericDAO
     try { connection = getConnection(); } 
     catch (SQLException sqle) { Debug.logWarning("ERROR [GenericDAO.delete]: Unable to esablish a connection with the database... Error was:\n"); Debug.logWarning(sqle); }
     
-    String sql = "DELETE FROM " + entity.tableName + " WHERE " + entity.colNameString(entity.pks, "=? AND ", "=?") + "";
+    String sql = "DELETE FROM " + modelEntity.tableName + " WHERE " + modelEntity.colNameString(modelEntity.pks, "=? AND ", "=?") + "";
     try {
       ps = connection.prepareStatement(sql);
 
-      for(int i=0;i<entity.pks.size();i++)
+      for(int i=0;i<modelEntity.pks.size();i++)
       {
-        ModelField curField=(ModelField)entity.pks.elementAt(i);
-        setValue(ps, i+1, curField, value);
+        ModelField curField=(ModelField)modelEntity.pks.elementAt(i);
+        setValue(ps, i+1, curField, entity);
       }
 
       ps.executeUpdate();
-      value.modified = true;
+      entity.modified = true;
     } catch (SQLException sqle) {
       Debug.logWarning("ERROR [GenericDAO.delete]: SQL Exception while executing the following:\n" + sql + "\nError was:\n");
       Debug.logWarning(sqle);
@@ -217,123 +218,85 @@ public class GenericDAO
     return true;
   }
   
-  public static void getValue(ResultSet rs, ModelField curField, GenericEntity value) throws SQLException
+  public static void getValue(ResultSet rs, ModelField curField, GenericEntity entity) throws SQLException
   {
-    Class valueClass = value.getClass();
-    Field field = null;
-    try { field = valueClass.getField(curField.name); }
-    catch(NoSuchFieldException e) { 
-      Debug.logError("GenericDAO.getValue: field " + valueClass.getName() + "." + curField.name + " not found; cannot set result.");
-      return;
-    }
-    catch(SecurityException e) {
-      Debug.logError("GenericDAO.getValue: security exception while getting field " + valueClass.getName() + "." + curField.name + "; cannot set result.");
-      return;
-    }
-    
-    String fieldType = field.getType().getName();
     ModelFieldType mft = ModelReader.getModelFieldType(curField.type);
-    if(!fieldType.equals(mft.javaType) && fieldType.indexOf(mft.javaType) < 0)
+    if(mft == null)
     {
-      Debug.logWarning("GenericDAO.getValue: type of field " + valueClass.getName() + "." + curField.name + " is " + fieldType + ", was expecting " + mft.javaType + "; this may indicate an error in the configuration or in the class, and may result in an SQL-Java data conversion error. Will use the real field type: " + fieldType + ", not the definition.");
-    }
-
-    try 
-    {
-      if(fieldType.equals("java.lang.String") || fieldType.equals("String"))
-        field.set(value, rs.getString(curField.colName));
-      else if(fieldType.equals("java.sql.Timestamp") || fieldType.equals("Timestamp"))
-        field.set(value, rs.getTimestamp(curField.colName));
-      else if(fieldType.equals("java.sql.Time") || fieldType.equals("Time"))
-        field.set(value, rs.getTime(curField.colName));
-      else if(fieldType.equals("java.sql.Date") || fieldType.equals("Date"))
-        field.set(value, rs.getDate(curField.colName));
-      else if(fieldType.equals("java.lang.Integer") || fieldType.equals("Integer"))
-      {
-        if(rs.getObject(curField.colName) == null) field.set(value, null);
-        else field.set(value, new Integer(rs.getInt(curField.colName)));
-      }
-      else if(fieldType.equals("java.lang.Long") || fieldType.equals("Long"))
-      {
-        if(rs.getObject(curField.colName) == null) field.set(value, null);
-        else field.set(value, new Long(rs.getLong(curField.colName)));
-      }
-      else if(fieldType.equals("java.lang.Float") || fieldType.equals("Float"))
-      {
-        if(rs.getObject(curField.colName) == null) field.set(value, null);
-        else field.set(value, new Float(rs.getFloat(curField.colName)));
-      }
-      else if(fieldType.equals("java.lang.Double") || fieldType.equals("Double"))
-      {
-        if(rs.getObject(curField.colName) == null) field.set(value, null);
-        else field.set(value, new Double(rs.getDouble(curField.colName)));
-      }
-    }
-    catch(IllegalAccessException e) {
-      Debug.logError("GenericDAO.setValue: illegal access exception while setting field " + valueClass.getName() + "." + curField.name + "; cannot set result.");
+      Debug.logWarning("GenericDAO.getValue: definition fieldType " + curField.type + " not found, cannot getValue for field " + entity.getEntityName() + "." + curField.name + ".");
       return;
+    }
+    String fieldType = mft.javaType;
+
+    if(fieldType.equals("java.lang.String") || fieldType.equals("String"))
+      entity.set(curField.name, rs.getString(curField.colName));
+    else if(fieldType.equals("java.sql.Timestamp") || fieldType.equals("Timestamp"))
+      entity.set(curField.name, rs.getTimestamp(curField.colName));
+    else if(fieldType.equals("java.sql.Time") || fieldType.equals("Time"))
+      entity.set(curField.name, rs.getTime(curField.colName));
+    else if(fieldType.equals("java.sql.Date") || fieldType.equals("Date"))
+      entity.set(curField.name, rs.getDate(curField.colName));
+    else if(fieldType.equals("java.lang.Integer") || fieldType.equals("Integer"))
+    {
+      if(rs.getObject(curField.colName) == null) entity.set(curField.name, null);
+      else entity.set(curField.name, new Integer(rs.getInt(curField.colName)));
+    }
+    else if(fieldType.equals("java.lang.Long") || fieldType.equals("Long"))
+    {
+      if(rs.getObject(curField.colName) == null) entity.set(curField.name, null);
+      else entity.set(curField.name, new Long(rs.getLong(curField.colName)));
+    }
+    else if(fieldType.equals("java.lang.Float") || fieldType.equals("Float"))
+    {
+      if(rs.getObject(curField.colName) == null) entity.set(curField.name, null);
+      else entity.set(curField.name, new Float(rs.getFloat(curField.colName)));
+    }
+    else if(fieldType.equals("java.lang.Double") || fieldType.equals("Double"))
+    {
+      if(rs.getObject(curField.colName) == null) entity.set(curField.name, null);
+      else entity.set(curField.name, new Double(rs.getDouble(curField.colName)));
     }
   }
 
-  public static void setValue(PreparedStatement ps, int ind, ModelField curField, GenericEntity value) throws SQLException
+  public static void setValue(PreparedStatement ps, int ind, ModelField curField, GenericEntity entity) throws SQLException
   {
-    Class valueClass = value.getClass();
-    Field field = null;
-    try { field = valueClass.getField(curField.name); }
-    catch(NoSuchFieldException e) { 
-      Debug.logError("GenericDAO.setValue: field " + valueClass.getName() + "." + curField.name + " not found; setting indexed parameter to null. This will result in an error if the corresponding column does not exist in the table.");
-      ps.setNull(ind, Types.NULL); 
-      return;
-    }
-    catch(SecurityException e) {
-      Debug.logError("GenericDAO.setValue: security exception while getting field " + valueClass.getName() + "." + curField.name + "; setting indexed parameter to null.");
-      ps.setNull(ind, Types.NULL); 
-      return;
-    }
-    
-    String fieldType = field.getType().getName();
+    Object field = entity.get(curField.name);
+    Class fieldClass = field.getClass();    
+    String fieldType = fieldClass.getName();
     ModelFieldType mft = ModelReader.getModelFieldType(curField.type);
     if(!fieldType.equals(mft.javaType) && fieldType.indexOf(mft.javaType) < 0)
     {
-      Debug.logWarning("GenericDAO.setValue: type of field " + valueClass.getName() + "." + curField.name + " is " + fieldType + ", was expecting " + mft.javaType + "; this may indicate an error in the configuration or in the class, and may result in an SQL-Java data conversion error. Will use the real field type: " + fieldType + ", not the definition.");
+      Debug.logWarning("GenericDAO.setValue: type of field " + entity.getEntityName() + "." + curField.name + " is " + fieldType + ", was expecting " + mft.javaType + "; this may indicate an error in the configuration or in the class, and may result in an SQL-Java data conversion error. Will use the real field type: " + fieldType + ", not the definition.");
     }
     
-    try
+    if(fieldType.equals("java.lang.String") || fieldType.equals("String"))
+      ps.setString(ind, (String)field);
+    else if(fieldType.equals("java.sql.Timestamp") || fieldType.equals("Timestamp"))
+      ps.setTimestamp(ind, (java.sql.Timestamp)field);
+    else if(fieldType.equals("java.sql.Time") || fieldType.equals("Time"))
+      ps.setTime(ind, (java.sql.Time)field);
+    else if(fieldType.equals("java.sql.Date") || fieldType.equals("Date"))
+      ps.setDate(ind, (java.sql.Date)field);
+    else if(fieldType.equals("java.lang.Integer") || fieldType.equals("Integer"))
     {
-      if(fieldType.equals("java.lang.String") || fieldType.equals("String"))
-        ps.setString(ind, (String)field.get(value));
-      else if(fieldType.equals("java.sql.Timestamp") || fieldType.equals("Timestamp"))
-        ps.setTimestamp(ind, (java.sql.Timestamp)field.get(value));
-      else if(fieldType.equals("java.sql.Time") || fieldType.equals("Time"))
-        ps.setTime(ind, (java.sql.Time)field.get(value));
-      else if(fieldType.equals("java.sql.Date") || fieldType.equals("Date"))
-        ps.setDate(ind, (java.sql.Date)field.get(value));
-      else if(fieldType.equals("java.lang.Integer") || fieldType.equals("Integer"))
-      {
-        if(field.get(value) != null) ps.setInt(ind, ((java.lang.Integer)field.get(value)).intValue()); 
-        else ps.setNull(ind, Types.NULL);
-      }
-      else if(fieldType.equals("java.lang.Long") || fieldType.equals("Long"))
-      {
-        if(field.get(value) != null) ps.setLong(ind, ((java.lang.Long)field.get(value)).longValue()); 
-        else ps.setNull(ind, Types.NULL);
-      }
-      else if(fieldType.equals("java.lang.Float") || fieldType.equals("Float"))
-      {
-        if(field.get(value) != null) ps.setFloat(ind, ((java.lang.Float)field.get(value)).floatValue()); 
-        else ps.setNull(ind, Types.NULL);
-      }
-      else if(fieldType.equals("java.lang.Double") || fieldType.equals("Double"))
-      {
-        if(field.get(value) != null) ps.setDouble(ind, ((java.lang.Double)field.get(value)).doubleValue()); 
-        else ps.setNull(ind, Types.NULL);
-      }
+      if(field != null) ps.setInt(ind, ((java.lang.Integer)field).intValue()); 
       else ps.setNull(ind, Types.NULL);
     }
-    catch(IllegalAccessException e) {
-      Debug.logError("GenericDAO.setValue: illegal access exception while getting field " + valueClass.getName() + "." + curField.name + "; setting indexed parameter to null.");
-      ps.setNull(ind, Types.NULL); 
-      return;
+    else if(fieldType.equals("java.lang.Long") || fieldType.equals("Long"))
+    {
+      if(field != null) ps.setLong(ind, ((java.lang.Long)field).longValue()); 
+      else ps.setNull(ind, Types.NULL);
     }
+    else if(fieldType.equals("java.lang.Float") || fieldType.equals("Float"))
+    {
+      if(field != null) ps.setFloat(ind, ((java.lang.Float)field).floatValue()); 
+      else ps.setNull(ind, Types.NULL);
+    }
+    else if(fieldType.equals("java.lang.Double") || fieldType.equals("Double"))
+    {
+      if(field != null) ps.setDouble(ind, ((java.lang.Double)field).doubleValue()); 
+      else ps.setNull(ind, Types.NULL);
+    }
+    else ps.setNull(ind, Types.NULL);
   }
 }
