@@ -30,9 +30,10 @@
 	<!-- shipment status -->
 	<StatusType description="Shipment" hasTable="N" parentTypeId="" statusTypeId="SHIPMENT_STATUS"/>
 	<StatusItem description="Scheduled" sequenceId="01" statusCode="SCHEDULED" statusId="SHIPMENT_SCHEDULED" statusTypeId="SHIPMENT_STATUS"/>
-	<StatusItem description="Shipped" sequenceId="02" statusCode="SHIPPED" statusId="SHIPMENT_SHIPPED" statusTypeId="SHIPMENT_STATUS"/>
-	<StatusItem description="En-Route" sequenceId="03" statusCode="ENROUTE" statusId="SHIPMENT_ENROUTE" statusTypeId="SHIPMENT_STATUS"/>
-	<StatusItem description="Delivered" sequenceId="04" statusCode="DELIVERED" statusId="SHIPMENT_DELIVERED" statusTypeId="SHIPMENT_STATUS"/>
+	<StatusItem description="Packed" sequenceId="02" statusCode="PACKED" statusId="SHIPMENT_PACKED" statusTypeId="SHIPMENT_STATUS"/>
+	<StatusItem description="Shipped" sequenceId="03" statusCode="SHIPPED" statusId="SHIPMENT_SHIPPED" statusTypeId="SHIPMENT_STATUS"/>
+	<StatusItem description="En-Route" sequenceId="04" statusCode="ENROUTE" statusId="SHIPMENT_ENROUTE" statusTypeId="SHIPMENT_STATUS"/>
+	<StatusItem description="Delivered" sequenceId="05" statusCode="DELIVERED" statusId="SHIPMENT_DELIVERED" statusTypeId="SHIPMENT_STATUS"/>
 	<StatusItem description="Cancelled" sequenceId="99" statusCode="CANCELLED" statusId="SHIPMENT_CANCELLED" statusTypeId="SHIPMENT_STATUS"/>
 	
 	<RejectionReason rejectionId="SRJ_DAMAGED" description="Damaged"/>
