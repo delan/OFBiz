@@ -59,35 +59,35 @@
             <#assign quantity = inventoryItemInfo.quantity>
             <#assign statusItem = inventoryItemInfo.statusItem?if_exists>
             <tr class="${rowClass}">
-              <td>
+              <td valign="top">
                 <#if facilityLocation?has_content>
                   <div class="tabletext">${facilityLocation.facilityId}:${facilityLocation.areaId?if_exists}-${facilityLocation.aisleId?if_exists}-${facilityLocation.sectionId?if_exists}-${facilityLocation.levelId?if_exists}-${facilityLocation.positionId?if_exists}</div>
                 <#else>
                   <div class="tabletext">&nbsp;</div>
                 </#if>
               </td>
-              <td>
+              <td valign="top">
                 <div class="tabletext">${inventoryItem.inventoryItemId}:${inventoryItem.binNumber?if_exists}</div>
               </td>
-              <td>
+              <td valign="top">
                 <#if product?has_content>
                   <div class="tabletext">${product.productName} [${product.productId}]</div>
                 <#else>
                   <div class="tabletext">&nbsp;</div>
                 </#if>
               </td>
-              <td>
+              <td valign="top">
                   <div class="tabletext">${quantity}</div>
               </td>
               <#if inventoryItem.inventoryItemTypeId == "NON_SERIAL_INV_ITEM">
-                <td>
+                <td valign="top">
                   <div class="tabletext">${inventoryItem.quantityOnHand?if_exists}</div>
                 </td>
-                <td>
+                <td valign="top">
                   <div class="tabletext">${inventoryItem.availableToPromise?if_exists}</div>
                 </td>
               <#else>
-                <td colspan="2">
+                <td colspan="2" valign="top">
                   <#if statusItem?exists>
                     <div class="tabletext">${statusItem.description}</div>
                   <#else>
@@ -95,7 +95,7 @@
                   </#if>
                 </td>
               </#if>
-              <td>
+              <td valign="top">
               	<#list orderItems as orderItem>
                   <div class="tabletext">${orderItem.orderId}:${orderItem.orderItemSeqId}-${orderItem.quantity}</div>
                 </#list>
@@ -153,20 +153,20 @@
               <#assign product = orderItemInfo.product>
               <#assign orderItemInventoryResList = orderItemInfo.orderItemInventoryResList>
               <tr class="${rowClass}">
-                <td>
+                <td valign="top">
                   <div class="tabletext">${orderItem.orderId}:${orderItem.orderItemSeqId}</div>
                 </td>
-                <td>
+                <td valign="top">
                   <#if product?has_content>
                     <div class="tabletext">${product.productName} [${product.productId}]</div>
                   <#else>
                     <div class="tabletext">&nbsp;</div>
                   </#if>
                 </td>
-                <td>
+                <td valign="top">
                   <div class="tabletext">${orderItem.quantity}</div>
                 </td>
-                <td>
+                <td valign="top">
                   <#list orderItemInventoryResList as orderItemInventoryRes>
                     <div class="tabletext">${orderItemInventoryRes.inventoryItemId}-${orderItemInventoryRes.quantity}</div>
                   </#list>
