@@ -2,7 +2,7 @@
 <!DOCTYPE services PUBLIC "-//OFBiz//DTD Services Config//EN" "http://www.ofbiz.org/dtds/services.dtd">
 
 <services>
-    <description>Common Application Shared Services</description>
+    <description>Common Application Components Workflow Services</description>
     <vendor>OFBiz</vendor>
     <version>1.0</version>
 
