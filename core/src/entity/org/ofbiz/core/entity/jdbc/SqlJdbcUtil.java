@@ -123,13 +123,13 @@ public class SqlJdbcUtil {
                         }
                         condBuffer.append(viewLink.getEntityAlias());
                         condBuffer.append(".");
-                        condBuffer.append(linkField.getColName());
+                        condBuffer.append(filterColName(linkField.getColName()));
 
                         condBuffer.append(" = ");
 
                         condBuffer.append(viewLink.getRelEntityAlias());
                         condBuffer.append(".");
-                        condBuffer.append(relLinkField.getColName());
+                        condBuffer.append(filterColName(relLinkField.getColName()));
                     }
                     if (condBuffer.length() == 0) {
                         throw new GenericModelException("No view-link/join key-maps found for the " + viewLink.getEntityAlias() + " and the " + viewLink.getRelEntityAlias() + " member-entities of the " + modelViewEntity.getEntityName() + " view-entity.");
@@ -288,7 +288,7 @@ public class SqlJdbcUtil {
                         }
                         whereString.append(viewLink.getEntityAlias());
                         whereString.append(".");
-                        whereString.append(linkField.getColName());
+                        whereString.append(filterColName(linkField.getColName()));
 
                         // check to see whether the left or right members are optional, if so:
                         // oracle: use the (+) on the optional side
@@ -303,8 +303,7 @@ public class SqlJdbcUtil {
 
                         whereString.append(viewLink.getRelEntityAlias());
                         whereString.append(".");
-                        whereString.append(relLinkField.getColName());
-                        //whereString.append(filterColName(relLinkField.getColName()));
+                        whereString.append(filterColName(relLinkField.getColName()));
                    }
                 }
             } else {

@@ -27,6 +27,7 @@ import java.util.*;
 import org.w3c.dom.*;
 
 import org.ofbiz.core.util.*;
+import org.ofbiz.core.entity.jdbc.*;
 
 /**
  * This class extends ModelEntity and provides additional information appropriate to view entities
@@ -262,27 +263,27 @@ public class ModelViewEntity extends ModelEntity {
 
             if (UtilValidate.isNotEmpty(alias.function)) {
                 if ("min".equals(alias.function)) {
-                    field.colName = "MIN(" + alias.entityAlias + "." + aliasedField.colName + ")";
+                    field.colName = "MIN(" + alias.entityAlias + "." + SqlJdbcUtil.filterColName(aliasedField.colName) + ")";
                 } else if ("max".equals(alias.function)) {
-                    field.colName = "MAX(" + alias.entityAlias + "." + aliasedField.colName + ")";
+                    field.colName = "MAX(" + alias.entityAlias + "." + SqlJdbcUtil.filterColName(aliasedField.colName) + ")";
                 } else if ("sum".equals(alias.function)) {
-                    field.colName = "SUM(" + alias.entityAlias + "." + aliasedField.colName + ")";
+                    field.colName = "SUM(" + alias.entityAlias + "." + SqlJdbcUtil.filterColName(aliasedField.colName) + ")";
                 } else if ("avg".equals(alias.function)) {
-                    field.colName = "AVG(" + alias.entityAlias + "." + aliasedField.colName + ")";
+                    field.colName = "AVG(" + alias.entityAlias + "." + SqlJdbcUtil.filterColName(aliasedField.colName) + ")";
                 } else if ("count".equals(alias.function)) {
-                    field.colName = "COUNT(" + alias.entityAlias + "." + aliasedField.colName + ")";
+                    field.colName = "COUNT(" + alias.entityAlias + "." + SqlJdbcUtil.filterColName(aliasedField.colName) + ")";
                 } else if ("count-distinct".equals(alias.function)) {
-                    field.colName = "COUNT(DISTINCT " + alias.entityAlias + "." + aliasedField.colName + ")";
+                    field.colName = "COUNT(DISTINCT " + alias.entityAlias + "." + SqlJdbcUtil.filterColName(aliasedField.colName) + ")";
                 } else if ("upper".equals(alias.function)) {
-                    field.colName = "UPPER(" + alias.entityAlias + "." + aliasedField.colName + ")";
+                    field.colName = "UPPER(" + alias.entityAlias + "." + SqlJdbcUtil.filterColName(aliasedField.colName) + ")";
                 } else if ("lower".equals(alias.function)) {
-                    field.colName = "LOWER(" + alias.entityAlias + "." + aliasedField.colName + ")";
+                    field.colName = "LOWER(" + alias.entityAlias + "." + SqlJdbcUtil.filterColName(aliasedField.colName) + ")";
                 } else {
                     Debug.logWarning("Specified alias function [" + alias.function + "] not valid; must be: min, max, sum, avg, count or count-distinct; using a column name with no function function");
-                    field.colName = alias.entityAlias + "." + aliasedField.colName;
+                    field.colName = alias.entityAlias + "." + SqlJdbcUtil.filterColName(aliasedField.colName);
                 }
             } else {
-                field.colName = alias.entityAlias + "." + aliasedField.colName;
+                field.colName = alias.entityAlias + "." + SqlJdbcUtil.filterColName(aliasedField.colName);
             }
 
             field.validators = aliasedField.validators;
