@@ -1,5 +1,5 @@
 /*
- * $Id: Region.java,v 1.4 2004/05/23 08:13:33 jonesde Exp $
+ * $Id: Region.java,v 1.5 2004/05/23 08:25:11 jonesde Exp $
  *
  * Copyright (c) 2001-2003 Sun Microsystems Inc., published in "Advanced Java Server Pages" by Prentice Hall PTR
  * Copyright (c) 2001-2002 The Open For Business Project - www.ofbiz.org
@@ -39,13 +39,15 @@ import javax.servlet.jsp.PageContext;
 import org.ofbiz.base.util.Debug;
 import org.ofbiz.base.util.UtilJ2eeCompat;
 
+import com.sun.rsasign.r;
+
 /**
  * A region is content that contains a set of sections that can render in a PageContext
  * <br>Implements abstract render(PageContext) from Content
  *
  * @author     David M. Geary in the book "Advanced Java Server Pages"
  * @author     <a href="mailto:jonesde@ofbiz.org">David E. Jones</a>
- * @version    $Revision: 1.4 $
+ * @version    $Revision: 1.5 $
  * @since      2.0
  */
 public class Region extends Content {
@@ -115,6 +117,7 @@ public class Region extends Content {
 
         ServletContext application = (ServletContext) request.getAttribute("servletContext");
         RequestDispatcher rd = application.getRequestDispatcher(content);
+        Debug.logInfo("real path for [" + content + "] is: " + application.getRealPath(content), module);
         //RequestDispatcher rd = request.getRequestDispatcher(content);
         if (rd == null) {
             throw new IllegalArgumentException("HttpServletRequest returned a null RequestDispatcher for: [" + content + "]");
