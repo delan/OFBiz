@@ -25,3 +25,20 @@ if (prodCatalog != null) {
     var catalogHeaderLogo = prodCatalog.get("headerLogo");
     if (catalogHeaderLogo != null) request.setAttribute("catalogHeaderLogo", catalogHeaderLogo);
 }
+
+var eventMsgReq = request.getAttribute(SiteDefs.EVENT_MESSAGE);
+var errorMsgReq = request.getAttribute(SiteDefs.ERROR_MESSAGE);
+var errorMsgSes = session.getAttribute(SiteDefs.ERROR_MESSAGE);
+
+if (eventMsgReq != null) {
+    request.setAttribute("eventMsgReq", UtilFormatOut.replaceString(eventMsgReq, "\n", "<br>"));
+    request.removeAttribute(SiteDefs.EVENT_MESSAGE);
+}
+if (errorMsgReq != null) {
+    request.setAttribute("errorMsgReq", UtilFormatOut.replaceString(errorMsgReq, "\n", "<br>"));
+    request.removeAttribute(SiteDefs.ERROR_MESSAGE);
+}
+if (errorMsgSes != null) {
+    request.setAttribute("errorMsgSes", UtilFormatOut.replaceString(errorMsgSes, "\n", "<br>"));
+    session.removeAttribute(SiteDefs.ERROR_MESSAGE);
+}
