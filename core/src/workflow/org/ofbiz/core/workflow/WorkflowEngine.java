@@ -79,127 +79,201 @@ public class WorkflowEngine implements GenericEngine {
     public void runAsync(String localName, ModelService modelService, Map context, GenericRequester requester, boolean persist) throws GenericServiceException {       
         // Suspend the current transaction
         TransactionManager tm = TransactionFactory.getTransactionManager();
-        if (tm == null)
+        if (tm == null) {
             throw new GenericServiceException("Cannot get the transaction manager; cannot run persisted services.");
+        }
 
         Transaction parentTrans = null;
+        boolean beganTransaction = false;
         try {
-            parentTrans = tm.suspend();
-            Debug.logVerbose("Suspended transaction.", module);
-        } catch (SystemException se) {
-            Debug.logError(se, "Cannot suspend transaction: " + se.getMessage());
-        }
-        // Build the requester
-        WfRequester req = null;
-        try {
-            req = WfFactory.getWfRequester();
-        } catch (WfException e) {
-            throw new GenericServiceException(e.getMessage(), e);
-        }
-
-        // Get the package and process ID::VERSION
-        String packageId = this.getSplitPosition(modelService.location, 0);
-        String packageVersion = this.getSplitPosition(modelService.location, 1);
-        String processId = this.getSplitPosition(modelService.invoke, 0);
-        String processVersion = this.getSplitPosition(modelService.invoke, 1);
-
-        // Build the process manager
-        WfProcessMgr mgr = null;
-        try {
-            mgr = WfFactory.getWfProcessMgr(dispatcher.getDelegator(), packageId, packageVersion, processId, processVersion);
-        } catch (WfException e) {
-            throw new GenericServiceException(e.getMessage(), e);
-        }
-
-        // Create the process
-        WfProcess process = null;
-        try {
-            process = mgr.createProcess(req);
-        } catch (NotEnabled ne) {
-            throw new GenericServiceException(ne.getMessage(), ne);
-        } catch (InvalidRequester ir) {
-            throw new GenericServiceException(ir.getMessage(), ir);
-        } catch (RequesterRequired rr) {
-            throw new GenericServiceException(rr.getMessage(), rr);
-        } catch (WfException wfe) {
-            throw new GenericServiceException(wfe.getMessage(), wfe);
-        }
-
-        // Set the service dispatcher for the workflow
-        try {
-            process.setServiceLoader(localName);
-        } catch (WfException e) {
-            throw new GenericServiceException(e.getMessage(), e);
-        }
-
-        // Assign the owner of the process
-        GenericValue userLogin = null;
-        if (context.containsKey("userLogin")) {
-            userLogin = (GenericValue) context.remove("userLogin");
             try {
-                Map fields = UtilMisc.toMap("partyId", userLogin.getString("partyId"),
-                        "roleTypeId", "WF_OWNER", "workEffortId", process.runtimeKey(),
-                        "fromDate", UtilDateTime.nowTimestamp());
-
+                parentTrans = tm.suspend();
+                Debug.logVerbose("Suspended transaction.", module);
+                beganTransaction = TransactionUtil.begin();
+            } catch (SystemException se) {
+                Debug.logError(se, "Cannot suspend transaction: " + se.getMessage());
+            } catch (GenericTransactionException e) {
+                Debug.logError(e, "Cannot begin nested transaction: " + e.getMessage());
+            }
+            
+            // Build the requester
+            WfRequester req = null;
+            try {
+                req = WfFactory.getWfRequester();
+            } catch (WfException e) {
                 try {
-                    GenericValue wepa = dispatcher.getDelegator().makeValue("WorkEffortPartyAssignment", fields);
-                    dispatcher.getDelegator().create(wepa);
-                } catch (GenericEntityException e) {
-                    throw new GenericServiceException("Cannot set ownership of workflow", e);
+                    TransactionUtil.rollback(beganTransaction);
+                } catch (GenericTransactionException gte) {
+                    Debug.logError(gte, "Unable to rollback nested exception.");
                 }
-            } catch (WfException we) {
-                throw new GenericServiceException("Cannot get the workflow process runtime key");
+                throw new GenericServiceException(e.getMessage(), e);
             }
-        }
-        
-        // Grab the locale from the context
-        Locale locale = (Locale) context.remove("locale");
-        
-        // Grab the starting activityId from the context
-        String startActivityId = (String) context.remove("startWithActivityId");
 
-        // Register the process and set the workflow owner
-        try {
-            req.registerProcess(process, context, requester);
-            if (userLogin != null) {
-                Map pContext = process.processContext();
-                pContext.put("workflowOwnerId", userLogin.getString("userLoginId"));
-                process.setProcessContext(pContext);
-            }
-        } catch (WfException wfe) {
-            throw new GenericServiceException(wfe.getMessage(), wfe);
-        }
-        
-        // Set the initial locale - (in context)
-        if (locale != null) {
+            // Get the package and process ID::VERSION
+            String packageId = this.getSplitPosition(modelService.location, 0);
+            String packageVersion = this.getSplitPosition(modelService.location, 1);
+            String processId = this.getSplitPosition(modelService.invoke, 0);
+            String processVersion = this.getSplitPosition(modelService.invoke, 1);
+
+            // Build the process manager
+            WfProcessMgr mgr = null;
             try {
-                Map pContext = process.processContext();
-                pContext.put("initialLocale", locale);
-                process.setProcessContext(pContext);
+                mgr = WfFactory.getWfProcessMgr(dispatcher.getDelegator(), packageId, packageVersion, processId, processVersion);
+            } catch (WfException e) {
+                try {
+                    TransactionUtil.rollback(beganTransaction);
+                } catch (GenericTransactionException gte) {
+                    Debug.logError(gte, "Unable to rollback nested exception.");
+                }
+                throw new GenericServiceException(e.getMessage(), e);
+            }
+
+            // Create the process
+            WfProcess process = null;
+            try {
+                process = mgr.createProcess(req);
+            } catch (NotEnabled ne) {
+                try {
+                    TransactionUtil.rollback(beganTransaction);
+                } catch (GenericTransactionException gte) {
+                    Debug.logError(gte, "Unable to rollback nested exception.");
+                }
+                throw new GenericServiceException(ne.getMessage(), ne);
+            } catch (InvalidRequester ir) {
+                try {
+                    TransactionUtil.rollback(beganTransaction);
+                } catch (GenericTransactionException gte) {
+                    Debug.logError(gte, "Unable to rollback nested exception.");
+                }
+                throw new GenericServiceException(ir.getMessage(), ir);
+            } catch (RequesterRequired rr) {
+                try {
+                    TransactionUtil.rollback(beganTransaction);
+                } catch (GenericTransactionException gte) {
+                    Debug.logError(gte, "Unable to rollback nested exception.");
+                }
+                throw new GenericServiceException(rr.getMessage(), rr);
             } catch (WfException wfe) {
+                try {
+                    TransactionUtil.rollback(beganTransaction);
+                } catch (GenericTransactionException gte) {
+                    Debug.logError(gte, "Unable to rollback nested exception.");
+                }
                 throw new GenericServiceException(wfe.getMessage(), wfe);
             }
-        }
-        
-        // Use the WorkflowRunner to start the workflow in a new thread                        
-        try {
-            Job job = new WorkflowRunner(process, requester, startActivityId);
-            if (Debug.verboseOn()) 
-                Debug.logVerbose("Created WorkflowRunner: " + job, module);
-            dispatcher.getJobManager().runJob(job);
-        } catch (JobManagerException je) {
-            throw new GenericServiceException(je.getMessage(), je);
-        }
 
-        // Resume the parent transaction
-        if (parentTrans != null) {
+            // Set the service dispatcher for the workflow
             try {
-                tm.resume(parentTrans);
-                Debug.logVerbose("Resumed the parent transaction.", module);
-            } catch (InvalidTransactionException ite) {
-                throw new GenericServiceException("Cannot resume transaction", ite);
-            } catch (SystemException se) {
-                throw new GenericServiceException("Unexpected transaction error", se);
+                process.setServiceLoader(localName);
+            } catch (WfException e) {
+                try {
+                    TransactionUtil.rollback(beganTransaction);
+                } catch (GenericTransactionException gte) {
+                    Debug.logError(gte, "Unable to rollback nested exception.");
+                }
+                throw new GenericServiceException(e.getMessage(), e);
+            }
+
+            // Assign the owner of the process
+            GenericValue userLogin = null;
+            if (context.containsKey("userLogin")) {
+                userLogin = (GenericValue) context.remove("userLogin");
+                try {
+                    Map fields = UtilMisc.toMap("partyId", userLogin.getString("partyId"),
+                            "roleTypeId", "WF_OWNER", "workEffortId", process.runtimeKey(),
+                            "fromDate", UtilDateTime.nowTimestamp());
+
+                    try {
+                        GenericValue wepa = dispatcher.getDelegator().makeValue("WorkEffortPartyAssignment", fields);
+                        dispatcher.getDelegator().create(wepa);
+                    } catch (GenericEntityException e) {
+                        try {
+                            TransactionUtil.rollback(beganTransaction);
+                        } catch (GenericTransactionException gte) {
+                            Debug.logError(gte, "Unable to rollback nested exception.");
+                        }
+                        throw new GenericServiceException("Cannot set ownership of workflow", e);
+                    }
+                } catch (WfException we) {
+                    try {
+                        TransactionUtil.rollback(beganTransaction);
+                    } catch (GenericTransactionException gte) {
+                        Debug.logError(gte, "Unable to rollback nested exception.");
+                    }
+                    throw new GenericServiceException("Cannot get the workflow process runtime key");
+                }
+            }
+        
+            // Grab the locale from the context
+            Locale locale = (Locale) context.remove("locale");
+        
+            // Grab the starting activityId from the context
+            String startActivityId = (String) context.remove("startWithActivityId");
+
+            // Register the process and set the workflow owner
+            try {
+                req.registerProcess(process, context, requester);
+                if (userLogin != null) {
+                    Map pContext = process.processContext();
+                    pContext.put("workflowOwnerId", userLogin.getString("userLoginId"));
+                    process.setProcessContext(pContext);
+                }
+            } catch (WfException wfe) {
+                try {
+                    TransactionUtil.rollback(beganTransaction);
+                } catch (GenericTransactionException gte) {
+                    Debug.logError(gte, "Unable to rollback nested exception.");
+                }
+                throw new GenericServiceException(wfe.getMessage(), wfe);
+            }
+        
+            // Set the initial locale - (in context)
+            if (locale != null) {
+                try {
+                    Map pContext = process.processContext();
+                    pContext.put("initialLocale", locale);
+                    process.setProcessContext(pContext);
+                } catch (WfException wfe) {
+                    try {
+                        TransactionUtil.rollback(beganTransaction);
+                    } catch (GenericTransactionException gte) {
+                        Debug.logError(gte, "Unable to rollback nested exception.");
+                    }
+                    throw new GenericServiceException(wfe.getMessage(), wfe);
+                }
+            }
+        
+            // Use the WorkflowRunner to start the workflow in a new thread                        
+            try {
+                Job job = new WorkflowRunner(process, requester, startActivityId);
+                if (Debug.verboseOn()) 
+                    Debug.logVerbose("Created WorkflowRunner: " + job, module);
+                dispatcher.getJobManager().runJob(job);
+            } catch (JobManagerException je) {
+                try {
+                    TransactionUtil.rollback(beganTransaction);
+                } catch (GenericTransactionException gte) {
+                    Debug.logError(gte, "Unable to rollback nested exception.");
+                }
+                throw new GenericServiceException(je.getMessage(), je);
+            }
+            
+            try {
+                TransactionUtil.commit(beganTransaction);
+            } catch (GenericTransactionException e) {
+                Debug.logError(e, "Cannot begin nested transaction: " + e.getMessage());
+            }
+        } finally {
+            // Resume the parent transaction
+            if (parentTrans != null) {
+                try {
+                    tm.resume(parentTrans);
+                    Debug.logVerbose("Resumed the parent transaction.", module);
+                } catch (InvalidTransactionException ite) {
+                    throw new GenericServiceException("Cannot resume transaction", ite);
+                } catch (SystemException se) {
+                    throw new GenericServiceException("Unexpected transaction error", se);
+                }
             }
         }
     }
