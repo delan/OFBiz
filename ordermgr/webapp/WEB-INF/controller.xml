@@ -95,6 +95,18 @@
         <response name="error" type="view" value="createnewnote"/>
     </request-map>
 
+    <request-map uri="shipsetup">
+        <security https="true" auth="true"/>
+        <response name="success" type="view" value="shipsetup"/>
+    </request-map>
+
+    <request-map uri="createshipestimate">
+        <security https="true" auth="true"/>
+        <event type="service" invoke="createShipmentEstimate"/>
+        <response name="success" type="view" value="shipsetup"/>
+        <response name="error" type="view" value="shipsetup"/>
+    </request-map>
+
     <request-map uri="changeDelegator">
         <event type="java" path="org.ofbiz.core.event.CoreEvents" invoke="changeDelegator"/>
         <response name="success" type="view" value="main"/>
@@ -110,5 +122,7 @@
     <view-map name="orderview" type="region"/>
     <view-map name="orderlist" type="region"/>
     <view-map name="createnewnote" type="region"/>
+
+    <view-map name="shipsetup" type="region"/>
     <!-- end of view mappings -->
 </site-conf>

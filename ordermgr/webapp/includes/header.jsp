@@ -41,6 +41,7 @@
             <TD width="90%" align=center class='headerCenter'>Welcome<%EntityField.run("person", "firstName", "&nbsp;", "", pageContext);%><%EntityField.run("person", "lastName", "&nbsp;", "", pageContext);%>!</TD>
           </ofbiz:if>
           <td class="headerButtonRight"><a href="<ofbiz:url>/orderlist</ofbiz:url>" class="buttontext">Order&nbsp;List</a></td>
+          <td class="headerButtonRight"><a href="<ofbiz:url>/shipsetup</ofbiz:url>" class="buttontext">Ship&nbsp;Rates</a></td>
         </TR>
       </TABLE>
     </TD>
