@@ -1,6 +1,9 @@
 /*
  * $Id$
  * $Log$
+ * Revision 1.11  2001/09/05 18:49:12  azeneski
+ * Updates (not finished)
+ *
  * Revision 1.10  2001/09/05 16:52:44  jonesde
  * Changed get related products to use ProductCategoryMember instead of Product.primaryProductCategoryId
  *
@@ -108,15 +111,15 @@ public class CatalogHelper {
                 setTrail(pageContext,parentId);
         
         GenericHelper helper = (GenericHelper)pageContext.getServletContext().getAttribute("helper");
-        Collection rollups = helper.findByAnd("ProductCategoryRollup",UtilMisc.toMap("parentProductCategoryId",parentId),null);
+        Collection rollups = helper.findByAndCache("ProductCategoryRollup",UtilMisc.toMap("parentProductCategoryId",parentId),null);
         Debug.log("Got rollups...");
         if ( rollups != null && rollups.size() > 0 ) {
-            Debug.log("Rollup size: " + rollups.size());            
+            Debug.log("Rollup size: " + rollups.size());
             Iterator ri = rollups.iterator();
             while ( ri.hasNext() ) {
                 GenericValue parent = (GenericValue) ri.next();
-                Debug.log("Adding children of: " + parent.getString("parentProductCategoryId"));
-                Collection cc = helper.getRelated("CurrentProductCategory",parent);
+                Debug.log("Adding child of: " + parent.getString("parentProductCategoryId"));
+                Collection cc = parent.getRelatedCache("CurrentProductCategory");
                 if ( cc != null && cc.size() > 0 )
                     categories.addAll(cc);
             }
