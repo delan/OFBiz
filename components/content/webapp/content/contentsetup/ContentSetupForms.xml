@@ -262,7 +262,7 @@
         </actions>
         <auto-fields-service service-name="updateContentPurposeOperation" default-field-type="display"/>
         <field name="deleteLink" title="&amp;nbsp;" widget-style="buttontext">
-            <hyperlink also-hidden="false" description="[Delete]" target="removeContentPurposeOperation?contentPurposeTypeId=${contentPurposeTypeId}&amp;contentOperationId=${contentOperationId}&amp;roleTypeId=${roleTypeId}&amp;statusId=${statusId}"/>
+            <hyperlink also-hidden="false" description="[Delete]" target="removeContentPurposeOperation?contentPurposeTypeId=${contentPurposeTypeId}&amp;contentOperationId=${contentOperationId}&amp;roleTypeId=${roleTypeId}&amp;statusId=${statusId}&amp;privilegeEnumId=${privilegeEnumId}"/>
         </field>
     </form>
 </forms>

@@ -28,7 +28,7 @@
 	<screen name="common">
 		<section>
 		<actions>
-		    <set field="currentMenuItemName" from-field="currentMenuItemName" from-scope="user"/>
+		    <set field="currentContentMenuItemName" from-field="currentContentMenuItemName" from-scope="user"/>
 		</actions>
                   <widgets>
                        <decorator-screen name="main" location="component://content/widget/CommonScreens.xml" >
@@ -45,7 +45,7 @@
 		<section>
 		<actions>
 		    <set field="headerItem" value="Content"/>
-		    <set field="currentMenuItemName" from-field="currentMenuItemName" from-scope="user" default-value="FindContent"/>
+		    <set field="currentContentMenuItemName" from-field="currentContentMenuItemName" from-scope="user" default-value="FindContent"/>
 		    <set field="subScreens.FindContent" value="FindContent" />
 		    <set field="subScreens.EditContent" value="EditContent" />
 		    <set field="subScreens.AddContent" value="AddContent" />
@@ -56,7 +56,7 @@
 		    <set field="subScreens.EditContentMetaData" value="metadata" />
 		</actions>
                   <widgets>
-                           <include-screen name="${subScreens.${currentMenuItemName}}" />
+                           <include-screen name="${subScreens.${currentContentMenuItemName}}" />
                   </widgets>
 		</section>
 	</screen>
@@ -70,8 +70,8 @@
           </or>
 		</condition>
 	    <actions>
-            <set field="currentMenuItemName" value="FindContent" to-scope="user" />
-            <set field="currentMenuItemName" value="FindContent" to-scope="screen" />
+            <set field="currentContentMenuItemName" value="FindContent" to-scope="user" />
+            <set field="currentContentMenuItemName" value="FindContent" to-scope="screen" />
                     <set field="title" value="Content Find Page"/>
                     <set field="entityName" value="Content"/>
                     <set field="queryString" from-field="result.queryString"/>
@@ -101,7 +101,7 @@
 		    <script location="component://content/widget/getMenuContext.bsh"/>
                     <set field="title" value="Content Edit Page"/>
                     <set field="titleProperty" value="PageTitleEditContent"/>
-            <set field="currentMenuItemName" value="EditContent" to-scope="user" />
+            <set field="currentContentMenuItemName" value="EditContent" to-scope="user" />
             <set field="defaultContentId" from-field="contentId" from-scope="user" />
             <set field="contentId" from-field="parameters.contentId" to-scope="screen" default-value="${defaultContentId}"/>
             <set field="contentId" from-field="contentId" to-scope="user" />
@@ -128,7 +128,7 @@
 		    <script location="component://content/widget/getMenuContext.bsh"/>
                     <set field="title" value="CMS Content Edit Page"/>
                     <set field="titleProperty" value="PageTitleEditContent"/>
-          <set field="currentMenuItemName" value="AddContent" to-scope="user" />
+          <set field="currentContentMenuItemName" value="AddContent" to-scope="user" />
 		</actions>
                   <widgets>
                        <decorator-screen name="common" >
@@ -149,7 +149,7 @@
 		    <script location="component://content/widget/getMenuContext.bsh"/>
                     <set field="title" value="Content Edit Page"/>
                     <set field="titleProperty" value="PageTitleEditContent"/>
-            <set field="currentMenuItemName" value="contentassoc" to-scope="user" />
+            <set field="currentContentMenuItemName" value="contentassoc" to-scope="user" />
             
             <set field="defaultContentId" from-field="contentId" from-scope="user" />
             <set field="contentId" from-field="parameters.contentId" to-scope="screen" default-value="${defaultContentId}"/>
@@ -214,7 +214,7 @@
 		    <script location="component://content/widget/getMenuContext.bsh"/>
                     <set field="title" value="Content Edit Page"/>
                     <set field="titleProperty" value="PageTitleEditContent"/>
-            <set field="currentMenuItemName" value="role" to-scope="user" />
+            <set field="currentContentMenuItemName" value="role" to-scope="user" />
             
             <set field="defaultContentId" from-field="contentId" from-scope="user" />
             <set field="contentId" from-field="parameters.contentId" to-scope="screen" default-value="${defaultContentId}"/>
@@ -241,7 +241,7 @@
 		    <script location="component://content/widget/getMenuContext.bsh"/>
                     <set field="title" value="Content Edit Page"/>
                     <set field="titleProperty" value="PageTitleEditContent"/>
-            <set field="currentMenuItemName" value="purpose" to-scope="user" />
+            <set field="currentContentMenuItemName" value="purpose" to-scope="user" />
             
             <set field="defaultContentId" from-field="contentId" from-scope="user" />
             <set field="contentId" from-field="parameters.contentId" to-scope="screen" default-value="${defaultContentId}"/>
@@ -268,7 +268,7 @@
 		    <script location="component://content/widget/getMenuContext.bsh"/>
                     <set field="title" value="Content Edit Page"/>
                     <set field="titleProperty" value="PageTitleEditContent"/>
-            <set field="currentMenuItemName" value="attribute" to-scope="user" />
+            <set field="currentContentMenuItemName" value="attribute" to-scope="user" />
             
             <set field="defaultContentId" from-field="contentId" from-scope="user" />
             <set field="contentId" from-field="parameters.contentId" to-scope="screen" default-value="${defaultContentId}"/>
@@ -296,7 +296,7 @@
 		    <script location="component://content/widget/getMenuContext.bsh"/>
                     <set field="title" value="Content Edit Page"/>
                     <set field="titleProperty" value="PageTitleEditContent"/>
-            <set field="currentMenuItemName" value="metadata" to-scope="user" />
+            <set field="currentContentMenuItemName" value="metadata" to-scope="user" />
             
             <set field="defaultContentId" from-field="contentId" from-scope="user" />
             <set field="contentId" from-field="parameters.contentId" to-scope="screen" default-value="${defaultContentId}"/>
