@@ -61,7 +61,7 @@ import org.ofbiz.party.party.PartyHelper;
  *  Utilities for product search based on various constraints including categories, features and keywords.
  *
  * @author <a href="mailto:jonesde@ofbiz.org">David E. Jones</a>
- * @version    $Rev:$
+ * @version    $Rev$
  * @since      3.0
  */
 public class ProductSearch {
@@ -213,10 +213,10 @@ public class ProductSearch {
             }
             
             long endMillis = System.currentTimeMillis();
-            double totalMillis = ((double)endMillis - (double)startMillis)/1000.0;
+            double totalSeconds = ((double)endMillis - (double)startMillis)/1000.0;
 
             // store info about results in the database, attached to the user's visitId, if specified
-            this.saveSearchResultInfo(new Long(productIds.size()), new Double(totalMillis));
+            this.saveSearchResultInfo(new Long(productIds.size()), new Double(totalSeconds));
 
             return productIds;
         }
