@@ -314,7 +314,8 @@
           <input type="text" name="USERNAME" value="<%=UtilFormatOut.checkNull(request.getParameter("USERNAME"))%>" size="20" maxlength="50">
       * </td>
     </tr>
-    <% if(UtilProperties.propertyValueEqualsIgnoreCase("ecommerce", "create.allow.password", "true")) { %>
+    <% if(UtilProperties.propertyValueEqualsIgnoreCase("ecommerce", "create.allow.password", "true")) { pageContext.setAttribute("createAllowPassword", "true"); }%>
+    <ofbiz:if name="createAllowPassword">
       <tr>
         <td width="26%">
             <div class="tabletext"><font color='<%=fontColor%>'>Password</font></div>
@@ -331,7 +332,16 @@
             <input type="password" name="CONFIRM_PASSWORD" value="" size="20" maxlength="50">
         * </td>
       </tr>
-    <% } else { %>
+      <tr>
+        <td width="26%">
+            <div class="tabletext"><font color='<%=fontColor%>'>Password Hint</font></div>
+        </td>
+        <td width="74%">
+            <input type="text" name="PASSWORD_HINT" value="" size="40" maxlength="100">
+        </td>
+      </tr>
+    </ofbiz:if>
+    <ofbiz:unless name="createAllowPassword">
       <tr>
         <td width="26%">
             <div class="tabletext"><font color='<%=fontColor%>'>Password</font></div>
@@ -340,7 +350,7 @@
            <div class="commentary">You will receive a password by email when your new account is approved.</div>
         </td>
       </tr>
-    <% } %>
+    </ofbiz:unless>
   </table>
           </td>
         </tr>

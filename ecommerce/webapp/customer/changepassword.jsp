@@ -62,6 +62,12 @@
         <input type="password" name="NEW_PASSWORD_CONFIRM" size="20" maxlength="20">
       *</td>
     </tr>
+    <tr>
+      <td width="26%" align=right><div class="tabletext">Password Hint</div></td>
+      <td width="74%">
+        <input type="text" name="PASSWORD_HINT" value="" size="40" maxlength="100">
+      </td>
+    </tr>
   </table>
   </form>
 
