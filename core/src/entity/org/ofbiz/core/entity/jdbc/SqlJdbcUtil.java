@@ -309,16 +309,47 @@ public class SqlJdbcUtil {
                     case 10: entity.dangerousSetNoCheckButFast(curField, rs.getObject(ind)); break;
                 }
             } else {
-                if (rs.getObject(ind) == null) {
-                    entity.dangerousSetNoCheckButFast(curField, null);
-                } else {
-                    switch (typeValue) {
-                        case 5: entity.dangerousSetNoCheckButFast(curField, new Integer(rs.getInt(ind))); break;
-                        case 6: entity.dangerousSetNoCheckButFast(curField, new Long(rs.getLong(ind))); break;
-                        case 7: entity.dangerousSetNoCheckButFast(curField, new Float(rs.getFloat(ind))); break;
-                        case 8: entity.dangerousSetNoCheckButFast(curField, new Double(rs.getDouble(ind))); break;
-                        case 9: entity.dangerousSetNoCheckButFast(curField, new Boolean(rs.getBoolean(ind))); break;
-                    }
+                switch (typeValue) {
+                    case 5:
+                        int intValue = rs.getInt(ind);
+                        if (rs.wasNull()) {
+                            entity.dangerousSetNoCheckButFast(curField, null);
+                        } else {
+                            entity.dangerousSetNoCheckButFast(curField, new Integer(intValue));
+                        }
+                        break;
+                    case 6:
+                        long longValue = rs.getLong(ind);
+                        if (rs.wasNull()) {
+                            entity.dangerousSetNoCheckButFast(curField, null);
+                        } else {
+                            entity.dangerousSetNoCheckButFast(curField, new Long(longValue));
+                        }
+                        break;
+                    case 7:
+                        float floatValue = rs.getFloat(ind);
+                        if (rs.wasNull()) {
+                            entity.dangerousSetNoCheckButFast(curField, null);
+                        } else {
+                            entity.dangerousSetNoCheckButFast(curField, new Float(floatValue));
+                        }
+                        break;
+                    case 8:
+                        double doubleValue = rs.getDouble(ind);
+                        if (rs.wasNull()) {
+                            entity.dangerousSetNoCheckButFast(curField, null);
+                        } else {
+                            entity.dangerousSetNoCheckButFast(curField, new Double(doubleValue));
+                        }
+                        break;
+                    case 9:
+                        boolean booleanValue = rs.getBoolean(ind);
+                        if (rs.wasNull()) {
+                            entity.dangerousSetNoCheckButFast(curField, null);
+                        } else {
+                            entity.dangerousSetNoCheckButFast(curField, new Boolean(booleanValue));
+                        }
+                        break;
                 }
             }
         } catch (SQLException sqle) {
