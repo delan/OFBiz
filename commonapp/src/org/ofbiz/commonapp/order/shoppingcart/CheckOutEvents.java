@@ -912,7 +912,47 @@ public class CheckOutEvents {
             }
         }
         return "success";
-    }       
+    }    
+    
+    public static String checkExternalPayment(HttpServletRequest request, HttpServletResponse response) {
+        // warning there can only be ONE payment preference for this to work
+        // you cannot accept multiple payment type when using an external gateway
+        GenericDelegator delegator = (GenericDelegator) request.getAttribute("delegator");    
+        String orderId = (String) request.getAttribute("order_id");
+        GenericValue orderHeader = null;
+        try {
+            orderHeader = delegator.findByPrimaryKey("OrderHeader", UtilMisc.toMap("orderId", orderId));  
+        } catch (GenericEntityException e) {
+            Debug.logError(e, "Problems getting order header", module);
+            request.setAttribute(SiteDefs.ERROR_MESSAGE, "<li>Problems getting order header. Cannot check external gateways!");
+            return "error";
+        }
+        if (orderHeader != null) {
+            List paymentPrefs = null;
+            try {
+                paymentPrefs = orderHeader.getRelated("OrderPaymentPreference");
+            } catch (GenericEntityException e) {
+                Debug.logError(e, "Problems getting order payments", module);
+                request.setAttribute(SiteDefs.ERROR_MESSAGE, "<li>Problems getting payment preference. Cannot check external gateways!");
+                return "error";
+            }
+            if (paymentPrefs != null) {
+                if (paymentPrefs.size() > 1) {
+                    Debug.logError("Too many payment preferences, you cannot have more then one when using external gateways", module);
+                }
+                GenericValue paymentPreference = EntityUtil.getFirst(paymentPrefs);
+                String paymentMethodTypeId = paymentPreference.getString("paymentMethodTypeId");
+                if (paymentMethodTypeId.startsWith("EXT_")) {
+                    String type = paymentMethodTypeId.substring(4);
+                    return type.toLowerCase();
+                }                
+            } 
+            return "none";               
+        } else {
+            request.setAttribute(SiteDefs.ERROR_MESSAGE, "<li>Error, cannot located order for processing.");
+            return "error";        
+        }        
+    }   
             
     public static String finalizeOrderEntry(HttpServletRequest request, HttpServletResponse response) {        
         ShoppingCart cart = (ShoppingCart) request.getSession().getAttribute(SiteDefs.SHOPPING_CART);
