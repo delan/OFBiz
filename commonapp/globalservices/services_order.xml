@@ -113,5 +113,6 @@
         <attribute name="totalPrice" type="Double" mode="OUT"/>
         <attribute name="affiliateId" type="String" mode="OUT"/>
         <attribute name="distributorId" type="String" mode="OUT"/>
+        <attribute name="statusString" type="String" mode="OUT"/>
     </service>
 </services>
