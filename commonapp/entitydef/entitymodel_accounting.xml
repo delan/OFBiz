@@ -1390,8 +1390,10 @@
     <entity entity-name="BillingAccount"
             package-name="org.ofbiz.commonapp.accounting.payment"
             title="Billing Account Entity">
-      <description>A BillingAccount is like a PaymentMethod but is used to track </description>
+      <description>A BillingAccount Payment Method</description>
       <field name="billingAccountId" type="id-ne"></field>
+      <field name="accountLimit" type="currency"></field>
+      <field name="settlementTermId" type="id"></field>
       <field name="contactMechId" type="id"></field>
       <field name="fromDate" type="date-time"></field>
       <field name="thruDate" type="date-time"></field>
@@ -1415,6 +1417,9 @@
       <relation type="one" fk-name="BILLACCT_PADDR" rel-entity-name="PostalAddress">
         <key-map field-name="contactMechId"/>
       </relation>
+      <relation type="one" fk-name="BILLACCT_STLEN" rel-entity-name="SettlementTerm">
+        <key-map field-name="settlementTermId"/>
+      </relation>      
     </entity>
     <entity entity-name="BillingAccountRole"
             package-name="org.ofbiz.commonapp.accounting.payment"
