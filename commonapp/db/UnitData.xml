@@ -1,0 +1,82 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<entity-engine-xml>
+  <!-- 
+    NOTE: All UomConversion conversionFactors are multipliers to change from uomId to uomIdTo.
+    In other words there is 1 uomId for conversionFactor uomIdTos, for instance 1 minute for 60 seconds.
+  -->
+
+  <!-- =============== TIME_FREQ_MEASURE =============== -->
+  <Uom abbreviation="ms" description="Time in Milli-Seconds" uomId="TF_ms" uomTypeId="TIME_FREQ_MEASURE"/>
+  <Uom abbreviation="s" description="Time in Seconds" uomId="TF_s" uomTypeId="TIME_FREQ_MEASURE"/>
+  <Uom abbreviation="min" description="Time in Minutes" uomId="TF_min" uomTypeId="TIME_FREQ_MEASURE"/>
+  <Uom abbreviation="hr" description="Time in Hours" uomId="TF_hr" uomTypeId="TIME_FREQ_MEASURE"/>
+  <Uom abbreviation="day" description="Time in Days" uomId="TF_day" uomTypeId="TIME_FREQ_MEASURE"/>
+  <Uom abbreviation="wk" description="Time in Weeks" uomId="TF_wk" uomTypeId="TIME_FREQ_MEASURE"/>
+  <Uom abbreviation="mon" description="Time in Months" uomId="TF_mon" uomTypeId="TIME_FREQ_MEASURE"/>
+  <Uom abbreviation="yr" description="Time in Years" uomId="TF_yr" uomTypeId="TIME_FREQ_MEASURE"/>
+  <Uom abbreviation="" description="Time in Decades" uomId="TF_DECADE" uomTypeId="TIME_FREQ_MEASURE"/>
+  <Uom abbreviation="" description="Time in Centuries" uomId="TF_CENTURY" uomTypeId="TIME_FREQ_MEASURE"/>
+  <Uom abbreviation="" description="Time in Millenia" uomId="TF_MILLENIUM" uomTypeId="TIME_FREQ_MEASURE"/>
+
+  <UomConversion uomId="TF_s" uomIdTo="TF_ms" conversionFactor="1000"/>
+  <UomConversion uomId="TF_min" uomIdTo="TF_s" conversionFactor="60"/>
+  <UomConversion uomId="TF_hr" uomIdTo="TF_min" conversionFactor="60"/>
+  <UomConversion uomId="TF_day" uomIdTo="TF_hr" conversionFactor="24"/>
+  <UomConversion uomId="TF_wk" uomIdTo="TF_day" conversionFactor="7"/>
+  <UomConversion uomId="TF_yr" uomIdTo="TF_day" conversionFactor="365"/>
+  <UomConversion uomId="TF_DECADE" uomIdTo="TF_yr" conversionFactor="10"/>
+  <UomConversion uomId="TF_CENTURY" uomIdTo="TF_yr" conversionFactor="100"/>
+  <UomConversion uomId="TF_MILLENIUM" uomIdTo="TF_yr" conversionFactor="1000"/>
+
+  <!-- =============== LENGTH_MEASURE =============== -->
+  <Uom abbreviation="A" description="Angstrom" uomId="LEN_A" uomTypeId="LENGTH_MEASURE"/>
+  <Uom abbreviation="cb" description="Cable" uomId="LEN_cb" uomTypeId="LENGTH_MEASURE"/>
+  <Uom abbreviation="cm" description="Centimeter" uomId="LEN_cm" uomTypeId="LENGTH_MEASURE"/>
+  <Uom abbreviation="chG" description="Chain (Gunter's/surveyor's)" uomId="LEN_chG" uomTypeId="LENGTH_MEASURE"/>
+  <Uom abbreviation="chR" description="Chain (Ramden's/engineer's)" uomId="LEN_chR" uomTypeId="LENGTH_MEASURE"/>
+
+  <!-- =============== AREA_MEASURE =============== -->
+  <Uom abbreviation="A" description="Acre" uomId="AREA_A" uomTypeId="AREA_MEASURE"/>
+  <Uom abbreviation="a" description="Are" uomId="AREA_a" uomTypeId="AREA_MEASURE"/>
+  <Uom abbreviation="ha" description="Hectare" uomId="AREA_ha" uomTypeId="AREA_MEASURE"/>
+  <Uom abbreviation="cm2" description="Square centimeter" uomId="AREA_cm2" uomTypeId="AREA_MEASURE"/>
+  
+  <!-- =============== VOLUME_LIQ_MEASURE =============== -->
+  <Uom abbreviation="bbl" description="Barrel (US)" uomId="VLIQ_bbl" uomTypeId="VOLUME_LIQ_MEASURE"/>
+  <Uom abbreviation="dr" description="Dram (US)" uomId="VLIQ_dr" uomTypeId="VOLUME_LIQ_MEASURE"/>
+  <Uom abbreviation="gi" description="Gill (1/4 UK pint)" uomId="VLIQ_gi" uomTypeId="VOLUME_LIQ_MEASURE"/>
+  <Uom abbreviation="gal" description="Gallon (UK)" uomId="VLIQ_galUK" uomTypeId="VOLUME_LIQ_MEASURE"/>
+  <Uom abbreviation="gal" description="Gallon (US)" uomId="VLIQ_galUS" uomTypeId="VOLUME_LIQ_MEASURE"/>
+  <Uom abbreviation="L" description="Liter" uomId="VLIQ_L" uomTypeId="VOLUME_LIQ_MEASURE"/>
+  
+  <!-- =============== VOLUME_DRY_MEASURE =============== -->
+  <Uom abbreviation="cm3" description="Cubic centimeter" uomId="VDRY_cm3" uomTypeId="VOLUME_DRY_MEASURE"/>
+  <Uom abbreviation="ft3" description="Cubic foot" uomId="VDRY_ft3" uomTypeId="VOLUME_DRY_MEASURE"/>
+  <Uom abbreviation="in3" description="Cubic inch" uomId="VDRY_in3" uomTypeId="VOLUME_DRY_MEASURE"/>
+  <Uom abbreviation="ST" description="Stere (cubic meter)" uomId="VDRY_ST" uomTypeId="VOLUME_DRY_MEASURE"/>
+  <Uom abbreviation="yd3" description="Cubic yard" uomId="VDRY_yd3" uomTypeId="VOLUME_DRY_MEASURE"/>
+  
+  <!-- =============== WEIGHT_MEASURE =============== -->
+  <Uom abbreviation="dr avdp" description="Dram (avdp)" uomId="WT_dr_avdp" uomTypeId="WEIGHT_MEASURE"/>
+  <Uom abbreviation="gr" description="Grain" uomId="WT_gr" uomTypeId="WEIGHT_MEASURE"/>
+  <Uom abbreviation="g" description="Gram" uomId="WT_g" uomTypeId="WEIGHT_MEASURE"/>
+  <Uom abbreviation="kg" description="Kilogram" uomId="WT_kg" uomTypeId="WEIGHT_MEASURE"/>
+  
+  <!-- =============== ENERGY_MEASURE =============== -->
+  <Uom abbreviation="Btu" description="British Thermal Unit" uomId="EN_Btu" uomTypeId="ENERGY_MEASURE"/>
+  <Uom abbreviation="cal15" description="Calorie (@15.5c)" uomId="EN_cal15" uomTypeId="ENERGY_MEASURE"/>
+  <Uom abbreviation="HP" description="Horsepower (mechanical)" uomId="EN_HP" uomTypeId="ENERGY_MEASURE"/>
+  <Uom abbreviation="J" description="Joule (absolute)" uomId="EN_J" uomTypeId="ENERGY_MEASURE"/>
+  <Uom abbreviation="Kw" description="Kilowatt" uomId="EN_Kw" uomTypeId="ENERGY_MEASURE"/>
+  
+  <!-- =============== TEMP_MEASURE =============== -->
+  <Uom abbreviation="K" description="Kelvin" uomId="TEMP_K" uomTypeId="TEMP_MEASURE"/>
+  <Uom abbreviation="C" description="Degrees Celsius" uomId="TEMP_C" uomTypeId="TEMP_MEASURE"/>
+  <Uom abbreviation="F" description="Degrees Fahrenheit" uomId="TEMP_F" uomTypeId="TEMP_MEASURE"/>
+  
+  <!-- =============== OTHER_MEASURE =============== -->
+  <Uom abbreviation="A" description="Amphere - Electric current" uomId="OTH_A" uomTypeId="OTHER_MEASURE"/>
+  <Uom abbreviation="cd" description="Candela - Luminosity (intensity of light)" uomId="OTH_cd" uomTypeId="OTHER_MEASURE"/>
+  <Uom abbreviation="mol" description="Mole - Substance (molecule)" uomId="OTH_mol" uomTypeId="OTHER_MEASURE"/>
+  
+</entity-engine-xml>

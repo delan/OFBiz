@@ -643,8 +643,16 @@
   <TermType description="" hasTable="N" parentTypeId="" termTypeId="EXCLUSIVE_RELATIONSH"/>
   <TermType description="" hasTable="N" parentTypeId="" termTypeId="OTHER_TERM"/>
 
-  <UomType description="" hasTable="N" parentTypeId="" uomTypeId="CURRENCY_MEASURE"/>
-  <UomType description="" hasTable="N" parentTypeId="" uomTypeId="TIME_FREQ_MEASURE"/>
+  <UomType description="Currency" hasTable="N" parentTypeId="" uomTypeId="CURRENCY_MEASURE"/>
+  <UomType description="Time/Frequency" hasTable="N" parentTypeId="" uomTypeId="TIME_FREQ_MEASURE"/>
+  <UomType description="Length" hasTable="N" parentTypeId="" uomTypeId="LENGTH_MEASURE"/>
+  <UomType description="Area" hasTable="N" parentTypeId="" uomTypeId="AREA_MEASURE"/>
+  <UomType description="Liquid Volume" hasTable="N" parentTypeId="" uomTypeId="VOLUME_LIQ_MEASURE"/>
+  <UomType description="Dry Volume" hasTable="N" parentTypeId="" uomTypeId="VOLUME_DRY_MEASURE"/>
+  <UomType description="Weight" hasTable="N" parentTypeId="" uomTypeId="WEIGHT_MEASURE"/>
+  <UomType description="Energy" hasTable="N" parentTypeId="" uomTypeId="ENERGY_MEASURE"/>
+  <UomType description="Temperature" hasTable="N" parentTypeId="" uomTypeId="TEMP_MEASURE"/>
+  <UomType description="Other" hasTable="N" parentTypeId="" uomTypeId="OTHER_MEASURE"/>
 
   <WorkEffortAssocType description="" hasTable="N" parentTypeId="" workEffortAssocTypeId="WORK_EFF_BREAKDOWN"/>
   <WorkEffortAssocType description="" hasTable="N" parentTypeId="" workEffortAssocTypeId="WORK_EFF_DEPENDENCY"/>
