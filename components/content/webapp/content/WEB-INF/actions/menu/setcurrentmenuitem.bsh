@@ -1,5 +1,5 @@
 /*
- * $Id: setcurrentmenuitem.bsh,v 1.1 2004/06/06 07:33:56 byersa Exp $
+ * $Id: setcurrentmenuitem.bsh,v 1.2 2004/06/11 00:27:27 byersa Exp $
  *
  * Copyright (c) 2003 The Open For Business Project - www.ofbiz.org
  *
@@ -26,7 +26,7 @@
 /**
  *
  * @author     <a href="mailto:byersa@automationgroups.com">Al Byers</a>
- * @version    $Revision: 1.1 $
+ * @version    $Revision: 1.2 $
  * @since      3.0
 
  * A commonly called script to find the "current" entity (either Content or DataResource
@@ -65,6 +65,7 @@ Debug.logInfo("in setcurrentmenuitem(0), parameterMap:" + parameterMap,"");
 paramMap = UtilHttp.getParameterMap(request);
 Debug.logInfo("in setcurrentmenuitem(0), paramMap:" + paramMap,"");
 String menuItemName = page.getProperty("menuItemName");
+Debug.logInfo("in setcurrentmenuitem(0), menuItemName:" + menuItemName,"");
 if (UtilValidate.isEmpty(menuItemName)) {
         modelMenu = menuWrapper.getModelMenu();
 //Debug.logInfo("in setcurrentmenuitem(0), modelMenu:" + modelMenu,"");
@@ -86,8 +87,8 @@ ModelMenuItem currentItem = currentModelMenu.getCurrentMenuItem();
 if (currentItem != null) {
     currentItem.setCurrentMenuTargetName(targetName);
 }
-//Debug.logInfo("in setcurrentmenuitem, menuItemName:" + menuItemName,"");
-//Debug.logInfo("in setcurrentmenuitem, targetName:" + targetName,"");
+Debug.logInfo("in setcurrentmenuitem, menuItemName:" + menuItemName,"");
+Debug.logInfo("in setcurrentmenuitem, targetName:" + targetName,"");
 //Debug.logInfo("in setcurrentmenuitem, dump:" + buffer.toString(),"");
 }
 

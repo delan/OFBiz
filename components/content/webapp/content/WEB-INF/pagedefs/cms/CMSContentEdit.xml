@@ -18,6 +18,7 @@
     <property name="requiredRoles">_OWNER_|BLOG_EDITOR|BLOG_ADMIN</property>    
     <property name="menuDefFile">/cms/CMSMenus.xml</property>    
     <property name="menuName">cms</property>
+    <property name="menuItemName">content</property>
     <property name="rootForumId">WebStore_FORUM</property>
 
 
