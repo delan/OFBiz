@@ -28,9 +28,7 @@
 
 <%
 	if (delegate == null) {
-		Debug.logError("delegate is empty; getting fromFromDate");
-		fromDate = request.getParameter("fromFromDate");
-		Debug.logError("From date is now: " + fromDate);
+		fromDate = request.getParameter("fromFromDate");		
 	}
 	if (workEffortId != null && assignPartyId != null && assignRoleTypeId != null && fromDate != null) { 
 		Debug.logInfo("Required parameters are here");   	
