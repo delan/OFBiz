@@ -24,7 +24,7 @@
  *
  * @author     David E. Jones (jonesde@ofbiz.org)
  * @author     Andy Zeneski (jaz@ofbiz.org)
- * @version    $Revision: 1.5 $
+ * @version    $Revision: 1.6 $
  * @since      2.0
  -->
 
@@ -274,6 +274,14 @@
             <if-empty field-name="productCategoryMember.thruDate">
                 <env-to-env env-name="nowTimestamp" to-env-name="productCategoryMember.thruDate"/>
                 <store-value value-name="productCategoryMember"/>
+            </if-empty>
+        </iterate>
+        <!-- expire product from all associations going to it -->
+        <get-related value-name="product" relation-name="AssocProductAssoc" list-name="assocProductAssocs"/>
+        <iterate entry-name="assocProductAssoc" list-name="assocProductAssocs">
+            <if-empty field-name="assocProductAssoc.thruDate">
+                <env-to-env env-name="nowTimestamp" to-env-name="assocProductAssoc.thruDate"/>
+                <store-value value-name="assocProductAssoc"/>
             </if-empty>
         </iterate>
     </simple-method>
