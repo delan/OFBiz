@@ -8,7 +8,7 @@
     <Created>2001-12-01 12:00:00</Created>
     <Description>Test XPDL File</Description>
     <Documentation></Documentation>
-    <PriorityUnit>P</PriorityUnit>
+    <!--<PriorityUnit>P/PriorityUnit>-->
     <CostUnit>USD</CostUnit>
   </PackageHeader>
   <RedefinableHeader PublicationStatus="UNDER_REVISION">
@@ -24,12 +24,23 @@
     <Participant Id="admin" Name="First Participant">
       <ParticipantType Type="HUMAN"/>
       <Description>None</Description>
-      <ExtendedAttributes><ExtendedAttribute Name="partyId" Value="admin"/></ExtendedAttributes>
+      <ExtendedAttributes>
+        <ExtendedAttribute Name="partyId" Value="admin"/>
+      </ExtendedAttributes>
     </Participant>
     <Participant Id="admins" Name="First Participant">
       <ParticipantType Type="ROLE"/>
       <Description>None</Description>
-      <ExtendedAttributes><ExtendedAttribute Name="roleTypeId" Value="ADMINS"/></ExtendedAttributes>
+      <ExtendedAttributes>
+        <ExtendedAttribute Name="roleTypeId" Value="ADMINS"/>
+      </ExtendedAttributes>
+    </Participant>
+    <Participant Id="user" Name="First Participant">
+      <ParticipantType Type="ROLE"/>
+      <Description>None</Description>
+      <ExtendedAttributes>
+        <ExtendedAttribute Name="partyIdExpr" Value="partyId"/>
+      </ExtendedAttributes>
     </Participant>
   </Participants>
 <!--
@@ -84,6 +95,10 @@
 
       <FormalParameters>
         <FormalParameter Id="orderId" Index="1" Mode="IN">
+          <DataType><BasicType Type="STRING"/></DataType>
+          <Description></Description>
+        </FormalParameter>
+        <FormalParameter Id="partyId" Index="2" Mode="IN">
           <DataType><BasicType Type="STRING"/></DataType>
           <Description></Description>
         </FormalParameter>

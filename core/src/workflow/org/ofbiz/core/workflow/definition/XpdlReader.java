@@ -136,6 +136,11 @@ public class XpdlReader {
             packageValue.set("costUomId", UtilXml.childElementValue(packageHeaderElement, "CostUnit"));
         }
 
+        //Participants?
+        Element participantsElement = UtilXml.firstChildElement(packageElement, "Participants");
+        List participants = UtilXml.childElementList(participantsElement, "Participant");
+        readParticipants(participants, packageValue);
+
         //RedefinableHeader?
         Element redefinableHeaderElement = UtilXml.firstChildElement(packageElement, "RedefinableHeader");
         readRedefinableHeader(redefinableHeaderElement, packageValue);
@@ -155,11 +160,6 @@ public class XpdlReader {
         Element typeDeclarationsElement = UtilXml.firstChildElement(packageElement, "TypeDeclarations");
         List typeDeclarations = UtilXml.childElementList(typeDeclarationsElement, "TypeDeclaration");
         readTypeDeclarations(typeDeclarations, packageId);
-
-        //Participants?
-        Element participantsElement = UtilXml.firstChildElement(packageElement, "Participants");
-        List participants = UtilXml.childElementList(participantsElement, "Participant");
-        readParticipants(participants, packageValue);
 
         //Applications?
         Element applicationsElement = UtilXml.firstChildElement(packageElement, "Applications");

@@ -34,7 +34,7 @@ import org.ofbiz.core.workflow.*;
 /**
  * WfResourceImpl - Workflow Resource Object implementation
  *
- *@author     <a href="mailto:jaz@zsolv.com">Andy Zeneski</a>
+ *@author     <a href="mailto:jaz@jflow.net">Andy Zeneski</a>
  *@created    November 15, 2001
  *@version    1.0
  */
@@ -58,9 +58,7 @@ public class WfResourceImpl implements WfResource {
      * @param roleTypeId The roleTypeId of this resource
      * @param fromDate The fromDate of this resource
      */
-    public WfResourceImpl(GenericDelegator delegator, String resourceKey, String resourceName,
-                          String partyId, String roleTypeId) {
-
+    public WfResourceImpl(GenericDelegator delegator, String resourceKey, String resourceName, String partyId, String roleTypeId) {
         this.delegator = delegator;
         this.resourceKey = resourceKey;
         this.resourceName = resourceName;

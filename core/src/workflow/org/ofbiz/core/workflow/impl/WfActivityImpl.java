@@ -36,7 +36,7 @@ import org.ofbiz.core.workflow.*;
 /**
  * WfActivityImpl - Workflow Activity Object implementation
  *
- *@author     <a href="mailto:jaz@zsolv.com">Andy Zeneski</a>
+ *@author     <a href="mailto:jaz@jflow.net">Andy Zeneski</a>
  *@author     David Ostrovsky (d.ostrovsky@gmx.de)
  *@created    December 18, 2001
  *@version    1.2
@@ -120,6 +120,12 @@ public class WfActivityImpl extends WfExecutionObjectImpl implements WfActivity 
         if (valueObject.get("acceptAllAssignments") != null)
             assignAll = valueObject.getBoolean("acceptAllAssignments").booleanValue();
 
+        String performerType = performer.getString("participantTypeId");
+        if (performerType != null && (performerType.equals("RESOURCE") || performerType.equals("ROLE"))) {
+            // We are a dynamic performer
+            performer = getDynamicPerformer(performer);
+        }
+
         if (!assignAll) {
             if (performer != null) {
                 Debug.logVerbose("[WfActivity.createAssignments] : (S) Single assignment", module);
@@ -127,6 +133,7 @@ public class WfActivityImpl extends WfExecutionObjectImpl implements WfActivity 
             }
             return;
         }
+
         // check for a party group
         if (performer.get("partyId") != null &&
                 !performer.getString("partyId").equals("_NA_")) {
@@ -146,21 +153,18 @@ public class WfActivityImpl extends WfExecutionObjectImpl implements WfActivity 
                 // party is a group
                 Collection partyRelations = null;
                 try {
-                    Map fields = UtilMisc.toMap("partyIdFrom",
-                                                performer.getString("partyId"), "partyRelationshipTypeId",
-                                                "GROUP_ROLLUP");
-                    partyRelations =
-                            getDelegator().findByAnd("PartyRelationship", fields);
+                    Map fields = UtilMisc.toMap("partyIdFrom", performer.getString("partyId"), "partyRelationshipTypeId", "GROUP_ROLLUP");
+                    partyRelations = getDelegator().findByAnd("PartyRelationship", fields);
                 } catch (GenericEntityException e) {
                     throw new WfException(e.getMessage(), e);
                 }
+
                 // make assignments for these parties
                 Debug.logVerbose("[WfActivity.createAssignments] : Group assignment", module);
                 Iterator i = partyRelations.iterator();
                 while (i.hasNext()) {
                     GenericValue value = (GenericValue) i.next();
-                    assign(WfFactory.getWfResource(getDelegator(), null, null,
-                                                   value.getString("partyIdTo"), null), true);
+                    assign(WfFactory.getWfResource(getDelegator(), null, null, value.getString("partyIdTo"), null), true);
                 }
             } else {
                 // not a group
@@ -168,6 +172,7 @@ public class WfActivityImpl extends WfExecutionObjectImpl implements WfActivity 
                 assign(WfFactory.getWfResource(performer), false);
             }
         }
+
         // check for role types
         else if (performer.get("roleTypeId") != null &&
                 !performer.getString("roleTypeId").equals("_NA_")) {
@@ -178,6 +183,7 @@ public class WfActivityImpl extends WfExecutionObjectImpl implements WfActivity 
             } catch (GenericEntityException e) {
                 throw new WfException(e.getMessage(), e);
             }
+
             // loop through the roles and create assignments
             Debug.logVerbose("[WfActivity.createAssignments] : Role assignment", module);
             Iterator i = partyRoles.iterator();
@@ -213,6 +219,55 @@ public class WfActivityImpl extends WfExecutionObjectImpl implements WfActivity 
         return assignments;
     }
 
+    // create a new assignment
+    private WfAssignment assign(WfResource resource, boolean append) throws WfException {
+        if (!append) {
+            Iterator ai = getIteratorAssignment();
+            while (ai.hasNext()) {
+                WfAssignment a = (WfAssignment) ai.next();
+                a.remove();
+            }
+        }
+
+        WfAssignment assign = WfFactory.getWfAssignment(this, resource, null, true);
+        return assign;
+    }
+
+    // check for a dynamic performer
+    private GenericValue getDynamicPerformer(GenericValue performer) throws WfException {
+        GenericValue newPerformer = new GenericValue(performer);
+        Map context = processContext();
+        String expr = null;
+        String field = null;
+        Object value = null;
+        if (newPerformer.get("partyId") != null && newPerformer.getString("partyId").length() > 0) {
+            // first try partyId
+            expr = newPerformer.getString("partyId");
+            if (expr != null && expr.trim().toLowerCase().startsWith("expr:")) {
+                value = eval(expr.trim().substring(5).trim(), context);
+                field = "partyId";
+            }
+        }
+        if (value == null) {
+            // then try roleTypeId
+            expr = newPerformer.getString("roleTypeId");
+            if (expr != null && expr.trim().toLowerCase().startsWith("expr:")) {
+                value = eval(expr.trim().substring(5).trim(), context);
+                field = "roleTypeId";
+            }
+        }
+        if (field != null && value != null) {
+            Debug.logVerbose("Evaluated expression: " + expr + " Result: " + value, module);
+            if (value instanceof String) {
+                String resp = (String) value;
+                newPerformer.set(field, resp);
+            } else {
+                throw new WfException("Expression did not return a String");
+            }
+        }
+        return newPerformer;
+    }
+
     /**
      * Activates this activity.
      * @throws WfException
@@ -239,20 +294,6 @@ public class WfActivityImpl extends WfExecutionObjectImpl implements WfActivity 
         } else {
             throw new CannotStart();
         }
-    }
-
-    // create a new assignment
-    private WfAssignment assign(WfResource resource, boolean append) throws WfException {
-        if (!append) {
-            Iterator ai = getIteratorAssignment();
-            while (ai.hasNext()) {
-                WfAssignment a = (WfAssignment) ai.next();
-                a.remove();
-            }
-        }
-
-        WfAssignment assign = WfFactory.getWfAssignment(this, resource, null, true);
-        return assign;
     }
 
     /**
