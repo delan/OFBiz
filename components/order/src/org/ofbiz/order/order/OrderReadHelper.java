@@ -1,5 +1,5 @@
 /*
- * $Id: OrderReadHelper.java,v 1.14 2003/11/27 17:46:12 ajzeneski Exp $
+ * $Id: OrderReadHelper.java,v 1.15 2003/12/29 20:32:18 ajzeneski Exp $
  *
  *  Copyright (c) 2002 The Open For Business Project - www.ofbiz.org
  *
@@ -51,7 +51,7 @@ import org.ofbiz.security.Security;
  * @author     <a href="mailto:jonesde@ofbiz.org">David E. Jones</a>
  * @author     Eric Pabst
  * @author     <a href="mailto:ray.barlow@whatsthe-point.com">Ray Barlow</a>
- * @version    $Revision: 1.14 $
+ * @version    $Revision: 1.15 $
  * @since      2.0
  */
 public class OrderReadHelper {
@@ -691,6 +691,11 @@ public class OrderReadHelper {
                 new EntityExpr("statusId", EntityOperator.NOT_EQUAL, "ITEM_CANCELLED"),
                 new EntityExpr("statusId", EntityOperator.NOT_EQUAL, "ITEM_REJECTED"));
         return EntityUtil.filterByAnd(getOrderItems(), exprs);
+    }
+
+    public GenericValue getOrderItem(String orderItemSeqId) {
+        List exprs = UtilMisc.toList(new EntityExpr("orderItemSeqId", EntityOperator.EQUALS, orderItemSeqId));
+        return EntityUtil.getFirst(EntityUtil.filterByAnd(getOrderItems(), exprs));
     }
 
     public List getValidDigitalItems() {

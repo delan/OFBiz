@@ -24,7 +24,7 @@
  *
  * @author     David E. Jones (jonesde@ofbiz.org)
  * @author     Andy Zeneski (jaz@ofbiz.org)
- * @version    $Revision: 1.3 $
+ * @version    $Revision: 1.4 $
  * @since      2.2
 -->
 <simple-methods>
@@ -1079,6 +1079,9 @@
         </call-service>
         <find-by-primary-key entity-name="Shipment" map-name="shipmentLookupMap" value-name="shipment"/>
 
+        <!-- move the itemMap to the envrironment -->
+        <field-to-env field-name="itemShipList" map-name="parameters" env-name="itemMapList"/>
+
         <!-- issue the passed in order items -->
         <iterate list-name="itemMapList" entry-name="itemMap">
             <field-to-field field-name="shipmentId" map-name="shipment" to-map-name="issueContext"/>
@@ -1115,7 +1118,7 @@
         <call-service service-name="updateShipment" in-map-name="packedContext"/>
         <!-- update the shipment status to shipped -->
         <if-empty map-name="parameters" field-name="setPackedOnly">
-              <field-to-field field-name="shipmentId" map-name="shipment" to-map-name="packedContext"/>
+            <field-to-field field-name="shipmentId" map-name="shipment" to-map-name="packedContext"/>
             <string-to-field field-name="statusId" map-name="packedContext" string="SHIPMENT_SHIPPED"/>
             <call-service service-name="updateShipment" in-map-name="packedContext"/>
         </if-empty>
