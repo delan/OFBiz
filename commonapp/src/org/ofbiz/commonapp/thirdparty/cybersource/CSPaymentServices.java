@@ -437,6 +437,7 @@ public class CSPaymentServices {
                         "paymentMethodId", paymentPreference.get("paymentMethodId"), "partyIdTo", paidTo,
                         "partyIdFrom", orderRole.get("partyId")));
 
+                payment.set("paymentPreference", paymentPreference.get("orderPaymentPreferenceId"));
                 payment.set("amount", new Double(reply.getField("bill_bill_amount")));
                 payment.set("effectiveDate", UtilDateTime.nowTimestamp());
                 payment.set("paymentRefNum", reply.getField("bill_trans_ref_no"));
