@@ -18,7 +18,7 @@
 
     <handler name="ftl" type="view" class="org.ofbiz.content.webapp.ftl.FreeMarkerViewHandler"/>
     <handler name="velocity" type="view" class="org.ofbiz.content.webapp.view.VelocityViewHandler"/>
-    <handler name="jsp" type="view" class="org.ofbiz.core.content.webapp.JspViewHandler"/>
+    <handler name="jsp" type="view" class="org.ofbiz.content.webapp.JspViewHandler"/>
     
     <handler name="http" type="view" class="org.ofbiz.content.webapp.view.HttpViewHandler"/>
     <handler name="datavision" type="view" class="org.ofbiz.content.webapp.view.DataVisionViewHandler"/>

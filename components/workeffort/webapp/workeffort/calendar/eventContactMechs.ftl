@@ -21,7 +21,7 @@
  *  THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  *
  *@author     Johan Isacsson (conversion of jsp created by Andy Zeneski) 
- *@version    $Revision: 1.1 $
+ *@version    $Revision: 1.2 $
  *@since      2.1
 -->
 
@@ -170,9 +170,9 @@
             <select name="partyId" class="selectBox">
                           <option selected value="">none</option>
                           <#list roles as role>
-                           <#assign party = delegator.findByPrimaryKey("Party", Static["org.ofbiz.core.util.UtilMisc"].toMap("partyId",role.partyId))>
-                            <#assign partyGroup = delegator.findByPrimaryKey("PartyGroup", Static["org.ofbiz.core.util.UtilMisc"].toMap("partyId",party.partyId))?if_exists>
-                            <#assign person = delegator.findByPrimaryKey("Person", Static["org.ofbiz.core.util.UtilMisc"].toMap("partyId",party.partyId))?if_exists>                                                                                     
+                           <#assign party = delegator.findByPrimaryKey("Party", Static["org.ofbiz.base.util.UtilMisc"].toMap("partyId",role.partyId))>
+                            <#assign partyGroup = delegator.findByPrimaryKey("PartyGroup", Static["org.ofbiz.base.util.UtilMisc"].toMap("partyId",party.partyId))?if_exists>
+                            <#assign person = delegator.findByPrimaryKey("Person", Static["org.ofbiz.base.util.UtilMisc"].toMap("partyId",party.partyId))?if_exists>                                                                                     
                             <#assign partyName = "">
                             <#if person?has_content>
                               <#assign partyName = person.firstName+"&nbsp;"+person.lastName>
