@@ -51,21 +51,4 @@
     request.setAttribute("externalKeyParam", externalKeyParam);
     request.setAttribute("externalLoginKey", externalLoginKey);
     request.setAttribute("activeApp", "partymgr");
-
-    String eventMsgReq = (String) request.getAttribute("_EVENT_MESSAGE_");
-    String errorMsgReq = (String) request.getAttribute("_ERROR_MESSAGE_");
-    String errorMsgSes = (String) session.getAttribute("_ERROR_MESSAGE_");
-
-    if (eventMsgReq != null) {
-        request.setAttribute("eventMsgReq", UtilFormatOut.replaceString(eventMsgReq, "\n", "<br>"));
-        request.removeAttribute("_EVENT_MESSAGE_");
-    }
-    if (errorMsgReq != null) {
-        request.setAttribute("errorMsgReq", UtilFormatOut.replaceString(errorMsgReq, "\n", "<br>"));
-        request.removeAttribute("_ERROR_MESSAGE_");
-    }
-    if (errorMsgSes != null) {
-        request.setAttribute("errorMsgSes", UtilFormatOut.replaceString(errorMsgSes, "\n", "<br>"));
-        session.removeAttribute("_ERROR_MESSAGE_");
-    }
 %>
