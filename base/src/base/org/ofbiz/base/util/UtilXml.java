@@ -55,13 +55,13 @@ import org.xml.sax.helpers.DefaultHandler;
  * Utilities methods to simplify dealing with JAXP & DOM XML parsing
  *
  * @author     <a href="mailto:jonesde@ofbiz.org">David E. Jones</a>
- * @version    $Rev:$
+ * @version    $Rev$
  * @since      2.0
  */
 public class UtilXml {
 
     public static final String module = UtilXml.class.getName();
-
+    
     public static String writeXmlDocument(Document document) throws java.io.IOException {
         if (document == null) {
             Debug.logWarning("[UtilXml.writeXmlDocument] Document was null, doing nothing", module);
@@ -197,11 +197,34 @@ public class UtilXml {
             return null;
         }
 
+        // DON'T do this: seems to be causing problems with Catalina/Tomcat, maybe it is expecting a different parser?
+        //System.setProperty("javax.xml.parsers.DocumentBuilderFactory", "org.apache.xerces.jaxp.DocumentBuilderFactoryImpl");
+        
         Document document = null;
-        DocumentBuilderFactory factory = DocumentBuilderFactory.newInstance();
 
+        /* Xerces DOMParser direct interaction; the other seems to be working better than this, so we'll stay with the standard JAXP stuff
+        DOMParser parser = new DOMParser();
+        try {
+            parser.setFeature("http://xml.org/sax/features/validation", true);
+            parser.setFeature("http://apache.org/xml/features/validation/schema", true);
+        } catch (SAXException e) {
+            Debug.logWarning("Could not set parser feature: " + e.toString(), module);
+        }
+        parser.parse(new InputSource(is));
+        document = parser.getDocument();
+        */
+        
+        /* Standard JAXP (mostly), but doesn't seem to be doing XML Schema validation, so making sure that is on... */
+        DocumentBuilderFactory factory = new org.apache.xerces.jaxp.DocumentBuilderFactoryImpl();
         factory.setValidating(validate);
         factory.setNamespaceAware(true);
+
+        factory.setAttribute("http://xml.org/sax/features/validation", Boolean.TRUE);
+        factory.setAttribute("http://apache.org/xml/features/validation/schema", Boolean.TRUE);
+        
+        // with a SchemaUrl, a URL object
+        //factory.setAttribute("http://java.sun.com/xml/jaxp/properties/schemaLanguage", "http://www.w3.org/2001/XMLSchema");
+        //factory.setAttribute("http://java.sun.com/xml/jaxp/properties/schemaSource", SchemaUrl);
         DocumentBuilder builder = factory.newDocumentBuilder();
         if (validate) {
             LocalResolver lr = new LocalResolver(new DefaultHandler());
@@ -210,8 +233,8 @@ public class UtilXml {
             builder.setEntityResolver(lr);
             builder.setErrorHandler(eh);
         }
-
         document = builder.parse(is);
+        
         return document;
     }
 
@@ -538,8 +561,8 @@ public class UtilXml {
 
                     inputSource.setPublicId(publicId);
                     hasDTD = true;
-                    //Debug.logInfo("[UtilXml.LocalResolver.resolveEntity] got LOCAL DTD input source with publicId [" +
-                    //        publicId + "] and the dtd file is [" + dtd + "]", module);
+                    if (Debug.verboseOn()) Debug.logVerbose("[UtilXml.LocalResolver.resolveEntity] got LOCAL DTD input source with publicId [" +
+                            publicId + "] and the dtd file is [" + dtd + "]", module);
                     return inputSource;
                 } catch (Exception e) {
                     Debug.logWarning(e, module);
@@ -551,20 +574,27 @@ public class UtilXml {
                 if (lastSlash == -1) {
                     filename = systemId;
                 } else {
-                    filename = systemId.substring(lastSlash);
+                    filename = systemId.substring(lastSlash + 1);
                 }
+                
                 URL resourceUrl = UtilURL.fromResource(filename);
                 
-                InputStream resStream = resourceUrl.openStream();
-                InputSource inputSource = new InputSource(resStream);
-
-                if (UtilValidate.isNotEmpty(publicId)) {
-                    inputSource.setPublicId(publicId);
+                if (resourceUrl != null) {
+                    InputStream resStream = resourceUrl.openStream();
+                    InputSource inputSource = new InputSource(resStream);
+    
+                    if (UtilValidate.isNotEmpty(publicId)) {
+                        inputSource.setPublicId(publicId);
+                    }
+                    hasDTD = true;
+                    if (Debug.verboseOn()) Debug.logVerbose("[UtilXml.LocalResolver.resolveEntity] got LOCAL DTD/Schema input source with publicId [" +
+                            publicId + "] and the file/resource is [" + filename + "]", module);
+                    return inputSource;
+                } else {
+                    if (Debug.verboseOn()) Debug.logVerbose("[UtilXml.LocalResolver.resolveEntity] could not find LOCAL DTD/Schema with publicId [" +
+                            publicId + "] and the file/resource is [" + filename + "]", module);
+                    return null;
                 }
-                hasDTD = true;
-                //Debug.logInfo("[UtilXml.LocalResolver.resolveEntity] got LOCAL DTD/Schema input source with publicId [" +
-                //        publicId + "] and the file/resource is [" + filename + "]", module);
-                return inputSource;
             }
             //Debug.logInfo("[UtilXml.LocalResolver.resolveEntity] local resolve failed for DTD with publicId [" +
             //        publicId + "] and the dtd file is [" + dtd + "], trying defaultResolver", module);
