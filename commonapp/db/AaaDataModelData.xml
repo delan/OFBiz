@@ -206,12 +206,13 @@
   <Enumeration description="Product ID Added" enumCode="PRODUCT_ID" enumId="PPIP_PRODUCT_ID" sequenceId="02" enumTypeId="PROD_PROMO_IN_PARAM"/>
   <Enumeration description="Quantity Added" enumCode="QUANTITY_ADDED" enumId="PPIP_QUANTITY_ADDED" sequenceId="03" enumTypeId="PROD_PROMO_IN_PARAM"/>
   <Enumeration description="New Product Quantity" enumCode="NEW_PROD_QUANT" enumId="PPIP_NEW_PROD_QUANT" sequenceId="04" enumTypeId="PROD_PROMO_IN_PARAM"/>
-  <Enumeration description="Equals" enumCode="EQ" enumId="PPC_EQ" sequenceId="01" enumTypeId="PROD_PROMO_COND"/>
-  <Enumeration description="Not Equals" enumCode="NEQ" enumId="PPC_NEQ" sequenceId="02" enumTypeId="PROD_PROMO_COND"/>
-  <Enumeration description="Less Than" enumCode="LT" enumId="PPC_LT" sequenceId="03" enumTypeId="PROD_PROMO_COND"/>
-  <Enumeration description="Less Than or Equal To" enumCode="LTE" enumId="PPC_LTE" sequenceId="04" enumTypeId="PROD_PROMO_COND"/>
-  <Enumeration description="Greater Than" enumCode="GT" enumId="PPC_GT" sequenceId="05" enumTypeId="PROD_PROMO_COND"/>
-  <Enumeration description="Greater Than or Equal To" enumCode="GTE" enumId="PPC_GTE" sequenceId="06" enumTypeId="PROD_PROMO_COND"/>
+  
+  <Enumeration description="==" enumCode="EQ" enumId="PPC_EQ" sequenceId="01" enumTypeId="PROD_PROMO_COND"/>
+  <Enumeration description="!=" enumCode="NEQ" enumId="PPC_NEQ" sequenceId="02" enumTypeId="PROD_PROMO_COND"/>
+  <Enumeration description="&lt;" enumCode="LT" enumId="PPC_LT" sequenceId="03" enumTypeId="PROD_PROMO_COND"/>
+  <Enumeration description="&lt;=" enumCode="LTE" enumId="PPC_LTE" sequenceId="04" enumTypeId="PROD_PROMO_COND"/>
+  <Enumeration description="&gt;" enumCode="GT" enumId="PPC_GT" sequenceId="05" enumTypeId="PROD_PROMO_COND"/>
+  <Enumeration description="&gt;=" enumCode="GTE" enumId="PPC_GTE" sequenceId="06" enumTypeId="PROD_PROMO_COND"/>
 
   <Enumeration description="Product" enumCode="PRODUCT_ID" enumId="PRIP_PRODUCT_ID" sequenceId="01" enumTypeId="PROD_PRICE_IN_PARAM"/>
   <Enumeration description="Product Category" enumCode="PRODUCT_CATEGORY_ID" enumId="PRIP_PROD_CAT_ID" sequenceId="02" enumTypeId="PROD_PRICE_IN_PARAM"/>
@@ -222,12 +223,12 @@
   <Enumeration description="Party Classification" enumCode="PARTY_CLASS" enumId="PRIP_PARTY_CLASS" sequenceId="07" enumTypeId="PROD_PRICE_IN_PARAM"/>
   <Enumeration description="Role Type" enumCode="ROLE_TYPE" enumId="PRIP_ROLE_TYPE" sequenceId="08" enumTypeId="PROD_PRICE_IN_PARAM"/>
 
-  <Enumeration description="Equals" enumCode="EQ" enumId="PRC_EQ" sequenceId="01" enumTypeId="PROD_PRICE_COND"/>
-  <Enumeration description="Not Equals" enumCode="NEQ" enumId="PRC_NEQ" sequenceId="02" enumTypeId="PROD_PRICE_COND"/>
-  <Enumeration description="Less Than" enumCode="LT" enumId="PRC_LT" sequenceId="03" enumTypeId="PROD_PRICE_COND"/>
-  <Enumeration description="Less Than or Equal To" enumCode="LTE" enumId="PRC_LTE" sequenceId="04" enumTypeId="PROD_PRICE_COND"/>
-  <Enumeration description="Greater Than" enumCode="GT" enumId="PRC_GT" sequenceId="05" enumTypeId="PROD_PRICE_COND"/>
-  <Enumeration description="Greater Than or Equal To" enumCode="GTE" enumId="PRC_GTE" sequenceId="06" enumTypeId="PROD_PRICE_COND"/>
+  <Enumeration description="==" enumCode="EQ" enumId="PRC_EQ" sequenceId="01" enumTypeId="PROD_PRICE_COND"/>
+  <Enumeration description="!=" enumCode="NEQ" enumId="PRC_NEQ" sequenceId="02" enumTypeId="PROD_PRICE_COND"/>
+  <Enumeration description="&lt;" enumCode="LT" enumId="PRC_LT" sequenceId="03" enumTypeId="PROD_PRICE_COND"/>
+  <Enumeration description="&lt;=" enumCode="LTE" enumId="PRC_LTE" sequenceId="04" enumTypeId="PROD_PRICE_COND"/>
+  <Enumeration description="&gt;" enumCode="GT" enumId="PRC_GT" sequenceId="05" enumTypeId="PROD_PRICE_COND"/>
+  <Enumeration description="&gt;=" enumCode="GTE" enumId="PRC_GTE" sequenceId="06" enumTypeId="PROD_PRICE_COND"/>
 
   <FacilityType description="Building" facilityTypeId="BUILDING" hasTable="N" parentTypeId=""/>
   <FacilityType description="Floor" facilityTypeId="FLOOR" hasTable="N" parentTypeId=""/>
@@ -438,10 +439,10 @@
   <ProductPromoActionType description="Gift With Purchase" productPromoActionTypeId="PROMO_GWP"/>
   <ProductPromoActionType description="Free Shipping" productPromoActionTypeId="PROMO_FREE_SHIPPING"/>
   <ProductPromoActionType description="Item Percent Discount" productPromoActionTypeId="PROMO_ITEM_PERCENT"/>
-  <ProductPromoActionType description="Item Amount Discount (flat)" productPromoActionTypeId="PROMO_ITEM_AMOUNT"/>
-  <ProductPromoActionType description="Item Amount Discount (per quantity)" productPromoActionTypeId="PROMO_ITEM_AMNTPQ"/>
+  <ProductPromoActionType description="Item Amount Flat" productPromoActionTypeId="PROMO_ITEM_AMOUNT"/>
+  <ProductPromoActionType description="Item Amount Per Quantity" productPromoActionTypeId="PROMO_ITEM_AMNTPQ"/>
   <ProductPromoActionType description="Order Percent Discount" productPromoActionTypeId="PROMO_ORDER_PERCENT"/>
-  <ProductPromoActionType description="Order Amount Discount (flat)" productPromoActionTypeId="PROMO_ORDER_AMOUNT"/>
+  <ProductPromoActionType description="Order Amount Flat" productPromoActionTypeId="PROMO_ORDER_AMOUNT"/>
 
   <ProductPriceActionType description="Percent Of List Price" productPriceActionTypeId="PRICE_POL"/>
   <ProductPriceActionType description="Percent Of Average Cost" productPriceActionTypeId="PRICE_POAC"/>
