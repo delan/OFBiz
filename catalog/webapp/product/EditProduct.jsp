@@ -475,23 +475,23 @@ function insertImageName(size,ext) {
                 </div>
                 <div class='tabletext'>
                     <b>Duplicate:</b>
-                    Prices&nbsp;<input type=CHECKBOX name='duplicatePrices' value='Y' checked/>
-                    IDs&nbsp;<input type=CHECKBOX name='duplicateIDs' value='Y' checked/>
-                    CategoryMembers&nbsp;<input type=CHECKBOX name='duplicateCategoryMembers' value='Y' checked/>
-                    Assocs&nbsp;<input type=CHECKBOX name='duplicateAssocs' value='Y' checked/>
-                    Attributes&nbsp;<input type=CHECKBOX name='duplicateAttributes' value='Y' checked/>
-                    FeatureAppls&nbsp;<input type=CHECKBOX name='duplicateFeatureAppls' value='Y' checked/>
-                    InventoryItems&nbsp;<input type=CHECKBOX name='duplicateInventoryItems' value='Y' checked/>
+                    Prices&nbsp;<input type='checkbox' class='checkBox' name='duplicatePrices' value='Y' checked/>
+                    IDs&nbsp;<input type='checkbox' class='checkBox' name='duplicateIDs' value='Y' checked/>
+                    CategoryMembers&nbsp;<input type='checkbox' class='checkBox' name='duplicateCategoryMembers' value='Y' checked/>
+                    Assocs&nbsp;<input type='checkbox' class='checkBox' name='duplicateAssocs' value='Y' checked/>
+                    Attributes&nbsp;<input type='checkbox' class='checkBox' name='duplicateAttributes' value='Y' checked/>
+                    FeatureAppls&nbsp;<input type='checkbox' class='checkBox' name='duplicateFeatureAppls' value='Y' checked/>
+                    InventoryItems&nbsp;<input type='checkbox' class='checkBox' name='duplicateInventoryItems' value='Y' checked/>
                 </div>
                 <div class='tabletext'>
                     <b>Remove:</b>
-                    Prices&nbsp;<input type=CHECKBOX name='removePrices' value='Y'/>
-                    IDs&nbsp;<input type=CHECKBOX name='removeIDs' value='Y'/>
-                    CategoryMembers&nbsp;<input type=CHECKBOX name='removeCategoryMembers' value='Y'/>
-                    Assocs&nbsp;<input type=CHECKBOX name='removeAssocs' value='Y'/>
-                    Attributes&nbsp;<input type=CHECKBOX name='removeAttributes' value='Y'/>
-                    FeatureAppls&nbsp;<input type=CHECKBOX name='removeFeatureAppls' value='Y'/>
-                    InventoryItems&nbsp;<input type=CHECKBOX name='removeInventoryItems' value='Y'/>
+                    Prices&nbsp;<input type='checkbox' class='checkBox' name='removePrices' value='Y'/>
+                    IDs&nbsp;<input type='checkbox' class='checkBox' name='removeIDs' value='Y'/>
+                    CategoryMembers&nbsp;<input type='checkbox' class='checkBox' name='removeCategoryMembers' value='Y'/>
+                    Assocs&nbsp;<input type='checkbox' class='checkBox' name='removeAssocs' value='Y'/>
+                    Attributes&nbsp;<input type='checkbox' class='checkBox' name='removeAttributes' value='Y'/>
+                    FeatureAppls&nbsp;<input type='checkbox' class='checkBox' name='removeFeatureAppls' value='Y'/>
+                    InventoryItems&nbsp;<input type='checkbox' class='checkBox' name='removeInventoryItems' value='Y'/>
                 </div>
             </form>
             <br><br>

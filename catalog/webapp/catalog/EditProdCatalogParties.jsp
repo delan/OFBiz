@@ -130,8 +130,8 @@
   <div class='head2'>Add Catalog for Party:</div>
   <br>
   <div class='tabletext'>
-    Party&nbsp;ID:&nbsp;<input type=text size='15' name='partyId'>
-    From&nbsp;Date:&nbsp;<input type=text size='22' name='fromDate'>
+    Party&nbsp;ID:&nbsp;<input type=text size='15' class='inputBox' name='partyId'>
+    From&nbsp;Date:&nbsp;<input type=text size='22' class='inputBox' name='fromDate'>
     <input type="submit" value="Add">
   </div>
 </form>

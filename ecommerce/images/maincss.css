@@ -602,6 +602,18 @@ background-color: white;
 font-size: small;
 }
 
+.radioButton {
+font-family: Verdana, Arial, Helvetica, sans-serif;
+background-color: white;
+font-size: small;
+}
+
+.checkBox {
+font-family: Verdana, Arial, Helvetica, sans-serif;
+background-color: white;
+font-size: small;
+}
+
 .smallSubmit,.mediumSubmit,.largeSubmit {
 font-family: Verdana, Arial, Helvetica, sans-serif;
 font-size: small;
