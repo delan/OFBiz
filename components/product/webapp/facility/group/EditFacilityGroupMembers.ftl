@@ -22,7 +22,7 @@
  *@author     David E. Jones
  *@author     Brad Steiner
  *@author     Catherine.Heintz@nereide.biz (migration to UiLabel)
- *@version    $Revision: 1.4 $
+ *@version    $Revision: 1.5 $
  *@since      2.2
 -->
 <#assign uiLabelMap = requestAttributes.uiLabelMap>
@@ -75,7 +75,7 @@ ${pages.get("/group/FacilityGroupTabBar.ftl")}
             <#assign line = line + 1>
             <#assign facility = facilityGroupMember.getRelatedOne("Facility")>
             <tr valign="middle">
-                <td><a href="<@ofbizUrl>/EditFacility?facilityId=${(facilityGroupMember)?if_exists}</@ofbizUrl>" class="buttontext"><#if facility?exists>${(facility.facilityName)?if_exists}</#if> [${(facilityGroupMember.facilityId)?if_exists}]</a></td>
+                <td><a href="<@ofbizUrl>/EditFacility?facilityId=${(facilityGroupMember.facilityId)?if_exists}</@ofbizUrl>" class="buttontext"><#if facility?exists>${(facility.facilityName)?if_exists}</#if> [${(facilityGroupMember.facilityId)?if_exists}]</a></td>
                 <td>
                     <#assign hasntStarted = false>
                     <#if (facilityGroupMember.getTimestamp("fromDate"))?exists && Static["org.ofbiz.base.util.UtilDateTime"].nowTimestamp().before(facilityGroupMember.getTimestamp("fromDate"))> <#assign hasntStarted = true></#if>
@@ -98,7 +98,7 @@ ${pages.get("/group/FacilityGroupTabBar.ftl")}
                     </FORM>
                 </td>
                 <td align="center">
-                <a href="<@ofbizUrl>/removeFacilityFromGroup?VIEW_SIZE=${viewSize}&VIEW_INDEX=${viewIndex}&facilityId=${(facilityGroupMember)?if_exists}&facilityGroupId=${(facilityGroupMember.facilityGroupId)?if_exists}&fromDate=${Static["org.ofbiz.base.util.UtilFormatOut"].encodeQueryValue(facilityGroupMember.getTimestamp("fromDate").toString())}&activeOnly=${activeOnly.toString()}</@ofbizUrl>" class="buttontext">
+                <a href="<@ofbizUrl>/removeFacilityFromGroup?VIEW_SIZE=${viewSize}&VIEW_INDEX=${viewIndex}&facilityId=${(facilityGroupMember.facilityId)?if_exists}&facilityGroupId=${(facilityGroupMember.facilityGroupId)?if_exists}&fromDate=${Static["org.ofbiz.base.util.UtilFormatOut"].encodeQueryValue(facilityGroupMember.getTimestamp("fromDate").toString())}&activeOnly=${activeOnly.toString()}</@ofbizUrl>" class="buttontext">
                 [${uiLabelMap.CommonDelete}]</a>
                 </td>
             </tr>

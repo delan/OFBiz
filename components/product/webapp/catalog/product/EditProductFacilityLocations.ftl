@@ -21,7 +21,7 @@
  *
  *@author     David E. Jones (jonesde@ofbiz.org)
  *@author     Brad Steiner (bsteiner@thehungersite.com)
- *@version    $Revision: 1.5 $
+ *@version    $Revision: 1.6 $
  *@since      2.2
 -->
 
@@ -55,7 +55,7 @@ ${pages.get("/product/ProductTabBar.ftl")}
 	                <FORM method=POST action="<@ofbizUrl>/updateProductFacilityLocation</@ofbizUrl>" name="lineForm${productFacilityLocation_index}">
 	                    <input type="hidden" name="productId" value="${(productFacilityLocation.productId)?if_exists}">
 	                    <input type="hidden" name="facilityId" value="${(productFacilityLocation.facilityId)?if_exists}">
-	                    <input type="hidden" name="locationSeqId" value="${(productFacilityLocation.facilityId)?if_exists}">
+	                    <input type="hidden" name="locationSeqId" value="${(productFacilityLocation.locationSeqId)?if_exists}">
 	                    <input type="text" size="10" name="minimumStock" value="${(productFacilityLocation.minimumStock)?if_exists}" class="inputBox">
 	                    <input type="text" size="10" name="moveQuantity" value="${(productFacilityLocation.moveQuantity)?if_exists}" class="inputBox">
 	                    <INPUT type="submit" value="Update" style="font-size: x-small;">
