@@ -21,9 +21,7 @@
  *  OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR
  *  THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  */
-
 package org.ofbiz.commonapp.product.category;
-
 
 import java.util.*;
 import javax.servlet.jsp.PageContext;
@@ -37,22 +35,27 @@ import org.ofbiz.core.entity.*;
 /**
  * CategoryWorker - Worker class to reduce code in JSPs.
  *
- * @author     <a href="mailto:jaz@zsolv.com">Andy Zeneski</a>
+ * @author     <a href="mailto:jaz@ofbiz.org">Andy Zeneski</a>
  * @author     <a href="mailto:jonesde@ofbiz.org">David E. Jones</a>
- * @version    1.0
- * @created    August 23, 2001, 7:58 PM
+ * @version    $Revision$
+ * @since      2.0
  */
 public class CategoryWorker {
 
     public static String getCatalogTopCategory(PageContext pageContext, String defaultTopCategory) {
-        String topCatName;
+        return getCatalogTopCategory(pageContext.getRequest(), defaultTopCategory);
+    }
+    
+    public static String getCatalogTopCategory(ServletRequest request, String defaultTopCategory) {
+        HttpServletRequest httpRequest = (HttpServletRequest) request;
+        String topCatName = null;
         boolean fromSession = false;
 
         // first see if a new category was specified as a parameter
-        topCatName = pageContext.getRequest().getParameter("CATALOG_TOP_CATEGORY");
+        topCatName = request.getParameter("CATALOG_TOP_CATEGORY");
         // if no parameter, try from session
         if (topCatName == null) {
-            topCatName = (String) pageContext.getSession().getAttribute("CATALOG_TOP_CATEGORY");
+            topCatName = (String) httpRequest.getSession().getAttribute("CATALOG_TOP_CATEGORY");
             if (topCatName != null)
                 fromSession = true;
         }
@@ -64,13 +67,17 @@ public class CategoryWorker {
 
         if (!fromSession) {
             if (Debug.infoOn()) Debug.logInfo("[CategoryWorker.getCatalogTopCategory] Setting new top category: " + topCatName);
-            pageContext.getSession().setAttribute("CATALOG_TOP_CATEGORY", topCatName);
+            httpRequest.getSession().setAttribute("CATALOG_TOP_CATEGORY", topCatName);
         }
         return topCatName;
     }
 
     public static void getCategoriesWithNoParent(PageContext pageContext, String attributeName) {
-        GenericDelegator delegator = (GenericDelegator) pageContext.getRequest().getAttribute("delegator");
+        getCategoriesWithNoParent(pageContext.getRequest(), attributeName);
+    }
+        
+    public static void getCategoriesWithNoParent(ServletRequest request, String attributeName) {
+        GenericDelegator delegator = (GenericDelegator) request.getAttribute("delegator");
         Collection results = new LinkedList();
 
         try {
@@ -90,11 +97,14 @@ public class CategoryWorker {
         } catch (GenericEntityException e) {
             Debug.logWarning(e);
         }
-        pageContext.setAttribute(attributeName, results);
+        request.setAttribute(attributeName, results);
     }
 
     public static void getRelatedCategories(PageContext pageContext, String attributeName, boolean limitView) {
-        ServletRequest request = pageContext.getRequest();
+            getRelatedCategories(pageContext.getRequest(), attributeName, limitView);
+    }
+        
+    public static void getRelatedCategories(ServletRequest request, String attributeName, boolean limitView) {        
         String requestId = null;
 
         requestId = UtilFormatOut.checkNull(request.getParameter("catalog_id"), request.getParameter("CATALOG_ID"),
@@ -103,19 +113,26 @@ public class CategoryWorker {
         if (requestId.equals(""))
             return;
         if (Debug.infoOn()) Debug.logInfo("[CatalogHelper.getRelatedCategories] RequestID: " + requestId);
-        getRelatedCategories(pageContext, attributeName, requestId, limitView);
+        getRelatedCategories(request, attributeName, requestId, limitView);
     }
 
     public static void getRelatedCategories(PageContext pageContext, String attributeName, String parentId, boolean limitView) {
-        ArrayList categories = getRelatedCategoriesRet(pageContext, attributeName, parentId, limitView);
+        getRelatedCategories(pageContext.getRequest(), attributeName, parentId, limitView);
+    }
+        
+    public static void getRelatedCategories(ServletRequest request, String attributeName, String parentId, boolean limitView) {
+        ArrayList categories = getRelatedCategoriesRet(request, attributeName, parentId, limitView);
 
         if (categories.size() > 0)
-            pageContext.setAttribute(attributeName, categories);
+            request.setAttribute(attributeName, categories);
     }
 
     public static ArrayList getRelatedCategoriesRet(PageContext pageContext, String attributeName, String parentId, boolean limitView) {
-        ArrayList categories = new ArrayList();
-        ServletRequest request = pageContext.getRequest();
+        return getRelatedCategoriesRet(pageContext.getRequest(), attributeName, parentId, limitView);
+    }
+    
+    public static ArrayList getRelatedCategoriesRet(ServletRequest request, String attributeName, String parentId, boolean limitView) {
+        ArrayList categories = new ArrayList();        
 
         if (Debug.verboseOn()) Debug.logVerbose("[CatalogHelper.getRelatedCategories] ParentID: " + parentId);
 
@@ -170,7 +187,7 @@ public class CategoryWorker {
             return;
 
         // always get the last crumb list
-        ArrayList crumb = getTrail(request);
+        List crumb = getTrail(request);
 
         if (crumb == null)
             crumb = new ArrayList();
@@ -226,25 +243,24 @@ public class CategoryWorker {
         setTrail(request, crumb);
     }
 
-    public static ArrayList getTrail(PageContext pageContext) {
+    public static List getTrail(PageContext pageContext) {
         return getTrail(pageContext.getRequest());
     }
 
-    public static ArrayList getTrail(ServletRequest request) {
+    public static List getTrail(ServletRequest request) {
         HttpSession session = ((HttpServletRequest) request).getSession();
         ArrayList crumb = (ArrayList) session.getAttribute("_BREAD_CRUMB_TRAIL_");
-
         return crumb;
     }
 
-    public static void setTrail(PageContext pageContext, ArrayList crumb) {
-        setTrail(pageContext.getRequest(), crumb);
+    public static List setTrail(PageContext pageContext, List crumb) {
+        return setTrail(pageContext.getRequest(), crumb);        
     }
 
-    public static void setTrail(ServletRequest request, ArrayList crumb) {
+    public static List setTrail(ServletRequest request, List crumb) {
         HttpSession session = ((HttpServletRequest) request).getSession();
-
         session.setAttribute("_BREAD_CRUMB_TRAIL_", crumb);
+        return crumb;
     }
 
     public static boolean checkTrailItem(PageContext pageContext, String category) {
@@ -252,7 +268,7 @@ public class CategoryWorker {
     }
 
     public static boolean checkTrailItem(ServletRequest request, String category) {
-        ArrayList crumb = getTrail(request);
+        List crumb = getTrail(request);
 
         if (crumb != null && crumb.contains(category))
             return true;
@@ -265,7 +281,7 @@ public class CategoryWorker {
     }
 
     public static String lastTrailItem(ServletRequest request) {
-        ArrayList crumb = getTrail(request);
+        List crumb = getTrail(request);
 
         if (crumb != null && crumb.size() > 0) {
             return (String) crumb.get(crumb.size() - 1);
