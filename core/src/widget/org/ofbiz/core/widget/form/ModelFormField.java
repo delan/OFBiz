@@ -1066,8 +1066,10 @@ public class ModelFormField {
     }
     
     public static class HyperlinkField extends FieldInfo {
+        public static String DEFAULT_TARGET_TYPE = "intra-app";
+        
         protected boolean alsoHidden = true;
-        protected boolean ofbizUrl = true;
+        protected String targetType;
         protected FlexibleStringExpander target;
         protected FlexibleStringExpander description;
         
@@ -1087,7 +1089,7 @@ public class ModelFormField {
             this.setDescription(element.getAttribute("description"));
             this.setTarget(element.getAttribute("target"));
             this.alsoHidden = !"false".equals(element.getAttribute("also-hidden"));
-            this.ofbizUrl = !"false".equals(element.getAttribute("ofbiz-url"));
+            this.targetType = element.getAttribute("target-type");
         }
 
         public void renderFieldString(StringBuffer buffer, Map context, FormStringRenderer formStringRenderer) {
@@ -1104,8 +1106,12 @@ public class ModelFormField {
         /**
          * @return
          */
-        public boolean getOfbizUrl() {
-            return this.ofbizUrl;
+        public String getTargetType() {
+            if (UtilValidate.isNotEmpty(this.targetType)) {
+                return this.targetType;
+            } else {
+                return HyperlinkField.DEFAULT_TARGET_TYPE;
+            }
         }
 
         /**
@@ -1132,8 +1138,8 @@ public class ModelFormField {
         /**
          * @param b
          */
-        public void setOfbizUrl(boolean b) {
-            this.ofbizUrl = b;
+        public void setTargetType(String string) {
+            this.targetType = string;
         }
 
         /**

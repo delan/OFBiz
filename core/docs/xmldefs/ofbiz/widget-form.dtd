@@ -155,7 +155,7 @@
 <!ELEMENT hyperlink EMPTY>
 <!ATTLIST hyperlink
     also-hidden ( true | false ) "true"
-    ofbiz-url ( true | false ) "true"
+    target-type ( intra-app | inter-app | content | plain ) "intra-app"
     target CDATA #REQUIRED
     description CDATA #IMPLIED
 >

@@ -148,8 +148,25 @@ public class HtmlFormRenderer implements FormStringRenderer {
         }
         
         buffer.append(" href=\"");
-        if (hyperlinkField.getOfbizUrl()) {
+        if ("intra-app".equals(hyperlinkField.getTargetType())) {
             this.appendOfbizUrl(buffer, "/" + hyperlinkField.getTarget(context));
+        } else if ("inter-app".equals(hyperlinkField.getTargetType())) {
+            String fullTarget = hyperlinkField.getTarget(context);
+            buffer.append(fullTarget);
+            String externalLoginKey = (String) this.request.getAttribute("externalLoginKey");
+            if (UtilValidate.isNotEmpty(externalLoginKey)) {
+                if (fullTarget.indexOf('?') == -1) {
+                    buffer.append('?');
+                } else {
+                    buffer.append('&');
+                }
+                buffer.append("externalLoginKey=");
+                buffer.append(externalLoginKey);
+            }
+        } else if ("content".equals(hyperlinkField.getTargetType())) {
+            this.appendContentUrl(buffer, hyperlinkField.getTarget(context));
+        } else if ("plain".equals(hyperlinkField.getTargetType())) {
+            buffer.append(hyperlinkField.getTarget(context));
         } else {
             buffer.append(hyperlinkField.getTarget(context));
         }
