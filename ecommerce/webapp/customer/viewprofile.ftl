@@ -145,6 +145,7 @@
       <#list partyContactMechValueMaps as partyContactMechValueMap>
         <#assign contactMech = partyContactMechValueMap.contactMech?if_exists>
         <#assign contactMechType = partyContactMechValueMap.contactMechType?if_exists>
+        <#assign partyContactMech = partyContactMechValueMap.partyContactMech?if_exists>
           <tr><td colspan="7"><hr class='sepbar'></td></tr>
           <tr>
             <td align="right" valign="top" width="10%">
@@ -163,8 +164,10 @@
                       <#if partyContactMechPurpose.thruDate?exists>(Expire:${partyContactMechPurpose.thruDate})</#if>
                     </div>
               </#list>
-              <#if contactMech.contactMechTypeId?exists = "POSTAL_ADDRESS">
+              <#if contactMech.contactMechTypeId?if_exists = "POSTAL_ADDRESS">
+                  <#assign postalAddress = partyContactMechValueMap.postalAddress?if_exists>
                   <div class="tabletext">
+                  <#if postalAddress?exists>
                     <#if postalAddress.toName?has_content><b>To:</b> ${postalAddress.toName}<br></#if>
                     <#if postalAddress.attnName?has_content><b>Attn:</b> ${postalAddress.attnName}<br></#if>
                     ${postalAddress.address1}<br>
@@ -173,31 +176,39 @@
                     ${postalAddress.stateProvinceGeoId}
                     ${postalAddress.postalCode}
                     <#if postalAddress.countryGeoId?has_content><br>${postalAddress.countryGeoId}</#if>
-                  </div>
-                  <#if postalAddress != null && (UtilValidate.isEmpty(postalAddress.getString("countryGeoId")) || postalAddress.getString("countryGeoId").equals("USA"))>
-                    <#assign addr1 =postalAddress.address1?if_exists>
-                    <#if (addr1.indexOf(' ') > 0)>
-                      <#assign addressNum = addr1.substring(0, addr1.indexOf(' '))>
-                      <#assign addressOther = addr1.substring(addr1.indexOf(' ')+1)>
-                      <a target='_blank' href='http://www.whitepages.com/find_person_results.pl?fid=a&s_n=${addressNum}&s_a=${addressOther}&c=${postalAddress.city?if_exists}&s=${postalAddress.stateProvinceGeoId?if_exists}&x=29&y=18' class='buttontext'>(lookup:whitepages.com)</a>
+                    <#if (!postalAddress.countryGeoId?has_content || postalAddress.countryGeoId?if_exists = "USA")>
+                      <#assign addr1 = postalAddress.address1?if_exists>
+                      <#if (addr1.indexOf(" ") > 0)>
+                        <#assign addressNum = addr1.substring(0, addr1.indexOf(" "))>
+                        <#assign addressOther = addr1.substring(addr1.indexOf(" ")+1)>
+                        <a target='_blank' href='http://www.whitepages.com/find_person_results.pl?fid=a&s_n=${addressNum}&s_a=${addressOther}&c=${postalAddress.city?if_exists}&s=${postalAddress.stateProvinceGeoId?if_exists}&x=29&y=18' class='buttontext'>(lookup:whitepages.com)</a>
+                      </#if>
                     </#if>
+                  <#else>
+                    Postal Address Information Not Found.
                   </#if>
-              <#elseif contactMech.contactMechTypeId?exists = "TELECOM_NUMBER">
+                  </div>
+              <#elseif contactMech.contactMechTypeId?if_exists = "TELECOM_NUMBER">
+                  <#assign telecomNumber = partyContactMechValueMap.telecomNumber?if_exists>
                   <div class="tabletext">
+                  <#if telecomNumber?exists>
                     ${telecomNumber.countryCode}
                     <#if telecomNumber.areaCode?has_content>${telecomNumber.areaCode}-</#if>${telecomNumber.contactNumber}
                     <#if partyContactMech.extension?has_content>ext&nbsp;${partyContactMech.extension}</#if>
-                    <#if telecomNumber?exists && (!telecomNumber.countryCode?has_content || telecomNumber.countryCode = "011")>
+                    <#if (!telecomNumber.countryCode?has_content || telecomNumber.countryCode = "011")>
                       <a target='_blank' href='http://www.anywho.com/qry/wp_rl?npa=${telecomNumber.areaCode?if_exists}&telephone=${telecomNumber.contactNumber?if_exists}&btnsubmit.x=20&btnsubmit.y=8' class='buttontext'>(lookup:anywho.com)</a>
                       <a target='_blank' href='http://whitepages.com/find_person_results.pl?fid=p&ac=${telecomNumber.areaCode?if_exists}&s=&p=${telecomNumber.contactNumber?if_exists}&pt=b&x=40&y=9' class='buttontext'>(lookup:whitepages.com)</a>
                     </#if>
+                  <#else>
+                    Phone Number Information Not Found.
+                  </#if>
                   </div>
-              <#elseif contactMech.contactMechTypeId?exists = "EMAIL_ADDRESS">
+              <#elseif contactMech.contactMechTypeId?if_exists = "EMAIL_ADDRESS">
                   <div class="tabletext">
                     ${contactMech.infoString}
                     <a href='mailto:${contactMech.infoString}' class='buttontext'>(send&nbsp;email)</a>
                   </div>
-              <#elseif contactMech.contactMechTypeId?exists = "WEB_ADDRESS">
+              <#elseif contactMech.contactMechTypeId?if_exists = "WEB_ADDRESS">
                   <div class="tabletext">
                     ${contactMech.infoString}
                     <#assign openAddress = contactMech.infoString?if_exists>
@@ -207,8 +218,8 @@
               <#else>
                   <div class="tabletext">${contactMech.infoString}</div>
               </#if>
-              <div class="tabletext">(Updated:&nbsp;${partyContactMech.fromDate})</div>
-              ${partyContactMech.thruDate", "<div class='tabletext'><b>Delete:&nbsp;", "</b></div>}
+              <div class="tabletext">(Updated:&nbsp;${partyContactMech.fromDate.toString()})</div>
+              <#if partyContactMech.thruDate?exists><div class='tabletext'><b>Delete:&nbsp;${partyContactMech.thruDate.toString()}</b></div></#if>
             </td>
             <td align="center" valign="top" nowrap width="1%"><div class="tabletext"><b>(${partyContactMech.allowSolicitation})</b></div></td>
             <td width="5">&nbsp;</td>
@@ -273,33 +284,31 @@
                                       <b>
                                         Credit Card: ${creditCard.nameOnCard} - ${Static["org.ofbiz.commonapp.party.contact.ContactHelper"].formatCreditCard(creditCard)}
                                       </b>
-                                      (Updated:&nbsp;${paymentMethod.fromDate})
-                                      <#if paymentMethod.thruDate?exists><b>(Delete:&nbsp;${paymentMethod.thruDate})</b></#if>
+                                      (Updated:&nbsp;${paymentMethod.fromDate.toString()})
+                                      <#if paymentMethod.thruDate?exists><b>(Delete:&nbsp;${paymentMethod.thruDate.toString()})</b></#if>
                                     </div>
                                   </td>
                                   <td width="5">&nbsp;</td>
                                   <td align="right" valign="top" width='1%' nowrap>
-                                    <div><a href='<@ofbizUrl>/editcreditcard?paymentMethodId=<%entityField.run("paymentMethod", "paymentMethodId");%></@ofbizUrl>' class="buttontext">
+                                    <div><a href='<@ofbizUrl>/editcreditcard?paymentMethodId=${paymentMethod.paymentMethodId}</@ofbizUrl>' class="buttontext">
                                     [Update]</a></div>
                                   </td>
                               <#elseif paymentMethod.paymentMethodTypeId?if_exists = "EFT_ACCOUNT">
                                   <td width="90%" valign="top">
                                     <div class="tabletext">
-                                      <b>
-                                        EFT Account: <%entityField.run("eftAccount", "nameOnAccount");%> - <%entityField.run("eftAccount", "bankName", "Bank: ", "");%> <%entityField.run("eftAccount", "accountNumber", "Account #: ", "");%>
-                                      </b>
-                                      (Updated:&nbsp;<%entityField.run("paymentMethod", "fromDate");%>)
-                                      <%entityField.run("paymentMethod", "thruDate", "<b>(Delete:&nbsp;", ")</b>");%>
+                                      <b>EFT Account: ${eftAccount.nameOnAccount?if_exists} - <#if eftAccount.bankName?has_content>Bank: ${eftAccount.bankName}</#if> <#if eftAccount.accountNumber?has_content>Account #: ${eftAccount.accountNumber}</#if></b>
+                                      (Updated:&nbsp;${paymentMethod.fromDate.toString()})
+                                      <#if paymentMethod.thruDate?exists><b>(Delete:&nbsp;${paymentMethod.thruDate.toString()})</b></#if>
                                     </div>
                                   </td>
                                   <td width="5">&nbsp;</td>
                                   <td align="right" valign="top" width='1%' nowrap>
-                                    <div><a href='<@ofbizUrl>/editeftaccount?paymentMethodId=<%entityField.run("paymentMethod", "paymentMethodId");%></@ofbizUrl>' class="buttontext">
+                                    <div><a href='<@ofbizUrl>/editeftaccount?paymentMethodId=${paymentMethod.paymentMethodId}</@ofbizUrl>' class="buttontext">
                                     [Update]</a></div>
                                   </td>
                               </#if>
                               <td align="right" valign="top" width='1%'>
-                                <div><a href='<@ofbizUrl>/deletePaymentMethod/viewprofile?paymentMethodId=<%entityField.run("paymentMethod", "paymentMethodId");%></@ofbizUrl>' class="buttontext">
+                                <div><a href='<@ofbizUrl>/deletePaymentMethod/viewprofile?paymentMethodId=${paymentMethod.paymentMethodId}</@ofbizUrl>' class="buttontext">
                                 [Expire]</a></div>
                               </td>
                             </tr>

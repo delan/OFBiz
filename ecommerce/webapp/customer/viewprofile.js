@@ -1,4 +1,4 @@
-<#--
+/*
  *  Copyright (c) 2001 The Open For Business Project - www.ofbiz.org
  *
  *  Permission is hereby granted, free of charge, to any person obtaining a 
@@ -22,14 +22,14 @@
  *@author     David E. Jones
  *@created    May 22 2001
  *@version    1.0
--->
+ */
 
 importPackage(Packages.java.lang);
 importPackage(Packages.java.util);
 importPackage(Packages.org.ofbiz.core.util);
 importPackage(Packages.org.ofbiz.core.entity);
-importPackage(Packages.org.ofbiz.commonapp.party.contact.ContactMechWorker);
-importPackage(Packages.org.ofbiz.commonapp.accounting.payment.PaymentWorker);
+importClass(Packages.org.ofbiz.commonapp.party.contact.ContactMechWorker);
+importClass(Packages.org.ofbiz.commonapp.accounting.payment.PaymentWorker);
 
 var dispatcher = request.getAttribute("dispatcher");
 var delegator = request.getAttribute("delegator");

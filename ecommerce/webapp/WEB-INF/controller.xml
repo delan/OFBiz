@@ -540,7 +540,7 @@
     <view-map name="orderhistory" type="region"/>
     <view-map name="orderstatus" type="region"/> 
 
-    <view-map name="viewprofile" type="region"/>
+    <view-map name="viewprofile" type="wsp" page="/customer/viewprofile.ftl"/>
     <view-map name="newcustomer" type="region"/>
     <view-map name="editcontactmech" type="region"/>
     <view-map name="editcreditcard" type="region"/>
