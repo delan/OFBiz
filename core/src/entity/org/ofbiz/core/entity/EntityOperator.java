@@ -48,6 +48,7 @@ public class EntityOperator implements java.io.Serializable {
     public static final int ID_AND = 10;
     public static final int ID_OR = 11;
     public static final int ID_LIKE = 12;
+    public static final int ID_NOT_IN = 13;
     
     public static final EntityOperator EQUALS = new EntityOperator(ID_EQUALS, "=");
     public static final EntityOperator NOT_EQUAL = new EntityOperator(ID_NOT_EQUAL, "<>");
@@ -61,6 +62,7 @@ public class EntityOperator implements java.io.Serializable {
     public static final EntityOperator AND = new EntityOperator(ID_AND, "AND");
     public static final EntityOperator OR = new EntityOperator(ID_OR, "OR");
     public static final EntityOperator LIKE = new EntityOperator(ID_LIKE, "LIKE");
+    public static final EntityOperator NOT_IN = new EntityOperator(ID_NOT_IN, "NOT IN");
 
     private int idInt;
     private String codeString;
