@@ -297,6 +297,9 @@ public class WorkflowServices {
     // Service 'Worker' Methods
     // -------------------------------------------------------------------
 
+    /**
+     * Checks if a user has permission to access workflow data.
+     */
     public static boolean hasPermission(Security security, String workEffortId, GenericValue userLogin) {
         if (userLogin == null || workEffortId == null) {
             Debug.logWarning("No UserLogin object or no Workeffort ID was passed.");
@@ -347,6 +350,25 @@ public class WorkflowServices {
             }
         }
         return false;
+    }
+
+    /**
+     * Returns the owner of the workflow.
+     */
+    public static GenericValue getOwner(GenericDelegator delegator, String workEffortId) {
+        try {
+            GenericValue we = delegator.findByPrimaryKey("WorkEffort", UtilMisc.toMap("workEffortId", workEffortId));
+            if (we != null && we.getString("parentWorkEffortId") == null) {
+                Collection c = delegator.findByAnd("WorkEffortPartyAssignment",
+                                                   UtilMisc.toMap("workEffortId", workEffortId, "roleTypeId", "WF_OWNER"));
+                return (GenericValue) c.iterator().next();
+            } else {
+                return getOwner(delegator, we.getString("parentWorkEffortId"));
+            }
+        } catch (GenericEntityException e) {
+            Debug.logWarning(e);
+        }
+        return null;
     }
 
 }

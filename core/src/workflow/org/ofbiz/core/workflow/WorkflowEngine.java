@@ -156,8 +156,9 @@ public class WorkflowEngine implements GenericEngine {
         }
 
         // Assign the owner of the process
+        GenericValue userLogin = null;
         if (context.containsKey("userLogin")) {
-            GenericValue userLogin = (GenericValue) context.remove("userLogin");
+            userLogin = (GenericValue) context.remove("userLogin");
             try {
                 Map fields = UtilMisc.toMap("partyId", userLogin.getString("partyId"),
                         "roleTypeId", "WF_OWNER", "workEffortId", process.runtimeKey(),
@@ -173,9 +174,12 @@ public class WorkflowEngine implements GenericEngine {
             }
         }
 
-        // Register the process
+        // Register the process and set the workflow owner
         try {
             req.registerProcess(process, context, requester);
+            Map pContext = process.processContext();
+            pContext.put("workflowOwnerId", userLogin.getString("userLoginId"));
+            process.setProcessContext(pContext);
         } catch (WfException wfe) {
             throw new GenericServiceException(wfe.getMessage(), wfe);
         }

@@ -704,10 +704,14 @@ public class WfActivityImpl extends WfExecutionObjectImpl implements WfActivity 
             context.putAll(extendedAttributes);
 
         // setup some internal buffer parameters
+        GenericValue userLogin = null;
         if (context.containsKey("runAsUser")) {
-            GenericValue userLogin = getUserLogin((String) context.get("userLogin"));
-            actualContext.put("userLogin", userLogin);
+            userLogin = getUserLogin((String) context.get("runAsUser"));
+        } else if (context.containsKey("workflowOwnerId")) {
+            userLogin = getUserLogin((String) context.get("workflowOwnerId"));
         }
+
+        context.put("userLogin", userLogin);
         context.put("workEffortId", runtimeKey());
 
         if (actualParameters != null) {
