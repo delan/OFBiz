@@ -31,6 +31,7 @@ import java.util.Iterator;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
+
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.xml.parsers.ParserConfigurationException;
@@ -51,11 +52,9 @@ import org.ofbiz.content.widget.html.HtmlTreeRenderer;
 import org.ofbiz.content.widget.menu.MenuFactory;
 import org.ofbiz.content.widget.menu.MenuStringRenderer;
 import org.ofbiz.content.widget.menu.ModelMenu;
-import org.ofbiz.content.widget.screen.ModelScreen.ScreenRenderer;
 import org.ofbiz.content.widget.tree.ModelTree;
 import org.ofbiz.content.widget.tree.TreeFactory;
 import org.ofbiz.content.widget.tree.TreeStringRenderer;
-
 import org.w3c.dom.Element;
 import org.xml.sax.SAXException;
 

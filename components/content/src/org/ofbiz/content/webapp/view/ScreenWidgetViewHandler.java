@@ -32,17 +32,13 @@ import java.util.HashMap;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
+
 import javax.servlet.ServletContext;
 import javax.servlet.ServletOutputStream;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 import javax.xml.parsers.ParserConfigurationException;
-
-import freemarker.ext.beans.BeansWrapper;
-import freemarker.ext.jsp.TaglibFactory;
-import freemarker.ext.servlet.HttpRequestHashModel;
-import freemarker.ext.servlet.HttpSessionHashModel;
 
 import org.ofbiz.base.util.Debug;
 import org.ofbiz.base.util.UtilDateTime;
@@ -55,10 +51,14 @@ import org.ofbiz.base.util.collections.MapStack;
 import org.ofbiz.content.webapp.control.LoginWorker;
 import org.ofbiz.content.widget.html.HtmlFormRenderer;
 import org.ofbiz.content.widget.html.HtmlScreenRenderer;
-import org.ofbiz.content.widget.screen.ModelScreen.ScreenRenderer;
+import org.ofbiz.content.widget.screen.ScreenRenderer;
 import org.ofbiz.entity.GenericValue;
-
 import org.xml.sax.SAXException;
+
+import freemarker.ext.beans.BeansWrapper;
+import freemarker.ext.jsp.TaglibFactory;
+import freemarker.ext.servlet.HttpRequestHashModel;
+import freemarker.ext.servlet.HttpSessionHashModel;
 
 /**
  * Handles view rendering for the Screen Widget
