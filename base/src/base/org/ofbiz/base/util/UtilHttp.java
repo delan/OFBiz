@@ -1,5 +1,5 @@
 /*
- * $Id: UtilHttp.java,v 1.3 2003/09/02 02:17:15 ajzeneski Exp $
+ * $Id: UtilHttp.java,v 1.4 2003/09/06 20:26:43 ajzeneski Exp $
  *
  *  Copyright (c) 2001, 2002 The Open For Business Project - www.ofbiz.org
  *
@@ -48,7 +48,7 @@ import javax.servlet.http.HttpSession;
  *
  * @author     <a href="mailto:jaz@ofbiz.org">Andy Zeneski</a> 
  * @author     <a href="mailto:jonesde@ofbiz.org">David E. Jones</a> 
- * @version    $Revision: 1.3 $
+ * @version    $Revision: 1.4 $
  * @since      2.1
  */
 public class UtilHttp {
@@ -260,17 +260,16 @@ public class UtilHttp {
      * 
      * @param response HttpServletResponse object to get OutputStream from
      * @param bytes Byte array of content to stream
-     * @param fileName Used for looking up content type
+     * @param contentType The content type to pass to the browser
      * @throws IOException
      */
-    public static void streamContentToBrowser(HttpServletResponse response, byte[] bytes, String fileName) throws IOException {
+    public static void streamContentToBrowser(HttpServletResponse response, byte[] bytes, String contentType) throws IOException {
         // tell the browser not the cache
         setResponseBrowserProxyNoCache(response);
         
         // set the response info
         response.setContentLength(bytes.length);
-        if (fileName != null) {
-            String contentType = getContentTypeByFileName(fileName);            
+        if (contentType != null) {                       
             response.setContentType(contentType);            
         }
         
@@ -303,17 +302,16 @@ public class UtilHttp {
      * @param response HttpServletResponse object to get OutputStream from
      * @param in InputStream of the actual content
      * @param length Size (in bytes) of the content
-     * @param fileName Used for looking up content type
+     * @param contentType The content type to pass to the browser
      * @throws IOException
      */
-    public static void streamContentToBrowser(HttpServletResponse response, InputStream in, int length, String fileName) throws IOException {
+    public static void streamContentToBrowser(HttpServletResponse response, InputStream in, int length, String contentType) throws IOException {
         // tell the browser not the cache
         setResponseBrowserProxyNoCache(response);
              
         // set the response info
         response.setContentLength(length);
-        if (fileName != null) {
-            String contentType = getContentTypeByFileName(fileName);            
+        if (contentType != null) {                      
             response.setContentType(contentType);            
         }
         
