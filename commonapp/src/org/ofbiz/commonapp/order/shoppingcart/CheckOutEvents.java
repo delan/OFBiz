@@ -533,7 +533,7 @@ public class CheckOutEvents {
             else
                 return "fail";
         } catch (GeneralException e) {
-            Debug.logError(e);
+            Debug.logError(e, "", module);
             return "error";
         }
     }
@@ -566,18 +566,18 @@ public class CheckOutEvents {
         // Get the orderId from the cart.
         String orderId = cart.getOrderId();
 
-        // Check the payment method type, if we are offline payment do not invoke the payment service.
+        // Check the payment preferences; if we hace ANY w/ status PAYMENT_NOT_AUTH invoke payment service.
         boolean requireAuth = false;
-        List paymentMethodIds = cart.getPaymentMethodIds();
-        Iterator paymentMethodIter = paymentMethodIds.iterator();
-
-        while (paymentMethodIter.hasNext() && !requireAuth) {
-            String paymentMethodId = (String) paymentMethodIter.next();
-
-            if (!paymentMethodId.equals("OFFLINE"))
-                requireAuth = true;
+        List paymentPreferences = null;
+        try {
+            Map paymentFields = UtilMisc.toMap("orderId", orderId, "statusId", "PAYMENT_NOT_AUTH");
+            paymentPreferences = delegator.findByAnd("OrderPaymentPreference", paymentFields);
+        } catch (GenericEntityException e) {
+            throw new GeneralException("Problems getting payment preferences", e);
         }
-
+        if (paymentPreferences != null && paymentPreferences.size() > 0)
+            requireAuth = true;
+        
         // Invoke payment processing.
         if (requireAuth) {
             Map paymentResult = null;
@@ -594,133 +594,96 @@ public class CheckOutEvents {
                 if (!authResp.equals("APPROVED")) {
                     // order was NOT approved
                     if (Debug.verboseOn()) Debug.logVerbose("Payment auth was NOT a success!", module);
-                    request.setAttribute(SiteDefs.ERROR_MESSAGE, "<li>" + DECLINE_MESSAGE);
-                    Map statusResult = null;
+                    request.setAttribute(SiteDefs.ERROR_MESSAGE, "<li>" + DECLINE_MESSAGE);                    
 
                     try {
                         // set the status on the order header
-                        statusResult = dispatcher.runSync("changeOrderStatus",
-                                UtilMisc.toMap("orderId", orderId, "statusId", HEADER_DECLINE_STATUS));
-                        if (statusResult.containsKey("errorMessage")) {
-                            throw new GenericServiceException((String) statusResult.get("errorMessage"));
-                        }
-
-                        // set the status on the order item(s)
-                        GenericValue orderHeader = delegator.findByPrimaryKey("OrderHeader", UtilMisc.toMap("orderId", orderId));
-
-                        if (orderHeader != null) {
-                            Collection orderItems = orderHeader.getRelated("OrderItem");
-                            if (orderItems != null && orderItems.size() > 0) {
-                                Iterator i = orderItems.iterator();
-                                while (i.hasNext()) {
-                                    GenericValue v = (GenericValue) i.next();
-                                    v.set("statusId", ITEM_DECLINE_STATUS);
-                                    v.store();
-                                }
-                            }
+                        Map statusFields = UtilMisc.toMap("orderId", orderId, "statusId", HEADER_DECLINE_STATUS, "userLogin", userLogin);
+                        Map statusResult = dispatcher.runSync("changeOrderStatus", statusFields);                               
+                        if (statusResult.containsKey(ModelService.ERROR_MESSAGE)) {
+                            throw new GeneralException("Problems adjusting order header status (" + orderId + ") : " + statusResult.get(ModelService.ERROR_MESSAGE));                            
                         }
                         
-                        // cancel inventory reservations
-                        try {
-                            Map cancelResult = dispatcher.runSync("cancelOrderInventoryReservation", UtilMisc.toMap("orderId", orderId, "userLogin", userLogin));
-                            if (ModelService.RESPOND_ERROR.equals((String) cancelResult.get(ModelService.RESPONSE_MESSAGE))) {
-                                Debug.logError("cancelOrderInventoryReservation service failed for Order with ID [" + orderId + "] - " + ServiceUtil.makeErrorMessage(cancelResult, "", "\n", "", ""), module);
-                            }
-                        } catch (GenericServiceException e) {
-                            throw new GeneralException("Error in cancelOrderInventoryReservation for Order with ID [" + orderId + "]", e);
+                        // set the status on the order item(s)
+                        Map itemStatusFields = UtilMisc.toMap("orderId", orderId, "statusId", ITEM_DECLINE_STATUS, "userLogin", userLogin);
+                        Map itemStatusResult = dispatcher.runSync("changeOrderItemStatus", itemStatusFields);                        
+                        if (itemStatusResult.containsKey(ModelService.ERROR_MESSAGE)) {
+                            throw new GeneralException("Problems adjusting order item status (" + orderId + ") : " + itemStatusResult.get(ModelService.ERROR_MESSAGE));
                         }
-
+                        
+                        // cancel the inventory reservations
+                        Map cancelInvFields = UtilMisc.toMap("orderId", orderId, "userLogin", userLogin);
+                        Map cancelInvResult = dispatcher.runSync("cancelOrderInventoryReservation", cancelInvFields);
+                        if (ModelService.RESPOND_ERROR.equals((String) cancelInvResult.get(ModelService.RESPONSE_MESSAGE))) {
+                            throw new GeneralException("Problems reversing the inventory reservations : " + cancelInvResult.get(ModelService.ERROR_MESSAGE));
+                        }
+                                              
                         // null out the orderId for next pass.
                         cart.setOrderId(null);
                         return false;
-                    } catch (GenericEntityException e) {
-                        throw new GeneralException("Problems adjusting item status (" + orderId + ")", e);
+                                           
                     } catch (GenericServiceException e) {
-                        throw new GeneralException("Problems adjusting order status (" + orderId + ")", e);
+                        throw new GeneralException("Service invocation error", e);
                     }
                 } else {
                     // order WAS approved
                     if (Debug.verboseOn()) Debug.logVerbose("Payment auth was a success!", module);
+                    
                     try {
                         // set the status on the order header
-                        Map statusResult = dispatcher.runSync("changeOrderStatus",
-                                UtilMisc.toMap("orderId", orderId, "statusId", HEADER_APPROVE_STATUS));
-
-                        if (statusResult.containsKey("errorMessage") || ModelService.RESPOND_ERROR.equals((String) statusResult.get(ModelService.RESPONSE_MESSAGE))) {
-                            Debug.logError("Order status service failed: [" + orderId + "] " + ServiceUtil.makeErrorMessage(statusResult, "", "\n", "", ""), module);
+                        Map statusFields = UtilMisc.toMap("orderId", orderId, "statusId", HEADER_APPROVE_STATUS, "userLogin", userLogin);
+                        Map statusResult = dispatcher.runSync("changeOrderStatus", statusFields);                               
+                        if (statusResult.containsKey(ModelService.ERROR_MESSAGE)) {
+                            throw new GeneralException("Problems adjusting order header status (" + orderId + ") : " + statusResult.get(ModelService.ERROR_MESSAGE));                            
                         }
-
+                        
                         // set the status on the order item(s)
-                        GenericValue orderHeader = delegator.findByPrimaryKey("OrderHeader", UtilMisc.toMap("orderId", orderId));
-
-                        if (orderHeader != null) {
-                            Collection orderItems = orderHeader.getRelated("OrderItem");
-
-                            if (orderItems != null && orderItems.size() > 0) {
-                                Iterator orderItemsIter = orderItems.iterator();
-
-                                while (orderItemsIter.hasNext()) {
-                                    GenericValue orderItem = (GenericValue) orderItemsIter.next();
-                                    orderItem.set("statusId", ITEM_APPROVE_STATUS);
-                                    orderItem.store();
-                                }
-                            }
+                        Map itemStatusFields = UtilMisc.toMap("orderId", orderId, "statusId", ITEM_APPROVE_STATUS, "userLogin", userLogin);
+                        Map itemStatusResult = dispatcher.runSync("changeOrderItemStatus", itemStatusFields);                        
+                        if (itemStatusResult.containsKey(ModelService.ERROR_MESSAGE)) {
+                            throw new GeneralException("Problems adjusting order item status (" + orderId + ") : " + itemStatusResult.get(ModelService.ERROR_MESSAGE));
                         }
+                                                                                                          
                         return true;
-                    } catch (GenericEntityException e) {
-                        throw new GeneralException("Problems adjusting item status (" + orderId + ")", e);
+                                           
                     } catch (GenericServiceException e) {
-                        throw new GeneralException("Problems adjusting order status (" + orderId + ")", e);
-                    }
+                        throw new GeneralException("Service invocation error", e);
+                    }                                                     
                 }
             } else {
                 // result returned null or service failed
                 request.setAttribute(SiteDefs.EVENT_MESSAGE, "<li>Problems with payment authorization. Please try again later.");                
                 if (Debug.verboseOn()) Debug.logVerbose("Payment auth failed due to processor trouble.", module);                    
                 
-                Map statusResult = null;
                 try {
                     // set the status on the order header
-                    statusResult = dispatcher.runSync("changeOrderStatus",
-                            UtilMisc.toMap("orderId", orderId, "statusId", HEADER_CANCELLED_STATUS));
-                    if (statusResult.containsKey("errorMessage")) {
-                        throw new GenericServiceException((String) statusResult.get("errorMessage"));
-                    }
-
-                    // set the status on the order item(s)
-                    GenericValue orderHeader = delegator.findByPrimaryKey("OrderHeader", UtilMisc.toMap("orderId", orderId));
-                    if (orderHeader != null) {
-                        Collection orderItems = orderHeader.getRelated("OrderItem");
-
-                        if (orderItems != null && orderItems.size() > 0) {
-                            Iterator i = orderItems.iterator();
-
-                            while (i.hasNext()) {
-                                GenericValue v = (GenericValue) i.next();
-                                v.set("statusId", ITEM_CANCELLED_STATUS);
-                                v.store();
-                            }
-                        }
+                    Map statusFields = UtilMisc.toMap("orderId", orderId, "statusId", HEADER_CANCELLED_STATUS, "userLogin", userLogin);
+                    Map statusResult = dispatcher.runSync("changeOrderStatus", statusFields);                               
+                    if (statusResult.containsKey(ModelService.ERROR_MESSAGE)) {
+                        throw new GeneralException("Problems adjusting order header status (" + orderId + ") : " + statusResult.get(ModelService.ERROR_MESSAGE));                            
                     }
                         
-                    // cancel inventory reservations
-                    try {
-                        Map cancelResult = dispatcher.runSync("cancelOrderInventoryReservation", UtilMisc.toMap("orderId", orderId, "userLogin", userLogin));
-                        if (ModelService.RESPOND_ERROR.equals((String) cancelResult.get(ModelService.RESPONSE_MESSAGE))) {
-                            Debug.logError("cancelOrderInventoryReservation service failed for Order with ID [" + orderId + "] - " + ServiceUtil.makeErrorMessage(cancelResult, "", "\n", "", ""), module);
-                        }
-                    } catch (GenericServiceException e) {
-                        throw new GeneralException("Error in cancelOrderInventoryReservation for Order with ID [" + orderId + "]", e);
+                    // set the status on the order item(s)
+                    Map itemStatusFields = UtilMisc.toMap("orderId", orderId, "statusId", ITEM_CANCELLED_STATUS, "userLogin", userLogin);
+                    Map itemStatusResult = dispatcher.runSync("changeOrderItemStatus", itemStatusFields);                        
+                    if (itemStatusResult.containsKey(ModelService.ERROR_MESSAGE)) {
+                        throw new GeneralException("Problems adjusting order item status (" + orderId + ") : " + itemStatusResult.get(ModelService.ERROR_MESSAGE));
                     }
-
+                        
+                    // cancel the inventory reservations
+                    Map cancelInvFields = UtilMisc.toMap("orderId", orderId, "userLogin", userLogin);
+                    Map cancelInvResult = dispatcher.runSync("cancelOrderInventoryReservation", cancelInvFields);
+                    if (ModelService.RESPOND_ERROR.equals((String) cancelInvResult.get(ModelService.RESPONSE_MESSAGE))) {
+                        throw new GeneralException("Problems reversing the inventory reservations : " + cancelInvResult.get(ModelService.ERROR_MESSAGE));
+                    }
+                                              
                     // null out the orderId for next pass.
                     cart.setOrderId(null);
                     return false;
-                } catch (GenericEntityException e) {
-                    throw new GeneralException("Problems adjusting item status (" + orderId + ")", e);
+                                           
                 } catch (GenericServiceException e) {
-                    throw new GeneralException("Problems adjusting order status (" + orderId + ")", e);
-                }                
+                    throw new GeneralException("Service invocation error", e);
+                }                                          
             }
         } else {
             // Handle NO payment gateway as a success.
