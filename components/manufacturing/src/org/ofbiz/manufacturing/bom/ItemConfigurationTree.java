@@ -27,77 +27,72 @@ public class ItemConfigurationTree {
     ItemConfigurationNode root;
     float rootQuantity;
     Date fromDate;
-    String partBomTypeId;
+    String bomTypeId;
     
     /** Creates a new instance of ItemConfigurationTree */
-    public ItemConfigurationTree(String partId, String partBomTypeId, Date fromDate, GenericDelegator delegator) throws GenericEntityException {
-        this(null, partId, partBomTypeId, fromDate, delegator);
-    }
+    public ItemConfigurationTree(String productId, String bomTypeId, Date fromDate, GenericDelegator delegator) throws GenericEntityException {
+        // If the parameters are not valid, return.
+        if (productId == null || bomTypeId == null || fromDate == null || delegator == null) return;
+        String productIdForRules = productId;
+        // The selected product features are loaded
+        List productFeatures = delegator.findByAnd("ProductFeatureAppl",
+                                              UtilMisc.toMap("productId", productId,
+                                              "productFeatureApplTypeId", "STANDARD_FEATURE"));
 
-    public ItemConfigurationTree(String productId, String partId, String partBomTypeId, Date fromDate, GenericDelegator delegator) throws GenericEntityException {
-        List productFeatures = null;
-        List productPartRules = null;
-        if (productId != null && productId.length() > 0) {
-            // The parameter partId is ignored:
-            // the partId is retrieved from ProductPartAssoc using the productId.
-            partId = null;
-            //
-            // Part breakdown is performed using the CONFIGURATOR:
-            // the VIRTUAL parts are resolved against productFeatures
-            // and partVariants.
-            // viene recuperata in partId la parte associata dall'entità ProductAttribute
-            List parts = delegator.findByAnd("ProductAssoc", 
-                                                   UtilMisc.toMap("productId", productId,
-                                                                  //"fromDate", fromDate,
-                                                                  "productAssocTypeId", "PRODUCT_PART"));
-            GenericValue part = null;
-            if (parts != null && parts.size() > 0) {
-                part = (GenericValue)parts.get(0);
-            }
-            
-            // se non viene trovata la parte:
-            //   se productId è un prodotto VARIANTE --> viene recuparata la parte del prodotto VIRTUALE ad esso associato (tramite ProductAssoc)
-            if (part == null) {
-                List virtualProducts = delegator.findByAnd("ProductAssoc", 
-                                                   UtilMisc.toMap("productIdTo", productId,
-                                                                  //"fromDate", fromDate,
-                                                                  "productAssocTypeId", "PRODUCT_VARIANT"));
-                if (virtualProducts != null && virtualProducts.size() > 0) {
-                    GenericValue virtualProduct = (GenericValue)virtualProducts.get(0);
-                    parts = delegator.findByAnd("ProductAssoc",
-                                                   UtilMisc.toMap("productId", (String)virtualProduct.get("productId"),
-                                                                  "productAssocTypeId", "PRODUCT_PART"));
-                    if (parts != null && parts.size() > 0) {
-                        part = (GenericValue)parts.get(0);
-                    }
-
-                }
-            }
-            if (part != null) {
-                partId = (String)part.get("productIdTo");
-                String productForRules = (String)part.get("productId");
-                // vengono recuperate in productFeatures le eventuali FEATURES del prodotto productId
-                productFeatures = delegator.findByAnd("ProductFeatureAppl",
-                                                       UtilMisc.toMap("productId", productId,
-                                                                      "productFeatureApplTypeId", "STANDARD_FEATURE"));
-
-                // vengono recuperate le regole
-                productPartRules = delegator.findByAnd("ProductPartRule",
-                                                       UtilMisc.toMap("productId", productForRules));
-                                                                      //"fromDate", fromDate));
+        // If the product is manufactured as a different product,
+        // load the new product
+        GenericValue manufacturedAsProduct = manufacturedAsProduct(productId, delegator);
+        // We load the information about the product that needs to be manufactured
+        // from Product entity
+        GenericValue product = delegator.findByPrimaryKey("Product", 
+                                            UtilMisc.toMap("productId", 
+                                            (manufacturedAsProduct != null? manufacturedAsProduct.getString("productIdTo"): productId)));
+        if (product == null) return;
+        // If the product hasn't a bill of materials we try to retrieve
+        // the bill of materials of its virtual product (if the current
+        // product is variant).
+        if (!hasBom(product) && product.get("isVariant")!=null && 
+                product.getString("isVariant").equals("Y")) {
+            List virtualProducts = product.getRelatedByAnd("AssocProductAssoc", UtilMisc.toMap("productAssocTypeId", "PRODUCT_VARIANT"));
+            if (virtualProducts != null && virtualProducts.size() > 0) {
+                GenericValue virtualProduct = (GenericValue)virtualProducts.get(0);
+                // If the virtual product is manufactured as a different product,
+                // load the new product
+                productIdForRules = virtualProduct.getString("productId");
+                manufacturedAsProduct = manufacturedAsProduct(virtualProduct.getString("productId"), delegator);
+                product = delegator.findByPrimaryKey("Product", 
+                                            UtilMisc.toMap("productId", 
+                                            (manufacturedAsProduct != null? manufacturedAsProduct.getString("productIdTo"): virtualProduct.get("productId"))));
             }
         }
+        if (product == null) return;
         try {
-            if (partId != null && partId.length() > 0) {
-                root = new ItemConfigurationNode(partId, delegator);
-                root.loadChildren(partBomTypeId, fromDate, productFeatures, productPartRules);
-            }
+            root = new ItemConfigurationNode(product);
+            root.setProductForRules(productIdForRules);
+            root.loadChildren(bomTypeId, fromDate, productFeatures);
         } catch(GenericEntityException gee) {
             root = null;
         }
-        this.partBomTypeId = partBomTypeId;
+        this.bomTypeId = bomTypeId;
         this.fromDate = fromDate;
         rootQuantity = 1;
+    }
+
+    private GenericValue manufacturedAsProduct(String productId, GenericDelegator delegator) throws GenericEntityException {
+        List manufacturedAsProducts = delegator.findByAnd("ProductAssoc", 
+                                         UtilMisc.toMap("productId", productId,
+                                         //"fromDate", fromDate,
+                                         "productAssocTypeId", "PRODUCT_MANUFACTURED"));
+        GenericValue manufacturedAsProduct = null;
+        if (manufacturedAsProducts != null && manufacturedAsProducts.size() > 0) {
+            manufacturedAsProduct = (GenericValue)manufacturedAsProducts.get(0);
+        }
+        return manufacturedAsProduct;
+    }
+    
+    private boolean hasBom(GenericValue product) throws GenericEntityException {
+        List children = product.getRelatedByAnd("MainProductAssoc", UtilMisc.toMap("productAssocTypeId", bomTypeId));
+        return (children != null && children.size() > 0);
     }
 
     public boolean isConfigured() {
@@ -139,12 +134,12 @@ public class ItemConfigurationTree {
         return fromDate;
     }
     
-    /** Getter for property partBomTypeId.
-     * @return Value of property partBomTypeId.
+    /** Getter for property bomTypeId.
+     * @return Value of property bomTypeId.
      *
      */
-    public String getPartBomTypeId() {
-        return partBomTypeId;
+    public String getBomTypeId() {
+        return bomTypeId;
     }
     
     // ------------------------------------
