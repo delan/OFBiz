@@ -37,10 +37,11 @@ import java.util.*;
  */
 public class StringUtil {
 
-    /** Creates a string seperated by delimimiter from a List of strings
-     *@param list a list of strings to join
-     *@param delim the delimiter character(s) to use. (null value will join with no delimiter)
-     *@return a String of all values in the list seperated by the delimiter
+    /**
+     * Creates a single string from a List of strings seperated by a delimiter.
+     * @param list a list of strings to join
+     * @param delim the delimiter character(s) to use. (null value will join with no delimiter)
+     * @return a String of all values in the list seperated by the delimiter
      */
     public static String join(List list, String delim) {
         if (list == null || list.size() < 1)
@@ -55,10 +56,11 @@ public class StringUtil {
         return buf.toString();
     }
 
-    /** Splits a String on a delimiter into a List of Strings.
-     *@param str the String to split
-     *@param delim the delimiter character(s) to join on (null will split on whitespace)
-     *@return a list of Strings
+    /**
+     * Splits a String on a delimiter into a List of Strings.
+     * @param str the String to split
+     * @param delim the delimiter character(s) to join on (null will split on whitespace)
+     * @return a list of Strings
      */
     public static List split(String str, String delim) {
         List splitList = null;
@@ -81,9 +83,26 @@ public class StringUtil {
         return splitList;
     }
 
-    /** Creates a Map from an encoded name/value pair string
-     *@param str The string to decode and format
-     *@return a Map of name/value pairs
+    /**
+     * Encloses each of a List of Strings in quotes.
+     * @param list List of String(s) to quote.
+     */
+    public static List quoteStrList(List list) {
+        List tmpList = list;
+        list = new ArrayList();
+        Iterator i = tmpList.iterator();
+        while (i.hasNext()) {
+            String str = (String) i.next();
+            str = "'" + str + "''";
+            list.add(str);
+        }
+        return list;
+    }
+
+    /**
+     * Creates a Map from an encoded name/value pair string
+     * @param str The string to decode and format
+     * @return a Map of name/value pairs
      */
     public static Map strToMap(String str) {
         if (str == null) return null;
@@ -102,9 +121,10 @@ public class StringUtil {
         return decodedMap;
     }
 
-    /** Creates an encoded String from a Map of name/value pairs (MUST BE STRINGS!)
-     *@param map The Map of name/value pairs
-     *@return String The encoded String
+    /**
+     * Creates an encoded String from a Map of name/value pairs (MUST BE STRINGS!)
+     * @param map The Map of name/value pairs
+     * @return String The encoded String
      */
     public static String mapToStr(Map map) {
         if (map == null) return null;
