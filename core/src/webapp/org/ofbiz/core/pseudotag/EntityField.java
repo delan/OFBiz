@@ -161,9 +161,14 @@ public class EntityField {
         }
 
         // Get the Locale from the Request object.
-        Locale userLocale = pageContext.getRequest().getLocale();
-        if (userLocale == null)
+        Locale userLocale = null;
+        if (false) {
+            //disable this until we get i18n issues addressed
+            userLocale = pageContext.getRequest().getLocale();
+        }
+        if (userLocale == null) {
             userLocale = Locale.getDefault();
+        }
 
         // Format the Object based on its type.
         String fieldString = null;
