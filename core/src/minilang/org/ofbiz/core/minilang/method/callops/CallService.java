@@ -162,6 +162,17 @@ public class CallService extends MethodOperation {
             methodContext.putEnv(inMapName, inMap);
         }
 
+        //before invoking the service, clear messages
+        if (methodContext.getMethodType() == MethodContext.EVENT) {
+            methodContext.removeEnv(simpleMethod.getEventErrorMessageName());
+            methodContext.removeEnv(simpleMethod.getEventEventMessageName());
+            methodContext.removeEnv(simpleMethod.getEventResponseCodeName());
+        } else if (methodContext.getMethodType() == MethodContext.SERVICE) {
+            methodContext.removeEnv(simpleMethod.getServiceErrorMessageName());
+            methodContext.removeEnv(simpleMethod.getServiceSuccessMessageName());
+            methodContext.removeEnv(simpleMethod.getServiceResponseMessageName());
+        }
+        
         // invoke the service
         Map result = null;
         if (includeUserLogin) {

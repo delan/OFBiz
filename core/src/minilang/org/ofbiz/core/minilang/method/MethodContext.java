@@ -94,6 +94,7 @@ public class MethodContext {
     public Object getEnv(String key) { return this.env.get(key); }
     public void putEnv(String key, Object value) { this.env.put(key, value); }
     public void putAllEnv(Map values) { this.env.putAll(values); }
+    public Object removeEnv(String key) { return this.env.remove(key); }
     public Iterator getEnvEntryIterator() { return this.env.entrySet().iterator(); }
 
     public Object getParameter(String key) { return this.parameters.get(key); }

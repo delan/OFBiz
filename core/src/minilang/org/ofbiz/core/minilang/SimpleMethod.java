@@ -365,8 +365,8 @@ public class SimpleMethod {
             if (tempErrorMsg != null && tempErrorMsg.length() > 0) {
                 errorMsg += tempErrorMsg;
                 methodContext.getRequest().setAttribute(SiteDefs.ERROR_MESSAGE, errorMsg);
-            }
-
+            } 
+            
             String eventMsg = (String) methodContext.getEnv(eventEventMessageName);
             if (eventMsg != null && eventMsg.length() > 0) {
                 methodContext.getRequest().setAttribute(SiteDefs.EVENT_MESSAGE, eventMsg);
