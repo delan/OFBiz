@@ -1,5 +1,5 @@
 /*
- * $Id: FindServices.java,v 1.5 2004/02/16 21:36:51 jonesde Exp $
+ * $Id: FindServices.java,v 1.6 2004/02/17 17:51:39 jonesde Exp $
  *
  * Copyright (c) 2001, 2002 The Open For Business Project - www.ofbiz.org
  *
@@ -50,7 +50,7 @@ import org.ofbiz.service.ServiceUtil;
  * FindServices Class
  *
  * @author     <a href="mailto:byersa@automationgroups.com">Al Byers</a>
- * @version    $Revision: 1.5 $
+ * @version    $Revision: 1.6 $
  * @since      2.2
  */
 public class FindServices {
@@ -310,7 +310,7 @@ public class FindServices {
             /* Retrieve entities  - an iterator over all the values*/
             try {
                 listIt = delegator.findListIteratorByCondition(entityName, exprList,
-                        null, null, null, new EntityFindOptions(false, EntityFindOptions.TYPE_SCROLL_INSENSITIVE, EntityFindOptions.CONCUR_READ_ONLY, true));
+                        null, null, null, new EntityFindOptions(true, EntityFindOptions.TYPE_SCROLL_INSENSITIVE, EntityFindOptions.CONCUR_READ_ONLY, false));
             } catch (GenericEntityException e) {
                 return ServiceUtil.returnError("Error finding iterator: " + e.getMessage());
             }
@@ -322,7 +322,7 @@ public class FindServices {
                 EntityExpr pkExpr = new EntityExpr(pkName, EntityOperator.LIKE, "%");
                 */
                 listIt = delegator.findListIteratorByCondition(entityName, null,
-                        null, null, null, new EntityFindOptions(false, EntityFindOptions.TYPE_SCROLL_INSENSITIVE, EntityFindOptions.CONCUR_READ_ONLY, true));
+                        null, null, null, new EntityFindOptions(true, EntityFindOptions.TYPE_SCROLL_INSENSITIVE, EntityFindOptions.CONCUR_READ_ONLY, false));
             } catch (GenericEntityException e) {
                 return ServiceUtil.returnError("Error finding all: " + e.getMessage());
             }
