@@ -1,5 +1,5 @@
 /*
- * $Id: PaymentGatewayServices.java,v 1.21 2003/11/25 06:05:35 jonesde Exp $
+ * $Id: PaymentGatewayServices.java,v 1.22 2003/12/03 18:54:13 ajzeneski Exp $
  *
  *  Copyright (c) 2002 The Open For Business Project - www.ofbiz.org
  *
@@ -62,7 +62,7 @@ import org.ofbiz.service.ServiceUtil;
  * PaymentGatewayServices
  *
  * @author     <a href="mailto:jaz@ofbiz.org">Andy Zeneski</a>
- * @version    $Revision: 1.21 $
+ * @version    $Revision: 1.22 $
  * @since      2.0
  */
 public class PaymentGatewayServices {
@@ -623,7 +623,7 @@ public class PaymentGatewayServices {
 
         // get the invoice amount (amount to bill)
         double invoiceTotal = InvoiceWorker.getInvoiceTotal(invoice);
-        Debug.log("Invoice total: " + invoiceTotal, module);
+        Debug.logInfo("Invoice total: " + invoiceTotal, module);
 
         // now capture the order
         Map serviceContext = UtilMisc.toMap("userLogin", userLogin, "orderId", testOrderId, "invoiceId", invoiceId, "captureAmount", new Double(invoiceTotal));
@@ -688,7 +688,7 @@ public class PaymentGatewayServices {
         double orderTotal = orh.getOrderGrandTotal();
         double totalPayments = PaymentWorker.getPaymentsTotal(orh.getOrderPayments());
         double remainingTotal = orderTotal - totalPayments;
-        Debug.log("Remaining Total: " + remainingTotal, module);
+        Debug.logInfo("Remaining Total: " + remainingTotal, module);
 
         // re-format the remaining total
         String currencyFormat = UtilProperties.getPropertyValue("general.properties", "currency.decimal.format", "##0.00");
@@ -707,10 +707,10 @@ public class PaymentGatewayServices {
         if (captureAmount == null) {
             captureAmount = new Double(remainingTotal);
         }
-        Debug.log("Formatted Remaining total : " + remainingTotal, module);
+        Debug.logInfo("Formatted Remaining total : " + remainingTotal, module);
 
         double amountToCapture = captureAmount.doubleValue();
-        Debug.log("Expected Capture Amount : " + amountToCapture, module);
+        Debug.logInfo("Expected Capture Amount : " + amountToCapture, module);
 
         // if we have a billing account get balance/limit and available
         GenericValue billingAccount = null;
@@ -812,7 +812,7 @@ public class PaymentGatewayServices {
                 // create any splits which are needed
                 if (authAmount.doubleValue() > amountThisCapture) {
                     // create a new payment preference and authorize it
-                    Debug.log("Creating payment preference split", module);
+                    Debug.logInfo("Creating payment preference split", module);
                     double newAmount = authAmount.doubleValue() - amountThisCapture;
                     String newPrefId = delegator.getNextSeqId("OrderPaymentPreference").toString();
                     GenericValue newPref = delegator.makeValue("OrderPaymentPreference", UtilMisc.toMap("orderPaymentPreferenceId", newPrefId));
@@ -821,7 +821,7 @@ public class PaymentGatewayServices {
                     newPref.set("paymentMethodId", paymentPref.get("paymentMethodId"));
                     newPref.set("maxAmount", paymentPref.get("maxAmount"));
                     newPref.set("statusId", "PAYMENT_NOT_AUTH");
-                    Debug.log("New preference : " + newPref, module);
+                    Debug.logInfo("New preference : " + newPref, module);
                     try {
                         // create the new payment preference
                         delegator.create(newPref);
@@ -897,7 +897,7 @@ public class PaymentGatewayServices {
         captureContext.put("captureAmount", new Double(amount));
         captureContext.put("currency", orh.getCurrency());
 
-        Debug.log("Capture : " + captureContext, module);
+        Debug.logInfo("Capture [" + serviceName + "] : " + captureContext, module);
 
         // now invoke the capture service
         Map captureResult = null;
@@ -1002,7 +1002,7 @@ public class PaymentGatewayServices {
             throw new GeneralException("Unable to process null capture amount");
         }
 
-        Debug.log("Invoice ID: " + invoiceId, module);
+        Debug.logInfo("Invoice ID: " + invoiceId, module);
 
         if (payTo == null)
             payTo = "Company";
@@ -1058,7 +1058,7 @@ public class PaymentGatewayServices {
 
             // create the PaymentApplication if invoiceId is available
             if (invoiceId != null) {
-                Debug.log("Processing Invoice #" + invoiceId, module);
+                Debug.logInfo("Processing Invoice #" + invoiceId, module);
                 Map paCtx = UtilMisc.toMap("paymentId", paymentId, "invoiceId", invoiceId);
                 paCtx.put("amountApplied", result.get("captureAmount"));
                 paCtx.put("userLogin", userLogin);
