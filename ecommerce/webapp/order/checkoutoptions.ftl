@@ -24,7 +24,7 @@
  *@since      2.1
 -->
 
-<#assign cart = content.shoppingCart>
+<#assign cart = context.shoppingCart>
 
 <form method="post" name="checkoutInfoForm" action="<@ofbizUrl>/checkout</@ofbizUrl>" style='margin:0;'>
   <table width="100%" border="0" cellpadding='0' cellspacing='0'>
@@ -48,7 +48,7 @@
                 <tr>
                   <td>
                     <table width='100%' cellpadding='1' border='0' cellpadding='0' cellspacing='0'>
-                      <#list content.carrierShipmentMethodList as carrierShipmentMethod>                    
+                      <#list context.carrierShipmentMethodList as carrierShipmentMethod>                    
                         <tr>
                           <td width='1%' valign="top" >
                             <#assign shippingMethod = carrierShipmentMethod.shipmentMethodTypeId + "@" + carrierShipmentMethod.partyId>
@@ -138,7 +138,7 @@
                           <div class="tabletext">Your order will be sent to the following email addresses:</div>
                           <div class="tabletext">
                             <b>
-                              <#list content.emailList as email>
+                              <#list context.emailList as email>
                                 ${email.infoString?if_exists}<#if email_has_next>,</#if>
                               </#list>
                             </b>
@@ -182,9 +182,9 @@
                           <a href="<@ofbizUrl>/editcontactmech?preContactMechTypeId=POSTAL_ADDRESS&contactMechPurposeTypeId=SHIPPING_LOCATION&DONE_PAGE=checkoutoptions</@ofbizUrl>" class="buttontext">[Add New Address]</a>
                         </td>
                       </tr>
-                       <#if content.shippingContactMechList?has_content>
+                       <#if context.shippingContactMechList?has_content>
                          <tr><td colspan="2"><hr class='sepbar'></td></tr>
-                         <#list content.shippingContactMechList as shippingContactMech>
+                         <#list context.shippingContactMechList as shippingContactMech>
                            <#assign shippingAddress = shippingContactMech.getRelatedOne("PostalAddress")>
                            <tr>
                              <td align="left" valign="top" width="1%" nowrap>
@@ -243,7 +243,7 @@
                       <tr><td colspan="2"><hr class='sepbar'></td></tr>
                       <tr>
                         <td width="1%" nowrap>
-                          <input type="radio" name="checkOutPaymentId" value="EXT_OFFLINE" <#if "EXT_OFFLINE" == content.checkOutPaymentId>checked</#if>>
+                          <input type="radio" name="checkOutPaymentId" value="EXT_OFFLINE" <#if "EXT_OFFLINE" == context.checkOutPaymentId>checked</#if>>
                         </td>
                         <td width="50%" nowrap>
                           <span class="tabletext">Offline:&nbsp;Check/Money Order</span>
@@ -251,7 +251,7 @@
                       </tr> 
                       <tr>
                         <td width="1%" nowrap>
-                          <input type="radio" name="checkOutPaymentId" value="EXT_WORLDPAY" <#if "EXT_WORLDPAY" == content.checkOutPaymentId>checked</#if>>
+                          <input type="radio" name="checkOutPaymentId" value="EXT_WORLDPAY" <#if "EXT_WORLDPAY" == context.checkOutPaymentId>checked</#if>>
                         </td>
                         <td width="50%" nowrap>
                           <span class="tabletext">Pay With WorldPay</span>
@@ -259,14 +259,14 @@
                       </tr>    
                       <tr>
                         <td width="1%" nowrap>
-                          <input type="radio" name="checkOutPaymentId" value="EXT_PAYPAL" <#if "EXT_PAYPAL" == content.checkOutPaymentId>checked</#if>>
+                          <input type="radio" name="checkOutPaymentId" value="EXT_PAYPAL" <#if "EXT_PAYPAL" == context.checkOutPaymentId>checked</#if>>
                         </td>
                         <td width="50%" nowrap>
                           <span class="tabletext">Pay With PayPal</span>
                         </td>
                       </tr>    
                       <tr><td colspan="2"><hr class='sepbar'></td></tr>
-                      <#list content.paymentMethodList as paymentMethod>
+                      <#list context.paymentMethodList as paymentMethod>
                         <#if paymentMethod.paymentMethodTypeId == "CREDIT_CARD">
                           <#assign creditCard = paymentMethod.getRelatedOne("CreditCard")>
                           <tr>                 

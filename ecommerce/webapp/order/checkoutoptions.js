@@ -27,16 +27,29 @@
 importPackage(Packages.java.lang);
 importPackage(Packages.org.ofbiz.core.util);
 importPackage(Packages.org.ofbiz.core.entity);
+importPackage(Packages.org.ofbiz.commonapp.party.contact.ContactHelper);
 
 var cart = session.getAttribute(SiteDefs.SHOPPING_CART);
 var userLogin = session.getAttribute("userLogin");
-var party = userLogin.getRelatedOne("Party");
 
-context.setAttribute("shoppingCart", cart);
-context.setAttribute("carrierShipmentMethodList", delegator.findAllCache("CarrierShipmentMethod", UtilMisc.toList("sequenceNumber")));
-context.setAttribute("shippingContactMechList", ContactHelper.getContactMech(party, "SHIPPING_LOCATION", "POSTAL_ADDRESS", false));   
-context.setAttribute("paymentMethodList", EntityUtil.filterByDate(party.getRelated("PaymentMethod"), true)); 
-context.setAttribute("emailList",  ContactHelper.getContactMechByType(party, "EMAIL_ADDRESS", false));
-context.setAttribute("billingAccountRoleList", delegator.findByAnd("BillingAccountRole", UtilMisc.toMap("partyId", userLogin.getString("partyId"), "roleTypeId", "BILL_TO_CUSTOMER"), null));
+var checkOutPaymentId = "";
+if (cart != null) {
+    if (cart.getPaymentMethodIds().size() > 0) {
+        checkOutPaymentId = (String) cart.getPaymentMethodIds().get(0);
+    } else if (cart.getPaymentMethodTypeIds().size() > 0) {
+        checkOutPaymentId = (String) cart.getPaymentMethodTypeIds().get(0);
+    }
+}
 
-<%String chosenShippingMethod = cart.getShipmentMethodTypeId() + '@' + cart.getCarrierPartyId();%>  
+context.put("shoppingCart", cart);
+context.put("userLogin", userLogin);
+context.put("checkOutPaymentId", checkOutPaymentId);
+context.put("chosenShippingMethod", cart.getShipmentMethodTypeId() + '@' + cart.getCarrierPartyId());
+context.put("carrierShipmentMethodList", delegator.findAllCache("CarrierShipmentMethod", UtilMisc.toList("sequenceNumber")));
+context.put("shippingContactMechList", ContactHelper.getContactMech(party, "SHIPPING_LOCATION", "POSTAL_ADDRESS", false));   
+context.put("paymentMethodList", EntityUtil.filterByDate(party.getRelated("PaymentMethod"), true)); 
+context.put("emailList",  ContactHelper.getContactMechByType(party, "EMAIL_ADDRESS", false));
+context.put("billingAccountRoleList", delegator.findByAnd("BillingAccountRole", UtilMisc.toMap("partyId", userLogin.getString("partyId"), "roleTypeId", "BILL_TO_CUSTOMER"), null));
+
+  
+
