@@ -25,6 +25,7 @@
 package org.ofbiz.core.workflow.definition;
 
 import java.io.IOException;
+import java.text.*;
 import java.util.*;
 import java.net.*;
 import javax.xml.parsers.*;
@@ -160,7 +161,7 @@ public class XpdlReader {
         // RedefinableHeader?
         Element redefinableHeaderElement = UtilXml.firstChildElement(packageElement, "RedefinableHeader");
         boolean packageOk = readRedefinableHeader(redefinableHeaderElement, packageValue, "package");
-        String packageVersion = packageValue.getString("packageVersion");
+        String packageVersion = packageValue.getString("packageVersion");       
 
         // Only do these if the package hasn't been imported.
         if (packageOk) {
@@ -213,12 +214,12 @@ public class XpdlReader {
 
     protected boolean readRedefinableHeader(Element redefinableHeaderElement, GenericValue valueObject, String prefix) throws DefinitionParserException {
         if (redefinableHeaderElement == null) {
-            valueObject.set(prefix + "Version", "_NA_");
+            valueObject.set(prefix + "Version", UtilDateTime.nowDateString());
             return checkVersion(valueObject, prefix);
         }
 
         valueObject.set("author", UtilXml.childElementValue(redefinableHeaderElement, "Author"));
-        valueObject.set(prefix + "Version", UtilXml.childElementValue(redefinableHeaderElement, "Version", "_NA_"));
+        valueObject.set(prefix + "Version", UtilXml.childElementValue(redefinableHeaderElement, "Version", UtilDateTime.nowDateString()));
         valueObject.set("codepage", UtilXml.childElementValue(redefinableHeaderElement, "Codepage"));
         valueObject.set("countryGeoId", UtilXml.childElementValue(redefinableHeaderElement, "Countrykey"));
         valueObject.set("publicationStatusId", "WPS_" + redefinableHeaderElement.getAttribute("PublicationStatus"));
@@ -475,7 +476,7 @@ public class XpdlReader {
         // RedefinableHeader?
         Element redefinableHeaderElement = UtilXml.firstChildElement(workflowProcessElement, "RedefinableHeader");
         boolean processOk = readRedefinableHeader(redefinableHeaderElement, workflowProcessValue, "process");
-        String processVersion = workflowProcessValue.getString("processVersion");
+        String processVersion = workflowProcessValue.getString("processVersion");        
 
         if (!processOk) {
             values.remove(workflowProcessValue);
@@ -1301,7 +1302,7 @@ public class XpdlReader {
         }
         return defaultValue;
     }
-
+    
     // ---------------------------------------------------------
     // RUNTIME, TEST, AND SAMPLE METHODS
     // ---------------------------------------------------------
