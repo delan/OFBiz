@@ -496,14 +496,6 @@
   <StatusValidChange condition="" statusId="WF_RUNNING" statusIdTo="WF_COMPLETED" transitionName="Suspend"/>
   <StatusValidChange condition="" statusId="WF_RUNNING" statusIdTo="WF_TERMINATED" transitionName="Suspend"/>
   <StatusValidChange condition="" statusId="WF_RUNNING" statusIdTo="WF_ABORTED" transitionName="Suspend"/>
-  <StatusItem description="Needs Action" sequenceId="01" statusCode="NEEDS ACTION" statusId="CAL_ASN_NEEDS_ACTION" statusTypeId="CALENDAR_ASSIGN"/>
-  <StatusItem description="Accepted" sequenceId="02" statusCode="ACCEPTED" statusId="CAL_ASN_ACCEPTED" statusTypeId="CALENDAR_ASSIGN"/>
-  <StatusItem description="Sent" sequenceId="03" statusCode="SENT" statusId="CAL_ASN_SENT" statusTypeId="CALENDAR_ASSIGN"/>
-  <StatusItem description="Tentative" sequenceId="04" statusCode="TENTATIVE" statusId="CAL_ASN_TENTATIVE" statusTypeId="CALENDAR_ASSIGN"/>
-  <StatusItem description="Confirmed" sequenceId="05" statusCode="CONFIRMED" statusId="CAL_ASN_CONFIRMED" statusTypeId="CALENDAR_ASSIGN"/>
-  <StatusItem description="Declined" sequenceId="06" statusCode="DECLINED" statusId="CAL_ASN_DECLINED" statusTypeId="CALENDAR_ASSIGN"/>
-  <StatusItem description="Completed" sequenceId="07" statusCode="COMPLETED" statusId="CAL_ASN_COMPLETED" statusTypeId="CALENDAR_ASSIGN"/>
-  <StatusItem description="Delegated" sequenceId="08" statusCode="DELEGATED" statusId="CAL_ASN_DELEGATED" statusTypeId="CALENDAR_ASSIGN"/>
   <StatusItem description="Under Revision" sequenceId="01" statusCode="UNDER_REVISION" statusId="WPS_UNDER_REVISION" statusTypeId="WORKFLOW_PUB_STATUS"/>
   <StatusItem description="Under Test"  sequenceId="02" statusCode="UNDER_TEST" statusId="WPS_UNDER_TEST" statusTypeId="WORKFLOW_PUB_STATUS"/>
   <StatusItem description="Released"  sequenceId="03" statusCode="RELEASED" statusId="WPS_RELEASED" statusTypeId="WORKFLOW_PUB_STATUS"/>
@@ -530,7 +522,6 @@
   <StatusType description="" hasTable="N" parentTypeId="" statusTypeId="SERVER_HIT_STATUS"/>
   <StatusType description="" hasTable="N" parentTypeId="" statusTypeId="WEB_CONTENT_STATUS"/>
   <StatusType description="" hasTable="N" parentTypeId="" statusTypeId="WORK_EFFORT_ASSIGN"/>
-  <StatusType description="" hasTable="N" parentTypeId="" statusTypeId="CALENDAR_ASSIGN"/>
   <SubscriptionType description="" hasTable="N" parentTypeId="" subscriptionTypeId="NEWSGROUP_SUBSCR"/>
   <SubscriptionType description="" hasTable="N" parentTypeId="" subscriptionTypeId="OTHER_SUBSCR"/>
   <SubscriptionType description="" hasTable="N" parentTypeId="" subscriptionTypeId="PRODUCT_INFO_SUBSCR"/>
