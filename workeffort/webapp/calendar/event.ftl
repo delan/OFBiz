@@ -1,4 +1,3 @@
-
 <#--
  *  Copyright (c) 2001 The Open For Business Project - www.ofbiz.org
  *
@@ -36,7 +35,11 @@
       <table width='100%' border='0' cellspacing='0' cellpadding='0' class='boxtop'>
         <tr>
           <td align=left width='40%' class="boxhead">Calendar Event Details</td>
-          <td align=right width='60%'><a href='<@ofbizUrl>/day</@ofbizUrl>' class='submenutext'>Day&nbsp;View</a><a href='<@ofbizUrl>/week</@ofbizUrl>' class='submenutext'>Week&nbsp;View</a><a href='<@ofbizUrl>/month</@ofbizUrl>' class='submenutext'>Month&nbsp;View</a><a href='<@ofbizUrl>/upcoming</@ofbizUrl>' class='submenutext'>Upcoming&nbsp;Events</a><a href='<@ofbizUrl>/event</@ofbizUrl>' class='submenutextrightdisabled'>New&nbsp;Event</a></td>
+          <td align=right width='60%'>
+		  <table><tr><td>
+		  <a href='<@ofbizUrl>/day</@ofbizUrl>' class='submenutext'>Day&nbsp;View</a><a href='<@ofbizUrl>/week</@ofbizUrl>' class='submenutext'>Week&nbsp;View</a><a href='<@ofbizUrl>/month</@ofbizUrl>' class='submenutext'>Month&nbsp;View</a><a href='<@ofbizUrl>/upcoming</@ofbizUrl>' class='submenutext'>Upcoming&nbsp;Events</a><a href='<@ofbizUrl>/event</@ofbizUrl>' class='submenutextrightdisabled'>New&nbsp;Event</a>
+		  </td></tr></table>
+		  </td>
         </tr>
       </table>
     </td>
@@ -46,27 +49,26 @@
       <table width='100%' border='0' cellspacing='0' cellpadding='0' class='boxbottom'>
         <tr>
           <td>
+              <div class='tabContainer'>
+                  <a href="<@ofbizUrl>/event?workEffortId=${workEffortId}</@ofbizUrl>" class="tabButtonSelected">Event</a>
+                  <a href="<@ofbizUrl>/eventPartyAssignments?workEffortId=${workEffortId}</@ofbizUrl>" class="tabButton">Parties</a>
+                  <a href="<@ofbizUrl>/eventContactMechs?workEffortId=${workEffortId}</@ofbizUrl>" class="tabButton">Contact information</a>
+              </div>					
             <#if canView = true>
               <#if workEffort?has_content>
-			  
-			    <div class='tabContainer'>
-  <a href="<@ofbizUrl>/event?workEffortId=${workEffortId}</@ofbizUrl>" class="tabButtonSelected">Event</a>
-  <a href="<@ofbizUrl>/eventPartyAssignments?workEffortId=${workEffortId}</@ofbizUrl>" class="tabButton">Parties</a>
-  <a href="<@ofbizUrl>/eventContactMechs?workEffortId=${workEffortId}</@ofbizUrl>" class="tabButton">Contact information</a>
-  </div>
-  
                 <form action="<@ofbizUrl>/updateevent</@ofbizUrl>" name="eventform" method=POST style='margin: 0;'>
+                <table border='0' cellpadding='2' cellspacing='0'>
                   <input type='hidden' name='workEffortId' value='${workEffortId}'>              
               <#else>
                 <form action="<@ofbizUrl>/createevent</@ofbizUrl>" name="eventform" method=POST style='margin: 0;'>
                 <input type='hidden' name='quickAssignPartyId' value='${userLogin.partyId}'>
-
+                <table border='0' cellpadding='2' cellspacing='0'>
                   <input type='hidden' name='workEffortTypeId' value='EVENT'>
                   <#if workEffortId?has_content>
                     <div class='tabletext'>ERROR: Could not find Event with ID "${workEffortId}"</div>
                   </#if>
               </#if>
-                <table border='0' cellpadding='2' cellspacing='0'>
+
                 <tr>
                   <td width='26%' align=right><div class='tabletext'>Event Name</div></td>
                   <td>&nbsp;</td>
