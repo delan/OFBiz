@@ -83,7 +83,7 @@ public class FreeMarkerViewRenderer extends org.jpublish.view.freemarker.FreeMar
                      //root.put(key, wrapper.wrap(value));
                      root.put(key, value);
                  }
-                 //Debug.logInfo("Key: " + key + " Value: " + context.get(key), module);
+                 //Debug.logInfo("Key: " + key + " Value: " + value + ":" + (value == null ? "null" : value.getClass().getName()), module);
              }
              root.put("context", wrapper.wrap(contextMap));                          
              FreeMarkerViewHandler.prepOfbizRoot(root, request, response);                     
