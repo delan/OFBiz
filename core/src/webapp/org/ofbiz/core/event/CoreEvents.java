@@ -249,7 +249,39 @@ public class CoreEvents {
         }
         
         // make the context valid; using the makeValid method from ModelService
-        Map validContext = modelService.makeValid(context, ModelService.IN_PARAM);
+        Map serviceContext = new HashMap();
+        Iterator ci = modelService.getInParamNames().iterator();
+        while (ci.hasNext()) {
+            String name = (String) ci.next();
+
+            // don't include userLogin, that's taken care of below
+            if ("userLogin".equals(name)) continue;
+            // don't include locale, that is also taken care of below
+            if ("locale".equals(name)) continue;
+            
+            Object value = request.getParameter(name);
+
+            // if the parameter wasn't passed and no other value found, don't pass on the null
+            if (value == null) {
+                value = request.getAttribute(name);
+            } 
+            if (value == null) {
+                value = request.getSession().getAttribute(name);
+            }
+            if (value == null) {
+                // still null, give up for this one
+                continue;
+            }
+            
+            if (value instanceof String && ((String) value).length() == 0) {
+                // interpreting empty fields as null values for each in back end handling...
+                value = null;
+            }
+
+            // set even if null so that values will get nulled in the db later on
+            serviceContext.put(name, value);
+        }                      
+        serviceContext = modelService.makeValid(serviceContext, ModelService.IN_PARAM);
 
         if (!modelService.export && !security.hasPermission("SERVICE_INVOKE_ANY", request.getSession())) {
             request.setAttribute(SiteDefs.ERROR_MESSAGE, "<li>You are not authorized to call this non-exported service, you must be logged in and have the SERVICE_INVOKE_ANY permission.");
@@ -328,7 +360,7 @@ public class CoreEvents {
                       
         // schedule service
         try {
-            dispatcher.schedule(serviceName, validContext, startTime, frequency, interval, count, endTime);
+            dispatcher.schedule(serviceName, serviceContext, startTime, frequency, interval, count, endTime);
         } catch (GenericServiceException e) {
             request.setAttribute(SiteDefs.ERROR_MESSAGE, "<li>Service dispatcher threw an exception: " + e.getMessage());
             return "error";
