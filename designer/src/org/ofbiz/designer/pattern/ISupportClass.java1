@@ -1,5 +1,0 @@
-package pattern;
-
-public  interface ISupportClass   {
-	public void setDtdClass(Object obj);
-}
