@@ -29,9 +29,9 @@
 %>
 <%@ page import="java.util.*" %>
 <%@ page import="java.text.*" %>
-<%@ page import="org.ofbiz.core.entity.*" %>
 <%@ page import="javax.servlet.jsp.tagext.BodyContent" %>
 <%@ page import="org.ofbiz.ecommerce.order.*" %>
+<%@ page import="org.ofbiz.commonapp.order.order.*" %>
 
 <%@ taglib uri="ofbizTags" prefix="ofbiz" %>
 
@@ -42,11 +42,9 @@
 
 <jsp:useBean id="security" type="org.ofbiz.core.security.Security" scope="application" />
 <jsp:useBean id="helper" type="org.ofbiz.core.entity.GenericHelper" scope="application" />
-<%GenericValue userLogin = (GenericValue)session.getAttribute(SiteDefs.USER_LOGIN);%>
-<%GenericValue person = userLogin==null?null:userLogin.getRelatedOne("Person");%>
 <%String controlPath=(String)request.getAttribute(SiteDefs.CONTROL_PATH);%>
 <%
-  String orderId = request.getParameter("orderId");
+  String orderId = request.getParameter("order_id");
   GenericValue orderHeader = helper.findByPrimaryKey("OrderHeader", UtilMisc.toMap("orderId", orderId));
   GenericValue shipmentPreference = null;
   String shippingMethod =  null; 
@@ -175,7 +173,6 @@
       </tr>
       <tr>
           <td align="left" valign="top"><div class="tabletext">
-        <%= OrderHelper.getPersonName(person) %><br>
         FIXME Address goes here <br>
         FIXME Payment type FIXME Payment number (last 4 digits) FIXME expires date
         </div></td>
@@ -201,7 +198,8 @@
   
   
   <ofbiz:iterator name="orderItem" property="orderItems"> 
-   <ofbiz:if name="orderItem" value="shoppingcart.CommentLine">
+   <%pageContext.setAttribute("orderItemDescription", orderItem.getString("itemDescription"));%>
+   <ofbiz:if name="orderItemDescription" value="shoppingcart.CommentLine">
     <tr>
         <td valign="top" align="left" colspan="5">
           <div class="tabletext"><b> >><%= orderItem.getString("itemDescription")%></b></div>
@@ -209,7 +207,7 @@
   
     </tr>
    </ofbiz:if>
-   <ofbiz:unless name="orderItem" value="shoppingcart.CommentLine">
+   <ofbiz:unless name="orderItemDescription" value="shoppingcart.CommentLine">
     <tr>
         <td valign="top" align="left">
           <div class="tabletext"><%= orderItem.getString("productId")%></div>
@@ -238,7 +236,8 @@
         <td colspan="2" rowspan="3" valign="middle" align="center" bgcolor="#99BBAA"><div class="commentary">Print this page for your records.</div></td>
     </tr>
     <% pageContext.setAttribute("orderAdjustmentIterator", order.getAdjustmentIterator()); %>
-    <ofbiz:iterator name="orderAdjustment" type="org.ofbiz.commonapp.order.order.OrderReadHelper.Adjustment" property="orderAdjustmentIterator">
+    <ofbiz:iterator name="orderAdjustmentObject" type="java.lang.Object" property="orderAdjustmentIterator">
+    <%OrderReadHelper.Adjustment orderAdjustment = (OrderReadHelper.Adjustment) orderAdjustmentObject;%>
     <tr>
         <td align="right" colspan="2"><div class="tabletext"><b><%=orderAdjustment.getDescription()%></b></div></td>
         <td align="right" nowrap><div class="tabletext"><%= UtilFormatOut.formatPrice(orderAdjustment.getAmount())%></div></td>
@@ -256,11 +255,11 @@
        </td>
       </tr>
      </table>
-  <a href="<ofbiz:url>orderstatus?order_id=<%=orderId%></ofbiz:url>" class="buttonlinkbig">[View Order]</a>&nbsp;&nbsp;
+  <a href="<ofbiz:url>/orderstatus?order_id=<%=orderId%></ofbiz:url>" class="buttonlinkbig">[View Order]</a>&nbsp;&nbsp;
 </ofbiz:if>
 <ofbiz:unless name="orderHeader">
     <p> No order found. </p>
 </ofbiz:unless>
-  <a href="<ofbiz:url>main</ofbiz:url>" class="buttonlinkbig">[Continue Shopping]</a>
+  <a href="<ofbiz:url>/main</ofbiz:url>" class="buttonlinkbig">[Continue Shopping]</a>
   </body>
   </html>

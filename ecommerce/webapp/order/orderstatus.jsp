@@ -38,6 +38,8 @@
 <%@ page import="org.ofbiz.ecommerce.order.*" %>
 <%@ page import="org.ofbiz.commonapp.order.order.*" %>
 
+<%@ taglib uri="ofbizTags" prefix="ofbiz" %>
+
 <% pageContext.setAttribute("PageName", "orderstatus"); %>
 <%@ include file="/includes/header.jsp" %>
 <%@ include file="/includes/onecolumn.jsp" %>
@@ -76,7 +78,7 @@
       if (billingLocationList.size() > 0) 
           billingAddress = ((GenericValue) billingLocationList.iterator().next()).getRelatedOne("ContactMech").getRelatedOne("PostalAddress");
 
-      orderItemIter = orderHeader.getRelated("OrderItem").iterator();
+      pageContext.setAttribute("orderItemList", orderHeader.getRelated("OrderItem"));
     } 
   }
 
@@ -254,15 +256,14 @@
   <table border="1" width="100%" cellpadding="2" cellspacing="0">
     <tr bgcolor="<%=bColorA2%>">
       <td width="15%"><div class="tabletext"><b>ID</b></div></td>
-      <td width="60%"><div class="tabletext"><b>Description</b></div></td>
+      <td width="50%"><div class="tabletext"><b>Description</b></div></td>
       <td width="10%" align="right"><div class="tabletext"><b>Quantity</b></div></td>
+      <td width="10%" align="right"><div class="tabletext"><b>Unit Price</b></div></td>
       <td width="15%" align="right" nowrap><div class="tabletext"><b>Line Price</b></div></td>
       <td><div class="tabletext"><b>&nbsp;</b></div></td>
     </tr>
-<%if(orderItemIter != null && orderItemIter.hasNext()){%>
-  <%while(orderItemIter.hasNext()){%>
+ <ofbiz:iterator name="orderItem" property="orderItemList">
     <%numberLines++;%>
-    <%GenericValue orderItem = (GenericValue)orderItemIter.next();%>
     <%if(bColorB.equals(bColorB1)){bColorB=bColorB2;}else{bColorB=bColorB1;}%>
     <tr bgcolor="<%=bColorB%>">
       <%if(orderItem.getString("productId").equals("shoppingcart.CommentLine")){%>
@@ -279,6 +280,11 @@
         <td align="right">
             <div nowrap>
               <%=UtilFormatOut.formatQuantity(orderItem.getDouble("quantity"))%>
+            </div>
+        </td>
+        <td align="right">
+            <div nowrap>
+              <%=UtilFormatOut.formatQuantity(orderItem.getDouble("unitPrice"))%>
             </div>
         </td>
         <td align="right" nowrap>
@@ -324,34 +330,27 @@
       <input name="item_id" value="<%=orderItem.getString("orderItemSeqId")%>" type="checkbox">
       </td>
     </tr>
-  <%}//end while%>
-
-<%}else{%>
+  </ofbiz:iterator>
+  <ofbiz:unless name="orderItemList" size="0">
   <tr><td><font color="red">ERROR: Sales Order Lines lookup failed.</font></td></tr>
-<%}%>
+  </ofbiz:unless>
 
-<% if(orderHeader != null) { %>
-    <tr bgcolor="<%=bColorA1%>">
-      <td align="right" colspan="3"><div class="tabletext"><b>Shipping & handling</b></div></td>
-      <td align="right" nowrap>
-        <div class="tabletext"><%=UtilFormatOut.formatPrice(order.getShippingTotal())%></div>
-      </td>
+    <% pageContext.setAttribute("orderAdjustmentIterator", order.getAdjustmentIterator()); %>
+    <ofbiz:iterator name="orderAdjustmentObject" type="java.lang.Object" property="orderAdjustmentIterator">
+    <%OrderReadHelper.Adjustment orderAdjustment = (OrderReadHelper.Adjustment) orderAdjustmentObject;%>
+    <tr>
+        <td align="right" colspan="4"><div class="tabletext"><b><%=orderAdjustment.getDescription()%></b></div></td>
+        <td align="right" nowrap><div class="tabletext"><%= UtilFormatOut.formatPrice(orderAdjustment.getAmount())%></div></td>
     </tr>
-    <tr bgcolor="<%=bColorA2%>">
-      <td align="right" colspan="3"><div class="tabletext"><b>Total tax</b></div></td>
+    </ofbiz:iterator> 
+    <tr>
+        <td align="right" colspan="4"><div class="tabletext"><b>Total Due</b></div></td>
        <td align="right" nowrap>
-        <div class="tabletext">0.00</div>
-      </td>
-    </tr>
-    <tr bgcolor="<%=bColorA1%>">
-      <td align="right" colspan="3"><div class="tabletext"><b>Total due</b></div></td>
-      <td align="right" nowrap>
-        <div class="tabletext"><%=UtilFormatOut.formatPrice(order.getTotalPrice())%></div>
-      </td>
+      <div class="tabletext"><%= UtilFormatOut.formatPrice(order.getTotalPrice())%></div>
+        </td>
     </tr>
 <%-- } else { %>
   <tr><td><font color="red">ERROR: Sales Order lookup failed.</font></td></tr> --%>
-<% } %>
 </table>
 
 <% } //end if customerId matches %>

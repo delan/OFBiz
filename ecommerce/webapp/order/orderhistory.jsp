@@ -36,6 +36,8 @@
 <%@ page import="org.ofbiz.commonapp.order.order.*" %>
 <%@ page import="org.ofbiz.ecommerce.order.*" %>
 
+<%@ taglib uri="ofbizTags" prefix="ofbiz" %>
+
 <% pageContext.setAttribute("PageName", "orderhistory"); %>
 
 <%@ include file="/includes/header.jsp" %>
@@ -47,11 +49,16 @@
 
   Collection orderRoleCollection = helper.findByAnd("OrderRole", 
           UtilMisc.toMap("partyId", userLogin.get("partyId"), "roleTypeId", "PLACING_CUSTOMER"), null);
-  Collection orderHeaderCollection = new ArrayList(orderRoleCollection.size());
+  Collection orderHeaderList = new ArrayList(orderRoleCollection.size());
   Iterator orderRoleIter = orderRoleCollection.iterator();
   while (orderRoleIter.hasNext()) {
-    orderHeaderCollection.add(((GenericValue) orderRoleIter.next()).getRelatedOne("OrderHeader"));
+    GenericValue orderHeader = ((GenericValue) orderRoleIter.next())
+            .getRelatedOne("OrderHeader");
+    if (orderHeader != null) {
+        orderHeaderList.add(orderHeader);
+    }
   }
+  pageContext.setAttribute("orderHeaderList", orderHeaderList);
 %>
 <br>
 <table width='100%' border="0" bgcolor="black" cellpadding="4" cellspacing="1">
@@ -86,11 +93,8 @@
       <td width="15%"><b></b>
       </td>
     </tr>
-    <%if(orderHeaderCollection != null && orderHeaderCollection.size() > 0) {%>
-      <%Iterator orderHeaderIter = orderHeaderCollection.iterator();%>
+    <ofbiz:iterator name="orderHeader" property="orderHeaderList">
       <%-- XXX should be most recent first --%>
-      <%while (orderHeaderIter.hasNext()) {%>
-        <%GenericValue orderHeader = (GenericValue) orderHeaderIter.next();%>
 	<%OrderReadHelper order = new OrderReadHelper(orderHeader); %>
         <%String orderStatusString = order.getStatusString();%>
         <tr><td colspan="7" height="1" bgcolor="#899ABC"></td></tr>
@@ -111,10 +115,10 @@
             <a href="<%=response.encodeURL(controlPath + "/orderstatus?order_id=" + orderHeader.getString("orderId"))%>" class='buttontext'>[View]</a>
           </td>
         </tr>
-      <%}%>
-    <%}else{%>
+    </ofbiz:iterator>
+    <ofbiz:unless name="orderHeaderList" size="0">
       <tr><td colspan="8"><div class='head3'>No Orders Found</div></td></tr>
-    <%}%>
+    </ofbiz:unless>
   </table>
       </td>
     </tr>

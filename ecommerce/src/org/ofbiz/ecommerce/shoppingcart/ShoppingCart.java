@@ -1,6 +1,9 @@
 /*
  * $Id$
  * $Log$
+ * Revision 1.6  2001/09/10 21:56:22  epabst
+ * updated/improved
+ *
  * Revision 1.5  2001/09/07 21:59:50  epabst
  * checkout process improved
  *
@@ -93,6 +96,8 @@ public class ShoppingCart {
     // create a new shopping cart item.
         ShoppingCartItem newItem = new ShoppingCartItem(product,quantity,attributes);
         Debug.log("New item created: " + newItem.getProductId());
+    
+        this.shipping += quantity * 2.00; //FIXME 2.00 is just dummy data
         
         // Check for existing cart item.
         Debug.log("Cart size: " + this.size());
@@ -112,18 +117,21 @@ public class ShoppingCart {
 
     /** Add an item to the shopping cart. */
     public int addItem(org.ofbiz.core.entity.GenericValue product, double quantity, HashMap attributes) {
-        cartLines.add(new ShoppingCartItem(product,quantity,attributes));
-        return cartLines.size()-1;
+        return addItem(new ShoppingCartItem(product,quantity,attributes));
     }
     
     /** Add an item to the shopping cart. */
     public int addItem(int index, ShoppingCartItem item) {
+        this.shipping += 2.00; //FIXME 2.00 is just dummy data
+        
         cartLines.add(index,item);
         return index;
     }
     
     /** Add an item to the shopping cart. */
     public int addItem(ShoppingCartItem item) {
+        this.shipping += 2.00; //FIXME 2.00 is just dummy data
+
         cartLines.add(item);
         return cartLines.size()-1;
     }
@@ -137,6 +145,7 @@ public class ShoppingCart {
         
     /** Remove an item from the cart object. */
     public ShoppingCartItem removeCartItem(int index) {
+        this.shipping -= 2.00; //FIXME 2.00 is just dummy data
         if ( cartLines.size() <= index )
             return null;
         return (ShoppingCartItem) cartLines.remove(index);

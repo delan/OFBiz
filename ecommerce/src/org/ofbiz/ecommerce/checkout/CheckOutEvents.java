@@ -1,6 +1,9 @@
 /*
  * $Id$
  * $Log$
+ * Revision 1.3  2001/09/10 21:56:22  epabst
+ * updated/improved
+ *
  * Revision 1.2  2001/09/06 16:02:54  epabst
  * renamed Address vars to Location
  * fixed bug where contactMechPurposeTypeId should end in _LOCATION instead of _ADDRESS
@@ -97,22 +100,25 @@ public class CheckOutEvents {
 
     public static String createOrder(HttpServletRequest request, HttpServletResponse response) {
         ShoppingCart cart = (ShoppingCart)request.getSession().getAttribute(SiteDefs.SHOPPING_CART); 
-        GenericValue userLogin = (GenericValue) request.getAttribute(SiteDefs.USER_LOGIN);
+        GenericValue userLogin = (GenericValue)request.getSession().getAttribute(SiteDefs.USER_LOGIN);
         StringBuffer errorMessage = new StringBuffer();
         if (cart != null && cart.size() > 0) {
-            GenericHelper helper = (GenericHelper) request.getAttribute("helper");
-            Long orderId = helper.getNextSeqId("OrderHeader");
-            GenericValue order = helper.makeValue("OrderHeader", UtilMisc.toMap("orderId", orderId, "orderTypeId", "SALES_ORDER", "orderDate", UtilDateTime.nowTimestamp(), "entryDate", UtilDateTime.nowTimestamp(), "statusId", "Ordered", "billingAccountId", cart.getBillingAccountId())); 
-            order.preStoreOther(helper.makeValue("OrderAdjustment", UtilMisc.toMap( "orderAdjustmentId", helper.getNextSeqId("OrderAdjustment"), "orderAdjustmentTypeId", "DISCOUNT_ADJUSTMENT", "orderId", orderId, "orderItemSeqId", "NA", "percentage", new Double(cart.getCartDiscount()))));
-            order.preStoreOther(helper.makeValue("OrderAdjustment", UtilMisc.toMap("orderAdjustmentId", helper.getNextSeqId("OrderAdjustment"), "orderAdjustmentTypeId", "SHIPPING_CHARGES", "orderId", orderId, "orderItemSeqId", null, "amount", new Double(cart.getShipping()))));
-            order.preStoreOther(helper.makeValue("OrderAdjustment", UtilMisc.toMap("orderAdjustmentId", helper.getNextSeqId("OrderAdjustment"), "orderAdjustmentTypeId", "SALES_TAX", "orderId", orderId, "orderItemSeqId", null, "amount", new Double(cart.getSalesTax()))));
+            GenericHelper helper = userLogin.helper;
+            String orderId = helper.getNextSeqId("OrderHeader").toString();
+            GenericValue order = helper.makeValue("OrderHeader", UtilMisc.toMap("orderId", orderId, "orderTypeId", "SALES_ORDER", "orderDate", UtilDateTime.nowTimestamp(), "entryDate", UtilDateTime.nowTimestamp(), "statusId", "Ordered", "shippingInstructions", cart.getShippingInstructions())); 
+            order.set("billingAccountId", cart.getBillingAccountId());
+            if (cart.getCartDiscount() != 0.0) {
+                order.preStoreOther(helper.makeValue("OrderAdjustment", UtilMisc.toMap( "orderAdjustmentId", helper.getNextSeqId("OrderAdjustment").toString(), "orderAdjustmentTypeId", "DISCOUNT_ADJUSTMENT", "orderId", orderId, "orderItemSeqId", "NA", "percentage", new Double(cart.getCartDiscount()))));
+            }
+            order.preStoreOther(helper.makeValue("OrderAdjustment", UtilMisc.toMap("orderAdjustmentId", helper.getNextSeqId("OrderAdjustment").toString(), "orderAdjustmentTypeId", "SHIPPING_CHARGES", "orderId", orderId, "orderItemSeqId", null, "amount", new Double(cart.getShipping()))));
+            order.preStoreOther(helper.makeValue("OrderAdjustment", UtilMisc.toMap("orderAdjustmentId", helper.getNextSeqId("OrderAdjustment").toString(), "orderAdjustmentTypeId", "SALES_TAX", "orderId", orderId, "orderItemSeqId", null, "amount", new Double(cart.getSalesTax()))));
             order.preStoreOther(helper.makeValue("OrderContactMech", UtilMisc.toMap( "contactMechId", cart.getShippingContactMechId(), "contactMechPurposeTypeId", "SHIPPING_LOCATION", "orderId", orderId)));
             
             String shippingMethod = cart.getShippingMethod();
             int delimiterPos = shippingMethod.indexOf('@');
             String shipmentMethodTypeId = shippingMethod.substring(0, delimiterPos);
             String carrierPartyId = shippingMethod.substring(delimiterPos+1);
-            Long shipmentId = helper.getNextSeqId("Shipment");
+            String shipmentId = helper.getNextSeqId("Shipment").toString();
             order.preStoreOther(helper.makeValue("OrderShipmentPreference", UtilMisc.toMap("orderId", orderId, "orderItemSeqId", DataModelConstants.SEQ_ID_NA, "shipmentMethodTypeId", shipmentMethodTypeId, "carrierPartyId", carrierPartyId, "carrierRoleTypeId", "CARRIER" /*XXX*/, "shippingInstructions", cart.getShippingInstructions())));
 
             Iterator itemIter = cart.iterator();
@@ -144,16 +150,21 @@ public class CheckOutEvents {
                         "roleTypeId", USER_ORDER_ROLE_TYPES[i])));
             }
                  
-            order.preStoreOther(helper.makeValue("OrderStatus", UtilMisc.toMap("orderStatusId", helper.getNextSeqId("OrderStatus"), "statusId", "Requested", "orderId", orderId, "statusDateTime", UtilDateTime.nowTimestamp())));
+            order.preStoreOther(helper.makeValue("OrderStatus", UtilMisc.toMap("orderStatusId", helper.getNextSeqId("OrderStatus").toString(), "statusId", "Requested", "orderId", orderId, "statusDatetime", UtilDateTime.nowTimestamp())));
 
             String creditCardId = cart.getCreditCardId();
             if (creditCardId != null) {
-                order.preStoreOther(helper.makeValue("OrderPaymentPreference", UtilMisc.toMap("orderPaymentPreferenceId", helper.getNextSeqId("OrderPaymentPreference"), "orderId", orderId, "paymentMethodTypeId", "CREDIT_CARD", "paymentInfoId", creditCardId)));
+                order.preStoreOther(helper.makeValue("OrderPaymentPreference", UtilMisc.toMap("orderPaymentPreferenceId", helper.getNextSeqId("OrderPaymentPref").toString(), "orderId", orderId, "paymentMethodTypeId", "CREDIT_CARD", "paymentInfoId", creditCardId)));
             } else {
                 //XXX CASH should not be assumed!!
-                order.preStoreOther(helper.makeValue("OrderPaymentPreference", UtilMisc.toMap("orderPaymentPreferenceId", helper.getNextSeqId("OrderPaymentPreference"), "orderId", orderId, "paymentMethodTypeId", "CASH", "paymentInfoId", creditCardId)));
+                order.preStoreOther(helper.makeValue("OrderPaymentPreference", UtilMisc.toMap("orderPaymentPreferenceId", helper.getNextSeqId("OrderPaymentPref").toString(), "orderId", orderId, "paymentMethodTypeId", "CASH", "paymentInfoId", creditCardId)));
             }
+            
+            helper.create(order);
+            
+            cart.clear();
                     
+            request.setAttribute("order_id", orderId);
             request.setAttribute("orderAdditionalEmails", cart.getOrderAdditionalEmails());
         } else {
             errorMessage.append("<li>There are no items in the cart.");
@@ -168,12 +179,24 @@ public class CheckOutEvents {
     }
 
     public static String renderConfirmOrder(HttpServletRequest request, HttpServletResponse response) {
-        //FIXME use HttpClient to call /confirmorder, store the HTML in request attributes to be used by emailOrder and renderConfirmOrder
-        return "error";
+        String controlPath = (String) request.getAttribute(SiteDefs.CONTROL_PATH);  
+        //XXX need to add secret code since no security yet
+        String url = "http://" + request.getServerName() + ":" + request.getServerPort() + controlPath + "/confirmorder?order_id=" + request.getAttribute("order_id");
+
+        HttpClient client = new HttpClient(url);
+        try {
+            String content = client.get();
+            request.setAttribute("confirmorder", content);
+            return "success";
+        } catch (HttpClientException hce) {
+            hce.printStackTrace();
+            request.setAttribute(SiteDefs.ERROR_MESSAGE, "error generating order confirmation");
+            return "error";
+        }
     }
 
     public static String emailOrder(HttpServletRequest request, HttpServletResponse response) {
         //FIXME use HttpClient to call /confirmorder, store the HTML in request attributes to be used by emailOrder and renderConfirmOrder
-        return "error";
+        return "success";
     }
 }
