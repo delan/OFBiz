@@ -42,12 +42,12 @@
 </#if>
 
 <#-- display the error messages -->
-<#if errorMsgReq?exists>
+<#if errorMsgReq?has_content>
 <div class='errorMessage'>${errorMsgReq}</div><br>
 </#if>
-<#if errorMsgSes?exists>
+<#if errorMsgSes?has_content>
 <div class='errorMessage'>${errorMsgSes}</div><br>
 </#if>
-<#if eventMsgReq?exists>
+<#if eventMsgReq?has_content>
 <div class='eventMessage'>${eventMsgReq}</div><br>
 </#if>
