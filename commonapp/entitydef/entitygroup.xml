@@ -398,7 +398,6 @@
     <entity-group group="org.ofbiz.commonapp" entity="RequirementType" />	
     <entity-group group="org.ofbiz.commonapp" entity="RequirementTypeAttr" />	
     <entity-group group="org.ofbiz.commonapp" entity="RespondingParty" />	
-    <entity-group group="org.ofbiz.commonapp" entity="WorkRequirement" />	
     <entity-group group="org.ofbiz.commonapp" entity="WorkRequirementFulfillment" />
 
   <!-- ========================================================= -->

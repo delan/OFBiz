@@ -125,26 +125,6 @@
       <field name="description" type="description"></field>
       <prim-key field="perfRatingTypeId"/>
     </entity>
-    <entity entity-name="PerfReviewItemType"
-            package-name="org.ofbiz.commonapp.humanres.ability"
-            title="Performance Review Item Type Entity">
-      <field name="perfReviewItemTypeId" type="id-ne"></field>
-      <field name="description" type="description"></field>
-      <prim-key field="perfReviewItemTypeId"/>
-    </entity>
-    <entity entity-name="PerformanceNote"
-            package-name="org.ofbiz.commonapp.humanres.ability"
-            title="Performance Note Entity">
-      <field name="partyId" type="id-ne"></field>
-      <field name="roleTypeId" type="id-ne"></field>
-      <field name="fromDate" type="date-time"></field>
-      <field name="thruDate" type="date-time"></field>
-      <field name="communicationDate" type="date-time"></field>
-      <field name="comments" type="comment"></field>
-      <prim-key field="partyId"/>
-      <prim-key field="roleTypeId"/>
-      <prim-key field="fromDate"/>
-    </entity>
     <entity entity-name="PerfReview"
             package-name="org.ofbiz.commonapp.humanres.ability"
             title="Employee Performance Review Entity">
@@ -233,6 +213,26 @@
       <relation type="one" fk-name="PERF_RVITM_PRITTP" rel-entity-name="PerfReviewItemType">
         <key-map field-name="perfReviewItemTypeId"/>
       </relation>
+    </entity>
+    <entity entity-name="PerfReviewItemType"
+            package-name="org.ofbiz.commonapp.humanres.ability"
+            title="Performance Review Item Type Entity">
+      <field name="perfReviewItemTypeId" type="id-ne"></field>
+      <field name="description" type="description"></field>
+      <prim-key field="perfReviewItemTypeId"/>
+    </entity>
+    <entity entity-name="PerformanceNote"
+            package-name="org.ofbiz.commonapp.humanres.ability"
+            title="Performance Note Entity">
+      <field name="partyId" type="id-ne"></field>
+      <field name="roleTypeId" type="id-ne"></field>
+      <field name="fromDate" type="date-time"></field>
+      <field name="thruDate" type="date-time"></field>
+      <field name="communicationDate" type="date-time"></field>
+      <field name="comments" type="comment"></field>
+      <prim-key field="partyId"/>
+      <prim-key field="roleTypeId"/>
+      <prim-key field="fromDate"/>
     </entity>
     <entity entity-name="PersonTraining"
             package-name="org.ofbiz.commonapp.humanres.ability"
