@@ -1,5 +1,5 @@
 /*
- * $Id: ContentServices.java,v 1.2 2003/10/27 23:56:11 byersa Exp $
+ * $Id: ContentServices.java,v 1.3 2003/11/05 00:04:53 byersa Exp $
  *
  * Copyright (c) 2001, 2002 The Open For Business Project - www.ofbiz.org
  *
@@ -25,11 +25,8 @@
 package org.ofbiz.content.content;
 
 import java.sql.Timestamp;
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.Iterator;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
+import java.lang.*;
 
 
 import org.ofbiz.base.util.Debug;
@@ -53,13 +50,14 @@ import org.ofbiz.service.LocalDispatcher;
  * ContentServices Class
  *
  * @author     <a href="mailto:byersa@automationgroups.com">Al Byers</a>
- * @version    $Revision: 1.2 $
+ * @version    $Revision: 1.3 $
  * @since      2.2
  *
  * 
  */
 public class ContentServices {
 
+    public static final String module = ContentServices.class.getName();
     /**
      * findRelatedContent
      * Finds the related
@@ -120,6 +118,11 @@ public class ContentServices {
 
     }
 
+    /**
+     * This is a generic service for traversing a Content tree,
+     * typical of a blog response tree.
+     * It calls the ContentWorker.traverse method.
+     */ 
     public static Map traverseContent(DispatchContext dctx, Map context) {
         HashMap results = new HashMap();
 
@@ -335,6 +338,159 @@ Debug.logInfo("CREATING CONTENTASSOC:" + contentAssoc, null);
         }
         result.put("contentIdTo", contentIdTo);
         result.put("contentIdFrom", contentIdFrom);
+        return result;
+    }
+        
+
+    /**
+     * A service wrapper for the updateContentMethod method.
+     * Forces permissions to be checked.
+     */
+    public static Map updateContent(DispatchContext dctx, Map context) {
+        context.put("entityOperation", "_CREATE");
+        List targetOperations = new ArrayList();
+        targetOperations.add("CREATE_CONTENT");
+        context.put("targetOperationList", targetOperations);
+        context.put("skipPermissionCheck", null);
+        Map result = updateContentMethod(dctx, context);
+        return result;
+    }
+
+    public static Map updateContentMethod(DispatchContext dctx, Map context) {
+        Map result = new HashMap();
+        GenericDelegator delegator = dctx.getDelegator();
+        LocalDispatcher dispatcher = dctx.getDispatcher();
+        GenericValue dataResource = null;
+        Locale locale = (Locale)context.get("locale");
+        String permissionStatus = ContentWorker.callContentPermissionCheck( delegator, dispatcher,
+                                      context);
+        if (permissionStatus != null && permissionStatus.equalsIgnoreCase("granted") ) {
+            GenericValue userLogin = (GenericValue) context.get("userLogin"); 
+            String userLoginId = (String)userLogin.get("userLoginId");
+            String lastModifiedByUserLogin = userLoginId;
+            Timestamp lastModifiedDate = UtilDateTime.nowTimestamp();
+    
+            // If textData exists, then create Content and return contentId
+            String contentId = (String)context.get("contentId");
+            try {
+                dataResource = delegator.findByPrimaryKey("Content", 
+                                       UtilMisc.toMap("contentId", contentId));
+            } catch (GenericEntityException e) {
+                Debug.logWarning(e, module);
+                return ServiceUtil.returnError( "dataResource.update.read_failure" + e.getMessage());
+            }
+
+            dataResource.setNonPKFields(context);
+            dataResource.put("lastModifiedByUserLogin", lastModifiedByUserLogin);
+            dataResource.put("lastModifiedDate", lastModifiedDate);
+            try {
+                dataResource.store();
+            } catch(GenericEntityException e) {
+                return ServiceUtil.returnError(e.getMessage());
+            }
+        }
+        return result;
+    }
+
+    public static Map updateAssocContent(DispatchContext dctx, Map context) {
+        context.put("entityOperation", "_UPDATE");
+        List targetOperations = new ArrayList();
+        targetOperations.add("UPDATE_CONTENT");
+        context.put("targetOperationList", targetOperations);
+        context.put("skipPermissionCheck", null);
+        Map result = updateContentAssocMethod(dctx, context);
+        return result;
+    }
+
+    public static Map updateContentAssocMethod(DispatchContext dctx, Map context) {
+        Map result = new HashMap();
+        GenericDelegator delegator = dctx.getDelegator();
+        LocalDispatcher dispatcher = dctx.getDispatcher();
+        // This section guesses how contentId should be used (From or To) if
+        // only a contentIdFrom o contentIdTo is passed in
+        String contentIdFrom = (String)context.get("contentId");
+        String contentIdTo = (String)context.get("contentIdTo");
+        String contentId = (String)context.get("contentId");
+
+        GenericValue contentAssoc = null;
+        try {
+            contentAssoc = delegator.findByPrimaryKey("ContentAssoc", 
+                    UtilMisc.toMap("contentId", contentId, "contentIdTo", contentIdTo)); 
+        } catch(GenericEntityException e) {
+            System.out.println("Entity Error:" + e.getMessage());
+            return ServiceUtil.returnError("Error in retrieving Content. " + e.getMessage());
+        }
+        contentAssoc.put("contentAssocTypeId", context.get("contentAssocTypeId"));
+        contentAssoc.put("contentAssocPredicateId", context.get("contentAssocPredicateIdFrom"));
+        contentAssoc.put("dataSourceId", context.get("dataSourceId"));
+        String fromDateStr = (String)context.get("fromDate");
+        if (UtilValidate.isEmpty(fromDateStr)) {
+        } else {
+            contentAssoc.setString("fromDate", (String)context.get("fromDate"));
+        }
+        String thruDateStr = (String)context.get("thruDate");
+        if (UtilValidate.isEmpty(thruDateStr)) {
+        } else {
+            contentAssoc.setString("thruDate", (String)context.get("thruDate"));
+        }
+        String sequenceNumStr = (String)context.get("sequenceNum");
+        if (UtilValidate.isEmpty(sequenceNumStr)) {
+            contentAssoc.put("sequenceNum", null);
+        } else {
+            contentAssoc.setString("sequenceNum", sequenceNumStr);
+        }
+        contentAssoc.put("mapKey", context.get("mapKey"));
+        String upperCoordinateStr = (String)context.get("upperCoordinate");
+        if (UtilValidate.isEmpty(upperCoordinateStr)) {
+            contentAssoc.put("upperCoordinate", null);
+        } else {
+            contentAssoc.setString("upperCoordinate", upperCoordinateStr);
+        }
+        String leftCoordinateStr = (String)context.get("leftCoordinate");
+        if (UtilValidate.isEmpty(leftCoordinateStr)) {
+            contentAssoc.put("leftCoordinate", null);
+        } else {
+            contentAssoc.setString("leftCoordinate", leftCoordinateStr);
+        }
+
+        GenericValue userLogin = (GenericValue) context.get("userLogin"); 
+        String userLoginId = (String)userLogin.get("userLoginId");
+        String updatedByUserLogin = userLoginId;
+        String lastModifiedByUserLogin = userLoginId;
+        Timestamp updatedDate = UtilDateTime.nowTimestamp();
+        Timestamp lastModifiedDate = UtilDateTime.nowTimestamp();
+        contentAssoc.put("updatedByUserLogin", updatedByUserLogin);
+        contentAssoc.put("lastModifiedByUserLogin", lastModifiedByUserLogin);
+        contentAssoc.put("updatedDate", updatedDate);
+        contentAssoc.put("lastModifiedDate", lastModifiedDate);
+
+        String permissionStatus = null;
+        Map serviceInMap = new HashMap();
+        serviceInMap.put("userLogin", context.get("userLogin")); 
+        List targetOperations = new ArrayList();
+        targetOperations.add("ASSOC_CONTENT");
+        serviceInMap.put("targetOperationList", targetOperations);
+        serviceInMap.put("contentPurposeList", context.get("contentPurposeList")); 
+        serviceInMap.put("entityOperation", context.get("entityOperation")); 
+        serviceInMap.put("contentIdTo", contentIdTo); 
+        serviceInMap.put("contentIdFrom", contentIdFrom); 
+        Map permResults = null;
+            try {
+                permResults = dispatcher.runSync("checkAssocPermission", serviceInMap);
+            } catch (GenericServiceException e) {
+                Debug.logError(e, "Problem checking permissions", "ContentServices");
+                return ServiceUtil.returnError("Problem checking association permissions");
+            }
+            permissionStatus = (String)permResults.get("permissionStatus");
+
+
+        if (permissionStatus != null && permissionStatus.equals("granted")) {
+            try {
+                contentAssoc.store();
+            } catch(GenericEntityException e) {
+                return ServiceUtil.returnError(e.getMessage());
+            }
+        }
         return result;
     }
         

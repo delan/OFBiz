@@ -302,6 +302,7 @@
         <set-nonpk-fields map-name="parameters" value-name="newEntity"/>
         <set-pk-fields map-name="parameters" value-name="newEntity"/>
         <create-value value-name="newEntity"/>
+        <field-to-result map-name="newEntity" field-name="contentTypeId" />
     </simple-method>
     <simple-method method-name="updateContentType" short-description="Update Content Type">
         <check-permission action="_UPDATE" permission="CONTENTMGR">
@@ -357,6 +358,7 @@
         <set-nonpk-fields map-name="parameters" value-name="newEntity"/>
         <set-pk-fields map-name="parameters" value-name="newEntity"/>
         <create-value value-name="newEntity"/>
+        <field-to-result map-name="newEntity" field-name="contentAssocTypeId" />
     </simple-method>
     <simple-method method-name="updateContentAssocType" short-description="Update Content AssocType">
         <check-permission action="_UPDATE" permission="CONTENTMGR">
@@ -390,6 +392,7 @@
         <set-nonpk-fields map-name="parameters" value-name="newEntity"/>
         <set-pk-fields map-name="parameters" value-name="newEntity"/>
         <create-value value-name="newEntity"/>
+        <field-to-result map-name="newEntity" field-name="contentPurposeTypeId" />
     </simple-method>
     <simple-method method-name="updateContentPurposeType" short-description="Update Content PurposeType">
         <check-permission action="_UPDATE" permission="CONTENTMGR">
@@ -456,6 +459,7 @@
         <set-nonpk-fields map-name="parameters" value-name="newEntity"/>
         <set-pk-fields map-name="parameters" value-name="newEntity"/>
         <create-value value-name="newEntity"/>
+        <field-to-result map-name="newEntity" field-name="contentAssocPredicateId" />
     </simple-method>
     <simple-method method-name="updateContentAssocPredicate" short-description="Update Content AssocPredicate">
         <check-permission action="_UPDATE" permission="CONTENTMGR">
