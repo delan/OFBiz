@@ -1,5 +1,5 @@
 /*
- * $Id: LoopSubContentTransform.java,v 1.3 2003/12/23 07:24:05 jonesde Exp $
+ * $Id: LoopSubContentTransform.java,v 1.4 2003/12/30 05:34:23 byersa Exp $
  * 
  * Copyright (c) 2001-2003 The Open For Business Project - www.ofbiz.org
  * 
@@ -39,12 +39,13 @@ import freemarker.template.SimpleHash;
 import freemarker.template.TemplateHashModel;
 import freemarker.template.TemplateTransformModel;
 import freemarker.template.TransformControl;
+import freemarker.template.TemplateModelException;
 
 /**
  * LoopSubContentTransform - Freemarker Transform for URLs (links)
  * 
  * @author <a href="mailto:byersa@automationgroups.com">Al Byers</a>
- * @version $Revision: 1.3 $
+ * @version $Revision: 1.4 $
  * @since 3.0
  */
 public class LoopSubContentTransform implements TemplateTransformModel {
@@ -160,8 +161,19 @@ public class LoopSubContentTransform implements TemplateTransformModel {
         ctx.put("locale", locale);
 
         //ctx.put("userLogin", userLogin);
-        List assocTypes = UtilMisc.toList("SUB_CONTENT");
-        Timestamp fromDate = UtilDateTime.nowTimestamp();
+        String contentAssocTypeId = getArg(args, "contentAssocTypeId", ctx);
+        if (UtilValidate.isEmpty(contentAssocTypeId))
+            contentAssocTypeId = "SUB_CONTENT";
+        List assocTypes = UtilMisc.toList(contentAssocTypeId);
+        ctx.put("assocTypes", assocTypes);
+        String fromDateStr = getArg(args, "fromDateStr", ctx);
+        Timestamp fromDate = null;
+        if (fromDateStr != null && fromDateStr.length() > 0) {
+            fromDate = UtilDateTime.toTimestamp(fromDateStr);
+        }
+        if (fromDate == null)
+            fromDate = UtilDateTime.nowTimestamp();
+        ctx.put("fromDate", fromDate);
         //GenericValue subContentDataResourceView = null;
         Map results =
             ContentServicesComplex.getAssocAndContentAndDataResourceMethod(delegator, contentId, mapKey, "From", fromDate, null, null, null, assocTypes, null);
@@ -181,7 +193,7 @@ public class LoopSubContentTransform implements TemplateTransformModel {
                 out.flush();
             }
 
-            public int onStart() throws IOException {
+            public int onStart() throws TemplateModelException, IOException {
                 templateContext.put("buf", new StringBuffer());
                 templateContext.put("entityIndex", new Integer(0));
                 if (Debug.verboseOn()) Debug.logVerbose("in LoopSubContent, onStart", module);
@@ -194,7 +206,8 @@ public class LoopSubContentTransform implements TemplateTransformModel {
                 }
             }
 
-            public int afterBody() throws IOException {
+            public int afterBody() throws TemplateModelException, IOException {
+                if (Debug.verboseOn()) Debug.logVerbose("in LoopSubContent, afterBody, start", module);
                 Integer idx = (Integer) templateContext.get("entityIndex");
                 if (Debug.verboseOn()) Debug.logVerbose("in LoopSubContent, prepCtx, idx :" + idx, module);
                 int i = idx.intValue();
