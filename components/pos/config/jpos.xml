@@ -10,7 +10,18 @@
         <!--Other non JavaPOS required property (mostly vendor properties and bus specific properties i.e. RS232 )-->
         <prop name="ScannerButtonSim" type="String" value="menuPlu"/>
         <prop name="BarcodeTypePosition" type="String" value="Prefix"/>
-        <prop name="BarcodeType-UPC" type="String" value="E"/>
+        <prop name="CodeType:CODE11" type="String" value="M"/>
+        <prop name="CodeType:CODE39" type="String" value="A"/>
+        <prop name="CodeType:CODE93" type="String" value="H"/>
+        <prop name="CodeType:CODE128" type="String" value="G"/>
+        <prop name="CodeType:CODABAR" type="String" value="K"/>
+        <prop name="CodeType:I2OF5" type="String" value="I"/>
+        <prop name="CodeType:ID2OF5" type="String" value="J"/>
+        <prop name="CodeType:MSI" type="String" value="F"/>
+        <prop name="CodeType:UPCA" type="String" value="B"/>
+        <prop name="CodeType:UPCE" type="String" value="C"/>
+        <prop name="CodeType:EAN13" type="String" value="E"/>
+        <prop name="CodeType:EAN8" type="String" value="D"/>
     </JposEntry>
 
         <JposEntry logicalName="KeyboardMsr">
@@ -18,7 +29,6 @@
         <vendor name="The Open For Business Project" url="http://www.ofbiz.org"/>
         <jpos category="MSR" version="1.8"/>
         <product description="Generic Keyboard Wedge Msr" name="KybMsr" url="www.ofbiz.org"/>
-        <!--Other non JavaPOS required property (mostly vendor properties and bus specific properties i.e. RS232 )-->
-        <prop name="NumberOfTracks" type="Integer" value="2"/>
+        <!--Other non JavaPOS required property (mostly vendor properties and bus specific properties i.e. RS232 )-->        
     </JposEntry>
 </JposEntries>

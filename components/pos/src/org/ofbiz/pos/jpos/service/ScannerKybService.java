@@ -1,5 +1,5 @@
 /*
- * $Id: ScannerKybService.java,v 1.3 2004/08/07 01:23:08 ajzeneski Exp $
+ * $Id: ScannerKybService.java,v 1.4 2004/08/07 01:54:17 ajzeneski Exp $
  *
  * Copyright (c) 2004 The Open For Business Project - www.ofbiz.org
  *
@@ -26,6 +26,7 @@ package org.ofbiz.pos.jpos.service;
 
 import java.util.HashMap;
 import java.util.Map;
+import java.util.Enumeration;
 
 import jpos.JposException;
 import jpos.ScannerConst;
@@ -37,7 +38,7 @@ import org.ofbiz.pos.adaptor.KeyboardReceiver;
 /**
  * 
  * @author     <a href="mailto:jaz@ofbiz.org">Andy Zeneski</a>
- * @version    $Revision: 1.3 $
+ * @version    $Revision: 1.4 $
  * @since      3.2
  */
 public class ScannerKybService extends BaseKybService implements jpos.services.ScannerService18, KeyboardReceiver {
@@ -57,6 +58,7 @@ public class ScannerKybService extends BaseKybService implements jpos.services.S
 
     public ScannerKybService() {
         KeyboardAdaptor.getInstance(this, KeyboardAdaptor.SCANNER_DATA);
+        this.readCodeMap();
     }
 
     // ScannerService18
@@ -166,5 +168,41 @@ public class ScannerKybService extends BaseKybService implements jpos.services.S
         System.out.println("Data 1 : " + new String(this.scannedDataLabel));
         System.out.println("Data 2 : " + new String(this.scannedData));
         System.out.println("CodeID : " + new String(this.codeId));
+    }
+
+    private void readCodeMap() {
+        Enumeration names = entry.getPropertyNames();
+        while (names.hasMoreElements()) {
+            String name = (String) names.nextElement();
+            if (name.startsWith("CodeType:")) {
+                String codeType = name.substring(name.indexOf(":"));
+                String codeValue = entry.getProp(name).getValueAsString();
+                if ("CODE11".equals(codeType)) {
+                    barcodeIdMap.put(codeValue.toUpperCase(), new Integer(ScannerConst.SCAN_SDT_OTHER));
+                } else if ("CODE39".equals(codeType)) {
+                    barcodeIdMap.put(codeValue.toUpperCase(), new Integer(ScannerConst.SCAN_SDT_Code39));
+                } else if ("CODE93".equals(codeType)) {
+                    barcodeIdMap.put(codeValue.toUpperCase(), new Integer(ScannerConst.SCAN_SDT_Code93));
+                } else if ("CODE128".equals(codeType)) {
+                    barcodeIdMap.put(codeValue.toUpperCase(), new Integer(ScannerConst.SCAN_SDT_Code128));
+                } else if ("CODABAR".equals(codeType)) {
+                    barcodeIdMap.put(codeValue.toUpperCase(), new Integer(ScannerConst.SCAN_SDT_Codabar));
+                } else if ("I2OF5".equals(codeType)) {
+                    barcodeIdMap.put(codeValue.toUpperCase(), new Integer(ScannerConst.SCAN_SDT_OTHER));
+                } else if ("ID2OF5".equals(codeType)) {
+                    barcodeIdMap.put(codeValue.toUpperCase(), new Integer(ScannerConst.SCAN_SDT_OTHER));
+                } else if ("MSI".equals(codeType)) {
+                    barcodeIdMap.put(codeValue.toUpperCase(), new Integer(ScannerConst.SCAN_SDT_OTHER));
+                } else if ("UPCA".equals(codeType)) {
+                    barcodeIdMap.put(codeValue.toUpperCase(), new Integer(ScannerConst.SCAN_SDT_UPCA));
+                } else if ("UPCE".equals(codeType)) {
+                    barcodeIdMap.put(codeValue.toUpperCase(), new Integer(ScannerConst.SCAN_SDT_UPCE));
+                } else if ("EAN13".equals(codeType)) {
+                    barcodeIdMap.put(codeValue.toUpperCase(), new Integer(ScannerConst.SCAN_SDT_EAN13));
+                } else if ("EAN8".equals(codeType)) {
+                    barcodeIdMap.put(codeValue.toUpperCase(), new Integer(ScannerConst.SCAN_SDT_EAN8));
+                }
+            }
+        }
     }
 }
