@@ -91,7 +91,6 @@
         <if-empty field-name="fromDate" map-name="parameters">
             <now-timestamp-to-env env-name="nowStamp"/>
             <env-to-field env-name="nowStamp" field-name="fromDate" map-name="parameters"/>
-            <!-- TODO: if fromDate is not specified make sure no ProductFeatureAppl exists with a valid date range, I guess this is kind of optional... -->
         </if-empty>
         <call-map-processor in-map-name="parameters" out-map-name="newEntityContext">
             <simple-map-processor name="populateEntity">
@@ -107,9 +106,18 @@
         <make-value value-name="newEntity" entity-name="ProductFeatureAppl" map-name="newEntityContext"/>
         <create-value value-name="newEntity"/>
 
-        <!-- what caches need to be cleared? hopefully just this one... -->
+        <!-- clear caches -->
         <field-to-field field-name="productId" map-name="parameters" to-map-name="clearCacheByProductIdMap"/>
         <clear-cache-line entity-name="ProductFeatureAndAppl" map-name="clearCacheByProductIdMap"/>
+        
+        <!-- this cache is from the ProductServices.makeGroup method -->
+        <!-- a trickier cache, need to know the productFeatureTypeId for this one, so look it up first... -->
+        <field-to-field field-name="productFeatureId" map-name="parameters" to-map-name="lookupProductFeatureMap"/>
+        <find-by-primary-key entity-name="ProductFeature" map-name="lookupProductFeatureMap" value-name="productFeature"/>
+        <field-to-field field-name="productId" map-name="parameters" to-map-name="clearMakeGroupCacheMap"/>
+        <field-to-field field-name="productFeatureTypeId" map-name="productFeature" to-map-name="clearMakeGroupCacheMap"/>
+        <string-to-field string="STANDARD_FEATURE" field-name="productFeatureApplTypeId" map-name="clearMakeGroupCacheMap"/>
+        <clear-cache-line entity-name="ProductFeatureAndAppl" map-name="clearMakeGroupCacheMap"/>
     </simple-method>
     <simple-method method-name="updateFeatureToProductApplication" short-description="Update Feature to Product Application">
         <check-permission permission="CATALOG" action="_UPDATE"><fail-message message="Security Error: to run updateFeatureToProductApplication you must have the CATALOG_UPDATE or CATALOG_ADMIN permission"/></check-permission>
@@ -129,9 +137,18 @@
         <check-errors/>
         <store-value value-name="productFeatureAppl"/>
 
-        <!-- what caches need to be cleared? hopefully just this one... -->
+        <!-- clear caches -->
         <field-to-field field-name="productId" map-name="parameters" to-map-name="clearCacheByProductIdMap"/>
         <clear-cache-line entity-name="ProductFeatureAndAppl" map-name="clearCacheByProductIdMap"/>
+        
+        <!-- this cache is from the ProductServices.makeGroup method -->
+        <!-- a trickier cache, need to know the productFeatureTypeId for this one, so look it up first... -->
+        <field-to-field field-name="productFeatureId" map-name="parameters" to-map-name="lookupProductFeatureMap"/>
+        <find-by-primary-key entity-name="ProductFeature" map-name="lookupProductFeatureMap" value-name="productFeature"/>
+        <field-to-field field-name="productId" map-name="parameters" to-map-name="clearMakeGroupCacheMap"/>
+        <field-to-field field-name="productFeatureTypeId" map-name="productFeature" to-map-name="clearMakeGroupCacheMap"/>
+        <string-to-field string="STANDARD_FEATURE" field-name="productFeatureApplTypeId" map-name="clearMakeGroupCacheMap"/>
+        <clear-cache-line entity-name="ProductFeatureAndAppl" map-name="clearMakeGroupCacheMap"/>
     </simple-method>
     <simple-method method-name="removeFeatureFromProduct" short-description="Remove Feature from Product">
         <check-permission permission="CATALOG" action="_DELETE"><fail-message message="Security Error: to run removeFeatureFromProduct you must have the CATALOG_DELETE or CATALOG_ADMIN permission"/></check-permission>
@@ -151,8 +168,17 @@
         -->
         <remove-value value-name="productFeatureAppl"/>
 
-        <!-- what caches need to be cleared? hopefully just this one... -->
+        <!-- clear caches -->
         <field-to-field field-name="productId" map-name="parameters" to-map-name="clearCacheByProductIdMap"/>
         <clear-cache-line entity-name="ProductFeatureAndAppl" map-name="clearCacheByProductIdMap"/>
+        
+        <!-- this cache is from the ProductServices.makeGroup method -->
+        <!-- a trickier cache, need to know the productFeatureTypeId for this one, so look it up first... -->
+        <field-to-field field-name="productFeatureId" map-name="parameters" to-map-name="lookupProductFeatureMap"/>
+        <find-by-primary-key entity-name="ProductFeature" map-name="lookupProductFeatureMap" value-name="productFeature"/>
+        <field-to-field field-name="productId" map-name="parameters" to-map-name="clearMakeGroupCacheMap"/>
+        <field-to-field field-name="productFeatureTypeId" map-name="productFeature" to-map-name="clearMakeGroupCacheMap"/>
+        <string-to-field string="STANDARD_FEATURE" field-name="productFeatureApplTypeId" map-name="clearMakeGroupCacheMap"/>
+        <clear-cache-line entity-name="ProductFeatureAndAppl" map-name="clearMakeGroupCacheMap"/>
     </simple-method>
 </simple-methods>
