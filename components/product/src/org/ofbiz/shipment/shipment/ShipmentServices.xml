@@ -24,7 +24,7 @@
  *
  * @author     David E. Jones (jonesde@ofbiz.org)
  * @author     Andy Zeneski (jaz@ofbiz.org)
- * @version    $Revision: 1.7 $
+ * @version    $Revision: 1.8 $
  * @since      2.2
 -->
 <simple-methods>
@@ -1022,7 +1022,7 @@
 		<string-to-field field-name="statusId" map-name="packedContext" string="SHIPMENT_PACKED"/>
 		<call-service service-name="updateShipment" in-map-name="packedContext"/>
 		<!-- update the shipment status to shipped -->
-		<if-empty map-name="parameters" field-name="_packOnly">
+		<if-empty map-name="parameters" field-name="setPackedOnly">
 	  		<field-to-field field-name="shipmentId" map-name="shipment" to-map-name="packedContext"/>
 			<string-to-field field-name="statusId" map-name="packedContext" string="SHIPMENT_SHIPPED"/>
 			<call-service service-name="updateShipment" in-map-name="packedContext"/>
