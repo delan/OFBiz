@@ -1,5 +1,5 @@
 /*
- * $Id: GenericDAO.java,v 1.6 2003/12/04 01:51:46 jonesde Exp $
+ * $Id: GenericDAO.java,v 1.7 2003/12/04 06:16:05 jonesde Exp $
  *
  * Copyright (c) 2001, 2002 The Open For Business Project - www.ofbiz.org
  *
@@ -41,7 +41,6 @@ import java.util.TreeSet;
 import java.util.Vector;
 
 import org.ofbiz.base.util.Debug;
-import org.ofbiz.base.util.UtilDateTime;
 import org.ofbiz.base.util.UtilValidate;
 import org.ofbiz.entity.EntityLockedException;
 import org.ofbiz.entity.GenericDataSourceException;
@@ -67,6 +66,7 @@ import org.ofbiz.entity.model.ModelFieldTypeReader;
 import org.ofbiz.entity.model.ModelKeyMap;
 import org.ofbiz.entity.model.ModelRelation;
 import org.ofbiz.entity.model.ModelViewEntity;
+import org.ofbiz.entity.transaction.TransactionUtil;
 import org.ofbiz.entity.util.EntityFindOptions;
 import org.ofbiz.entity.util.EntityListIterator;
 
@@ -79,7 +79,7 @@ import org.ofbiz.entity.util.EntityListIterator;
  * @author     <a href="mailto:jdonnerstag@eds.de">Juergen Donnerstag</a>
  * @author     <a href="mailto:gielen@aixcept.de">Rene Gielen</a>
  * @author     <a href="mailto:john_nutting@telluridetechnologies.com">John Nutting</a>
- * @version    $Revision: 1.6 $
+ * @version    $Revision: 1.7 $
  * @since      1.0
  */
 public class GenericDAO {
@@ -137,13 +137,16 @@ public class GenericDAO {
             return singleUpdateView(entity, (ModelViewEntity) modelEntity, fieldsToSave, sqlP);
         }
 
+        // if we have a STAMP_TX_FIELD then set it with NOW, always do this before the STAMP_FIELD
+        if (modelEntity.isField(ModelEntity.STAMP_TX_FIELD)) {
+            entity.set(ModelEntity.STAMP_TX_FIELD, TransactionUtil.getTransactionStartStamp());
+        }
+
         // if we have a STAMP_FIELD then set it with NOW.
         if (modelEntity.isField(ModelEntity.STAMP_FIELD)) {
-            entity.set(ModelEntity.STAMP_FIELD, UtilDateTime.nowTimestamp());
+            entity.set(ModelEntity.STAMP_FIELD, TransactionUtil.getTransactionUniqueNowStamp());
         }
         
-        // TODO: if we have a STAMP_TX_FIELD then set it with NOW.
-
         String sql = "INSERT INTO " + modelEntity.getTableName(datasourceInfo) + " (" + modelEntity.colNameString(fieldsToSave) + ") VALUES (" +
             modelEntity.fieldsStringList(fieldsToSave, "?", ", ") + ")";
 
@@ -230,12 +233,15 @@ public class GenericDAO {
             }
         }
 
+        // if we have a STAMP_TX_FIELD then set it with NOW, always do this before the STAMP_FIELD
+        if (modelEntity.isField(ModelEntity.STAMP_TX_FIELD)) {
+            entity.set(ModelEntity.STAMP_TX_FIELD, TransactionUtil.getTransactionStartStamp());
+        }
+
         // if we have a STAMP_FIELD then update it with NOW.
         if (modelEntity.isField(ModelEntity.STAMP_FIELD)) {
-            entity.set(ModelEntity.STAMP_FIELD, UtilDateTime.nowTimestamp());
+            entity.set(ModelEntity.STAMP_FIELD, TransactionUtil.getTransactionUniqueNowStamp());
         }
-        
-        // TODO: if we have a STAMP_TX_FIELD then set it with NOW.
         
         String sql = "UPDATE " + modelEntity.getTableName(datasourceInfo) + " SET " + modelEntity.colNameString(fieldsToSave, "=?, ", "=?", false) + " WHERE " +
             SqlJdbcUtil.makeWhereStringFromFields(modelEntity.getPksCopy(), entity, "AND");
