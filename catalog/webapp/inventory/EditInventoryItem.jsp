@@ -1,7 +1,4 @@
-<%
-/**
- *  Title: Edit Inventory Item Page
- *  Description: None
+<%--
  *  Copyright (c) 2001 The Open For Business Project - www.ofbiz.org
  *
  *  Permission is hereby granted, free of charge, to any person obtaining a 
@@ -25,9 +22,7 @@
  *@author     David E. Jones
  *@created    Sep 10 2001
  *@version    1.0
- */
-%>
-<%try {%>
+--%>
 <%@ page import="java.util.*, java.io.*" %>
 <%@ page import="org.ofbiz.core.util.*, org.ofbiz.core.entity.*" %>
 
@@ -131,10 +126,10 @@
         <td width="74%">
           <%-- <input type="text" name="<%=paramName%>" value="<%=UtilFormatOut.checkNull(tryEntity?inventoryItem.getString(fieldName):request.getParameter(paramName))%>" size="20" maxlength="20"> --%>
           <select name="inventoryItemTypeId" size=1>
-            <option selected value='<ofbiz:inputvalue entityAttr="inventoryItemType" field="inventoryItemTypeId"/>'><ofbiz:inputvalue entityAttr="inventoryItemType" field="description"/> <ofbiz:entityfield attribute="inventoryItemType" field="inventoryItemTypeId" prefix="[" suffix="]"/></option>
+            <option selected value='<ofbiz:inputvalue entityAttr="inventoryItemType" field="inventoryItemTypeId"/>'><ofbiz:inputvalue entityAttr="inventoryItemType" field="description"/> <%--<ofbiz:entityfield attribute="inventoryItemType" field="inventoryItemTypeId" prefix="[" suffix="]"/>--%></option>
             <option value='<ofbiz:inputvalue entityAttr="inventoryItemType" field="inventoryItemTypeId"/>'>----</option>
             <ofbiz:iterator name="nextInventoryItemType" property="inventoryItemTypes">
-              <option value='<ofbiz:inputvalue entityAttr="nextInventoryItemType" field="inventoryItemTypeId"/>'><ofbiz:inputvalue entityAttr="nextInventoryItemType" field="description"/> <ofbiz:entityfield attribute="nextInventoryItemType" field="inventoryItemTypeId" prefix="[" suffix="]"/></option>
+              <option value='<ofbiz:inputvalue entityAttr="nextInventoryItemType" field="inventoryItemTypeId"/>'><ofbiz:inputvalue entityAttr="nextInventoryItemType" field="description"/> <%--<ofbiz:entityfield attribute="nextInventoryItemType" field="inventoryItemTypeId" prefix="[" suffix="]"/>--%></option>
             </ofbiz:iterator>
           </select>
         </td>
@@ -255,4 +250,3 @@
   <h3>You do not have permission to view this page. ("CATALOG_VIEW" or "CATALOG_ADMIN" needed)</h3>
 <%}%>
 </td><td>&nbsp;&nbsp;</td></tr></table>
-<%} catch (Exception e) { Debug.logError(e); } %>

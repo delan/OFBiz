@@ -76,7 +76,7 @@
     <td align="left">
         <FORM method=POST action='<ofbiz:url>/updateProductPriceRule</ofbiz:url>'>
             <input type=hidden <ofbiz:inputvalue entityAttr="productPriceRule" field="productPriceRuleId" fullattrs="true"/>>
-            <input type=text size='25' <ofbiz:inputvalue entityAttr="productPriceRule" field="ruleName" fullattrs="true"/>>
+            <input type=text size='15' <ofbiz:inputvalue entityAttr="productPriceRule" field="ruleName" fullattrs="true"/>>
             <input type=text size='22' <ofbiz:inputvalue entityAttr="productPriceRule" field="fromDate" fullattrs="true"/>>
             <input type=text size='22' <ofbiz:inputvalue entityAttr="productPriceRule" field="thruDate" fullattrs="true"/>>
             &nbsp;&nbsp;
@@ -104,8 +104,18 @@
             <td width='85%'><div class="tabletext"><b>Input,&nbsp;Operator&nbsp;&amp;&nbsp;Value</b></div></td>
             <td width='10%'><div class="tabletext"><b>&nbsp;</b></div></td>
           </tr>
+          <%long maxCondSeqId = 1;%>
           <ofbiz:iterator name="productPriceCond" property="productPriceConds">
               <tr>
+                <%
+                    //if cur seq id is a number and is greater than max, set new max for input box prefill below
+                    try {
+                        long curCondSeqId = Long.parseLong(productPriceCond.getString("productPriceCondSeqId"));
+                        if (curCondSeqId >= maxCondSeqId) {
+                            maxCondSeqId = curCondSeqId + 1;
+                        }
+                    } catch (Exception e) {}
+                %>
                 <td><div class='tabletext'><b><ofbiz:inputvalue entityAttr="productPriceCond" field="productPriceCondSeqId"/></b></div></td>
                 <td align="left">
                     <FORM method=POST action='<ofbiz:url>/updateProductPriceCond</ofbiz:url>'>
@@ -150,7 +160,7 @@
                 <FORM method=POST action='<ofbiz:url>/createProductPriceCond</ofbiz:url>'>
                     <input type=hidden <ofbiz:inputvalue entityAttr="productPriceRule" field="productPriceRuleId" fullattrs="true"/>>
                     <span class='tabletext'><b>New:</b>&nbsp;</span>
-                    <input type=text size='5' name='productPriceCondSeqId'>
+                    <input type=text size='5' name='productPriceCondSeqId' value='<%=maxCondSeqId%>'>
                     <select name='inputParamEnumId' size=1>
                         <ofbiz:iterator name="inputParamEnum" property="inputParamEnums">
                           <option value='<%=inputParamEnum.getString("enumId")%>'><%=inputParamEnum.getString("description")%><%--[<%=inputParamEnum.getString("enumId")%>]--%></option>
@@ -186,8 +196,18 @@
             <td width='85%'><div class="tabletext"><b>ActionType,&nbsp;Amount</b></div></td>
             <td width='10%'><div class="tabletext"><b>&nbsp;</b></div></td>
           </tr>
+          <%long maxActionSeqId = 1;%>
           <ofbiz:iterator name="productPriceAction" property="productPriceActions">
               <tr>
+                <%
+                    //if cur seq id is a number and is greater than max, set new max for input box prefill below
+                    try {
+                        long curActionSeqId = Long.parseLong(productPriceAction.getString("productPriceActionSeqId"));
+                        if (curActionSeqId >= maxActionSeqId) {
+                            maxActionSeqId = curActionSeqId + 1;
+                        }
+                    } catch (Exception e) {}
+                %>
                 <td><div class='tabletext'><b><ofbiz:inputvalue entityAttr="productPriceAction" field="productPriceActionSeqId"/></b></div></td>
                 <td align="left">
                     <FORM method=POST action='<ofbiz:url>/updateProductPriceAction</ofbiz:url>'>
@@ -220,7 +240,7 @@
                 <FORM method=POST action='<ofbiz:url>/createProductPriceAction</ofbiz:url>'>
                     <input type=hidden <ofbiz:inputvalue entityAttr="productPriceRule" field="productPriceRuleId" fullattrs="true"/>>
                     <span class='tabletext'><b>New:</b>&nbsp;</span>
-                    <input type=text size='5' name='productPriceActionSeqId'>
+                    <input type=text size='5' name='productPriceActionSeqId' value='<%=maxActionSeqId%>'>
                     <select name='productPriceActionTypeId' size=1>
                         <ofbiz:iterator name="productPriceActionType" property="productPriceActionTypes">
                           <option value='<%=productPriceActionType.getString("productPriceActionTypeId")%>'><%=productPriceActionType.getString("description")%><%--[<%=productPriceActionType.getString("productPriceActionTypeId")%>]--%></option>

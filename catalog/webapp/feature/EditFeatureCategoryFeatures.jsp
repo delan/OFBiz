@@ -1,5 +1,4 @@
-<%
-/**
+<%--
  *  Copyright (c) 2001 The Open For Business Project - www.ofbiz.org
  *
  *  Permission is hereby granted, free of charge, to any person obtaining a
@@ -23,8 +22,7 @@
  *@author     David E. Jones
  *@created    April 4, 2002
  *@version    1.0
- */
-%>
+--%>
 
 <%@ page import="java.util.*, java.io.*" %>
 <%@ page import="org.ofbiz.core.util.*, org.ofbiz.core.entity.*" %>
@@ -93,25 +91,26 @@
     <%}%>
   </tr>
 <ofbiz:iterator name="productFeature" property="productFeatures">
+  <%GenericValue curProductFeatureType = productFeature.getRelatedOneCache("ProductFeatureType");%>
   <tr valign="middle" class='viewOneTR1'>
     <FORM method=POST action='<ofbiz:url>/UpdateProductFeature</ofbiz:url>'>
         <%if (productId != null && productId.length() > 0) {%><input type="hidden" name="productId" value="<%=productId%>"><%}%>
         <input type=hidden <ofbiz:inputvalue entityAttr="productFeature" field="productFeatureId" fullattrs="true"/>>
-      <td><input type=text size='20' <ofbiz:inputvalue entityAttr="productFeature" field="description" fullattrs="true"/>></td>
-      <td><select name='productFeatureTypeId' size=1>
+      <td><input type=text size='15' <ofbiz:inputvalue entityAttr="productFeature" field="description" fullattrs="true"/>></td>
+      <td><select name='productFeatureTypeId' size=1 style='font-size: x-small;'>
         <%if (productFeature.get("productFeatureTypeId") != null) {%>
-          <option value='<%=productFeature.getString("productFeatureTypeId")%>'> [<%=productFeature.getString("productFeatureTypeId")%>]</option>
-          <option value='<%=productFeature.getString("productFeatureTypeId")%>'></option>
+          <option value='<%=productFeature.getString("productFeatureTypeId")%>'><%if (curProductFeatureType != null) {%><%=UtilFormatOut.checkNull(curProductFeatureType.getString("description"))%><%} else {%> [<%=productFeature.getString("productFeatureTypeId")%>]<%}%></option>
+          <option value='<%=productFeature.getString("productFeatureTypeId")%>'>---</option>
         <%}%>
         <ofbiz:iterator name="productFeatureType" property="productFeatureTypes">
-          <option value='<%=productFeatureType.getString("productFeatureTypeId")%>'><%=productFeatureType.getString("description")%> [<%=productFeatureType.getString("productFeatureTypeId")%>]</option>
+          <option value='<%=productFeatureType.getString("productFeatureTypeId")%>'><%=productFeatureType.getString("description")%> <%--[<%=productFeatureType.getString("productFeatureTypeId")%>]--%></option>
         </ofbiz:iterator>
       </select></td>
-      <td><select name='productFeatureCategoryId' size=1>
+      <td><select name='productFeatureCategoryId' size=1 style='font-size: x-small;'>
         <%if (productFeature.get("productFeatureCategoryId") != null) {%>
           <%GenericValue curProdFeatCat = productFeature.getRelatedOne("ProductFeatureCategory");%>
           <option value='<%=productFeature.getString("productFeatureCategoryId")%>'><%=curProdFeatCat!=null?curProdFeatCat.getString("description"):""%> [<%=productFeature.getString("productFeatureCategoryId")%>]</option>
-          <option value='<%=productFeature.getString("productFeatureCategoryId")%>'></option>
+          <option value='<%=productFeature.getString("productFeatureCategoryId")%>'>---</option>
         <%}%>
         <ofbiz:iterator name="productFeatureCategory" property="productFeatureCategories">
           <option value='<%=productFeatureCategory.getString("productFeatureCategoryId")%>'><%=productFeatureCategory.getString("description")%> [<%=productFeatureCategory.getString("productFeatureCategoryId")%>]</option>
@@ -132,14 +131,14 @@
         <input type=hidden <ofbiz:inputvalue entityAttr="productFeature" field="productFeatureId" fullattrs="true"/>>
         <td><div class="tabletext">&nbsp;</div></td>
         <td>
-          <select name='productFeatureApplTypeId' size=1>
+          <select name='productFeatureApplTypeId' size=1 style='font-size: x-small;'>
             <ofbiz:iterator name="productFeatureApplType" property="productFeatureApplTypes">
-              <option value='<%=productFeatureApplType.getString("productFeatureApplTypeId")%>'><%=productFeatureApplType.getString("description")%> [<%=productFeatureApplType.getString("productFeatureApplTypeId")%>]</option>
+              <option value='<%=productFeatureApplType.getString("productFeatureApplTypeId")%>'><%=productFeatureApplType.getString("description")%> <%--[<%=productFeatureApplType.getString("productFeatureApplTypeId")%>]--%></option>
             </ofbiz:iterator>
           </select>
         </td>
-        <td><input type=text size='18' name='fromDate'></td>
-        <td><input type=text size='18' name='thruDate'></td>
+        <td><input type=text size='18' name='fromDate' style='font-size: x-small;'></td>
+        <td><input type=text size='18' name='thruDate' style='font-size: x-small;'></td>
         <td>&nbsp;</td>
         <td><input type=text size='5' name='sequenceNum' value='<ofbiz:inputvalue entityAttr="productFeature" field="defaultSequenceNum"/>'></td>
       <td colspan='3' align=left><INPUT type=submit value='Apply'></td>
@@ -160,7 +159,7 @@
       <td>
         <select name='productFeatureTypeId' size=1>
         <ofbiz:iterator name="productFeatureType" property="productFeatureTypes">
-          <option value='<%=productFeatureType.getString("productFeatureTypeId")%>'><%=productFeatureType.getString("description")%> [<%=productFeatureType.getString("productFeatureTypeId")%>]</option>
+          <option value='<%=productFeatureType.getString("productFeatureTypeId")%>'><%=productFeatureType.getString("description")%> <%--[<%=productFeatureType.getString("productFeatureTypeId")%>]--%></option>
         </ofbiz:iterator>
         </select>
       </td>

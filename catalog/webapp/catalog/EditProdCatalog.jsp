@@ -173,10 +173,10 @@
         <td>&nbsp;</td>
         <td width="74%">
           <select name='reserveOrderEnumId'>
-              <option value='<ofbiz:inputvalue entityAttr="prodCatalog" field="reserveOrderEnumId"/>'><ofbiz:inputvalue entityAttr="reserveOrderEnum" field="description"/> <ofbiz:entityfield attribute="prodCatalog" field="reserveOrderEnumId" prefix="[" suffix="]"/></option>
+              <option value='<ofbiz:inputvalue entityAttr="prodCatalog" field="reserveOrderEnumId"/>'><ofbiz:inputvalue entityAttr="reserveOrderEnum" field="description"/> <%--<ofbiz:entityfield attribute="prodCatalog" field="reserveOrderEnumId" prefix="[" suffix="]"/>--%></option>
               <option value='<ofbiz:inputvalue entityAttr="prodCatalog" field="reserveOrderEnumId"/>'>----</option>
               <ofbiz:iterator name="newReserveOrderEnum" property="reserveOrderEnums">
-                <option value='<ofbiz:inputvalue entityAttr="newReserveOrderEnum" field="enumId"/>'><ofbiz:inputvalue entityAttr="newReserveOrderEnum" field="description"/> [<ofbiz:inputvalue entityAttr="newReserveOrderEnum" field="enumId"/>]</option>
+                <option value='<ofbiz:inputvalue entityAttr="newReserveOrderEnum" field="enumId"/>'><ofbiz:inputvalue entityAttr="newReserveOrderEnum" field="description"/> <%--[<ofbiz:inputvalue entityAttr="newReserveOrderEnum" field="enumId"/>]--%></option>
               </ofbiz:iterator>
           </select>
         </td>

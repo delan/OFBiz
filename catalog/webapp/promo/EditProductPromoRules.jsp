@@ -110,8 +110,18 @@
             <td width='85%'><div class="tabletext"><b>Input,&nbsp;Operator&nbsp;&amp;&nbsp;Value</b></div></td>
             <td width='10%'><div class="tabletext"><b>&nbsp;</b></div></td>
           </tr>
+          <%long maxCondSeqId = 1;%>
           <ofbiz:iterator name="productPromoCond" property="productPromoConds">
               <tr>
+                <%
+                    //if cur seq id is a number and is greater than max, set new max for input box prefill below
+                    try {
+                        long curCondSeqId = Long.parseLong(productPromoCond.getString("productPromoCondSeqId"));
+                        if (curCondSeqId >= maxCondSeqId) {
+                            maxCondSeqId = curCondSeqId + 1;
+                        }
+                    } catch (Exception e) {}
+                %>
                 <td><div class='tabletext'><b><ofbiz:inputvalue entityAttr="productPromoCond" field="productPromoCondSeqId"/></b></div></td>
                 <td align="left">
                     <FORM method=POST action='<ofbiz:url>/updateProductPromoCond</ofbiz:url>'>
@@ -158,7 +168,7 @@
                     <input type=hidden <ofbiz:inputvalue entityAttr="productPromoRule" field="productPromoId" fullattrs="true"/>>
                     <input type=hidden <ofbiz:inputvalue entityAttr="productPromoRule" field="productPromoRuleId" fullattrs="true"/>>
                     <span class='tabletext'><b>New:</b>&nbsp;</span>
-                    <input type=text size='5' name='productPromoCondSeqId'>
+                    <input type=text size='5' name='productPromoCondSeqId' value='<%=maxCondSeqId%>'>
                     <select name='inputParamEnumId' size=1>
                         <ofbiz:iterator name="inputParamEnum" property="inputParamEnums">
                           <option value='<%=inputParamEnum.getString("enumId")%>'><%=inputParamEnum.getString("description")%><%--[<%=inputParamEnum.getString("enumId")%>]--%></option>
@@ -195,8 +205,18 @@
             <td width='85%'><div class="tabletext"><b>ActionType,&nbsp;OrderAdjustmentType,&nbsp;Quantity,&nbsp;ProductId&nbsp;&amp;&nbsp;Limit</b></div></td>
             <td width='10%'><div class="tabletext"><b>&nbsp;</b></div></td>
           </tr>
+          <%long maxActionSeqId = 1;%>
           <ofbiz:iterator name="productPromoAction" property="productPromoActions">
               <tr>
+                <%
+                    //if cur seq id is a number and is greater than max, set new max for input box prefill below
+                    try {
+                        long curActionSeqId = Long.parseLong(productPromoAction.getString("productPromoActionSeqId"));
+                        if (curActionSeqId >= maxActionSeqId) {
+                            maxActionSeqId = curActionSeqId + 1;
+                        }
+                    } catch (Exception e) {}
+                %>
                 <td><div class='tabletext'><b><ofbiz:inputvalue entityAttr="productPromoAction" field="productPromoActionSeqId"/></b></div></td>
                 <td align="left">
                     <FORM method=POST action='<ofbiz:url>/updateProductPromoAction</ofbiz:url>'>
@@ -245,7 +265,7 @@
                     <input type=hidden <ofbiz:inputvalue entityAttr="productPromoRule" field="productPromoId" fullattrs="true"/>>
                     <input type=hidden <ofbiz:inputvalue entityAttr="productPromoRule" field="productPromoRuleId" fullattrs="true"/>>
                     <span class='tabletext'><b>New:</b>&nbsp;</span>
-                    <input type=text size='5' name='productPromoActionSeqId'>
+                    <input type=text size='5' name='productPromoActionSeqId' value='<%=maxActionSeqId%>'>
                     <select name='productPromoActionTypeId' size=1>
                         <ofbiz:iterator name="productPromoActionType" property="productPromoActionTypes">
                           <option value='<%=productPromoActionType.getString("productPromoActionTypeId")%>'><%=productPromoActionType.getString("description")%><%--[<%=productPromoActionType.getString("productPromoActionTypeId")%>]--%></option>

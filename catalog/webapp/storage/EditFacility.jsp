@@ -24,7 +24,6 @@
  *@created    May 10 2002
  *@version    1.0
 --%>
-<%try {%>
 <%@ page import="java.util.*, java.io.*" %>
 <%@ page import="org.ofbiz.core.util.*, org.ofbiz.core.entity.*" %>
 
@@ -94,10 +93,10 @@
         <td width="74%">
           <%-- <input type="text" name="<%=paramName%>" value="<%=UtilFormatOut.checkNull(tryEntity?facility.getString(fieldName):request.getParameter(paramName))%>" size="20" maxlength="20"> --%>
           <select name="facilityTypeId" size=1>
-            <option selected value='<ofbiz:inputvalue entityAttr="facilityType" field="facilityTypeId"/>'><ofbiz:inputvalue entityAttr="facilityType" field="description"/> <ofbiz:entityfield attribute="facilityType" field="facilityTypeId" prefix="[" suffix="]"/></option>
+            <option selected value='<ofbiz:inputvalue entityAttr="facilityType" field="facilityTypeId"/>'><ofbiz:inputvalue entityAttr="facilityType" field="description"/> <%--<ofbiz:entityfield attribute="facilityType" field="facilityTypeId" prefix="[" suffix="]"/>--%></option>
             <option value='<ofbiz:inputvalue entityAttr="facilityType" field="facilityTypeId"/>'>----</option>
             <ofbiz:iterator name="nextFacilityType" property="facilityTypes">
-              <option value='<ofbiz:inputvalue entityAttr="nextFacilityType" field="facilityTypeId"/>'><ofbiz:inputvalue entityAttr="nextFacilityType" field="description"/> <ofbiz:entityfield attribute="nextFacilityType" field="facilityTypeId" prefix="[" suffix="]"/></option>
+              <option value='<ofbiz:inputvalue entityAttr="nextFacilityType" field="facilityTypeId"/>'><ofbiz:inputvalue entityAttr="nextFacilityType" field="description"/> <%--<ofbiz:entityfield attribute="nextFacilityType" field="facilityTypeId" prefix="[" suffix="]"/>--%></option>
             </ofbiz:iterator>
           </select>
         </td>
@@ -129,4 +128,3 @@
   <h3>You do not have permission to view this page. ("CATALOG_VIEW" or "CATALOG_ADMIN" needed)</h3>
 <%}%>
 </td><td>&nbsp;&nbsp;</td></tr></table>
-<%} catch (Exception e) { Debug.logError(e); } %>

@@ -90,7 +90,8 @@
     <td><div class="tabletext">&nbsp;</div></td>
   </tr>
 <ofbiz:iterator name="productFeatureAndAppl" property="productFeatureAndAppls">
-  <%GenericValue curProductFeatureCategory = delegator.findByPrimaryKey("ProductFeatureCategory", UtilMisc.toMap("productFeatureCategoryId", productFeatureAndAppl.get("productFeatureCategoryId")));%>
+  <%GenericValue curProductFeatureApplType = productFeatureAndAppl.getRelatedOneCache("ProductFeatureApplType");%>
+  <%GenericValue curProductFeatureCategory = productFeatureAndAppl.getRelatedOneCache("ProductFeatureCategory");%>
   <%if (curProductFeatureCategory != null) pageContext.setAttribute("curProductFeatureCategory", curProductFeatureCategory);%>
   <tr valign="middle">
     <FORM method=POST action='<ofbiz:url>/UpdateFeatureToProductApplication</ofbiz:url>'>
@@ -108,11 +109,11 @@
         <input type=text size='5' <ofbiz:inputvalue entityAttr="productFeatureAndAppl" field="sequenceNum" fullattrs="true"/>>
       <select name='productFeatureApplTypeId' size=1>
         <%if (productFeatureAndAppl.get("productFeatureApplTypeId") != null) {%>
-          <option value='<%=productFeatureAndAppl.getString("productFeatureApplTypeId")%>'> [<%=productFeatureAndAppl.getString("productFeatureApplTypeId")%>]</option>
-          <option value='<%=productFeatureAndAppl.getString("productFeatureApplTypeId")%>'></option>
+          <option value='<%=productFeatureAndAppl.getString("productFeatureApplTypeId")%>'><%if (curProductFeatureApplType != null) {%><%=UtilFormatOut.checkNull(curProductFeatureApplType.getString("description"))%><%} else {%> [<%=productFeatureAndAppl.getString("productFeatureApplTypeId")%>]<%}%></option>
+          <option value='<%=productFeatureAndAppl.getString("productFeatureApplTypeId")%>'>---</option>
         <%}%>
         <ofbiz:iterator name="productFeatureApplType" property="productFeatureApplTypes">
-          <option value='<%=productFeatureApplType.getString("productFeatureApplTypeId")%>'><%=productFeatureApplType.getString("description")%> [<%=productFeatureApplType.getString("productFeatureApplTypeId")%>]</option>
+          <option value='<%=productFeatureApplType.getString("productFeatureApplTypeId")%>'><%=productFeatureApplType.getString("description")%> <%--[<%=productFeatureApplType.getString("productFeatureApplTypeId")%>]--%></option>
         </ofbiz:iterator>
       </select>
         <INPUT type=submit value='Update'>
@@ -144,14 +145,14 @@
   <br>
   Feature Type: <select name='productFeatureTypeId' size=1>
     <ofbiz:iterator name="productFeatureType" property="productFeatureTypes">
-      <option value='<%=productFeatureType.getString("productFeatureTypeId")%>'><%=productFeatureType.getString("description")%> [<%=productFeatureType.getString("productFeatureTypeId")%>]</option>
+      <option value='<%=productFeatureType.getString("productFeatureTypeId")%>'><%=productFeatureType.getString("description")%> <%--[<%=productFeatureType.getString("productFeatureTypeId")%>]--%></option>
     </ofbiz:iterator>
   </select>
   ID Code: <input type=text size='10' name='idCode' value=''>
   <br>
-  Appl Type: <select name='productFeatureApplTypeId' size=1>
+  Feature Application Type: <select name='productFeatureApplTypeId' size=1>
     <ofbiz:iterator name="productFeatureApplType" property="productFeatureApplTypes">
-      <option value='<%=productFeatureApplType.getString("productFeatureApplTypeId")%>'><%=productFeatureApplType.getString("description")%> [<%=productFeatureApplType.getString("productFeatureApplTypeId")%>]</option>
+      <option value='<%=productFeatureApplType.getString("productFeatureApplTypeId")%>'><%=productFeatureApplType.getString("description")%> <%--[<%=productFeatureApplType.getString("productFeatureApplTypeId")%>]--%></option>
     </ofbiz:iterator>
   </select>
   <br>
