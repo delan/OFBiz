@@ -325,8 +325,7 @@ public class ServiceDispatcher {
             // ===== invoke the service =====
             if (!isError && !isFailure) {
                 Map invokeResult = engine.runSync(localName, modelService, context);
-                if (invokeResult != null) {
-                    Debug.log("Service result - " + invokeResult, module);
+                if (invokeResult != null) {                    
                     result.putAll(invokeResult);
                 } else {
                     Debug.logWarning("Service (in runSync : " + modelService.name + ") returns null result", module);

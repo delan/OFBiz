@@ -20,7 +20,7 @@
  *  THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  *
  *@author     David E. Jones (jonesde@ofbiz.org) 
- *@version    $Rev:$
+ *@version    $Rev$
  *@since      2.1
 -->
 <#assign uiLabelMap = requestAttributes.uiLabelMap>
@@ -538,7 +538,7 @@ ${pages.get("/customer/messagelist.ftl")}
             <div>&nbsp;</div>
             <div align="right" class="head3"><b><u>Upload New File</u></b>
               <div>&nbsp;</div>
-              <form method="post" enctype="multipart/mixed" action="<@ofbizUrl>/createPartyAsset</@ofbizUrl>" style="margin: 0;">
+              <form method="post" enctype="multipart/form-data" action="<@ofbizUrl>/createPartyAsset</@ofbizUrl>" style="margin: 0;">
                 <input type="hidden" name="dataCategoryId" value="PERSONAL">
                 <input type="hidden" name="contentTypeId" value="DOCUMENT">
                 <input type="hidden" name="statusId" value="CTNT_PUBLISHED">

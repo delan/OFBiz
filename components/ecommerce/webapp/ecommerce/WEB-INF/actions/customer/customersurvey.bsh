@@ -33,6 +33,7 @@ delegator = request.getAttribute("delegator");
 userLogin = session.getAttribute("userLogin");
 partyId = userLogin.getString("partyId");
 paramMap = UtilHttp.getParameterMap(request);
+Debug.log("ParamMap - " + paramMap);
 
 productStoreSurveyId = paramMap.get("productStoreSurveyId");
 if (productStoreSurveyId == null) {
@@ -44,6 +45,9 @@ if (surveyAppl != null) {
     survey = surveyAppl.getRelatedOne("Survey");
     context.put("survey", survey);
 
+    if (request.getAttribute("_ERROR_MESSAGE") == null) {
+        paramMap = UtilMisc.toMap("productStoreSurveyId", productStoreSurveyId);
+    }
     wrapper = new ProductStoreSurveyWrapper(surveyAppl, partyId, paramMap);
     context.put("surveyWrapper", wrapper);
 
