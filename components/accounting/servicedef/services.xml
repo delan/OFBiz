@@ -863,7 +863,7 @@
         <attribute name="referenceNum" type="String" mode="OUT" optional="false"/>
     </service>
     <service name="linkPhysicalGiftCard" engine="java"
-            location="org.ofbiz.accounting.thirdparty.valuelink.ValueLinkServices" invoke="linkPhysicalCard" auth="true">
+            location="org.ofbiz.accounting.thirdparty.valuelink.ValueLinkServices" invoke="linkPhysicalCard" auth="false">
         <description>Link a physical card to a virtual account</description>
         <attribute name="paymentConfig" type="String" mode="IN" optional="false"/>
         <attribute name="virtualCard" type="String" mode="IN" optional="false"/>
