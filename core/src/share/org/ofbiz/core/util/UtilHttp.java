@@ -191,29 +191,25 @@ public class UtilHttp {
     
     /** URL Encodes a Map of arguements */
     public static String urlEncodeArgs(Map args) {
+        if (args == null) return "";
         StringBuffer buf = new StringBuffer();
-        Set names = args.keySet();
-        Iterator i = names.iterator();
-
+        Iterator i = args.entrySet().iterator();
         while (i.hasNext()) {
-            String name = (String) i.next();
-            Object value = args.get(name);
+            Map.Entry entry = (Map.Entry) i.next();
+            String name = (String) entry.getKey();
+            Object value = entry.getValue();
             String valueStr = null;
-            if (value != null) {
+            if (name != null && value != null) {
                 if (value instanceof String) {
                     valueStr = (String) value;
                 } else {
                     valueStr = value.toString();
                 }
-            }
                         
-            if (name != null) {
                 if (buf.length() > 0) buf.append('&');
                 buf.append(URLEncoder.encode(name));
                 buf.append('=');
-                if (valueStr != null) {
-                    buf.append(URLEncoder.encode(valueStr));
-                }
+                buf.append(URLEncoder.encode(valueStr));
             }
         }
         return buf.toString();
