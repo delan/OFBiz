@@ -22,10 +22,14 @@
  *
  *@author     Andy Zeneski
  *@version    $Rev:$
- *@since      2.0
+ *@since      3.3
 --%>
 
-<%@ page import="java.util.*" %>
+<%@ page import="java.util.*,
+                 org.ofbiz.service.ServiceDispatcher,
+                 org.ofbiz.service.RunningService,
+                 org.ofbiz.service.engine.GenericEngine,
+                 java.sql.Timestamp" %>
 <%@ page import="org.ofbiz.security.*, org.ofbiz.entity.*" %>
 <%@ page import="org.ofbiz.base.util.*, org.ofbiz.content.webapp.pseudotag.*" %>
 
@@ -36,55 +40,55 @@
 
 <%if(security.hasPermission("WEBTOOLS_VIEW", session)) {%>
 
-<div class="head2">Thread Pool List</div>
-<a href="<ofbiz:url>/threadList</ofbiz:url>" class="buttontext">[Refresh]</a>&nbsp;
+<div class="head2">Service Log</div>
+<a href="<ofbiz:url>/serviceList</ofbiz:url>" class="buttontext">[Refresh]</a>&nbsp;
 <a href="<ofbiz:url>/jobList</ofbiz:url>" class="buttontext">[Job List]</a>&nbsp;
-<a href="<ofbiz:url>/serviceList</ofbiz:url>" class="buttontext">[Service Log]</a>&nbsp;
+<a href="<ofbiz:url>/threadList</ofbiz:url>" class="buttontext">[Thread List]</a>&nbsp;
 <a href="<ofbiz:url>/scheduleJob</ofbiz:url>" class="buttontext">[Schedule Job]</a>
 <br>
 
 <br>
 <table cellpadding="2" cellspacing="0" border="1" width="100%">
   <tr>
-    <td><div class="tableheadtext">Thread</div></td>
-    <td><div class="tableheadtext">Status</div></td>
-    <td><div class="tableheadtext">Job</div></td>
-    <td><div class="tableheadtext">Service</div></td>
-	<td><div class="tableheadtext">Time (ms)</div></td>
+    <td><div class="tableheadtext">Service Name</div></td>
+    <td><div class="tableheadtext">Dispatcher Name</div></td>
+    <td><div class="tableheadtext">Mode</div></td>
+    <td><div class="tableheadtext">Start Time</div></td>
+	<td><div class="tableheadtext">End Time</div></td>
     <%--<td>&nbsp;</td>--%>
   </tr>
   <%
-    /*
-    if (request.getParameter("killThread") != null) {
-        String threadToKill = request.getParameter("killThread");
-        dispatcher.getJobManager().killThread(threadToKill);
-    }
-    */
-    List jobs = dispatcher.getJobManager().processList();
-    if (jobs != null) {
-        Iterator i = jobs.iterator();
+
+    Map log = ServiceDispatcher.getServiceLogMap();
+    if (log != null) {
+        Iterator i = log.keySet().iterator();
         while (i.hasNext()) {
-            Map job = (Map) i.next();
+            RunningService rs = (RunningService) i.next();
   %>
   <%
-      String status = "Invalid Status";
-      int state = ((Integer) job.get("status")).intValue();
-      switch (state) {
-          case 0 : status = "Sleeping"; break;
-          case 1 : status = "Running"; break;
-          case -1: status = "Shutting down"; break;
-          default: status = "Invalid Status"; break;
+      int mode = rs.getMode();
+      String modeStr = "";
+      if (mode == GenericEngine.SYNC_MODE) {
+          modeStr = "SYNC";
+      } else {
+          modeStr = "ASYNC";
       }
-      String serviceName = (String) job.get("serviceName");
-      String threadName = (String) job.get("threadName");
-      String jobName = (String) job.get("jobName");
+
+      String serviceName = rs.getModelService().name;
+      String localName = rs.getLocalName();
+      Timestamp startTime = rs.getStartStamp();
+      Timestamp endTime = rs.getEndStamp();
   %>
   <tr>
-    <td><div class="tabletext"><%=UtilFormatOut.checkNull(threadName,"&nbsp;")%></div></td>
-    <td><div class="tabletext"><%=UtilFormatOut.checkNull(status, "&nbsp;")%></div></td>
-    <td><div class="tabletext"><%=UtilFormatOut.checkNull(jobName,"[none]")%></div></td>
-    <td><div class="tabletext"><%=UtilFormatOut.checkNull(serviceName,"[none]")%></div></td>
-    <td><div class="tabletext"><%=job.get("runTime")%></div></td>
+    <td><div class="tabletext"><%=UtilFormatOut.checkNull(serviceName,"&nbsp;")%></div></td>
+    <td><div class="tabletext"><%=UtilFormatOut.checkNull(localName, "&nbsp;")%></div></td>
+    <td><div class="tabletext"><%=UtilFormatOut.checkNull(modeStr,"[none]")%></div></td>
+    <td><div class="tabletext"><%=startTime%></div></td>
+    <%if (endTime != null) {%>
+    <td><div class="tabletext"><%=endTime%></div></td>
+    <%}else{%>
+    <td><div class="tabletext">[running]</div></td>
+    <%}%>
     <%-- doesn't work <td align="center"><a href="<ofbiz:url>/threadList?killThread=<%=threadName%></ofbiz:url>" class="buttontext">[Kill]</a></td>--%>
   </tr>
   <%

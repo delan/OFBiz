@@ -124,6 +124,10 @@
     	<put section="title">Thread List</put>
     	<put section="content" content="/service/threads.jsp"/>
     </define>
+    <define id="serviceList" region="MAIN_REGION">
+    	<put section="title">Service Log</put>
+    	<put section="content" content="/service/services.jsp"/>
+    </define>
     <define id="jobList" region="MAIN_REGION">
     	<put section="title">Scheduled Jobs</put>
     	<put section="content" content="/service/jobs.jsp"/>
