@@ -82,6 +82,29 @@ ${pages.get("/jobshopmgt/ProductionRunTabBar.ftl")}
                         ${updateProductionRunWrapper.renderFormString()}
                     </td>
                 </tr>
+                <#if orderItems?has_content>
+                <tr>
+                    <td align="left">
+                        <table border="0" cellpadding="2" cellspacing="0">
+                            <tr>
+                                <td width="20%" align="right">
+                                    <span class="tableheadtext">${uiLabelMap.ManufacturingOrderItems}</span>
+                                </td>
+                                <td>&nbsp;</td>
+                                <td width="80%" align="left">
+                                    <span class="tabletext">
+                                        <#list orderItems as orderItem>
+                                            <a href="/ordermgr/control/orderview?order_id=${orderItem.getString("orderId")}" class="buttontext" target="_blank">
+                                                ${orderItem.getString("orderId")}/${orderItem.getString("orderItemSeqId")}
+                                            </a>&nbsp;
+                                        </#list>
+                                    </span>
+                                </td>
+                            </tr>
+                        </table>
+                    </td>
+                </tr>
+                </#if>
                 <tr>
                     <td align="center">
                         <a href="<@ofbizUrl>/changeProductionRunStatusToPrinted?productionRunId=${productionRunId}</@ofbizUrl>" class="buttontext">[${uiLabelMap.ManufacturingProductionRunPrintDocuments}]</a>

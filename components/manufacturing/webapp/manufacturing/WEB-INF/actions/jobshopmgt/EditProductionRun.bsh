@@ -47,6 +47,11 @@ if (!UtilValidate.isEmpty(productionRunId)) {
     if (productionRun.exist()){
         context.put("productionRunId", productionRunId);
         context.put("productionRun", productionRun.getGenericValue());
+        // Find all the order items to which this production run is linked.
+        List orderItems = delegator.findByAnd("WorkOrderItemFulfillment", UtilMisc.toMap("workEffortId", productionRunId));
+        if (orderItems.size() > 0) {
+            context.put("orderItems", orderItems);
+        }
 
         // Find all the work efforts that must be completed before this one.
         List mandatoryWorkEfforts = EntityUtil.filterByDate(delegator.findByAnd("WorkEffortAssoc", UtilMisc.toMap("workEffortIdTo", productionRunId, "workEffortAssocTypeId", "WORK_EFF_PRECEDENCY")));
