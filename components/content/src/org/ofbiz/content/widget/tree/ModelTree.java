@@ -392,7 +392,14 @@ public class ModelTree {
 				context.put("processChildren", new Boolean(true));
 				// this action will usually obtain the "current" entity
 				ModelTreeAction.runSubActions(this.actions, context);
-				String id = (String) context.get(modelTree.getPkName());
+    			String pkName = modelTree.getPkName();
+				String id = null;
+    			if (UtilValidate.isNotEmpty(this.entryName)) {
+    			    Map map = (Map)context.get(this.entryName);
+                    id = (String)map.get(pkName);
+                } else {
+				    id = (String) context.get(pkName);
+                }
 				modelTree.currentNodeTrail.add(id);
 				context.put("currentNodeTrail", modelTree.currentNodeTrail);
 				String currentNodeTrailPiped = StringUtil.join( modelTree.currentNodeTrail, "|");
@@ -434,7 +441,6 @@ public class ModelTree {
 							//GenericPK pk = val.getPrimaryKey();
 							//if (Debug.infoOn()) Debug.logInfo(" pk:" + pk,
 							// module);
-							String pkName = this.modelTree.getPkName();
 							String thisEntityId = (String) val.get(pkName);
 							Map newContext = ((MapStack) context) .standAloneChildStack();
 							String nodeEntryName = node.getEntryName();
@@ -482,10 +488,13 @@ public class ModelTree {
              boolean hasChildren = false;
              Long nodeCount = null;
              String countFieldName = "childBranchCount";
+       		Object obj = null;
              if (UtilValidate.isNotEmpty(this.entryName)) {
-                 countFieldName = this.entryName + "." + countFieldName;  
+    			    Map map = (Map)context.get(this.entryName);
+                 obj = map.get(countFieldName);
+             } else {
+       		    obj = context.get(countFieldName);
              }
-       		Object obj = context.get(countFieldName);
        		if (obj != null)
                 nodeCount = (Long)obj;
              String entName = modelTree.getEntityName();
@@ -510,9 +519,16 @@ public class ModelTree {
                  }
                  */
                  nodeCount = new Long(this.subNodeValues.size());
-                 String id = (String)context.get(modelTree.getPkName());
+    			String pkName = modelTree.getPkName();
+				String id = null;
+    			if (UtilValidate.isNotEmpty(this.entryName)) {
+    			    Map map = (Map)context.get(this.entryName);
+                    id = (String)map.get(pkName);
+                } else {
+				    id = (String) context.get(pkName);
+                }
                  	try {
-                 		GenericValue entity = delegator.findByPrimaryKey(entName, UtilMisc.toMap(modelTree.getPkName(), id));
+                 		GenericValue entity = delegator.findByPrimaryKey(entName, UtilMisc.toMap(pkName, id));
                  	    entity.put("childBranchCount", nodeCount);
                  	    entity.store();
                  	} catch(GenericEntityException e) {
