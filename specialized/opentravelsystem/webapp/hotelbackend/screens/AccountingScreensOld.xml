@@ -31,7 +31,7 @@
                 <property-map resource="AccountingUiLabels" map-name="uiLabelMap" global="true"/>
             </actions>
             <widgets>
-                <decorator-screen name="common-decorator" location="specialized://opentravelsystem/webapp/hotelbackend/screens/CommonScreens.xml">
+                <decorator-screen name="common-decorator" location="component://opentravelsystem/webapp/hotelbackend/screens/CommonScreens.xml">
                     <decorator-section name="body">
                         <section>
                             <!-- do check for ACCOUNTING, _VIEW permission -->
@@ -40,11 +40,11 @@
                             </condition>
                             <widgets>
                                 <platform-specific>
-                                    <html><html-template location="specialized://opentravelsystem/webapp/hotelbackend/includes/appheaderAccounting.ftl"/></html>
+                                    <html><html-template location="component://opentravelsystem/webapp/hotelbackend/includes/appheaderAccounting.ftl"/></html>
                                 </platform-specific>
                                 <container style="contentarea">
                                  <platform-specific>
-                                    <html><html-template location="applications://accounting/webapp/accounting/fixedasset/FixedAssetTabBar.ftl"/></html>
+                                    <html><html-template location="component://accounting/webapp/accounting/fixedasset/FixedAssetTabBar.ftl"/></html>
                                 </platform-specific>
                                     
                                 <decorator-section-include name="body"/>
@@ -83,7 +83,7 @@
                                 <container>
                                     <link target="EditFixedAsset" text="[${uiLabelMap.AccountingNewFixedAsset}]" style="buttontext"/>
                                 </container>
-                        <include-form name="ListFixedAssets" location="applications://accounting/webapp/accounting/fixedasset/FixedAssetForms.xml"/>
+                        <include-form name="ListFixedAssets" location="component://accounting/webapp/accounting/fixedasset/FixedAssetForms.xml"/>
                                 <container>
                                     <link target="EditFixedAsset" text="[${uiLabelMap.AccountingNewFixedAsset}]" style="buttontext"/>
                                 </container>
@@ -112,7 +112,7 @@
                          <container>
                             <link target="EditFixedAsset" text="[${uiLabelMap.AccountingNewFixedAsset}]" style="buttontext"/>
                          </container>
-                        <include-form name="EditFixedAsset" location="applications://accounting/webapp/accounting/fixedasset/FixedAssetForms.xml"/>
+                        <include-form name="EditFixedAsset" location="component://accounting/webapp/accounting/fixedasset/FixedAssetForms.xml"/>
                     </decorator-section>
                 </decorator-screen>
             </widgets>
@@ -147,11 +147,11 @@
                           <container>
                             <label style="head1">${uiLabelMap.AccountingFixedAsset}: ${fixedAsset.fixedAssetName} [${uiLabelMap.CommonId}:${fixedAssetId}]</label>
                              </container>
-                        <include-form name="ListFixedAssetProducts" location="applications://accounting/webapp/accounting/fixedasset/FixedAssetForms.xml"/>
+                        <include-form name="ListFixedAssetProducts" location="component://accounting/webapp/accounting/fixedasset/FixedAssetForms.xml"/>
                         <container>
                             <label style="head1">${uiLabelMap.AccountingFixedAssetProductNew}</label>
                              </container>
-                        <include-form name="AddFixedAssetProduct" location="applications://accounting/webapp/accounting/fixedasset/FixedAssetForms.xml"/>
+                        <include-form name="AddFixedAssetProduct" location="component://accounting/webapp/accounting/fixedasset/FixedAssetForms.xml"/>
                     </decorator-section>
                 </decorator-screen>
             </widgets>
@@ -171,7 +171,7 @@
                 <set field="nowTimestamp" value="UtilDateTime.nowTimestamp()"/>
                 <set field="fixedAssetId" from-field="parameters.fixedAssetId"/>
                 <entity-one entity-name="FixedAsset" value-name="fixedAsset"/>
-                <script location="applications://accounting/webapp/accounting/fixedasset/month.bsh"/>
+                <script location="component://accounting/webapp/accounting/fixedasset/month.bsh"/>
             </actions>
             <widgets>
                 <decorator-screen name="CommonAccountingDecorator">
@@ -185,7 +185,7 @@
                                     <link target="ListFixedAssetCalendar?fixedAssetId=${fixedAssetId}" text="[${uiLabelMap.CommonThis} ${uiLabelMap.CommonMonth}]" style="buttontext"/>
                                     <link target="ListFixedAssetCalendar?fixedAssetId=${fixedAssetId}&amp;month=1" text="[${uiLabelMap.CommonNext} ${uiLabelMap.CommonMonth}]" style="buttontext"/>
                                     <link target="ListFixedAssetCalendar?fixedAssetId=${fixedAssetId}&amp;month=3" text="[${uiLabelMap.CommonNext} ${uiLabelMap.CommonQuarter}]" style="buttontext"/>
-                                    <include-form name="listFixedAssetCalendar" location="applications://accounting/webapp/accounting/fixedasset/FixedAssetForms.xml"/>
+                                    <include-form name="listFixedAssetCalendar" location="component://accounting/webapp/accounting/fixedasset/FixedAssetForms.xml"/>
                                     <label style="tabletext" text="*) empty, but maximum from fixed Asset capacity shown"></label>
                                 </container>
 <!--                                 <container>
@@ -193,7 +193,7 @@
                                 </container>
                                 <container>
                                    <label style="head1">${uiLabelMap.AccountingUpdateAvailability}</label>
-                                   <include-form name="updateFixedAssetCalendar" location="applications://accounting/webapp/accounting/fixedasset/FixedAssetForms.xml"/>
+                                   <include-form name="updateFixedAssetCalendar" location="component://accounting/webapp/accounting/fixedasset/FixedAssetForms.xml"/>
                                 </container>
  -->                    </decorator-section>
                 </decorator-screen>

@@ -29,7 +29,7 @@
 
     <context-param>
         <param-name>webSiteId</param-name>
-        <param-value>HotelDemoStore</param-value>
+        <param-value>HotelDemoWebsite</param-value>
     <description>A unique ID used to look up the WebSite entity to get information about catalogs, etc.</description>
     </context-param>
     <context-param>

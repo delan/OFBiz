@@ -29,13 +29,13 @@
                 <property-map resource="OrderUiLabels" map-name="uiLabelMap" global="true"/>
             </actions>
             <widgets>
-                <decorator-screen name="common-decorator" location="specialized://opentravelsystem/webapp/hotelbackend/screens/CommonScreens.xml">
+                <decorator-screen name="common-decorator" location="component://opentravelsystem/webapp/hotelbackend/screens/CommonScreens.xml">
                     <decorator-section name="body">
                         <section>
                             <widgets>
                                  <platform-specific>
                                     <html>
-                                        <html-template location="specialized://opentravelsystem/webapp/hotelbackend/includes/appheaderOrder.ftl"/>
+                                        <html-template location="component://opentravelsystem/webapp/hotelbackend/includes/appheaderOrder.ftl"/>
                                     </html>
                                 </platform-specific>
                                 <container style="contentarea">
@@ -61,14 +61,14 @@
                 <property-map resource="OrderUiLabels" map-name="uiLabelMap" global="true"/>
                 <set field="productStoreId" from-scope="application" from-field="productStoreId"/>
                 <set field="productStoreId" to-scope="user" value="${productStoreId}"/>
-                <script location="specialized://opentravelsystem/webapp/hotelbackend/WEB-INF/actions/order/findOrders.bsh"/>
+                <script location="component://opentravelsystem/webapp/hotelbackend/WEB-INF/actions/order/findOrders.bsh"/>
             </actions>
             <widgets>
                 <decorator-screen name="CommonOrderDecorator">
                     <decorator-section name="body">
                         <platform-specific>
                             <html>
-                                <html-template location="specialized://opentravelsystem/webapp/hotelbackend/order/findOrders.ftl"/>
+                                <html-template location="component://opentravelsystem/webapp/hotelbackend/order/findOrders.ftl"/>
                             </html>
                         </platform-specific>
                     </decorator-section>
@@ -84,29 +84,29 @@
                 <set field="page.headerItem" value="main"/>
                 <property-map resource="OrderUiLabels" map-name="uiLabelMap" global="true"/>
                 <set field="orderId" from-field="parameters.order_id"/>
-                <script location="applications://order/webapp/ordermgr/WEB-INF/actions/order/orderview.bsh"/>
+                <script location="component://order/webapp/ordermgr/WEB-INF/actions/order/orderview.bsh"/>
             </actions>
             <widgets>
                 <decorator-screen name="CommonOrderDecorator">
                     <decorator-section name="body">
                         <platform-specific>
                             <html>
-                                <html-template location="specialized://opentravelsystem/webapp/hotelbackend/order/orderheader.ftl"/>
+                                <html-template location="component://opentravelsystem/webapp/hotelbackend/order/orderheader.ftl"/>
                              </html>
                         </platform-specific>
                         <platform-specific>
                             <html>
-                                <html-template location="specialized://opentravelsystem/webapp/hotelbackend/order/orderitems.ftl"/>
+                                <html-template location="component://opentravelsystem/webapp/hotelbackend/order/orderitems.ftl"/>
                             </html>
                         </platform-specific>
                         <platform-specific>
                             <html>
-                                <html-template location="applications://order/webapp/ordermgr/order/ordernotes.ftl"/>
+                                <html-template location="component://order/webapp/ordermgr/order/ordernotes.ftl"/>
                              </html>
                         </platform-specific>
                         <platform-specific>
                             <html>
-                                <html-template location="applications://order/webapp/ordermgr/order/transitions.ftl"/>
+                                <html-template location="component://order/webapp/ordermgr/order/transitions.ftl"/>
                              </html>
                         </platform-specific>
                     </decorator-section>
@@ -128,7 +128,7 @@
                     <decorator-section name="body">
                         <platform-specific>
                             <html>
-                                <html-template location="specialized://opentravelsystem/webapp/hotelbackend/order/orderdownload.ftl"/>
+                                <html-template location="component://opentravelsystem/webapp/hotelbackend/order/orderdownload.ftl"/>
                              </html>
                         </platform-specific>
                     </decorator-section>
@@ -142,14 +142,14 @@
                 <set field="page.appTabButtonItem" value="Reservations"/>
                 <set field="page.headerItem" value="statistics"/>
                 <property-map resource="OrderUiLabels" map-name="uiLabelMap" global="true"/>
-                <script location="specialized://opentravelsystem/webapp/hotelbackend/WEB-INF/actions/order/orderstats.bsh"/>
+                <script location="component://opentravelsystem/webapp/hotelbackend/WEB-INF/actions/order/orderstats.bsh"/>
             </actions>
             <widgets>
                 <decorator-screen name="CommonOrderDecorator">
                     <decorator-section name="body">
                         <platform-specific>
                             <html>
-                                <html-template location="specialized://opentravelsystem/webapp/hotelbackend/order/orderstats.ftl"/>
+                                <html-template location="component://opentravelsystem/webapp/hotelbackend/order/orderstats.ftl"/>
                              </html>
                         </platform-specific>
                     </decorator-section>
@@ -174,11 +174,11 @@
                         </container>
                         <container>
                             <label style="head2" text="Purchases by Product Report"/>
-                            <include-form name="OrderPurchaseProductOptions" location="specialized://opentravelsystem/webapp/hotelbackend/screens/ReportForms.xml"/>
+                            <include-form name="OrderPurchaseProductOptions" location="component://opentravelsystem/webapp/hotelbackend/screens/ReportForms.xml"/>
                         </container>
                         <container>
                             <label style="head2" text="Purchases by Payment Method Report"/>
-                            <include-form name="OrderPurchasePaymentOptions" location="specialized://opentravelsystem/webapp/hotelbackend/screens/ReportForms.xml"/>
+                            <include-form name="OrderPurchasePaymentOptions" location="component://opentravelsystem/webapp/hotelbackend/screens/ReportForms.xml"/>
                         </container>
                     </decorator-section>
                 </decorator-screen>
@@ -215,7 +215,7 @@
             <widgets>
                 <platform-specific>
                     <!-- NOTE: this is really generating XSL:FO, but the HTML oriented renderer should do fine, the screen will need to be called differently though to get binary output from it -->
-                    <html><html-template location="applications://order/webapp/ordermgr/reports/OrderPurchaseReportPayment.fo.ftl"/></html>
+                    <html><html-template location="component://order/webapp/ordermgr/reports/OrderPurchaseReportPayment.fo.ftl"/></html>
                 </platform-specific>
             </widgets>
         </section>
@@ -246,12 +246,12 @@
                     <order-by field-name="terminalId"/>
                     <order-by field-name="productId"/>
                 </entity-condition>
-                <!-- <script location="applications://order/widget/test.bsh"/> -->
+                <!-- <script location="component://order/widget/test.bsh"/> -->
             </actions>
             <widgets>
                 <platform-specific>
                     <!-- NOTE: this is really generating XSL:FO, but the HTML oriented renderer should do fine, the screen will need to be called differently though to get binary output from it -->
-                    <html><html-template location="applications://order/webapp/ordermgr/reports/OrderPurchaseReportProduct.fo.ftl"/></html>
+                    <html><html-template location="component://order/webapp/ordermgr/reports/OrderPurchaseReportProduct.fo.ftl"/></html>
                 </platform-specific>
             </widgets>
         </section>

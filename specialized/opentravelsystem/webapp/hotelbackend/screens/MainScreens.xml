@@ -30,13 +30,13 @@
                     map-name="uiLabelMap" global="true"/>
             </actions>
             <widgets>
-                <decorator-screen name="common-decorator" location="specialized://opentravelsystem/webapp/hotelbackend/screens/CommonScreens.xml">
+                <decorator-screen name="common-decorator" location="component://opentravelsystem/webapp/hotelbackend/screens/CommonScreens.xml">
                     <decorator-section name="body">
                         <section>
                             <widgets>
                                  <platform-specific>
                                     <html>
-                                        <html-template location="specialized://opentravelsystem/webapp/hotelbackend/includes/appheaderMain.ftl"/>
+                                        <html-template location="component://opentravelsystem/webapp/hotelbackend/includes/appheaderMain.ftl"/>
                                     </html>
                                 </platform-specific>
                                 <container style="contentarea">
@@ -67,7 +67,7 @@
                         <!--content content-id="otsxmlxsl"/--> <!-- xml/xsl test-->
                         <platform-specific>
                             <html>
-                                <html-template location="specialized://opentravelsystem/webapp/hotelbackend/main.ftl"/>
+                                <html-template location="component://opentravelsystem/webapp/hotelbackend/main.ftl"/>
                             </html>
                         </platform-specific>
                     </decorator-section>
@@ -101,7 +101,7 @@
                     <decorator-section name="body">
                         <platform-specific>
                             <html>
-                                <html-template location="applications://common/webcommon/login.ftl"/>
+                                <html-template location="component://common/webcommon/login.ftl"/>
                             </html>
                         </platform-specific>
                     </decorator-section>

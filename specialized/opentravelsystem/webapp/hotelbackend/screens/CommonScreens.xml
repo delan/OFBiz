@@ -27,16 +27,16 @@
             </actions>
             <widgets>
                 <!-- render header -->
-                <platform-specific><html><html-template location="specialized://opentravelsystem/webapp/hotelbackend/includes/header.ftl"/></html></platform-specific>
+                <platform-specific><html><html-template location="component://opentravelsystem/webapp/hotelbackend/includes/header.ftl"/></html></platform-specific>
                 <!-- render appbar -->
-                <platform-specific><html><html-template location="specialized://opentravelsystem/webapp/hotelbackend/includes/appbar.ftl"/></html></platform-specific>
+                <platform-specific><html><html-template location="component://opentravelsystem/webapp/hotelbackend/includes/appbar.ftl"/></html></platform-specific>
                 <container style="centerarea">
                         <container style="column-main">
                             <decorator-section-include name="body"/>
                         </container>
                 </container>
                 <!-- render footer -->
-                <platform-specific><html><html-template location="specialized://opentravelsystem/includes/footer.ftl"/></html></platform-specific>
+                <platform-specific><html><html-template location="component://opentravelsystem/includes/footer.ftl"/></html></platform-specific>
             </widgets>
         </section>
     </screen>

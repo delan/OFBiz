@@ -29,15 +29,15 @@
                 <property-map resource="opentravelsystemUiLabels" map-name="uiLabelMap" global="true"/>
             </actions>
             <widgets>
-                <decorator-screen name="common-decorator" location="specialized://opentravelsystem/webapp/hotelbackend/screens/CommonScreens.xml">
+                <decorator-screen name="common-decorator" location="component://opentravelsystem/webapp/hotelbackend/screens/CommonScreens.xml">
                     <decorator-section name="body">
                         <section>
                             <widgets>
                                  <platform-specific>
-                                    <html><html-template location="specialized://opentravelsystem/webapp/hotelbackend/includes/appheaderSettings.ftl"/></html>
+                                    <html><html-template location="component://opentravelsystem/webapp/hotelbackend/includes/appheaderSettings.ftl"/></html>
                                 </platform-specific>
                                  <platform-specific>
-                                    <html><html-template location="applications://common/webcommon/includes/messages.ftl"/></html>
+                                    <html><html-template location="component://common/webcommon/includes/messages.ftl"/></html>
                                 </platform-specific>
                                 <container style="contentarea">
                                     <!-- by default will render left-bar only if leftbarScreen value not empty -->
@@ -65,7 +65,7 @@
                     <decorator-section name="body">
                                  <platform-specific>
                                     <html>
-                                        <html-template location="specialized://opentravelsystem/webapp/hotelbackend/settings/main.ftl"/>
+                                        <html-template location="component://opentravelsystem/webapp/hotelbackend/settings/main.ftl"/>
                                     </html>
                                 </platform-specific>
                     </decorator-section>
@@ -90,14 +90,14 @@
                     <decorator-section name="body">
                         <platform-specific>
                             <html>
-                                <html-template location="specialized://opentravelsystem/webapp/hotelbackend/catalog/ProductStoreTabBar.ftl"/>
+                                <html-template location="component://opentravelsystem/webapp/hotelbackend/catalog/ProductStoreTabBar.ftl"/>
                             </html>
                         </platform-specific>
                           <container>
                             <label style="head1">${uiLabelMap.PageTitleEditProductStore}:</label>
                             <label style="head2"> ${productStore.storeName} [${uiLabelMap.CommonId}:${productStoreId}]</label>
                              </container>
-                        <include-form name="EditProductStore" location="applications://product/webapp/catalog/store/ProductStoreForms.xml"/>
+                        <include-form name="EditProductStore" location="component://product/webapp/catalog/store/ProductStoreForms.xml"/>
                     </decorator-section>
                 </decorator-screen>
             </widgets>
@@ -127,7 +127,7 @@
                     <decorator-section name="body">
                         <platform-specific>
                             <html>
-                                <html-template location="specialized://opentravelsystem/webapp/hotelbackend/catalog/ProductStoreTabBar.ftl"/>
+                                <html-template location="component://opentravelsystem/webapp/hotelbackend/catalog/ProductStoreTabBar.ftl"/>
                             </html>
                         </platform-specific>
 <!--                           <container>
@@ -135,7 +135,7 @@
                              </container>
  -->                        <platform-specific>
                             <html>
-                                <html-template location="specialized://opentravelsystem/webapp/hotelbackend/catalog/EditProductStoreRoles.ftl"/>
+                                <html-template location="component://opentravelsystem/webapp/hotelbackend/catalog/EditProductStoreRoles.ftl"/>
                             </html>
                         </platform-specific>
                     </decorator-section>
@@ -166,7 +166,7 @@
                     <decorator-section name="body">
                         <platform-specific>
                             <html>
-                                <html-template location="specialized://opentravelsystem/webapp/hotelbackend/catalog/ProductStoreTabBar.ftl"/>
+                                <html-template location="component://opentravelsystem/webapp/hotelbackend/catalog/ProductStoreTabBar.ftl"/>
                             </html>
                         </platform-specific>
 <!--                           <container>
@@ -174,7 +174,7 @@
                              </container>
  -->                        <platform-specific>
                             <html>
-                                <html-template location="specialized://opentravelsystem/webapp/hotelbackend/catalog/EditProductStoreTaxSetup.ftl"/>
+                                <html-template location="component://opentravelsystem/webapp/hotelbackend/catalog/EditProductStoreTaxSetup.ftl"/>
                             </html>
                         </platform-specific>
                     </decorator-section>
@@ -214,7 +214,7 @@
                     <decorator-section name="body">
                         <platform-specific>
                             <html>
-                                <html-template location="specialized://opentravelsystem/webapp/hotelbackend/catalog/ProductStoreTabBar.ftl"/>
+                                <html-template location="component://opentravelsystem/webapp/hotelbackend/catalog/ProductStoreTabBar.ftl"/>
                             </html>
                         </platform-specific>
 <!--                           <container>
@@ -222,7 +222,7 @@
                              </container>
  -->                        <platform-specific>
                             <html>
-                                <html-template location="specialized://opentravelsystem/webapp/hotelbackend/catalog/EditProductStorePaySetup.ftl"/>
+                                <html-template location="component://opentravelsystem/webapp/hotelbackend/catalog/EditProductStorePaySetup.ftl"/>
                             </html>
                         </platform-specific>
                     </decorator-section>
@@ -253,15 +253,15 @@
                     <decorator-section name="body">
                         <platform-specific>
                             <html>
-                                <html-template location="specialized://opentravelsystem/webapp/hotelbackend/catalog/ProductStoreTabBar.ftl"/>
+                                <html-template location="component://opentravelsystem/webapp/hotelbackend/catalog/ProductStoreTabBar.ftl"/>
                             </html>
                         </platform-specific>
                           <container>
                             <label style="head1">${uiLabelMap.PageTitleEditProductStoreEmails}:</label>
                             <label style="head2"> ${productStore.storeName} [${uiLabelMap.CommonId}:${productStoreId}]</label>
                              </container>
-                        <include-form name="updateProductStoreEmail" location="applications://product/webapp/catalog/store/ProductStoreForms.xml"/>
-                        <include-form name="createProductStoreEmail" location="applications://product/webapp/catalog/store/ProductStoreForms.xml"/>
+                        <include-form name="updateProductStoreEmail" location="component://product/webapp/catalog/store/ProductStoreForms.xml"/>
+                        <include-form name="createProductStoreEmail" location="component://product/webapp/catalog/store/ProductStoreForms.xml"/>
                     </decorator-section>
                 </decorator-screen>
             </widgets>

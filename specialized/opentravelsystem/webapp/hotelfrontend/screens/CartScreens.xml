@@ -30,24 +30,24 @@
     <screen name="microcart">
         <section>
             <widgets>
-                <platform-specific><html><html-template location="applications://ecommerce/webapp/ecommerce/cart/microcart.ftl"/></html></platform-specific>
+                <platform-specific><html><html-template location="component://ecommerce/webapp/ecommerce/cart/microcart.ftl"/></html></platform-specific>
             </widgets>
         </section>
     </screen>
     <screen name="minicart">
         <section>
             <widgets>
-                <platform-specific><html><html-template location="applications://ecommerce/webapp/ecommerce/cart/minicart.ftl"/></html></platform-specific>
+                <platform-specific><html><html-template location="component://ecommerce/webapp/ecommerce/cart/minicart.ftl"/></html></platform-specific>
             </widgets>
         </section>
     </screen>
     <screen name="minipromotext">
         <section>
             <actions>
-                <script location="applications://ecommerce/webapp/ecommerce/WEB-INF/actions/cart/showpromotext.bsh"/>
+                <script location="component://ecommerce/webapp/ecommerce/WEB-INF/actions/cart/showpromotext.bsh"/>
             </actions>
             <widgets>
-                <platform-specific><html><html-template location="applications://ecommerce/webapp/ecommerce/cart/minipromotext.ftl"/></html></platform-specific>
+                <platform-specific><html><html-template location="component://ecommerce/webapp/ecommerce/cart/minipromotext.ftl"/></html></platform-specific>
             </widgets>
         </section>
     </screen>
@@ -55,7 +55,7 @@
     <screen name="promoUseDetailsInline">
         <section>
             <widgets>
-                <platform-specific><html><html-template location="applications://ecommerce/webapp/ecommerce/cart/promoUseDetailsInline.ftl"/></html></platform-specific>
+                <platform-specific><html><html-template location="component://ecommerce/webapp/ecommerce/cart/promoUseDetailsInline.ftl"/></html></platform-specific>
             </widgets>
         </section>
     </screen>
@@ -69,13 +69,13 @@
 
                 <set field="title-property" value="PageTitleShoppingCart"/>
                 <set field="headerItem" value="Shopping Cart"/>
-                <script location="applications://ecommerce/webapp/ecommerce/WEB-INF/actions/cart/showcart.bsh"/>
-                <script location="applications://ecommerce/webapp/ecommerce/WEB-INF/actions/cart/showpromotext.bsh"/>
+                <script location="component://ecommerce/webapp/ecommerce/WEB-INF/actions/cart/showcart.bsh"/>
+                <script location="component://ecommerce/webapp/ecommerce/WEB-INF/actions/cart/showpromotext.bsh"/>
             </actions>
             <widgets>
-                <decorator-screen name="main-decorator" location="applications://ecommerce/widget/CommonScreens.xml">
+                <decorator-screen name="main-decorator" location="component://opentravelsystem/webapp/hotelfrontend/screens/CommonScreens.xml">
                     <decorator-section name="body">
-                        <platform-specific><html><html-template location="applications://ecommerce/webapp/ecommerce/cart/showcart.ftl"/></html></platform-specific>
+                        <platform-specific><html><html-template location="component://ecommerce/webapp/ecommerce/cart/showcart.ftl"/></html></platform-specific>
                     </decorator-section>
                 </decorator-screen>
             </widgets>
@@ -87,13 +87,13 @@
                 <set field="leftbarScreenName" value="leftbar"/>
 
                 <set field="title" value="Show All Promotions"/>
-                <script location="applications://ecommerce/webapp/ecommerce/WEB-INF/actions/cart/showcart.bsh"/>
-                <script location="applications://ecommerce/webapp/ecommerce/WEB-INF/actions/cart/showpromotext.bsh"/>
+                <script location="component://ecommerce/webapp/ecommerce/WEB-INF/actions/cart/showcart.bsh"/>
+                <script location="component://ecommerce/webapp/ecommerce/WEB-INF/actions/cart/showpromotext.bsh"/>
             </actions>
             <widgets>
-                <decorator-screen name="main-decorator" location="applications://ecommerce/widget/CommonScreens.xml">
+                <decorator-screen name="main-decorator" location="component://opentravelsystem/webapp/hotelfrontend/screens/CommonScreens.xml">
                     <decorator-section name="body">
-                        <platform-specific><html><html-template location="applications://ecommerce/webapp/ecommerce/cart/showAllPromotions.ftl"/></html></platform-specific>
+                        <platform-specific><html><html-template location="component://ecommerce/webapp/ecommerce/cart/showAllPromotions.ftl"/></html></platform-specific>
                     </decorator-section>
                 </decorator-screen>
             </widgets>
@@ -106,12 +106,12 @@
                 <set field="rightbarScreenName" value="rightbar"/>
 
                 <set field="title" value="Show Promotion Details"/>
-                <script location="applications://ecommerce/webapp/ecommerce/WEB-INF/actions/cart/showPromotionDetails.bsh"/>
+                <script location="component://ecommerce/webapp/ecommerce/WEB-INF/actions/cart/showPromotionDetails.bsh"/>
             </actions>
             <widgets>
-                <decorator-screen name="main-decorator" location="applications://ecommerce/widget/CommonScreens.xml">
+                <decorator-screen name="main-decorator" location="component://opentravelsystem/webapp/hotelfrontend/screens/CommonScreens.xml">
                     <decorator-section name="body">
-                        <platform-specific><html><html-template location="applications://ecommerce/webapp/ecommerce/cart/showPromotionDetails.ftl"/></html></platform-specific>
+                        <platform-specific><html><html-template location="component://ecommerce/webapp/ecommerce/cart/showPromotionDetails.ftl"/></html></platform-specific>
                     </decorator-section>
                 </decorator-screen>
             </widgets>
