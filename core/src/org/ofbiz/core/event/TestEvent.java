@@ -1,6 +1,10 @@
 /*
  * $Id$
  * $Log$
+ * Revision 1.3  2001/07/23 18:38:14  azeneski
+ * Added in new HttpClient. Makes behind the scenes HTTP request (GET/POST)
+ * and returns the output as a string.
+ *
  * Revision 1.2  2001/07/23 18:05:00  azeneski
  * Fixed runaway thread in the job scheduler.
  *
@@ -59,13 +63,12 @@ public class TestEvent {
     }
         
     public static String httpClientTest(HttpServletRequest request, HttpServletResponse response ) {
-        try {
-            
+        try {            
             HttpClient http = new HttpClient("http://www.ofbiz.org/cgi-bin/http_test.pl");
             http.setHeader("Cookie","name=value,value=name");
             http.setHeader("User-Agent", "Mozilla/4.0");
             http.setParameter("testId","testing");
-            Debug.log(http.get());
+            Debug.log(http.post());
         } 
         catch ( Exception e ) {
             Debug.log(e,"HttpClientException Caught.");

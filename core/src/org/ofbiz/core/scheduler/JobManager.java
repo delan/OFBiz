@@ -1,6 +1,9 @@
 /*
  * $Id$
  * $Log$
+ * Revision 1.2  2001/07/23 18:05:00  azeneski
+ * Fixed runaway thread in the job scheduler.
+ *
  * Revision 1.1  2001/07/19 20:50:22  azeneski
  * Added the job scheduler to 'core' module.
  *
@@ -297,8 +300,10 @@ public class JobManager {
     
     /** Close out the scheduler thread. */
     public void finalize() {
-        if (js != null)
+        if (js != null) {
             js.stop();
-        Debug.log("JobManager: Stopped Scheduler Thread.");
+            js = null;
+            Debug.log("JobManager: Stopped Scheduler Thread.");
+        }
     }
 }
