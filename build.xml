@@ -22,7 +22,7 @@
  *  THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  *
  *  This is the Open for Business Main build script.
- *  $Id: build.xml,v 1.3 2003/08/17 06:06:13 ajzeneski Exp $
+ *  $Id: build.xml,v 1.4 2003/08/17 06:44:25 jonesde Exp $
 -->
 
 <project name="OFBiz Main Build" default="build" basedir=".">
@@ -73,6 +73,12 @@
         <ant dir="components/service" target="clean" inheritAll="false"/>
         
         <echo message="[clean]"/>
+        <echo message="[clean] ==============================================="/>
+        <echo message="[clean] ========== Cleaning entityext component ======="/>
+        <echo message="[clean] ==============================================="/>                
+        <ant dir="components/entityext" target="clean" inheritAll="false"/>
+        
+        <echo message="[clean]"/>
         <echo message="[clean] ================================================="/>
         <echo message="[clean] ========== Cleaning minilang component =========="/>
         <echo message="[clean] ==========-======================================"/>                
@@ -120,6 +126,12 @@
         <echo message="[build] ========== Building service component =========="/>
         <echo message="[build] ================================================"/>
         <ant dir="components/service" inheritAll="false" />
+        
+        <echo message="[build]"/>
+        <echo message="[build] ==============================================="/>
+        <echo message="[build] ========== Building entityext component ======="/>
+        <echo message="[build] ==============================================="/>
+        <ant dir="components/entityext" inheritAll="false"/>
         
         <echo message="[build]" />
         <echo message="[build] ================================================="/>
