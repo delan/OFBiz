@@ -327,7 +327,6 @@ public class ModelService {
 
             if (!ObjectType.instanceOf(testObject, infoType, null)) {
                 String testType = testObject == null ? "null" : testObject.getClass().getName();
-
                 throw new ServiceValidationException("Type check failed for field " + key + "; expected type is " +
                         infoType + "; actual type is: " + testType);
             }
@@ -402,7 +401,8 @@ public class ModelService {
                             key + " failed: " + e.toString(), module);
                         // let this go. service invokation will catch it
                     }
-                    target.put(key, value);
+                    if (value != null)
+                        target.put(key, value);
                 }
             }
         }
