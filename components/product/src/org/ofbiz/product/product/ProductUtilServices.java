@@ -1,5 +1,5 @@
 /*
- * $Id: ProductUtilServices.java,v 1.7 2004/01/27 08:55:15 jonesde Exp $
+ * $Id: ProductUtilServices.java,v 1.8 2004/01/27 09:03:37 jonesde Exp $
  *
  *  Copyright (c) 2002 The Open For Business Project (www.ofbiz.org)
  *  Permission is hereby granted, free of charge, to any person obtaining a
@@ -58,7 +58,7 @@ import org.ofbiz.service.ServiceUtil;
  *
  * @author     <a href="mailto:jaz@ofbiz.org">Andy Zeneski</a>
  * @author     <a href="mailto:jonesde@ofbiz.org">David E. Jones</a>
- * @version    $Revision: 1.7 $
+ * @version    $Revision: 1.8 $
  * @since      2.0
  */
 public class ProductUtilServices {
@@ -222,25 +222,26 @@ public class ProductUtilServices {
                     newVariantProduct.store();
                     
                     // ProductCategoryMember
-                    duplicateRelated(product, "ProductCategoryMember", variantProductId, nowTimestamp, true, delegator);
+                    duplicateRelated(product, "", "ProductCategoryMember", "productId", variantProductId, nowTimestamp, true, delegator);
                     
                     // ProductFeatureAppl
-                    duplicateRelated(product, "ProductFeatureAppl", variantProductId, nowTimestamp, true, delegator);
+                    duplicateRelated(product, "", "ProductFeatureAppl", "productId", variantProductId, nowTimestamp, true, delegator);
                     
                     // ProductContent
-                    duplicateRelated(product, "ProductContent", variantProductId, nowTimestamp, true, delegator);
+                    duplicateRelated(product, "", "ProductContent", "productId", variantProductId, nowTimestamp, true, delegator);
                     
                     // ProductPrice
-                    duplicateRelated(product, "ProductPrice", variantProductId, nowTimestamp, true, delegator);
+                    duplicateRelated(product, "", "ProductPrice", "productId", variantProductId, nowTimestamp, true, delegator);
                     
                     // GoodIdentification
-                    duplicateRelated(product, "GoodIdentification", variantProductId, nowTimestamp, true, delegator);
+                    duplicateRelated(product, "", "GoodIdentification", "productId", variantProductId, nowTimestamp, true, delegator);
                     
                     // ProductAttribute
-                    duplicateRelated(product, "ProductAttribute", variantProductId, nowTimestamp, true, delegator);
+                    duplicateRelated(product, "", "ProductAttribute", "productId", variantProductId, nowTimestamp, true, delegator);
                     
                     // ProductAssoc
-                    duplicateRelated(product, "ProductAssoc", variantProductId, nowTimestamp, true, delegator);
+                    duplicateRelated(product, "Main", "ProductAssoc", "productId", variantProductId, nowTimestamp, true, delegator);
+                    duplicateRelated(product, "Assoc", "ProductAssoc", "productIdTo", variantProductId, nowTimestamp, true, delegator);
                     
                     product.remove();
                     
@@ -281,25 +282,26 @@ public class ProductUtilServices {
                     newVariantProduct.store();
                     
                     // ProductCategoryMember
-                    duplicateRelated(product, "ProductCategoryMember", variantProductId, nowTimestamp, false, delegator);
+                    duplicateRelated(product, "", "ProductCategoryMember", "productId", variantProductId, nowTimestamp, false, delegator);
                     
                     // ProductFeatureAppl
-                    duplicateRelated(product, "ProductFeatureAppl", variantProductId, nowTimestamp, false, delegator);
+                    duplicateRelated(product, "", "ProductFeatureAppl", "productId", variantProductId, nowTimestamp, false, delegator);
                     
                     // ProductContent
-                    duplicateRelated(product, "ProductContent", variantProductId, nowTimestamp, false, delegator);
+                    duplicateRelated(product, "", "ProductContent", "productId", variantProductId, nowTimestamp, false, delegator);
                     
                     // ProductPrice
-                    duplicateRelated(product, "ProductPrice", variantProductId, nowTimestamp, false, delegator);
+                    duplicateRelated(product, "", "ProductPrice", "productId", variantProductId, nowTimestamp, false, delegator);
                     
                     // GoodIdentification
-                    duplicateRelated(product, "GoodIdentification", variantProductId, nowTimestamp, false, delegator);
+                    duplicateRelated(product, "", "GoodIdentification", "productId", variantProductId, nowTimestamp, false, delegator);
                     
                     // ProductAttribute
-                    duplicateRelated(product, "ProductAttribute", variantProductId, nowTimestamp, false, delegator);
+                    duplicateRelated(product, "", "ProductAttribute", "productId", variantProductId, nowTimestamp, false, delegator);
                     
                     // ProductAssoc
-                    duplicateRelated(product, "ProductAssoc", variantProductId, nowTimestamp, false, delegator);
+                    duplicateRelated(product, "Main", "ProductAssoc", "productId", variantProductId, nowTimestamp, false, delegator);
+                    duplicateRelated(product, "Assoc", "ProductAssoc", "productIdTo", variantProductId, nowTimestamp, false, delegator);
                     
                     numWithOneValid++;
                     if (numWithOneValid % 100 == 0) {
@@ -318,13 +320,13 @@ public class ProductUtilServices {
         return ServiceUtil.returnSuccess();
     }
     
-    protected static void duplicateRelated(GenericValue product, String relatedEntityName, String variantProductId, Timestamp nowTimestamp, boolean removeOld, GenericDelegator delegator) throws GenericEntityException {
+    protected static void duplicateRelated(GenericValue product, String title, String relatedEntityName, String productIdField, String variantProductId, Timestamp nowTimestamp, boolean removeOld, GenericDelegator delegator) throws GenericEntityException {
         List relatedList = EntityUtil.filterByDate(product.getRelated(relatedEntityName), nowTimestamp);
         Iterator relatedIter = relatedList.iterator();
         while (relatedIter.hasNext()) {
             GenericValue relatedValue = (GenericValue) relatedIter.next();
             GenericValue newRelatedValue = (GenericValue) relatedValue.clone();
-            newRelatedValue.set("productId", variantProductId);
+            newRelatedValue.set(productIdField, variantProductId);
             
             // create a new one? see if one already exists with different from/thru dates
             ModelEntity modelEntity = relatedValue.getModelEntity();
