@@ -166,6 +166,7 @@
   <StatusValidChange condition="" statusId="INVOICE_IN_PROCESS" statusIdTo="INVOICE_READY" transitionName="Invoice Ready"/>
   <StatusValidChange condition="" statusId="INVOICE_IN_PROCESS" statusIdTo="INVOICE_CANCELLED" transitionName="Invoice Cancelled"/>
   <StatusValidChange condition="" statusId="INVOICE_READY" statusIdTo="INVOICE_SENT" transitionName="Invoice Sent"/>
+  <StatusValidChange condition="" statusId="INVOICE_READY" statusIdTo="INVOICE_PAID" transitionName="Invoice Paid"/>
   <StatusValidChange condition="" statusId="INVOICE_READY" statusIdTo="INVOICE_CANCELLED" transitionName="Invoice Cancelled"/>
   <StatusValidChange condition="" statusId="INVOICE_SENT" statusIdTo="INVOICE_PAID" transitionName="Invoice Paid"/>
   <StatusValidChange condition="" statusId="INVOICE_SENT" statusIdTo="INVOICE_CANCELLED" transitionName="Invoice Cancelled"/>    
