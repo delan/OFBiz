@@ -21,7 +21,7 @@
  *
  * @author David E. Jones (jonesde@ofbiz.org)
  * @version 1.0
---%><%@ page import="java.io.*, java.util.*, java.net.*" %><%@ page import="org.w3c.dom.*, org.apache.xml.serialize.*" %><%@ page import="org.ofbiz.core.security.*, org.ofbiz.core.entity.*, org.ofbiz.core.util.*, org.ofbiz.core.pseudotag.*" %><%@ page import="org.ofbiz.core.entity.model.*" %><%@ taglib uri="ofbizTags" prefix="ofbiz" %><jsp:useBean id="security" type="org.ofbiz.core.security.Security" scope="request" /><jsp:useBean id="delegator" type="org.ofbiz.core.entity.GenericDelegator" scope="request" /><%
+--%><%@ page import="java.io.*, java.util.*, java.net.*, org.w3c.dom.*, org.ofbiz.core.security.*, org.ofbiz.core.entity.*, org.ofbiz.core.util.*, org.ofbiz.core.entity.model.*" %><%@ taglib uri="ofbizTags" prefix="ofbiz" %><jsp:useBean id="security" type="org.ofbiz.core.security.Security" scope="request" /><jsp:useBean id="delegator" type="org.ofbiz.core.entity.GenericDelegator" scope="request" /><%
   if(security.hasPermission("ENTITY_MAINT", session)) {
       String[] entityName = (String[]) session.getAttribute("xmlrawdump_entitylist");
       session.removeAttribute("xmlrawdump_entitylist");
@@ -45,10 +45,17 @@
 
             numberOfEntities = passedEntityNames.size();
             
-            PrintWriter writer = response.getWriter();
+            PrintWriter writer = null;
+            ServletContext context = pageContext.getServletContext();
+            if (UtilJ2eeCompat.useOutputStreamNotWriter(context)) {
+                writer = new PrintWriter(response.getOutputStream(), true);
+            } else {
+                writer = response.getWriter();
+            }
+
             writer.println("<?xml version=\"1.0\" encoding=\"UTF-8\"?>");
             writer.println("<entity-engine-xml>");
-
+            
             Iterator i = passedEntityNames.iterator();
             while(i.hasNext()) { 
                 String curEntityName = (String)i.next();
