@@ -1,5 +1,5 @@
 /*
- * $Id: GenericDAO.java,v 1.13 2004/03/10 06:43:27 jonesde Exp $
+ * $Id: GenericDAO.java,v 1.14 2004/03/10 06:50:47 jonesde Exp $
  *
  * Copyright (c) 2001, 2002 The Open For Business Project - www.ofbiz.org
  *
@@ -59,7 +59,7 @@ import org.ofbiz.entity.util.EntityListIterator;
  * @author     <a href="mailto:jdonnerstag@eds.de">Juergen Donnerstag</a>
  * @author     <a href="mailto:gielen@aixcept.de">Rene Gielen</a>
  * @author     <a href="mailto:john_nutting@telluridetechnologies.com">John Nutting</a>
- * @version    $Revision: 1.13 $
+ * @version    $Revision: 1.14 $
  * @since      1.0
  */
 public class GenericDAO {
@@ -154,6 +154,8 @@ public class GenericDAO {
             return retVal;
         } catch (GenericEntityException e) {
             throw new GenericEntityException("while inserting: " + entity.toString(), e);
+        } finally {
+            sqlP.close();
         }
     }
 
@@ -169,6 +171,7 @@ public class GenericDAO {
 
     public int update(GenericEntity entity) throws GenericEntityException {
         ModelEntity modelEntity = entity.getModelEntity();
+
         if (modelEntity == null) {
             throw new GenericModelException("Could not find ModelEntity record for entityName: " + entity.getEntityName());
         }
@@ -176,11 +179,12 @@ public class GenericDAO {
         // we don't want to update ALL fields, just the nonpk fields that are in the passed GenericEntity
         List partialFields = new ArrayList();
         Collection keys = entity.getAllKeys();
+
         for (int fi = 0; fi < modelEntity.getNopksSize(); fi++) {
             ModelField curField = modelEntity.getNopk(fi);
-            if (keys.contains(curField.getName())) {
+
+            if (keys.contains(curField.getName()))
                 partialFields.add(curField);
-            }
         }
 
         return customUpdate(entity, modelEntity, partialFields);
@@ -247,6 +251,8 @@ public class GenericDAO {
             entity.synchronizedWithDatasource();
         } catch (GenericEntityException e) {
             throw new GenericEntityException("while updating: " + entity.toString(), e);
+        } finally {
+            sqlP.close();
         }
 
         if (retVal == 0) {
@@ -300,16 +306,20 @@ public class GenericDAO {
         }
 
         SQLProcessor sqlP = new SQLProcessor(helperName);
+
         int totalStored = 0;
+
         try {
             Iterator entityIter = entities.iterator();
+
             while (entityIter != null && entityIter.hasNext()) {
                 GenericEntity curEntity = (GenericEntity) entityIter.next();
+
                 totalStored += singleStore(curEntity, sqlP);
             }
-        } catch (GenericEntityException e) {
+        } catch (GenericDataSourceException e) {
             sqlP.rollback();
-            throw new GenericEntityException("Exception occurred in storeAll", e);
+            throw new GenericDataSourceException("Exception occurred in storeAll", e);
         } finally {
             sqlP.close();
         }
@@ -502,21 +512,25 @@ public class GenericDAO {
         sqlBuffer.append(SqlJdbcUtil.makeFromClause(modelEntity, datasourceInfo));
         sqlBuffer.append(SqlJdbcUtil.makeWhereClause(modelEntity, modelEntity.getPksCopy(), entity, "AND", datasourceInfo.joinStyle));
 
-        sqlP.prepareStatement(sqlBuffer.toString(), true, ResultSet.TYPE_FORWARD_ONLY, ResultSet.CONCUR_READ_ONLY);
-        SqlJdbcUtil.setPkValues(sqlP, modelEntity, entity, modelFieldTypeReader);
-        sqlP.executeQuery();
+        try {
+            sqlP.prepareStatement(sqlBuffer.toString(), true, ResultSet.TYPE_FORWARD_ONLY, ResultSet.CONCUR_READ_ONLY);
+            SqlJdbcUtil.setPkValues(sqlP, modelEntity, entity, modelFieldTypeReader);
+            sqlP.executeQuery();
 
-        if (sqlP.next()) {
-            for (int j = 0; j < modelEntity.getNopksSize(); j++) {
-                ModelField curField = modelEntity.getNopk(j);
+            if (sqlP.next()) {
+                for (int j = 0; j < modelEntity.getNopksSize(); j++) {
+                    ModelField curField = modelEntity.getNopk(j);
 
-                SqlJdbcUtil.getValue(sqlP.getResultSet(), j + 1, curField, entity, modelFieldTypeReader);
+                    SqlJdbcUtil.getValue(sqlP.getResultSet(), j + 1, curField, entity, modelFieldTypeReader);
+                }
+
+                entity.synchronizedWithDatasource();
+            } else {
+                // Debug.logWarning("[GenericDAO.select]: select failed, result set was empty for entity: " + entity.toString(), module);
+                throw new GenericEntityNotFoundException("Result set was empty for entity: " + entity.toString());
             }
-
-            entity.synchronizedWithDatasource();
-        } else {
-            // Debug.logWarning("[GenericDAO.select]: select failed, result set was empty for entity: " + entity.toString(), module);
-            throw new GenericEntityNotFoundException("Result set was empty for entity: " + entity.toString());
+        } finally {
+            sqlP.close();
         }
     }
 
@@ -995,31 +1009,31 @@ public class GenericDAO {
         String sql = sqlBuffer.toString();
 
         SQLProcessor sqlP = new SQLProcessor(helperName);
+        sqlP.prepareStatement(sql, findOptions.getSpecifyTypeAndConcur(), findOptions.getResultSetType(), findOptions.getResultSetConcurrency());
+        if (verboseOn) {
+            // put this inside an if statement so that we don't have to generate the string when not used...
+            Debug.logVerbose("Setting the whereEntityConditionParams: " + whereEntityConditionParams, module);
+        }
+        // set all of the values from the Where EntityCondition
+        Iterator whereEntityConditionParamsIter = whereEntityConditionParams.iterator();
+        while (whereEntityConditionParamsIter.hasNext()) {
+            EntityConditionParam whereEntityConditionParam = (EntityConditionParam) whereEntityConditionParamsIter.next();
+            SqlJdbcUtil.setValue(sqlP, whereEntityConditionParam.getModelField(), modelEntity.getEntityName(), whereEntityConditionParam.getFieldValue(), modelFieldTypeReader);
+        }
+        if (verboseOn) {
+            // put this inside an if statement so that we don't have to generate the string when not used...
+            Debug.logVerbose("Setting the havingEntityConditionParams: " + havingEntityConditionParams, module);
+        }
+        // set all of the values from the Having EntityCondition
+        Iterator havingEntityConditionParamsIter = havingEntityConditionParams.iterator();
+        while (havingEntityConditionParamsIter.hasNext()) {
+            EntityConditionParam havingEntityConditionParam = (EntityConditionParam) havingEntityConditionParamsIter.next();
+            SqlJdbcUtil.setValue(sqlP, havingEntityConditionParam.getModelField(), modelEntity.getEntityName(), havingEntityConditionParam.getFieldValue(), modelFieldTypeReader);
+        }
 
+        
         try {
-            sqlP.prepareStatement(sql, findOptions.getSpecifyTypeAndConcur(), findOptions.getResultSetType(), findOptions.getResultSetConcurrency());
-            if (verboseOn) {
-                // put this inside an if statement so that we don't have to generate the string when not used...
-                Debug.logVerbose("Setting the whereEntityConditionParams: " + whereEntityConditionParams, module);
-            }
-            // set all of the values from the Where EntityCondition
-            Iterator whereEntityConditionParamsIter = whereEntityConditionParams.iterator();
-            while (whereEntityConditionParamsIter.hasNext()) {
-                EntityConditionParam whereEntityConditionParam = (EntityConditionParam) whereEntityConditionParamsIter.next();
-                SqlJdbcUtil.setValue(sqlP, whereEntityConditionParam.getModelField(), modelEntity.getEntityName(), whereEntityConditionParam.getFieldValue(), modelFieldTypeReader);
-            }
-            if (verboseOn) {
-                // put this inside an if statement so that we don't have to generate the string when not used...
-                Debug.logVerbose("Setting the havingEntityConditionParams: " + havingEntityConditionParams, module);
-            }
-            // set all of the values from the Having EntityCondition
-            Iterator havingEntityConditionParamsIter = havingEntityConditionParams.iterator();
-            while (havingEntityConditionParamsIter.hasNext()) {
-                EntityConditionParam havingEntityConditionParam = (EntityConditionParam) havingEntityConditionParamsIter.next();
-                SqlJdbcUtil.setValue(sqlP, havingEntityConditionParam.getModelField(), modelEntity.getEntityName(), havingEntityConditionParam.getFieldValue(), modelFieldTypeReader);
-            }
-
-        	sqlP.executeQuery();
+            sqlP.executeQuery();
             long count = 0;
             ResultSet resultSet = sqlP.getResultSet();
             if (resultSet.next()) {
@@ -1063,10 +1077,14 @@ public class GenericDAO {
 
         int retVal;
 
-        sqlP.prepareStatement(sql);
-        SqlJdbcUtil.setPkValues(sqlP, modelEntity, entity, modelFieldTypeReader);
-        retVal = sqlP.executeUpdate();
-        entity.removedFromDatasource();
+        try {
+            sqlP.prepareStatement(sql);
+            SqlJdbcUtil.setPkValues(sqlP, modelEntity, entity, modelFieldTypeReader);
+            retVal = sqlP.executeUpdate();
+            entity.removedFromDatasource();
+        } finally {
+            sqlP.close();
+        }
         return retVal;
     }
 
@@ -1106,13 +1124,17 @@ public class GenericDAO {
             sql += " WHERE " + SqlJdbcUtil.makeWhereStringFromFields(whereFields, dummyValue, "AND");
         }
 
-        sqlP.prepareStatement(sql);
+        try {
+            sqlP.prepareStatement(sql);
 
-        if (fields != null && fields.size() > 0) {
-            SqlJdbcUtil.setValuesWhereClause(sqlP, whereFields, dummyValue, modelFieldTypeReader);
+            if (fields != null && fields.size() > 0) {
+                SqlJdbcUtil.setValuesWhereClause(sqlP, whereFields, dummyValue, modelFieldTypeReader);
+            }
+
+            return sqlP.executeUpdate();
+        } finally {
+            sqlP.close();
         }
-
-        return sqlP.executeUpdate();
     }
 
     /** Called dummyPKs because they can be invalid PKs, doing a deleteByAnd instead of a normal delete */
