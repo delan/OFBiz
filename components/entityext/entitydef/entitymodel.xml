@@ -26,7 +26,7 @@
  *
  * @author     David E. Jones (jonesde@ofbiz.org)
  * @author     Andy Zeneski (jaz@ofbiz.org)
- * @version    $Revision: 1.8 $
+ * @version    $Revision: 1.9 $
  */
 -->
 
@@ -80,7 +80,13 @@
       <field name="numAlreadyRemoved" type="numeric"></field>
       <field name="totalRowsToStore" type="numeric"></field>
       <field name="totalRowsToRemove" type="numeric"></field>
+      <field name="totalSplits" type="numeric"></field>
+      <field name="totalStoreCalls" type="numeric"></field>
       <field name="runningTimeMillis" type="numeric"></field>
+      <field name="perSplitMinMillis" type="numeric"></field>
+      <field name="perSplitMaxMillis" type="numeric"></field>
+      <field name="perSplitMinItems" type="numeric"></field>
+      <field name="perSplitMaxItems" type="numeric"></field>
       <prim-key field="entitySyncId"/>
       <prim-key field="startDate"/>
       <relation type="one" fk-name="ENTSYNC_HSTSNC" rel-entity-name="EntitySync">
