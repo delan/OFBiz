@@ -176,14 +176,14 @@
 
   <table width="100%" cellpadding="2" cellspacing="2" border="0">
     <tr class="<%=rowClassResultHeader%>">
-    <%for(int fnum=0;fnum<entity.fields.size();fnum++){%>
-      <%ModelField field = (ModelField)entity.fields.get(fnum);%>
-      <td nowrap><div class="tabletext"><b><%=field.name%></b></div></td>
-    <%}%>
       <td>&nbsp;</td>
       <%if(hasDeletePermission){%>
         <td>&nbsp;</td>
       <%}%>
+    <%for(int fnum=0;fnum<entity.fields.size();fnum++){%>
+      <%ModelField field = (ModelField)entity.fields.get(fnum);%>
+      <td nowrap><div class="tabletext"><b><%=field.name%></b></div></td>
+    <%}%>
     </tr>
 <%
  if(resultArray != null && resultArray.length > 0)
@@ -197,6 +197,30 @@
     {
 %>
     <%rowClassResult=(rowClassResult==rowClassResult1?rowClassResult2:rowClassResult1);%><tr class="<%=rowClassResult%>">
+      <td>
+        <%
+          String findString = "entityName=" + entityName;
+          for(int pknum=0; pknum<entity.pks.size(); pknum++)
+          {
+            ModelField pkField = (ModelField)entity.pks.get(pknum);
+            ModelFieldType type = delegator.getEntityFieldType(entity, pkField.type);
+            if(type.javaType.equals("Timestamp") || type.javaType.equals("java.sql.Timestamp")){
+              String dtStr = value.getTimestamp(pkField.name).toString();
+              findString += "&" + pkField.name + "_DATE=" + dtStr.substring(0, dtStr.indexOf(' '));
+              findString += "&" + pkField.name + "_TIME=" + dtStr.substring(dtStr.indexOf(' ') + 1);
+            }
+            else {
+              findString += "&" + pkField.name + "=" + value.get(pkField.name);
+            }
+          }
+        %>
+        <a href="<%=response.encodeURL(controlPath + "/ViewGeneric?" + findString)%>" class="buttontext">[View]</a>
+      </td>
+      <%if(hasDeletePermission){%>
+        <td>
+          <a href="<%=response.encodeURL(controlPath + "/UpdateGeneric?" + findString + "&UPDATE_MODE=DELETE&" + curFindString)%>" class="buttontext">[Delete]</a>
+        </td>
+      <%}%>
     <%for(int fnum=0;fnum<entity.fields.size();fnum++){%>
       <%ModelField field = (ModelField)entity.fields.get(fnum);%>
       <%ModelFieldType type = delegator.getEntityFieldType(entity, field.type);%>
@@ -224,30 +248,6 @@
       <%}%>
         &nbsp;</div>
       </td><%}%>
-      <td>
-        <%
-          String findString = "entityName=" + entityName;
-          for(int pknum=0; pknum<entity.pks.size(); pknum++)
-          {
-            ModelField pkField = (ModelField)entity.pks.get(pknum);
-            ModelFieldType type = delegator.getEntityFieldType(entity, pkField.type);
-            if(type.javaType.equals("Timestamp") || type.javaType.equals("java.sql.Timestamp")){
-              String dtStr = value.getTimestamp(pkField.name).toString();
-              findString += "&" + pkField.name + "_DATE=" + dtStr.substring(0, dtStr.indexOf(' '));
-              findString += "&" + pkField.name + "_TIME=" + dtStr.substring(dtStr.indexOf(' ') + 1);
-            }
-            else {
-              findString += "&" + pkField.name + "=" + value.get(pkField.name);
-            }
-          }
-        %>
-        <a href="<%=response.encodeURL(controlPath + "/ViewGeneric?" + findString)%>" class="buttontext">[View]</a>
-      </td>
-      <%if(hasDeletePermission){%>
-        <td>
-          <a href="<%=response.encodeURL(controlPath + "/UpdateGeneric?" + findString + "&UPDATE_MODE=DELETE&" + curFindString)%>" class="buttontext">[Delete]</a>
-        </td>
-      <%}%>
     </tr>
   <%}%>
 <%
@@ -284,7 +284,7 @@
 <% } %>
 </table>
 <%if(hasCreatePermission){%>
-  <a href="<%=response.encodeURL(controlPath + "/ViewGeneric?entityName=" + entityName)%>" class="buttontext">[Create <%=entity.entityName%>]</a>
+  <a href="<%=response.encodeURL(controlPath + "/ViewGeneric?entityName=" + entityName)%>" class="buttontext">[Create New <%=entity.entityName%>]</a>
 <%}%>
 <%}else{%>
   <h3>You do not have permission to view this page (<%=entity.tableName%>_ADMIN, or <%=entity.tableName%>_VIEW needed).</h3>
