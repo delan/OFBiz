@@ -554,12 +554,13 @@ public class GenericDelegator {
     }
 
     /** Remove a Generic Entity corresponding to the primaryKey
-     * @param  primaryKey  The primary key of the entity to remove.
+     *@param  primaryKey  The primary key of the entity to remove.
+     *@return int representing number of rows effected by this operation
      */
-    public void removeByPrimaryKey(GenericPK primaryKey) throws GenericEntityException {
+    public int removeByPrimaryKey(GenericPK primaryKey) throws GenericEntityException {
         GenericHelper helper = getEntityHelper(primaryKey.getModelEntity());
         this.clearCacheLine(primaryKey);
-        helper.removeByPrimaryKey(primaryKey);
+        return helper.removeByPrimaryKey(primaryKey);
     }
 
     /** Finds all Generic entities
@@ -775,12 +776,13 @@ public class GenericDelegator {
     /** Removes/deletes Generic Entity records found by all of the specified fields (ie: combined using AND)
      * @param entityName The Name of the Entity as defined in the entity XML file
      * @param fields The fields of the named entity to query by with their corresponging values
+     *@return int representing number of rows effected by this operation
      */
-    public void removeByAnd(String entityName, Map fields) throws GenericEntityException {
+    public int removeByAnd(String entityName, Map fields) throws GenericEntityException {
         this.clearCacheLine(entityName, fields);
         ModelEntity modelEntity = getModelReader().getModelEntity(entityName);
         GenericHelper helper = getEntityHelper(modelEntity);
-        helper.removeByAnd(modelEntity, fields);
+        return helper.removeByAnd(modelEntity, fields);
     }
 
     /** Get the named Related Entity for the GenericValue from the persistent store
@@ -945,8 +947,9 @@ public class GenericDelegator {
      *      combination of relation.title and relation.rel-entity-name as
      *      specified in the entity XML definition file
      * @param value GenericValue instance containing the entity
+     *@return int representing number of rows effected by this operation
      */
-    public void removeRelated(String relationName, GenericValue value) throws GenericEntityException {
+    public int removeRelated(String relationName, GenericValue value) throws GenericEntityException {
         ModelEntity modelEntity = value.getModelEntity();
         ModelRelation relation = modelEntity.getRelation(relationName);
         if (relation == null) {
@@ -959,7 +962,7 @@ public class GenericDelegator {
             fields.put(keyMap.getRelFieldName(), value.get(keyMap.getFieldName()));
         }
 
-        this.removeByAnd(relation.getRelEntityName(), fields);
+        return this.removeByAnd(relation.getRelEntityName(), fields);
     }
 
     /** Refresh the Entity for the GenericValue from the persistent store
@@ -969,8 +972,9 @@ public class GenericDelegator {
         GenericPK pk = value.getPrimaryKey();
         clearCacheLine(pk);
         GenericValue newValue = findByPrimaryKey(pk);
-        if (newValue == null)
+        if (newValue == null) {
             throw new IllegalArgumentException("[GenericDelegator.refresh] could not refresh value: " + value);
+        }
         value.fields = newValue.fields;
         value.setDelegator(this);
         value.modified = false;
@@ -978,14 +982,17 @@ public class GenericDelegator {
 
     /** Store the Entity from the GenericValue to the persistent store
      * @param value GenericValue instance containing the entity
+     *@return int representing number of rows effected by this operation
      */
-    public void store(GenericValue value) throws GenericEntityException {
+    public int store(GenericValue value) throws GenericEntityException {
         this.clearCacheLine(value.getPrimaryKey());
         GenericHelper helper = getEntityHelper(value.getModelEntity());
-        helper.store(value);
+        int retVal = helper.store(value);
         // refresh the valueObject to get the new version
-        if (value.lockEnabled())
+        if (value.lockEnabled()) {
             refresh(value);
+        }
+        return retVal;
     }
 
     /** Store the Entities from the Collection GenericValue instances to the persistent store.
@@ -996,10 +1003,12 @@ public class GenericDelegator {
      *  if the data source supports transactions. This is just like to othersToStore feature
      *  of the GenericEntity on a create or store.
      *@param values Collection of GenericValue instances containing the entities to store
+     *@return int representing number of rows effected by this operation
      */
-    public void storeAll(Collection values) throws GenericEntityException {
-        if (values == null)
-            return;
+    public int storeAll(Collection values) throws GenericEntityException {
+        if (values == null) {
+            return 0;
+        }
 
         //from the delegator level this is complicated because different GenericValue
         // objects in the collection may correspond to different helpers
@@ -1017,6 +1026,7 @@ public class GenericDelegator {
         }
 
         boolean beganTransaction = false;
+        int numberChanged = 0;
         try {
             //if there are multiple helpers and no transaction is active, begin one
             if (valuesPerHelper.size() > 1) {
@@ -1029,7 +1039,7 @@ public class GenericDelegator {
                 String helperName = (String) curEntry.getKey();
                 GenericHelper helper = GenericHelperFactory.getHelper(helperName);
                 this.clearAllCacheLinesByValue((Collection) curEntry.getValue());
-                helper.storeAll((Collection) curEntry.getValue());
+                numberChanged += helper.storeAll((Collection) curEntry.getValue());
             }
 
             //only commit the transaction if we started one...
@@ -1050,9 +1060,12 @@ public class GenericDelegator {
         viter = values.iterator();
         while (viter.hasNext()) {
             GenericValue value = (GenericValue) viter.next();
-            if (value.lockEnabled())
+            if (value.lockEnabled()) {
                 refresh(value);
+            }
         }
+        
+        return numberChanged;
     }
 
     /** Remove the Entities from the Collection from the persistent store.
@@ -1064,10 +1077,12 @@ public class GenericDelegator {
      *  <br>These updates all happen in one transaction, so they will either all succeed or all fail,
      *  if the data source supports transactions.
      *@param dummyPKs Collection of GenericEntity instances containing the entities or by and fields to remove
+     *@return int representing number of rows effected by this operation
      */
-    public void removeAll(Collection dummyPKs) throws GenericEntityException {
-        if (dummyPKs == null)
-            return;
+    public int removeAll(Collection dummyPKs) throws GenericEntityException {
+        if (dummyPKs == null) {
+            return 0;
+        }
 
         //from the delegator level this is complicated because different GenericValue
         // objects in the collection may correspond to different helpers
@@ -1085,6 +1100,7 @@ public class GenericDelegator {
         }
 
         boolean beganTransaction = false;
+        int numRemoved = 0;
         try {
             //if there are multiple helpers and no transaction is active, begin one
             if (valuesPerHelper.size() > 1) {
@@ -1097,7 +1113,7 @@ public class GenericDelegator {
                 String helperName = (String) curEntry.getKey();
                 GenericHelper helper = GenericHelperFactory.getHelper(helperName);
                 this.clearAllCacheLines((Collection) curEntry.getValue());
-                helper.removeAll((Collection) curEntry.getValue());
+                numRemoved += helper.removeAll((Collection) curEntry.getValue());
             }
 
             //only commit the transaction if we started one...
@@ -1113,6 +1129,8 @@ public class GenericDelegator {
             //after rolling back, rethrow the exception
             throw e;
         }
+        
+        return numRemoved;
     }
 
     // ======================================
