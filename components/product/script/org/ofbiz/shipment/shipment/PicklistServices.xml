@@ -23,7 +23,7 @@
  *  THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  *
  * @author     David E. Jones (jonesde@ofbiz.org)
- * @version    $Revision: 1.6 $
+ * @version    $Revision: 1.7 $
  * @since      2.2
  -->
 <simple-methods>
@@ -885,14 +885,14 @@
                 </call-service>
                 <!-- refresh the value object now that the create has been done -->
                 <refresh-value value-name="targetInventoryItem"/>
-
+                
                 <!--
                     go through OrderItemInventoryRes and move each one over, starting with the older making
                     sure to stay within quantityOnHand
                 -->
                 <iterate entry-name="orderItemInventoryResAndItemLocation" list-name="orderItemInventoryResAndItemLocationList">
                     <!-- see if there is enough physically moved over to move this reservation -->
-                    <if-compare-field field-name="quantityLeftToProcess" operator="greater" to-field-name="orderItemInventoryResAndItemLocation.quantity" type="Double">
+                    <if-compare-field field-name="quantityLeftToProcess" operator="greater-equals" to-field-name="orderItemInventoryResAndItemLocation.quantity" type="Double">
                         <get-related-one value-name="orderItemInventoryResAndItemLocation" relation-name="OrderItemInventoryRes" to-value-name="orderItemInventoryRes"/>
 
                         <!-- if there aren't enough to move, put this on a list for insufficient quantities and handle later -->
