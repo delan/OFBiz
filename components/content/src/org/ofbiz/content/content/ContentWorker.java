@@ -1,5 +1,5 @@
 /*
- * $Id: ContentWorker.java,v 1.12 2003/12/30 05:46:19 byersa Exp $
+ * $Id: ContentWorker.java,v 1.13 2003/12/30 06:01:26 byersa Exp $
  *
  *  Copyright (c) 2001, 2002 The Open For Business Project - www.ofbiz.org
  *
@@ -59,7 +59,7 @@ import bsh.EvalError;
  * ContentWorker Class
  * 
  * @author <a href="mailto:byersa@automationgroups.com">Al Byers</a>
- * @version $Revision: 1.12 $
+ * @version $Revision: 1.13 $
  * @since 2.2
  * 
  *  
@@ -271,12 +271,10 @@ public class ContentWorker {
             nodeTrail.add(currentNode);
             if (((Boolean)currentNode.get("isPick")).booleanValue()) {
                 inProgress = true;
-                break;
             } else {
                 // If not a "pick" node, look at kids
                 inProgress = traverseSubContent(ctx);
                 if (inProgress)
-                    break;
             }
             selectKids(currentNode, ctx);
             nodeTrail.add(currentNode);
