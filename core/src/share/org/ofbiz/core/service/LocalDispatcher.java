@@ -42,11 +42,11 @@ public class LocalDispatcher {
     protected ServiceDispatcher dispatcher;
     protected String name;
     
-    public LocalDispatcher(String name, GenericDelegator delegator, Collection readerURLs) {
-        this(name,delegator,readerURLs,null);
+    public LocalDispatcher(String name, String root, GenericDelegator delegator, Collection readerURLs) {
+        this(name,root,delegator,readerURLs,null);
     }
     
-    public LocalDispatcher(String name, GenericDelegator delegator, Collection readerURLs, ClassLoader loader) {
+    public LocalDispatcher(String name, String root, GenericDelegator delegator, Collection readerURLs, ClassLoader loader) {
         if ( loader == null ) {
             try {
                 loader = Thread.currentThread().getContextClassLoader();
@@ -55,7 +55,7 @@ public class LocalDispatcher {
                 loader = this.getClass().getClassLoader();
             }
         }
-        ctx = new DispatchContext(name,readerURLs,loader,this);
+        ctx = new DispatchContext(name,root,readerURLs,loader,this);
         init(name, delegator, ctx);        
     }
     

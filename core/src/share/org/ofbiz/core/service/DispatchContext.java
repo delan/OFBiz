@@ -50,9 +50,9 @@ public class DispatchContext {
      *@param readers a collection of reader URLs
      *@param loader the classloader to use for dispatched services
      */
-    public DispatchContext(String name, Collection readers, ClassLoader loader, LocalDispatcher dispatcher) {
+    public DispatchContext(String name, String root, Collection readers, ClassLoader loader, LocalDispatcher dispatcher) {
         this.name = name;
-        this.root = null;
+        this.root = root;
         this.readers = readers;
         this.loader = loader;
         this.dispatcher = dispatcher;

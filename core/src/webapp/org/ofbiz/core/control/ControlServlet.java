@@ -173,8 +173,8 @@ public class ControlServlet extends HttpServlet {
                     }                    
                 }
             }            
-            dispatcher = new LocalDispatcher(getServletContext().getServletContextName(),delegator,readers);      
-            dispatcher.getDispatchContext().setRootPath(getServletContext().getRealPath("/"));
+            String rootPath = getServletContext().getRealPath("/");
+            dispatcher = new LocalDispatcher(getServletContext().getServletContextName(),rootPath,delegator,readers);                  
             getServletContext().setAttribute("dispatcher",dispatcher);
             if ( dispatcher == null )
                 Debug.logError("[ControlServlet.init] ERROR: dispatcher could not be initialized.");                         
