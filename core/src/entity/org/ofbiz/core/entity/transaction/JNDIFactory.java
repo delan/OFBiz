@@ -1,7 +1,7 @@
 /*
  * $Id$
  *
- *  Copyright (c) 2001 The Open For Business Project - www.ofbiz.org
+ *  Copyright (c) 2001, 2002 The Open For Business Project - www.ofbiz.org
  *
  *  Permission is hereby granted, free of charge, to any person obtaining a
  *  copy of this software and associated documentation files (the "Software"),
@@ -24,24 +24,21 @@
 
 package org.ofbiz.core.entity.transaction;
 
-
 import javax.naming.*;
 import javax.transaction.*;
-import org.w3c.dom.Element;
 
-import org.ofbiz.core.entity.*;
 import org.ofbiz.core.entity.config.*;
 import org.ofbiz.core.util.*;
-
 
 /**
  * Central source for Tyrex JTA objects from JNDI
  *
- *@author     <a href="mailto:jonesde@ofbiz.org">David E. Jones</a>
- *@version    1.0
- *@created    July 1, 2001, 5:03 PM
+ * @author     <a href="mailto:jonesde@ofbiz.org">David E. Jones</a>
+ * @version    $Revision$
+ * @since      2.0
  */
 public class JNDIFactory implements TransactionFactoryInterface {
+    
     // Debug module name
     public static final String module = JNDIFactory.class.getName();
 

@@ -1,7 +1,7 @@
 /*
  * $Id$
  *
- * <p>Copyright (c) 2001 The Open For Business Project - www.ofbiz.org
+ * <p>Copyright (c) 2001, 2002 The Open For Business Project - www.ofbiz.org
  *
  * <p>Permission is hereby granted, free of charge, to any person obtaining a
  *  copy of this software and associated documentation files (the "Software"),
@@ -21,20 +21,16 @@
  *  OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR
  *  THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  */
-
 package org.ofbiz.core.config;
 
-
-import java.io.*;
 import org.ofbiz.core.util.*;
-
 
 /**
  * GenericConfigException
  *
- *@author <a href="mailto:jonesde@ofbiz.org">David E. Jones</a>
- *@created Sep 17, 2001
- *@version 1.0
+ * @author     <a href="mailto:jonesde@ofbiz.org">David E. Jones</a>
+ * @version    $Revision$
+ * @since      2.0
  */
 public class GenericConfigException extends GeneralException {
 

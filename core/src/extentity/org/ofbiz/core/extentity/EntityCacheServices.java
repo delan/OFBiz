@@ -24,9 +24,7 @@
  */
 package org.ofbiz.core.extentity;
 
-import java.net.*;
 import java.util.*;
-import java.sql.Timestamp;
 
 import org.ofbiz.core.entity.*;
 import org.ofbiz.core.service.*;

@@ -1,7 +1,7 @@
 /*
  * $Id$
  *
- *  Copyright (c) 2001 The Open For Business Project - www.ofbiz.org
+ *  Copyright (c) 2001, 2002 The Open For Business Project - www.ofbiz.org
  *
  *  Permission is hereby granted, free of charge, to any person obtaining a
  *  copy of this software and associated documentation files (the "Software"),
@@ -21,12 +21,8 @@
  *  OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR
  *  THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  */
-
 package org.ofbiz.core.generic;
 
-
-import java.rmi.*;
-import javax.servlet.*;
 import javax.servlet.http.*;
 import java.lang.reflect.*;
 
@@ -35,13 +31,12 @@ import org.ofbiz.core.entity.model.*;
 import org.ofbiz.core.security.*;
 import org.ofbiz.core.util.*;
 
-
 /**
  * Web Event for doing updates on Generic Entities
  *
- *@author     <a href='mailto:jonesde@ofbiz.org'>David E. Jones (jonesde@ofbiz.org)</a>
- *@created    Aug 18 2001
- *@version    1.0
+ * @author     <a href="mailto:jonesde@ofbiz.org">David E. Jones</a>
+ * @version    $Revision$
+ * @since      2.0
  */
 public class GenericWebEvent {
 

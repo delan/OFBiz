@@ -1,7 +1,7 @@
 /*
  * $Id$
  *
- *  Copyright (c) 2001 The Open For Business Project - www.ofbiz.org
+ *  Copyright (c) 2001, 2002 The Open For Business Project - www.ofbiz.org
  *
  *  Permission is hereby granted, free of charge, to any person obtaining a
  *  copy of this software and associated documentation files (the "Software"),
@@ -21,26 +21,23 @@
  *  OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR
  *  THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  */
-
 package org.ofbiz.core.entity.model;
 
-
 import java.io.*;
-import java.util.*;
 
 import org.ofbiz.core.util.*;
-
 
 /**
  * Generic Entity - General Utilities
  *
- *@author     David E. Jones
- *@created    May 15, 2001
- *@version    1.0
+ * @author     <a href="mailto:jonesde@ofbiz.org">David E. Jones</a>
+ * @version    $Revision$
+ * @since      2.0
  */
 public class ModelUtil {
 
-    /** Changes the first letter of the passed String to upper case.
+    /** 
+     * Changes the first letter of the passed String to upper case.
      * @param string The passed String
      * @return A String with an upper case first letter
      */
@@ -53,7 +50,8 @@ public class ModelUtil {
         return sb.toString();
     }
 
-    /** Changes the first letter of the passed String to lower case.
+    /** 
+     * Changes the first letter of the passed String to lower case.
      *
      * @param string The passed String
      * @return A String with a lower case first letter
@@ -114,7 +112,8 @@ public class ModelUtil {
         return fieldName.toString();
     }
 
-    /** Converts a Java variable name to a database name.
+    /** 
+     * Converts a Java variable name to a database name.
      * The naming conventions used to allow for this are as follows: a database name (table or 
      * column) is in all capital letters, and the words are separated by an underscore 
      * (for example: NEAT_ENTITY_NAME or RANDOM_FIELD_NAME); a Java name (ejb or field) is in all 
@@ -144,7 +143,8 @@ public class ModelUtil {
         return dbName.toString();
     }
 
-    /** Converts a package name to a path by replacing all '.' characters with the File.separatorChar character. 
+    /** 
+     * Converts a package name to a path by replacing all '.' characters with the File.separatorChar character. 
      *  Is therefore platform independent.
      * @param The package name.
      * @return The path name corresponding to the specified package name.
@@ -154,7 +154,8 @@ public class ModelUtil {
         return packageName.replace('.', File.separatorChar);
     }
 
-    /** Replaces all occurances of oldString in mainString with newString
+    /** 
+     * Replaces all occurances of oldString in mainString with newString
      * @param mainString The original string
      * @param oldString The string to replace
      * @param newString The string to insert in place of the old

@@ -23,10 +23,6 @@
  */
 package org.ofbiz.core.serialize;
 
-import java.io.*;
-
-import org.ofbiz.core.util.GeneralException;
-
 /**
  * XmlSerializable
  *
@@ -34,7 +30,7 @@ import org.ofbiz.core.util.GeneralException;
  * @version    $Revision$
  * @since      2.0
  */
-public class SerializeException extends GeneralException {
+public class SerializeException extends org.ofbiz.core.util.GeneralException {
 
     public SerializeException() {
         super();

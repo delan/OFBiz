@@ -1,7 +1,7 @@
 /*
  * $Id$
  *
- * Copyright (c) 2001 The Open For Business Project - www.ofbiz.org
+ * Copyright (c) 2001, 2002 The Open For Business Project - www.ofbiz.org
  *
  * Permission is hereby granted, free of charge, to any person obtaining a
  * copy of this software and associated documentation files (the "Software"),
@@ -21,21 +21,19 @@
  * OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR
  * THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  */
-
 package org.ofbiz.core.entity.jdbc;
 
-
-import java.util.*;
 import java.sql.*;
+
 import org.ofbiz.core.entity.*;
 import org.ofbiz.core.util.*;
 
-
 /**
- * <p>Title: SQLProcessor</p>
- * <p>Description: provides utitlity functions to ease database access</p>
- * @author  <a href="mailto:jdonnerstag@eds.de">Juergen Donnerstag</a>
- * @version 1.0
+ * SQLProcessor - provides utitlity functions to ease database access
+ * 
+ * @author     <a href="mailto:jonesde@ofbiz.org">David E. Jones</a> 
+ * @version    $Revision$
+ * @since      2.0
  */
 public class SQLProcessor {
 

@@ -1,7 +1,7 @@
 /*
  * $Id$
  *
- *  Copyright (c) 2001 The Open For Business Project - www.ofbiz.org
+ *  Copyright (c) 2001, 2002 The Open For Business Project - www.ofbiz.org
  *
  *  Permission is hereby granted, free of charge, to any person obtaining a
  *  copy of this software and associated documentation files (the "Software"),
@@ -24,21 +24,15 @@
 package org.ofbiz.core.serialize;
 
 import java.io.*;
-import java.net.*;
 import java.text.*;
 import java.util.*;
 import java.lang.ref.WeakReference;
 
 import javax.xml.parsers.ParserConfigurationException;
-
 import org.xml.sax.SAXException;
-import org.xml.sax.SAXParseException;
-
 import org.w3c.dom.Document;
-import org.w3c.dom.DOMException;
 import org.w3c.dom.Element;
 import org.w3c.dom.Node;
-import org.w3c.dom.NodeList;
 
 import org.ofbiz.core.util.*;
 import org.ofbiz.core.entity.*;

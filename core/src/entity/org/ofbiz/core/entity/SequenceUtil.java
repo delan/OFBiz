@@ -1,7 +1,7 @@
 /*
  * $Id$
  *
- *  Copyright (c) 2001 The Open For Business Project - www.ofbiz.org
+ *  Copyright (c) 2001, 2002 The Open For Business Project - www.ofbiz.org
  *
  *  Permission is hereby granted, free of charge, to any person obtaining a
  *  copy of this software and associated documentation files (the "Software"),
@@ -21,9 +21,7 @@
  *  OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR
  *  THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  */
-
 package org.ofbiz.core.entity;
-
 
 import java.sql.*;
 import java.util.*;
@@ -32,14 +30,13 @@ import javax.transaction.*;
 import org.ofbiz.core.util.*;
 import org.ofbiz.core.entity.model.*;
 
-
 /**
- * <p>Sequence Utility to get unique sequences from named sequence banks
- * <p>Uses a collision detection approach to safely get unique sequenced ids in banks from the database
+ * Sequence Utility to get unique sequences from named sequence banks
+ * Uses a collision detection approach to safely get unique sequenced ids in banks from the database
  *
- *@author     David E. Jones
- *@created    Wed Aug 29 2001
- *@version    1.0
+ * @author     <a href="mailto:jonesde@ofbiz.org">David E. Jones</a>
+ * @version    $Revision$
+ * @since      2.0
  */
 public class SequenceUtil {
 
@@ -211,7 +208,7 @@ public class SequenceUtil {
                         Debug.logWarning(sqle, "Error closing result set in sequence util");
                     }
 
-                    sql = "UPDATE " + parentUtil.tableName + " SET " + parentUtil.idColName + "=" + parentUtil.idColName + "+" + this.bankSize + " WHERE " + parentUtil.nameColName + "='" + this.seqName + "'";
+                    sql = "UPDATE " + parentUtil.tableName + " SET " + parentUtil.idColName + "=" + parentUtil.idColName + "+" + SequenceBank.bankSize + " WHERE " + parentUtil.nameColName + "='" + this.seqName + "'";
                     if (stmt.executeUpdate(sql) <= 0) {
                         Debug.logWarning("[SequenceUtil.SequenceBank.fillBank] update failed, no rows changes for seqName: " + seqName, module);
                         return;

@@ -1,7 +1,7 @@
 /*
  * $Id$
  *
- *  Copyright (c) 2001 The Open For Business Project - www.ofbiz.org
+ *  Copyright (c) 2001, 2002 The Open For Business Project - www.ofbiz.org
  *
  *  Permission is hereby granted, free of charge, to any person obtaining a
  *  copy of this software and associated documentation files (the "Software"),
@@ -21,26 +21,22 @@
  *  OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR
  *  THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  */
-
 package org.ofbiz.core.entity;
-
 
 import java.sql.*;
 import javax.sql.*;
-import java.util.*;
 import javax.transaction.*;
 import javax.transaction.xa.*;
 
 import org.ofbiz.core.util.*;
 
-
 /**
  * <p>Transaction Utility to help with some common transaction tasks
  * <p>Provides a wrapper around the transaction objects to allow for changes in underlying implementations in the future.
  *
- * @author <a href="mailto:jonesde@ofbiz.org">David E. Jones</a>
- * @created    Dec 12 2001
- * @version    1.0
+ * @author     <a href="mailto:jonesde@ofbiz.org">David E. Jones</a>
+ * @version    $Revision$
+ * @since      2.0
  */
 public class TransactionUtil implements javax.transaction.Status {
     // Debug module name

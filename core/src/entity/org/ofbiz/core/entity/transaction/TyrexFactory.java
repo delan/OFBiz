@@ -1,7 +1,7 @@
 /*
  * $Id$
  *
- *  Copyright (c) 2001 The Open For Business Project - www.ofbiz.org
+ *  Copyright (c) 2001, 2002 The Open For Business Project - www.ofbiz.org
  *
  *  Permission is hereby granted, free of charge, to any person obtaining a
  *  copy of this software and associated documentation files (the "Software"),
@@ -21,29 +21,23 @@
  *  OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR
  *  THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  */
-
 package org.ofbiz.core.entity.transaction;
 
-
 import java.net.*;
-import java.util.*;
-import java.security.*;
-import java.sql.*;
 import javax.sql.*;
-import javax.naming.*;
 import javax.transaction.*;
 
 import org.ofbiz.core.util.*;
+
 import tyrex.tm.*;
 import tyrex.resource.*;
-
 
 /**
  * TyrexTransactionFactory - central source for Tyrex JTA objects
  *
- *@author     <a href="mailto:jonesde@ofbiz.org">David E. Jones</a>
- *@version    1.0
- *@created    July 1, 2001, 5:03 PM
+ * @author     <a href="mailto:jonesde@ofbiz.org">David E. Jones</a>
+ * @version    $Revision$
+ * @since      2.0
  */
 public class TyrexFactory implements TransactionFactoryInterface {
 

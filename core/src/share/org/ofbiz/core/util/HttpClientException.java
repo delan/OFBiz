@@ -23,8 +23,6 @@
  */
 package org.ofbiz.core.util;
 
-import java.io.*;
-
 /**
  * HttpClient Exception.
  *

@@ -25,8 +25,6 @@
 package org.ofbiz.core.entity.config;
 
 import java.util.*;
-import java.net.*;
-import java.io.*;
 import org.w3c.dom.*;
 
 import org.ofbiz.core.config.*;
@@ -389,19 +387,19 @@ public class EntityConfigUtil {
             Element dbcpJdbcElement = UtilXml.firstChildElement(datasourceElement, "dbcp-jdbc");
 
             if (jndiJdbcElement != null) {
-                datasourceType = this.TYPE_JNDI_JDBC;
+                datasourceType = DatasourceInfo.TYPE_JNDI_JDBC;
                 datasourceTypeElement = jndiJdbcElement;
             } else if (tyrexDataSourceElement != null) {
-                datasourceType = this.TYPE_TYREX_DATA_SOURCE;
+                datasourceType = DatasourceInfo.TYPE_TYREX_DATA_SOURCE;
                 datasourceTypeElement = tyrexDataSourceElement;
             } else if (inlineJdbcElement != null) {
-                datasourceType = this.TYPE_INLINE_JDBC;
+                datasourceType = DatasourceInfo.TYPE_INLINE_JDBC;
                 datasourceTypeElement = inlineJdbcElement;
             } else if (dbcpJdbcElement != null) {
-                datasourceType = this.TYPE_DBCP_JDBC;
+                datasourceType = DatasourceInfo.TYPE_DBCP_JDBC;
                 datasourceTypeElement = dbcpJdbcElement;
             } else {
-                datasourceType = this.TYPE_OTHER;
+                datasourceType = DatasourceInfo.TYPE_OTHER;
                 datasourceTypeElement = null;
             }
         }

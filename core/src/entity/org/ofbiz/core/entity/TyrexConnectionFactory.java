@@ -1,7 +1,7 @@
 /*
  * $Id$
  *
- *  Copyright (c) 2001 The Open For Business Project - www.ofbiz.org
+ *  Copyright (c) 2001, 2002 The Open For Business Project - www.ofbiz.org
  *
  *  Permission is hereby granted, free of charge, to any person obtaining a
  *  copy of this software and associated documentation files (the "Software"),
@@ -21,22 +21,16 @@
  *  OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR
  *  THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  */
-
 package org.ofbiz.core.entity;
-
 
 import java.util.*;
 import java.sql.*;
-import javax.sql.*;
-import javax.naming.*;
 import org.w3c.dom.Element;
 
 import org.ofbiz.core.util.*;
 
 // For Tyrex 0.9.8.5
 import tyrex.resource.jdbc.xa.*;
-import tyrex.tm.*;
-
 
 // For Tyrex 0.9.7.0
 // import tyrex.jdbc.xa.*;
@@ -44,9 +38,9 @@ import tyrex.tm.*;
 /**
  * Tyrex ConnectionFactory - central source for JDBC connections from Tyrex
  *
- * @author <a href="mailto:jonesde@ofbiz.org">David E. Jones</a>
- * @version 1.0
- * Created on Dec 18, 2001, 5:03 PM
+ * @author     <a href="mailto:jonesde@ofbiz.org">David E. Jones</a>
+ * @version    $Revision$
+ * @since      2.0
  */
 public class TyrexConnectionFactory {
 
