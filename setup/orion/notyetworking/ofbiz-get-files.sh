@@ -25,6 +25,6 @@ cp -i $OFBIZ_HOME/commonapp/etc/localdtds.properties $ORION_HOME/lib
 cp -i $OFBIZ_HOME/lib/common/castor-0.9.3.9.jar $OFBIZ_HOME/lib/common/hsqldb.jar $OFBIZ_HOME/lib/common/pgjdbc2.jar $ORION_HOME/lib
 cp -i $OFBIZ_HOME/lib/common/mm.mysql-2.0.8-bin.jar $OFBIZ_HOME/lib/common/log4j.jar $ORION_HOME/lib
 cp -i $OFBIZ_HOME/lib/share/axis.jar $OFBIZ_HOME/lib/share/clutil.jar $OFBIZ_HOME/lib/share/wsdl4j.jar $ORION_HOME/lib
-cp -i $OFBIZ_HOME/lib/share/bsh-1.2b3.jar $OFBIZ_HOME/lib/share/jakarta-oro-2.0.4.jar $ORION_HOME/lib
+cp -i $OFBIZ_HOME/lib/share/bsh-1.2b6.jar $OFBIZ_HOME/lib/share/jakarta-oro-2.0.4.jar $ORION_HOME/lib
 cp -i $OFBIZ_HOME/lib/compile/xerces.jar $ORION_HOME/lib
 

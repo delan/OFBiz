@@ -55,7 +55,7 @@
         <copy file="lib/common/tyrex-1.0.jar" toDir="${catalina.dir}/common/lib"/>
 
         <copy file="lib/share/axis.jar" toDir="${catalina.dir}/lib"/>
-        <copy file="lib/share/bsh-1.2b3.jar" toDir="${catalina.dir}/lib"/>
+        <copy file="lib/share/bsh-1.2b6.jar" toDir="${catalina.dir}/lib"/>
         <copy file="lib/share/clutil.jar" toDir="${catalina.dir}/lib"/>
         <copy file="lib/share/wsdl4j.jar" toDir="${catalina.dir}/lib"/>
         <copy file="lib/share/jakarta-oro-2.0.4.jar" toDir="${catalina.dir}/lib"/>
@@ -361,7 +361,7 @@
         <copy file="lib/common/ots-jts_1.0.jar"              toDir="${ext.dir}/lib/ext"/>
         <copy file="lib/common/tyrex-1.0.jar"            toDir="${ext.dir}/lib/ext"/>
         <copy file="lib/share/axis.jar"                      toDir="${ext.dir}/lib/ext"/>
-        <copy file="lib/share/bsh-1.2b3.jar"                 toDir="${ext.dir}/lib/ext"/>
+        <copy file="lib/share/bsh-1.2b6.jar"                 toDir="${ext.dir}/lib/ext"/>
         <copy file="lib/share/clutil.jar"                    toDir="${ext.dir}/lib/ext"/>
         <copy file="lib/share/wsdl4j.jar"                    toDir="${ext.dir}/lib/ext"/>
         <copy file="lib/share/jakarta-oro-2.0.4.jar"         toDir="${ext.dir}/lib/ext"/>

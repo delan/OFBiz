@@ -23,6 +23,6 @@ rm $ORION_HOME/lib/localdtds.properties
 rm $ORION_HOME/lib/castor-0.9.3.9.jar $ORION_HOME/lib/hsqldb.jar $ORION_HOME/lib/pgjdbc2.jar
 rm $ORION_HOME/lib/mm.mysql-2.0.8-bin.jar $ORION_HOME/lib/log4j.jar
 rm $ORION_HOME/lib/axis.jar $ORION_HOME/lib/clutil.jar $ORION_HOME/lib/wsdl4j.jar
-rm $ORION_HOME/lib/bsh-1.2b3.jar $ORION_HOME/lib/jakarta-oro-2.0.4.jar
+rm $ORION_HOME/lib/bsh-1.2b6.jar $ORION_HOME/lib/jakarta-oro-2.0.4.jar
 rm $ORION_HOME/lib/xerces.jar
 

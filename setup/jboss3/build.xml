@@ -59,7 +59,7 @@
         <copy file="lib/common/pgjdbc2.jar" toDir="${j2eedeploy.dir}"/>
         <copy file="lib/common/mm.mysql-2.0.8-bin.jar" toDir="${j2eedeploy.dir}"/>
         <copy file="lib/common/ots-jts_1.0.jar" toDir="${j2eedeploy.dir}"/>
-        <copy file="lib/share/bsh-1.2b3.jar" toDir="${j2eedeploy.dir}"/>
+        <copy file="lib/share/bsh-1.2b6.jar" toDir="${j2eedeploy.dir}"/>
         <copy file="lib/share/clutil.jar" toDir="${j2eedeploy.dir}"/>
         <copy file="lib/share/jakarta-oro-2.0.4.jar" toDir="${j2eedeploy.dir}"/>
 
