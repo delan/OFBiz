@@ -142,8 +142,8 @@
             title="Carrier Shipment Method Entity">
       <field name="shipmentMethodTypeId" type="id-ne"></field>
       <field name="partyId" type="id-ne"></field>
-      <field name="roleTypeId" type="id-ne"></field>	
-	  <field name="sequenceNumber" type="numeric"></field>
+      <field name="roleTypeId" type="id-ne"></field>
+      <field name="sequenceNumber" type="numeric"></field>	
       <prim-key field="shipmentMethodTypeId" />	
       <prim-key field="partyId" />	
       <prim-key field="roleTypeId" />
