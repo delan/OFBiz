@@ -59,6 +59,11 @@
     	<response name="success" type="view" value="main"/>
     </request-map>
 
+    <request-map uri="FastLoadCache">
+    	<security https="true" auth="true"/>
+    	<response name="success" type="view" value="FastLoadCache"/>
+    </request-map>
+
     <request-map uri="changeDelegator">
         <event type="java" path="org.ofbiz.core.event.CoreEvents" invoke="changeDelegator"/>
         <response name="success" type="view" value="main"/>
@@ -168,6 +173,7 @@
     <view-map name="error" page="/error/error.jsp"/>
     <view-map name="main" page="/main.jsp"/>
 
+    <view-map name="FastLoadCache" page="/FastLoadCache.jsp"/>
     <view-map name="keywordsearch" page="/find/keywordsearch.jsp"/>
     <view-map name="ChooseTopCategory" page="/ChooseTopCategory.jsp"/>
     <view-map name="EditCategory" page="/EditCategory.jsp"/>
@@ -179,4 +185,3 @@
     <view-map name="UploadCategoryImage" page="/UploadCategoryImage.jsp"/>
     <!-- end of view mappings -->
 </site-conf>
-

@@ -1,6 +1,6 @@
 <%
 /**
- *  Title: Main Page
+ *  Title: Cache Load Page
  *  Description: None
  *  Copyright (c) 2001 The Open For Business Project - www.ofbiz.org
  *
@@ -27,21 +27,22 @@
  *@version    1.0
  */
 %>
+<%@ page import="org.ofbiz.core.entity.*" %>
 
-<% pageContext.setAttribute("PageName", "Main Page"); %> 
+<% pageContext.setAttribute("PageName", "Fast Load Cache"); %> 
 <%@ include file="/includes/envsetup.jsp" %>
 <%@ include file="/includes/header.jsp" %>
 <%@ include file="/includes/leftcolumn.jsp" %>
+
 <BR>
 <TABLE border=0 width='100%' cellpadding='<%=boxBorderWidth%>' cellspacing=0 bgcolor='<%=boxBorderColor%>'>
   <TR>
     <TD width='100%'>
       <table width='100%' border='0' cellpadding='<%=boxTopPadding%>' cellspacing='0' bgcolor='<%=boxTopColor%>'>
         <tr>
-          <TD align=left width='90%' >
-            <div class='boxhead'>&nbsp;Catalog Administration Main Page</div>
-          </TD>
-          <TD align=right width='10%'>&nbsp;</TD>
+          <td valign=middle align=center>
+      <div class="boxhead">Loading Catalog Caches...</div>
+          </td>
         </tr>
       </table>
     </TD>
@@ -51,31 +52,36 @@
       <table width='100%' border='0' cellpadding='<%=boxBottomPadding%>' cellspacing='0' bgcolor='<%=boxBottomColor%>'>
         <tr>
           <td>
-<%if(userLogin == null) {%>
-  <DIV class='tabletext'>For something interesting make sure you are logged in, try username:admin, password:ofbiz.</DIV>
-<%}%>
-<BR>
-<%if(security.hasEntityPermission("CATALOG", "_VIEW", session)) {%>
-  <DIV class='tabletext'>Edit Category with Category ID:</DIV>
-  <FORM method=POST action='<ofbiz:url>/EditCategory</ofbiz:url>' style='margin: 0;'>
-    <INPUT type=text size='20' maxlength='20' name='PRODUCT_CATEGORY_ID' value=''>
-    <INPUT type=submit value='Edit Category'>
-  </FORM>
-  <DIV class='tabletext'>OR: <A href='<ofbiz:url>/EditCategory</ofbiz:url>' class='buttontext'>Create New Category</A></DIV>
-<BR>
-  <DIV class='tabletext'>Edit Product with Product ID:</DIV>
-  <FORM method=POST action='<ofbiz:url>/EditProduct</ofbiz:url>' style='margin: 0;'>
-    <INPUT type=text size='20' maxlength='20' name='PRODUCT_ID' value=''>
-    <INPUT type=submit value='Edit Product'>
-  </FORM>
-  <DIV class='tabletext'>OR: <A href='<ofbiz:url>/EditProduct</ofbiz:url>' class='buttontext'>Create New Product</A></DIV>
-<BR>
-<BR>
-<div><A href='<ofbiz:url>/UpdateAllKeywords</ofbiz:url>' class='buttontext'>Auto-Create Keywords for All Products</A></div>
-<div><A href='<ofbiz:url>/FastLoadCache</ofbiz:url>' class='buttontext'>Fast-Load Catalog into Cache</A></div>
-<BR>
-<%}%>
-<DIV class='tabletext'>This application is primarily intended for those repsonsible for the maintenance of product catalog related information.</DIV>
+            <div>Loading Categories...</div>
+            <%UtilTimer ctimer = new UtilTimer();%>
+            <div><%=ctimer.timerString("Before category find")%></div>
+            <%Collection categoryCol = delegator.findAll("ProductCategory");%>
+            <%Iterator categories = UtilMisc.toIterator(categoryCol);%>
+            <div><%=ctimer.timerString("Before load all categories into cache")%></div>
+            <%
+                while (categories != null && categories.hasNext()) {
+                    GenericValue category = (GenericValue) categories.next();
+                    delegator.putInPrimaryKeyCache(category.getPrimaryKey(), category);
+                }
+            %>
+            <div><%=ctimer.timerString("Finished Categories")%></div>
+            <div>Loaded <%=categoryCol.size()%> Categories</div>
+            <BR>
+            <div>Loading Products...</div>
+            <%UtilTimer ptimer = new UtilTimer();%>
+            <div><%=ptimer.timerString("Before product find")%></div>
+            <%Collection productCol = delegator.findAll("Product");%>
+            <%Iterator products = UtilMisc.toIterator(productCol);%>
+            <div><%=ptimer.timerString("Before load all products into cache")%></div>
+            <%
+                while (products != null && products.hasNext()) {
+                    GenericValue product = (GenericValue) products.next();
+                    delegator.putInPrimaryKeyCache(product.getPrimaryKey(), product);
+                }
+            %>
+            <div><%=ptimer.timerString("Finished Products")%></div>
+            <div>Loaded <%=productCol.size()%> products</div>
+
           </td>
         </tr>
       </table>
