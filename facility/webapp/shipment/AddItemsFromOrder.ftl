@@ -64,12 +64,12 @@ ${pages.get("/shipment/ShipmentTabBar.ftl")}
 
     <#assign rowCount = 0>
     <#if isSalesOrder>
-        <form action="<@ofbizUrl>/issueOrderItemInventoryResToShipment</@ofbizUrl>" name="issueOrderItemInventoryResToShipmentForm">
+        <form action="<@ofbizUrl>/issueOrderItemInventoryResToShipment</@ofbizUrl>" name="selectAllForm">
     <#else>
-        <form action="<@ofbizUrl>/issueOrderItemToShipment</@ofbizUrl>" name="issueOrderItemToShipmentForm">
+        <form action="<@ofbizUrl>/issueOrderItemToShipment</@ofbizUrl>" name="selectAllForm">
     </#if>
     <input type="hidden" name="shipmentId" value="${shipmentId}">
-    <input type="hidden" name="_useRowSubmit" value="N">
+    <input type="hidden" name="_useRowSubmit" value="Y">
     <table width="100%" cellpadding="2" cellspacing="0" border="1">
         <tr>
             <td><div class="tableheadtext">Order Item</div></td>
@@ -83,6 +83,10 @@ ${pages.get("/shipment/ShipmentTabBar.ftl")}
                 <td><div class="tableheadtext">Issed = Ordered</div></td>
             </#if>
             <td><div class="tableheadtext">Issue</div></td>
+            <td align="right">
+                <div class="tableheadtext">Submit?</div>
+                <div class="tableheadtext">All<input type="checkbox" name="selectAll" value="Y" onclick="javascript:toggleAll(this);"></div>
+            </td>
         </tr>
         <#list orderItemDatas?if_exists as orderItemData>
             <#assign orderItem = orderItemData.orderItem>
@@ -136,9 +140,13 @@ ${pages.get("/shipment/ShipmentTabBar.ftl")}
                             <input type="hidden" name="orderId_o_${rowCount}" value="${orderItem.orderId}"/>
                             <input type="hidden" name="orderItemSeqId_o_${rowCount}" value="${orderItem.orderItemSeqId}"/>
                             <input type="text" class='inputBox' size="5" name="quantity_o_${rowCount}" value="${quantityNotIssued}"/>
-                            <#assign rowCount = rowCount + 1>   
                         </td>
+                        <td align="right">              
+                          <input type="checkbox" name="_rowSubmit_o_${rowCount}" value="Y" onclick="javascript:checkToggle(this);">
+                        </td>
+                        <#assign rowCount = rowCount + 1>   
                     <#else>
+                        <td><div class="tabletext">&nbsp;</div></td>
                         <td><div class="tabletext">&nbsp;</div></td>
                     </#if>
                 </#if>
@@ -163,18 +171,22 @@ ${pages.get("/shipment/ShipmentTabBar.ftl")}
                         </td>
                         <td><div class="tabletext">&nbsp;</div></td>
                         <td><div class="tabletext">${orderItemInventoryRes.quantity}</div></td>
-                        <td>
-                            <#if originFacility?exists && originFacility.facilityId == inventoryItem.facilityId?if_exists>
+                        <#if originFacility?exists && originFacility.facilityId == inventoryItem.facilityId?if_exists>
+                            <td>
                                 <input type="hidden" name="shipmentId_o_${rowCount}" value="${shipmentId}"/>
                                 <input type="hidden" name="orderId_o_${rowCount}" value="${orderItemInventoryRes.orderId}"/>
                                 <input type="hidden" name="orderItemSeqId_o_${rowCount}" value="${orderItemInventoryRes.orderItemSeqId}"/>
                                 <input type="hidden" name="inventoryItemId_o_${rowCount}" value="${orderItemInventoryRes.inventoryItemId}"/>
                                 <input type="text" class='inputBox' size="5" name="quantity_o_${rowCount}" value="${orderItemInventoryRes.quantity}"/>
-                                <#assign rowCount = rowCount + 1>   
-                            <#else>
-                                <div class="tabletext">Not In Origin Facility</div>
-                            </#if>
-                        </td>
+                            </td>
+                            <td align="right">              
+                              <input type="checkbox" name="_rowSubmit_o_${rowCount}" value="Y" onclick="javascript:checkToggle(this);">
+                            </td>
+                            <#assign rowCount = rowCount + 1>   
+                        <#else>
+                            <td><div class="tabletext">Not In Origin Facility</div></td>
+                            <td><div class="tabletext">&nbsp;</div></td>
+                        </#if>
                     </tr>
                 </#list>
             </#if>
@@ -185,6 +197,7 @@ ${pages.get("/shipment/ShipmentTabBar.ftl")}
     </table>
     <input type="hidden" name="_rowCount" value="${rowCount}">
     </form>
+    <script language="JavaScript">selectAll();</script>
 </#if>
 
 <#else>

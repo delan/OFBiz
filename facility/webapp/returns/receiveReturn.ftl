@@ -24,58 +24,6 @@
  *@since      2.2
 -->
 
-<script language="JavaScript">
-<!--
-function toggle(e) {
-    e.checked = !e.checked;    
-}
-function checkToggle(e) {
-    var cform = document.receiveform;
-    if (e.checked) {      
-        var len = cform.elements.length;
-        var allchecked = true;
-        for (var i = 0; i < len; i++) {
-            var element = cform.elements[i];
-            var elementName = new java.lang.String(element.name);          
-            if (elementName.startsWith("_rowSubmit") && !element.checked) {       
-                allchecked = false;
-            }
-            cform.selectAll.checked = allchecked;            
-        }
-    } else {
-        cform.selectAll.checked = false;
-    }
-}
-function toggleAll(e) {
-    var cform = document.receiveform;
-    var len = cform.elements.length;
-    for (var i = 0; i < len; i++) {
-        var element = cform.elements[i];                   
-        var eName = new java.lang.String(element.name);                
-        if (eName.startsWith("_rowSubmit") && element.checked != e.checked) {
-            toggle(element);
-        } 
-    }     
-}
-function selectAll() {
-    var cform = document.receiveform;
-    var len = cform.elements.length;
-    for (var i = 0; i < len; i++) {
-        var element = cform.elements[i];                   
-        var eName = new java.lang.String(element.name);                
-        if ((element.name == "selectAll" || eName.startsWith("_rowSubmit")) && !element.checked) {
-            toggle(element);
-        } 
-    }     
-}
-function removeSelected() {
-    var cform = document.receiveform;
-    cform.removeSelected.value = true;
-    cform.submit();
-}
-//-->
-</script>
-
 <#if security.hasEntityPermission("FACILITY", "_CREATE", session)>
 
 <#if requestParameters.facilityId?exists>
@@ -130,7 +78,7 @@ function removeSelected() {
 
 <#-- Multi-Item Return Receiving -->
 <#if returnHeader?has_content>
-  <form method="post" action="<@ofbizUrl>/receiveInventoryProduct/ReceiveReturn</@ofbizUrl>" name='receiveform' style='margin: 0;'>
+  <form method="post" action="<@ofbizUrl>/receiveInventoryProduct/ReceiveReturn</@ofbizUrl>" name='selectAllForm' style='margin: 0;'>
     <#-- general request fields -->
     <input type="hidden" name="facilityId" value="${requestParameters.facilityId?if_exists}">   
     <input type="hidden" name="returnId" value="${requestParameters.returnId?if_exists}">   
@@ -257,7 +205,7 @@ function removeSelected() {
         <#else>        
           <tr>
             <td colspan="2" align="right">
-              <a href="javascript:document.receiveform.submit();" class="buttontext">Receive Selected Product(s)</a>
+              <a href="javascript:document.selectAllForm.submit();" class="buttontext">Receive Selected Product(s)</a>
             </td>
           </tr>
         </#if>
@@ -269,7 +217,7 @@ function removeSelected() {
   
   <#-- Initial Screen -->
 <#else>
-  <form name="receiveform" method="post" action="<@ofbizUrl>/ReceiveReturn</@ofbizUrl>" style='margin: 0;'>
+  <form name="selectAllForm" method="post" action="<@ofbizUrl>/ReceiveReturn</@ofbizUrl>" style='margin: 0;'>
     <input type="hidden" name="facilityId" value="${requestParameters.facilityId?if_exists}">
     <input type="hidden" name="initialSelected" value="Y">
 	<table border='0' cellpadding='2' cellspacing='0'>
@@ -285,7 +233,7 @@ function removeSelected() {
       <tr>
         <td colspan="2">&nbsp;</td>
         <td colspan="2">
-          <a href="javascript:document.receiveform.submit();" class="buttontext">Receive Product(s)</a>
+          <a href="javascript:document.selectAllForm.submit();" class="buttontext">Receive Product(s)</a>
         </td>
       </tr>        
     </table>

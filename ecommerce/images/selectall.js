@@ -5,7 +5,7 @@ function toggle(e) {
     e.checked = !e.checked;    
 }
 function checkToggle(e) {
-    var cform = document.receiveform;
+    var cform = document.selectAllForm;
     if (e.checked) {      
         var len = cform.elements.length;
         var allchecked = true;
@@ -22,7 +22,7 @@ function checkToggle(e) {
     }
 }
 function toggleAll(e) {
-    var cform = document.receiveform;
+    var cform = document.selectAllForm;
     var len = cform.elements.length;
     for (var i = 0; i < len; i++) {
         var element = cform.elements[i];                   
@@ -33,7 +33,7 @@ function toggleAll(e) {
     }     
 }
 function selectAll() {
-    var cform = document.receiveform;
+    var cform = document.selectAllForm;
     var len = cform.elements.length;
     for (var i = 0; i < len; i++) {
         var element = cform.elements[i];                   
@@ -44,7 +44,7 @@ function selectAll() {
     }     
 }
 function removeSelected() {
-    var cform = document.receiveform;
+    var cform = document.selectAllForm;
     cform.removeSelected.value = true;
     cform.submit();
 }
