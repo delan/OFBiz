@@ -1,0 +1,1214 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!-- generated from Core Component dictionary by coreparse.py python script -->
+<xs:schema xmlns:xs="http://www.w3.org/2001/XMLSchema" elementFormDefault="qualified" attributeFormDefault="unqualified">
+<!-- Basic components having no children elements -->
+  <xs:complexType name="AuthorEditor.Action.Code">
+    <xs:annotation><xs:documentation>
+Code which indicates what action was taken by Person in adding, editing, posting or otherwise changing this entry, transaction or other information in the accounting or business system.Represents granular change tracking.
+    </xs:documentation></xs:annotation>
+       <xs:sequence>
+             <xs:element name="Code.Content" type="xs:string"/>
+             <xs:element name="CodeList.Identifier" type="xs:string" minOccurs="0" maxOccurs="1"/>
+             <xs:element name="CodeList.Agency.Identifier" type="xs:string" minOccurs="0" maxOccurs="1"/>
+             <xs:element name="CodeList.Version.Identifier" type="xs:string" minOccurs="0" maxOccurs="1"/>
+             <xs:element name="Code.Name" type="xs:string" minOccurs="0" maxOccurs="1"/>
+             <xs:element name="Language.Code" type="xs:string" minOccurs="0" maxOccurs="1"/>
+       </xs:sequence>
+   </xs:complexType>
+  <xs:complexType name="AuthorEditor.Action.DateTime">
+    <xs:annotation><xs:documentation>
+Point in time when a piece of information was entered, edited, posted, or otherwise changed within an entry, transaction, or other element of an accounting or business system.
+    </xs:documentation></xs:annotation>
+       <xs:sequence>
+             <xs:element name="DateTime.Content" type="xs:dateTime"/>
+             <xs:element name="DateTime.Format.Text" type="xs:string" minOccurs="0" maxOccurs="1"/>
+       </xs:sequence>
+   </xs:complexType>
+  <xs:complexType name="AuthorEditor.Person.Identifier">
+    <xs:annotation><xs:documentation>
+Identifier of the party (self or trading partner) who added, edited, posted, authorized, and/or other information process.  Establishes the chain of custody of information.See GL. State Transition. Details for business and economic events.  This aggregate component is for information processes in accounting and attesting.
+    </xs:documentation></xs:annotation>
+       <xs:sequence>
+             <xs:element name="Identifier.Content" type="xs:string"/>
+             <xs:element name="IdentificationScheme.Name" type="xs:string" minOccurs="0" maxOccurs="1"/>
+             <xs:element name="IdentificationSchemeAgency.Name" type="xs:string" minOccurs="0" maxOccurs="1"/>
+             <xs:element name="Language.Code" type="xs:string" minOccurs="0" maxOccurs="1"/>
+             <xs:element name="IdentificationScheme.Data.UniformResourceIdentifier" type="xs:anyURI" minOccurs="0" maxOccurs="1"/>
+             <xs:element name="IdentificationScheme.UniformResourceIdentifier" type="xs:anyURI" minOccurs="0" maxOccurs="1"/>
+       </xs:sequence>
+   </xs:complexType>
+  <xs:complexType name="Doc.DataURI.Text">
+    <xs:annotation><xs:documentation>
+An RFC 2396 URI, which returns the Document from a filesystem, network, etc.
+    </xs:documentation></xs:annotation>
+       <xs:sequence>
+             <xs:element name="Text.Content" type="xs:string"/>
+             <xs:element name="Language.Code" type="xs:string" minOccurs="0" maxOccurs="1"/>
+       </xs:sequence>
+   </xs:complexType>
+  <xs:complexType name="Doc.DateTime">
+    <xs:annotation><xs:documentation>
+The particular point in time when Document was created, issued, executed or first processed by its author, in accordance with the primary purpose inherent in the particular document type.In business processes, dates are associated with events, not documents.  However, the execution of a document is itself, an event similar to the sending of any other message; thus Docs have issue dates.
+    </xs:documentation></xs:annotation>
+       <xs:sequence>
+             <xs:element name="DateTime.Content" type="xs:dateTime"/>
+             <xs:element name="DateTime.Format.Text" type="xs:string" minOccurs="0" maxOccurs="1"/>
+       </xs:sequence>
+   </xs:complexType>
+  <xs:complexType name="Doc.LanguageCode.Text">
+    <xs:annotation><xs:documentation>
+The ISO 639 Language Code of this Document
+    </xs:documentation></xs:annotation>
+       <xs:sequence>
+             <xs:element name="Text.Content" type="xs:string"/>
+             <xs:element name="Language.Code" type="xs:string" minOccurs="0" maxOccurs="1"/>
+       </xs:sequence>
+   </xs:complexType>
+  <xs:complexType name="Doc.Number.Text">
+    <xs:annotation><xs:documentation>
+Invoice number, PO number, etc. assigned to this business document instance by the author or the author's system.
+    </xs:documentation></xs:annotation>
+       <xs:sequence>
+             <xs:element name="Text.Content" type="xs:string"/>
+             <xs:element name="Language.Code" type="xs:string" minOccurs="0" maxOccurs="1"/>
+       </xs:sequence>
+   </xs:complexType>
+  <xs:complexType name="Doc.SchemaURI.Text">
+    <xs:annotation><xs:documentation>
+An RFC 2396 URI, which returns an XML schema specifying the information model used in the underlying records in the Document.Enables users to publish formats for orders, invoices, or any other document, making it more usable by their trading partners at low cost.  Allows very low-end ebXML scenarios without reg/reps or hosted services.
+    </xs:documentation></xs:annotation>
+       <xs:sequence>
+             <xs:element name="Text.Content" type="xs:string"/>
+             <xs:element name="Language.Code" type="xs:string" minOccurs="0" maxOccurs="1"/>
+       </xs:sequence>
+   </xs:complexType>
+  <xs:complexType name="Doc.Signature.Text">
+    <xs:annotation><xs:documentation>
+Digital signature or hash which authenticates the document within the contractual context established between parties.
+    </xs:documentation></xs:annotation>
+       <xs:sequence>
+             <xs:element name="Text.Content" type="xs:string"/>
+             <xs:element name="Language.Code" type="xs:string" minOccurs="0" maxOccurs="1"/>
+       </xs:sequence>
+   </xs:complexType>
+  <xs:complexType name="Doc.Text">
+    <xs:annotation><xs:documentation>
+Full copy of the business document.
+    </xs:documentation></xs:annotation>
+       <xs:sequence>
+             <xs:element name="Text.Content" type="xs:string"/>
+             <xs:element name="Language.Code" type="xs:string" minOccurs="0" maxOccurs="1"/>
+       </xs:sequence>
+   </xs:complexType>
+  <xs:complexType name="Doc.Type.Name">
+    <xs:annotation><xs:documentation>
+The name of the document expressing its purpose from the viewpoint of its author (e.g. sales invoice, purchase order, remittance advice, etc.)
+    </xs:documentation></xs:annotation>
+       <xs:sequence>
+             <xs:element name="Text.Content" type="xs:string"/>
+             <xs:element name="Language.Code" type="xs:string" minOccurs="0" maxOccurs="1"/>
+       </xs:sequence>
+   </xs:complexType>
+  <xs:complexType name="Doc.TypeVersion.Text">
+    <xs:annotation><xs:documentation>
+version number of the (1) Doc. Type Name in this instance of Doc.Details, or if Name is absent (2) the version of the full record at Doc. Data URI. Text
+    </xs:documentation></xs:annotation>
+       <xs:sequence>
+             <xs:element name="Text.Content" type="xs:string"/>
+             <xs:element name="Language.Code" type="xs:string" minOccurs="0" maxOccurs="1"/>
+       </xs:sequence>
+   </xs:complexType>
+  <xs:complexType name="GL.Amount">
+    <xs:annotation><xs:documentation>
+Monetary amount of an economic event or accounting adjustment within the context of GAAP or other comprehensive basis of accounting, in the base currency of the accounting entity, having sign positive denoting debit, negative denoting credit.If debit/credit code is present, the sign of GL Amount is ignored.  For entries in other currencies, use "GL. Original Amount. Amount".   The "GL Entry. Amount" is for amounts in reporting currency.
+    </xs:documentation></xs:annotation>
+       <xs:sequence>
+             <xs:element name="Amount.Content" type="xs:decimal"/>
+             <xs:element name="AmountCurrency.Identification.Code" type="xs:string" minOccurs="0" maxOccurs="1"/>
+       </xs:sequence>
+   </xs:complexType>
+  <xs:complexType name="GL.Beginning.DateTime">
+    <xs:annotation><xs:documentation>
+Together with GL. Ending. Date Time, defines an interval in time; for example, the interval covered by the GL Entries in a GL Transaction Set, i.e. their Event Dates or at least their Document Dates.May also define a real period in time, e.g. an entire calendar day, month, etc.
+    </xs:documentation></xs:annotation>
+       <xs:sequence>
+             <xs:element name="DateTime.Content" type="xs:dateTime"/>
+             <xs:element name="DateTime.Format.Text" type="xs:string" minOccurs="0" maxOccurs="1"/>
+       </xs:sequence>
+   </xs:complexType>
+  <xs:complexType name="GL.CostCenter.Identifier">
+    <xs:annotation><xs:documentation>
+The identifier of a Cost Center to which revenue or expense are assigned or associated, within the classification scheme of an organization.This element is used in ledger-subledger relations, and A2A integration with internal and hosted applications, not in B2B.
+    </xs:documentation></xs:annotation>
+       <xs:sequence>
+             <xs:element name="Identifier.Content" type="xs:string"/>
+             <xs:element name="IdentificationScheme.Name" type="xs:string" minOccurs="0" maxOccurs="1"/>
+             <xs:element name="IdentificationSchemeAgency.Name" type="xs:string" minOccurs="0" maxOccurs="1"/>
+             <xs:element name="Language.Code" type="xs:string" minOccurs="0" maxOccurs="1"/>
+             <xs:element name="IdentificationScheme.Data.UniformResourceIdentifier" type="xs:anyURI" minOccurs="0" maxOccurs="1"/>
+             <xs:element name="IdentificationScheme.UniformResourceIdentifier" type="xs:anyURI" minOccurs="0" maxOccurs="1"/>
+       </xs:sequence>
+   </xs:complexType>
+  <xs:complexType name="GL.DebitCredit.Code">
+    <xs:annotation><xs:documentation>
+The code  indicating whether the Amount is a debit or credit within the double-entry methodology of accounting.For example D, Dr, C, or Cr, or their upper or lower cases.
+    </xs:documentation></xs:annotation>
+       <xs:sequence>
+             <xs:element name="Code.Content" type="xs:string"/>
+             <xs:element name="CodeList.Identifier" type="xs:string" minOccurs="0" maxOccurs="1"/>
+             <xs:element name="CodeList.Agency.Identifier" type="xs:string" minOccurs="0" maxOccurs="1"/>
+             <xs:element name="CodeList.Version.Identifier" type="xs:string" minOccurs="0" maxOccurs="1"/>
+             <xs:element name="Code.Name" type="xs:string" minOccurs="0" maxOccurs="1"/>
+             <xs:element name="Language.Code" type="xs:string" minOccurs="0" maxOccurs="1"/>
+       </xs:sequence>
+   </xs:complexType>
+  <xs:complexType name="GL.Dimension.Identifier">
+    <xs:annotation><xs:documentation>
+A property, attribute, or classification of the economic event of a GL Entry, within an arbitrary classification scheme identified by the Identification Scheme. Name or URI of the Core Component Identifier.Type.GLIEs and the AR/AP model already provide specifically-named dimensions for Account, Party, Product or Service, Organization Unit, and others. This Dimension entity is for any other dimension attribute.
+    </xs:documentation></xs:annotation>
+       <xs:sequence>
+             <xs:element name="Identifier.Content" type="xs:string"/>
+             <xs:element name="IdentificationScheme.Name" type="xs:string" minOccurs="0" maxOccurs="1"/>
+             <xs:element name="IdentificationSchemeAgency.Name" type="xs:string" minOccurs="0" maxOccurs="1"/>
+             <xs:element name="Language.Code" type="xs:string" minOccurs="0" maxOccurs="1"/>
+             <xs:element name="IdentificationScheme.Data.UniformResourceIdentifier" type="xs:anyURI" minOccurs="0" maxOccurs="1"/>
+             <xs:element name="IdentificationScheme.UniformResourceIdentifier" type="xs:anyURI" minOccurs="0" maxOccurs="1"/>
+       </xs:sequence>
+   </xs:complexType>
+  <xs:complexType name="GL.Due.DateTime">
+    <xs:annotation><xs:documentation>
+Point in time a monetary liability is contracted to be paid, or a monetary asset such as a receivable is contracted to be received.
+    </xs:documentation></xs:annotation>
+       <xs:sequence>
+             <xs:element name="DateTime.Content" type="xs:dateTime"/>
+             <xs:element name="DateTime.Format.Text" type="xs:string" minOccurs="0" maxOccurs="1"/>
+       </xs:sequence>
+   </xs:complexType>
+  <xs:complexType name="GL.Employee.Identifier">
+    <xs:annotation><xs:documentation>
+The identifier of a Employee, within the payroll or human resources scheme of an organization, with whom this asset, liability, income or expense is associated with.  Not always the same as GL. Transition element, employee who executes, authorizes etc.This element is used in ledger-subledger relations, and A2A integration with internal and hosted applications, not in B2B.
+    </xs:documentation></xs:annotation>
+       <xs:sequence>
+             <xs:element name="Identifier.Content" type="xs:string"/>
+             <xs:element name="IdentificationScheme.Name" type="xs:string" minOccurs="0" maxOccurs="1"/>
+             <xs:element name="IdentificationSchemeAgency.Name" type="xs:string" minOccurs="0" maxOccurs="1"/>
+             <xs:element name="Language.Code" type="xs:string" minOccurs="0" maxOccurs="1"/>
+             <xs:element name="IdentificationScheme.Data.UniformResourceIdentifier" type="xs:anyURI" minOccurs="0" maxOccurs="1"/>
+             <xs:element name="IdentificationScheme.UniformResourceIdentifier" type="xs:anyURI" minOccurs="0" maxOccurs="1"/>
+       </xs:sequence>
+   </xs:complexType>
+  <xs:complexType name="GL.Ending.DateTime">
+    <xs:annotation><xs:documentation>
+Together with GL. Beginning. Date Time, defines an interval in time; for example, the interval covered by the GL Entries in a GL Transaction Set, i.e. their Event Dates or at least their Document Dates.May also define a real period in time, e.g. an entire calendar day, month, etc.
+    </xs:documentation></xs:annotation>
+       <xs:sequence>
+             <xs:element name="DateTime.Content" type="xs:dateTime"/>
+             <xs:element name="DateTime.Format.Text" type="xs:string" minOccurs="0" maxOccurs="1"/>
+       </xs:sequence>
+   </xs:complexType>
+  <xs:complexType name="GL.EntryCount.Value">
+    <xs:annotation><xs:documentation>
+Number of Entry instances in a GL Transaction Set or GL Transaction
+    </xs:documentation></xs:annotation>
+       <xs:sequence>
+             <xs:element name="Numeric.Content" type="xs:decimal"/>
+             <xs:element name="Numeric.Format.Text" type="xs:string" minOccurs="0" maxOccurs="1"/>
+       </xs:sequence>
+   </xs:complexType>
+  <xs:complexType name="GL.EntryDescription.Text">
+    <xs:annotation><xs:documentation>
+The usually short memo or note informing the reader of the nature of a GL Transaction or GL Entry, or its surrounding circumstances.
+    </xs:documentation></xs:annotation>
+       <xs:sequence>
+             <xs:element name="Text.Content" type="xs:string"/>
+             <xs:element name="Language.Code" type="xs:string" minOccurs="0" maxOccurs="1"/>
+       </xs:sequence>
+   </xs:complexType>
+  <xs:complexType name="GL.EntryIdentifier.Text">
+    <xs:annotation><xs:documentation>
+The unique identifier of a GL Entry within a Ledger, or within a GL Transaction.If GL. Entry Id is unique only within a transaction, for example, the combination of GL. Transaction Id and GL. Entry Id may establish uniqueness within a Ledger.
+    </xs:documentation></xs:annotation>
+       <xs:sequence>
+             <xs:element name="Text.Content" type="xs:string"/>
+             <xs:element name="Language.Code" type="xs:string" minOccurs="0" maxOccurs="1"/>
+       </xs:sequence>
+   </xs:complexType>
+  <xs:complexType name="GL.FiscalType.Code">
+    <xs:annotation><xs:documentation>
+a code assigned to a GL entry which indicates whether the entry is an actual, budget, forecast, plan, scenario, etc. entry.Since budget, plan and other proformas and models can reflect the entire multidimensioned possibilities of an actual business system, accounting systems often maintain models in the real systems,  distinguished only by this sort of code.
+    </xs:documentation></xs:annotation>
+       <xs:sequence>
+             <xs:element name="Code.Content" type="xs:string"/>
+             <xs:element name="CodeList.Identifier" type="xs:string" minOccurs="0" maxOccurs="1"/>
+             <xs:element name="CodeList.Agency.Identifier" type="xs:string" minOccurs="0" maxOccurs="1"/>
+             <xs:element name="CodeList.Version.Identifier" type="xs:string" minOccurs="0" maxOccurs="1"/>
+             <xs:element name="Code.Name" type="xs:string" minOccurs="0" maxOccurs="1"/>
+             <xs:element name="Language.Code" type="xs:string" minOccurs="0" maxOccurs="1"/>
+       </xs:sequence>
+   </xs:complexType>
+  <xs:complexType name="GL.Fund.Identifier">
+    <xs:annotation><xs:documentation>
+The identifier of a Fund within the accounting classification scheme of an organization.This element is used in ledger-subledger relations, and A2A integration with internal and hosted applications, not in B2B.
+    </xs:documentation></xs:annotation>
+       <xs:sequence>
+             <xs:element name="Identifier.Content" type="xs:string"/>
+             <xs:element name="IdentificationScheme.Name" type="xs:string" minOccurs="0" maxOccurs="1"/>
+             <xs:element name="IdentificationSchemeAgency.Name" type="xs:string" minOccurs="0" maxOccurs="1"/>
+             <xs:element name="Language.Code" type="xs:string" minOccurs="0" maxOccurs="1"/>
+             <xs:element name="IdentificationScheme.Data.UniformResourceIdentifier" type="xs:anyURI" minOccurs="0" maxOccurs="1"/>
+             <xs:element name="IdentificationScheme.UniformResourceIdentifier" type="xs:anyURI" minOccurs="0" maxOccurs="1"/>
+       </xs:sequence>
+   </xs:complexType>
+  <xs:complexType name="GL.GroupIdentifier.Text">
+    <xs:annotation><xs:documentation>
+The identifier of a group of entries or transactions within a Ledger which are related to each other within the same collaboration instance, such as a fulfillment transaction and a settlement transaction at different dates, for the same goods.Integrated accounting systems often have keys such as this; also; enables a GL to associate the economic events of collaboration patterns occurring at different points in time.
+    </xs:documentation></xs:annotation>
+       <xs:sequence>
+             <xs:element name="Text.Content" type="xs:string"/>
+             <xs:element name="Language.Code" type="xs:string" minOccurs="0" maxOccurs="1"/>
+       </xs:sequence>
+   </xs:complexType>
+  <xs:complexType name="GL.GroupStatus.Code">
+    <xs:annotation><xs:documentation>
+The lowest status or business state of completion, agreement, etc. found among all entries sharing the same Group Id (i.e. related to each other within the same collaboration.)For example, within the collaboration pattern of shared transaction repositories, 1=sent, 2=acknowledged received, 3=accepted, 4=denied, 5=other; when all parties' entries are signed and ratified (3), the transaction is good.
+    </xs:documentation></xs:annotation>
+       <xs:sequence>
+             <xs:element name="Code.Content" type="xs:string"/>
+             <xs:element name="CodeList.Identifier" type="xs:string" minOccurs="0" maxOccurs="1"/>
+             <xs:element name="CodeList.Agency.Identifier" type="xs:string" minOccurs="0" maxOccurs="1"/>
+             <xs:element name="CodeList.Version.Identifier" type="xs:string" minOccurs="0" maxOccurs="1"/>
+             <xs:element name="Code.Name" type="xs:string" minOccurs="0" maxOccurs="1"/>
+             <xs:element name="Language.Code" type="xs:string" minOccurs="0" maxOccurs="1"/>
+       </xs:sequence>
+   </xs:complexType>
+  <xs:complexType name="GL.IsPosted.Indicator">
+    <xs:annotation><xs:documentation>
+An indicator which distinguishes entries which have been finalized and completed and entered into the books, from entries which are not yet posted, for example because they are incomplete, unbalanced, etc.Enables the representation of entries in process such as out of balance entries, within the accounting context, i.e. within GLs. Enables GLs to contain data during formative stages of transactions, i.e. to support business processes.
+    </xs:documentation></xs:annotation>
+       <xs:sequence>
+             <xs:element name="Indicator.Content" type="xs:string"/>
+             <xs:element name="Indicator.Format.Text" type="xs:string" minOccurs="0" maxOccurs="1"/>
+       </xs:sequence>
+   </xs:complexType>
+  <xs:complexType name="GL.IsSummary.Indicator">
+    <xs:annotation><xs:documentation>
+Indicates whether the entry is a detail entry or an aggregated entry such as a control account for a subledger, or consolidation totals representing the transactions maintained by another system.Accountants and accounting systems, often maintain aggregated amounts representing a wide variety of circumstances, including condensed data from earlier periods of the same system, totals which are artifacts for reporting software, etc.
+    </xs:documentation></xs:annotation>
+       <xs:sequence>
+             <xs:element name="Indicator.Content" type="xs:string"/>
+             <xs:element name="Indicator.Format.Text" type="xs:string" minOccurs="0" maxOccurs="1"/>
+       </xs:sequence>
+   </xs:complexType>
+  <xs:complexType name="GL.Job.Identifier">
+    <xs:annotation><xs:documentation>
+The identifier of a Job within the accounting classification scheme of an organization.This element is used in ledger-subledger relations, and A2A integration with internal and hosted applications, not in B2B.
+    </xs:documentation></xs:annotation>
+       <xs:sequence>
+             <xs:element name="Identifier.Content" type="xs:string"/>
+             <xs:element name="IdentificationScheme.Name" type="xs:string" minOccurs="0" maxOccurs="1"/>
+             <xs:element name="IdentificationSchemeAgency.Name" type="xs:string" minOccurs="0" maxOccurs="1"/>
+             <xs:element name="Language.Code" type="xs:string" minOccurs="0" maxOccurs="1"/>
+             <xs:element name="IdentificationScheme.Data.UniformResourceIdentifier" type="xs:anyURI" minOccurs="0" maxOccurs="1"/>
+             <xs:element name="IdentificationScheme.UniformResourceIdentifier" type="xs:anyURI" minOccurs="0" maxOccurs="1"/>
+       </xs:sequence>
+   </xs:complexType>
+  <xs:complexType name="GL.Matched.Code">
+    <xs:annotation><xs:documentation>
+Indicates whether a receivable/payable is cleared by matching with an associated settlement or other offsetting entry within this Ledger; for example within OMG FDTF ARAP, 1) not matched, 2) partly matched, 3) matched.This is a placeholder for a more extensive core component necesary for managing external payables and receivables.
+    </xs:documentation></xs:annotation>
+       <xs:sequence>
+             <xs:element name="Code.Content" type="xs:string"/>
+             <xs:element name="CodeList.Identifier" type="xs:string" minOccurs="0" maxOccurs="1"/>
+             <xs:element name="CodeList.Agency.Identifier" type="xs:string" minOccurs="0" maxOccurs="1"/>
+             <xs:element name="CodeList.Version.Identifier" type="xs:string" minOccurs="0" maxOccurs="1"/>
+             <xs:element name="Code.Name" type="xs:string" minOccurs="0" maxOccurs="1"/>
+             <xs:element name="Language.Code" type="xs:string" minOccurs="0" maxOccurs="1"/>
+       </xs:sequence>
+   </xs:complexType>
+  <xs:complexType name="GL.Note.Text">
+    <xs:annotation><xs:documentation>
+Notes, narrative etc. containing disclosures, usually with numeric quantities, attached or associated with a GL Transaction or Entry, in compliance with a specific requirement of law, regulation, organizational  policy, standards body, etc.Notes requirements may be triggered by events in the legal or business environment affecting the reporting entity, or by its accounts or transactions.
+    </xs:documentation></xs:annotation>
+       <xs:sequence>
+             <xs:element name="Text.Content" type="xs:string"/>
+             <xs:element name="Language.Code" type="xs:string" minOccurs="0" maxOccurs="1"/>
+       </xs:sequence>
+   </xs:complexType>
+  <xs:complexType name="GL.OrganizationUnit.Identifier">
+    <xs:annotation><xs:documentation>
+The department, division, or other organizational unit or budget unit within the Accounting EntityManagement accountability unit.
+    </xs:documentation></xs:annotation>
+       <xs:sequence>
+             <xs:element name="Identifier.Content" type="xs:string"/>
+             <xs:element name="IdentificationScheme.Name" type="xs:string" minOccurs="0" maxOccurs="1"/>
+             <xs:element name="IdentificationSchemeAgency.Name" type="xs:string" minOccurs="0" maxOccurs="1"/>
+             <xs:element name="Language.Code" type="xs:string" minOccurs="0" maxOccurs="1"/>
+             <xs:element name="IdentificationScheme.Data.UniformResourceIdentifier" type="xs:anyURI" minOccurs="0" maxOccurs="1"/>
+             <xs:element name="IdentificationScheme.UniformResourceIdentifier" type="xs:anyURI" minOccurs="0" maxOccurs="1"/>
+       </xs:sequence>
+   </xs:complexType>
+  <xs:complexType name="GL.Original.Amount">
+    <xs:annotation><xs:documentation>
+Monetary amount of an economic event or accounting adjustment within the context of GAAP or other comprehensive basis of accounting, in some other currency NOT the reporting currency, having sign positive denoting debit, negative denoting credit.If debit/credit code is present, the sign of GL Original. Amount is ignored.  For entries in base currency, use "GL. Amount".   The "GL Entry. Amount" is for amounts in reporting currency.
+    </xs:documentation></xs:annotation>
+       <xs:sequence>
+             <xs:element name="Amount.Content" type="xs:decimal"/>
+             <xs:element name="AmountCurrency.Identification.Code" type="xs:string" minOccurs="0" maxOccurs="1"/>
+       </xs:sequence>
+   </xs:complexType>
+  <xs:complexType name="GL.OriginalLedger.Identifier">
+    <xs:annotation><xs:documentation>
+The unique Identifier of the original ledger in which this GL Entry was created or executed, for example, the ledger of the accounting entity who maintains audit trail for this GL Entry.This element is used in ledger-subledger relations, and A2A integration with internal and hosted applications, not in B2B.
+    </xs:documentation></xs:annotation>
+       <xs:sequence>
+             <xs:element name="Identifier.Content" type="xs:string"/>
+             <xs:element name="IdentificationScheme.Name" type="xs:string" minOccurs="0" maxOccurs="1"/>
+             <xs:element name="IdentificationSchemeAgency.Name" type="xs:string" minOccurs="0" maxOccurs="1"/>
+             <xs:element name="Language.Code" type="xs:string" minOccurs="0" maxOccurs="1"/>
+             <xs:element name="IdentificationScheme.Data.UniformResourceIdentifier" type="xs:anyURI" minOccurs="0" maxOccurs="1"/>
+             <xs:element name="IdentificationScheme.UniformResourceIdentifier" type="xs:anyURI" minOccurs="0" maxOccurs="1"/>
+       </xs:sequence>
+   </xs:complexType>
+  <xs:complexType name="GL.OriginalTransactionIdentifier.Text">
+    <xs:annotation><xs:documentation>
+The unique Transaction Id within the original ledger in which this GL Entry was created or executed, for example, the ledger of the accounting entity who maintains audit trail for this GL Entry.This element is used in ledger-subledger relations, and A2A integration with internal and hosted applications, not in B2B.
+    </xs:documentation></xs:annotation>
+       <xs:sequence>
+             <xs:element name="Text.Content" type="xs:string"/>
+             <xs:element name="Language.Code" type="xs:string" minOccurs="0" maxOccurs="1"/>
+       </xs:sequence>
+   </xs:complexType>
+  <xs:complexType name="GL.Party.Identifier">
+    <xs:annotation><xs:documentation>
+Identifier of the Party with whom the purchase, sale or payment, etc. was conducted, i.e. the reciprocal party in a stock flow or other  economic event. e.g. a DUNS number.In GLs, debits=positive, credits=negative; increases in sales=credit, purchase=debit, asset=debit, liability=credit.  For further Party role information, see GL State Transition.
+    </xs:documentation></xs:annotation>
+       <xs:sequence>
+             <xs:element name="Identifier.Content" type="xs:string"/>
+             <xs:element name="IdentificationScheme.Name" type="xs:string" minOccurs="0" maxOccurs="1"/>
+             <xs:element name="IdentificationSchemeAgency.Name" type="xs:string" minOccurs="0" maxOccurs="1"/>
+             <xs:element name="Language.Code" type="xs:string" minOccurs="0" maxOccurs="1"/>
+             <xs:element name="IdentificationScheme.Data.UniformResourceIdentifier" type="xs:anyURI" minOccurs="0" maxOccurs="1"/>
+             <xs:element name="IdentificationScheme.UniformResourceIdentifier" type="xs:anyURI" minOccurs="0" maxOccurs="1"/>
+       </xs:sequence>
+   </xs:complexType>
+  <xs:complexType name="GL.Period.Text">
+    <xs:annotation><xs:documentation>
+A reporting period of an economic event or accountant's adjustment, that are meaningful within the classification system of an accounting entity, e.g., "January 2002", "4th Quarter", etc.
+    </xs:documentation></xs:annotation>
+       <xs:sequence>
+             <xs:element name="Text.Content" type="xs:string"/>
+             <xs:element name="Language.Code" type="xs:string" minOccurs="0" maxOccurs="1"/>
+       </xs:sequence>
+   </xs:complexType>
+  <xs:complexType name="GL.Posted.DateTime">
+    <xs:annotation><xs:documentation>
+Point in time the Transaction Set, Transaction, or Entry was posted or committed to the system, i.e. elevated from draft or suspense status to be recognized for financial reporting or other Ledger. Purpose.Relevant in internal control and in GAAP and other accounting recognition decisions.
+    </xs:documentation></xs:annotation>
+       <xs:sequence>
+             <xs:element name="DateTime.Content" type="xs:dateTime"/>
+             <xs:element name="DateTime.Format.Text" type="xs:string" minOccurs="0" maxOccurs="1"/>
+       </xs:sequence>
+   </xs:complexType>
+  <xs:complexType name="GL.ProductService.Identifier">
+    <xs:annotation><xs:documentation>
+Identifier of the product or service which is the subject of the Amount in a GL Entry.
+    </xs:documentation></xs:annotation>
+       <xs:sequence>
+             <xs:element name="Identifier.Content" type="xs:string"/>
+             <xs:element name="IdentificationScheme.Name" type="xs:string" minOccurs="0" maxOccurs="1"/>
+             <xs:element name="IdentificationSchemeAgency.Name" type="xs:string" minOccurs="0" maxOccurs="1"/>
+             <xs:element name="Language.Code" type="xs:string" minOccurs="0" maxOccurs="1"/>
+             <xs:element name="IdentificationScheme.Data.UniformResourceIdentifier" type="xs:anyURI" minOccurs="0" maxOccurs="1"/>
+             <xs:element name="IdentificationScheme.UniformResourceIdentifier" type="xs:anyURI" minOccurs="0" maxOccurs="1"/>
+       </xs:sequence>
+   </xs:complexType>
+  <xs:complexType name="GL.ProductService.Measure">
+    <xs:annotation><xs:documentation>
+Measure of the product or service which is the subject of the Amount in a GL Entry.
+    </xs:documentation></xs:annotation>
+       <xs:sequence>
+             <xs:element name="Measure.Content" type="xs:decimal"/>
+             <xs:element name="MeasureUnit.Code" type="xs:string" minOccurs="0" maxOccurs="1"/>
+       </xs:sequence>
+   </xs:complexType>
+  <xs:complexType name="GL.ProductService.Quantity">
+    <xs:annotation><xs:documentation>
+Quantity of the product or service which is the subject of the Amount in a GL Entry.
+    </xs:documentation></xs:annotation>
+       <xs:sequence>
+             <xs:element name="Quantity.Content" type="xs:decimal"/>
+             <xs:element name="QuantityUnit.Code" type="xs:string" minOccurs="0" maxOccurs="1"/>
+             <xs:element name="QuantityUnit.CodeList.Identifier" type="xs:string" minOccurs="0" maxOccurs="1"/>
+             <xs:element name="QuantityUnit.CodeListAgency.Identifier" type="xs:string" minOccurs="0" maxOccurs="1"/>
+       </xs:sequence>
+   </xs:complexType>
+  <xs:complexType name="GL.Program.Identifier">
+    <xs:annotation><xs:documentation>
+The identifier of a Program within the accounting classification scheme of an organization.This element is used in ledger-subledger relations, and A2A integration with internal and hosted applications, not in B2B.
+    </xs:documentation></xs:annotation>
+       <xs:sequence>
+             <xs:element name="Identifier.Content" type="xs:string"/>
+             <xs:element name="IdentificationScheme.Name" type="xs:string" minOccurs="0" maxOccurs="1"/>
+             <xs:element name="IdentificationSchemeAgency.Name" type="xs:string" minOccurs="0" maxOccurs="1"/>
+             <xs:element name="Language.Code" type="xs:string" minOccurs="0" maxOccurs="1"/>
+             <xs:element name="IdentificationScheme.Data.UniformResourceIdentifier" type="xs:anyURI" minOccurs="0" maxOccurs="1"/>
+             <xs:element name="IdentificationScheme.UniformResourceIdentifier" type="xs:anyURI" minOccurs="0" maxOccurs="1"/>
+       </xs:sequence>
+   </xs:complexType>
+  <xs:complexType name="GL.Project.Identifier">
+    <xs:annotation><xs:documentation>
+The identifier of a Project within the accounting classification scheme of an organization.
+    </xs:documentation></xs:annotation>
+       <xs:sequence>
+             <xs:element name="Identifier.Content" type="xs:string"/>
+             <xs:element name="IdentificationScheme.Name" type="xs:string" minOccurs="0" maxOccurs="1"/>
+             <xs:element name="IdentificationSchemeAgency.Name" type="xs:string" minOccurs="0" maxOccurs="1"/>
+             <xs:element name="Language.Code" type="xs:string" minOccurs="0" maxOccurs="1"/>
+             <xs:element name="IdentificationScheme.Data.UniformResourceIdentifier" type="xs:anyURI" minOccurs="0" maxOccurs="1"/>
+             <xs:element name="IdentificationScheme.UniformResourceIdentifier" type="xs:anyURI" minOccurs="0" maxOccurs="1"/>
+       </xs:sequence>
+   </xs:complexType>
+  <xs:complexType name="GL.ResourceType.Text">
+    <xs:annotation><xs:documentation>
+Type of economic resource represented by this GL Entry (money, raw materials, labor, finished goods, services, delivered goods, etc.)ref. the UMM meta model and ebXML catalog of common business processes 5/11/2001
+    </xs:documentation></xs:annotation>
+       <xs:sequence>
+             <xs:element name="Text.Content" type="xs:string"/>
+             <xs:element name="Language.Code" type="xs:string" minOccurs="0" maxOccurs="1"/>
+       </xs:sequence>
+   </xs:complexType>
+  <xs:complexType name="GL.SetCreated.DateTime">
+    <xs:annotation><xs:documentation>
+Point in time the Transaction Set, Transaction, or Entry was exported from a system, e.g. to create an instance of accounting information for sending or consolidation into another system.Relevant in internal control and in GAAP and other accounting recognition decisions.
+    </xs:documentation></xs:annotation>
+       <xs:sequence>
+             <xs:element name="DateTime.Content" type="xs:dateTime"/>
+             <xs:element name="DateTime.Format.Text" type="xs:string" minOccurs="0" maxOccurs="1"/>
+       </xs:sequence>
+   </xs:complexType>
+  <xs:complexType name="GL.SetImported.DateTime">
+    <xs:annotation><xs:documentation>
+Point in time the Transaction Set, Transaction, or Entry was imported into a system, e.g. to create an replica of accounting information that originated in a subledger or other system.Relevant in internal control and in GAAP and other accounting recognition decisions.
+    </xs:documentation></xs:annotation>
+       <xs:sequence>
+             <xs:element name="DateTime.Content" type="xs:dateTime"/>
+             <xs:element name="DateTime.Format.Text" type="xs:string" minOccurs="0" maxOccurs="1"/>
+       </xs:sequence>
+   </xs:complexType>
+  <xs:complexType name="GL.SettlementMethod.Text">
+    <xs:annotation><xs:documentation>
+How or by what bank, settlement agent, etc. the asset/liability was settled or is expected to be settled.
+    </xs:documentation></xs:annotation>
+       <xs:sequence>
+             <xs:element name="Text.Content" type="xs:string"/>
+             <xs:element name="Language.Code" type="xs:string" minOccurs="0" maxOccurs="1"/>
+       </xs:sequence>
+   </xs:complexType>
+  <xs:complexType name="GL.SettlementTerms.Text">
+    <xs:annotation><xs:documentation>
+Textual description of the fixed charges and/or interest rates payable or receivable on an obligation, and date/times on which they apply.This is a placeholder for a more extensive core component necesary for managing external payables and receivables.
+    </xs:documentation></xs:annotation>
+       <xs:sequence>
+             <xs:element name="Text.Content" type="xs:string"/>
+             <xs:element name="Language.Code" type="xs:string" minOccurs="0" maxOccurs="1"/>
+       </xs:sequence>
+   </xs:complexType>
+  <xs:complexType name="GL.SourceJournal.Identifier">
+    <xs:annotation><xs:documentation>
+Identifies the type of accounting journal this GL Entry originated within, e.g. sales journal, disbursements journal, etc.Business transactions are most often processed and stored in structures or formats optimized for the purpose. The "Journals" of a company most often correspond with its business applications.
+    </xs:documentation></xs:annotation>
+       <xs:sequence>
+             <xs:element name="Identifier.Content" type="xs:string"/>
+             <xs:element name="IdentificationScheme.Name" type="xs:string" minOccurs="0" maxOccurs="1"/>
+             <xs:element name="IdentificationSchemeAgency.Name" type="xs:string" minOccurs="0" maxOccurs="1"/>
+             <xs:element name="Language.Code" type="xs:string" minOccurs="0" maxOccurs="1"/>
+             <xs:element name="IdentificationScheme.Data.UniformResourceIdentifier" type="xs:anyURI" minOccurs="0" maxOccurs="1"/>
+             <xs:element name="IdentificationScheme.UniformResourceIdentifier" type="xs:anyURI" minOccurs="0" maxOccurs="1"/>
+       </xs:sequence>
+   </xs:complexType>
+  <xs:complexType name="GL.TotalCredits.Amount">
+    <xs:annotation><xs:documentation>
+The total of Amounts in a GL Transaction Set or GL Transaction that are Credits.Accountants examining transactions for accuracy or approval often look for Total Debits or Credits because a simple grand total will be zero for balanced entries, giving no clue as to the total magnitude of business in the entries.
+    </xs:documentation></xs:annotation>
+       <xs:sequence>
+             <xs:element name="Amount.Content" type="xs:decimal"/>
+             <xs:element name="AmountCurrency.Identification.Code" type="xs:string" minOccurs="0" maxOccurs="1"/>
+       </xs:sequence>
+   </xs:complexType>
+  <xs:complexType name="GL.TotalDebits.Amount">
+    <xs:annotation><xs:documentation>
+The total of Amounts in a GL Transaction Set or GL Transaction that are Debits.Accountants examining transactions for accuracy or approval often look for Total Debits or Credits because a simple grand total will be zero for balanced entries, giving no clue as to the total magnitude of business in the entries.
+    </xs:documentation></xs:annotation>
+       <xs:sequence>
+             <xs:element name="Amount.Content" type="xs:decimal"/>
+             <xs:element name="AmountCurrency.Identification.Code" type="xs:string" minOccurs="0" maxOccurs="1"/>
+       </xs:sequence>
+   </xs:complexType>
+  <xs:complexType name="GL.TransactionCount.Value">
+    <xs:annotation><xs:documentation>
+Number of Transaction instances in a GL Transaction Set
+    </xs:documentation></xs:annotation>
+       <xs:sequence>
+             <xs:element name="Numeric.Content" type="xs:decimal"/>
+             <xs:element name="Numeric.Format.Text" type="xs:string" minOccurs="0" maxOccurs="1"/>
+       </xs:sequence>
+   </xs:complexType>
+  <xs:complexType name="GL.TransactionDescription.Text">
+    <xs:annotation><xs:documentation>
+The usually short memo or note informing the reader of the nature of a GL Transaction or GL Entry, or its surrounding circumstances.
+    </xs:documentation></xs:annotation>
+       <xs:sequence>
+             <xs:element name="Text.Content" type="xs:string"/>
+             <xs:element name="Language.Code" type="xs:string" minOccurs="0" maxOccurs="1"/>
+       </xs:sequence>
+   </xs:complexType>
+  <xs:complexType name="GL.TransactionIdentifier.Text">
+    <xs:annotation><xs:documentation>
+The identifier which associates the GL Entry instances in a GL Transaction with each other (e.g. to form a balanced journal entry), and, with their document  header or other container and its associated information.Most GLs, even paper-based or flat files, have identifiers associating the entries of multi-line journal postings. This element is intended for use in ledger-subledger relations not B2B, but could be inherited from Transaction Ids in sales or purchasing.
+    </xs:documentation></xs:annotation>
+       <xs:sequence>
+             <xs:element name="Text.Content" type="xs:string"/>
+             <xs:element name="Language.Code" type="xs:string" minOccurs="0" maxOccurs="1"/>
+       </xs:sequence>
+   </xs:complexType>
+  <xs:complexType name="GL.TransactionSetIdentifier.Text">
+    <xs:annotation><xs:documentation>
+The identifier of a GL Transaction Set, i.e. within the accounting or transaction system.This element is used in ledger-subledger relations, batch control,  and A2A integration with internal and hosted applications, not in B2B messages with trading partners.
+    </xs:documentation></xs:annotation>
+       <xs:sequence>
+             <xs:element name="Text.Content" type="xs:string"/>
+             <xs:element name="Language.Code" type="xs:string" minOccurs="0" maxOccurs="1"/>
+       </xs:sequence>
+   </xs:complexType>
+  <xs:complexType name="GL.XBRLType.Identifier">
+    <xs:annotation><xs:documentation>
+Identifier which classifies this GL Entry to one of the financial reporting classifications of an XBRL taxonomy, e.g. for GAAP reporting.e.g. the IAS taxonomy, US taxonomy for commercial /industrial companies, etc.
+    </xs:documentation></xs:annotation>
+       <xs:sequence>
+             <xs:element name="Identifier.Content" type="xs:string"/>
+             <xs:element name="IdentificationScheme.Name" type="xs:string" minOccurs="0" maxOccurs="1"/>
+             <xs:element name="IdentificationSchemeAgency.Name" type="xs:string" minOccurs="0" maxOccurs="1"/>
+             <xs:element name="Language.Code" type="xs:string" minOccurs="0" maxOccurs="1"/>
+             <xs:element name="IdentificationScheme.Data.UniformResourceIdentifier" type="xs:anyURI" minOccurs="0" maxOccurs="1"/>
+             <xs:element name="IdentificationScheme.UniformResourceIdentifier" type="xs:anyURI" minOccurs="0" maxOccurs="1"/>
+       </xs:sequence>
+   </xs:complexType>
+  <xs:complexType name="GLAccount.Balance.Amount">
+    <xs:annotation><xs:documentation>
+The current Balance of a GL Account, at a point in time.For example, after summing all GL Entries up to and including the current GL Entry which this GL Account classifies.
+    </xs:documentation></xs:annotation>
+       <xs:sequence>
+             <xs:element name="Amount.Content" type="xs:decimal"/>
+             <xs:element name="AmountCurrency.Identification.Code" type="xs:string" minOccurs="0" maxOccurs="1"/>
+       </xs:sequence>
+   </xs:complexType>
+  <xs:complexType name="GLAccount.Code.Text">
+    <xs:annotation><xs:documentation>
+The human readable account code, within the scheme, usually called the "chart of accounts", established or adopted by the accounting entity.Note that human readable account codes sometimes need to be changed by bookkeepers, independently of the concept or system identifier of an account.
+    </xs:documentation></xs:annotation>
+       <xs:sequence>
+             <xs:element name="Text.Content" type="xs:string"/>
+             <xs:element name="Language.Code" type="xs:string" minOccurs="0" maxOccurs="1"/>
+       </xs:sequence>
+   </xs:complexType>
+  <xs:complexType name="GLAccount.DataURI.Text">
+    <xs:annotation><xs:documentation>
+An RFC 2396 URI, which returns a record from the Id Scheme agency, network, application, filesystem, SQL database, XML repository,  etc. containing the GL Account records.
+    </xs:documentation></xs:annotation>
+       <xs:sequence>
+             <xs:element name="Text.Content" type="xs:string"/>
+             <xs:element name="Language.Code" type="xs:string" minOccurs="0" maxOccurs="1"/>
+       </xs:sequence>
+   </xs:complexType>
+  <xs:complexType name="GLAccount.Identifier.Text">
+    <xs:annotation><xs:documentation>
+The identifier of a GL account, within the scheme usually called the "chart of accounts", established or adopted by the accounting entity.
+    </xs:documentation></xs:annotation>
+       <xs:sequence>
+             <xs:element name="Text.Content" type="xs:string"/>
+             <xs:element name="Language.Code" type="xs:string" minOccurs="0" maxOccurs="1"/>
+       </xs:sequence>
+   </xs:complexType>
+  <xs:complexType name="GLAccount.Name">
+    <xs:annotation><xs:documentation>
+The human readable description of the GL Account, i.e. the name of the account, which is a classification assigned to an economic event or accountant's adjustment or entry.Usually within the context of GAAP or other comprehensive basis of accounting, for example, a particular type of resource, asset, liability, equity, income or expense.
+    </xs:documentation></xs:annotation>
+       <xs:sequence>
+             <xs:element name="Text.Content" type="xs:string"/>
+             <xs:element name="Language.Code" type="xs:string" minOccurs="0" maxOccurs="1"/>
+       </xs:sequence>
+   </xs:complexType>
+  <xs:complexType name="GLAccount.ParentIdentifier.Text">
+    <xs:annotation><xs:documentation>
+Another  GL Account. Identifier within the same scheme, of which this ID is child, subaccount or member, within the classification system of the accounting entity.Enables expression of hierearchy in lists of GL Accounts.  See also Account. Type. Text which also expresses groupings of accounts.
+    </xs:documentation></xs:annotation>
+       <xs:sequence>
+             <xs:element name="Text.Content" type="xs:string"/>
+             <xs:element name="Language.Code" type="xs:string" minOccurs="0" maxOccurs="1"/>
+       </xs:sequence>
+   </xs:complexType>
+  <xs:complexType name="GLAccount.ResourceType.Text">
+    <xs:annotation><xs:documentation>
+Resource type associated with this account, within the classification system of the Owner of the GL; Type of economic resource (money, raw materials, labor, finished goods, services, delivered goods, etc.)ref. the UMM meta model and ebXML catalog of common business processes 5/11/2001
+    </xs:documentation></xs:annotation>
+       <xs:sequence>
+             <xs:element name="Text.Content" type="xs:string"/>
+             <xs:element name="Language.Code" type="xs:string" minOccurs="0" maxOccurs="1"/>
+       </xs:sequence>
+   </xs:complexType>
+  <xs:complexType name="GLAccount.SchemaURI.Text">
+    <xs:annotation><xs:documentation>
+An RFC 2396 URI, which returns a schema specifying the information model used in the underlying records in the GL Account scheme.For example, an XML schema used in the GL Account. Data URI. Text (GL0110)
+    </xs:documentation></xs:annotation>
+       <xs:sequence>
+             <xs:element name="Text.Content" type="xs:string"/>
+             <xs:element name="Language.Code" type="xs:string" minOccurs="0" maxOccurs="1"/>
+       </xs:sequence>
+   </xs:complexType>
+  <xs:complexType name="GLAccount.Type.Text">
+    <xs:annotation><xs:documentation>
+An Identifier which classifies GL Accounts into categories that are meaningful within the classification system of the accounting entity, e.g., the "Cash" account may be of the "Current Assets" type; "Rent" of "Expenses" type, etc.Account types based on the accounting equation,  Assets= Liabilities+ Owners Equity are often used by accountants and accounting systems.
+    </xs:documentation></xs:annotation>
+       <xs:sequence>
+             <xs:element name="Text.Content" type="xs:string"/>
+             <xs:element name="Language.Code" type="xs:string" minOccurs="0" maxOccurs="1"/>
+       </xs:sequence>
+   </xs:complexType>
+  <xs:complexType name="GLAccount.XBRLTypeIdentifier.Text">
+    <xs:annotation><xs:documentation>
+The mapping or association between a GL Account and its corresponding element within an XBRL taxonomy.
+    </xs:documentation></xs:annotation>
+       <xs:sequence>
+             <xs:element name="Text.Content" type="xs:string"/>
+             <xs:element name="Language.Code" type="xs:string" minOccurs="0" maxOccurs="1"/>
+       </xs:sequence>
+   </xs:complexType>
+  <xs:complexType name="GLLocation.Event.Text">
+    <xs:annotation><xs:documentation>
+Description of the significance of this location code, for example, as the place where the economic event represented by this GL Entry was contracted, executed, fulfilled, settled, taxable, etc.
+    </xs:documentation></xs:annotation>
+       <xs:sequence>
+             <xs:element name="Text.Content" type="xs:string"/>
+             <xs:element name="Language.Code" type="xs:string" minOccurs="0" maxOccurs="1"/>
+       </xs:sequence>
+   </xs:complexType>
+  <xs:complexType name="GLLocation.Identifier.Text">
+    <xs:annotation><xs:documentation>
+An identifier (Id) uniquely identifying a location, within the classification scheme of the Owner.
+    </xs:documentation></xs:annotation>
+       <xs:sequence>
+             <xs:element name="Text.Content" type="xs:string"/>
+             <xs:element name="Language.Code" type="xs:string" minOccurs="0" maxOccurs="1"/>
+       </xs:sequence>
+   </xs:complexType>
+  <xs:complexType name="GLSettlementTerm.Description.Text">
+    <xs:annotation><xs:documentation>
+Text string, describing interest or penalty or other settlement terms  other than Interest Rate. Percent/Begins or Fixed Amount/Begins.
+    </xs:documentation></xs:annotation>
+       <xs:sequence>
+             <xs:element name="Text.Content" type="xs:string"/>
+             <xs:element name="Language.Code" type="xs:string" minOccurs="0" maxOccurs="1"/>
+       </xs:sequence>
+   </xs:complexType>
+  <xs:complexType name="GLSettlementTerm.Fixed.Amount">
+    <xs:annotation><xs:documentation>
+Fixed amount of penalty or fee or lost discount, which applies to the amount in this GL Entry if it is still outstanding at a particular point in time specified in GL Settlement Term. Fixed Amount Begins. Date Time.
+    </xs:documentation></xs:annotation>
+       <xs:sequence>
+             <xs:element name="Amount.Content" type="xs:decimal"/>
+             <xs:element name="AmountCurrency.Identification.Code" type="xs:string" minOccurs="0" maxOccurs="1"/>
+       </xs:sequence>
+   </xs:complexType>
+  <xs:complexType name="GLSettlementTerm.FixedAmountBegins.DateTime">
+    <xs:annotation><xs:documentation>
+Point in time when a fixed amount of fee, penalty or lost discount  specified in Settlement Term. Fixed Amount, begins to apply.
+    </xs:documentation></xs:annotation>
+       <xs:sequence>
+             <xs:element name="DateTime.Content" type="xs:dateTime"/>
+             <xs:element name="DateTime.Format.Text" type="xs:string" minOccurs="0" maxOccurs="1"/>
+       </xs:sequence>
+   </xs:complexType>
+  <xs:complexType name="GLSettlementTerm.InterestRate.Percent">
+    <xs:annotation><xs:documentation>
+Positive or negative interest rate applicable to the amount of this GL Entry, commencing at GL Settlement Term. Interest Rate Begins. Date Time and ending whenever a) settled or reciprocated, or b) another Interest term is applied.
+    </xs:documentation></xs:annotation>
+       <xs:sequence>
+             <xs:element name="Numeric.Content" type="xs:decimal"/>
+             <xs:element name="Numeric.Format.Text" type="xs:string" minOccurs="0" maxOccurs="1"/>
+       </xs:sequence>
+   </xs:complexType>
+  <xs:complexType name="GLSettlementTerm.InterestRateBegins.DateTime">
+    <xs:annotation><xs:documentation>
+Point in time when an interest rate specified in Settlement Term. Interest Rate begins to apply.
+    </xs:documentation></xs:annotation>
+       <xs:sequence>
+             <xs:element name="DateTime.Content" type="xs:dateTime"/>
+             <xs:element name="DateTime.Format.Text" type="xs:string" minOccurs="0" maxOccurs="1"/>
+       </xs:sequence>
+   </xs:complexType>
+  <xs:complexType name="GLStateTransition.AuthorizedByIdentifier.Text">
+    <xs:annotation><xs:documentation>
+Identifier of the party (self or trading partner) who authorized the recording of a change in state.
+    </xs:documentation></xs:annotation>
+       <xs:sequence>
+             <xs:element name="Text.Content" type="xs:string"/>
+             <xs:element name="Language.Code" type="xs:string" minOccurs="0" maxOccurs="1"/>
+       </xs:sequence>
+   </xs:complexType>
+  <xs:complexType name="GLStateTransition.Begins.DateTime">
+    <xs:annotation><xs:documentation>
+Point in time when a change in business state occurred.
+    </xs:documentation></xs:annotation>
+       <xs:sequence>
+             <xs:element name="DateTime.Content" type="xs:dateTime"/>
+             <xs:element name="DateTime.Format.Text" type="xs:string" minOccurs="0" maxOccurs="1"/>
+       </xs:sequence>
+   </xs:complexType>
+  <xs:complexType name="GLStateTransition.StateName.Text">
+    <xs:annotation><xs:documentation>
+Business state of the resource flow represented by this Entry, such as offered, accepted, shipped, rejected, collected, paid, etc. having meaning within the classification scheme of the Owner of the entry (i.e. ledger).Examples of classification schemes for Business State include states which begin at the moment of an economic event executed by a role within an ebXML business collaboration, or an agent within an REA model.
+    </xs:documentation></xs:annotation>
+       <xs:sequence>
+             <xs:element name="Text.Content" type="xs:string"/>
+             <xs:element name="Language.Code" type="xs:string" minOccurs="0" maxOccurs="1"/>
+       </xs:sequence>
+   </xs:complexType>
+  <xs:complexType name="Ledger.AccountingEntity.Identifier">
+    <xs:annotation><xs:documentation>
+The unique identifier of the Entity whose transactions are contained in the GL, if this is a master GL.  Otherwise, formal name or identifier of internal organization unit.e.g. a DUNS number
+    </xs:documentation></xs:annotation>
+       <xs:sequence>
+             <xs:element name="Identifier.Content" type="xs:string"/>
+             <xs:element name="IdentificationScheme.Name" type="xs:string" minOccurs="0" maxOccurs="1"/>
+             <xs:element name="IdentificationSchemeAgency.Name" type="xs:string" minOccurs="0" maxOccurs="1"/>
+             <xs:element name="Language.Code" type="xs:string" minOccurs="0" maxOccurs="1"/>
+             <xs:element name="IdentificationScheme.Data.UniformResourceIdentifier" type="xs:anyURI" minOccurs="0" maxOccurs="1"/>
+             <xs:element name="IdentificationScheme.UniformResourceIdentifier" type="xs:anyURI" minOccurs="0" maxOccurs="1"/>
+       </xs:sequence>
+   </xs:complexType>
+  <xs:complexType name="Ledger.AccountingEntity.Name">
+    <xs:annotation><xs:documentation>
+The complete legal name of the entity whose transactions are contained in the GL, if this is a master GL, otherwise, formal name of organization unit.
+    </xs:documentation></xs:annotation>
+       <xs:sequence>
+             <xs:element name="Text.Content" type="xs:string"/>
+             <xs:element name="Language.Code" type="xs:string" minOccurs="0" maxOccurs="1"/>
+       </xs:sequence>
+   </xs:complexType>
+  <xs:complexType name="Ledger.Identifier">
+    <xs:annotation><xs:documentation>
+The unique Identifier of a Ledger within a scheme.This element is indispensable in ledger-subledger relations, and A2A integration with internal and hosted applications.  It is also used in B2B relations such as within hosted GL environments, AR/AP reconciliation, and settlement.
+    </xs:documentation></xs:annotation>
+       <xs:sequence>
+             <xs:element name="Identifier.Content" type="xs:string"/>
+             <xs:element name="IdentificationScheme.Name" type="xs:string" minOccurs="0" maxOccurs="1"/>
+             <xs:element name="IdentificationSchemeAgency.Name" type="xs:string" minOccurs="0" maxOccurs="1"/>
+             <xs:element name="Language.Code" type="xs:string" minOccurs="0" maxOccurs="1"/>
+             <xs:element name="IdentificationScheme.Data.UniformResourceIdentifier" type="xs:anyURI" minOccurs="0" maxOccurs="1"/>
+             <xs:element name="IdentificationScheme.UniformResourceIdentifier" type="xs:anyURI" minOccurs="0" maxOccurs="1"/>
+       </xs:sequence>
+   </xs:complexType>
+  <xs:complexType name="Ledger.Name">
+    <xs:annotation><xs:documentation>
+Name or alias of the source ledger identified in the ledgerUri element. Usually a mnemonic or full name of the legal entity, or the name of the subledger or business application (at the user interface level) in which this transaction has been entered.
+    </xs:documentation></xs:annotation>
+       <xs:sequence>
+             <xs:element name="Text.Content" type="xs:string"/>
+             <xs:element name="Language.Code" type="xs:string" minOccurs="0" maxOccurs="1"/>
+       </xs:sequence>
+   </xs:complexType>
+  <xs:complexType name="Tax.Amount">
+    <xs:annotation><xs:documentation>
+The amount of tax.
+    </xs:documentation></xs:annotation>
+       <xs:sequence>
+             <xs:element name="Amount.Content" type="xs:decimal"/>
+             <xs:element name="AmountCurrency.Identification.Code" type="xs:string" minOccurs="0" maxOccurs="1"/>
+       </xs:sequence>
+   </xs:complexType>
+  <xs:complexType name="Tax.Category.Code">
+    <xs:annotation><xs:documentation>
+The tax category which relates an item   to the rate of tax charged.For example standard, exempt, or zero rated.
+    </xs:documentation></xs:annotation>
+       <xs:sequence>
+             <xs:element name="Code.Content" type="xs:string"/>
+             <xs:element name="CodeList.Identifier" type="xs:string" minOccurs="0" maxOccurs="1"/>
+             <xs:element name="CodeList.Agency.Identifier" type="xs:string" minOccurs="0" maxOccurs="1"/>
+             <xs:element name="CodeList.Version.Identifier" type="xs:string" minOccurs="0" maxOccurs="1"/>
+             <xs:element name="Code.Name" type="xs:string" minOccurs="0" maxOccurs="1"/>
+             <xs:element name="Language.Code" type="xs:string" minOccurs="0" maxOccurs="1"/>
+       </xs:sequence>
+   </xs:complexType>
+  <xs:complexType name="Tax.Description.Text">
+    <xs:annotation><xs:documentation>
+Text providing information on the tax.This text may cover information which is in addition to the structured information but cannot be provided within the given structure
+    </xs:documentation></xs:annotation>
+       <xs:sequence>
+             <xs:element name="Text.Content" type="xs:string"/>
+             <xs:element name="Language.Code" type="xs:string" minOccurs="0" maxOccurs="1"/>
+       </xs:sequence>
+   </xs:complexType>
+  <xs:complexType name="Tax.Percent">
+    <xs:annotation><xs:documentation>
+The percentage applied to the taxable amount to find the tax amount.
+    </xs:documentation></xs:annotation>
+       <xs:sequence>
+             <xs:element name="Numeric.Content" type="xs:decimal"/>
+             <xs:element name="Numeric.Format.Text" type="xs:string" minOccurs="0" maxOccurs="1"/>
+       </xs:sequence>
+   </xs:complexType>
+  <xs:complexType name="Taxable.Amount">
+    <xs:annotation><xs:documentation>
+The amount on which tax at this rate is calculated.Allows for one price charge to have different rates of tax applied to it.
+    </xs:documentation></xs:annotation>
+       <xs:sequence>
+             <xs:element name="Amount.Content" type="xs:decimal"/>
+             <xs:element name="AmountCurrency.Identification.Code" type="xs:string" minOccurs="0" maxOccurs="1"/>
+       </xs:sequence>
+   </xs:complexType>
+  <xs:complexType name="Their.DocumentNumber.Text">
+    <xs:annotation><xs:documentation>
+The trading partner's order number, invoice number, check number, or other document identifier in their system, associated with this GL Entry.
+    </xs:documentation></xs:annotation>
+       <xs:sequence>
+             <xs:element name="Text.Content" type="xs:string"/>
+             <xs:element name="Language.Code" type="xs:string" minOccurs="0" maxOccurs="1"/>
+       </xs:sequence>
+   </xs:complexType>
+  <xs:complexType name="Their.DocumentURI.Text">
+    <xs:annotation><xs:documentation>
+An RFC 2396 URI, which returns the trading partner's order, invoice, receipt, or other document authored by them, associated with this GL Entry.
+    </xs:documentation></xs:annotation>
+       <xs:sequence>
+             <xs:element name="Text.Content" type="xs:string"/>
+             <xs:element name="Language.Code" type="xs:string" minOccurs="0" maxOccurs="1"/>
+       </xs:sequence>
+   </xs:complexType>
+  <xs:complexType name="Their.Entry.Amount">
+    <xs:annotation><xs:documentation>
+The trading partner's depiction of the Amount of this GL Entry
+    </xs:documentation></xs:annotation>
+       <xs:sequence>
+             <xs:element name="Amount.Content" type="xs:decimal"/>
+             <xs:element name="AmountCurrency.Identification.Code" type="xs:string" minOccurs="0" maxOccurs="1"/>
+       </xs:sequence>
+   </xs:complexType>
+  <xs:complexType name="Their.PartyIdentifier.Text">
+    <xs:annotation><xs:documentation>
+The code the trading partner used or assigned to our organization in the current transaction.
+    </xs:documentation></xs:annotation>
+       <xs:sequence>
+             <xs:element name="Text.Content" type="xs:string"/>
+             <xs:element name="Language.Code" type="xs:string" minOccurs="0" maxOccurs="1"/>
+       </xs:sequence>
+   </xs:complexType>
+  <xs:complexType name="Their.ProductIdentifier.Text">
+    <xs:annotation><xs:documentation>
+The Id for this Product Service in their system.
+    </xs:documentation></xs:annotation>
+       <xs:sequence>
+             <xs:element name="Text.Content" type="xs:string"/>
+             <xs:element name="Language.Code" type="xs:string" minOccurs="0" maxOccurs="1"/>
+       </xs:sequence>
+   </xs:complexType>
+  <xs:complexType name="Their.TransactionIdentifier.Text">
+    <xs:annotation><xs:documentation>
+A string which identifies this Transaction in the other organization who executed this transaction with us.  This should be a unique identifier but because its value domain is outside our control, uniqueness must not be assumed by our system.NOT Invoice number, PO number etc. This is intended for use with AR/AP or other interparty settlement systems at the GL level.
+    </xs:documentation></xs:annotation>
+       <xs:sequence>
+             <xs:element name="Text.Content" type="xs:string"/>
+             <xs:element name="Language.Code" type="xs:string" minOccurs="0" maxOccurs="1"/>
+       </xs:sequence>
+   </xs:complexType>
+  <xs:complexType name="Their.UserIdentifier.Text">
+    <xs:annotation><xs:documentation>
+A string which identifies the User in the other organization who executed this transaction with us.  This should be a unique identifier but because its value domain is outside our control, uniqueness must not be assumed by our system.
+    </xs:documentation></xs:annotation>
+       <xs:sequence>
+             <xs:element name="Text.Content" type="xs:string"/>
+             <xs:element name="Language.Code" type="xs:string" minOccurs="0" maxOccurs="1"/>
+       </xs:sequence>
+   </xs:complexType>
+<!-- Easy aggregate components (having no children that are aggregates) -->
+  <xs:complexType name="AuthorEditor.Details">
+        <xs:annotation><xs:documentation>
+Identity(ies) of persons who added or edited information in GL Entry, and the nature of the action they performed. 
+        </xs:documentation></xs:annotation>
+            <xs:sequence>
+             <xs:element name="AuthorEditor.Person.Identifier" type="AuthorEditor.Person.Identifier" minOccurs="1" maxOccurs="1"/>
+             <xs:element name="AuthorEditor.Action.DateTime" type="AuthorEditor.Action.DateTime" minOccurs="1" maxOccurs="1"/>
+             <xs:element name="AuthorEditor.Action.Code" type="AuthorEditor.Action.Code" minOccurs="1" maxOccurs="1"/>
+            </xs:sequence>
+       </xs:complexType>
+  <xs:complexType name="Doc.Details">
+        <xs:annotation><xs:documentation>
+General purpose aggregate component for referencing or containing  business documents (source documents) in accounting systems as static content. Had to invent this aggregate for GLs, because documents are so pervasive in business operation and as audit trail and other internal accounting uses.
+        </xs:documentation></xs:annotation>
+            <xs:sequence>
+             <xs:element name="Doc.Type.Name" type="Doc.Type.Name" minOccurs="0" maxOccurs="1"/>
+             <xs:element name="Doc.TypeVersion.Text" type="Doc.TypeVersion.Text" minOccurs="0" maxOccurs="1"/>
+             <xs:element name="Doc.Number.Text" type="Doc.Number.Text" minOccurs="0" maxOccurs="1"/>
+             <xs:element name="Doc.DateTime" type="Doc.DateTime" minOccurs="0" maxOccurs="1"/>
+             <xs:element name="Doc.Text" type="Doc.Text" minOccurs="0" maxOccurs="1"/>
+             <xs:element name="Doc.LanguageCode.Text" type="Doc.LanguageCode.Text" minOccurs="0" maxOccurs="1"/>
+             <xs:element name="Doc.SchemaURI.Text" type="Doc.SchemaURI.Text" minOccurs="0" maxOccurs="1"/>
+             <xs:element name="Doc.DataURI.Text" type="Doc.DataURI.Text" minOccurs="0" maxOccurs="1"/>
+             <xs:element name="Doc.Signature.Text" type="Doc.Signature.Text" minOccurs="0" maxOccurs="1"/>
+            </xs:sequence>
+       </xs:complexType>
+  <xs:complexType name="GLAccount.Details">
+        <xs:annotation><xs:documentation>
+Information about the classification or classifications assigned to an economic event or accountant's  adjustment, to assign it into categories that are meaningful within the classification system of an accounting entity, such as, for financial reporting. General ledger accounts most often classify amounts for purposes of  GAAP or other comprehensive basis of accounting, e.g., a particular type of resource, asset, liability, equity, income or expense.
+        </xs:documentation></xs:annotation>
+            <xs:sequence>
+             <xs:element name="GLAccount.Identifier.Text" type="GLAccount.Identifier.Text" minOccurs="0" maxOccurs="1"/>
+             <xs:element name="GLAccount.Code.Text" type="GLAccount.Code.Text" minOccurs="0" maxOccurs="1"/>
+             <xs:element name="GLAccount.Name" type="GLAccount.Name" minOccurs="0" maxOccurs="1"/>
+             <xs:element name="GLAccount.Type.Text" type="GLAccount.Type.Text" minOccurs="0" maxOccurs="1"/>
+             <xs:element name="GLAccount.ParentIdentifier.Text" type="GLAccount.ParentIdentifier.Text" minOccurs="0" maxOccurs="1"/>
+             <xs:element name="GLAccount.XBRLTypeIdentifier.Text" type="GLAccount.XBRLTypeIdentifier.Text" minOccurs="0" maxOccurs="1"/>
+             <xs:element name="GLAccount.Balance.Amount" type="GLAccount.Balance.Amount" minOccurs="0" maxOccurs="1"/>
+             <xs:element name="GLAccount.SchemaURI.Text" type="GLAccount.SchemaURI.Text" minOccurs="0" maxOccurs="1"/>
+             <xs:element name="GLAccount.DataURI.Text" type="GLAccount.DataURI.Text" minOccurs="0" maxOccurs="1"/>
+             <xs:element name="GLAccount.ResourceType.Text" type="GLAccount.ResourceType.Text" minOccurs="0" maxOccurs="1"/>
+            </xs:sequence>
+       </xs:complexType>
+  <xs:complexType name="GLEntryDocument.Details">
+        <xs:annotation><xs:documentation>
+Document which explains, authorizes, reports or documents the monetary effect contained in this GL Entry. Important in audit trail, and in GAAP and other accounting classification.
+        </xs:documentation></xs:annotation>
+            <xs:sequence>
+             <xs:element name="Doc.Type.Name" type="Doc.Type.Name" minOccurs="0" maxOccurs="1"/>
+             <xs:element name="Doc.TypeVersion.Text" type="Doc.TypeVersion.Text" minOccurs="0" maxOccurs="1"/>
+             <xs:element name="Doc.Number.Text" type="Doc.Number.Text" minOccurs="0" maxOccurs="1"/>
+             <xs:element name="Doc.DateTime" type="Doc.DateTime" minOccurs="0" maxOccurs="1"/>
+             <xs:element name="Doc.Text" type="Doc.Text" minOccurs="0" maxOccurs="1"/>
+             <xs:element name="Doc.LanguageCode.Text" type="Doc.LanguageCode.Text" minOccurs="0" maxOccurs="1"/>
+             <xs:element name="Doc.SchemaURI.Text" type="Doc.SchemaURI.Text" minOccurs="0" maxOccurs="1"/>
+             <xs:element name="Doc.DataURI.Text" type="Doc.DataURI.Text" minOccurs="0" maxOccurs="1"/>
+             <xs:element name="Doc.Signature.Text" type="Doc.Signature.Text" minOccurs="0" maxOccurs="1"/>
+            </xs:sequence>
+       </xs:complexType>
+  <xs:complexType name="GLLocation.Details">
+        <xs:annotation><xs:documentation>
+Information about location(s) where an economic transaction was/will be contracted, executed, fulfilled, taxable, etc. 
+        </xs:documentation></xs:annotation>
+            <xs:sequence>
+             <xs:element name="GLLocation.Identifier.Text" type="GLLocation.Identifier.Text" minOccurs="1" maxOccurs="1"/>
+             <xs:element name="GLLocation.Event.Text" type="GLLocation.Event.Text" minOccurs="1" maxOccurs="1"/>
+            </xs:sequence>
+       </xs:complexType>
+  <xs:complexType name="GLSettlementTerm.Details">
+        <xs:annotation><xs:documentation>
+Information about Interest or fixed penalty applicable before and after due date. 
+        </xs:documentation></xs:annotation>
+            <xs:sequence>
+             <xs:element name="GLSettlementTerm.InterestRate.Percent" type="GLSettlementTerm.InterestRate.Percent" minOccurs="0" maxOccurs="1"/>
+             <xs:element name="GLSettlementTerm.InterestRateBegins.DateTime" type="GLSettlementTerm.InterestRateBegins.DateTime" minOccurs="0" maxOccurs="1"/>
+             <xs:element name="GLSettlementTerm.Fixed.Amount" type="GLSettlementTerm.Fixed.Amount" minOccurs="0" maxOccurs="1"/>
+             <xs:element name="GLSettlementTerm.FixedAmountBegins.DateTime" type="GLSettlementTerm.FixedAmountBegins.DateTime" minOccurs="0" maxOccurs="1"/>
+             <xs:element name="GLSettlementTerm.Description.Text" type="GLSettlementTerm.Description.Text" minOccurs="0" maxOccurs="1"/>
+            </xs:sequence>
+       </xs:complexType>
+  <xs:complexType name="GLStateTransition.Details">
+        <xs:annotation><xs:documentation>
+Information about a change or changes in business or legal state associated with a GL entry, including, as a minimum, the objective date(s) of transaction execution or fulfillment sufficient to determine the date of GAAP recognition. 
+        </xs:documentation></xs:annotation>
+            <xs:sequence>
+             <xs:element name="GLStateTransition.StateName.Text" type="GLStateTransition.StateName.Text" minOccurs="1" maxOccurs="1"/>
+             <xs:element name="GLStateTransition.AuthorizedByIdentifier.Text" type="GLStateTransition.AuthorizedByIdentifier.Text" minOccurs="1" maxOccurs="1"/>
+             <xs:element name="GLStateTransition.Begins.DateTime" type="GLStateTransition.Begins.DateTime" minOccurs="1" maxOccurs="1"/>
+            </xs:sequence>
+       </xs:complexType>
+  <xs:complexType name="GLTransactionDocument.Details">
+        <xs:annotation><xs:documentation>
+Document which explains, authorizes, reports or documents the monetary effect contained in this GL Transaction. Important in audit trail, and in GAAP and other accounting classification.
+        </xs:documentation></xs:annotation>
+            <xs:sequence>
+             <xs:element name="Doc.Type.Name" type="Doc.Type.Name" minOccurs="0" maxOccurs="1"/>
+             <xs:element name="Doc.TypeVersion.Text" type="Doc.TypeVersion.Text" minOccurs="0" maxOccurs="1"/>
+             <xs:element name="Doc.Number.Text" type="Doc.Number.Text" minOccurs="0" maxOccurs="1"/>
+             <xs:element name="Doc.DateTime" type="Doc.DateTime" minOccurs="0" maxOccurs="1"/>
+             <xs:element name="Doc.Text" type="Doc.Text" minOccurs="0" maxOccurs="1"/>
+             <xs:element name="Doc.LanguageCode.Text" type="Doc.LanguageCode.Text" minOccurs="0" maxOccurs="1"/>
+             <xs:element name="Doc.SchemaURI.Text" type="Doc.SchemaURI.Text" minOccurs="0" maxOccurs="1"/>
+             <xs:element name="Doc.DataURI.Text" type="Doc.DataURI.Text" minOccurs="0" maxOccurs="1"/>
+             <xs:element name="Doc.Signature.Text" type="Doc.Signature.Text" minOccurs="0" maxOccurs="1"/>
+            </xs:sequence>
+       </xs:complexType>
+  <xs:complexType name="GLTransactionSetDocument.Details">
+        <xs:annotation><xs:documentation>
+Document which explains, authorizes, reports or documents the monetary effect contained in this GL Transaction Set. Important in audit trail, and in GAAP and other accounting classification.
+        </xs:documentation></xs:annotation>
+            <xs:sequence>
+             <xs:element name="Doc.Type.Name" type="Doc.Type.Name" minOccurs="0" maxOccurs="1"/>
+             <xs:element name="Doc.TypeVersion.Text" type="Doc.TypeVersion.Text" minOccurs="0" maxOccurs="1"/>
+             <xs:element name="Doc.Number.Text" type="Doc.Number.Text" minOccurs="0" maxOccurs="1"/>
+             <xs:element name="Doc.DateTime" type="Doc.DateTime" minOccurs="0" maxOccurs="1"/>
+             <xs:element name="Doc.Text" type="Doc.Text" minOccurs="0" maxOccurs="1"/>
+             <xs:element name="Doc.LanguageCode.Text" type="Doc.LanguageCode.Text" minOccurs="0" maxOccurs="1"/>
+             <xs:element name="Doc.SchemaURI.Text" type="Doc.SchemaURI.Text" minOccurs="0" maxOccurs="1"/>
+             <xs:element name="Doc.DataURI.Text" type="Doc.DataURI.Text" minOccurs="0" maxOccurs="1"/>
+             <xs:element name="Doc.Signature.Text" type="Doc.Signature.Text" minOccurs="0" maxOccurs="1"/>
+            </xs:sequence>
+       </xs:complexType>
+  <xs:complexType name="Tax.Details">
+        <xs:annotation><xs:documentation>
+A compulsory contribution to governmental revenue, levied on personal income and business profits or added to the cost of some goods, services, and transactions. 
+        </xs:documentation></xs:annotation>
+            <xs:sequence>
+             <xs:element name="Tax.Amount" type="Tax.Amount" minOccurs="0" maxOccurs="0"/>
+             <xs:element name="Tax.Description.Text" type="Tax.Description.Text" minOccurs="0" maxOccurs="0"/>
+             <xs:element name="Tax.Category.Code" type="Tax.Category.Code" minOccurs="0" maxOccurs="0"/>
+             <xs:element name="Tax.Percent" type="Tax.Percent" minOccurs="0" maxOccurs="0"/>
+             <xs:element name="Taxable.Amount" type="Taxable.Amount" minOccurs="0" maxOccurs="0"/>
+            </xs:sequence>
+       </xs:complexType>
+  <xs:complexType name="Their.Details">
+        <xs:annotation><xs:documentation>
+Information about the Identifiers and other codes used by the trading partner in their documents depicting this transaction. Their Ids or codes for our organization, as well as this particular transaction, product, etc. Systematic recording and attention to the trading partner's depictions of our dealings, are inherent in processes such as reconcilation of balances within the OMG FDTF AR/AP model.
+        </xs:documentation></xs:annotation>
+            <xs:sequence>
+             <xs:element name="Their.UserIdentifier.Text" type="Their.UserIdentifier.Text" minOccurs="0" maxOccurs="1"/>
+             <xs:element name="Their.TransactionIdentifier.Text" type="Their.TransactionIdentifier.Text" minOccurs="0" maxOccurs="1"/>
+             <xs:element name="Their.ProductIdentifier.Text" type="Their.ProductIdentifier.Text" minOccurs="0" maxOccurs="1"/>
+             <xs:element name="Their.PartyIdentifier.Text" type="Their.PartyIdentifier.Text" minOccurs="0" maxOccurs="1"/>
+             <xs:element name="Their.DocumentNumber.Text" type="Their.DocumentNumber.Text" minOccurs="0" maxOccurs="1"/>
+             <xs:element name="Their.DocumentURI.Text" type="Their.DocumentURI.Text" minOccurs="0" maxOccurs="1"/>
+             <xs:element name="Their.Entry.Amount" type="Their.Entry.Amount" minOccurs="0" maxOccurs="1"/>
+            </xs:sequence>
+       </xs:complexType>
+<!-- Multi-level aggregate components (having children that are aggregates) -->
+  <xs:complexType name="GLEntry.Details">
+        <xs:annotation><xs:documentation>
+Information about a business or economic event or accountant's adjustment, affecting the valuation or financial position of a person, organization or other accounting entity. Notes: 1) the child element list is an example, full implementation of GLIEs.  2) This aggregate (GL Entry.Details) contains all GLIEs and may be used by itself for any transaction history, sequence of economic events, etc.
+        </xs:documentation></xs:annotation>
+            <xs:sequence>
+             <xs:element name="Ledger.Identifier" type="Ledger.Identifier" minOccurs="0" maxOccurs="1"/>
+             <xs:element name="Ledger.Name" type="Ledger.Name" minOccurs="0" maxOccurs="1"/>
+             <xs:element name="GL.TransactionIdentifier.Text" type="GL.TransactionIdentifier.Text" minOccurs="0" maxOccurs="1"/>
+             <xs:element name="GL.GroupIdentifier.Text" type="GL.GroupIdentifier.Text" minOccurs="0" maxOccurs="1"/>
+             <xs:element name="GL.EntryIdentifier.Text" type="GL.EntryIdentifier.Text" minOccurs="0" maxOccurs="1"/>
+             <xs:element name="AuthorEditor.Details" type="AuthorEditor.Details" minOccurs="0" maxOccurs="unbounded"/>
+             <xs:element name="GLStateTransition.Details" type="GLStateTransition.Details" minOccurs="0" maxOccurs="1"/>
+             <xs:element name="GLLocation.Details" type="GLLocation.Details" minOccurs="0" maxOccurs="1"/>
+             <xs:element name="GL.Period.Text" type="GL.Period.Text" minOccurs="0" maxOccurs="1"/>
+             <xs:element name="GL.Amount" type="GL.Amount" minOccurs="0" maxOccurs="1"/>
+             <xs:element name="GL.Original.Amount" type="GL.Original.Amount" minOccurs="0" maxOccurs="1"/>
+             <xs:element name="GL.DebitCredit.Code" type="GL.DebitCredit.Code" minOccurs="0" maxOccurs="1"/>
+             <xs:element name="GL.EntryDescription.Text" type="GL.EntryDescription.Text" minOccurs="0" maxOccurs="1"/>
+             <xs:element name="GL.Note.Text" type="GL.Note.Text" minOccurs="0" maxOccurs="1"/>
+             <xs:element name="GLTransactionDocument.Details" type="GLTransactionDocument.Details" minOccurs="0" maxOccurs="1"/>
+             <xs:element name="GLEntryDocument.Details" type="GLEntryDocument.Details" minOccurs="0" maxOccurs="1"/>
+             <xs:element name="Their.Details" type="Their.Details" minOccurs="0" maxOccurs="1"/>
+             <xs:element name="GL.SourceJournal.Identifier" type="GL.SourceJournal.Identifier" minOccurs="0" maxOccurs="1"/>
+             <xs:element name="GLAccount.Details" type="GLAccount.Details" minOccurs="0" maxOccurs="1"/>
+             <xs:element name="GL.OriginalLedger.Identifier" type="GL.OriginalLedger.Identifier" minOccurs="0" maxOccurs="1"/>
+             <xs:element name="GL.OriginalTransactionIdentifier.Text" type="GL.OriginalTransactionIdentifier.Text" minOccurs="0" maxOccurs="1"/>
+             <xs:element name="GL.FiscalType.Code" type="GL.FiscalType.Code" minOccurs="0" maxOccurs="1"/>
+             <xs:element name="GL.IsPosted.Indicator" type="GL.IsPosted.Indicator" minOccurs="0" maxOccurs="1"/>
+             <xs:element name="GL.IsSummary.Indicator" type="GL.IsSummary.Indicator" minOccurs="0" maxOccurs="1"/>
+             <xs:element name="GL.OrganizationUnit.Identifier" type="GL.OrganizationUnit.Identifier" minOccurs="0" maxOccurs="1"/>
+             <xs:element name="GL.Party.Identifier" type="GL.Party.Identifier" minOccurs="0" maxOccurs="1"/>
+             <xs:element name="GL.ProductService.Identifier" type="GL.ProductService.Identifier" minOccurs="0" maxOccurs="1"/>
+             <xs:element name="GL.ProductService.Quantity" type="GL.ProductService.Quantity" minOccurs="0" maxOccurs="1"/>
+             <xs:element name="GL.ProductService.Measure" type="GL.ProductService.Measure" minOccurs="0" maxOccurs="1"/>
+             <xs:element name="GL.Due.DateTime" type="GL.Due.DateTime" minOccurs="0" maxOccurs="1"/>
+             <xs:element name="GL.SettlementMethod.Text" type="GL.SettlementMethod.Text" minOccurs="0" maxOccurs="1"/>
+             <xs:element name="GLSettlementTerm.Details" type="GLSettlementTerm.Details" minOccurs="0" maxOccurs="1"/>
+             <xs:element name="GL.Matched.Code" type="GL.Matched.Code" minOccurs="0" maxOccurs="1"/>
+             <xs:element name="GL.Project.Identifier" type="GL.Project.Identifier" minOccurs="0" maxOccurs="1"/>
+             <xs:element name="GL.Job.Identifier" type="GL.Job.Identifier" minOccurs="0" maxOccurs="1"/>
+             <xs:element name="GL.CostCenter.Identifier" type="GL.CostCenter.Identifier" minOccurs="0" maxOccurs="1"/>
+             <xs:element name="GL.Employee.Identifier" type="GL.Employee.Identifier" minOccurs="0" maxOccurs="1"/>
+             <xs:element name="GL.Fund.Identifier" type="GL.Fund.Identifier" minOccurs="0" maxOccurs="1"/>
+             <xs:element name="GL.Program.Identifier" type="GL.Program.Identifier" minOccurs="0" maxOccurs="1"/>
+             <xs:element name="GL.Dimension.Identifier" type="GL.Dimension.Identifier" minOccurs="0" maxOccurs="unbounded"/>
+             <xs:element name="Tax.Details" type="Tax.Details" minOccurs="0" maxOccurs="1"/>
+            </xs:sequence>
+       </xs:complexType>
+  <xs:complexType name="GLTransaction.Details">
+        <xs:annotation><xs:documentation>
+A collection of 1 or more GL Entry instances, together with additional information applicable to all of those GL Entries, for example, a header containing multiple rows of a balanced journal entry which might represent a discrete economic event. Notes: 1) the child element list is an example, full implementation of GLIEs.  2) The usage of any child element here, means that it applies to all Entries unless overridden by an element of the same name in an Entry.
+        </xs:documentation></xs:annotation>
+            <xs:sequence>
+             <xs:element name="Ledger.Identifier" type="Ledger.Identifier" minOccurs="0" maxOccurs="1"/>
+             <xs:element name="Ledger.Name" type="Ledger.Name" minOccurs="0" maxOccurs="1"/>
+             <xs:element name="GL.TransactionIdentifier.Text" type="GL.TransactionIdentifier.Text" minOccurs="0" maxOccurs="1"/>
+             <xs:element name="GL.GroupIdentifier.Text" type="GL.GroupIdentifier.Text" minOccurs="0" maxOccurs="1"/>
+             <xs:element name="GL.GroupStatus.Code" type="GL.GroupStatus.Code" minOccurs="0" maxOccurs="1"/>
+             <xs:element name="GL.TotalDebits.Amount" type="GL.TotalDebits.Amount" minOccurs="0" maxOccurs="1"/>
+             <xs:element name="GL.TotalCredits.Amount" type="GL.TotalCredits.Amount" minOccurs="0" maxOccurs="1"/>
+             <xs:element name="GL.EntryCount.Value" type="GL.EntryCount.Value" minOccurs="0" maxOccurs="1"/>
+             <xs:element name="GL.Posted.DateTime" type="GL.Posted.DateTime" minOccurs="0" maxOccurs="1"/>
+             <xs:element name="GLStateTransition.Details" type="GLStateTransition.Details" minOccurs="0" maxOccurs="1"/>
+             <xs:element name="GL.TransactionDescription.Text" type="GL.TransactionDescription.Text" minOccurs="0" maxOccurs="1"/>
+             <xs:element name="GLLocation.Details" type="GLLocation.Details" minOccurs="0" maxOccurs="1"/>
+             <xs:element name="GL.Period.Text" type="GL.Period.Text" minOccurs="0" maxOccurs="1"/>
+             <xs:element name="GLTransactionDocument.Details" type="GLTransactionDocument.Details" minOccurs="0" maxOccurs="1"/>
+             <xs:element name="GL.SourceJournal.Identifier" type="GL.SourceJournal.Identifier" minOccurs="0" maxOccurs="1"/>
+             <xs:element name="GL.OriginalLedger.Identifier" type="GL.OriginalLedger.Identifier" minOccurs="0" maxOccurs="1"/>
+             <xs:element name="GLAccount.Details" type="GLAccount.Details" minOccurs="0" maxOccurs="1"/>
+             <xs:element name="GL.OriginalTransactionIdentifier.Text" type="GL.OriginalTransactionIdentifier.Text" minOccurs="0" maxOccurs="1"/>
+             <xs:element name="GL.FiscalType.Code" type="GL.FiscalType.Code" minOccurs="0" maxOccurs="1"/>
+             <xs:element name="GL.IsPosted.Indicator" type="GL.IsPosted.Indicator" minOccurs="0" maxOccurs="1"/>
+             <xs:element name="GL.IsSummary.Indicator" type="GL.IsSummary.Indicator" minOccurs="0" maxOccurs="1"/>
+             <xs:element name="GL.OrganizationUnit.Identifier" type="GL.OrganizationUnit.Identifier" minOccurs="0" maxOccurs="1"/>
+             <xs:element name="GL.Project.Identifier" type="GL.Project.Identifier" minOccurs="0" maxOccurs="1"/>
+             <xs:element name="GL.Job.Identifier" type="GL.Job.Identifier" minOccurs="0" maxOccurs="1"/>
+             <xs:element name="GL.CostCenter.Identifier" type="GL.CostCenter.Identifier" minOccurs="0" maxOccurs="1"/>
+             <xs:element name="GL.Employee.Identifier" type="GL.Employee.Identifier" minOccurs="0" maxOccurs="1"/>
+             <xs:element name="GL.Fund.Identifier" type="GL.Fund.Identifier" minOccurs="0" maxOccurs="1"/>
+             <xs:element name="GL.Program.Identifier" type="GL.Program.Identifier" minOccurs="0" maxOccurs="1"/>
+             <xs:element name="GLEntry.Details" type="GLEntry.Details" minOccurs="0" maxOccurs="1"/>
+            </xs:sequence>
+       </xs:complexType>
+  <xs:complexType name="GLTransactionSet.Details">
+        <xs:annotation><xs:documentation>
+A collection of 1 or more GL Transaction instances, together with additional information applicable to the collection as a whole, or to all of those GL Transactions and GL Entries. Notes: 1) the child element list is an example, full implementation of GLIEs.  (2) The usage of any child element here, means that it applies to all Transactions and Entries unless overridden by an element of the same name in a Transaction or Entry.
+        </xs:documentation></xs:annotation>
+            <xs:sequence>
+             <xs:element name="Ledger.Identifier" type="Ledger.Identifier" minOccurs="0" maxOccurs="1"/>
+             <xs:element name="Ledger.Name" type="Ledger.Name" minOccurs="0" maxOccurs="1"/>
+             <xs:element name="GL.TransactionSetIdentifier.Text" type="GL.TransactionSetIdentifier.Text" minOccurs="0" maxOccurs="1"/>
+             <xs:element name="GLTransactionSetDocument.Details" type="GLTransactionSetDocument.Details" minOccurs="0" maxOccurs="1"/>
+             <xs:element name="GL.Posted.DateTime" type="GL.Posted.DateTime" minOccurs="0" maxOccurs="1"/>
+             <xs:element name="GL.SetCreated.DateTime" type="GL.SetCreated.DateTime" minOccurs="0" maxOccurs="1"/>
+             <xs:element name="GL.SetImported.DateTime" type="GL.SetImported.DateTime" minOccurs="0" maxOccurs="1"/>
+             <xs:element name="GL.Beginning.DateTime" type="GL.Beginning.DateTime" minOccurs="0" maxOccurs="1"/>
+             <xs:element name="GL.Ending.DateTime" type="GL.Ending.DateTime" minOccurs="0" maxOccurs="1"/>
+             <xs:element name="GL.TotalDebits.Amount" type="GL.TotalDebits.Amount" minOccurs="0" maxOccurs="1"/>
+             <xs:element name="GL.TotalCredits.Amount" type="GL.TotalCredits.Amount" minOccurs="0" maxOccurs="1"/>
+             <xs:element name="GL.TransactionCount.Value" type="GL.TransactionCount.Value" minOccurs="0" maxOccurs="1"/>
+             <xs:element name="GL.EntryCount.Value" type="GL.EntryCount.Value" minOccurs="0" maxOccurs="1"/>
+             <xs:element name="GL.Period.Text" type="GL.Period.Text" minOccurs="0" maxOccurs="1"/>
+             <xs:element name="GL.SourceJournal.Identifier" type="GL.SourceJournal.Identifier" minOccurs="0" maxOccurs="1"/>
+             <xs:element name="GLAccount.Details" type="GLAccount.Details" minOccurs="0" maxOccurs="1"/>
+             <xs:element name="GL.OriginalLedger.Identifier" type="GL.OriginalLedger.Identifier" minOccurs="0" maxOccurs="1"/>
+             <xs:element name="GL.OriginalTransactionIdentifier.Text" type="GL.OriginalTransactionIdentifier.Text" minOccurs="0" maxOccurs="1"/>
+             <xs:element name="GL.FiscalType.Code" type="GL.FiscalType.Code" minOccurs="0" maxOccurs="1"/>
+             <xs:element name="GL.IsPosted.Indicator" type="GL.IsPosted.Indicator" minOccurs="0" maxOccurs="1"/>
+             <xs:element name="GL.IsSummary.Indicator" type="GL.IsSummary.Indicator" minOccurs="0" maxOccurs="1"/>
+             <xs:element name="GL.OrganizationUnit.Identifier" type="GL.OrganizationUnit.Identifier" minOccurs="0" maxOccurs="1"/>
+             <xs:element name="GL.Project.Identifier" type="GL.Project.Identifier" minOccurs="0" maxOccurs="1"/>
+             <xs:element name="GL.Job.Identifier" type="GL.Job.Identifier" minOccurs="0" maxOccurs="1"/>
+             <xs:element name="GL.CostCenter.Identifier" type="GL.CostCenter.Identifier" minOccurs="0" maxOccurs="1"/>
+             <xs:element name="GL.Employee.Identifier" type="GL.Employee.Identifier" minOccurs="0" maxOccurs="1"/>
+             <xs:element name="GL.Fund.Identifier" type="GL.Fund.Identifier" minOccurs="0" maxOccurs="1"/>
+             <xs:element name="GL.Program.Identifier" type="GL.Program.Identifier" minOccurs="0" maxOccurs="1"/>
+             <xs:element name="GLTransaction.Details" type="GLTransaction.Details" minOccurs="0" maxOccurs="1"/>
+            </xs:sequence>
+       </xs:complexType>
+  <xs:complexType name="Ledger.Details">
+        <xs:annotation><xs:documentation>
+A GL Transaction Set which represents the comprehensive dealings of an Accounting Entity or some specifically defined subset thereof,   and, usually, has long term existence. (See GL Transaction Set for definition and children elements.) The goal of the GL Transaction Set object is to represent transactions as completely and richly as possible, e.g., including identifiers for the accounting entity, accounts etc. As a result it is a near-synonym for Ledger.
+        </xs:documentation></xs:annotation>
+            <xs:sequence>
+             <xs:element name="Ledger.Identifier" type="Ledger.Identifier" minOccurs="1" maxOccurs="1"/>
+             <xs:element name="Ledger.Name" type="Ledger.Name" minOccurs="1" maxOccurs="1"/>
+             <xs:element name="Ledger.AccountingEntity.Name" type="Ledger.AccountingEntity.Name" minOccurs="0" maxOccurs="1"/>
+             <xs:element name="Ledger.AccountingEntity.Identifier" type="Ledger.AccountingEntity.Identifier" minOccurs="0" maxOccurs="1"/>
+             <xs:element name="GLTransactionSet.Details" type="GLTransactionSet.Details" minOccurs="1" maxOccurs="1"/>
+            </xs:sequence>
+       </xs:complexType>
+</xs:schema>
