@@ -181,7 +181,7 @@
 <% pageContext.setAttribute("shippingPartyContactPurposeList", helper.findByAnd("PartyContactMechPurpose", UtilMisc.toMap(
         "partyId", userLogin.getString("partyId"),
         "contactMechPurposeTypeId", "SHIPPING_LOCATION"), null)); %>  
-<TABLE border=0 width='100%' cellpadding=1 cellspacing=0 bgcolor='black'>
+<TABLE border=0 width='100%' cellpadding=1 cellspacing=0 bgcolor='black' style='height: 100%;'>
   <TR>
     <TD width='100%'>
       <table width="100%" border="0" cellpadding="4" cellspacing="0" bgcolor="#678475">
@@ -193,11 +193,11 @@
       </table>
     </TD>
   </TR>
-  <TR>
-    <TD width='100%'>
-      <table width='100%' border=0 cellpadding=4 cellspacing=0 bgcolor='white'>
+  <TR style='height: 100%;'>
+    <TD width='100%' valign=top>
+      <table width='100%' border=0 cellpadding=4 cellspacing=0 bgcolor='white' style='height: 100%;'>
         <tr>
-          <td>
+          <td valign=top>
 
   <a href="<ofbiz:url>/editcontactmech?CONTACT_MECH_TYPE_ID=POSTAL_ADDRESS&CM_NEW_PURPOSE_TYPE_ID=SHIPPING_LOCATION&DONE_PAGE=checkoutoptions</ofbiz:url>" class="buttontext">[Add New Address]</a>
  <ofbiz:if name="shippingPartyContactPurposeList" size="0">
@@ -254,7 +254,7 @@
 
 <% pageContext.setAttribute("creditCardInfoList", userLogin.getRelatedOne("Party").getRelated("CreditCardInfo")); %>
 
-<TABLE border=0 width='100%' cellpadding=1 cellspacing=0 bgcolor='black'>
+<TABLE border=0 width='100%' cellpadding=1 cellspacing=0 bgcolor='black' style='height: 100%;'>
   <TR>
     <TD width='100%'>
       <table width="100%" border="0" cellpadding="4" cellspacing="0" bgcolor="#678475">
@@ -266,11 +266,11 @@
       </table>
     </TD>
   </TR>
-  <TR>
-    <TD width='100%'>
-      <table width='100%' border=0 cellpadding=4 cellspacing=0 bgcolor='white'>
+  <TR style='height: 100%;'>
+    <TD width='100%' valign=top>
+      <table width='100%' border=0 cellpadding=4 cellspacing=0 bgcolor='white' style='height: 100%;'>
         <tr>
-          <td>
+          <td valign=top>
 <a href="<ofbiz:url>/editcreditcard?DONE_PAGE=checkoutoptions</ofbiz:url>" class="buttontext">[Add Credit Card]</a>
 
 <ofbiz:if name="creditCardInfoList" size="0"> 
