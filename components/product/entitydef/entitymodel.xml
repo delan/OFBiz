@@ -26,7 +26,7 @@
  *
  * @author     David E. Jones (jonesde@ofbiz.org)
  * @author     Andy Zeneski (jaz@ofbiz.org)
- * @version    $Revision: 1.41 $
+ * @version    $Revision: 1.42 $
  */
 -->
 
@@ -3012,6 +3012,36 @@
         <key-map field-name="shipmentMethodTypeId"/>
       </view-link>
     </view-entity>
+    <entity entity-name="ProductStoreSurveyAppl"
+            package-name="org.ofbiz.product.store"
+            title="Product Store Survey Application Entity">
+      <field name="productStoreSurveyId" type="id-ne"></field>
+      <field name="productStoreId" type="id-ne"></field>
+      <field name="surveyApplTypeId" type="id-ne"></field>
+      <field name="surveyId" type="id-ne"></field>
+      <field name="productId" type="id"></field>
+      <field name="productCategoryId" type="id"></field>
+      <field name="fromDate" type="date-time"></field>
+      <field name="thruDate" type="date-time"></field>
+      <field name="templatePath" type="long-varchar"></field>
+      <field name="sequenceNum" type="numeric"></field>
+      <prim-key field="productStoreSurveyId"/>
+      <relation type="one" fk-name="PRDSTRSVY_PRDS" rel-entity-name="ProductStore">
+        <key-map field-name="productStoreId"/>
+      </relation>
+      <relation type="one" fk-name="PRDSTRSVY_SRVY" rel-entity-name="Survey">
+        <key-map field-name="surveyId"/>
+      </relation>
+      <relation type="one" fk-name="PRDSTRSVY_SATP" rel-entity-name="SurveyApplType">
+        <key-map field-name="surveyApplTypeId"/>
+      </relation>
+      <relation type="one-nofk" rel-entity-name="Product">
+        <key-map field-name="productId"/>
+      </relation>
+      <relation type="one-nofk" rel-entity-name="ProductCategory">
+        <key-map field-name="productCategoryId"/>
+      </relation>
+    </entity>
 
   <!-- ========================================================= -->
   <!-- org.ofbiz.product.supplier -->
