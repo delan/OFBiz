@@ -20,7 +20,7 @@
  *  THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  *
  *@author     Andy Zeneski (jaz@ofbiz.org)
- *@version    $Revision: 1.3 $
+ *@version    $Revision: 1.4 $
  *@since      3.0
 -->
 <#assign uiLabelMap = requestAttributes.uiLabelMap>
@@ -92,7 +92,7 @@
           <select class="selectBox" name="productCategoryId">
             <option></option>
             <#list productCategories as category>
-              <option value="${category.productCategoryId}">${category.description}</option>
+              <option value="${category.productCategoryId}">${category.description?default("No Description")}</option>
             </#list>
           </select>
         </td>
