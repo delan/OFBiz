@@ -581,6 +581,9 @@
       <field name="correspondingPoId" type="id"></field>
       <field name="statusId" type="id"></field>
       <field name="syncStatusId" type="id"></field>
+      <field name="autoCancelDate" type="date-time"></field>
+      <field name="dontCancelSetDate" type="date-time"></field>
+      <field name="dontCancelSetUserLogin" type="id-vlong"></field>
       <prim-key field="orderId"/>
       <prim-key field="orderItemSeqId"/>
       <relation type="one" fk-name="ORDER_ITEM_HDR" rel-entity-name="OrderHeader">
@@ -671,6 +674,9 @@
       <relation type="many" rel-entity-name="ItemIssuance">
         <key-map field-name="orderId"/>
         <key-map field-name="orderItemSeqId"/>
+      </relation>
+      <relation type="one" fk-name="ORDER_ITEM_DCUL" title="DontCancelSet" rel-entity-name="UserLogin">
+        <key-map field-name="dontCancelSetUserLogin" rel-field-name="userLoginId"/>
       </relation>
     </entity>
     <entity entity-name="OrderItemAssociation"
@@ -781,6 +787,7 @@
       <field name="inventoryItemId" type="id-ne"></field>
       <field name="reserveOrderEnumId" type="id-ne"></field>
       <field name="quantity" type="floating-point"></field>
+      <field name="quantityNotAvailable" type="floating-point"></field>
       <field name="reservedDatetime" type="date-time"></field>
       <field name="createdDatetime" type="date-time"></field>
       <field name="promisedDatetime" type="date-time"></field>
