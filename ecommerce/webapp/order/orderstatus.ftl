@@ -28,7 +28,7 @@
   <#assign maySelectItems = true>
   <form name="addOrderToCartForm" action="<@ofbizUrl>/addordertocart/orderstatus?order_id=${orderHeader.orderId}</@ofbizUrl>" method="GET">
     <input type="hidden" name="add_all" value="false">
-    <input type="hidden" name="order_id" value="${orderHeader.orderId}">
+    <input type="hidden" name="order_id" value="${orderHeader.orderId}">    
     ${pages.get("/order/orderheader.ftl")}
     <br>
     ${pages.get("/order/orderitems.ftl")}

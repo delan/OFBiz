@@ -157,7 +157,7 @@
         <select name="stateProvinceGeoId" class='selectBox'>
           <option>${postalAddressData.stateProvinceGeoId?if_exists}</option>
           <option></option>
-          <#include "/includes/states.ftl">
+          ${pages.get("/includes/states.ftl")}
         </select>
       *</td>
     </tr>
@@ -175,7 +175,7 @@
         <select name="countryGeoId" class='selectBox'>
           <option>${postalAddressData.countryGeoId?if_exists}</option>
           <option></option>
-          <#include "/includes/countries.ftl">
+           ${fs_repository.get("/includes/countries.ftl")}
         </select>
       *</td>
     </tr>
