@@ -28,11 +28,9 @@ import java.io.InputStream;
 import java.net.URL;
 
 import org.ofbiz.base.util.Debug;
-import org.ofbiz.base.util.cache.UtilCache;
 import org.ofbiz.base.util.UtilURL;
 import org.ofbiz.base.util.UtilXml;
 import org.ofbiz.base.util.cache.UtilCache;
-
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
 
