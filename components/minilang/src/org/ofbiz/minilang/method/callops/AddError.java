@@ -1,5 +1,5 @@
 /*
- * $Id: AddError.java,v 1.1 2003/08/17 06:06:13 ajzeneski Exp $
+ * $Id: AddError.java,v 1.2 2003/10/10 09:55:53 jonesde Exp $
  *
  *  Copyright (c) 2001, 2002 The Open For Business Project - www.ofbiz.org
  *
@@ -34,7 +34,7 @@ import org.ofbiz.minilang.method.*;
  * Adds the fail-message or fail-property value to the error-list.
  *
  * @author     <a href="mailto:jonesde@ofbiz.org">David E. Jones</a>
- * @version    $Revision: 1.1 $
+ * @version    $Revision: 1.2 $
  * @since      2.0
  */
 public class AddError extends MethodOperation {
@@ -82,7 +82,8 @@ public class AddError extends MethodOperation {
             messages.add(message);
             // if (Debug.infoOn()) Debug.logInfo("[SimpleMapOperation.addMessage] Adding message: " + message, module);
         } else if (isProperty && propertyResource != null && message != null) {
-            String propMsg = UtilProperties.getPropertyValue(UtilURL.fromResource(propertyResource, loader), message);
+            //String propMsg = UtilProperties.getPropertyValue(UtilURL.fromResource(propertyResource, loader), message);
+            String propMsg = UtilProperties.getMessage(propertyResource, message, methodContext.getEnvMap(), methodContext.getLocale());
 
             if (propMsg == null || propMsg.length() == 0) {
                 messages.add("Simple Method error occurred, but no message was found, sorry.");
