@@ -78,6 +78,12 @@
         <xs:attribute type="xs:string" name="default-map-name"/>
         <xs:attribute type="xs:string" name="default-entity-name"/>
         <xs:attribute type="xs:string" name="default-service-name"/>
+        <xs:attribute type="xs:string" name="form-title-area-style">
+            <xs:annotation><xs:documentation>The form-title-area-style specifies the style to use in the header or title area for the form in a multi-form widget with all form fields rendered in one area.</xs:documentation></xs:annotation>
+        </xs:attribute>
+        <xs:attribute type="xs:string" name="form-widget-area-style">
+            <xs:annotation><xs:documentation>The form-widget-area-style specifies the style to use in the main or widget area for the form in a multi-form widget with all form fields rendered in one area.</xs:documentation></xs:annotation>
+        </xs:attribute>
         <xs:attribute type="xs:string" name="default-title-area-style"/>
         <xs:attribute type="xs:string" name="default-widget-area-style"/>
         <xs:attribute type="xs:string" name="default-title-style"/>
