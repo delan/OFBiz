@@ -361,7 +361,7 @@ class Configuration {
         
         // build a default log4j configuration based on ofbizHome
         if (log4jConfig == null) {
-            log4jConfig = "file://" + ofbizHome + "/commonapp/etc/debug.properties";
+            log4jConfig = ofbizHome + "/commonapp/etc/debug.properties";
         }
         
         // set the log4j configuration property so we don't pick up one inside jars by mistake
