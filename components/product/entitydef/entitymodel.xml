@@ -26,7 +26,7 @@
  *
  * @author     David E. Jones (jonesde@ofbiz.org)
  * @author     Andy Zeneski (jaz@ofbiz.org)
- * @version    $Revision: 1.68 $
+ * @version    $Revision: 1.69 $
  */
 -->
 
@@ -3058,7 +3058,7 @@
       </relation>
     </entity>
     <view-entity entity-name="ProductStorePromoAndAppl"
-            package-name="org.ofbiz.product.promo"
+            package-name="org.ofbiz.product.store"
             title="Product Store Promotion and Applicability View Entity">
       <member-entity entity-alias="PSPA" entity-name="ProductStorePromoAppl"/>
       <member-entity entity-alias="PP" entity-name="ProductPromo"/>
