@@ -40,7 +40,7 @@ import org.ofbiz.core.service.*;
  */
 public class EventAction {
 
-    protected String serviceName, serviceMode;
+    protected String serviceName, serviceMode, useResult, updateContext;
 
     protected EventAction() {
     }
@@ -48,14 +48,29 @@ public class EventAction {
     public EventAction(Element action) {
         this.serviceName = action.getAttribute("service");
         this.serviceMode = action.getAttribute("mode");
+        this.updateContext = action.getAttribute("update-context");
+        this.useResult = action.getAttribute("use-result");
     }
 
-    public void runAction(DispatchContext dctx, Map context, Map result) throws GenericServiceException {
+    public void runAction(String selfService, DispatchContext dctx, Map context) throws GenericServiceException {
+        if (this.serviceName.equals(selfService))
+            throw new GenericServiceException("Cannot invoke self on ECA.");
+
+        Map newContext = new HashMap(context);
+
+        // pull out context parameters needed for this service.
+        Map actionContext = dctx.getModelService(serviceName).makeValid(context, ModelService.IN_PARAM);
+
+        Map result = null;
         LocalDispatcher dispatcher = dctx.getDispatcher();
         if (serviceMode.equals("sync")) {
-            result = dispatcher.runSync(serviceName, context);
+            result = dispatcher.runSync(this.serviceName, context);
         } else if (serviceMode.equals("async")) {
             dispatcher.runAsync(serviceName, context);
         }
+
+        // use the result to update the context fields.
+        if (updateContext.equalsIgnoreCase("true"))
+            context.putAll(dctx.getModelService(selfService).makeValid(result, ModelService.IN_PARAM));
     }
 }

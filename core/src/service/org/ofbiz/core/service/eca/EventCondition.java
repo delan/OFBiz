@@ -45,40 +45,43 @@ public class EventCondition {
 
     protected String lhsValueName, rhsValueName;
     protected String lhsMapName, rhsMapName;
-    protected String lhsType, rhsType;
+    protected String rhsType;
     protected String operator;
     protected String compareType;
-
-    protected List actions = new LinkedList();
+    protected String format;
 
     protected EventCondition() {
     }
 
-    public EventCondition(Element condition) {
-        this.lhsValueName = condition.getAttribute("lhs-value");
-        this.rhsValueName = condition.getAttribute("rhs-value");
-        this.lhsMapName = condition.getAttribute("lhs-map");
-        this.rhsMapName = condition.getAttribute("rhs-map");
-        this.lhsType = condition.getAttribute("lhs-type");
-        this.rhsType = condition.getAttribute("rhs-type");
-        this.operator = condition.getAttribute("operator");
-        this.compareType = condition.getAttribute("compare-type");
+    public EventCondition(Element condition, String rhsType) {
+        this.lhsValueName = condition.getAttribute("field-name");
+        this.lhsMapName = condition.getAttribute("map-name");
 
-        List actionList = UtilXml.childElementList(condition, "action");
-        if (actionList != null) {
-            Iterator i = actionList.iterator();
-            while (i.hasNext()) {
-                Element action = (Element) i.next();
-                actions.add(new EventAction(action));
-            }
+        this.rhsType = rhsType;
+        if (rhsType.equals("constant")) {
+            this.rhsValueName = condition.getAttribute("value");
+            this.rhsMapName = null;
+        } else {
+            this.rhsValueName = condition.getAttribute("to-field-name");
+            this.rhsMapName = condition.getAttribute("to-map-name");
         }
+
+        this.operator = condition.getAttribute("operator");
+        this.compareType = condition.getAttribute("type");
+        this.format = condition.getAttribute("format");
+
+        if (lhsValueName == null)
+            lhsValueName = "";
+        if (rhsValueName == null)
+            rhsValueName = "";
     }
 
-    public void eval(DispatchContext dctx, Map context, Map result) throws GenericServiceException {
+    public boolean eval(String serviceName, DispatchContext dctx, Map context) throws GenericServiceException {
+        if (serviceName == null || dctx == null || context == null || dctx.getClassLoader() == null)
+            throw new GenericServiceException("Cannot have null Service, Context or DispatchContext!");
         Object lhsValue, rhsValue;
-        if (lhsType.equals("constant")) {
-            lhsValue = (Object) lhsValueName;
-        } else if (lhsMapName != null) {
+
+        if (lhsMapName != null && lhsMapName.length() > 0) {
             try {
                 if (context.containsKey(lhsMapName)) {
                     Map envMap = (Map) context.get(lhsMapName);
@@ -97,8 +100,8 @@ public class EventCondition {
         }
 
         if (rhsType.equals("constant")) {
-            rhsValue = (Object) rhsValueName;
-        } else if (rhsMapName != null) {
+            rhsValue = rhsValueName;
+        } else if (rhsMapName != null && rhsMapName.length() > 0) {
             try {
                 if (context.containsKey(rhsMapName)) {
                     Map envMap = (Map) context.get(rhsMapName);
@@ -116,15 +119,12 @@ public class EventCondition {
                 throw new GenericServiceException("Field (" + rhsValueName + ") is not found in context.");
         }
 
+        if (Debug.verboseOn())
+            Debug.logVerbose("Comparing : " + lhsValue + " <> " + rhsValue);
+
         // evaluate the condition & invoke the action(s)
         List messages = new LinkedList();
-        if (ObjectType.doRealCompare(lhsValue, rhsValue, operator, compareType, null, messages, null, dctx.getClassLoader()).booleanValue()) {
-            Iterator a = actions.iterator();
-            while (a.hasNext()) {
-                EventAction action = (EventAction) a.next();
-                action.runAction(dctx, context, result);
-            }
-        }
+        Boolean cond = ObjectType.doRealCompare(lhsValue, rhsValue, operator, compareType, null, messages, null, dctx.getClassLoader());
 
         // if any messages were returned send them out
         if (messages.size() > 0) {
@@ -132,6 +132,7 @@ public class EventCondition {
             while (m.hasNext())
                 Debug.logWarning((String) m.next());
         }
+        return cond.booleanValue();
     }
 
 }

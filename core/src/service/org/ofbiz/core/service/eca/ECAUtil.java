@@ -41,11 +41,17 @@ import org.ofbiz.core.service.*;
  */
 public class ECAUtil {
 
+    public static final String module = ECAUtil.class.getName();
     public static final String SERVICE_ECA_XML_FILENAME = "secaconf.xml";
     protected static Map ECAMap = new HashMap();
 
-    public static void readConfig() throws GenericConfigException {
-        Element rootElement = ResourceLoader.getXmlRootElement(ECAUtil.SERVICE_ECA_XML_FILENAME);
+    public static void readConfig() {
+        Element rootElement = null;
+        try {
+            rootElement = ResourceLoader.getXmlRootElement(ECAUtil.SERVICE_ECA_XML_FILENAME);
+        } catch (GenericConfigException e) {
+            Debug.logError(e);
+        }
         List ecaList = UtilXml.childElementList(rootElement, "eca");
         Iterator ecaIt = ecaList.iterator();
         while (ecaIt.hasNext()) {
@@ -53,29 +59,22 @@ public class ECAUtil {
             String serviceName = e.getAttribute("service");
             String eventName = e.getAttribute("event");
             Map eventMap = (Map) ECAMap.get(serviceName);
-            List conditions = null;
+            List rules = null;
             if (eventMap == null) {
                 eventMap = new HashMap();
-                conditions = new LinkedList();
+                rules = new LinkedList();
             } else {
-                conditions = (List) eventMap.get(eventName);
-                if (conditions == null)
-                    conditions = new LinkedList();
+                rules = (List) eventMap.get(eventName);
+                if (rules == null)
+                    rules = new LinkedList();
             }
-
-            List condElements = UtilXml.childElementList(e, "condition");
-            Iterator cei = condElements.iterator();
-            while (cei.hasNext()) {
-                Element c = (Element) cei.next();
-                conditions.add(new EventCondition(c));
-            }
-            eventMap.put(eventName, conditions);
+            rules.add(new EventConditionAction(e));
+            eventMap.put(eventName, rules);
             ECAMap.put(serviceName, eventMap);
         }
     }
 
-    public static void evalConditions(String serviceName, String event, DispatchContext dctx, Map context, Map result)
-            throws GenericServiceException {
+    public static void evalConditions(String serviceName, String event, DispatchContext dctx, Map context) throws GenericServiceException {
         Map eventMap = (Map) ECAMap.get(serviceName);
         if (eventMap == null || eventMap.size() == 0)
             return;
@@ -85,9 +84,10 @@ public class ECAUtil {
             return;
 
         Iterator i = conditions.iterator();
+        if (i.hasNext() && Debug.verboseOn()) Debug.logVerbose("Running ECA (" + event + ").");
         while (i.hasNext()) {
-            EventCondition c = (EventCondition) i.next();
-            c.eval(dctx, context, result);
+            EventConditionAction c = (EventConditionAction) i.next();
+            c.eval(serviceName, dctx, context);
         }
     }
 }

@@ -33,24 +33,38 @@
 <!ELEMENT eca ( condition*, action+ )>
 <!ATTLIST eca
 	serviceName CDATA #REQUIRED
-	event ( auth | validate | invoke | commit ) #REQUIRED
+	event ( auth | validate | invoke | commit | return ) #REQUIRED
 >
+
 <!ELEMENT condition EMPTY>
 <!ATTLIST condition
-    lhs-type ( constant | field ) "constant"
-    lhs-map CDATA #IMPLIED
-    lhs-value CDATA #REQUIRED
+    map-name CDATA #IMPLIED
+    field-name CDATA #REQUIRED
     operator ( less | greater | less-equals | greater-equals | equals | not-equals | contains ) #REQUIRED
-    rhs-type ( constant | field ) "constant"
-    rhs-map CDATA #IMPLIED
-    rhs-value CDATA #REQUIRED
-    compare-type ( PlainString | String | Double | Float | Long | Integer | Date | Time | Timestamp | Object ) "String"
+    value CDATA #REQUIRED
+    type ( PlainString | String | Double | Float | Long | Integer | Date | Time | Timestamp | Object ) "String"
+    format CDATA #IMPLIED
 >
+
+<!ELEMENT condition-field EMPTY>
+<!ATTLIST condition-field
+    map-name CDATA #IMPLIED
+    field-name CDATA #REQUIRED
+    operator ( less | greater | less-equals | greater-equals | equals | not-equals | contains ) #REQUIRED
+    to-map-name CDATA #IMPLIED
+    to-field-name CDATA #IMPLIED
+    type ( PlainString | String | Double | Float | Long | Integer | Date | Time | Timestamp | Object ) "String"
+    format CDATA #IMPLIED
+>
+
 <!ELEMENT action EMPTY>
 <!ATTLIST action
 	service CDATA #REQUIRED
 	mode ( sync | async ) #REQUIRED
+    update-context ( true | false ) "true"
 >
+
+
 
 <!--
 <service-eca>
