@@ -137,8 +137,8 @@ public class Section extends Content {
         try {
             if (Debug.verboseOn()) Debug.logVerbose("Rendering view [" + content + "] of type [" + typeToUse + "]");
             ViewHandler vh = ViewFactory.getViewHandler(context, typeToUse);
-
-            vh.render(name, content, info, request, response);
+            // use the default content-type and encoding for the ViewHandler -- may want to change this.
+            vh.render(name, content, info, null, null, request, response);
         } catch (ViewHandlerException e) {
             throw new ServletException(e.getNonNestedMessage(), e.getNested());
         }
