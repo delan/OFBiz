@@ -40,4 +40,39 @@
         
         <field name="submitButton" title="Update" widget-style="smallSubmit"><submit button-type="button"/></field>
     </form>
+    <form name="EditSurveyQuestions" type="list" 
+        target="updateSurveyQuestion" title="" default-map-name="surveyQuestion" list-name="surveyQuestionList" list-entry-name="surveyQuestion"
+        default-title-style="tableheadtext" default-widget-style="inputBox" default-tooltip-style="tabletext">
+        
+        <auto-fields-service service-name="updateSurveyQuestion"/>
+
+        <field name="surveyId"><hidden/></field>
+        <field name="surveyQuestionSeqId" title="Question #"><display/></field>
+
+        <!-- <field name="surveyQuestionTypeId" title="Question Type"><display description="${surveyQuestionType.description}"/></field> -->
+        <field name="surveyQuestionTypeId" title="Question Type">
+            <drop-down allow-empty="false">
+               <entity-options entity-name="SurveyQuestionType" description="${description}"/>
+            </drop-down>
+        </field>
+                
+        <field name="submitButton" title="Update" widget-style="smallSubmit"><submit button-type="button"/></field>
+    </form>
+    <form name="CreateSurveyQuestion" type="single" 
+        target="createSurveyQuestion" title=""
+        default-title-style="tableheadtext" default-widget-style="inputBox" default-tooltip-style="tabletext">
+        
+        <auto-fields-service service-name="createSurveyQuestion"/>
+        
+        <field name="surveyId"><hidden value="${surveyId}"/></field>
+        <field name="surveyQuestionSeqId"><ignored/></field>
+
+        <field name="surveyQuestionTypeId">
+            <drop-down allow-empty="false">
+               <entity-options entity-name="SurveyQuestionType" description="${description}"/>
+            </drop-down>
+        </field>
+        
+        <field name="submitButton" title="Create" widget-style="smallSubmit"><submit button-type="button"/></field>
+    </form>
 </forms>
