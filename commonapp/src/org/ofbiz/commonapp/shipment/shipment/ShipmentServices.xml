@@ -159,45 +159,48 @@
             </if-not-empty>
         </if-empty>
         
-        <call-bsh><![CDATA[
-                import org.ofbiz.commonapp.order.order.OrderReadHelper;
-            
-                orderReadHelper = new OrderReadHelper(orderHeader);
-                orderItems = orderReadHelper.getValidOrderItems();
-                orderAdjustments = orderReadHelper.getAdjustments();
-                orderHeaderAdjustments = orderReadHelper.getOrderHeaderAdjustments();
-                orderSubTotal = orderReadHelper.getOrderItemsSubTotal();
-               
-                shippingAmount = OrderReadHelper.getAllOrderItemsAdjustmentsTotal(orderItems, orderAdjustments, false, false, true);
-                shippingAmount += OrderReadHelper.calcOrderAdjustments(orderHeaderAdjustments, orderSubTotal, false, false, true);
-                org.ofbiz.core.util.Debug.logInfo("shippingAmmount=" + shippingAmount);
-                shipment.put("estimatedShipCost", shippingAmount);
-        ]]></call-bsh>
+        <if-empty field-name="estimatedShipCost" map-name="shipment">
+            <call-bsh><![CDATA[
+                    import org.ofbiz.commonapp.order.order.OrderReadHelper;
+                
+                    orderReadHelper = new OrderReadHelper(orderHeader);
+                    orderItems = orderReadHelper.getValidOrderItems();
+                    orderAdjustments = orderReadHelper.getAdjustments();
+                    orderHeaderAdjustments = orderReadHelper.getOrderHeaderAdjustments();
+                    orderSubTotal = orderReadHelper.getOrderItemsSubTotal();
+                   
+                    shippingAmount = OrderReadHelper.getAllOrderItemsAdjustmentsTotal(orderItems, orderAdjustments, false, false, true);
+                    shippingAmount += OrderReadHelper.calcOrderAdjustments(orderHeaderAdjustments, orderSubTotal, false, false, true);
+                    org.ofbiz.core.util.Debug.logInfo("shippingAmmount=" + shippingAmount);
+                    shipment.put("estimatedShipCost", shippingAmount);
+            ]]></call-bsh>
+        </if-empty>
         
         <!-- create a ShipmentRouteSegment with originFacilityId (if set on Shipment), destContactMechId, 
             and from OrderShipmentPreference shipmentMethodTypeId, carrierPartyId, etc -->
         <field-to-field field-name="shipmentId" map-name="shipment" to-map-name="shipmentRouteSegmentMap"/>
-        
-        <!-- estimatedShipDate, estimatedArrivalDate -->
-        <field-to-field field-name="estimatedShipDate" map-name="shipment" to-field-name="estimatedStartDate" to-map-name="shipmentRouteSegmentMap"/>
-        <field-to-field field-name="estimatedArrivalDate" map-name="shipment" to-field-name="estimatedArrivalDate" to-map-name="shipmentRouteSegmentMap"/>
+        <find-by-and entity-name="ShipmentRouteSegment" map-name="shipmentRouteSegmentMap" list-name="shipmentRouteSegments"/>
+        <if-empty field-name="shipmentRouteSegments">
+            <!-- estimatedShipDate, estimatedArrivalDate -->
+            <field-to-field field-name="estimatedShipDate" map-name="shipment" to-field-name="estimatedStartDate" to-map-name="shipmentRouteSegmentMap"/>
+            <field-to-field field-name="estimatedArrivalDate" map-name="shipment" to-field-name="estimatedArrivalDate" to-map-name="shipmentRouteSegmentMap"/>
+    
+            <field-to-field field-name="originFacilityId" map-name="shipment" to-map-name="shipmentRouteSegmentMap"/>
+            <field-to-field field-name="originContactMechId" map-name="shipment" to-map-name="shipmentRouteSegmentMap"/>
+            <field-to-field field-name="destinationFacilityId" map-name="shipment" to-field-name="destFacilityId" to-map-name="shipmentRouteSegmentMap"/>
+            <field-to-field field-name="destinationContactMechId" map-name="shipment" to-field-name="destContactMechId" to-map-name="shipmentRouteSegmentMap"/>
+    
+            <field-to-field field-name="primaryOrderId" map-name="shipment" to-field-name="orderId" to-map-name="lookupOrderSpPKMap"/>
+            <string-to-field string="_NA_" field-name="orderItemSeqId" map-name="lookupOrderSpPKMap"/>
+            <find-by-primary-key entity-name="OrderShipmentPreference" map-name="lookupOrderSpPKMap" value-name="orderShipmentPreference"/>
+            <if-not-empty field-name="orderShipmentPreference">
+                <field-to-field field-name="carrierPartyId" map-name="orderShipmentPreference" to-map-name="shipmentRouteSegmentMap"/>
+                <field-to-field field-name="shipmentMethodTypeId" map-name="orderShipmentPreference" to-map-name="shipmentRouteSegmentMap"/>
+            </if-not-empty>
+            <call-service service-name="createShipmentRouteSegment" in-map-name="shipmentRouteSegmentMap"/>
+        </if-empty>
 
-        <field-to-field field-name="originFacilityId" map-name="shipment" to-map-name="shipmentRouteSegmentMap"/>
-        <field-to-field field-name="originContactMechId" map-name="shipment" to-map-name="shipmentRouteSegmentMap"/>
-        <field-to-field field-name="destinationFacilityId" map-name="shipment" to-field-name="destFacilityId" to-map-name="shipmentRouteSegmentMap"/>
-        <field-to-field field-name="destinationContactMechId" map-name="shipment" to-field-name="destContactMechId" to-map-name="shipmentRouteSegmentMap"/>
-
-        <field-to-field field-name="primaryOrderId" map-name="shipment" to-field-name="orderId" to-map-name="lookupOrderSpPKMap"/>
-        <string-to-field string="_NA_" field-name="orderItemSeqId" map-name="lookupOrderSpPKMap"/>
-        <find-by-primary-key entity-name="OrderShipmentPreference" map-name="lookupOrderSpPKMap" value-name="orderShipmentPreference"/>
-        <if-not-empty field-name="orderShipmentPreference">
-            <field-to-field field-name="carrierPartyId" map-name="orderShipmentPreference" to-map-name="shipmentRouteSegmentMap"/>
-            <field-to-field field-name="shipmentMethodTypeId" map-name="orderShipmentPreference" to-map-name="shipmentRouteSegmentMap"/>
-        </if-not-empty>
-
-        <!-- do all storing here... -->
         <store-value value-name="shipment"/>
-        <call-service service-name="createShipmentRouteSegment" in-map-name="shipmentRouteSegmentMap"/>        
     </simple-method>
 
     <!-- ShipmentItem services -->
