@@ -49,6 +49,7 @@ import org.ofbiz.entity.util.EntityUtil;
 import org.ofbiz.product.catalog.CatalogWorker;
 import org.ofbiz.product.category.CategoryWorker;
 import org.ofbiz.service.DispatchContext;
+import org.ofbiz.service.GenericServiceException;
 import org.ofbiz.service.LocalDispatcher;
 import org.ofbiz.service.ModelService;
 import org.ofbiz.service.ServiceUtil;
@@ -196,7 +197,6 @@ public class ProductServices {
         // * String productStoreId -- Product Store ID for Inventory
         String productStoreId = (String) context.get("productStoreId");
         Locale locale = (Locale) context.get("locale");
-        String errMsg=null;
 
         GenericDelegator delegator = dctx.getDelegator();
         LocalDispatcher dispatcher = dctx.getDispatcher();
@@ -204,19 +204,15 @@ public class ProductServices {
         List featureOrder = new LinkedList((Collection) context.get("featureOrder"));
 
         if (featureOrder == null || featureOrder.size() == 0) {
-            result.put(ModelService.RESPONSE_MESSAGE, ModelService.RESPOND_ERROR);
-            result.put(ModelService.ERROR_MESSAGE, "Empty list of features passed");
-            return result;
+            return ServiceUtil.returnError("Empty list of features passed");
         }
 
         Collection variants = (Collection) prodFindAllVariants(dctx, context).get("assocProducts");
         List virtualVariant = new ArrayList();
 
         if (variants == null || variants.size() == 0) {
-            errMsg = UtilProperties.getMessage(resource,"productservices.empty_list_of_products_returned", locale);
             result.put(ModelService.RESPONSE_MESSAGE, ModelService.RESPOND_ERROR);
-            result.put(ModelService.ERROR_MESSAGE, errMsg);
-            return result;
+            return ServiceUtil.returnError(UtilProperties.getMessage(resource,"productservices.empty_list_of_products_returned", locale));
         }
         List items = new ArrayList();
         Iterator i = variants.iterator();
@@ -231,12 +227,8 @@ public class ProductServices {
                 productTo = delegator.findByPrimaryKeyCache("Product", UtilMisc.toMap("productId", productIdTo));
             } catch (GenericEntityException e) {
                 Debug.logError(e, module);
-                Map messageMap = UtilMisc.toMap("productIdTo", productIdTo);
-                messageMap.put("errMessage", e.toString());
-                errMsg = UtilProperties.getMessage(resource,"productservices.error_finding_associated_variant_with_ID_error", messageMap, locale);
-                result.put(ModelService.RESPONSE_MESSAGE, ModelService.RESPOND_ERROR);
-                result.put(ModelService.ERROR_MESSAGE, errMsg);
-                return result;
+                Map messageMap = UtilMisc.toMap("productIdTo", productIdTo, "errMessage", e.toString());
+                return ServiceUtil.returnError(UtilProperties.getMessage(resource, "productservices.error_finding_associated_variant_with_ID_error", messageMap, locale));
             }
             if (productTo == null) {
                 Debug.logWarning("Could not find associated variant with ID " + productIdTo + ", not showing in list", module);
@@ -268,12 +260,20 @@ public class ProductServices {
             }
 
             // next check inventory for each item: if inventory is not required or is available
-            if (!org.ofbiz.product.store.ProductStoreWorker.isStoreInventoryRequired(productStoreId, productIdTo, delegator) ||
-                org.ofbiz.product.store.ProductStoreWorker.isStoreInventoryAvailable(productStoreId, productIdTo, 1.0, delegator, dispatcher)) {
-                items.add(productIdTo);
-                if (productTo.getString("isVirtual") != null && productTo.getString("isVirtual").equals("Y")) {
-                    virtualVariant.add(productIdTo);
+            try {
+                Map invReqResult = dispatcher.runSync("isStoreInventoryAvailableOrNotRequired", UtilMisc.toMap("productStoreId", productStoreId, "productId", productIdTo, "quantity", new Double(1.0)));
+                if (ServiceUtil.isError(invReqResult)) {
+                    return ServiceUtil.returnError("Error calling the isStoreInventoryRequired when building the variant product tree.", null, null, invReqResult);
+                } else if (!"Y".equals((String) invReqResult.get("availableOrNotRequired"))) {
+                    items.add(productIdTo);
+                    if (productTo.getString("isVirtual") != null && productTo.getString("isVirtual").equals("Y")) {
+                        virtualVariant.add(productIdTo);
+                    }
                 }
+            } catch (GenericServiceException e) {
+                String errMsg = "Error calling the isStoreInventoryRequired when building the variant product tree: " + e.toString();
+                Debug.logError(e, errMsg, module);
+                return ServiceUtil.returnError(errMsg);
             }
         }
 
@@ -281,7 +281,6 @@ public class ProductServices {
 
         // Make the selectable feature list
         List selectableFeatures = null;
-
         try {
             Map fields = UtilMisc.toMap("productId", productId, "productFeatureApplTypeId", "SELECTABLE_FEATURE");
             List sort = UtilMisc.toList("sequenceNum");
@@ -290,10 +289,7 @@ public class ProductServices {
             selectableFeatures = EntityUtil.filterByDate(selectableFeatures, true);
         } catch (GenericEntityException e) {
             Debug.logError(e, module);
-            errMsg = UtilProperties.getMessage(resource,"productservices.empty_list_of_selectable_features_found", locale);
-            result.put(ModelService.RESPONSE_MESSAGE, ModelService.RESPOND_ERROR);
-            result.put(ModelService.ERROR_MESSAGE, errMsg);
-            return result;
+            return ServiceUtil.returnError(UtilProperties.getMessage(resource,"productservices.empty_list_of_selectable_features_found", locale));
         }
         Map features = new HashMap();
         Iterator sFIt = selectableFeatures.iterator();
@@ -305,31 +301,25 @@ public class ProductServices {
 
             if (!features.containsKey(featureType)) {
                 List featureList = new LinkedList();
-
                 featureList.add(feature);
                 features.put(featureType, featureList);
             } else {
                 List featureList = (LinkedList) features.get(featureType);
-
                 featureList.add(feature);
                 features.put(featureType, featureList);
             }
         }
 
         Map tree = null;
-
         try {
             tree = makeGroup(delegator, features, items, featureOrder, 0);
         } catch (Exception e) {
             Debug.logError(e, module);
-            result.put(ModelService.RESPONSE_MESSAGE, ModelService.RESPOND_ERROR);
-            result.put(ModelService.ERROR_MESSAGE, e.getMessage());
-            return result;
+            return ServiceUtil.returnError(e.getMessage());
         }
         if (tree == null || tree.size() == 0) {
-            errMsg = UtilProperties.getMessage(resource,"productservices.feature_grouping_came_back_empty", locale);
             result.put(ModelService.RESPONSE_MESSAGE, ModelService.RESPOND_ERROR);
-            result.put(ModelService.ERROR_MESSAGE, errMsg);
+            result.put(ModelService.ERROR_MESSAGE, UtilProperties.getMessage(resource,"productservices.feature_grouping_came_back_empty", locale));
         } else {
             result.put("variantTree", tree);
             result.put("virtualVariant", virtualVariant);
@@ -337,18 +327,15 @@ public class ProductServices {
         }
 
         Map sample = null;
-
         try {
             sample = makeVariantSample(dctx.getDelegator(), features, items, (String) featureOrder.get(0));
         } catch (Exception e) {
-            result.put(ModelService.RESPONSE_MESSAGE, ModelService.RESPOND_ERROR);
-            result.put(ModelService.ERROR_MESSAGE, e.getMessage());
-            return result;
+            return ServiceUtil.returnError(e.getMessage());
         }
+        
         if (sample == null || sample.size() == 0) {
-            errMsg = UtilProperties.getMessage(resource,"productservices.feature_sample_came_back_empty", locale);
             result.put(ModelService.RESPONSE_MESSAGE, ModelService.RESPOND_ERROR);
-            result.put(ModelService.ERROR_MESSAGE, errMsg);
+            result.put(ModelService.ERROR_MESSAGE, UtilProperties.getMessage(resource,"productservices.feature_sample_came_back_empty", locale));
         } else {
             result.put("variantSample", sample);
             result.put(ModelService.RESPONSE_MESSAGE, ModelService.RESPOND_SUCCESS);

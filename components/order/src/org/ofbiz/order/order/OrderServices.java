@@ -221,23 +221,28 @@ public class OrderServices {
 
             if ("SALES_ORDER".equals(orderTypeId) || "WORK_ORDER".equals(orderTypeId)) {
                 // check to see if we have inventory available
-                if (ProductStoreWorker.isStoreInventoryRequired(productStoreId, product, delegator)) {
-                    if (!ProductStoreWorker.isStoreInventoryAvailable(productStoreId, currentProductId,
-                    		currentQuantity.doubleValue(), delegator, dispatcher)) {
+                try {
+                    Map invReqResult = dispatcher.runSync("isStoreInventoryAvailableOrNotRequired", UtilMisc.toMap("productStoreId", productStoreId, "productId", product.get("productId"), "product", product, "quantity", currentQuantity));
+                    if (ServiceUtil.isError(invReqResult)) {
+                        errorMessages.add(invReqResult.get(ModelService.ERROR_MESSAGE));
+                        errorMessages.addAll((List) invReqResult.get(ModelService.ERROR_MESSAGE_LIST));
+                    } else if (!"Y".equals((String) invReqResult.get("availableOrNotRequired"))) {
                         String invErrMsg = UtilProperties.getMessage(resource, "product.out_of_stock",
-                        		new Object[] { getProductName(product, itemName), currentProductId }, locale);
+                                new Object[] { getProductName(product, itemName), currentProductId }, locale);
                         Debug.logWarning(invErrMsg, module);
                         errorMessages.add(invErrMsg);
                         continue;
                     }
+                } catch (GenericServiceException e) {
+                    String errMsg = "Fatal error calling inventory checking services: " + e.toString();
+                    Debug.logError(e, errMsg, module);
+                    errorMessages.add(errMsg);
                 }
             }
         }
 
         if (errorMessages.size() > 0) {
-            result.put(ModelService.RESPONSE_MESSAGE, ModelService.RESPOND_ERROR);
-            result.put(ModelService.ERROR_MESSAGE_LIST, errorMessages);
-            return result;
+            return ServiceUtil.returnError(errorMessages);
         }
 
         // the inital status for ALL order types
@@ -547,34 +552,37 @@ public class OrderServices {
                     GenericValue orderItem = (GenericValue) invDecItemIter.next();
                     if (orderItem.get("productId") != null) {
                         // only reserve product items; ignore non-product items
-                        Double inventoryNotReserved = ProductStoreWorker.reserveStoreInventory(productStoreId,
-                            orderItem.getString("productId"), orderItem.getDouble("quantity"),
-                            orderItem.getString("orderId"), orderItem.getString("orderItemSeqId"),
-                            userLogin, delegator, dispatcher);
-
-                        if (inventoryNotReserved != null) {
-                            // if inventoryNotReserved is not 0.0 then that is the amount that it couldn't reserve
-                            GenericValue product = null;
-                            try {
-                                product = delegator.findByPrimaryKeyCache("Product", UtilMisc.toMap("productId", orderItem.getString("productId")));
-                            } catch (GenericEntityException e) {
-                                Debug.logError(e, "Error when looking up product in createOrder service, product failed inventory reservation", module);
+                        try {
+                            Map reserveResult = dispatcher.runSync("reserveStoreInventory", UtilMisc.toMap(
+                                    "productStoreId", productStoreId, "productId", orderItem.getString("productId"),
+                                    "quantity", orderItem.getDouble("quantity"), "orderId", orderItem.getString("orderId"), 
+                                    "orderItemSeqId", orderItem.getString("orderItemSeqId"), "userLogin", userLogin));
+                            
+                            if (ServiceUtil.isError(reserveResult)) {
+                                GenericValue product = null;
+                                try {
+                                    product = delegator.findByPrimaryKeyCache("Product", UtilMisc.toMap("productId", orderItem.getString("productId")));
+                                } catch (GenericEntityException e) {
+                                    Debug.logError(e, "Error when looking up product in createOrder service, product failed inventory reservation", module);
+                                }
+                                
+                                String invErrMsg = "The product ";
+                                if (product != null) {
+                                    invErrMsg += getProductName(product, orderItem);
+                                }
+                                invErrMsg += " with ID " + orderItem.getString("productId") + " is no longer in stock. Please try reducing the quantity or removing the product from this order.";
+                                resErrorMessages.add(invErrMsg);
                             }
-                            String invErrMsg = "The product ";
-
-                            if (product != null) {
-                                invErrMsg += getProductName(product, orderItem);
-                            }
-                            invErrMsg += " with ID " + orderItem.getString("productId") + " is no longer in stock. Please try reducing the quantity or removing the product from this order.";
-                            resErrorMessages.add(invErrMsg);
+                        } catch (GenericServiceException e) {
+                            String errMsg = "Fatal error calling reserveStoreInventory service: " + e.toString();
+                            Debug.logError(e, errMsg, module);
+                            resErrorMessages.add(errMsg);
                         }
                     }
                 }
 
                 if (resErrorMessages.size() > 0) {
-                    result.put(ModelService.RESPONSE_MESSAGE, ModelService.RESPOND_ERROR);
-                    result.put(ModelService.ERROR_MESSAGE_LIST, resErrorMessages);
-                    return result;
+                    return ServiceUtil.returnError(resErrorMessages);
                 }
                 // END inventory reservation
             }

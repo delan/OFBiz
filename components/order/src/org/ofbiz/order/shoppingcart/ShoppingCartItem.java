@@ -1,7 +1,7 @@
 /*
  * $Id$
  *
- *  Copyright (c) 2001, 2002 The Open For Business Project - www.ofbiz.org
+ *  Copyright (c) 2001-2004 The Open For Business Project - www.ofbiz.org
  *
  *  Permission is hereby granted, free of charge, to any person obtaining a
  *  copy of this software and associated documentation files (the "Software"),
@@ -58,6 +58,7 @@ import org.ofbiz.product.config.ProductConfigWrapper;
 import org.ofbiz.service.GenericServiceException;
 import org.ofbiz.service.LocalDispatcher;
 import org.ofbiz.service.ModelService;
+import org.ofbiz.service.ServiceUtil;
 
 /**
  * <p><b>Title:</b> ShoppingCartItem.java
@@ -433,14 +434,20 @@ public class ShoppingCartItem implements java.io.Serializable {
 
         // check inventory if new quantity is greater than old quantity; don't worry about inventory getting pulled out from under, that will be handled at checkout time
         if (_product != null && quantity > this.quantity) {
-
-            if (org.ofbiz.product.store.ProductStoreWorker.isStoreInventoryRequired(productStoreId, this.getProduct(), this.getDelegator())) {
-            	if (!org.ofbiz.product.store.ProductStoreWorker.isStoreInventoryAvailable(productStoreId, productId, quantity, this.getDelegator(), dispatcher)) {
+            try {
+                Map invReqResult = dispatcher.runSync("isStoreInventoryAvailableOrNotRequired", UtilMisc.toMap("productStoreId", productStoreId, "productId", productId, "product", this.getProduct(), "quantity", new Double(quantity)));
+                if (ServiceUtil.isError(invReqResult)) {
+                    Debug.logError("Error calling isStoreInventoryAvailableOrNotRequired service, result is: " + invReqResult, module);
+                    throw new CartItemModifyException((String) invReqResult.get(ModelService.ERROR_MESSAGE));
+                } else if (!"Y".equals((String) invReqResult.get("availableOrNotRequired"))) {
                     String excMsg = "Sorry, we do not have enough (you tried " + UtilFormatOut.formatQuantity(quantity) + ") of the product " + this.getName() + " (product ID: " + productId + ") in stock, not adding to cart. Please try a lower quantity, try again later, or call customer service for more information.";
-
                     Debug.logWarning(excMsg, module);
                     throw new CartItemModifyException(excMsg);
                 }
+            } catch (GenericServiceException e) {
+                String errMsg = "Fatal error calling inventory checking services: " + e.toString();
+                Debug.logError(e, errMsg, module);
+                throw new CartItemModifyException(errMsg);
             }
         }
 

@@ -23,7 +23,6 @@
  */
 package org.ofbiz.product.product;
 
-import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Iterator;
 import java.util.LinkedList;
@@ -146,8 +145,11 @@ public class ProductWorker {
         return null;
     }
 
-    /** invokes the getInventoryAvailableByFacility service, returns true if specified quantity is available, else false **/
-    public static boolean isProductInventoryAvailableByFacility(String productId, String inventoryFacilityId, double quantity, LocalDispatcher dispatcher) throws GenericServiceException {
+    /** 
+     * invokes the getInventoryAvailableByFacility service, returns true if specified quantity is available, else false
+     * this is only used in the related method that uses a ProductConfigWrapper, until that is refactored into a service as well...
+     */
+    private static boolean isProductInventoryAvailableByFacility(String productId, String inventoryFacilityId, double quantity, LocalDispatcher dispatcher) throws GenericServiceException {
         Double availableToPromise = null;
 
         try {
@@ -206,51 +208,6 @@ public class ProductWorker {
         return available;
     }
 
-    /** invokes the reserveProductInventoryByFacility service, returns quantity not reserved, 0 on error, null on success **/
-    public static Double reserveProductInventoryByFacility(String productId, Double quantity, String inventoryFacilityId,  String orderId, String reserveOrderEnumId, String orderItemSeqId, boolean requireInventory, GenericValue userLogin, LocalDispatcher dispatcher) throws GenericServiceException {
-
-        Double quantityNotReserved = null;
-
-        try {
-            Map serviceContext = new HashMap();
-
-            serviceContext.put("productId", productId);
-            serviceContext.put("facilityId", inventoryFacilityId);
-            serviceContext.put("orderId", orderId);
-            serviceContext.put("orderItemSeqId", orderItemSeqId);
-            serviceContext.put("quantity", quantity);
-
-            if (requireInventory) {
-                serviceContext.put("requireInventory", "Y");
-            } else {
-                serviceContext.put("requireInventory", "N");
-            }
-            serviceContext.put("reserveOrderEnumId", reserveOrderEnumId);
-            serviceContext.put("userLogin", userLogin);
-
-            Map result = dispatcher.runSync("reserveProductInventoryByFacility", serviceContext);
-
-            quantityNotReserved = (Double) result.get("quantityNotReserved");
-
-            if (quantityNotReserved == null) {
-                Debug.logWarning("The reserveProductInventoryByFacility service returned a null quantityNotReserved, the error message was:\n" + result.get(ModelService.ERROR_MESSAGE), module);
-                return !requireInventory? null: new Double(0.0);
-            }
-        } catch (GenericServiceException e) {
-            Debug.logWarning(e, "Error invoking reserveProductInventoryByFacility service", module);
-            return !requireInventory? null: new Double(0.0);
-        }
-
-        // whew, finally here: now check to see if we were able to reserve...
-        if (quantityNotReserved.doubleValue() == 0) {
-            if (Debug.infoOn()) Debug.logInfo("Inventory IS reserved in facility with id " + inventoryFacilityId + " for product id " + productId + "; desired quantity was " + quantity, module);
-            return null;
-        } else {
-            if (Debug.infoOn()) Debug.logInfo("There is insufficient inventory available in facility with id " + inventoryFacilityId + " for product id " + productId + "; desired quantity is " + quantity + ", amount could not reserve is " + quantityNotReserved, module);
-            return quantityNotReserved;
-        }
-    }
-    
     public static void getAssociatedProducts(PageContext pageContext, String productAttributeName, String assocPrefix) {
         GenericDelegator delegator = (GenericDelegator) pageContext.getRequest().getAttribute("delegator");
         GenericValue product = (GenericValue) pageContext.getAttribute(productAttributeName);
