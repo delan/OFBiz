@@ -163,7 +163,7 @@
         <field name="contentInfoText" title="${uiLabelMap.ProductContentInfoText}" widget-style="tabletext">
             <display description="${uiLabelMap.ProductNoteForContentOptions}" also-hidden="false"/>
         </field>
-        <!--
+        <!-- These go on the Content tab-button page
         <field name="productName"><text size="30" maxlength="60"/></field>
         <field name="description" widget-style="textAreaBox"><textarea cols="60" rows="2"/></field>
         <field name="longDescription" widget-style="textAreaBox"><textarea cols="60" rows="3"/></field>
@@ -183,6 +183,58 @@
             <display description="[${product.createdByUserLogin}] on ${product.createdDate}" also-hidden="false"/>
         </field>
     </form>
+    <!-- ProductPrice -->
+    <form name="AddProductPrice" type="single"
+            target="createProductPrice" title="" 
+            default-title-style="tableheadtext" default-widget-style="inputBox" default-tooltip-style="tabletext">
+        <auto-fields-service service-name="createProductPrice" map-name=""/>
+        <field name="productId"><hidden value="${productId}"/></field>
+        <field name="productPriceTypeId">
+            <drop-down allow-empty="false">
+                <entity-options entity-name="ProductPriceType" description="${description}">
+                    <entity-order-by field-name="description"/>
+                </entity-options>
+            </drop-down>
+        </field>
+        <field name="currencyUomId">
+            <drop-down allow-empty="false" no-current-selected-key="${defaultCurrencyUomId}">
+                <entity-options entity-name="Uom" key-field-name="uomId" description="${description} [${uomId}]">
+                    <entity-constraint name="uomTypeId" value="CURRENCY_MEASURE"/>
+                    <entity-order-by field-name="description"/>
+                </entity-options>
+            </drop-down>
+        </field>
+        <field name="productStoreGroupId">
+            <drop-down allow-empty="false" no-current-selected-key="_NA_">
+                <entity-options entity-name="ProductStoreGroup" description="${productStoreGroupName}">
+                    <entity-order-by field-name="productStoreGroupName"/>
+                </entity-options>
+            </drop-down>
+        </field>
+        <field name="submitButton" title="${uiLabelMap.CommonCreate}" widget-style="standardSubmit"><submit button-type="button"/></field>
+    </form>
+    <form name="UpdateProductPrice" type="list"
+            target="updateProductPrice" title="" list-name="productPrices"
+            default-title-style="tableheadtext" default-widget-style="inputBox" default-tooltip-style="tabletext">
+        <auto-fields-service service-name="updateProductPrice" map-name="productPrice"/>
+        <field name="productId"><hidden/></field>
+        <!-- TODO: get descriptions from IDs <display description="${roleType.description}"/> -->
+        <field name="productPriceTypeId" title="${uiLabelMap.ProductPriceType}" widget-style="tabletext"><display/></field>
+        <field name="currencyUomId" title="${uiLabelMap.ProductCurrency}" widget-style="tabletext"><display/></field>
+        <field name="productStoreGroupId" title="${uiLabelMap.ProductProductStoreGroup}" widget-style="tabletext"><display/></field>
+        <field name="fromDate" title="${uiLabelMap.CommonFromDateTime}" widget-style="tabletext"><display/></field>
+
+        <field name="lastUpdatedByText" title="${uiLabelMap.ProductLastModifiedBy}:" widget-style="tabletext">
+            <display description="[${productPrice.lastModifiedByUserLogin}] ${uiLabelMap.CommonOn} ${productPrice.lastModifiedDate}" also-hidden="false"/>
+        </field>
+
+        <field name="submitButton" title="${uiLabelMap.CommonUpdate}" widget-style="standardSubmit"><submit button-type="button"/></field>
+        <field name="deleteLink" title="&amp;nbsp;" widget-style="buttontext">
+            <hyperlink target="deleteProductPrice?productId=${productId}&amp;productPriceTypeId=${productPriceTypeId}&amp;currencyUomId=${currencyUomId}&amp;productStoreGroupId=${productStoreGroupId}&amp;fromDate=${fromDate}"
+                description="[${uiLabelMap.CommonDelete}]" also-hidden="false"/>
+        </field>
+    </form>
+    <!-- ProductCategoryMember -->
     <form name="AddProductCategoryMember" type="single"
             target="addProductToCategory" title="${uiLabelMap.ProductAddProductCategoryMemberFromDate}:"
             default-title-style="tableheadtext" default-widget-style="inputBox" default-tooltip-style="tabletext">
@@ -221,6 +273,7 @@
                 description="[${uiLabelMap.CommonDelete}]" also-hidden="false"/>
         </field>
     </form>
+    <!-- ProductContent -->
     <form name="AddProductContentAssoc" type="single"
             target="addContentToProduct" title="Add ProductContent (select Content Id, enter From Date):"
             default-title-style="tableheadtext" default-widget-style="inputBox" default-tooltip-style="tabletext">
@@ -372,7 +425,8 @@
         <field use-when="contentId != null" name="submitButton" title="${uiLabelMap.CommonUpdate}" widget-style="standardSubmit"><submit button-type="button"/></field>
     </form>
 
-   <form name="AddSupplierProduct" type="single"
+    <!-- SupplierProduct -->
+    <form name="AddSupplierProduct" type="single"
         target="updateSupplierProduct" title="" default-map-name="supplierProduct"
         default-title-style="tableheadtext" default-widget-style="inputBox" default-tooltip-style="tabletext">
 
@@ -399,7 +453,6 @@
         <field use-when="supplierProduct == null" name="submitButton" title="${uiLabelMap.CommonCreate}" widget-style="standardSubmit"><submit button-type="button"/></field>
         <field use-when="supplierProduct != null" name="submitButton" title="${uiLabelMap.CommonUpdate}" widget-style="standardSubmit"><submit button-type="button"/></field>
     </form>
-
     <form name="UpdateSupplierProduct" type="list"
             target="updateSupplierProduct" title="" list-name="productSuppliers"
             default-title-style="tableheadtext" default-widget-style="inputBox" default-tooltip-style="tabletext">
@@ -420,9 +473,9 @@
                 description="[${uiLabelMap.CommonDelete}]" also-hidden="false"/>
         </field>
     </form>
+
     <!-- Product Category Content Forms  -->
-    
-      <form name="AddCategoryContentAssoc" type="single"
+    <form name="AddCategoryContentAssoc" type="single"
             target="addContentToCategory" title="Add ProductCategoryContent (select Content Id, enter From Date):"
             default-title-style="tableheadtext" default-widget-style="inputBox" default-tooltip-style="tabletext">
         <auto-fields-entity entity-name="ProductCategoryContent"/>
@@ -481,7 +534,7 @@
                 description="[Delete]" also-hidden="false"/>
         </field>
     </form>
-     <form name="EditCategoryContentSimpleText" type="single"
+    <form name="EditCategoryContentSimpleText" type="single"
             target="updateSimpleTextContentForCategory" title="Update Simple Text Content for Category"
             default-title-style="tableheadtext" default-widget-style="inputBox" default-tooltip-style="tabletext">
         <alt-target use-when="contentId==null" target="createSimpleTextContentForCategory"/>
@@ -501,5 +554,4 @@
         <field use-when="contentId == null" name="submitButton" title="Create" widget-style="standardSubmit"><submit button-type="button"/></field>
         <field use-when="contentId != null" name="submitButton" title="Update" widget-style="standardSubmit"><submit button-type="button"/></field>
     </form>
-
 </forms>

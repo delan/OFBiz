@@ -1,5 +1,5 @@
 /*
- * $Id: ModelFormField.java,v 1.14 2004/07/01 08:37:50 jonesde Exp $
+ * $Id: ModelFormField.java,v 1.15 2004/07/31 12:17:39 jonesde Exp $
  *
  * Copyright (c) 2003 The Open For Business Project - www.ofbiz.org
  *
@@ -58,7 +58,7 @@ import bsh.Interpreter;
  *
  * @author     <a href="mailto:jonesde@ofbiz.org">David E. Jones</a>
  * @author     <a href="mailto:byersa@automationgroups.com">Al Byers</a>
- * @version    $Revision: 1.14 $
+ * @version    $Revision: 1.15 $
  * @since      2.2
  */
 public class ModelFormField {
@@ -1203,7 +1203,7 @@ public class ModelFormField {
             super();
         }
 
-        protected String noCurrentSelectedKey;
+        protected FlexibleStringExpander noCurrentSelectedKey;
         protected List optionSources = new LinkedList();
 
         public FieldInfoWithOptions(int fieldSource, int fieldType, ModelFormField modelFormField) {
@@ -1213,7 +1213,7 @@ public class ModelFormField {
         public FieldInfoWithOptions(Element element, ModelFormField modelFormField) {
             super(element, modelFormField);
 
-            noCurrentSelectedKey = element.getAttribute("no-current-selected-key");
+            noCurrentSelectedKey = new FlexibleStringExpander(element.getAttribute("no-current-selected-key"));
 
             // read all option and entity-options sub-elements, maintaining order
             List childElements = UtilXml.childElementList(element);
@@ -1261,12 +1261,12 @@ public class ModelFormField {
             return key;
         }
 
-        public String getNoCurrentSelectedKey() {
-            return this.noCurrentSelectedKey;
+        public String getNoCurrentSelectedKey(Map context) {
+            return this.noCurrentSelectedKey.expandString(context);
         }
 
         public void setNoCurrentSelectedKey(String string) {
-            this.noCurrentSelectedKey = string;
+            this.noCurrentSelectedKey = new FlexibleStringExpander(string);
         }
 
         public void addOptionSource(OptionSource optionSource) {

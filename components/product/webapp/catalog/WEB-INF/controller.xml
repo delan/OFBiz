@@ -1613,9 +1613,12 @@
     <view-map name="createProductInCategoryStart" type="jpublish" page="/category/createProductInCategoryStart.ftl"/>
     <view-map name="createProductInCategoryCheckExisting" type="jpublish" page="/category/createProductInCategoryCheckExisting.ftl"/>
 
-    <!-- <view-map name="EditProduct" type="screen" page="component://product/widget/catalog/ProductScreens.xml#EditProduct"/> -->
+    <view-map name="EditProduct" type="screen" page="component://product/widget/catalog/ProductScreens.xml#EditProduct"/>
+    <view-map name="EditProductPrices" type="screen" page="component://product/widget/catalog/ProductScreens.xml#EditProductPrices"/>
+    <!--
     <view-map name="EditProduct" type="jpublish" page="/product/EditProduct.ftl"/>
     <view-map name="EditProductPrices" type="jpublish" page="/product/EditProductPrices.ftl"/>
+    -->
     <view-map name="EditProductContent" type="jpublish" page="/product/EditProductContent.ftl"/>
     <view-map name="EditProductGoodIdentifications" type="jpublish" page="/product/EditProductGoodIdentifications.ftl"/>
     <view-map name="EditProductCategories" type="jpublish" page="/product/EditProductCategories.ftl"/>
