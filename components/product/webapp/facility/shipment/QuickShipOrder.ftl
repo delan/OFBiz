@@ -21,7 +21,7 @@
  *
  *@author     Andy Zeneski (jaz@ofbiz.org)
  *@author     Catherine.Heintz@nereide.biz (migration to UiLabel)
- *@version    $Revision: 1.8 $
+ *@version    $Revision: 1.9 $
  *@since      3.0
 -->
 <#assign uiLabelMap = requestAttributes.uiLabelMap>
@@ -170,11 +170,12 @@ function setWeight(weight) {
             document.weightForm.weight.focus();
           // -->
           </script>           
-          <#-- todo embed the applet -->
+          <#-- todo embed the applet
           <applet code="ShipmentScaleApplet.class" codebase="/images/" name="Package Weight Reader" width="0" height="0" MAYSCRIPT>
             <param name="serialPort" value="com1">
             <param name="fakeWeight" value="22">
           </applet>
+          -->
         </#if>
       <#else>
         <div class="tabletext"><font color="red">${uiLabelMap.ProductErrorNoPackagesFoundForShipment} !</font></div>
