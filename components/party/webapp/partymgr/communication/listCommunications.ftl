@@ -21,7 +21,7 @@
  *
  *@author     Andy Zeneski (jaz@ofbiz.org)
  *@author     Olivier Heintz (olivier.heintz@nereide.biz) 
- *@version    $Revision: 1.3 $
+ *@version    $Revision: 1.4 $
  *@since      2.2
 -->
 
@@ -79,15 +79,15 @@
   <tr><td colspan="8"><hr class="sepbar"></td></tr>
   <#if events?has_content>
     <#list events as event>
-      <#assign eventType = event.getRelatedOne("CommunicationEventType")>
-      <#assign contactMechType = event.getRelatedOne("ContactMechType")>
+      <#assign eventType = event.getRelatedOne("CommunicationEventType")?if_exists>
+      <#assign contactMechType = event.getRelatedOne("ContactMechType")?if_exists>
       <#if event.statusId?exists>
         <#assign statusItem = event.getRelatedOne("StatusItem")>
       </#if>
       <tr>
         <td><div class="tabletext">${event.communicationEventId?if_exists}</div></td>
-        <td><div class="tabletext">${eventType.get("description",locale)?default(uiLabelMap.CommonNA)}</div></td>
-        <td><div class="tabletext">${contactMechType.get("description",locale)?default(uiLabelMap.CommonNA)}</div></td>
+        <td><div class="tabletext">${(eventType.get("description",locale))?default(uiLabelMap.CommonNA)}</div></td>
+        <td><div class="tabletext">${(contactMechType.get("description",locale))?default(uiLabelMap.CommonNA)}</div></td>
         <td><div class="tabletext">${(statusItem.get("description", locale))?default(uiLabelMap.CommonNA)}</div></td>
         <td><div class="tabletext">${event.partyIdFrom?default(uiLabelMap.CommonNA)}</div></td>
         <td><div class="tabletext">${event.partyIdTo?default(uiLabelMap.CommonNA)}</div></td>

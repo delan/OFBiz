@@ -21,7 +21,7 @@
  *
  *@author     Andy Zeneski (jaz@ofbiz.org)
  *@author     Olivier Heintz (olivier.heintz@nereide.biz) 
- *@version    $Revision: 1.5 $
+ *@version    $Revision: 1.6 $
  *@since      2.2
 -->
 
@@ -302,6 +302,11 @@
         <#else>
         <div class="tabletext">${(communicationEvent.custRequestId)?if_exists}</div>
         </#if>
+        <#if (!(communicationEvent.custRequestId)?has_content && (communicationEvent.communicationEventId)?has_content)>
+          &nbsp;<a href="/workeffort/control/request?partyId=${partyId}&communicationEventId=${communicationEvent.communicationEventId}&subject=${communicationEvent.subject?default("")}${requestAttributes.externalKeyParam}" class="buttontext">Create New Request</a>
+        <#elseif ((communicationEvent.custRequestId)?has_content)>
+          &nbsp;<a href="/workeffort/control/request?custRequestId=${communicationEvent.custRequestId}${requestAttributes.externalKeyParam}" class="buttontext">View Request</a>
+        </#if>
       </td>
     </tr>
     <tr>
@@ -329,13 +334,35 @@
       </td>
     </tr>
     <tr>
+      <td width="20%" align="right"><span class="tableheadtext">Subject</span></td>
+      <td width="1">&nbsp;</td>
+      <td>
+        <#if okayToUpdate>
+        <input type="text" class="inputBox" size="30" name="subject" value="${(communicationEvent.subject)?if_exists}">
+        <#else>
+        <div class="tabletext">${(communicationEvent.subject)?if_exists}</div>
+        </#if>        
+      </td>
+    </tr>
+    <tr>
       <td width="20%" align="right"><span class="tableheadtext">${uiLabelMap.CommonNote}</span></td>
       <td width="1">&nbsp;</td>
       <td>
         <#if okayToUpdate>
-        <textarea class="textAreaBox" cols="60" rows="5" name="note">${(communicationEvent.note)?if_exists}</textarea>
+        <textarea class="textAreaBox" cols="60" rows="3" name="note">${(communicationEvent.note)?if_exists}</textarea>
         <#else>
         <div class="tabletext">${(communicationEvent.note)?if_exists}</div>
+        </#if>
+      </td>
+    </tr>
+    <tr>
+      <td width="20%" align="right"><span class="tableheadtext">${uiLabelMap.CommonContent}</span></td>
+      <td width="1">&nbsp;</td>
+      <td>
+        <#if okayToUpdate>
+        <textarea class="textAreaBox" cols="60" rows="10" name="content">${(communicationEvent.content)?if_exists}</textarea>
+        <#else>
+        <div class="tabletext">${(communicationEvent.content)?if_exists}</div>
         </#if>
       </td>
     </tr>
