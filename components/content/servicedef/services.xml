@@ -108,10 +108,13 @@
             invoke="createContent"
             auth="true" >
         <description>Create a Content</description>
-        <auto-attributes include="nonpk" mode="IN" optional="true"/>
+        <auto-attributes include="nonpk" mode="IN" optional="true">
+            <exclude field-name="contentTypeId"/>
+        </auto-attributes>
+        <attribute mode="IN" name="contentTypeId" optional="false" type="String"/>
         <attribute mode="IN" name="targetOperationList" optional="true" type="java.util.List"/>
         <attribute mode="IN" name="contentPurposeTypeId" optional="true" type="String"/>
-        <attribute mode="IN" name="userLogin" optional="true" type="org.ofbiz.core.entity.GenericValue"/>
+        <attribute mode="IN" name="userLogin" optional="true" type="org.ofbiz.entity.GenericValue"/>
         <attribute mode="INOUT" name="roleTypeList" optional="true" type="java.util.List"/>
         <attribute mode="INOUT" name="contentId" optional="true" type="String"/>
     </service>
@@ -122,7 +125,7 @@
         <auto-attributes include="nonpk" mode="IN" optional="true"/>
         <attribute mode="IN" name="targetOperationList" optional="true" type="java.util.List"/>
         <attribute mode="IN" name="contentPurposeTypeId" optional="true" type="String"/>
-        <attribute mode="IN" name="userLogin" optional="true" type="org.ofbiz.core.entity.GenericValue"/>
+        <attribute mode="IN" name="userLogin" optional="true" type="org.ofbiz.entity.GenericValue"/>
         <attribute mode="INOUT" name="roleTypeList" optional="true" type="java.util.List"/>
     </service>
     <service name="removeContent" default-entity-name="Content" engine="simple"
@@ -131,7 +134,7 @@
         <auto-attributes include="pk" mode="IN" optional="false"/>
         <attribute mode="IN" name="targetOperationList" optional="true" type="java.util.List"/>
         <attribute mode="IN" name="contentPurposeTypeId" optional="true" type="String"/>
-        <attribute mode="IN" name="userLogin" optional="true" type="org.ofbiz.core.entity.GenericValue"/>
+        <attribute mode="IN" name="userLogin" optional="true" type="org.ofbiz.entity.GenericValue"/>
         <attribute mode="INOUT" name="roleTypeList" optional="true" type="java.util.List"/>
     </service>
     <service name="checkContentPermission"
@@ -151,13 +154,15 @@
     <service name="findRelatedContent" default-entity-name="Content" engine="java"
             location="org.ofbiz.content.content.ContentServices.xml" invoke="findRelatedContent" auth="true">
         <description>Create a Content</description>
-        <attribute mode="IN" name="currentContent" optional="false" type="org.ofbiz.core.entity.GenericValue"/>
+        <attribute mode="IN" name="currentContent" optional="false" type="org.ofbiz.entity.GenericValue"/>
         <attribute mode="IN" name="toFrom" optional="true" type="String"/>
         <attribute mode="IN" name="fromDate" optional="true" type="String"/>
         <attribute mode="IN" name="thruDate" optional="true" type="String"/>
         <attribute mode="IN" name="targetOperationList" optional="true" type="java.util.List"/>
-        <attribute mode="IN" name="userLogin" optional="true" type="org.ofbiz.core.entity.GenericValue"/>
+        <attribute mode="IN" name="userLogin" optional="true" type="org.ofbiz.entity.GenericValue"/>
         <attribute mode="IN" name="contentAssocTypeList" optional="true" type="java.util.List"/>
+        <attribute mode="IN" name="contentTypeList" optional="true" type="java.util.List"/>
+        <attribute mode="IN" name="entityOperation" optional="true" type="String"/>
         <attribute mode="OUT" name="contentList" optional="false" type="java.util.List"/>
     </service>
 
@@ -189,8 +194,8 @@
         <attribute mode="IN" name="targetOperationList" optional="true" type="java.util.List"/>
         <attribute mode="IN" name="contentPurposeList" optional="true" type="java.util.List"/>
         <attribute mode="INOUT" name="roleTypeList" optional="true" type="java.util.List"/>
-        <attribute mode="IN" name="userLogin" optional="true"
-                                     type="org.ofbiz.core.entity.GenericValue"/>
+        <attribute mode="IN" name="userLogin" optional="true" 
+                                     type="org.ofbiz.entity.GenericValue"/>
         <attribute mode="IN" name="contentIdTo" optional="true" type="String"/>
         <attribute mode="IN" name="contentIdFrom" optional="true" type="String"/>
         <attribute mode="IN" name="statusId" optional="true" type="String"/>
@@ -1048,7 +1053,9 @@
         <description>Create a Content, DataResource and/or ContentAssoc</description>
         <auto-attributes entity-name="Content" include="all" mode="IN" optional="true">
             <exclude field-name="contentId"/>
+            <exclude field-name="contentTypeId"/>
         </auto-attributes>
+        <attribute mode="IN" name="contentTypeId" optional="true" type="String"/>
         <auto-attributes entity-name="DataResource" include="all" mode="IN" optional="true">
             <exclude field-name="dataResourceId"/>
         </auto-attributes>
@@ -1073,6 +1080,27 @@
         <attribute mode="INOUT" name="roleTypeList" optional="true" type="java.util.List"/>
     </service>
 
+    <service name="getAssocAndContentAndDataResource" default-entity-name="ContentAssocDataResourceViewFrom" 
+            engine="java"
+            location="org.ofbiz.content.content.ContentServicesComplex" 
+            invoke="getAssocAndContentAndDataResource" auth="false">
+        <description>Get a ContentAssocDataResourceView</description>
+        <auto-attributes entity-name="ContentAssocDataResourceViewFrom" include="all" 
+            mode="OUT" optional="true">
+            <exclude field-name="contentIdStart"/>
+        </auto-attributes>
+        <attribute mode="IN" name="assocTypes" optional="true" type="java.util.List"/>
+        <attribute mode="IN" name="contentTypes" optional="true" type="java.util.List"/>
+        <attribute mode="IN" name="mapKey" optional="true" type="String"/>
+        <attribute mode="IN" name="contentId" optional="true" type="String"/>
+        <attribute mode="IN" name="direction" optional="true" type="String"/>
+        <attribute mode="IN" name="fromDateStr" optional="true" type="String"/>
+        <attribute mode="IN" name="thruDateStr" optional="true" type="String"/>
+        <attribute mode="IN" name="fromDate" optional="true" type="java.sql.Timestamp"/>
+        <attribute mode="IN" name="thruDate" optional="true" type="java.sql.Timestamp"/>
+        <attribute mode="OUT" name="entityList" optional="true" type="java.util.List"/>
+    </service>
+
     <service name="traverseContent"
         auth="false" engine="java" invoke="traverseContent"
         location="org.ofbiz.content.content.ContentServices" >
@@ -1087,5 +1115,124 @@
         <attribute mode="IN" name="direction" optional="true" type="String"/>
         <attribute mode="OUT" name="pickList" optional="true" type="java.util.List"/>
         <attribute mode="OUT" name="nodeMap" optional="true" type="java.util.Map"/>
+    </service>
+    <service name="getSubContent" 
+            engine="java"
+            location="org.ofbiz.content.ContentManagementServices" 
+            invoke="getSubContent" auth="false">
+        <description>Get subContent of passed contentId/mapKey or subContentId</description>
+        <attribute mode="IN" name="mapKey" optional="true" type="String"/>
+        <attribute mode="IN" name="contentId" optional="true" type="String"/>
+        <attribute mode="IN" name="subContentId" optional="true" type="String"/>
+        <attribute mode="IN" name="assocTypes" optional="true" type="java.util.List"/>
+        <attribute mode="IN" name="contentTypes" optional="true" type="java.util.List"/>
+        <attribute mode="IN" name="fromDate" optional="true" type="java.sql.Timestamp"/>
+        <attribute mode="OUT" name="view" optional="true" type="org.ofbiz.entity.GenericValue"/>
+        <attribute mode="OUT" name="content" optional="true" type="org.ofbiz.entity.GenericValue"/>
+    </service>
+    <!--
+    <service name="addMostRecent" 
+            engine="java"
+            location="org.ofbiz.content.ContentManagementServices" 
+            invoke="addMostRecent" auth="false">
+        <description>Get subContent of passed contentId/mapKey or subContentId</description>
+        <attribute mode="IN" name="suffix" optional="true" type="String"/>
+        <attribute mode="IN" name="pk" optional="true" type="org.ofbiz.entity.GenericValue"/>
+        <attribute mode="IN" name="session" optional="true" type="javax.servlet.http.HttpSession"/>
+    </service>
+    -->
+    <service name="persistContentAndAssoc" default-entity-name="Content" engine="java"
+            location="org.ofbiz.content.ContentManagementServices" 
+            invoke="persistContentAndAssoc" auth="true">
+        <description>Create a Content, DataResource and/or ContentAssoc</description>
+        <auto-attributes entity-name="Content" include="all" mode="IN" optional="true">
+            <exclude field-name="contentId"/>
+        </auto-attributes>
+        <auto-attributes entity-name="DataResource" include="all" mode="IN" optional="true">
+            <exclude field-name="dataResourceId"/>
+        </auto-attributes>
+        <auto-attributes entity-name="ElectronicText" include="all" mode="IN" optional="true">
+            <exclude field-name="dataResourceId"/>
+        </auto-attributes>
+        <auto-attributes entity-name="ContentAssoc" include="all" mode="IN" optional="true">
+            <exclude field-name="contentIdTo"/>
+            <exclude field-name="contentId"/>
+            <exclude field-name="fromDate"/>
+            <exclude field-name="contentAssocTypeId"/>
+        </auto-attributes>
+        <attribute mode="INOUT" entity-name="Content" name="contentId" optional="true" type="String"/>
+
+        <attribute mode="INOUT" entity-name="DataResource" name="dataResourceId" optional="true" type="String"/>
+
+
+        <attribute mode="INOUT" entity-name="ContentAssoc" name="contentIdTo" optional="true" type="String"/>
+        <attribute mode="INOUT" entity-name="ContentAssoc" name="contentIdFrom" optional="true" type="String"/>
+        <attribute mode="INOUT" entity-name="ContentAssoc" name="contentAssocTypeId" optional="true" type="String"/>
+        <attribute mode="INOUT" entity-name="ContentAssoc" name="fromDate" optional="true" type="Timestamp"/>
+
+        <attribute mode="IN" name="targetOperationList" optional="true" type="java.util.List"/>
+        <attribute mode="IN" name="contentPurposeList" optional="true" type="java.util.List"/>
+        <attribute mode="IN" name="userLogin" optional="true" type="org.ofbiz.entity.GenericValue"/>
+        <attribute mode="INOUT" name="roleTypeList" optional="true" type="java.util.List"/>
+    </service>
+    <service name="deactivateAssocs" 
+            engine="java"
+            location="org.ofbiz.content.content.ContentServices" 
+            invoke="deactivateAssocs" auth="false">
+        <description>Supply thruDate to all ContentAssoc that come "before" current one</description>
+        <attribute mode="IN" name="contentIdTo" optional="false" type="String"/>
+        <attribute mode="IN" name="mapKey" optional="true" type="String"/>
+        <attribute mode="IN" name="activeContentId" optional="false" type="String"/>
+        <attribute mode="IN" name="contentAssocTypeId" optional="true" type="String"/>
+        <attribute mode="IN" name="fromDate" optional="false" type="Timestamp"/>
+        <attribute mode="OUT" name="deactivatedList" optional="false" type="java.util.List"/>
+    </service>
+
+    <!-- SubContent Render Services -->
+    <service name="renderSubContentAsText" 
+            engine="java"
+            location="org.ofbiz.content.content.ContentServices" 
+            invoke="renderSubContentAsText" auth="false">
+        <description>Get the subcontent and render</description>
+        <attribute mode="IN" name="contentId" optional="true" type="String"/>
+        <attribute mode="IN" name="mapKey" optional="true" type="String"/>
+        <attribute mode="IN" name="outWriter" optional="false" type="java.io.Writer"/>
+        <attribute mode="IN" name="subContentId" optional="true" type="String"/>
+        <attribute mode="IN" name="templateContext" optional="false" type="java.lang.Object"/>
+        <attribute mode="IN" name="locale" optional="true" type="String"/>
+        <attribute mode="IN" name="mimeTypeId" optional="true" type="String"/>
+        <attribute mode="IN" name="userLogin" optional="true" type="org.ofbiz.entity.GenericValue"/>
+        <attribute mode="IN" name="fromDate" optional="true" type="java.sql.Timestamp"/>
+        <attribute mode="IN" name="subContentDataResourceView" optional="true" 
+                             type="org.ofbiz.entity.GenericValue"/>
+        <attribute mode="OUT" name="view" optional="true" type="org.ofbiz.entity.GenericValue"/>
+    </service>
+
+    <service name="renderContentAsText" 
+            engine="java"
+            location="org.ofbiz.content.content.ContentServices" 
+            invoke="renderContentAsText" auth="false">
+        <description>Get the subcontent and render</description>
+        <attribute mode="IN" name="contentId" optional="false" type="String"/>
+        <attribute mode="IN" name="outWriter" optional="false" type="java.io.Writer"/>
+        <attribute mode="IN" name="templateContext" optional="true" type="java.lang.Object"/>
+        <attribute mode="IN" name="locale" optional="true" type="String"/>
+        <attribute mode="IN" name="mimeTypeId" optional="true" type="String"/>
+        <attribute mode="IN" name="subContentDataResourceView" optional="true" 
+                             type="org.ofbiz.entity.GenericValue"/>
+    </service>
+
+    <service name="renderDataResourceAsText" 
+            engine="java"
+            location="org.ofbiz.content.data.DataServices" 
+            invoke="renderDataResourceAsText" auth="false">
+        <description>Get the dataResource and render</description>
+        <attribute mode="IN" name="dataResourceId" optional="false" type="String"/>
+        <attribute mode="IN" name="outWriter" optional="false" type="java.io.Writer"/>
+        <attribute mode="IN" name="templateContext" optional="false" type="java.lang.Object"/>
+        <attribute mode="IN" name="locale" optional="true" type="String"/>
+        <attribute mode="IN" name="mimeTypeId" optional="true" type="String"/>
+        <attribute mode="IN" name="subContentDataResourceView" optional="true" 
+                             type="org.ofbiz.entity.GenericValue"/>
     </service>
 </services>
