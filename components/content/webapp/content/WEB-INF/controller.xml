@@ -1023,6 +1023,17 @@
         <response name="success" type="view" value="SurveyResponse"/>
         <response name="error" type="view" value="SurveyResponse"/>
     </request-map>
+    <request-map uri="ViewSurveyResponse">
+        <security auth="true" https="true"/>
+        <response name="success" type="view" value="ViewSurveyResponse"/>
+        <response name="error" type="view" value="ViewSurveyResponse"/>
+    </request-map>
+    <request-map uri="updateSurveyResponse">
+        <security auth="true" https="true"/>
+        <event type="service" invoke="createSurveyResponse"/>
+        <response name="success" type="view" value="ViewSurveyResponse"/>
+        <response name="error" type="view" value="ViewSurveyResponse"/>
+    </request-map>
 
     <!-- end of request mappings -->
     <request-map uri="subcontent">
@@ -1397,6 +1408,8 @@
     <view-map name="EditSurveyQuestions" page="/survey/EditSurveyQuestions.ftl" type="jpublish"/>
     <view-map name="LookupPartyAndUserLoginAndPerson" page="/content/LookupPartyAndUserLoginAndPerson.ftl" type="jpublish"/>
     <view-map name="SurveyResponse" page="/survey/SurveyResponse.ftl" type="jpublish"/>
+    <view-map name="ViewSurveyResponse" page="/survey/ViewResponse.ftl" type="jpublish"/>
+
     <view-map name="CMSSiteFind" page="component://content/widget/cms/CMSScreens.xml#CMSSiteFind" type="screen"/>
     <view-map name="CMSSiteEdit" page="component://content/widget/cms/CMSScreens.xml#CMSSiteEdit" type="screen"/>
     <view-map name="CMSContentFind" page="component://content/widget/cms/CMSScreens.xml#CMSContentFind" type="screen"/>

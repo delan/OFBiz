@@ -189,7 +189,7 @@
                         <td align="right" colspan="2">
                           <div class="tabletext" style="font-size: xx-small;">
                             <b><i>Survey</i>:</b>
-                              <a href="/content/control/ViewSurveyResponses?surveyId=${survey.surveyId}&externalLoginKey=${requestAttributes.externalLoginKey}" class="buttontext" style="font-size: xx-small;">${survey.surveyId}</a>
+                              <a href="/content/control/ViewSurveyResponse?surveyResponseId=${survey.surveyResponseId}&surveyId=${survey.surveyId}&partyId=${survey.partyId}&externalLoginKey=${requestAttributes.externalLoginKey}" class="buttontext" style="font-size: xx-small;">${survey.surveyId}</a>
                           </div>
                         </td>                        
                         <td>&nbsp;</td>

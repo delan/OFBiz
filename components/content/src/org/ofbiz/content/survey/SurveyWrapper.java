@@ -58,7 +58,7 @@ import freemarker.ext.beans.BeansWrapper;
  * Survey Wrapper - Class to render survey forms
  *
  * @author     <a href="mailto:jaz@ofbiz.org">Andy Zeneski</a>
- * @version    $Rev:$
+ * @version    $Rev$
  * @since      3.0
  */
 public class SurveyWrapper {
@@ -70,6 +70,7 @@ public class SurveyWrapper {
     protected String partyId = null;
     protected String surveyId = null;
     protected Map passThru = null;
+    protected boolean edit = false;
 
     protected SurveyWrapper() {}
 
@@ -158,6 +159,10 @@ public class SurveyWrapper {
         return template;
     }
 
+    public void setEdit(boolean edit) {
+        this.edit = edit;
+    }
+
     // returns the GenericValue object for the current Survey
     public GenericValue getSurvey() {
         GenericValue survey = null;
@@ -179,6 +184,10 @@ public class SurveyWrapper {
 
     // true if we can update this survey
     public boolean canUpdate() {
+        if (this.edit) {
+            return true;
+        }
+        
         GenericValue survey = this.getSurvey();
         if (!"Y".equals(survey.getString("allowMultiple")) || !"Y".equals(survey.getString("allowUpdate"))) {
             return false;
