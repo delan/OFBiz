@@ -1,5 +1,5 @@
 /*
- * $Id: ServiceEcaRule.java,v 1.1 2003/08/17 05:12:39 ajzeneski Exp $
+ * $Id: ServiceEcaRule.java,v 1.2 2003/09/25 21:23:10 ajzeneski Exp $
  *
  * Copyright (c) 2001, 2002 The Open For Business Project - www.ofbiz.org
  *
@@ -40,7 +40,7 @@ import org.w3c.dom.Element;
  * ServiceEcaRule
  *
  * @author     <a href="mailto:jaz@ofbiz.org">Andy Zeneski</a>
- * @version    $Revision: 1.1 $
+ * @version    $Revision: 1.2 $
  * @since      2.0
  */
 public class ServiceEcaRule {
@@ -112,7 +112,7 @@ public class ServiceEcaRule {
                 // in order to enable OR logic without multiple calls to the given service, 
                 //only execute a given service name once per service call phase 
                 if (!actionsRun.contains(ea.serviceName)) {
-                    if (Debug.verboseOn()) Debug.logVerbose("Running ECA Service: " + ea.serviceName + ", triggered by rule on Service: " + serviceName, module);
+                    if (Debug.infoOn()) Debug.logInfo("Running ECA Service: " + ea.serviceName + ", triggered by rule on Service: " + serviceName, module);
                     ea.runAction(serviceName, dctx, context, result);
                     actionsRun.add(ea.serviceName);
                 }
