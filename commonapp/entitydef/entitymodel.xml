@@ -8284,6 +8284,11 @@
       <prim-key-col>SHIPMENT_METHOD_TYPE_ID</prim-key-col>	
       <prim-key-col>PARTY_ID</prim-key-col>	
       <prim-key-col>ROLE_TYPE_ID</prim-key-col>
+      <relation>
+        <type>one</type>
+        <rel-table-name>SHIPMENT_METHOD_TYPE</rel-table-name>
+        <key-map><col-name>SHIPMENT_METHOD_TYPE_ID</col-name></key-map>
+      </relation>
     </entity>	
     <entity>
       <title>Packaging Content Entity</title>
