@@ -4,4 +4,5 @@
     <property name="titleProperty">ManufacturingProductionRunDeclaration</property>
     <property name="headerItem">jobshop</property>   
     <property name="tabButtonItem">declaration</property>
+    <content-action name="/jobshopmgt/ProductionRunDeclaration.bsh"/>
 </page>

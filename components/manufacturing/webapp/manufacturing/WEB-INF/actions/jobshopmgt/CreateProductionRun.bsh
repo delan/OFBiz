@@ -21,13 +21,28 @@
  *
  *@author     Andy Zeneski (jaz@ofbiz.org)
  *@author      Olivier.Heintz@nereide.biz
- *@version    $Rev:$
+ *@version    $Rev$
  *@since      3.0
  */
 
 import java.util.*;
 import org.ofbiz.entity.*;
 import org.ofbiz.base.util.*;
+
+
+// Loads the newly created production run (for the tab bar)
+delegator = request.getAttribute("delegator");
+
+productionRunId = request.getAttribute("productionRunId");
+System.out.println("BSH: " + productionRunId);
+if (!UtilValidate.isEmpty(productionRunId)) {
+    GenericValue productionRun = delegator.findByPrimaryKey("WorkEffort", UtilMisc.toMap("workEffortId", productionRunId));
+    if (productionRun != null) {
+        context.put("productionRunId", productionRunId);
+        context.put("productionRun", productionRun);
+    }
+}
+
 
 // requestParams = UtilHttp.getParameterMap(request);
 HashMap productionRunData= new HashMap();
@@ -37,6 +52,8 @@ pRQuantity = request.getParameter("pRQuantity");
 if (pRQuantity != null) productionRunData.put("pRQuantity",pRQuantity);
 startDate = request.getParameter("startDate");
 if (startDate != null) productionRunData.put("startDate",startDate);
+facilityId = request.getParameter("facilityId");
+if (facilityId != null) productionRunData.put("facilityId", facilityId);
 routingId = request.getParameter("routingId");
 if (routingId != null) productionRunData.put("routingId",routingId);
 workEffortName = request.getParameter("workEffortName");
@@ -51,7 +68,6 @@ if (msgResult == null) msgResult = request.getAttribute("msgResult");
 /*UtilMisc.toMap("routing","crac") if (msgResult != null && ! msgResult.isEmpty()) {
 	Iterator ite = msgResult.iterator();
 
-delegator = request.getAttribute("delegator");
 if (calendarId == null) {
     calendarId = request.getAttribute("calendarId");
 }
@@ -72,6 +88,16 @@ errorMessage = request.getAttribute("_ERROR_MESSAGE_");
 if (errorMessage != null && errorMessage.length() > 0) {
     tryEntity = false;    
 }
+
+// get all the warehouses
+delegator = request.getAttribute("delegator");
+warehouses = delegator.findByAnd("Facility", UtilMisc.toMap("facilityTypeId", "WAREHOUSE"));
+context.put("warehouses", warehouses);
+if (facilityId != null && facilityId.length() > 0) {
+    currentFacilityId = delegator.findByPrimaryKeyCache("Facility", UtilMisc.toMap("facilityId", facilityId));
+    context.put("currentFacilityId", currentFacilityId);
+}
+
 
 context.put("msgResult", msgResult);
 context.put("productionRunData", productionRunData);
