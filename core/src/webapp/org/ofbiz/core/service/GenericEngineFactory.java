@@ -32,6 +32,7 @@ import org.ofbiz.core.util.*;
  *  THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  *
  *@author     <a href="mailto:jonesde@ofbiz.org">David E. Jones</a>
+ *@author     <a href="mailto:jaz@zsolv.com">Andy Zeneski</a>
  *@created    Oct 20 2001
  *@version    1.0
  */

@@ -1,6 +1,9 @@
 /*
  * $Id$
  * $Log$
+ * Revision 1.5  2001/11/03 00:19:35  azeneski
+ * Changed the compareTo to not change the runTime of a job.
+ *
  * Revision 1.4  2001/11/02 23:11:14  azeneski
  * Some non-functional services implementation.
  *
@@ -59,7 +62,7 @@ public class JobManager {
         // Get all scheduled jobs from the database.
         Collection jobList = null;
         try {
-            jobList = delegator.findAll("Jobs");
+            jobList = delegator.findAll("JobSandbox");
         }
         catch ( GenericEntityException e ) {
             e.printStackTrace();
@@ -69,6 +72,7 @@ public class JobManager {
             while ( i.hasNext() ) {
                 // Add the job.
                 try {
+                    // Map context = getContextMethod()?
                     Job thisJob = addJob((GenericValue)i.next(),null); // fix the context
                 }
                 catch ( JobSchedulerException e ) {

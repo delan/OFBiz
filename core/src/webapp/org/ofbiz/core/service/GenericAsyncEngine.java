@@ -94,24 +94,46 @@ public abstract class GenericAsyncEngine implements GenericEngine {
     // Private Methods to create a GenericValue object for a Job.
     
     private GenericValue createScheduledJob(String jobName, String service) throws GenericEntityException {
-        return createScheduledJob(jobName,null,null,-1,0,service);
+        return createScheduledJob(jobName,service,null,null,null,null,null,null);
     }
     
-    private GenericValue createScheduledJob(String jobName, Date startDate, String service) throws GenericEntityException {
-        return createScheduledJob(jobName,startDate,null,-1,0,service);
+    private GenericValue createScheduledJob(String jobName, String service, Date startDate) throws GenericEntityException {
+        return createScheduledJob(jobName,service,startDate,null,null,null,null,null);
     }
     
-    private GenericValue createScheduledJob(String jobName, Date startDate, Date endDate, String service) throws GenericEntityException {
-        return createScheduledJob(jobName,startDate,endDate,-1,0,service);
+    private GenericValue createScheduledJob(String jobName, String service, Date startDate, Date endDate) throws GenericEntityException {
+        return createScheduledJob(jobName,service,startDate,endDate,null,null,null,null);
     }
-    
-    private GenericValue createScheduledJob(String jobName, Date startDate, Date endDate, int interval, int intervalType, String service) throws GenericEntityException {
+         
+    private GenericValue createScheduledJob(String jobName, String serviceName, Date startDate, Date endDate,
+    String exceptions, String exceptionRule, String recurrences, String recurrenceRule) throws GenericEntityException {
+        
+        // Make create a name if null.
         if ( jobName == null )
             jobName = new String(new Long(System.currentTimeMillis()).toString());
-        Map fields = UtilMisc.toMap("jobName",jobName,"startDate",startDate,"endDate",endDate,"interval",new Integer(interval),"intervalType", new Integer(intervalType),"serviceName",service);
-        GenericValue valueObject = dispatcher.getDelegator().create("Job",fields);
-        valueObject.store();
-        return valueObject;
+        
+        // Get a sequence ID for the RecurrenceInfo entity.
+        String recurrenceId = dispatcher.getDelegator().getNextSeqId("RecurrenceInfo").toString();
+        
+        // Make the RecurrenceInfo field mapping.
+        Map rFields = new HashMap();
+        rFields.put("recurrenceInfoId",recurrenceId);
+        rFields.put("startDateTime",startDate);
+        rFields.put("endDateTime",endDate);
+        rFields.put("exceptionDateTimes",exceptions);
+        rFields.put("exceptionRule",exceptionRule);
+        rFields.put("recurrenceDateTimes",recurrences);
+        rFields.put("recurrenceRule",recurrenceRule);
+        
+        // Make the JobSandbox field mapping
+        Map jFields = UtilMisc.toMap("jobName",jobName,"serviceName",serviceName,"recurrenceInfoId",recurrenceId);
+        
+        // Create the value objects.
+        GenericValue job = dispatcher.getDelegator().makeValue("OrderHeader", jFields);
+        GenericValue rule = dispatcher.getDelegator().makeValue("RecurrenceInfo", rFields);
+        job.preStoreOther(rule);
+        dispatcher.getDelegator().create(job);
+        return job;
     }
     
 }

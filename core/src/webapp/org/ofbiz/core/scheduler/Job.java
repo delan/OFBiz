@@ -1,6 +1,9 @@
 /*
  * $Id$
  * $Log$
+ * Revision 1.4  2001/11/03 01:38:25  azeneski
+ * Renamed runTime to runtime.
+ *
  * Revision 1.3  2001/11/03 00:19:35  azeneski
  * Changed the compareTo to not change the runtime of a job.
  *
@@ -55,6 +58,9 @@ public class Job implements Comparable, Serializable {
     private long runtime;
     private long seqNum;
     
+    private List exceptionList;
+    private List recurrenceList;
+    
     /* Entity: JobSandbox
      * jobName - string
      * serviceName - string
@@ -77,13 +83,21 @@ public class Job implements Comparable, Serializable {
         this.context = context;
         this.runtime = -1;
         this.seqNum = 0;
-        updateRuntime();
+        init();
         try {
             job.store();
         }
         catch ( GenericEntityException e ) {
             e.printStackTrace();
         }
+    }
+    
+    // Initialize the job.
+    private void init() {
+        exceptionList = new ArrayList();
+        recurrenceList = new ArrayList();
+        // build the lists.
+        updateRuntime();
     }
     
     /** Updates the runtime based on the interval (minutes). */
