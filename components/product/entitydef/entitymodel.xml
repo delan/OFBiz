@@ -26,7 +26,7 @@
  *
  * @author     David E. Jones (jonesde@ofbiz.org)
  * @author     Andy Zeneski (jaz@ofbiz.org)
- * @version    $Revision: 1.76 $
+ * @version    $Revision: 1.77 $
  */
 -->
 
@@ -183,6 +183,7 @@
       <field name="linkOneImageUrl" type="url"></field>
       <field name="linkTwoImageUrl" type="url"></field>
       <field name="detailTemplate" type="long-varchar"></field>
+      <field name="showInSelect" type="indicator"></field>
       <prim-key field="productCategoryId"/>
       <relation type="many" rel-entity-name="ProductCategoryAttribute">
         <key-map field-name="productCategoryId"/>
