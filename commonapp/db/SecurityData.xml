@@ -249,6 +249,7 @@
   
   <SecurityGroupPermission groupId="ORDERENTRY" permissionId="ORDERMGR_VIEW_ROLE"/>
   <SecurityGroupPermission groupId="ORDERENTRY" permissionId="ORDERMGR_NOTE"/>
+  <SecurityGroupPermission groupId="ORDERENTRY" permissionId="ORDERMGR_UPDATE"/>
   <SecurityGroupPermission groupId="ORDERENTRY" permissionId="ORDERMGR_CREATE"/>
   <SecurityGroupPermission groupId="ORDERENTRY" permissionId="PARTYMGR_VIEW"/>
   <SecurityGroupPermission groupId="ORDERENTRY" permissionId="PARTYMGR_CREATE"/>
