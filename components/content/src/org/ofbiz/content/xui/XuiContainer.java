@@ -108,7 +108,7 @@ public abstract class XuiContainer implements Container {
             this.startupFile = ContainerConfig.getPropertyValue(cc, "startup-file", "xui.properties");
         }
         this.initialScreen = new XuiScreen();
-        this.initialScreen.setup(this.startupFile);
+        this.initialScreen.setup(this.startupFile);                
 
         return true;
     }
@@ -146,7 +146,7 @@ public abstract class XuiContainer implements Container {
             frame.setUndecorated(true);
             frame.setVisible(false);
             frame.getContentPane().add(this);            
-            this.setup(frame, new String[] { startupFile });
+            super.setup(frame, new String[] { startupFile });
         }
     }
 }

@@ -74,15 +74,38 @@ public class KeyboardAdaptor {
             }
         }
 
-        receivers.put(receiver, new Integer(dataType));
+        if (receiver != null && dataType > -1) {
+            receivers.put(receiver, new Integer(dataType));
+        }
         return adaptor;
     }
 
-    public static void attachComponents(Component[] coms) {
+    public static KeyboardAdaptor getInstance() {
+        return getInstance(null, -1);
+    }
+
+    public static void attachComponents(Component[] coms, boolean recurse) {
+        // check the adaptor
+        if (adaptor == null) {
+            KeyboardAdaptor.getInstance();
+        }
+
         // add the new components to listen on
         if (adaptor != null && coms != null) {
-            adaptor.addComponents(coms);
+            adaptor.addComponents(coms, recurse);
         }
+    }
+
+    public static void attachComponents(Component[] coms) {
+        KeyboardAdaptor.attachComponents(coms, true);
+    }
+
+    public static void attachComponents(Container parent, boolean recurse) {
+        KeyboardAdaptor.attachComponents(new Component[] { parent }, recurse);
+    }
+
+    public static void attachComponents(Container parent) {
+        KeyboardAdaptor.attachComponents(parent, true);
     }
 
     public static void stop() {
@@ -97,8 +120,8 @@ public class KeyboardAdaptor {
         KeyboardAdaptor.adaptor = this;
     }
 
-    private void addComponents(Component[] coms) {
-        listener.reader.configureComponents(coms);
+    private void addComponents(Component[] coms, boolean recurse) {
+        listener.reader.configureComponents(coms, recurse);
     }
 
     private class KeyboardListener extends Thread {
@@ -224,14 +247,15 @@ public class KeyboardAdaptor {
             this.k = k;
         }
 
-        private void configureComponents(Component[] coms) {
+        private void configureComponents(Component[] coms, boolean recurse) {
             for (int i = 0; i < coms.length; i++) {
                 if (!loadedComponents.contains(coms[i])) {
                     coms[i].addKeyListener(this);
+                    Debug.logInfo("Added [" + coms[i].getName() + "] to KeyboardAdaptor", module);
                 }
-                if (coms[i] instanceof Container) {
+                if (recurse && coms[i] instanceof Container) {
                     Component[] nextComs = ((Container) coms[i]).getComponents();
-                    configureComponents(nextComs);
+                    configureComponents(nextComs, true);
                 }
             }
         }
