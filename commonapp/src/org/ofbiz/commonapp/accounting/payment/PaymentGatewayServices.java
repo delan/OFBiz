@@ -45,10 +45,10 @@ public class PaymentGatewayServices {
     public static final String module = PaymentGatewayServices.class.getName();
 
     /**
-     * Processes payments through service calls to 'ccProcessor' and 'eftProcessor'.
+     * Processes payments through service calls to the defined processing service for the website/paymentMethodType
      * @returns APPROVED|FAILED|ERROR for complete processing of ALL payment methods.
      */
-    public static Map processPayments(DispatchContext dctx, Map context) {
+    public static Map authOrderPayments(DispatchContext dctx, Map context) {
         GenericDelegator delegator = dctx.getDelegator();
         String orderId = (String) context.get("orderId");
         String webSiteId = (String) context.get("webSiteId");
@@ -187,7 +187,7 @@ public class PaymentGatewayServices {
             try {
                 // pass the payTo partyId to the result processor; we just add it to the result context.
                 processorResult.put("payToPartyId", context.get("payToPartyId"));
-                if (processResult(dctx, processorResult, paymentPref))
+                if (processResult(dctx, processorResult, paymentPref, paymentSettings))
                     amountToBill -= thisAmount;
             } catch (GeneralException ge) {
                 Debug.logError(ge, "Problem processing the result: " + processorResult, module);
@@ -226,25 +226,144 @@ public class PaymentGatewayServices {
         }
         return result;
     }
+    
+    /**
+     * Captures payments through service calls to the defined processing service for the website/paymentMethodType
+     * @returns COMPLETE|FAILED|ERROR for complete processing of ALL payment methods.
+     */
+    public static Map captureOrderPayments(DispatchContext dctx, Map context) {
+        GenericDelegator delegator = dctx.getDelegator();
+        LocalDispatcher dispatcher = dctx.getDispatcher();
+        String orderId = (String) context.get("orderId");
+        String webSiteId = (String) context.get("webSiteId");
+        Map result = new HashMap();        
 
-    private static boolean processResult(DispatchContext dctx, Map result, GenericValue paymentPreference) throws GeneralException {
+        // get the order header and payment preferences
+        GenericValue orderHeader = null;
+        List paymentPrefs = null;
+
+        try {                       
+            orderHeader = delegator.findByPrimaryKey("OrderHeader", UtilMisc.toMap("orderId", orderId));
+            
+            // get the payment prefs
+            Map lookupMap = UtilMisc.toMap("orderId", orderId, "statusId", "PAYMENT_AUTHORIZED");
+            List orderList = UtilMisc.toList("maxAmount");
+            paymentPrefs = delegator.findByAnd("OrderPaymentPreference", lookupMap, orderList);
+        } catch (GenericEntityException gee) {
+            Debug.logError(gee, "Problems getting entity record(s), see stack trace", module);
+            result.put(ModelService.RESPONSE_MESSAGE, ModelService.RESPOND_ERROR);
+            result.put(ModelService.ERROR_MESSAGE, "ERROR: Could not get order information (" + gee.getMessage() + ").");
+            return result;
+        }
+
+        // error if no order was found
+        if (orderHeader == null) {
+            return ServiceUtil.returnError("Could not find OrderHeader with orderId: " + orderId + "; not processing payments.");
+        }  
+        
+        // get the order total
+        OrderReadHelper orh = new OrderReadHelper(orderHeader);
+        double captureTotal = orh.getOrderGrandTotal();
+        
+        // return complete if no payment prefs were found
+        if (paymentPrefs == null || paymentPrefs.size() == 0) {
+            Debug.logWarning("No orderPaymentPreferences available to capture", module);
+            result.put("processResult", "COMPLETE");
+            result.put(ModelService.RESPONSE_MESSAGE, ModelService.RESPOND_SUCCESS);
+            return result;   
+        }
+        
+        // iterate over the prefs and capture each one; log all failed attempts so we can re-auth
+        List failedAttempts = new ArrayList();
+        Iterator payments = paymentPrefs.iterator();
+        while (payments.hasNext()) {
+            GenericValue paymentPref = (GenericValue) payments.next();
+            
+            // get the payment method type so we can lookup the capture service
+            String paymentMethodTypeId = null;
+            if (paymentPref.get("paymentMethodTypeId") != null) {
+                paymentMethodTypeId = paymentPref.getString("paymentMethodTypeId");
+            } else {
+                try {                
+                    GenericValue paymentMethod = paymentPref.getRelatedOne("PaymentMethod");
+                    paymentMethodTypeId = paymentMethod.getString("paymentMethodTypeId");
+                } catch (GenericEntityException e) {
+                    Debug.logError(e, "Trouble getting PaymentMethod from the OrderPaymentPreference", module);
+                    return ServiceUtil.returnError("Trouble getting PaymentMethod entity from OrderPaymentPreference");
+                }
+            }
+            
+            // get the capture amount.
+            Double captureAmount = new Double(captureTotal);
+            if (paymentPref.get("maxAmount") != null && paymentPref.getDouble("maxAmount").doubleValue() > 0.00)
+                captureAmount = paymentPref.getDouble("maxAmount");                                        
+            if (Debug.verboseOn())
+                Debug.logVerbose("Charging amount: " + captureAmount, module);
+                            
+            // look up the payment configuration settings
+            GenericValue paymentSettings = PaymentWorker.getPaymentSetting(delegator, webSiteId, paymentMethodTypeId);
+            Map captureContext = new HashMap();
+            String serviceName = null;
+            String paymentConfig = null;
+            if (paymentSettings != null) {
+                serviceName = paymentSettings.getString("paymentCaptureService");
+                paymentConfig = paymentSettings.getString("paymentConfiguration");
+            }            
+            
+            // prepare the context for the capture service (must follow the ccCaptureInterface
+            captureContext.put("orderPaymentPreference", paymentPref);
+            captureContext.put("paymentConfig", paymentConfig);
+            captureContext.put("captureAmount", captureAmount);
+            captureContext.put("currency", context.get("currency"));
+            
+            // now invoke the capture service
+            Map captureResult = null;
+            try {
+                captureResult = dispatcher.runSync(serviceName, captureContext);                               
+            } catch (GenericServiceException e) {
+                Debug.logError(e, "Could not capture payment ... serviceName: " + serviceName + " ... context: " + captureContext, module);
+                failedAttempts.add(paymentPref);                
+            } 
+            
+            // pass the payTo partyId to the result processor; we just add it to the result context.
+            captureResult.put("payToPartyId", context.get("payToPartyId"));
+            
+            // process the capture's results
+            boolean processResult = false;
+            try {
+                processResult = PaymentGatewayServices.processResult(dctx, captureResult, paymentPref, paymentSettings);
+                if (processResult)
+                    captureTotal -= captureAmount.doubleValue();
+            } catch (GeneralException e) {
+                Debug.logError(e, "Trouble processing the result; captureResult: " + captureResult, module);
+                ServiceUtil.returnError("Trouble processing the capture results");                     
+            }
+        }
+        
+        // now re-auth and re-capture any failed attempts
+        // TODO: re-auth and re-capture all failed attempts
+        
+        return ServiceUtil.returnSuccess();    
+    }
+
+    private static boolean processResult(DispatchContext dctx, Map result, GenericValue paymentPreference, GenericValue paymentSettings) throws GeneralException {
         Boolean authResult = (Boolean) result.get("authResult");
         Boolean captureResult = (Boolean) result.get("captureResult");
         boolean resultPassed = false;
 
         if (authResult != null) {
-            processAuthResult(dctx, result, paymentPreference);
+            processAuthResult(dctx, result, paymentPreference, paymentSettings);
             resultPassed = authResult.booleanValue();
         }
         if (captureResult != null) {
-            processCaptureResult(dctx, result, paymentPreference);
+            processCaptureResult(dctx, result, paymentPreference, paymentSettings);
             if (!resultPassed)
                 resultPassed = captureResult.booleanValue();
         }
         return resultPassed;
     }
 
-    private static void processAuthResult(DispatchContext dctx, Map result, GenericValue paymentPreference) throws GeneralException {
+    private static void processAuthResult(DispatchContext dctx, Map result, GenericValue paymentPreference, GenericValue paymentSettings) throws GeneralException {
         Boolean authResult = (Boolean) result.get("authResult");
 
         if (result != null && authResult.booleanValue()) {
@@ -266,7 +385,7 @@ public class PaymentGatewayServices {
         paymentPreference.store();
     }
 
-    private static void processCaptureResult(DispatchContext dctx, Map result, GenericValue paymentPreference) throws GeneralException {
+    private static void processCaptureResult(DispatchContext dctx, Map result, GenericValue paymentPreference, GenericValue paymentConfig) throws GeneralException {
         Boolean captureResult = (Boolean) result.get("captureResult");
         String payTo = (String) result.get("payToPartyId");
 

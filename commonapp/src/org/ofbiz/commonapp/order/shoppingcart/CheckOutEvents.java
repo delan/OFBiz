@@ -790,7 +790,7 @@ public class CheckOutEvents {
             Map paymentResult = null;
             try {
                 // invoke the payment gateway service.
-                paymentResult = dispatcher.runSync("processPayments", UtilMisc.toMap("orderId", orderId, "webSiteId", CatalogWorker.getWebSiteId((ServletRequest)request)));
+                paymentResult = dispatcher.runSync("authOrderPayments", UtilMisc.toMap("orderId", orderId, "webSiteId", CatalogWorker.getWebSiteId((ServletRequest)request)));
             } catch (GenericServiceException e) {
                 Debug.logWarning(e, module);
             }

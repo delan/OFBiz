@@ -260,18 +260,28 @@
         <attribute name="paymentId" type="String" mode="OUT" optional="true"/>
     </service>
 
-    <service name="processPayments" engine="java"
-            location="org.ofbiz.commonapp.accounting.payment.PaymentGatewayServices" invoke="processPayments" auth="false">
-        <description>Process payments (authorizations)</description>
+    <service name="authOrderPayments" engine="java"
+            location="org.ofbiz.commonapp.accounting.payment.PaymentGatewayServices" invoke="authOrderPayments" auth="false">
+        <description>Process (authorizes) payments for an order</description>
         <attribute name="orderId" type="String" mode="INOUT" optional="false"/>
         <attribute name="payToPartyId" type="String" mode="IN" optional="true"/>
         <attribute name="currency" type="String" mode="IN" optional="true"/>
         <attribute name="webSiteId" type="String" mode="IN" optional="false"/>
         <attribute name="processResult" type="String" mode="OUT" optional="false"/>
     </service>
+    
+    <service name="captureOrderPayments" engine="java"
+            location="org.ofbiz.commonapp.accounting.payment.PaymentGatewayServices" invoke="captureOrderPayments" auth="true">
+        <description>Captures (settles) pre-authorized order payments</description>       
+        <attribute name="orderId" type="String" mode="INOUT" optional="false"/>
+        <attribute name="payToPartyId" type="String" mode="IN" optional="true"/>
+        <attribute name="currency" type="String" mode="IN" optional="true"/>
+        <attribute name="webSiteId" type="String" mode="IN" optional="false"/>
+        <attribute name="processResult" type="String" mode="OUT" optional="false"/>        
+    </service>
 
-	<service name="ccProcessInterface" engine="interface" location="" invoke="">
-        <description>Credit Card Processing Interface</description>
+	<service name="ccAuthInterface" engine="interface" location="" invoke="">
+        <description>Credit Card Authorization Interface</description>
         <attribute name="orderId" type="String" mode="IN" optional="false"/>
         <attribute name="processAmount" type="Double" mode="INOUT" optional="false"/>
         <attribute name="orderItems" type="List" mode="IN" optional="false"/>
@@ -292,6 +302,16 @@
         <attribute name="avsCode" type="String" mode="OUT" optional="true"/>
         <attribute name="scoreCode" type="String" mode="OUT" optional="true"/>        
         <attribute name="captureRefNum" type="String" mode="OUT" optional="true"/>
+	</service>
+	
+	<service name="ccCaptureInterface" engine="interface" location="" invoke="">
+	    <description>Credit Card Capture Interface</description>
+	    <attribute name="orderPaymentPreference" type="GenericValue" mode="IN" optional="false"/>
+	    <attribute name="captureAmount" type="Double" mode="IN" optional="false"/>
+	    <attribute name="currency" type="String" mode="IN" optional="true"/>
+	    <attribute name="paymentConfig" type="String" mode="IN" optional="true"/>
+	    <attribute name="captureResult" type="Boolean" mode="OUT" optional="true"/>
+	    <attribute name="captureRefNum" type="String" mode="OUT" optional="true"/>	    	    
 	</service>
 	
     <service name="eftProcessInterface" engine="interface" location="" invoke="">
@@ -319,31 +339,31 @@
     <service name="testCCProcessor" engine="java"
             location="org.ofbiz.commonapp.accounting.payment.PaymentGatewayServices" invoke="testProcessor">
         <description>Credit Card Processing</description>
-        <implements service="ccProcessInterface"/>
+        <implements service="ccAuthInterface"/>
     </service>
     
     <service name="alwaysApproveCCProcessor" engine="java"
              location="org.ofbiz.commonapp.accounting.payment.PaymentGatewayServices" invoke="alwaysApproveProcessor">            
         <description>Credit Card Processing</description>
-        <implements service="ccProcessInterface"/>
+        <implements service="ccAuthInterface"/>
     </service>
 
     <service name="alwaysDeclineCCProcessor" engine="java"            
             location="org.ofbiz.commonapp.accounting.payment.PaymentGatewayServices" invoke="alwaysDeclineProcessor">            
         <description>Credit Card Processing</description>
-        <implements service="ccProcessInterface"/>
+        <implements service="ccAuthInterface"/>
     </service>
     
     <service name="payflowCCProcessor" engine="java"
              location="org.ofbiz.commonapp.thirdparty.verisign.PayflowPro" invoke="ccProcessor"> 
         <description>Credit Card Processing</description>
-        <implements service="ccProcessInterface"/>
+        <implements service="ccAuthInterface"/>
     </service>
 
     <service name="cyberSourceCCProcessor" engine="java"            
             location="org.ofbiz.commonapp.thirdparty.cybersource.CSPaymentServices" invoke="ccProcessor">
         <description>Credit Card Processing</description>
-        <implements service="ccProcessInterface"/>
+        <implements service="ccAuthInterface"/>
     </service>
 
     <!-- EFT Processors -->        

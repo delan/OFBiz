@@ -53,16 +53,18 @@
             <table width="100%" cellpadding="2" cellspacing="2" border="0">
               <tr>
                 <td nowrap><div class="tableheadtext"><b>WebSite</b></div></td>
-                <td nowrap><div class="tableheadtext"><b>Payment Method Type</b></div></td>
-                <td nowrap><div class="tableheadtext"><b>Auth Service Name</b></div></td>
-                <td nowrap><div class="tableheadtext"><b>Capture Service Name</b></div></td>
+                <td nowrap><div class="tableheadtext"><b>PayMethod Type</b></div></td>
+                <td nowrap><div class="tableheadtext"><b>Auth Service</b></div></td>
+                <td nowrap><div class="tableheadtext"><b>Re-Auth Service</b></td>
+                <td nowrap><div class="tableheadtext"><b>Capture Service</b></div></td>
+                <td nowrap><div class="tableheadtext"><b>Refund Service</b></td>
                 <td nowrap><div class="tableheadtext"><b>Payment Config</b></div></td>               
                 <td nowrap><div class="tableheadtext">&nbsp;</div></td>
               </tr>
-              <tr><td colspan="6"><hr class="sepbar"></td></tr>
+              <tr><td colspan="8"><hr class="sepbar"></td></tr>
               <ofbiz:unless name="paymentSetups">
                 <tr>
-                  <td colspan="6"><div class="tabletext">No settings found.</div></td>
+                  <td colspan="8"><div class="tabletext">No settings found.</div></td>
                 </tr>
               </ofbiz:unless>
               <ofbiz:iterator name="paymentSetting" property="paymentSetups">
@@ -70,7 +72,9 @@
                 <td><div class="tabletext"><ofbiz:entityfield attribute="paymentSetting" field="siteName"/></div></td>
                 <td><div class="tabletext"><ofbiz:entityfield attribute="paymentSetting" field="description"/></div></td>
                 <td><div class="tabletext"><ofbiz:entityfield attribute="paymentSetting" field="paymentAuthService"/></div></td>
+                <td><div class="tabletext"><ofbiz:entityfield attribute="paymentSetting" field="paymentReAuthService"/></div></td>
                 <td><div class="tabletext"><ofbiz:entityfield attribute="paymentSetting" field="paymentCaptureService"/></div></td>
+                <td><div class="tabletext"><ofbiz:entityfield attribute="paymentSetting" field="paymentRefundService"/></div></td>
                 <td><div class="tabletext"><ofbiz:entityfield attribute="paymentSetting" field="paymentConfiguration"/></div></td>                
                 <td nowrap>
                   <div class="tabletext">&nbsp;
@@ -187,12 +191,22 @@
                   <td width="26%" align=right><div class="tabletext">Processor Auth Service</div></td>
                   <td>&nbsp;</td>
                   <td width="74%"><input type="text" class="inputBox" <ofbiz:inputvalue entityAttr="webSitePayment" field="paymentAuthService" fullattrs="true"/> size="30" maxlength="60"></td>                
-                </tr>    
+                </tr>  
+                <tr>
+                  <td width="26%" align=right><div class="tabletext">Processor Re-Auth Service</div></td>
+                  <td>&nbsp;</td>
+                  <td width="74%"><input type="text" class="inputBox" <ofbiz:inputvalue entityAttr="webSitePayment" field="paymentReAuthService" fullattrs="true"/> size="30" maxlength="60"></td>                
+                </tr>                      
                 <tr>
                   <td width="26%" align=right><div class="tabletext">Processor Capture Service</div></td>
                   <td>&nbsp;</td>
                   <td width="74%"><input type="text" class="inputBox" <ofbiz:inputvalue entityAttr="webSitePayment" field="paymentCaptureService" fullattrs="true"/> size="30" maxlength="60"></td>                
-                </tr>                         
+                </tr> 
+                <tr>
+                  <td width="26%" align=right><div class="tabletext">Processor Refund Service</div></td>
+                  <td>&nbsp;</td>
+                  <td width="74%"><input type="text" class="inputBox" <ofbiz:inputvalue entityAttr="webSitePayment" field="paymentRefundService" fullattrs="true"/> size="30" maxlength="60"></td>                
+                </tr>                                            
                 <tr>
                   <td width="26%" align=right><div class="tabletext">Processor Properties URL</div></td>
                   <td>&nbsp;</td>
