@@ -1703,4 +1703,34 @@
         <attribute name="productCategoryId" type="String" mode="IN" optional="false"/>
         <attribute name="doSubCategories" type="String" mode="IN" optional="true"/>
     </service>
+
+    <!-- SupplierProduct Services -->
+    <service name="createSupplierProduct" default-entity-name="SupplierProduct" engine="simple"
+            location="org/ofbiz/product/supplier/SupplierProductServices.xml" invoke="createSupplierProduct" auth="true">
+        <description>Create a new SupplierProduct record</description>
+        <required-permissions join-type="AND">
+            <check-permission permission="CATALOG" action="_CREATE"/>
+        </required-permissions>
+        <auto-attributes mode="IN" include="pk" optional="false"/>
+        <auto-attributes mode="IN" include="nonpk" optional="true"/>
+        <override name="supplierProductId" optional="false"/>
+        <override name="lastPrice" optional="false"/>
+    </service>
+    <service name="updateSupplierProduct" default-entity-name="SupplierProduct" engine="simple"
+            location="org/ofbiz/product/supplier/SupplierProductServices.xml" invoke="updateSupplierProduct" auth="true">
+        <description>Update a SupplierProduct record</description>
+        <required-permissions join-type="AND">
+            <check-permission permission="CATALOG" action="_UPDATE"/>
+        </required-permissions>
+        <auto-attributes mode="IN" include="pk" optional="false"/>
+        <auto-attributes mode="IN" include="nonpk" optional="true"/>
+    </service>
+    <service name="removeSupplierProduct" default-entity-name="SupplierProduct" engine="simple"
+            location="org/ofbiz/product/supplier/SupplierProductServices.xml" invoke="removeSupplierProduct" auth="true">
+        <description>Remove a SupplierProduct record</description>
+        <required-permissions join-type="AND">
+            <check-permission permission="CATALOG" action="_DELETE"/>
+        </required-permissions>
+        <auto-attributes mode="IN" include="pk" optional="false"/>              
+    </service>
 </services>
