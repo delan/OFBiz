@@ -341,8 +341,6 @@ public class ModelViewEntity extends ModelEntity {
      * Go through all aliasAlls and create an alias for each field of each member entity
      */
     private void expandAllAliasAlls(Map entityCache) {
-        List expandedAliasList = new ArrayList();
-
         Iterator aliasAllIter = aliasAlls.iterator();
         while (aliasAllIter.hasNext()) {
             ModelAliasAll aliasAll = (ModelAliasAll) aliasAllIter.next();
@@ -371,7 +369,7 @@ public class ModelViewEntity extends ModelEntity {
             while (fieldnamesIterator.hasNext()) {
                 // now merge the lists, leaving out any that duplicate an existing alias name
                 String aliasName = (String) fieldnamesIterator.next();
-                if (UtilValidate.isNotEmpty("prefix")) {
+                if (UtilValidate.isNotEmpty(prefix)) {
                     StringBuffer newAliasBuffer = new StringBuffer(prefix);
                     //make sure the first letter is uppercase to delineate the field name
                     newAliasBuffer.append(Character.toUpperCase(aliasName.charAt(0)));
@@ -390,7 +388,7 @@ public class ModelViewEntity extends ModelEntity {
                 expandedAlias.name = aliasName;
                 expandedAlias.field = expandedAlias.name;
                 expandedAlias.entityAlias = aliasAll.getEntityAlias();
-                expandedAliasList.add(expandedAlias);
+                aliases.add(expandedAlias);
             }
         }
     }
