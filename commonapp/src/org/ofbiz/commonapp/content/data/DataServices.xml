@@ -44,6 +44,7 @@
         <make-value entity-name="DataResource" value-name="lookupKeyValue"/>
         <set-pk-fields map-name="parameters" value-name="lookupKeyValue"/>
         <find-by-primary-key entity-name="DataResource" map-name="lookupKeyValue" value-name="lookedUpValue"/>
+	<to-string map-name="parameters" field-name="locale" />
         <set-nonpk-fields map-name="parameters" value-name="lookedUpValue"/>
         <store-value value-name="lookedUpValue"/>
     </simple-method>
@@ -210,7 +211,7 @@
         <find-by-primary-key entity-name="DataCategory" map-name="lookupKeyValue" value-name="lookedUpValue"/>
         <remove-value value-name="lookedUpValue"/>
     </simple-method>
-    
+
     <!-- Methods for DataResourceType -->
     <simple-method method-name="createDataResourceType" short-description="Create Data Resource Role">
         <check-permission action="_CREATE" permission="CONTENTMGR">
@@ -241,6 +242,72 @@
         <make-value entity-name="DataResourceType" value-name="lookupKeyValue"/>
         <set-pk-fields map-name="parameters" value-name="lookupKeyValue"/>
         <find-by-primary-key entity-name="DataResourceType" map-name="lookupKeyValue" value-name="lookedUpValue"/>
+        <remove-value value-name="lookedUpValue"/>
+    </simple-method>
+    
+    <!-- Methods for DataResourceAttribute -->
+    <simple-method method-name="createDataResourceAttribute" short-description="Create Data Resource Role">
+        <check-permission action="_CREATE" permission="CONTENTMGR">
+            <fail-message message="Security Error: to run createDataResourceAttribute you must have the CONTENTMGR_CREATE or CONTENTMGR_ADMIN permission"/>
+        </check-permission>
+        <check-errors/>
+        <make-value entity-name="DataResourceAttribute" value-name="newEntity"/>
+        <set-nonpk-fields map-name="parameters" value-name="newEntity"/>
+        <set-pk-fields map-name="parameters" value-name="newEntity"/>
+        <create-value value-name="newEntity"/>
+    </simple-method>
+    <simple-method method-name="updateDataResourceAttribute" short-description="Update Data Resource Role">
+        <check-permission action="_UPDATE" permission="CONTENTMGR">
+            <fail-message message="Security Error: to run updateDataResourceAttribute you must have the CONTENTMGR_UPDATE or CONTENTMGR_ADMIN permission"/>
+        </check-permission>
+        <check-errors/>
+        <make-value entity-name="DataResourceAttribute" value-name="lookupKeyValue"/>
+        <set-pk-fields map-name="parameters" value-name="lookupKeyValue"/>
+        <find-by-primary-key entity-name="DataResourceAttribute" map-name="lookupKeyValue" value-name="lookedUpValue"/>
+        <set-nonpk-fields map-name="parameters" value-name="lookedUpValue"/>
+        <store-value value-name="lookedUpValue"/>
+    </simple-method>
+    <simple-method method-name="removeDataResourceAttribute" short-description="Remove Data Resource Role">
+        <check-permission action="_DELETE" permission="CONTENTMGR">
+            <fail-message message="Security Error: to run removeDataResourceAttribute you must have the CONTENTMGR_DELETE or CONTENTMGR_ADMIN permission"/>
+        </check-permission>
+        <check-errors/>
+        <make-value entity-name="DataResourceAttribute" value-name="lookupKeyValue"/>
+        <set-pk-fields map-name="parameters" value-name="lookupKeyValue"/>
+        <find-by-primary-key entity-name="DataResourceAttribute" map-name="lookupKeyValue" value-name="lookedUpValue"/>
+        <remove-value value-name="lookedUpValue"/>
+    </simple-method>
+
+    <!-- Methods for DataResourceRole -->
+    <simple-method method-name="createDataResourceRole" short-description="Create Data Resource Role">
+        <check-permission action="_CREATE" permission="CONTENTMGR">
+            <fail-message message="Security Error: to run createDataResourceRole you must have the CONTENTMGR_CREATE or CONTENTMGR_ADMIN permission"/>
+        </check-permission>
+        <check-errors/>
+        <make-value entity-name="DataResourceRole" value-name="newEntity"/>
+        <set-nonpk-fields map-name="parameters" value-name="newEntity"/>
+        <set-pk-fields map-name="parameters" value-name="newEntity"/>
+        <create-value value-name="newEntity"/>
+    </simple-method>
+    <simple-method method-name="updateDataResourceRole" short-description="Update Data Resource Role">
+        <check-permission action="_UPDATE" permission="CONTENTMGR">
+            <fail-message message="Security Error: to run updateDataResourceRole you must have the CONTENTMGR_UPDATE or CONTENTMGR_ADMIN permission"/>
+        </check-permission>
+        <check-errors/>
+        <make-value entity-name="DataResourceRole" value-name="lookupKeyValue"/>
+        <set-pk-fields map-name="parameters" value-name="lookupKeyValue"/>
+        <find-by-primary-key entity-name="DataResourceRole" map-name="lookupKeyValue" value-name="lookedUpValue"/>
+        <set-nonpk-fields map-name="parameters" value-name="lookedUpValue"/>
+        <store-value value-name="lookedUpValue"/>
+    </simple-method>
+    <simple-method method-name="removeDataResourceRole" short-description="Remove Data Resource Role">
+        <check-permission action="_DELETE" permission="CONTENTMGR">
+            <fail-message message="Security Error: to run removeDataResourceRole you must have the CONTENTMGR_DELETE or CONTENTMGR_ADMIN permission"/>
+        </check-permission>
+        <check-errors/>
+        <make-value entity-name="DataResourceRole" value-name="lookupKeyValue"/>
+        <set-pk-fields map-name="parameters" value-name="lookupKeyValue"/>
+        <find-by-primary-key entity-name="DataResourceRole" map-name="lookupKeyValue" value-name="lookedUpValue"/>
         <remove-value value-name="lookedUpValue"/>
     </simple-method>
     
@@ -395,6 +462,39 @@
         <make-value entity-name="MimeType" value-name="lookupKeyValue"/>
         <set-pk-fields map-name="parameters" value-name="lookupKeyValue"/>
         <find-by-primary-key entity-name="MimeType" map-name="lookupKeyValue" value-name="lookedUpValue"/>
+        <remove-value value-name="lookedUpValue"/>
+    </simple-method>
+
+    <!-- Methods for ElectronicText -->
+    <simple-method method-name="createElectronicText" short-description="Create Data Resource Role">
+        <check-permission action="_CREATE" permission="CONTENTMGR">
+            <fail-message message="Security Error: to run createElectronicText you must have the CONTENTMGR_CREATE or CONTENTMGR_ADMIN permission"/>
+        </check-permission>
+        <check-errors/>
+        <make-value entity-name="ElectronicText" value-name="newEntity"/>
+        <set-nonpk-fields map-name="parameters" value-name="newEntity"/>
+        <set-pk-fields map-name="parameters" value-name="newEntity"/>
+        <create-value value-name="newEntity"/>
+    </simple-method>
+    <simple-method method-name="updateElectronicText" short-description="Update Data Resource Role">
+        <check-permission action="_UPDATE" permission="CONTENTMGR">
+            <fail-message message="Security Error: to run updateElectronicText you must have the CONTENTMGR_UPDATE or CONTENTMGR_ADMIN permission"/>
+        </check-permission>
+        <check-errors/>
+        <make-value entity-name="ElectronicText" value-name="lookupKeyValue"/>
+        <set-pk-fields map-name="parameters" value-name="lookupKeyValue"/>
+        <find-by-primary-key entity-name="ElectronicText" map-name="lookupKeyValue" value-name="lookedUpValue"/>
+        <set-nonpk-fields map-name="parameters" value-name="lookedUpValue"/>
+        <store-value value-name="lookedUpValue"/>
+    </simple-method>
+    <simple-method method-name="removeElectronicText" short-description="Remove Data Resource Role">
+        <check-permission action="_DELETE" permission="CONTENTMGR">
+            <fail-message message="Security Error: to run removeElectronicText you must have the CONTENTMGR_DELETE or CONTENTMGR_ADMIN permission"/>
+        </check-permission>
+        <check-errors/>
+        <make-value entity-name="ElectronicText" value-name="lookupKeyValue"/>
+        <set-pk-fields map-name="parameters" value-name="lookupKeyValue"/>
+        <find-by-primary-key entity-name="ElectronicText" map-name="lookupKeyValue" value-name="lookedUpValue"/>
         <remove-value value-name="lookedUpValue"/>
     </simple-method>
 </simple-methods>
