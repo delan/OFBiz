@@ -1,5 +1,5 @@
 /*
- * $Id: BOMServices.java,v 1.5 2004/04/21 20:42:48 jacopo Exp $
+ * $Id: BOMServices.java,v 1.6 2004/05/11 10:51:15 jacopo Exp $
  *
  * Copyright (c) 2001, 2002 The Open For Business Project - www.ofbiz.org
  *
@@ -152,8 +152,10 @@ public class BOMServices {
                 for (int i = 0; i < products.size(); i++) {
                     ItemConfigurationNode oneNode = (ItemConfigurationNode)products.get(i);
                     GenericValue oneProduct = oneNode.getPart();
-                    oneProduct.set("billOfMaterialLevel", new Integer(oneNode.getDepth()));
-                    oneProduct.store();
+                    if (oneProduct.getInteger("billOfMaterialLevel").intValue() < oneNode.getDepth()) {
+                        oneProduct.set("billOfMaterialLevel", new Integer(oneNode.getDepth()));
+                        oneProduct.store();
+                    }
                 }
             }
             // FIXME: also all the variants llc should be updated?
@@ -163,7 +165,44 @@ public class BOMServices {
         result.put("lowLevelCode", llc);
         return result;
     }
-    
+
+    /** Updates the product's low level code (llc) for all the products in the Product entity.
+     * For the llc only the manufacturing bom ("MANUF_COMPONENT") is considered.
+     * @param dctx
+     * @param context
+     * @return
+     */    
+    public static Map initLowLevelCode(DispatchContext dctx, Map context) {
+        Map result = new HashMap();
+        Security security = dctx.getSecurity();
+        GenericDelegator delegator = dctx.getDelegator();
+        LocalDispatcher dispatcher = dctx.getDispatcher();
+
+        try {
+            List products = delegator.findAll("Product");
+            Iterator productsIt = products.iterator();
+            Integer zero = new Integer(0);
+            while (productsIt.hasNext()) {
+                GenericValue product = (GenericValue)productsIt.next();
+                product.set("billOfMaterialLevel", zero);
+                product.store();
+            }
+            productsIt = products.iterator();
+            List productLLCs = new ArrayList();
+            while (productsIt.hasNext()) {
+                GenericValue product = (GenericValue)productsIt.next();
+                Map depthResult = dispatcher.runSync("updateLowLevelCode", UtilMisc.toMap("productId", product.getString("productId"), "alsoComponents", Boolean.valueOf(false)));
+                //System.out.println("PRODUCT: " + product.getString("productId") + " - LLC: " + depthResult.get("lowLevelCode"));
+                productLLCs.add(product.getString("productId") + " - " + depthResult.get("lowLevelCode"));
+            }
+            result.put("productLLCs", productLLCs);
+            // FIXME: also all the variants llc should be updated?
+        } catch (Exception e) {
+            return ServiceUtil.returnError("Error running initLowLevelCode: " + e.getMessage());
+        }
+        return result;
+    }
+
     /** Returns the ProductAssoc generic value for a duplicate productIdKey
      * ancestor if present, null otherwise.
      * Useful to avoid loops when adding new assocs (components)

@@ -369,6 +369,12 @@
         <attribute mode="OUT" name="lowLevelCode" optional="false" type="Integer"/>
     </service>
 
+    <service name="initLowLevelCode" engine="java"
+            location="org.ofbiz.manufacturing.bom.BOMServices" invoke="initLowLevelCode">
+        <description>Updates the low level code of all the products in the Product entity</description>
+        <attribute mode="OUT" name="productLLCs" optional="false" type="java.util.List"/>
+    </service>
+
     <service name="searchDuplicatedAncestor" default-entity-name="ProductAssoc" engine="java"
             location="org.ofbiz.manufacturing.bom.BOMServices" invoke="searchDuplicatedAncestor">
         <description>Returns the ProductAssoc generic value for a duplicate productIdKey ancestor if present, null otherwise. Useful to avoid loops when adding new assocs to a bill of materials.</description>
