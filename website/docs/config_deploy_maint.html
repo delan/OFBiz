@@ -1,7 +1,7 @@
 <!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN">
 <html>
 <head>
-<!--  $Id: config_deploy_maint.html,v 1.1 2004/04/23 08:44:37 dengkane Exp $ -->
+<!--  $Id: config_deploy_maint.html,v 1.2 2004/04/23 16:35:55 dengkane Exp $ -->
   <title>The Open For Business Project: General Setup</title>
 </head>
 <body>
@@ -11,10 +11,10 @@ Written By: Kane Deng<br>
 Email: <a href="mailto:kane@freebsd-uk.eu.org">kane@freebsd-uk.eu.org</a><br>
 Open For Business Site: <a href="http://www.ofbiz.org/">http://www.ofbiz.org</a>
 <br>
-<a href="http://sf.net/projects/ofbiz"> <img src="sflogo.php"
- border="0" alt="SourceForge Logo"></a> <br>
+&nbsp;
+<br>
 Founders and Lead Architects: David E. Jones &amp; Andy Zeneski <br>
-Last Updated: April 15, 2004<br>
+Last Updated: April 24, 2004<br>
 <h3 align="left"><a name="Table of Contents">Table of Contents</a></h3>
 <ol>
   <li><a href="#Introduction">Introduction</a></li>
@@ -430,7 +430,7 @@ commands:<br>
 <br>
 press "Enter" if cvs prompt you for password, then using this command:<br>
 <br>
-<code>cvs -d :pserver:guestcvs.dev.java.net:/cvs checkout ofbiz</code><br>
+<code>cvs -d :pserver:guest@cvs.dev.java.net:/cvs checkout ofbiz</code><br>
 <br>
 If you are using WinCVS or other GUI cvs client, you should
 set CVSROOT parameter in Preferences, set as follows:<br>
@@ -557,6 +557,82 @@ Default data can be loaded automatically once the server has been
 started by
 going to a JSP, which will be explained in
 the WebTools section.<br>
+<br>
+<br>
+<h5>J2EE Application Server Configuration</h5>
+<span style="font-weight: bold;">Servlet &amp; JSP Container</span><br>
+<br>
+Since 3.0, OFBiz embeds Jetty as its default Servlet &amp; JSP
+container. So you don't need to do any special configuration if you use
+the embedded Jetty. Now it is not easy to deploy OFBiz onto other
+Servlet &amp; JSP containers, and you'd better use the embedded Jetty
+for OFBiz 3.0. There are developers who are contributing programs or
+documents on how to deploy on other containers, just be a little
+patient. OFBiz is very portable, and it is not difficult to run on
+other containers.<br>
+<br>
+<span style="font-weight: bold;">Transaction Manager</span><br>
+<br>
+OFBiz 3.0 is using JOTM as its transaction manager, previous versions
+had been using Tyrex.<br>
+<br>
+We configure the transaction manger in entityengine.xml, there are
+following lines in entityengine.xml...<br>
+<br>
+<pre>    &lt;!-- the transaction factory class to use, one is needed for each way of getting JTA interfaces --&gt;<br>    &lt;!-- Use this one for JOTM --&gt;<br>    &lt;!--<br>    &lt;transaction-factory class="org.ofbiz.entity.transaction.JotmFactory"/&gt;<br>    --&gt;<br><br>    &lt;!-- Use this one for JNDI --&gt;<br>    &lt;!-- NOTE: to use the JndiFactory you must specify the necessary JNDI properties --&gt;<br>    &lt;transaction-factory class="org.ofbiz.entity.transaction.JNDIFactory"&gt;<br>        &lt;user-transaction-jndi jndi-server-name="default" jndi-name="java:comp/UserTransaction"/&gt;<br>        &lt;transaction-manager-jndi jndi-server-name="default" jndi-name="java:comp/UserTransaction"/&gt;<br>    &lt;/transaction-factory&gt;<br><br></pre>
+<br>
+OFBiz will use JNDI to get transaction manager as default, and you can
+use the JotmFactory by uncommenting the above lines.<br>
+<br>
+OFBiz will start JNDI service first, then bind the transaction object
+under JNDI naming service using name "java:comp/UserTransaction". Other
+programs will get the transaction by accessing the JNDI using
+"java:comp/UserTransaction". You can see the <span
+ style="font-weight: bold;">ofbiz/base/config/ofbiz-containers.xml</span>
+to learn how OFBiz start JNDI service, there are following lines in
+ofbiz-containers.xml file...<br>
+<br>
+<pre>    &lt;!-- load JNDI/JOTM --&gt;<br>    &lt;container name="jotm-container" class="org.ofbiz.entity.transaction.JotmContainer"/&gt;</pre>
+<br>
+JotmContainer will start Carol naming service first, then create a Jotm
+object, and then bind the transaction object to Carol naming service
+using the name "java:comp/UserTransaction".<br>
+<br>
+<span style="font-weight: bold;">Connection Pool</span><br>
+<br>
+OFBiz uses both Minerva connection pool and DBCP connection pool, and
+will try to obtain a connection from Minerva first, and will use it if
+can get. If OFBiz can't get a connection from Minerva, it will try
+DBCP, and if DBCP fails too, OFBiz will try to obtain a connection
+using plain JDBC.<br>
+<br>
+You can see following configuration in entityengine.xml...<br>
+<br>
+<pre>    &lt;datasource name="localmysql"<br>            helper-class="org.ofbiz.entity.datasource.GenericHelperDAO"<br>            field-type-name="mysql"<br>            check-on-start="true"<br>            add-missing-on-start="true"<br>            use-foreign-keys="false"<br>            join-style="ansi-no-parenthesis"&gt;<br>        &lt;read-data reader-name="main"/&gt;<br>        &lt;inline-jdbc<br>                jdbc-driver="org.gjt.mm.mysql.Driver"<br>                jdbc-uri="jdbc:mysql://127.0.0.1/ofbiz?autoReconnect=true"<br>                jdbc-username="ofbiz"<br>                jdbc-password="ofbiz"<br>                isolation-level="ReadCommitted"/&gt;<br>        &lt;!-- &lt;jndi-jdbc jndi-server-name="localjndi" jndi-name="java:/MySqlDataSource" isolation-level="Serializable"/&gt; --&gt;<br>    &lt;/datasource&gt;</pre>
+<br>
+OFBiz will check jndi-jdbc first, and will obtain connections from the
+JNDI service if you configured it. The above lines haven't configured
+jndi-jdbc, the lines have been commented. But if you configured
+jndi-jdbc and OFBiz can't obtain a connection from it, OFBiz will try
+to
+get connections using Minerva and DBCP, as configured in inline-jdbc.<br>
+<br>
+You can set the connection pooling parameters in inline-jdbc,
+currently, there are <span style="font-weight: bold;">pool-maxsize</span>,
+<span style="font-weight: bold;">pool-minsize</span> two parameters.
+Set these too parameter like this:<br>
+<br>
+<pre>    &lt;datasource name="localmysql"<br>            helper-class="org.ofbiz.entity.datasource.GenericHelperDAO"<br>            field-type-name="mysql"<br>            check-on-start="true"<br>            add-missing-on-start="true"<br>            use-foreign-keys="false"<br>            join-style="ansi-no-parenthesis"&gt;<br>        &lt;read-data reader-name="main"/&gt;<br>        &lt;inline-jdbc<br>                jdbc-driver="org.gjt.mm.mysql.Driver"<br>                jdbc-uri="jdbc:mysql://127.0.0.1/ofbiz?autoReconnect=true"<br>                jdbc-username="ofbiz"<br>                jdbc-password="ofbiz"<br>                isolation-level="ReadCommitted"<br><span
+ style="font-weight: bold;">                pool-minsize="2"</span><br
+ style="font-weight: bold;"><span style="font-weight: bold;">                pool-maxsize="20"/&gt;</span><br
+ style="font-weight: bold;">        &lt;!-- &lt;jndi-jdbc jndi-server-name="localjndi" jndi-name="java:/MySqlDataSource" isolation-level="Serializable"/&gt; --&gt;<br>    &lt;/datasource&gt;<br><br></pre>
+<br>
+The above setting means there will be 2 connections in the pool at the
+minimum and 20 connections in the pool at the maximum.<br>
+<br>
+<span style="font-weight: bold;">JMS Configuration</span><br>
+<br>
+<br>
 <br>
 <hr style="width: 100%; height: 2px;">
 <h3><a name="Restarting_versus_Run-time_Changable"></a>Restarting
