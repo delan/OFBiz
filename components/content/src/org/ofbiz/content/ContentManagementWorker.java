@@ -91,7 +91,7 @@ public class ContentManagementWorker {
         String cacheEntityName = entityName;
         LifoSet lkupCache = (LifoSet)lookupCaches.get(cacheEntityName);
         if(lkupCache == null){
-            lkupCache	= new LifoSet();
+            lkupCache    = new LifoSet();
             lookupCaches.put(cacheEntityName, lkupCache);
         }    
         
@@ -105,7 +105,7 @@ public class ContentManagementWorker {
         String cacheEntityName = entityName;
         LifoSet lkupCache = (LifoSet)lookupCaches.get(cacheEntityName);
         if(lkupCache == null){
-            lkupCache	= new LifoSet();
+            lkupCache    = new LifoSet();
             lookupCaches.put(cacheEntityName, lkupCache);
         }    
         
@@ -726,17 +726,17 @@ public class ContentManagementWorker {
     }
     
     public static int updateStatsTopDown(GenericDelegator delegator, String contentId, List typeList) throws GenericEntityException {
-    	int subLeafCount = 0;
-    	GenericValue thisContent = delegator.findByPrimaryKeyCache("Content", UtilMisc.toMap("contentId", contentId));
-    	if (thisContent == null)
-    		throw new RuntimeException("No entity found for id=" + contentId);
-    	
-    	String thisContentId = thisContent.getString("contentId");
+        int subLeafCount = 0;
+        GenericValue thisContent = delegator.findByPrimaryKeyCache("Content", UtilMisc.toMap("contentId", contentId));
+        if (thisContent == null)
+            throw new RuntimeException("No entity found for id=" + contentId);
+        
+        String thisContentId = thisContent.getString("contentId");
        List condList = new ArrayList();
        Iterator iterType = typeList.iterator();
        while (iterType.hasNext()) {
-       	String type = (String)iterType.next();
-       	condList.add(new EntityExpr("contentAssocTypeId", EntityOperator.EQUALS, type));
+           String type = (String)iterType.next();
+           condList.add(new EntityExpr("contentAssocTypeId", EntityOperator.EQUALS, type));
        }
        
        EntityCondition conditionType = new EntityConditionList(condList, EntityOperator.OR);
@@ -745,38 +745,38 @@ public class ContentManagementWorker {
             List listFiltered = EntityUtil.filterByDate(listAll);
             Iterator iter = listFiltered.iterator();
             while (iter.hasNext()) {
-            	GenericValue contentAssoc = (GenericValue)iter.next();
-            	String subContentId = contentAssoc.getString("contentId");
-            	subLeafCount += updateStatsTopDown(delegator, subContentId, typeList);
+                GenericValue contentAssoc = (GenericValue)iter.next();
+                String subContentId = contentAssoc.getString("contentId");
+                subLeafCount += updateStatsTopDown(delegator, subContentId, typeList);
             }
             
             // If no children, count this as a leaf
             if (subLeafCount == 0)
-            	subLeafCount = 1;
+                subLeafCount = 1;
             thisContent.put("childBranchCount", new Integer(listFiltered.size()));
             thisContent.put("childLeafCount", new Integer(subLeafCount));
             thisContent.store();
-		
-    	return subLeafCount;
+        
+        return subLeafCount;
     }
     
     public static void updateStatsBottomUp(GenericDelegator delegator, String contentId, List typeList, int changeAmount) throws GenericEntityException {
-    	GenericValue thisContent = delegator.findByPrimaryKeyCache("Content", UtilMisc.toMap("contentId", contentId));
-    	if (thisContent == null)
-    		throw new RuntimeException("No entity found for id=" + contentId);
-    	
-    	String thisContentId = thisContent.getString("contentId");
-    	Integer leafCount = (Integer)thisContent.get("nodeLeafCount");
-    	int subLeafCount = (leafCount == null) ? 0 : leafCount.intValue();
-    	subLeafCount += changeAmount;
-    	thisContent.put("nodeLeafCount", new Integer(subLeafCount));
+        GenericValue thisContent = delegator.findByPrimaryKeyCache("Content", UtilMisc.toMap("contentId", contentId));
+        if (thisContent == null)
+            throw new RuntimeException("No entity found for id=" + contentId);
+        
+        String thisContentId = thisContent.getString("contentId");
+        Integer leafCount = (Integer)thisContent.get("nodeLeafCount");
+        int subLeafCount = (leafCount == null) ? 0 : leafCount.intValue();
+        subLeafCount += changeAmount;
+        thisContent.put("nodeLeafCount", new Integer(subLeafCount));
         thisContent.store();
 
        List condList = new ArrayList();
        Iterator iterType = typeList.iterator();
        while (iterType.hasNext()) {
-       	String type = (String)iterType.next();
-       	condList.add(new EntityExpr("contentAssocTypeId", EntityOperator.EQUALS, type));
+           String type = (String)iterType.next();
+           condList.add(new EntityExpr("contentAssocTypeId", EntityOperator.EQUALS, type));
        }
        
        EntityCondition conditionType = new EntityConditionList(condList, EntityOperator.OR);
@@ -785,12 +785,12 @@ public class ContentManagementWorker {
             List listFiltered = EntityUtil.filterByDate(listAll);
             Iterator iter = listFiltered.iterator();
             while (iter.hasNext()) {
-            	GenericValue contentAssoc = (GenericValue)iter.next();
-            	String subContentId = contentAssoc.getString("contentId");
-            	updateStatsBottomUp(delegator, subContentId, typeList, changeAmount);
+                GenericValue contentAssoc = (GenericValue)iter.next();
+                String subContentId = contentAssoc.getString("contentId");
+                updateStatsBottomUp(delegator, subContentId, typeList, changeAmount);
             }
             
-		
-    	return ;
+        
+        return ;
     }
 }

@@ -246,7 +246,7 @@ public class ContentManagementServices {
                         }
                     } else if (dataResourceTypeId.equals("SHORT_TEXT")) {
                     } else {
-                    	// assume ELECTRONIC_TEXT
+                        // assume ELECTRONIC_TEXT
                         if (UtilValidate.isNotEmpty(textData)) {
                             context.put("dataResourceId", dataResourceId);
                             thisResult = DataServices.createElectronicTextMethod(dctx, context);
@@ -430,7 +430,7 @@ public class ContentManagementServices {
 
       List siteRoles = null;
       try {
-      	  siteRoles = delegator.findByAndCache("RoleType", UtilMisc.toMap("parentTypeId", "BLOG"));
+          siteRoles = delegator.findByAndCache("RoleType", UtilMisc.toMap("parentTypeId", "BLOG"));
       } catch(GenericEntityException e) {
           return ServiceUtil.returnError( e.getMessage());
       }
@@ -441,7 +441,7 @@ public class ContentManagementServices {
           serviceContext.put("contentId", siteContentId);
           serviceContext.put("userLogin", userLogin);
           Debug.logInfo("updateSiteRoles, serviceContext(0):" + serviceContext, module);
-      	  GenericValue roleType = (GenericValue)siteRoleIter.next();
+            GenericValue roleType = (GenericValue)siteRoleIter.next();
           String siteRole = (String)roleType.get("roleTypeId"); // BLOG_EDITOR, BLOG_ADMIN, etc.
           String cappedSiteRole = ModelUtil.dbNameToVarName(siteRole);
           if (Debug.infoOn()) Debug.logInfo("updateSiteRoles, cappediteRole(1):" + cappedSiteRole, module);
@@ -537,13 +537,13 @@ Debug.logInfo("updateSiteRoles, serviceContext(2):" + serviceContext, module);
 
       List siteRoles = null;
       try {
-      	  siteRoles = delegator.findByAndCache("RoleType", UtilMisc.toMap("parentTypeId", "BLOG"));
+            siteRoles = delegator.findByAndCache("RoleType", UtilMisc.toMap("parentTypeId", "BLOG"));
       } catch(GenericEntityException e) {
           return ServiceUtil.returnError( e.getMessage());
       }
       Iterator siteRoleIter = siteRoles.iterator();
       while (siteRoleIter.hasNext()) {
-      	  GenericValue roleType = (GenericValue)siteRoleIter.next();
+            GenericValue roleType = (GenericValue)siteRoleIter.next();
           String siteRole = (String)roleType.get("roleTypeId"); // BLOG_EDITOR, BLOG_ADMIN, etc.
           String cappedSiteRole = ModelUtil.dbNameToVarName(siteRole);
           //if (Debug.infoOn()) Debug.logInfo("updateSiteRoles, cappediteRole(1):" + cappedSiteRole, module);
@@ -644,16 +644,16 @@ Debug.logInfo("updateSiteRoles, serviceContext(2):" + serviceContext, module);
         String contentIdTo = (String)context.get("contentIdTo");
         Integer seqInc = (Integer)context.get("seqInc");
         if (seqInc == null)
-        	seqInc = new Integer(100);
+            seqInc = new Integer(100);
         int seqIncrement = seqInc.intValue();
         List typeList = (List)context.get("typeList");
         if (typeList == null)
-        	typeList = UtilMisc.toList("PUBLISH_LINK", "SUB_CONTENT");
+            typeList = UtilMisc.toList("PUBLISH_LINK", "SUB_CONTENT");
         List condList = new ArrayList();
         Iterator iterType = typeList.iterator();
         while (iterType.hasNext()) {
-        	String type = (String)iterType.next();
-        	condList.add(new EntityExpr("contentAssocTypeId", EntityOperator.EQUALS, type));
+            String type = (String)iterType.next();
+            condList.add(new EntityExpr("contentAssocTypeId", EntityOperator.EQUALS, type));
         }
         
         EntityCondition conditionType = new EntityConditionList(condList, EntityOperator.OR);
@@ -664,14 +664,14 @@ Debug.logInfo("updateSiteRoles, serviceContext(2):" + serviceContext, module);
              Iterator iter = listFiltered.iterator();
              int seqNum = seqIncrement;
              while (iter.hasNext()) {
-             	GenericValue contentAssoc = (GenericValue)iter.next();
-             	contentAssoc.put("sequenceNum", new Integer(seqNum));
-             	contentAssoc.store();
-             	seqNum += seqIncrement;
+                 GenericValue contentAssoc = (GenericValue)iter.next();
+                 contentAssoc.put("sequenceNum", new Integer(seqNum));
+                 contentAssoc.store();
+                 seqNum += seqIncrement;
              }
         } catch(GenericEntityException e) {
             Debug.logError(e, module);
-            return ServiceUtil.returnError(e.getMessage());         	
+            return ServiceUtil.returnError(e.getMessage());             
          }
          
        
@@ -688,44 +688,44 @@ Debug.logInfo("updateSiteRoles, serviceContext(2):" + serviceContext, module);
         String userLoginId = userLogin.getString("userLoginId");
         int seqNum = 9999;
         try {
-        	GenericValue content = delegator.findByPrimaryKey("Content", UtilMisc.toMap("contentId", contentId));
-        	if (content == null) {
-        		Debug.logError("content was null", module);
-        		return ServiceUtil.returnError("content was null");
-        	}
-        	String dataResourceId = content.getString("dataResourceId");
-        	String dataTemplateTypeId = content.getString("dataTemplateTypeId");
-        	content.set("dataTemplateTypeId", "NONE");
-        	content.set("dataResourceId", null);
-        	content.set("lastModifedDate", UtilDateTime.nowTimestamp());
-        	content.set("lastModifedByUserLogin", userLoginId);
-        	content.store();
-        	
-        	if (UtilValidate.isNotEmpty(dataResourceId)) {
-        	// add previous DataResource as part of new subcontent
-        	GenericValue contentClone = (GenericValue)content.clone();
-        	contentClone.set("dataTemplateTypeId", dataTemplateTypeId);
-        	contentClone.set("dataResourceId", dataResourceId);
-        	content.set("lastModifedDate", UtilDateTime.nowTimestamp());
-        	content.set("lastModifedByUserLogin", userLoginId);
-        	content.set("createdDate", UtilDateTime.nowTimestamp());
-        	content.set("createdByUserLogin", userLoginId);
-        	
-        	contentClone.set("contentId", null);
-        	Map serviceIn = new HashMap();
-        	serviceIn.putAll(contentClone);
-        	serviceIn.put("caContentIdTo", contentId);
-        	serviceIn.put("caContentAssocTypeId", "SUB_CONTENT");
+            GenericValue content = delegator.findByPrimaryKey("Content", UtilMisc.toMap("contentId", contentId));
+            if (content == null) {
+                Debug.logError("content was null", module);
+                return ServiceUtil.returnError("content was null");
+            }
+            String dataResourceId = content.getString("dataResourceId");
+            String dataTemplateTypeId = content.getString("dataTemplateTypeId");
+            content.set("dataTemplateTypeId", "NONE");
+            content.set("dataResourceId", null);
+            content.set("lastModifedDate", UtilDateTime.nowTimestamp());
+            content.set("lastModifedByUserLogin", userLoginId);
+            content.store();
+            
+            if (UtilValidate.isNotEmpty(dataResourceId)) {
+            // add previous DataResource as part of new subcontent
+            GenericValue contentClone = (GenericValue)content.clone();
+            contentClone.set("dataTemplateTypeId", dataTemplateTypeId);
+            contentClone.set("dataResourceId", dataResourceId);
+            content.set("lastModifedDate", UtilDateTime.nowTimestamp());
+            content.set("lastModifedByUserLogin", userLoginId);
+            content.set("createdDate", UtilDateTime.nowTimestamp());
+            content.set("createdByUserLogin", userLoginId);
+            
+            contentClone.set("contentId", null);
+            Map serviceIn = new HashMap();
+            serviceIn.putAll(contentClone);
+            serviceIn.put("caContentIdTo", contentId);
+            serviceIn.put("caContentAssocTypeId", "SUB_CONTENT");
             try {
                 result = dispatcher.runSync("persistContentAndAssoc", serviceIn);
             } catch(ServiceAuthException e) {
-                return ServiceUtil.returnError(e.getMessage());         	
+                return ServiceUtil.returnError(e.getMessage());             
             }
-        	}
-        	
+            }
+            
         } catch(GenericEntityException e) {
             Debug.logError(e, module);
-            return ServiceUtil.returnError(e.getMessage());         	
+            return ServiceUtil.returnError(e.getMessage());             
         }
          
        
@@ -738,14 +738,14 @@ Debug.logInfo("updateSiteRoles, serviceContext(2):" + serviceContext, module);
         GenericDelegator delegator = dctx.getDelegator();
         List typeList = (List)context.get("typeList");
         if (typeList == null)
-        	typeList = UtilMisc.toList("PUBLISH_LINK", "SUB_CONTENT");
+            typeList = UtilMisc.toList("PUBLISH_LINK", "SUB_CONTENT");
         String startContentId = (String)context.get("contentId");
         try {
-        	int leafCount = ContentManagementWorker.updateStatsTopDown(delegator, startContentId, typeList);
-        	result.put("leafCount", new Integer(leafCount));
+            int leafCount = ContentManagementWorker.updateStatsTopDown(delegator, startContentId, typeList);
+            result.put("leafCount", new Integer(leafCount));
         } catch(GenericEntityException e) {
             Debug.logError(e, module);
-            return ServiceUtil.returnError(e.getMessage());         	
+            return ServiceUtil.returnError(e.getMessage());             
         }
         return result;
     }
@@ -756,58 +756,58 @@ Debug.logInfo("updateSiteRoles, serviceContext(2):" + serviceContext, module);
         GenericDelegator delegator = dctx.getDelegator();
         List typeList = (List)context.get("typeList");
         if (typeList == null)
-        	typeList = UtilMisc.toList("PUBLISH_LINK", "SUB_CONTENT");
+            typeList = UtilMisc.toList("PUBLISH_LINK", "SUB_CONTENT");
         String contentId = (String)context.get("contentId");
         
         try {
-	    	GenericValue thisContent = delegator.findByPrimaryKey("Content", UtilMisc.toMap("contentId", contentId));
-	    	if (thisContent == null)
-	    		throw new RuntimeException("No entity found for id=" + contentId);
-	    	
-	    	String thisContentId = thisContent.getString("contentId");
-	    	Integer leafCount = (Integer)thisContent.get("nodeLeafCount");
-	    	int subLeafCount = (leafCount == null) ? 1 : leafCount.intValue();
-	        String mode = (String)context.get("mode");
-	        if (mode != null && mode.equalsIgnoreCase("remove")) {
-	        	subLeafCount *= -1;
+            GenericValue thisContent = delegator.findByPrimaryKey("Content", UtilMisc.toMap("contentId", contentId));
+            if (thisContent == null)
+                throw new RuntimeException("No entity found for id=" + contentId);
+            
+            String thisContentId = thisContent.getString("contentId");
+            Integer leafCount = (Integer)thisContent.get("nodeLeafCount");
+            int subLeafCount = (leafCount == null) ? 1 : leafCount.intValue();
+            String mode = (String)context.get("mode");
+            if (mode != null && mode.equalsIgnoreCase("remove")) {
+                subLeafCount *= -1;
             } else {
                 // TODO: ??? what is this supposed to do:
-	        	//subLeafCount = subLeafCount;
+                //subLeafCount = subLeafCount;
             }
-	        
-	       List condList = new ArrayList();
-	       Iterator iterType = typeList.iterator();
-	       while (iterType.hasNext()) {
-	       	String type = (String)iterType.next();
-	       	condList.add(new EntityExpr("contentAssocTypeId", EntityOperator.EQUALS, type));
-	       }
-	       
-	       EntityCondition conditionType = new EntityConditionList(condList, EntityOperator.OR);
-	       EntityCondition conditionMain = new EntityConditionList(UtilMisc.toList( new EntityExpr("contentId", EntityOperator.EQUALS, thisContentId), conditionType), EntityOperator.AND);
+            
+           List condList = new ArrayList();
+           Iterator iterType = typeList.iterator();
+           while (iterType.hasNext()) {
+               String type = (String)iterType.next();
+               condList.add(new EntityExpr("contentAssocTypeId", EntityOperator.EQUALS, type));
+           }
+           
+           EntityCondition conditionType = new EntityConditionList(condList, EntityOperator.OR);
+           EntityCondition conditionMain = new EntityConditionList(UtilMisc.toList( new EntityExpr("contentId", EntityOperator.EQUALS, thisContentId), conditionType), EntityOperator.AND);
             List listAll = delegator.findByConditionCache("ContentAssoc", conditionMain, null, null);
             List listFiltered = EntityUtil.filterByDate(listAll);
             Iterator iter = listFiltered.iterator();
             while (iter.hasNext()) {
-            	GenericValue contentAssoc = (GenericValue)iter.next();
-            	String subContentId = contentAssoc.getString("contentId");
-            	GenericValue contentTo = delegator.findByPrimaryKeyCache("Content", UtilMisc.toMap("contentId", subContentId));
-            	Integer childBranchCount = (Integer)contentTo.get("childBranchCount");
-            	int branchCount = (childBranchCount == null) ? 1 : childBranchCount.intValue();
+                GenericValue contentAssoc = (GenericValue)iter.next();
+                String subContentId = contentAssoc.getString("contentId");
+                GenericValue contentTo = delegator.findByPrimaryKeyCache("Content", UtilMisc.toMap("contentId", subContentId));
+                Integer childBranchCount = (Integer)contentTo.get("childBranchCount");
+                int branchCount = (childBranchCount == null) ? 1 : childBranchCount.intValue();
                 if (mode != null && mode.equalsIgnoreCase("remove"))
-                	branchCount += -1;
+                    branchCount += -1;
                 else
-                	branchCount += 1;
+                    branchCount += 1;
                 // For the level just above only, update the branch count
                 contentTo.put("childBranchCount", new Integer(branchCount));
                 
                 // Start the updating of leaf counts above
-            	ContentManagementWorker.updateStatsBottomUp(delegator, subContentId, typeList, subLeafCount);
+                ContentManagementWorker.updateStatsBottomUp(delegator, subContentId, typeList, subLeafCount);
             }
         
         
         } catch(GenericEntityException e) {
             Debug.logError(e, module);
-            return ServiceUtil.returnError(e.getMessage());         	
+            return ServiceUtil.returnError(e.getMessage());             
         }
         return result;
     }

@@ -1,5 +1,5 @@
 /*
- * $Id: ModelScreenWidget.java,v 1.11 2004/08/16 19:37:59 byersa Exp $
+ * $Id$
  *
  * Copyright (c) 2004 The Open For Business Project - www.ofbiz.org
  *
@@ -122,6 +122,8 @@ public abstract class ModelScreenWidget {
     }
     
     public static void renderSubWidgetsString(List subWidgets, Writer writer, Map context, ScreenStringRenderer screenStringRenderer) {
+        if (subWidgets == null)
+            return;
         Iterator subWidgetIter = subWidgets.iterator();
         while (subWidgetIter.hasNext()) {
             ModelScreenWidget subWidget = (ModelScreenWidget) subWidgetIter.next();

@@ -1,5 +1,5 @@
 /*
- * $Id: ModelTree.java,v 1.7 2004/08/14 07:35:13 jonesde Exp $
+ * $Id$
  *
  * Copyright (c) 2004 The Open For Business Project - www.ofbiz.org
  *
@@ -200,8 +200,8 @@ public class ModelTree {
         
             Element screenElement = UtilXml.firstChildElement(nodeElement, "include-screen");
             if (screenElement != null) {
-                this.screenName =  screenElement.getAttribute("screen-name");
-                this.screenLocation =  screenElement.getAttribute("screen-location");
+                this.screenName =  screenElement.getAttribute("name");
+                this.screenLocation =  screenElement.getAttribute("location");
                 this.shareScope =  screenElement.getAttribute("share-scope");
             }
             
@@ -363,10 +363,15 @@ public class ModelTree {
                 if (actionElement != null) {
                    actions.add(new ModelTreeAction.EntityAnd(modelNode.modelTree, actionElement));
                 }
-            
+                
                 actionElement = UtilXml.firstChildElement(nodeElement, "service");
                 if (actionElement != null) {
                     actions.add(new ModelTreeAction.Service(modelNode.modelTree, actionElement));
+                }
+                
+                actionElement = UtilXml.firstChildElement(nodeElement, "entity-condition");
+                if (actionElement != null) {
+                    actions.add(new ModelTreeAction.EntityCondition(modelNode.modelTree, actionElement));
                 }
         
             }
