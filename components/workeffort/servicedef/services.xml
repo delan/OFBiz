@@ -151,4 +151,57 @@
         <attribute name="periods" type="java.util.List" mode="OUT" optional="false"/>
         <attribute name="maxConcurrentEntries" type="java.lang.Integer" mode="OUT" optional="false"/>
     </service>          
+    <service name="createWorkEffortAssoc" default-entity-name="WorkEffortAssoc" engine="simple"
+            location="org/ofbiz/workeffort/workeffort/WorkEffortSimpleServices.xml" invoke="createWorkEffortAssoc">
+        <description>
+            Create a WorkEffort Assoc, for linking task to describe a project or
+	    for linking routing with its routingTasks
+        </description>
+        <auto-attributes include="pk" mode="IN" optional="false"/>
+        <auto-attributes include="nonpk" mode="IN" optional="true"/>
+        <override name="fromDate" optional="true"/>
+    </service>
+    <service name="updateWorkEffortAssoc" default-entity-name="WorkEffortAssoc" engine="simple"
+            location="org/ofbiz/workeffort/workeffort/WorkEffortSimpleServices.xml" invoke="updateWorkEffortAssoc">
+        <description>
+            Update a WorkEffort Assoc, for linking task to describe a project or
+            for linking routing with its routingTasks
+        </description>
+        <auto-attributes include="pk" mode="IN" optional="false"/>
+        <auto-attributes include="nonpk" mode="IN" optional="true"/>
+    </service>
+    <service name="removeWorkEffortAssoc" engine="simple" default-entity-name="WorkEffortAssoc"
+            location="org/ofbiz/workeffort/workeffort/WorkEffortSimpleServices.xml" invoke="removeWorkEffortAssoc">
+        <description>
+            Remove a WorkEffort Assoc, for linking task to describe a project or
+            for linking routing with its routingTasks
+        </description>
+        <auto-attributes include="pk" mode="IN" optional="false"/>
+    </service>
+    <service name="createWorkEffortGoodStandard" engine="simple" default-entity-name="WorkEffortGoodStandard"
+            location="org/ofbiz/workeffort/workeffort/WorkEffortSimpleServices.xml" invoke="createWorkEffortGoodStandard">
+        <description>
+            Create a WorkEffort - Product Assoc, for linking WorkEffort to In or Out  Product,
+            for routing it's the link between Manafactured Product with its routings
+        </description>
+        <auto-attributes include="pk" mode="IN" optional="false"/>
+        <auto-attributes include="nonpk" mode="IN" optional="true"/>
+        <override name="fromDate" optional="true"/>
+    </service>
+    <service name="updateWorkEffortGoodStandard" engine="simple" default-entity-name="WorkEffortGoodStandard"
+            location="org/ofbiz/workeffort/workeffort/WorkEffortSimpleServices.xml" invoke="updateWorkEffortGoodStandard">
+        <description>
+            Update a WorkEffort - Product Assoc, for linking WorkEffort to In or Out  Product,
+            for routing it's the link between Manafactured Product with its routings
+        </description>
+        <auto-attributes include="pk" mode="IN" optional="false"/>
+        <auto-attributes include="nonpk" mode="IN" optional="true"/>
+    </service>
+    <service name="removeWorkEffortGoodStandard" engine="simple" default-entity-name="WorkEffortGoodStandard"
+            location="org/ofbiz/workeffort/workeffort/WorkEffortSimpleServices.xml" invoke="removeWorkEffortGoodStandard">
+        <description>Remove a WorkEffort - Product Assoc, for linking WorkEffort to In or Out  Product,
+            for routing it's the link between Manafactured Product with its routings
+        </description>
+        <auto-attributes include="pk" mode="IN" optional="false"/>
+    </service>
 </services>

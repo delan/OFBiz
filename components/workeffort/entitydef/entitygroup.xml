@@ -26,7 +26,7 @@
  *
  *@author     David E. Jones (jonesde@ofbiz.org)
  *@author     Andy Zeneski (jaz@ofbiz.org)
- *@version    $Revision: 1.1 $
+ *@version    $Revision: 1.2 $
  */
 -->
 
@@ -56,6 +56,7 @@
     <entity-group group="org.ofbiz" entity="WorkEffortAndFulfillment" />
     <entity-group group="org.ofbiz" entity="WorkEffortAndPartyAssign" />
     <entity-group group="org.ofbiz" entity="WorkEffortAssoc" />
+    <entity-group group="org.ofbiz" entity="WorkEffortAssocView" />
     <entity-group group="org.ofbiz" entity="WorkEffortAssocAttribute" />
     <entity-group group="org.ofbiz" entity="WorkEffortAssocType" />
     <entity-group group="org.ofbiz" entity="WorkEffortAssocTypeAttr" />
