@@ -1,5 +1,5 @@
 /*
- * $Id: JettyContainer.java,v 1.19 2004/01/24 17:50:52 ajzeneski Exp $
+ * $Id: JettyContainer.java,v 1.20 2004/01/24 18:43:02 ajzeneski Exp $
  *
  * Copyright (c) 2003 The Open For Business Project - www.ofbiz.org
  *
@@ -55,7 +55,7 @@ import org.ofbiz.base.util.SSLUtil;
  * This container depends on the ComponentContainer as well.
  *
  * @author     <a href="mailto:jaz@ofbiz.org">Andy Zeneski</a>
-  *@version    $Revision: 1.19 $
+  *@version    $Revision: 1.20 $
  * @since      3.0
  */
 public class JettyContainer implements Container {
@@ -151,6 +151,21 @@ public class JettyContainer implements Container {
                 if ("default".equals(props.getProperty("type").value)) {
                     SocketListener listener = new SocketListener();
                     setListenerOptions(listener, props);
+                    if (props.getProperty("identify-listener") != null) {
+                        boolean identifyListener = "true".equalsIgnoreCase(props.getProperty("identify-listener").value);
+                        listener.setIdentifyListener(identifyListener);
+                    }
+                    if (props.getProperty("buffer-size") != null) {
+                        int value = 0;
+                        try {
+                            value = Integer.parseInt(props.getProperty("buffer-size").value);
+                        } catch (NumberFormatException e) {
+                            value = 0;
+                        }
+                        if (value > 0) {
+                            listener.setBufferSize(value);
+                        }
+                    }
                     if (props.getProperty("low-resource-persist-time") != null) {
                         int value = 0;
                         try {
@@ -179,6 +194,21 @@ public class JettyContainer implements Container {
                         boolean needClientAuth = "true".equalsIgnoreCase(props.getProperty("need-client-auth").value);
                         listener.setNeedClientAuth(needClientAuth);
                     }
+                    if (props.getProperty("identify-listener") != null) {
+                        boolean identifyListener = "true".equalsIgnoreCase(props.getProperty("identify-listener").value);
+                        listener.setIdentifyListener(identifyListener);
+                    }
+                    if (props.getProperty("buffer-size") != null) {
+                        int value = 0;
+                        try {
+                            value = Integer.parseInt(props.getProperty("buffer-size").value);
+                        } catch (NumberFormatException e) {
+                            value = 0;
+                        }
+                        if (value > 0) {
+                            listener.setBufferSize(value);
+                        }
+                    }
                     if (props.getProperty("low-resource-persist-time") != null) {
                         int value = 0;
                         try {
@@ -198,6 +228,21 @@ public class JettyContainer implements Container {
                 } else if ("ajp13".equals(props.getProperty("type").value)) {
                     AJP13Listener listener = new AJP13Listener();
                     setListenerOptions(listener, props);
+                    if (props.getProperty("identify-listener") != null) {
+                        boolean identifyListener = "true".equalsIgnoreCase(props.getProperty("identify-listener").value);
+                        listener.setIdentifyListener(identifyListener);
+                    }
+                    if (props.getProperty("buffer-size") != null) {
+                        int value = 0;
+                        try {
+                            value = Integer.parseInt(props.getProperty("buffer-size").value);
+                        } catch (NumberFormatException e) {
+                            value = 0;
+                        }
+                        if (value > 0) {
+                            listener.setBufferSize(value);
+                        }
+                    }
                     server.addListener(listener);
                 }
             } else if ("request-log".equals(props.value)) {
@@ -324,6 +369,18 @@ public class JettyContainer implements Container {
             }
             if (value > 0) {
                 listener.setMaxIdleTimeMs(value);
+            }
+        }
+
+        if (listenerProps.getProperty("linger-time") != null) {
+            int value = 0;
+            try {
+                value = Integer.parseInt(listenerProps.getProperty("linger-time").value);
+            } catch (NumberFormatException e) {
+                value = 0;
+            }
+            if (value > 0) {
+                listener.setLingerTimeSecs(value);
             }
         }
     }
