@@ -510,31 +510,16 @@
     	
     	<!-- sort the list by date -->    	
     	<order-value-list list-name="reservations" order-by-list-name="reservedDatetime"/>
-    	
-    	<!-- a counter to so we just loop for then needed amount -->
-    	<field-to-env env-name="balanceAvailable" field-name="availableToPromise" map-name="inventoryItem"/>
-    	
-    	<!-- cancel the reservations -->    	
-    	<iterate list-name="reservations" entry-name="oiir">    	
-    		<!-- only continue if we have enough quantity to work with -->
-    		<if-compare field-name="balanceAvailable" operator="greater" value="0">    		
-    			<field-to-field field-name="orderId" map-name="oiir" to-map-name="cancelOiirMap"/>
-    			<field-to-field field-name="orderItemSeqId" map-name="oiir" to-map-name="cancelOiirMap"/>
-    			<field-to-field field-name="inventoryItemId" map-name="oiir" to-map-name="cancelOiirMap"/>    			                
-                <call-service service-name="cancelOrderItemInventoryRes" in-map-name="cancelOiirMap"/>
-    			<!-- log the reservation to be re-reserved again -->
-    			<field-to-list field-name="oiir" list-name="toReserve"/>
-    			<!-- deduct the reservation from the balanceAvailable -->
-    			<calculate field-name="balanceAvailable">
-    				<calcop operator="subtract" field-name="balanceAvailable">
-    					<calcop operator="get" field-name="quantity" map-name="oiir"/>
-    				</calcop>
-    			</calculate>    			
-    		</if-compare>
-    	</iterate>
-    	    	    	
-    	<!-- re-reserve the cancelled items -->
-    	<iterate list-name="toReserve" entry-name="oiir">
+    	        	
+    	<iterate list-name="reservations" entry-name="oiir">
+    		<!-- cancel the reservation -->
+   			<field-to-field field-name="orderId" map-name="oiir" to-map-name="cancelOiirMap"/>
+   			<field-to-field field-name="orderItemSeqId" map-name="oiir" to-map-name="cancelOiirMap"/>
+   			<field-to-field field-name="inventoryItemId" map-name="oiir" to-map-name="cancelOiirMap"/>   			
+            <call-service service-name="cancelOrderItemInventoryRes" in-map-name="cancelOiirMap"/>
+            <clear-field field-name="cancelOiirMap"/>
+
+   			<!-- re-reserve the cancelled item -->
     		<!-- require inventory is N because it had to be N to begin with to have a negative ATP -->
     		<field-to-field field-name="productId" map-name="inventoryItem" to-map-name="resMap"/>
     		<field-to-field field-name="orderId" map-name="oiir" to-map-name="resMap"/>
@@ -544,7 +529,8 @@
     		<field-to-field field-name="reserveOrderEnumId" map-name="oiir" to-map-name="resMap"/>
     		<string-to-field field-name="requireInventory" map-name="resMap" string="N"/>    		
     		<call-service service-name="reserveProductInventory" in-map-name="resMap"/>
-    	</iterate>
+    		<clear-field field-name="resMap"/>
+    	</iterate>    	    	    	    	    	
     </simple-method>
     
     <!-- Inventory Transfer Services -->
