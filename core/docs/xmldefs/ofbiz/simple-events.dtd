@@ -29,21 +29,18 @@
 -->
 
 <!ELEMENT simple-events ( simple-event* )>
-<!ELEMENT simple-event ( ( parameter-map | simple-map-processor | check-errors | service | field-to-request | field-to-session )* )>
+<!ELEMENT simple-event ( ( simple-map-processor | check-errors | service | field-to-request | field-to-session )* )>
 <!ATTLIST simple-event
     event-name CDATA #REQUIRED
     short-description CDATA #REQUIRED
     login-required ( true | false ) "true"
+    parameter-map-name CDATA "parameters"
     request-name CDATA "_request_"
     response-code-name CDATA "_response_code_"
     error-message-name CDATA "_error_message_"
     event-message-name CDATA "_event_message_"
 >
 
-<!ELEMENT parameter-map EMPTY>
-<!ATTLIST parameter-map
-    map-name CDATA #REQUIRED
->
 <!ELEMENT simple-map-processor EMPTY>
 <!ATTLIST simple-map-processor
     xml-resource CDATA #REQUIRED

@@ -108,6 +108,7 @@ public class SimpleEvent {
     List eventOperations = new LinkedList();
     String eventName;
     String shortDescription;
+    String parameterMapName;
     String requestName;
     String responseCodeName;
     String errorMessageName;
@@ -118,6 +119,10 @@ public class SimpleEvent {
     public SimpleEvent(Element simpleEventElement) {
         eventName = simpleEventElement.getAttribute("event-name");
         shortDescription = simpleEventElement.getAttribute("short-description");
+
+        parameterMapName = simpleEventElement.getAttribute("parameter-map-name");
+        if(parameterMapName == null || parameterMapName.length() == 0)
+            parameterMapName = "parameters";
 
         requestName = simpleEventElement.getAttribute("request-name");
         if(requestName == null || requestName.length() == 0)
@@ -147,6 +152,7 @@ public class SimpleEvent {
     public String exec(HttpServletRequest request, ClassLoader loader) {
         Map env = new HashMap();
         env.put(requestName, request);
+        env.put(parameterMapName, UtilMisc.getParameterMap(request));
 
         if (loginRequired) {
             GenericValue userLogin = (GenericValue) request.getSession().getAttribute(SiteDefs.USER_LOGIN);
@@ -189,14 +195,16 @@ public class SimpleEvent {
                 Element curOperElem = (Element) operElemIter.next();
                 String nodeName = curOperElem.getNodeName();
 
-                if ("parameter-map".equals(nodeName)) {
-                    eventOperations.add(new SimpleEvent.ParameterMap(curOperElem, this));
-                } else if ("simple-map-processor".equals(nodeName)) {
+                if ("simple-map-processor".equals(nodeName)) {
                     eventOperations.add(new SimpleEvent.SimpleMapProcessor(curOperElem, this));
                 } else if ("check-errors".equals(nodeName)) {
                     eventOperations.add(new SimpleEvent.CheckErrors(curOperElem, this));
                 } else if ("service".equals(nodeName)) {
                     eventOperations.add(new SimpleEvent.Service(curOperElem, this));
+                } else if ("field-to-request".equals(nodeName)) {
+                    eventOperations.add(new SimpleEvent.FieldToRequest(curOperElem, this));
+                } else if ("field-to-session".equals(nodeName)) {
+                    eventOperations.add(new SimpleEvent.FieldToSession(curOperElem, this));
                 } else {
                     Debug.logWarning("[SimpleEvent.StringProcess.readOperations] Operation element \"" + nodeName + "\" no recognized");
                 }
@@ -221,21 +229,6 @@ public class SimpleEvent {
     /* All of the EventOperations...
     /* ==================================================================== */
 
-    /** An event operation that creates a local map from the request parameters */
-    public static class ParameterMap extends EventOperation {
-        String mapName;
-        
-        public ParameterMap(Element element, SimpleEvent simpleEvent) {
-            super(element, simpleEvent);
-            mapName = element.getAttribute("map-name");
-        }
-        
-        public boolean exec(Map env, HttpServletRequest request, ClassLoader loader) {
-            env.put(mapName, UtilMisc.getParameterMap(request));
-            return true;
-        }
-    }
-    
     /** An event operation that calls a simple map processor minilang file */
     public static class SimpleMapProcessor extends EventOperation {
         String xmlResource;
