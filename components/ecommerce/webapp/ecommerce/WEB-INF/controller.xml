@@ -25,7 +25,6 @@
         <event type="java" path="org.ofbiz.securityext.login.LoginEvents" invoke="autoLoginCheck"/>
         <event type="java" path="org.ofbiz.marketing.tracking.TrackingCodeEvents" invoke="checkTrackingCodeCookies"/>
         <event type="java" path="org.ofbiz.product.product.ProductEvents" invoke="setDefaultStoreSettings"/>
-        <event type="java" path="org.ofbiz.order.shoppinglist.ShoppingListEvents" invoke="restoreAutoSaveList"/>
     </firstvisit>
 
     <!-- Events to run on every request before security (chains exempt) -->
@@ -36,6 +35,7 @@
         <event type="java" path="org.ofbiz.marketing.tracking.TrackingCodeEvents" invoke="checkTrackingCodeUrlParam"/>
         <event type="java" path="org.ofbiz.marketing.tracking.TrackingCodeEvents" invoke="checkPartnerTrackingCodeUrlParam"/>
         <event type="java" path="org.ofbiz.order.shoppingcart.ShoppingCartEvents" invoke="keepCartUpdated"/>
+        <event type="java" path="org.ofbiz.order.shoppinglist.ShoppingListEvents" invoke="restoreAutoSaveList"/>
     </preprocessor>
 
     <!-- Events to run on every request after all other processing (chains exempt) -->
