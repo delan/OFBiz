@@ -112,7 +112,7 @@
     <td align=right><div class="tabletext">Product Category ID</div></td>
     <td>&nbsp;</td>
     <td>
-      <b><%=productCategoryId%></b> (This cannot be changed without re-creating the cateogry.)
+      <b><%=productCategoryId%></b> (This cannot be changed without re-creating the category.)
     </td>
   </tr>
 <%}%>
