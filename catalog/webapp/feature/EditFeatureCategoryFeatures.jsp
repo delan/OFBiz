@@ -33,6 +33,8 @@
 
 <%if (security.hasEntityPermission("CATALOG", "_VIEW", session)) {%>
 <%
+    String nowTimestampString = UtilDateTime.nowTimestamp().toString();
+
     String productId = request.getParameter("productId");
     String productFeatureCategoryId = request.getParameter("productFeatureCategoryId");
 
@@ -89,10 +91,12 @@
         <td colspan='3'><div class="tabletext">&nbsp;</div></td>
     <%}%>
   </tr>
+<%int line = 0;%>
 <ofbiz:iterator name="productFeature" property="productFeatures">
+  <%line++;%>
   <%GenericValue curProductFeatureType = productFeature.getRelatedOneCache("ProductFeatureType");%>
   <tr valign="middle" class='viewOneTR1'>
-    <FORM method=POST action='<ofbiz:url>/UpdateProductFeature</ofbiz:url>'>
+    <form method='POST' action='<ofbiz:url>/UpdateProductFeature</ofbiz:url>'>
         <%if (productId != null && productId.length() > 0) {%><input type="hidden" name="productId" value="<%=productId%>"><%}%>
         <input type=hidden <ofbiz:inputvalue entityAttr="productFeature" field="productFeatureId" fullattrs="true"/>>
       <td><input type=text class='inputBox' size='15' <ofbiz:inputvalue entityAttr="productFeature" field="description" fullattrs="true"/>></td>
@@ -120,12 +124,12 @@
       <td><input type=text class='inputBox' size='5' <ofbiz:inputvalue entityAttr="productFeature" field="defaultSequenceNum" fullattrs="true"/>></td>
       <td><input type=text class='inputBox' size='5' <ofbiz:inputvalue entityAttr="productFeature" field="idCode" fullattrs="true"/>></td>
       <td><input type=text class='inputBox' size='5' <ofbiz:inputvalue entityAttr="productFeature" field="abbrev" fullattrs="true"/>></td>
-      <td><INPUT type=submit value='Update'></td>
-    </FORM>
+      <td><input type=submit value='Update'></td>
+    </form>
     <%if (productId != null && productId.length() > 0) {%>
       </tr>
       <tr class='viewOneTR2'>
-      <FORM method=POST action='<ofbiz:url>/ApplyFeatureToProduct</ofbiz:url>'>
+      <form method='POST' action='<ofbiz:url>/ApplyFeatureToProduct</ofbiz:url>' name='lineForm<%=line%>'>
         <input type=hidden name='productId' value='<%=productId%>'>
         <input type=hidden <ofbiz:inputvalue entityAttr="productFeature" field="productFeatureId" fullattrs="true"/>>
         <td><div class="tabletext">&nbsp;</div></td>
@@ -136,12 +140,12 @@
             </ofbiz:iterator>
           </select>
         </td>
-        <td><input type=text size='18' name='fromDate' class='inputBox'></td>
-        <td><input type=text size='18' name='thruDate' class='inputBox'></td>
+        <td><input type=text size='25' name='fromDate' class='inputBox'><a href="javascript:call_cal(document.lineForm<%=line%>.fromDate, '<%=nowTimestampString%>');"><img src='/images/cal.gif' width='16' height='16' border='0' alt='Calendar'></a></td>
+        <td><input type=text size='25' name='thruDate' class='inputBox'><a href="javascript:call_cal(document.lineForm<%=line%>.thruDate, '<%=nowTimestampString%>');"><img src='/images/cal.gif' width='16' height='16' border='0' alt='Calendar'></a></td>
         <td><input type=text size='6' name='amount' class='inputBox'></td>
         <td><input type=text size='5' name='sequenceNum' class='inputBox' value='<ofbiz:inputvalue entityAttr="productFeature" field="defaultSequenceNum"/>'></td>
-      <td colspan='3' align=left><INPUT type=submit value='Apply'></td>
-      </FORM>
+      <td colspan='3' align=left><input type=submit value='Apply'></td>
+      </form>
     <%}%>
   </tr>
 </ofbiz:iterator>
