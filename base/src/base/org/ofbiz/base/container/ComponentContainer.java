@@ -1,5 +1,5 @@
 /*
- * $Id: ComponentContainer.java,v 1.6 2003/08/17 03:11:28 ajzeneski Exp $
+ * $Id: ComponentContainer.java,v 1.7 2003/08/17 05:25:25 ajzeneski Exp $
  *
  * Copyright (c) 2003 The Open For Business Project - www.ofbiz.org
  *
@@ -40,7 +40,7 @@ import org.ofbiz.base.util.*;
  * </pre>
  *
  * @author     <a href="mailto:jaz@ofbiz.org">Andy Zeneski</a> 
-  *@version    $Revision: 1.6 $
+  *@version    $Revision: 1.7 $
  * @since      2.2
  */
 public class ComponentContainer implements Container {
@@ -131,16 +131,16 @@ public class ComponentContainer implements Container {
                     if (componentPath.isDirectory() && !subs[i].equals("CVS")) {                        
                         // make sure we have a component configuraton file
                         String componentLocation = componentPath.getCanonicalPath();
-                        File configFile = new File(componentLocation + "/ofbiz-component.xml");
+                        File configFile = new File(componentLocation + "/ofbiz-component.xml");                        
                         if (configFile.exists()) {
                             ComponentConfig config = null;
                             try {
-                                config = ComponentConfig.getComponentConfig(directoryName, componentLocation);
+                                config = ComponentConfig.getComponentConfig(componentPath.getName(), componentLocation);
                             } catch (ComponentException e) {
-                                Debug.logError("Cannot load component : " + directoryName + " @ " + componentLocation + " : " + e.getMessage(), module);    
+                                Debug.logError("Cannot load component : " + componentPath.getName() + " @ " + componentLocation + " : " + e.getMessage(), module);    
                             }
                             if (config == null) {
-                                Debug.logError("Cannot load component : " + directoryName + " @ " + componentLocation, module);    
+                                Debug.logError("Cannot load component : " + componentPath.getName() + " @ " + componentLocation, module);    
                             } else {
                                 loadComponent(config);
                             }                          
@@ -170,7 +170,7 @@ public class ComponentContainer implements Container {
                 if (location.startsWith("/")) {
                     location = location.substring(1);
                 }
-                if ("dir".equals(cp.type)) {
+                if ("dir".equals(cp.type)) {                    
                     classPath.addComponent(configRoot + location);
                 } else if ("jar".equals(cp.type)) {
                     String dirLoc = location;
@@ -185,12 +185,12 @@ public class ComponentContainer implements Container {
                             File files[] = path.listFiles();
                             for (int i = 0; i < files.length; i++) {
                                 String file = files[i].getName();
-                                if (file.endsWith(".jar") || file.endsWith(".zip")) {
+                                if (file.endsWith(".jar") || file.endsWith(".zip")) {                                    
                                     classPath.addComponent(files[i]);
                                 }
                             }
                         } else {
-                            // add a single file
+                            // add a single file                                                       
                             classPath.addComponent(configRoot + location);    
                         }
                     } else {                                               
