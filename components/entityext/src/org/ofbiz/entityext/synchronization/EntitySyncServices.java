@@ -74,20 +74,14 @@ public class EntitySyncServices {
      *@return Map with the result of the service, the output parameters
      */
     public static Map runEntitySync(DispatchContext dctx, Map context) {
-        EntitySyncContext esc = null;
-        
         try {
-            esc = new EntitySyncContext(dctx, context);
-        } catch (GeneralServiceException e) {
-            return e.returnError(module);
-        }
-        
-        try {
+            EntitySyncContext esc = new EntitySyncContext(dctx, context);
+            
             esc.runPushStartRunning();
 
             // increment starting time to run until now
+            esc.setSplitStartTime(); // just run this the first time, will be updated between each loop automatically
             while (esc.hasMoreTimeToSync()) {
-                esc.setSplitStartTime();
                 
                 // make sure the following message is commented out before commit:
                 //Debug.logInfo("Doing runEntitySync split, currentRunStartTime=" + esc.currentRunStartTime + ", currentRunEndTime=" + esc.currentRunEndTime, module);
@@ -105,15 +99,9 @@ public class EntitySyncServices {
                 // ===== DELETES =====
                 List keysToRemove = esc.assembleKeysToRemove();
                 
-                // grab some totals before calling...
-                esc.updateTotalsForSplit(valuesToCreate.size(), valuesToStore.size(), keysToRemove.size());
-
                 esc.runPushSendData(valuesToCreate, valuesToStore, keysToRemove);
                 
                 esc.saveResultsReportedFromDataStore();
-                
-                // update start time, loop
-                esc.setCurrentRunTimesForNextBlock();
             }
 
             esc.saveFinalSyncResults();
@@ -353,22 +341,6 @@ public class EntitySyncServices {
         
         return ServiceUtil.returnSuccess();
     }
-    /*
-        <attribute name="valuesToCreate" type="List" mode="OUT" optional="true"/>
-        <attribute name="valuesToStore" type="List" mode="OUT" optional="true"/>
-        <attribute name="keysToRemove" type="List" mode="OUT" optional="true"/>
-        <!-- fields for results of storage on the calling machine -->
-        <attribute name="startDate" type="Timestamp" mode="INOUT" optional="true"/>
-        <attribute name="toCreateInserted" type="Long" mode="IN" optional="true"/>
-        <attribute name="toCreateUpdated" type="Long" mode="IN" optional="true"/>
-        <attribute name="toCreateNotUpdated" type="Long" mode="IN" optional="true"/>
-        <attribute name="toStoreInserted" type="Long" mode="IN" optional="true"/>
-        <attribute name="toStoreUpdated" type="Long" mode="IN" optional="true"/>
-        <attribute name="toStoreNotUpdated" type="Long" mode="IN" optional="true"/>
-        <attribute name="toRemoveDeleted" type="Long" mode="IN" optional="true"/>
-        <attribute name="toRemoveAlreadyDeleted" type="Long" mode="IN" optional="true"/>
-     * 
-     */
 
     /**
      * Pull and Report Entity Sync Data - Called Remotely to Push Results from last pull, the Pull next set of results.
@@ -377,22 +349,54 @@ public class EntitySyncServices {
      *@return Map with the result of the service, the output parameters
      */
     public static Map pullAndReportEntitySyncData(DispatchContext dctx, Map context) {
-        Debug.logInfo("Running cleanSyncRemoveInfo", module);
-        GenericDelegator delegator = dctx.getDelegator();
-        
-        String entitySyncId = (String) context.get("entitySyncId");
-        String delegatorName = (String) context.get("delegatorName");
+        try {
+            EntitySyncContext esc = new EntitySyncContext(dctx, context);
 
-        // report info from last pull
-        Timestamp startDate = (Timestamp) context.get("startDate");
-        
-        // TODO: if EntitySync.statusId is ESR_RUNNING, make sure startDate matches EntitySync.lastHistoryStartDate
-        
-        // TODO: Part 1: if any results are passed, store the results for the given startDate, update EntitySync, etc
-        
-        // TODO: Part 2: get the next set of data for the given entitySyncId
-        // TODO: Part 2a: return it back for storage but leave the EntitySyncHistory without results, and don't update the EntitySync last time
-        
+            // restore info from last pull, or if no results start new run
+            esc.runPullStartOrRestoreSavedResults();
+
+            // increment starting time to run until now
+            while (esc.hasMoreTimeToSync()) {
+                // Part 1: if any results are passed, store the results for the given startDate, update EntitySync, etc
+                esc.saveResultsReportedFromDataStore();
+                
+                // make sure the following message is commented out before commit:
+                //Debug.logInfo("Doing runEntitySync split, currentRunStartTime=" + esc.currentRunStartTime + ", currentRunEndTime=" + esc.currentRunEndTime, module);
+                
+                esc.totalSplits++;
+                
+                // tx times are indexed
+                // keep track of how long these sync runs take and store that info on the history table
+                // saves info about removed, all entities that don't have no-auto-stamp set, this will be done in the GenericDAO like the stamp sets
+                
+                // Part 2: get the next set of data for the given entitySyncId
+                // Part 2a: return it back for storage but leave the EntitySyncHistory without results, and don't update the EntitySync last time
+
+                // ===== INSERTS =====
+                ArrayList valuesToCreate = esc.assembleValuesToCreate();
+                // ===== UPDATES =====
+                ArrayList valuesToStore = esc.assembleValuesToStore();
+                // ===== DELETES =====
+                List keysToRemove = esc.assembleKeysToRemove();
+                
+                if (esc.totalRowsToStore > 0) {
+                    // stop if we found some data, otherwise look and try again
+                    Map result = ServiceUtil.returnSuccess();
+                    result.put("startDate", esc.startDate);
+                    result.put("valuesToCreate", valuesToCreate);
+                    result.put("valuesToStore", valuesToStore);
+                    result.put("keysToRemove", keysToRemove);
+                    return result;
+                }
+            }
+            
+            // if no more results from database to return, save final settings
+            if (!esc.hasMoreTimeToSync() ) {
+                esc.saveFinalSyncResults();
+            }
+        } catch (GeneralServiceException e) {
+            return e.returnError(module);
+        }
         return ServiceUtil.returnSuccess();
     }
 
