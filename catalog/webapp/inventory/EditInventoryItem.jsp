@@ -91,32 +91,19 @@
 
 <div class="head1">Edit InventoryItem with ID "<%=UtilFormatOut.checkNull(inventoryItemId)%>"</div>
 
-<form action="<ofbiz:url>/UpdateInventoryItem</ofbiz:url>" method=POST style='margin: 0;'>
-<table border='0' cellpadding='2' cellspacing='0'>
 
 <%if(inventoryItem == null){%>
   <%if(inventoryItemId != null){%>
+    <form action="<ofbiz:url>/CreateInventoryItem</ofbiz:url>" method=POST style='margin: 0;'>
+    <table border='0' cellpadding='2' cellspacing='0'>
     <h3>Could not find inventoryItem with ID "<%=inventoryItemId%>".</h3>
-    <input type=hidden name="UPDATE_MODE" value="CREATE">
-    <tr>
-      <td align=right><div class="tabletext">InventoryItem ID</div></td>
-      <td>&nbsp;</td>
-      <td>
-        <input type="text" name="inventoryItemId" size="20" maxlength="20" value="<%=inventoryItemId%>">
-      </td>
-    </tr>
   <%}else{%>
-    <input type=hidden name="UPDATE_MODE" value="CREATE">
-    <tr>
-      <td align=right><div class="tabletext">InventoryItem ID</div></td>
-      <td>&nbsp;</td>
-      <td>
-        <input type="text" name="inventoryItemId" size="20" maxlength="20" value="">
-      </td>
-    </tr>
+    <form action="<ofbiz:url>/CreateInventoryItem</ofbiz:url>" method=POST style='margin: 0;'>
+    <table border='0' cellpadding='2' cellspacing='0'>
   <%}%>
 <%}else{%>
-  <input type=hidden name="UPDATE_MODE" value="UPDATE">
+  <form action="<ofbiz:url>/UpdateInventoryItem</ofbiz:url>" method=POST style='margin: 0;'>
+  <table border='0' cellpadding='2' cellspacing='0'>
   <input type=hidden name="inventoryItemId" value="<%=inventoryItemId%>">
   <tr>
     <td align=right><div class="tabletext">InventoryItem ID</div></td>
@@ -192,7 +179,7 @@
                <option value="<%=facility.getString("facilityId")%>"><%=facility.getString("description")%></option>
              </ofbiz:iterator>
            </select>
-           OR enter a Container ID:
+           <br>OR enter a Container ID:
            <input type="text" <ofbiz:inputvalue entityAttr="inventoryItem" field="containerId" fullattrs="true"/> size="20" maxlength="20">
          </td>
        </tr>
