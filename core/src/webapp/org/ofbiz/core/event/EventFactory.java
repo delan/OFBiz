@@ -43,19 +43,26 @@ public class EventFactory {
     protected static Map handlers = new HashMap();
 
     public static EventHandler getEventHandler(RequestHandler rh, String type) throws EventHandlerException {
-        EventHandler handler = (EventHandler) handlers.get(type);
+        // get the context specific handlers
+        ServletContext context = rh.getServletContext();
+        Map contextHandlers = (Map) handlers.get(context.getInitParameter("webSiteId"));
+        if (contextHandlers == null)
+            contextHandlers = new HashMap();
+        
+        // attempt to get a pre-loaded handler
+        EventHandler handler = (EventHandler) contextHandlers.get(type);
 
         if (handler == null) {
             synchronized (EventHandler.class) {
-                handler = (EventHandler) handlers.get(type);
+                handler = (EventHandler) contextHandlers.get(type);
                 if (handler == null) {
                     String handlerClass = rh.getRequestManager().getHandlerClass(type, RequestManager.EVENT_HANDLER_KEY);
-
                     if (handlerClass == null)
                         throw new EventHandlerException("Unknown handler");
+                        
                     try {
                         handler = (EventHandler) ObjectType.getInstance(handlerClass);
-                        handlers.put(type, handler);
+                        contextHandlers.put(type, handler);
                     } catch (ClassNotFoundException cnf) {
                         throw new EventHandlerException("Cannot load handler class", cnf);
                     } catch (InstantiationException ie) {
@@ -67,6 +74,9 @@ public class EventFactory {
             }
             if (handler == null)
                 throw new EventHandlerException("Invalid handler");
+            
+            // lets store the updates in the master map
+            handlers.put(context.getInitParameter("webSiteId"), contextHandlers);
         }
         return handler;
     }
