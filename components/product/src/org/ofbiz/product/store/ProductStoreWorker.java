@@ -1,5 +1,5 @@
 /*
- * $Id: ProductStoreWorker.java,v 1.16 2004/02/10 13:53:27 ajzeneski Exp $
+ * $Id: ProductStoreWorker.java,v 1.17 2004/02/10 14:11:42 ajzeneski Exp $
  *
  *  Copyright (c) 2001, 2002 The Open For Business Project - www.ofbiz.org
  *
@@ -47,7 +47,7 @@ import org.ofbiz.party.contact.ContactMechWorker;
  * ProductStoreWorker - Worker class for store related functionality
  *
  * @author     <a href="mailto:jaz@ofbiz.org">Andy Zeneski</a>
- * @version    $Revision: 1.16 $
+ * @version    $Revision: 1.17 $
  * @since      2.0
  */
 public class ProductStoreWorker {
@@ -291,7 +291,7 @@ public class ProductStoreWorker {
                                 //continue;
                             }
                         }
-                        if (incWorkMap.size() == featureIdMap.size()) {
+                        if (incWorkMap.size() == 0) {
                             // same size == no features included (this is ANY type)
                             returnShippingMethods.remove(method);
                             continue;
