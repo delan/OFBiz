@@ -242,6 +242,9 @@
       <relation type="many" rel-entity-name="ProductKeywordResult">
         <key-map field-name="productCategoryId"/>
       </relation>
+      <relation type="many" rel-entity-name="ProductCategoryRole">
+        <key-map field-name="productCategoryId"/>
+      </relation>
     </entity>
     <entity entity-name="ProductCategoryAttribute"
             package-name="org.ofbiz.commonapp.product.category"
