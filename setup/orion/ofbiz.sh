@@ -34,7 +34,7 @@ echo " OFBIZ_HOME=$OFBIZ_HOME"
 echo
 #echo "CLASSPATH=$CLASSPATH"
 echo
-echo " -- RUNNING $JAVA_HOME/bin/java -Dofbiz.home=$OFBIZ_HOME -jar orion.jar $1 --"
+echo " -- RUNNING $JAVA_HOME/bin/java -Dofbiz.home=$OFBIZ_HOME -jar orion.jar $@ --"
 
-$JAVA_HOME/bin/java -Dofbiz.home=$OFBIZ_HOME -jar orion.jar $1
+$JAVA_HOME/bin/java -Dofbiz.home=$OFBIZ_HOME -jar orion.jar $@
 
