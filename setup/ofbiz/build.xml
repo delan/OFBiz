@@ -144,6 +144,9 @@
         <copy file="core/lib/ofbcore-ejb.jar"
             toFile="${j2eedeploy.dir}/ofbcore-ejb.jar" />    
 
+        <copy file="commonapp/lib/ofbcommonapp.jar"
+            toFile="${lib.dir}/ofbcommonapp.jar" />        
+
         <copy file="ecommerce/etc/ecommerce.properties"
             toFile="${etc.dir}/ecommerce.properties" />
         <copy file="ecommerce/lib/ofbecom.jar"
