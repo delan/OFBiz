@@ -139,10 +139,12 @@
   <!-- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -->
   <!-- Add OFBiz applications.                                         -->
   <!-- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -->
+  <!-- NOT including website here because it is not in the apps distro, only in the docs one
   <Call name="addWebApplication">
     <Arg>/</Arg>
     <Arg><SystemProperty name="ofbiz.home" default="../ofbiz"/>/website</Arg>
-  </Call>  
+  </Call>
+  -->
   <Call name="addWebApplication">
     <Arg>/commonapp/*</Arg>
     <Arg><SystemProperty name="ofbiz.home" default="../ofbiz"/>/commonapp/webapp</Arg>
