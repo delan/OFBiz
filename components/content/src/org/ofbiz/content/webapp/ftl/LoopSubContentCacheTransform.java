@@ -1,5 +1,5 @@
 /*
- * $Id: LoopSubContentCacheTransform.java,v 1.19 2004/06/06 05:06:10 byersa Exp $
+ * $Id: LoopSubContentCacheTransform.java,v 1.20 2004/06/06 05:26:53 jonesde Exp $
  * 
  * Copyright (c) 2001-2003 The Open For Business Project - www.ofbiz.org
  * 
@@ -49,7 +49,7 @@ import freemarker.template.TransformControl;
  * LoopSubContentCacheTransform - Freemarker Transform for URLs (links)
  * 
  * @author <a href="mailto:byersa@automationgroups.com">Al Byers</a>
- * @version $Revision: 1.19 $
+ * @version $Revision: 1.20 $
  * @since 3.0
  */
 public class LoopSubContentCacheTransform implements TemplateTransformModel {
@@ -242,7 +242,7 @@ public class LoopSubContentCacheTransform implements TemplateTransformModel {
         }
         final GenericValue view = val;
 
-        if (view == null) {
+        if (view != null) {
             templateCtx.put("contentId", null);
             templateCtx.put("subContentId", null);
     
@@ -309,8 +309,9 @@ public class LoopSubContentCacheTransform implements TemplateTransformModel {
 
             public int onStart() throws TemplateModelException, IOException {
 
-                if (view == null)
+                if (view == null) {
                     return TransformControl.SKIP_BODY;
+                }
 
                 List globalNodeTrail = (List)templateCtx.get("globalNodeTrail");
                 String trailCsv = FreeMarkerWorker.nodeTrailToCsv(globalNodeTrail);
@@ -345,7 +346,6 @@ public class LoopSubContentCacheTransform implements TemplateTransformModel {
             }
 
             public int afterBody() throws TemplateModelException, IOException {
-
                 FreeMarkerWorker.reloadValues(templateCtx, savedValues);
                 List list = (List)templateCtx.get("globalNodeTrail");
                 List subList = list.subList(0, list.size() - 1 );
@@ -359,14 +359,17 @@ public class LoopSubContentCacheTransform implements TemplateTransformModel {
                 }
 
                 FreeMarkerWorker.saveContextValues(templateCtx, saveKeyNames, savedValues);
-                if (inProgress)
+                if (inProgress) {
                     return TransformControl.REPEAT_EVALUATION;
-                else
+                } else {
                     return TransformControl.END_EVALUATION;
+                }
             }
 
             public void close() throws IOException {
-
+                if (view == null) {
+                    return;
+                }
                 FreeMarkerWorker.reloadValues(templateCtx, savedValuesUp);
                 int outputIndex = ((Integer)templateCtx.get("outputIndex")).intValue(); 
                 if (Debug.infoOn()) Debug.logInfo("outputIndex(2):" + outputIndex , "");
