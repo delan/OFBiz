@@ -448,7 +448,7 @@ public abstract class WfExecutionObjectImpl implements WfExecutionObject {
      */
     public void resume() throws WfException, CannotResume, NotRunning, NotSuspended {
         if (state().startsWith("open.not_running")) {
-            if (!state().equals("open.not_running_suspended"))
+            if (!state().equals("open.not_running.suspended"))
                 throw new NotSuspended();
             else
                 throw new NotRunning();
