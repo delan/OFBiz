@@ -55,6 +55,7 @@ import org.ofbiz.product.config.ProductConfigWrapper;
 import org.ofbiz.service.LocalDispatcher;
 
 import org.apache.commons.collections.map.LinkedMap;
+import org.ofbiz.product.product.ProductContentWrapper;
 
 /**
  * Shopping Cart Object
@@ -89,6 +90,10 @@ public class ShoppingCart implements Serializable {
 
     /** Holds value of order adjustments. */
     private List adjustments = new LinkedList();
+    // OrderTerms
+    private boolean orderTermSet = false;
+    private List orderTerms = new LinkedList();
+
     private List cartLines = new LinkedList();
     private List paymentInfo = new LinkedList();
     private List shipInfo = new LinkedList();
@@ -128,6 +133,8 @@ public class ShoppingCart implements Serializable {
         public String maySplit = "N";
         public String isGift = "N";
         public double shipEstimate = 0.00;
+        public Timestamp shipBeforeDate=null;
+        public Timestamp shipAfterDate=null;
 
         public List makeItemShipGroupAndAssoc(GenericDelegator delegator, ShoppingCart cart, long groupIndex) {
             String shipGroupSeqId = UtilFormatOut.formatPaddedNumber(groupIndex, 5);
@@ -152,6 +159,8 @@ public class ShoppingCart implements Serializable {
             shipGroup.set("maySplit", new String(maySplit));
             shipGroup.set("isGift", new String(isGift));
             shipGroup.set("shipGroupSeqId", shipGroupSeqId);
+            shipGroup.set("shipByDate", shipBeforeDate);
+            shipGroup.set("shipAfterDate", shipAfterDate);
             values.add(shipGroup);
 
             // create the shipping estimate adjustments
@@ -601,7 +610,7 @@ public class ShoppingCart implements Serializable {
      * @return the new/increased item index
      * @throws CartItemModifyException
      */
-    public int addOrIncreaseItem(String productId, double selectedAmount, double quantity, Timestamp reservStart, double reservLength, double reservPersons, Map features, Map attributes, String prodCatalogId, ProductConfigWrapper configWrapper, LocalDispatcher dispatcher) throws CartItemModifyException, ItemNotFoundException {
+    public int addOrIncreaseItem(String productId, double selectedAmount, double quantity, Timestamp reservStart, double reservLength, double reservPersons, Map features, Map attributes, String prodCatalogId, ProductConfigWrapper configWrapper, LocalDispatcher dispatcher, GenericValue supplierProduct) throws CartItemModifyException, ItemNotFoundException {
         // public int addOrIncreaseItem(GenericValue product, double quantity, HashMap features) {
 
         // Check for existing cart item.
@@ -613,11 +622,24 @@ public class ShoppingCart implements Serializable {
 
                 if (Debug.verboseOn()) Debug.logVerbose("Found a match for id " + productId + " on line " + i + ", updating quantity to " + newQuantity, module);
                 sci.setQuantity(newQuantity, dispatcher, this);
+
+                if (getOrderType().equals("PURCHASE_ORDER")) {
+                    sci.setBasePrice(supplierProduct.getDouble("lastPrice").doubleValue());
+                    sci.setName(ShoppingCartItem.getPurchaseOrderItemDescription(sci.getProduct(), supplierProduct, this.getLocale()));
+                 }
                 return i;
             }
         }
+
         // Add the new item to the shopping cart if it wasn't found.
-        return this.addItem(0, ShoppingCartItem.makeItem(new Integer(0), productId, selectedAmount, quantity, reservStart, reservLength, reservPersons, features, attributes, prodCatalogId, configWrapper, dispatcher, this));
+        if (supplierProduct != null) {
+             return this.addItem(0, ShoppingCartItem.makePurchaseOrderItem(new Integer(0), productId, selectedAmount, quantity, features, attributes, prodCatalogId, configWrapper, dispatcher, this, supplierProduct));
+        } else {
+            return this.addItem(0, ShoppingCartItem.makeItem(new Integer(0), productId, selectedAmount, quantity, reservStart, reservLength, reservPersons, features, attributes, prodCatalogId, configWrapper, dispatcher, this));
+        }
+    }
+    public int addOrIncreaseItem(String productId, double selectedAmount, double quantity, Timestamp reservStart, double reservLength, double reservPersons, Map features, Map attributes, String prodCatalogId, ProductConfigWrapper configWrapper, LocalDispatcher dispatcher) throws CartItemModifyException, ItemNotFoundException {
+        return addOrIncreaseItem(productId, selectedAmount, quantity, reservStart, reservLength, reservPersons, features, attributes, prodCatalogId, configWrapper, dispatcher, null);
     }
     public int addOrIncreaseItem(String productId, double selectedAmount, double quantity, Map features, Map attributes, String prodCatalogId, LocalDispatcher dispatcher) throws CartItemModifyException, ItemNotFoundException {
         return addOrIncreaseItem(productId, 0.00, quantity, null, 0.00 ,0.00, features, attributes, prodCatalogId, null, dispatcher);
@@ -851,6 +873,42 @@ public class ShoppingCart implements Serializable {
     public void setWebSiteId(String webSiteId) {
         this.webSiteId = webSiteId;
     }
+
+   public void setShipBeforeDate(int idx, Timestamp shipBeforeDate) {
+       CartShipInfo csi = this.getShipInfo(idx);
+       csi.shipBeforeDate  = shipBeforeDate;
+   }
+
+   public void setShipBeforeDate(Timestamp shipBeforeDate) {
+       this.setShipBeforeDate(0, shipBeforeDate);
+   }
+
+   public Timestamp getShipBeforeDate(int idx) {
+       CartShipInfo csi = this.getShipInfo(idx);
+       return csi.shipBeforeDate;
+   }
+
+   public Timestamp getShipBeforeDate() {
+       return this.getShipBeforeDate(0);
+   }
+
+   public void setShipAfterDate(int idx, Timestamp shipAfterDate) {
+       CartShipInfo csi = this.getShipInfo(idx);
+       csi.shipAfterDate  = shipAfterDate;
+   }
+
+   public void setShipAfterDate(Timestamp shipAfterDate) {
+       this.setShipAfterDate(0, shipAfterDate);
+   }
+
+   public Timestamp getShipAfterDate(int idx) {
+       CartShipInfo csi = this.getShipInfo(idx);
+       return csi.shipAfterDate;
+   }
+
+   public Timestamp getShipAfterDate() {
+       return this.getShipAfterDate(0);
+   }
 
     public String getOrderPartyId() {
         return this.orderPartyId;
@@ -1847,6 +1905,38 @@ public class ShoppingCart implements Serializable {
         adjustments.remove(index);
     }
 
+    /** Get a List of orderTerms on the order (ie cart) */
+    public List getOrderTerms() {
+        return orderTerms;
+    }
+
+    /** Add an orderTerm to the order */
+    public int addOrderTerm(String termTypeId,Double termValue,Long termDays) {
+        GenericValue orderTerm = new GenericValue(delegator.getModelEntity("OrderTerm"));
+        orderTerm.put("termTypeId", termTypeId);
+        orderTerm.put("termValue", termValue);
+        orderTerm.put("termDays", termDays);
+        return addOrderTerm(orderTerm);
+    }
+
+    /** Add an orderTerm to the order */
+    public int addOrderTerm(GenericValue orderTerm) {
+        orderTerms.add(orderTerm);
+        return orderTerms.indexOf(orderTerm);
+    }
+
+    public void removeOrderTerm(int index) {
+        orderTerms.remove(index);
+    }
+
+    public boolean isOrderTermSet(){
+       return orderTermSet;
+    }
+
+    public void setOrderTermSet(boolean orderTermSet){
+         this.orderTermSet = orderTermSet;
+     }
+
     /** go through the order adjustments and remove all adjustments with the given type */
     public void removeAdjustmentByType(String orderAdjustmentTypeId) {
         if (orderAdjustmentTypeId == null) return;
@@ -2698,6 +2788,7 @@ public class ShoppingCart implements Serializable {
         result.put("orderItems", this.makeOrderItems(explodeItems, dispatcher));
         result.put("workEfforts", this.makeWorkEfforts());
         result.put("orderAdjustments", this.makeAllAdjustments());
+        result.put("orderTerms", this.getOrderTerms());
         result.put("orderItemPriceInfos", this.makeAllOrderItemPriceInfos());
         result.put("orderProductPromoUses", this.makeProductPromoUses());
 

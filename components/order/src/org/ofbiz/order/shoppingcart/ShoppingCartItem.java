@@ -85,7 +85,7 @@ public class ShoppingCartItem implements java.io.Serializable {
     private String productId = null;
     private String itemType = null;            // ends up in orderItemTypeId
     private String productCategoryId = null;
-    private String itemDescription = null;  // special field for non-product items
+    private String itemDescription = null;
     private Timestamp reservStart = null;      // for reservations: date start
     private double reservLength = 0;           // for reservations: length    
     private double reservPersons = 0;       // for reservations: number of persons using
@@ -110,6 +110,7 @@ public class ShoppingCartItem implements java.io.Serializable {
     private Map additionalProductFeatureAndAppls = new HashMap();
     private List alternativeOptionProductIds = null;
     private ProductConfigWrapper configWrapper = null;
+    private List featuresForSupplier = new LinkedList();
 
     /**
      * Makes a ShoppingCartItem and adds it to the cart.
@@ -202,7 +203,97 @@ public class ShoppingCartItem implements java.io.Serializable {
 
         return makeItem(cartLocation, product, selectedAmount, quantity, reservStart, reservLength, reservPersons, additionalProductFeatureAndAppls, attributes, prodCatalogId, configWrapper, dispatcher, cart, true);
     }
+    /**
+     * Makes a ShoppingCartItem for a purchase order item and adds it to the cart.
+     * NOTE: This method will get the product entity and check to make sure it can be purchased.
+     *
+     * @param cartLocation The location to place this item; null will place at the end
+     * @param productId The primary key of the product being added
+     * @param quantity The quantity to add
+     * @param additionalProductFeatureAndAppls Product feature/appls map
+     * @param attributes All unique attributes for this item (NOT features)
+     * @param prodCatalogId The catalog this item was added from
+     * @param configWrapper The product configuration wrapper (null if the product is not configurable)
+     * @param dispatcher LocalDispatcher object for doing promotions, etc
+     * @param cart The parent shopping cart object this item will belong to
+     * @param supplierProduct GenericValue of SupplierProduct entity, containing product description and prices
+     * @return a new ShoppingCartItem object
+     * @throws CartItemModifyException
+     */
+    public static ShoppingCartItem makePurchaseOrderItem(Integer cartLocation, String productId, double selectedAmount, double quantity, Map additionalProductFeatureAndAppls, Map attributes,
+    		String prodCatalogId, ProductConfigWrapper configWrapper, LocalDispatcher dispatcher, ShoppingCart cart, GenericValue supplierProduct) throws CartItemModifyException, ItemNotFoundException {
+        GenericDelegator delegator = cart.getDelegator();
+        GenericValue product = null;
+
+        try {
+            product = delegator.findByPrimaryKeyCache("Product", UtilMisc.toMap("productId", productId));
+        } catch (GenericEntityException e) {
+            Debug.logWarning(e.toString(), module);
+            product = null;
+        }
+
+        if (product == null) {
+            Map messageMap = UtilMisc.toMap("productId", productId );
+
+            String excMsg = UtilProperties.getMessage(resource, "item.product_not_found",
+                                          messageMap , cart.getLocale() );
+
+            Debug.logWarning(excMsg, module);
+            throw new ItemNotFoundException(excMsg);
+        }
+        ShoppingCartItem newItem = new ShoppingCartItem(product, additionalProductFeatureAndAppls, attributes, prodCatalogId, configWrapper, cart.getLocale());
+
+        // check to see if product is virtual
+        if ("Y".equals(product.getString("isVirtual"))) {
+            String excMsg = "Tried to add the Virtual Product " + product.getString("productName") +
+                " (productId: " + product.getString("productId") + ") to the cart, not adding.";
+
+            Debug.logWarning(excMsg, module);
+            throw new CartItemModifyException(excMsg);
+        }
+
+        java.sql.Timestamp nowTimestamp = UtilDateTime.nowTimestamp();
+
+        // check to see if the product is fully configured
+        if ("AGGREGATED".equals(product.getString("productTypeId"))) {
+            if (configWrapper == null || !configWrapper.isCompleted()) {
+                String excMsg = "Tried to add the Product " + product.getString("productName") +
+                    " (productId: " + product.getString("productId") + ") to the cart, not adding: the product is not configured correctly.";
+
+                Debug.logWarning(excMsg, module);
+                throw new CartItemModifyException(excMsg);
+            }
+        }
     
+        // add to cart before setting quantity so that we can get order total, etc
+        if (cartLocation == null) {
+            cart.addItemToEnd(newItem);
+        } else {
+            cart.addItem(cartLocation.intValue(), newItem);
+        }
+
+        try {
+            newItem.setQuantity(quantity, dispatcher, cart, true);
+        } catch (CartItemModifyException e) {
+            cart.removeCartItem(cart.getItemIndex(newItem), dispatcher);
+            cart.clearItemShipInfo(newItem);
+            cart.removeEmptyCartItems();
+            throw e;
+        }
+
+        if (selectedAmount > 0) {
+            newItem.setSelectedAmount(selectedAmount);
+        }
+
+        // specific for purchase orders - description is set to supplierProductId + supplierProductName, price set to lastPrice of SupplierProduct
+        // if supplierProduct has no supplierProductName, use the regular supplierProductId
+        if (supplierProduct != null) {
+            newItem.setName(getPurchaseOrderItemDescription(product, supplierProduct, cart.getLocale()));
+            newItem.setBasePrice(supplierProduct.getDouble("lastPrice").doubleValue());
+        }
+        return newItem;
+
+    }
     /**
      * Makes a ShoppingCartItem and adds it to the cart.
      * WARNING: This method does not check if the product is in a purchase category.
@@ -468,6 +559,22 @@ public class ShoppingCartItem implements java.io.Serializable {
     /** Creates new ShoppingCartItem object. */
     protected ShoppingCartItem(GenericValue product, Map additionalProductFeatureAndAppls, Map attributes, String prodCatalogId, Locale locale) {
         this(product, additionalProductFeatureAndAppls, attributes, prodCatalogId, null, locale);
+         if (product != null) {
+            String productName = ProductContentWrapper.getProductContentAsText(product, "PRODUCT_NAME", this.locale);
+            // if the productName is null or empty, see if there is an associated virtual product and get the productName of that product
+            if (UtilValidate.isEmpty(productName)) {
+                GenericValue parentProduct = this.getParentProduct();
+                if (parentProduct != null) {
+                    productName = ProductContentWrapper.getProductContentAsText(parentProduct, "PRODUCT_NAME", this.locale);
+                }
+            }
+
+            if (productName == null) {
+                this.itemDescription= "";
+            } else {
+                this.itemDescription= productName;
+            }
+        }
     }
 
     /** Creates new ShoppingCartItem object. */
@@ -672,8 +779,9 @@ public class ShoppingCartItem implements java.io.Serializable {
 
         // set quantity before promos so order total, etc will be updated
         this.quantity = quantity;
+        if (!cart.getOrderType().equals("PURCHASE_ORDER")) {
         this.updatePrice(dispatcher, cart);
-
+        }
         // apply/unapply promotions - only for sales orders
         if (doPromotions && cart.getOrderType().equals("SALES_ORDER")) {
             org.ofbiz.order.shoppingcart.product.ProductPromoWorker.doPromotions(cart, dispatcher);
@@ -1024,14 +1132,18 @@ public class ShoppingCartItem implements java.io.Serializable {
     public String getProductId() {
         return productId;
     }
-
+    /** Set the item's description. */
+    public void setName(String itemName) {
+        this.itemDescription = itemName;
+    }
     /** Returns the item's description. */
     public String getName() {
+       if (itemDescription != null) {
+          return itemDescription;
+       } else {
         GenericValue product = getProduct();
-        
         if (product != null) {
             String productName = ProductContentWrapper.getProductContentAsText(product, "PRODUCT_NAME", this.locale);
-
             // if the productName is null or empty, see if there is an associated virtual product and get the productName of that product
             if (UtilValidate.isEmpty(productName)) {
                 GenericValue parentProduct = this.getParentProduct();
@@ -1039,14 +1151,14 @@ public class ShoppingCartItem implements java.io.Serializable {
                     productName = ProductContentWrapper.getProductContentAsText(parentProduct, "PRODUCT_NAME", this.locale);
                 }
             }
-
             if (productName == null) {
                 return "";
             } else {
                 return productName;
             }
         } else {
-            return itemDescription;
+               return "";
+            }
         }
     }
 
@@ -1156,6 +1268,36 @@ public class ShoppingCartItem implements java.io.Serializable {
         }
         return featureSet;
     }
+    /** Returns a list of the item's standard features */
+    public List getStandardFeatureList() {
+        List features = null;
+        GenericValue product = this.getProduct();
+        if (product != null) {
+            try {
+                List featureAppls = product.getRelated("ProductFeatureAndAppl");
+                features=EntityUtil.filterByAnd(featureAppls,UtilMisc.toMap("productFeatureApplTypeId","STANDARD_FEATURE"));
+            } catch (GenericEntityException e) {
+                Debug.logError(e, "Unable to get features from product : " + product.get("productId"), module);
+            }
+        }
+        return features;
+    }
+
+    /** Returns a List of the item's features for supplier*/
+   public List getFeaturesForSupplier(LocalDispatcher dispatcher,String partyId) {
+       List featureAppls = getStandardFeatureList();
+       if (featureAppls != null && featureAppls.size() > 0) {
+           try {
+              Map result=dispatcher.runSync("convertFeaturesForSupplier",
+                                             UtilMisc.toMap("partyId",partyId,
+                                                            "productFeatures", featureAppls));
+              featuresForSupplier=(List)result.get("convertedProductFeatures");
+           } catch (GenericServiceException e) {
+               Debug.logError(e, "Unable to get features for supplier from product : " + this.productId, module);
+           }
+       }
+       return featuresForSupplier;
+   }
 
     /** Returns the item's size (length + girth) */
     public double getSize() {
@@ -1683,5 +1825,22 @@ public class ShoppingCartItem implements java.io.Serializable {
                 cart.addItem(thisIndex, (ShoppingCartItem) newItemsItr.next());
             }
         }
+    }
+    public static String getPurchaseOrderItemDescription(GenericValue product, GenericValue supplierProduct, Locale locale){
+          String itemDescription = "";
+          String supplierProductId = supplierProduct.getString("supplierProductId");
+          if (supplierProductId == null) {
+               supplierProductId = "";
+          } else {
+               supplierProductId += " ";
+          }
+          String supplierProductName = supplierProduct.getString("supplierProductName");
+          if (supplierProductName == null) {
+            if (supplierProductName == null) {
+                supplierProductName = ProductContentWrapper.getProductContentAsText(product, "PRODUCT_NAME", locale);
+             }
+           }
+          itemDescription = supplierProductId + supplierProductName;
+          return itemDescription;
     }
 }

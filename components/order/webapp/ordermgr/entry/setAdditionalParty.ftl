@@ -42,7 +42,11 @@
               <a href="<@ofbizUrl>/orderentry</@ofbizUrl>" class="submenutext">${uiLabelMap.OrderOrderItems}</a>
               <a href="<@ofbizUrl>/setShipping</@ofbizUrl>" class="submenutext">${uiLabelMap.FacilityShipping}</a>
               <a href="<@ofbizUrl>/setOptions</@ofbizUrl>" class="submenutext">${uiLabelMap.CommonOptions}</a>
+              <#if orderType=="PURCHASE_ORDER">
+                 <a href="<@ofbizUrl>/setOrderTerm</@ofbizUrl>" class="submenutext">${uiLabelMap.AccountingPayment}</a>
+              <#else>
               <a href="<@ofbizUrl>/setBilling</@ofbizUrl>" class="submenutext">${uiLabelMap.AccountingPayment}</a>
+              </#if>
               <a href="<@ofbizUrl>/finalizeOrder?finalizeReqAdditionalParty=false</@ofbizUrl>" class="submenutextright">${uiLabelMap.CommonContinue}</a>
             </div>
           </td>

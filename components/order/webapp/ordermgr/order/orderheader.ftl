@@ -164,6 +164,7 @@
                         </div>
                       </td>
                     </tr>
+
                     <#if distributorId?exists>
                     <tr><td colspan="7"><hr class="sepbar"></td></tr>
                     <tr>
@@ -201,8 +202,41 @@
       </table>
       <#-- end of header box -->
       <br>
+      <#-- box for order terms -->
+      <#if orderTerms?has_content>
+         <table border="0" width="100%" cellspacing="0" cellpadding="0" class="boxoutside">
+           <tr>
+            <td width="100%" colspan="3">
+              <table width="100%" border="0" cellspacing="0" cellpadding="0" class="boxtop">
+                <tr>
+                  <td valign="middle" align="left">
+                    <div class="boxhead">&nbsp;${uiLabelMap.OrderOrderTerms}</div>
+                  </td>
+                </tr>
+              </table>
+            </td>
+          </tr>
+          <tr>
+            <td width="60%" align="left"><div class="tabletext"><b>${uiLabelMap.OrderOrderTermType}</b></div></td>
+            <td width="20%" align="center"><div class="tabletext"><b>${uiLabelMap.OrderOrderTermValue}</b></div></td>
+            <td width="20%" align="center"><div class="tabletext"><b>${uiLabelMap.OrderOrderTermDays}</b></div></td>
+          </tr>
+          <tr><td colspan="3"><hr class='sepbar'></td></tr>
+          <#list orderTerms as orderTerm>
+              <tr>
+                <td width="60%" align="left"><div class="tabletext">${orderTerm.getRelatedOne("TermType").get("description")}</div></td>
+                <td width="20%" align="center"><div class="tabletext">${orderTerm.termValue?default("")}</div></td>
+	            <td width="20%" align="center"><div class="tabletext">${orderTerm.termDays?default("")}</div></td>
+	          </tr>
+	          <tr><td colspan="3">&nbsp;</td></tr>
+          </#list>
+        </table>
+      </#if>
+      <br/>
+      <#-- end of order terms box -->
+      
       <#-- payment box -->
-      <#if orderPaymentPreferences?has_content || billingAccount?has_content>
+      <#if orderPaymentPreferences?has_content || billingAccount?has_content || invoices?has_content>
         <table border="0" width="100%" cellspacing="0" cellpadding="0" class="boxoutside">
           <tr>
             <td width="100%">
@@ -717,7 +751,30 @@
                         </td>
                       </tr>
                     </#if>
-
+                    <#if shipGroup.shipByDate?has_content>
+                    <tr><td colspan="7"><hr class="sepbar"></td></tr>
+                    <tr>
+                        <td align="right" valign="top" width="15%">
+                          <div class="tabletext">&nbsp;<b>${uiLabelMap.OrderShipBeforeDate}</b></div>
+                        </td>
+                        <td width="5">&nbsp;</td>
+                        <td align="left" valign="top" width="80%">
+                          <div class="tabletext">${shipGroup.shipByDate}</div>
+                        </td>
+                     </tr>
+                     </#if>
+                     <#if shipGroup.shipAfterDate?has_content>
+                     <tr><td colspan="7"><hr class="sepbar"></td></tr>
+                     <tr>
+                        <td align="right" valign="top" width="15%">
+                          <div class="tabletext">&nbsp;<b>${uiLabelMap.OrderShipAfterDate}</b></div>
+                        </td>
+                        <td width="5">&nbsp;</td>
+                        <td align="left" valign="top" width="80%">
+                          <div class="tabletext">${shipGroup.shipAfterDate}</div>
+                        </td>
+                     </tr>
+                     </#if>
                    <#assign shipGroupShipments = shipGroup.getRelated("PrimaryShipment")>
                    <#if shipGroupShipments?has_content>
                       <tr><td colspan="7"><hr class="sepbar"></td></tr>

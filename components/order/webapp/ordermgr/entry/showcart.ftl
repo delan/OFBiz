@@ -152,6 +152,9 @@ function gwAll(e) {
                     </#if>
                     - <span class="tabletext"><a href="<@ofbizUrl>/orderentry?updateParty=Y</@ofbizUrl>" class="buttontext">[${uiLabelMap.CommonChange}]</a><#if partyId?default("_NA_") == "_NA_"> - <a href="/partymgr/control/findparty?externalLoginKey=${requestAttributes.externalLoginKey}" class="buttontext">[${uiLabelMap.PartyFindParty}]</a></#if></span>
                   </td>
+                  <td valign="middle">
+                     <div class="tabletext">${uiLabelMap.AccountingCurrency} : [${currencyUomId}]
+                  </td>
                   <#if security.hasEntityPermission("CATALOG", "_CREATE", session)>
                   <td align="right" valign="middle">
                     <a href="/catalog/control/EditProduct?externalLoginKey=${requestAttributes.externalLoginKey}" target="catalog" class="buttontext">[${uiLabelMap.ProductCreateNewProduct}]</a>
@@ -279,9 +282,11 @@ function gwAll(e) {
               <select class="selectBox" name="GWALL" onChange="javascript:gwAll(this);">
                 <option value="">${uiLabelMap.OrderGiftWrapAllItems}</option>
                 <option value="NO^">${uiLabelMap.OrderNoGiftWrap}</option>
+                <#if allgiftWraps?has_content>
                 <#list allgiftWraps as option>
-                  <option value="${option.productFeatureId}">${option.description} : <@ofbizCurrency amount=option.defaultAmount?default(0) isoCode=currencyUomId/></option>
+                    <option value="${option.productFeatureId?default("")}">${option.description?default("")} : <@ofbizCurrency amount=option.defaultAmount?default(0) isoCode=currencyUomId/></option>
                 </#list>
+                </#if>
               </select>
           <#else>
             <td NOWRAP>&nbsp;</td>
@@ -296,7 +301,7 @@ function gwAll(e) {
         <#list shoppingCart.items() as cartLine>
           <#assign cartLineIndex = shoppingCart.getItemIndex(cartLine)>
           <#assign lineOptionalFeatures = cartLine.getOptionalProductFeatures()>
-          <tr><td colspan="7"><hr class="sepbar"></td></tr>
+          <tr><td colspan="8"><hr class="sepbar"></td></tr>
           <tr>
             <td>&nbsp;</td>         
             <td>
@@ -305,9 +310,9 @@ function gwAll(e) {
                 <div class="tabletext">                    
                   <#if cartLine.getProductId()?exists>
                     <#-- product item -->
-                    <a href="<@ofbizUrl>/product?product_id=${cartLine.getProductId()}</@ofbizUrl>" class="buttontext">${cartLine.getProductId()} - 
-                    ${cartLine.getName()?if_exists}</a> : ${cartLine.getDescription()?if_exists}
-                    
+                    <a href="<@ofbizUrl>/product?product_id=${cartLine.getProductId()}</@ofbizUrl>" class="buttontext">${cartLine.getProductId()}</a> -
+                    <input size="60" class="inputBox" type="text" name="description_${cartLineIndex}" value="${cartLine.getName()?default("")}"><br/>
+                    <i>${cartLine.getDescription()?if_exists}</i>
                     <#if shoppingCart.getOrderType() != "PURCHASE_ORDER">
                       <#-- only applies to sales orders, not purchase orders
                       <#-- if inventory is not required check to see if it is out of stock and needs to have a message shown about that... -->
@@ -317,11 +322,19 @@ function gwAll(e) {
                           <b>(${itemProduct.inventoryMessage})</b>
                       </#if>                                          
                     </#if>   
-                                     
                   <#else>
                     <#-- this is a non-product item -->
                     <b>${cartLine.getItemTypeDescription()?if_exists}</b> : ${cartLine.getName()?if_exists}
                   </#if>
+                   <#assign features = "">
+                   <#if cartLine.getFeaturesForSupplier(dispatcher,shoppingCart.getPartyId())?has_content>
+                       <#assign features = cartLine.getFeaturesForSupplier(dispatcher, shoppingCart.getPartyId())>
+                   <#elseif cartLine.getStandardFeatureList()?has_content>
+                       <#assign features = cartLine.getStandardFeatureList()>
+                   </#if>
+                   <#if features?has_content>
+                     <br/><i>${uiLabelMap.CommonFeatures}: <#list features as feature>${feature.description?default("")} </#list></i>
+                   </#if>
 		  		  
                 </div>
 	        </td></tr>
@@ -369,7 +382,6 @@ function gwAll(e) {
               </#if>
             </td>
             <#-- end gift wrap option -->
-		
             <td nowrap align="center">
               <div class="tabletext">
                 <#if cartLine.getIsPromo() || cartLine.getShoppingListId()?exists>
@@ -416,7 +428,7 @@ function gwAll(e) {
         </#if>
         
         <tr> 
-          <td colspan="5" align="right" valign=bottom>             
+          <td colspan="6" align="right" valign=bottom>
             <div class="tabletext"><b>${uiLabelMap.OrderCartTotal}:</b></div>
           </td>
           <td align="right" valign=bottom>
@@ -425,7 +437,7 @@ function gwAll(e) {
           </td>
         </tr>       
         <tr>
-          <td colspan="6">&nbsp;</td>
+          <td colspan="8">&nbsp;</td>
         </tr>      
       </table>    
     </FORM>

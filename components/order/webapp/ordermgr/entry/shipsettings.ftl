@@ -50,6 +50,43 @@
       <table width='100%' border='0' cellspacing='0' cellpadding='0' class='boxbottom'>
         <tr>
           <td>
+            <#if shippingContactMechListF?has_content>
+            <table width="100%" border="0" cellpadding="1" cellspacing="0">
+              <form method="post" action="<@ofbizUrl>/finalizeOrder</@ofbizUrl>" name="shipsetupform">
+                <input type="hidden" name="finalizeMode" value="ship">
+
+                <tr><td colspan="3"><hr class='sepbar'></td></tr>
+                <#list shippingContactMechListF as shippingContactMech>
+                  <#if shippingContactMech.postalAddress?exists>
+                  <#assign shippingAddress = shippingContactMech.postalAddress>
+                  <tr>
+                    <td align="left" valign="top" width="1%" nowrap>
+                      <input type="radio" name="shipping_contact_mech_id" value="${shippingAddress.contactMechId}" <#if cart.getShippingContactMechId()?default("") == shippingAddress.contactMechId>checked</#if>>
+                    </td>
+                    <td align="left" valign="top" width="99%" nowrap>
+                      <div class="tabletext">
+                        <#if shippingAddress.toName?has_content><b>To:</b>&nbsp;${shippingAddress.toName}<br></#if>
+                        <#if shippingAddress.attnName?has_content><b>Attn:</b>&nbsp;${shippingAddress.attnName}<br></#if>
+                        <#if shippingAddress.address1?has_content>${shippingAddress.address1}<br></#if>
+                        <#if shippingAddress.address2?has_content>${shippingAddress.address2}<br></#if>
+                        <#if shippingAddress.city?has_content>${shippingAddress.city}</#if>
+                        <#if shippingAddress.stateProvinceGeoId?has_content><br>${shippingAddress.stateProvinceGeoId}</#if>
+                        <#if shippingAddress.postalCode?has_content><br>${shippingAddress.postalCode}</#if>
+                        <#if shippingAddress.countryGeoId?has_content><br>${shippingAddress.countryGeoId}</#if>
+                      </div>
+                    </td>
+                    <td>
+                      <div class="tabletext"><a href="/partymgr/control/editcontactmech?party_id=<%=partyId%>&contactMechId=<%=shippingContactMechId%>" target="_blank" class="buttontext">[Update]</a></div>
+                    </td>
+                  </tr>
+                  <#if shippingContactMech_has_next>
+                  <tr><td colspan="3"><hr class='sepbar'></td></tr>
+                  </#if>
+                  </#if>
+                </#list>
+              </form>
+            </table>
+            <#else>
             <#if shippingContactMechList?has_content && !requestParameters.createNew?exists>
             <table width="100%" border="0" cellpadding="1" cellspacing="0">
               <tr>
@@ -184,6 +221,7 @@
                 </td>
                 </table>
               </form>
+            </#if>
             </#if>
           </td>
         </tr>

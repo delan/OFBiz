@@ -54,6 +54,24 @@
               <tr>
                 <td>
                   <table width="100%" border="0" cellpadding="1">
+                    <#if orderType == "PURCHASE_ORDER">
+                     <tr>
+                       <td align="right" valign="top" width="15%">
+                         <span class="tabletext">&nbsp;<b>${uiLabelMap.OrderOrderFor}</b> </span>
+                       </td>
+                       <td width="5">&nbsp;</td>
+                       <td align="left" valign="top" width="80%" class="tabletext">
+                       <#if person?has_content>
+                          ${person.firstName?if_exists}&nbsp;${person.lastName?if_exists}&nbsp;[${person.partyId}]
+                       <#elseif partyGroup?has_content>
+                          ${partyGroup.groupName?if_exists}&nbsp;[${partyGroup.partyId}]
+                       <#else>
+                          [${uiLabelMap.PartyPartyNotDefined}]
+                       </#if>
+                      </td>
+                    </tr>
+                    <tr><td colspan="7"><hr class='sepbar'></td></tr>
+                  </#if>
                     <#if shippingAddress?has_content>
                       <tr>
                         <td align="right" valign="top" width="15%">
@@ -74,6 +92,38 @@
                       </tr>
                       <tr><td colspan="7"><hr class='sepbar'></td></tr>
                     </#if>
+                    <#if orderTerms?has_content>
+                      <tr>
+                        <td align="right" valign="top" width="15%">
+                          <div class="tabletext">&nbsp;<b>${uiLabelMap.OrderOrderTerms}</b></div>
+                        </td>
+                        <td width="5">&nbsp;</td>
+                        <td align="left" valign="top" width="80%">
+                           <table>
+                             <tr>
+	                       <td width="33%"><div class="tabletext"><b>${uiLabelMap.OrderOrderTermType}</b></div></td>
+                               <td width="33%"><div class="tabletext"><b>${uiLabelMap.OrderOrderTermValue}</b></div></td>
+	                       <td width="33%"><div class="tabletext"><b>${uiLabelMap.OrderOrderTermDays}</b></div></td>
+	                     </tr>
+                            <tr><td colspan="3"><hr class='sepbar'></td></tr>
+                            <#assign index=0>
+                            <#list orderTerms as orderTerm>
+                            <tr>
+                              <td width="33%"><div class="tabletext">${orderTerm.getRelatedOne("TermType").get("description")}</div></td>
+	                      <td width="33%"><div class="tabletext">${orderTerm.termValue?default("")}</div></td>
+	                      <td width="33%"><div class="tabletext">${orderTerm.termDays?default("")}</div></td>
+	                    </tr>
+                           <#if orderTerms.size()&lt;index >
+                              <tr><td colspan="3"><hr class='sepbar'></td></tr>
+                           </#if>
+                           <#assign index=index+1>
+                          </#list>
+                        </table>
+                      </td>
+                    </tr>
+                    <tr><td colspan="7"><hr class='sepbar'></td></tr>
+                  </#if>
+                  <#if orderType != "PURCHASE_ORDER">
                     <tr>
                       <td align="right" valign="top" width="15%">
                         <div class="tabletext">&nbsp;<b>${uiLabelMap.CommonMethod}</b></div>
@@ -87,9 +137,10 @@
                         </div>
                       </td>
                     </tr>
+                    <tr><td colspan="7"><hr class='sepbar'></td></tr>
+                  </#if>
                     <#-- tracking number -->
                     <#if trackingNumber?has_content>
-                      <tr><td colspan="7"><hr class='sepbar'></td></tr>
                       <tr>
                         <td align="right" valign="top" width="15%">
                           <div class="tabletext">&nbsp;<b>${uiLabelMap.FacilityTrackingNumber}</b></div>
@@ -100,8 +151,9 @@
                           <div class="tabletext">${trackingNumber}</div>
                         </td>
                       </tr>
-                    </#if>
                     <tr><td colspan="7"><hr class='sepbar'></td></tr>
+                    </#if>
+
                     <#-- splitting preference -->
                     <tr>
                       <td align="right" valign="top" width="15%">
@@ -129,6 +181,7 @@
                       </tr>
                     </#if>
                     <tr><td colspan="7"><hr class='sepbar'></td></tr>
+                  <#if orderType != "PURCHASE_ORDER">
                     <#-- gift settings -->
                     <tr>
                       <td align="right" valign="top" width="15%">
@@ -142,8 +195,8 @@
                         </div>
                       </td>
                     </tr>
-                    <#if giftMessage?has_content>
                       <tr><td colspan="7"><hr class='sepbar'></td></tr>
+                    <#if giftMessage?has_content>
                       <tr>
                         <td align="right" valign="top" width="15%">
                           <div class="tabletext">&nbsp;<b>${uiLabelMap.OrderGiftMessage}</b></div>
@@ -153,6 +206,30 @@
                           <div class="tabletext">${giftMessage}</div>
                         </td>
                       </tr>
+                       <tr><td colspan="7"><hr class='sepbar'></td></tr>
+                    </#if>
+                  </#if>
+                  <#if shipBeforeDate?has_content>
+                    <tr>
+                        <td align="right" valign="top" width="15%">
+                          <div class="tabletext">&nbsp;<b>${uiLabelMap.OrderShipBeforeDate}</b></div>
+                        </td>
+                        <td width="5">&nbsp;</td>
+                        <td align="left" valign="top" width="80%">
+                          <div class="tabletext">${shipBeforeDate}</div>
+                        </td>
+                     </tr>
+                   </#if>
+                   <#if shipAfterDate?has_content>
+                     <tr>
+                        <td align="right" valign="top" width="15%">
+                          <div class="tabletext">&nbsp;<b>${uiLabelMap.OrderShipAfterDate}</b></div>
+                        </td>
+                        <td width="5">&nbsp;</td>
+                        <td align="left" valign="top" width="80%">
+                          <div class="tabletext">${shipAfterDate}</div>
+                        </td>
+                     </tr>
                     </#if>
                   </table>
                 </td>
@@ -286,4 +363,3 @@
         </tr>
       </table>
       </#if>
-

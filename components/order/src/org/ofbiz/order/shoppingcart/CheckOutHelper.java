@@ -57,6 +57,9 @@ import org.ofbiz.service.GenericServiceException;
 import org.ofbiz.service.LocalDispatcher;
 import org.ofbiz.service.ModelService;
 import org.ofbiz.service.ServiceUtil;
+import java.sql.Timestamp;
+import org.ofbiz.base.util.UtilDateTime;
+import org.ofbiz.base.util.ObjectType;
 
 /**
  * A facade over the ShoppingCart to simplify the relatively complex
@@ -123,14 +126,14 @@ public class CheckOutHelper {
     }
 
     public Map setCheckOutShippingOptions(String shippingMethod, String correspondingPoId, String shippingInstructions,
-            String orderAdditionalEmails, String maySplit, String giftMessage, String isGift) {
+            String orderAdditionalEmails, String maySplit, String giftMessage, String isGift, String shipBeforeDate, String shipAfterDate ) {
         List errorMessages = new ArrayList();
         Map result;
         String errMsg = null;
 
         if (this.cart != null && this.cart.size() > 0) {
             errorMessages.addAll(setCheckOutShippingOptionsInternal(shippingMethod, correspondingPoId,
-                    shippingInstructions, orderAdditionalEmails, maySplit, giftMessage, isGift));
+                    shippingInstructions, orderAdditionalEmails, maySplit, giftMessage, isGift, shipBeforeDate, shipAfterDate));
         } else {
             errMsg = UtilProperties.getMessage(resource,"checkhelper.no_items_in_cart", (cart != null ? cart.getLocale() : Locale.getDefault()));
             errorMessages.add(errMsg);
@@ -148,7 +151,7 @@ public class CheckOutHelper {
     }
 
     private List setCheckOutShippingOptionsInternal(String shippingMethod, String correspondingPoId, String shippingInstructions,
-            String orderAdditionalEmails, String maySplit, String giftMessage, String isGift) {
+            String orderAdditionalEmails, String maySplit, String giftMessage, String isGift, String shipBeforeDate, String shipAfterDate ) {
         List errorMessages = new ArrayList();
         String errMsg = null;
 
@@ -187,7 +190,22 @@ public class CheckOutHelper {
         if (UtilValidate.isNotEmpty(isGift)) {
             cart.setIsGift(Boolean.valueOf(isGift));
         } else {
-            errMsg = UtilProperties.getMessage(resource,"checkhelper.specify_if_order_is_gift", (cart != null ? cart.getLocale() : Locale.getDefault()));
+            errMsg = UtilProperties.getMessage(resource, "checkhelper.specify_if_order_is_gift", (cart != null ? cart.getLocale() : Locale.getDefault()));
+            errorMessages.add(errMsg);
+        }
+
+        // set the shipping dates
+        if (UtilValidate.isDate(shipBeforeDate)) {
+            cart.setShipBeforeDate(UtilDateTime.toTimestamp(shipBeforeDate));
+        } else {
+            errMsg = UtilProperties.getMessage(resource, "checkhelper.specify_if_shipBeforeDate_is_date", (cart != null ? cart.getLocale() : Locale.getDefault()));
+            errorMessages.add(errMsg);
+        }
+
+        if (UtilValidate.isDate(shipAfterDate)) {
+            cart.setShipAfterDate(UtilDateTime.toTimestamp(shipAfterDate));
+        } else {
+            errMsg = UtilProperties.getMessage(resource, "checkhelper.specify_if_shipAfterDate_is_date", (cart != null ? cart.getLocale() : Locale.getDefault()));
             errorMessages.add(errMsg);
         }
 
@@ -282,9 +300,34 @@ public class CheckOutHelper {
         return errorMessages;
     }
 
+    public Map setCheckOutDates(Timestamp shipBefore, Timestamp shipAfter) {
+          List errorMessages = new ArrayList();
+          Map result = null;
+          String errMsg = null;
+
+          if (this.cart != null && this.cart.size() > 0) {
+          	this.cart.setShipBeforeDate(shipBefore);
+          	this.cart.setShipAfterDate(shipAfter);
+          } else {
+          	errMsg = UtilProperties.getMessage(resource,"checkhelper.no_items_in_cart",
+                                                     (cart != null ? cart.getLocale() : Locale.getDefault()));
+          	errorMessages.add(errMsg);
+          }
+
+          if (errorMessages.size() == 1) {
+          	result = ServiceUtil.returnError(errorMessages.get(0).toString());
+          } else if (errorMessages.size() > 0) {
+          	result = ServiceUtil.returnError(errorMessages);
+          } else {
+          	result = ServiceUtil.returnSuccess();
+          }
+          return result;
+      }
+
+
     public Map setCheckOutOptions(String shippingMethod, String shippingContactMechId, Map selectedPaymentMethods,
             List singleUsePayments, String billingAccountId, Double billingAccountAmt, String correspondingPoId,
-            String shippingInstructions, String orderAdditionalEmails, String maySplit, String giftMessage, String isGift) {
+            String shippingInstructions, String orderAdditionalEmails, String maySplit, String giftMessage, String isGift, String shipBeforeDate, String shipAfterDate) {
         List errorMessages = new ArrayList();
         Map result = null;
         String errMsg = null;
@@ -293,7 +336,7 @@ public class CheckOutHelper {
         if (this.cart != null && this.cart.size() > 0) {
             // set the general shipping options and method
             errorMessages.addAll(setCheckOutShippingOptionsInternal(shippingMethod, correspondingPoId,
-                    shippingInstructions, orderAdditionalEmails, maySplit, giftMessage, isGift));
+                    shippingInstructions, orderAdditionalEmails, maySplit, giftMessage, isGift, shipBeforeDate, shipAfterDate));
 
             // set the shipping address
             errorMessages.addAll(setCheckOutShippingAddressInternal(shippingContactMechId));
@@ -1126,8 +1169,9 @@ public class CheckOutHelper {
      * @return A Map conforming to the OFBiz Service conventions containing
      * any error messages
      */
-    public Map finalizeOrderEntryOptions(String shippingMethod,
-                                         String shippingInstructions, String maySplit, String giftMessage, String isGift) {
+    public Map finalizeOrderEntryOptions(String shippingMethod, String shippingInstructions, String maySplit,
+            String giftMessage, String isGift, String shipBeforeDate, String shipAfterDate) {
+
         Map result;
         String errMsg=null;
         //Verify the shipping method is valid
@@ -1153,6 +1197,36 @@ public class CheckOutHelper {
         this.cart.setGiftMessage(giftMessage);
         this.cart.setMaySplit(Boolean.valueOf(maySplit));
         this.cart.setIsGift(Boolean.valueOf(isGift));
+
+        // set ship before date
+        if ((shipBeforeDate != null) && (shipBeforeDate.length() > 8)) {
+           shipBeforeDate = shipBeforeDate.trim();
+           if (shipBeforeDate.length() < 14) {
+               shipBeforeDate = shipBeforeDate + " " + "00:00:00.000";
+           }
+
+           try {
+               this.cart.setShipBeforeDate((Timestamp) ObjectType.simpleTypeConvert(shipBeforeDate, "Timestamp", null, null));
+           } catch (Exception e) {
+               errMsg = "Ship Before Date must be a valid date formed ";
+               result = ServiceUtil.returnError(errMsg);
+           }
+        }
+
+        // set ship after date
+        if ((shipAfterDate != null) && (shipAfterDate.length() > 8)) {
+           shipAfterDate = shipAfterDate.trim();
+           if (shipAfterDate.length() < 14) {
+               shipAfterDate = shipAfterDate + " " + "00:00:00.000";
+           }
+
+           try {
+               this.cart.setShipAfterDate((Timestamp) ObjectType.simpleTypeConvert(shipAfterDate,"Timestamp", null, null));
+            } catch (Exception e) {
+              errMsg = "Ship After Date must be a valid date formed ";
+              result = ServiceUtil.returnError(errMsg);
+            }
+        }
 
         result = ServiceUtil.returnSuccess();
         return result;
@@ -1296,13 +1370,15 @@ public class CheckOutHelper {
      *
      * @see CheckOutHelper#finalizeOrderEntryMethodType(String)
      * @see CheckOutHelper#finalizeOrderEntryOfflinePayments(Map)
-     * @see CheckOutHelper#finalizeOrderEntryOptions(String, String, String, String, String)
+     * @see CheckOutHelper#finalizeOrderEntryOptions(String, String, String, String, String, String, String)
      * @see CheckOutHelper#finalizeOrderEntryPayment(String, Double, boolean, boolean)
      * @see CheckOutHelper#finalizeOrderEntryShip(String)
      */
     public Map finalizeOrderEntry(String finalizeMode, String shippingContactMechId, String shippingMethod,
-                                  String shippingInstructions, String maySplit, String giftMessage, String isGift, String methodType,
-                                  String checkOutPaymentId, boolean isSingleUsePayment, boolean appendPayment, Map params) {
+            String shippingInstructions, String maySplit, String giftMessage, String isGift, String methodType,
+            String checkOutPaymentId, boolean isSingleUsePayment, boolean appendPayment, Map params,
+            String shipBeforeDate, String shipAfterDate) {
+
         Map result = ServiceUtil.returnSuccess();
         Map errorMaps = new HashMap();
         Map callResult;
@@ -1316,7 +1392,7 @@ public class CheckOutHelper {
 
         // set the options
         if (finalizeMode != null && finalizeMode.equals("options")) {
-            callResult = this.finalizeOrderEntryOptions(shippingMethod, shippingInstructions, maySplit, giftMessage, isGift);
+            callResult = this.finalizeOrderEntryOptions(shippingMethod, shippingInstructions, maySplit, giftMessage, isGift, shipBeforeDate, shipAfterDate);
             this.addErrors(errorMessages, errorMaps, callResult);
         }
 

@@ -847,7 +847,8 @@
       <field name="termTypeId" type="id-ne"></field>
       <field name="orderId" type="id-ne"></field>
       <field name="orderItemSeqId" type="id-ne"></field>
-      <field name="termValue" type="numeric"></field>
+      <field name="termValue" type="currency-amount"></field>
+      <field name="termDays" type="numeric"></field>
       <field name="uomId" type="id"></field>
       <prim-key field="termTypeId"/>
       <prim-key field="orderId"/>

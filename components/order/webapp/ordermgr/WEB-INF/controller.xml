@@ -251,6 +251,18 @@
         <security https="true" auth="true"/>
         <response name="success" type="view" value="orderentry"/>
     </request-map>
+    <request-map uri="setOrderAgreement">
+        <security https="true" auth="true"/>
+         <event type="java" path="org.ofbiz.order.shoppingcart.ShoppingCartEvents" invoke="selectAgreement"/>
+        <response name="success" type="view" value="orderentry"/>
+        <response name="error" type="view" value="orderentry"/>
+    </request-map>
+    <request-map uri="setOrderCurrency">
+        <security https="true" auth="true"/>
+         <event type="java" path="org.ofbiz.order.shoppingcart.ShoppingCartEvents" invoke="setCurrency"/>
+        <response name="success" type="view" value="orderentry"/>
+        <response name="error" type="view" value="orderentry"/>
+    </request-map>
     <request-map uri="additem">
         <security https="true" auth="true"/>
         <event type="java" path="org.ofbiz.order.shoppingcart.ShoppingCartEvents" invoke="addToCart"/>
@@ -322,6 +334,7 @@
         <response name="shipping" type="view" value="shipsetting"/>
         <response name="options" type="view" value="optionsetting"/>
         <response name="payment" type="view" value="billsetting"/>
+        <response name="term" type="view" value="orderTerm"/>
         <response name="sales" type="request" value="calcShipping"/>
         <response name="po" type="view" value="confirm"/>
         <response name="error" type="view" value="orderentry"/>
@@ -477,7 +490,22 @@
         <response name="success" type="view" value="ordercomplete"/>
         <response name="error" type="view" value="ordercomplete"/>
     </request-map>
-
+    <request-map uri="setOrderTerm">
+        <security https="true" auth="true"/>
+        <response name="success" type="view" value="orderTerm"/>
+    </request-map>
+    <request-map uri="addOrderTerm">
+        <security https="true" auth="true"/>
+        <event type="java" path="org.ofbiz.order.shoppingcart.ShoppingCartEvents" invoke="addOrderTerm"/>
+        <response name="success" type="view" value="orderTerm"/>
+        <response name="error" type="view" value="orderTerm"/>
+    </request-map>
+    <request-map uri="removeOrderTerm">
+        <security https="true" auth="true"/>
+        <event type="java" path="org.ofbiz.order.shoppingcart.ShoppingCartEvents" invoke="removeOrderTerm"/>
+        <response name="success" type="view" value="orderTerm"/>
+        <response name="error" type="view" value="orderTerm"/>
+    </request-map>
 
     <!-- Order Return Requests -->
     <request-map uri="findreturn">
@@ -627,6 +655,7 @@
     <view-map name="optionsetting" type="jpublish" page="/entry/optionsettings.ftl"/>
     <view-map name="confirm" type="jpublish" page="/entry/confirmorder.ftl"/>
     <view-map name="ordercomplete" type="jpublish" page="/entry/ordercomplete.ftl"/>
+    <view-map name="orderTerm" type="jpublish" page="/entry/orderterms.ftl"/>
 
     <view-map name="showAllPromotions" type="jpublish" page="/entry/showAllPromotions.ftl"/>
     <view-map name="showPromotionDetails" type="jpublish" page="/entry/showPromotionDetails.ftl"/>

@@ -23,6 +23,7 @@
  *@version    1.0
  */
 
+import org.ofbiz.service.*;
 import org.ofbiz.entity.*;
 import org.ofbiz.entity.condition.*;
 import org.ofbiz.entity.util.*;
@@ -35,7 +36,10 @@ import org.ofbiz.order.shoppingcart.product.ProductDisplayWorker;
 import org.ofbiz.order.shoppingcart.product.ProductPromoWorker;
 
 delegator = request.getAttribute("delegator");
+dispatcher= (LocalDispatcher)request.getAttribute("dispatcher");
 userLogin = session.getAttribute("userLogin");
+
+context.put("dispatcher",dispatcher);
 
 // Get the Cart and Prepare Size
 shoppingCart = ShoppingCartEvents.getCartObject(request);
@@ -63,9 +67,14 @@ context.put("suppliers", suppliers);
 
 // check the selected product store
 productStoreId = request.getParameter("productStoreId");
+productStore = null;
+
 if (UtilValidate.isNotEmpty(productStoreId)) {
     productStore = ProductStoreWorker.getProductStore(productStoreId, delegator);
     if (productStore != null) {
+    	// put in the default currency, to help selecting a currency for a purchase order
+    	context.put("defaultCurrencyUomId", productStore.getString("defaultCurrencyUomId"));
+
         // check security on the store
         storeReps = delegator.findByAnd("ProductStoreRole", UtilMisc.toMap("productStoreId", productStore.getString("productStoreId"),
                 "partyId", userLogin.getString("partyId"), "roleTypeId", "SALES_REP"));
@@ -77,8 +86,10 @@ if (UtilValidate.isNotEmpty(productStoreId)) {
             request.setAttribute("_ERROR_MESSAGE_", "You do not have permission to take orders for this store.");
             shoppingCart.clear();
             session.removeAttribute("orderMode");
+            session.removeAttribute("agreementsMode");
             return;
         }
+        shoppingCart.setProductStoreId(productStoreId);
     } else {
         shoppingCart.setProductStoreId(null);
     }
@@ -114,6 +125,7 @@ if ("SALES_ORDER".equals(mode) && UtilValidate.isEmpty(shoppingCart.getProductSt
     request.setAttribute("_ERROR_MESSAGE_", "A Product Store MUST be selected for a Sales Order.");
     shoppingCart.clear();
     session.removeAttribute("orderMode");
+    session.removeAttribute("agreementsMode");
     return;
 }
     
@@ -190,3 +202,34 @@ if (!UtilValidate.isEmpty(defaultComment)) {
     context.put("useAsDefaultComment", "true");
 }
 context.put("defaultComment", defaultComment);
+
+if ("PURCHASE_ORDER".equals(mode)) {
+    // for purchase orders, get purchasing agreements
+    payToPartyId = null;
+    if (productStore != null) {
+        payToPartyId = productStore.getString("payToPartyId");
+    }
+    partyId = shoppingCart.getOrderPartyId();
+    agreements = delegator.findByAndCache("Agreement", UtilMisc.toMap("partyIdTo", partyId, "partyIdFrom", payToPartyId));
+    if (agreements != null && agreements.size() > 0) {
+        context.put("hasAgreements","Y");
+        context.put("agreements", agreements);
+    } else {
+        context.put("hasAgreements","N");
+    }
+
+    // set agreementsMode, which tracks if the user has already set a currency or agreement (used in orderentry.ftl)
+    agreementsMode = request.getParameter("currencyUomId");
+    if (UtilValidate.isEmpty(agreementsMode)) {
+        agreementsMode = request.getParameter("agreementId");
+     }
+    if (UtilValidate.isNotEmpty(agreementsMode)) {
+        session.setAttribute("agreementsMode", agreementsMode.trim());
+     }
+}
+
+// currencies and shopping cart currency
+currencies = delegator.findByAndCache("Uom", UtilMisc.toMap("uomTypeId","CURRENCY_MEASURE"));
+context.put("currencies", currencies);
+context.put("currencyUomId", shoppingCart.getCurrency());
+

@@ -26,9 +26,8 @@
 
 <#if !sessionAttributes.orderMode?exists || updateParty?exists>
   ${pages.get("/entry/checkinits.ftl")}
-<#elseif sessionAttributes.orderMode?exists && sessionAttributes.orderMode == "PURCHASE_ORDER" && !sessionAttributes.poHeader?exists>
-  <#-- ${pages.get("/entry/poheader.ftl")} -->
-  ${pages.get("/entry/showcart.ftl")}
+<#elseif (sessionAttributes.orderMode?exists && sessionAttributes.orderMode == "PURCHASE_ORDER") && (!sessionAttributes.agreementsMode?exists)>
+  ${pages.get("/entry/orderagreements.ftl")}
 <#else>
   ${pages.get("/entry/showcart.ftl")}
 </#if>

@@ -95,6 +95,7 @@
         <attribute name="orderTypeId" type="String" mode="INOUT" optional="false"/>
         <attribute name="salesChannelEnumId" type="String" mode="IN" optional="true"/>
         <attribute name="orderItems" type="java.util.List" mode="IN" optional="false"/>
+        <attribute name="orderTerms" type="java.util.List" mode="IN" optional="false"/>
         <!-- workeffort contains the rental start/enddate, nbr of persons. WorkEfforts is mandatory for ordertype = RENTAL_ORDER_ITEM-->
         <attribute name="workEfforts" type="java.util.List" mode="IN" optional="true"/> 
         <attribute name="orderAdjustments" type="java.util.List" mode="IN" optional="false"/>
