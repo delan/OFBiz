@@ -23,25 +23,13 @@
 package org.ofbiz.product.product;
 
 import java.sql.Timestamp;
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.Collection;
-import java.util.HashMap;
-import java.util.HashSet;
-import java.util.Iterator;
-import java.util.LinkedList;
-import java.util.List;
-import java.util.Locale;
-import java.util.Map;
-import java.util.Set;
+import java.util.*;
 
 import org.ofbiz.base.util.Debug;
 import org.ofbiz.base.util.UtilDateTime;
 import org.ofbiz.base.util.UtilMisc;
 import org.ofbiz.base.util.UtilProperties;
 import org.ofbiz.base.util.UtilValidate;
-import org.ofbiz.base.util.collections.OrderedMap;
-import org.ofbiz.base.util.collections.OrderedSet;
 import org.ofbiz.entity.GenericDelegator;
 import org.ofbiz.entity.GenericEntityException;
 import org.ofbiz.entity.GenericValue;
@@ -53,6 +41,9 @@ import org.ofbiz.service.GenericServiceException;
 import org.ofbiz.service.LocalDispatcher;
 import org.ofbiz.service.ModelService;
 import org.ofbiz.service.ServiceUtil;
+
+import org.apache.commons.collections.map.LinkedMap;
+import org.apache.commons.collections.set.ListOrderedSet;
 
 /**
  * Product Services
@@ -159,7 +150,7 @@ public class ProductServices {
         String productId = (String) context.get("productId");
         Locale locale = (Locale) context.get("locale");
         String errMsg=null;
-        Set featureSet = new OrderedSet();
+        Set featureSet = new ListOrderedSet();
 
         try {
             Map fields = UtilMisc.toMap("productId", productId, "productFeatureApplTypeId", "SELECTABLE_FEATURE");
@@ -523,7 +514,7 @@ public class ProductServices {
         throws IllegalArgumentException, IllegalStateException {
         //List featureKey = new ArrayList();
         Map tempGroup = new HashMap();
-        Map group = new OrderedMap();
+        Map group = new LinkedMap();
         String orderKey = (String) order.get(index);
 
         if (featureList == null) {
@@ -631,7 +622,7 @@ public class ProductServices {
     // builds a variant sample (a single sku for a featureType)
     private static Map makeVariantSample(GenericDelegator delegator, Map featureList, List items, String feature) {
         Map tempSample = new HashMap();
-        Map sample = new OrderedMap();
+        Map sample = new LinkedMap();
         Iterator itemIt = items.iterator();
 
         while (itemIt.hasNext()) {

@@ -81,7 +81,7 @@ public class ContentManagementWorker {
     * by the entity name and builds a signature from the primary key values.
     *
     * @param entityName 
-    * @param suffix 
+    * @param lookupCaches
     * @param pk either a GenericValue or GenericPK - populated
     */
     public static void mruAddByEntityName(String entityName, GenericEntity pk, Map lookupCaches) {
@@ -160,7 +160,7 @@ public class ContentManagementWorker {
     }
 
     //public static String getFromSomewhere(String name, org.ofbiz.base.util.collections.OrderedMap paramMap, HttpServletRequest request, org.jpublish.JPublishContext context) {
-    public static String getFromSomewhere(String name, org.ofbiz.base.util.collections.OrderedMap paramMap, HttpServletRequest request, Map context) {
+    public static String getFromSomewhere(String name, Map paramMap, HttpServletRequest request, Map context) {
 
         String ret = null;
         if (paramMap != null)
@@ -181,7 +181,7 @@ public class ContentManagementWorker {
     }
 
     //public static String getFromSomewhere(String name, org.ofbiz.base.util.collections.OrderedMap paramMap, HttpServletRequest request, org.jpublish.JPublishContext context) {
-    public static String getFromSomewhere(String name, org.ofbiz.base.util.collections.OrderedMap paramMap, HttpServletRequest request, org.jpublish.JPublishContext context) {
+    public static String getFromSomewhere(String name, Map paramMap, HttpServletRequest request, org.jpublish.JPublishContext context) {
 
         String ret = null;
         if (paramMap != null)

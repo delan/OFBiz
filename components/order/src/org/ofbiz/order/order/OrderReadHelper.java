@@ -24,13 +24,18 @@
 package org.ofbiz.order.order;
 
 import java.sql.Timestamp;
-import java.util.*;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.Iterator;
+import java.util.LinkedList;
+import java.util.List;
+import java.util.Map;
+import java.util.Set;
 
 import org.ofbiz.base.util.Debug;
 import org.ofbiz.base.util.UtilFormatOut;
 import org.ofbiz.base.util.UtilMisc;
 import org.ofbiz.base.util.UtilValidate;
-import org.ofbiz.base.util.collections.OrderedSet;
 import org.ofbiz.common.DataModelConstants;
 import org.ofbiz.entity.GenericDelegator;
 import org.ofbiz.entity.GenericEntity;
@@ -41,6 +46,8 @@ import org.ofbiz.entity.condition.EntityOperator;
 import org.ofbiz.entity.util.EntityUtil;
 import org.ofbiz.product.product.ProductWorker;
 import org.ofbiz.security.Security;
+
+import org.apache.commons.collections.set.ListOrderedSet;
 
 /**
  * Utility class for easily extracting important information from orders
@@ -451,7 +458,7 @@ public class OrderReadHelper {
     }
 
     public Set getItemFeatureSet(GenericValue item) {
-        Set featureSet = new OrderedSet();
+        Set featureSet = new ListOrderedSet();
         List featureAppls = null;
         if (item.get("productId") != null) {
             try {

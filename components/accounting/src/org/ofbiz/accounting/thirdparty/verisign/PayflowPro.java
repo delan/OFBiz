@@ -31,21 +31,22 @@ import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
+import com.Verisign.payment.PFProAPI;
+
 import org.ofbiz.base.util.Debug;
 import org.ofbiz.base.util.StringUtil;
 import org.ofbiz.base.util.UtilMisc;
 import org.ofbiz.base.util.UtilProperties;
-import org.ofbiz.base.util.collections.OrderedMap;
 import org.ofbiz.entity.GenericValue;
 import org.ofbiz.service.DispatchContext;
 
-import com.Verisign.payment.PFProAPI;
+import org.apache.commons.collections.map.LinkedMap;
 
 /**
  * PayflowPro - Verisign PayFlow Pro <=> OFBiz Service Module
  *
  * @author     <a href="mailto:jaz@ofbiz.org">Andy Zeneski</a> 
- * @version    $Rev:$
+ * @version    $Rev$
  * @since      2.0
  */
 public class PayflowPro {
@@ -130,7 +131,7 @@ public class PayflowPro {
 
     private static void parseResponse(String resp, Map result, String resource) {
         boolean checkAVS = UtilProperties.propertyValueEqualsIgnoreCase(resource, "payment.verisign.checkAvs", "Y");
-        Map parameters = new OrderedMap();
+        Map parameters = new LinkedMap();
         List params = StringUtil.split(resp, "&");
         Iterator i = params.iterator();
 
