@@ -1,6 +1,9 @@
 /*
  * $Id$
  * $Log$
+ * Revision 1.15  2001/09/26 01:35:49  azeneski
+ * Modification to set context root in request object.
+ *
  * Revision 1.14  2001/09/19 08:32:02  jonesde
  * Initial checkin of refactored entity engine.
  *
@@ -81,8 +84,6 @@ package org.ofbiz.core.util;
 public final class SiteDefs {
     
     /** Default Site Config Variables */
-    public static final String SITE_NAME = "Open For Commerce";
-    public static final String SITE_CONF = "/WEB-INF/xml/siteconf.properties";
     public static final String ERROR_PAGE = "/error/error.jsp";
     public static final String CHECK_LOGIN_REQUEST_URI = "checkLogin";
     public static final String LOGIN_REQUEST_URI = "login";
