@@ -58,6 +58,13 @@
       <field name="pushEntitySyncId" type="id"></field>
       <prim-key field="posTerminalId"/>
     </entity>
+    <entity entity-name="PosTerminalLog"
+            package-name="org.ofbiz.pos.terminal"
+            title="Pos Terminal Log">
+      <field name="posTerminalLogId" type="id-ne"></field>
+      <field name="posTerminalId" type="id-ne"></field>
+      <prim-key field="posTerminalLogId"/>
+    </entity>
     <entity entity-name="PosTerminalState"
             package-name="org.ofbiz.pos.terminal"
             title="Pos Terminal State">

@@ -45,6 +45,7 @@ public class PaymentEvents {
 
     public static synchronized void payCash(PosScreen pos) {
         PosTransaction trans = PosTransaction.getCurrentTx(pos.getSession());
+        trans.clearPayment("CASH");
 
         // all cash transactions are NO_PAYMENT; no need to check
         try {
