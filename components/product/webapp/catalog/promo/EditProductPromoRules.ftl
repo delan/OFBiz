@@ -22,7 +22,7 @@
  *@author     David E. Jones (jonesde@ofbiz.org)
  *@author     Brad Steiner (bsteiner@thehungersite.com)
  *@author     Catherine.Heintz@nereide.biz (migration to UiLabel)
- *@version    $Revision: 1.7 $
+ *@version    $Revision: 1.8 $
  *@since      2.2
 -->
 <#assign uiLabelMap = requestAttributes.uiLabelMap>
@@ -54,11 +54,9 @@ ${pages.get("/promo/PromoTabBar.ftl")}
                 </FORM>
             </td>
             <td align="center">&nbsp;
-            <#if (productPromoConds.size() != 0)>
-                <#if (productPromoActions.size() != 0)>
-                    <a href="<@ofbizUrl>/deleteProductPromoRule?productPromoId=${(productPromoRule.productPromoId)?if_exists}&productPromoRuleId=${(productPromoRule.productPromoRuleId)?if_exists}</@ofbizUrl>" class="buttontext">
-                    [${uiLabelMap.CommonDelete}]</a>
-                </#if>
+            <#if (productPromoConds.size() == 0 && productPromoActions.size() == 0)>
+                <a href="<@ofbizUrl>/deleteProductPromoRule?productPromoId=${(productPromoRule.productPromoId)?if_exists}&productPromoRuleId=${(productPromoRule.productPromoRuleId)?if_exists}</@ofbizUrl>" class="buttontext">
+                [${uiLabelMap.CommonDelete}]</a>
             </#if>
             </td>
         </tr>
@@ -249,7 +247,6 @@ ${pages.get("/promo/PromoTabBar.ftl")}
 
         <div class="head2">${uiLabelMap.ProductAddPromoRule} :</div>
         <br>
-        ${uiLabelMap.CommonId} : <input type=text size="20" class="inputBox" name="productPromoRuleId">
         ${uiLabelMap.ProductName} : <input type=text size="30" name="ruleName" class="inputBox">
         <input type="submit" value="${uiLabelMap.CommonAdd}">
         </form>

@@ -22,7 +22,7 @@
  *@author     David E. Jones (jonesde@ofbiz.org)
  *@author     Andy Zeneski
  *@author     Catherine.Heintz@nereide.biz (migration to UiLabel)
- *@version    $Revision: 1.3 $
+ *@version    $Revision: 1.4 $
  *@since      2.2
 -->
 <#assign uiLabelMap = requestAttributes.uiLabelMap>
@@ -74,6 +74,17 @@
 <#else>
     <h3>${uiLabelMap.ProductNoPriceRulesFound}.</h3>
 </#if>
+
+<br>
+
+<form method="POST" action="<@ofbizUrl>/createProductPriceRule</@ofbizUrl>" style="margin: 0;">
+  <div class="head2">${uiLabelMap.ProductAddPriceRule}:</div>
+  <br>
+  ${uiLabelMap.ProductName}: <input type=text size="30" class="inputBox" name="ruleName">
+  <input type="submit" class="smallSubmit" value="${uiLabelMap.CommonAdd}">
+</form>
+
+<br>
 
 <#else>
   <h3>${uiLabelMap.ProductViewPermissionError}</h3>

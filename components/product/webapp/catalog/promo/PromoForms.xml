@@ -24,18 +24,18 @@
 -->
 
 <forms>
-    <form name="EditProductPromo" type="single" 
+    <form name="EditProductPromo" type="single"
             target="UpdateProductPromo" title="" default-map-name="productPromo"
             default-title-style="tableheadtext" default-widget-style="inputBox" default-tooltip-style="tabletext">
-        
+
         <alt-target use-when="productPromo==null" target="CreateProductPromo"/>
-        
+
         <auto-fields-service service-name="updateProductPromo" map-name=""/>
-        
-        <field use-when="productPromo!=null" name="productPromoId" tooltip="This cannot be changed without re-creating the Product Catalog."><display/></field>
-        <field use-when="productPromo==null&amp;&amp;productPromoId!=null" name="productPromoId" tooltip="Could not find ProductPromo with ID [${productPromoId}]"><text size="20" maxlength="20"/></field>
+
+        <field use-when="productPromo!=null" name="productPromoId" tooltip=""><display/></field>
+        <field use-when="productPromo==null&amp;&amp;productPromoId!=null" name="productPromoId" tooltip="Could not find ProductPromo with ID [${productPromoId}]"><display/></field>
         <!-- this to be taken care of with auto-fields-service as soon as it uses entity field info too -->
-        <field use-when="productPromo==null&amp;&amp;productPromoId==null" name="productPromoId"><text size="20" maxlength="20"/></field>
+        <field use-when="productPromo==null&amp;&amp;productPromoId==null" name="productPromoId"><ignored/></field>
 
         <field name="promoText" widget-style="textAreaBox"><textarea cols="70" rows="5"/></field>
         <field name="userEntered" widget-style="selectBox">

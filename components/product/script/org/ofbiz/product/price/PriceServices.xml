@@ -39,17 +39,17 @@
         <set-pk-fields map-name="parameters" value-name="newEntity"/>
 
         <now-timestamp-to-env env-name="nowTimestamp"/>
-        
+
         <if-empty field-name="fromDate" map-name="newEntity">
             <env-to-field env-name="nowTimestamp" field-name="fromDate" map-name="newEntity"/>
         </if-empty>
         <field-to-result field-name="fromDate" map-name="newEntity"/>
-        
+
         <env-to-field env-name="nowTimestamp" field-name="lastModifiedDate" map-name="newEntity"/>
         <env-to-field env-name="nowTimestamp" field-name="createdDate" map-name="newEntity"/>
         <field-to-field field-name="userLoginId" map-name="userLogin" to-field-name="lastModifiedByUserLogin" to-map-name="newEntity"/>
         <field-to-field field-name="userLoginId" map-name="userLogin" to-field-name="createdByUserLogin" to-map-name="newEntity"/>
-        
+
         <create-value value-name="newEntity"/>
     </simple-method>
     <simple-method method-name="updateProductPrice" short-description="Update an ProductPrice">
@@ -62,16 +62,16 @@
         <make-value entity-name="ProductPrice" value-name="lookupPKMap"/>
         <set-pk-fields map-name="parameters" value-name="lookupPKMap"/>
         <find-by-primary-key entity-name="ProductPrice" map-name="lookupPKMap" value-name="lookedUpValue"/>
-        
+
         <!-- grab the old price value before setting nonpk parameter fields -->
         <field-to-result map-name="lookedUpValue" field-name="price" result-name="oldPrice"/>
-        
+
         <set-nonpk-fields map-name="parameters" value-name="lookedUpValue"/>
-        
+
         <now-timestamp-to-env env-name="nowTimestamp"/>
         <env-to-field env-name="nowTimestamp" field-name="lastModifiedDate" map-name="lookedUpValue"/>
         <field-to-field field-name="userLoginId" map-name="userLogin" to-field-name="lastModifiedByUserLogin" to-map-name="lookedUpValue"/>
-        
+
         <store-value value-name="lookedUpValue"/>
     </simple-method>
     <simple-method method-name="deleteProductPrice" short-description="Delete an ProductPrice">
@@ -84,13 +84,13 @@
         <make-value entity-name="ProductPrice" value-name="lookupPKMap"/>
         <set-pk-fields map-name="parameters" value-name="lookupPKMap"/>
         <find-by-primary-key entity-name="ProductPrice" map-name="lookupPKMap" value-name="lookedUpValue"/>
-        
+
         <!-- grab the old price value before setting nonpk parameter fields -->
         <field-to-result map-name="lookedUpValue" field-name="price" result-name="oldPrice"/>
-        
+
         <remove-value value-name="lookedUpValue"/>
     </simple-method>
-    
+
     <simple-method method-name="saveProductPriceChange" short-description="Save History of ProductPrice Change">
         <check-permission permission="CATALOG" action="_UPDATE">
             <alt-permission permission="CATALOG" action="_CREATE"/>
@@ -113,7 +113,7 @@
         <now-timestamp-to-env env-name="nowTimestamp"/>
         <env-to-field env-name="nowTimestamp" field-name="changedDate" map-name="newEntity"/>
         <field-to-field field-name="userLoginId" map-name="userLogin" to-field-name="changedByUserLogin" to-map-name="newEntity"/>
-        
+
         <create-value value-name="newEntity"/>
     </simple-method>
 
@@ -125,7 +125,8 @@
 
         <make-value value-name="newEntity" entity-name="ProductPriceRule"/>
         <set-nonpk-fields map-name="parameters" value-name="newEntity"/>
-        <set-pk-fields map-name="parameters" value-name="newEntity"/>
+        <sequenced-id-to-env sequence-name="ProductPriceRule" env-name="newEntity.productPriceRuleId" to-string="true"/>
+        <field-to-result field-name="productPriceRuleId" map-name="newEntity"/>
 
         <create-value value-name="newEntity"/>
     </simple-method>
@@ -160,6 +161,8 @@
         <make-value value-name="newEntity" entity-name="ProductPriceCond"/>
         <set-nonpk-fields map-name="parameters" value-name="newEntity"/>
         <set-pk-fields map-name="parameters" value-name="newEntity"/>
+        <make-next-seq-id value-name="newEntity" seq-field-name="productPriceCondSeqId" numeric-padding="2"/>
+        <field-to-result field-name="productPriceCondSeqId" map-name="newEntity"/>
 
         <create-value value-name="newEntity"/>
     </simple-method>
@@ -194,6 +197,8 @@
         <make-value value-name="newEntity" entity-name="ProductPriceAction"/>
         <set-nonpk-fields map-name="parameters" value-name="newEntity"/>
         <set-pk-fields map-name="parameters" value-name="newEntity"/>
+        <make-next-seq-id value-name="newEntity" seq-field-name="productPriceActionSeqId" numeric-padding="2"/>
+        <field-to-result field-name="productPriceActionSeqId" map-name="newEntity"/>
 
         <create-value value-name="newEntity"/>
     </simple-method>

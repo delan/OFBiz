@@ -306,18 +306,18 @@
   <InventoryItem availableToPromise="10" quantityOnHand="10" facilityId="WebStoreWarehouse" inventoryItemId="9013" inventoryItemTypeId="NON_SERIAL_INV_ITEM" productId="WG-9943-S4" />
 
   <!-- a default promotion to play with -->
-  <ProductPromo productPromoId="testpromo1" promoName="Test Promo 1"
+  <ProductPromo productPromoId="9000" promoName="Test Promo 1"
     promoText="Spend more than $100 on your favorite widgets and gizmos and get a free &lt;a href=&apos;/ecommerce/control/product?category_id=20111&amp;product_id=WG-1111&apos; class=&apos;buttontext&apos;&gt;Micro Chrome Widget&lt;/a&gt;!"/>
-  <ProductPromoRule productPromoId="testpromo1" productPromoRuleId="rule1" ruleName="Rule 1: Free Widget" />
+  <ProductPromoRule productPromoId="9000" productPromoRuleId="01" ruleName="Rule 1: Free Widget" />
   <ProductPromoCond inputParamEnumId="PPIP_ORDER_TOTAL" operatorEnumId="PPC_GT" condValue="100"
-    productPromoId="testpromo1" productPromoRuleId="rule1" productPromoCondSeqId="01" />
-  <ProductPromoAction productPromoId="testpromo1" productPromoRuleId="rule1" productPromoActionSeqId="01"
+    productPromoId="9000" productPromoRuleId="01" productPromoCondSeqId="01" />
+  <ProductPromoAction productPromoId="9000" productPromoRuleId="01" productPromoActionSeqId="01"
     orderAdjustmentTypeId="PROMOTION_ADJUSTMENT" productId="WG-1111" productPromoActionEnumId="PROMO_GWP" quantity="1.0" />
 
-  <ProductStorePromoAppl fromDate="2001-01-01 12:00:00.0" productStoreId="9000" productPromoId="testpromo1" />
+  <ProductStorePromoAppl fromDate="2001-01-01 12:00:00.0" productStoreId="9000" productPromoId="9000" />
 
   <!-- a default pricing rule to play with; take 20% off all products in the PROMOTIONS category -->
-  <ProductPriceRule productPriceRuleId="tr1" ruleName="Test Rule 1" isSale="Y"/>
-  <ProductPriceAction amount="-20.0" productPriceActionSeqId="1" productPriceActionTypeId="PRICE_POL" productPriceRuleId="tr1"/>
-  <ProductPriceCond condValue="PROMOTIONS" inputParamEnumId="PRIP_PROD_CAT_ID" operatorEnumId="PRC_EQ" productPriceCondSeqId="1" productPriceRuleId="tr1"/>
+  <ProductPriceRule productPriceRuleId="9000" ruleName="Test Rule 1" isSale="Y"/>
+  <ProductPriceAction amount="-20.0" productPriceActionSeqId="01" productPriceActionTypeId="PRICE_POL" productPriceRuleId="9000"/>
+  <ProductPriceCond condValue="PROMOTIONS" inputParamEnumId="PRIP_PROD_CAT_ID" operatorEnumId="PRC_EQ" productPriceCondSeqId="01" productPriceRuleId="9000"/>
 </entity-engine-xml>
