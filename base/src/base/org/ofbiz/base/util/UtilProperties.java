@@ -444,7 +444,7 @@ public class UtilProperties implements java.io.Serializable {
         if (bundleMap == null) {
             return null;
         }
-        return ((ResourceBundleMapWrapper) bundleMap).getInitialResourceBundle();
+        return ((ResourceBundleMapWrapper.InternalRbmWrapper) bundleMap).getResourceBundle();
     }
     
     /** Returns the specified resource/properties file as a Map with the original ResourceBundle in the Map under the key _RESOURCE_BUNDLE_
@@ -457,18 +457,28 @@ public class UtilProperties implements java.io.Serializable {
             throw new IllegalArgumentException("Locale cannot be null");
         }
         
+        ResourceBundleMapWrapper.InternalRbmWrapper bundleMap = getInternalRbmWrapper(resource, locale);
+        return new ResourceBundleMapWrapper(bundleMap);
+    }
+
+    public static ResourceBundleMapWrapper.InternalRbmWrapper getInternalRbmWrapper(String resource, Locale locale) {
         String resourceCacheKey = resource + "_" + locale.toString();        
-        Map bundleMap = (Map) bundleLocaleCache.get(resourceCacheKey);
+        ResourceBundleMapWrapper.InternalRbmWrapper bundleMap = (ResourceBundleMapWrapper.InternalRbmWrapper) bundleLocaleCache.get(resourceCacheKey);
         if (bundleMap == null) {
-            ResourceBundle bundle = getBaseResourceBundle(resource, locale);
-            bundleMap = new ResourceBundleMapWrapper(bundle);
-            if (bundleMap != null) {
-                bundleLocaleCache.put(resourceCacheKey, bundleMap);
+            synchronized (UtilProperties.class) {
+                bundleMap = (ResourceBundleMapWrapper.InternalRbmWrapper) bundleLocaleCache.get(resourceCacheKey);
+                if (bundleMap == null) {
+                    ResourceBundle bundle = getBaseResourceBundle(resource, locale);
+                    bundleMap = new ResourceBundleMapWrapper.InternalRbmWrapper(bundle);
+                    if (bundleMap != null) {
+                        bundleLocaleCache.put(resourceCacheKey, bundleMap);
+                    }
+                }                
             }
         }
         return bundleMap;
     }
-
+    
     protected static ResourceBundle getBaseResourceBundle(String resource, Locale locale) {
         if (resource == null || resource.length() <= 0) return null;
         if (locale == null) locale = Locale.getDefault();

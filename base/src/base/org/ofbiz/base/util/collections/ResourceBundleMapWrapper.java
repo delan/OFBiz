@@ -51,7 +51,15 @@ public class ResourceBundleMapWrapper implements Map {
     }
 
     /**
-     * When creating new from a ResourceBundle the one passed to the constructor should be the most base or common ResourceBundle, with more specific ones pushed onto the stack progressively.
+     * When creating new from a InternalRbmWrapper the one passed to the constructor should be the most specific or local InternalRbmWrapper, with more common ones pushed onto the stack progressively.
+     */
+    public ResourceBundleMapWrapper(InternalRbmWrapper initialInternalRbmWrapper) {
+        this.initialResourceBundle = initialInternalRbmWrapper.getResourceBundle();
+        this.rbmwStack = new MapStack(initialInternalRbmWrapper);
+    }
+    
+    /**
+     * When creating new from a ResourceBundle the one passed to the constructor should be the most specific or local ResourceBundle, with more common ones pushed onto the stack progressively.
      */
     public ResourceBundleMapWrapper(ResourceBundle initialResourceBundle) {
         this.initialResourceBundle = initialResourceBundle;
@@ -63,9 +71,14 @@ public class ResourceBundleMapWrapper implements Map {
         this.rbmwStack.addToBottom(new InternalRbmWrapper(topResourceBundle));
     }
 
+    /** Puts InternalRbmWrapper on the BOTTOM of the stack (bottom meaning will be overriden by higher layers on the stack, ie everything else already there) */
+    public void addBottomResourceBundle(InternalRbmWrapper topInternalRbmWrapper) {
+        this.rbmwStack.addToBottom(topInternalRbmWrapper);
+    }
+
     /** Don't pass the locale to make sure it has the same locale as the base */
     public void addBottomResourceBundle(String resource) {
-        this.addBottomResourceBundle(UtilProperties.getResourceBundle(resource, this.initialResourceBundle.getLocale()));
+        this.addBottomResourceBundle(UtilProperties.getInternalRbmWrapper(resource, this.initialResourceBundle.getLocale()));
     }
 
     /** In general we don't want to use this, better to start with the more specific ResourceBundle and add layers of common ones...
@@ -120,7 +133,7 @@ public class ResourceBundleMapWrapper implements Map {
         return this.rbmwStack.values();
     }
     
-    protected static class InternalRbmWrapper implements Map {
+    public static class InternalRbmWrapper implements Map {
         protected ResourceBundle resourceBundle;
         protected Map topLevelMap;
         
