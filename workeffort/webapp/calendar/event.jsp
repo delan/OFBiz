@@ -28,19 +28,15 @@
  */
 %>
 
-<%@ page import="org.ofbiz.core.util.*" %>
-<%@ page import="org.ofbiz.core.security.*" %>
 <%@ page import="org.ofbiz.commonapp.workeffort.workeffort.*" %>
 
-<% pageContext.setAttribute("PageName", "Calendar Event Editor Page"); %> 
+<%pageContext.setAttribute("PageName", "Calendar Event Editor Page");%>
 
 <%@ include file="/includes/envsetup.jsp" %>
 <%@ include file="/includes/header.jsp" %>
 <%@ include file="/includes/onecolumn.jsp" %>
-<%
-  WorkEffortWorker.getWorkEffort(pageContext, "workEffortId", "workEffort", "partyAssigns", "canView");
-  boolean useValues = pageContext.getAttribute("workEffort")==null?false:true;
-%>
+<%WorkEffortWorker.getWorkEffort(pageContext, "workEffortId", "workEffort", "partyAssigns", "canView");%>
+<%boolean useValues = pageContext.getAttribute("workEffort")==null?false:true;%>
 
 <BR>
 <TABLE border=0 width='100%' cellpadding='<%=boxBorderWidth%>' cellspacing=0 bgcolor='<%=boxBorderColor%>'>

@@ -54,6 +54,13 @@
   </tag>	
 
   <tag>
+    <name>iteratorHasNext</name>
+    <tagclass>org.ofbiz.core.taglib.IterateHasNextTag</tagclass>
+    <bodycontent>JSP</bodycontent>
+    <info>Only process body if parent iterator tag has another entry.</info>
+  </tag>	
+
+  <tag>
     <name>if</name>
     <tagclass>org.ofbiz.core.taglib.IfTag</tagclass>
     <bodycontent>JSP</bodycontent>

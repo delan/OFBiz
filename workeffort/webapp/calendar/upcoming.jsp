@@ -28,14 +28,14 @@
  */
 %>
 
-<%@ page import="org.ofbiz.core.util.*" %>
-<%@ page import="org.ofbiz.core.security.*" %>
-
-<% pageContext.setAttribute("PageName", "Calendar Month View Page"); %> 
+<%@ page import="org.ofbiz.commonapp.workeffort.workeffort.*" %>
+<%pageContext.setAttribute("PageName", "Calendar Month View Page");%>
 
 <%@ include file="/includes/envsetup.jsp" %>
 <%@ include file="/includes/header.jsp" %>
 <%@ include file="/includes/onecolumn.jsp" %>
+<%WorkEffortWorker.getUpcomingWorkEfforts(pageContext, "days");%>
+
 <BR>
 <TABLE border=0 width='100%' cellpadding='<%=boxBorderWidth%>' cellspacing=0 bgcolor='<%=boxBorderColor%>'>
   <TR>
@@ -61,7 +61,21 @@
       <table width='100%' border='0' cellpadding='<%=boxBottomPadding%>' cellspacing='0' bgcolor='<%=boxBottomColor%>'>
         <tr>
           <td>
-            <DIV class='tabletext'>NOTE: This page is currently empty, so don't bother looking for anything.</DIV>
+            <ofbiz:if name="days" size="0">
+              <ofbiz:iterator name="workEfforts" property="days">
+                <ofbiz:iterator name="workEffort" property="workEfforts">
+                  <DIV class='tabletext'>
+                    <ofbiz:entityfield attribute="workEffort" field="estimatedStartDate"/> -
+                    <ofbiz:entityfield attribute="workEffort" field="estimatedCompletionDate"/>:
+                    <b><ofbiz:entityfield attribute="workEffort" field="workEffortName"/></b>
+                  </DIV>
+                </ofbiz:iterator>
+                <ofbiz:iteratorHasNext><HR></ofbiz:iteratorHasNext>
+              </ofbiz:iterator>
+            </ofbiz:if>
+            <ofbiz:unless name="days" size="0">
+              <div class='tabletext'>No events found.</div>
+            </ofbiz:unless>
           </td>
         </tr>
       </table>
