@@ -29,6 +29,10 @@ import org.apache.xml.serialize.*;
 /**
  * <p><b>Title:</b> Generic Entity Value Object
  * <p><b>Description:</b> Handles persisntence for any defined entity.
+ * Note that this class extends <code>Observable</code> to achieve change notification for
+ * <code>Observer</code>s. Whenever a field changes the name of the field will be passed to
+ * the <code>notifyObservers()</code> method, and through that to the <code>update()</code> method of each
+ * <code>Observer</code>.
  * <p>Copyright (c) 2001 The Open For Business Project - www.ofbiz.org
  *
  * <p>Permission is hereby granted, free of charge, to any person obtaining a
@@ -53,7 +57,7 @@ import org.apache.xml.serialize.*;
  *@created    Wed Aug 08 2001
  *@version    1.0
  */
-public class GenericEntity implements Serializable, Comparable, Cloneable {
+public class GenericEntity extends Observable implements Serializable, Comparable, Cloneable {
   /** Name of the GenericDelegator, used to reget the GenericDelegator when deserialized */
   public String delegatorName = null;
   /** Reference to an instance of GenericDelegator used to do some basic operations on this entity value. If null various methods in this class will fail. This is automatically set by the GenericDelegator for all GenericValue objects instantiated through it. You may set this manually for objects you instantiate manually, but it is optional. */
@@ -166,6 +170,8 @@ public class GenericEntity implements Serializable, Comparable, Cloneable {
       }
       fields.put(name, value);
       modified = true;
+      this.setChanged();
+      this.notifyObservers(name);
     }
   }
   
@@ -175,7 +181,7 @@ public class GenericEntity implements Serializable, Comparable, Cloneable {
    */
   public void setString(String name, String value) {
     ModelField field = getModelEntity().getField(name);
-    if(field == null) set(name, value); //this will get an error...
+    if(field == null) set(name, value); //this will get an error in the set() method...
     
     ModelFieldType type = null;
     try { type = getDelegator().getEntityFieldType(getModelEntity(), field.type); }
@@ -199,7 +205,7 @@ public class GenericEntity implements Serializable, Comparable, Cloneable {
     else if(fieldType.equals("java.lang.Double") || fieldType.equals("Double"))
       set(name, Double.valueOf(value));
     else {
-      //throw an exception or something...
+      throw new IllegalArgumentException("Java type " + fieldType + " not currently supported. Sorry.");
     }
   }
   
@@ -283,11 +289,10 @@ public class GenericEntity implements Serializable, Comparable, Cloneable {
     if(keyValuePairs == null) return;
     Iterator entries = keyValuePairs.entrySet().iterator();
     Map.Entry anEntry = null;
-    //this could be implement with Map.putAll, but we'll leave it like this so we can add validation later
+    //this could be implement with Map.putAll, but we'll leave it like this for the extra features it has
     while(entries.hasNext()) {
       anEntry = (Map.Entry)entries.next();
-      this.fields.put(anEntry.getKey(), anEntry.getValue());
-      modified = true;
+      this.set((String)anEntry.getKey(), anEntry.getValue());
     }
   }
   
@@ -410,6 +415,7 @@ public class GenericEntity implements Serializable, Comparable, Cloneable {
    *@return    Hashcode corresponding to this entity
    */
   public int hashCode() {
+    //divide both by two (shift to right one bit) to maintain scale and add together
     return getEntityName().hashCode()>>1 + fields.hashCode()>>1;
   }
   
