@@ -1,5 +1,5 @@
 /*
- * $Id: JobManager.java,v 1.13 2004/06/16 20:48:43 ajzeneski Exp $
+ * $Id: JobManager.java,v 1.14 2004/06/17 00:52:15 ajzeneski Exp $
  *
  * Copyright (c) 2001, 2002 The Open For Business Project - www.ofbiz.org
  *
@@ -60,7 +60,7 @@ import org.ofbiz.service.config.ServiceConfigUtil;
  * JobManager
  *
  * @author     <a href="mailto:jaz@ofbiz.org">Andy Zeneski</a>
- * @version    $Revision: 1.13 $
+ * @version    $Revision: 1.14 $
  * @since      2.0
  */
 public class JobManager {
@@ -207,12 +207,23 @@ public class JobManager {
                         Timestamp now = UtilDateTime.nowTimestamp();
                         // only re-schedule if there is no new recurrences since last run
                         Debug.log("Scheduling Job : " + job, module);
+
+                        String newJobId = job.getDelegator().getNextSeqId("JobSandbox").toString();
+                        String pJobId = job.getString("parentJobId");
+                        if (pJobId == null) {
+                            pJobId = job.getString("jobId");
+                        }
                         GenericValue newJob = new GenericValue(job);
+                        newJob.set("statusId", "SERVICE_PENDING");
                         newJob.set("runTime", now);
+                        newJob.set("jobId", newJobId);
+                        newJob.set("previousJobId", job.getString("jobId"));
+                        newJob.set("parentJobId", pJobId);
                         newJob.set("startDateTime", null);
                         toStore.add(newJob);
 
                         // set the cancel time on the old job to the same as the re-schedule time
+                        job.set("statusId", "SERVICE_CRASHED");
                         job.set("cancelDateTime", now);
                         toStore.add(job);
                     }
@@ -285,6 +296,27 @@ public class JobManager {
      *@param endTime The time in milliseconds the service should expire
      */
     public void schedule(String poolName, String serviceName, Map context, long startTime, int frequency, int interval, int count, long endTime) throws JobManagerException {
+        schedule(null, serviceName, context, startTime, frequency, interval, count, endTime, -1);
+    }
+
+    /**
+     * Schedule a job to start at a specific time with specific recurrence info
+     *@param poolName The name of the pool to run the service from
+     *@param serviceName The name of the service to invoke
+     *@param context The context for the service
+     *@param startTime The time in milliseconds the service should run
+     *@param frequency The frequency of the recurrence (HOURLY,DAILY,MONTHLY,etc)
+     *@param interval The interval of the frequency recurrence
+     *@param count The number of times to repeat
+     *@param endTime The time in milliseconds the service should expire
+     *@param maxRetry The max number of retries on failure (-1 for no max)
+     */
+    public void schedule(String poolName, String serviceName, Map context, long startTime, int frequency, int interval, int count, long endTime, int maxRetry) throws JobManagerException {
+        if (delegator == null) {
+            Debug.logWarning("No delegator referenced; cannot schedule job.", module);
+            return;
+        }
+
         // persist the context
         String dataId = null;
         try {
@@ -302,7 +334,7 @@ public class JobManager {
         }
 
         // schedule the job
-        schedule(poolName, serviceName, dataId, startTime, frequency, interval, count, endTime);
+        schedule(poolName, serviceName, dataId, startTime, frequency, interval, count, endTime, maxRetry);
     }
 
     /**
@@ -313,7 +345,7 @@ public class JobManager {
      *@param startTime The time in milliseconds the service should run
      */
     public void schedule(String poolName, String serviceName, String dataId, long startTime) throws JobManagerException {
-        schedule(poolName, serviceName, dataId, startTime, -1, 0, 1, 0);
+        schedule(poolName, serviceName, dataId, startTime, -1, 0, 1, 0, -1);
     }
 
     /**
@@ -326,17 +358,16 @@ public class JobManager {
      *@param interval The interval of the frequency recurrence
      *@param count The number of times to repeat
      *@param endTime The time in milliseconds the service should expire
+     *@param maxRetry The max number of retries on failure (-1 for no max)
      */
-    public void schedule(String poolName, String serviceName, String dataId, long startTime, int frequency, int interval, int count, long endTime) throws JobManagerException {
-        String infoId = null;
-        String jobName = new String(new Long((new Date().getTime())).toString());
-
+    public void schedule(String poolName, String serviceName, String dataId, long startTime, int frequency, int interval, int count, long endTime, int maxRetry) throws JobManagerException {
         if (delegator == null) {
             Debug.logWarning("No delegator referenced; cannot schedule job.", module);
             return;
         }
 
         // create the recurrence
+        String infoId = null;
         if (frequency > -1 && count > 1) {
             try {
                 RecurrenceInfo info = RecurrenceInfo.makeInfo(delegator, startTime, frequency, interval, count);
@@ -347,7 +378,9 @@ public class JobManager {
         }
 
         // set the persisted fields
-        Map jFields = UtilMisc.toMap("jobName", jobName, "runTime", new java.sql.Timestamp(startTime),
+        String jobName = new String(new Long((new Date().getTime())).toString());
+        String jobId = delegator.getNextSeqId("JobSandbox").toString();
+        Map jFields = UtilMisc.toMap("jobId", jobId, "jobName", jobName, "runTime", new java.sql.Timestamp(startTime),
                 "serviceName", serviceName, "recurrenceInfoId", infoId, "runtimeDataId", dataId);
 
         // set the pool ID
@@ -356,6 +389,12 @@ public class JobManager {
         } else {
             jFields.put("poolId", ServiceConfigUtil.getSendPool());
         }
+
+        // set the loader name
+        jFields.put("loaderName", dispatcherName);
+
+        // set the max retry
+        jFields.put("maxRetry", new Long(maxRetry));
 
         // create the value and store
         GenericValue jobV = null;
@@ -396,6 +435,10 @@ public class JobManager {
     public static RecurrenceInfo getRecurrenceInfo(GenericValue job) {
         try {
             if (job != null) {
+                if (job.get("cancelDateTime") != null) {
+                    // cancel has been flagged, no more recurrence
+                    return null;
+                }
                 GenericValue ri = job.getRelatedOne("RecurrenceInfo");
 
                 if (ri != null) {

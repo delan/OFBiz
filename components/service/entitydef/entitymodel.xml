@@ -26,7 +26,7 @@
  *
  * @author     David E. Jones (jonesde@ofbiz.org)
  * @author     Andy Zeneski (jaz@ofbiz.org)
- * @version    $Revision: 1.4 $
+ * @version    $Revision: 1.5 $
  */
 -->
 
@@ -54,11 +54,16 @@
     <entity entity-name="JobSandbox"
             package-name="org.ofbiz.service.schedule"
             title="Job Scheduler Sandbox Entity">
+      <field name="jobId" type="id-ne"></field>
       <field name="jobName" type="name"></field>
       <field name="runTime" type="date-time"></field>
       <field name="poolId" type="name"></field>
+      <field name="statusId" type="id"></field>
+      <field name="parentJobId" type="id"></field>
+      <field name="previousJobId" type="id"></field>
       <field name="serviceName" type="name"></field>
       <field name="loaderName" type="name"></field>
+      <field name="maxRetry" type="numeric"></field>
       <field name="runAsUser" type="id-vlong"></field>
       <field name="runtimeDataId" type="id"></field>
       <field name="recurrenceInfoId" type="id"></field>
@@ -66,8 +71,7 @@
       <field name="startDateTime" type="date-time"></field>
       <field name="finishDateTime" type="date-time"></field>
       <field name="cancelDateTime" type="date-time"></field>
-      <prim-key field="jobName"/>
-      <prim-key field="runTime"/>
+      <prim-key field="jobId"/>
       <relation type="one" fk-name="JOB_SNDBX_RECINFO" rel-entity-name="RecurrenceInfo">
         <key-map field-name="recurrenceInfoId"/>
       </relation>
@@ -76,6 +80,9 @@
       </relation>
       <relation type="one" fk-name="JOB_SNDBX_USRLGN" title="RunAs" rel-entity-name="UserLogin">
         <key-map field-name="runAsUser" rel-field-name="userLoginId"/>
+      </relation>
+      <relation type="one" fk-name="JOB_SNDBX_STTS" rel-entity-name="StatusItem">
+        <key-map field-name="statusId"/>
       </relation>
     </entity>
     <entity entity-name="RecurrenceInfo"

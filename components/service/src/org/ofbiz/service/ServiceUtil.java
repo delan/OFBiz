@@ -1,5 +1,5 @@
 /*
- * $Id: ServiceUtil.java,v 1.12 2004/06/02 16:34:34 ajzeneski Exp $
+ * $Id: ServiceUtil.java,v 1.13 2004/06/17 00:52:13 ajzeneski Exp $
  *
  * Copyright (c) 2001, 2002 The Open For Business Project - www.ofbiz.org
  *
@@ -47,7 +47,7 @@ import org.ofbiz.service.config.ServiceConfigUtil;
  * Generic Service Utility Class
  *
  * @author     <a href="mailto:jaz@ofbiz.org">Andy Zeneski</a>
- * @version    $Revision: 1.12 $
+ * @version    $Revision: 1.13 $
  * @since      2.0
  */
 public class ServiceUtil {
@@ -326,15 +326,15 @@ public class ServiceUtil {
             return ServiceUtil.returnError("You do not have permission to run this service");
         }
 
-        String jobName = (String) context.get("jobName");
-        Timestamp runTime = (Timestamp) context.get("runTime");
-        Map fields = UtilMisc.toMap("jobName", jobName, "runTime", runTime);
+        String jobId = (String) context.get("jobId");
+        Map fields = UtilMisc.toMap("jobId", jobId);
 
         GenericValue job = null;
         try {
             job = delegator.findByPrimaryKey("JobSandbox", fields);
             if (job != null) {
                 job.set("cancelDateTime", UtilDateTime.nowTimestamp());
+                job.set("statusId", "SERVICE_CANCELLED");
                 job.store();
             }
         } catch (GenericEntityException e) {
@@ -349,6 +349,37 @@ public class ServiceUtil {
             return result;
         } else {
             return ServiceUtil.returnError("Unable to cancel job : " + job);
+        }
+    }
+
+    public static Map cancelJobRetries(DispatchContext dctx, Map context) {
+        GenericDelegator delegator = dctx.getDelegator();
+        Security security = dctx.getSecurity();
+        GenericValue userLogin = (GenericValue) context.get("userLogin");
+        if (!security.hasPermission("SERVICE_INVOKE_ANY", userLogin)) {
+            return ServiceUtil.returnError("You do not have permission to run this service");
+        }
+
+        String jobId = (String) context.get("jobId");
+        Map fields = UtilMisc.toMap("jobId", jobId);
+
+        GenericValue job = null;
+        try {
+            job = delegator.findByPrimaryKey("JobSandbox", fields);
+            if (job != null) {
+                job.set("maxRetry", new Long(0));                
+                job.store();
+            }
+        } catch (GenericEntityException e) {
+            Debug.logError(e, module);
+            return ServiceUtil.returnError("Unable to cancel job retries : " + fields);
+        }
+
+        Timestamp cancelDate = job.getTimestamp("cancelDateTime");
+        if (cancelDate != null) {
+            return ServiceUtil.returnSuccess();
+        } else {
+            return ServiceUtil.returnError("Unable to cancel job retries : " + job);
         }
     }
 }

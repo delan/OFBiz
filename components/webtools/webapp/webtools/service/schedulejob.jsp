@@ -21,7 +21,7 @@
  *  THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  *
  *@author     Andy Zeneski 
- *@version    $Revision: 1.6 $
+ *@version    $Revision: 1.7 $
  *@since      2.0
 --%>
 
@@ -95,6 +95,10 @@
         <td align="right"><div class="tabletext">Count:</div></td>
         <td><input type="text" class="inputBox" size="6" name="SERVICE_COUNT" value="1">&nbsp;<span class="tabletext">(number of time the job will run; use -1 for no limit i.e. forever)</span></td>
       </tr>
+      <tr>
+        <td align="right"><div class="tabletext">Max Retry:</div></td>
+        <td><input type="text" class="inputBox" size="6" name="SERVICE_MAXRETRY" value="">&nbsp;<span class="tabletext">(number of time the job will retry on error; use -1 for no limit or leave empty for service default)</span></td>
+      </tr>
 
       <tr>
         <td colspan="2">&nbsp;</td>
@@ -122,9 +126,9 @@
 	<%
 		DispatchContext dctx = dispatcher.getDispatchContext();
 		ModelService model = dctx.getModelService(serviceName);
-		
+
 	%>
-	
+
     <table border='0'>
       <%
       	Iterator pi = model.getInParamNames().iterator();

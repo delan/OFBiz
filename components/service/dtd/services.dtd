@@ -26,7 +26,7 @@
  *  THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
  *  Service Framework - Service Definition DTD
- *  $Id: services.dtd,v 1.5 2004/02/11 16:49:35 ajzeneski Exp $
+ *  $Id: services.dtd,v 1.6 2004/06/17 00:52:10 ajzeneski Exp $
 -->
 
 <!ELEMENT services (description?, vendor?, version?, created?, service+)>
@@ -48,6 +48,7 @@
 	use-transaction (true|false) "true"
 	require-new-transaction (true|false) "false"
 	transaction-timout CDATA #IMPLIED
+    max-retry CDATA "-1"
 	debug (true|false) "false"
 >
 <!ELEMENT required-permissions (check-permission*, check-role-member*)>

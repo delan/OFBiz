@@ -1,5 +1,5 @@
 /*
- * $Id: CoreEvents.java,v 1.5 2003/12/05 21:03:55 ajzeneski Exp $
+ * $Id: CoreEvents.java,v 1.6 2004/06/17 00:52:09 ajzeneski Exp $
  *
  * Copyright (c) 2001-2003 The Open For Business Project - www.ofbiz.org
  *
@@ -57,7 +57,7 @@ import org.ofbiz.service.calendar.RecurrenceRule;
  * CoreEvents - WebApp Events Related To CORE components
  *
  * @author     <a href="mailto:jaz@ofbiz.org">Andy Zeneski</a>
- * @version    $Revision: 1.5 $
+ * @version    $Revision: 1.6 $
  * @since      2.0
  */
 public class CoreEvents {
@@ -205,7 +205,8 @@ public class CoreEvents {
         String serviceEndTime = (String) params.remove("SERVICE_END_TIME");
         String serviceFreq = (String) params.remove("SERVICE_FREQUENCY");
         String serviceIntr = (String) params.remove("SERVICE_INTERVAL");
-        String serviceCnt = (String) params.remove("SERVICE_COUNT");        
+        String serviceCnt = (String) params.remove("SERVICE_COUNT");
+        String retryCnt = (String) params.remove("SERVICE_MAXRETRY");
 
         // the frequency map
         Map freqMap = new HashMap();
@@ -221,6 +222,7 @@ public class CoreEvents {
         // some defaults
         long startTime = (new Date()).getTime();
         long endTime = 0;
+        int maxRetry = -1;
         int count = 1;
         int interval = 1;
         int frequency = RecurrenceRule.DAILY;
@@ -363,6 +365,22 @@ public class CoreEvents {
                 }
             }
         }
+        if (retryCnt != null && retryCnt.length() > 0) {
+            int parsedValue = -2;
+
+            try {
+                parsedValue = Integer.parseInt(retryCnt);
+            } catch (NumberFormatException e) {
+                parsedValue = -2;
+            }
+            if (parsedValue > -2) {
+                maxRetry = parsedValue;
+            } else {
+                maxRetry = modelService.maxRetry;
+            }
+        } else {
+            maxRetry = modelService.maxRetry;
+        }
 
         // return the errors
         if (errorBuf.length() > 0) {
@@ -372,7 +390,7 @@ public class CoreEvents {
                       
         // schedule service
         try {
-            dispatcher.schedule(poolName, serviceName, serviceContext, startTime, frequency, interval, count, endTime);
+            dispatcher.schedule(poolName, serviceName, serviceContext, startTime, frequency, interval, count, endTime, maxRetry);
         } catch (GenericServiceException e) {
             request.setAttribute("_ERROR_MESSAGE_", "<li>Service dispatcher threw an exception: " + e.getMessage());
             return "error";

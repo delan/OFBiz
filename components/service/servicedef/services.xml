@@ -24,4 +24,13 @@
         <auto-attributes entity-name="JobSandbox" include="pk" mode="IN" optional="false"/>
         <attribute name="cancelDateTime" type="Timestamp" mode="OUT" optional="false"/>
     </service>
+
+    <service name="cancelJobRetries" engine="java"
+            location="org.ofbiz.service.ServiceUtil" invoke="cancelJobRetries" auth="true">
+        <description>Cancels a job retry flag</description>
+        <required-permissions join-type="AND">
+            <check-permission permission="SERVICE_INVOKE_ANY"/>
+        </required-permissions>
+        <auto-attributes entity-name="JobSandbox" include="pk" mode="IN" optional="false"/>        
+    </service>
 </services>

@@ -21,7 +21,7 @@
  *  THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  *
  *@author     Andy Zeneski
- *@version    $Revision: 1.10 $
+ *@version    $Revision: 1.11 $
  *@since      2.0
 --%>
 
@@ -87,10 +87,10 @@
     </td>
     <%--<td align='center'><a href="#" class="buttontext">[View Data]</a></td>--%>
     <td align="center">
-      <%if (job.getString("startDateTime") != null) {%>
+      <%if (job.getString("startDateTime") != null || endTime != null) {%>
       &nbsp;
       <%}else{%>
-      <a href="<ofbiz:url>/cancelJob?jobName=<%=job.getString("jobName")%>&runTime=<%=job.getString("runTime")%></ofbiz:url>" class="buttontext">[Cancel Job]</a>
+      <nobr><a href="<ofbiz:url>/cancelJob?jobId=<%=job.getString("jobId")%></ofbiz:url>" class="buttontext">[Cancel Job]</a></nobr>
       <%}%>
     </td>
   </tr>

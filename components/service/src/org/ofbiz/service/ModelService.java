@@ -1,5 +1,5 @@
 /*
- * $Id: ModelService.java,v 1.9 2004/03/12 23:45:01 ajzeneski Exp $
+ * $Id: ModelService.java,v 1.10 2004/06/17 00:52:13 ajzeneski Exp $
  *
  * Copyright (c) 2001, 2002 The Open For Business Project - www.ofbiz.org
  *
@@ -49,7 +49,7 @@ import org.ofbiz.security.Security;
  *
  * @author     <a href="mailto:jaz@ofbiz.org">Andy Zeneski</a>
  * @author     <a href="mailto:jonesde@ofbiz.org">David E. Jones</a>
- * @version    $Revision: 1.9 $
+ * @version    $Revision: 1.10 $
  * @since      2.0
  */
 public class ModelService {
@@ -109,7 +109,10 @@ public class ModelService {
     
     /** Override the default transaction timeout, only works if we start the transaction */
     public int transactionTimeout;
-    
+
+    /** Sets the max number of times this service will retry when failed (persisted async only) */
+    public int maxRetry = -1;
+
     /** Set of services this service implements */
     public Set implServices = new OrderedSet();  
     

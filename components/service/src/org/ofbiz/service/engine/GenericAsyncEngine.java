@@ -1,5 +1,5 @@
 /*
- * $Id: GenericAsyncEngine.java,v 1.3 2004/03/12 23:50:45 ajzeneski Exp $
+ * $Id: GenericAsyncEngine.java,v 1.4 2004/06/17 00:52:14 ajzeneski Exp $
  *
  * Copyright (c) 2001, 2002 The Open For Business Project - www.ofbiz.org
  *
@@ -48,7 +48,7 @@ import org.ofbiz.service.job.JobManagerException;
  * Generic Asynchronous Engine
  *
  * @author     <a href="mailto:jaz@ofbiz.org">Andy Zeneski</a>
- * @version    $Revision: 1.3 $
+ * @version    $Revision: 1.4 $
  * @since      2.0
  */
 public abstract class GenericAsyncEngine implements GenericEngine {
@@ -106,9 +106,17 @@ public abstract class GenericAsyncEngine implements GenericEngine {
                 toBeStored.add(runtimeData);
 
                 // Create the job info
+                String jobId = dispatcher.getDelegator().getNextSeqId("JobSandbox").toString();
                 String jobName = new String(new Long((new Date().getTime())).toString());
-                Map jFields = UtilMisc.toMap("jobName", jobName, "runTime", UtilDateTime.nowTimestamp(), "poolId",
-                        ServiceConfigUtil.getSendPool(), "serviceName", modelService.name, "loaderName", localName, "runtimeDataId", dataId);
+
+
+                Map jFields = UtilMisc.toMap("jobId", jobId, "jobName", jobName, "runTime", UtilDateTime.nowTimestamp());
+                jFields.put("poolId", ServiceConfigUtil.getSendPool());
+                jFields.put("statusId", "SERVICE_PENDING");
+                jFields.put("serviceName", modelService.name);
+                jFields.put("loaderName", localName);
+                jFields.put("maxRetry", new Long(modelService.maxRetry));
+                jFields.put("runtimeDataId", dataId);
 
                 jobV = dispatcher.getDelegator().makeValue("JobSandbox", jFields);
                 toBeStored.add(jobV);
@@ -132,7 +140,8 @@ public abstract class GenericAsyncEngine implements GenericEngine {
             }
         } else {
             String name = new Long(new Date().getTime()).toString();
-            job = new GenericServiceJob(dctx, name, modelService.name, context, requester);
+            String jobId = modelService.name + "." + name;
+            job = new GenericServiceJob(dctx, jobId, name, modelService.name, context, requester);
             try {
                 dispatcher.getJobManager().runJob(job);
             } catch (JobManagerException jse) {

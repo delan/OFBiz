@@ -18,6 +18,9 @@
         <attribute name="message" type="String" mode="IN" optional="true"/>
         <attribute name="resp" type="String" mode="OUT"/>
     </service>
+    <service name="testError" engine="java" export="true" validate="false" require-new-transaction="true" max-retry="1"
+            location="org.ofbiz.common.CommonServices" invoke="returnErrorService">
+    </service>
     <service name="testRmi" engine="rmi" validate="false"
             location="rmi://localhost:1099/RMIDispatcher" invoke="testScv">
         <implements service="testScv"/>
