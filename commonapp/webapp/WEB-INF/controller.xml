@@ -69,8 +69,14 @@
        <response name="success" type="view" value="error"/>
     </request-map>
 
-    <request-map uri="TestJMS">
-        <event type="service" invoke="testJMS"/>
+    <request-map uri="TestJMSQueue">
+        <event type="service" invoke="testJMSQueue"/>
+        <response name="error" type="view" value="error"/>
+        <response name="success" type="view" value="error"/>
+    </request-map>
+
+    <request-map uri="TestJMSTopic">
+        <event type="service" invoke="testJMSTopic"/>
         <response name="error" type="view" value="error"/>
         <response name="success" type="view" value="error"/>
     </request-map>
