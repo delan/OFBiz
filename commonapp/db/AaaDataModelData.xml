@@ -419,7 +419,6 @@
   <ProductPromoActionType description="Order Percent Discount" productPromoActionTypeId="PROMO_ORDER_PERCENT"/>
   <ProductPromoActionType description="Order Amount Discount" productPromoActionTypeId="PROMO_ORDER_AMOUNT"/>
   
-  <ProductType description="Virtual Product" hasTable="N" parentTypeId="" productTypeId="VIRTUAL_PRODUCT"/>
   <ProductType description="Service" hasTable="N" parentTypeId="" productTypeId="SERVICE"/>
   <ProductType description="Good" hasTable="N" parentTypeId="" productTypeId="GOOD"/>
   <ProductType description="Raw Material" hasTable="N" parentTypeId="GOOD" productTypeId="RAW_MATERIAL"/>
