@@ -2,87 +2,46 @@
 <classpath>
 	<classpathentry kind="con" path="org.eclipse.jdt.launching.JRE_CONTAINER"/>
 	<classpathentry kind="src" path="base/src/base"/>
-	<classpathentry kind="src" path="components/guiapp/src"/>
-	<classpathentry kind="src" path="components/widget/src"/>
-	<classpathentry kind="src" path="components/webapp/src"/>
-	<classpathentry kind="src" path="components/catalina/src"/>
-	<classpathentry kind="src" path="components/jetty/src"/>
-	<classpathentry kind="src" path="components/jotm/src"/>
-	<classpathentry kind="src" path="components/manufacturing/src"/>
-	<classpathentry kind="src" path="components/pos/src"/>
-	<classpathentry kind="src" path="components/shark/src"/>
-	<classpathentry kind="src" path="components/minerva/src"/>
+	<classpathentry excluding="org/ofbiz/accounting/thirdparty/clearcommerce/**|org/ofbiz/accounting/thirdparty/verisign/**" kind="src" path="applications/accounting/src"/>
+	<classpathentry kind="src" path="applications/content/src"/>
+	<classpathentry kind="src" path="applications/ecommerce/src"/>
+	<classpathentry kind="src" path="applications/manufacturing/src"/>
+	<classpathentry kind="src" path="applications/marketing/src"/>
+	<classpathentry excluding="org/ofbiz/order/thirdparty/taxware/**" kind="src" path="applications/order/src"/>
+	<classpathentry kind="src" path="applications/party/src"/>
+	<classpathentry kind="src" path="applications/pos/src"/>
+	<classpathentry excluding="ShipmentScaleApplet.java" kind="src" path="applications/product/src"/>
+	<classpathentry kind="src" path="applications/securityext/src"/>
+	<classpathentry kind="src" path="applications/workeffort/src"/>
+	<classpathentry kind="src" path="framework/appserver/src"/>
+	<classpathentry kind="src" path="framework/catalina/src"/>
+	<classpathentry kind="src" path="framework/common/src"/>
+	<classpathentry kind="src" path="framework/datafile/src"/>
+	<classpathentry kind="src" path="framework/entity/src"/>
+	<classpathentry kind="src" path="framework/entityext/src"/>
+	<classpathentry kind="src" path="framework/example/src"/>
+	<classpathentry kind="src" path="framework/guiapp/src"/>
+	<classpathentry kind="src" path="framework/jetty/src"/>
+	<classpathentry kind="src" path="framework/jotm/src"/>
+	<classpathentry kind="src" path="framework/minerva/src"/>
+	<classpathentry kind="src" path="framework/minilang/src"/>
+	<classpathentry kind="src" path="framework/rules/src"/>
+	<classpathentry kind="src" path="framework/security/src"/>
+	<classpathentry kind="src" path="framework/service/src"/>
+	<classpathentry kind="src" path="framework/shark/src"/>
+	<classpathentry kind="src" path="framework/tests/src"/>
+	<classpathentry kind="src" path="framework/webapp/src"/>
+	<classpathentry kind="src" path="framework/webtools/src"/>
+	<classpathentry kind="src" path="framework/widget/src"/>
+	<classpathentry kind="src" path="framework/workflow/src"/>
 	<classpathentry kind="src" path="base/src/start"/>
-	<classpathentry kind="src" path="components/entity/src"/>
-	<classpathentry kind="src" path="components/security/src"/>
-	<classpathentry kind="src" path="components/service/src"/>
-	<classpathentry kind="src" path="components/entityext/src"/>
-	<classpathentry kind="src" path="components/minilang/src"/>
-	<classpathentry kind="src" path="components/common/src"/>
-	<classpathentry kind="src" path="components/workeffort/src"/>
-	<classpathentry kind="src" path="components/workflow/src"/>
-	<classpathentry kind="src" path="components/content/src"/>
-	<classpathentry kind="src" path="components/securityext/src"/>
-	<classpathentry excluding="ShipmentScaleApplet.java" kind="src" path="components/product/src"/>
-	<classpathentry kind="src" path="components/party/src"/>
-	<classpathentry excluding="org/ofbiz/order/thirdparty/taxware/**" kind="src" path="components/order/src"/>
-	<classpathentry kind="src" path="components/marketing/src"/>
-	<classpathentry excluding="org/ofbiz/accounting/thirdparty/clearcommerce/**|org/ofbiz/accounting/thirdparty/verisign/**" kind="src" path="components/accounting/src"/>
-	<classpathentry kind="src" path="components/ecommerce/src"/>
-	<classpathentry kind="src" path="components/webtools/src"/>
-	<classpathentry kind="src" path="components/rules/src"/>
-	<classpathentry kind="src" path="components/datafile/src"/>
 	<classpathentry kind="lib" path="base/lib/activation.jar"/>
 	<classpathentry kind="lib" path="base/lib/mail.jar"/>
 	<classpathentry kind="lib" path="base/lib/scripting/bsh.jar"/>
 	<classpathentry kind="lib" path="base/lib/scripting/js.jar"/>
 	<classpathentry kind="lib" path="base/lib/scripting/bsf.jar"/>
 	<classpathentry kind="lib" path="base/lib/scripting/oro.jar"/>
-	<classpathentry kind="lib" path="components/service/lib/jms_1.0.2a.jar"/>
-	<classpathentry kind="lib" path="components/service/lib/axis.jar"/>
-	<classpathentry kind="lib" path="components/service/lib/wsdl4j.jar"/>
-	<classpathentry kind="lib" path="components/service/lib/jaxrpc.jar"/>
-	<classpathentry kind="lib" path="components/service/lib/saaj.jar"/>
-	<classpathentry kind="lib" path="components/content/lib/jcalendar.jar"/>
-	<classpathentry kind="lib" path="components/entity/lib/jdbc/hsqldb.jar"/>
-	<classpathentry kind="lib" path="components/entity/lib/jdbc/p6spy.jar"/>
-	<classpathentry kind="lib" path="components/entity/lib/jdbc/postgresql.jar"/>
-	<classpathentry kind="lib" path="components/entity/lib/jdbc/sapdbc.jar"/>
-	<classpathentry kind="lib" path="components/accounting/lib/worldpay/cryptix.jar"/>
-	<classpathentry kind="lib" path="components/accounting/lib/worldpay/select.jar"/>
-	<classpathentry kind="lib" path="components/minerva/lib/ots-jts_1.0.jar"/>
-	<classpathentry kind="lib" path="components/minerva/lib/oswego-concurrent.jar"/>
-	<classpathentry kind="lib" path="components/minerva/lib/jta_1.0.1.jar"/>
-	<classpathentry kind="lib" path="components/minerva/lib/jdbc2_0-stdext.jar"/>
-	<classpathentry kind="lib" path="components/service/lib/axis-ant.jar"/>
-	<classpathentry kind="lib" path="components/jetty/lib/ant.jar"/>
-	<classpathentry kind="lib" path="components/jotm/lib/carol.jar"/>
-	<classpathentry kind="lib" path="components/jotm/lib/xapool.jar"/>
-	<classpathentry kind="lib" path="components/jotm/lib/objectweb-datasource.jar"/>
-	<classpathentry kind="lib" path="components/jotm/lib/jotm.jar"/>
-	<classpathentry kind="lib" path="components/jotm/lib/jotm_jrmp_stubs.jar"/>
-	<classpathentry kind="lib" path="components/jotm/lib/jotm_iiop_stubs.jar"/>
-	<classpathentry kind="lib" path="components/jetty/lib/org.mortbay.jmx.jar"/>
-	<classpathentry kind="lib" path="components/jetty/lib/org.mortbay.jetty.jar"/>
 	<classpathentry kind="lib" path="base/lib/scripting/jython.jar"/>
-	<classpathentry kind="lib" path="components/jotm/lib/connector-1_5.jar"/>
-	<classpathentry kind="lib" path="components/shark/lib/sharkxpdl-standard.jar"/>
-	<classpathentry kind="lib" path="components/shark/lib/sharkutilities-misc.jar"/>
-	<classpathentry kind="lib" path="components/shark/lib/sharkutilities-map.jar"/>
-	<classpathentry kind="lib" path="components/shark/lib/sharktoolagent-standard.jar"/>
-	<classpathentry kind="lib" path="components/shark/lib/sharksecurity-standard.jar"/>
-	<classpathentry kind="lib" path="components/shark/lib/sharkscripting-standard.jar"/>
-	<classpathentry kind="lib" path="components/shark/lib/sharkprocesslocking-memory.jar"/>
-	<classpathentry kind="lib" path="components/shark/lib/sharklogging-standard.jar"/>
-	<classpathentry kind="lib" path="components/shark/lib/sharklimitagent-timer.jar"/>
-	<classpathentry kind="lib" path="components/shark/lib/sharkkernel-standard.jar"/>
-	<classpathentry kind="lib" path="components/shark/lib/sharkinternalapi.jar"/>
-	<classpathentry kind="lib" path="components/shark/lib/sharkcorbaserver.jar"/>
-	<classpathentry kind="lib" path="components/shark/lib/sharkcorbaclientapi.jar"/>
-	<classpathentry kind="lib" path="components/shark/lib/sharkcommonapi.jar"/>
-	<classpathentry kind="lib" path="components/shark/lib/sharkclientapi.jar"/>
-	<classpathentry kind="lib" path="components/shark/lib/sharkcaching-lru.jar"/>
-	<classpathentry kind="lib" path="components/shark/lib/sharkassignment-standard.jar"/>
 	<classpathentry kind="lib" path="base/lib/junit.jar"/>
 	<classpathentry kind="lib" path="base/lib/servlet-api.jar"/>
 	<classpathentry kind="lib" path="base/lib/log4j.jar"/>
@@ -101,76 +60,103 @@
 	<classpathentry kind="lib" path="base/lib/commons/commons-collections.jar"/>
 	<classpathentry kind="lib" path="base/lib/commons/commons-cli.jar"/>
 	<classpathentry kind="lib" path="base/lib/commons/commons-beanutils.jar"/>
-	<classpathentry kind="lib" path="components/catalina/lib/common/naming-resources.jar"/>
-	<classpathentry kind="lib" path="components/catalina/lib/common/naming-java.jar"/>
-	<classpathentry kind="lib" path="components/catalina/lib/common/naming-factory.jar"/>
-	<classpathentry kind="lib" path="components/catalina/lib/common/ant.jar"/>
-	<classpathentry kind="lib" path="components/catalina/lib/server/tomcat-util.jar"/>
-	<classpathentry kind="lib" path="components/catalina/lib/server/tomcat-jni.jar"/>
-	<classpathentry kind="lib" path="components/catalina/lib/server/tomcat-jk2.jar"/>
-	<classpathentry kind="lib" path="components/catalina/lib/server/tomcat-jk.jar"/>
-	<classpathentry kind="lib" path="components/catalina/lib/server/tomcat-http11.jar"/>
-	<classpathentry kind="lib" path="components/catalina/lib/server/tomcat-coyote.jar"/>
-	<classpathentry kind="lib" path="components/catalina/lib/server/servlets-webdav.jar"/>
-	<classpathentry kind="lib" path="components/catalina/lib/server/servlets-ssi.jar"/>
-	<classpathentry kind="lib" path="components/catalina/lib/server/servlets-invoker.jar"/>
-	<classpathentry kind="lib" path="components/catalina/lib/server/servlets-default.jar"/>
-	<classpathentry kind="lib" path="components/catalina/lib/server/servlets-common.jar"/>
-	<classpathentry kind="lib" path="components/catalina/lib/server/servlets-cgi.jar"/>
-	<classpathentry kind="lib" path="components/catalina/lib/server/jkshm.jar"/>
-	<classpathentry kind="lib" path="components/catalina/lib/server/jkconfig.jar"/>
-	<classpathentry kind="lib" path="components/catalina/lib/server/catalina-optional.jar"/>
-	<classpathentry kind="lib" path="components/catalina/lib/server/catalina-i18n-ja.jar"/>
-	<classpathentry kind="lib" path="components/catalina/lib/server/catalina-i18n-fr.jar"/>
-	<classpathentry kind="lib" path="components/catalina/lib/server/catalina-i18n-es.jar"/>
-	<classpathentry kind="lib" path="components/catalina/lib/server/catalina-cluster.jar"/>
-	<classpathentry kind="lib" path="components/catalina/lib/server/catalina-ant.jar"/>
-	<classpathentry kind="lib" path="components/catalina/lib/server/catalina.jar"/>
-	<classpathentry kind="lib" path="components/content/lib/lucene.jar"/>
 	<classpathentry kind="lib" path="base/lib/junitperf.jar"/>
 	<classpathentry kind="lib" path="base/lib/freemarker.jar"/>
 	<classpathentry kind="lib" path="base/lib/avalon-util-exception-1.0.0.jar"/>
-	<classpathentry kind="lib" path="components/tests/lib/Tidy.jar"/>
-	<classpathentry kind="lib" path="components/tests/lib/Quick4util.jar"/>
-	<classpathentry kind="lib" path="components/tests/lib/Quick4rt.jar"/>
-	<classpathentry kind="lib" path="components/tests/lib/jxweb.jar"/>
-	<classpathentry kind="lib" path="components/tests/lib/jxunit3.jar"/>
-	<classpathentry kind="lib" path="components/tests/lib/dtdparser113.jar"/>
-	<classpathentry kind="lib" path="components/tests/lib/dom4j-full.jar"/>
 	<classpathentry kind="lib" path="base/lib/xml-apis.jar"/>
 	<classpathentry kind="lib" path="base/lib/xercesImpl.jar"/>
 	<classpathentry kind="lib" path="base/lib/resolver.jar"/>
 	<classpathentry kind="lib" path="base/lib/commons/commons-fileupload.jar"/>
-	<classpathentry kind="lib" path="components/accounting/lib/cybersource/cybssecurity.jar"/>
-	<classpathentry kind="lib" path="components/accounting/lib/cybersource/cybsclients.jar"/>
-	<classpathentry kind="lib" path="components/catalina/lib/common/ant-launcher.jar"/>
-	<classpathentry kind="lib" path="components/pos/lib/jpos18-controls.jar"/>
-	<classpathentry kind="lib" path="components/pos/lib/jcl.jar"/>
-	<classpathentry kind="lib" path="components/pos/lib/gtkswing.jar"/>
-	<classpathentry kind="lib" path="components/shark/lib/sharkrepositorypersistence-filesystem.jar"/>
-	<classpathentry kind="lib" path="components/shark/lib/sharkassignment-historyrelated.jar"/>
 	<classpathentry kind="lib" path="base/lib/jdbm.jar"/>
 	<classpathentry kind="lib" path="base/lib/commons/commons-primitives.jar"/>
 	<classpathentry kind="lib" path="base/lib/commons/commons-codec.jar"/>
 	<classpathentry kind="lib" path="base/lib/jakarta-regexp.jar"/>
 	<classpathentry kind="lib" path="base/lib/httpunit.jar"/>
 	<classpathentry kind="lib" path="base/lib/scripting/jruby.jar"/>
-	<classpathentry kind="lib" path="components/content/lib/poi.jar"/>
-	<classpathentry kind="lib" path="components/guiapp/lib/XuiCoreSwing.jar"/>
-	<classpathentry kind="lib" path="components/webapp/lib/velocity-dep-1.3.jar"/>
-	<classpathentry kind="lib" path="components/webapp/lib/velocity-1.3.jar"/>
-	<classpathentry kind="lib" path="components/webapp/lib/MinML2.jar"/>
-	<classpathentry kind="lib" path="components/webapp/lib/krysalis-barcode.jar"/>
-	<classpathentry kind="lib" path="components/webapp/lib/JPublish.jar"/>
-	<classpathentry kind="lib" path="components/webapp/lib/jasperreports-applet.jar"/>
-	<classpathentry kind="lib" path="components/webapp/lib/jasperreports.jar"/>
-	<classpathentry kind="lib" path="components/webapp/lib/iTextXML.jar"/>
-	<classpathentry kind="lib" path="components/webapp/lib/iText.jar"/>
-	<classpathentry kind="lib" path="components/webapp/lib/fop.jar"/>
-	<classpathentry kind="lib" path="components/webapp/lib/EdenLib.jar"/>
-	<classpathentry kind="lib" path="components/webapp/lib/DataVision.jar"/>
-	<classpathentry kind="lib" path="components/webapp/lib/batik.jar"/>
-	<classpathentry kind="lib" path="components/webapp/lib/avalon-framework-cvs-20020806.jar"/>
-	<classpathentry kind="lib" path="components/webapp/lib/xom-1.0d25.jar"/>
+	<classpathentry kind="lib" path="framework/webapp/lib/xom-1.0d25.jar"/>
+	<classpathentry kind="lib" path="framework/webapp/lib/velocity-dep-1.3.jar"/>
+	<classpathentry kind="lib" path="framework/webapp/lib/velocity-1.3.jar"/>
+	<classpathentry kind="lib" path="framework/webapp/lib/MinML2.jar"/>
+	<classpathentry kind="lib" path="framework/webapp/lib/krysalis-barcode.jar"/>
+	<classpathentry kind="lib" path="framework/webapp/lib/JPublish.jar"/>
+	<classpathentry kind="lib" path="framework/webapp/lib/jasperreports-applet.jar"/>
+	<classpathentry kind="lib" path="framework/webapp/lib/jasperreports.jar"/>
+	<classpathentry kind="lib" path="framework/webapp/lib/iTextXML.jar"/>
+	<classpathentry kind="lib" path="framework/webapp/lib/iText.jar"/>
+	<classpathentry kind="lib" path="framework/webapp/lib/fop.jar"/>
+	<classpathentry kind="lib" path="framework/webapp/lib/EdenLib.jar"/>
+	<classpathentry kind="lib" path="framework/webapp/lib/DataVision.jar"/>
+	<classpathentry kind="lib" path="framework/webapp/lib/batik.jar"/>
+	<classpathentry kind="lib" path="framework/webapp/lib/avalon-framework-cvs-20020806.jar"/>
+	<classpathentry kind="lib" path="framework/tests/lib/Tidy.jar"/>
+	<classpathentry kind="lib" path="framework/tests/lib/Quick4util.jar"/>
+	<classpathentry kind="lib" path="framework/tests/lib/Quick4rt.jar"/>
+	<classpathentry kind="lib" path="framework/tests/lib/jxweb.jar"/>
+	<classpathentry kind="lib" path="framework/tests/lib/jxunit3.jar"/>
+	<classpathentry kind="lib" path="framework/tests/lib/dtdparser113.jar"/>
+	<classpathentry kind="lib" path="framework/tests/lib/dom4j-full.jar"/>
+	<classpathentry kind="lib" path="framework/shark/lib/sharkxpdl-standard.jar"/>
+	<classpathentry kind="lib" path="framework/shark/lib/sharkutilities-misc.jar"/>
+	<classpathentry kind="lib" path="framework/shark/lib/sharkutilities-map.jar"/>
+	<classpathentry kind="lib" path="framework/shark/lib/sharktoolagent-standard.jar"/>
+	<classpathentry kind="lib" path="framework/shark/lib/sharksecurity-standard.jar"/>
+	<classpathentry kind="lib" path="framework/shark/lib/sharkscripting-standard.jar"/>
+	<classpathentry kind="lib" path="framework/shark/lib/sharkrepositorypersistence-filesystem.jar"/>
+	<classpathentry kind="lib" path="framework/shark/lib/sharkprocesslocking-memory.jar"/>
+	<classpathentry kind="lib" path="framework/shark/lib/sharklogging-standard.jar"/>
+	<classpathentry kind="lib" path="framework/shark/lib/sharklimitagent-timer.jar"/>
+	<classpathentry kind="lib" path="framework/shark/lib/sharkkernel-standard.jar"/>
+	<classpathentry kind="lib" path="framework/shark/lib/sharkinternalapi.jar"/>
+	<classpathentry kind="lib" path="framework/shark/lib/sharkcorbaserver.jar"/>
+	<classpathentry kind="lib" path="framework/shark/lib/sharkcorbaclientapi.jar"/>
+	<classpathentry kind="lib" path="framework/shark/lib/sharkcommonapi.jar"/>
+	<classpathentry kind="lib" path="framework/shark/lib/sharkclientapi.jar"/>
+	<classpathentry kind="lib" path="framework/shark/lib/sharkcaching-lru.jar"/>
+	<classpathentry kind="lib" path="framework/shark/lib/sharkassignment-standard.jar"/>
+	<classpathentry kind="lib" path="framework/shark/lib/sharkassignment-historyrelated.jar"/>
+	<classpathentry kind="lib" path="framework/service/lib/wsdl4j.jar"/>
+	<classpathentry kind="lib" path="framework/service/lib/saaj.jar"/>
+	<classpathentry kind="lib" path="framework/service/lib/jms_1.0.2a.jar"/>
+	<classpathentry kind="lib" path="framework/service/lib/jaxrpc.jar"/>
+	<classpathentry kind="lib" path="framework/service/lib/axis-ant.jar"/>
+	<classpathentry kind="lib" path="framework/service/lib/axis.jar"/>
+	<classpathentry kind="lib" path="framework/minerva/lib/ots-jts_1.0.jar"/>
+	<classpathentry kind="lib" path="framework/minerva/lib/oswego-concurrent.jar"/>
+	<classpathentry kind="lib" path="framework/minerva/lib/jta_1.0.1.jar"/>
+	<classpathentry kind="lib" path="framework/minerva/lib/jdbc2_0-stdext.jar"/>
+	<classpathentry kind="lib" path="framework/jotm/lib/xapool.jar"/>
+	<classpathentry kind="lib" path="framework/jotm/lib/objectweb-datasource.jar"/>
+	<classpathentry kind="lib" path="framework/jotm/lib/jotm.jar"/>
+	<classpathentry kind="lib" path="framework/jotm/lib/jotm_jrmp_stubs.jar"/>
+	<classpathentry kind="lib" path="framework/jotm/lib/jotm_iiop_stubs.jar"/>
+	<classpathentry kind="lib" path="framework/jotm/lib/connector-1_5.jar"/>
+	<classpathentry kind="lib" path="framework/jotm/lib/carol.jar"/>
+	<classpathentry kind="lib" path="framework/jetty/lib/org.mortbay.jmx.jar"/>
+	<classpathentry kind="lib" path="framework/jetty/lib/org.mortbay.jetty.jar"/>
+	<classpathentry kind="lib" path="framework/jetty/lib/jasper-runtime.jar"/>
+	<classpathentry kind="lib" path="framework/jetty/lib/jasper-compiler.jar"/>
+	<classpathentry kind="lib" path="framework/jetty/lib/ant.jar"/>
+	<classpathentry kind="lib" path="framework/guiapp/lib/XuiCoreSwing.jar"/>
+	<classpathentry kind="lib" path="applications/pos/lib/starjavapos.jar"/>
+	<classpathentry kind="lib" path="applications/pos/lib/looks-1.2.2.jar"/>
+	<classpathentry kind="lib" path="applications/pos/lib/jpos18-controls.jar"/>
+	<classpathentry kind="lib" path="applications/pos/lib/jcl.jar"/>
+	<classpathentry kind="lib" path="applications/pos/lib/gtkswing.jar"/>
+	<classpathentry kind="lib" path="applications/content/lib/poi.jar"/>
+	<classpathentry kind="lib" path="applications/content/lib/lucene.jar"/>
+	<classpathentry kind="lib" path="applications/content/lib/jcalendar.jar"/>
+	<classpathentry kind="lib" path="applications/accounting/lib/worldpay/select.jar"/>
+	<classpathentry kind="lib" path="applications/accounting/lib/worldpay/cryptix.jar"/>
+	<classpathentry kind="lib" path="applications/accounting/lib/cybersource/cybssecurity.jar"/>
+	<classpathentry kind="lib" path="applications/accounting/lib/cybersource/cybsclients.jar"/>
+	<classpathentry kind="lib" path="framework/catalina/lib/server/tomcat-coyote.jar"/>
+	<classpathentry kind="lib" path="framework/catalina/lib/server/catalina.jar"/>
+	<classpathentry kind="lib" path="framework/catalina/lib/server/tomcat-http11.jar"/>
+	<classpathentry kind="lib" path="framework/catalina/lib/server/tomcat-util.jar"/>
+	<classpathentry kind="lib" path="framework/catalina/lib/server/catalina-cluster.jar"/>
+	<classpathentry kind="lib" path="framework/catalina/lib/server/servlets-common.jar"/>
+	<classpathentry kind="lib" path="framework/catalina/lib/server/jkshm.jar"/>
+	<classpathentry kind="lib" path="framework/catalina/lib/server/jkconfig.jar"/>
+	<classpathentry kind="lib" path="framework/catalina/lib/server/catalina-optional.jar"/>
 	<classpathentry kind="output" path="bin"/>
 </classpath>
