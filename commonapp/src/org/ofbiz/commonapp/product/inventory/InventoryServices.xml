@@ -415,7 +415,7 @@
         -->
         <field-to-field field-name="orderId" map-name="parameters" to-map-name="oiirListLookupMap"/>
         <find-by-and entity-name="OrderItemInventoryRes" map-name="oiirListLookupMap" list-name="oiirList" use-cache="false"/>
-        <iterate entry-name="orderItemInventoryRes" list-name="oiirList">
+        <iterate entry-name="oiir" list-name="oiirList">
         	<field-to-field field-name="orderId" map-name="oiir" to-map-name="cancelOiirMap"/>
    			<field-to-field field-name="orderItemSeqId" map-name="oiir" to-map-name="cancelOiirMap"/>
    			<field-to-field field-name="inventoryItemId" map-name="oiir" to-map-name="cancelOiirMap"/>
