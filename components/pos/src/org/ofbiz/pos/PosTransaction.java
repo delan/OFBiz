@@ -47,6 +47,7 @@ import org.ofbiz.order.shoppingcart.ShoppingCartItem;
 import org.ofbiz.order.shoppingcart.CheckOutHelper;
 import org.ofbiz.order.shoppingcart.ItemNotFoundException;
 import org.ofbiz.pos.component.Journal;
+import org.ofbiz.pos.component.Output;
 import org.ofbiz.pos.device.DeviceLoader;
 import org.ofbiz.entity.GenericValue;
 import org.ofbiz.entity.GenericEntityException;
@@ -124,9 +125,16 @@ public class PosTransaction {
         return (cart == null || cart.size() == 0);
     }
 
-    public List lookupItem(String productId) {
-        trace("item lookup", productId);
-        return null;
+    public List lookupItem(String sku) throws GeneralException {
+        // first check for the product
+        GenericValue product = session.getDelegator().findByPrimaryKey("Product", UtilMisc.toMap("productId", sku));
+        if (product != null) {
+            return UtilMisc.toList(product);
+        } else {
+            // not found; so we move on to GoodIdentification
+           return session.getDelegator().findByAnd("GoodIdentificationAndProduct",
+                   UtilMisc.toMap("idValue", sku), UtilMisc.toList("productId"));
+        }
     }
 
     public String getOrderId() {
@@ -257,15 +265,24 @@ public class PosTransaction {
 
     public double addPayment(String id, double amount) {
         trace("added payment", id + "/" + amount);
+        /*
         Double currentAmt = cart.getPaymentAmount(id);
         if (currentAmt != null) {
             amount += currentAmt.doubleValue();
         }
-        cart.addPaymentAmount(id, amount, true);
+        */
+        cart.addPaymentAmount(id, new Double(amount), null, true, false);
         return this.getTotalDue();
     }
 
+    public void setPaymentRefNum(int paymentIndex, String refNum) {
+        trace("setting payment index reference number", paymentIndex + " / " + refNum);
+        ShoppingCart.CartPaymentInfo inf = cart.getPaymentInfo(paymentIndex);
+        inf.refNum = refNum;
+    }
+
     public void clearPayments() {
+        trace("all payments cleared from sale");
         cart.clearPayments();
     }
 
@@ -273,7 +290,8 @@ public class PosTransaction {
         return cart.selectedPayments();
     }
 
-    public double processSale() throws GeneralException {
+    public double processSale(Output output) throws GeneralException {
+        trace("process sale");
         double grandTotal = this.getGrandTotal();
         double paymentAmt = this.getPaymentTotal();
         if (grandTotal > paymentAmt) {
@@ -284,6 +302,7 @@ public class PosTransaction {
         cart.setOrderPartyId(partyId);
 
         // store the "order"
+        output.print("Saving sale...");
         Map orderRes = ch.createOrder(session.getUserLogin());
         Debug.log("Create Order Resp : " + orderRes, module);
 
@@ -294,6 +313,7 @@ public class PosTransaction {
         }
 
         // process the payment(s)
+        output.print("Processing payments...");
         Map payRes = null;
         try {
             payRes = ch.processPayment(ProductStoreWorker.getProductStore(productStoreId, session.getDelegator()), session.getUserLogin(), true);
@@ -309,6 +329,9 @@ public class PosTransaction {
 
         // get the change due
         double change = (grandTotal - paymentAmt);
+
+        // notify the change due
+        output.print(Output.CHANGE + UtilFormatOut.formatPrice(this.getTotalDue() * -1));
 
         // open the drawer (only supports 1 drawer for now)
         DeviceLoader.drawer[drawerIdx].openDrawer();
@@ -436,7 +459,7 @@ public class PosTransaction {
                 Journal.appendNode(paymentLine, "td", "desc", desc);
                 Journal.appendNode(paymentLine, "td", "qty", "-");
                 Journal.appendNode(paymentLine, "td", "price", UtilFormatOut.formatPrice(-1 * amount));
-            }            
+            }
         }
     }
 
