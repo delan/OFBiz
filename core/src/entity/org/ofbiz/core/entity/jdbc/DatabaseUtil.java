@@ -575,7 +575,9 @@ public class DatabaseUtil {
         ResultSet tableSet = null;
 
         try {
-            tableSet = dbData.getTables(null, dbData.getUserName(), null, null);
+            String[] types = {"TABLE", "VIEW", "ALIAS", "SYNONYM"};
+            String userName = dbData.supportsSchemasInTableDefinitions() ? dbData.getUserName() : null;
+            tableSet = dbData.getTables(null, userName, null, types);
         } catch (SQLException sqle) {
             String message = "Unable to get list of table information... Error was:" + sqle.toString();
 
@@ -708,7 +710,8 @@ public class DatabaseUtil {
         Map colInfo = new HashMap();
 
         try {
-            ResultSet rsCols = dbData.getColumns(null, dbData.getUserName(), null, null);
+            String userName = dbData.supportsSchemasInTableDefinitions() ? dbData.getUserName() : null;
+            ResultSet rsCols = dbData.getColumns(null, userName, null, null);
 
             while (rsCols.next()) {
                 try {
