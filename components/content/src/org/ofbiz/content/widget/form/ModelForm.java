@@ -71,7 +71,7 @@ public class ModelForm {
 
     protected String name;
     protected String type;
-    protected String target;
+    protected FlexibleStringExpander target;
     protected String title;
     protected String tooltip;
     protected String listName;
@@ -195,7 +195,7 @@ public class ModelForm {
         if (this.type == null || formElement.hasAttribute("type"))
             this.type = formElement.getAttribute("type");
         if (this.target == null || formElement.hasAttribute("target"))
-            this.target = formElement.getAttribute("target");
+            setTarget( formElement.getAttribute("target") );
         if (this.title == null || formElement.hasAttribute("title"))
             this.title = formElement.getAttribute("title");
         if (this.tooltip == null || formElement.hasAttribute("tooltip"))
@@ -1154,7 +1154,7 @@ public class ModelForm {
             throw new IllegalArgumentException(errmsg);
         }
 
-        return target;
+        return target.expandString(context);
     }
 
     /**
@@ -1261,7 +1261,7 @@ public class ModelForm {
      * @param string
      */
     public void setTarget(String string) {
-        this.target = string;
+        this.target = new FlexibleStringExpander(string);
     }
 
     /**
