@@ -320,8 +320,8 @@
     <view-entity entity-name="WorkflowDataFieldsView" 
             package-name="org.ofbiz.commonapp.workeffort.definition"
             title="Workflow Data Fields View Entity">	
-      <member-entity entity-alias="WDF" entity-name="WorkflowDataField" />	
-      <member-entity entity-alias="WDFL" entity-name="WorkflowDataFieldList" />
+      <member-entity entity-alias="WDFL" entity-name="WorkflowDataFieldList" />	
+      <member-entity entity-alias="WDF" entity-name="WorkflowDataField" />
       <alias entity-alias="WDF" name="dataFieldId" prim-key="true" />
       <alias entity-alias="WDF" name="dataFieldName" />
       <alias entity-alias="WDF" name="description" />
@@ -462,7 +462,7 @@
       <field name="dataFieldListId" type="id"></field>
       <field name="participantListId" type="id"></field>	
       <prim-key field="packageId" />
-      <relation type="many" rel-entity-name="WorkflowPackageExternal">
+      <relation type="many" title="Main" rel-entity-name="WorkflowPackageExternal">
         <key-map field-name="packageId" />
       </relation>
       <relation type="many" title="External" rel-entity-name="WorkflowPackageExternal">
@@ -513,13 +513,15 @@
       <relation type="many" rel-entity-name="WorkflowParticipantsView">
         <key-map field-name="participantListId" />
       </relation>
+      <relation type="many" rel-entity-name="WorkflowTypeDeclaration">
+        <key-map field-name="packageId" />
+      </relation>
     </entity>
     <entity entity-name="WorkflowPackageExternal" 
             package-name="org.ofbiz.commonapp.workeffort.definition"
             title="Workflow Package External Entity">
       <field name="packageId" type="id-ne"></field>
-      <field name="externalPackageId" type="id-ne"></field>
-      <field name="href" type="url"></field>	
+      <field name="externalPackageId" type="id-ne"></field>	
       <prim-key field="packageId" />	
       <prim-key field="externalPackageId" />
       <relation type="one" title="Main" rel-entity-name="WorkflowPackage">
@@ -527,9 +529,6 @@
       </relation>
       <relation type="one" title="External" rel-entity-name="WorkflowPackage">
         <key-map field-name="externalPackageId" rel-field-name="packageId" />
-      </relation>
-      <relation type="one" rel-entity-name="WorkflowPackage">
-        <key-map field-name="packageId" />
       </relation>
     </entity>
     <entity entity-name="WorkflowParticipant" 
@@ -772,6 +771,27 @@
         <key-map field-name="packageId" />
         <key-map field-name="processId" />
         <key-map field-name="toActivityId" rel-field-name="activityId" />
+      </relation>
+    </entity>
+    <entity entity-name="WorkflowTypeDeclaration" 
+            package-name="org.ofbiz.commonapp.workeffort.definition"
+            title="Workflow Type Declaration Entity">
+      <field name="packageId" type="id-ne"></field>
+      <field name="typeId" type="id-ne"></field>
+      <field name="typeName" type="name"></field>
+      <field name="description" type="description"></field>
+      <field name="dataTypeEnumId" type="id"></field>
+      <field name="arrayTypeMembersId" type="id"></field>	
+      <prim-key field="packageId" />	
+      <prim-key field="typeId" />
+      <relation type="one" title="DataType" rel-entity-name="Enumeration">
+        <key-map field-name="dataTypeEnumId" rel-field-name="enumId" />
+      </relation>
+      <relation type="many" rel-entity-name="WorkflowArrayTypeMembers">
+        <key-map field-name="arrayTypeMembersId" />
+      </relation>
+      <relation type="one" rel-entity-name="WorkflowPackage">
+        <key-map field-name="packageId" />
       </relation>
     </entity>
 
