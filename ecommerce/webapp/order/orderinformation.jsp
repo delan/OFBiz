@@ -39,7 +39,7 @@
     </ofbiz:if>
     <%String distributorId = localOrder != null ? localOrder.getDistributorId() : (String) session.getAttribute(ThirdPartyEvents.DISTRIBUTOR_ID);%>
     <%if (distributorId != null) pageContext.setAttribute("distributorId", distributorId);%>
-    <%if (creditCardInfo != null) pageContext.setAttribute("creditCardInfo", creditCardInfo);%>
+    <%if (paymentMethod != null) pageContext.setAttribute("paymentMethod", paymentMethod);%>
     <%if (billingAccount != null) pageContext.setAttribute("billingAccount", billingAccount);%>
     <%--if (billingAddress != null) pageContext.setAttribute("billingAddress", billingAddress);--%>
     <%if (shippingAddress != null) pageContext.setAttribute("shippingAddress", shippingAddress);%>
@@ -153,20 +153,43 @@
         <tr>
           <td>
               <table width="100%" border="0" cellpadding="1">
-              <ofbiz:if name="creditCardInfo"> 
+              <ofbiz:if name="paymentMethod"> 
                 <%pageContext.setAttribute("outputted", "true");%>
-                <tr>
-                  <td align="right" valign="top" width="15%">
-                    <div class="tabletext">&nbsp;<b>Credit Card</b></div>
-                  </td>
-                  <td width="5">&nbsp;</td>
-                  <td align="left" valign="top" width="80%">
-                      <div class="tabletext">
-                        <%EntityField.run("creditCardInfo", "nameOnCard", pageContext);%><br>
-                        <%=ContactHelper.formatCreditCard(creditCardInfo)%>
-                      </div>
-                  </td>
-                </tr>
+                <%if ("CREDIT_CARD".equals(paymentMethod.getString("paymentMethodTypeId"))) {%>
+                    <%GenericValue creditCard = paymentMethod.getRelatedOne("CreditCard");%>
+                    <%pageContext.setAttribute("creditCard", creditCard);%>
+                    <tr>
+                      <td align="right" valign="top" width="15%">
+                        <div class="tabletext">&nbsp;<b>Credit Card</b></div>
+                      </td>
+                      <td width="5">&nbsp;</td>
+                      <td align="left" valign="top" width="80%">
+                          <div class="tabletext">
+                            <%EntityField.run("creditCard", "nameOnCard", pageContext);%><br>
+                            <%EntityField.run("creditCard", "companyNameOnCard", "", "<br>", pageContext);%>
+                            <%=ContactHelper.formatCreditCard(creditCard)%>
+                          </div>
+                      </td>
+                    </tr>
+                <%} else if ("EFT_ACCOUNT".equals(paymentMethod.getString("paymentMethodTypeId"))) {%>
+                    <%GenericValue eftAccount = paymentMethod.getRelatedOne("EftAccount");%>
+                    <%pageContext.setAttribute("eftAccount", eftAccount);%>
+                    <tr>
+                      <td align="right" valign="top" width="15%">
+                        <div class="tabletext">&nbsp;<b>EFT Account</b></div>
+                      </td>
+                      <td width="5">&nbsp;</td>
+                      <td align="left" valign="top" width="80%">
+                          <div class="tabletext">
+                            <%EntityField.run("eftAccount", "nameOnAccount", pageContext);%> 
+                            <%EntityField.run("eftAccount", "companyNameOnAccount", "<br>", "", pageContext);%> 
+                            <%EntityField.run("eftAccount", "bankName", "<br>Bank: ", "", pageContext);%>
+                            <%EntityField.run("eftAccount", "routingNumber", ", ", "", pageContext);%>
+                            <%EntityField.run("eftAccount", "accountNumber", "<br>Account #: ", "", pageContext);%>
+                          </div>
+                      </td>
+                    </tr>
+                <%}%>
               </ofbiz:if>
               <ofbiz:if name="billingAccount">
                 <ofbiz:if name="outputted">

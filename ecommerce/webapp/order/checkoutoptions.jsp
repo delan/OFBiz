@@ -44,11 +44,12 @@
 <ofbiz:if name="cart">
     <%if (cart.getMaySplit() != null) pageContext.setAttribute("maySplit", cart.getMaySplit());%>
 </ofbiz:if>
-<% pageContext.setAttribute("carrierShipmentMethodList", delegator.findAllCache("CarrierShipmentMethod", null)); %>
-<% pageContext.setAttribute("shippingContactMechList", ContactHelper.getContactMech(userLogin.getRelatedOne("Party"), "SHIPPING_LOCATION", "POSTAL_ADDRESS", false)); %>  
-<% pageContext.setAttribute("creditCardInfoList", EntityUtil.filterByDate(userLogin.getRelatedOne("Party").getRelated("CreditCardInfo"))); %>
-<% pageContext.setAttribute("emailList",  ContactHelper.getContactMechByType(userLogin.getRelatedOne("Party"), "EMAIL_ADDRESS", false));%>
-<% pageContext.setAttribute("billingAccountRoleList", delegator.findByAnd("BillingAccountRole", UtilMisc.toMap(
+<%GenericValue party = userLogin.getRelatedOne("Party");%>
+<%pageContext.setAttribute("carrierShipmentMethodList", delegator.findAllCache("CarrierShipmentMethod", null)); %>
+<%pageContext.setAttribute("shippingContactMechList", ContactHelper.getContactMech(party, "SHIPPING_LOCATION", "POSTAL_ADDRESS", false)); %>  
+<%pageContext.setAttribute("paymentMethodList", EntityUtil.filterByDate(party.getRelated("PaymentMethod"))); %>
+<%pageContext.setAttribute("emailList",  ContactHelper.getContactMechByType(party, "EMAIL_ADDRESS", false));%>
+<%pageContext.setAttribute("billingAccountRoleList", delegator.findByAnd("BillingAccountRole", UtilMisc.toMap(
         "partyId", userLogin.getString("partyId"),
         "roleTypeId", "BILL_TO_CUSTOMER"), null)); %>  
 
@@ -69,12 +70,12 @@
       </table>
     </TD>
   </TR>
-  <TR>
-    <TD width='100%'>
-      <table width='100%' border='0' cellspacing='0' cellpadding='0' class='boxbottom'>
+  <TR style='height: 100%;'>
+    <TD width='100%' valign=top height='100%'>
+      <table width='100%' border='0' cellspacing='0' cellpadding='0' class='boxbottom' style='height: 100%;'>
         <tr>
           <td>
-  <table width="100%" cellpadding="4" border="0" cellpadding="0" cellspacing="0">
+  <table width="100%" cellpadding="1" border="0" cellpadding="0" cellspacing="0">
   <%String chosenShippingMethod = cart.getShipmentMethodTypeId() + '@' + cart.getCarrierPartyId();%>
 <ofbiz:iterator name="carrierShipmentMethod" property="carrierShipmentMethodList">
     <tr>
@@ -194,7 +195,7 @@
         <tr>
           <td valign=top>
 
-<table width="100%" border="0" cellpadding="4" cellspacing="0">
+<table width="100%" border="0" cellpadding="1" cellspacing="0">
   <tr><td colspan="2"><a href="<ofbiz:url>/editcontactmech?preContactMechTypeId=POSTAL_ADDRESS&contactMechPurposeTypeId=SHIPPING_LOCATION&DONE_PAGE=checkoutoptions</ofbiz:url>" class="buttontext">[Add New Address]</a></td></tr>
  <ofbiz:if name="shippingContactMechList" size="0">
     <tr><td colspan="2"><hr class='sepbar'></td></tr>
@@ -257,29 +258,51 @@
         <tr>
           <td valign=top>
 
-<table width="100%" cellpadding="4" cellspacing="0" border="0">
-  <tr><td colspan="2"><a href="<ofbiz:url>/editcreditcard?DONE_PAGE=checkoutoptions</ofbiz:url>" class="buttontext">[Add Credit Card]</a></td></tr>
- <ofbiz:if name="creditCardInfoList" size="0"> 
+<table width="100%" cellpadding="1" cellspacing="0" border="0">
+  <tr><td colspan="2">
+    <span class='tabletext'>Add:</span>
+    <a href="<ofbiz:url>/editcreditcard?DONE_PAGE=checkoutoptions</ofbiz:url>" class="buttontext">[Credit Card]</a>
+    <a href="<ofbiz:url>/editeftaccount?DONE_PAGE=checkoutoptions</ofbiz:url>" class="buttontext">[EFT Account]</a>
+  </td></tr>
+ <ofbiz:if name="paymentMethodList" size="0"> 
   <tr><td colspan="2"><hr class='sepbar'></td></tr>
-  <ofbiz:iterator name="creditCardInfo" property="creditCardInfoList">
-      <tr>
-        <td width="1%" nowrap>
-          <%String creditCardId = creditCardInfo.getString("creditCardId");%>
-          <input type="radio" name="credit_card_id" value="<%=creditCardId%>"
-            <ofbiz:if name="cart"><%=creditCardId.equals(cart.getCreditCardId()) ? "CHECKED" : ""%></ofbiz:if>>
-        </td>
-        <td width="50%" nowrap>
-          <span class="tabletext">
-            <%=ContactHelper.formatCreditCard(creditCardInfo)%>
-          </span>
-            <a href="<ofbiz:url>/editcreditcard?DONE_PAGE=checkoutoptions&CREDIT_CARD_ID=<%=creditCardInfo.getString("creditCardId")%></ofbiz:url>" class="buttontext">[Update]</a>
-        </td>
-      </tr>
+  <ofbiz:iterator name="paymentMethod" property="paymentMethodList">
+      <%if ("CREDIT_CARD".equals(paymentMethod.getString("paymentMethodTypeId"))) {%>
+          <%GenericValue creditCard = paymentMethod.getRelatedOne("CreditCard");%>
+          <tr>
+            <td width="1%" nowrap>
+              <%String paymentMethodId = paymentMethod.getString("paymentMethodId");%>
+              <input type="radio" name="paymentMethodId" value="<%=paymentMethodId%>"
+              <ofbiz:if name="cart"><%=paymentMethodId.equals(cart.getPaymentMethodId()) ? "CHECKED" : ""%></ofbiz:if>>
+            </td>
+            <td width="50%" nowrap>
+              <span class="tabletext">CC:&nbsp;<%=ContactHelper.formatCreditCard(creditCard)%></span>
+              <a href="<ofbiz:url>/editcreditcard?DONE_PAGE=checkoutoptions&paymentMethodId=<%=paymentMethod.getString("paymentMethodId")%></ofbiz:url>" class="buttontext">[Update]</a>
+            </td>
+          </tr>
+      <%} else if ("EFT_ACCOUNT".equals(paymentMethod.getString("paymentMethodTypeId"))) {%>
+          <%GenericValue eftAccount = paymentMethod.getRelatedOne("EftAccount");%>
+          <%pageContext.setAttribute("eftAccount", eftAccount);%>
+          <tr>
+            <td width="1%" nowrap>
+              <%String paymentMethodId = paymentMethod.getString("paymentMethodId");%>
+              <input type="radio" name="paymentMethodId" value="<%=paymentMethodId%>"
+              <ofbiz:if name="cart"><%=paymentMethodId.equals(cart.getPaymentMethodId()) ? "CHECKED" : ""%></ofbiz:if>>
+            </td>
+            <td width="50%" nowrap>
+              <span class="tabletext">
+                EFT:&nbsp;<%EntityField.run("eftAccount", "bankName", pageContext);%>
+                <%EntityField.run("eftAccount", "accountNumber", ": ", "", pageContext);%>
+              </span>
+              <a href="<ofbiz:url>/editeftaccount?DONE_PAGE=checkoutoptions&paymentMethodId=<%=paymentMethod.getString("paymentMethodId")%></ofbiz:url>" class="buttontext">[Update]</a>
+            </td>
+          </tr>
+      <%}%>
       <tr><td colspan="2"><hr class='sepbar'></td></tr>
   </ofbiz:iterator>
  </ofbiz:if>
 </table>
-<ofbiz:unless name="creditCardInfoList" size="0">
+<ofbiz:unless name="paymentMethodList" size="0">
    <h3>There are no credit cards on file.</h3>
 </ofbiz:unless>
 

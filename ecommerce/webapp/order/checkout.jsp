@@ -52,7 +52,7 @@
 <ofbiz:if name="cart" size="0">
 <%
   GenericValue shippingAddress = cart.getShippingAddress(delegator);
-  GenericValue creditCardInfo = cart.getCreditCardInfo(delegator);
+  GenericValue paymentMethod = cart.getPaymentMethod(delegator);
   GenericValue billingAddress = cart.getBillingAddress(delegator);
   GenericValue billingAccount = cart.getBillingAccountId() != null ? delegator.findByPrimaryKey("BillingAccount", UtilMisc.toMap("billingAccountId", cart.getBillingAccountId())) : null;
 

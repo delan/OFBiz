@@ -60,7 +60,7 @@ public class CheckOutEvents {
         if (cart != null && cart.size() > 0) {
             String shippingMethod = request.getParameter("shipping_method");
             String shippingContactMechId = request.getParameter("shipping_contact_mech_id");
-            String creditCardId = request.getParameter("credit_card_id");
+            String paymentMethodId = request.getParameter("paymentMethodId");
             String billingAccountId = request.getParameter("billing_account_id");
             String correspondingPoId = request.getParameter("corresponding_po_id");
             String shippingInstructions = request.getParameter("shipping_instructions");
@@ -95,8 +95,8 @@ public class CheckOutEvents {
                 errorMessage.append("<li>Please Select a Shipping Destination");
             }
             
-            if(UtilValidate.isNotEmpty(creditCardId)) {
-                cart.setCreditCardId(creditCardId);
+            if(UtilValidate.isNotEmpty(paymentMethodId)) {
+                cart.setPaymentMethodId(paymentMethodId);
             }
             if (UtilValidate.isNotEmpty(billingAccountId)) {
                 cart.setBillingAccountId(billingAccountId);
@@ -104,7 +104,7 @@ public class CheckOutEvents {
                 if (UtilValidate.isEmpty(cart.getPoNumber())) {
                     cart.setPoNumber("(none)");
                 }//else ok
-            } else if (UtilValidate.isEmpty(creditCardId)) {
+            } else if (UtilValidate.isEmpty(paymentMethodId)) {
                 errorMessage.append("<li>Please Select a Method of Billing");
             }
         } else {

@@ -89,11 +89,11 @@
       GenericValue billingAddress = order.getShippingAddress(); 
       GenericValue billingAccount = orderHeader.getRelatedOne("BillingAccount");
 
-      GenericValue creditCardInfo = null;
+      GenericValue paymentMethod = null;
       Iterator orderPaymentPreferences = UtilMisc.toIterator(orderHeader.getRelated("OrderPaymentPreference"));
       if(orderPaymentPreferences != null && orderPaymentPreferences.hasNext()) {
         GenericValue orderPaymentPreference = (GenericValue)orderPaymentPreferences.next();
-        creditCardInfo = orderPaymentPreference.getRelatedOne("CreditCardInfo");
+        paymentMethod = orderPaymentPreference.getRelatedOne("PaymentMethod");
       }
 
       GenericValue shipmentPreference = null;

@@ -38,8 +38,8 @@ import org.ofbiz.commonapp.order.order.Adjustment;
 public class ShoppingCart implements java.io.Serializable {
     private ArrayList cartLines;
     
-    //either creditCardId or poNumber must be null (use one or the other)
-    private String creditCardId;
+    //either paymentMethodId or poNumber must be null (use one or the other)
+    private String paymentMethodId;
     private String poNumber;
     
     private String shippingContactMechId;
@@ -197,7 +197,7 @@ public class ShoppingCart implements java.io.Serializable {
         result.put("shipmentMethodTypeId", getShipmentMethodTypeId());
         result.put("carrierPartyId", getCarrierPartyId());
         result.put("maySplit", getMaySplit());
-        result.put("creditCardId", getCreditCardId());
+        result.put("paymentMethodId", getPaymentMethodId());
         return result;
     }
                 
@@ -228,14 +228,14 @@ public class ShoppingCart implements java.io.Serializable {
             cartLines.add(toIndex-1,cartLines.remove(fromIndex));
     }
     
-    /** Sets the credit card id in the cart. */
+    /** Sets the PO Number in the cart. */
     public void setPoNumber(String poNumber) {
         this.poNumber = poNumber;
     }
     
-    /** Sets the credit card id in the cart. */
-    public void setCreditCardId(String creditCardId) {
-        this.creditCardId = creditCardId;
+    /** Sets the Payment Method Id in the cart. */
+    public void setPaymentMethodId(String paymentMethodId) {
+        this.paymentMethodId = paymentMethodId;
     }
     
     /** Sets the shipping amount in the cart. */
@@ -295,9 +295,9 @@ public class ShoppingCart implements java.io.Serializable {
         this.cartDiscountString = cartDiscountString;
     }
     
-    /** Returns the credit card id. */
-    public String getCreditCardId() {
-        return creditCardId;
+    /** Returns the Payment Method Id. */
+    public String getPaymentMethodId() {
+        return paymentMethodId;
     }
     
     /** Returns the po number. */
@@ -343,10 +343,10 @@ public class ShoppingCart implements java.io.Serializable {
         return orderAdditionalEmails;
     }
     
-    public GenericValue getCreditCardInfo(GenericDelegator delegator) {
-        if (this.creditCardId != null) {
-            try { return delegator.findByPrimaryKey("CreditCardInfo", UtilMisc.toMap("creditCardId", creditCardId)); }
-            catch(GenericEntityException e) { Debug.logWarning(e.getMessage()); return null; }
+    public GenericValue getPaymentMethod(GenericDelegator delegator) {
+        if (this.paymentMethodId != null) {
+            try { return delegator.findByPrimaryKey("PaymentMethod", UtilMisc.toMap("paymentMethodId", this.paymentMethodId)); }
+            catch(GenericEntityException e) { Debug.logWarning(e.toString()); return null; }
         } else {
             return null;
         }
@@ -354,8 +354,8 @@ public class ShoppingCart implements java.io.Serializable {
     
     public GenericValue getShippingAddress(GenericDelegator delegator) {
         if (this.shippingContactMechId != null) {
-            try { return delegator.findByPrimaryKey("PostalAddress", UtilMisc.toMap("contactMechId", shippingContactMechId)); }
-            catch(GenericEntityException e) { Debug.logWarning(e.getMessage()); return null; }
+            try { return delegator.findByPrimaryKey("PostalAddress", UtilMisc.toMap("contactMechId", this.shippingContactMechId)); }
+            catch(GenericEntityException e) { Debug.logWarning(e.toString()); return null; }
         } else {
             return null;
         }
@@ -363,8 +363,8 @@ public class ShoppingCart implements java.io.Serializable {
     
     public GenericValue getBillingAddress(GenericDelegator delegator) {
         if (this.billingAccountId != null) {
-            try { return delegator.findByPrimaryKey("PostalAddress", UtilMisc.toMap("contactMechId", billingAccountId)); }
-            catch(GenericEntityException e) { Debug.logWarning(e.getMessage()); return null; }
+            try { return delegator.findByPrimaryKey("PostalAddress", UtilMisc.toMap("contactMechId", this.billingAccountId)); }
+            catch(GenericEntityException e) { Debug.logWarning(e.toString()); return null; }
         } else {
             return null;
         }

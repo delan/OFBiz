@@ -55,7 +55,7 @@
       <table width='100%' border='0' cellspacing='0' cellpadding='0' class='boxbottom'>
         <tr>
           <td>
-              <table width="100%" border="0" cellpadding="1">
+              <table width="100%" border="0" cellpadding="0">
                 <tr align=left valign=bottom>
                   <th width="65%" align="left">Product</th>
                   <th width="5%" align="right">Quantity</th>
