@@ -483,6 +483,12 @@
         <response name="success" type="view" value="returnitems"/>
         <response name="error" type="view" value="returnhead"/>
     </request-map>
+    <request-map uri="quickRefundOrder">
+        <security https="true" auth="true"/>
+        <event type="service" invoke="quickReturnOrder"/>
+        <response name="success" type="view" value="orderview"/>
+        <response name="error" type="view" value="orderview"/>
+    </request-map>
 
     <request-map uri="returnMain">
         <security https="true" auth="true"/>

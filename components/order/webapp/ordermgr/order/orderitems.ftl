@@ -105,10 +105,13 @@
                         </#list>
                         <#assign returns = orderItem.getRelated("ReturnItem")?if_exists>
                         <#if returns?has_content>
-                          <#list returns as return>
-                            <div class="tabletext">
-                              <font color="red"><b>${uiLabelMap.OrderReturned}</b></font> #<a href="<@ofbizUrl>/returnMain?returnId=${return.returnId}</@ofbizUrl>" class="buttontext">${return.returnId}</a>
-                            </div>
+                          <#list returns as returnItem>
+                            <#assign returnHeader = returnItem.getRelatedOne("ReturnHeader")>
+                            <#if returnHeader.statusId != "RETURN_CANCELLED">
+                              <div class="tabletext">
+                                <font color="red"><b>${uiLabelMap.OrderReturned}</b></font> #<a href="<@ofbizUrl>/returnMain?returnId=${returnItem.returnId}</@ofbizUrl>" class="buttontext">${returnItem.returnId}</a>
+                              </div>
+                            </#if>
                           </#list>
                         </#if>
                       </td>

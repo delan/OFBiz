@@ -958,11 +958,13 @@
             title="Return Entity">
       <field name="returnId" type="id-ne"></field>
       <field name="statusId" type="id"></field>
+      <field name="createdBy" type="id-vlong"></field>
       <field name="fromPartyId" type="id"></field>
       <field name="billingAccountId" type="id"></field>
       <field name="entryDate" type="date-time"></field>
       <field name="originContactMechId" type="id"></field>
       <field name="destinationFacilityId" type="id"></field>
+      <field name="needsInventoryReceive" type="indicator"></field>
       <prim-key field="returnId"/>
       <relation type="one" fk-name="RTN_FROM_PARTY" rel-entity-name="Party">
         <key-map field-name="fromPartyId" rel-field-name="partyId"/>
@@ -981,6 +983,9 @@
       </relation>
       <relation type="one" fk-name="RTN_STTS_ITEM" rel-entity-name="StatusItem">
         <key-map field-name="statusId"/>
+      </relation>
+      <relation type="one-nofk" rel-entity-name="UserLogin">
+        <key-map field-name="createdBy" rel-field-name="userLoginId"/>
       </relation>
     </entity>
     <entity entity-name="ReturnItem"

@@ -68,6 +68,7 @@
         <if-empty field-name="statusId" map-name="newEntity">
             <string-to-field string="RETURN_REQUESTED" field-name="statusId" map-name="newEntity"/>
         </if-empty>
+        <field-to-field field-name="userLoginId" map-name="userLogin" to-field-name="createdBy" to-map-name="newEntity"/>
 
         <create-value value-name="newEntity"/>
         <string-to-field field-name="responseMessage" string="Return Request #${returnId} was created successfully."/>
@@ -130,15 +131,15 @@
             </if>
 
             <if-compare-field field-name="returnQuantity" map-name="parameters" operator="greater" to-field-name="returnableQuantity" type="Double">
-                <add-error><fail-message message="No return quantity available; previous returns may exist."/></add-error>
+                <add-error><fail-message message="Requested return quantity [${parameters.returnQuantity}] not available; previous returns may exist [${returnableQuantity}]."/></add-error>
             </if-compare-field>
 
             <if-compare-field field-name="returnQuantity" map-name="parameters" operator="greater" to-field-name="quantity" to-map-name="orderItem" type="Double">
-                <add-error><fail-message message="Return quantity cannot exceed the ordered quantity."/></add-error>
+                <add-error><fail-message message="Return quantity [${parameters.returnQuantity}] cannot exceed the ordered quantity [${orderItem.quantity}]."/></add-error>
             </if-compare-field>
 
             <if-compare-field field-name="returnPrice" map-name="parameters" operator="greater" to-field-name="returnablePrice" type="Double">
-                <add-error><fail-message message="Return price cannot exceed the purchase price."/></add-error>
+                <add-error><fail-message message="Return price [${parameters.returnPrice}] cannot exceed the purchase price [${returnablePrice}]."/></add-error>
             </if-compare-field>
             <check-errors/>
 
@@ -277,5 +278,98 @@
 
         <!-- return the current return header status -->
         <field-to-result field-name="statusId" map-name="returnHeader" result-name="returnHeaderStatus"/>
+    </simple-method>
+    
+    <simple-method method-name="quickReturnFromOrder" short-description="Create Quick Return From Order">
+        <if>
+    	  <condition>
+    	    <and>
+    	      <not><if-has-permission permission="ORDERMGR" action="_CREATE"/></not>
+    	      <not><if-compare-field field-name="partyId" map-name="userLogin" operator="equals" to-field-name="fromPartyId" to-map-name="parameters"/></not>
+    	    </and>
+    	  </condition>
+    	  <then>
+    	    <add-error><fail-message message="Security Error: to run quickReturnFromOrder you must have the ORDERMGR_CREATE or ORDERMGR_ADMIN permission"/></add-error>
+    	  </then>
+    	</if>
+        <check-errors/>
+
+        <!-- get primary information from the order header -->
+        <entity-one entity-name="OrderHeader" value-name="orderHeader">
+            <field-map env-name="parameters.orderId" field-name="orderId"/>
+        </entity-one>
+
+        <!-- find the bill to customer; for return's fromPartyId -->
+        <entity-condition entity-name="OrderRole" list-name="orderRoles">
+            <condition-list combine="and">
+                <condition-expr field-name="orderId" operator="equals" env-name="orderHeader.orderId"/>
+                <condition-expr field-name="roleTypeId" operator="equals" value="BILL_TO_CUSTOMER"/>
+            </condition-list>
+        </entity-condition>
+        <first-from-list entry-name="orderRole" list-name="orderRoles"/>
+
+        <!-- create the return header -->
+        <field-to-field field-name="originFacilityId" map-name="orderHeader" to-field-name="destinationFacilityId" to-map-name="createHeaderCtx"/>
+        <field-to-field field-name="partyId" map-name="orderRole" to-field-name="fromPartyId" to-map-name="createHeaderCtx"/>
+
+        <call-service service-name="createReturnHeader" in-map-name="createHeaderCtx" include-user-login="true">
+            <result-to-field result-name="returnId"/>
+        </call-service>
+
+        <!-- get the available to return order items -->
+        <entity-condition entity-name="OrderItem" list-name="orderItems">
+            <condition-list combine="and">
+                <condition-expr field-name="orderId" operator="equals" env-name="orderHeader.orderId"/>
+                <condition-expr field-name="statusId" operator="equals" value="ITEM_COMPLETED"/>
+            </condition-list>
+        </entity-condition>
+
+        <if-empty field-name="returnReasonId" map-name="parameters">
+            <string-to-field string="RTN_NOT_WANT" field-name="returnReasonId" map-name="parameters"/>
+        </if-empty>
+        <if-empty field-name="returnTypeId" map-name="parameters">
+            <string-to-field string="RTN_REFUND" field-name="returnTypeId" map-name="parameters"/>
+        </if-empty>
+
+        <!-- create the return items -->
+        <iterate entry-name="orderItem" list-name="orderItems">
+            <string-to-field string="ITEM" field-name="returnItemType" map-name="newItemCtx"/>
+            <field-to-field field-name="returnId" to-map-name="newItemCtx"/>
+            <field-to-field field-name="returnReasonId" map-name="parameters" to-map-name="newItemCtx"/>
+            <field-to-field field-name="returnTypeId" map-name="parameters" to-map-name="newItemCtx"/>
+            <env-to-field env-name="orderItem.orderId" field-name="orderId" map-name="newItemCtx"/>
+            <env-to-field env-name="orderItem.orderItemSeqId" field-name="orderItemSeqId" map-name="newItemCtx"/>
+            <env-to-field env-name="orderItem.itemDescription" field-name="description" map-name="newItemCtx"/>
+
+            <!-- get the returnable price and quantity -->
+            <field-to-field field-name="orderItem" to-map-name="itemCheckMap"/>
+            <call-service service-name="getReturnableQuantity" in-map-name="itemCheckMap">
+                <result-to-field result-name="returnableQuantity" field-name="returnQuantity" map-name="newItemCtx"/>
+                <result-to-field result-name="returnablePrice" field-name="returnPrice" map-name="newItemCtx"/>
+            </call-service>
+
+            <!-- create the return item -->
+            <call-service service-name="createReturnItem" in-map-name="newItemCtx" include-user-login="true"/>
+        </iterate>
+
+        <!-- update the header status -->
+        <string-to-field string="RETURN_ACCEPTED" field-name="statusId" map-name="updateHeaderCtx"/>
+        <field-to-field field-name="returnId" to-map-name="updateHeaderCtx"/>
+        <call-service service-name="updateReturnHeader" in-map-name="updateHeaderCtx" include-user-login="true"/>
+
+        <!-- auto-receive this return if we passed in the flag -->
+        <if-compare field-name="${parameters.receiveReturn}" operator="equals" value="true">
+            <field-to-field field-name="returnId" to-map-name="receiveCtx"/>
+            <call-service service-name="quickReceiveReturn" in-map-name="receiveCtx"/>
+        <else>
+            <!-- update the header status -->
+            <string-to-field string="RETURN_RECEIVED" field-name="statusId" map-name="updateHeaderCtx"/>
+            <string-to-field string="Y" field-name="needsInventoryReceive" map-name="updateHeaderCtx"/>
+            <field-to-field field-name="returnId" to-map-name="updateHeaderCtx"/>
+            <call-service service-name="updateReturnHeader" in-map-name="updateHeaderCtx" include-user-login="true"/>
+        </else>
+        </if-compare>
+
+        <field-to-result field-name="returnId"/>
     </simple-method>
 </simple-methods>
