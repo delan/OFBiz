@@ -110,7 +110,7 @@
     </entity>
     <entity entity-name="MarketingCampaignPromo"
             package-name="org.ofbiz.commonapp.marketing.campaign"
-            title="Marketing Campaign Price Entity">
+            title="Marketing Campaign Promo Entity">
       <field name="marketingCampaignId" type="id-ne"></field>
       <field name="productPromoId" type="id-ne"></field>
       <prim-key field="marketingCampaignId"/>

@@ -199,10 +199,8 @@ public class OrderServices {
             return result;
         }
         
-        String initialStatus = "ORDER_ORDERED";
-        if ("PURCHASE_ORDER".equals(orderTypeId)) {
-            initialStatus = "ORDER_CREATED";
-        }
+        // the inital status for ALL order types
+        String initialStatus = "ORDER_CREATED";       
 
         // create the order object
         String orderId = delegator.getNextSeqId("OrderHeader").toString();
@@ -1103,6 +1101,7 @@ public class OrderServices {
         result.put("templateName", ofbizHome + webSiteEmail.get("templatePath"));
         result.put("emailType", emailType);
         result.put("subject", subjectString);
+        result.put("contentType", webSiteEmail.get("contentType"));
         result.put("sendFrom", webSiteEmail.get("fromAddress"));        
         result.put("sendCc", webSiteEmail.get("ccAddress"));
         result.put("sendBcc", webSiteEmail.get("ccAddress"));

@@ -849,12 +849,10 @@ public class ShoppingCart implements java.io.Serializable {
                 seqId++;
                 item.setOrderItemSeqId(orderItemSeqId);
 
-                String initialStatus = "ITEM_ORDERED";
-                if (this.getOrderType().equals("PURCHASE_ORDER")) {
-                    initialStatus = "ITEM_CREATED";
-                }
+                // the initial status for all item types
+                String initialStatus = "ITEM_CREATED";
+                
                 GenericValue orderItem = getDelegator().makeValue("OrderItem", null);
-
                 orderItem.set("orderItemSeqId", orderItemSeqId);
                 orderItem.set("orderItemTypeId", item.getItemType());
                 orderItem.set("productId", item.getProductId());

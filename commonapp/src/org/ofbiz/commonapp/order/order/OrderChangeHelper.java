@@ -50,7 +50,7 @@ public class OrderChangeHelper {
         final String ITEM_STATUS = UtilProperties.getPropertyValue(orderPropertiesUrl, "order.item.payment.approved.status", "ITEM_APPROVED");
         
         try {
-            OrderChangeHelper.orderStatusChanges(dispatcher, userLogin, orderId, HEADER_STATUS, "ITEM_ORDERED", ITEM_STATUS);                                                                                                                                       
+            OrderChangeHelper.orderStatusChanges(dispatcher, userLogin, orderId, HEADER_STATUS, "ITEM_CREATED", ITEM_STATUS);                                                                                                                                       
         } catch (GenericServiceException e) {
             Debug.logError(e, "Service invocation error, status changes were not updated for order #" + orderId, module);
             return false;
