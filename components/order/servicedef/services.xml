@@ -214,7 +214,12 @@
 
     <service name="recalcShippingTotal" engine="java"
             location="org.ofbiz.order.order.OrderServices" invoke="recalcOrderShipping">
-        <description>Adjust the shipping amount</description>
+        <description>Adjust the order shipping amount</description>
+        <attribute name="orderId" type="String" mode="IN"/>
+    </service>
+    <service name="recalcTaxTotal" engine="java"
+            location="org.ofbiz.order.order.OrderServices" invoke="recalcOrderTax">
+        <description>Adjust the order tax amount</description>
         <attribute name="orderId" type="String" mode="IN"/>
     </service>
 
