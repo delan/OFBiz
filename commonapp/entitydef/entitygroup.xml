@@ -426,6 +426,7 @@
   <!-- ========================================================= -->
 
     <entity-group group="org.ofbiz.commonapp" entity="CustRequest" />
+    <entity-group group="org.ofbiz.commonapp" entity="CustRequestAndRole" />
     <entity-group group="org.ofbiz.commonapp" entity="CustRequestAttribute" />
     <entity-group group="org.ofbiz.commonapp" entity="CustRequestItem" />
     <entity-group group="org.ofbiz.commonapp" entity="CustRequestItemNote" />
@@ -437,6 +438,7 @@
     <entity-group group="org.ofbiz.commonapp" entity="DesiredFeature" />
     <entity-group group="org.ofbiz.commonapp" entity="OrderRequirementCommitment" />
     <entity-group group="org.ofbiz.commonapp" entity="Requirement" />
+    <entity-group group="org.ofbiz.commonapp" entity="RequirementAndRole" />
     <entity-group group="org.ofbiz.commonapp" entity="RequirementAttribute" />
     <entity-group group="org.ofbiz.commonapp" entity="RequirementBudgetAllocation" />
     <entity-group group="org.ofbiz.commonapp" entity="RequirementCustRequest" />

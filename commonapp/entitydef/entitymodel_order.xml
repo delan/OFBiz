@@ -1330,6 +1330,10 @@
       <field name="custRequestDate" type="date-time"></field>
       <field name="responseRequiredDate" type="date-time"></field>
       <field name="description" type="description"></field>
+      <field name="createdDate" type="date-time"></field>
+      <field name="createdByUserLogin" type="id-vlong"></field>
+      <field name="lastModifiedDate" type="date-time"></field>
+      <field name="lastModifiedByUserLogin" type="id-vlong"></field>
       <prim-key field="custRequestId"/>
       <relation type="one" fk-name="CUST_REQ_TYPE" rel-entity-name="CustRequestType">
         <key-map field-name="custRequestTypeId"/>
@@ -1353,6 +1357,45 @@
         <key-map field-name="custRequestId"/>
       </relation>
     </entity>
+    <view-entity entity-name="CustRequestAndRole"
+            package-name="org.ofbiz.commonapp.workeffort.workeffort"
+            title="Customer Request And Role View Entity">
+      <member-entity entity-alias="CR" entity-name="CustRequest"/>
+      <member-entity entity-alias="CRR" entity-name="CustRequestRole"/>
+      <alias entity-alias="CR" name="custRequestId"/>
+      <alias entity-alias="CR" name="custRequestTypeId"/>
+      <alias entity-alias="CR" name="custRequestDate"/>
+      <alias entity-alias="CR" name="responseRequiredDate"/>
+      <alias entity-alias="CR" name="description"/>
+      <alias entity-alias="CR" name="lastModifiedDate"/>
+      <alias entity-alias="CR" name="lastModifiedByUserLogin"/>
+      <alias entity-alias="CRR" name="partyId"/>
+      <alias entity-alias="CRR" name="roleTypeId"/>
+      <view-link entity-alias="CR" rel-entity-alias="CRR">
+        <key-map field-name="custRequestId"/>
+      </view-link>
+      <relation type="one-nofk" rel-entity-name="CustRequest">
+        <key-map field-name="custRequestId"/>
+      </relation>
+      <relation type="one-nofk" rel-entity-name="CustRequestRole">
+        <key-map field-name="custRequestId"/>
+        <key-map field-name="partyId"/>
+        <key-map field-name="roleTypeId"/>
+      </relation>
+      <relation type="one-nofk" rel-entity-name="Party">
+        <key-map field-name="partyId"/>
+      </relation>
+      <relation type="one-nofk" rel-entity-name="Person">
+        <key-map field-name="partyId"/>
+      </relation>
+      <relation type="one-nofk" rel-entity-name="PartyRole">
+        <key-map field-name="partyId"/>
+        <key-map field-name="roleTypeId"/>
+      </relation>
+      <relation type="one-nofk" rel-entity-name="RoleType">
+        <key-map field-name="roleTypeId"/>
+      </relation>
+    </view-entity>
     <entity entity-name="CustRequestAttribute"
             package-name="org.ofbiz.commonapp.order.request"
             title="Customer Request Attribute Entity">
@@ -1556,12 +1599,16 @@
       <field name="fixedAssetId" type="id"></field>
       <field name="productId" type="id"></field>
       <field name="description" type="description"></field>
-      <field name="requirementCreationDate" type="date-time"></field>
+      <field name="requirementStartDate" type="date-time"></field>
       <field name="requiredByDate" type="date-time"></field>
       <field name="estimatedBudget" type="currency-amount"></field>
       <field name="quantity" type="floating-point"></field>
       <field name="useCase" type="very-long"></field>
       <field name="reason" type="long-varchar"></field>
+      <field name="createdDate" type="date-time"></field>
+      <field name="createdByUserLogin" type="id-vlong"></field>
+      <field name="lastModifiedDate" type="date-time"></field>
+      <field name="lastModifiedByUserLogin" type="id-vlong"></field>
       <prim-key field="requirementId"/>
       <relation type="one" fk-name="REQ_TYPE" rel-entity-name="RequirementType">
         <key-map field-name="requirementTypeId"/>
@@ -1606,6 +1653,55 @@
         <key-map field-name="requirementId"/>
       </relation>
     </entity>
+    <view-entity entity-name="RequirementAndRole"
+            package-name="org.ofbiz.commonapp.workeffort.workeffort"
+            title="Requirement And Role View Entity">
+      <member-entity entity-alias="RQ" entity-name="Requirement"/>
+      <member-entity entity-alias="RQR" entity-name="RequirementRole"/>
+      <alias entity-alias="RQ" name="requirementId"/>
+      <alias entity-alias="RQ" name="requirementTypeId"/>
+      <alias entity-alias="RQ" name="facilityId"/>
+      <alias entity-alias="RQ" name="deliverableId"/>
+      <alias entity-alias="RQ" name="fixedAssetId"/>
+      <alias entity-alias="RQ" name="productId"/>
+      <alias entity-alias="RQ" name="description"/>
+      <alias entity-alias="RQ" name="requirementStartDate"/>
+      <alias entity-alias="RQ" name="requiredByDate"/>
+      <alias entity-alias="RQ" name="estimatedBudget"/>
+      <alias entity-alias="RQ" name="quantity"/>
+      <alias entity-alias="RQ" name="reason"/>
+      <alias entity-alias="RQ" name="lastModifiedDate"/>
+      <alias entity-alias="RQ" name="lastModifiedByUserLogin"/>
+      <alias entity-alias="RQR" name="partyId"/>
+      <alias entity-alias="RQR" name="roleTypeId"/>
+      <alias entity-alias="RQR" name="fromDate"/>
+      <alias entity-alias="RQR" name="thruDate"/>
+      <view-link entity-alias="RQ" rel-entity-alias="RQR">
+        <key-map field-name="requirementId"/>
+      </view-link>
+      <relation type="one-nofk" rel-entity-name="Requirement">
+        <key-map field-name="requirementId"/>
+      </relation>
+      <relation type="one-nofk" rel-entity-name="RequirementRole">
+        <key-map field-name="requirementId"/>
+        <key-map field-name="partyId"/>
+        <key-map field-name="roleTypeId"/>
+        <key-map field-name="fromDate"/>
+      </relation>
+      <relation type="one-nofk" rel-entity-name="Party">
+        <key-map field-name="partyId"/>
+      </relation>
+      <relation type="one-nofk" rel-entity-name="Person">
+        <key-map field-name="partyId"/>
+      </relation>
+      <relation type="one-nofk" rel-entity-name="PartyRole">
+        <key-map field-name="partyId"/>
+        <key-map field-name="roleTypeId"/>
+      </relation>
+      <relation type="one-nofk" rel-entity-name="RoleType">
+        <key-map field-name="roleTypeId"/>
+      </relation>
+    </view-entity>
     <entity entity-name="RequirementAttribute"
             package-name="org.ofbiz.commonapp.order.request"
             title="Requirement Attribute Entity">
