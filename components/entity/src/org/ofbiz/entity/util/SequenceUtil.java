@@ -278,7 +278,7 @@ public class SequenceUtil {
                         // collision happened, wait a bounded random amount of time then continue
                         int waitTime = (new Double(Math.random() * (maxWaitMillis - minWaitMillis))).intValue() + minWaitMillis;
 
-                        Debug.logWarning("[SequenceUtil.SequenceBank.fillBank] Collision found, val1=" + val1 + ", bankSize=" + bankSize + ", val2=" + val2 + ", waitTime=" + waitTime, module);
+                        Debug.logWarning("[SequenceUtil.SequenceBank.fillBank] Collision found for seqName [" + seqName + "], val1=" + val1 + ", val2=" + val2 + ", val1+bankSize=" + (val1 + bankSize) + ", bankSize=" + bankSize + ", waitTime=" + waitTime, module);
 
                         try {
                             this.wait(waitTime);
