@@ -25,7 +25,7 @@
  * @author     Johan Isacsson
  * @author     David E. Jones
  * @author     Olivier.Heintz@nereide.biz 
- * @version    $Revision: 1.1 $
+ * @version    $Revision: 1.2 $
  * @since      2.2
 -->
 
@@ -120,7 +120,15 @@
             <get-related value-name="partyContactMech" relation-name="PartyContactMechPurpose" list-name="partyContactMechPurposes"/>   
             <iterate entry-name="partyContactMechPurpose" list-name="partyContactMechPurposes">
                 <field-to-field field-name="contactMechId" map-name="newPartyContactMech" to-map-name="partyContactMechPurpose"/>
-                <field-to-list field-name="partyContactMechPurpose" list-name="storeList"/>	
+                
+                <field-to-field field-name="partyId" map-name="partyContactMechPurpose" to-map-name="purposeMap"/>
+                <field-to-field field-name="contactMechPurposeTypeId" map-name="partyContactMechPurpose" to-map-name="purposeMap"/>
+                <field-to-field field-name="contactMechId" map-name="partyContactMechPurpose" to-map-name="purposeMap"/>
+                <find-by-and entity-name="PartyContactMechPurpose" list-name="purposeResult" map-name="purposeMap"/>
+                	
+                <if-empty field-name="purposeResult">
+                	<field-to-list field-name="partyContactMechPurpose" list-name="storeList"/>	
+            	</if-empty>
             </iterate>
         </if-compare-field>
         
