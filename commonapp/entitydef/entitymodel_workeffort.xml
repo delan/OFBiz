@@ -630,7 +630,169 @@
       <field name="inventoryItemId" type="id-ne"></field>	
       <prim-key field="workEffortId" />	
       <prim-key field="inventoryItemId" />
-    </entity>
+    </entity>	
+    <view-entity entity-name="WorkEffortPartyAssignByGroup" 
+            package-name="org.ofbiz.commonapp.workeffort.workeffort"
+            title="Work Effort And Party Assignment By Group Entity">
+      <description>Also includes PartyRelationship Link so that a groupPartyId can be specified to find all PartyAssignments for all groups a party is in</description>	
+      <member-entity entity-alias="WEPA" entity-name="WorkEffortPartyAssignment" />	
+      <member-entity entity-alias="WE" entity-name="WorkEffort" />	
+      <member-entity entity-alias="PREL" entity-name="PartyRelationship" />
+      <alias entity-alias="WE" name="workEffortId" prim-key="true" />
+      <alias entity-alias="WE" name="workEffortTypeId" />
+      <alias entity-alias="WE" name="currentStatusId" />
+      <alias entity-alias="WE" name="lastStatusUpdate" />
+      <alias entity-alias="WE" name="universalId" />
+      <alias entity-alias="WE" name="scopeEnumId" />
+      <alias entity-alias="WE" name="priority" />
+      <alias entity-alias="WE" name="workEffortName" />
+      <alias entity-alias="WE" name="description" />
+      <alias entity-alias="WE" name="locationDesc" />
+      <alias entity-alias="WE" name="revisionNumber" />
+      <alias entity-alias="WE" name="assetId" />
+      <alias entity-alias="WE" name="fixedAssetId" />
+      <alias entity-alias="WE" name="facilityId" />
+      <alias entity-alias="WE" name="createdDate" />
+      <alias entity-alias="WE" name="createdByPartyId" />
+      <alias entity-alias="WE" name="lastModifiedDate" />
+      <alias entity-alias="WE" name="lastModifiedByPartyId" />
+      <alias entity-alias="WE" name="estimatedStartDate" />
+      <alias entity-alias="WE" name="estimatedCompletionDate" />
+      <alias entity-alias="WE" name="estimatedMilliSeconds" />
+      <alias entity-alias="WE" name="totalMilliSecondsAllowed" />
+      <alias entity-alias="WE" name="totalMoneyAllowed" />
+      <alias entity-alias="WE" name="moneyUomId" />
+      <alias entity-alias="WE" name="actualStartDate" />
+      <alias entity-alias="WE" name="actualCompletionDate" />
+      <alias entity-alias="WE" name="actualMilliSeconds" />
+      <alias entity-alias="WE" name="specialTerms" />
+      <alias entity-alias="WE" name="timeTransparency" />
+      <alias entity-alias="WE" name="infoUrl" />
+      <alias entity-alias="WE" name="recurrenceInfoId" />
+      <alias entity-alias="WE" name="runtimeDataId" />
+      <alias entity-alias="WE" name="noteId" />
+      <alias entity-alias="WE" name="serviceLoaderName" />
+      <alias entity-alias="WEPA" name="roleTypeId" prim-key="true" />
+      <alias entity-alias="WEPA" name="fromDate" prim-key="true" />
+      <alias entity-alias="WEPA" name="thruDate" />
+      <alias entity-alias="WEPA" name="partyAssignFacilityId" field="facilityId" />
+      <alias entity-alias="WEPA" name="statusId" />
+      <alias entity-alias="WEPA" name="statusDateTime" />
+      <alias entity-alias="WEPA" name="comments" />
+      <alias entity-alias="WEPA" name="mustRsvp" />
+      <alias entity-alias="WEPA" name="expectationEnumId" />
+      <alias entity-alias="PREL" name="partyId" field="partyIdFrom" prim-key="true" />
+      <alias entity-alias="PREL" name="groupPartyId" field="partyIdTo" prim-key="true" />
+      <view-link entity-alias="WE" rel-entity-alias="WEPA">
+        <key-map field-name="workEffortId" />
+      </view-link>
+      <view-link entity-alias="PREL" rel-entity-alias="WEPA">
+        <key-map field-name="partyIdTo" rel-field-name="partyId" />
+      </view-link>
+      <relation type="one" rel-entity-name="WorkEffort">
+        <key-map field-name="workEffortId" />
+      </relation>
+      <relation type="one" rel-entity-name="WorkEffortPartyAssignment">
+        <key-map field-name="workEffortId" />
+        <key-map field-name="partyId" />
+        <key-map field-name="roleTypeId" />
+        <key-map field-name="fromDate" />
+      </relation>
+      <relation type="one" rel-entity-name="Party">
+        <key-map field-name="partyId" />
+      </relation>
+      <relation type="one" rel-entity-name="Person">
+        <key-map field-name="partyId" />
+      </relation>
+      <relation type="one" rel-entity-name="PartyRole">
+        <key-map field-name="partyId" />
+        <key-map field-name="roleTypeId" />
+      </relation>
+      <relation type="one" rel-entity-name="RoleType">
+        <key-map field-name="roleTypeId" />
+      </relation>
+    </view-entity>	
+    <view-entity entity-name="WorkEffortPartyAssignByRole" 
+            package-name="org.ofbiz.commonapp.workeffort.workeffort"
+            title="Work Effort And Party Assignment By Role Entity">
+      <description>Also includes PartyRole Link so that if a partyId is specified it will find all PartyAssignments for all roles a party is in; does not link on the partyId of the PartyAssignment</description>	
+      <member-entity entity-alias="WEPA" entity-name="WorkEffortPartyAssignment" />	
+      <member-entity entity-alias="WE" entity-name="WorkEffort" />	
+      <member-entity entity-alias="PR" entity-name="PartyRole" />
+      <alias entity-alias="WE" name="workEffortId" prim-key="true" />
+      <alias entity-alias="WE" name="workEffortTypeId" />
+      <alias entity-alias="WE" name="currentStatusId" />
+      <alias entity-alias="WE" name="lastStatusUpdate" />
+      <alias entity-alias="WE" name="universalId" />
+      <alias entity-alias="WE" name="scopeEnumId" />
+      <alias entity-alias="WE" name="priority" />
+      <alias entity-alias="WE" name="workEffortName" />
+      <alias entity-alias="WE" name="description" />
+      <alias entity-alias="WE" name="locationDesc" />
+      <alias entity-alias="WE" name="revisionNumber" />
+      <alias entity-alias="WE" name="assetId" />
+      <alias entity-alias="WE" name="fixedAssetId" />
+      <alias entity-alias="WE" name="facilityId" />
+      <alias entity-alias="WE" name="createdDate" />
+      <alias entity-alias="WE" name="createdByPartyId" />
+      <alias entity-alias="WE" name="lastModifiedDate" />
+      <alias entity-alias="WE" name="lastModifiedByPartyId" />
+      <alias entity-alias="WE" name="estimatedStartDate" />
+      <alias entity-alias="WE" name="estimatedCompletionDate" />
+      <alias entity-alias="WE" name="estimatedMilliSeconds" />
+      <alias entity-alias="WE" name="totalMilliSecondsAllowed" />
+      <alias entity-alias="WE" name="totalMoneyAllowed" />
+      <alias entity-alias="WE" name="moneyUomId" />
+      <alias entity-alias="WE" name="actualStartDate" />
+      <alias entity-alias="WE" name="actualCompletionDate" />
+      <alias entity-alias="WE" name="actualMilliSeconds" />
+      <alias entity-alias="WE" name="specialTerms" />
+      <alias entity-alias="WE" name="timeTransparency" />
+      <alias entity-alias="WE" name="infoUrl" />
+      <alias entity-alias="WE" name="recurrenceInfoId" />
+      <alias entity-alias="WE" name="runtimeDataId" />
+      <alias entity-alias="WE" name="noteId" />
+      <alias entity-alias="WE" name="serviceLoaderName" />
+      <alias entity-alias="WEPA" name="wepaPartyId" field="partyId" prim-key="true" />
+      <alias entity-alias="WEPA" name="fromDate" prim-key="true" />
+      <alias entity-alias="WEPA" name="thruDate" />
+      <alias entity-alias="WEPA" name="partyAssignFacilityId" field="facilityId" />
+      <alias entity-alias="WEPA" name="statusId" />
+      <alias entity-alias="WEPA" name="statusDateTime" />
+      <alias entity-alias="WEPA" name="comments" />
+      <alias entity-alias="WEPA" name="mustRsvp" />
+      <alias entity-alias="WEPA" name="expectationEnumId" />
+      <alias entity-alias="PR" name="partyId" prim-key="true" />
+      <alias entity-alias="PR" name="roleTypeId" prim-key="true" />
+      <view-link entity-alias="WE" rel-entity-alias="WEPA">
+        <key-map field-name="workEffortId" />
+      </view-link>
+      <view-link entity-alias="PR" rel-entity-alias="WEPA">
+        <key-map field-name="roleTypeId" />
+      </view-link>
+      <relation type="one" rel-entity-name="WorkEffort">
+        <key-map field-name="workEffortId" />
+      </relation>
+      <relation type="one" rel-entity-name="WorkEffortPartyAssignment">
+        <key-map field-name="workEffortId" />
+        <key-map field-name="partyId" />
+        <key-map field-name="roleTypeId" />
+        <key-map field-name="fromDate" />
+      </relation>
+      <relation type="one" rel-entity-name="Party">
+        <key-map field-name="partyId" />
+      </relation>
+      <relation type="one" rel-entity-name="Person">
+        <key-map field-name="partyId" />
+      </relation>
+      <relation type="one" rel-entity-name="PartyRole">
+        <key-map field-name="partyId" />
+        <key-map field-name="roleTypeId" />
+      </relation>
+      <relation type="one" rel-entity-name="RoleType">
+        <key-map field-name="roleTypeId" />
+      </relation>
+    </view-entity>
     <entity entity-name="WorkEffortPartyAssignment" 
             package-name="org.ofbiz.commonapp.workeffort.workeffort"
             title="Work Effort Party Assignment Entity">
