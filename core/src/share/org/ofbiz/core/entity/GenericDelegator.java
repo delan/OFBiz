@@ -45,7 +45,9 @@ import org.w3c.dom.NodeList;
  *@version    1.0
  */
 public class GenericDelegator {
-    static UtilCache delegatorCache = new UtilCache("GenericDelegators", 0, 0);
+    /** the delegatorCache will now be a HashMap, allowing reload of definitions, 
+     * but the delegator will always be the same object for the given name */
+    static Map delegatorCache = new HashMap();
     String delegatorName;
 
     /** set this to true for better performance; set to false to be able to reload definitions at runtime throught he cache manager */
@@ -684,7 +686,7 @@ public class GenericDelegator {
      * @param relationName String containing the relation name which is the
      *      combination of relation.title and relation.rel-entity-name as
      *      specified in the entity XML definition file
-     * @param order The fields of the named entity to order the query by; may be null;
+     * @param orderBy The fields of the named entity to order the query by; may be null;
      *      optionally add a " ASC" for ascending or " DESC" for descending
      * @param value GenericValue instance containing the entity
      * @return Collection of GenericValue instances as specified in the relation definition
@@ -698,7 +700,7 @@ public class GenericDelegator {
      *      combination of relation.title and relation.rel-entity-name as
      *      specified in the entity XML definition file
      * @param byAndFields the fields that must equal in order to keep; may be null
-     * @param order The fields of the named entity to order the query by; may be null;
+     * @param orderBy The fields of the named entity to order the query by; may be null;
      *      optionally add a " ASC" for ascending or " DESC" for descending
      * @param value GenericValue instance containing the entity
      * @return Collection of GenericValue instances as specified in the relation definition
@@ -707,7 +709,7 @@ public class GenericDelegator {
         ModelEntity modelEntity = value.getModelEntity();
         ModelRelation relation = modelEntity.getRelation(relationName);
         if (relation == null)
-            throw new IllegalArgumentException("[GenericDelegator.selectRelated] could not find relation for relationName: " + relationName + " for value " + value);
+            throw new GenericModelException("Could not find relation for relationName: " + relationName + " for value " + value);
         ModelEntity relatedEntity = getModelReader().getModelEntity(relation.relEntityName);
 
         //put the byAndFields (if not null) into the hash map first,
@@ -721,6 +723,34 @@ public class GenericDelegator {
         return this.findByAnd(relatedEntity.entityName, fields, orderBy);
     }
 
+    /** Get a dummy primary key for the named Related Entity for the GenericValue
+     * @param relationName String containing the relation name which is the
+     *      combination of relation.title and relation.rel-entity-name as
+     *      specified in the entity XML definition file
+     * @param byAndFields the fields that must equal in order to keep; may be null
+     * @param value GenericValue instance containing the entity
+     * @return GenericPK containing a possibly incomplete PrimaryKey object representing the related entity or entities
+     */
+    public GenericPK getRelatedDummyPK(String relationName, Map byAndFields, GenericValue value) throws GenericEntityException {
+        ModelEntity modelEntity = value.getModelEntity();
+        ModelRelation relation = modelEntity.getRelation(relationName);
+        if (relation == null)
+            throw new GenericModelException("Could not find relation for relationName: " + relationName + " for value " + value);
+        ModelEntity relatedEntity = getModelReader().getModelEntity(relation.relEntityName);
+
+        //put the byAndFields (if not null) into the hash map first,
+        //they will be overridden by value's fields if over-specified this is important for security and cleanliness
+        Map fields = byAndFields == null ? new HashMap() : new HashMap(byAndFields);
+        for (int i = 0; i < relation.keyMaps.size(); i++) {
+            ModelKeyMap keyMap = (ModelKeyMap) relation.keyMaps.get(i);
+            fields.put(keyMap.relFieldName, value.get(keyMap.fieldName));
+        }
+        
+        GenericPK dummyPK = new GenericPK(relatedEntity, fields);
+        dummyPK.setDelegator(this);
+        return dummyPK;
+    }
+
     /** Get the named Related Entity for the GenericValue from the persistent store, checking first in the cache to see if the desired value is there
      * @param relationName String containing the relation name which is the
      *      combination of relation.title and relation.rel-entity-name as
@@ -732,7 +762,7 @@ public class GenericDelegator {
         ModelEntity modelEntity = value.getModelEntity();
         ModelRelation relation = modelEntity.getRelation(relationName);
         if (relation == null)
-            throw new GenericModelException("[GenericDelegator.selectRelated] could not find relation for relationName: " + relationName + " for value " + value);
+            throw new GenericModelException("Could not find relation for relationName: " + relationName + " for value " + value);
         ModelEntity relatedEntity = getModelReader().getModelEntity(relation.relEntityName);
 
         Map fields = new HashMap();
