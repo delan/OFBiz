@@ -490,7 +490,7 @@ public class EntitySyncServices {
                 }
 
                 // update the result info
-                esc.saveResultsReportedFromDataStore();
+                esc.runSaveOfflineSyncInfo(currentRows);
                 esc.advanceRunTimes();
             }
 
