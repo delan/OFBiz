@@ -60,10 +60,10 @@ public class <%=entity.ejbName%>PK implements Serializable
   }
 
   /**
-   *  Description of the Method
+   *  Determines the equality of two <%=entity.ejbName%>PK objects, overrides the default equals
    *
-   *@param  obj  Description of Field
-   *@return      Description of the Returned Value
+   *@param  obj  The object (<%=entity.ejbName%>PK) to compare this two
+   *@return      boolean stating if the two objects are equal
    */
   public boolean equals(Object obj)
   {
@@ -79,12 +79,22 @@ public class <%=entity.ejbName%>PK implements Serializable
   }
 
   /**
-   *  Description of the Method
+   *  Creates a hashCode for the combined primary keys, using the default String hashCode, overrides the default hashCode
    *
-   *@return    Description of the Returned Value
+   *@return    Hashcode corresponding to this primary key
    */
   public int hashCode()
   {
-    return (<%=entity.pkNameString(" + ","")%>).hashCode();
+    return (<%=entity.pkNameString(" + \"::\" + ","")%>).hashCode();
+  }
+
+  /**
+   *  Creates a String for the combined primary keys, overrides the default toString
+   *
+   *@return    String corresponding to this primary key
+   */
+  public String toString()
+  {
+    return <%=entity.pkNameString(" + \"::\" + ","")%>;
   }
 }

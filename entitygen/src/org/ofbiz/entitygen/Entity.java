@@ -3,7 +3,7 @@ package org.ofbiz.entitygen;
 import java.util.*;
 
 /**
- * <p><b>Title:</b> Entity Generator
+ * <p><b>Title:</b> Entity Generator - Entity model class
  * <p><b>Description:</b> None
  * <p>Copyright (c) 2001 The Open For Business Project - www.ofbiz.org
  *
@@ -132,20 +132,31 @@ public class Entity
 
   public String nonPkNullList()
   {
+    return fieldsStringList(fields, "null", ", ", false, true);
+  }
+
+  public String fieldsStringList(Vector flds, String eachString, String separator)
+  {
+    return fieldsStringList(flds, eachString, separator, false, false);
+  }
+  
+  public String fieldsStringList(Vector flds, String eachString, String separator, boolean appendIndex)
+  {
+    return fieldsStringList(flds, eachString, separator, appendIndex, false);
+  }
+  
+  public String fieldsStringList(Vector flds, String eachString, String separator, boolean appendIndex, boolean onlyNonPK)
+  {
     String returnString = "";
-    if(fields.size() < 1) { return ""; }
+    if(flds.size() < 1) { return ""; }
 
     int i = 0;
-    for(; i < fields.size() - 1; i++)
+    for(; i < flds.size(); i++)
     {
-      if(!((Field)fields.elementAt(i)).isPk)
-      {
-        returnString = returnString + "null, ";
-      }
-    }
-    if(!((Field)fields.elementAt(i)).isPk)
-    {
-      returnString = returnString + "null";
+      if(onlyNonPK && ((Field)flds.elementAt(i)).isPk) continue;
+      returnString = returnString + eachString;
+      if(appendIndex) returnString = returnString + (i+1);
+      if(i < flds.size() - 1) returnString = returnString + separator;
     }
     return returnString;
   }
@@ -200,9 +211,9 @@ public class Entity
     int i = 0;
     for(; i < flds.size() - 1; i++)
     {
-      returnString = returnString + tableName + "_" + ((Field)flds.elementAt(i)).columnName + "=[ltp]=" + ((Field)flds.elementAt(i)).fieldName + "%>&";
+      returnString = returnString + "\"" + tableName + "_" + ((Field)flds.elementAt(i)).columnName + "=\" + " + ((Field)flds.elementAt(i)).fieldName + " + \"&\" + ";
     }
-    returnString = returnString + tableName + "_" + ((Field)flds.elementAt(i)).columnName + "=[ltp]=" + ((Field)flds.elementAt(i)).fieldName + "%>";
+    returnString = returnString + "\"" + tableName + "_" + ((Field)flds.elementAt(i)).columnName + "=\" + " + ((Field)flds.elementAt(i)).fieldName;
     return returnString;
   }
 
@@ -214,9 +225,9 @@ public class Entity
     int i = 0;
     for(; i < flds.size() - 1; i++)
     {
-      returnString = returnString + tableName + "_" + ((Field)flds.elementAt(i)).columnName + "=[ltp]=" + GenUtil.lowerFirstChar(ejbName) + ".get" + GenUtil.upperFirstChar(((Field)flds.elementAt(i)).fieldName) + "()%>&";
+      returnString = returnString + "\"" + tableName + "_" + ((Field)flds.elementAt(i)).columnName + "=\" + " + GenUtil.lowerFirstChar(ejbName) + ".get" + GenUtil.upperFirstChar(((Field)flds.elementAt(i)).fieldName) + "() + \"&\" + ";
     }
-    returnString = returnString + tableName + "_" + ((Field)flds.elementAt(i)).columnName + "=[ltp]=" + GenUtil.lowerFirstChar(ejbName) + ".get" + GenUtil.upperFirstChar(((Field)flds.elementAt(i)).fieldName) + "()%>";
+    returnString = returnString + "\"" + tableName + "_" + ((Field)flds.elementAt(i)).columnName + "=\" + " + GenUtil.lowerFirstChar(ejbName) + ".get" + GenUtil.upperFirstChar(((Field)flds.elementAt(i)).fieldName) + "()";
     return returnString;
   }
 }

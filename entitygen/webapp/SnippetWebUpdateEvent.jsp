@@ -32,7 +32,7 @@
     {
       if(<%=((Field)entity.fields.elementAt(i)).fieldName%>String != null)
       {
-        <%=((Field)entity.fields.elementAt(i)).fieldName%> = new <%=((Field)entity.fields.elementAt(i)).javaType%>(<%=((Field)entity.fields.elementAt(i)).fieldName%>String);
+        <%=((Field)entity.fields.elementAt(i)).fieldName%> = <%=((Field)entity.fields.elementAt(i)).javaType%>.valueOf(<%=((Field)entity.fields.elementAt(i)).fieldName%>String);
       }
     }
     catch(Exception e)

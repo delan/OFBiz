@@ -3,7 +3,7 @@ package org.ofbiz.entitygen;
 import java.util.*;
 
 /**
- * <p><b>Title:</b> Entity Generator
+ * <p><b>Title:</b> Entity Generator - Finder model class
  * <p><b>Description:</b> None
  * <p>Copyright (c) 2001 The Open For Business Project - www.ofbiz.org
  *

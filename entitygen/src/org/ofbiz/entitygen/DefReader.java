@@ -19,7 +19,7 @@ import org.w3c.dom.Node;
 import org.w3c.dom.NodeList;
 
 /**
- * <p><b>Title:</b> Entity Generator - Entity class
+ * <p><b>Title:</b> Entity Generator - Entity Definition Reader
  * <p><b>Description:</b> Describes an Entity and acts as the base for all entity description data used in the code templates.
  * <p>Copyright (c) 2001 The Open For Business Project - www.ofbiz.org
  *

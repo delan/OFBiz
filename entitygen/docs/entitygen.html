@@ -103,11 +103,6 @@ interpreted by the JSP engine at generation time. So, the characters &quot;[ltp]
 everywhere there should be a &quot;&lt;%&quot; in the generated JSP. Simply do a
 search and replace on the generated JSP and change &quot;[ltp]&quot; to
 &quot;&lt;%&quot;.</p>
-<p>Everything should compile clean if the descriptor has correct Java types, et
-cetera in it. There are a couple of exceptions. The main one is the
-FindEntity.jsp output file. If there are multiple primary keys, more &quot;searchParamX&quot;
-parameters will have to be added. The same is true for finders with multiple
-fields.</p>
 <h3><a name="Modifying Generated Code">Modifying Generated Code</a></h3>
 
 <p>With any code generator the question always comes up about what to do when

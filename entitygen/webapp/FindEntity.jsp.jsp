@@ -93,12 +93,12 @@
 
     if(searchType.compareTo("all") == 0) <%=GenUtil.lowerFirstChar(entity.ejbName)%>Collection = <%=entity.ejbName%>Helper.findAll();
 <%for(i=0;i<entity.finders.size();i++){%><%Finder finderDesc = (Finder)entity.finders.elementAt(i);%>
-    else if(searchType.compareTo("<%=entity.classNameString(finderDesc.fields,"And","")%>") == 0) <%=GenUtil.lowerFirstChar(entity.ejbName)%>Collection = <%=entity.ejbName%>Helper.findBy<%=entity.classNameString(finderDesc.fields,"And","")%>(searchParam1);
+    else if(searchType.compareTo("<%=entity.classNameString(finderDesc.fields,"And","")%>") == 0) <%=GenUtil.lowerFirstChar(entity.ejbName)%>Collection = <%=entity.ejbName%>Helper.findBy<%=entity.classNameString(finderDesc.fields,"And","")%>(<%=entity.fieldsStringList(finderDesc.fields,"searchParam",", ",true)%>);
 <%}%>
     else if(searchType.compareTo("primaryKey") == 0)
     {
       <%=GenUtil.lowerFirstChar(entity.ejbName)%>Collection = new LinkedList();
-      <%=entity.ejbName%> <%=GenUtil.lowerFirstChar(entity.ejbName)%>Temp = <%=entity.ejbName%>Helper.findByPrimaryKey(searchParam1);
+      <%=entity.ejbName%> <%=GenUtil.lowerFirstChar(entity.ejbName)%>Temp = <%=entity.ejbName%>Helper.findByPrimaryKey(<%=entity.fieldsStringList(entity.pks,"searchParam",", ",true)%>);
       if(<%=GenUtil.lowerFirstChar(entity.ejbName)%>Temp != null) <%=GenUtil.lowerFirstChar(entity.ejbName)%>Collection.add(<%=GenUtil.lowerFirstChar(entity.ejbName)%>Temp);
     }
     if(<%=GenUtil.lowerFirstChar(entity.ejbName)%>Collection != null) <%=GenUtil.lowerFirstChar(entity.ejbName)%>Array = <%=GenUtil.lowerFirstChar(entity.ejbName)%>Collection.toArray();
@@ -121,7 +121,7 @@
 Note: you may use the '%' character as a wildcard, to replace any other letters.
 <table cellpadding="2" cellspacing="2" border="0">
   [ltp]rowColorTop=(rowColorTop==rowColorTop1?rowColorTop2:rowColorTop1);%><tr bgcolor="[ltp]=rowColorTop%>">
-    <form method="post" action="Find<%=entity.ejbName%>.jsp" style=margin:0;>
+    <form method="post" action="[ltp]=response.encodeURL("Find<%=entity.ejbName%>.jsp")%>" style=margin:0;>
       <td valign="top">Primary Key:</td>
       <td valign="top">
           <input type="hidden" name="SEARCH_TYPE" value="primaryKey">
@@ -138,7 +138,7 @@ Note: you may use the '%' character as a wildcard, to replace any other letters.
   <%Finder finderDesc = (Finder)entity.finders.elementAt(i);%>
   [ltp]rowColorTop=(rowColorTop==rowColorTop1?rowColorTop2:rowColorTop1);%><tr bgcolor="[ltp]=rowColorTop%>">
     <td valign="top"><%=entity.classNameString(finderDesc.fields," and ","")%>: </td>
-    <form method="post" action="Find<%=entity.ejbName%>.jsp" style=margin:0;>
+    <form method="post" action="[ltp]=response.encodeURL("Find<%=entity.ejbName%>.jsp")%>" style=margin:0;>
       <td valign="top">
         <input type="hidden" name="SEARCH_TYPE" value="<%=entity.classNameString(finderDesc.fields,"And","")%>">
 <%for(int j=0;j<finderDesc.fields.size();j++){%>
@@ -152,7 +152,7 @@ Note: you may use the '%' character as a wildcard, to replace any other letters.
 <%}%>
   [ltp]rowColorTop=(rowColorTop==rowColorTop1?rowColorTop2:rowColorTop1);%><tr bgcolor="[ltp]=rowColorTop%>">
     <td valign="top">Display All: </td>
-    <form method="post" action="Find<%=entity.ejbName%>.jsp" style=margin:0;>
+    <form method="post" action="[ltp]=response.encodeURL("Find<%=entity.ejbName%>.jsp")%>" style=margin:0;>
       <td valign="top">
         <input type="hidden" name="SEARCH_TYPE" value="all">
       </td>
@@ -165,7 +165,7 @@ Note: you may use the '%' character as a wildcard, to replace any other letters.
 <b><%=entity.ejbName%>s found by:&nbsp; [ltp]=searchType%> : [ltp]=UtilFormatOut.checkNull(searchParam1)%> : [ltp]=UtilFormatOut.checkNull(searchParam2)%> : [ltp]=UtilFormatOut.checkNull(searchParam3)%></b>
 <br>
 [ltp]if(hasCreatePermission){%>
-  <a href="Edit<%=entity.ejbName%>.jsp" class="buttontext">[Create <%=entity.ejbName%>]</a>
+  <a href="[ltp]=response.encodeURL("Edit<%=entity.ejbName%>.jsp")%>" class="buttontext">[Create <%=entity.ejbName%>]</a>
 [ltp]}%>
 <table border="0" width="100%" cellpadding="2">
 [ltp] if(arraySize > 0) { %>
@@ -173,13 +173,13 @@ Note: you may use the '%' character as a wildcard, to replace any other letters.
       <td align="left">
         <b>
         [ltp] if(viewIndex > 0) { %>
-          <a href="Find<%=entity.ejbName%>.jsp?[ltp]=curFindString%>&VIEW_SIZE=[ltp]=viewSize%>&VIEW_INDEX=[ltp]=viewIndex-1%>" class="buttontext">[Previous]</a> |
+          <a href="[ltp]=response.encodeURL("Find<%=entity.ejbName%>.jsp?" + curFindString + "&VIEW_SIZE=" + viewSize + "&VIEW_INDEX=" + (viewIndex-1))%>" class="buttontext">[Previous]</a> |
         [ltp] } %>
         [ltp] if(arraySize > 0) { %>
           [ltp]=lowIndex%> - [ltp]=highIndex%> of [ltp]=arraySize%>
         [ltp] } %>
         [ltp] if(arraySize>highIndex) { %>
-          | <a href="Find<%=entity.ejbName%>.jsp?[ltp]=curFindString%>&VIEW_SIZE=[ltp]=viewSize%>&VIEW_INDEX=[ltp]=viewIndex+1%>" class="buttontext">[Next]</a>
+          | <a href="[ltp]=response.encodeURL("Find<%=entity.ejbName%>.jsp?" + curFindString + "&VIEW_SIZE=" + viewSize + "&VIEW_INDEX=" + (viewIndex+1))%>" class="buttontext">[Next]</a>
         [ltp] } %>
         </b>
       </td>
@@ -239,16 +239,16 @@ Note: you may use the '%' character as a wildcard, to replace any other letters.
       </td>
   <%}%>
       <td>
-        <a href="View<%=entity.ejbName%>.jsp?<%=entity.httpArgListFromClass(entity.pks)%>" class="buttontext">[View]</a>
+        <a href="[ltp]=response.encodeURL("View<%=entity.ejbName%>.jsp?" + <%=entity.httpArgListFromClass(entity.pks)%>)%>" class="buttontext">[View]</a>
       </td>
       [ltp]if(hasUpdatePermission){%>
         <td>
-          <a href="Edit<%=entity.ejbName%>.jsp?<%=entity.httpArgListFromClass(entity.pks)%>" class="buttontext">[Edit]</a>
+          <a href="[ltp]=response.encodeURL("Edit<%=entity.ejbName%>.jsp?" + <%=entity.httpArgListFromClass(entity.pks)%>)%>" class="buttontext">[Edit]</a>
         </td>
       [ltp]}%>
       [ltp]if(hasDeletePermission){%>
         <td>
-          <a href="Find<%=entity.ejbName%>.jsp?WEBEVENT=UPDATE_<%=entity.tableName%>&UPDATE_MODE=DELETE&<%=entity.httpArgListFromClass(entity.pks)%>&[ltp]=curFindString%>" class="buttontext">[Delete]</a>
+          <a href="[ltp]=response.encodeURL("Find<%=entity.ejbName%>.jsp?WEBEVENT=UPDATE_<%=entity.tableName%>&UPDATE_MODE=DELETE&" + <%=entity.httpArgListFromClass(entity.pks)%> + "&" + curFindString)%>" class="buttontext">[Delete]</a>
         </td>
       [ltp]}%>
     </tr>
@@ -268,26 +268,26 @@ Note: you may use the '%' character as a wildcard, to replace any other letters.
 </table>
 
 <table border="0" width="100%" cellpadding="2">
-[ltp]if(arraySize > 0){%>
-  <tr bgcolor="[ltp]=rowColorResultIndex%>">
-    <td align="left">
-      <b>
-      [ltp] if(viewIndex > 0) { %>
-      <a href="Find<%=entity.ejbName%>.jsp?[ltp]=curFindString%>&VIEW_SIZE=[ltp]=viewSize%>&VIEW_INDEX=[ltp]=viewIndex-1%>" class="buttontext">[Previous]</a> |
-      [ltp] } %>
-      [ltp] if(arraySize > 0) { %>
-      [ltp]=lowIndex%> - [ltp]=highIndex%> of [ltp]=arraySize%>
-      [ltp] } %>
-      [ltp] if(arraySize>highIndex) { %>
-      | <a href="Find<%=entity.ejbName%>.jsp?[ltp]=curFindString%>&VIEW_SIZE=[ltp]=viewSize%>&VIEW_INDEX=[ltp]=viewIndex+1%>" class="buttontext">[Next]</a>
-      [ltp] } %>
-      </b>
-    </td>
-  </tr>
-[ltp]}%>
+[ltp] if(arraySize > 0) { %>
+    <tr bgcolor="[ltp]=rowColorResultIndex%>">
+      <td align="left">
+        <b>
+        [ltp] if(viewIndex > 0) { %>
+          <a href="[ltp]=response.encodeURL("Find<%=entity.ejbName%>.jsp?" + curFindString + "&VIEW_SIZE=" + viewSize + "&VIEW_INDEX=" + (viewIndex-1))%>" class="buttontext">[Previous]</a> |
+        [ltp] } %>
+        [ltp] if(arraySize > 0) { %>
+          [ltp]=lowIndex%> - [ltp]=highIndex%> of [ltp]=arraySize%>
+        [ltp] } %>
+        [ltp] if(arraySize>highIndex) { %>
+          | <a href="[ltp]=response.encodeURL("Find<%=entity.ejbName%>.jsp?" + curFindString + "&VIEW_SIZE=" + viewSize + "&VIEW_INDEX=" + (viewIndex+1))%>" class="buttontext">[Next]</a>
+        [ltp] } %>
+        </b>
+      </td>
+    </tr>
+[ltp] } %>
 </table>
 [ltp]if(hasCreatePermission){%>
-  <a href="Edit<%=entity.ejbName%>.jsp" class="buttontext">[Create <%=entity.ejbName%>]</a>
+  <a href="[ltp]=response.encodeURL("Edit<%=entity.ejbName%>.jsp")%>" class="buttontext">[Create <%=entity.ejbName%>]</a>
 [ltp]}%>
 [ltp]}else{%>
   <h3>You do not have permission to view this page (<%=entity.tableName%>_ADMIN, or <%=entity.tableName%>_VIEW needed).</h3>

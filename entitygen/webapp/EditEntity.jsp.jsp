@@ -72,21 +72,21 @@
   <%=entity.ejbName%> <%=GenUtil.lowerFirstChar(entity.ejbName)%> = <%=entity.ejbName%>Helper.findByPrimaryKey(<%=entity.pkNameString()%>);
 %>
 
-<a href="Find<%=entity.ejbName%>.jsp" class="buttontext">[Find <%=entity.ejbName%>]</a>
+<a href="[ltp]=response.encodeURL("Find<%=entity.ejbName%>.jsp")%>" class="buttontext">[Find <%=entity.ejbName%>]</a>
 [ltp]if(hasCreatePermission){%>
-  <a href="Edit<%=entity.ejbName%>.jsp" class="buttontext">[Create <%=entity.ejbName%>]</a>
+  <a href="[ltp]=response.encodeURL("Edit<%=entity.ejbName%>.jsp")%>" class="buttontext">[Create <%=entity.ejbName%>]</a>
 [ltp]}%>
 [ltp]if(<%=GenUtil.lowerFirstChar(entity.ejbName)%> != null){%>
   [ltp]if(hasDeletePermission){%>
-    <a href="Edit<%=entity.ejbName%>.jsp?WEBEVENT=UPDATE_<%=entity.tableName%>&UPDATE_MODE=DELETE&<%=entity.httpArgList(entity.pks)%>" class="buttontext">[Delete this <%=entity.ejbName%>]</a>
+    <a href="[ltp]=response.encodeURL("Edit<%=entity.ejbName%>.jsp?WEBEVENT=UPDATE_<%=entity.tableName%>&UPDATE_MODE=DELETE&" + <%=entity.httpArgList(entity.pks)%>)%>" class="buttontext">[Delete this <%=entity.ejbName%>]</a>
   [ltp]}%>
 [ltp]}%>
 [ltp]if(<%=entity.pkNameString(" != null && ", " != null")%>){%>
-  <a href="View<%=entity.ejbName%>.jsp?<%=entity.httpArgList(entity.pks)%>" class="buttontext">[View <%=entity.ejbName%> Details]</a>
+  <a href="[ltp]=response.encodeURL("View<%=entity.ejbName%>.jsp?" + <%=entity.httpArgList(entity.pks)%>)%>" class="buttontext">[View <%=entity.ejbName%> Details]</a>
 [ltp]}%>
 <br>
 
-<form action="Edit<%=entity.ejbName%>.jsp" method="POST" name="updateForm">
+<form action="[ltp]=response.encodeURL("Edit<%=entity.ejbName%>.jsp")%>" method="POST" name="updateForm">
 <table cellpadding="2" cellspacing="2" border="0">
 
 [ltp]if(<%=GenUtil.lowerFirstChar(entity.ejbName)%> == null){%>
@@ -214,17 +214,17 @@
 </table>
 </form>
 
-<a href="Find<%=entity.ejbName%>.jsp" class="buttontext">[Find <%=entity.ejbName%>]</a>
+<a href="[ltp]=response.encodeURL("Find<%=entity.ejbName%>.jsp")%>" class="buttontext">[Find <%=entity.ejbName%>]</a>
 [ltp]if(hasCreatePermission){%>
-  <a href="Edit<%=entity.ejbName%>.jsp" class="buttontext">[Create <%=entity.ejbName%>]</a>
+  <a href="[ltp]=response.encodeURL("Edit<%=entity.ejbName%>.jsp")%>" class="buttontext">[Create <%=entity.ejbName%>]</a>
 [ltp]}%>
 [ltp]if(<%=GenUtil.lowerFirstChar(entity.ejbName)%> != null){%>
   [ltp]if(hasDeletePermission){%>
-    <a href="Edit<%=entity.ejbName%>.jsp?WEBEVENT=UPDATE_<%=entity.tableName%>&UPDATE_MODE=DELETE&<%=entity.httpArgList(entity.pks)%>" class="buttontext">[Delete this <%=entity.ejbName%>]</a>
+    <a href="[ltp]=response.encodeURL("Edit<%=entity.ejbName%>.jsp?WEBEVENT=UPDATE_<%=entity.tableName%>&UPDATE_MODE=DELETE&" + <%=entity.httpArgList(entity.pks)%>)%>" class="buttontext">[Delete this <%=entity.ejbName%>]</a>
   [ltp]}%>
 [ltp]}%>
 [ltp]if(<%=entity.pkNameString(" != null && ", " != null")%>){%>
-  <a href="View<%=entity.ejbName%>.jsp?<%=entity.httpArgList(entity.pks)%>" class="buttontext">[View <%=entity.ejbName%> Details]</a>
+  <a href="[ltp]=response.encodeURL("View<%=entity.ejbName%>.jsp?" + <%=entity.httpArgList(entity.pks)%>)%>" class="buttontext">[View <%=entity.ejbName%> Details]</a>
 [ltp]}%>
 <br>
 [ltp]}else{%>
@@ -233,3 +233,4 @@
 
 [ltp]@ include file="/includes/onecolumnclose.jsp" %>
 [ltp]@ include file="/includes/footer.jsp" %>
+

@@ -1,7 +1,7 @@
 package org.ofbiz.entitygen;
 
 /**
- * <p><b>Title:</b> Entity Generator
+ * <p><b>Title:</b> Entity Generator - General Generator Utilities
  * <p><b>Description:</b> None
  * <p>Copyright (c) 2001 The Open For Business Project - www.ofbiz.org
  *

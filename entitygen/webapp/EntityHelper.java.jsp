@@ -40,9 +40,9 @@ public class <%=entity.ejbName%>Helper
 {
 <%if(entity.useCache){%>
   /**
-   *  A cache object, maxSize is 0 (can be any size), expireTime is 6000000 (6 million), or 6000 seconds which is 100 minutes
+   *  A cache object with named <%=entity.ejbName%>Cache, maxSize and expireTime can be set with this name in the conf/cache.properties file
    */
-  public static UtilCache valueCache = new UtilCache(0,6000000);
+  public static UtilCache valueCache = new UtilCache("<%=entity.ejbName%>Cache");
 <%}%>
   /**
    *  A static variable to cache the Home object for the <%=entity.ejbName%> EJB
@@ -165,10 +165,10 @@ public class <%=entity.ejbName%>Helper
       return null;
     }
 <%if(entity.useCache){%>
-    if(valueCache.containsKey(primaryKey))
+    <%=GenUtil.lowerFirstChar(entity.ejbName)%> = (<%=entity.ejbName%>)valueCache.get(primaryKey);
+    if(<%=GenUtil.lowerFirstChar(entity.ejbName)%> != null)
     {
-      if(!valueCache.hasExpired(primaryKey))
-        return (<%=entity.ejbName%>)valueCache.get(primaryKey);
+      return <%=GenUtil.lowerFirstChar(entity.ejbName)%>;
     }
 <%}%>
     init();

@@ -72,18 +72,18 @@
   <%=entity.ejbName%> <%=GenUtil.lowerFirstChar(entity.ejbName)%> = <%=entity.ejbName%>Helper.findByPrimaryKey(<%=entity.pkNameString()%>);
 %>
 
-<a href="Find<%=entity.ejbName%>.jsp" class="buttontext">[Find <%=entity.ejbName%>]</a>
+<a href="[ltp]=response.encodeURL("Find<%=entity.ejbName%>.jsp")%>" class="buttontext">[Find <%=entity.ejbName%>]</a>
 [ltp]if(hasCreatePermission){%>
-  <a href="Edit<%=entity.ejbName%>.jsp" class="buttontext">[Create <%=entity.ejbName%>]</a>
+  <a href="[ltp]=response.encodeURL("Edit<%=entity.ejbName%>.jsp")%>" class="buttontext">[Create <%=entity.ejbName%>]</a>
 [ltp]}%>
-[ltp]if(hasDeletePermission){%>
-  [ltp]if(<%=GenUtil.lowerFirstChar(entity.ejbName)%> != null){%>
-    <a href="Edit<%=entity.ejbName%>.jsp?WEBEVENT=UPDATE_<%=entity.tableName%>&UPDATE_MODE=DELETE&<%=entity.httpArgList(entity.pks)%>" class="buttontext">[Delete this <%=entity.ejbName%>]</a>
+[ltp]if(<%=GenUtil.lowerFirstChar(entity.ejbName)%> != null){%>
+  [ltp]if(hasDeletePermission){%>
+    <a href="[ltp]=response.encodeURL("Edit<%=entity.ejbName%>.jsp?WEBEVENT=UPDATE_<%=entity.tableName%>&UPDATE_MODE=DELETE&" + <%=entity.httpArgList(entity.pks)%>)%>" class="buttontext">[Delete this <%=entity.ejbName%>]</a>
   [ltp]}%>
 [ltp]}%>
 [ltp]if(hasUpdatePermission){%>
   [ltp]if(<%=entity.pkNameString(" != null && ", " != null")%>){%>
-    <a href="Edit<%=GenUtil.lowerFirstChar(entity.ejbName)%>.jsp?<%=entity.httpArgList(entity.pks)%>" class="buttontext">[Edit <%=entity.ejbName%>]</a>
+    <a href="[ltp]=response.encodeURL("Edit<%=entity.ejbName%>.jsp?" + <%=entity.httpArgList(entity.pks)%>)%>" class="buttontext">[Edit <%=entity.ejbName%>]</a>
   [ltp]}%>
 [ltp]}%>
 
@@ -126,18 +126,18 @@
 [ltp]} //end if <%=GenUtil.lowerFirstChar(entity.ejbName)%> == null %>
 </table>
 
-<a href="Find<%=entity.ejbName%>.jsp" class="buttontext">[Find <%=entity.ejbName%>]</a>
+<a href="[ltp]=response.encodeURL("Find<%=entity.ejbName%>.jsp")%>" class="buttontext">[Find <%=entity.ejbName%>]</a>
 [ltp]if(hasCreatePermission){%>
-  <a href="Edit<%=entity.ejbName%>.jsp" class="buttontext">[Create <%=entity.ejbName%>]</a>
+  <a href="[ltp]=response.encodeURL("Edit<%=entity.ejbName%>.jsp")%>" class="buttontext">[Create <%=entity.ejbName%>]</a>
 [ltp]}%>
-[ltp]if(hasDeletePermission){%>
-  [ltp]if(<%=GenUtil.lowerFirstChar(entity.ejbName)%> != null){%>
-    <a href="Edit<%=entity.ejbName%>.jsp?WEBEVENT=UPDATE_<%=entity.tableName%>&UPDATE_MODE=DELETE&<%=entity.httpArgList(entity.pks)%>" class="buttontext">[Delete this <%=entity.ejbName%>]</a>
+[ltp]if(<%=GenUtil.lowerFirstChar(entity.ejbName)%> != null){%>
+  [ltp]if(hasDeletePermission){%>
+    <a href="[ltp]=response.encodeURL("Edit<%=entity.ejbName%>.jsp?WEBEVENT=UPDATE_<%=entity.tableName%>&UPDATE_MODE=DELETE&" + <%=entity.httpArgList(entity.pks)%>)%>" class="buttontext">[Delete this <%=entity.ejbName%>]</a>
   [ltp]}%>
 [ltp]}%>
 [ltp]if(hasUpdatePermission){%>
   [ltp]if(<%=entity.pkNameString(" != null && ", " != null")%>){%>
-    <a href="Edit<%=GenUtil.lowerFirstChar(entity.ejbName)%>.jsp?<%=entity.httpArgList(entity.pks)%>" class="buttontext">[Edit <%=entity.ejbName%>]</a>
+    <a href="[ltp]=response.encodeURL("Edit<%=entity.ejbName%>.jsp?" + <%=entity.httpArgList(entity.pks)%>)%>" class="buttontext">[Edit <%=entity.ejbName%>]</a>
   [ltp]}%>
 [ltp]}%>
 <br>
