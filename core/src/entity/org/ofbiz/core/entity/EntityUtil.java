@@ -26,6 +26,7 @@ package org.ofbiz.core.entity;
 
 import java.util.*;
 import org.ofbiz.core.util.*;
+import org.ofbiz.core.entity.model.*;
 
 /**
  * Helper methods when dealing with Entities, especially ones that follow certain conventions
@@ -66,7 +67,18 @@ public class EntityUtil {
      *@return Collection of GenericValue's that are currently active
      */
     public static Collection filterByDate(Collection datedValues) {
-        return filterByDate(datedValues, UtilDateTime.nowDate());
+        return filterByDate(datedValues, UtilDateTime.nowTimestamp(), "fromDate", "thruDate", false);
+    }
+
+    /**
+     *returns the values that are currently active.
+     *
+     *@param datedValues GenericValue's that have "fromDate" and "thruDate" fields
+     *@param allAreSame Specifies whether all values in the collection are of the same entity; this can help speed things up a fair amount since we only have to see if the from and thru date fields are valid once
+     *@return Collection of GenericValue's that are currently active
+     */
+    public static Collection filterByDate(Collection datedValues, boolean allAreSame) {
+        return filterByDate(datedValues, UtilDateTime.nowTimestamp(), "fromDate", "thruDate", allAreSame);
     }
 
     /**
@@ -77,17 +89,73 @@ public class EntityUtil {
      *@return Collection of GenericValue's that are active at the moment
      */
     public static Collection filterByDate(Collection datedValues, java.util.Date moment) {
+        return filterByDate(datedValues, new java.sql.Timestamp(moment.getTime()), "fromDate", "thruDate", false);
+    }
+    
+    /**
+     *returns the values that are active at the moment.
+     *
+     *@param datedValues GenericValue's that have "fromDate" and "thruDate" fields
+     *@param moment the moment in question
+     *@return Collection of GenericValue's that are active at the moment
+     */
+    public static Collection filterByDate(Collection datedValues, java.sql.Timestamp moment) {
+        return filterByDate(datedValues, moment, "fromDate", "thruDate", false);
+    }
+    
+    /**
+     *returns the values that are active at the moment.
+     *
+     *@param datedValues GenericValue's that have "fromDate" and "thruDate" fields
+     *@param moment the moment in question
+     *@param allAreSame Specifies whether all values in the collection are of the same entity; this can help speed things up a fair amount since we only have to see if the from and thru date fields are valid once
+     *@return Collection of GenericValue's that are active at the moment
+     */
+    public static Collection filterByDate(Collection datedValues, java.sql.Timestamp moment, String fromDateName, String thruDateName, boolean allAreSame) {
         if (datedValues == null) return null;
+        if (moment == null) return datedValues;
+        if (fromDateName == null) throw new IllegalArgumentException("You must specify the name of the fromDate field to use this method");
+        if (thruDateName == null) throw new IllegalArgumentException("You must specify the name of the thruDate field to use this method");
 
-        Collection result = new ArrayList();
+        Collection result = new LinkedList();
         Iterator iter = datedValues.iterator();
-        while (iter.hasNext()) {
-            GenericValue datedValue = (GenericValue) iter.next();
-            if ((datedValue.get("thruDate") == null || datedValue.getTimestamp("thruDate").after(moment))
-                    && (datedValue.get("fromDate") == null || datedValue.getTimestamp("fromDate").before(moment))) {
-                result.add(datedValue);
-            }//else not active at moment
+        
+        if (allAreSame) {
+            ModelField fromDateField = null;
+            ModelField thruDateField = null;
+            if (iter.hasNext()) {
+                GenericValue datedValue = (GenericValue) iter.next();
+                fromDateField = datedValue.getModelEntity().getField(fromDateName);
+                if (fromDateField == null) throw new IllegalArgumentException("\"" + fromDateName + "\" is not a field of " + datedValue.getEntityName());
+                thruDateField = datedValue.getModelEntity().getField(thruDateName);
+                if (fromDateField == null) throw new IllegalArgumentException("\"" + thruDateName + "\" is not a field of " + datedValue.getEntityName());
+                
+                java.sql.Timestamp fromDate = (java.sql.Timestamp) datedValue.dangerousGetNoCheckButFast(fromDateField);
+                java.sql.Timestamp thruDate = (java.sql.Timestamp) datedValue.dangerousGetNoCheckButFast(thruDateField);
+                if ((thruDate == null || thruDate.after(moment)) && (fromDate == null || fromDate.before(moment))) {
+                    result.add(datedValue);
+                }//else not active at moment
+            }
+            while (iter.hasNext()) {
+                GenericValue datedValue = (GenericValue) iter.next();
+                java.sql.Timestamp fromDate = (java.sql.Timestamp) datedValue.dangerousGetNoCheckButFast(fromDateField);
+                java.sql.Timestamp thruDate = (java.sql.Timestamp) datedValue.dangerousGetNoCheckButFast(thruDateField);
+                if ((thruDate == null || thruDate.after(moment)) && (fromDate == null || fromDate.before(moment))) {
+                    result.add(datedValue);
+                }//else not active at moment
+            }
+        } else {
+            //if not all values are known to be of the same entity, must check each one...
+            while (iter.hasNext()) {
+                GenericValue datedValue = (GenericValue) iter.next();
+                java.sql.Timestamp fromDate = datedValue.getTimestamp(fromDateName);
+                java.sql.Timestamp thruDate = datedValue.getTimestamp(thruDateName);
+                if ((thruDate == null || thruDate.after(moment)) && (fromDate == null || fromDate.before(moment))) {
+                    result.add(datedValue);
+                }//else not active at moment
+            }
         }
+
         return result;
     }
 

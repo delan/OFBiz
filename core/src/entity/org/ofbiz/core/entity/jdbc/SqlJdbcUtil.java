@@ -302,21 +302,21 @@ public class SqlJdbcUtil {
             int typeValue = getType(fieldType);
             if (typeValue <= 4) {
                 switch (typeValue) {
-                    case 1: entity.dangerousSetNoCheckButFast(curField.getName(), rs.getString(ind)); break;
-                    case 2: entity.dangerousSetNoCheckButFast(curField.getName(), rs.getTimestamp(ind)); break;
-                    case 3: entity.dangerousSetNoCheckButFast(curField.getName(), rs.getTime(ind)); break;
-                    case 4: entity.dangerousSetNoCheckButFast(curField.getName(), rs.getDate(ind)); break;
+                    case 1: entity.dangerousSetNoCheckButFast(curField, rs.getString(ind)); break;
+                    case 2: entity.dangerousSetNoCheckButFast(curField, rs.getTimestamp(ind)); break;
+                    case 3: entity.dangerousSetNoCheckButFast(curField, rs.getTime(ind)); break;
+                    case 4: entity.dangerousSetNoCheckButFast(curField, rs.getDate(ind)); break;
                 }
             } else {
                 if (rs.getObject(ind) == null) {
-                    entity.dangerousSetNoCheckButFast(curField.getName(), null);
+                    entity.dangerousSetNoCheckButFast(curField, null);
                 } else {
                     switch (typeValue) {
-                        case 5: entity.dangerousSetNoCheckButFast(curField.getName(), new Integer(rs.getInt(ind))); break;
-                        case 6: entity.dangerousSetNoCheckButFast(curField.getName(), new Long(rs.getLong(ind))); break;
-                        case 7: entity.dangerousSetNoCheckButFast(curField.getName(), new Float(rs.getFloat(ind))); break;
-                        case 8: entity.dangerousSetNoCheckButFast(curField.getName(), new Double(rs.getDouble(ind))); break;
-                        case 9: entity.dangerousSetNoCheckButFast(curField.getName(), new Boolean(rs.getBoolean(ind))); break;
+                        case 5: entity.dangerousSetNoCheckButFast(curField, new Integer(rs.getInt(ind))); break;
+                        case 6: entity.dangerousSetNoCheckButFast(curField, new Long(rs.getLong(ind))); break;
+                        case 7: entity.dangerousSetNoCheckButFast(curField, new Float(rs.getFloat(ind))); break;
+                        case 8: entity.dangerousSetNoCheckButFast(curField, new Double(rs.getDouble(ind))); break;
+                        case 9: entity.dangerousSetNoCheckButFast(curField, new Boolean(rs.getBoolean(ind))); break;
                     }
                 }
             }
@@ -326,7 +326,7 @@ public class SqlJdbcUtil {
     }
     
     public static void setValue(SQLProcessor sqlP, ModelField modelField, GenericEntity entity, ModelFieldTypeReader modelFieldTypeReader) throws GenericEntityException {
-        Object fieldValue = entity.dangerousGetNoCheckButFast(modelField.getName());
+        Object fieldValue = entity.dangerousGetNoCheckButFast(modelField);
         setValue(sqlP, modelField, entity.getEntityName(), fieldValue, modelFieldTypeReader);
     }
     

@@ -222,11 +222,11 @@ public class GenericEntity extends Observable implements Map, Serializable, Comp
         }
     }
     
-    public void dangerousSetNoCheckButFast(String name, Object value) {
-        this.fields.put(name, value);
+    public void dangerousSetNoCheckButFast(ModelField modelField, Object value) {
+        this.fields.put(modelField.getName(), value);
     }
-    public Object dangerousGetNoCheckButFast(String name) {
-        return this.fields.get(name);
+    public Object dangerousGetNoCheckButFast(ModelField modelField) {
+        return this.fields.get(modelField.getName());
     }
 
     /** Sets the named field to the passed value, converting the value from a String to the corrent type using <code>Type.valueOf()</code>
