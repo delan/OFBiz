@@ -1,5 +1,5 @@
 /*
- * $Id: KeywordIndex.java,v 1.8 2004/01/22 13:16:47 jonesde Exp $
+ * $Id: KeywordIndex.java,v 1.9 2004/01/25 04:37:51 jonesde Exp $
  *
  * Copyright (c) 2001, 2002 The Open For Business Project - www.ofbiz.org
  *
@@ -50,7 +50,7 @@ import org.ofbiz.entity.util.EntityUtil;
  *  Does indexing in preparation for a keyword search.
  *
  * @author     <a href="mailto:jonesde@ofbiz.org">David E. Jones</a>
- * @version    $Revision: 1.8 $
+ * @version    $Revision: 1.9 $
  * @since      2.0
  */
 public class KeywordIndex {
@@ -103,7 +103,6 @@ public class KeywordIndex {
             !"0".equals(UtilProperties.getPropertyValue("prodsearch", "index.weight.ProductFeatureAndAppl.idCode", "1"))) {
             // get strings from attributes and features
             Iterator productFeatureAndAppls = UtilMisc.toIterator(delegator.findByAnd("ProductFeatureAndAppl", UtilMisc.toMap("productId", productId)));
-
             while (productFeatureAndAppls != null && productFeatureAndAppls.hasNext()) {
                 GenericValue productFeatureAndAppl = (GenericValue) productFeatureAndAppls.next();
                 addWeightedKeywordSourceString(productFeatureAndAppl, "description", strings);
@@ -112,23 +111,42 @@ public class KeywordIndex {
             }
         }
 
+        // ProductAttribute
         if (!"0".equals(UtilProperties.getPropertyValue("prodsearch", "index.weight.ProductAttribute.attrName", "1")) ||
                 !"0".equals(UtilProperties.getPropertyValue("prodsearch", "index.weight.ProductAttribute.attrValue", "1"))) {
             Iterator productAttributes = UtilMisc.toIterator(delegator.findByAnd("ProductAttribute", UtilMisc.toMap("productId", productId)));
-
             while (productAttributes != null && productAttributes.hasNext()) {
                 GenericValue productAttribute = (GenericValue) productAttributes.next();
                 addWeightedKeywordSourceString(productAttribute, "attrName", strings);
                 addWeightedKeywordSourceString(productAttribute, "attrValue", strings);
             }
         }
-        
+
+        // GoodIdentification
         if (!"0".equals(UtilProperties.getPropertyValue("prodsearch", "index.weight.GoodIdentification.idValue", "1"))) {
             Iterator goodIdentifications = UtilMisc.toIterator(delegator.findByAnd("GoodIdentification", UtilMisc.toMap("productId", productId)));
-
             while (goodIdentifications != null && goodIdentifications.hasNext()) {
                 GenericValue goodIdentification = (GenericValue) goodIdentifications.next();
                 addWeightedKeywordSourceString(goodIdentification, "idValue", strings);
+            }
+        }
+        
+        // Variant Product IDs
+        if ("Y".equals(product.getString("isVirtual"))) {
+            if (!"0".equals(UtilProperties.getPropertyValue("prodsearch", "index.weight.Variant.Product.productId", "1"))) {
+                Iterator variantProducts = UtilMisc.toIterator(delegator.findByAnd("ProductAssoc", UtilMisc.toMap("productId", productId, "productAssocTypeId", "PRODUCT_VARIANT")));
+                while (variantProducts != null && variantProducts.hasNext()) {
+                    GenericValue variantProduct = (GenericValue) variantProducts.next();
+                    int weight = 1;
+                    try {
+                        weight = Integer.parseInt(UtilProperties.getPropertyValue("prodsearch", "index.weight.Variant.Product.productId", "1"));
+                    } catch (Exception e) {
+                        Debug.logWarning("Could not parse weight number: " + e.toString(), module);
+                    }
+                    for (int i = 0; i < weight; i++) {
+                        strings.add(variantProduct.getString("productId"));
+                    }
+                }
             }
         }
         
