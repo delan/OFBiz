@@ -1,5 +1,5 @@
 /*
- * $Id: OrderServices.java,v 1.15 2003/10/04 21:49:16 ajzeneski Exp $
+ * $Id: OrderServices.java,v 1.16 2003/10/26 05:44:02 ajzeneski Exp $
  *
  *  Copyright (c) 2001, 2002 The Open For Business Project - www.ofbiz.org
  *
@@ -26,25 +26,9 @@ package org.ofbiz.order.order;
 import java.sql.Timestamp;
 import java.text.DecimalFormat;
 import java.text.ParseException;
-import java.util.ArrayList;
-import java.util.Calendar;
-import java.util.Collection;
-import java.util.Date;
-import java.util.HashMap;
-import java.util.Iterator;
-import java.util.LinkedList;
-import java.util.List;
-import java.util.Locale;
-import java.util.Map;
-import java.util.Set;
+import java.util.*;
 
-import org.ofbiz.base.util.Debug;
-import org.ofbiz.base.util.FlexibleStringExpander;
-import org.ofbiz.base.util.GeneralException;
-import org.ofbiz.base.util.UtilDateTime;
-import org.ofbiz.base.util.UtilMisc;
-import org.ofbiz.base.util.UtilProperties;
-import org.ofbiz.base.util.UtilValidate;
+import org.ofbiz.base.util.*;
 import org.ofbiz.common.DataModelConstants;
 import org.ofbiz.entity.GenericDelegator;
 import org.ofbiz.entity.GenericEntityException;
@@ -58,11 +42,7 @@ import org.ofbiz.order.shoppingcart.shipping.ShippingEvents;
 import org.ofbiz.party.contact.ContactHelper;
 import org.ofbiz.product.store.ProductStoreWorker;
 import org.ofbiz.security.Security;
-import org.ofbiz.service.DispatchContext;
-import org.ofbiz.service.GenericServiceException;
-import org.ofbiz.service.LocalDispatcher;
-import org.ofbiz.service.ModelService;
-import org.ofbiz.service.ServiceUtil;
+import org.ofbiz.service.*;
 import org.ofbiz.workflow.WfUtil;
 
 /**
@@ -71,7 +51,7 @@ import org.ofbiz.workflow.WfUtil;
  * @author     <a href="mailto:jaz@ofbiz.org">Andy Zeneski</a>
  * @author     <a href="mailto:cnelson@einnovation.com">Chris Nelson</a>
  * @author     <a href="mailto:jonesde@ofbiz.org">David E. Jones</a> 
- * @version    $Revision: 1.15 $
+ * @version    $Revision: 1.16 $
  * @since      2.0
  */
 
@@ -700,6 +680,7 @@ public class OrderServices {
         
         boolean allCanceled = true;
         boolean allComplete = true;
+        boolean allApproved = true;
         if (orderItems != null) {
             Iterator itemIter = orderItems.iterator();
             while (itemIter.hasNext()) {
@@ -712,7 +693,11 @@ public class OrderServices {
                     if (!"ITEM_COMPLETED".equals(statusId)) {
                         Debug.log("Not set to complete", module);
                         allComplete = false;
-                        break;                       
+                        if (!"ITEM_APPROVED".equals(statusId)) {
+                            Debug.log("Not set to approve", module);
+                            allApproved = false;
+                            break;
+                        }
                     }
                 }
             }
@@ -723,6 +708,8 @@ public class OrderServices {
                 newStatus = "ORDER_CANCELLED";
             } else if (allComplete) {                
                 newStatus = "ORDER_COMPLETED";                
+            } else if (allApproved) {
+                newStatus = "ORDER_APPROVED";
             }
             
             // now set the new order status
@@ -907,10 +894,14 @@ public class OrderServices {
             return result;
         }
         
-        // cancel any order processing if we are cancelled
-        if ("ORDER_CANCELLED".equals(statusId)) {
+        // release the inital hold if we are cancelled or approved
+        if ("ORDER_CANCELLED".equals(statusId) || "ORDER_APPROVED".equals(statusId)) {
             OrderChangeHelper.releaseInitialOrderHold(ctx.getDispatcher(), orderId);
-            OrderChangeHelper.abortOrderProcessing(ctx.getDispatcher(), orderId);
+
+            // cancel any order processing if we are cancelled
+            if ("ORDER_CANCELLED".equals(statusId)) {
+                OrderChangeHelper.abortOrderProcessing(ctx.getDispatcher(), orderId);
+            }
         }
         
         result.put(ModelService.RESPONSE_MESSAGE, ModelService.RESPOND_SUCCESS);
@@ -2439,6 +2430,119 @@ public class OrderServices {
             }               
         }        
         return ServiceUtil.returnSuccess();
-    } 
-    
+    }
+
+    public static Map checkDigitalItemFulfillment(DispatchContext dctx, Map context) {
+        GenericDelegator delegator = dctx.getDelegator();
+        LocalDispatcher dispatcher = dctx.getDispatcher();
+        GenericValue userLogin = (GenericValue) context.get("userLogin");
+        String orderId = (String) context.get("orderId");
+
+        // need the order header
+        GenericValue orderHeader = null;
+        try {
+            orderHeader = delegator.findByPrimaryKey("OrderHeader", UtilMisc.toMap("orderId", orderId));
+        } catch (GenericEntityException e) {
+            Debug.logError(e, "ERROR: Unable to get OrderHeader for orderId : " + orderId, module);
+            return ServiceUtil.returnError("ERROR: Unable to get OrderHeader for orderId : " + orderId);
+        }
+
+        // get all the items for the order
+        List orderItems = null;
+        if (orderHeader != null) {
+            try {
+                orderItems = orderHeader.getRelated("OrderItem");
+            } catch (GenericEntityException e) {
+                Debug.logError(e, "ERROR: Unable to get OrderItem list for orderId : " + orderId, module);
+                return ServiceUtil.returnError("ERROR: Unable to get OrderItem list for orderId : " + orderId);
+            }
+        }
+
+        // find any digital goods
+        Map digitalProducts = new HashMap();
+        List digitalItems = new ArrayList();
+        if (orderItems != null && orderItems.size() > 0) {
+            Iterator i = orderItems.iterator();
+            while (i.hasNext()) {
+                GenericValue item = (GenericValue) i.next();
+                GenericValue product = null;
+                try {
+                    product = item.getRelatedOne("Product");
+                } catch (GenericEntityException e) {
+                    Debug.logError(e, "ERROR: Unable to get Product from OrderItem", module);
+                }
+                if (product != null) {
+                    String productType = product.getString("productTypeId");
+                    // check for digital and finished/digital goods
+                    if ("DIGITAL_GOOD".equals(productType) || "FINDIG_GOOD".equals(productType)) {
+                        // we only invoice APPROVED items
+                        if ("ITEM_APPROVED".equals(item.getString("statusId"))) {
+                            digitalItems.add(item);
+                        }
+                        if ("DIGITAL_GOOD".equals(productType)) {
+                            // 100% digital goods need status change
+                            digitalProducts.put(item, product);
+                        }
+                    }
+                }
+            }
+        }
+
+        // now process the digital items
+        if (digitalItems.size() > 0) {
+            // invoice all APPROVED digital goods
+            Map invoiceContext = UtilMisc.toMap("orderId", orderId, "billItems", digitalItems, "userLogin", userLogin);
+            Map invoiceResult = null;
+            try {
+                invoiceResult = dispatcher.runSync("createInvoiceForOrder", invoiceContext);
+            } catch (GenericServiceException e) {
+                Debug.logError(e, "ERROR: Unable to invoice digital items", module);
+                return ServiceUtil.returnError("Problem with invoice creation; digital items not fulfilled.");
+            }
+            if (ModelService.RESPOND_ERROR.equals((String)invoiceResult.get(ModelService.RESPONSE_MESSAGE))) {
+                return ServiceUtil.returnError((String)invoiceResult.get(ModelService.ERROR_MESSAGE));
+            }
+
+            // update the status of DIGITAL_GOOD to COMPLETED; clean FINDIG as APPROVED for pick/ship
+            Iterator dii = digitalItems.iterator();
+            while (dii.hasNext()) {
+                GenericValue item = (GenericValue) dii.next();
+                GenericValue product = (GenericValue) digitalProducts.get(item);
+                if (product != null) {
+                    // we were set as a digital good; one more check and change status
+                    if ("DIGITAL_GOOD".equals(product.getString("productTypeId"))) {
+                        Map statusCtx = new HashMap();
+                        statusCtx.put("orderId", item.getString("orderId"));
+                        statusCtx.put("orderItemSeqId", item.getString("orderItemSeqId"));
+                        statusCtx.put("statusId", "ITEM_COMPLETED");
+                        statusCtx.put("userLogin", userLogin);
+                        try {
+                            Map svcResult = dispatcher.runSync("changeOrderItemStatus", statusCtx);
+                        } catch (GenericServiceException e) {
+                            Debug.logError(e, "ERROR: Problem setting the status to COMPLETED : " + item, module);
+                        }
+                    }
+                }
+            }
+
+            // fulfill the digital goods
+            // TODO: add the fulfillment service!
+            Map fulfillContext = UtilMisc.toMap("orderId", orderId, "orderItems", digitalItems);
+            Map fulfillResult = null;
+            /*
+            try {
+                fulfillResult = dispatcher.runSync("fulfillDigitalItems", fulfillContext);
+            } catch (GenericServiceException e) {
+                Debug.logError(e, "ERROR: Unable to fulfill digital items", module);
+                return ServiceUtil.returnError("Problem with fulfillment; digital items not fulfilled.");
+            }
+            if (ModelService.RESPOND_ERROR.equals((String)fulfillResult.get(ModelService.RESPONSE_MESSAGE))) {
+                return ServiceUtil.returnError((String)fulfillResult.get(ModelService.ERROR_MESSAGE));
+            }
+            */
+        }
+
+        return ServiceUtil.returnSuccess();
+    }
+
 }

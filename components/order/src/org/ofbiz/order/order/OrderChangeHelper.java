@@ -1,5 +1,5 @@
 /*
- * $Id: OrderChangeHelper.java,v 1.6 2003/10/25 00:47:44 ajzeneski Exp $
+ * $Id: OrderChangeHelper.java,v 1.7 2003/10/26 05:44:02 ajzeneski Exp $
  *
  * Copyright (c) 2001, 2002 The Open For Business Project - www.ofbiz.org
  *
@@ -45,7 +45,7 @@ import org.ofbiz.workflow.client.WorkflowClient;
  * Order Helper - Helper Methods For Non-Read Actions
  *
  * @author     <a href="mailto:jaz@ofbiz.org">Andy Zeneski</a>
- * @version    $Revision: 1.6 $
+ * @version    $Revision: 1.7 $
  * @since      2.0
  */
 public class OrderChangeHelper {
@@ -70,7 +70,9 @@ public class OrderChangeHelper {
         try {
             OrderChangeHelper.orderStatusChanges(dispatcher, userLogin, orderId, HEADER_STATUS, "ITEM_CREATED", ITEM_STATUS, DIGITAL_ITEM_STATUS);
             OrderChangeHelper.releaseInitialOrderHold(dispatcher, orderId);
-            // TODO: Call the service to check/run digial fulfillment
+
+            // call the service to check/run digial fulfillment
+            Map checkDigi = dispatcher.runSync("checkDigitalItemFulfillment", UtilMisc.toMap("orderId", orderId, "userLogin", userLogin));
         } catch (GenericServiceException e) {
             Debug.logError(e, "Service invocation error, status changes were not updated for order #" + orderId, module);
             return false;
@@ -170,7 +172,7 @@ public class OrderChangeHelper {
                         }
                         if (product != null) {
                             String productType = product.getString("productTypeId");
-                            if (productType.equals("DIGITAL_GOOD")) {                                                                                                
+                            if ("DIGITAL_GOOD".equals(productType) || "FINDIG_GOOD".equals(productType)) {
                                 // update the status
                                 Map digitalStatusFields = UtilMisc.toMap("orderId", orderId, "orderItemSeqId", orderItemSeqId, "statusId", digitalItemStatus, "userLogin", userLogin);
                                 Map digitalStatusChange = dispatcher.runSync("changeOrderItemStatus", digitalStatusFields);

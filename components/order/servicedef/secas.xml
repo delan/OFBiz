@@ -19,6 +19,10 @@
         <condition field-name="statusId" operator="equals" value="ITEM_COMPLETED"/>
         <action service="checkOrderItemStatus" mode="sync"/>
     </eca>
+    <eca service="changeOrderItemStatus" event="commit">
+        <condition field-name="statusId" operator="equals" value="ITEM_APPROVED"/>
+        <action service="checkOrderItemStatus" mode="sync"/>
+    </eca>
     <eca service="changeOrderStatus" event="commit" run-on-error="false">
         <condition field-name="statusId" operator="equals" value="ORDER_CANCELLED"/>                
         <action service="releaseOrderPayments" mode="sync"/>
