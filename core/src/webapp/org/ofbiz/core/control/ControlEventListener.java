@@ -56,7 +56,7 @@ public class ControlEventListener implements HttpSessionListener {
 
         countCreateSession();
 
-        Debug.logInfo("Creating session: " + event.getSession().toString(), module);
+        Debug.logInfo("Creating session: " + session.getId(), module);
     }
 
     public void sessionDestroyed(HttpSessionEvent event) {
@@ -71,29 +71,29 @@ public class ControlEventListener implements HttpSessionListener {
                 Debug.logError(e, "Could not update visit for session destuction: " + visit, module);
             }
         }
-        
+
         // store the UserLoginSession
         String userLoginSessionString = getUserLoginSession(session);
         GenericValue userLogin = (GenericValue) session.getAttribute("userLogin");
         if (userLogin != null && userLoginSessionString != null) {
-        	GenericValue userLoginSession = null;
+            GenericValue userLoginSession = null;
             try {
-                userLoginSession = userLogin.getRelatedOne("UserLoginSession");            
-            
-        		if (userLoginSession == null) {
-        			userLoginSession = userLogin.getDelegator().makeValue("UserLoginSession", 
-        					UtilMisc.toMap("userLoginId", userLogin.getString("userLoginId"))); 
-        			userLogin.getDelegator().create(userLoginSession);       		
-        		}
-        		userLoginSession.set("savedDate", UtilDateTime.nowTimestamp());
-        		userLoginSession.set("sessionData", userLoginSessionString);
-        		userLoginSession.store();
-        	} catch (GenericEntityException e) {}
+                userLoginSession = userLogin.getRelatedOne("UserLoginSession");
+
+                if (userLoginSession == null) {
+                    userLoginSession = userLogin.getDelegator().makeValue("UserLoginSession", 
+                            UtilMisc.toMap("userLoginId", userLogin.getString("userLoginId")));
+                    userLogin.getDelegator().create(userLoginSession);
+                }
+                userLoginSession.set("savedDate", UtilDateTime.nowTimestamp());
+                userLoginSession.set("sessionData", userLoginSessionString);
+                userLoginSession.store();
+            } catch (GenericEntityException e) {}
         }
 
         countDestroySession();
 
-        Debug.logInfo("Destroying session: " + event.getSession().toString(), module);
+        Debug.logInfo("Destroying session: " + session.getId(), module);
     }
 
     public static long getTotalActiveSessions() {
@@ -125,18 +125,18 @@ public class ControlEventListener implements HttpSessionListener {
         totalActiveSessions++;
         totalPassiveSessions--;
     }
-    
-    private String getUserLoginSession(HttpSession session) {    	
-    	Map userLoginSession = (Map) session.getAttribute("userLoginSession");
-    	
-    	String sessionData = null;
-    	if (userLoginSession != null && userLoginSession.size() > 0) {
-    		try {
-    			sessionData = XmlSerializer.serialize(userLoginSession);
-    		} catch (Exception e) {
-    			Debug.logWarning(e, "Problems serializing UserLoginSession", module);
-    		}
-    	}
-    	return sessionData;
+
+    private String getUserLoginSession(HttpSession session) {
+        Map userLoginSession = (Map) session.getAttribute("userLoginSession");
+
+        String sessionData = null;
+        if (userLoginSession != null && userLoginSession.size() > 0) {
+            try {
+                sessionData = XmlSerializer.serialize(userLoginSession);
+            } catch (Exception e) {
+                Debug.logWarning(e, "Problems serializing UserLoginSession", module);
+            }
+        }
+        return sessionData;
     }
 }
