@@ -1,5 +1,5 @@
 /*
- * $Id: ShoppingCartItem.java,v 1.1 2003/08/18 17:03:08 ajzeneski Exp $
+ * $Id: ShoppingCartItem.java,v 1.2 2003/08/25 20:16:33 ajzeneski Exp $
  *
  *  Copyright (c) 2001, 2002 The Open For Business Project - www.ofbiz.org
  *
@@ -42,6 +42,7 @@ import org.ofbiz.entity.util.EntityUtil;
 import org.ofbiz.order.order.OrderReadHelper;
 import org.ofbiz.product.catalog.CatalogWorker;
 import org.ofbiz.product.category.CategoryWorker;
+import org.ofbiz.product.product.ProductWorker;
 import org.ofbiz.service.GenericServiceException;
 import org.ofbiz.service.LocalDispatcher;
 import org.ofbiz.service.ModelService;
@@ -52,7 +53,7 @@ import org.ofbiz.service.ModelService;
  *
  * @author     <a href="mailto:jaz@ofbiz.org.com">Andy Zeneski</a>
  * @author     <a href="mailto:jonesde@ofbiz.org">David E. Jones</a>
- * @version    $Revision: 1.1 $
+ * @version    $Revision: 1.2 $
  * @since      2.0
  */
 public class ShoppingCartItem implements java.io.Serializable {
@@ -453,18 +454,7 @@ public class ShoppingCartItem implements java.io.Serializable {
     /** Returns true if shipping charges apply to this item. */
     public boolean shippingApplies() {
         if (_product != null) {
-            String productTypeId = getProduct().getString("productTypeId");
-            if ("SERVICE".equals(productTypeId) || "DIGITAL_GOOD".equals(productTypeId)) {
-                // don't charge shipping on services or digital goods
-                return false;
-            }       
-            Boolean chargeShipping = getProduct().getBoolean("chargeShipping");
-    
-            if (chargeShipping == null) {
-                return true;
-            } else {
-                return chargeShipping.booleanValue();
-            }
+            return ProductWorker.shippingApplies(getProduct());            
         } else {
             // we don't ship non-product items
             return false;
@@ -473,14 +463,8 @@ public class ShoppingCartItem implements java.io.Serializable {
 
     /** Returns true if tax charges apply to this item. */
     public boolean taxApplies() {
-        if (_product != null) {        
-            Boolean taxable = getProduct().getBoolean("taxable");
-    
-            if (taxable == null) {
-                return true;
-            } else {
-                return taxable.booleanValue();
-            }
+        if (_product != null) {
+            return ProductWorker.taxApplies(getProduct());            
         } else {
             // we do tax non-product items
             return true;
