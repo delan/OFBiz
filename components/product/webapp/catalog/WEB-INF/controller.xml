@@ -24,7 +24,7 @@
 <site-conf xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" 
         xsi:noNamespaceSchemaLocation="http://www.ofbiz.org/dtds/site-conf.xsd">
     <description>Catalog Module Site Configuration File</description>
-    <owner>The Open For Business Project (c) 2001 </owner>
+    <owner>The Open For Business Project (c) 2001-2004</owner>
     <errorpage>/error/error.jsp</errorpage>
 
     <handler name="java" type="request" class="org.ofbiz.content.webapp.event.JavaEventHandler"/>
@@ -32,19 +32,23 @@
     <handler name="service" type="request" class="org.ofbiz.content.webapp.event.ServiceEventHandler"/>
     <handler name="service-multi" type="request" class="org.ofbiz.content.webapp.event.ServiceMultiEventHandler"/>
     <handler name="simple" type="request" class="org.ofbiz.content.webapp.event.SimpleEventHandler"/>
+    <handler name="bsf" type="request" class="org.ofbiz.content.webapp.event.BsfEventHandler"/>
 
     <handler name="jpublish" type="view" class="org.ofbiz.content.webapp.view.JPublishViewHandler"/>
     <handler name="region" type="view" class="org.ofbiz.content.webapp.view.RegionViewHandler"/>    
+    <handler name="screen" type="view" class="org.ofbiz.content.webapp.view.ScreenWidgetViewHandler"/>
 
     <handler name="ftl" type="view" class="org.ofbiz.content.webapp.ftl.FreeMarkerViewHandler"/>    
     <handler name="jsp" type="view" class="org.ofbiz.content.webapp.view.JspViewHandler"/>
-    <handler name="screen" type="view" class="org.ofbiz.content.webapp.view.ScreenWidgetViewHandler"/>
+    <handler name="fop" type="view" class="org.ofbiz.content.webapp.view.FopPdfViewHandler"/>
+    <handler name="screenfop" type="view" class="org.ofbiz.content.webapp.view.ScreenFopPdfViewHandler"/>
 
     <handler name="http" type="view" class="org.ofbiz.content.webapp.view.HttpViewHandler"/>
     <handler name="datavision" type="view" class="org.ofbiz.content.webapp.view.DataVisionViewHandler"/>
     <handler name="jasperreportspdf" type="view" class="org.ofbiz.content.webapp.view.JasperReportsPdfViewHandler"/>
     <handler name="jasperreportsxml" type="view" class="org.ofbiz.content.webapp.view.JasperReportsXmlViewHandler"/>
 
+    <firstvisit></firstvisit>
     <preprocessor>
         <!-- Events to run on every request before security (chains exempt) -->
         <!-- <event type="java" path="org.ofbiz.content.webapp.event.TestEvent" invoke="test"/> -->
