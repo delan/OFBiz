@@ -8,32 +8,68 @@
 <jsp:useBean id="delegator" type="org.ofbiz.core.entity.GenericDelegator" scope="request" />
 
 <%if(security.hasEntityPermission("PARTYMGR", "_VIEW", session)) {%>
+  <%String searchString = "";%>
 
 <ofbiz:if name="first_name">
+  <%searchString = "first_name=" + request.getParameter("first_name") + "&last_name=" + request.getParameter("last_name");%>
   <ofbiz:service name="getPartyFromName">
     <ofbiz:param name="firstName" attribute="first_name"/>
     <ofbiz:param name="lastName" attribute="last_name"/>
   </ofbiz:service> 
 </ofbiz:if>
-
-<ofbiz:if name="last_name">
-  <ofbiz:service name="getPartyFromName">
-    <ofbiz:param name="firstName" attribute="first_name"/>
-    <ofbiz:param name="lastName" attribute="last_name"/>
-  </ofbiz:service>
-</ofbiz:if>
+<ofbiz:unless name="first_name">
+  <ofbiz:if name="last_name">
+    <%searchString = "first_name=" + request.getParameter("first_name") + "&last_name=" + request.getParameter("last_name");%>
+    <ofbiz:service name="getPartyFromName">
+      <ofbiz:param name="firstName" attribute="first_name"/>
+      <ofbiz:param name="lastName" attribute="last_name"/>
+    </ofbiz:service>
+  </ofbiz:if>
+</ofbiz:unless>
 
 <ofbiz:if name="email">
+  <%searchString = "email=" + request.getParameter("email");%>
   <ofbiz:service name="getPartyFromEmail">
     <ofbiz:param name="email" attribute="email"/>
   </ofbiz:service>
 </ofbiz:if>
 
 <ofbiz:if name="userlogin_id">
+  <%searchString = "userlogin_id=" + request.getParameter("userlogin_id");%>
   <ofbiz:service name="getPartyFromUserLogin">
     <ofbiz:param name="userLoginId" attribute="userlogin_id"/>
   </ofbiz:service>
 </ofbiz:if>
+
+<%
+    Collection parties = (Collection) pageContext.getAttribute("parties");
+
+    int viewIndex = 0;
+    int viewSize = 10;
+    int highIndex = 0;
+    int lowIndex = 0;
+    int listSize = 0;
+
+    try {
+        viewIndex = Integer.valueOf((String) pageContext.getRequest().getParameter("VIEW_INDEX")).intValue();
+    } catch (Exception e) {
+        viewIndex = 0;
+    }
+    try {
+        viewSize = Integer.valueOf((String) pageContext.getRequest().getParameter("VIEW_SIZE")).intValue();
+    } catch (Exception e) {
+        viewSize = 10;
+    }
+    if (parties != null) {
+        listSize = parties.size();
+    }
+    lowIndex = viewIndex * viewSize;
+    highIndex = (viewIndex + 1) * viewSize;
+    if (listSize < highIndex) {
+        highIndex = listSize;
+    }
+%>
+
 <br>
 <TABLE border=0 width='100%' cellspacing='0' cellpadding='0' class='boxoutside'>
   <TR>
@@ -100,7 +136,23 @@
     <TD width='100%'>
       <table width='100%' border='0' cellspacing='0' cellpadding='0' class='boxtop'>
         <tr>
-          <td width="100%"><div class="boxhead">Parties Found</div></td>
+          <td width="50%"><div class="boxhead">Parties Found</div></td>
+          <td width="50%">
+            <div class="boxhead" align=right>
+              <ofbiz:if name="parties" size="0">
+                <%if (viewIndex > 0) {%>
+                  <a href="<ofbiz:url><%="/findparty?" + searchString + "&VIEW_SIZE=" + viewSize + "&VIEW_INDEX=" + (viewIndex-1)%></ofbiz:url>" class="lightbuttontext">[Previous]</a> |
+                <%}%>
+                <%if (listSize > 0) {%>
+                  <%=lowIndex+1%> - <%=highIndex%> of <%=listSize%>
+                <%}%>
+                <%if (listSize > highIndex) {%>
+                  | <a href="<ofbiz:url><%="/findparty?" + searchString + "&VIEW_SIZE=" + viewSize + "&VIEW_INDEX=" + (viewIndex+1)%></ofbiz:url>" class="lightbuttontext">[Next]</a>
+                <%}%>
+              </ofbiz:if>
+              &nbsp;
+            </div>
+          </td>
         </tr>
       </table>
       <table width='100%' border='0' cellspacing='0' cellpadding='0' class='boxbottom'>
@@ -116,9 +168,9 @@
           <td colspan='6'><hr class='sepbar'></td>
         </tr>
         <ofbiz:if name="parties">
-            <ofbiz:iterator name="party" property="parties">
+            <ofbiz:iterator name="party" property="parties" offset="<%=lowIndex%>" limit="<%=viewSize%>">
               <tr>
-                <td><a href="<ofbiz:url>/viewprofile?party_id=<ofbiz:entityfield attribute="party" field="partyId"/></ofbiz:url>" class="buttontext"><ofbiz:entityfield attribute="party" field="partyId"/></a></td>
+                <td><a href='<ofbiz:url>/viewprofile?party_id=<ofbiz:entityfield attribute="party" field="partyId"/></ofbiz:url>' class="buttontext"><ofbiz:entityfield attribute="party" field="partyId"/></a></td>
                 <ofbiz:service name="getPerson">
                   <ofbiz:param name="partyId" map="party" attribute="partyId"/>
                 </ofbiz:service>
@@ -145,8 +197,8 @@
                 <td><div class="tabletext"><%=userLoginString%></div></td>
                 <td><div class="tabletext"><ofbiz:entityfield attribute="party" field="partyTypeId"/></div></td>
                 <td align="right">
-                  <a href="<ofbiz:url>/viewprofile?party_id=<ofbiz:entityfield attribute="party" field="partyId"/></ofbiz:url>" class="buttontext">[View Profile]</a>&nbsp;&nbsp;
-                  <a href="/ordermgr/control/orderlist?partyId=<ofbiz:entityfield attribute="party" field="partyId"/>" class="buttontext">[Orders]</a>&nbsp;&nbsp;
+                  <a href='<ofbiz:url>/viewprofile?party_id=<ofbiz:entityfield attribute="party" field="partyId"/></ofbiz:url>' class="buttontext">[View Profile]</a>&nbsp;&nbsp;
+                  <a href='/ordermgr/control/orderlist?partyId=<ofbiz:entityfield attribute="party" field="partyId"/>' class="buttontext">[Orders]</a>&nbsp;&nbsp;
                 </td>
               </tr>
             </ofbiz:iterator>
