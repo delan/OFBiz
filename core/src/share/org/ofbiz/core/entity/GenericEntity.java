@@ -337,8 +337,18 @@ public class GenericEntity extends Observable implements Serializable, Comparabl
    *@return org.w3c.dom.Element object representing this generic entity
    */
   public Element makeXmlElement(Document document) {
+    return makeXmlElement(document, null);
+  }
+  
+  /** Makes an XML Element object with an attribute for each field of the entity
+   *@param document The XML Document that the new Element will be part of
+   *@param prefix A prefix to put in front of the entity name in the tag name
+   *@return org.w3c.dom.Element object representing this generic entity
+   */
+  public Element makeXmlElement(Document document, String prefix) {
     Element element = null;
-    if(document != null) element = document.createElement(this.getEntityName());
+    if(prefix == null) prefix = "";
+    if(document != null) element = document.createElement(prefix + this.getEntityName());
     //else element = new ElementImpl(null, this.getEntityName());
     if(element == null) return null;
     

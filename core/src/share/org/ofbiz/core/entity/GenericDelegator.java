@@ -936,9 +936,17 @@ public class GenericDelegator {
     return values;
   }
 
+  public GenericPK makePK(Element element) {
+    GenericValue value = makeValue(element);
+    return value.getPrimaryKey();
+  }
+  
   public GenericValue makeValue(Element element) {
     if(element == null) return null;
     String entityName = element.getTagName();
+    //if a dash or colon is in the tag name, grab what is after it
+    if(entityName.indexOf('-') > 0) entityName = entityName.substring(entityName.indexOf('-')+1);
+    if(entityName.indexOf(':') > 0) entityName = entityName.substring(entityName.indexOf(':')+1);
     GenericValue value = this.makeValue(entityName, null);
 
     ModelEntity modelEntity = value.getModelEntity();
