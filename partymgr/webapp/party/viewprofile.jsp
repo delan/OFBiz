@@ -110,7 +110,9 @@
       <ofbiz:unless name="showOld">
         <a href="<ofbiz:url>/viewprofile?SHOW_OLD=true</ofbiz:url>" class="buttontext">[Show Old]</a>&nbsp;&nbsp;
       </ofbiz:unless>
-      <a href="/ordermgr/control/orderlist?partyId=<%=partyId%>" class="buttontext">[Orders]</a>&nbsp;&nbsp;
+      <% if(security.hasRolePermission("ORDERMGR", "_VIEW", "", "", session)) { %>
+        <a href="/ordermgr/control/orderlist?partyId=<%=partyId%>" class="buttontext">[Orders]</a>&nbsp;&nbsp;
+      <%}%>
     </td>
   </tr>
 </table>
@@ -125,19 +127,23 @@
             <td valign="middle" align="left">
               <div class="boxhead">&nbsp;Personal Information</div>
             </td>
+            <%if(security.hasEntityPermission("PARTYMGR", "_UPDATE", session)) {%>
             <td valign="middle" align="right">
               <a href="<ofbiz:url>/editperson</ofbiz:url>" class="lightbuttontext">
               [<ofbiz:if name="lookupPerson">Update</ofbiz:if>]</a>&nbsp;&nbsp;
             </td>
+            <%}%>
           </ofbiz:if>
           <ofbiz:if name="lookupGroup">
             <td valign="middle" align="left">
               <div class="boxhead">&nbsp;Party Group Information</div>
             </td>
+            <%if(security.hasEntityPermission("PARTYMGR", "_UPDATE", session)) {%>
             <td valign="middle" align="right">
               <a href="<ofbiz:url>/editpartygroup</ofbiz:url>" class="lightbuttontext">
               [<ofbiz:if name="lookupGroup">Update</ofbiz:if>]</a>&nbsp;&nbsp;
             </td>
+            <%}%>
           </ofbiz:if>
         </tr>
       </table>
@@ -201,10 +207,12 @@
           <td valign="middle" align="left">
             <div class="boxhead">&nbsp;Contact Information</div>
           </td>
+          <%if(security.hasEntityPermission("PARTYMGR", "_CREATE", session)) {%>
           <td valign="middle" align="right">
               <a href="<ofbiz:url>/editcontactmech</ofbiz:url>" class="lightbuttontext">
               [Create New]</a>&nbsp;&nbsp;
           </td>
+          <%}%>
         </tr>
       </table>
     </TD>
@@ -296,14 +304,18 @@
             </td>
             <td align="center" valign="top" nowrap width="1%"><div class="tabletext"><b>(<%entityField.run("partyContactMech", "allowSolicitation");%>)</b></div></td>
             <td width="5">&nbsp;</td>
+            <%if(security.hasEntityPermission("PARTYMGR", "_UPDATE", session)) {%>
             <td align="right" valign="top" nowrap width="1%">
               <div><a href='<ofbiz:url>/editcontactmech?contactMechId=<%entityField.run("contactMech", "contactMechId");%></ofbiz:url>' class="buttontext">
               [Update]</a>&nbsp;</div>
             </td>
+            <%}%>
+            <%if(security.hasEntityPermission("PARTYMGR", "_DELETE", session)) {%>
             <td align="right" valign="top" width="1%">
               <div><a href='<ofbiz:url>/deleteContactMech/viewprofile?contactMechId=<%entityField.run("contactMech", "contactMechId");%>&partyId=<%=partyId%></ofbiz:url>' class="buttontext">
               [Expire]</a>&nbsp;&nbsp;</div>
             </td>
+            <%}%>
           </tr>
       </ofbiz:iterator>
     </table>
@@ -443,14 +455,16 @@
                 <div class="tabletext"><b>AVS String:</b>&nbsp;Global</div>
               </ofbiz:unless>
           </td>
+          <%if(security.hasEntityPermission("PARTYMGR", "_UPDATE", session)) {%>
           <td align="right" valign="top" width="1%">
             <a href="<ofbiz:url>/editAvsOverride</ofbiz:url>" class="buttontext">[Edit]</a>
-          </td>
+          </td>          
           <ofbiz:if name="avsOverride">
             <td align="right" valign="top" width="1%">
               <a href="<ofbiz:url>/resetAvsOverride?partyId=<%=avsOverride.getString("partyId")%></ofbiz:url>" class="buttontext">[Reset]</a>
             </td>
           </ofbiz:if>
+          <%}%>
         </tr>
       </table>
     </TD>
@@ -466,9 +480,11 @@
           <td valign="middle" align="left">
             <div class="boxhead">&nbsp;User Name(s)</div>
           </td>
+          <%if(security.hasEntityPermission("PARTYMGR", "_CREATE", session)) {%>
           <td valign="middle" align="right">&nbsp;
             <a href="<ofbiz:url>/createnewlogin</ofbiz:url>" class="lightbuttontext">[Create New]</a>&nbsp;&nbsp;
           </td>
+          <%}%>
         </tr>
       </table>
     </TD>
@@ -501,7 +517,9 @@
                   </div>
                 </td>
                 <td align="right" valign="top" width="20%">
-                  <a href="<ofbiz:url>/editlogin?userlogin_id=<%entityField.run("userUserLogin", "userLoginId");%></ofbiz:url>" class="buttontext">[Edit]</a>&nbsp;
+                  <%if(security.hasEntityPermission("PARTYMGR", "_CREATE", session)) {%>
+                      <a href="<ofbiz:url>/editlogin?userlogin_id=<%entityField.run("userUserLogin", "userLoginId");%></ofbiz:url>" class="buttontext">[Edit]</a>&nbsp;
+                  <%}%>
                   <%if (security.hasEntityPermission("SECURITY", "_VIEW", session)) {%>
                       <a href="<ofbiz:url>/EditUserLoginSecurityGroups?userLoginId=<%entityField.run("userUserLogin", "userLoginId");%></ofbiz:url>" class="buttontext">[SecurityGroups]</a>&nbsp;
                   <%}%>
@@ -530,9 +548,11 @@
           <td valign="middle" align="left">
             <div class="boxhead">&nbsp;Notes</div>
           </td>
+          <%if(security.hasEntityPermission("PARTYMGR", "_NOTE", session)) {%>
           <td valign="middle" align="right">&nbsp;
             <a href="<ofbiz:url>/createnewnote</ofbiz:url>" class="lightbuttontext">[Create New]</a>&nbsp;&nbsp;
           </td>
+          <%}%>
         </tr>
       </table>
     </TD>

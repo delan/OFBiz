@@ -285,8 +285,12 @@
                   <!-- this is all on one line so that no break will be inserted -->
                   <div class="tabletext"><nobr>
                     <a href='<ofbiz:url>/viewprofile?party_id=<ofbiz:entityfield attribute="party" field="partyId"/></ofbiz:url>' class="buttontext">[View&nbsp;Profile]</a>&nbsp;
-                    <a href='/ordermgr/control/orderlist?partyId=<ofbiz:entityfield attribute="party" field="partyId"/>' class="buttontext">[Orders]</a>&nbsp;
-                    <a href='/ordermgr/control/salesentry?partyId=<ofbiz:entityfield attribute="party" field="partyId"/>' class="buttontext">[New Order]</a>&nbsp;
+                    <% if(security.hasRolePermission("ORDERMGR", "_VIEW", "", "", session)) { %>
+                      <a href='/ordermgr/control/orderlist?partyId=<ofbiz:entityfield attribute="party" field="partyId"/>' class="buttontext">[Orders]</a>&nbsp;
+                    <%}%>
+                    <%if(security.hasEntityPermission("ORDERMGR", "_CREATE", session)) {%>
+                      <a href='/ordermgr/control/salesentry?partyId=<ofbiz:entityfield attribute="party" field="partyId"/>' class="buttontext">[New Order]</a>&nbsp;
+                    <%}%>
                   </nobr></div>
                 </td>
               </tr>

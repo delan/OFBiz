@@ -117,7 +117,9 @@
               <tr>
                 <td><div class="tabletext"><b>&nbsp;Description</b></div></td>
                 <td><div class="tabletext"><b>&nbsp;From Date</b></div></td>
+                <%if(security.hasEntityPermission("PARTYMGR", "_DELETE", session)) {%>
                 <td>&nbsp;</td>
+                <%}%>
               </tr>
               <ofbiz:iterator name="partyRelationship" property="partyRelationships">
               	  <%GenericValue partyRelationshipType = partyRelationship.getRelatedOneCache("PartyRelationshipType");%>
@@ -139,10 +141,13 @@
 		                <%}%>
 	                </div></td>
 	                <td><div class="tabletext">&nbsp;<%inputValue.run("fromDate", "partyRelationship");%></div></td>
-	                <td align="right">
-	                  <a href='<ofbiz:url>/deletePartyRelationship?partyIdTo=<%inputValue.run("partyIdTo", "partyRelationship");%>&roleTypeIdTo=<%inputValue.run("roleTypeIdTo", "partyRelationship");%>&roleTypeIdFrom=<%inputValue.run("roleTypeIdFrom", "partyRelationship");%>&partyIdFrom=<%inputValue.run("partyIdFrom", "partyRelationship");%>&fromDate=<%=UtilFormatOut.encodeQueryValue(partyRelationship.getTimestamp("fromDate").toString())%></ofbiz:url>' class="buttontext">[Remove]</a>&nbsp
+	                <%if(security.hasEntityPermission("PARTYMGR", "_DELETE", session)) {%>
+	                <td align="right">	                 
+  	                  <a href='<ofbiz:url>/deletePartyRelationship?partyIdTo=<%inputValue.run("partyIdTo", "partyRelationship");%>&roleTypeIdTo=<%inputValue.run("roleTypeIdTo", "partyRelationship");%>&roleTypeIdFrom=<%inputValue.run("roleTypeIdFrom", "partyRelationship");%>&partyIdFrom=<%inputValue.run("partyIdFrom", "partyRelationship");%>&fromDate=<%=UtilFormatOut.encodeQueryValue(partyRelationship.getTimestamp("fromDate").toString())%></ofbiz:url>' class="buttontext">[Remove]</a>&nbsp;
 	                </td>
+	                <%}%>
 	              </tr>
+	              <%if(security.hasEntityPermission("PARTYMGR", "_UPDATE", session)) {%>
 	              <tr>
 	                <td colspan='3' align='right'>
 				        <form method="post" action="<ofbiz:url>/updatePartyRelationship</ofbiz:url>">
@@ -158,6 +163,7 @@
 	                	</form>
 	                </td>
 	              </tr>
+	              <%}%>
               </ofbiz:iterator>
             </table>
             </ofbiz:if>
@@ -169,6 +175,7 @@
       </table>
     </TD>
   </TR>
+  <%if(security.hasEntityPermission("PARTYMGR", "_UPDATE", session)) {%>
   <TR>
     <TD width="100%"><hr class="sepbar"></TD>
   </TR>
@@ -258,9 +265,11 @@
       </table>
     </TD>
   </TR>
+  <%}%>
 </TABLE>
 
 <%-- Add relationship type --%>
+<%if(security.hasEntityPermission("PARTYMGR", "_CREATE", session)) {%>
 <br>
 <TABLE border=0 width='100%' cellspacing='0' cellpadding='0' class='boxoutside'>
   <TR>
@@ -345,6 +354,7 @@
     </TD>
   </TR>
 </TABLE>
+<%}%>
 
 <%}else{%>
   <h3>You do not have permission to view this page. ("PARTYMGR_VIEW" or "PARTYMGR_ADMIN" needed)</h3>

@@ -110,9 +110,11 @@
                 <td align="right" valign="top" width="10%" nowrap><div class="tabletext"><b>Role</b></div></td>
                 <td width="5">&nbsp;</td>
                 <td align="left" valign="top" width="70%"><div class="tabletext"><ofbiz:entityfield attribute="userRole" field="description"/> [<ofbiz:entityfield attribute="userRole" field="roleTypeId"/>]</div></td>
+                <%if(security.hasEntityPermission("PARTYMGR", "_DELETE", session)) {%>
                 <td align="right" valign="top" width="20%">
                   <a href='<ofbiz:url>/deleterole?partyId=<%=partyId%>&roleTypeId=<ofbiz:entityfield attribute="userRole" field="roleTypeId"/></ofbiz:url>' class="buttontext">[Remove]</a>&nbsp;
                 </td>
+                <%}%>
               </tr>
               </ofbiz:iterator>
             </table>
@@ -125,6 +127,7 @@
       </table>
     </TD>
   </TR>
+  <%if(security.hasEntityPermission("PARTYMGR", "_UPDATE", session)) {%>
   <TR>
     <TD width="100%"><hr class="sepbar"></TD>
   </TR>
@@ -150,9 +153,11 @@
       </table>
     </TD>
   </TR>
+  <%}%>
 </TABLE>
 
 <%-- Add role type --%>
+<%if(security.hasEntityPermission("PARTYMGR", "_CREATE", session)) {%>
 <br>
 <TABLE border=0 width='100%' cellspacing='0' cellpadding='0' class='boxoutside'>
   <TR>
@@ -188,6 +193,7 @@
     </TD>
   </TR>
 </TABLE>
+<%}%>
 
 <%}else{%>
   <h3>You do not have permission to view this page. ("PARTYMGR_VIEW" or "PARTYMGR_ADMIN" needed)</h3>
