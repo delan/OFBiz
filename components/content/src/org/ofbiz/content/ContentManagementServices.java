@@ -719,7 +719,7 @@ Debug.logInfo("updateSiteRoles, serviceContext(2):" + serviceContext, module);
         Map result = new HashMap();
         GenericDelegator delegator = dctx.getDelegator();
         LocalDispatcher dispatcher = dctx.getDispatcher();
-        String contentId = (String)context.get("caContentIdTo");
+        String contentId = (String)context.get("contentId");
         GenericValue userLogin = (GenericValue)context.get("userLogin");
         String userLoginId = userLogin.getString("userLoginId");
         int seqNum = 9999;
@@ -730,33 +730,34 @@ Debug.logInfo("updateSiteRoles, serviceContext(2):" + serviceContext, module);
                 return ServiceUtil.returnError("content was null");
             }
             String dataResourceId = content.getString("dataResourceId");
-            String dataTemplateTypeId = content.getString("dataTemplateTypeId");
-            content.set("dataTemplateTypeId", "NONE");
             content.set("dataResourceId", null);
-            content.set("lastModifedDate", UtilDateTime.nowTimestamp());
-            content.set("lastModifedByUserLogin", userLoginId);
+            content.set("lastModifiedDate", UtilDateTime.nowTimestamp());
+            content.set("lastModifiedByUserLogin", userLoginId);
             content.store();
             
             if (UtilValidate.isNotEmpty(dataResourceId)) {
-            // add previous DataResource as part of new subcontent
-            GenericValue contentClone = (GenericValue)content.clone();
-            contentClone.set("dataTemplateTypeId", dataTemplateTypeId);
-            contentClone.set("dataResourceId", dataResourceId);
-            content.set("lastModifedDate", UtilDateTime.nowTimestamp());
-            content.set("lastModifedByUserLogin", userLoginId);
-            content.set("createdDate", UtilDateTime.nowTimestamp());
-            content.set("createdByUserLogin", userLoginId);
-            
-            contentClone.set("contentId", null);
-            Map serviceIn = new HashMap();
-            serviceIn.putAll(contentClone);
-            serviceIn.put("caContentIdTo", contentId);
-            serviceIn.put("caContentAssocTypeId", "SUB_CONTENT");
-            try {
-                result = dispatcher.runSync("persistContentAndAssoc", serviceIn);
-            } catch(ServiceAuthException e) {
-                return ServiceUtil.returnError(e.getMessage());             
-            }
+            	// add previous DataResource as part of new subcontent
+            	GenericValue contentClone = (GenericValue)content.clone();
+            	contentClone.set("dataResourceId", dataResourceId);
+            	content.set("lastModifiedDate", UtilDateTime.nowTimestamp());
+            	content.set("lastModifiedByUserLogin", userLoginId);
+            	content.set("createdDate", UtilDateTime.nowTimestamp());
+            	content.set("createdByUserLogin", userLoginId);
+	            
+            	contentClone.set("contentId", null);
+            	Map serviceIn = new HashMap();
+            	serviceIn.putAll(contentClone);
+            	serviceIn.put("userLogin", userLogin);
+            	serviceIn.put("caContentIdTo", contentId);
+            	serviceIn.put("caContentAssocTypeId", "SUB_CONTENT");
+            	try {
+                	result = dispatcher.runSync("persistContentAndAssoc", serviceIn);
+            	} catch(ServiceAuthException e) {
+                	return ServiceUtil.returnError(e.getMessage());             
+            	}
+            	
+            	List typeList = UtilMisc.toList("SUB_CONTENT");
+            	int leafCount = ContentManagementWorker.updateStatsTopDown(delegator, contentId, typeList);
             }
             
         } catch(GenericEntityException e) {
@@ -786,6 +787,7 @@ Debug.logInfo("updateSiteRoles, serviceContext(2):" + serviceContext, module);
         return result;
     }
     
+/*
     public static Map updateLeafChange(DispatchContext dctx, Map context) throws GenericServiceException{
 
         Map result = new HashMap();
@@ -801,7 +803,7 @@ Debug.logInfo("updateSiteRoles, serviceContext(2):" + serviceContext, module);
                 throw new RuntimeException("No entity found for id=" + contentId);
             
             String thisContentId = thisContent.getString("contentId");
-            Integer leafCount = (Integer)thisContent.get("nodeLeafCount");
+            Long leafCount = (Long)thisContent.get("nodeLeafCount");
             int subLeafCount = (leafCount == null) ? 1 : leafCount.intValue();
             String mode = (String)context.get("mode");
             if (mode != null && mode.equalsIgnoreCase("remove")) {
@@ -846,6 +848,104 @@ Debug.logInfo("updateSiteRoles, serviceContext(2):" + serviceContext, module);
             return ServiceUtil.returnError(e.getMessage());             
         }
         return result;
+    }
+    */
+    
+    /**
+     * This service changes the contentTypeId of the current content and its children depending on the pageMode.
+     * if pageMode == "outline" then if the contentTypeId of children is not "OUTLINE_NODE" or "PAGE_NODE" 
+     * (it could be DOCUMENT or SUBPAGE_NODE) then it will get changed to PAGE_NODE.`
+     * if pageMode == "page" then if the contentTypeId of children is not "PAGE_NODE" or "SUBPAGE_NODE" 
+     * (it could be DOCUMENT or OUTLINE_NODE) then it will get changed to SUBPAGE_NODE.`
+     * @param delegator
+     * @param contentId
+     * @param pageMode
+     */
+    public static Map updatePageType(DispatchContext dctx, Map context) throws GenericServiceException{
+        
+        GenericDelegator delegator = dctx.getDelegator();
+    	Map results = null;
+    	String pageMode = (String)context.get("pageMode");
+    	String contentId = (String)context.get("contentId");
+        String contentTypeId = "PAGE_NODE";
+        if (pageMode != null && pageMode.equalsIgnoreCase("outline"))
+        	contentTypeId = "OUTLINE_NODE";
+        GenericValue thisContent = null;
+        try {
+            thisContent = delegator.findByPrimaryKey("Content", UtilMisc.toMap("contentId", contentId));
+            if (thisContent == null)
+                ServiceUtil.returnError("No entity found for id=" + contentId);
+            thisContent.set("contentTypeId", contentTypeId);
+            thisContent.store();
+            List kids = ContentWorker.getAssociatedContent(thisContent, "from", null, UtilMisc.toList("SUB_CONTENT"), null, null);
+            Iterator iter = kids.iterator();
+            while (iter.hasNext()) {
+            	GenericValue kidContent = (GenericValue)iter.next();
+                if (contentTypeId.equals("OUTLINE_NODE")) {
+                	updateOutlineNodeChildren(kidContent);
+                } else {
+                	updatePageNodeChildren(kidContent);
+                }
+            }
+        } catch(GenericEntityException e) {
+        	Debug.logError(e, module);
+            return ServiceUtil.returnError(e.getMessage());
+        }
+            
+        return results;
+    }
+    
+    public static void updatePageNodeChildren(GenericValue content) throws GenericEntityException {
+        
+    	String contentTypeId = content.getString("contentTypeId");
+    	String newContentTypeId = null;
+        if (contentTypeId == null || contentTypeId.equals("DOCUMENT")) {
+            newContentTypeId = "SUBPAGE_NODE";
+        } else if (contentTypeId.equals("OUTLINE_NODE")) {
+            newContentTypeId = "PAGE_NODE";
+        }
+            
+        content.put("contentTypeId", newContentTypeId);
+        content.store();
+        
+        if (contentTypeId == null || contentTypeId.equals("OUTLINE_DOCUMENT") || contentTypeId.equals("DOCUMENT")) {
+            List kids = ContentWorker.getAssociatedContent(content, "from", null, UtilMisc.toList("SUB_CONTENT"), null, null);
+            Iterator iter = kids.iterator();
+            while (iter.hasNext()) {
+            	GenericValue kidContent = (GenericValue)iter.next();
+            	updatePageNodeChildren(kidContent);
+            }
+        }
+        return;
+    }
+
+    public static void updateOutlineNodeChildren(GenericValue content) throws GenericEntityException {
+    	
+    	String newContentTypeId = null;
+    	String contentTypeId = content.getString("contentTypeId");
+    	String dataResourceId = content.getString("dataResourceId");
+    	Long branchCount = (Long)content.get("childBranchCount");
+        if (contentTypeId == null || contentTypeId.equals("DOCUMENT")) {
+        	if (UtilValidate.isEmpty(dataResourceId) || (branchCount != null && branchCount.intValue() > 0))
+        		newContentTypeId = "OUTLINE_NODE";
+       		else
+        		newContentTypeId = "PAGE_NODE";
+        } else if (contentTypeId.equals("SUBPAGE_NODE")) {
+            newContentTypeId = "PAGE_NODE";
+        }
+            
+        content.put("contentTypeId", newContentTypeId);
+        content.store();
+        
+        if (contentTypeId == null || contentTypeId.equals("DOCUMENT")) {
+            List kids = ContentWorker.getAssociatedContent(content, "from", null, UtilMisc.toList("SUB_CONTENT"), null, null);
+            Iterator iter = kids.iterator();
+            while (iter.hasNext()) {
+            	GenericValue kidContent = (GenericValue)iter.next();
+            	updateOutlineNodeChildren(kidContent);
+            }
+        }
+        return;
     }
 
 }
