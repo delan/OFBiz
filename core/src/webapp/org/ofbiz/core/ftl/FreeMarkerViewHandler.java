@@ -152,8 +152,9 @@ public class FreeMarkerViewHandler implements ViewHandler {
         BeanModel responseBModel = new BeanModel(response, BeansWrapper.getDefaultInstance());
         root.put("response", responseBModel);
         
-        // add the OFBiz transforms
+        // add the OFBiz transforms/methods
         root.put("ofbizUrl", new OfbizUrlTransform());
         root.put("ofbizContentUrl", new OfbizContentTransform());
+        root.put("setRequestAttribute", new SetRequestAttributeMethod());
     }
 }
