@@ -554,6 +554,11 @@
         </auto-attributes>
         <attribute name="quantity" type="Long" mode="IN" optional="false"/>
     </service>
+    <service name="purgeOldStoreAutoPromos" engine="java"
+            location="org.ofbiz.product.promo.PromoServices" invoke="purgeOldStoreAutoPromos" auth="true">
+    	<description>Purge Expired ProductStorePromoAppl Records, by store or global if productStoreId is null</description>
+        <attribute name="productStoreId" type="String" mode="IN" optional="true"/>
+    </service>
 
     <service name="createProductPromoCond" default-entity-name="ProductPromoCond" engine="simple"
                 location="org/ofbiz/product/promo/PromoServices.xml" invoke="createProductPromoCond" auth="true">
