@@ -645,7 +645,7 @@
     <entity-group group="org.ofbiz.commonapp" entity="WorkflowActivitySubFlow" />	
     <entity-group group="org.ofbiz.commonapp" entity="WorkflowActivityTool" />	
     <entity-group group="org.ofbiz.commonapp" entity="WorkflowApplication" />	
-    <entity-group group="org.ofbiz.commonapp" entity="WorkflowArrayTypeMembers" />	
+    <entity-group group="org.ofbiz.commonapp" entity="WorkflowComplexTypeInfo" />	
     <entity-group group="org.ofbiz.commonapp" entity="WorkflowDataField" />	
     <entity-group group="org.ofbiz.commonapp" entity="WorkflowFormalParam" />	
     <entity-group group="org.ofbiz.commonapp" entity="WorkflowPackage" />	
