@@ -26,7 +26,7 @@
  *
  * @author     David E. Jones (jonesde@ofbiz.org)
  * @author     Andy Zeneski (jaz@ofbiz.org)
- * @version    $Revision: 1.23 $
+ * @version    $Revision: 1.24 $
  */
 -->
 
@@ -2481,6 +2481,7 @@
       <field name="retryFailedAuths" type="indicator"></field>
       <field name="headerApprovedStatus" type="id"></field>
       <field name="itemApprovedStatus" type="id"></field>
+      <field name="digitalItemApprovedStatus" type="id"></field>
       <field name="headerDeclinedStatus" type="id"></field>
       <field name="itemDeclinedStatus" type="id"></field>      
       <field name="headerCancelStatus" type="id"></field>
