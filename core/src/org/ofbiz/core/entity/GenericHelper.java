@@ -134,6 +134,14 @@ public interface GenericHelper
    */
   public Collection getRelated(String relationName, GenericValue value);
 
+  /** Get the named Related Entity for the GenericValue from the persistent store
+   *@param relationName String containing the relation name which is the combination of relation.title and relation.rel-entity-name as specified in the entity XML definition file
+   *@param value GenericValue instance containing the entity
+   *@return GenericValue instance as specified in the one-relation definition 
+   *@throws IllegalArgumentException if the relation is a many-relation
+   */
+  public GenericValue getRelatedOne(String relationName, GenericValue value);
+
   /** Remove the named Related Entity for the GenericValue from the persistent store
    *@param relationName String containing the relation name which is the combination of relation.title and relation.rel-entity-name as specified in the entity XML definition file
    *@param value GenericValue instance containing the entity

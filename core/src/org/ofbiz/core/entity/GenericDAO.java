@@ -492,6 +492,7 @@ public class GenericDAO
   {
     ModelEntity modelEntity = value.getModelEntity();
     ModelRelation relation = modelEntity.getRelation(relationName);
+    if(relation == null) throw new IllegalArgumentException("[GenericDAO.selectRelated] could not find relation for relationName: " + relationName + " for value " + value);
     ModelEntity relatedEntity = modelReader.getModelEntity(relation.relEntityName);
 
     Map fields = new HashMap();

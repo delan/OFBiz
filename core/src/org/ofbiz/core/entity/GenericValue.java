@@ -37,6 +37,8 @@ public class GenericValue extends GenericEntity
   public transient GenericHelper helper = null;
   /** Hashtable to cache various related entity collections */
   public transient Map relatedCache = null;
+  /** Hashtable to cache various related cardinality one entity collections */
+  public transient Map relatedOneCache = null;
   
   /** Creates new GenericValue */
   public GenericValue(ModelEntity modelEntity) { super(modelEntity); }
@@ -69,6 +71,27 @@ public class GenericValue extends GenericEntity
       relatedCache.put(relationName, col);
     }
     return col;
+  }
+
+  /** Get the named Related Entity for the GenericValue from the persistent store
+   *@param relationName String containing the relation name which is the combination of relation.title and relation.rel-entity-name as specified in the entity XML definition file
+   *@return Collection of GenericValue instances as specified in the relation definition
+   */
+  public GenericValue getRelatedOne(String relationName) { return helper.getRelatedOne(relationName, this); }
+  /** Get the named Related Entity for the GenericValue from the persistent store, looking first in a cache associated with this entity which is destroyed with this ValueObject when no longer used.
+   *@param relationName String containing the relation name which is the combination of relation.title and relation.rel-entity-name as specified in the entity XML definition file
+   *@return Collection of GenericValue instances as specified in the relation definition
+   */
+  public GenericValue getRelatedOneCache(String relationName) 
+  { 
+    if(relatedOneCache == null) relatedOneCache = new Hashtable();
+    GenericValue value = (GenericValue)relatedOneCache.get(relationName);
+    if(value == null)
+    {
+      value = getRelatedOne(relationName);
+      relatedOneCache.put(relationName, value);
+    }
+    return value;
   }
 
   /** Remove the named Related Entity for the GenericValue from the persistent store

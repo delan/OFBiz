@@ -131,4 +131,19 @@ public abstract class GenericHelperAbstract implements GenericHelper
     }
     return col;
   }
+  
+  /** 
+   * simple implementation that uses {@link getRelated(String, GenericValue)}.
+   * @throws IllegalArgumentException if the collection found has more than one item
+   */
+  public GenericValue getRelatedOne(String relationName, GenericValue value) 
+  {
+    ModelRelation relation = value.getModelEntity().getRelation(relationName);
+    if(relation == null) throw new IllegalArgumentException("[GenericHelperAbstract.getRelatedOne] could not find relation for relationName: " + relationName + " for value " + value);
+      
+    Collection col = getRelated(relationName, value);
+    if ((col == null) || col.size() == 0) { return null; } 
+    else if (col.size() == 1) { return (GenericValue) col.iterator().next(); } 
+    else { throw new IllegalArgumentException("[GenericHelperAbstract.getRelatedOne] got multiple results for relationName: " + relationName + " for value " + value); }
+  }
 }

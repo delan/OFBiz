@@ -64,7 +64,8 @@ public class GenericEntity implements Serializable
   { 
     if(modelEntity.getField(name) == null)
     {
-      Debug.logWarning("[GenericEntity.get] \"" + name + "\" is not a field of " + entityName + ", but getting anyway...");
+      throw new IllegalArgumentException("[GenericEntity.get] \"" + name + "\" is not a field of " + entityName);
+      //Debug.logWarning("[GenericEntity.get] \"" + name + "\" is not a field of " + entityName + ", but getting anyway...");
     }
     return fields.get(name); 
   }
@@ -72,15 +73,21 @@ public class GenericEntity implements Serializable
   { 
     if(modelEntity.getField(name) == null)
     {
-      Debug.logWarning("[GenericEntity.set] \"" + name + "\" is not a field of " + entityName + ", but setting anyway...");
+      throw new IllegalArgumentException("[GenericEntity.get] \"" + name + "\" is not a field of " + entityName);
+      //Debug.logWarning("[GenericEntity.set] \"" + name + "\" is not a field of " + entityName + ", but setting anyway...");
     }
-    fields.put(name, value); modified = true;
+    fields.put(name, value); 
+    modified = true;
   }
 
+  /** Sets the named field to the passed value, converting the value from a String to the corrent type using <code>Type.valueOf()</code>
+   * @param name The field name to set
+   * @param value The String value to convert and set
+   */
   public void setString(String name, String value)
   {
     ModelField field = modelEntity.getField(name);
-    if(field == null) set(name, value); //this will get a warning...
+    if(field == null) set(name, value); //this will get an error...
     
     ModelFieldType type = field.modelFieldType;
     String fieldType = type.javaType;
