@@ -76,7 +76,7 @@ public class UtilFormatOut {
             return new Double(priceDecimalFormat.parse(formatPrice(price)).doubleValue());
         } catch (ParseException e) {
             Debug.logError(e, module);
-            return null;
+            return new Double(price);
         }
     }
 
