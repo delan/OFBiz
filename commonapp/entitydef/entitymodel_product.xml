@@ -1793,6 +1793,7 @@
             title="Product Promotion Entity">
       <field name="productPromoId" type="id-ne"></field>
       <field name="promoName" type="name"></field>
+      <field name="promoCode" type="short-varchar"></field>
       <field name="promoText" type="description"></field>
       <field name="singleUse" type="indicator"></field>
       <prim-key field="productPromoId"/>
