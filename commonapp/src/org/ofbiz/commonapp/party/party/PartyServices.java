@@ -42,11 +42,13 @@ import org.ofbiz.core.service.*;
  *
  *@author     <a href="mailto:jonesde@ofbiz.org">David E. Jones</a>
  *@author     <a href="mailto:jaz@zsolv.com">Andy Zeneski</a>
- *@created    January 25, 2002
  *@version    1.0
  */
 public class PartyServices {
 
+    public static final String module = PartyServices.class.getName();
+    public static final String resource = "org.ofbiz.commonapp.party.party.PackageMessages";
+    
     /**
      * Deletes a Party.
      * @param ctx The DispatchContext that this service is operating in.
@@ -84,13 +86,13 @@ public class PartyServices {
         Security security = ctx.getSecurity();
         Timestamp now = UtilDateTime.nowTimestamp();
         List toBeStored = new LinkedList();
+        Locale locale = (Locale) context.get("locale");
 
         String partyId = (String) context.get("partyId");
 
         // if specified partyId starts with a number, return an error
         if (partyId != null && Character.isDigit(partyId.charAt(0))) {
-            return ServiceUtil.returnError("Cannot create person, specified party ID cannot start with a digit, " +
-                    "numeric IDs are reserved for auto-generated IDs");
+            return ServiceUtil.returnError(UtilProperties.getMessage(resource, "party.id_is_digit", locale));
         }
 
         // partyId might be empty, so check it and get next seq party id if empty
@@ -98,7 +100,7 @@ public class PartyServices {
             Long newId = delegator.getNextSeqId("Party");
 
             if (newId == null) {
-                return ServiceUtil.returnError("ERROR: Could not create person (id generation failure)");
+                return ServiceUtil.returnError(UtilProperties.getMessage(resource, "party.id_generation_failure", locale));
             } else {
                 partyId = newId.toString();
             }
@@ -115,8 +117,7 @@ public class PartyServices {
 
         if (party != null) {
             if (!"PERSON".equals(party.getString("partyTypeId"))) {
-                return ServiceUtil.returnError("Cannot create person, a party with the specified party ID already " +
-                        "exists and is not a PERSON type party");
+                return ServiceUtil.returnError(UtilProperties.getMessage(resource, "person.create.party_exists_not_person_type", locale));
             }
         } else {
             // create a party if one doesn't already exist
@@ -133,36 +134,18 @@ public class PartyServices {
         }
 
         if (person != null) {
-            return ServiceUtil.returnError("Cannot create party, a person with the specified party ID already exists");
+            return ServiceUtil.returnError(UtilProperties.getMessage(resource, "person.create.person_exists", locale));
         }
 
         person = delegator.makeValue("Person", UtilMisc.toMap("partyId", partyId));
+        person.setNonPKFields(context);
         toBeStored.add(person);
-
-        person.set("firstName", context.get("firstName"), false);
-        person.set("middleName", context.get("middleName"), false);
-        person.set("lastName", context.get("lastName"), false);
-        person.set("personalTitle", context.get("personalTitle"), false);
-        person.set("suffix", context.get("suffix"), false);
-
-        person.set("nickname", context.get("nickname"), false);
-        person.set("gender", context.get("gender"), false);
-        person.set("birthDate", context.get("birthDate"), false);
-        person.set("height", context.get("height"), false);
-        person.set("weight", context.get("weight"), false);
-        person.set("mothersMaidenName", context.get("mothersMaidenName"), false);
-        person.set("maritalStatus", context.get("maritalStatus"), false);
-        person.set("socialSecurityNumber", context.get("socialSecurityNumber"), false);
-        person.set("passportNumber", context.get("passportNumber"), false);
-        person.set("passportExpireDate", context.get("passportExpireDate"), false);
-        person.set("totalYearsWorkExperience", context.get("totalYearsWorkExperience"), false);
-        person.set("comments", context.get("comments"), false);
 
         try {
             delegator.storeAll(toBeStored);
         } catch (GenericEntityException e) {
             Debug.logWarning(e.getMessage());
-            return ServiceUtil.returnError("Could not add person info (write failure): " + e.getMessage());
+            return ServiceUtil.returnError(UtilProperties.getMessage(resource, "person.create.db_error", new Object[] { e.getMessage() }, locale));
         }
 
         result.put("partyId", partyId);
@@ -182,6 +165,7 @@ public class PartyServices {
         GenericDelegator delegator = ctx.getDelegator();
         Security security = ctx.getSecurity();
         GenericValue userLogin = (GenericValue) context.get("userLogin");
+        Locale locale = (Locale) context.get("locale");
 
         String partyId = ServiceUtil.getPartyIdCheckSecurity(userLogin, security, context, result, "PARTYMGR", "_UPDATE");
 
@@ -194,40 +178,24 @@ public class PartyServices {
             person = delegator.findByPrimaryKey("Person", UtilMisc.toMap("partyId", partyId));
         } catch (GenericEntityException e) {
             Debug.logWarning(e);
-            return ServiceUtil.returnError("Could not update person information (read failure): " + e.getMessage());
+            return ServiceUtil.returnError(UtilProperties.getMessage(resource, "person.update.read_failure", new Object[] { e.getMessage() }, locale));
         }
 
         if (person == null) {
-            return ServiceUtil.returnError("Could not update person information (person not found)");
+            return ServiceUtil.returnError(UtilProperties.getMessage(resource, "person.update.not_found", locale));
         }
 
-        person.set("firstName", context.get("firstName"), false);
-        person.set("middleName", context.get("middleName"), false);
-        person.set("lastName", context.get("lastName"), false);
-        person.set("personalTitle", context.get("personalTitle"), false);
-        person.set("suffix", context.get("suffix"), false);
-
-        person.set("nickname", context.get("nickname"), false);
-        person.set("gender", context.get("gender"), false);
-        person.set("birthDate", context.get("birthDate"), false);
-        person.set("height", context.get("height"), false);
-        person.set("weight", context.get("weight"), false);
-        person.set("mothersMaidenName", context.get("mothersMaidenName"), false);
-        person.set("maritalStatus", context.get("maritalStatus"), false);
-        person.set("socialSecurityNumber", context.get("socialSecurityNumber"), false);
-        person.set("passportNumber", context.get("passportNumber"), false);
-        person.set("passportExpireDate", context.get("passportExpireDate"), false);
-        person.set("totalYearsWorkExperience", context.get("totalYearsWorkExperience"), false);
-        person.set("comments", context.get("comments"), false);
+        person.setNonPKFields(context);
 
         try {
             person.store();
         } catch (GenericEntityException e) {
             Debug.logWarning(e.getMessage());
-            return ServiceUtil.returnError("Could update personal information (write failure): " + e.getMessage());
+            return ServiceUtil.returnError(UtilProperties.getMessage(resource, "person.update.write_failure", new Object[] { e.getMessage() }, locale));
         }
 
         result.put(ModelService.RESPONSE_MESSAGE, ModelService.RESPOND_SUCCESS);
+        result.put(ModelService.SUCCESS_MESSAGE, UtilProperties.getMessage(resource, "person.update.success", locale));
         return result;
     }
 
@@ -300,10 +268,7 @@ public class PartyServices {
 
         partyGroup = delegator.makeValue("PartyGroup", UtilMisc.toMap("partyId", partyId));
         toBeStored.add(partyGroup);
-
-        partyGroup.set("groupName", context.get("groupName"), false);
-        partyGroup.set("federalTaxId", context.get("federalTaxId"), false);
-        partyGroup.set("comments", context.get("comments"), false);
+        partyGroup.setNonPKFields(context);
 
         try {
             delegator.storeAll(toBeStored);
@@ -347,9 +312,7 @@ public class PartyServices {
             return ServiceUtil.returnError("Could not update party group information (partyGroup not found)");
         }
 
-        partyGroup.set("groupName", context.get("groupName"), false);
-        partyGroup.set("federalTaxId", context.get("federalTaxId"), false);
-        partyGroup.set("comments", context.get("comments"), false);
+        partyGroup.setNonPKFields(context);
 
         try {
             partyGroup.store();
@@ -424,13 +387,7 @@ public class PartyServices {
         }
 
         affiliate = delegator.makeValue("Affiliate", UtilMisc.toMap("partyId", partyId));
-
-        affiliate.set("affiliateName", context.get("affiliateName"), false);
-        affiliate.set("affiliateDescription", context.get("affiliateDescription"), false);
-        affiliate.set("yearEstablished", context.get("yearEstablished"), false);
-        affiliate.set("siteType", context.get("siteType"), false);
-        affiliate.set("sitePageViews", context.get("sitePageViews"), false);
-        affiliate.set("siteVisitors", context.get("siteVisitors"), false);
+        affiliate.setNonPKFields(context);
         affiliate.set("dateTimeCreated", now, false);
 
         try {
@@ -476,12 +433,7 @@ public class PartyServices {
             return ServiceUtil.returnError("Could not update affiliate information (affiliate not found)");
         }
 
-        affiliate.set("affiliateName", context.get("affiliateName"), false);
-        affiliate.set("affiliateDescription", context.get("affiliateDescription"), false);
-        affiliate.set("yearEstablished", context.get("yearEstablished"), false);
-        affiliate.set("siteType", context.get("siteType"), false);
-        affiliate.set("sitePageViews", context.get("sitePageViews"), false);
-        affiliate.set("siteVisitors", context.get("siteVisitors"), false);
+        affiliate.setNonPKFields(context);
 
         try {
             affiliate.store();
@@ -514,8 +466,6 @@ public class PartyServices {
             return ServiceUtil.returnError("Could not create survey response (no partyId sent)");
 
         Map gFields = UtilMisc.toMap("partyId", partyId, "surveyId", surveyId, "surveyResponseId", responseId);
-        Map sFields = UtilMisc.toMap("partyId", partyId, "surveyId", surveyId, "surveyResponseId", responseId,
-                "surveyResponse", response, "responseDateTime", now);
 
         // look for existing record to update
         GenericValue getter = null;
@@ -535,6 +485,8 @@ public class PartyServices {
             }
         } else {
             try {
+                Map sFields = UtilMisc.toMap("partyId", partyId, "surveyId", surveyId, "surveyResponseId", responseId,
+                        "surveyResponse", response, "responseDateTime", now);
                 GenericValue newValue = delegator.makeValue("PartySurveyResponse", sFields);
 
                 delegator.create(newValue);
@@ -781,12 +733,12 @@ public class PartyServices {
     public static Map createRoleType(DispatchContext dctx, Map context) {
         Map result = new HashMap();
         GenericDelegator delegator = dctx.getDelegator();
-        String roleTypeId = (String) context.get("roleTypeId");
-        String description = (String) context.get("description");
         GenericValue roleType = null;
 
         try {
-            roleType = delegator.makeValue("RoleType", UtilMisc.toMap("roleTypeId", roleTypeId, "description", description));
+            roleType = delegator.makeValue("RoleType", null);
+            roleType.setPKFields(context);
+            roleType.setNonPKFields(context);
             roleType = delegator.create(roleType);
         } catch (GenericEntityException e) {
             Debug.logError(e);
