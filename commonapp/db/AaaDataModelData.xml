@@ -345,6 +345,17 @@
   <PriceComponentType description="" hasTable="N" parentTypeId="" priceComponentTypeId="SURCHARGE_COMPONENT"/>
   <PriceComponentType description="" hasTable="Y" parentTypeId="" priceComponentTypeId="UTILIZATION_SURCHARG"/>
 
+  <ProdCatalogCategoryType description="Browse Root Cateogry" prodCatalogCategoryTypeId="PCCT_BROWSE_ROOT"/>
+  <ProdCatalogCategoryType description="Search Constraint Cateogry" prodCatalogCategoryTypeId="PCCT_SEARCH"/>
+  <ProdCatalogCategoryType description="Quick Add Cateogry" prodCatalogCategoryTypeId="PCCT_QUICK_ADD"/>
+  <ProdCatalogCategoryType description="Promotions Cateogry" prodCatalogCategoryTypeId="PCCT_PROMOTIONS"/>
+  <ProdCatalogCategoryType description="Most Popular Cateogry" prodCatalogCategoryTypeId="PCCT_MOST_POPULAR"/>
+
+  <ProdCatalogPromoType description="Gift With Purchase" prodCatalogPromoTypeId="PROMO_GWP"/>
+  <ProdCatalogPromoType description="Free Shipping" prodCatalogPromoTypeId="PROMO_FREE_SHIPPING"/>
+  <ProdCatalogPromoType description="Order Percent Discount" prodCatalogPromoTypeId="PROMO_ORDER_PERCENT"/>
+  <ProdCatalogPromoType description="Order Amount Discount" prodCatalogPromoTypeId="PROMO_ORDER_AMOUNT"/>
+  
   <ProductAssocType description="Upgrade or Up-Sell" hasTable="N" parentTypeId="" productAssocTypeId="PRODUCT_UPGRADE"/>
   <ProductAssocType description="Complementary or Cross-Sell" hasTable="N" parentTypeId="" productAssocTypeId="PRODUCT_COMPLEMENT"/>
   <ProductAssocType description="Incompatable" hasTable="N" parentTypeId="" productAssocTypeId="PRODUCT_INCOMPATABLE"/>
