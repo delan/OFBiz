@@ -53,7 +53,7 @@
   <!-- org.ofbiz.commonapp.humanres.ability -->
   <!-- ========================================================= -->
 
-    <entity entity-name="EmployeePerformanceReview" 
+    <entity entity-name="EmployeePerformanceReview"
             package-name="org.ofbiz.commonapp.humanres.ability"
             title="Employee Performance Review Entity">
       <field name="employeePartyId" type="id-ne"></field>
@@ -75,7 +75,7 @@
       <prim-key field="employeeRoleTypeId"/>
       <prim-key field="perfReviewId"/>
     </entity>
-    <entity entity-name="PartyQual" 
+    <entity entity-name="PartyQual"
             package-name="org.ofbiz.commonapp.humanres.ability"
             title="Party Qualification Entity">
       <field name="partyId" type="id-ne"></field>
@@ -89,7 +89,7 @@
         <key-map field-name="partyQualTypeId"/>
       </relation>
     </entity>
-    <entity entity-name="PartyQualType" 
+    <entity entity-name="PartyQualType"
             package-name="org.ofbiz.commonapp.humanres.ability"
             title="Party Qualification Type Entity">
       <field name="partyQualTypeId" type="id-ne"></field>
@@ -107,7 +107,7 @@
         <key-map field-name="partyQualTypeId"/>
       </relation>
     </entity>
-    <entity entity-name="PartyResume" 
+    <entity entity-name="PartyResume"
             package-name="org.ofbiz.commonapp.humanres.ability"
             title="Resume Entity">
       <field name="resumeId" type="id-ne"></field>
@@ -117,7 +117,7 @@
       <prim-key field="resumeId"/>
       <prim-key field="partyId"/>
     </entity>
-    <entity entity-name="PartySkill" 
+    <entity entity-name="PartySkill"
             package-name="org.ofbiz.commonapp.humanres.ability"
             title="Party Skill Entity">
       <field name="partyId" type="id-ne"></field>
@@ -129,21 +129,21 @@
       <prim-key field="partyId"/>
       <prim-key field="skillTypeId"/>
     </entity>
-    <entity entity-name="PerfRatingType" 
+    <entity entity-name="PerfRatingType"
             package-name="org.ofbiz.commonapp.humanres.ability"
             title="Performance Rating Type Entity">
       <field name="perfRatingTypeId" type="id-ne"></field>
       <field name="description" type="description"></field>
       <prim-key field="perfRatingTypeId"/>
     </entity>
-    <entity entity-name="PerfReviewItemType" 
+    <entity entity-name="PerfReviewItemType"
             package-name="org.ofbiz.commonapp.humanres.ability"
             title="Performance Review Item Type Entity">
       <field name="perfReviewItemTypeId" type="id-ne"></field>
       <field name="description" type="description"></field>
       <prim-key field="perfReviewItemTypeId"/>
     </entity>
-    <entity entity-name="PerformanceNote" 
+    <entity entity-name="PerformanceNote"
             package-name="org.ofbiz.commonapp.humanres.ability"
             title="Performance Note Entity">
       <field name="partyId" type="id-ne"></field>
@@ -156,7 +156,7 @@
       <prim-key field="roleTypeId"/>
       <prim-key field="fromDate"/>
     </entity>
-    <entity entity-name="PerformanceReviewItem" 
+    <entity entity-name="PerformanceReviewItem"
             package-name="org.ofbiz.commonapp.humanres.ability"
             title="Performance Review Item Entity">
       <field name="employeePartyId" type="id-ne"></field>
@@ -171,7 +171,7 @@
       <prim-key field="perfReviewId"/>
       <prim-key field="perfReviewSeqId"/>
     </entity>
-    <entity entity-name="PersonTraining" 
+    <entity entity-name="PersonTraining"
             package-name="org.ofbiz.commonapp.humanres.ability"
             title="Person Training Entity">
       <field name="partyId" type="id-ne"></field>
@@ -182,21 +182,21 @@
       <prim-key field="trainingClassTypeId"/>
       <prim-key field="fromDate"/>
     </entity>
-    <entity entity-name="ResponsibilityType" 
+    <entity entity-name="ResponsibilityType"
             package-name="org.ofbiz.commonapp.humanres.ability"
             title="Responsibility Type Entity">
       <field name="responsibilityTypeId" type="id-ne"></field>
       <field name="description" type="description"></field>
       <prim-key field="responsibilityTypeId"/>
     </entity>
-    <entity entity-name="SkillType" 
+    <entity entity-name="SkillType"
             package-name="org.ofbiz.commonapp.humanres.ability"
             title="Skill Type Entity">
       <field name="skillTypeId" type="id-ne"></field>
       <field name="description" type="description"></field>
       <prim-key field="skillTypeId"/>
     </entity>
-    <entity entity-name="TrainingClassType" 
+    <entity entity-name="TrainingClassType"
             package-name="org.ofbiz.commonapp.humanres.ability"
             title="Training Class Type Entity">
       <field name="trainingClassTypeId" type="id-ne"></field>
@@ -208,7 +208,7 @@
   <!-- org.ofbiz.commonapp.humanres.employment -->
   <!-- ========================================================= -->
 
-    <entity entity-name="BenefitType" 
+    <entity entity-name="BenefitType"
             package-name="org.ofbiz.commonapp.humanres.employment"
             title="Benefit Type Entity">
       <field name="benefitTypeId" type="id-ne"></field>
@@ -217,7 +217,7 @@
       <field name="employerPaidPercentage" type="floating-point"></field>
       <prim-key field="benefitTypeId"/>
     </entity>
-    <entity entity-name="Employment" 
+    <entity entity-name="Employment"
             package-name="org.ofbiz.commonapp.humanres.employment"
             title="Employment Entity">
       <field name="roleTypeIdFrom" type="id-ne"></field>
@@ -234,7 +234,7 @@
       <prim-key field="partyIdTo"/>
       <prim-key field="fromDate"/>
     </entity>
-    <entity entity-name="EmploymentApp" 
+    <entity entity-name="EmploymentApp"
             package-name="org.ofbiz.commonapp.humanres.employment"
             title="Employment Application Entity">
       <field name="applicationId" type="id-ne"></field>
@@ -246,14 +246,14 @@
       <field name="applicationDate" type="date-time"></field>
       <prim-key field="applicationId"/>
     </entity>
-    <entity entity-name="EmploymentAppSourceType" 
+    <entity entity-name="EmploymentAppSourceType"
             package-name="org.ofbiz.commonapp.humanres.employment"
             title="Employment Application Source Type Entity">
       <field name="employmentAppSourceTypeId" type="id-ne"></field>
       <field name="description" type="description"></field>
       <prim-key field="employmentAppSourceTypeId"/>
     </entity>
-    <entity entity-name="PartyBenefit" 
+    <entity entity-name="PartyBenefit"
             package-name="org.ofbiz.commonapp.humanres.employment"
             title="Party Benefit Entity">
       <field name="roleTypeIdFrom" type="id-ne"></field>
@@ -274,7 +274,7 @@
       <prim-key field="benefitTypeId"/>
       <prim-key field="fromDate"/>
     </entity>
-    <entity entity-name="PayCheck" 
+    <entity entity-name="PayCheck"
             package-name="org.ofbiz.commonapp.humanres.employment"
             title="Pay Check Entity">
       <field name="paymentId" type="id-ne"></field>
@@ -282,7 +282,7 @@
       <field name="roleTypeId" type="id"></field>
       <prim-key field="paymentId"/>
     </entity>
-    <entity entity-name="PayGrade" 
+    <entity entity-name="PayGrade"
             package-name="org.ofbiz.commonapp.humanres.employment"
             title="Pay Grade Entity">
       <field name="payGradeId" type="id-ne"></field>
@@ -290,7 +290,7 @@
       <field name="comments" type="comment"></field>
       <prim-key field="payGradeId"/>
     </entity>
-    <entity entity-name="PayHistory" 
+    <entity entity-name="PayHistory"
             package-name="org.ofbiz.commonapp.humanres.employment"
             title="Pay History Entity">
       <field name="roleTypeIdFrom" type="id-ne"></field>
@@ -310,7 +310,7 @@
       <prim-key field="partyIdTo"/>
       <prim-key field="fromDate"/>
     </entity>
-    <entity entity-name="PayrollPreference" 
+    <entity entity-name="PayrollPreference"
             package-name="org.ofbiz.commonapp.humanres.employment"
             title="Payroll Preference Entity">
       <field name="partyId" type="id-ne"></field>
@@ -330,14 +330,14 @@
       <prim-key field="roleTypeId"/>
       <prim-key field="payrollPreferenceSeqId"/>
     </entity>
-    <entity entity-name="RejectionReason" 
+    <entity entity-name="RejectionReason"
             package-name="org.ofbiz.commonapp.humanres.employment"
             title="Rejection Reason Entity">
       <field name="rejectionId" type="id-ne"></field>
       <field name="description" type="description"></field>
       <prim-key field="rejectionId"/>
     </entity>
-    <entity entity-name="SalaryStep" 
+    <entity entity-name="SalaryStep"
             package-name="org.ofbiz.commonapp.humanres.employment"
             title="Salary Step Entity">
       <field name="salaryStepSeqId" type="id-ne"></field>
@@ -347,21 +347,21 @@
       <prim-key field="salaryStepSeqId"/>
       <prim-key field="payGradeId"/>
     </entity>
-    <entity entity-name="TerminationReason" 
+    <entity entity-name="TerminationReason"
             package-name="org.ofbiz.commonapp.humanres.employment"
             title="Termination Reason Entity">
       <field name="terminationReasonId" type="id-ne"></field>
       <field name="description" type="description"></field>
       <prim-key field="terminationReasonId"/>
     </entity>
-    <entity entity-name="TerminationType" 
+    <entity entity-name="TerminationType"
             package-name="org.ofbiz.commonapp.humanres.employment"
             title="Termination Type Entity">
       <field name="terminationTypeId" type="id-ne"></field>
       <field name="description" type="description"></field>
       <prim-key field="terminationTypeId"/>
     </entity>
-    <entity entity-name="UnemploymentClaim" 
+    <entity entity-name="UnemploymentClaim"
             package-name="org.ofbiz.commonapp.humanres.employment"
             title="Unemployment Claim Entity">
       <field name="unemploymentClaimId" type="id-ne"></field>
@@ -380,7 +380,7 @@
   <!-- org.ofbiz.commonapp.humanres.position -->
   <!-- ========================================================= -->
 
-    <entity entity-name="EmplPosition" 
+    <entity entity-name="EmplPosition"
             package-name="org.ofbiz.commonapp.humanres.position"
             title="EmplPosition Entity">
       <field name="positionId" type="id-ne"></field>
@@ -399,14 +399,14 @@
       <field name="actualThruDate" type="date-time"></field>
       <prim-key field="positionId"/>
     </entity>
-    <entity entity-name="EmplPositionClassType" 
+    <entity entity-name="EmplPositionClassType"
             package-name="org.ofbiz.commonapp.humanres.position"
             title="EmplPosition Classification Type Entity">
       <field name="positionClassTypeId" type="id-ne"></field>
       <field name="description" type="description"></field>
       <prim-key field="positionClassTypeId"/>
     </entity>
-    <entity entity-name="EmplPositionFulfillment" 
+    <entity entity-name="EmplPositionFulfillment"
             package-name="org.ofbiz.commonapp.humanres.position"
             title="EmplPosition Fulfillment Entity">
       <field name="positionId" type="id-ne"></field>
@@ -418,7 +418,7 @@
       <prim-key field="partyId"/>
       <prim-key field="fromDate"/>
     </entity>
-    <entity entity-name="EmplPositionReportingStruct" 
+    <entity entity-name="EmplPositionReportingStruct"
             package-name="org.ofbiz.commonapp.humanres.position"
             title="EmplPosition Reporting Structure Entity">
       <field name="positionIdReportingTo" type="id-ne"></field>
@@ -431,7 +431,7 @@
       <prim-key field="positionIdManagedBy"/>
       <prim-key field="fromDate"/>
     </entity>
-    <entity entity-name="EmplPositionResponsibility" 
+    <entity entity-name="EmplPositionResponsibility"
             package-name="org.ofbiz.commonapp.humanres.position"
             title="EmplPosition Responsibility Entity">
       <field name="positionId" type="id-ne"></field>
@@ -443,7 +443,7 @@
       <prim-key field="responsibilityTypeId"/>
       <prim-key field="fromDate"/>
     </entity>
-    <entity entity-name="EmplPositionType" 
+    <entity entity-name="EmplPositionType"
             package-name="org.ofbiz.commonapp.humanres.position"
             title="EmplPosition Type Entity">
       <field name="positionTypeId" type="id-ne"></field>
@@ -452,7 +452,7 @@
       <field name="description" type="description"></field>
       <prim-key field="positionTypeId"/>
     </entity>
-    <entity entity-name="EmplPositionTypeClass" 
+    <entity entity-name="EmplPositionTypeClass"
             package-name="org.ofbiz.commonapp.humanres.position"
             title="EmplPosition Type Class Entity">
       <field name="positionTypeId" type="id-ne"></field>
@@ -464,7 +464,7 @@
       <prim-key field="positionClassTypeId"/>
       <prim-key field="fromDate"/>
     </entity>
-    <entity entity-name="ValidResponsibility" 
+    <entity entity-name="ValidResponsibility"
             package-name="org.ofbiz.commonapp.humanres.position"
             title="Valid Responsibility Entity">
       <field name="positionTypeId" type="id-ne"></field>
@@ -475,6 +475,6 @@
       <prim-key field="positionTypeId"/>
       <prim-key field="responsibilityTypeId"/>
       <prim-key field="fromDate"/>
-    </entity>  
+    </entity>
 </entitymodel>
 

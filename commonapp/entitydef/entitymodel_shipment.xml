@@ -54,7 +54,7 @@
   <!-- org.ofbiz.commonapp.shipment.issuance -->
   <!-- ========================================================= -->
 
-    <entity entity-name="ItemIssuance" 
+    <entity entity-name="ItemIssuance"
             package-name="org.ofbiz.commonapp.shipment.issuance"
             title="Item Issuance Entity">
       <field name="itemIssuanceId" type="id-ne"></field>
@@ -66,7 +66,7 @@
       <field name="quantity" type="floating-point"></field>
       <prim-key field="itemIssuanceId"/>
     </entity>
-    <entity entity-name="ItemIssuanceRole" 
+    <entity entity-name="ItemIssuanceRole"
             package-name="org.ofbiz.commonapp.shipment.issuance"
             title="Item Issuance Role Entity">
       <field name="itemIssuanceId" type="id-ne"></field>
@@ -81,7 +81,7 @@
   <!-- org.ofbiz.commonapp.shipment.receipt -->
   <!-- ========================================================= -->
 
-    <entity entity-name="ShipmentReceipt" 
+    <entity entity-name="ShipmentReceipt"
             package-name="org.ofbiz.commonapp.shipment.receipt"
             title="Shipment Receipt Entity">
       <field name="receiptId" type="id-ne"></field>
@@ -97,7 +97,7 @@
       <field name="quantityRejected" type="floating-point"></field>
       <prim-key field="receiptId"/>
     </entity>
-    <entity entity-name="ShipmentReceiptRole" 
+    <entity entity-name="ShipmentReceiptRole"
             package-name="org.ofbiz.commonapp.shipment.receipt"
             title="Shipment Receipt Role Entity">
       <field name="receiptId" type="id-ne"></field>
@@ -112,7 +112,7 @@
   <!-- org.ofbiz.commonapp.shipment.route -->
   <!-- ========================================================= -->
 
-    <entity entity-name="ShipmentRouteSegment" 
+    <entity entity-name="ShipmentRouteSegment"
             package-name="org.ofbiz.commonapp.shipment.route"
             title="Shipment Route Segment Entity">
       <field name="shipmentRouteSegmentId" type="id-ne"></field>
@@ -137,7 +137,7 @@
   <!-- org.ofbiz.commonapp.shipment.shipment -->
   <!-- ========================================================= -->
 
-    <entity entity-name="CarrierShipmentMethod" 
+    <entity entity-name="CarrierShipmentMethod"
             package-name="org.ofbiz.commonapp.shipment.shipment"
             title="Carrier Shipment Method Entity">
       <field name="shipmentMethodTypeId" type="id-ne"></field>
@@ -161,7 +161,7 @@
         <key-map field-name="roleTypeId"/>
       </relation>
     </entity>
-    <entity entity-name="PackagingContent" 
+    <entity entity-name="PackagingContent"
             package-name="org.ofbiz.commonapp.shipment.shipment"
             title="Packaging Content Entity">
       <field name="shipmentPackageId" type="id-ne"></field>
@@ -172,7 +172,7 @@
       <prim-key field="shipmentId"/>
       <prim-key field="shipmentItemSeqId"/>
     </entity>
-    <entity entity-name="Shipment" 
+    <entity entity-name="Shipment"
             package-name="org.ofbiz.commonapp.shipment.shipment"
             title="Shipment Entity">
       <field name="shipmentId" type="id-ne"></field>
@@ -201,7 +201,7 @@
         <key-map field-name="shipmentId"/>
       </relation>
     </entity>
-    <entity entity-name="ShipmentAttribute" 
+    <entity entity-name="ShipmentAttribute"
             package-name="org.ofbiz.commonapp.shipment.shipment"
             title="Shipment Attribute Entity">
       <field name="shipmentId" type="id-ne"></field>
@@ -216,7 +216,7 @@
         <key-map field-name="attrName"/>
       </relation>
     </entity>
-    <entity entity-name="ShipmentCostEstimate" 
+    <entity entity-name="ShipmentCostEstimate"
             package-name="org.ofbiz.commonapp.shipment.shipment"
             title="Shipment Cost Estimate Entity">
       <field name="shipmentCostEstimateId" type="id-ne"></field>
@@ -271,7 +271,7 @@
         <key-map field-name="priceBreakId" rel-field-name="quantityBreakId"/>
       </relation>
     </entity>
-    <entity entity-name="ShipmentItem" 
+    <entity entity-name="ShipmentItem"
             package-name="org.ofbiz.commonapp.shipment.shipment"
             title="Shipment Item Entity">
       <field name="shipmentId" type="id-ne"></field>
@@ -286,7 +286,7 @@
         <key-map field-name="shipmentItemSeqId"/>
       </relation>
     </entity>
-    <entity entity-name="ShipmentItemBilling" 
+    <entity entity-name="ShipmentItemBilling"
             package-name="org.ofbiz.commonapp.shipment.shipment"
             title="Shipment Item Billing Entity">
       <field name="shipmentId" type="id-ne"></field>
@@ -298,7 +298,7 @@
       <prim-key field="invoiceId"/>
       <prim-key field="invoiceItemSeqId"/>
     </entity>
-    <entity entity-name="ShipmentItemFeature" 
+    <entity entity-name="ShipmentItemFeature"
             package-name="org.ofbiz.commonapp.shipment.shipment"
             title="Shipment Item Feature Entity">
       <field name="shipmentId" type="id-ne"></field>
@@ -308,7 +308,7 @@
       <prim-key field="shipmentItemSeqId"/>
       <prim-key field="productFeatureId"/>
     </entity>
-    <entity entity-name="ShipmentMethodType" 
+    <entity entity-name="ShipmentMethodType"
             package-name="org.ofbiz.commonapp.shipment.shipment"
             title="Shipment Method Type Entity">
       <field name="shipmentMethodTypeId" type="id-ne"></field>
@@ -318,14 +318,14 @@
         <key-map field-name="shipmentMethodTypeId"/>
       </relation>
     </entity>
-    <entity entity-name="ShipmentPackage" 
+    <entity entity-name="ShipmentPackage"
             package-name="org.ofbiz.commonapp.shipment.shipment"
             title="Shipment Package Entity">
       <field name="shipmentPackageId" type="id-ne"></field>
       <field name="dateCreated" type="date-time"></field>
       <prim-key field="shipmentPackageId"/>
     </entity>
-    <entity entity-name="ShipmentStatus" 
+    <entity entity-name="ShipmentStatus"
             package-name="org.ofbiz.commonapp.shipment.shipment"
             title="Shipment Status Entity">
       <field name="statusId" type="id-ne"></field>
@@ -334,7 +334,7 @@
       <prim-key field="statusId"/>
       <prim-key field="shipmentId"/>
     </entity>
-    <entity entity-name="ShipmentType" 
+    <entity entity-name="ShipmentType"
             package-name="org.ofbiz.commonapp.shipment.shipment"
             title="Shipment Type Entity">
       <field name="shipmentTypeId" type="id-ne"></field>
@@ -355,7 +355,7 @@
         <key-map field-name="shipmentTypeId"/>
       </relation>
     </entity>
-    <entity entity-name="ShipmentTypeAttr" 
+    <entity entity-name="ShipmentTypeAttr"
             package-name="org.ofbiz.commonapp.shipment.shipment"
             title="Shipment Type Attribute Entity">
       <field name="shipmentTypeId" type="id-ne"></field>
@@ -372,7 +372,7 @@
         <key-map field-name="shipmentTypeId"/>
       </relation>
     </entity>
-    <entity entity-name="ShippingDocument" 
+    <entity entity-name="ShippingDocument"
             package-name="org.ofbiz.commonapp.shipment.shipment"
             title="Shipping Document Entity">
       <field name="documentId" type="id-ne"></field>
@@ -381,6 +381,6 @@
       <field name="shipmentPackageId" type="id"></field>
       <field name="description" type="description"></field>
       <prim-key field="documentId"/>
-    </entity>  
+    </entity>
 </entitymodel>
 

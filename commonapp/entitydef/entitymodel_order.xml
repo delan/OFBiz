@@ -54,7 +54,7 @@
   <!-- org.ofbiz.commonapp.order.order -->
   <!-- ========================================================= -->
 
-    <entity entity-name="OrderAdjustment" 
+    <entity entity-name="OrderAdjustment"
             package-name="org.ofbiz.commonapp.order.order"
             title="Order Adjustment Entity">
       <field name="orderAdjustmentId" type="id-ne"></field>
@@ -81,7 +81,7 @@
         <key-map field-name="orderItemSeqId"/>
       </relation>
     </entity>
-    <entity entity-name="OrderAdjustmentAttribute" 
+    <entity entity-name="OrderAdjustmentAttribute"
             package-name="org.ofbiz.commonapp.order.order"
             title="Order Adjustment Attribute Entity">
       <field name="orderAdjustmentId" type="id-ne"></field>
@@ -96,7 +96,7 @@
         <key-map field-name="attrName"/>
       </relation>
     </entity>
-    <entity entity-name="OrderAdjustmentType" 
+    <entity entity-name="OrderAdjustmentType"
             package-name="org.ofbiz.commonapp.order.order"
             title="Order Adjustment Type Entity">
       <field name="orderAdjustmentTypeId" type="id-ne"></field>
@@ -117,7 +117,7 @@
         <key-map field-name="orderAdjustmentTypeId"/>
       </relation>
     </entity>
-    <entity entity-name="OrderAdjustmentTypeAttr" 
+    <entity entity-name="OrderAdjustmentTypeAttr"
             package-name="org.ofbiz.commonapp.order.order"
             title="Order Adjustment Type Attribute Entity">
       <field name="orderAdjustmentTypeId" type="id-ne"></field>
@@ -134,7 +134,7 @@
         <key-map field-name="orderAdjustmentTypeId"/>
       </relation>
     </entity>
-    <entity entity-name="OrderAttribute" 
+    <entity entity-name="OrderAttribute"
             package-name="org.ofbiz.commonapp.order.order"
             title="Order Attribute Entity">
       <field name="orderId" type="id-ne"></field>
@@ -149,7 +149,7 @@
         <key-map field-name="attrName"/>
       </relation>
     </entity>
-    <entity entity-name="OrderContactMech" 
+    <entity entity-name="OrderContactMech"
             package-name="org.ofbiz.commonapp.order.order"
             title="Order Contact Mechanism Entity">
       <field name="contactMechId" type="id-ne"></field>
@@ -168,7 +168,7 @@
         <key-map field-name="contactMechPurposeTypeId"/>
       </relation>
     </entity>
-    <entity entity-name="OrderHeader" 
+    <entity entity-name="OrderHeader"
             package-name="org.ofbiz.commonapp.order.order"
             title="Order Header Entity">
       <field name="orderId" type="id-ne"></field>
@@ -243,7 +243,7 @@
         <key-map field-name="orderId"/>
       </relation>
     </entity>
-    <entity entity-name="OrderHeaderNote" 
+    <entity entity-name="OrderHeaderNote"
             package-name="org.ofbiz.commonapp.order.order"
             title="Order Header Note Entity">
       <field name="orderId" type="id-ne"></field>
@@ -256,12 +256,12 @@
       <relation type="one" rel-entity-name="NoteData">
         <key-map field-name="noteId"/>
       </relation>
-    </entity>	
-    <view-entity entity-name="OrderHeaderNoteView" 
+    </entity>
+    <view-entity entity-name="OrderHeaderNoteView"
             package-name="org.ofbiz.commonapp.order.order"
-            title="Order Header Note View Entity">	
-      <member-entity entity-alias="ND" entity-name="NoteData"/>	
-      <member-entity entity-alias="OD" entity-name="OrderHeaderNote"/>	
+            title="Order Header Note View Entity">
+      <member-entity entity-alias="ND" entity-name="NoteData"/>
+      <member-entity entity-alias="OD" entity-name="OrderHeaderNote"/>
       <member-entity entity-alias="PR" entity-name="Person"/>
       <alias entity-alias="OD" name="orderId" prim-key="true"/>
       <alias entity-alias="ND" name="noteId" prim-key="true"/>
@@ -278,7 +278,7 @@
         <key-map field-name="noteParty" rel-field-name="partyId"/>
       </view-link>
     </view-entity>
-    <entity entity-name="OrderItem" 
+    <entity entity-name="OrderItem"
             package-name="org.ofbiz.commonapp.order.order"
             title="Order Item Entity">
       <field name="orderId" type="id-ne"></field>
@@ -366,7 +366,7 @@
         <key-map field-name="orderItemSeqId"/>
       </relation>
     </entity>
-    <entity entity-name="OrderItemAssociation" 
+    <entity entity-name="OrderItemAssociation"
             package-name="org.ofbiz.commonapp.order.order"
             title="Order Item Association Entity">
       <field name="salesOrderId" type="id-ne"></field>
@@ -392,7 +392,7 @@
         <key-map field-name="poItemSeqId" rel-field-name="orderItemSeqId"/>
       </relation>
     </entity>
-    <entity entity-name="OrderItemAttribute" 
+    <entity entity-name="OrderItemAttribute"
             package-name="org.ofbiz.commonapp.order.order"
             title="Order Item Attribute Entity">
       <field name="orderId" type="id-ne"></field>
@@ -410,7 +410,7 @@
         <key-map field-name="attrName"/>
       </relation>
     </entity>
-    <entity entity-name="OrderItemBilling" 
+    <entity entity-name="OrderItemBilling"
             package-name="org.ofbiz.commonapp.order.order"
             title="Order Item Billing Entity">
       <field name="orderId" type="id-ne"></field>
@@ -438,7 +438,7 @@
         <key-map field-name="invoiceItemSeqId"/>
       </relation>
     </entity>
-    <entity entity-name="OrderItemContactMech" 
+    <entity entity-name="OrderItemContactMech"
             package-name="org.ofbiz.commonapp.order.order"
             title="Order Item Contact Mechanism Entity">
       <field name="contactMechId" type="id-ne"></field>
@@ -463,7 +463,7 @@
         <key-map field-name="contactMechPurposeTypeId"/>
       </relation>
     </entity>
-    <entity entity-name="OrderItemRole" 
+    <entity entity-name="OrderItemRole"
             package-name="org.ofbiz.commonapp.order.order"
             title="Order Item Role Entity">
       <field name="orderId" type="id-ne"></field>
@@ -492,7 +492,7 @@
         <key-map field-name="roleTypeId"/>
       </relation>
     </entity>
-    <entity entity-name="OrderItemType" 
+    <entity entity-name="OrderItemType"
             package-name="org.ofbiz.commonapp.order.order"
             title="Order Item Type Entity">
       <field name="orderItemTypeId" type="id-ne"></field>
@@ -513,7 +513,7 @@
         <key-map field-name="orderItemTypeId"/>
       </relation>
     </entity>
-    <entity entity-name="OrderItemTypeAttr" 
+    <entity entity-name="OrderItemTypeAttr"
             package-name="org.ofbiz.commonapp.order.order"
             title="Order Item Type Attribute Entity">
       <field name="orderItemTypeId" type="id-ne"></field>
@@ -530,7 +530,7 @@
         <key-map field-name="orderItemTypeId"/>
       </relation>
     </entity>
-    <entity entity-name="OrderPaymentPreference" 
+    <entity entity-name="OrderPaymentPreference"
             package-name="org.ofbiz.commonapp.order.order"
             title="The Order Payment Preference Entity">
       <field name="orderPaymentPreferenceId" type="id-ne"></field>
@@ -555,7 +555,7 @@
         <key-map field-name="paymentMethodId"/>
       </relation>
     </entity>
-    <entity entity-name="OrderRole" 
+    <entity entity-name="OrderRole"
             package-name="org.ofbiz.commonapp.order.order"
             title="Order Role Entity">
       <field name="orderId" type="id-ne"></field>
@@ -581,7 +581,7 @@
         <key-map field-name="orderId"/>
       </relation>
     </entity>
-    <entity entity-name="OrderShipment" 
+    <entity entity-name="OrderShipment"
             package-name="org.ofbiz.commonapp.order.order"
             title="Order Shipment Entity">
       <field name="orderId" type="id-ne"></field>
@@ -608,7 +608,7 @@
         <key-map field-name="shipmentItemSeqId"/>
       </relation>
     </entity>
-    <entity entity-name="OrderShipmentPreference" 
+    <entity entity-name="OrderShipmentPreference"
             package-name="org.ofbiz.commonapp.order.order"
             title="The Order Shipment Preference Entity">
       <field name="orderId" type="id-ne"></field>
@@ -643,7 +643,7 @@
         <key-map field-name="shipmentMethodTypeId"/>
       </relation>
     </entity>
-    <entity entity-name="OrderStatus" 
+    <entity entity-name="OrderStatus"
             package-name="org.ofbiz.commonapp.order.order"
             title="Order Status Entity">
       <field name="orderStatusId" type="id-ne"></field>
@@ -663,7 +663,7 @@
         <key-map field-name="orderItemSeqId"/>
       </relation>
     </entity>
-    <entity entity-name="OrderTerm" 
+    <entity entity-name="OrderTerm"
             package-name="org.ofbiz.commonapp.order.order"
             title="Order Term Entity">
       <field name="orderTermId" type="id-ne"></field>
@@ -683,7 +683,7 @@
         <key-map field-name="termTypeId"/>
       </relation>
     </entity>
-    <entity entity-name="OrderTermAttribute" 
+    <entity entity-name="OrderTermAttribute"
             package-name="org.ofbiz.commonapp.order.order"
             title="Order Term Attribute Entity">
       <field name="orderTermId" type="id-ne"></field>
@@ -698,7 +698,7 @@
         <key-map field-name="attrName"/>
       </relation>
     </entity>
-    <entity entity-name="OrderType" 
+    <entity entity-name="OrderType"
             package-name="org.ofbiz.commonapp.order.order"
             title="Order Type Entity">
       <field name="orderTypeId" type="id-ne"></field>
@@ -719,7 +719,7 @@
         <key-map field-name="orderTypeId"/>
       </relation>
     </entity>
-    <entity entity-name="OrderTypeAttr" 
+    <entity entity-name="OrderTypeAttr"
             package-name="org.ofbiz.commonapp.order.order"
             title="Order Type Attribute Entity">
       <field name="orderTypeId" type="id-ne"></field>
@@ -736,7 +736,7 @@
         <key-map field-name="orderTypeId"/>
       </relation>
     </entity>
-    <entity entity-name="Picklist" 
+    <entity entity-name="Picklist"
             package-name="org.ofbiz.commonapp.order.order"
             title="Picklist Entity">
       <field name="picklistId" type="id-ne"></field>
@@ -746,7 +746,7 @@
         <key-map field-name="picklistId"/>
       </relation>
     </entity>
-    <entity entity-name="PicklistItem" 
+    <entity entity-name="PicklistItem"
             package-name="org.ofbiz.commonapp.order.order"
             title="Picklist Item Entity">
       <field name="picklistId" type="id-ne"></field>
@@ -761,7 +761,7 @@
         <key-map field-name="inventoryItemId"/>
       </relation>
     </entity>
-    <entity entity-name="ProductOrderItem" 
+    <entity entity-name="ProductOrderItem"
             package-name="org.ofbiz.commonapp.order.order"
             title="Product Order Item Entity">
       <field name="orderId" type="id-ne"></field>
@@ -791,7 +791,7 @@
         <key-map field-name="engagementItemSeqId" rel-field-name="orderItemSeqId"/>
       </relation>
     </entity>
-    <entity entity-name="SalesTaxLookup" 
+    <entity entity-name="SalesTaxLookup"
             package-name="org.ofbiz.commonapp.order.order"
             title="Sales Tax Lookup Entity">
       <field name="salesTaxLookupId" type="id-ne"></field>
@@ -806,7 +806,7 @@
         <key-map field-name="productCategoryId"/>
       </relation>
     </entity>
-    <entity entity-name="WorkOrderItemFulfillment" 
+    <entity entity-name="WorkOrderItemFulfillment"
             package-name="org.ofbiz.commonapp.order.order"
             title="Work Order Item Fulfillment Entity">
       <field name="workEffortId" type="id-ne"></field>
@@ -831,7 +831,7 @@
   <!-- org.ofbiz.commonapp.order.quote -->
   <!-- ========================================================= -->
 
-    <entity entity-name="Quote" 
+    <entity entity-name="Quote"
             package-name="org.ofbiz.commonapp.order.quote"
             title="Quote Entity">
       <field name="quoteId" type="id-ne"></field>
@@ -852,7 +852,7 @@
         <key-map field-name="quoteId"/>
       </relation>
     </entity>
-    <entity entity-name="QuoteAttribute" 
+    <entity entity-name="QuoteAttribute"
             package-name="org.ofbiz.commonapp.order.quote"
             title="Quote Attribute Entity">
       <field name="quoteId" type="id-ne"></field>
@@ -867,7 +867,7 @@
         <key-map field-name="attrName"/>
       </relation>
     </entity>
-    <entity entity-name="QuoteItem" 
+    <entity entity-name="QuoteItem"
             package-name="org.ofbiz.commonapp.order.quote"
             title="Quote Item Entity">
       <field name="quoteId" type="id-ne"></field>
@@ -887,7 +887,7 @@
       <prim-key field="quoteId"/>
       <prim-key field="quoteItemSeqId"/>
     </entity>
-    <entity entity-name="QuoteRole" 
+    <entity entity-name="QuoteRole"
             package-name="org.ofbiz.commonapp.order.quote"
             title="Quote Role Entity">
       <field name="quoteId" type="id-ne"></field>
@@ -897,7 +897,7 @@
       <prim-key field="partyId"/>
       <prim-key field="roleTypeId"/>
     </entity>
-    <entity entity-name="QuoteTerm" 
+    <entity entity-name="QuoteTerm"
             package-name="org.ofbiz.commonapp.order.quote"
             title="Quote Term Entity">
       <field name="quoteTermId" type="id-ne"></field>
@@ -907,7 +907,7 @@
       <field name="termValue" type="numeric"></field>
       <prim-key field="quoteTermId"/>
     </entity>
-    <entity entity-name="QuoteTermAttribute" 
+    <entity entity-name="QuoteTermAttribute"
             package-name="org.ofbiz.commonapp.order.quote"
             title="Quote Term Attribute Entity">
       <field name="quoteTermId" type="id-ne"></field>
@@ -922,7 +922,7 @@
         <key-map field-name="attrName"/>
       </relation>
     </entity>
-    <entity entity-name="QuoteType" 
+    <entity entity-name="QuoteType"
             package-name="org.ofbiz.commonapp.order.quote"
             title="Quote Type Entity">
       <field name="quoteTypeId" type="id-ne"></field>
@@ -943,7 +943,7 @@
         <key-map field-name="quoteTypeId"/>
       </relation>
     </entity>
-    <entity entity-name="QuoteTypeAttr" 
+    <entity entity-name="QuoteTypeAttr"
             package-name="org.ofbiz.commonapp.order.quote"
             title="Quote Type Attribute Entity">
       <field name="quoteTypeId" type="id-ne"></field>
@@ -965,7 +965,7 @@
   <!-- org.ofbiz.commonapp.order.request -->
   <!-- ========================================================= -->
 
-    <entity entity-name="CustRequest" 
+    <entity entity-name="CustRequest"
             package-name="org.ofbiz.commonapp.order.request"
             title="Customer Request Entity">
       <field name="custRequestId" type="id-ne"></field>
@@ -984,7 +984,7 @@
         <key-map field-name="custRequestId"/>
       </relation>
     </entity>
-    <entity entity-name="CustRequestAttribute" 
+    <entity entity-name="CustRequestAttribute"
             package-name="org.ofbiz.commonapp.order.request"
             title="Customer Request Attribute Entity">
       <field name="custRequestId" type="id-ne"></field>
@@ -999,7 +999,7 @@
         <key-map field-name="attrName"/>
       </relation>
     </entity>
-    <entity entity-name="CustRequestItem" 
+    <entity entity-name="CustRequestItem"
             package-name="org.ofbiz.commonapp.order.request"
             title="Customer Request Item Entity">
       <field name="custRequestId" type="id-ne"></field>
@@ -1011,7 +1011,7 @@
       <prim-key field="custRequestId"/>
       <prim-key field="custRequestItemSeqId"/>
     </entity>
-    <entity entity-name="CustRequestRole" 
+    <entity entity-name="CustRequestRole"
             package-name="org.ofbiz.commonapp.order.request"
             title="Customer Request Role Entity">
       <field name="custRequestId" type="id-ne"></field>
@@ -1021,7 +1021,7 @@
       <prim-key field="partyId"/>
       <prim-key field="roleTypeId"/>
     </entity>
-    <entity entity-name="CustRequestType" 
+    <entity entity-name="CustRequestType"
             package-name="org.ofbiz.commonapp.order.request"
             title="Customer Request Type Entity">
       <field name="custRequestTypeId" type="id-ne"></field>
@@ -1042,7 +1042,7 @@
         <key-map field-name="custRequestTypeId"/>
       </relation>
     </entity>
-    <entity entity-name="CustRequestTypeAttr" 
+    <entity entity-name="CustRequestTypeAttr"
             package-name="org.ofbiz.commonapp.order.request"
             title="Customer Request Type Attribute Entity">
       <field name="custRequestTypeId" type="id-ne"></field>
@@ -1059,7 +1059,7 @@
         <key-map field-name="custRequestTypeId"/>
       </relation>
     </entity>
-    <entity entity-name="DesiredFeature" 
+    <entity entity-name="DesiredFeature"
             package-name="org.ofbiz.commonapp.order.request"
             title="Desired Feature Entity">
       <field name="desiredFeatureId" type="id-ne"></field>
@@ -1069,7 +1069,7 @@
       <prim-key field="desiredFeatureId"/>
       <prim-key field="requirementId"/>
     </entity>
-    <entity entity-name="OrderRequirementCommitment" 
+    <entity entity-name="OrderRequirementCommitment"
             package-name="org.ofbiz.commonapp.order.request"
             title="Order Requirement Commitment Entity">
       <field name="orderId" type="id-ne"></field>
@@ -1080,7 +1080,7 @@
       <prim-key field="orderItemSeqId"/>
       <prim-key field="requirementId"/>
     </entity>
-    <entity entity-name="Requirement" 
+    <entity entity-name="Requirement"
             package-name="org.ofbiz.commonapp.order.request"
             title="Requirement Entity">
       <field name="requirementId" type="id-ne"></field>
@@ -1103,7 +1103,7 @@
         <key-map field-name="requirementId"/>
       </relation>
     </entity>
-    <entity entity-name="RequirementAttribute" 
+    <entity entity-name="RequirementAttribute"
             package-name="org.ofbiz.commonapp.order.request"
             title="Requirement Attribute Entity">
       <field name="requirementId" type="id-ne"></field>
@@ -1118,7 +1118,7 @@
         <key-map field-name="attrName"/>
       </relation>
     </entity>
-    <entity entity-name="RequirementBudgetAllocation" 
+    <entity entity-name="RequirementBudgetAllocation"
             package-name="org.ofbiz.commonapp.order.request"
             title="Requirement Budget Allocation Entity">
       <field name="budgetId" type="id-ne"></field>
@@ -1129,7 +1129,7 @@
       <prim-key field="budgetItemSeqId"/>
       <prim-key field="requirementId"/>
     </entity>
-    <entity entity-name="RequirementCustRequest" 
+    <entity entity-name="RequirementCustRequest"
             package-name="org.ofbiz.commonapp.order.request"
             title="Requirement Customer Request Entity">
       <field name="custRequestId" type="id-ne"></field>
@@ -1139,7 +1139,7 @@
       <prim-key field="custRequestItemSeqId"/>
       <prim-key field="requirementId"/>
     </entity>
-    <entity entity-name="RequirementRole" 
+    <entity entity-name="RequirementRole"
             package-name="org.ofbiz.commonapp.order.request"
             title="Requirement Role Entity">
       <field name="requirementId" type="id-ne"></field>
@@ -1152,7 +1152,7 @@
       <prim-key field="roleTypeId"/>
       <prim-key field="fromDate"/>
     </entity>
-    <entity entity-name="RequirementStatus" 
+    <entity entity-name="RequirementStatus"
             package-name="org.ofbiz.commonapp.order.request"
             title="Requirement Status Entity">
       <field name="requirementId" type="id-ne"></field>
@@ -1161,7 +1161,7 @@
       <prim-key field="requirementId"/>
       <prim-key field="statusId"/>
     </entity>
-    <entity entity-name="RequirementType" 
+    <entity entity-name="RequirementType"
             package-name="org.ofbiz.commonapp.order.request"
             title="Requirement Type Entity">
       <field name="requirementTypeId" type="id-ne"></field>
@@ -1182,7 +1182,7 @@
         <key-map field-name="requirementTypeId"/>
       </relation>
     </entity>
-    <entity entity-name="RequirementTypeAttr" 
+    <entity entity-name="RequirementTypeAttr"
             package-name="org.ofbiz.commonapp.order.request"
             title="Requirement Type Attribute Entity">
       <field name="requirementTypeId" type="id-ne"></field>
@@ -1199,7 +1199,7 @@
         <key-map field-name="requirementTypeId"/>
       </relation>
     </entity>
-    <entity entity-name="RespondingParty" 
+    <entity entity-name="RespondingParty"
             package-name="org.ofbiz.commonapp.order.request"
             title="Responding Party Entity">
       <field name="respondingPartySeqId" type="id-ne"></field>
@@ -1211,7 +1211,7 @@
       <prim-key field="custRequestId"/>
       <prim-key field="partyId"/>
     </entity>
-    <entity entity-name="WorkRequirement" 
+    <entity entity-name="WorkRequirement"
             package-name="org.ofbiz.commonapp.order.request"
             title="Work Requirement Entity">
       <field name="requirementId" type="id-ne"></field>
@@ -1220,7 +1220,7 @@
       <field name="productId" type="id"></field>
       <prim-key field="requirementId"/>
     </entity>
-    <entity entity-name="WorkRequirementFulfillment" 
+    <entity entity-name="WorkRequirementFulfillment"
             package-name="org.ofbiz.commonapp.order.request"
             title="Work Requirement Fulfillment Entity">
       <field name="requirementId" type="id-ne"></field>
@@ -1233,7 +1233,7 @@
   <!-- org.ofbiz.commonapp.order.shoppinglist -->
   <!-- ========================================================= -->
 
-    <entity entity-name="ShoppingList" 
+    <entity entity-name="ShoppingList"
             package-name="org.ofbiz.commonapp.order.shoppinglist"
             title="Shopping List Entity">
       <field name="shoppingListId" type="id-ne"></field>
@@ -1259,7 +1259,7 @@
         <key-map field-name="shoppingListTypeId"/>
       </relation>
     </entity>
-    <entity entity-name="ShoppingListItem" 
+    <entity entity-name="ShoppingListItem"
             package-name="org.ofbiz.commonapp.order.shoppinglist"
             title="Shopping List Item Entity">
       <field name="shoppingListId" type="id-ne"></field>
@@ -1275,7 +1275,7 @@
         <key-map field-name="productId"/>
       </relation>
     </entity>
-    <entity entity-name="ShoppingListType" 
+    <entity entity-name="ShoppingListType"
             package-name="org.ofbiz.commonapp.order.shoppinglist"
             title="Shopping List Type Entity">
       <field name="shoppingListTypeId" type="id-ne"></field>
@@ -1284,6 +1284,6 @@
       <relation type="many" rel-entity-name="ShoppingList">
         <key-map field-name="shoppingListTypeId"/>
       </relation>
-    </entity>  
+    </entity>
 </entitymodel>
 

@@ -66,7 +66,7 @@
   <!-- org.ofbiz.commonapp.common.currency -->
   <!-- ========================================================= -->
 
-    <entity entity-name="CurrencyCode" 
+    <entity entity-name="CurrencyCode"
             package-name="org.ofbiz.commonapp.common.currency"
             title="Currency ISO Code Chart"
             author="Andy Zeneski (jaz@zsolv.com)">
@@ -79,7 +79,7 @@
   <!-- org.ofbiz.commonapp.common.enum -->
   <!-- ========================================================= -->
 
-    <entity entity-name="Enumeration" 
+    <entity entity-name="Enumeration"
             package-name="org.ofbiz.commonapp.common.enum"
             title="Enumeration Entity">
       <field name="enumId" type="id-ne"></field>
@@ -92,7 +92,7 @@
         <key-map field-name="enumTypeId"/>
       </relation>
     </entity>
-    <entity entity-name="EnumerationType" 
+    <entity entity-name="EnumerationType"
             package-name="org.ofbiz.commonapp.common.enum"
             title="Enumeration Type Entity">
       <field name="enumTypeId" type="id-ne"></field>
@@ -115,7 +115,7 @@
   <!-- org.ofbiz.commonapp.common.geo -->
   <!-- ========================================================= -->
 
-    <entity entity-name="CountryCapital" 
+    <entity entity-name="CountryCapital"
             package-name="org.ofbiz.commonapp.common.geo"
             dependent-on="CountryCode"
             title="Country Capital Entity"
@@ -127,7 +127,7 @@
         <key-map field-name="countryCode"/>
       </relation>
     </entity>
-    <entity entity-name="CountryCode" 
+    <entity entity-name="CountryCode"
             package-name="org.ofbiz.commonapp.common.geo"
             title="ISO Country Code Entity"
             author="Andy Zeneski (jaz@zsolv.com)">
@@ -143,7 +143,7 @@
         <key-map field-name="countryCode"/>
       </relation>
     </entity>
-    <entity entity-name="CountryTeleCode" 
+    <entity entity-name="CountryTeleCode"
             package-name="org.ofbiz.commonapp.common.geo"
             dependent-on="CountryCode"
             title="Telephone Country Code Entity"
@@ -155,7 +155,7 @@
         <key-map field-name="countryCode"/>
       </relation>
     </entity>
-    <entity entity-name="Geo" 
+    <entity entity-name="Geo"
             package-name="org.ofbiz.commonapp.common.geo"
             title="Geographic Boundary Entity">
       <field name="geoId" type="id-ne"></field>
@@ -177,7 +177,7 @@
         <key-map field-name="geoId"/>
       </relation>
     </entity>
-    <entity entity-name="GeoAssoc" 
+    <entity entity-name="GeoAssoc"
             package-name="org.ofbiz.commonapp.common.geo"
             title="Geographic Boundary Association Entity">
       <field name="geoId" type="id-ne"></field>
@@ -195,7 +195,7 @@
         <key-map field-name="geoAssocTypeId"/>
       </relation>
     </entity>
-    <entity entity-name="GeoAssocType" 
+    <entity entity-name="GeoAssocType"
             package-name="org.ofbiz.commonapp.common.geo"
             title="Geographic Boundary Association Entity">
       <field name="geoAssocTypeId" type="id-ne"></field>
@@ -205,7 +205,7 @@
         <key-map field-name="geoAssocTypeId"/>
       </relation>
     </entity>
-    <entity entity-name="GeoType" 
+    <entity entity-name="GeoType"
             package-name="org.ofbiz.commonapp.common.geo"
             title="Geographic Boundary Type Entity">
       <field name="geoTypeId" type="id-ne"></field>
@@ -228,7 +228,7 @@
   <!-- org.ofbiz.commonapp.common.note -->
   <!-- ========================================================= -->
 
-    <entity entity-name="NoteData" 
+    <entity entity-name="NoteData"
             package-name="org.ofbiz.commonapp.common.note"
             title="Note Data Entity">
       <field name="noteId" type="id-ne"></field>
@@ -243,14 +243,14 @@
   <!-- org.ofbiz.commonapp.common.period -->
   <!-- ========================================================= -->
 
-    <entity entity-name="PeriodType" 
+    <entity entity-name="PeriodType"
             package-name="org.ofbiz.commonapp.common.period"
             title="Period Type Entity">
       <field name="periodTypeId" type="id-ne"></field>
       <field name="description" type="description"></field>
       <prim-key field="periodTypeId"/>
     </entity>
-    <entity entity-name="StandardTimePeriod" 
+    <entity entity-name="StandardTimePeriod"
             package-name="org.ofbiz.commonapp.common.period"
             title="Standard Time Period Entity">
       <field name="standardTimePeriodId" type="id-ne"></field>
@@ -264,7 +264,7 @@
   <!-- org.ofbiz.commonapp.common.sequence -->
   <!-- ========================================================= -->
 
-    <entity entity-name="SequenceValueItem" 
+    <entity entity-name="SequenceValueItem"
             package-name="org.ofbiz.commonapp.common.sequence"
             title="Sequence Entity">
       <field name="seqName" type="id-long-ne"></field>
@@ -276,7 +276,7 @@
   <!-- org.ofbiz.commonapp.common.status -->
   <!-- ========================================================= -->
 
-    <entity entity-name="StatusItem" 
+    <entity entity-name="StatusItem"
             package-name="org.ofbiz.commonapp.common.status"
             title="Status Entity">
       <field name="statusId" type="id-ne"></field>
@@ -298,7 +298,7 @@
         <key-map field-name="statusId" rel-field-name="statusIdTo"/>
       </relation>
     </entity>
-    <entity entity-name="StatusType" 
+    <entity entity-name="StatusType"
             package-name="org.ofbiz.commonapp.common.status"
             title="Status Type Entity">
       <field name="statusTypeId" type="id-ne"></field>
@@ -316,7 +316,7 @@
         <key-map field-name="statusTypeId"/>
       </relation>
     </entity>
-    <entity entity-name="StatusValidChange" 
+    <entity entity-name="StatusValidChange"
             package-name="org.ofbiz.commonapp.common.status"
             title="Status Valid Change Entity">
       <field name="statusId" type="id-ne"></field>
@@ -331,11 +331,11 @@
       <relation type="one" title="To" rel-entity-name="StatusItem">
         <key-map field-name="statusIdTo" rel-field-name="statusId"/>
       </relation>
-    </entity>	
-    <view-entity entity-name="StatusValidChangeToDetail" 
+    </entity>
+    <view-entity entity-name="StatusValidChangeToDetail"
             package-name="org.ofbiz.commonapp.common.status"
-            title="Status Valid Change To Detail View Entity">	
-      <member-entity entity-alias="SI" entity-name="StatusItem"/>	
+            title="Status Valid Change To Detail View Entity">
+      <member-entity entity-alias="SI" entity-name="StatusItem"/>
       <member-entity entity-alias="SVC" entity-name="StatusValidChange"/>
       <alias entity-alias="SVC" name="statusId" prim-key="true"/>
       <alias entity-alias="SVC" name="statusIdTo" prim-key="true"/>
@@ -361,7 +361,7 @@
   <!-- org.ofbiz.commonapp.common.uom -->
   <!-- ========================================================= -->
 
-    <entity entity-name="Uom" 
+    <entity entity-name="Uom"
             package-name="org.ofbiz.commonapp.common.uom"
             title="Unit Of Measure Entity">
       <field name="uomId" type="id-ne"></field>
@@ -379,7 +379,7 @@
         <key-map field-name="uomId" rel-field-name="uomIdTo"/>
       </relation>
     </entity>
-    <entity entity-name="UomConversion" 
+    <entity entity-name="UomConversion"
             package-name="org.ofbiz.commonapp.common.uom"
             title="Unit Of Measure Conversion Type Entity">
       <field name="uomId" type="id-ne"></field>
@@ -394,7 +394,7 @@
         <key-map field-name="uomIdTo" rel-field-name="uomId"/>
       </relation>
     </entity>
-    <entity entity-name="UomType" 
+    <entity entity-name="UomType"
             package-name="org.ofbiz.commonapp.common.uom"
             title="Unit Of Measure Type Entity">
       <field name="uomTypeId" type="id-ne"></field>
@@ -417,7 +417,7 @@
   <!-- org.ofbiz.commonapp.content.content -->
   <!-- ========================================================= -->
 
-    <entity entity-name="Content" 
+    <entity entity-name="Content"
             package-name="org.ofbiz.commonapp.content.content"
             title="Content Entity">
       <field name="contentId" type="id-vlong-ne"></field>
@@ -449,7 +449,7 @@
         <key-map field-name="dataObjectId"/>
       </relation>
     </entity>
-    <entity entity-name="ContentAssociation" 
+    <entity entity-name="ContentAssociation"
             package-name="org.ofbiz.commonapp.content.content"
             title="Content Association Entity">
       <field name="contentIdFrom" type="id-vlong-ne"></field>
@@ -460,7 +460,7 @@
       <prim-key field="contentIdFrom"/>
       <prim-key field="contentIdTo"/>
     </entity>
-    <entity entity-name="ContentAttribute" 
+    <entity entity-name="ContentAttribute"
             package-name="org.ofbiz.commonapp.content.content"
             title="Content Attribute Entity">
       <field name="contentId" type="id-vlong-ne"></field>
@@ -475,7 +475,7 @@
         <key-map field-name="attrName"/>
       </relation>
     </entity>
-    <entity entity-name="ContentCategory" 
+    <entity entity-name="ContentCategory"
             package-name="org.ofbiz.commonapp.content.content"
             title="Content Category Entity">
       <field name="contentCategoryId" type="id-ne"></field>
@@ -490,7 +490,7 @@
         <key-map field-name="contentCategoryId"/>
       </relation>
     </entity>
-    <entity entity-name="ContentCategoryClass" 
+    <entity entity-name="ContentCategoryClass"
             package-name="org.ofbiz.commonapp.content.content"
             title="Content Category Classification Entity">
       <field name="contentCategoryId" type="id-ne"></field>
@@ -506,7 +506,7 @@
         <key-map field-name="contentCategoryId"/>
       </relation>
     </entity>
-    <entity entity-name="ContentDataObjectUsage" 
+    <entity entity-name="ContentDataObjectUsage"
             package-name="org.ofbiz.commonapp.content.content"
             title="Content Data Object Usage Entity">
       <field name="contentId" type="id-vlong-ne"></field>
@@ -525,7 +525,7 @@
         <key-map field-name="dataObjectId"/>
       </relation>
     </entity>
-    <entity entity-name="ContentRole" 
+    <entity entity-name="ContentRole"
             package-name="org.ofbiz.commonapp.content.content"
             title="Content Role Entity">
       <description>Data Type Of: Party Role</description>
@@ -539,7 +539,7 @@
       <prim-key field="roleTypeId"/>
       <prim-key field="fromDate"/>
     </entity>
-    <entity entity-name="ContentType" 
+    <entity entity-name="ContentType"
             package-name="org.ofbiz.commonapp.content.content"
             title="Content Type Entity">
       <field name="contentTypeId" type="id-ne"></field>
@@ -560,7 +560,7 @@
         <key-map field-name="contentTypeId"/>
       </relation>
     </entity>
-    <entity entity-name="ContentTypeAttr" 
+    <entity entity-name="ContentTypeAttr"
             package-name="org.ofbiz.commonapp.content.content"
             title="Content Type Attribute Entity">
       <field name="contentTypeId" type="id-ne"></field>
@@ -582,7 +582,7 @@
   <!-- org.ofbiz.commonapp.content.data -->
   <!-- ========================================================= -->
 
-    <entity entity-name="DataCategory" 
+    <entity entity-name="DataCategory"
             package-name="org.ofbiz.commonapp.content.data"
             title="Data Category Entity">
       <field name="dataCategoryId" type="id-ne"></field>
@@ -602,7 +602,7 @@
         <key-map field-name="dataCategoryId"/>
       </relation>
     </entity>
-    <entity entity-name="DataCategoryMember" 
+    <entity entity-name="DataCategoryMember"
             package-name="org.ofbiz.commonapp.content.data"
             title="Data Category Member Entity">
       <field name="dataObjectId" type="id-ne"></field>
@@ -617,7 +617,7 @@
         <key-map field-name="dataObjectId"/>
       </relation>
     </entity>
-    <entity entity-name="DataObject" 
+    <entity entity-name="DataObject"
             package-name="org.ofbiz.commonapp.content.data"
             title="Data Object Entity">
       <field name="dataObjectId" type="id-ne"></field>
@@ -673,7 +673,7 @@
         <key-map field-name="dataObjectId"/>
       </relation>
     </entity>
-    <entity entity-name="DataObjectAttribute" 
+    <entity entity-name="DataObjectAttribute"
             package-name="org.ofbiz.commonapp.content.data"
             title="Data Object Attribute Entity">
       <field name="dataObjectId" type="id-ne"></field>
@@ -688,7 +688,7 @@
         <key-map field-name="attrName"/>
       </relation>
     </entity>
-    <entity entity-name="DataObjectPurpose" 
+    <entity entity-name="DataObjectPurpose"
             package-name="org.ofbiz.commonapp.content.data"
             title="Data Object Purpose Entity">
       <field name="dataObjectId" type="id-ne"></field>
@@ -702,7 +702,7 @@
         <key-map field-name="dataObjectPurposeTypeId"/>
       </relation>
     </entity>
-    <entity entity-name="DataObjectPurposeType" 
+    <entity entity-name="DataObjectPurposeType"
             package-name="org.ofbiz.commonapp.content.data"
             title="Data Object Purpose Type Entity">
       <field name="dataObjectPurposeTypeId" type="id-ne"></field>
@@ -712,7 +712,7 @@
         <key-map field-name="dataObjectPurposeTypeId"/>
       </relation>
     </entity>
-    <entity entity-name="DataObjectType" 
+    <entity entity-name="DataObjectType"
             package-name="org.ofbiz.commonapp.content.data"
             title="Data Object Type Entity">
       <field name="dataObjectTypeId" type="id-ne"></field>
@@ -733,7 +733,7 @@
         <key-map field-name="dataObjectTypeId"/>
       </relation>
     </entity>
-    <entity entity-name="DataObjectTypeAttr" 
+    <entity entity-name="DataObjectTypeAttr"
             package-name="org.ofbiz.commonapp.content.data"
             title="Data Object Type Attribute Entity">
       <field name="dataObjectTypeId" type="id-ne"></field>
@@ -750,7 +750,7 @@
         <key-map field-name="dataObjectTypeId"/>
       </relation>
     </entity>
-    <entity entity-name="ElectronicText" 
+    <entity entity-name="ElectronicText"
             package-name="org.ofbiz.commonapp.content.data"
             title="Electronic Text Entity">
       <field name="dataObjectId" type="id-ne"></field>
@@ -760,14 +760,14 @@
         <key-map field-name="dataObjectId"/>
       </relation>
     </entity>
-    <entity entity-name="FunctionType" 
+    <entity entity-name="FunctionType"
             package-name="org.ofbiz.commonapp.content.data"
             title="Function Type Entity">
       <field name="functionTypeId" type="id-ne"></field>
       <field name="description" type="description"></field>
       <prim-key field="functionTypeId"/>
     </entity>
-    <entity entity-name="ImageDataObject" 
+    <entity entity-name="ImageDataObject"
             package-name="org.ofbiz.commonapp.content.data"
             title="Image Data Object Entity">
       <field name="dataObjectId" type="id-ne"></field>
@@ -777,7 +777,7 @@
         <key-map field-name="dataObjectId"/>
       </relation>
     </entity>
-    <entity entity-name="OtherDataObject" 
+    <entity entity-name="OtherDataObject"
             package-name="org.ofbiz.commonapp.content.data"
             title="Other Data Object Entity">
       <field name="dataObjectId" type="id-ne"></field>
@@ -792,7 +792,7 @@
   <!-- org.ofbiz.commonapp.content.document -->
   <!-- ========================================================= -->
 
-    <entity entity-name="Document" 
+    <entity entity-name="Document"
             package-name="org.ofbiz.commonapp.content.document"
             title="Document Entity">
       <field name="documentId" type="id-ne"></field>
@@ -813,7 +813,7 @@
         <key-map field-name="documentId"/>
       </relation>
     </entity>
-    <entity entity-name="DocumentAttribute" 
+    <entity entity-name="DocumentAttribute"
             package-name="org.ofbiz.commonapp.content.document"
             title="Document Attribute Entity">
       <field name="documentId" type="id-ne"></field>
@@ -828,7 +828,7 @@
         <key-map field-name="attrName"/>
       </relation>
     </entity>
-    <entity entity-name="DocumentType" 
+    <entity entity-name="DocumentType"
             package-name="org.ofbiz.commonapp.content.document"
             title="Document Type Entity">
       <field name="documentTypeId" type="id-ne"></field>
@@ -849,7 +849,7 @@
         <key-map field-name="documentTypeId"/>
       </relation>
     </entity>
-    <entity entity-name="DocumentTypeAttr" 
+    <entity entity-name="DocumentTypeAttr"
             package-name="org.ofbiz.commonapp.content.document"
             title="Document Type Attribute Entity">
       <field name="documentTypeId" type="id-ne"></field>
@@ -871,7 +871,7 @@
   <!-- org.ofbiz.commonapp.content.preference -->
   <!-- ========================================================= -->
 
-    <entity entity-name="WebPreferenceType" 
+    <entity entity-name="WebPreferenceType"
             package-name="org.ofbiz.commonapp.content.preference"
             title="Web Preference Type Entity">
       <field name="webPreferenceTypeId" type="id-ne"></field>
@@ -881,7 +881,7 @@
         <key-map field-name="webPreferenceTypeId"/>
       </relation>
     </entity>
-    <entity entity-name="WebUserPreference" 
+    <entity entity-name="WebUserPreference"
             package-name="org.ofbiz.commonapp.content.preference"
             title="Web User Preference Entity">
       <field name="userLoginId" type="id-vlong-ne"></field>
@@ -905,7 +905,7 @@
   <!-- org.ofbiz.commonapp.content.subscription -->
   <!-- ========================================================= -->
 
-    <entity entity-name="Subscription" 
+    <entity entity-name="Subscription"
             package-name="org.ofbiz.commonapp.content.subscription"
             title="Subscription Entity">
       <field name="subscriptionId" type="id-ne"></field>
@@ -976,7 +976,7 @@
         <key-map field-name="subscriptionId"/>
       </relation>
     </entity>
-    <entity entity-name="SubscriptionActivity" 
+    <entity entity-name="SubscriptionActivity"
             package-name="org.ofbiz.commonapp.content.subscription"
             title="Subscription Activity Entity">
       <field name="subscriptionActivityId" type="id-ne"></field>
@@ -987,7 +987,7 @@
         <key-map field-name="subscriptionActivityId"/>
       </relation>
     </entity>
-    <entity entity-name="SubscriptionAttribute" 
+    <entity entity-name="SubscriptionAttribute"
             package-name="org.ofbiz.commonapp.content.subscription"
             title="Subscription Attribute Entity">
       <field name="subscriptionId" type="id-ne"></field>
@@ -1002,7 +1002,7 @@
         <key-map field-name="attrName"/>
       </relation>
     </entity>
-    <entity entity-name="SubscriptionFulfillmentPiece" 
+    <entity entity-name="SubscriptionFulfillmentPiece"
             package-name="org.ofbiz.commonapp.content.subscription"
             title="Subscription Fulfillment Piece Entity">
       <field name="subscriptionActivityId" type="id-ne"></field>
@@ -1016,7 +1016,7 @@
         <key-map field-name="subscriptionActivityId"/>
       </relation>
     </entity>
-    <entity entity-name="SubscriptionType" 
+    <entity entity-name="SubscriptionType"
             package-name="org.ofbiz.commonapp.content.subscription"
             title="Subscription Type Entity">
       <field name="subscriptionTypeId" type="id-ne"></field>
@@ -1037,7 +1037,7 @@
         <key-map field-name="subscriptionTypeId"/>
       </relation>
     </entity>
-    <entity entity-name="SubscriptionTypeAttr" 
+    <entity entity-name="SubscriptionTypeAttr"
             package-name="org.ofbiz.commonapp.content.subscription"
             title="Subscription Type Attribute Entity">
       <field name="subscriptionTypeId" type="id-ne"></field>
@@ -1059,7 +1059,7 @@
   <!-- org.ofbiz.commonapp.content.visit -->
   <!-- ========================================================= -->
 
-    <entity entity-name="BrowserType" 
+    <entity entity-name="BrowserType"
             package-name="org.ofbiz.commonapp.content.visit"
             title="Browser Type Entity">
       <field name="browserTypeId" type="id-ne"></field>
@@ -1070,7 +1070,7 @@
         <key-map field-name="browserTypeId"/>
       </relation>
     </entity>
-    <entity entity-name="PlatformType" 
+    <entity entity-name="PlatformType"
             package-name="org.ofbiz.commonapp.content.visit"
             title="Platform Type Entity">
       <field name="platformTypeId" type="id-ne"></field>
@@ -1081,7 +1081,7 @@
         <key-map field-name="platformTypeId"/>
       </relation>
     </entity>
-    <entity entity-name="ProtocolType" 
+    <entity entity-name="ProtocolType"
             package-name="org.ofbiz.commonapp.content.visit"
             title="Protocol Type Entity">
       <field name="protocolTypeId" type="id-ne"></field>
@@ -1091,7 +1091,7 @@
         <key-map field-name="protocolTypeId"/>
       </relation>
     </entity>
-    <entity entity-name="ServerHit" 
+    <entity entity-name="ServerHit"
             package-name="org.ofbiz.commonapp.content.visit"
             title="Server Hit Entity">
       <field name="visitId" type="id-long-ne"></field>
@@ -1138,7 +1138,7 @@
         <key-map field-name="contentId"/>
       </relation>
     </entity>
-    <entity entity-name="ServerHitBin" 
+    <entity entity-name="ServerHitBin"
             package-name="org.ofbiz.commonapp.content.visit"
             title="Server Hit Bin Entity">
       <field name="contentId" type="id-vlong-ne"></field>
@@ -1159,7 +1159,7 @@
         <key-map field-name="contentId"/>
       </relation>
     </entity>
-    <entity entity-name="ServerHitType" 
+    <entity entity-name="ServerHitType"
             package-name="org.ofbiz.commonapp.content.visit"
             title="Server Hit Bin Entity">
       <field name="hitTypeId" type="id"></field>
@@ -1172,7 +1172,7 @@
         <key-map field-name="hitTypeId"/>
       </relation>
     </entity>
-    <entity entity-name="UserAgent" 
+    <entity entity-name="UserAgent"
             package-name="org.ofbiz.commonapp.content.visit"
             title="User Agent Entity">
       <field name="userAgentId" type="id-ne"></field>
@@ -1201,7 +1201,7 @@
         <key-map field-name="userAgentId"/>
       </relation>
     </entity>
-    <entity entity-name="UserAgentMethodType" 
+    <entity entity-name="UserAgentMethodType"
             package-name="org.ofbiz.commonapp.content.visit"
             title="User Agent Method Type Entity">
       <field name="userAgentMethodTypeId" type="id-ne"></field>
@@ -1211,7 +1211,7 @@
         <key-map field-name="userAgentMethodTypeId"/>
       </relation>
     </entity>
-    <entity entity-name="UserAgentType" 
+    <entity entity-name="UserAgentType"
             package-name="org.ofbiz.commonapp.content.visit"
             title="User Agent Type Entity">
       <field name="userAgentTypeId" type="id-ne"></field>
@@ -1221,7 +1221,7 @@
         <key-map field-name="userAgentTypeId"/>
       </relation>
     </entity>
-    <entity entity-name="Visit" 
+    <entity entity-name="Visit"
             package-name="org.ofbiz.commonapp.content.visit"
             title="Visit Entity">
       <field name="visitId" type="id-long-ne"></field>
@@ -1255,7 +1255,7 @@
   <!-- org.ofbiz.commonapp.security.login -->
   <!-- ========================================================= -->
 
-    <entity entity-name="UserLogin" 
+    <entity entity-name="UserLogin"
             package-name="org.ofbiz.commonapp.security.login"
             title="User Login Entity">
       <field name="userLoginId" type="id-vlong-ne"></field>
@@ -1276,7 +1276,7 @@
         <key-map field-name="partyId"/>
       </relation>
     </entity>
-    <entity entity-name="UserLoginHistory" 
+    <entity entity-name="UserLoginHistory"
             package-name="org.ofbiz.commonapp.security.login"
             title="User Login History Entity">
       <field name="userLoginId" type="id-vlong-ne"></field>
@@ -1299,7 +1299,7 @@
   <!-- org.ofbiz.commonapp.security.securitygroup -->
   <!-- ========================================================= -->
 
-    <entity entity-name="SecurityGroup" 
+    <entity entity-name="SecurityGroup"
             package-name="org.ofbiz.commonapp.security.securitygroup"
             title="Security Component - Security Group Entity">
       <field name="groupId" type="id-ne"></field>
@@ -1312,7 +1312,7 @@
         <key-map field-name="groupId"/>
       </relation>
     </entity>
-    <entity entity-name="SecurityGroupPermission" 
+    <entity entity-name="SecurityGroupPermission"
             package-name="org.ofbiz.commonapp.security.securitygroup"
             title="Security Component - Security Group Permission Entity">
       <description>Defines a permission available to a security group</description>
@@ -1327,7 +1327,7 @@
         <key-map field-name="permissionId"/>
       </relation>
     </entity>
-    <entity entity-name="SecurityPermission" 
+    <entity entity-name="SecurityPermission"
             package-name="org.ofbiz.commonapp.security.securitygroup"
             title="Security Component - Security Permission Entity">
       <field name="permissionId" type="id-long-ne"></field>
@@ -1337,7 +1337,7 @@
         <key-map field-name="permissionId"/>
       </relation>
     </entity>
-    <entity entity-name="UserLoginSecurityGroup" 
+    <entity entity-name="UserLoginSecurityGroup"
             package-name="org.ofbiz.commonapp.security.securitygroup"
             title="Security Component - User Login Security Group Entity">
       <description>Maps a UserLogin to a security group</description>
@@ -1354,6 +1354,6 @@
       <relation type="many" rel-entity-name="SecurityGroupPermission">
         <key-map field-name="groupId"/>
       </relation>
-    </entity>  
+    </entity>
 </entitymodel>
 

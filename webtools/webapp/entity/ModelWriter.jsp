@@ -143,8 +143,8 @@ if (security.hasPermission("ENTITY_MAINT", session) || request.getParameter("ori
       ModelEntity entity = reader.getModelEntity(entityName);
       if (entity instanceof ModelViewEntity) {
         ModelViewEntity viewEntity = (ModelViewEntity)entity;
-%>	
-    <view-entity entity-name="<%=entity.getEntityName()%>" 
+%>
+    <view-entity entity-name="<%=entity.getEntityName()%>"
             package-name="<%=entity.getPackageName()%>"<%if (entity.getDependentOn().length() > 0) {%>
             dependent-on="<%=entity.getDependentOn()%>"<%}%><%if (!title.equals(entity.getTitle())) {%>
             title="<%=entity.getTitle()%>"<%}%><%if (!copyright.equals(entity.getCopyright())) {%>
@@ -154,7 +154,7 @@ if (security.hasPermission("ENTITY_MAINT", session) || request.getParameter("ori
       <description><%=entity.getDescription()%></description><%}%><%
   Iterator meIter = viewEntity.getMemberEntityNames().entrySet().iterator();
   while(meIter.hasNext()) {
-    Map.Entry entry = (Map.Entry)meIter.next();%>	
+    Map.Entry entry = (Map.Entry)meIter.next();%>
       <member-entity entity-alias="<%=(String)entry.getKey()%>" entity-name="<%=(String)entry.getValue()%>"/><%
   }
   for (int y = 0; y < viewEntity.getAliasesSize(); y++) {
@@ -182,7 +182,7 @@ if (security.hasPermission("ENTITY_MAINT", session) || request.getParameter("ori
       else {
 %>
     <entity entity-name="<%=entity.getEntityName()%>"<%if (!entity.getEntityName().equals(ModelUtil.dbNameToClassName(entity.getTableName()))){
-          %> table-name="<%=entity.getTableName()%>"<%}%> 
+          %> table-name="<%=entity.getTableName()%>"<%}%>
             package-name="<%=entity.getPackageName()%>"<%if (entity.getDependentOn().length() > 0) {%>
             dependent-on="<%=entity.getDependentOn()%>"<%}%><%if (!title.equals(entity.getTitle())) {%>
             title="<%=entity.getTitle()%>"<%}%><%if (!copyright.equals(entity.getCopyright())) {%>
@@ -215,7 +215,7 @@ if (security.hasPermission("ENTITY_MAINT", session) || request.getParameter("ori
     </entity><%
       }
     }
-  }%>  
+  }%>
 </entitymodel>
 <%
   }
