@@ -154,3 +154,21 @@ public class FreeMarkerGenerator extends AbstractGenerator {
         return config;
     }
 }
+
+/* An example of what might be in the JPublish inContext using WSP
+ *
+==== Adding to the freemarker root request:org.apache.coyote.tomcat4.CoyoteRequestFacade@9ca1fb
+==== Adding to the freemarker root response:org.apache.coyote.tomcat4.CoyoteResponseFacade@14e9851
+==== Adding to the freemarker root session:org.apache.catalina.session.StandardSessionFacade@4dd1b
+==== Adding to the freemarker root application:org.apache.catalina.core.ApplicationContextFacade@d0f59e
+==== Adding to the freemarker root content:/catalog/category.jsp
+==== Adding to the freemarker root syslog:com.anthonyeden.lib.log.SystemErrorLogger@e1eae7
+==== Adding to the freemarker root page:/templates/main_lr.html
+==== Adding to the freemarker root pages:org.jpublish.finder.DefaultPageFinder@e9a7c2
+==== Adding to the freemarker root google:com.wspublisher.modules.soapclient.google.GoogleSearchServiceLocator@58213c
+==== Adding to the freemarker root out:org.apache.coyote.tomcat4.CoyoteOutputStream@e4e358
+==== Adding to the freemarker root site:org.jpublish.SiteContext@1898115
+==== Adding to the freemarker root browser:com.wspublisher.web.Browser@1503458
+==== Adding to the freemarker root url_util:org.jpublish.util.URLUtilities@229ed4
+ *
+ */
