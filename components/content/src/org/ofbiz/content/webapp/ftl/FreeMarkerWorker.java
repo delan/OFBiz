@@ -1,5 +1,5 @@
 /*
- * $Id: FreeMarkerWorker.java,v 1.34 2004/07/18 10:09:33 jonesde Exp $
+ * $Id: FreeMarkerWorker.java,v 1.35 2004/08/12 15:10:13 byersa Exp $
  *
  * Copyright (c) 2002-2004 The Open For Business Project - www.ofbiz.org
  *
@@ -76,7 +76,7 @@ import freemarker.template.TemplateModelException;
  * FreemarkerViewHandler - Freemarker Template Engine Util
  *
  * @author     <a href="mailto:byersa@automationgroups.com">Al Byers</a>
- * @version    $Revision: 1.34 $
+ * @version    $Revision: 1.35 $
  * @since      3.0
  */
 public class FreeMarkerWorker {
@@ -806,8 +806,6 @@ public class FreeMarkerWorker {
                 passedGlobalNodeTrail.add(node);
             } catch (GenericEntityException e) {
                 throw new GeneralException(e.getMessage());
-            } catch (MiniLangException e2) {
-                throw new GeneralException(e2.getMessage());
             }
         }
         ctx.put("globalNodeTrail", passedGlobalNodeTrail);
