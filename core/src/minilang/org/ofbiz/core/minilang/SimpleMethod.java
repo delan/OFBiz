@@ -280,6 +280,10 @@ public class SimpleMethod {
     public boolean getLoginRequired() { return this.loginRequired; }
     public boolean getUseTransaction() { return this.useTransaction; }
 
+    public String getDelegatorEnvName() { return this.delegatorName; }
+    public String getSecurityEnvName() { return this.securityName; }
+    public String getDispatcherEnvName() { return this.dispatcherName; }
+
     /** Execute the Simple Method operations */
     public String exec(MethodContext methodContext) {
         methodContext.putEnv(delegatorName, methodContext.getDelegator());
