@@ -24,7 +24,7 @@
  *
  * @author     Andy Zeneski (jaz@ofbiz.org)
  * @author     Olivier.Heintz@nereide.biz 
- * @version    $Revision: 1.3 $
+ * @version    $Revision: 1.4 $
  * @since      2.2
 -->
 
@@ -116,5 +116,36 @@
 		<field-to-field field-name="partyId" map-name="parameters" to-map-name="lookupPKMap"/>
 		<find-by-primary-key entity-name="CommunicationEventRole" map-name="lookupPKMap" value-name="eventRole"/>		
 		<remove-value value-name="eventRole"/>
-	</simple-method>				
+	</simple-method>
+
+    <simple-method method-name="markEventRead" short-description="Marks a Communication Event as Read">
+        <if-empty field-name="communicationEventId" map-name="parameters">
+            <field-to-field field-name="messageId" map-name="parameters" to-field-name="communicationEventId" to-map-name="parameters"/>   
+        </if-empty>
+        <field-to-field field-name="communicationEventId" map-name="parameters" to-map-name="lookupPKMap"/>
+		<find-by-primary-key entity-name="CommunicationEvent" map-name="lookupPKMap" value-name="event"/>
+        <if>
+            <condition>
+                <if-compare-field field-name="partyIdTo" map-name="event" to-map-name="userLogin" to-field-name="partyId" operator="not-equals"/>
+            </condition>
+            <then>
+                <check-permission permission="PARTYMGR" action="_CREATE">
+				    <fail-property resource="PartyUiLabels" property="PartyCreateCommunicationEventPermissionError"/>
+                </check-permission>
+            </then>
+        </if>
+
+        <if>
+            <condition>
+                <or>
+                    <if-compare field-name="statusId" map-name="event" operator="equals" value="COM_ENTERED"/>
+                    <if-compare field-name="statusId" map-name="event" operator="equals" value="COM_PENDING"/>
+                </or>
+            </condition>
+            <then>
+                <string-to-field string="COM_READ" field-name="statusId" map-name="event"/>
+                <store-value value-name="event"/>
+            </then>
+        </if>
+    </simple-method>
 </simple-methods>

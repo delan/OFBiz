@@ -458,4 +458,14 @@
         <description>Remove a Communication Event Role</description>
         <auto-attributes entity-name="CommunicationEventRole" include="pk" mode="IN" optional="false"/>
     </service>
+    <service name="markCommEventRead" engine="simple"
+            location="org/ofbiz/party/communication/CommunicationEventServices.xml" invoke="markEventRead" auth="true">
+        <description>Marks a communication event as read if in the entered/pending status</description>
+        <attribute name="communicationEventId" type="String" mode="IN" optional="false"/>
+    </service>
+    <service name="markMessageRead" engine="simple"
+            location="org/ofbiz/party/communication/CommunicationEventServices.xml" invoke="markEventRead" auth="true">
+        <description>Marks a communication event as read if in the entered/pending status</description>
+        <attribute name="messageId" type="String" mode="IN" optional="false"/>
+    </service>
 </services>
