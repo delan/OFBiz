@@ -276,6 +276,7 @@ public class EntityConfigUtil {
         public boolean usePkConstraintNames = true;
         public int constraintNameClipLength = 30;
         public String fkStyle = null;
+        public boolean useFkInitiallyDeferred = true;
 
         public DatasourceInfo(Element element) {
             this.name = element.getAttribute("name");
@@ -295,6 +296,7 @@ public class EntityConfigUtil {
                 Debug.logWarning("datasource def not found with name " + this.name + ", using default for use-pk-constraint-names (true)");
                 Debug.logWarning("datasource def not found with name " + this.name + ", using default for constraint-name-clip-length (30)");
                 Debug.logWarning("datasource def not found with name " + this.name + ", using default for fk-style (name_constraint)");
+                Debug.logWarning("datasource def not found with name " + this.name + ", using default for use-fk-initially-deferred (true)");
             } else {
                 //anything but false is true
                 checkOnStart = !"false".equals(datasourceElement.getAttribute("check-on-start"));
@@ -316,6 +318,8 @@ public class EntityConfigUtil {
                     Debug.logError("Could not parse constraint-name-clip-length value for datasource with name " + this.name + ", using default value of 30");
                 }
                 fkStyle = datasourceElement.getAttribute("fk-style");
+                //anything but true is false
+                useFkInitiallyDeferred = "true".equals(datasourceElement.getAttribute("use-fk-initially-deferred"));
             }
             if (fkStyle == null || fkStyle.length() == 0) {
                 fkStyle = "name_constraint";
