@@ -1,5 +1,5 @@
 /*
- * $Id: KeywordSearch.java,v 1.3 2003/10/15 06:33:34 jonesde Exp $
+ * $Id: KeywordSearch.java,v 1.4 2003/10/17 11:09:53 jonesde Exp $
  *
  *  Copyright (c) 2001 The Open For Business Project (www.ofbiz.org)
  *  Permission is hereby granted, free of charge, to any person obtaining a
@@ -49,7 +49,7 @@ import org.ofbiz.entity.jdbc.ConnectionFactory;
  *  <br>Special thanks to Glen Thorne and the Weblogic Commerce Server for ideas.
  *
  * @author     <a href="mailto:jonesde@ofbiz.org">David E. Jones</a>
- * @version    $Revision: 1.3 $
+ * @version    $Revision: 1.4 $
  * @since      2.1
  */
 public class KeywordSearch {
@@ -191,7 +191,7 @@ public class KeywordSearch {
         return null;
     }
 
-    protected static List makeKeywordList(String keywordsString) {
+    public static List makeKeywordList(String keywordsString) {
         StringTokenizer tokenizer = new StringTokenizer(keywordsString);
 
         List keywords = new ArrayList(10);
@@ -204,7 +204,7 @@ public class KeywordSearch {
         return keywords;
     }
 
-    protected static List fixKeywords(List keywords, boolean anyPrefix, boolean anySuffix, boolean removeStems, String intraKeywordOperator) {
+    public static List fixKeywords(List keywords, boolean anyPrefix, boolean anySuffix, boolean removeStems, String intraKeywordOperator) {
         if (keywords == null) {
             return null;
         }
