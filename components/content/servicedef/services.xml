@@ -1551,16 +1551,16 @@
         <description>Creates or updates ContentRole</description>
         <attribute name="orderId" type="String" mode="IN" optional="false"/>
     </service>
-    <service name="followNodeChildren" auth="true" engine="java"
+    <service name="followNodeChildren" auth="true" engine="java" transaction-timout="72000" 
         location="org.ofbiz.content.ContentManagementServices" invoke="followNodeChildren">
         <description>Descend thru content tree and execute service at each node</description>
         <attribute name="contentId" type="String" mode="IN" optional="false"/>
         <attribute name="serviceName" type="String" mode="IN" optional="false"/>
+        <attribute name="contentAssocTypeId" type="String" mode="IN" optional="true"/>
     </service>
-    <service name="publishContent" auth="true" engine="java"
+    <service name="publishContent" auth="true" engine="java" transaction-timout="72000" 
         location="org.ofbiz.content.content.ContentServices" invoke="publishContent">
         <description>Change statusId to published (BLOG_PUBLISHED)</description>
-        <attribute mode="IN" name="userLogin" optional="false" type="GenericValue"/>
         <attribute mode="IN" name="content" optional="false" type="GenericValue"/>
     </service>
 </services>

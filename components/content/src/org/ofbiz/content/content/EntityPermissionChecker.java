@@ -121,17 +121,20 @@ public class EntityPermissionChecker {
         HttpServletRequest request = (HttpServletRequest)context.get("request");
         GenericValue userLogin = null;
         String userLoginId = null; 
+        String partyId = null; 
         GenericDelegator delegator = null;
         if (request != null) {
             HttpSession session = request.getSession();
             userLogin = (GenericValue)session.getAttribute("userLogin");
-            if (userLogin != null)
+            if (userLogin != null) {
             	userLoginId = userLogin.getString("userLoginId");
+            	partyId = userLogin.getString("partyId");
+            }
            delegator = (GenericDelegator)request.getAttribute("delegator");
         }
     	try {
             permissionConditionGetter.init(delegator);
-    		passed = ContentPermissionServices.checkPermissionMethod(delegator, userLogin,  entityName, entityIdList, auxiliaryValueGetter, relatedRoleGetter, permissionConditionGetter);
+    		passed = ContentPermissionServices.checkPermissionMethod(delegator, partyId,  entityName, entityIdList, auxiliaryValueGetter, relatedRoleGetter, permissionConditionGetter);
     	} catch(GenericEntityException e) {
             throw new RuntimeException(e.getMessage());
     	}
