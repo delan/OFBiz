@@ -726,7 +726,7 @@ public class GenericDAO
     try { connection = getConnection(); } 
     catch (SQLException sqle) { Debug.logWarning("[GenericDAO.createTable]: Unable to esablish a connection with the database... Error was:"); Debug.logWarning(sqle.getMessage()); }
     
-    String sql = "CREATE TABLE " + entity.tableName + "("; 
+    String sql = "CREATE TABLE " + entity.tableName + " (";
     for(int i=0;i<entity.fields.size();i++)
     {
       ModelField field=(ModelField)entity.fields.get(i);
