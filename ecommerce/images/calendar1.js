@@ -80,8 +80,8 @@ function cal_popup1 (str_datetime) {
 	
 	var obj_calwindow = window.open('/images/' +
 		'calendar.html?datetime=' + this.dt_current.valueOf()+ '&id=' + this.id,
-		'Calendar', 'width=150,height='+(this.time_comp ? 150 : 115)+
-		',status=no,resizable=no,top='+my+',left='+mx+',dependent=yes,alwaysRaised=yes'
+		'Calendar', 'width=150,height='+(this.time_comp ? 220 : 235)+
+		',status=no,resizable=yes,top='+my+',left='+mx+',dependent=yes,alwaysRaised=yes'
 	);
 	obj_calwindow.opener = window;
 	obj_calwindow.focus();
