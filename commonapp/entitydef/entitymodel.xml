@@ -1189,6 +1189,8 @@
       <field name="referrerUrl" type="url"></field>
       <field name="idByIpContactMechId" type="id"></field>
       <field name="refByWebContactMechId" type="id"></field>
+      <field name="serverIpAddress" type="id"></field>
+      <field name="serverHostName" type="long-varchar"></field>
       <prim-key field="visitId"/>
       <prim-key field="contentId"/>
       <prim-key field="hitStartDateTime"/>

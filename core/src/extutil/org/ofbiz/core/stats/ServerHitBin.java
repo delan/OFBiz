@@ -477,6 +477,19 @@ public class ServerHitBin {
             String referrerUrl = request.getHeader("Referer") != null ? request.getHeader("Referer") : "";
             serverHit.set("referrerUrl", referrerUrl.length() > 250 ? referrerUrl.substring(0, 250) : referrerUrl);
             
+            //get localhost ip address and hostname to store
+            try {
+                InetAddress address = InetAddress.getLocalHost();
+                if (address != null) {
+                    serverHit.set("serverIpAddress", address.getHostAddress());
+                    serverHit.set("serverHostName", address.getHostName());
+                } else {
+                    Debug.logError("Unable to get localhost internet address, was null", module);
+                }
+            } catch (java.net.UnknownHostException e) {
+                Debug.logError("Unable to get localhost internet address: " + e.toString(), module);
+            }
+            
             try {
                 serverHit.create();
             } catch (GenericEntityException e) {
