@@ -1,5 +1,5 @@
 /*
- * $Id: GenericEntity.java,v 1.32 2004/07/07 05:53:47 doogie Exp $
+ * $Id: GenericEntity.java,v 1.33 2004/07/07 05:56:52 doogie Exp $
  *
  *  Copyright (c) 2002 The Open For Business Project - www.ofbiz.org
  *
@@ -61,11 +61,12 @@ import org.w3c.dom.Element;
  *
  *@author     <a href="mailto:jonesde@ofbiz.org">David E. Jones</a>
  *@author     <a href="mailto:jaz@ofbiz.org">Andy Zeneski</a>
- *@version    $Revision: 1.32 $
+ *@version    $Revision: 1.33 $
  *@since      2.0
  */
 public class GenericEntity extends Observable implements Map, LocalizedMap, Serializable, Comparable, Cloneable {
 
+    public static final GenericEntity NULL_ENTITY = new NullGenericEntity();
     public static final String module = GenericEntity.class.getName();
 
     public static NumberFormat nf = NumberFormat.getInstance();
@@ -1115,4 +1116,8 @@ public class GenericEntity extends Observable implements Map, LocalizedMap, Seri
     public boolean matches(EntityCondition condition) {
         return condition.entityMatches(this);
     }
+
+    public static interface NULL { };
+
+    protected static class NullGenericEntity extends GenericEntity implements NULL { };
 }
