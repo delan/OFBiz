@@ -1,6 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <entity-engine-xml>
-  <Content contentId="TEMPLATE_MASTER" contentTypeId="TREE_ROOT" description="Template Master"/>
   <ContentAssocType contentAssocTypeId="TEMPLATE_MEMBER" description="Template Member"/>
   <ContentAssocType contentAssocTypeId="STRUCTURE_DEF" description="Document Structure Definition"/>
   <ContentAssocType contentAssocTypeId="TXFORM_DEF" description="Transformation Definition"/>
@@ -44,6 +43,7 @@
   <ContentType contentTypeId="STRUCTURE_DEF" description="Structure Definition (like DTD)" hasTable="N" parentTypeId=""/>
   <ContentType contentTypeId="TXFORM_DEF" description="Transformation Definition (like XSLT)" hasTable="N" parentTypeId=""/>
   <ContentType contentTypeId="TEMPLATE" description="Template" hasTable="N" parentTypeId=""/>
+  <Content contentId="TEMPLATE_MASTER" contentTypeId="TREE_ROOT" description="Template Master"/>
 
   <DataResourceType dataResourceTypeId="LOCAL_FILE" description="Local File" hasTable="N" parentTypeId=""/>
   <DataResourceType dataResourceTypeId="OFBIZ_FILE" description="File (rel to OFBIZ_HOME)" hasTable="N" parentTypeId=""/>
