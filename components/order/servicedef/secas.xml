@@ -61,6 +61,16 @@
         <action service="processOrderWf" mode="async" persist="true" />
     </eca>
 
+    <!-- This ECA is for content usage subscriptions
+         Andy: not all orders will be subscriptions; ITS NOT RECOMMENDED TO TRIGGER ON THIS - Use the fulfillment services for processing subscriptions
+         David: let's leave it this way for now, need to rethink somewhat how other things are done since the ECA based design has some nice features
+    -->
+    <eca service="changeOrderStatus" event="commit" run-on-error="false">
+        <condition field-name="statusId" operator="equals" value="ORDER_APPROVED"/>
+        <condition-field field-name="statusId" operator="not-equals" to-field-name="oldStatusId"/>
+        <action service="updateSubscriptionByOrder" mode="sync"/>
+    </eca>
+
     <!-- create adjustment change -->
     <eca service="createOrderAdjustment" event="commit">
         <action service="resetGrandTotal" mode="sync"/>
