@@ -779,7 +779,7 @@ public class GenericDelegator {
      */
     public EntityListIterator findListIteratorByCondition(String entityName, EntityCondition entityCondition, 
             Collection fieldsToSelect, List orderBy) throws GenericEntityException {
-        return this.findListIteratorByCondition(entityName, entityCondition, null, fieldsToSelect, orderBy, new EntityFindOptions());
+        return this.findListIteratorByCondition(entityName, entityCondition, null, fieldsToSelect, orderBy, null);
     }
     
     /** Finds GenericValues by the conditions specified in the EntityCondition object, the the EntityCondition javadoc for more details.

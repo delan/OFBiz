@@ -549,7 +549,7 @@ public class GenericDAO {
 
         EntityListIterator entityListIterator = null;
         try {
-            entityListIterator = selectListIteratorByCondition(modelEntity, entityCondition, null, null, orderBy, new EntityFindOptions());
+            entityListIterator = selectListIteratorByCondition(modelEntity, entityCondition, null, null, orderBy, null);
             return entityListIterator.getCompleteCollection();
         } finally {
             if (entityListIterator != null) {
@@ -570,7 +570,7 @@ public class GenericDAO {
 
         EntityListIterator entityListIterator = null;
         try {
-            entityListIterator = selectListIteratorByCondition(modelEntity, entityCondition, null, null, orderBy, new EntityFindOptions());
+            entityListIterator = selectListIteratorByCondition(modelEntity, entityCondition, null, null, orderBy, null);
             return entityListIterator.getCompleteCollection();
         } finally {
             if (entityListIterator != null) {
@@ -590,7 +590,7 @@ public class GenericDAO {
         EntityCondition entityCondition = new EntityExprList(expressions, EntityOperator.AND);
         EntityListIterator entityListIterator = null;
         try {
-            entityListIterator = selectListIteratorByCondition(modelEntity, entityCondition, null, null, orderBy, new EntityFindOptions());
+            entityListIterator = selectListIteratorByCondition(modelEntity, entityCondition, null, null, orderBy, null);
             return entityListIterator.getCompleteCollection();
         } finally {
             if (entityListIterator != null) {
@@ -610,7 +610,7 @@ public class GenericDAO {
         EntityCondition entityCondition = new EntityExprList(expressions, EntityOperator.OR);
         EntityListIterator entityListIterator = null;
         try {
-            entityListIterator = selectListIteratorByCondition(modelEntity, entityCondition, null, null, orderBy, new EntityFindOptions());
+            entityListIterator = selectListIteratorByCondition(modelEntity, entityCondition, null, null, orderBy, null);
             return entityListIterator.getCompleteCollection();
         } finally {
             if (entityListIterator != null) {
@@ -942,7 +942,7 @@ public class GenericDAO {
     public Collection selectByCondition(ModelEntity modelEntity, EntityCondition entityCondition, Collection fieldsToSelect, List orderBy) throws GenericEntityException {
         EntityListIterator entityListIterator = null;
         try {
-            entityListIterator = selectListIteratorByCondition(modelEntity, entityCondition, null, fieldsToSelect, orderBy, new EntityFindOptions());
+            entityListIterator = selectListIteratorByCondition(modelEntity, entityCondition, null, fieldsToSelect, orderBy, null);
             return entityListIterator.getCompleteCollection();
         } finally {
             if (entityListIterator != null) {
@@ -967,6 +967,9 @@ public class GenericDAO {
         if (modelEntity == null) {
             return null;
         }
+
+        //if no find options passed, use default
+        if (findOptions == null) findOptions = new EntityFindOptions();
         
         boolean verboseOn = Debug.verboseOn();
         
