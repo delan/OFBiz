@@ -347,7 +347,8 @@ public class DataResourceWorker {
         String dataResourceId = dataResource.getString("dataResourceId");
         GenericValue imageDataResource = delegator.findByPrimaryKey("ImageDataResource", UtilMisc.toMap("dataResourceId", dataResourceId));
         if (imageDataResource != null) {
-            b = (byte[]) imageDataResource.get("imageData");
+            //b = (byte[]) imageDataResource.get("imageData");
+            b = imageDataResource.getBytes("imageData");
         }
         return b;
     }
