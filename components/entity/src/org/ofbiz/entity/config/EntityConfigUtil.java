@@ -1,5 +1,5 @@
 /*
- * $Id: EntityConfigUtil.java,v 1.2 2003/08/17 06:58:16 jonesde Exp $
+ * $Id: EntityConfigUtil.java,v 1.3 2003/08/18 03:15:10 ajzeneski Exp $
  *
  * Copyright (c) 2001, 2002 The Open For Business Project - www.ofbiz.org
  *
@@ -24,19 +24,28 @@
  */
 package org.ofbiz.entity.config;
 
-import java.util.*;
-import org.w3c.dom.*;
+import java.util.HashMap;
+import java.util.Iterator;
+import java.util.LinkedList;
+import java.util.List;
+import java.util.Map;
 
-import org.ofbiz.base.config.*;
-import org.ofbiz.base.util.*;
-import org.ofbiz.entity.*;
+import org.ofbiz.base.config.GenericConfigException;
+import org.ofbiz.base.config.ResourceLoader;
+import org.ofbiz.base.util.Debug;
+import org.ofbiz.base.util.UtilValidate;
+import org.ofbiz.base.util.UtilXml;
+import org.ofbiz.entity.GenericEntityConfException;
+import org.ofbiz.entity.GenericEntityException;
+import org.w3c.dom.Document;
+import org.w3c.dom.Element;
 
 /**
  * Misc. utility method for dealing with the entityengine.xml file
  *
  * @author     <a href="mailto:jonesde@ofbiz.org">David E. Jones</a> 
  * @author     <a href="mailto:jaz@ofbiz.org">Andy Zeneski</a> 
- * @version    $Revision: 1.2 $
+ * @version    $Revision: 1.3 $
  * @since      2.0
  */
 public class EntityConfigUtil {
@@ -233,6 +242,10 @@ public class EntityConfigUtil {
     public static EntityConfigUtil.DatasourceInfo getDatasourceInfo(String name) {
         return (EntityConfigUtil.DatasourceInfo) datasourceInfos.get(name);
     }
+    
+    public static Map getDatasourceInfos() {
+        return datasourceInfos;
+    }
 
     public static class ResourceLoaderInfo {
         public String name;
@@ -301,8 +314,13 @@ public class EntityConfigUtil {
 
         public EntityGroupReaderInfo(Element element) {
             this.name = element.getAttribute("name");
+            String loader = element.getAttribute("loader");
+            String location = element.getAttribute("location");
+            
             resourceElements = new LinkedList();
-            resourceElements.add(element);
+            if (loader != null && loader.length() > 0 && location != null && location.length() > 0) {            
+                resourceElements.add(element);
+            }
             resourceElements.addAll(UtilXml.childElementList(element, "resource"));
         }
     }

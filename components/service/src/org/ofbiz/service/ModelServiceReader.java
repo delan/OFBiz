@@ -1,5 +1,5 @@
 /* 
- * $Id: ModelServiceReader.java,v 1.2 2003/08/17 08:42:35 jonesde Exp $
+ * $Id: ModelServiceReader.java,v 1.3 2003/08/18 03:15:10 ajzeneski Exp $
  *
  * Copyright (c) 2001, 2002 The Open For Business Project - www.ofbiz.org
  *
@@ -40,6 +40,7 @@ import org.ofbiz.base.config.ResourceHandler;
 import org.ofbiz.entity.*;
 import org.ofbiz.entity.model.*;
 import org.ofbiz.base.util.Debug;
+import org.ofbiz.base.util.GeneralException;
 import org.ofbiz.base.util.OrderedMap;
 import org.ofbiz.base.util.UtilCache;
 import org.ofbiz.base.util.UtilTimer;
@@ -55,7 +56,7 @@ import org.xml.sax.SAXException;
  *
  * @author     <a href="mailto:jaz@ofbiz.org">Andy Zeneski</a>
  * @author     <a href="mailto:jonesde@ofbiz.org">David E. Jones</a>
- * @version    $Revision: 1.2 $
+ * @version    $Revision: 1.3 $
  * @since      2.0
  */
 
@@ -384,7 +385,7 @@ public class ModelServiceReader {
             try {            
                 ModelEntity entity = delegator.getModelEntity(entityName);
                 if (entity == null) {
-                    throw new IllegalArgumentException("Could not find entity with name [" + entityName + "]");
+                    throw new GeneralException("Could not find entity with name [" + entityName + "]");
                 }
                 Iterator fieldsIter = entity.getFieldsIterator();
                 if (fieldsIter != null) {            
@@ -392,7 +393,9 @@ public class ModelServiceReader {
                         ModelField field = (ModelField) fieldsIter.next();
                         if ((field.getIsPk() && includePk) || (!field.getIsPk() && includeNonPk)) {                        
                             ModelFieldType fieldType = delegator.getEntityFieldType(entity, field.getType());
-                            
+                            if (fieldType == null) {
+                                throw new GeneralException("Null field type from delegator for entity [" + entityName + "]");
+                            }
                             ModelParam param = new ModelParam();
                             param.entityName = entityName;
                             param.fieldName = field.getName();
@@ -425,8 +428,10 @@ public class ModelServiceReader {
                     }                    
                 }
             } catch (GenericEntityException e) {
-                Debug.logError(e, "Problem loading auto-attribute [" + entityName + "]", module);
-            }
+                Debug.logError(e, "Problem loading auto-attributes [" + entityName + "]", module);
+            } catch (GeneralException e) {
+                Debug.logError(e, "Cannot load auto-attributes : " + e.getMessage());
+            }            
         }
     }
             

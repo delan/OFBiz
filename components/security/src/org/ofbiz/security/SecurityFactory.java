@@ -1,5 +1,5 @@
 /*
- * $Id: SecurityFactory.java,v 1.1 2003/08/17 04:39:05 ajzeneski Exp $
+ * $Id: SecurityFactory.java,v 1.2 2003/08/18 03:15:10 ajzeneski Exp $
  *
  * Copyright (c) 2001, 2002 The Open For Business Project - www.ofbiz.org
  *
@@ -42,13 +42,13 @@ import org.w3c.dom.Element;
  *
  * @author     <a href="mailto:hermanns@aixcept.de">Rainer Hermanns</a>
  * @author     <a href="mailto:jaz@ofbiz.org">Andy Zeneski</a>
- * @version    $Revision: 1.1 $
+ * @version    $Revision: 1.2 $
  * @since      2.0
  */
 public class SecurityFactory {
     
     public static final String module = SecurityFactory.class.getName();
-    public static final String DEFAULT_SECURITY = "org.ofbiz.core.security.OFBizSecurity";
+    public static final String DEFAULT_SECURITY = "org.ofbiz.security.OFBizSecurity";
     
     private static String securityName = null;
     private static Element rootElement = null;

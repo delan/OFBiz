@@ -1,5 +1,5 @@
 /*
- * $Id: ResourceLoader.java,v 1.1 2003/08/15 20:23:20 ajzeneski Exp $
+ * $Id: ResourceLoader.java,v 1.2 2003/08/18 03:15:10 ajzeneski Exp $
  *
  * Copyright (c) 2002 The Open For Business Project - www.ofbiz.org
  *
@@ -24,21 +24,24 @@
  */
 package org.ofbiz.base.config;
 
+import java.io.InputStream;
+import java.net.URL;
+import java.util.HashMap;
+import java.util.Map;
 
-import java.util.*;
-import java.net.*;
-import java.io.*;
-import org.w3c.dom.*;
-
-import org.ofbiz.base.util.*;
-
+import org.ofbiz.base.util.Debug;
+import org.ofbiz.base.util.UtilCache;
+import org.ofbiz.base.util.UtilURL;
+import org.ofbiz.base.util.UtilXml;
+import org.w3c.dom.Document;
+import org.w3c.dom.Element;
 
 /**
  * Loads resources using dynamically specified resource loader classes
  *
  *@author     <a href="mailto:jonesde@ofbiz.org">David E. Jones</a>
- *@created    March 1, 2002
- *@version    1.0
+ *@version    $Revision: 1.2 $
+ *@since      2.0
  */
 public abstract class ResourceLoader {
     
@@ -53,7 +56,9 @@ public abstract class ResourceLoader {
     public static InputStream loadResource(String xmlFilename, String location, String loaderName) throws GenericConfigException {
         ResourceLoader loader = getLoader(xmlFilename, loaderName);
 
-        if (loader == null) throw new IllegalArgumentException("ResourceLoader not found with name [" + loaderName + "] in " + xmlFilename);
+        if (loader == null) {
+            throw new IllegalArgumentException("ResourceLoader not found with name [" + loaderName + "] in " + xmlFilename);
+        }
         return loader.loadResource(location);
     }
 
