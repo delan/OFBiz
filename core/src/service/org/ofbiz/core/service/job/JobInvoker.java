@@ -75,7 +75,7 @@ public class JobInvoker implements Runnable {
      */
     public void stop() {
         run = false;
-        notify();
+        //removed to solve hanging thread issue: notify();
     }
 
     /**
