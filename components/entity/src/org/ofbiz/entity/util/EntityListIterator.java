@@ -30,6 +30,7 @@ import java.util.LinkedList;
 import java.util.List;
 import java.util.ListIterator;
 
+import org.ofbiz.base.util.Debug;
 import org.ofbiz.base.util.GeneralRuntimeException;
 import org.ofbiz.entity.GenericDelegator;
 import org.ofbiz.entity.GenericEntityException;
@@ -46,11 +47,14 @@ import org.ofbiz.entity.model.ModelFieldTypeReader;
  * Generic Entity Cursor List Iterator for Handling Cursored DB Results
  *
  *@author     <a href="mailto:jonesde@ofbiz.org">David E. Jones</a>
- *@version    $Revision: 1.4 $
+ *@version    $Revision: 1.5 $
  *@since      2.0
  */
 public class EntityListIterator implements ListIterator {
 
+    /** Module Name Used for debugging */
+    public static final String module = EntityListIterator.class.getName();
+    
     protected SQLProcessor sqlp;
     protected ResultSet resultSet;
     protected ModelEntity modelEntity;
@@ -77,6 +81,10 @@ public class EntityListIterator implements ListIterator {
         try {
             resultSet.afterLast();
         } catch (SQLException e) {
+            if (!closed) {
+                this.close();
+                Debug.logWarning("Warning: auto-closed EntityListIterator because of exception: " + e.toString(), module);
+            }
             throw new GenericEntityException("Error setting the cursor to afterLast", e);
         }
     }
@@ -86,6 +94,10 @@ public class EntityListIterator implements ListIterator {
         try {
             resultSet.beforeFirst();
         } catch (SQLException e) {
+            if (!closed) {
+                this.close();
+                Debug.logWarning("Warning: auto-closed EntityListIterator because of exception: " + e.toString(), module);
+            }
             throw new GenericEntityException("Error setting the cursor to beforeFirst", e);
         }
     }
@@ -95,6 +107,10 @@ public class EntityListIterator implements ListIterator {
         try {
             return resultSet.last();
         } catch (SQLException e) {
+            if (!closed) {
+                this.close();
+                Debug.logWarning("Warning: auto-closed EntityListIterator because of exception: " + e.toString(), module);
+            }
             throw new GenericEntityException("Error setting the cursor to last", e);
         }
     }
@@ -104,15 +120,22 @@ public class EntityListIterator implements ListIterator {
         try {
             return resultSet.first();
         } catch (SQLException e) {
+            if (!closed) {
+                this.close();
+                Debug.logWarning("Warning: auto-closed EntityListIterator because of exception: " + e.toString(), module);
+            }
             throw new GenericEntityException("Error setting the cursor to first", e);
         }
     }
 
     public void close() throws GenericEntityException {
-        if (closed) throw new GenericResultSetClosedException("This EntityListIterator has been closed, this operation cannot be performed");
-
-        sqlp.close();
-        closed = true;
+        if (closed) {
+            //maybe not the best way: throw new GenericResultSetClosedException("This EntityListIterator has been closed, this operation cannot be performed");
+            Debug.logWarning("This EntityListIterator for Entity [" + modelEntity==null?"":modelEntity.getEntityName() + "] has already been closed, not closing again.", module);
+        } else {
+            sqlp.close();
+            closed = true;
+        }
     }
 
     /** NOTE: Calling this method does return the current value, but so does calling next() or previous(), so calling one of those AND this method will cause the value to be created twice */
@@ -139,6 +162,10 @@ public class EntityListIterator implements ListIterator {
         try {
             return resultSet.getRow();
         } catch (SQLException e) {
+            if (!closed) {
+                this.close();
+                Debug.logWarning("Warning: auto-closed EntityListIterator because of exception: " + e.toString(), module);
+            }
             throw new GenericEntityException("Error getting the current index", e);
         }
     }
@@ -154,6 +181,10 @@ public class EntityListIterator implements ListIterator {
         try {
             return resultSet.absolute(rowNum);
         } catch (SQLException e) {
+            if (!closed) {
+                this.close();
+                Debug.logWarning("Warning: auto-closed EntityListIterator because of exception: " + e.toString(), module);
+            }
             throw new GenericEntityException("Error setting the absolute index to " + rowNum, e);
         }
     }
@@ -168,6 +199,10 @@ public class EntityListIterator implements ListIterator {
         try {
             return resultSet.relative(rows);
         } catch (SQLException e) {
+            if (!closed) {
+                this.close();
+                Debug.logWarning("Warning: auto-closed EntityListIterator because of exception: " + e.toString(), module);
+            }
             throw new GenericEntityException("Error going to the relative index " + rows, e);
         }
     }
@@ -187,6 +222,14 @@ public class EntityListIterator implements ListIterator {
                 }
             }
         } catch (SQLException e) {
+            if (!closed) {
+                try {
+                    this.close();
+                } catch (GenericEntityException e1) {
+                    Debug.logError(e1, "Error auto-closing EntityListIterator on error, so info below for more info on original error; close error: " + e1.toString(), module);
+                }
+                Debug.logWarning("Warning: auto-closed EntityListIterator because of exception: " + e.toString(), module);
+            }
             throw new GeneralRuntimeException("Error while checking to see if this is the last result", e);
         }
     }
@@ -206,6 +249,14 @@ public class EntityListIterator implements ListIterator {
                 }
             }
         } catch (SQLException e) {
+            if (!closed) {
+                try {
+                    this.close();
+                } catch (GenericEntityException e1) {
+                    Debug.logError(e1, "Error auto-closing EntityListIterator on error, so info below for more info on original error; close error: " + e1.toString(), module);
+                }
+                Debug.logWarning("Warning: auto-closed EntityListIterator because of exception: " + e.toString(), module);
+            }
             throw new GeneralRuntimeException("Error while checking to see if this is the first result", e);
         }
     }
@@ -219,8 +270,24 @@ public class EntityListIterator implements ListIterator {
                 return null;
             }
         } catch (SQLException e) {
+            if (!closed) {
+                try {
+                    this.close();
+                } catch (GenericEntityException e1) {
+                    Debug.logError(e1, "Error auto-closing EntityListIterator on error, so info below for more info on original error; close error: " + e1.toString(), module);
+                }
+                Debug.logWarning("Warning: auto-closed EntityListIterator because of exception: " + e.toString(), module);
+            }
             throw new GeneralRuntimeException("Error getting the next result", e);
         } catch (GenericEntityException e) {
+            if (!closed) {
+                try {
+                    this.close();
+                } catch (GenericEntityException e1) {
+                    Debug.logError(e1, "Error auto-closing EntityListIterator on error, so info below for more info on original error; close error: " + e1.toString(), module);
+                }
+                Debug.logWarning("Warning: auto-closed EntityListIterator because of exception: " + e.toString(), module);
+            }
             throw new GeneralRuntimeException("Error creating GenericValue", e);
         }
     }
@@ -230,6 +297,14 @@ public class EntityListIterator implements ListIterator {
         try {
             return currentIndex() + 1;
         } catch (GenericEntityException e) {
+            if (!closed) {
+                try {
+                    this.close();
+                } catch (GenericEntityException e1) {
+                    Debug.logError(e1, "Error auto-closing EntityListIterator on error, so info below for more info on original error; close error: " + e1.toString(), module);
+                }
+                Debug.logWarning("Warning: auto-closed EntityListIterator because of exception: " + e.toString(), module);
+            }
             throw new GeneralRuntimeException(e.getNonNestedMessage(), e.getNested());
         }
     }
@@ -243,8 +318,24 @@ public class EntityListIterator implements ListIterator {
                 return null;
             }
         } catch (SQLException e) {
+            if (!closed) {
+                try {
+                    this.close();
+                } catch (GenericEntityException e1) {
+                    Debug.logError(e1, "Error auto-closing EntityListIterator on error, so info below for more info on original error; close error: " + e1.toString(), module);
+                }
+                Debug.logWarning("Warning: auto-closed EntityListIterator because of exception: " + e.toString(), module);
+            }
             throw new GeneralRuntimeException("Error getting the previous result", e);
         } catch (GenericEntityException e) {
+            if (!closed) {
+                try {
+                    this.close();
+                } catch (GenericEntityException e1) {
+                    Debug.logError(e1, "Error auto-closing EntityListIterator on error, so info below for more info on original error; close error: " + e1.toString(), module);
+                }
+                Debug.logWarning("Warning: auto-closed EntityListIterator because of exception: " + e.toString(), module);
+            }
             throw new GeneralRuntimeException("Error creating GenericValue", e);
         }
     }
@@ -254,6 +345,14 @@ public class EntityListIterator implements ListIterator {
         try {
             return currentIndex() - 1;
         } catch (GenericEntityException e) {
+            if (!closed) {
+                try {
+                    this.close();
+                } catch (GenericEntityException e1) {
+                    Debug.logError(e1, "Error auto-closing EntityListIterator on error, so info below for more info on original error; close error: " + e1.toString(), module);
+                }
+                Debug.logWarning("Warning: auto-closed EntityListIterator because of exception: " + e.toString(), module);
+            }
             throw new GeneralRuntimeException("Error getting the current index", e);
         }
     }
@@ -262,6 +361,10 @@ public class EntityListIterator implements ListIterator {
         try {
             resultSet.setFetchSize(rows);
         } catch (SQLException e) {
+            if (!closed) {
+                this.close();
+                Debug.logWarning("Warning: auto-closed EntityListIterator because of exception: " + e.toString(), module);
+            }
             throw new GenericEntityException("Error getting the next result", e);
         }
     }
@@ -281,8 +384,16 @@ public class EntityListIterator implements ListIterator {
             }
             return list;
         } catch (SQLException e) {
+            if (!closed) {
+                this.close();
+                Debug.logWarning("Warning: auto-closed EntityListIterator because of exception: " + e.toString(), module);
+            }
             throw new GeneralRuntimeException("Error getting results", e);
         } catch (GeneralRuntimeException e) {
+            if (!closed) {
+                this.close();
+                Debug.logWarning("Warning: auto-closed EntityListIterator because of exception: " + e.toString(), module);
+            }
             throw new GenericEntityException(e.getNonNestedMessage(), e.getNested());
         }
     }
@@ -316,8 +427,16 @@ public class EntityListIterator implements ListIterator {
             }
             return list;
         } catch (SQLException e) {
+            if (!closed) {
+                this.close();
+                Debug.logWarning("Warning: auto-closed EntityListIterator because of exception: " + e.toString(), module);
+            }
             throw new GeneralRuntimeException("Error getting results", e);
         } catch (GeneralRuntimeException e) {
+            if (!closed) {
+                this.close();
+                Debug.logWarning("Warning: auto-closed EntityListIterator because of exception: " + e.toString(), module);
+            }
             throw new GenericEntityException(e.getNonNestedMessage(), e.getNested());
         }
     }
@@ -332,5 +451,17 @@ public class EntityListIterator implements ListIterator {
 
     public void set(Object obj) {
         throw new GeneralRuntimeException("CursorListIterator currently only supports read-only access");
+    }
+
+    protected void finalize() throws Throwable {
+        try {
+            if (!closed) {
+                this.close();
+                Debug.logError("====================================================================\n ERROR: EntityListIterator Not Closed for Entity [" + modelEntity==null?"":modelEntity.getEntityName() + "], caught in Finalize\n ====================================================================\n", module);
+            }
+        } catch (Exception e) {
+            Debug.logError(e, "Error closing the SQLProcessor in finalize EntityListIterator", module);
+        }
+        super.finalize();
     }
 }
