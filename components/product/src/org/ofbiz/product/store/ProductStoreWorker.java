@@ -1,5 +1,5 @@
 /*
- * $Id: ProductStoreWorker.java,v 1.30 2004/07/29 20:52:57 ajzeneski Exp $
+ * $Id: ProductStoreWorker.java,v 1.31 2004/08/06 22:26:11 jonesde Exp $
  *
  *  Copyright (c) 2001-2004 The Open For Business Project - www.ofbiz.org
  *
@@ -53,7 +53,7 @@ import org.ofbiz.service.LocalDispatcher;
  * ProductStoreWorker - Worker class for store related functionality
  *
  * @author     <a href="mailto:jaz@ofbiz.org">Andy Zeneski</a>
- * @version    $Revision: 1.30 $
+ * @version    $Revision: 1.31 $
  * @since      2.0
  */
 public class ProductStoreWorker {
@@ -706,6 +706,11 @@ public class ProductStoreWorker {
                     String inventoryFacilityId = pfValue.getString("facilityId");
 
                     try {
+                        // TODO: must entire quantity be available in one location?
+                        // Right now the answer is yes, it only succeeds if one facility has sufficient inventory for the order.
+                        boolean isAvailable = ProductWorker.isProductInventoryAvailableByFacility(productId, inventoryFacilityId, quantity.doubleValue(), dispatcher);
+                        if (!isAvailable) continue;
+
                         quantityNotReserved = ProductWorker.reserveProductInventoryByFacility(productId, quantity, inventoryFacilityId, orderId, reserveOrderEnumId, orderItemSeqId, requireInventory, userLogin, dispatcher);
                     } catch (GenericServiceException e) {
                         Debug.logWarning(e, "Error invoking reserveProductInventoryByFacility in reserveCatalogInventory", module);
