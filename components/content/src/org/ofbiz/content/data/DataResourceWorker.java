@@ -1,5 +1,5 @@
 /*
- * $Id: DataResourceWorker.java,v 1.8 2003/12/15 11:58:36 byersa Exp $
+ * $Id: DataResourceWorker.java,v 1.9 2003/12/15 23:07:56 byersa Exp $
  *
  * Copyright (c) 2001, 2002 The Open For Business Project - www.ofbiz.org
  *
@@ -81,7 +81,7 @@ import freemarker.template.Template;
  * DataResourceWorker Class
  *
  * @author     <a href="mailto:byersa@automationgroups.com">Al Byers</a>
- * @version    $Revision: 1.8 $
+ * @version    $Revision: 1.9 $
  * @since      3.0
  *
  * 
@@ -724,7 +724,6 @@ Debug.logInfo("in uploadAndStoreImage, idFieldValue:" + idFieldValue, "");
             }
             File file = new File(prefix + sep + objectInfo );
             int c;
-            Debug.logInfo(" in renderDataResourceAsHtml(CONTEXT_FILE), file:" + file + " abs:" + file.isAbsolute(), module);
             FileReader in = null;
             try {
                 in = new FileReader( file);

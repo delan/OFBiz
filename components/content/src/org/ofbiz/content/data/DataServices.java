@@ -31,7 +31,7 @@ import freemarker.template.SimpleHash;
  * DataServices Class
  *
  * @author     <a href="mailto:byersa@automationgroups.com">Al Byers</a>
- * @version    $Revision: 1.5 $
+ * @version    $Revision: 1.6 $
  * @since      3.0
  *
  * 
@@ -199,14 +199,15 @@ Debug.logInfo("in create FileMethod permissionStatus:" + permissionStatus, null)
             String dataResourceTypeId = (String)dataResource.get("dataResourceTypeId");
             String objectInfo = (String)dataResource.get("objectInfo");
             String textData = (String)context.get("textData");
-            String prefix = null;
+            String prefix = "";
             File file = null;
             if (textData != null && textData.length() > 0 ) {
                 String fileName = "";
                 String sep = "";
                 try {
                     if (UtilValidate.isEmpty(dataResourceTypeId) || dataResourceTypeId.equals("LOCAL_FILE")) {
-                        file = new File(prefix + sep + objectInfo );
+                        file = new File(objectInfo );
+Debug.logInfo("in create FileMethod file:" + file, null);
                         if (!file.isAbsolute()) {
                             throw new GenericServiceException("File: " + file + " is not absolute");
                         }
