@@ -39,6 +39,14 @@
     <!-- End of Security Mappings -->
 
     <!-- Request Mappings -->
+    <request-map uri="pullapplet">
+    	<event type="java" path="org.ofbiz.commonapp.common.CommonEvents" invoke="checkAppletRequest"/>
+    	<response name="success" type="none"/>    	
+    </request-map>
+    <request-map uri="pushapplet">
+    	<event type="java" path="org.ofbiz.commonapp.common.CommonEvents" invoke="receiveAppletRequest"/>
+    	<response name="success" type="none"/>
+    </request-map>
     <request-map uri="httpService">
         <event type="java" path="org.ofbiz.core.service.engine.HttpEngine" invoke="httpEngine"/>
         <response name="success" type="none"/>
