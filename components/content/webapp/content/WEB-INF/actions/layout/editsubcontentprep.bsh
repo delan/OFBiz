@@ -1,5 +1,5 @@
 /*
- * $Id: editsubcontentprep.bsh,v 1.2 2003/12/15 12:10:58 byersa Exp $
+ * $Id: editsubcontentprep.bsh,v 1.3 2003/12/18 15:35:46 byersa Exp $
  *
  * Copyright (c) 2003 The Open For Business Project - www.ofbiz.org
  *
@@ -26,7 +26,7 @@
 /**
  *
  * @author     <a href="mailto:byersa@automationgroups.com">Al Byers</a>
- * @version    $Revision: 1.2 $
+ * @version    $Revision: 1.3 $
  * @since      3.0
 
  */
@@ -114,8 +114,10 @@ Debug.logInfo("in editsubcontentprep, contentIdTo:" + contentIdTo, "");
     singleWrapper.putInContext("currentValue", currentMap);
 }
 
-//if (!contentIdTo.equals("TEMPLATE_MASTER"))
-//    context.put("dynamicPrimaryHTMLField", "textData");
+//if (!contentIdTo.equals("TEMPLATE_MASTER")) {
+//Debug.logInfo("in editsubcontentprep(2), contentIdTo:" + contentIdTo, "");
+    //context.put("dynamicPrimaryHTMLField", "textData");
+//}
 
 singleWrapper.putInContext("contentIdTo", contentIdTo);
 mapKey = (String)paramMap.get("mapKey");
