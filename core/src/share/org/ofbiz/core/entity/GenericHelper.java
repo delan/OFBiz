@@ -109,6 +109,18 @@ public interface GenericHelper
    */
   public void storeAll(Collection values) throws GenericEntityException;
 
+  /** Remove the Entities from the Collection from the persistent store.
+   *  <br>The Collection contains GenericEntity objects, can be either GenericPK or GenericValue.
+   *  <br>If a certain entity contains a complete primary key, the entity in the datasource corresponding
+   *  to that primary key will be removed, this is like a removeByPrimary Key.
+   *  <br>On the other hand, if a certain entity is an incomplete or non primary key,
+   *  if will behave like the removeByAnd method.
+   *  <br>These updates all happen in one transaction, so they will either all succeed or all fail,
+   *  if the data source supports transactions.
+   *@param dummyPKs Collection of GenericEntity instances containing the entities or by and fields to remove
+   */
+  public void removeAll(Collection dummyPKs) throws GenericEntityException;
+  
   /** Check the datasource to make sure the entity definitions are correct, optionally adding missing entities or fields on the server
    *@param modelEntities Map of entityName names and ModelEntity values
    *@param messages Collection to put any result messages in

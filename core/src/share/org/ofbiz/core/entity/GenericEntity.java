@@ -134,6 +134,7 @@ public class GenericEntity extends Observable implements Serializable, Comparabl
     return fields.get(name);
   }
   
+  /** Returns true if the entity contains all of the primary key fields, but NO others. */
   public boolean isPrimaryKey() {
     Vector pks = getModelEntity().pks;
     TreeSet fieldKeys = new TreeSet(fields.keySet());
@@ -142,6 +143,16 @@ public class GenericEntity extends Observable implements Serializable, Comparabl
       fieldKeys.remove(((ModelField)pks.elementAt(i)).name);
     }
     if(!fieldKeys.isEmpty()) return false;
+    return true;
+  }
+  
+  /** Returns true if the entity contains all of the primary key fields. */
+  public boolean containsPrimaryKey() {
+    Vector pks = getModelEntity().pks;
+    TreeSet fieldKeys = new TreeSet(fields.keySet());
+    for(int i=0; i<pks.size(); i++) {
+      if(!fieldKeys.contains(((ModelField)pks.elementAt(i)).name)) return false;
+    }
     return true;
   }
   
