@@ -420,10 +420,6 @@ public class ShoppingCartEvents {
     public static ShoppingCart getCartObject(HttpServletRequest request) {
         GenericDelegator delegator = (GenericDelegator) request.getAttribute("delegator");
         HttpSession session = request.getSession(true);
-        if (session.getAttribute("backupCart") != null) {
-            session.setAttribute(SiteDefs.SHOPPING_CART, session.getAttribute("backupCart"));
-            session.removeAttribute("backupCart");
-        }
         ShoppingCart cart = (ShoppingCart) session.getAttribute(SiteDefs.SHOPPING_CART);
         if (cart == null) {
             cart = new ShoppingCart(delegator, session);

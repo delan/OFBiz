@@ -563,23 +563,71 @@ public class ShoppingCartItem implements java.io.Serializable {
         return delegator;
     }
 
-    public ShoppingCartItem cloneToCart(ShoppingCart cart, LocalDispatcher dispatcher,
-            double quantity, boolean doPromotions) {
-        return cloneToCart(-1, cart, dispatcher, quantity, doPromotions);
-    }
+    public void explodeItem(ShoppingCart cart, LocalDispatcher dispatcher) throws CartItemModifyException {
+        double baseQuantity = this.getQuantity();
+        int thisIndex = cart.items().indexOf(this);
+        List newItems = new ArrayList();
+        if (baseQuantity > 1) {
+            for (int i = 1; i < baseQuantity; i++) {
+                // clone the item
+                ShoppingCartItem item = new ShoppingCartItem(this);
 
-    public ShoppingCartItem cloneToCart(int index, ShoppingCart cart, LocalDispatcher dispatcher,
-            double quantity, boolean doPromotions) {
-        Integer placement = null;
-        if (index > -1)
-            placement = new Integer(index);
-        ShoppingCartItem item = null;
-        try {
-            item = ShoppingCartItem.makeItem(placement, _product, quantity, additionalProductFeatureAndAppls,
-                    attributes, prodCatalogId, dispatcher, cart, doPromotions);
-        } catch (CartItemModifyException e) {
-            Debug.logError(e);
+                // set the new item's quantity
+                item.setQuantity(1, dispatcher, cart, false);
+
+                // now copy/calc the adjustments
+                Debug.logInfo("Clone's adj: " + item.getAdjustments());
+                if (item.getAdjustments() != null && item.getAdjustments().size() > 0) {
+                    List adjustments = new LinkedList(item.getAdjustments());
+                    Iterator adjIterator = adjustments.iterator();
+                    while (adjIterator.hasNext()) {
+                        GenericValue adjustment = (GenericValue) adjIterator.next();
+                        if (adjustment != null) {
+                            item.removeAdjustment(adjustment);
+                            GenericValue newAdjustment = new GenericValue(adjustment);
+                            Double adjAmount = newAdjustment.getDouble("amount");
+                            // we use != becuase adjustments can be +/-
+                            if (adjAmount != null && adjAmount.doubleValue() != 0.00)
+                                newAdjustment.set("amount", new Double(adjAmount.doubleValue() / baseQuantity));
+                            Debug.logInfo("Cloned adj: " + newAdjustment);
+                            item.addAdjustment(newAdjustment);
+                        } else {
+                            Debug.logInfo("Clone Adjustment is null");
+                        }
+                    }
+                }
+                newItems.add(item);
+            }
+
+            // set this item's quantity
+            this.setQuantity(1, dispatcher, cart, false);
+
+            Debug.logInfo("BaseQuantity: " + baseQuantity);
+            Debug.logInfo("Item's Adj: " + this.getAdjustments());
+
+            // re-calc this item's adjustments
+            if (this.getAdjustments() != null && this.getAdjustments().size() > 0) {
+                List adjustments = new LinkedList(this.getAdjustments());
+                Iterator adjIterator = adjustments.iterator();
+                while (adjIterator.hasNext()) {
+                    GenericValue adjustment = (GenericValue) adjIterator.next();
+                    if (adjustment != null) {
+                        this.removeAdjustment(adjustment);
+                        GenericValue newAdjustment = new GenericValue(adjustment);
+                        Double adjAmount = newAdjustment.getDouble("amount");
+                        // we use != becuase adjustments can be +/-
+                        if (adjAmount != null && adjAmount.doubleValue() != 0.00)
+                            newAdjustment.set("amount", new Double(adjAmount.doubleValue() / baseQuantity));
+                        Debug.logInfo("Updated adj: " + newAdjustment);
+                        this.addAdjustment(newAdjustment);
+                    }
+                }
+            }
+
+            // add the cloned item(s) to the cart
+            Iterator newItemsItr = newItems.iterator();
+            while (newItemsItr.hasNext())
+                cart.addItem(thisIndex, (ShoppingCartItem) newItemsItr.next());
         }
-        return item;
     }
 }

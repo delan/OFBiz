@@ -654,34 +654,10 @@ public class ShoppingCart implements java.io.Serializable {
                 while (itemIter.hasNext()) {
                     ShoppingCartItem item = (ShoppingCartItem) itemIter.next();
                     Debug.logInfo("Item qty: " + item.getQuantity());
-                    if (item.getQuantity() > 1) {
-                        List explodedItems = new ArrayList();
-                        for (int i = 1; i < item.getQuantity(); i++) {
-                            Debug.logInfo("Cloning item.. (" + i + ")" + item);
-                            int thisItemIndex = cartLineItems.indexOf(item);
-                            ShoppingCartItem newItem = item.cloneToCart(thisItemIndex, this, dispatcher, 1, false);
-                            if (newItem == null) {
-                                Debug.logError("Cannot clone item. See logs for details.");
-                                break;
-                            }
-                            else {
-                                explodedItems.add(newItem);
-                            }
-                        }
-                        double explodedSize = 0.0 + explodedItems.size();
-                        Debug.logInfo("Exploded Size: " + explodedSize);
-                        if (explodedSize == (item.getQuantity() - 1)) {
-                            try {
-                                Debug.logInfo("Setting item qty to 1: " + item);
-                                item.setQuantity(1, dispatcher, this, false);
-                            } catch (CartItemModifyException e) {
-                                Debug.logError(e, "Error trying to adjust main item's quantity. Not exploding!");
-                                cartLines.removeAll(explodedItems);
-                            }
-                        } else {
-                            Debug.logInfo("Invalid result; removing exploded items.");
-                            cartLines.removeAll(explodedItems);
-                        }
+                    try {
+                        item.explodeItem(this, dispatcher);
+                    } catch (CartItemModifyException e) {
+                        Debug.logError(e, "Problem exploding item! Item not exploded.");
                     }
                 }
             }

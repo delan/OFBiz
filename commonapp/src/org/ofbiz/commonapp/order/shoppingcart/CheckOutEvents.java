@@ -138,14 +138,6 @@ public class CheckOutEvents {
             errorMessage.append("<li>There are no items in the cart.");
         }
 
-        if (request.getSession().getAttribute("backupCart") == null) {
-            ShoppingCart newCart = new ShoppingCart(cart, request.getSession());
-            if (newCart != null) {
-                request.getSession().setAttribute("backupCart", cart);
-                request.getSession().setAttribute(SiteDefs.SHOPPING_CART, newCart);
-            }
-        }
-
         if (errorMessage.length() > 0) {
             request.setAttribute(SiteDefs.ERROR_MESSAGE, errorMessage.toString());
             return "error";
@@ -403,7 +395,7 @@ public class CheckOutEvents {
         GenericDelegator delegator = (GenericDelegator) request.getAttribute("delegator");
         ShoppingCart cart = (ShoppingCart) request.getSession().getAttribute(SiteDefs.SHOPPING_CART);
 
-        List items = cart.makeOrderItems(explodeOrderItems(request), dispatcher);
+        List items = cart.makeOrderItems();
         List adjs = cart.makeAllAdjustments();
         GenericValue shipAddress = cart.getShippingAddress();
         if (shipAddress == null) {
