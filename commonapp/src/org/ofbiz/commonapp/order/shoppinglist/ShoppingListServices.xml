@@ -70,26 +70,28 @@
     </simple-method>
     
     <simple-method method-name="updateShoppingList" short-description="Update a ShoppingList">
+        <field-to-field field-name="shoppingListId" map-name="parameters" to-map-name="lookupPKMap"/>
+        <find-by-primary-key entity-name="ShoppingList" map-name="lookupPKMap" value-name="shoppingList"/>
+
         <string-to-field field-name="parentMethodName" string="updateShoppingList"/>
         <string-to-field field-name="permissionAction" string="UPDATE"/>
         <call-simple-method method-name="checkShoppingListSecurity"/>
         <check-errors/>    	     
 
-        <field-to-field field-name="shoppingListId" map-name="parameters" to-map-name="lookupPKMap"/>
-        <find-by-primary-key entity-name="ShoppingList" map-name="lookupPKMap" value-name="shoppingList"/>
         <set-nonpk-fields map-name="parameters" value-name="shoppingList"/>
         <store-value value-name="shoppingList"/>
     </simple-method>
     
     <simple-method method-name="removeShoppingList" short-description="Remove a ShoppingList">
+        <field-to-field field-name="shoppingListId" map-name="parameters" to-map-name="lookupPKMap"/>
+        <find-by-primary-key entity-name="ShoppingListItem" map-name="lookupPKMap" value-name="shoppingList"/>
+
         <string-to-field field-name="parentMethodName" string="updateShoppingList"/>
         <string-to-field field-name="permissionAction" string="UPDATE"/>
         <call-simple-method method-name="checkShoppingListSecurity"/>
         <check-errors/>    	     
 
-        <field-to-field field-name="shoppingListId" map-name="parameters" to-map-name="lookupPKMap"/>
-        <find-by-primary-key entity-name="ShoppingListItem" map-name="lookupPKMap" value-name="shoppingListItem"/>
-        <remove-value value-name="shoppingListItem"/>
+        <remove-value value-name="shoppingList"/>
     </simple-method>
     
     <simple-method method-name="createShoppingListItem" short-description="Create a ShoppingList Item">
@@ -154,7 +156,7 @@
     	<if>
     	    <condition>
   	            <and>
-    	            <not><if-compare-field field-name="partyId" map-name="userLogin" operator="equals" to-map-name="parameters"/></not>
+    	            <not><if-compare-field field-name="partyId" map-name="userLogin" operator="equals" to-map-name="shoppingList"/></not>
     	            <not><if-has-permission permission="PARTYMGR" action="_${permissionAction}"/></not>
     	        </and>
     	    </condition>
