@@ -2038,11 +2038,11 @@
     <view-map name="EditFeatureTypes" type="screen" page="component://product/widget/catalog/FeatureScreens.xml#EditFeatureTypes"/>
     <view-map name="EditFeatureType" type="screen" page="component://product/widget/catalog/FeatureScreens.xml#EditFeatureType"/>
     
-    <view-map name="FindProdCatalog" type="jpublish" page="/catalog/FindProdCatalog.ftl"/>
-    <view-map name="EditProdCatalog" type="jpublish" page="/catalog/EditProdCatalog.ftl"/>
-    <view-map name="EditProdCatalogCategories" type="jpublish" page="/catalog/EditProdCatalogCategories.ftl"/>
-    <view-map name="EditProdCatalogStores" type="jpublish" page="/catalog/EditProdCatalogStores.ftl"/>
-    <view-map name="EditProdCatalogParties" type="jpublish" page="/catalog/EditProdCatalogParties.ftl"/>
+    <view-map name="FindProdCatalog" type="screen" page="component://product/widget/catalog/CatalogScreens.xml#FindProdCatalog"/>
+    <view-map name="EditProdCatalog" type="screen" page="component://product/widget/catalog/CatalogScreens.xml#EditProdCatalog"/>
+    <view-map name="EditProdCatalogCategories" type="screen" page="component://product/widget/catalog/CatalogScreens.xml#EditProdCatalogCategories"/>
+    <view-map name="EditProdCatalogStores" type="screen" page="component://product/widget/catalog/CatalogScreens.xml#EditProdCatalogStores"/>
+    <view-map name="EditProdCatalogParties" type="screen" page="component://product/widget/catalog/CatalogScreens.xml#EditProdCatalogParties"/>
 
     <view-map name="FindProductPromo" type="jpublish" page="/promo/FindProductPromo.ftl"/>
     <view-map name="EditProductPromo" type="jpublish" page="/promo/EditProductPromo.ftl"/>

@@ -53,15 +53,7 @@ if (prodCatalog != null) {
     }
 }
 
-HtmlFormWrapper updateProductStoreCatalogWrapper = new HtmlFormWrapper("/catalog/ProdCatalogForms.xml", "UpdateProductStoreCatalog", request, response);
-updateProductStoreCatalogWrapper.putInContext("productStoreCatalogDatas", productStoreCatalogDatas);
-updateProductStoreCatalogWrapper.putInContext("uiLabelMap", request.getAttribute("uiLabelMap"));
-
-HtmlFormWrapper createProductStoreCatalogWrapper = new HtmlFormWrapper("/catalog/ProdCatalogForms.xml", "CreateProductStoreCatalog", request, response);
-createProductStoreCatalogWrapper.putInContext("prodCatalog", prodCatalog);
-createProductStoreCatalogWrapper.putInContext("uiLabelMap", request.getAttribute("uiLabelMap"));
 
 context.put("prodCatalogId", prodCatalogId);
 context.put("prodCatalog", prodCatalog);
-context.put("updateProductStoreCatalogWrapper", updateProductStoreCatalogWrapper);
-context.put("createProductStoreCatalogWrapper", createProductStoreCatalogWrapper);
+context.put("productStoreCatalogDatas", productStoreCatalogDatas);

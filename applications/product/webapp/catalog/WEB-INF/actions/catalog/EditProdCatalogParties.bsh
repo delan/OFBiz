@@ -54,15 +54,6 @@ if (prodCatalog != null) {
     }
 }
 
-HtmlFormWrapper updateProdCatalogToPartyWrapper = new HtmlFormWrapper("/catalog/ProdCatalogForms.xml", "UpdateProdCatalogToParty", request, response);
-updateProdCatalogToPartyWrapper.putInContext("prodCatalogRoleDatas", prodCatalogRoleDatas);
-updateProdCatalogToPartyWrapper.putInContext("uiLabelMap", request.getAttribute("uiLabelMap"));
-
-HtmlFormWrapper addProdCatalogToPartyWrapper = new HtmlFormWrapper("/catalog/ProdCatalogForms.xml", "AddProdCatalogToParty", request, response);
-addProdCatalogToPartyWrapper.putInContext("prodCatalog", prodCatalog);
-addProdCatalogToPartyWrapper.putInContext("uiLabelMap", request.getAttribute("uiLabelMap"));
-
 context.put("prodCatalogId", prodCatalogId);
 context.put("prodCatalog", prodCatalog);
-context.put("updateProdCatalogToPartyWrapper", updateProdCatalogToPartyWrapper);
-context.put("addProdCatalogToPartyWrapper", addProdCatalogToPartyWrapper);
+context.put("prodCatalogRoleDatas", prodCatalogRoleDatas);
