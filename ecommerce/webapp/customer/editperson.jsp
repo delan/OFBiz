@@ -36,65 +36,73 @@
 <%@ include file="/includes/header.jsp" %>
 <%@ include file="/includes/onecolumn.jsp" %>
 <%
-  boolean useValues = true;
-  if(request.getAttribute(SiteDefs.ERROR_MESSAGE) != null) useValues = false;
+    boolean tryEntity = true;
+    if(request.getAttribute(SiteDefs.ERROR_MESSAGE) != null) tryEntity = false;
+    if(person == null)
+        tryEntity = false;
+    pageContext.setAttribute("tryEntity", new Boolean(tryEntity));
 
-  String donePage = request.getParameter("DONE_PAGE");
-  if(donePage == null || donePage.length() <= 0) donePage="viewprofile";
+    String donePage = request.getParameter("DONE_PAGE");
+    if(donePage == null || donePage.length() <= 0) donePage="viewprofile";
+    pageContext.setAttribute("donePage", donePage);
 %>
-    <table width="90%" border="0" cellpadding="2" cellspacing="0">
-    <%if(person == null){%>
-      <%useValues = false;%>
-      <p class="head1">Add New Personal Information</p>
-        <FORM method=POST action='<ofbiz:url>/updateperson/<%=donePage%></ofbiz:url>' name="editpersonform">
-        <input type=hidden name="UPDATE_MODE" value="CREATE">
-    <%}else{%>
-      <p class="head1">Edit Personal Information</p>
-        <FORM method=POST action='<ofbiz:url>/updateperson/<%=donePage%></ofbiz:url>' name="editpersonform">
-        <input type=hidden name="UPDATE_MODE" value="UPDATE">
-    <%}%>
 
+<ofbiz:unless name="person">
+  <p class="head1">Add New Personal Information</p>
+    <FORM method=POST action='<ofbiz:url>/updateperson/<ofbiz:print attribute="donePage"/></ofbiz:url>' name="editpersonform">
+    <input type=hidden name="UPDATE_MODE" value="CREATE">
+</ofbiz:unless>
+<ofbiz:if name="person">
+  <p class="head1">Edit Personal Information</p>
+    <FORM method=POST action='<ofbiz:url>/updateperson/<ofbiz:print attribute="donePage"/></ofbiz:url>' name="editpersonform">
+    <input type=hidden name="UPDATE_MODE" value="UPDATE">
+</ofbiz:if>
+
+&nbsp;<a href='<ofbiz:url>/authview/<ofbiz:print attribute="donePage"/></ofbiz:url>' class="buttontext">[Done/Cancel]</a>
+&nbsp;<a href="javascript:document.editpersonform.submit()" class="buttontext">[Save]</a>
+
+<table width="90%" border="0" cellpadding="2" cellspacing="0">
     <tr>
       <td width="26%" align=right><div class="tabletext">Title</div></td>
       <td width="74%" align=left>
-        <input type="text" name="PERSON_TITLE" value="<%=UtilFormatOut.checkNull(useValues?person.getString("personalTitle"):request.getParameter("PERSON_TITLE"))%>" size="10" maxlength="30">
+        <input type="text" size="10" maxlength="30" <ofbiz:inputvalue field="personalTitle" entityAttr="person" tryEntityAttr="tryEntity" fullattrs="true"/>>
       </td>
     </tr>
     <tr>
       <td width="26%" align=right><div class="tabletext">First name</div></td>
       <td width="74%" align=left>
-        <input type="text" name="PERSON_FIRST_NAME" value="<%=UtilFormatOut.checkNull(useValues?person.getString("firstName"):request.getParameter("PERSON_FIRST_NAME"))%>" size="30" maxlength="30">
+        <input type="text" size="30" maxlength="30" <ofbiz:inputvalue field="firstName" entityAttr="person" tryEntityAttr="tryEntity" fullattrs="true"/>>
       *</td>
     </tr>
     <tr>
       <td width="26%" align=right><div class="tabletext">Middle initial</div></td>
       <td width="74%" align=left>
-          <input type="text" name="PERSON_MIDDLE_NAME" value="<%=UtilFormatOut.checkNull(useValues?person.getString("middleName"):request.getParameter("PERSON_MIDDLE_NAME"))%>" size="4" maxlength="4">
+          <input type="text" size="4" maxlength="4" <ofbiz:inputvalue field="middleName" entityAttr="person" tryEntityAttr="tryEntity" fullattrs="true"/>>
       </td>
     </tr>
     <tr>
       <td width="26%" align=right><div class="tabletext">Last name </div></td>
       <td width="74%" align=left>
-        <input type="text" name="PERSON_LAST_NAME" value="<%=UtilFormatOut.checkNull(useValues?person.getString("lastName"):request.getParameter("PERSON_LAST_NAME"))%>" size="30" maxlength="30">
+        <input type="text" size="30" maxlength="30" <ofbiz:inputvalue field="lastName" entityAttr="person" tryEntityAttr="tryEntity" fullattrs="true"/>>
       *</td>
     </tr>
     <tr>
       <td width="26%" align=right><div class="tabletext">Suffix</div></td>
       <td width="74%" align=left>
-        <input type="text" name="PERSON_SUFFIX" value="<%=UtilFormatOut.checkNull(useValues?person.getString("suffix"):request.getParameter("PERSON_SUFFIX"))%>" size="10" maxlength="30">
+        <input type="text" size="10" maxlength="30" <ofbiz:inputvalue field="suffix" entityAttr="person" tryEntityAttr="tryEntity" fullattrs="true"/>>
       </td>
     </tr>
     <tr>
       <td width="26%" align=right><div class="tabletext">Nick Name</div></td>
       <td width="74%" align=left>
-        <input type="text" name="PERSON_NICKNAME" value="<%=UtilFormatOut.checkNull(useValues?person.getString("nickname"):request.getParameter("PERSON_NICKNAME"))%>" size="30" maxlength="60">
+        <input type="text" size="30" maxlength="60" <ofbiz:inputvalue field="nickname" entityAttr="person" tryEntityAttr="tryEntity" fullattrs="true"/>>
       </td>
     </tr>
     <tr>
       <td width="26%" align=right><div class="tabletext">Gender</div></td>
       <td width="74%" align=left>
-        <select name="PERSON_GENDER">
-          <option><%=UtilFormatOut.checkNull(useValues?person.getString("gender"):request.getParameter("PERSON_GENDER"))%></option>
+        <select name="gender">
+          <option><ofbiz:inputvalue field="gender" entityAttr="person" tryEntityAttr="tryEntity"/></option>
           <option></option>
           <option>M</option>
           <option>F</option>
@@ -104,73 +112,71 @@
     <tr>
       <td width="26%" align=right><div class="tabletext">Birth Date</div></td>
       <td width="74%" align=left>
-        <input type="text" name="PERSON_BIRTH_DATE" value="<%=UtilFormatOut.checkNull(useValues?UtilDateTime.toDateString(person.getDate("birthDate")):request.getParameter("PERSON_BIRTH_DATE"))%>" size="11" maxlength="20">
-        (MM/DD/YYYY)
+        <input type="text" size="11" maxlength="20" <ofbiz:inputvalue field="birthDate" entityAttr="person" tryEntityAttr="tryEntity" fullattrs="true"/>>
+        (yyyy-MM-dd)
       </td>
     </tr>
     <tr>
       <td width="26%" align=right><div class="tabletext">Height</div></td>
       <td width="74%" align=left>
-        <input type="text" name="PERSON_HEIGHT" value="<%=UtilFormatOut.checkNull(useValues?UtilFormatOut.formatQuantity(person.getDouble("height")):request.getParameter("PERSON_HEIGHT"))%>" size="30" maxlength="60">
+        <input type="text" size="30" maxlength="60" <ofbiz:inputvalue field="height" entityAttr="person" tryEntityAttr="tryEntity" fullattrs="true"/>>
       </td>
     </tr>
     <tr>
       <td width="26%" align=right><div class="tabletext">Weight</div></td>
       <td width="74%" align=left>
-        <input type="text" name="PERSON_WEIGHT" value="<%=UtilFormatOut.checkNull(useValues?UtilFormatOut.formatQuantity(person.getDouble("weight")):request.getParameter("PERSON_WEIGHT"))%>" size="30" maxlength="60">
+        <input type="text" size="30" maxlength="60" <ofbiz:inputvalue field="weight" entityAttr="person" tryEntityAttr="tryEntity" fullattrs="true"/>>
       </td>
     </tr>
 
     <tr>
       <td width="26%" align=right><div class="tabletext">Mothers Maiden Name</div></td>
       <td width="74%" align=left>
-        <input type="text" name="PERSON_MOTHERS_MAIDEN_NAME" value="<%=UtilFormatOut.checkNull(useValues?person.getString("mothersMaidenName"):request.getParameter("PERSON_MOTHERS_MAIDEN_NAME"))%>" size="30" maxlength="60">
+        <input type="text" size="30" maxlength="60" <ofbiz:inputvalue field="mothersMaidenName" entityAttr="person" tryEntityAttr="tryEntity" fullattrs="true"/>>
       </td>
     </tr>
     <tr>
       <td width="26%" align=right><div class="tabletext">Marital Status</div></td>
       <td width="74%" align=left>
-        <input type="text" name="PERSON_MARITAL_STATUS" value="<%=UtilFormatOut.checkNull(useValues?person.getString("maritalStatus"):request.getParameter("PERSON_MARITAL_STATUS"))%>" size="30" maxlength="60">
+        <input type="text" size="30" maxlength="60" <ofbiz:inputvalue field="maritalStatus" entityAttr="person" tryEntityAttr="tryEntity" fullattrs="true"/>>
       </td>
     </tr>
     <tr>
       <td width="26%" align=right><div class="tabletext">Social Security Number</div></td>
       <td width="74%" align=left>
-        <input type="text" name="PERSON_SOCIAL_SECURITY_NUMBER" value="<%=UtilFormatOut.checkNull(useValues?person.getString("socialSecurityNumber"):request.getParameter("PERSON_SOCIAL_SECURITY_NUMBER"))%>" size="30" maxlength="60">
+        <input type="text" size="30" maxlength="60" <ofbiz:inputvalue field="socialSecurityNumber" entityAttr="person" tryEntityAttr="tryEntity" fullattrs="true"/>>
       </td>
     </tr>
     <tr>
       <td width="26%" align=right><div class="tabletext">Passport Number</div></td>
       <td width="74%" align=left>
-        <input type="text" name="PERSON_PASSPORT_NUMBER" value="<%=UtilFormatOut.checkNull(useValues?person.getString("passportNumber"):request.getParameter("PERSON_PASSPORT_NUMBER"))%>" size="30" maxlength="60">
+        <input type="text" size="30" maxlength="60" <ofbiz:inputvalue field="passportNumber" entityAttr="person" tryEntityAttr="tryEntity" fullattrs="true"/>>
       </td>
     </tr>
     <tr>
       <td width="26%" align=right><div class="tabletext">Passport Expire Date</div></td>
       <td width="74%" align=left>
-        <input type="text" name="PERSON_PASSPORT_EXPIRE_DATE" value="<%=UtilFormatOut.checkNull(useValues?UtilDateTime.toDateString(person.getDate("passportExpireDate")):request.getParameter("PERSON_PASSPORT_EXPIRE_DATE"))%>" size="11" maxlength="20">
-        (MM/DD/YYYY)
+        <input type="text" size="11" maxlength="20" <ofbiz:inputvalue field="passportExpireDate" entityAttr="person" tryEntityAttr="tryEntity" fullattrs="true"/>>
+        (yyyy-MM-dd)
       </td>
     </tr>
     <tr>
       <td width="26%" align=right><div class="tabletext">Total Years Work Experience</div></td>
       <td width="74%" align=left>
-        <input type="text" name="PERSON_TOTAL_YEARS_WORK_EXPERIENCE" value="<%=UtilFormatOut.checkNull(useValues?UtilFormatOut.formatQuantity(person.getDouble("totalYearsWorkExperience")):request.getParameter("PERSON_TOTAL_YEARS_WORK_EXPERIENCE"))%>" size="30" maxlength="60">
+        <input type="text" size="30" maxlength="60" <ofbiz:inputvalue field="totalYearsWorkExperience" entityAttr="person" tryEntityAttr="tryEntity" fullattrs="true"/>>
       </td>
     </tr>
     <tr>
       <td width="26%" align=right><div class="tabletext">Comment</div></td>
       <td width="74%" align=left>
-        <input type="text" name="PERSON_COMMENT" value="<%=UtilFormatOut.checkNull(useValues?person.getString("comments"):request.getParameter("PERSON_COMMENT"))%>" size="30" maxlength="60">
+        <input type="text" size="30" maxlength="60" <ofbiz:inputvalue field="comments" entityAttr="person" tryEntityAttr="tryEntity" fullattrs="true"/>>
       </td>
     </tr>
+</table>
+</form>
 
-  </form>
-  </table>
-
-    &nbsp;<a href="<ofbiz:url>/<%=donePage%></ofbiz:url>" class="buttontext">[Done/Cancel]</a>
-    &nbsp;<a href="javascript:document.editpersonform.submit()" class="buttontext">[Save]</a>
-    <%--  <input type="image" value="[Save]" border="0" src="/commerce/images/btn_save.gif"> --%>
+&nbsp;<a href='<ofbiz:url>/authview/<ofbiz:print attribute="donePage"/></ofbiz:url>' class="buttontext">[Done/Cancel]</a>
+&nbsp;<a href="javascript:document.editpersonform.submit()" class="buttontext">[Save]</a>
 
 <%@ include file="/includes/onecolumnclose.jsp" %>
 <%@ include file="/includes/footer.jsp" %>

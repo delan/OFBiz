@@ -30,14 +30,14 @@
 
 <%@ page import="java.util.*" %>
 <%@ page import="org.ofbiz.core.entity.*" %>
-<%@ page import="org.ofbiz.commonapp.party.contact.*" %>
+<%@ page import="org.ofbiz.commonapp.party.contact.*, org.ofbiz.commonapp.party.party.*" %>
 
 <% pageContext.setAttribute("PageName", "viewprofile"); %>
 <%@ include file="/includes/envsetup.jsp" %>
 <%@ include file="/includes/header.jsp" %>
 <%@ include file="/includes/onecolumn.jsp" %>
 <%
-    ContactMechWorker.getPartyOtherValues(pageContext, userLogin.getString("partyId"), "party", "person", "partyGroup");
+    PartyWorker.getPartyOtherValues(pageContext, userLogin.getString("partyId"), "party", "person", "partyGroup");
     boolean showOld = "true".equals(request.getParameter("SHOW_OLD"));
     pageContext.setAttribute("showOld", new Boolean(showOld));
     ContactMechWorker.getPartyContactMechValueMaps(pageContext, userLogin.getString("partyId"), showOld, "partyContactMechValueMaps");
