@@ -1,5 +1,5 @@
 /*
- * $Id: ParametricSearch.java,v 1.9 2004/01/20 17:57:47 jonesde Exp $
+ * $Id: ParametricSearch.java,v 1.10 2004/01/21 19:55:19 jonesde Exp $
  *
  *  Copyright (c) 2001 The Open For Business Project (www.ofbiz.org)
  *  Permission is hereby granted, free of charge, to any person obtaining a
@@ -22,6 +22,7 @@
  */
 package org.ofbiz.product.feature;
 
+import java.sql.Timestamp;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Iterator;
@@ -34,12 +35,16 @@ import javax.servlet.ServletRequest;
 import javax.servlet.http.HttpServletRequest;
 
 import org.ofbiz.base.util.Debug;
-import org.ofbiz.base.util.UtilCache;
+import org.ofbiz.base.util.UtilDateTime;
 import org.ofbiz.base.util.UtilHttp;
 import org.ofbiz.base.util.UtilMisc;
 import org.ofbiz.entity.GenericDelegator;
 import org.ofbiz.entity.GenericEntityException;
 import org.ofbiz.entity.GenericValue;
+import org.ofbiz.entity.condition.EntityCondition;
+import org.ofbiz.entity.condition.EntityConditionList;
+import org.ofbiz.entity.condition.EntityExpr;
+import org.ofbiz.entity.condition.EntityOperator;
 import org.ofbiz.entity.util.EntityListIterator;
 import org.ofbiz.entity.util.EntityUtil;
 
@@ -47,7 +52,7 @@ import org.ofbiz.entity.util.EntityUtil;
  *  Utilities for parametric search based on features.
  *
  * @author <a href="mailto:jonesde@ofbiz.org">David E. Jones</a>
- * @version    $Revision: 1.9 $
+ * @version    $Revision: 1.10 $
  * @since      2.1
  */
 public class ParametricSearch {
@@ -256,4 +261,122 @@ public class ParametricSearch {
         return productIds;
     }
      */
+
+    /** Get all features associated with products and associate them with a feature group attached to the category for each feature type;
+     * includes products associated with this category only, but will also associate all feature groups of sub-categories with this category, optionally calls this method for all sub-categories too
+     */
+    public static void attachProductFeaturesToCategory(String productCategoryId, Set productFeatureTypeIdsToExclude, GenericDelegator delegator, boolean doSubCategories, Timestamp nowTimestamp) throws GenericEntityException {
+        if (nowTimestamp == null) {
+            nowTimestamp = UtilDateTime.nowTimestamp();
+        }
+
+        // do sub-categories first so all feature groups will be in place
+        List subCategoryList = delegator.findByAnd("ProductCategoryRollup", UtilMisc.toMap("parentCategoryId", productCategoryId));
+        if (doSubCategories) {
+            Iterator subCategoryIter = subCategoryList.iterator();
+            while (subCategoryIter.hasNext()) {
+                GenericValue productCategoryRollup = (GenericValue) subCategoryIter.next();
+                attachProductFeaturesToCategory(productCategoryRollup.getString("productCategoryId"), productFeatureTypeIdsToExclude, delegator, true, nowTimestamp);
+            }
+        }
+
+        // now get all features for this category and make associated feature groups
+        Map productFeatureIdByTypeIdSetMap = new HashMap();
+        List productCategoryMemberList = delegator.findByAnd("ProductCategoryMember", UtilMisc.toMap("productCategoryId", productCategoryId));
+        Iterator productCategoryMemberIter = productCategoryMemberList.iterator();
+        while (productCategoryMemberIter.hasNext()) {
+            GenericValue productCategoryMember = (GenericValue) productCategoryMemberIter.next();
+            String productId = productCategoryMember.getString("productId");
+            EntityCondition condition = new EntityConditionList(UtilMisc.toList(
+                    new EntityExpr("productId", EntityOperator.EQUALS, productId),
+                    new EntityExpr("fromDate", EntityOperator.LESS_THAN_EQUAL_TO, nowTimestamp),
+                    new EntityExpr(new EntityExpr("thruDate", EntityOperator.EQUALS, null), EntityOperator.OR, new EntityExpr("thruDate", EntityOperator.GREATER_THAN_EQUAL_TO, nowTimestamp))
+                    ), EntityOperator.AND);
+            EntityListIterator productFeatureAndApplEli = delegator.findListIteratorByCondition("ProductFeatureAndAppl", condition, null, null);
+            GenericValue productFeatureAndAppl = null;
+            while ((productFeatureAndAppl = (GenericValue) productFeatureAndApplEli.next()) != null) {
+                String productFeatureId = productFeatureAndAppl.getString("productFeatureId");
+                String productFeatureTypeId = productFeatureAndAppl.getString("productFeatureTypeId");
+                if (productFeatureTypeIdsToExclude != null && productFeatureTypeIdsToExclude.contains(productFeatureTypeId)) {
+                    continue;
+                }
+                Set productFeatureIdSet = (Set) productFeatureIdByTypeIdSetMap.get(productFeatureTypeId);
+                if (productFeatureIdSet == null) {
+                    productFeatureIdSet = new HashSet();
+                    productFeatureIdByTypeIdSetMap.put(productFeatureTypeId, productFeatureIdSet);
+                }
+                productFeatureIdSet.add(productFeatureId);
+            }
+        }
+        
+        Iterator productFeatureIdByTypeIdSetIter = productFeatureIdByTypeIdSetMap.entrySet().iterator();
+        while (productFeatureIdByTypeIdSetIter.hasNext()) {
+            Map.Entry entry = (Map.Entry) productFeatureIdByTypeIdSetIter.next();
+            String productFeatureTypeId = (String) entry.getKey();
+            Set productFeatureIdSet = (Set) entry.getValue();
+            
+            String productFeatureGroupId = productCategoryId + "_" + productFeatureTypeId;
+            if (productFeatureGroupId.length() > 20) {
+                Debug.logWarning("Manufactured productFeatureGroupId was greater than 20 characters, means that we had some long productCategoryId and/or productFeatureTypeId values, at the category part should be unique since it is first, so if the feature type isn't unique it just means more than one type of feature will go into the category...", module);
+                productFeatureGroupId = productFeatureGroupId.substring(0, 20);
+            }
+            
+            GenericValue productFeatureGroup = delegator.findByPrimaryKey("ProductFeatureGroup", UtilMisc.toMap("productFeatureGroupId", productFeatureGroupId));
+            if (productFeatureGroup == null) {
+                // auto-create the group
+                String description = "Feature Group for type [" + productFeatureTypeId + "] features in category [" + productCategoryId + "]";
+                productFeatureGroup = delegator.makeValue("ProductFeatureGroup", UtilMisc.toMap("productFeatureGroupId", productFeatureGroupId, "description", description));
+                productFeatureGroup.create();
+                
+                GenericValue productFeatureCatGrpAppl = delegator.makeValue("ProductFeatureCatGrpAppl", UtilMisc.toMap("productFeatureGroupId", productFeatureGroupId, "productCategoryId", productCategoryId, "fromDate", nowTimestamp));
+                productFeatureCatGrpAppl.create();
+            }
+            
+            // now put all of the features in the group, if there is not already a valid feature placement there...
+            Iterator productFeatureIdIter = productFeatureIdSet.iterator();
+            while (productFeatureIdIter.hasNext()) {
+                String productFeatureId = (String) productFeatureIdIter.next();
+                EntityCondition condition = new EntityConditionList(UtilMisc.toList(
+                        new EntityExpr("productFeatureId", EntityOperator.EQUALS, productFeatureId),
+                        new EntityExpr("productFeatureGroupId", EntityOperator.EQUALS, productFeatureGroupId),
+                        new EntityExpr("fromDate", EntityOperator.LESS_THAN_EQUAL_TO, nowTimestamp),
+                        new EntityExpr(new EntityExpr("thruDate", EntityOperator.EQUALS, null), EntityOperator.OR, new EntityExpr("thruDate", EntityOperator.GREATER_THAN_EQUAL_TO, nowTimestamp))
+                        ), EntityOperator.AND);
+                if (delegator.findCountByCondition("ProductFeatureGroupAppl", condition, null) == 0) {
+                    // if no valid ones, create one
+                    GenericValue productFeatureGroupAppl = delegator.makeValue("ProductFeatureGroupAppl", UtilMisc.toMap("productFeatureGroupId", productFeatureGroupId, "productFeatureId", productFeatureId, "fromDate", nowTimestamp));
+                    productFeatureGroupAppl.create();
+                }
+            }
+        }
+        
+        // now get all feature groups associated with sub-categories and associate them with this category
+        Iterator subCategoryIter = subCategoryList.iterator();
+        while (subCategoryIter.hasNext()) {
+            GenericValue productCategoryRollup = (GenericValue) subCategoryIter.next();
+            String subProductCategoryId = productCategoryRollup.getString("productCategoryId");
+            EntityCondition condition = new EntityConditionList(UtilMisc.toList(
+                    new EntityExpr("productCategoryId", EntityOperator.EQUALS, subProductCategoryId),
+                    new EntityExpr("fromDate", EntityOperator.LESS_THAN_EQUAL_TO, nowTimestamp),
+                    new EntityExpr(new EntityExpr("thruDate", EntityOperator.EQUALS, null), EntityOperator.OR, new EntityExpr("thruDate", EntityOperator.GREATER_THAN_EQUAL_TO, nowTimestamp))
+                    ), EntityOperator.AND);
+            EntityListIterator productFeatureCatGrpApplEli = delegator.findListIteratorByCondition("ProductFeatureCatGrpAppl", condition, null, null);
+            GenericValue productFeatureCatGrpAppl = null;
+            while ((productFeatureCatGrpAppl = (GenericValue) productFeatureCatGrpApplEli.next()) != null) {
+                String productFeatureGroupId = productFeatureCatGrpAppl.getString("productFeatureGroupId");
+                EntityCondition checkCondition = new EntityConditionList(UtilMisc.toList(
+                        new EntityExpr("productCategoryId", EntityOperator.EQUALS, productCategoryId),
+                        new EntityExpr("productFeatureGroupId", EntityOperator.EQUALS, productFeatureGroupId),
+                        new EntityExpr("fromDate", EntityOperator.LESS_THAN_EQUAL_TO, nowTimestamp),
+                        new EntityExpr(new EntityExpr("thruDate", EntityOperator.EQUALS, null), EntityOperator.OR, new EntityExpr("thruDate", EntityOperator.GREATER_THAN_EQUAL_TO, nowTimestamp))
+                        ), EntityOperator.AND);
+                if (delegator.findCountByCondition("ProductFeatureCatGrpAppl", checkCondition, null) == 0) {
+                    // if no valid ones, create one
+                    GenericValue productFeatureGroupAppl = delegator.makeValue("ProductFeatureCatGrpAppl", UtilMisc.toMap("productFeatureGroupId", productFeatureGroupId, "productCategoryId", productCategoryId, "fromDate", nowTimestamp));
+                    productFeatureGroupAppl.create();
+                }
+                
+            }
+        }
+    }
 }
