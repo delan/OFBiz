@@ -1,6 +1,9 @@
 /*
  * $Id$
  * $Log$
+ * Revision 1.4  2001/08/31 17:44:04  epabst
+ * added shopping cart code
+ *
  * Revision 1.3  2001/08/30 16:21:22  jonesde
  * Minor clean ups.
  *
@@ -127,8 +130,8 @@ public class UtilValidate
   public static final String isSSNMsg = "The SSN must be a 9 digit U.S. social security number(like 123-45-6789). Please reenter it now.";
   public static final String isEmailMsg = "The Email must be a valid email address(like john@email.com). Please re-enter it now.";
   public static final String isAnyCardMsg = "The credit card number is not a valid card number.";
-  public static final String isCreditCardPrefixMsg = "This is not a valid ";
-  public static final String isCreditCardSuffixMsg = " credit card number.(Click the link on this form to see a list of sample numbers.) Please reenter it now.";
+  public static final String isCreditCardPrefixMsg = " is not a valid ";
+  public static final String isCreditCardSuffixMsg = " credit card number. Please reenter it now.";
   public static final String isDayMsg = "The Day must be a day number between 1 and 31.  Please reenter it now.";
   public static final String isMonthMsg = "The Month must be a month number between 1 and 12.  Please reenter it now.";
   public static final String isYearMsg = "The Year must be a 2 or 4 digit year number.  Please reenter it now.";
