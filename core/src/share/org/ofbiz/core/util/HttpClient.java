@@ -36,6 +36,8 @@ import java.net.*;
  */
 public class HttpClient {
     
+    public static final String module = HttpClient.class.getName();
+    
     private int timeout = 30000;
     private boolean lineFeed = true;
     private boolean followRedirects = true;
@@ -227,11 +229,24 @@ public class HttpClient {
         StringBuffer buf = new StringBuffer();
 
         try {
-            if (Debug.verboseOn()) Debug.logVerbose("ContentEncoding: " + con.getContentEncoding() + "; ContentType: " + con.getContentType() + " or: " + URLConnection.guessContentTypeFromStream(in));
+            if (Debug.verboseOn()) {
+                try {
+                    Debug.logVerbose("ContentEncoding: " + con.getContentEncoding() + "; ContentType: " + 
+                            con.getContentType() + " or: " + URLConnection.guessContentTypeFromStream(in));                            
+                } catch (IOException ioe) {
+                    Debug.logWarning(ioe, "Caught exception printing content debugging information", module);
+                }
+            }
             
             String charset = null;
             String contentType = con.getContentType();
-            if (contentType == null) contentType = URLConnection.guessContentTypeFromStream(in);
+            if (contentType == null) {
+                try {                 
+                    contentType = URLConnection.guessContentTypeFromStream(in);
+                } catch (IOException ioe) {
+                    Debug.logWarning(ioe, "Problems guessing content type from steam", module);
+                }
+            }
             
             if (contentType != null) {
                 contentType = contentType.toUpperCase();
