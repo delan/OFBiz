@@ -34,7 +34,6 @@
     <global-services loader="mainfile" location="services_workeffort.xml"/>
     <global-services loader="mainfile" location="services_workflow.xml"/>
 
-    <!--
     <jms-service name="testQueue"
                  jndi-name="OpenJMS"
                  type="queue"
@@ -53,6 +52,6 @@
                  publisher-enabled="true"
                  listener-enabled="true"
                  listener-class="org.ofbiz.core.service.jms.JMSTopicListener"/>
-    -->
+
 </service-config>
 
