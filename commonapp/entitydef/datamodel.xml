@@ -2934,7 +2934,7 @@
       <package-name>org.ofbiz.commonapp.product.product</package-name>
       <table-name>PRODUCT</table-name>
       <cmp-field><column-name>PRODUCT_ID</column-name><field-type>id-ne</field-type></cmp-field>
-      <cmp-field><column-name>PRIMARY_PRODUCT_CATEGORY_ID</column-name><field-type>id-ne</field-type></cmp-field>
+      <cmp-field><column-name>PRIMARY_PRODUCT_CATEGORY_ID</column-name><field-type>id</field-type></cmp-field>
       <cmp-field><column-name>MANUFACTURER_PARTY_ID</column-name><field-type>id</field-type></cmp-field>
       <cmp-field><column-name>UOM_ID</column-name><field-type>id</field-type></cmp-field>
       <cmp-field><column-name>QUANTITY_INCLUDED</column-name><field-type>floating-point</field-type></cmp-field>
@@ -3304,8 +3304,10 @@
       <package-name>org.ofbiz.commonapp.product.category</package-name>
       <table-name>PRODUCT_CATEGORY</table-name>
       <cmp-field><column-name>PRODUCT_CATEGORY_ID</column-name><field-type>id-ne</field-type></cmp-field>
+      <cmp-field><column-name>PRIMARY_PARENT_CATEGORY_ID</column-name><field-type>id</field-type></cmp-field>
       <cmp-field><column-name>DESCRIPTION</column-name><field-type>description</field-type></cmp-field>
       <prim-key-column>PRODUCT_CATEGORY_ID</prim-key-column>
+      <finder><column-name>PRIMARY_PARENT_CATEGORY_ID</column-name></finder>
       <relation>
         <relation-type>many</relation-type>
         <related-table-name>PRODUCT_CATEGORY_CLASS</related-table-name>
@@ -3322,6 +3324,19 @@
         <key-map><column-name>PRODUCT_CATEGORY_ID</column-name></key-map>
       </relation>
       <relation>
+        <relation-title>PrimaryParent</relation-title>
+        <relation-type>one</relation-type>
+        <related-table-name>PRODUCT_CATEGORY</related-table-name>
+        <key-map><column-name>PRIMARY_PARENT_CATEGORY_ID</column-name><related-column-name>PRODUCT_CATEGORY_ID</related-column-name></key-map>
+      </relation>
+      <relation>
+        <relation-title>PrimaryChild</relation-title>
+        <relation-type>many</relation-type>
+        <related-table-name>PRODUCT_CATEGORY</related-table-name>
+        <key-map><column-name>PRODUCT_CATEGORY_ID</column-name><related-column-name>PRIMARY_PARENT_CATEGORY_ID</related-column-name></key-map>
+      </relation>
+      <relation>
+        <relation-title>Primary</relation-title>
         <relation-type>many</relation-type>
         <related-table-name>PRODUCT</related-table-name>
         <key-map><column-name>PRODUCT_CATEGORY_ID</column-name><related-column-name>PRIMARY_PRODUCT_CATEGORY_ID</related-column-name></key-map>
