@@ -20,7 +20,7 @@
  *  THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  *
  *@author     Andy Zeneski (jaz@ofbiz.org)
- *@version    $Revision: 1.7 $
+ *@version    $Revision: 1.8 $
  *@since      2.2
 -->
 
@@ -207,6 +207,16 @@ function lookupOrders(click) {
                       </td>
                     </tr>
                   </table>
+                </td>
+              </tr>
+              <tr><td colspan="3"><hr class="sepbar"></td></tr>
+              <tr>
+                <td width='25%' align='right'>&nbsp;</td>
+                <td width='5%'>&nbsp;</td>
+                <td>
+                  <div class="tabletext">
+                    <input type='checkbox' name='showAll' value='Y' onclick="javascript:lookupOrders(true);">&nbsp;Show All Records
+                  </div>
                 </td>
               </tr>
             </table>
