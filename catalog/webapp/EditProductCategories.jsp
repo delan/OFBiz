@@ -78,7 +78,7 @@
     <td><div class="tabletext"><b>Category ID</b></div></td>
     <td><div class="tabletext"><b>Description</b></div></td>
     <td><div class="tabletext"><b>From&nbsp;Date&nbsp;&amp;&nbsp;Time</b></div></td>
-    <td><div class="tabletext"><b>Sequence</b></div></td>
+    <td><div class="tabletext"><b>Sequence&nbsp;&amp;&nbsp;Quantity</b></div></td>
     <td><div class="tabletext"><b>&nbsp;</b></div></td>
   </tr>
 <ofbiz:iterator name="productCategoryMember" property="productCategoryMembers">
@@ -93,6 +93,7 @@
             <input type=hidden name='PRODUCT_CATEGORY_ID' value='<ofbiz:entityfield attribute="productCategoryMember" field="productCategoryId"/>'>
             <input type=hidden name='FROM_DATE' value='<ofbiz:inputvalue entityAttr="productCategoryMember" field="fromDate"/>'>
             <input type=text size='5' name='SEQUENCE_NUM' value='<ofbiz:inputvalue entityAttr="productCategoryMember" field="sequenceNum"/>'>
+            <input type=text size='5' name='QUANTITY' value='<ofbiz:inputvalue entityAttr="productCategoryMember" field="quantity"/>'>
             <INPUT type=submit value='Update'>
         </FORM>
     </td>
