@@ -43,42 +43,45 @@ import org.apache.commons.collections.map.HashedMap;
 /**
  * 
  * @author     <a href="mailto:jaz@ofbiz.org">Andy Zeneski</a>
- * @version    $Rev:$
+ * @version    $Rev$
  * @since      3.2
  */
 public class CacheLineTable implements Serializable {
 
     public static final String module = CacheLineTable.class.getName();
+    protected static jdbm.RecordManager jdbmMgr = null;
 
     protected AbstractHashedMap memoryTable = null;
     protected jdbm.htree.HTree fileTable = null;
+    protected String fileStore = null;
     protected String cacheName = null;
     protected int maxInMemory = 0;
 
-    public CacheLineTable(String cacheName, boolean fileTable, int maxInMemory) {
+    public CacheLineTable(String fileStore, String cacheName, boolean fileTable, int maxInMemory) {
+        this.fileStore = fileStore;
         this.cacheName = cacheName;
         this.maxInMemory = maxInMemory;
         if (fileTable) {
             // create the manager the first time it is needed
-            if (UtilCache.jdbmMgr == null) {
+            if (CacheLineTable.jdbmMgr == null) {
                 synchronized (this) {
-                    if (UtilCache.jdbmMgr == null) {
+                    if (CacheLineTable.jdbmMgr == null) {
                         try {
-                            UtilCache.jdbmMgr = jdbm.RecordManagerFactory.createRecordManager("cachestore");
+                            CacheLineTable.jdbmMgr = jdbm.RecordManagerFactory.createRecordManager(fileStore);
                         } catch (IOException e) {
                             Debug.logError(e, module);
                         }
                     }
                 }
             }
-            if (UtilCache.jdbmMgr != null) {
+            if (CacheLineTable.jdbmMgr != null) {
                 try {
-                    long recno = UtilCache.jdbmMgr.getNamedObject(cacheName);
+                    long recno = CacheLineTable.jdbmMgr.getNamedObject(cacheName);
                     if (recno != 0) {
-                        this.fileTable = jdbm.htree.HTree.load(UtilCache.jdbmMgr, recno);
+                        this.fileTable = jdbm.htree.HTree.load(CacheLineTable.jdbmMgr, recno);
                     } else {
-                        this.fileTable = jdbm.htree.HTree.createInstance(UtilCache.jdbmMgr);
-                        UtilCache.jdbmMgr.setNamedObject(cacheName, this.fileTable.getRecid());
+                        this.fileTable = jdbm.htree.HTree.createInstance(CacheLineTable.jdbmMgr);
+                        CacheLineTable.jdbmMgr.setNamedObject(cacheName, this.fileTable.getRecid());
                     }
                 } catch (IOException e) {
                     Debug.logError(e, module);
@@ -175,11 +178,11 @@ public class CacheLineTable implements Serializable {
             try {
                 // remove this table
                 long recid = fileTable.getRecid();
-                UtilCache.jdbmMgr.delete(recid);
+                CacheLineTable.jdbmMgr.delete(recid);
 
                 // create a new table
-                this.fileTable = jdbm.htree.HTree.createInstance(UtilCache.jdbmMgr);
-                UtilCache.jdbmMgr.setNamedObject(cacheName, this.fileTable.getRecid());
+                this.fileTable = jdbm.htree.HTree.createInstance(CacheLineTable.jdbmMgr);
+                CacheLineTable.jdbmMgr.setNamedObject(cacheName, this.fileTable.getRecid());
             } catch (IOException e) {
                 Debug.logError(e, module);
             }
