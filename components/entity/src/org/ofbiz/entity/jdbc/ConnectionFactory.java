@@ -1,5 +1,5 @@
 /*
- * $Id: ConnectionFactory.java,v 1.1 2003/08/16 22:05:49 ajzeneski Exp $
+ * $Id: ConnectionFactory.java,v 1.1 2003/08/17 04:56:27 jonesde Exp $
  *
  * Copyright (c) 2001, 2002 The Open For Business Project - www.ofbiz.org
  *
@@ -22,13 +22,17 @@
  * THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  *
  */
-package org.ofbiz.entity;
+package org.ofbiz.entity.jdbc;
 
-import java.sql.*;
+import java.sql.Connection;
+import java.sql.DriverManager;
+import java.sql.SQLException;
+
+import org.ofbiz.base.util.Debug;
+import org.ofbiz.entity.GenericEntityException;
+import org.ofbiz.entity.transaction.DBCPConnectionFactory;
+import org.ofbiz.entity.transaction.TransactionFactory;
 import org.w3c.dom.Element;
-
-import org.ofbiz.entity.transaction.*;
-import org.ofbiz.base.util.*;
 
 /**
  * ConnectionFactory - central source for JDBC connections

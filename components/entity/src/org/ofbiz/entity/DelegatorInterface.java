@@ -1,5 +1,5 @@
 /*
- * $Id: DelegatorInterface.java,v 1.1 2003/08/16 22:05:50 ajzeneski Exp $
+ * $Id: DelegatorInterface.java,v 1.2 2003/08/17 04:56:26 jonesde Exp $
  *
  * Copyright (c) 2001, 2002 The Open For Business Project - www.ofbiz.org
  *
@@ -24,16 +24,27 @@
  */
 package org.ofbiz.entity;
 
-import java.util. *;
+import java.util.Collection;
+import java.util.List;
+import java.util.Map;
+import java.util.Set;
 
-import org.ofbiz.entity.model.*;
-import org.ofbiz.base.util.*;
+import org.ofbiz.base.util.UtilCache;
+import org.ofbiz.entity.condition.EntityCondition;
+import org.ofbiz.entity.datasource.GenericHelper;
+import org.ofbiz.entity.model.ModelEntity;
+import org.ofbiz.entity.model.ModelFieldType;
+import org.ofbiz.entity.model.ModelGroupReader;
+import org.ofbiz.entity.model.ModelReader;
+import org.ofbiz.entity.util.EntityFindOptions;
+import org.ofbiz.entity.util.EntityListIterator;
+import org.ofbiz.entity.util.SequenceUtil;
 
 /**
  * Delegator Interface
  *
  * @author     <a href="mailto:plightbo@cisco.com">Patrick Lightbody</a>
- * @version    $Revision: 1.1 $
+ * @version    $Revision: 1.2 $
  * @since      2.0
  */
 public interface DelegatorInterface {

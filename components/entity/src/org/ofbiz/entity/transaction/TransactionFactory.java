@@ -1,5 +1,5 @@
 /*
- * $Id: TransactionFactory.java,v 1.1 2003/08/16 22:05:49 ajzeneski Exp $
+ * $Id: TransactionFactory.java,v 1.1 2003/08/17 04:56:27 jonesde Exp $
  *
  *  Copyright (c) 2001, 2002 The Open For Business Project - www.ofbiz.org
  *
@@ -21,14 +21,17 @@
  *  OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR
  *  THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  */
-package org.ofbiz.entity;
+package org.ofbiz.entity.transaction;
 
-import javax.transaction.*;
-import java.sql.*;
+import java.sql.Connection;
+import java.sql.SQLException;
 
-import org.ofbiz.base.util.*;
-import org.ofbiz.entity.config.*;
-import org.ofbiz.entity.transaction.TransactionFactoryInterface;
+import javax.transaction.TransactionManager;
+import javax.transaction.UserTransaction;
+
+import org.ofbiz.base.util.Debug;
+import org.ofbiz.entity.GenericEntityException;
+import org.ofbiz.entity.config.EntityConfigUtil;
 
 /**
  * TransactionFactory - central source for JTA objects

@@ -1,5 +1,5 @@
 /*
- * $Id: EntityExprList.java,v 1.1 2003/08/16 22:05:50 ajzeneski Exp $
+ * $Id: EntityConditionList.java,v 1.1 2003/08/17 04:56:25 jonesde Exp $
  *
  * Copyright (c) 2001, 2002 The Open For Business Project - www.ofbiz.org
  *
@@ -22,28 +22,30 @@
  * THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  *
  */
-package org.ofbiz.entity;
+package org.ofbiz.entity.condition;
 
-import java.util.*;
+import java.util.Iterator;
+import java.util.List;
 
-import org.ofbiz.entity.model.*;
+import org.ofbiz.entity.GenericModelException;
+import org.ofbiz.entity.model.ModelEntity;
 
 /**
- * Encapsulates simple expressions used for specifying queries
+ * Encapsulates a list of EntityConditions to be used as a single EntityCondition combined as specified
  *
  * @author     <a href="mailto:jonesde@ofbiz.org">David E. Jones</a>
  * @version    $Revision: 1.1 $
  * @since      2.0
  */
-public class EntityExprList extends EntityCondition {
+public class EntityConditionList extends EntityCondition {
 
-    protected List exprList;
+    protected List conditionList;
     protected EntityOperator operator;
 
-    protected EntityExprList() {}
+    protected EntityConditionList() {}
 
-    public EntityExprList(List exprList, EntityOperator operator) {
-        this.exprList = exprList;
+    public EntityConditionList(List conditionList, EntityOperator operator) {
+        this.conditionList = conditionList;
         this.operator = operator;
     }
 
@@ -51,30 +53,30 @@ public class EntityExprList extends EntityCondition {
         return this.operator;
     }
 
-    public EntityExpr getExpr(int index) {
-        return (EntityExpr) this.exprList.get(index);
+    public EntityCondition getCondition(int index) {
+        return (EntityCondition) this.conditionList.get(index);
     }
     
-    public int getExprListSize() {
-        return this.exprList.size();
+    public int getConditionListSize() {
+        return this.conditionList.size();
     }
     
-    public Iterator getExprIterator() {
-        return this.exprList.iterator();
+    public Iterator getConditionIterator() {
+        return this.conditionList.iterator();
     }
     
     public String makeWhereString(ModelEntity modelEntity, List entityConditionParams) {
         // if (Debug.verboseOn()) Debug.logVerbose("makeWhereString for entity " + modelEntity.getEntityName(), module);
         StringBuffer whereStringBuffer = new StringBuffer();
 
-        if (exprList != null && exprList.size() > 0) {
-            for (int i = 0; i < exprList.size(); i++) {
-                EntityExpr expr = (EntityExpr) exprList.get(i);
+        if (conditionList != null && conditionList.size() > 0) {
+            for (int i = 0; i < conditionList.size(); i++) {
+                EntityCondition condition = (EntityCondition) conditionList.get(i);
 
                 whereStringBuffer.append('(');
-                whereStringBuffer.append(expr.makeWhereString(modelEntity, entityConditionParams));
+                whereStringBuffer.append(condition.makeWhereString(modelEntity, entityConditionParams));
                 whereStringBuffer.append(')');
-                if (i < exprList.size() - 1) {
+                if (i < conditionList.size() - 1) {
                     whereStringBuffer.append(' ');
                     whereStringBuffer.append(operator.getCode());
                     whereStringBuffer.append(' ');
@@ -86,24 +88,24 @@ public class EntityExprList extends EntityCondition {
 
     public void checkCondition(ModelEntity modelEntity) throws GenericModelException {
         // if (Debug.verboseOn()) Debug.logVerbose("checkCondition for entity " + modelEntity.getEntityName(), module);
-        Iterator exprIter = exprList.iterator();
+        if (conditionList == null || conditionList.size() == 0) return;
 
+        Iterator exprIter = conditionList.iterator();
         while (exprIter.hasNext()) {
-            EntityExpr entityExpr = (EntityExpr) exprIter.next();
-
-            entityExpr.checkCondition(modelEntity);
+            EntityCondition entityCondition = (EntityCondition) exprIter.next();
+            entityCondition.checkCondition(modelEntity);
         }
     }
 
     public String toString() {
         StringBuffer toStringBuffer = new StringBuffer();
 
-        toStringBuffer.append("[ExprList::");
-        if (exprList != null && exprList.size() > 0) {
-            for (int i = 0; i < exprList.size(); i++) {
-                EntityExpr expr = (EntityExpr) exprList.get(i);
+        toStringBuffer.append("[conditionList::");
+        if (conditionList != null && conditionList.size() > 0) {
+            for (int i = 0; i < conditionList.size(); i++) {
+                EntityCondition condition = (EntityCondition) conditionList.get(i);
 
-                toStringBuffer.append(expr.toString());
+                toStringBuffer.append(condition.toString());
                 if (i > 0) toStringBuffer.append("::");
             }
         }

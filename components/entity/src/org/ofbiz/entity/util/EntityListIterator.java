@@ -20,14 +20,26 @@
  *  THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  */
 
-package org.ofbiz.entity;
+package org.ofbiz.entity.util;
 
 
-import java.sql.*;
-import java.util.*;
-import org.ofbiz.entity.jdbc.*;
-import org.ofbiz.entity.model.*;
-import org.ofbiz.base.util.*;
+import java.sql.ResultSet;
+import java.sql.SQLException;
+import java.util.ArrayList;
+import java.util.LinkedList;
+import java.util.List;
+import java.util.ListIterator;
+
+import org.ofbiz.base.util.GeneralRuntimeException;
+import org.ofbiz.entity.GenericDelegator;
+import org.ofbiz.entity.GenericEntityException;
+import org.ofbiz.entity.GenericResultSetClosedException;
+import org.ofbiz.entity.GenericValue;
+import org.ofbiz.entity.jdbc.SQLProcessor;
+import org.ofbiz.entity.jdbc.SqlJdbcUtil;
+import org.ofbiz.entity.model.ModelEntity;
+import org.ofbiz.entity.model.ModelField;
+import org.ofbiz.entity.model.ModelFieldTypeReader;
 
 
 /**

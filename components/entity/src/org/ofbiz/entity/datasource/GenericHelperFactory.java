@@ -1,5 +1,5 @@
 /*
- * $Id: GenericHelperFactory.java,v 1.1 2003/08/16 22:05:49 ajzeneski Exp $
+ * $Id: GenericHelperFactory.java,v 1.1 2003/08/17 04:56:27 jonesde Exp $
  *
  * Copyright (c) 2001, 2002 The Open For Business Project - www.ofbiz.org
  *
@@ -22,12 +22,13 @@
  * THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  *
  */
-package org.ofbiz.entity;
+package org.ofbiz.entity.datasource;
 
-import java.util.*;
+import java.util.HashMap;
+import java.util.Map;
 
-import org.ofbiz.base.util.*;
-import org.ofbiz.entity.config.*;
+import org.ofbiz.base.util.Debug;
+import org.ofbiz.entity.config.EntityConfigUtil;
 
 /**
  * Generic Entity Helper Factory Class

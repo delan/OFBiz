@@ -1,5 +1,5 @@
 /*
- * $Id: TransactionUtil.java,v 1.1 2003/08/16 22:05:49 ajzeneski Exp $
+ * $Id: TransactionUtil.java,v 1.1 2003/08/17 04:56:26 jonesde Exp $
  *
  *  Copyright (c) 2001, 2002 The Open For Business Project - www.ofbiz.org
  *
@@ -21,14 +21,23 @@
  *  OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR
  *  THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  */
-package org.ofbiz.entity;
+package org.ofbiz.entity.transaction;
 
-import java.sql.*;
-import javax.sql.*;
-import javax.transaction.*;
-import javax.transaction.xa.*;
+import java.sql.Connection;
+import java.sql.SQLException;
 
-import org.ofbiz.base.util.*;
+import javax.sql.XAConnection;
+import javax.transaction.HeuristicMixedException;
+import javax.transaction.HeuristicRollbackException;
+import javax.transaction.NotSupportedException;
+import javax.transaction.RollbackException;
+import javax.transaction.SystemException;
+import javax.transaction.Transaction;
+import javax.transaction.TransactionManager;
+import javax.transaction.UserTransaction;
+import javax.transaction.xa.XAResource;
+
+import org.ofbiz.base.util.Debug;
 
 /**
  * <p>Transaction Utility to help with some common transaction tasks

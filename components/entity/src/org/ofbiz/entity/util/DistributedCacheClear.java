@@ -1,5 +1,5 @@
 /*
- * $Id: DistributedCacheClear.java,v 1.1 2003/08/16 22:05:49 ajzeneski Exp $
+ * $Id: DistributedCacheClear.java,v 1.1 2003/08/17 04:56:26 jonesde Exp $
  *
  *  Copyright (c) 2001, 2002 The Open For Business Project - www.ofbiz.org
  *
@@ -21,7 +21,12 @@
  *  OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR
  *  THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  */
-package org.ofbiz.entity;
+package org.ofbiz.entity.util;
+
+import org.ofbiz.entity.GenericDelegator;
+import org.ofbiz.entity.GenericEntity;
+import org.ofbiz.entity.GenericPK;
+import org.ofbiz.entity.GenericValue;
 
 /**
  * Distributed Cache Clear interface definition

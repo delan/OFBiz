@@ -1,5 +1,5 @@
 /*
- * $Id: JotmConnectionFactory.java,v 1.1 2003/08/16 22:05:50 ajzeneski Exp $
+ * $Id: JotmConnectionFactory.java,v 1.2 2003/08/17 04:56:27 jonesde Exp $
  *
  * Copyright (c) 2003 The Open For Business Project - www.ofbiz.org
  *
@@ -33,17 +33,16 @@ import java.util.Set;
 
 import org.enhydra.jdbc.pool.StandardXAPoolDataSource;
 import org.enhydra.jdbc.standard.StandardXADataSource;
-import org.ofbiz.entity.GenericEntityException;
-import org.ofbiz.entity.TransactionFactory;
 import org.ofbiz.base.util.Debug;
 import org.ofbiz.base.util.ObjectType;
+import org.ofbiz.entity.GenericEntityException;
 import org.w3c.dom.Element;
 
 /**
  * JotmFactory - Central source for JOTM JDBC Objects
  *
  * @author     <a href="mailto:jaz@ofbiz.org">Andy Zeneski</a>
- * @version    $Revision: 1.1 $
+ * @version    $Revision: 1.2 $
  * @since      2.1
  */
 public class JotmConnectionFactory {

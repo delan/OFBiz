@@ -1,5 +1,5 @@
 /*
- * $Id: EntityCondition.java,v 1.1 2003/08/16 22:05:49 ajzeneski Exp $
+ * $Id: EntityCondition.java,v 1.1 2003/08/17 04:56:25 jonesde Exp $
  *
  * <p>Copyright (c) 2001 The Open For Business Project - www.ofbiz.org
  *
@@ -22,12 +22,14 @@
  *  THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  */
 
-package org.ofbiz.entity;
+package org.ofbiz.entity.condition;
 
 
-import java.io.*;
-import java.util.*;
-import org.ofbiz.entity.model.*;
+import java.io.Serializable;
+import java.util.List;
+
+import org.ofbiz.entity.GenericModelException;
+import org.ofbiz.entity.model.ModelEntity;
 
 
 /**

@@ -1,5 +1,5 @@
 /*
- * $Id: JNDIFactory.java,v 1.1 2003/08/16 22:05:50 ajzeneski Exp $
+ * $Id: JNDIFactory.java,v 1.2 2003/08/17 04:56:27 jonesde Exp $
  *
  *  Copyright (c) 2001, 2002 The Open For Business Project - www.ofbiz.org
  *
@@ -24,23 +24,33 @@
 
 package org.ofbiz.entity.transaction;
 
-import java.util.*;
-import javax.naming.*;
-import javax.transaction.*;
-import java.sql.*;
-import javax.sql.*;
-import org.w3c.dom.Element;
+import java.sql.Connection;
+import java.sql.SQLException;
+import java.util.HashMap;
+import java.util.Map;
 
-import org.ofbiz.entity.*;
-import org.ofbiz.entity.config.*;
-import org.ofbiz.base.config.*;
-import org.ofbiz.base.util.*;
+import javax.naming.InitialContext;
+import javax.naming.NamingException;
+import javax.sql.DataSource;
+import javax.sql.XAConnection;
+import javax.sql.XADataSource;
+import javax.transaction.TransactionManager;
+import javax.transaction.UserTransaction;
+
+import org.ofbiz.base.config.GenericConfigException;
+import org.ofbiz.base.util.Debug;
+import org.ofbiz.base.util.GeneralException;
+import org.ofbiz.base.util.JNDIContextFactory;
+import org.ofbiz.entity.GenericEntityException;
+import org.ofbiz.entity.config.EntityConfigUtil;
+import org.ofbiz.entity.jdbc.ConnectionFactory;
+import org.w3c.dom.Element;
 
 /**
  * Central source for Tyrex JTA objects from JNDI
  *
  * @author     <a href="mailto:jonesde@ofbiz.org">David E. Jones</a>
- * @version    $Revision: 1.1 $
+ * @version    $Revision: 1.2 $
  * @since      2.0
  */
 public class JNDIFactory implements TransactionFactoryInterface {

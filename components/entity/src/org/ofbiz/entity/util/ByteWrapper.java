@@ -1,5 +1,5 @@
 /*
- * $Id: EntityConditionParam.java,v 1.1 2003/08/16 22:05:49 ajzeneski Exp $
+ * $Id: ByteWrapper.java,v 1.1 2003/08/17 04:56:26 jonesde Exp $
  *
  * Copyright (c) 2001, 2002 The Open For Business Project - www.ofbiz.org
  *
@@ -22,42 +22,31 @@
  * THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  *
  */
-package org.ofbiz.entity;
+package org.ofbiz.entity.util;
 
-import java.io.*;
-
-import org.ofbiz.entity.model.*;
+import java.io.Serializable;
 
 /**
- * Represents a single parameter to be used in the preparedStatement
+ * A very simple class to wrap a byte array for persistence.
  *
  * @author     <a href="mailto:jonesde@ofbiz.org">David E. Jones</a>
  * @version    $Revision: 1.1 $
- * @since      2.0
+ * @since      2.1
  */
-public class EntityConditionParam implements Serializable {
-    protected ModelField modelField;
-    protected Object fieldValue;
+public class ByteWrapper implements Serializable {
+    protected byte[] bytes;
 
-    protected EntityConditionParam() {}
+    protected ByteWrapper() {}
 
-    public EntityConditionParam(ModelField modelField, Object fieldValue) {
-        if (modelField == null) {
-            throw new IllegalArgumentException("modelField cannot be null");
-        }
-        this.modelField = modelField;
-        this.fieldValue = fieldValue;
+    public ByteWrapper(byte[] bytes) {
+        this.bytes = bytes;
     }
 
-    public ModelField getModelField() {
-        return modelField;
+    public byte[] getBytes() {
+        return bytes;
     }
 
-    public Object getFieldValue() {
-        return fieldValue;
-    }
-
-    public String toString() {
-        return modelField.getColName() + "=" + fieldValue.toString();
+    public byte getByte(int pos) {
+        return bytes[pos];
     }
 }

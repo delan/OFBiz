@@ -1,5 +1,5 @@
 /*
- * $Id: EntityExpr.java,v 1.1 2003/08/16 22:05:49 ajzeneski Exp $
+ * $Id: EntityExpr.java,v 1.1 2003/08/17 04:56:25 jonesde Exp $
  *
  * Copyright (c) 2001, 2002 The Open For Business Project - www.ofbiz.org
  *
@@ -22,11 +22,15 @@
  * THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  *
  */
-package org.ofbiz.entity;
+package org.ofbiz.entity.condition;
 
-import java.util.*;
+import java.util.Collection;
+import java.util.Iterator;
+import java.util.List;
 
-import org.ofbiz.entity.model.*;
+import org.ofbiz.entity.GenericModelException;
+import org.ofbiz.entity.model.ModelEntity;
+import org.ofbiz.entity.model.ModelField;
 
 /**
  * Encapsulates simple expressions used for specifying queries

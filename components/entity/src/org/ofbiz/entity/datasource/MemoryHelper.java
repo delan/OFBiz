@@ -1,5 +1,5 @@
 /*
- * $Id: MemoryHelper.java,v 1.1 2003/08/16 22:05:49 ajzeneski Exp $
+ * $Id: MemoryHelper.java,v 1.1 2003/08/17 04:56:27 jonesde Exp $
  *
  *  Copyright (c) 2001 The Open For Business Project - www.ofbiz.org
  *
@@ -22,7 +22,7 @@
  *  THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  */
 
-package org.ofbiz.entity;
+package org.ofbiz.entity.datasource;
 
 import java.util.ArrayList;
 import java.util.Collection;
@@ -33,12 +33,19 @@ import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
+import org.ofbiz.base.util.Debug;
+import org.ofbiz.entity.GenericEntityException;
+import org.ofbiz.entity.GenericNotImplementedException;
+import org.ofbiz.entity.GenericPK;
+import org.ofbiz.entity.GenericValue;
+import org.ofbiz.entity.condition.EntityCondition;
 import org.ofbiz.entity.jdbc.SqlJdbcUtil;
 import org.ofbiz.entity.model.ModelEntity;
 import org.ofbiz.entity.model.ModelField;
 import org.ofbiz.entity.model.ModelFieldTypeReader;
 import org.ofbiz.entity.model.ModelRelation;
-import org.ofbiz.base.util.Debug;
+import org.ofbiz.entity.util.EntityFindOptions;
+import org.ofbiz.entity.util.EntityListIterator;
 
 /**
  * Partial GenericHelper implementation that is entirely memory-based,
@@ -162,13 +169,13 @@ public class MemoryHelper implements GenericHelper {
         // make sure the PKs exist
         for (Iterator iterator = me.getPksIterator(); iterator.hasNext();) {
             ModelField field = (ModelField) iterator.next();
-            if (!value.fields.containsKey(field.getName())) {
+            if (!value.containsKey(field.getName())) {
                 return false;
             }
         }
 
         // make sure the value doesn't have any extra (unknown) fields
-        for (Iterator iterator = value.fields.entrySet().iterator(); iterator.hasNext();) {
+        for (Iterator iterator = value.entrySet().iterator(); iterator.hasNext();) {
             Map.Entry entry = (Map.Entry) iterator.next();
             if (me.getField((String) entry.getKey()) == null) {
                 return false;
@@ -305,7 +312,7 @@ public class MemoryHelper implements GenericHelper {
             Map.Entry mapEntry = (Map.Entry) iterator.next();
             GenericValue value = (GenericValue) mapEntry.getValue();
 
-            if (isAndMatch(value.fields, fields)) {
+            if (isAndMatch(value.getAllFields(), fields)) {
                 result.add(value);
             }
         }
@@ -338,7 +345,7 @@ public class MemoryHelper implements GenericHelper {
             Map.Entry mapEntry = (Map.Entry) iterator.next();
             GenericValue value = (GenericValue) mapEntry.getValue();
 
-            if (isOrMatch(value.fields, fields)) {
+            if (isOrMatch(value.getAllFields(), fields)) {
                 result.add(value);
             }
         }
@@ -377,7 +384,7 @@ public class MemoryHelper implements GenericHelper {
         for (Iterator iterator = entityCache.entrySet().iterator(); iterator.hasNext();) {
             Map.Entry mapEntry = (Map.Entry) iterator.next();
             GenericValue value = (GenericValue) mapEntry.getValue();
-            if (isAndMatch(value.fields, fields)) {
+            if (isAndMatch(value.getAllFields(), fields)) {
                 removeList.add(mapEntry.getKey());
             }
         }

@@ -1,5 +1,5 @@
 /*
- * $Id: EntityFindOptions.java,v 1.1 2003/08/16 22:05:49 ajzeneski Exp $
+ * $Id: EntityFindOptions.java,v 1.1 2003/08/17 04:56:26 jonesde Exp $
  *
  *  Copyright (c) 2002 The Open For Business Project - www.ofbiz.org
  *
@@ -22,10 +22,10 @@
  *  THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  */
 
-package org.ofbiz.entity;
+package org.ofbiz.entity.util;
 
 
-import java.sql.*;
+import java.sql.ResultSet;
 
 
 /**

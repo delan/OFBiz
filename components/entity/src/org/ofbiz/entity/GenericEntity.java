@@ -1,5 +1,5 @@
 /*
- * $Id: GenericEntity.java,v 1.1 2003/08/16 22:05:49 ajzeneski Exp $
+ * $Id: GenericEntity.java,v 1.2 2003/08/17 04:56:26 jonesde Exp $
  *
  *  Copyright (c) 2002 The Open For Business Project - www.ofbiz.org
  *
@@ -23,13 +23,25 @@
  */
 package org.ofbiz.entity;
 
-import java.io.*;
-import java.util.*;
+import java.io.PrintWriter;
+import java.io.Serializable;
+import java.util.Collection;
+import java.util.HashMap;
+import java.util.Iterator;
+import java.util.LinkedList;
+import java.util.Map;
+import java.util.Observable;
+import java.util.TreeSet;
 
-import org.ofbiz.base.util.*;
-import org.ofbiz.entity.model.*;
-import org.ofbiz.entity.jdbc.*;
-
+import org.ofbiz.base.util.Debug;
+import org.ofbiz.base.util.UtilFormatOut;
+import org.ofbiz.base.util.UtilValidate;
+import org.ofbiz.base.util.UtilXml;
+import org.ofbiz.entity.jdbc.SqlJdbcUtil;
+import org.ofbiz.entity.model.ModelEntity;
+import org.ofbiz.entity.model.ModelField;
+import org.ofbiz.entity.model.ModelFieldType;
+import org.ofbiz.entity.util.ByteWrapper;
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
 
@@ -43,7 +55,7 @@ import org.w3c.dom.Element;
  *
  *@author     <a href="mailto:jonesde@ofbiz.org">David E. Jones</a>
  *@author     <a href="mailto:jaz@ofbiz.org">Andy Zeneski</a>
- *@version    $Revision: 1.1 $
+ *@version    $Revision: 1.2 $
  *@since      2.0
  */
 public class GenericEntity extends Observable implements Map, Serializable, Comparable, Cloneable {

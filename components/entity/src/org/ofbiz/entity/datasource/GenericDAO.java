@@ -1,5 +1,5 @@
 /*
- * $Id: GenericDAO.java,v 1.1 2003/08/16 22:05:49 ajzeneski Exp $
+ * $Id: GenericDAO.java,v 1.1 2003/08/17 04:56:27 jonesde Exp $
  *
  * Copyright (c) 2001, 2002 The Open For Business Project - www.ofbiz.org
  *
@@ -22,15 +22,53 @@
  * THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  *
  */
-package org.ofbiz.entity;
+package org.ofbiz.entity.datasource;
 
-import java.sql.*;
-import java.util.*;
+import java.sql.Connection;
+import java.sql.ResultSet;
+import java.util.ArrayList;
+import java.util.Collection;
+import java.util.Collections;
+import java.util.HashMap;
+import java.util.HashSet;
+import java.util.Hashtable;
+import java.util.Iterator;
+import java.util.LinkedList;
+import java.util.List;
+import java.util.Map;
+import java.util.Set;
+import java.util.TreeSet;
+import java.util.Vector;
 
-import org.ofbiz.base.util.*;
-import org.ofbiz.entity.config.*;
-import org.ofbiz.entity.model.*;
-import org.ofbiz.entity.jdbc.*;
+import org.ofbiz.base.util.Debug;
+import org.ofbiz.base.util.UtilDateTime;
+import org.ofbiz.base.util.UtilValidate;
+import org.ofbiz.entity.EntityLockedException;
+import org.ofbiz.entity.GenericDataSourceException;
+import org.ofbiz.entity.GenericDelegator;
+import org.ofbiz.entity.GenericEntity;
+import org.ofbiz.entity.GenericEntityException;
+import org.ofbiz.entity.GenericEntityNotFoundException;
+import org.ofbiz.entity.GenericModelException;
+import org.ofbiz.entity.GenericNotImplementedException;
+import org.ofbiz.entity.GenericPK;
+import org.ofbiz.entity.GenericValue;
+import org.ofbiz.entity.condition.EntityCondition;
+import org.ofbiz.entity.condition.EntityConditionParam;
+import org.ofbiz.entity.condition.EntityFieldMap;
+import org.ofbiz.entity.condition.EntityOperator;
+import org.ofbiz.entity.config.EntityConfigUtil;
+import org.ofbiz.entity.jdbc.DatabaseUtil;
+import org.ofbiz.entity.jdbc.SQLProcessor;
+import org.ofbiz.entity.jdbc.SqlJdbcUtil;
+import org.ofbiz.entity.model.ModelEntity;
+import org.ofbiz.entity.model.ModelField;
+import org.ofbiz.entity.model.ModelFieldTypeReader;
+import org.ofbiz.entity.model.ModelKeyMap;
+import org.ofbiz.entity.model.ModelRelation;
+import org.ofbiz.entity.model.ModelViewEntity;
+import org.ofbiz.entity.util.EntityFindOptions;
+import org.ofbiz.entity.util.EntityListIterator;
 
 /**
  * Generic Entity Data Access Object - Handles persisntence for any defined entity.
