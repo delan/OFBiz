@@ -1,5 +1,6 @@
 package org.ofbiz.core.entity;
 
+import java.net.*;
 import java.util.*;
 import java.security.*;
 import javax.naming.*;
@@ -39,9 +40,19 @@ public class TyrexTransactionFactory {
     
     static {
         try {
-            td = TransactionDomain.createDomain("");
+            String resourceName = "tyrexdomain.xml";
+            URL url = UtilURL.fromResource(resourceName);
+            if (url != null) {
+                td = TransactionDomain.createDomain(url.toString());
+                td.recover();
+            } else {
+                Debug.logError("ERROR: Could not create Tyrex Transaction Domain (resource not found):" + resourceName);
+            }
         } catch (tyrex.tm.DomainConfigurationException e) {
-            Debug.logError("Could not create Tyrex Transaction Domain:");
+            Debug.logError("Could not create Tyrex Transaction Domain (configuration):");
+            Debug.logError(e);
+        } catch (tyrex.tm.RecoveryException e) {
+            Debug.logError("Could not create Tyrex Transaction Domain (recovery):");
             Debug.logError(e);
         }
     }

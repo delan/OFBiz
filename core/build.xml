@@ -70,11 +70,11 @@
         
         <property name="tyrex.jar"    value="${env.CATALINA_HOME}/common/lib/tyrex-0.9.8.5.jar" />
 
-        <property name="log4j.jar"     value="../lib/log4j.jar"/>
-		<property name="bsh.jar"       value="../lib/bsh-1.2b3.jar"/>
-        <property name="axis.jar"      value="../lib/axis.jar"/>
-        <property name="clutil.jar"    value="../lib/clutil.jar" />
-        <property name="wsdl4j.jar"    value="../lib/wsdl4j.jar" />
+        <property name="log4j.jar"     value="../lib/common/log4j.jar"/>
+	<property name="bsh.jar"       value="../lib/share/bsh-1.2b3.jar"/>
+        <property name="axis.jar"      value="../lib/share/axis.jar"/>
+        <property name="clutil.jar"    value="../lib/share/clutil.jar" />
+        <property name="wsdl4j.jar"    value="../lib/share/wsdl4j.jar" />
 
         <property name="api-jars1"     value="${servlet.jar}:${jdbc.jar}:${mail.jar}:${log4j.jar}" />
         <property name="api-jars2"     value="${jaxp.jar}:${jta.jar}:${xerces.jar}:${tyrex.jar}:${bsh.jar}" />
