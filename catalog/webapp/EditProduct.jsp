@@ -130,7 +130,7 @@
     <td width="74%"><input type="text" name="<%=paramName%>" value="<%=UtilFormatOut.checkNull(useValues?UtilDateTime.toDateString(product.getDate(fieldName)):request.getParameter(paramName))%>" size="10" maxlength="20">(MM/DD/YYYY)</td>
   </tr>
   <tr>
-    <%fieldName = "supportDiscontinuationDateStr";%><%paramName = "SUPPORT_DISCONTINUATION_DATE";%>    
+    <%fieldName = "supportDiscontinuationDate";%><%paramName = "SUPPORT_DISCONTINUATION_DATE";%>    
     <td width="26%"><div class="tabletext">Support Discontinuation Date</div></td>
     <td width="74%"><input type="text" name="<%=paramName%>" value="<%=UtilFormatOut.checkNull(useValues?UtilDateTime.toDateString(product.getDate(fieldName)):request.getParameter(paramName))%>" size="10" maxlength="20">(MM/DD/YYYY)</td>
   </tr>
@@ -242,10 +242,10 @@
 <%}%>
 <br>
 
-<%-- Edit 'ProductCategory's --%>
+<%-- Edit 'ProductCategoryMember's --%>
 <%if(productId!=null && product!=null){%>
 <hr>
-<p class="head2">Product-Category Maintenance</p>
+<p class="head2">Product-Category Member Maintenance</p>
 
 <table border="1" cellpadding='0' cellspacing='0'>
   <tr>
@@ -258,10 +258,10 @@
   <%GenericValue productCategoryMember = (GenericValue)pcIterator.next();%>
   <%GenericValue category = productCategoryMember.getRelatedOne("ProductCategory");%>
   <tr valign="middle">
-    <td><a href="/ecommerce/control/category?PRODUCT_CATEGORY_ID=<%=productCategoryMember.getString("productCategoryId")%>" class="buttontext"><%=productCategoryMember.getString("productCategoryId")%></a></td>
-    <td><%if(category!=null){%><a href="/ecommerce/control/category?PRODUCT_CATEGORY_ID=<%=productCategoryMember.getString("categoryId")%>" class="buttontext"><%=category.getString("description")%></a><%}%>&nbsp;</td>
+    <td><a href="<ofbiz:url>/EditCategory?PRODUCT_CATEGORY_ID=<%=productCategoryMember.getString("productCategoryId")%></ofbiz:url>" class="buttontext"><%=productCategoryMember.getString("productCategoryId")%></a></td>
+    <td><%if(category!=null){%><a href="<ofbiz:url>/EditCategory?PRODUCT_CATEGORY_ID=<%=productCategoryMember.getString("productCategoryId")%></ofbiz:url>" class="buttontext"><%=category.getString("description")%></a><%}%>&nbsp;</td>
     <td>
-      <a href="<ofbiz:url>/UpdateProductCategoryMember?PRODUCT_ID=<%=productId%>&PRODUCT_CATEGORY_ID=<%=productCategoryMember.getString("productCategoryId")%></ofbiz:url>" class="buttontext">
+      <a href="<ofbiz:url>/UpdateProductCategoryMember?UPDATE_MODE=DELETE&PRODUCT_ID=<%=productId%>&PRODUCT_CATEGORY_ID=<%=productCategoryMember.getString("productCategoryId")%></ofbiz:url>" class="buttontext">
       [Delete]</a>
     </td>
   </tr>
@@ -270,6 +270,7 @@
 
 <form method="POST" action="<ofbiz:url>/UpdateProductCategoryMember</ofbiz:url>">
   <input type="hidden" name="PRODUCT_ID" value="<%=productId%>">
+  <input type="hidden" name="UPDATE_MODE" value="CREATE">
   Add ProductCategoryMember (enter Category ID):
     <select name="PRODUCT_CATEGORY_ID">
     <%Iterator it = UtilMisc.toIterator(categoryCol);%>

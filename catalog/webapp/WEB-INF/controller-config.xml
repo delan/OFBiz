@@ -51,6 +51,11 @@
         <success>view:EditCategory</success><error>view:EditCategory</error>
         <event-type>java</event-type><event-path>org.ofbiz.catalog.CategoryEvents</event-path><event-invoke>updateCategory</event-invoke>
     </request-map>
+    <request-map>
+        <uri>UpdateProductCategoryRollup</uri><secure>true</secure><auth>true</auth>
+        <success>view:EditCategory</success><error>view:EditCategory</error>
+        <event-type>java</event-type><event-path>org.ofbiz.catalog.CategoryEvents</event-path><event-invoke>updateProductCategoryRollup</event-invoke>
+    </request-map>
 
     <request-map><uri>EditProduct</uri><secure>true</secure><auth>true</auth><success>view:EditProduct</success></request-map>
     <request-map>
@@ -74,6 +79,12 @@
         <uri>UpdateProductKeywords</uri><secure>true</secure><auth>true</auth>
         <success>view:EditProductKeyword</success><error>view:EditProductKeyword</error>
         <event-type>java</event-type><event-path>org.ofbiz.catalog.ProductEvents</event-path><event-invoke>updateProductKeywords</event-invoke>
+    </request-map>
+
+    <request-map>
+        <uri>UpdateAllKeywords</uri><secure>true</secure><auth>true</auth>
+        <success>view:main</success><error>view:main</error>
+        <event-type>java</event-type><event-path>org.ofbiz.catalog.ProductEvents</event-path><event-invoke>updateAllKeywords</event-invoke>
     </request-map>
 
     <request-map><uri>UploadImage</uri><secure>true</secure><auth>true</auth><success>view:UploadImage</success></request-map>

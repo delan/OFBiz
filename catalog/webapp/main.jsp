@@ -51,7 +51,9 @@
   </TR>
   <TR>
     <TD bgcolor='white'>
-<DIV class='tabletext'>For something interesting make sure you are logged in, try username:admin, password:ofbiz.</DIV>
+<%if(userLogin == null) {%>
+  <DIV class='tabletext'>For something interesting make sure you are logged in, try username:admin, password:ofbiz.</DIV>
+<%}%>
 <BR>
 <%if(security.hasEntityPermission("CATALOG", "_VIEW", session)) {%>
   <A href='<ofbiz:url>/EditCategory</ofbiz:url>' class='buttontext'>Create New Category</A>
@@ -60,11 +62,12 @@
     <INPUT type=submit value='Edit Category'>
   </FORM>
   <A href='<ofbiz:url>/EditProduct</ofbiz:url>' class='buttontext'>Create New Product</A>
-  <FORM method=POST action='<ofbiz:url>/EditProduct</ofbiz:url>' style='margin-top: 0;'>
+  <FORM method=POST action='<ofbiz:url>/EditProduct</ofbiz:url>' style='margin: 0;'>
     <INPUT type=text size='20' maxlength='20' name='PRODUCT_ID' value=''>
     <INPUT type=submit value='Edit Product'>
   </FORM>
-<BR>
+  <A href='<ofbiz:url>/UpdateAllKeywords</ofbiz:url>' class='buttontext'>Auto-Create Keywords for All Products</A>
+<BR><BR>
 <%}%>
 <DIV class='tabletext'>This application is primarily intended for those repsonsible for the maintenance of product catalog related information.</DIV>
     </TD>

@@ -121,7 +121,7 @@ public class CategoryEvents {
     return "success";
   }
   
-  /** Updates Product Category information according to UPDATE_MODE parameter
+  /** Updates Product Category Member information according to UPDATE_MODE parameter
    *@param request The HTTPRequest object for the current request
    *@param response The HTTPResponse object for the current request
    *@return String specifying the exit status of this event
@@ -168,7 +168,7 @@ public class CategoryEvents {
       }
     }
     else if(updateMode.equals("DELETE")) {
-      GenericValue productCategoryMember = helper.findByPrimaryKey("ProductKeyword", UtilMisc.toMap("productId", productId, "productCategoryId", productCategoryId));
+      GenericValue productCategoryMember = helper.findByPrimaryKey("ProductCategoryMember", UtilMisc.toMap("productId", productId, "productCategoryId", productCategoryId));
       if(productCategoryMember == null) {
         request.setAttribute("ERROR_MESSAGE", "Could not remove product-category (does not exist)");
         return "error";
@@ -177,6 +177,73 @@ public class CategoryEvents {
       catch(Exception e) {
         request.setAttribute("ERROR_MESSAGE", "Could not remove product-category (write error)");
         Debug.logWarning("[ProductEvents.updateProductCategoryMember] Could not remove product-category (write error); message: " + e.getMessage());
+        return "error";
+      }
+    }
+    else {
+      request.setAttribute("ERROR_MESSAGE", "Specified update mode: \"" + updateMode + "\" is not supported.");
+      return "error";
+    }
+    
+    return "success";
+  }
+
+  /** Updates Product Category Rollup information according to UPDATE_MODE parameter
+   *@param request The HTTPRequest object for the current request
+   *@param response The HTTPResponse object for the current request
+   *@return String specifying the exit status of this event
+   */
+  public static String updateProductCategoryRollup(HttpServletRequest request, HttpServletResponse response) {
+    String errMsg = "";
+    GenericHelper helper = (GenericHelper)request.getAttribute("helper");
+    Security security = (Security)request.getAttribute("security");
+
+    String updateMode = request.getParameter("UPDATE_MODE");
+    if(updateMode == null || updateMode.length() <= 0) {
+      request.setAttribute("ERROR_MESSAGE", "Update Mode was not specified, but is required.");
+      Debug.logWarning("[ProductEvents.updateProductCategoryRollup] Update Mode was not specified, but is required");
+      return "error";
+    }
+
+    //check permissions before moving on...
+    if(!security.hasEntityPermission("CATALOG", "_" + updateMode, request.getSession())) {
+      request.setAttribute("ERROR_MESSAGE", "You do not have sufficient permissions to "+ updateMode + " CATALOG (CATALOG_" + updateMode + " or CATALOG_ADMIN needed).");
+      return "error";
+    }
+
+    String productCategoryId = request.getParameter("UPDATE_PRODUCT_CATEGORY_ID");
+    String parentProductCategoryId = request.getParameter("UPDATE_PARENT_PRODUCT_CATEGORY_ID");
+    
+    if(!UtilValidate.isNotEmpty(productCategoryId)) errMsg += "<li>Product Category ID is missing.";
+    if(!UtilValidate.isNotEmpty(parentProductCategoryId)) errMsg += "<li>Parent Product Category ID is missing.";
+    if(errMsg.length() > 0) {
+      errMsg = "<b>The following errors occured:</b><br><ul>" + errMsg + "</ul>";
+      request.setAttribute("ERROR_MESSAGE", errMsg);
+      return "error";
+    }
+        
+    if(updateMode.equals("CREATE")) {
+      GenericValue productCategoryRollup = helper.makeValue("ProductCategoryRollup", UtilMisc.toMap("productCategoryId", productCategoryId, "parentProductCategoryId", parentProductCategoryId));
+      if(helper.findByPrimaryKey(productCategoryRollup.getPrimaryKey()) != null) {
+        request.setAttribute("ERROR_MESSAGE", "Could not create product-category entry (already exists)");
+        return "error";
+      }
+      productCategoryRollup = productCategoryRollup.create();
+      if(productCategoryRollup == null) {
+        request.setAttribute("ERROR_MESSAGE", "Could not create product-category entry (write error)");
+        return "error";
+      }
+    }
+    else if(updateMode.equals("DELETE")) {
+      GenericValue productCategoryRollup = helper.findByPrimaryKey("ProductCategoryRollup", UtilMisc.toMap("productCategoryId", productCategoryId, "parentProductCategoryId", parentProductCategoryId));
+      if(productCategoryRollup == null) {
+        request.setAttribute("ERROR_MESSAGE", "Could not remove product-category (does not exist)");
+        return "error";
+      }
+      try { productCategoryRollup.remove(); }
+      catch(Exception e) {
+        request.setAttribute("ERROR_MESSAGE", "Could not remove product-category (write error)");
+        Debug.logWarning("[ProductEvents.updateProductCategoryRollup] Could not remove product-category (write error); message: " + e.getMessage());
         return "error";
       }
     }

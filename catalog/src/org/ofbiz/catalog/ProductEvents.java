@@ -341,14 +341,16 @@ public class ProductEvents {
     }
 
     Iterator iterator = UtilMisc.toIterator(helper.findAll("Product", null));
-
+    int numProds = 0;
     while(iterator != null && iterator.hasNext()) {
       GenericValue product = (GenericValue)iterator.next();
       if(product != null) {
         KeywordSearch.induceKeywords(product);
       }
+      numProds++;
     }
     
+    request.setAttribute("EVENT_MESSAGE", "Keyword creation complete for " + numProds + " products.");
     return "success";
   }
 }

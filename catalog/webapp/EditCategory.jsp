@@ -130,6 +130,99 @@
 <%}%>
 <br>
 
+<%-- Edit 'ProductCategoryRollup's --%>
+<%if(category!=null){%>
+<hr>
+<p class="head2">Category Rollup: Parent Categories</p>
+
+<table border="1" cellpadding='0' cellspacing='0'>
+  <tr>
+    <td><b>Parent Category ID</b></td>
+    <td><b>Description</b></td>
+    <td><b>&nbsp;</b></td>
+  </tr>
+<%Iterator ppcIterator = UtilMisc.toIterator(category.getRelated("CurrentProductCategoryRollup"));%>
+<%if(ppcIterator != null && ppcIterator.hasNext()) {%>
+  <%while(ppcIterator.hasNext()) {%>
+    <%GenericValue productCategoryRollup = (GenericValue)ppcIterator.next();%>
+    <%GenericValue curCategory = productCategoryRollup.getRelatedOne("ParentProductCategory");%>
+    <tr valign="middle">
+      <td><a href="<ofbiz:url>/EditCategory?PRODUCT_CATEGORY_ID=<%=curCategory.getString("productCategoryId")%></ofbiz:url>" class="buttontext"><%=curCategory.getString("productCategoryId")%></a></td>
+      <td><%if(curCategory!=null){%><a href="<ofbiz:url>/EditCategory?PRODUCT_CATEGORY_ID=<%=productCategoryRollup.getString("productCategoryId")%></ofbiz:url>" class="buttontext"><%=curCategory.getString("description")%></a><%}%>&nbsp;</td>
+      <td>
+        <a href="<ofbiz:url>/UpdateProductCategoryRollup?UPDATE_MODE=DELETE&PRODUCT_CATEGORY_ID=<%=productCategoryId%>&UPDATE_PRODUCT_CATEGORY_ID=<%=productCategoryRollup.getString("productCategoryId")%>&UPDATE_PARENT_PRODUCT_CATEGORY_ID=<%=productCategoryRollup.getString("parentProductCategoryId")%></ofbiz:url>" class="buttontext">
+        [Delete]</a>
+      </td>
+    </tr>
+  <%}%>
+<%}else{%>
+  <tr valign="middle">
+    <td colspan='3'><DIV class='tabletext'>No Parent Categories found.</DIV></td>
+  </tr>
+<%}%>
+</table>
+
+<form method="POST" action="<ofbiz:url>/UpdateProductCategoryRollup</ofbiz:url>">
+  <input type="hidden" name="UPDATE_PRODUCT_CATEGORY_ID" value="<%=productCategoryId%>">
+  <input type="hidden" name="PRODUCT_CATEGORY_ID" value="<%=productCategoryId%>">
+  <input type="hidden" name="UPDATE_MODE" value="CREATE">
+  Add Parent Category (enter Category ID):
+    <select name="UPDATE_PARENT_PRODUCT_CATEGORY_ID">
+    <%Iterator pit = UtilMisc.toIterator(categoryCol);%>
+    <%while(pit != null && pit.hasNext()) {%>
+      <%GenericValue curCategory = (GenericValue)pit.next();%>
+      <option value="<%=curCategory.getString("productCategoryId")%>"><%=curCategory.getString("description")%> [<%=curCategory.getString("productCategoryId")%>]</option>
+    <%}%>
+    </select>
+  <input type="submit" value="Add">
+</form>
+
+<hr>
+<p class="head2">Category Rollup: Child Categories</p>
+
+<table border="1" cellpadding='0' cellspacing='0'>
+  <tr>
+    <td><b>Child Category ID</b></td>
+    <td><b>Description</b></td>
+    <td><b>&nbsp;</b></td>
+  </tr>
+<%Iterator cpcIterator = UtilMisc.toIterator(category.getRelated("ParentProductCategoryRollup"));%>
+<%if(cpcIterator != null && cpcIterator.hasNext()) {%>
+  <%while(cpcIterator.hasNext()) {%>
+    <%GenericValue productCategoryRollup = (GenericValue)cpcIterator.next();%>
+    <%GenericValue curCategory = productCategoryRollup.getRelatedOne("CurrentProductCategory");%>
+    <tr valign="middle">
+      <td><a href="<ofbiz:url>/EditCategory?PRODUCT_CATEGORY_ID=<%=curCategory.getString("productCategoryId")%></ofbiz:url>" class="buttontext"><%=curCategory.getString("productCategoryId")%></a></td>
+      <td><%if(curCategory!=null){%><a href="<ofbiz:url>/EditCategory?PRODUCT_CATEGORY_ID=<%=curCategory.getString("productCategoryId")%></ofbiz:url>" class="buttontext"><%=curCategory.getString("description")%></a><%}%>&nbsp;</td>
+      <td>
+        <a href="<ofbiz:url>/UpdateProductCategoryRollup?UPDATE_MODE=DELETE&PRODUCT_CATEGORY_ID=<%=productCategoryId%>&UPDATE_PRODUCT_CATEGORY_ID=<%=productCategoryRollup.getString("productCategoryId")%>&UPDATE_PARENT_PRODUCT_CATEGORY_ID=<%=productCategoryRollup.getString("parentProductCategoryId")%></ofbiz:url>" class="buttontext">
+        [Delete]</a>
+      </td>
+    </tr>
+  <%}%>
+<%}else{%>
+  <tr valign="middle">
+    <td colspan='3'><DIV class='tabletext'>No Child Categories found.</DIV></td>
+  </tr>
+<%}%>
+</table>
+
+<form method="POST" action="<ofbiz:url>/UpdateProductCategoryRollup</ofbiz:url>">
+  <input type="hidden" name="UPDATE_PARENT_PRODUCT_CATEGORY_ID" value="<%=productCategoryId%>">
+  <input type="hidden" name="PRODUCT_CATEGORY_ID" value="<%=productCategoryId%>">
+  <input type="hidden" name="UPDATE_MODE" value="CREATE">
+  Add Child Category (enter Category ID):
+    <select name="UPDATE_PRODUCT_CATEGORY_ID">
+    <%Iterator cit = UtilMisc.toIterator(categoryCol);%>
+    <%while(cit != null && cit.hasNext()) {%>
+      <%GenericValue curCategory = (GenericValue)cit.next();%>
+      <option value="<%=curCategory.getString("productCategoryId")%>"><%=curCategory.getString("description")%> [<%=curCategory.getString("productCategoryId")%>]</option>
+    <%}%>
+    </select>
+  <input type="submit" value="Add">
+</form>
+<%}%>
+
 <%}else{%>
   <h3>You do not have permission to view this page.  ("CATALOG_VIEW" or "CATALOG_ADMIN" needed)</h3>
 <%}%>
