@@ -51,14 +51,7 @@ public class ShoppingCart implements java.io.Serializable {
     private String orderId = null;
     private String billingAccountId = null;
     
-    private String shippingInstructions = null;
-    private Boolean maySplit = null;
-    private String giftMessage = null;
-    private Boolean isGift = null;
-    
-    private String shipmentMethodTypeId = "";
-    private String carrierPartyId = "";
-    
+    private GenericValue orderShipmentPreference = null;
     private String orderAdditionalEmails = null;
     private boolean viewCartOnAdd = true;
 
@@ -68,7 +61,8 @@ public class ShoppingCart implements java.io.Serializable {
     private Map contactMechIdsMap = new HashMap();
     private List freeShippingProductPromoActions = new ArrayList();
 
-    private GenericDelegator delegator;
+    private transient GenericDelegator delegator = null;
+    private String delegatorName = null;
     private HttpSession session;
     
     /** don't allow empty constructor */
@@ -77,9 +71,18 @@ public class ShoppingCart implements java.io.Serializable {
     /** Creates new empty ShoppingCart object. */
     public ShoppingCart(GenericDelegator delegator, HttpSession session) {
         this.delegator = delegator;
+        this.delegatorName = delegator.getDelegatorName();
         this.session = session;
+        this.orderShipmentPreference = delegator.makeValue("OrderShipmentPreference", null);
     }
 
+    public GenericDelegator getDelegator() {
+        if (delegator == null) {
+            delegator = GenericDelegator.getGenericDelegator(delegatorName);
+        }
+        return delegator;
+    }
+    
     // =======================================================================
     // Methods for cart items
     // =======================================================================
@@ -87,7 +90,7 @@ public class ShoppingCart implements java.io.Serializable {
     /** Add an item to the shopping cart, or if already there, increase the quantity.
      *  @return the new/increased item index
      */
-    public int addOrIncreaseItem(GenericDelegator delegator, String productId, double quantity, HashMap features, HashMap attributes, String prodCatalogId, LocalDispatcher dispatcher) throws CartItemModifyException {
+    public int addOrIncreaseItem(String productId, double quantity, HashMap features, HashMap attributes, String prodCatalogId, LocalDispatcher dispatcher) throws CartItemModifyException {
     //public int addOrIncreaseItem(GenericValue product, double quantity, HashMap features) {
 
         // Check for existing cart item.
@@ -102,7 +105,7 @@ public class ShoppingCart implements java.io.Serializable {
         }
 
         // Add the new item to the shopping cart if it wasn't found.
-        return this.addItem(0, ShoppingCartItem.makeItem(new Integer(0), delegator, productId, quantity, features, attributes, prodCatalogId, dispatcher, this));
+        return this.addItem(0, ShoppingCartItem.makeItem(new Integer(0), getDelegator(), productId, quantity, features, attributes, prodCatalogId, dispatcher, this));
     }
     /** Add an item to the shopping cart. */
     public int addItem(int index, ShoppingCartItem item) {
@@ -115,8 +118,8 @@ public class ShoppingCart implements java.io.Serializable {
     }
 
     /** Add an item to the shopping cart. */
-    public int addItemToEnd(GenericDelegator delegator, String productId, double quantity, HashMap features, HashMap attributes, String prodCatalogId, LocalDispatcher dispatcher) throws CartItemModifyException {
-        return addItemToEnd(ShoppingCartItem.makeItem(null, delegator, productId, quantity, features, attributes, prodCatalogId, dispatcher, this));
+    public int addItemToEnd(String productId, double quantity, HashMap features, HashMap attributes, String prodCatalogId, LocalDispatcher dispatcher) throws CartItemModifyException {
+        return addItemToEnd(ShoppingCartItem.makeItem(null, getDelegator(), productId, quantity, features, attributes, prodCatalogId, dispatcher, this));
     }
     /** Add an item to the shopping cart. */
     public int addItemToEnd(ShoppingCartItem item) {
@@ -223,11 +226,11 @@ public class ShoppingCart implements java.io.Serializable {
         poNumber = null;
         orderId = null;
 
-        shippingInstructions = null;
-        maySplit = null;
-        giftMessage = null;
-        isGift = null;
-
+        orderShipmentPreference.remove("shippingInstructions");
+        orderShipmentPreference.remove("maySplit");
+        orderShipmentPreference.remove("giftMessage");
+        orderShipmentPreference.remove("isGift");
+        
         orderAdditionalEmails = null;
         this.freeShippingProductPromoActions.clear();
 
@@ -293,56 +296,56 @@ public class ShoppingCart implements java.io.Serializable {
         return this.getContactMech("SHIPPING_LOCATION");
     }
 
-    /** Sets the shipment method type. */
-    public void setShipmentMethodTypeId(String shipmentMethodTypeId) {
-        this.shipmentMethodTypeId = shipmentMethodTypeId;
-    }
-    /** Returns the shipment method type */
-    public String getShipmentMethodTypeId() {
-        return shipmentMethodTypeId;
-    }
-
     /** Returns the order level shipping amount */
     public double getOrderShipping() {
         return OrderReadHelper.calcOrderAdjustments(this.getAdjustments(), this.getSubTotal(), false, false, true);
     }
 
+    /** Sets the shipment method type. */
+    public void setShipmentMethodTypeId(String shipmentMethodTypeId) {
+        orderShipmentPreference.set("shipmentMethodTypeId", shipmentMethodTypeId);
+    }
+    /** Returns the shipment method type */
+    public String getShipmentMethodTypeId() {
+        return orderShipmentPreference.getString("shipmentMethodTypeId");
+    }
+
     /** Sets the shipping instructions. */
     public void setShippingInstructions(String shippingInstructions) {
-        this.shippingInstructions = shippingInstructions;
+        orderShipmentPreference.set("shippingInstructions", shippingInstructions);
     }
     /** Returns the shipping instructions. */
     public String getShippingInstructions() {
-        return shippingInstructions;
+        return orderShipmentPreference.getString("shippingInstructions");
     }
 
     public void setMaySplit(Boolean maySplit) {
-        this.maySplit = maySplit;
+        orderShipmentPreference.set("maySplit", maySplit);
     }
-    /** Returns Boolean.TRUE if the order may be shipped (null if unspecified) */
+    /** Returns Boolean.TRUE if the order may be split (null if unspecified) */
     public Boolean getMaySplit() {
-        return maySplit;
+        return orderShipmentPreference.getBoolean("maySplit");
     }
 
     public void setGiftMessage(String giftMessage) {
-        this.giftMessage = giftMessage;
+        orderShipmentPreference.set("giftMessage", giftMessage);
     }
     public String getGiftMessage() {
-        return giftMessage;
+        return orderShipmentPreference.getString("giftMessage");
     }
 
     public void setIsGift(Boolean isGift) {
-        this.isGift = isGift;
+        orderShipmentPreference.set("isGift", isGift);
     }
     public Boolean getIsGift() {
-        return isGift;
+        return orderShipmentPreference.getBoolean("isGift");
     }
 
     public void setCarrierPartyId(String carrierPartyId) {
-        this.carrierPartyId = carrierPartyId;
+        orderShipmentPreference.set("carrierPartyId", carrierPartyId);
     }
     public String getCarrierPartyId() {
-        return carrierPartyId;
+        return orderShipmentPreference.getString("carrierPartyId");
     }
 
     public void setOrderAdditionalEmails(String orderAdditionalEmails) {
@@ -352,14 +355,14 @@ public class ShoppingCart implements java.io.Serializable {
         return orderAdditionalEmails;
     }
 
-    public List getPaymentMethods(GenericDelegator delegator) {
+    public List getPaymentMethods() {
         List paymentMethods = new LinkedList();
         if (paymentMethodIds != null && paymentMethodIds.size() > 0) {
             Iterator pmIdsIter = paymentMethodIds.iterator();
             while (pmIdsIter.hasNext()) {
                 String paymentMethodId = (String) pmIdsIter.next();
                 try {
-                    paymentMethods.add(delegator.findByPrimaryKey("PaymentMethod", UtilMisc.toMap("paymentMethodId", paymentMethodId)));
+                    paymentMethods.add(getDelegator().findByPrimaryKey("PaymentMethod", UtilMisc.toMap("paymentMethodId", paymentMethodId)));
                 } catch (GenericEntityException e) {
                     Debug.logError(e);
                 }
@@ -368,10 +371,10 @@ public class ShoppingCart implements java.io.Serializable {
         return paymentMethods;
     }
 
-    public GenericValue getShippingAddress(GenericDelegator delegator) {
+    public GenericValue getShippingAddress() {
         if (this.getShippingContactMechId() != null) {
             try {
-                return delegator.findByPrimaryKey("PostalAddress", UtilMisc.toMap("contactMechId", this.getShippingContactMechId()));
+                return getDelegator().findByPrimaryKey("PostalAddress", UtilMisc.toMap("contactMechId", this.getShippingContactMechId()));
             } catch (GenericEntityException e) {
                 Debug.logWarning(e.toString());
                 return null;
@@ -600,7 +603,7 @@ public class ShoppingCart implements java.io.Serializable {
     // =======================================================================
     
     /** Returns an collection of order items. */
-    public List makeOrderItems(GenericDelegator delegator) {
+    public List makeOrderItems() {
         synchronized (cartLines) {
             List result = new LinkedList();
             Iterator itemIter = cartLines.iterator();
@@ -625,7 +628,7 @@ public class ShoppingCart implements java.io.Serializable {
                 seqId++;
                 item.setOrderItemSeqId(orderItemSeqId);
                 
-                GenericValue orderItem = delegator.makeValue("OrderItem", null);
+                GenericValue orderItem = getDelegator().makeValue("OrderItem", null);
                 orderItem.set("orderItemSeqId", orderItemSeqId);
                 orderItem.set("orderItemTypeId", "SALES_ORDER_ITEM");
                 orderItem.set("productId", item.getProductId());
@@ -643,8 +646,9 @@ public class ShoppingCart implements java.io.Serializable {
             return result;
         }
     }
+    
     /** make a list of all adjustments including order adjustments, order line adjustments, and special adjustments (shipping and tax if applicable) */
-    public List makeAllAdjustments(GenericDelegator delegator) {
+    public List makeAllAdjustments() {
         List allAdjs = new LinkedList();
         
         //before returning adjustments, go through them to find all that need counter adjustments (for instance: free shipping)
@@ -658,11 +662,11 @@ public class ShoppingCart implements java.io.Serializable {
                 while (fsppas.hasNext()) {
                     GenericValue productPromoAction = (GenericValue) fsppas.next();
 
-                    if ((productPromoAction.get("productId") == null || productPromoAction.getString("productId").equals(this.shipmentMethodTypeId)) &&
-                            (productPromoAction.get("partyId") == null || productPromoAction.getString("partyId").equals(this.carrierPartyId))) {
+                    if ((productPromoAction.get("productId") == null || productPromoAction.getString("productId").equals(this.getShipmentMethodTypeId())) &&
+                            (productPromoAction.get("partyId") == null || productPromoAction.getString("partyId").equals(this.getCarrierPartyId()))) {
                         Double shippingAmount = new Double(-OrderReadHelper.calcOrderAdjustment(orderAdjustment, getSubTotal()));
                         //always set orderAdjustmentTypeId to SHIPPING_CHARGES for free shipping adjustments
-                        GenericValue fsOrderAdjustment = delegator.makeValue("OrderAdjustment",
+                        GenericValue fsOrderAdjustment = getDelegator().makeValue("OrderAdjustment",
                                 UtilMisc.toMap("orderItemSeqId", orderAdjustment.get("orderItemSeqId"), "orderAdjustmentTypeId", "SHIPPING_CHARGES", "amount", shippingAmount,
                                 "productPromoId", productPromoAction.get("productPromoId"), "productPromoRuleId", productPromoAction.get("productPromoRuleId"),
                                 "productPromoActionSeqId", productPromoAction.get("productPromoActionSeqId")));
@@ -695,11 +699,11 @@ public class ShoppingCart implements java.io.Serializable {
                         while (fsppas.hasNext()) {
                             GenericValue productPromoAction = (GenericValue) fsppas.next();
 
-                            if ((productPromoAction.get("productId") == null || productPromoAction.getString("productId").equals(this.shipmentMethodTypeId)) &&
-                                    (productPromoAction.get("partyId") == null || productPromoAction.getString("partyId").equals(this.carrierPartyId))) {
+                            if ((productPromoAction.get("productId") == null || productPromoAction.getString("productId").equals(item.getShipmentMethodTypeId())) &&
+                                    (productPromoAction.get("partyId") == null || productPromoAction.getString("partyId").equals(item.getCarrierPartyId()))) {
                                 Double shippingAmount = new Double(-OrderReadHelper.calcItemAdjustment(orderAdjustment, new Double(item.getQuantity()), new Double(item.getItemSubTotal())));
                                 //always set orderAdjustmentTypeId to SHIPPING_CHARGES for free shipping adjustments
-                                GenericValue fsOrderAdjustment = delegator.makeValue("OrderAdjustment",
+                                GenericValue fsOrderAdjustment = getDelegator().makeValue("OrderAdjustment",
                                         UtilMisc.toMap("orderItemSeqId", orderAdjustment.get("orderItemSeqId"), "orderAdjustmentTypeId", "SHIPPING_CHARGES", "amount", shippingAmount,
                                         "productPromoId", productPromoAction.get("productPromoId"), "productPromoRuleId", productPromoAction.get("productPromoRuleId"),
                                         "productPromoActionSeqId", productPromoAction.get("productPromoActionSeqId")));
@@ -720,8 +724,32 @@ public class ShoppingCart implements java.io.Serializable {
         return allAdjs;
     }
 
+    /** make a list of all OrderShipmentPreferences including ones for the order and order lines */
+    public List makeAllOrderShipmentPreferences() {
+        List allOshPrefs = new LinkedList();
+
+        //if nothing has been put into the value, don't set it; must at least have a carrierPartyId and a shipmentMethodTypeId
+        if (this.orderShipmentPreference.size() > 1) {
+            allOshPrefs.add(this.orderShipmentPreference);
+        }
+        
+        //add all of the item adjustments to this list too
+        Iterator itemIter = cartLines.iterator();
+        while (itemIter.hasNext()) {
+            ShoppingCartItem item = (ShoppingCartItem) itemIter.next();
+            //if nothing has been put into the value, don't set it; must at least have a carrierPartyId and a shipmentMethodTypeId
+            GenericValue itemOrderShipmentPreference = item.getOrderShipmentPreference();
+            if (itemOrderShipmentPreference != null && itemOrderShipmentPreference.size() > 1) {
+                itemOrderShipmentPreference.set("orderItemSeqId", item.getOrderItemSeqId());
+                allOshPrefs.add(item.getOrderShipmentPreference());
+            }
+        }
+
+        return allOshPrefs;
+    }
+
     /** make a list of OrderItemPriceInfos from the ShoppingCartItems */
-    public List makeAllOrderItemPriceInfos(GenericDelegator delegator) {
+    public List makeAllOrderItemPriceInfos() {
         List allInfos = new LinkedList();
         
         //add all of the item adjustments to this list too
@@ -743,7 +771,7 @@ public class ShoppingCart implements java.io.Serializable {
     }
     
     /** make a list of OrderContactMechs from the ShoppingCart and the ShoppingCartItems */
-    public List makeAllOrderContactMechs(GenericDelegator delegator) {
+    public List makeAllOrderContactMechs() {
         List allOrderContactMechs = new LinkedList();
 
         Map contactMechIds = this.getOrderContactMechIds();
@@ -751,7 +779,7 @@ public class ShoppingCart implements java.io.Serializable {
             Iterator cMechIdsIter = contactMechIds.entrySet().iterator();
             while (cMechIdsIter.hasNext()) {
                 Map.Entry entry = (Map.Entry) cMechIdsIter.next();
-                GenericValue orderContactMech = delegator.makeValue("OrderContactMech", null);
+                GenericValue orderContactMech = getDelegator().makeValue("OrderContactMech", null);
                 orderContactMech.set("contactMechPurposeTypeId", entry.getKey());
                 orderContactMech.set("contactMechId", entry.getValue());
                 allOrderContactMechs.add(orderContactMech);
@@ -762,7 +790,7 @@ public class ShoppingCart implements java.io.Serializable {
     }
     
     /** make a list of OrderContactMechs from the ShoppingCart and the ShoppingCartItems */
-    public List makeAllOrderItemContactMechs(GenericDelegator delegator) {
+    public List makeAllOrderItemContactMechs() {
         List allOrderContactMechs = new LinkedList();
         
         Iterator itemIter = cartLines.iterator();
@@ -773,7 +801,7 @@ public class ShoppingCart implements java.io.Serializable {
                 Iterator cMechIdsIter = itemContactMechIds.entrySet().iterator();
                 while (cMechIdsIter.hasNext()) {
                     Map.Entry entry = (Map.Entry) cMechIdsIter.next();
-                    GenericValue orderContactMech = delegator.makeValue("OrderItemContactMech", null);
+                    GenericValue orderContactMech = getDelegator().makeValue("OrderItemContactMech", null);
                     orderContactMech.set("contactMechPurposeTypeId", entry.getKey());
                     orderContactMech.set("contactMechId", entry.getValue());
                     orderContactMech.set("orderItemSeqId", item.getOrderItemSeqId());
@@ -786,24 +814,18 @@ public class ShoppingCart implements java.io.Serializable {
     }
     
     /** Returns a Map of cart values to pass to the storeOrder service */
-    public Map makeCartMap(GenericDelegator delegator) {
+    public Map makeCartMap() {
         Map result = new HashMap();
-        result.put("orderItems", makeOrderItems(delegator));
-        result.put("orderAdjustments", makeAllAdjustments(delegator));
-        result.put("orderItemPriceInfos", makeAllOrderItemPriceInfos(delegator));
+        result.put("orderItems", makeOrderItems());
+        result.put("orderAdjustments", makeAllAdjustments());
+        result.put("orderItemPriceInfos", makeAllOrderItemPriceInfos());
 
-        result.put("orderContactMechs", makeAllOrderContactMechs(delegator));
-        result.put("orderItemContactMechs", makeAllOrderItemContactMechs(delegator));
-        
-        result.put("shipmentMethodTypeId", getShipmentMethodTypeId());
-        result.put("carrierPartyId", getCarrierPartyId());
-        result.put("shippingInstructions", getShippingInstructions());
-        result.put("maySplit", getMaySplit());
-        result.put("giftMessage", getGiftMessage());
-        result.put("isGift", getIsGift());
+        result.put("orderContactMechs", makeAllOrderContactMechs());
+        result.put("orderItemContactMechs", makeAllOrderItemContactMechs());
+        result.put("orderShipmentPreferences", makeAllOrderShipmentPreferences());
         
         result.put("billingAccountId", getBillingAccountId());
-        result.put("paymentMethods", getPaymentMethods(delegator));
+        result.put("paymentMethods", getPaymentMethods());
         result.put("paymentMethodTypeIds", getPaymentMethodTypeIds());
         return result;
     }    

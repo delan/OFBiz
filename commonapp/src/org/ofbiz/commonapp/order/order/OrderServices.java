@@ -153,8 +153,9 @@ public class OrderServices {
             orderAdjustment.set("orderAdjustmentId", adjSeqId.toString());
             orderAdjustment.set("orderId", orderId);
 
-            if (orderAdjustment.get("orderItemSeqId") == null || orderAdjustment.getString("orderItemSeqId").length() == 0)
+            if (orderAdjustment.get("orderItemSeqId") == null || orderAdjustment.getString("orderItemSeqId").length() == 0) {
                 orderAdjustment.set("orderItemSeqId", DataModelConstants.SEQ_ID_NA); // set the orderItemSeqId to _NA_ if not alredy set...
+            }
 
             toBeStored.add(orderAdjustment);
         }
@@ -181,19 +182,21 @@ public class OrderServices {
             }
         }
         
-        // set the shipment preference
-        String shipmentMethodTypeId = (String) context.get("shipmentMethodTypeId");
-        String carrierPartyId = (String) context.get("carrierPartyId");
-        GenericValue orderShipmentPreference = delegator.makeValue("OrderShipmentPreference",
-                UtilMisc.toMap("orderId", orderId, "orderItemSeqId", DataModelConstants.SEQ_ID_NA,
-                        "shipmentMethodTypeId", shipmentMethodTypeId,
-                        "carrierPartyId", carrierPartyId, "carrierRoleTypeId", "CARRIER"));
-        orderShipmentPreference.set("shippingInstructions", context.get("shippingInstructions"));
-        orderShipmentPreference.set("maySplit", context.get("maySplit"));
-        orderShipmentPreference.set("giftMessage", context.get("giftMessage"));
-        orderShipmentPreference.set("isGift", context.get("isGift"));
-        toBeStored.add(orderShipmentPreference);
-
+        // set the shipment preferences
+        List orderShipmentPreferences = (List) context.get("orderShipmentPreferences");
+        if (orderShipmentPreferences != null && orderShipmentPreferences.size() > 0) {
+            Iterator oshprefs = orderShipmentPreferences.iterator();
+            while (oshprefs.hasNext()) {
+                GenericValue orderShipmentPreference = (GenericValue) oshprefs.next();
+                orderShipmentPreference.set("orderId", orderId);
+                orderShipmentPreference.set("carrierRoleTypeId", "CARRIER");
+                if (orderShipmentPreference.get("orderItemSeqId") == null || orderShipmentPreference.getString("orderItemSeqId").length() == 0) {
+                    orderShipmentPreference.set("orderItemSeqId", DataModelConstants.SEQ_ID_NA); // set the orderItemSeqId to _NA_ if not alredy set...
+                }
+                toBeStored.add(orderShipmentPreference);
+            }
+        }
+        
         // set the order items
         Iterator oi = orderItems.iterator();
         while (oi.hasNext()) {

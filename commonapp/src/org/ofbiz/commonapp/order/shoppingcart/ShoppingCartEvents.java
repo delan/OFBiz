@@ -94,7 +94,7 @@ public class ShoppingCartEvents {
          */
         
         try {
-            cart.addOrIncreaseItem(delegator, productId, quantity, null, attributes, CatalogWorker.getCurrentCatalogId(request), dispatcher);
+            cart.addOrIncreaseItem(productId, quantity, null, attributes, CatalogWorker.getCurrentCatalogId(request), dispatcher);
         } catch (CartItemModifyException e) {
             request.setAttribute(SiteDefs.ERROR_MESSAGE, e.getMessage());
             return "success"; //don't return error because this is a non-critical error and should go back to the same page
@@ -136,7 +136,7 @@ public class ShoppingCartEvents {
                     GenericValue orderItem = (GenericValue) itemIter.next();
                     if (orderItem.get("productId") != null && orderItem.get("quantity") != null) {
                         try {
-                            cart.addOrIncreaseItem(delegator, orderItem.getString("productId"), orderItem.getDouble("quantity").doubleValue(), null, null, CatalogWorker.getCurrentCatalogId(request), dispatcher);
+                            cart.addOrIncreaseItem(orderItem.getString("productId"), orderItem.getDouble("quantity").doubleValue(), null, null, CatalogWorker.getCurrentCatalogId(request), dispatcher);
                             noItems = false;
                         } catch (CartItemModifyException e) {
                             errMsg += "<li>" + e.getMessage();
@@ -167,7 +167,7 @@ public class ShoppingCartEvents {
                     if (orderItem != null) {
                         if (orderItem.get("productId") != null && orderItem.get("quantity") != null) {
                             try {
-                                cart.addOrIncreaseItem(delegator, orderItem.getString("productId"), orderItem.getDouble("quantity").doubleValue(), null, null, CatalogWorker.getCurrentCatalogId(request), dispatcher);
+                                cart.addOrIncreaseItem(orderItem.getString("productId"), orderItem.getDouble("quantity").doubleValue(), null, null, CatalogWorker.getCurrentCatalogId(request), dispatcher);
                                 noItems = false;
                             } catch (CartItemModifyException e) {
                                 errMsg += "<li>" + e.getMessage();
@@ -231,7 +231,7 @@ public class ShoppingCartEvents {
                 catch(NumberFormatException nfe) { quantity = 0; }
                 if (quantity > 0.0) {
                     try {
-                        cart.addOrIncreaseItem(delegator, productCategoryMember.getString("productId"), quantity, null, null, CatalogWorker.getCurrentCatalogId(request), dispatcher);
+                        cart.addOrIncreaseItem(productCategoryMember.getString("productId"), quantity, null, null, CatalogWorker.getCurrentCatalogId(request), dispatcher);
                     } catch (CartItemModifyException e) {
                         errMsg += "<li>" + e.getMessage();
                     }
@@ -284,7 +284,7 @@ public class ShoppingCartEvents {
             Double quantity = productCategoryMember.getDouble("quantity");
             if (quantity != null && quantity.doubleValue() > 0.0) {
                 try {
-                    cart.addOrIncreaseItem(delegator, productCategoryMember.getString("productId"), quantity.doubleValue(), null, null, CatalogWorker.getCurrentCatalogId(request), dispatcher);
+                    cart.addOrIncreaseItem(productCategoryMember.getString("productId"), quantity.doubleValue(), null, null, CatalogWorker.getCurrentCatalogId(request), dispatcher);
                     totalQuantity += quantity.doubleValue();
                 } catch (CartItemModifyException e) {
                     errMsg += "<li>" + e.getMessage();

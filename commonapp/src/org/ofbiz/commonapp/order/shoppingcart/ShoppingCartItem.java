@@ -56,6 +56,7 @@ public class ShoppingCartItem implements java.io.Serializable {
     private Map features = null;
     private Map attributes = null;
     private String orderItemSeqId = null;
+    private GenericValue orderShipmentPreference = null;
     
     private Map contactMechIdsMap = new HashMap();
     private List orderItemPriceInfos = null;
@@ -147,7 +148,9 @@ public class ShoppingCartItem implements java.io.Serializable {
         this.itemComment = null;
         this.attributes = attributes;
         this.features = features;
+        this.delegator = _product.getDelegator();
         this.delegatorName = _product.getDelegator().getDelegatorName();
+        this.orderShipmentPreference = delegator.makeValue("OrderShipmentPreference", null);
     }
 
     /** Sets the quantity for the item and validates the change in quantity, etc */
@@ -383,6 +386,57 @@ public class ShoppingCartItem implements java.io.Serializable {
         return this.isPromo;
     }
     
+    public GenericValue getOrderShipmentPreference() {
+        return orderShipmentPreference;
+    }
+    
+    /** Sets the shipment method type. */
+    public void setShipmentMethodTypeId(String shipmentMethodTypeId) {
+        orderShipmentPreference.set("shipmentMethodTypeId", shipmentMethodTypeId);
+    }
+    /** Returns the shipment method type */
+    public String getShipmentMethodTypeId() {
+        return orderShipmentPreference.getString("shipmentMethodTypeId");
+    }
+
+    /** Sets the shipping instructions. */
+    public void setShippingInstructions(String shippingInstructions) {
+        orderShipmentPreference.set("shippingInstructions", shippingInstructions);
+    }
+    /** Returns the shipping instructions. */
+    public String getShippingInstructions() {
+        return orderShipmentPreference.getString("shippingInstructions");
+    }
+
+    public void setMaySplit(Boolean maySplit) {
+        orderShipmentPreference.set("maySplit", maySplit);
+    }
+    /** Returns Boolean.TRUE if the order may be split (null if unspecified) */
+    public Boolean getMaySplit() {
+        return orderShipmentPreference.getBoolean("maySplit");
+    }
+
+    public void setGiftMessage(String giftMessage) {
+        orderShipmentPreference.set("giftMessage", giftMessage);
+    }
+    public String getGiftMessage() {
+        return orderShipmentPreference.getString("giftMessage");
+    }
+
+    public void setIsGift(Boolean isGift) {
+        orderShipmentPreference.set("isGift", isGift);
+    }
+    public Boolean getIsGift() {
+        return orderShipmentPreference.getBoolean("isGift");
+    }
+
+    public void setCarrierPartyId(String carrierPartyId) {
+        orderShipmentPreference.set("carrierPartyId", carrierPartyId);
+    }
+    public String getCarrierPartyId() {
+        return orderShipmentPreference.getString("carrierPartyId");
+    }
+
     /** Compares the specified object with this cart item. */
     public boolean equals(ShoppingCartItem item) {
         if (item == null) return false;

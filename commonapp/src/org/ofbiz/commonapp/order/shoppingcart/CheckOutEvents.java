@@ -215,7 +215,7 @@ public class CheckOutEvents {
         }
 
         // store the order - build the context
-        Map context = cart.makeCartMap(delegator);
+        Map context = cart.makeCartMap();
         String distributorId = (String) request.getSession().getAttribute("_DISTRIBUTOR_ID_");
         String affiliateId = (String) request.getSession().getAttribute("_AFFILIATE_ID_");
         if (distributorId != null) context.put("distributorId", distributorId);
