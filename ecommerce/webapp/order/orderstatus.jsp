@@ -33,13 +33,17 @@
 <%@ page import="java.text.*" %>
 
 <%@ page import="org.ofbiz.core.entity.*" %>
-<%@ page import="org.ofbiz.core.util.*" %>
+<%@ page import="org.ofbiz.core.util.*, org.ofbiz.core.pseudotag.*" %>
 
+<%@ page import="org.ofbiz.ecommerce.misc.*" %>
 <%@ page import="org.ofbiz.commonapp.party.party.*" %>
 <%@ page import="org.ofbiz.commonapp.party.contact.*" %>
 <%@ page import="org.ofbiz.commonapp.order.order.*" %>
 
 <%@ taglib uri="ofbizTags" prefix="ofbiz" %>
+<jsp:useBean id="delegator" type="org.ofbiz.core.entity.GenericDelegator" scope="request" />
+<ofbiz:object name="person" property="person" type="org.ofbiz.core.entity.GenericValue" />  
+<ofbiz:object name="userLogin" property="userLogin" type="org.ofbiz.core.entity.GenericValue" />  
 
 <%
   String orderId = request.getParameter("order_id");

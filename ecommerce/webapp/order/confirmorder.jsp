@@ -27,14 +27,21 @@
  *@version    1.0
  */
 %>
-<%@ include file="/includes/envsetup.jsp" %>
 
-<%@ page import="java.text.*" %>
-<%@ page import="javax.servlet.jsp.tagext.BodyContent" %>
-<%@ page import="org.ofbiz.commonapp.party.party.*" %>
-<%@ page import="org.ofbiz.commonapp.party.contact.*" %>
+<%@ taglib uri="ofbizTags" prefix="ofbiz" %>
+
+<%@ page import="java.util.*" %>
+
+<%@ page import="org.ofbiz.core.util.*, org.ofbiz.core.pseudotag.*" %>
+<%@ page import="org.ofbiz.core.entity.*" %>
+<%@ page import="org.ofbiz.ecommerce.misc.*" %>
+<%@ page import="org.ofbiz.ecommerce.catalog.*" %>
+<%@ page import="org.ofbiz.ecommerce.shoppingcart.*" %>
 <%@ page import="org.ofbiz.commonapp.order.order.*" %>
-
+<%@ page import="org.ofbiz.commonapp.party.contact.ContactHelper" %>
+<%@ page import="org.ofbiz.commonapp.party.party.PartyHelper" %>
+<jsp:useBean id="delegator" type="org.ofbiz.core.entity.GenericDelegator" scope="request" />
+<ofbiz:object name="person" property="person" type="org.ofbiz.core.entity.GenericValue" />  
 
 <% pageContext.setAttribute("PageName", "confirmorder");%>
 
