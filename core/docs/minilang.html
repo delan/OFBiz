@@ -1295,7 +1295,7 @@ operations, including the conditional/if operations.</p>
 </tr>
 <tr>
     <td>map-name</td><td>Y</td>
-    <td>The name of the method environment field that contains the map that the field to be compared will come from.</td>
+    <td>The name of the method environment field that contains the map that the field to be compared will come from.</td>u
 </tr>
 <tr>
     <td>field-name</td><td>Y</td>
@@ -1307,12 +1307,14 @@ operations, including the conditional/if operations.</p>
     less, greater, less-equals, greater-equals, equals, not-equals, or contains.</td>
 </tr>
 <tr>
-    <td>to-map-name</td><td>Y</td>
-    <td>The name of the method environment field that contains the map that the field to be compared will come from.</td>
+    <td>to-map-name</td><td>N</td>
+    <td>The name of the method environment field that contains the map that the 
+    field to be compared will come from. If left empty will default to the map-name.</td>
 </tr>
 <tr>
-    <td>to-field-name</td><td>Y</td>
-    <td>The name of the to-map field that the main field will be compared to.</td>
+    <td>to-field-name</td><td>N</td>
+    <td>The name of the to-map field that the main field will be compared to.
+    If left empty will default to the field-name.</td>
 </tr>
 <tr>
     <td>type</td><td>N</td>
