@@ -369,6 +369,7 @@ public class OrderServices {
             result.put("billToPerson", billTo);
             result.put("affiliateId", affilId);
             result.put("distributorId", distId);
+            result.put("statusString", statusString);
         } catch (GenericEntityException e) {
             result.put(ModelService.RESPONSE_MESSAGE, ModelService.RESPOND_ERROR);
             result.put(ModelService.ERROR_MESSAGE, "ERROR: Could not get order information (" + e.getMessage() + ").");
