@@ -42,6 +42,7 @@ import org.w3c.dom.Element;
 import org.w3c.dom.Node;
 import org.w3c.dom.NodeList;
 
+import org.ofbiz.core.config.*;
 import org.ofbiz.core.util.*;
 import org.ofbiz.core.entity.*;
 import org.ofbiz.core.entity.config.*;
@@ -106,7 +107,7 @@ public class ModelFieldTypeReader {
         }
         Element fieldTypeElement = UtilXml.firstChildElement(rootElement, "field-type", "name", modelName);
 
-        fieldTypeResourceHandler = new ResourceHandler(fieldTypeElement);
+        fieldTypeResourceHandler = new ResourceHandler(EntityConfigUtil.ENTITY_ENGINE_XML_FILENAME, fieldTypeElement);
 
         //preload caches...
         getFieldTypeCache();
@@ -127,7 +128,7 @@ public class ModelFieldTypeReader {
                     Document document = null;
                     try {
                         document = fieldTypeResourceHandler.getDocument();
-                    } catch (GenericEntityException e) {
+                    } catch (GenericConfigException e) {
                         Debug.logError(e, "Error loading field type file");
                     }
                     if (document == null) {

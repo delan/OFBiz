@@ -42,6 +42,7 @@ import org.w3c.dom.Element;
 import org.w3c.dom.Node;
 import org.w3c.dom.NodeList;
 
+import org.ofbiz.core.config.*;
 import org.ofbiz.core.util.*;
 import org.ofbiz.core.entity.*;
 import org.ofbiz.core.entity.config.*;
@@ -101,7 +102,7 @@ public class ModelGroupReader {
         }
         Element groupReaderElement = UtilXml.firstChildElement(rootElement, "entity-group-reader", "name", modelName);
 
-        entityGroupResourceHandler = new ResourceHandler(groupReaderElement);
+        entityGroupResourceHandler = new ResourceHandler(EntityConfigUtil.ENTITY_ENGINE_XML_FILENAME, groupReaderElement);
 
         //preload caches...
         getGroupCache();
@@ -123,7 +124,7 @@ public class ModelGroupReader {
                     Document document = null;
                     try {
                         document = entityGroupResourceHandler.getDocument();
-                    } catch (GenericEntityException e) {
+                    } catch (GenericConfigException e) {
                         Debug.logError(e, "Error loading entity group model");
                     }
                     if (document == null) {

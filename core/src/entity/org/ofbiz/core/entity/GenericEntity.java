@@ -428,8 +428,15 @@ public class GenericEntity extends Observable implements Map, Serializable, Comp
             ModelField modelField = (ModelField) modelFields.next();
             String name = modelField.getName();
             String value = this.getString(name);
-            if (value == null) value = "";
-            element.setAttribute(name, value);
+            if (value != null) {
+                if (value.indexOf('\n') >= 0 || value.indexOf('\r') >= 0) {
+                    UtilXml.addChildElementCDATAValue(element, name, value, document);
+                } else {
+                    element.setAttribute(name, value);
+                }
+            } else {
+                //do nothing will null values
+            }
         }
 
         return element;

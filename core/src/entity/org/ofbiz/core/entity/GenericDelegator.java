@@ -89,7 +89,11 @@ public class GenericDelegator {
         return delegator;
     }
 
-    public GenericDelegator(String delegatorName) throws GenericEntityException {
+    /** Only allow creation through the factory method */
+    protected GenericDelegator() {}
+    
+    /** Only allow creation through the factory method */
+    protected GenericDelegator(String delegatorName) throws GenericEntityException {
         Debug.logInfo("Creating new Delegator with name \"" + delegatorName + "\".", module);
 
         this.delegatorName = delegatorName;
@@ -1312,8 +1316,17 @@ public class GenericDelegator {
             ModelField modelField = (ModelField) modelFields.next();
             String name = modelField.getName();
             String attr = element.getAttribute(name);
-            if (attr != null && attr.length() > 0)
-                value.setString(name, attr);
+            if (attr != null) {
+                if (attr.length() > 0) {
+                    value.setString(name, attr);
+                }
+            } else {
+                //if no attribute try a subelement
+                Element subElement = UtilXml.firstChildElement(element, name);
+                if (subElement != null) {
+                    value.setString(name, UtilXml.elementValue(subElement));
+                }
+            }
         }
 
         return value;
@@ -1351,4 +1364,3 @@ public class GenericDelegator {
         }
     }
 }
-

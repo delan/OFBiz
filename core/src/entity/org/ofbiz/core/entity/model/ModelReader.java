@@ -35,6 +35,7 @@ import org.w3c.dom.Document;
 import org.w3c.dom.Element;
 import org.w3c.dom.Node;
 
+import org.ofbiz.core.config.*;
 import org.ofbiz.core.util.*;
 import org.ofbiz.core.entity.*;
 import org.ofbiz.core.entity.config.*;
@@ -112,7 +113,7 @@ public class ModelReader {
         Iterator resIter = resourceElements.iterator();
         while (resIter.hasNext()) {
             Element resourceElement = (Element) resIter.next();
-            ResourceHandler handler = new ResourceHandler(resourceElement);
+            ResourceHandler handler = new ResourceHandler(EntityConfigUtil.ENTITY_ENGINE_XML_FILENAME, resourceElement);
             entityResourceHandlers.add(handler);
         }
     }
@@ -137,7 +138,12 @@ public class ModelReader {
                         ResourceHandler entityResourceHandler = (ResourceHandler) rhIter.next();
 
                         //utilTimer.timerString("Before getDocument in file " + entityFileName);
-                        Document document = entityResourceHandler.getDocument();
+                        Document document = null;
+                        try {
+                            document = entityResourceHandler.getDocument();
+                        } catch (GenericConfigException e) {
+                            throw new GenericEntityConfException("Error getting document from resource handler", e);
+                        }
                         if (document == null) {
                             Debug.logError("Could not get document for " + entityResourceHandler.toString());
                             entityCache = null;
@@ -267,7 +273,7 @@ public class ModelReader {
     }
 
     public void addEntityToResourceHandler(String entityName, String loaderName, String location) {
-        entityResourceHandlerMap.put(entityName, new ResourceHandler(loaderName, location));
+        entityResourceHandlerMap.put(entityName, new ResourceHandler(EntityConfigUtil.ENTITY_ENGINE_XML_FILENAME, loaderName, location));
     }
     
     public ResourceHandler getEntityResourceHandler(String entityName) {

@@ -23,33 +23,37 @@
  *
  */
 
-package org.ofbiz.core.entity.config;
+package org.ofbiz.core.config;
 
 import java.util.*;
 import java.net.*;
 import java.io.*;
 import org.ofbiz.core.util.*;
-import org.ofbiz.core.entity.*;
 
 /**
- * Loads resources from the file system
+ * Loads resources from a URL
  *
  *@author     <a href="mailto:jonesde@ofbiz.org">David E. Jones</a>
  *@created    March 1, 2002
  *@version    1.0
  */
-public class FileLoader extends ResourceLoader {
-    public InputStream loadResource(String location) throws GenericEntityConfException {
+public class UrlLoader extends ResourceLoader {
+    public InputStream loadResource(String location) throws GenericConfigException {
         String fullLocation = fullLocation(location);
-        URL fileUrl = null;
-        fileUrl = UtilURL.fromFilename(fullLocation);
-        if (fileUrl == null) {
-            throw new GenericEntityConfException("File Resource not found: " + fullLocation);
+        
+        URL url = null;
+        try {
+            url = new URL(fullLocation);
+        } catch (java.net.MalformedURLException e) {
+            throw new GenericConfigException("Error with malformed URL while trying to load URL resource at location [" + fullLocation + "]", e);
+        }
+        if (url == null) {
+            throw new GenericConfigException("URL Resource not found: " + fullLocation);
         }
         try {
-            return fileUrl.openStream();
+            return url.openStream();
         } catch (java.io.IOException e) {
-            throw new GenericEntityConfException("Error opening file at location [" + fileUrl.toExternalForm() + "]", e);
+            throw new GenericConfigException("Error opening URL resource at location [" + url.toExternalForm() + "]", e);
         }
     }
 }

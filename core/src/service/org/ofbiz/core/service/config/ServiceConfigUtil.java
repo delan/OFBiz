@@ -23,7 +23,7 @@
  *
  */
 
-package org.ofbiz.core.entity.config;
+package org.ofbiz.core.service.config;
 
 import java.util.*;
 import java.net.*;
@@ -32,31 +32,23 @@ import org.w3c.dom.*;
 
 import org.ofbiz.core.config.*;
 import org.ofbiz.core.util.*;
-import org.ofbiz.core.entity.*;
+import org.ofbiz.core.service.*;
 
 /**
- * Misc. utility method for dealing with the entityengine.xml file
+ * Misc. utility method for dealing with the serviceengine.xml file
  *
  *@author     <a href="mailto:jonesde@ofbiz.org">David E. Jones</a>
- *@created    March 1, 2002
+ *@created    March 15, 2002
  *@version    1.0
  */
-public class EntityConfigUtil {
-    public static final String ENTITY_ENGINE_XML_FILENAME = "entityengine.xml";
+public class ServiceConfigUtil {
+    public static final String SERVICE_ENGINE_XML_FILENAME = "serviceengine.xml";
     
-    public static Element getXmlRootElement() throws GenericEntityConfException {
-        try {
-            return ResourceLoader.getXmlRootElement(EntityConfigUtil.ENTITY_ENGINE_XML_FILENAME);
-        } catch (GenericConfigException e) {
-            throw new GenericEntityConfException("Could not get entity engine XML root element", e);
-        }
+    public static Element getXmlRootElement() throws GenericConfigException {
+        return ResourceLoader.getXmlRootElement(ServiceConfigUtil.SERVICE_ENGINE_XML_FILENAME);
     }
 
-    public static Document getXmlDocument() throws GenericEntityConfException {
-        try {
-            return ResourceLoader.getXmlDocument(EntityConfigUtil.ENTITY_ENGINE_XML_FILENAME);
-        } catch (GenericConfigException e) {
-            throw new GenericEntityConfException("Could not get entity engine XML document", e);
-        }
+    public static Document getXmlDocument() throws GenericConfigException {
+        return ResourceLoader.getXmlDocument(ServiceConfigUtil.SERVICE_ENGINE_XML_FILENAME);
     }
 }

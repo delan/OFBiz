@@ -220,8 +220,17 @@ public class UtilXml {
     public static Element addChildElementValue(Element element, String childElementName,
                                                String childElementValue, Document document) {
         Element newElement = addChildElement(element, childElementName, document);
-        Text newText = document.createTextNode(childElementValue);
-        newElement.appendChild(newText);
+        newElement.appendChild(document.createTextNode(childElementValue));
+        return newElement;
+    }
+
+    /** Creates a child element with the given name and appends it to the element child node list.
+     *  Also creates a CDATASection node with the given value and appends it to the new elements child node list.
+     */
+    public static Element addChildElementCDATAValue(Element element, String childElementName,
+                                               String childElementValue, Document document) {
+        Element newElement = addChildElement(element, childElementName, document);
+        newElement.appendChild(document.createCDATASection(childElementValue));
         return newElement;
     }
 
@@ -296,6 +305,8 @@ public class UtilXml {
     /** Return the text (node value) of the first node under this, works best if normalized */
     public static String elementValue(Element element) {
         if (element == null) return null;
+        //make sure we get all the text there...
+        element.normalize();
         Node textNode = element.getFirstChild();
         if (textNode == null) return null;
         //should be of type text

@@ -23,13 +23,12 @@
  *
  */
 
-package org.ofbiz.core.entity.config;
+package org.ofbiz.core.config;
 
 import java.util.*;
 import java.net.*;
 import java.io.*;
 import org.ofbiz.core.util.*;
-import org.ofbiz.core.entity.*;
 
 /**
  * Loads resources from the classpath
@@ -39,16 +38,16 @@ import org.ofbiz.core.entity.*;
  *@version    1.0
  */
 public class ClasspathLoader extends ResourceLoader {
-    public InputStream loadResource(String location) throws GenericEntityConfException {
+    public InputStream loadResource(String location) throws GenericConfigException {
         String fullLocation = fullLocation(location);
         URL url = UtilURL.fromResource(fullLocation);
         if (url == null) {
-            throw new GenericEntityConfException("Classpath Resource not found: " + fullLocation);
+            throw new GenericConfigException("Classpath Resource not found: " + fullLocation);
         }
         try {
             return url.openStream();
         } catch (java.io.IOException e) {
-            throw new GenericEntityConfException("Error opening classpath resource at location [" + url.toExternalForm() + "]", e);
+            throw new GenericConfigException("Error opening classpath resource at location [" + url.toExternalForm() + "]", e);
         }
     }
 }

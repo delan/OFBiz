@@ -23,7 +23,7 @@
  *
  */
 
-package org.ofbiz.core.entity.config;
+package org.ofbiz.core.config;
 
 import java.util.*;
 import java.net.*;
@@ -31,7 +31,6 @@ import java.io.*;
 import org.w3c.dom.*;
 
 import org.ofbiz.core.util.*;
-import org.ofbiz.core.entity.*;
 
 /**
  * Loads resources using dynamically specified resource loader classes
@@ -42,30 +41,31 @@ import org.ofbiz.core.entity.*;
  */
 public abstract class ResourceLoader {
     protected static UtilCache loaderCache = new UtilCache("ResourceLoaders", 0, 0);
+    protected static Map docSaveMap = new HashMap();
 
     protected String name;
     protected String prefix;
     protected String envName;
     
-    public static InputStream loadResource(String location, String loaderName) throws GenericEntityConfException {
-        ResourceLoader loader = getLoader(loaderName);
-        if (loader == null) throw new IllegalArgumentException("ResourceLoader not found with name [" + loaderName + "] in entityengine.xml");
+    public static InputStream loadResource(String xmlFilename, String location, String loaderName) throws GenericConfigException {
+        ResourceLoader loader = getLoader(xmlFilename, loaderName);
+        if (loader == null) throw new IllegalArgumentException("ResourceLoader not found with name [" + loaderName + "] in " + xmlFilename);
         return loader.loadResource(location);
     }
     
-    public static ResourceLoader getLoader(String loaderName) throws GenericEntityConfException {
-        ResourceLoader loader = (ResourceLoader) loaderCache.get(loaderName);
+    public static ResourceLoader getLoader(String xmlFilename, String loaderName) throws GenericConfigException {
+        ResourceLoader loader = (ResourceLoader) loaderCache.get(xmlFilename + "::" + loaderName);
         if (loader == null) {
             synchronized (ResourceLoader.class) {
-                loader = (ResourceLoader) loaderCache.get(loaderName);
+                loader = (ResourceLoader) loaderCache.get(xmlFilename + "::" + loaderName);
                 if (loader == null) {
-                    Element rootElement = EntityConfigUtil.getXmlRootElement();
+                    Element rootElement = getXmlRootElement(xmlFilename);
 
                     Element loaderElement = UtilXml.firstChildElement(rootElement, "resource-loader", "name", loaderName);
                     loader = makeLoader(loaderElement);
 
                     if (loader != null) {
-                        loaderCache.put(loaderName, loader);
+                        loaderCache.put(xmlFilename + "::" + loaderName, loader);
                     }
                 }
             }
@@ -74,7 +74,46 @@ public abstract class ResourceLoader {
         return loader;
     }
     
-    public static ResourceLoader makeLoader(Element loaderElement) throws GenericEntityConfException {
+    public static Element getXmlRootElement(String xmlFilename) throws GenericConfigException {
+        Document document = ResourceLoader.getXmlDocument(xmlFilename);
+        if (document != null) {
+            return document.getDocumentElement();
+        } else {
+            return null;
+        }
+    }
+
+    public static Document getXmlDocument(String xmlFilename) throws GenericConfigException {
+        Document document = (Document) docSaveMap.get(xmlFilename);
+        if (document == null) {
+            synchronized (ResourceLoader.class) {
+                document = (Document) docSaveMap.get(xmlFilename);
+                if (document == null) {
+                    URL confUrl = UtilURL.fromResource(xmlFilename);
+                    if (confUrl == null) {
+                        throw new GenericConfigException("ERROR: could not find the [" + xmlFilename + "] XML file on the classpath");
+                    }
+
+                    try {
+                        document = UtilXml.readXmlDocument(confUrl);
+                    } catch (org.xml.sax.SAXException e) {
+                        throw new GenericConfigException("Error reading " + xmlFilename + "", e);
+                    } catch (javax.xml.parsers.ParserConfigurationException e) {
+                        throw new GenericConfigException("Error reading " + xmlFilename + "", e);
+                    } catch (java.io.IOException e) {
+                        throw new GenericConfigException("Error reading " + xmlFilename + "", e);
+                    }
+                    
+                    if (document != null) {
+                        docSaveMap.put(xmlFilename, document);
+                    }
+                }
+            }
+        }
+        return document;
+    }
+    
+    public static ResourceLoader makeLoader(Element loaderElement) throws GenericConfigException {
         if (loaderElement == null)
             return null;
         
@@ -88,19 +127,19 @@ public abstract class ResourceLoader {
                 try {
                     lClass = Class.forName(className);
                 } catch (ClassNotFoundException e) {
-                    throw new GenericEntityConfException("Error loading Resource Loader class \"" + className + "\"", e);
+                    throw new GenericConfigException("Error loading Resource Loader class \"" + className + "\"", e);
                 }
             }
 
             try {
                 loader = (ResourceLoader) lClass.newInstance();
             } catch (IllegalAccessException e) {
-                throw new GenericEntityConfException("Error loading Resource Loader class \"" + className + "\"", e);
+                throw new GenericConfigException("Error loading Resource Loader class \"" + className + "\"", e);
             } catch (InstantiationException e) {
-                throw new GenericEntityConfException("Error loading Resource Loader class \"" + className + "\"", e);
+                throw new GenericConfigException("Error loading Resource Loader class \"" + className + "\"", e);
             }
         } catch (SecurityException e) {
-            throw new GenericEntityConfException("Error loading Resource Loader class \"" + className + "\"", e);
+            throw new GenericConfigException("Error loading Resource Loader class \"" + className + "\"", e);
         }
 
         if (loader != null) {
@@ -110,7 +149,7 @@ public abstract class ResourceLoader {
         return loader;
     }
     
-    public ResourceLoader() { }
+    protected ResourceLoader() { }
     
     public void init(String name, String prefix, String envName) {
         this.name = name;
@@ -131,5 +170,5 @@ public abstract class ResourceLoader {
         return buf.toString();
     }
     
-    public abstract InputStream loadResource(String location) throws GenericEntityConfException;
+    public abstract InputStream loadResource(String location) throws GenericConfigException;
 }
