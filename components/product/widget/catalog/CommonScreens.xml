@@ -1,6 +1,4 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<!DOCTYPE screens PUBLIC "-//OFBiz//DTD OFBiz Screen Widget//EN" "http://www.ofbiz.org/dtds/widget-screen.dtd">
-
 <!--
  *  Copyright (c) 2004 The Open For Business Project - www.ofbiz.org
  *
@@ -22,10 +20,11 @@
  *  OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR
  *  THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  *
- *  $Id: CommonScreens.xml,v 1.5 2004/08/03 16:33:32 jonesde Exp $
+ *  $Id$
 -->
 
-<screens>
+<screens xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" 
+        xsi:noNamespaceSchemaLocation="http://www.ofbiz.org/dtds/widget-screen.xsd">
     <screen name="main">
         <section>
             <actions>

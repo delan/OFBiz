@@ -1,6 +1,4 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<!DOCTYPE screens PUBLIC "-//OFBiz//DTD OFBiz Screen Widget//EN" "http://www.ofbiz.org/dtds/widget-screen.dtd">
-
 <!--
  *  Copyright (c) 2004 The Open For Business Project - www.ofbiz.org
  *
@@ -25,7 +23,8 @@
  *  $Id: ProductScreens.xml 3183 2004-08-26 22:06:24Z jonesde $
 -->
 
-<screens>
+<screens xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" 
+        xsi:noNamespaceSchemaLocation="http://www.ofbiz.org/dtds/widget-screen.xsd">
     <screen name="GenericDecorator">
         <section>
             <actions>
