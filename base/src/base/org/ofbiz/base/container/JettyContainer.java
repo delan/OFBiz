@@ -1,5 +1,5 @@
 /*
- * $Id: JettyContainer.java,v 1.13 2003/09/10 02:31:47 ajzeneski Exp $
+ * $Id: JettyContainer.java,v 1.14 2003/09/14 18:17:18 ajzeneski Exp $
  *
  * Copyright (c) 2003 The Open For Business Project - www.ofbiz.org
  *
@@ -54,7 +54,7 @@ import org.ofbiz.base.util.UtilURL;
  * This container depends on the ComponentContainer as well.
  *
  * @author     <a href="mailto:jaz@ofbiz.org">Andy Zeneski</a> 
-  *@version    $Revision: 1.13 $
+  *@version    $Revision: 1.14 $
  * @since      3.0
  */
 public class JettyContainer implements Container {
@@ -95,12 +95,13 @@ public class JettyContainer implements Container {
                 while (appInfos.hasNext()) {
                     ComponentConfig.WebappInfo appInfo = (ComponentConfig.WebappInfo) appInfos.next();
                     List virtualHosts = appInfo.getVirtualHosts();
+                    Map initParameters = appInfo.getInitParameters();
                     Server server = (Server) servers.get(appInfo.server);
                     if (server == null) {
                         Debug.logWarning("Server with name [" + appInfo.server + "] not found; not mounting [" + appInfo.name + "]", module);
                     } else {
                         try {
-                        	// set the root location (make sure we set the paths correctly)                           
+                            // set the root location (make sure we set the paths correctly)                           
                             String location = component.getRootLocation() + appInfo.location;
                             location = location.replace('\\', '/');
                             if (!location.endsWith("/")) {
@@ -117,6 +118,13 @@ public class JettyContainer implements Container {
                             	ctx.addVirtualHost((String)vh.next());
                             }
                             
+                            // set the init parameters
+                            Iterator ip = initParameters.keySet().iterator();
+                            while (ip.hasNext()) {
+                                String paramName = (String) ip.next();
+                                ctx.setInitParameter(paramName, (String) initParameters.get(paramName));
+                            }
+			
                         } catch (IOException e) {
                             Debug.logError(e, "Problem mounting application [" + appInfo.name + " / " + appInfo.location + "]", module);                        
                         }

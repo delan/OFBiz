@@ -1,5 +1,5 @@
 /*
- * $Id: ComponentConfig.java,v 1.13 2003/09/11 13:23:26 jonesde Exp $
+ * $Id: ComponentConfig.java,v 1.14 2003/09/14 18:17:18 ajzeneski Exp $
  *
  * Copyright (c) 2003 The Open For Business Project - www.ofbiz.org
  *
@@ -52,7 +52,7 @@ import org.xml.sax.SAXException;
  *
  * @author     <a href="mailto:jonesde@ofbiz.org">David E. Jones</a>
  * @author     <a href="mailto:jaz@ofbiz.org">Andy Zeneski</a>
- * @version    $Revision: 1.13 $
+ * @version    $Revision: 1.14 $
  * @since      3.0
  */
 public class ComponentConfig {
@@ -505,6 +505,7 @@ public class ComponentConfig {
     public static class WebappInfo {
         public ComponentConfig componentConfig;
         public List virtualHosts;
+        public Map initParameters;
         public String name;
         public String title;
         public String server;
@@ -514,6 +515,7 @@ public class ComponentConfig {
 
         public WebappInfo(ComponentConfig componentConfig, Element element) {
         	this.virtualHosts = new LinkedList();
+            this.initParameters = new HashMap();
             this.componentConfig = componentConfig;
             this.name = element.getAttribute("name");
             this.title = element.getAttribute("title");
@@ -533,24 +535,36 @@ public class ComponentConfig {
             }
             
             // check the mount point and make sure it is properly formatted
-            if (!this.mountPoint.startsWith("/")) {
-                this.mountPoint = "/" + this.mountPoint;
-            }
-            if (!this.mountPoint.endsWith("/*")) {
-                if (!this.mountPoint.endsWith("/")) {
-                    this.mountPoint = this.mountPoint + "/";
+            if (!"/".equals(this.mountPoint)) {
+                if (!this.mountPoint.startsWith("/")) {
+                    this.mountPoint = "/" + this.mountPoint;
                 }
-                this.mountPoint = this.mountPoint + "*";   
+                if (!this.mountPoint.endsWith("/*")) {
+                    if (!this.mountPoint.endsWith("/")) {
+                        this.mountPoint = this.mountPoint + "/";
+                    }
+                    this.mountPoint = this.mountPoint + "*";   
+                }
             }
-            
+			
             // load the virtual hosts
             List virtHostList = UtilXml.childElementList(element, "virtual-host");
             if (virtHostList != null && virtHostList.size() > 0) {
-            	Iterator elementIter = virtHostList.iterator();
-            	while (elementIter.hasNext()) {
-            		Element e = (Element) elementIter.next();
-            		virtualHosts.add(e.getAttribute("host-name"));
-            	}
+                Iterator elementIter = virtHostList.iterator();
+                while (elementIter.hasNext()) {
+                    Element e = (Element) elementIter.next();
+                    virtualHosts.add(e.getAttribute("host-name"));
+                }
+            }
+			
+            // load the init parameters
+            List initParamList = UtilXml.childElementList(element, "init-param");
+            if (initParamList != null && initParamList.size() > 0) {
+                Iterator elementIter = initParamList.iterator();
+                while (elementIter.hasNext()) {
+                    Element e = (Element) elementIter.next();
+                    this.initParameters.put(e.getAttribute("name"), e.getAttribute("value"));
+                }
             }
         } 
         
@@ -567,6 +581,10 @@ public class ComponentConfig {
         
         public List getVirtualHosts() {
         	return virtualHosts;
+        }
+		
+        public Map getInitParameters() {
+            return initParameters;
         }
     }
 }
