@@ -1,4 +1,4 @@
-<?xml version="1.0"?>
+<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
 <!--
 /**
  *  Title: Entity Generator Group Definitions for the General Data Model
@@ -29,6 +29,17 @@
  */
 -->
 
+<!DOCTYPE entitygroup [
+<!-- ====================== Root Element ======================= -->
+<!ELEMENT entitygroup (entity-group*)>
+
+<!-- ================= Children of entitygroup =================== -->
+<!ELEMENT entity-group EMPTY>
+
+<!-- ================= Children of entity-group =================== -->
+<!ATTLIST entity-group group CDATA #REQUIRED>
+<!ATTLIST entity-group entity CDATA #REQUIRED>
+]>
 
 <entitygroup>
   <!-- ========================================================= -->
