@@ -1,5 +1,4 @@
-<%
-/**
+<%--
  *  Copyright (c) 2001 The Open For Business Project - www.ofbiz.org
  *
  *  Permission is hereby granted, free of charge, to any person obtaining a 
@@ -23,8 +22,7 @@
  *@author     David E. Jones
  *@created    May 20 2002
  *@version    1.0
- */
-%>
+--%>
 
 <%@ page import="java.util.*, java.io.*" %>
 <%@ page import="org.ofbiz.core.util.*, org.ofbiz.core.entity.*" %>
@@ -122,24 +120,26 @@
                         <input type=hidden <ofbiz:inputvalue entityAttr="productPromoCond" field="productPromoCondSeqId" fullattrs="true"/>>
                         <select name='inputParamEnumId' size=1>
                             <%if (productPromoCond.get("inputParamEnumId") != null) {%>
-                              <option value='<%=productPromoCond.getString("inputParamEnumId")%>'> [<%=productPromoCond.getString("inputParamEnumId")%>]</option>
+                              <%GenericValue inputParamEnum = productPromoCond.getRelatedOneCache("InputParamEnumeration");%>
+                              <option value='<%=productPromoCond.getString("inputParamEnumId")%>'><%if (inputParamEnum != null) {%><%=inputParamEnum.getString("description")%><%} else {%>[<%=productPromoCond.getString("inputParamEnumId")%>]<%}%></option>
                               <option value='<%=productPromoCond.getString("inputParamEnumId")%>'>&nbsp;</option>
                             <%} else {%>
                               <option value=''>&nbsp;</option>
                             <%}%>
                             <ofbiz:iterator name="inputParamEnum" property="inputParamEnums">
-                              <option value='<%=inputParamEnum.getString("enumId")%>'><%=inputParamEnum.getString("description")%> [<%=inputParamEnum.getString("enumId")%>]</option>
+                              <option value='<%=inputParamEnum.getString("enumId")%>'><%=inputParamEnum.getString("description")%><%--[<%=inputParamEnum.getString("enumId")%>]--%></option>
                             </ofbiz:iterator>
                         </select>
                         <select name='operatorEnumId' size=1>
                             <%if (productPromoCond.get("operatorEnumId") != null) {%>
-                              <option value='<%=productPromoCond.getString("operatorEnumId")%>'> [<%=productPromoCond.getString("operatorEnumId")%>]</option>
+                              <%GenericValue operatorEnum = productPromoCond.getRelatedOneCache("OperatorEnumeration");%>
+                              <option value='<%=productPromoCond.getString("operatorEnumId")%>'><%if (operatorEnum != null) {%><%=operatorEnum.getString("description")%><%} else {%>[<%=productPromoCond.getString("operatorEnumId")%>]<%}%></option>
                               <option value='<%=productPromoCond.getString("operatorEnumId")%>'>&nbsp;</option>
                             <%} else {%>
                               <option value=''>&nbsp;</option>
                             <%}%>
                             <ofbiz:iterator name="condOperEnum" property="condOperEnums">
-                              <option value='<%=condOperEnum.getString("enumId")%>'><%=condOperEnum.getString("description")%> [<%=condOperEnum.getString("enumId")%>]</option>
+                              <option value='<%=condOperEnum.getString("enumId")%>'><%=condOperEnum.getString("description")%><%--[<%=condOperEnum.getString("enumId")%>]--%></option>
                             </ofbiz:iterator>
                         </select>
                         <input type=text size='30' <ofbiz:inputvalue entityAttr="productPromoCond" field="condValue" fullattrs="true"/>>
@@ -161,12 +161,12 @@
                     <input type=text size='5' name='productPromoCondSeqId'>
                     <select name='inputParamEnumId' size=1>
                         <ofbiz:iterator name="inputParamEnum" property="inputParamEnums">
-                          <option value='<%=inputParamEnum.getString("enumId")%>'><%=inputParamEnum.getString("description")%> [<%=inputParamEnum.getString("enumId")%>]</option>
+                          <option value='<%=inputParamEnum.getString("enumId")%>'><%=inputParamEnum.getString("description")%><%--[<%=inputParamEnum.getString("enumId")%>]--%></option>
                         </ofbiz:iterator>
                     </select>
                     <select name='operatorEnumId' size=1>
                         <ofbiz:iterator name="condOperEnum" property="condOperEnums">
-                          <option value='<%=condOperEnum.getString("enumId")%>'><%=condOperEnum.getString("description")%> [<%=condOperEnum.getString("enumId")%>]</option>
+                          <option value='<%=condOperEnum.getString("enumId")%>'><%=condOperEnum.getString("description")%><%--[<%=condOperEnum.getString("enumId")%>]--%></option>
                         </ofbiz:iterator>
                     </select>
                     <input type=text size='30' name='condValue'>
@@ -205,29 +205,31 @@
                         <input type=hidden <ofbiz:inputvalue entityAttr="productPromoAction" field="productPromoActionSeqId" fullattrs="true"/>>
                         <select name='productPromoActionTypeId' size=1>
                             <%if (productPromoAction.get("productPromoActionTypeId") != null) {%>
-                              <option value='<%=productPromoAction.getString("productPromoActionTypeId")%>'> [<%=productPromoAction.getString("productPromoActionTypeId")%>]</option>
+                              <%GenericValue productPromoActionType = productPromoAction.getRelatedOneCache("ProductPromoActionType");%>
+                              <option value='<%=productPromoAction.getString("productPromoActionTypeId")%>'><% if (productPromoActionType != null) {%><%=productPromoActionType.getString("description")%><%} else {%>[<%=productPromoAction.getString("productPromoActionTypeId")%>]<%}%></option>
                               <option value='<%=productPromoAction.getString("productPromoActionTypeId")%>'>&nbsp;</option>
                             <%} else {%>
                               <option value=''>&nbsp;</option>
                             <%}%>
                             <ofbiz:iterator name="productPromoActionType" property="productPromoActionTypes">
-                              <option value='<%=productPromoActionType.getString("productPromoActionTypeId")%>'><%=productPromoActionType.getString("description")%> [<%=productPromoActionType.getString("productPromoActionTypeId")%>]</option>
+                              <option value='<%=productPromoActionType.getString("productPromoActionTypeId")%>'><%=productPromoActionType.getString("description")%><%--[<%=productPromoActionType.getString("productPromoActionTypeId")%>]--%></option>
                             </ofbiz:iterator>
                         </select>
                         <select name='orderAdjustmentTypeId' size=1>
                             <%if (productPromoAction.get("orderAdjustmentTypeId") != null) {%>
-                              <option value='<%=productPromoAction.getString("orderAdjustmentTypeId")%>'> [<%=productPromoAction.getString("orderAdjustmentTypeId")%>]</option>
+                              <%GenericValue orderAdjustmentType = productPromoAction.getRelatedOneCache("OrderAdjustmentType");%>
+                              <option value='<%=productPromoAction.getString("orderAdjustmentTypeId")%>'><% if (orderAdjustmentType != null) {%><%=orderAdjustmentType.getString("description")%><%} else {%>[<%=productPromoAction.getString("orderAdjustmentTypeId")%>]<%}%></option>
                               <option value='<%=productPromoAction.getString("orderAdjustmentTypeId")%>'>&nbsp;</option>
                             <%} else {%>
                               <option value=''>&nbsp;</option>
                             <%}%>
                             <ofbiz:iterator name="orderAdjustmentType" property="orderAdjustmentTypes">
-                              <option value='<%=orderAdjustmentType.getString("orderAdjustmentTypeId")%>'><%=orderAdjustmentType.getString("description")%> [<%=orderAdjustmentType.getString("orderAdjustmentTypeId")%>]</option>
+                              <option value='<%=orderAdjustmentType.getString("orderAdjustmentTypeId")%>'><%=orderAdjustmentType.getString("description")%><%--[<%=orderAdjustmentType.getString("orderAdjustmentTypeId")%>]--%></option>
                             </ofbiz:iterator>
                         </select>
-                        <input type=text size='8' <ofbiz:inputvalue entityAttr="productPromoAction" field="quantity" fullattrs="true"/>>
-                        <input type=text size='20' <ofbiz:inputvalue entityAttr="productPromoAction" field="productId" fullattrs="true"/>>
-                        <input type=text size='5' <ofbiz:inputvalue entityAttr="productPromoAction" field="actionLimit" fullattrs="true"/>>
+                        <input type=text size='5' <ofbiz:inputvalue entityAttr="productPromoAction" field="quantity" fullattrs="true"/>>
+                        <input type=text size='15' <ofbiz:inputvalue entityAttr="productPromoAction" field="productId" fullattrs="true"/>>
+                        <input type=text size='4' <ofbiz:inputvalue entityAttr="productPromoAction" field="actionLimit" fullattrs="true"/>>
                         <INPUT type=submit value='Update'>
                     </FORM>
                 </td>
@@ -246,17 +248,17 @@
                     <input type=text size='5' name='productPromoActionSeqId'>
                     <select name='productPromoActionTypeId' size=1>
                         <ofbiz:iterator name="productPromoActionType" property="productPromoActionTypes">
-                          <option value='<%=productPromoActionType.getString("productPromoActionTypeId")%>'><%=productPromoActionType.getString("description")%> [<%=productPromoActionType.getString("productPromoActionTypeId")%>]</option>
+                          <option value='<%=productPromoActionType.getString("productPromoActionTypeId")%>'><%=productPromoActionType.getString("description")%><%--[<%=productPromoActionType.getString("productPromoActionTypeId")%>]--%></option>
                         </ofbiz:iterator>
                     </select>
                     <select name='orderAdjustmentTypeId' size=1>
                         <ofbiz:iterator name="orderAdjustmentType" property="orderAdjustmentTypes">
-                          <option value='<%=orderAdjustmentType.getString("orderAdjustmentTypeId")%>'><%=orderAdjustmentType.getString("description")%> [<%=orderAdjustmentType.getString("orderAdjustmentTypeId")%>]</option>
+                          <option value='<%=orderAdjustmentType.getString("orderAdjustmentTypeId")%>'><%=orderAdjustmentType.getString("description")%><%--[<%=orderAdjustmentType.getString("orderAdjustmentTypeId")%>]--%></option>
                         </ofbiz:iterator>
                     </select>
-                    <input type=text size='8' name='quantity'>
-                    <input type=text size='20' name='productId'>
-                    <input type=text size='5' name='actionLimit'>
+                    <input type=text size='5' name='quantity'>
+                    <input type=text size='15' name='productId'>
+                    <input type=text size='4' name='actionLimit'>
                     <INPUT type=submit value='Create'>
                 </FORM>
             </td>

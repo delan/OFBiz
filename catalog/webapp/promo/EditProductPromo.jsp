@@ -1,5 +1,4 @@
-<%
-/**
+<%--
  *  Copyright (c) 2001 The Open For Business Project - www.ofbiz.org
  *
  *  Permission is hereby granted, free of charge, to any person obtaining a 
@@ -23,8 +22,7 @@
  *@author     David E. Jones
  *@created    May 13 2002
  *@version    1.0
- */
-%>
+--%>
 <%try {%>
 <%@ page import="java.util.*, java.io.*" %>
 <%@ page import="org.ofbiz.core.util.*, org.ofbiz.core.entity.*" %>
@@ -62,7 +60,7 @@
     <form action="<ofbiz:url>/CreateProductPromo</ofbiz:url>" method=POST style='margin: 0;'>
     <table border='0' cellpadding='2' cellspacing='0'>
     <tr>
-      <td align=right><div class="tabletext">ProductPromo ID</div></td>
+      <td align=right><div class="tabletext">Product Promo ID</div></td>
       <td>&nbsp;</td>
       <td>
         <h3>Could not find productPromo with ID "<%=productPromoId%>".</h3><br>
@@ -73,7 +71,7 @@
     <form action="<ofbiz:url>/CreateProductPromo</ofbiz:url>" method=POST style='margin: 0;'>
     <table border='0' cellpadding='2' cellspacing='0'>
     <tr>
-      <td align=right><div class="tabletext">ProductPromo ID</div></td>
+      <td align=right><div class="tabletext">Product Promo ID</div></td>
       <td>&nbsp;</td>
       <td>
         <input type=text size='20' maxlength='20' name="productPromoId" value="<%=UtilFormatOut.checkNull(productPromoId)%>">
@@ -85,7 +83,7 @@
   <table border='0' cellpadding='2' cellspacing='0'>
   <input type=hidden name="productPromoId" value="<%=productPromoId%>">
   <tr>
-    <td align=right><div class="tabletext">ProductPromo ID</div></td>
+    <td align=right><div class="tabletext">Product Promo ID</div></td>
     <td>&nbsp;</td>
     <td>
       <b><%=productPromoId%></b> (This cannot be changed without re-creating the productPromo.)
@@ -100,7 +98,7 @@
       <tr>
         <td width="26%" align=right><div class="tabletext">Promo Text</div></td>
         <td>&nbsp;</td>
-        <td width="74%"><textarea name='promoText' cols='60' rows='3'><ofbiz:inputvalue entityAttr="productPromo" field="promoText"/></textarea></td>
+        <td width="74%"><textarea name='promoText' cols='70' rows='5'><ofbiz:inputvalue entityAttr="productPromo" field="promoText"/></textarea></td>
       </tr>
 
       <tr>
@@ -114,8 +112,8 @@
         </td>
       </tr>
   <tr>
-    <td colspan='1' align=right><input type="submit" name="Update" value="Update"></td>
     <td colspan='2'>&nbsp;</td>
+    <td colspan='1' align=left><input type="submit" name="Update" value="Update"></td>
   </tr>
 </table>
 </form>
