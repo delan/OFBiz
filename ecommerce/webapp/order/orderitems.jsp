@@ -23,14 +23,11 @@
  *  THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  *
  *@author     Eric Pabst
+ *@author     David E. Jones
  *@created    May 22 2001
  *@version    1.0
  */
 %>
-<%@ taglib uri="ofbizTags" prefix="ofbiz" %>
-
-<%@ page import="java.util.*" %>
-
 <%@ page import="org.ofbiz.commonapp.order.order.*" %>
 <%@ page import="org.ofbiz.core.entity.*" %>
 <%@ page import="org.ofbiz.core.util.*" %>
@@ -75,25 +72,21 @@
       <%pageContext.setAttribute("productId", orderItem.getString("productId"));%>
       <ofbiz:if type="String" name="productId" value="shoppingcart.CommentLine">
         <td colspan="1" valign="top">    
-          <b><div class="tabletext"> &gt;&gt; <%=orderItem.getString("itemDescription")%></div></b>
+          <b><div class="tabletext"> &gt;&gt; <%entityField.run("orderItem", "itemDescription");%></div></b>
         </td>
       </ofbiz:if>
       <ofbiz:unless type="String" name="productId" value="shoppingcart.CommentLine">
         <td valign="top">
           <div class="tabletext">
-          <a href="<%=response.encodeUrl(serverRoot + controlPath + "/product?product_id=" + orderItem.getString("productId"))%>" class="buttontext"><%=orderItem.getString("productId")%> - <%=orderItem.getString("itemDescription")%></a>
+          <a href="<%=response.encodeUrl(serverRoot + controlPath + "/product?product_id=" + orderItem.getString("productId"))%>" class="buttontext"><%entityField.run("orderItem", "productId");%> - <%entityField.run("orderItem", "itemDescription");%></a>
           <%-- <a href="<ofbiz:url><%="/product?product_id=" + orderItem.getString("productId")%></ofbiz:url>" class="buttontext"><%=orderItem.getString("productId")%> - <%=orderItem.getString("itemDescription")%></a> --%>
           </div>
         </td>
         <td align="right" valign="top">
-            <div class="tabletext" nowrap>
-              <%=UtilFormatOut.formatQuantity(orderItem.getDouble("quantity"))%>
-            </div>
+            <div class="tabletext" nowrap><%entityField.run("orderItem", "quantity");%></div>
         </td>
         <td align="right" valign="top">
-            <div class="tabletext" nowrap>
-              <%=UtilFormatOut.formatQuantity(orderItem.getDouble("unitPrice"))%>
-            </div>
+            <div class="tabletext" nowrap><%entityField.run("orderItem", "unitPrice");%></div>
         </td>
         <td align="right" valign="top" nowrap>
           <%double lineTotal = orderItem.getDouble("quantity").doubleValue()*orderItem.getDouble("unitPrice").doubleValue();%>

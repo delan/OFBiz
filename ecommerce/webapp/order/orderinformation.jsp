@@ -23,13 +23,11 @@
  *  THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  *
  *@author     Eric Pabst
+ *@author     David E. Jones
  *@created    May 22 2001
  *@version    1.0
  */
 %>
-<%@ taglib uri="ofbizTags" prefix="ofbiz" %>
-
-<%@ page import="java.util.*" %>
 
 <%@ page import="org.ofbiz.ecommerce.catalog.*" %>
 <%@ page import="org.ofbiz.ecommerce.shoppingcart.*" %>
@@ -37,7 +35,6 @@
 <%@ page import="org.ofbiz.commonapp.order.order.*" %>
 <%@ page import="org.ofbiz.commonapp.party.party.PartyHelper" %>
 <%@ page import="org.ofbiz.ecommerce.misc.*" %>
-<%@ page import="org.ofbiz.core.entity.*" %>
 
     <%GenericValue localOrderHeader = null;%>
     <%OrderReadHelper localOrder = null;%>
@@ -66,7 +63,7 @@
       <table width='100%' border='0' cellpadding='<%=boxTopPadding%>' cellspacing='0' bgcolor='<%=boxTopColor%>'>
         <tr>
           <td valign="middle" align="left">
-            <div class="boxhead">&nbsp;Order <ofbiz:if name="orderHeader">#<%=localOrderHeader.getString("orderId")%> </ofbiz:if>Information</div>
+            <div class="boxhead">&nbsp;Order <ofbiz:if name="orderHeader">#<%entityField.run("orderHeader", "orderId");%> </ofbiz:if>Information</div>
           </td>
         </tr>
       </table>
@@ -89,7 +86,7 @@
         <%if(person!=null){%>
           <%=PartyHelper.getPersonName(person)%>
         <%}%>
-        <%=UtilFormatOut.ifNotEmpty(userLogin.getString("userLoginId"), " (", ")")%>
+        <%entityField.run("userLogin", "userLoginId", " (", ") ");%>
         </div>
       </td>
     </tr>
@@ -117,9 +114,7 @@
       </td>
       <td width="5">&nbsp;</td>
       <td align="left" valign="top" width="80%">
-          <div class="tabletext">
-          <%=UtilDateTime.toDateTimeString(localOrderHeader.getTimestamp("orderDate"))%>
-          </div>
+          <div class="tabletext"><%entityField.run("orderHeader", "orderDate");%></div>
       </td>
     </tr>
   </ofbiz:if>
@@ -172,7 +167,7 @@
       <td width="5">&nbsp;</td>
       <td align="left" valign="top" width="80%">
           <div class="tabletext">
-            <%=creditCardInfo.getString("nameOnCard")%><br>
+            <%entityField.run("creditCardInfo", "nameOnCard");%><br>
             <%=ContactHelper.formatCreditCard(creditCardInfo)%>
           </div>
       </td>
@@ -190,7 +185,7 @@
       <td width="5">&nbsp;</td>
       <td align="left" valign="top" width="80%">
           <div class="tabletext">
-            #<%=billingAccount.getString("billingAccountId")%> - <%=UtilFormatOut.checkNull(billingAccount.getString("description"))%>
+            #<%entityField.run("billingAccount", "billingAccountId");%> - <%entityField.run("billingAccount", "description");%>
           </div>
       </td>
     </tr>
@@ -217,14 +212,14 @@
       <td width="5">&nbsp;</td>
       <td align="left" valign="top" width="80%">
           <div class="tabletext">
-            <ofbiz:entityfield attribute="billingAddress" field="toName" prefix="<b>To:</b> " suffix="<br>"/>
-            <ofbiz:entityfield attribute="billingAddress" field="attnName" prefix="<b>Attn:</b> " suffix="<br>"/>
-            <ofbiz:entityfield attribute="billingAddress" field="address1"/><br>
-            <ofbiz:entityfield attribute="billingAddress" field="address2" prefix="" suffix="<br>"/>
-            <ofbiz:entityfield attribute="billingAddress" field="city"/>,
-            <ofbiz:entityfield attribute="billingAddress" field="stateProvinceGeoId"/>
-            <ofbiz:entityfield attribute="billingAddress" field="postalCode"/>
-            <ofbiz:entityfield attribute="billingAddress" field="countryGeoId" prefix="<br>" suffix=""/>
+            <%entityField.run("billingAddress", "toName", "<b>To:</b> ", "<br>");%>
+            <%entityField.run("billingAddress", "attnName", "<b>Attn:</b> ", "<br>");%>
+            <%entityField.run("billingAddress", "address1");%><br>
+            <%entityField.run("billingAddress", "address2", "", "<br>");%>
+            <%entityField.run("billingAddress", "city");%>,
+            <%entityField.run("billingAddress", "stateProvinceGeoId");%>
+            <%entityField.run("billingAddress", "postalCode");%>
+            <%entityField.run("billingAddress", "countryGeoId", "<br>", "");%>
           </div>
       </td>
     </tr>
@@ -267,14 +262,14 @@
       <td width="5">&nbsp;</td>
       <td align="left" valign="top" width="80%">
           <div class="tabletext">
-            <ofbiz:entityfield attribute="shippingAddress" field="toName" prefix="<b>To:</b> " suffix="<br>"/>
-            <ofbiz:entityfield attribute="shippingAddress" field="attnName" prefix="<b>Attn:</b> " suffix="<br>"/>
-            <ofbiz:entityfield attribute="shippingAddress" field="address1"/><br>
-            <ofbiz:entityfield attribute="shippingAddress" field="address2" prefix="" suffix="<br>"/>
-            <ofbiz:entityfield attribute="shippingAddress" field="city"/>,
-            <ofbiz:entityfield attribute="shippingAddress" field="stateProvinceGeoId"/>
-            <ofbiz:entityfield attribute="shippingAddress" field="postalCode"/>
-            <ofbiz:entityfield attribute="shippingAddress" field="countryGeoId" prefix="<br>" suffix=""/>
+            <%entityField.run("shippingAddress", "toName", "<b>To:</b> ", "<br>");%>
+            <%entityField.run("shippingAddress", "attnName", "<b>Attn:</b> ", "<br>");%>
+            <%entityField.run("shippingAddress", "address1");%><br>
+            <%entityField.run("shippingAddress", "address2", "", "<br>");%>
+            <%entityField.run("shippingAddress", "city");%>,
+            <%entityField.run("shippingAddress", "stateProvinceGeoId");%>
+            <%entityField.run("shippingAddress", "postalCode");%>
+            <%entityField.run("shippingAddress", "countryGeoId", "<br>", "");%>
           </div>
       </td>
     </tr>
