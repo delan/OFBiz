@@ -103,6 +103,10 @@
         <delete file="${classes.dir}/localdtds.properties" />
         <delete file="${classes.dir}/serviceengine.xml" />
         <delete file="${classes.dir}/tyrexdomain.xml" />
+        <delete file="${classes.dir}/url.properties" />
+        <delete file="${classes.dir}/cybersource.properties" />
+        <delete file="${classes.dir}/payflow.properties" />
+        <delete file="${classes.dir}/taxware.properties" />
 
         <delete dir="${classes.dir}/org/ofbiz/commonapp" />
 
@@ -293,15 +297,20 @@
     </target>
 
     <target name="deploy-copy" depends="" if="copy.dirs.exist">
-        <copy file="commonapp/etc/serverstats.properties" toFile="${classes.dir}/serverstats.properties" />
-        <copy file="commonapp/etc/entityengine.xml" toFile="${classes.dir}/entityengine.xml" />
-        <copy file="commonapp/etc/security.properties" toFile="${classes.dir}/security.properties" />
-        <copy file="commonapp/etc/debug.properties" toFile="${classes.dir}/debug.properties" />
-        <copy file="commonapp/etc/cache.properties" toFile="${classes.dir}/cache.properties" />
-        <copy file="commonapp/etc/general.properties" toFile="${classes.dir}/general.properties" />
-        <copy file="commonapp/etc/localdtds.properties" toFile="${classes.dir}/localdtds.properties" />
-        <copy file="commonapp/etc/serviceengine.xml" toFile="${classes.dir}/serviceengine.xml" />
-        <copy file="commonapp/etc/tyrexdomain.xml" toFile="${classes.dir}/tyrexdomain.xml" />
+        <copy file="commonapp/etc/serverstats.properties" toDir="${classes.dir}" />
+        <copy file="commonapp/etc/security.properties" toDir="${classes.dir}" />
+        <copy file="commonapp/etc/debug.properties" toDir="${classes.dir}" />
+        <copy file="commonapp/etc/cache.properties" toDir="${classes.dir}" />
+        <copy file="commonapp/etc/general.properties" toDir="${classes.dir}" />
+        <copy file="commonapp/etc/localdtds.properties" toDir="${classes.dir}" />
+        <copy file="commonapp/etc/url.properties" toDir="${classes.dir}" />
+        <copy file="commonapp/etc/cybersource.properties" toDir="${classes.dir}" />
+        <copy file="commonapp/etc/payflow.properties" toDir="${classes.dir}" />
+        <copy file="commonapp/etc/taxware.properties" toDir="${classes.dir}" />
+        
+        <copy file="commonapp/etc/entityengine.xml" toDir="${classes.dir}" />
+        <copy file="commonapp/etc/serviceengine.xml" toDir="${classes.dir}" />
+        <copy file="commonapp/etc/tyrexdomain.xml" toDir="${classes.dir}" />
 
         <copy file="core/lib/ofbcore-share.jar" toFile="${lib.dir}/ofbcore-share.jar" />
         <copy file="core/lib/ofbcore-entity.jar" toFile="${lib.dir}/ofbcore-entity.jar" />
@@ -357,11 +366,11 @@
 
         <copy file="lib/common/castor-0.9.3.9.jar"           toDir="${ext.dir}/lib/ext"/>
         <copy file="lib/common/hsqldb.jar"                   toDir="${ext.dir}/lib/ext"/>
-        <copy file="lib/common/postgresql.jar"              toDir="${ext.dir}/lib/ext"/>
+        <copy file="lib/common/postgresql.jar"               toDir="${ext.dir}/lib/ext"/>
         <copy file="lib/common/log4j.jar"                    toDir="${ext.dir}/lib/ext"/>
         <copy file="lib/common/mm.mysql-2.0.8-bin.jar"       toDir="${ext.dir}/lib/ext"/>
         <copy file="lib/common/ots-jts_1.0.jar"              toDir="${ext.dir}/lib/ext"/>
-        <copy file="lib/common/tyrex-1.0.jar"            toDir="${ext.dir}/lib/ext"/>
+        <copy file="lib/common/tyrex-1.0.jar"                toDir="${ext.dir}/lib/ext"/>
         <copy file="lib/share/axis.jar"                      toDir="${ext.dir}/lib/ext"/>
         <copy file="lib/share/bsh-1.2b6.jar"                 toDir="${ext.dir}/lib/ext"/>
         <copy file="lib/share/clutil.jar"                    toDir="${ext.dir}/lib/ext"/>
@@ -402,6 +411,10 @@
         <copy file="commonapp/etc/localdtds.properties"      toDir="${ext.dir}/etc"/>
         <copy file="commonapp/etc/serviceengine.xml"         toDir="${ext.dir}/etc"/>
         <copy file="commonapp/etc/tyrexdomain.xml"           toDir="${ext.dir}/etc"/>
+        <copy file="commonapp/etc/url.properties"            toDir="${ext.dir}/etc"/>
+        <copy file="commonapp/etc/cybersource.properties"    toDir="${ext.dir}/etc"/>
+        <copy file="commonapp/etc/payflow.properties"        toDir="${ext.dir}/etc"/>
+        <copy file="commonapp/etc/taxware.properties"        toDir="${ext.dir}/etc"/>
 
         <copy toDir="${ext.dir}/commonapp/entitydef">
           <fileset dir="commonapp/entitydef"/>
