@@ -1,5 +1,5 @@
 /*
- * $Id: DataResourceWorker.java,v 1.19 2004/03/16 17:48:08 byersa Exp $
+ * $Id: DataResourceWorker.java,v 1.20 2004/03/24 21:27:17 byersa Exp $
  *
  *  Copyright (c) 2001, 2002 The Open For Business Project - www.ofbiz.org
  *
@@ -64,7 +64,7 @@ import freemarker.template.Template;
  * 
  * @author <a href="mailto:byersa@automationgroups.com">Al Byers</a>
  * @author <a href="mailto:jonesde@ofbiz.org">David E. Jones</a>
- * @version $Revision: 1.19 $
+ * @version $Revision: 1.20 $
  * @since 3.0
  */
 public class DataResourceWorker {
@@ -561,8 +561,7 @@ public class DataResourceWorker {
 
         Map context = (Map)templateContext.get("context");
         String webSiteId = (String) templateContext.get("webSiteId");
-        if (UtilValidate.isEmpty(webSiteId))
-            webSiteId = (String) context.get("webSiteId");
+        //if (UtilValidate.isEmpty(webSiteId)) webSiteId = (String) context.get("webSiteId");
         String https = (String) templateContext.get("https");
         if (UtilValidate.isEmpty(https))
             https = (String) context.get("https");
