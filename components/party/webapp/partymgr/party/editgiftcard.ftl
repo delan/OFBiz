@@ -20,7 +20,7 @@
  *  THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  *
  *@author     Andy Zeneski (jaz@ofbiz.org)
- *@version    $Revision: 1.2 $
+ *@version    $Revision: 1.3 $
  *@since      3.0
 -->
 
@@ -50,14 +50,14 @@
       <td width="26%" align=right valign=top><div class="tabletext">Card Number</div></td>
       <td width="5">&nbsp;</td>
       <td width="74%">
-        <input type="text" class="inputBox" size="20" maxlength="60" name="cardNumber" value="${giftCardData.physicalNumber?if_exists}">
+        <input type="text" class="inputBox" size="20" maxlength="60" name="cardNumber" value="${giftCardData.cardNumber?if_exists}">
       </td>
     </tr>
     <tr>
       <td width="26%" align=right valign=top><div class="tabletext">PIN Number</div></td>
       <td width="5">&nbsp;</td>
       <td width="74%">
-        <input type="text" class="inputBox" size="10" maxlength="60" name="pinNumber" value="${giftCardData.physicalPin?if_exists}">
+        <input type="text" class="inputBox" size="10" maxlength="60" name="pinNumber" value="${giftCardData.pinNumber?if_exists}">
       </td>
     </tr>
     <tr>

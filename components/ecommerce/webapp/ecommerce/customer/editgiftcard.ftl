@@ -20,7 +20,7 @@
  *  THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  *
  *@author     Andy Zeneski (jaz@ofbiz.org)
- *@version    $Revision: 1.3 $
+ *@version    $Revision: 1.4 $
  *@since      3.0
 -->
 
@@ -36,7 +36,7 @@
       <form method="post" action='<@ofbizUrl>/createGiftCard?DONE_PAGE=${donePage}</@ofbizUrl>' name="editgiftcardform" style='margin: 0;'>
       <table width="90%" border="0" cellpadding="2" cellspacing="0">
     <#else>
-      <p class="head1">${uiLabelMap.AccountingEditCreditCard}</p>
+      <p class="head1">${uiLabelMap.AccountingEditGiftCard}</p>
       &nbsp;<a href='<@ofbizUrl>/authview/${donePage}</@ofbizUrl>' class="buttontext">[${uiLabelMap.CommonGoBack}]</a>
       &nbsp;<a href="javascript:document.editgiftcardform.submit()" class="buttontext">[${uiLabelMap.CommonSave}]</a>
       <form method="post" action='<@ofbizUrl>/updateGiftCard?DONE_PAGE=${donePage}</@ofbizUrl>' name="editgiftcardform" style='margin: 0;'>
