@@ -1530,7 +1530,7 @@ public class OrderServices {
 
         // prepare the order information
         Map sendMap = prepareOrderEmail(delegator, orderId, orderItemSeqId, emailType);
-        if (sendMap != null && ServiceUtil.isError(sendMap)) {
+        if (sendMap != null && (ServiceUtil.isError(sendMap) || ServiceUtil.isFailure(sendMap))) {
             return sendMap;
         }
 
