@@ -1,5 +1,5 @@
 /*
- * $Id: ShoppingCartEvents.java,v 1.8 2003/11/25 18:15:25 ajzeneski Exp $
+ * $Id: ShoppingCartEvents.java,v 1.9 2003/11/26 10:47:38 jonesde Exp $
  *
  *  Copyright (c) 2001, 2002 The Open For Business Project - www.ofbiz.org
  *
@@ -50,7 +50,7 @@ import org.ofbiz.content.webapp.control.RequestHandler;
  *
  * @author     <a href="mailto:jaz@ofbiz.org">Andy Zeneski</a>
  * @author     <a href="mailto:tristana@twibble.org">Tristan Austin</a>
- * @version    $Revision: 1.8 $
+ * @version    $Revision: 1.9 $
  * @since      2.0
  */
 public class ShoppingCartEvents {
@@ -62,6 +62,19 @@ public class ShoppingCartEvents {
     private static final String NON_CRITICAL_ERROR = "noncritical";
     private static final String ERROR = "error";
 
+    public static String addProductPromoCode(HttpServletRequest request, HttpServletResponse response) {
+        ShoppingCart cart = getCartObject(request);
+        String productPromoCodeId = (String) request.getAttribute("productPromoCodeId");
+        if (UtilValidate.isNotEmpty(productPromoCodeId)) {
+            String checkResult = cart.addProductPromoCode(productPromoCodeId);
+            if (UtilValidate.isNotEmpty(checkResult)) {
+                request.setAttribute("_ERROR_MESSAGE_", checkResult);
+                return "error";
+            }
+        }
+        return "success";
+    }
+    
     /** Event to add an item to the shopping cart. */
     public static String addToCart(HttpServletRequest request, HttpServletResponse response) {
         GenericDelegator delegator = (GenericDelegator) request.getAttribute("delegator");
@@ -79,7 +92,7 @@ public class ShoppingCartEvents {
 
         String quantityStr = null;
         double quantity = 0;
-        Map attributes = null;
+        // not used right now: Map attributes = null;
         String catalogId = CatalogWorker.getCurrentCatalogId(request);
         Locale locale = UtilHttp.getLocale(request);
 
@@ -235,8 +248,7 @@ public class ShoppingCartEvents {
     public static String addToCartFromOrder(HttpServletRequest request, HttpServletResponse response) {
         String orderId = request.getParameter("order_id");
         String[] itemIds = request.getParameterValues("item_id");
-        Locale locale = UtilHttp.getLocale(request);
-
+        // not used yet: Locale locale = UtilHttp.getLocale(request);
 
         ShoppingCart cart = getCartObject(request);
         GenericDelegator delegator = (GenericDelegator) request.getAttribute("delegator");
@@ -270,8 +282,7 @@ public class ShoppingCartEvents {
         ShoppingCartHelper cartHelper = new ShoppingCartHelper(delegator, dispatcher, cart);
         String controlDirective;
         Map result;
-        Locale locale = UtilHttp.getLocale(request);
-
+        // not used yet: Locale locale = UtilHttp.getLocale(request);
 
         //Convert the params to a map to pass in
         Map paramMap = UtilHttp.getParameterMap(request);
@@ -329,9 +340,8 @@ public class ShoppingCartEvents {
         String controlDirective;
         Map result;
         Map paramMap = UtilHttp.getParameterMap(request);
-        Locale locale = UtilHttp.getLocale(request);
-
-
+        // not used yet: Locale locale = UtilHttp.getLocale(request);
+        
         //Delegate the cart helper
         result = cartHelper.deleteFromCart(paramMap);
         controlDirective = processResult(result, request);
@@ -354,9 +364,8 @@ public class ShoppingCartEvents {
         ShoppingCartHelper cartHelper = new ShoppingCartHelper(null, dispatcher, cart);
         String controlDirective;
         Map result;
-        Locale locale = UtilHttp.getLocale(request);
-
-
+        // not used yet: Locale locale = UtilHttp.getLocale(request);
+        
         Map paramMap = UtilHttp.getParameterMap(request);
 
         String removeSelectedFlag = request.getParameter("removeSelected");
