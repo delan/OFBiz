@@ -549,6 +549,14 @@
         <xs:attribute type="xs:string" name="entity-name" use="required"/>
         <xs:attribute type="xs:string" name="entity-id" use="required"/>
         <xs:attribute type="xs:string" name="target-operation" use="required"/>
+        <xs:attribute name="display-fail-cond" default="false">
+            <xs:simpleType>
+                <xs:restriction base="xs:token">
+                    <xs:enumeration value="true"/>
+                    <xs:enumeration value="false"/>
+                </xs:restriction>
+            </xs:simpleType>
+        </xs:attribute>
     </xs:attributeGroup>
     <xs:element name="permission-condition-getter">
         <xs:complexType>
