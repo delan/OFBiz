@@ -1,5 +1,5 @@
 /*
- * $Id: ContentPermissionServices.java,v 1.5 2003/12/15 11:55:58 byersa Exp $
+ * $Id: ContentPermissionServices.java,v 1.6 2003/12/30 05:43:05 byersa Exp $
  *
  * Copyright (c) 2001-2003 The Open For Business Project - www.ofbiz.org
  *
@@ -49,7 +49,7 @@ import org.ofbiz.service.ServiceUtil;
  * ContentPermissionServices Class
  *
  * @author     <a href="mailto:byersa@automationgroups.com">Al Byers</a>
- * @version    $Revision: 1.5 $
+ * @version    $Revision: 1.6 $
  * @since      2.2
  * 
  * Services for granting operation permissions on Content entities in a data-driven manner.
@@ -503,8 +503,10 @@ Debug.logInfo("in checkAssocPerm, contentIdFrom:" + contentIdFrom, null);
 Debug.logInfo("in checkAssocPerm, contentTo:" + contentTo, null);
 Debug.logInfo("in checkAssocPerm, contentFrom:" + contentFrom, null);
         } catch (GenericEntityException e) {
-            Debug.logError(e, " content To or From not found. ", module);
             return ServiceUtil.returnError("Error in retrieving content To or From. " + e.getMessage());
+        }
+        if (contentTo == null || contentFrom == null) {
+            return ServiceUtil.returnError("contentTo[" + contentTo + "]/From[" + contentFrom + "] is null. ");
         }
         String creatorLoginTo = (String)contentTo.get("createdByUserLogin");
         String creatorLoginFrom = (String)contentFrom.get("createdByUserLogin");
