@@ -24,6 +24,8 @@
  *@since      2.1
 -->
 
+<#assign cart = content.shoppingCart>
+
 <form method="post" name="checkoutInfoForm" action="<@ofbizUrl>/checkout</@ofbizUrl>" style='margin:0;'>
   <table width="100%" border="0" cellpadding='0' cellspacing='0'>
     <tr valign="top" align="left">
@@ -46,7 +48,7 @@
                 <tr>
                   <td>
                     <table width='100%' cellpadding='1' border='0' cellpadding='0' cellspacing='0'>
-                      <#list carrierShipmentMethodList as carrierShipmentMethod>                    
+                      <#list content.carrierShipmentMethodList as carrierShipmentMethod>                    
                         <tr>
                           <td width='1%' valign="top" >
                             <#assign shippingMethod = carrierShipmentMethod.shipmentMethodTypeId + "@" + carrierShipmentMethod.partyId>
@@ -136,7 +138,7 @@
                           <div class="tabletext">Your order will be sent to the following email addresses:</div>
                           <div class="tabletext">
                             <b>
-                              <#list emailList as email>
+                              <#list content.emailList as email>
                                 ${email.infoString?if_exists}<#if email_has_next>,</#if>
                               </#list>
                             </b>
@@ -180,9 +182,9 @@
                           <a href="<@ofbizUrl>/editcontactmech?preContactMechTypeId=POSTAL_ADDRESS&contactMechPurposeTypeId=SHIPPING_LOCATION&DONE_PAGE=checkoutoptions</@ofbizUrl>" class="buttontext">[Add New Address]</a>
                         </td>
                       </tr>
-                       <#if shippingContactMechList?has_content>
+                       <#if content.shippingContactMechList?has_content>
                          <tr><td colspan="2"><hr class='sepbar'></td></tr>
-                         <#list shippingContactMechList as shippingContactMech>
+                         <#list content.shippingContactMechList as shippingContactMech>
                            <#assign shippingAddress = shippingContactMech.getRelatedOne("PostalAddress")>
                            <tr>
                              <td align="left" valign="top" width="1%" nowrap>
@@ -198,7 +200,7 @@
                                  <#if shippingAddress.stateProvidenceGeoId?exists><br>${shippingAddress.stateProvidenceId}</#if>
                                  <#if shippingAddress.postalCode?exists><br>${shippingAddress.postalCode}</#if>
                                  <#if shippingAddress.countryGeoId?exists><br>${shippingAddress.countryGeoId}</#if>                                                            
-                                 <a href="<@ofbizUrl>/editcontactmech?DONE_PAGE=checkoutoptions&contactMechId=<%=shippingContactMechId%></@ofbizUrl>" class="buttontext">[Update]</a>
+                                 <a href="<@ofbizUrl>/editcontactmech?DONE_PAGE=checkoutoptions&contactMechId=${shippingAddress.contactMechId}</@ofbizUrl>" class="buttontext">[Update]</a>
                                </div>
                              </td>
                            </tr>
@@ -231,29 +233,17 @@
             <td width='100%' valign=top height='100%'>
               <table width='100%' border='0' cellspacing='0' cellpadding='0' class='boxbottom' style='height: 100%;'>
                 <tr>
-                  <td valign=top>
-                 
-<%
-    String checkOutPaymentId = "";
-    if (cart != null) {
-        if (cart.getPaymentMethodIds().size() > 0) {
-            checkOutPaymentId = (String) cart.getPaymentMethodIds().get(0);
-        } else if (cart.getPaymentMethodTypeIds().size() > 0) {
-            checkOutPaymentId = (String) cart.getPaymentMethodTypeIds().get(0);
-        }
-    }
-%>
-
+                  <td valign=top>                
                     <table width="100%" cellpadding="1" cellspacing="0" border="0">
                       <tr><td colspan="2">
                         <span class='tabletext'>Add:</span>
-                        <a href="<ofbiz:url>/editcreditcard?DONE_PAGE=checkoutoptions</ofbiz:url>" class="buttontext">[Credit Card]</a>
-                        <a href="<ofbiz:url>/editeftaccount?DONE_PAGE=checkoutoptions</ofbiz:url>" class="buttontext">[EFT Account]</a>
+                        <a href="<@ofbizUrl>/editcreditcard?DONE_PAGE=checkoutoptions</@ofbizUrl>" class="buttontext">[Credit Card]</a>
+                        <a href="<@ofbizUrl>/editeftaccount?DONE_PAGE=checkoutoptions</@ofbizUrl>" class="buttontext">[EFT Account]</a>
                       </td></tr>
                       <tr><td colspan="2"><hr class='sepbar'></td></tr>
                       <tr>
                         <td width="1%" nowrap>
-                          <input type="radio" name="checkOutPaymentId" value="EXT_OFFLINE" <%="EXT_OFFLINE".equals(checkOutPaymentId) ? "CHECKED" : ""%>>
+                          <input type="radio" name="checkOutPaymentId" value="EXT_OFFLINE" <#if "EXT_OFFLINE" == content.checkOutPaymentId>checked</#if>>
                         </td>
                         <td width="50%" nowrap>
                           <span class="tabletext">Offline:&nbsp;Check/Money Order</span>
@@ -261,7 +251,7 @@
                       </tr> 
                       <tr>
                         <td width="1%" nowrap>
-                          <input type="radio" name="checkOutPaymentId" value="EXT_WORLDPAY" <%="EXT_WORLDPAY".equals(checkOutPaymentId) ? "CHECKED" : ""%>>
+                          <input type="radio" name="checkOutPaymentId" value="EXT_WORLDPAY" <#if "EXT_WORLDPAY" == content.checkOutPaymentId>checked</#if>>
                         </td>
                         <td width="50%" nowrap>
                           <span class="tabletext">Pay With WorldPay</span>
@@ -269,34 +259,34 @@
                       </tr>    
                       <tr>
                         <td width="1%" nowrap>
-                          <input type="radio" name="checkOutPaymentId" value="EXT_PAYPAL" <%="EXT_PAYPAL".equals(checkOutPaymentId) ? "CHECKED" : ""%>>
+                          <input type="radio" name="checkOutPaymentId" value="EXT_PAYPAL" <#if "EXT_PAYPAL" == content.checkOutPaymentId>checked</#if>>
                         </td>
                         <td width="50%" nowrap>
                           <span class="tabletext">Pay With PayPal</span>
                         </td>
                       </tr>    
                       <tr><td colspan="2"><hr class='sepbar'></td></tr>
-                      <#list paymentMethodList as paymentMethod>
+                      <#list content.paymentMethodList as paymentMethod>
                         <#if paymentMethod.paymentMethodTypeId == "CREDIT_CARD">
                           <#assign creditCard = paymentMethod.getRelatedOne("CreditCard")>
                           <tr>                 
                             <td width="1%" nowrap>
-                              <input type="radio" name="checkOutPaymentId" value="<%=paymentMethodId%>" <%=paymentMethodId.equals(checkOutPaymentId) ? "CHECKED" : ""%>>
+                              <input type="radio" name="checkOutPaymentId" value="${paymentMethod.paymentMethodId}" <#if paymentMethod.paymentMethodId == checkOutPaymentId>checked</#if>>
                             </td>
                             <td width="50%" nowrap>
-                              <span class="tabletext">CC:&nbsp;<%=ContactHelper.formatCreditCard(creditCard)%></span>
-                              <a href="<ofbiz:url>/editcreditcard?DONE_PAGE=checkoutoptions&paymentMethodId=<%=paymentMethod.getString("paymentMethodId")%></ofbiz:url>" class="buttontext">[Update]</a>
+                              <span class="tabletext">CC:&nbsp;${Static["org.ofbiz.commonapp.party.contact.ContactHelper"].formatCreditCard(creditCard)}</span>
+                              <a href="<@ofbizUrl>/editcreditcard?DONE_PAGE=checkoutoptions&paymentMethodId=${paymentMethod.paymentMethodId}</@ofbizUrl>" class="buttontext">[Update]</a>
                             </td>
                           </tr>
                         <#elseif paymentMethod.paymentMethodTypeId == "EFT_ACCOUNT">
                           <#assign eftAccount = paymentMethod.getRelatedOne("EftAccount")>
                           <tr>
                             <td width="1%" nowrap>             
-                              <input type="radio" name="checkOutPaymentId" value="<%=paymentMethodId%>" <%=paymentMethodId.equals(checkOutPaymentId) ? "CHECKED" : ""%>>
+                              <input type="radio" name="checkOutPaymentId" value="${paymentMethod.paymentMethodId}" <#if paymentMethod.paymentMethodId == checkOutPaymentId>checked</#if>>
                             </td>
                             <td width="50%" nowrap>
-                              <span class="tabletext">EFT:&nbsp;<%EntityField.run("eftAccount", "bankName", pageContext);%><%EntityField.run("eftAccount", "accountNumber", ": ", "", pageContext);%></span>
-                              <a href="<ofbiz:url>/editeftaccount?DONE_PAGE=checkoutoptions&paymentMethodId=<%=paymentMethod.getString("paymentMethodId")%></ofbiz:url>" class="buttontext">[Update]</a>
+                              <span class="tabletext">EFT:&nbsp;${eftAccount.bankName?if_exists}: ${eftAccount.accountNumber?if_exists}</span>
+                              <a href="<@ofbizUrl>/editeftaccount?DONE_PAGE=checkoutoptions&paymentMethodId=${paymentMethod.paymentMethodId}</@ofbizUrl>" class="buttontext">[Update]</a>
                             </td>
                           </tr>
                           <tr><td colspan="2"><hr class='sepbar'></td></tr>
@@ -309,7 +299,7 @@
                     </#if>
                     <#if billingAccountRoleList?has_content>
                       <div class="tabletext">To pay with store credit, enter your Purchase Order (PO) number here and select the billing account:</div>
-                      <input type="text" class='inputBox' name="corresponding_po_id" size="20" value='<ofbiz:if name="cart"><%=UtilFormatOut.checkNull(cart.getPoNumber())%></ofbiz:if>'>
+                      <input type="text" class='inputBox' name="corresponding_po_id" size="20" value='${cart.getPoNumber()?if_exists}'>
                       <br>
                       <table width="90%" border="0" cellpadding="0" cellspacing="0">
                         <tr><td colspan="2"><hr class='sepbar'></td></tr>
@@ -317,13 +307,12 @@
                           <#assign billingAccount = billingAccountRole.getRelatedOne("BillingAccount")>
                           <tr>
                             <td align="left" valign="top" width="1%" nowrap>
-                              <input type="radio" name="billing_account_id" value="<%=billingAccount.getString("billingAccountId")%>"
-                              <ofbiz:if name="cart"><%=billingAccount.getString("billingAccountId").equals(cart.getBillingAccountId()) ? "CHECKED" : ""%></ofbiz:if>>
+                              <input type="radio" name="billing_account_id" value="${billingAccount.billingAccountId}" <#if cart.getBillingAccountId() == billingAccount.billingAccountId>checked</#if>>
                             </td>
                             <td align="left" valign="top" width="99%" nowrap>
                               <div class="tabletext">
-                               Billing Account #<b><%=UtilFormatOut.checkNull(billingAccount.getString("billingAccountId"))%></b><br>
-                               <%=UtilFormatOut.checkNull(billingAccount.getString("description"))%>
+                               Billing Account #<b>${billingAccount.billingAccountId}</b><br>
+                               ${billingAccount.description?if_exists}
                               </div> 
                             </td>
                           </tr>
@@ -345,7 +334,7 @@
 <table width="100%">
   <tr valign="top">
     <td align="left">
-      &nbsp;<a href="<ofbiz:url>/view/showcart</ofbiz:url>" class="buttontextbig">[Back to Shopping Cart]</a>
+      &nbsp;<a href="<@ofbizUrl>/view/showcart</@ofbizUrl>" class="buttontextbig">[Back to Shopping Cart]</a>
     </td>
     <td align="right">
       <a href="javascript:document.checkoutInfoForm.submit()" class="buttontextbig">[Continue to Final Order Review]</a>
