@@ -19,6 +19,11 @@ import org.ofbiz.entity.util.EntityUtil;
 import org.ofbiz.entity.GenericValue;
 import org.ofbiz.entity.GenericDelegator;
 import org.ofbiz.entity.GenericEntityException;
+import org.ofbiz.service.GenericServiceException;
+import org.ofbiz.service.LocalDispatcher;
+import org.ofbiz.service.ModelService;
+import org.ofbiz.service.ServiceUtil;
+
 
     /** It represents an (in-memory) bill of materials (in which each
      * component is an ItemConfigurationNode)
@@ -45,8 +50,8 @@ public class ItemConfigurationTree {
      * @throws GenericEntityException If a db problem occurs.
      *
      */
-    public ItemConfigurationTree(String productId, String bomTypeId, Date inDate, GenericDelegator delegator) throws GenericEntityException {
-        this(productId, bomTypeId, inDate, true, delegator);
+    public ItemConfigurationTree(String productId, String bomTypeId, Date inDate, GenericDelegator delegator, LocalDispatcher dispatcher) throws GenericEntityException {
+        this(productId, bomTypeId, inDate, true, delegator, dispatcher);
     }
     
     /** Creates a new instance of ItemConfigurationTree by reading
@@ -64,18 +69,25 @@ public class ItemConfigurationTree {
      * @throws GenericEntityException If a db problem occurs.
      *
      */
-    public ItemConfigurationTree(String productId, String bomTypeId, Date inDate, boolean explosion, GenericDelegator delegator) throws GenericEntityException {
+    public ItemConfigurationTree(String productId, String bomTypeId, Date inDate, boolean explosion, GenericDelegator delegator, LocalDispatcher dispatcher) throws GenericEntityException {
         // If the parameters are not valid, return.
-        if (productId == null || bomTypeId == null || delegator == null) return;
+        if (productId == null || bomTypeId == null || delegator == null || dispatcher == null) return;
         // If the date is null, set it to today.
         if (inDate == null) inDate = new Date();
         
         String productIdForRules = productId;
         // The selected product features are loaded
-        List productFeatures = delegator.findByAnd("ProductFeatureAppl",
+        List productFeaturesAppl = delegator.findByAnd("ProductFeatureAppl",
                                               UtilMisc.toMap("productId", productId,
                                               "productFeatureApplTypeId", "STANDARD_FEATURE"));
-
+        List productFeatures = new ArrayList();
+        GenericValue oneProductFeatureAppl = null;
+        for (int i = 0; i < productFeaturesAppl.size(); i++) {
+            oneProductFeatureAppl = (GenericValue)productFeaturesAppl.get(i);
+            productFeatures.add(delegator.findByPrimaryKey("ProductFeature", 
+                                       UtilMisc.toMap("productFeatureId", oneProductFeatureAppl.getString("productFeatureId"))));
+                               
+        }
         // If the product is manufactured as a different product,
         // load the new product
         GenericValue manufacturedAsProduct = manufacturedAsProduct(productId, inDate, delegator);
@@ -108,7 +120,7 @@ public class ItemConfigurationTree {
             root = new ItemConfigurationNode(product);
             root.setProductForRules(productIdForRules);
             if (explosion) {
-                root.loadChildren(bomTypeId, inDate, productFeatures);
+                root.loadChildren(bomTypeId, inDate, productFeatures, dispatcher);
             } else {
                 root.loadParents(bomTypeId, inDate, productFeatures);
             }
@@ -237,4 +249,19 @@ public class ItemConfigurationTree {
         }
         return productsId;
     }
+    
+    /** It visits the in-memory tree that represents a bill of materials
+     * and it creates a manufacturing order for each of the nodes that needs
+     * to be manufactured.
+     * @param orderId The (sales) order id for which the manufacturing orders are created. If specified (together with orderItemSeqId) a link between the two order lines is created in the OrderItemAssociation entity. If null, no link is created.
+     * @param orderItemSeqId
+     * @param delegator The delegator used.
+     * @throws GenericEntityException If a db problem occurs.
+     */    
+    public void createManufacturingOrders(String orderId, String orderItemSeqId, GenericDelegator delegator, LocalDispatcher dispatcher, GenericValue userLogin)  throws GenericEntityException {
+        if (root != null) {
+            root.createManufacturingOrder(orderId, orderItemSeqId, delegator, dispatcher, userLogin);
+        }
+    }
+
 }

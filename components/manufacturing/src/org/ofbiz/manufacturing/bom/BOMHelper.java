@@ -16,6 +16,8 @@ import org.ofbiz.entity.GenericDelegator;
 import org.ofbiz.entity.GenericValue;
 import org.ofbiz.entity.GenericEntityException;
 import org.ofbiz.base.util.UtilMisc;
+import org.ofbiz.service.LocalDispatcher;
+
 
 /** Helper class containing static method useful when dealing
  * with product's bills of materials.
@@ -83,15 +85,15 @@ public class BOMHelper {
      * @return the ProductAssoc generic value for a duplicate productIdKey
      * ancestor if present, null otherwise.
      */    
-    public static GenericValue searchDuplicatedAncestor(String productId, String productIdKey, String bomType, Date inDate, GenericDelegator delegator) throws GenericEntityException {
-        return searchDuplicatedAncestor(productId, productIdKey, null, bomType, inDate, delegator);
+    public static GenericValue searchDuplicatedAncestor(String productId, String productIdKey, String bomType, Date inDate, GenericDelegator delegator, LocalDispatcher dispatcher) throws GenericEntityException {
+        return searchDuplicatedAncestor(productId, productIdKey, null, bomType, inDate, delegator, dispatcher);
     }
     
-    private static GenericValue searchDuplicatedAncestor(String productId, String productIdKey, ArrayList productIdKeys, String bomType, Date inDate, GenericDelegator delegator) throws GenericEntityException {
+    private static GenericValue searchDuplicatedAncestor(String productId, String productIdKey, ArrayList productIdKeys, String bomType, Date inDate, GenericDelegator delegator, LocalDispatcher dispatcher) throws GenericEntityException {
         // If the date is null, set it to today.
         if (inDate == null) inDate = new Date();
         if (productIdKeys == null) {
-            ItemConfigurationTree tree = new ItemConfigurationTree(productIdKey, bomType, inDate, delegator);
+            ItemConfigurationTree tree = new ItemConfigurationTree(productIdKey, bomType, inDate, delegator, dispatcher);
             productIdKeys = tree.getAllProductsId();
             productIdKeys.add(productIdKey);
         }
@@ -109,7 +111,7 @@ public class BOMHelper {
                     return oneNode;
                 }
             }
-            duplicatedNode = searchDuplicatedAncestor(oneNode.getString("productId"), productIdKey, productIdKeys, bomType, inDate, delegator);
+            duplicatedNode = searchDuplicatedAncestor(oneNode.getString("productId"), productIdKey, productIdKeys, bomType, inDate, delegator, dispatcher);
             if (duplicatedNode != null) {
                 break;
             }

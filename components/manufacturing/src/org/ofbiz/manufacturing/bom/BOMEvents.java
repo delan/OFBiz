@@ -1,5 +1,5 @@
 /*
- * $Id: BOMEvents.java,v 1.4 2004/02/17 11:27:39 jacopo Exp $
+ * $Id: BOMEvents.java,v 1.5 2004/04/17 07:44:14 jacopo Exp $
  *
  *  Copyright (c) 2001, 2002 The Open For Business Project - www.ofbiz.org
  *
@@ -38,6 +38,7 @@ import org.ofbiz.entity.GenericEntityException;
 import org.ofbiz.entity.GenericValue;
 import org.ofbiz.entity.util.EntityListIterator;
 import org.ofbiz.security.Security;
+import org.ofbiz.service.LocalDispatcher;
 
 /**
  * Product's Bill of Materials Related Events
@@ -57,6 +58,7 @@ public class BOMEvents {
     public static String updateProductBom(HttpServletRequest request, HttpServletResponse response) {
         String errMsg = "";
         GenericDelegator delegator = (GenericDelegator) request.getAttribute("delegator");
+        LocalDispatcher dispatcher = (LocalDispatcher) request.getAttribute("dispatcher");
         Security security = (Security) request.getAttribute("security");
 
         String updateMode = request.getParameter("UPDATE_MODE");
@@ -108,7 +110,7 @@ public class BOMEvents {
         // Will the new node create loops in the bill of materials tree?
         try {
             // FIXME: fromDate should be provided instead of null
-            GenericValue dupAncestor = BOMHelper.searchDuplicatedAncestor(productId, productIdTo, productAssocTypeId, null, delegator);
+            GenericValue dupAncestor = BOMHelper.searchDuplicatedAncestor(productId, productIdTo, productAssocTypeId, null, delegator, dispatcher);
             if (dupAncestor != null) {
                 errMsg += "<li>The link could cause conflicts because of the following link: " + dupAncestor.getString("productId") + " --> " + dupAncestor.getString("productIdTo");
             }
