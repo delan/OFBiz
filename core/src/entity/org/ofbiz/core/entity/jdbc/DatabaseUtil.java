@@ -715,6 +715,8 @@ public class DatabaseUtil {
             Debug.logWarning("Unable to get Driver name & version information", module);
         }
         
+        Debug.logInfo("Getting Table Info From Database");
+        
         //get ALL tables from this database
         TreeSet tableNames = new TreeSet();
         ResultSet tableSet = null;
@@ -852,6 +854,9 @@ public class DatabaseUtil {
             Debug.logWarning("Unable to get Driver name & version information", module);
         }
         */
+
+        Debug.logInfo("Getting Column Info From Database");
+        
         Map colInfo = new HashMap();
 
         try {
@@ -983,6 +988,9 @@ public class DatabaseUtil {
             Debug.logWarning("Unable to get Driver name & version information", module);
         }
         */
+
+        Debug.logInfo("Getting Foreign Key (Reference) Info From Database");
+        
         Map refInfo = new HashMap();
 
         try {
@@ -1116,6 +1124,9 @@ public class DatabaseUtil {
             }
             return null;
         }
+
+        Debug.logInfo("Getting Index Info From Database");
+        
         Map indexInfo = new HashMap();
 
         try {
@@ -1127,9 +1138,15 @@ public class DatabaseUtil {
                 //false for unique, we don't really use unique indexes
                 //true for approximate, don't really care if stats are up-to-date
                 String userName = dbData.supportsSchemasInTableDefinitions() ? dbData.getUserName() : null;
-                ResultSet rsCols = dbData.getIndexInfo(null, userName, curTableName, false, true);
+                
+                ResultSet rsCols = null;
+                try {
+                    rsCols = dbData.getIndexInfo(null, userName, curTableName, false, true);
+                } catch (Exception e) {
+                    Debug.logWarning(e, "Error getting index info for table: " + curTableName + " using userName " + userName);
+                }
 
-                while (rsCols.next()) {
+                while (rsCols != null && rsCols.next()) {
                     //NOTE: The code in this block may look funny, but it is designed so that the wrapping loop can be removed
                     try {
                         //skip all index info for statistics
@@ -1164,14 +1181,16 @@ public class DatabaseUtil {
                 }
 
                 //Debug.logInfo("There are " + totalIndices + " indices in the database");
-                try {
-                    rsCols.close();
-                } catch (SQLException sqle) {
-                    String message = "Unable to close ResultSet for fk reference list, continuing anyway... Error was:" + sqle.toString();
+                if (rsCols != null) {
+                    try {
+                        rsCols.close();
+                    } catch (SQLException sqle) {
+                        String message = "Unable to close ResultSet for fk reference list, continuing anyway... Error was:" + sqle.toString();
 
-                    Debug.logError(message, module);
-                    if (messages != null)
-                        messages.add(message);
+                        Debug.logError(message, module);
+                        if (messages != null)
+                            messages.add(message);
+                    }
                 }
             }
             Debug.logInfo("There are " + totalIndices + " indices in the database");
