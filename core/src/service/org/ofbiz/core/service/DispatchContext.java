@@ -65,8 +65,8 @@ public class DispatchContext implements Serializable {
 
     /** 
      * Creates new DispatchContext
-     *@param readers a collection of reader URLs
-     *@param loader the classloader to use for dispatched services
+     * @param readers a collection of reader URLs
+     * @param loader the classloader to use for dispatched services
      */
     public DispatchContext(String name, Collection readers, ClassLoader loader, LocalDispatcher dispatcher) {
         this.name = name;
@@ -90,8 +90,8 @@ public class DispatchContext implements Serializable {
 
     /** 
      * Returns the service attribute for the given name, or null if there is no attribute by that name.
-     *@param name a String specifying the name of the attribute
-     *@return an Object conatining the value of the attribute, or null if there is no attribute by that name.
+     * @param name a String specifying the name of the attribute
+     * @return an Object conatining the value of the attribute, or null if there is no attribute by that name.
      */
     public Object getAttribute(String name) {
         if (attributes.containsKey(name))
@@ -101,8 +101,8 @@ public class DispatchContext implements Serializable {
 
     /** 
      * Binds an object to a given attribute name in this context.
-     *@param name a String specifying the name of the attribute
-     *@param object an Object representing the attribute to be bound.
+     * @param name a String specifying the name of the attribute
+     * @param object an Object representing the attribute to be bound.
      */
     public void setAttribute(String name, Object object) {
         attributes.put(name, object);
@@ -110,7 +110,7 @@ public class DispatchContext implements Serializable {
 
     /** 
      * Gets the classloader of this context
-     *@return ClassLoader of the context
+     * @return ClassLoader of the context
      */
     public ClassLoader getClassLoader() {
         return this.loader;
@@ -118,7 +118,7 @@ public class DispatchContext implements Serializable {
 
     /** 
      * Gets the collection of readers associated with this context
-     *@return Collection of reader URLs
+     * @return Collection of reader URLs
      */
     public Collection getReaders() {
         return readers;
@@ -126,7 +126,7 @@ public class DispatchContext implements Serializable {
 
     /** 
      * Gets the name of the local dispatcher
-     *@return String name of the LocalDispatcher object
+     * @return String name of the LocalDispatcher object
      */
     public String getName() {
         return name;
@@ -134,10 +134,23 @@ public class DispatchContext implements Serializable {
 
     /** 
      * Gets the ModelService instance that corresponds to given the name
-     *@param serviceName Name of the service
-     *@return GenericServiceModel that corresponds to the serviceName
+     * @param serviceName Name of the service
+     * @return GenericServiceModel that corresponds to the serviceName
      */
     public ModelService getModelService(String serviceName) throws GenericServiceException {
+        ModelService retVal = getLocalModelService(serviceName);
+        if (retVal == null) {
+            retVal = getGlobalModelService(serviceName);
+        }
+        
+        if (retVal == null) {
+            throw new GenericServiceException("Cannot locate service by name (" + serviceName + ")");
+        }
+        
+        return retVal;                
+    }
+    
+    private ModelService getLocalModelService(String serviceName) throws GenericServiceException {
         Map serviceMap = (Map) modelService.get(name);
         if (serviceMap == null) {
             synchronized (this) {
@@ -149,20 +162,16 @@ public class DispatchContext implements Serializable {
                 }
             }
         }
-
+        
         ModelService retVal = null;
-        if (serviceMap != null)
-            retVal = (ModelService) serviceMap.get(serviceName);
-        if (retVal == null)
-            retVal = getGlobalModelService(serviceName);
-        if (retVal != null) {
-            if (retVal.interfaceCheck()) {
-                ModelService newModel = new ModelService(retVal);
-                newModel.interfaceUpdate(this);
-                return newModel;
+        if (serviceMap != null) {
+            retVal = (ModelService) serviceMap.get(serviceName); 
+            if (retVal != null && !retVal.inheritedParameters()) {
+                retVal.interfaceUpdate(this);     
             }
-        }      
-        return retVal;                
+        }
+        
+        return retVal;
     }
 
     private ModelService getGlobalModelService(String serviceName) throws GenericServiceException {
@@ -178,16 +187,20 @@ public class DispatchContext implements Serializable {
             }
         }
 
-        ModelService retVal = (ModelService) serviceMap.get(serviceName);
-
-        if (retVal == null)
-            throw new GenericServiceException("Cannot locate service by name (" + serviceName + ")");
+        ModelService retVal = null;
+        if (serviceMap != null) {
+            retVal = (ModelService) serviceMap.get(serviceName);
+            if (retVal != null && !retVal.inheritedParameters()) {
+                retVal.interfaceUpdate(this);
+            }
+        }
+        
         return retVal;
     }
 
     /** 
      * Gets the LocalDispatcher used with this context
-     *@return LocalDispatcher that was used to create this context
+     * @return LocalDispatcher that was used to create this context
      */
     public LocalDispatcher getDispatcher() {
         return this.dispatcher;
@@ -195,7 +208,7 @@ public class DispatchContext implements Serializable {
 
     /** 
      * Sets the LocalDispatcher used with this context
-     *@param dispatcher The LocalDispatcher to re-assign to this context
+     * @param dispatcher The LocalDispatcher to re-assign to this context
      */
     public void setDispatcher(LocalDispatcher dispatcher) {
         this.dispatcher = dispatcher;
@@ -203,7 +216,7 @@ public class DispatchContext implements Serializable {
 
     /** 
      * Gets the GenericDelegator associated with this context/dispatcher
-     *@return GenericDelegator associated with this context
+     * @return GenericDelegator associated with this context
      */
     public GenericDelegator getDelegator() {
         return dispatcher.getDelegator();
@@ -211,7 +224,7 @@ public class DispatchContext implements Serializable {
 
     /** 
      * Gets the Security object associated with this dispatcher
-     *@return Security object associated with this dispatcher
+     * @return Security object associated with this dispatcher
      */
     public Security getSecurity() {
         return dispatcher.getSecurity();

@@ -235,7 +235,8 @@ public class ModelServiceReader {
         return modelServices;
     }
 
-    /** Gets an Service object based on a definition from the specified XML Service descriptor file.
+    /** 
+     * Gets an Service object based on a definition from the specified XML Service descriptor file.
      * @param serviceName The serviceName of the Service definition to use.
      * @return An Service object describing the specified service of the specified descriptor file.
      */
@@ -248,7 +249,8 @@ public class ModelServiceReader {
             return null;
     }
 
-    /** Creates a Iterator with the serviceName of each Service defined in the specified XML Service Descriptor file.
+    /** 
+     * Creates a Iterator with the serviceName of each Service defined in the specified XML Service Descriptor file.
      * @return A Iterator of serviceName Strings
      */
     public Iterator getServiceNamesIterator() {
@@ -261,7 +263,8 @@ public class ModelServiceReader {
         }
     }
 
-    /** Creates a Collection with the serviceName of each Service defined in the specified XML Service Descriptor file.
+    /** 
+     * Creates a Collection with the serviceName of each Service defined in the specified XML Service Descriptor file.
      * @return A Collection of serviceName Strings
      */
     public Collection getServiceNames() {

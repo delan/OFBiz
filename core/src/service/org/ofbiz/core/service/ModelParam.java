@@ -65,6 +65,23 @@ public class ModelParam {
     
     /** Is this Parameter set internally? */
     public boolean internal = false;
+    
+    public ModelParam() {}
+    
+    public ModelParam(ModelParam param) {
+        this.name = param.name;
+        this.type = param.type;
+        this.mode = param.mode;
+        this.formLabel = param.formLabel;
+        this.entityName = param.entityName;
+        this.fieldName = param.fieldName;
+        this.stringMapPrefix = param.stringMapPrefix;
+        this.optional = param.optional;
+        this.overrideOptional = param.overrideOptional;
+        this.formDisplay = param.formDisplay;
+        this.overrideFormDisplay = param.overrideFormDisplay;
+        this.internal = param.internal;
+    }
         
     public String toString() {
         StringBuffer buf = new StringBuffer();
@@ -76,7 +93,9 @@ public class ModelParam {
         buf.append(fieldName + "::");
         buf.append(stringMapPrefix + "::");
         buf.append(optional + "::");
+        buf.append(overrideOptional + "::");
         buf.append(formDisplay + "::");
+        buf.append(overrideFormDisplay + "::");
         buf.append(internal);
         return buf.toString();
     }

@@ -133,13 +133,37 @@ public class ModelService {
         this.useTransaction = model.useTransaction || true;
         this.implServices = model.implServices;
         this.overrideParameters = model.overrideParameters;
+        this.inheritedParameters = model.inheritedParameters();
+        
         List modelParamList = model.getModelParamList();
         Iterator i = modelParamList.iterator();
-        while (i.hasNext()) 
-            this.addParam((ModelParam) i.next());        
-        this.inheritedParameters = model.inheritedParameters();
+        while (i.hasNext()) {        
+            this.addParamClone((ModelParam) i.next());
+        }                
     }
-
+    
+    public String toString() {
+        StringBuffer buf = new StringBuffer();
+        buf.append(name + "::");
+        buf.append(description + "::");
+        buf.append(engineName + "::");
+        buf.append(nameSpace + "::");
+        buf.append(location + "::");
+        buf.append(invoke + "::");
+        buf.append(defaultEntityName + "::");
+        buf.append(auth + "::");
+        buf.append(export + "::");
+        buf.append(validate + "::");
+        buf.append(useTransaction + "::");
+        buf.append(requireNewTransaction + "::");
+        buf.append(implServices + "::");
+        buf.append(overrideParameters + "::");
+        buf.append(contextInfo + "::");
+        buf.append(contextParamList + "::");
+        buf.append(inheritedParameters + "::");        
+        return buf.toString();
+    }
+    
     /**
      * Test if we have already inherited our interface parameters     * @return boolean     */
     public boolean inheritedParameters() {
@@ -160,8 +184,40 @@ public class ModelService {
      * then sorts by order if specified.
      */
     public void addParam(ModelParam param) {
-        contextInfo.put(param.name, param);
-        contextParamList.add(param);        
+        if (param != null) {        
+            contextInfo.put(param.name, param);
+            contextParamList.add(param);
+        }        
+    }
+        
+    private void copyParams(Collection params) {
+        if (params != null) {
+            Iterator i = params.iterator();
+            while (i.hasNext()) {
+                ModelParam param = (ModelParam) i.next();       
+                addParam(param);
+            }
+        }
+    }
+    
+    /**
+     * Adds a clone of a parameter definition to this service     
+     */
+    public void addParamClone(ModelParam param) {
+        if (param != null) {        
+            ModelParam newParam = new ModelParam(param);          
+            addParam(newParam);
+        }
+    }   
+    
+    private void copyParamsAndClone(Collection params) {        
+        if (params != null) {
+            Iterator i = params.iterator();
+            while (i.hasNext()) {            
+                ModelParam param = (ModelParam) i.next();
+                addParamClone(param);
+            }            
+        }        
     }
 
     public Set getAllParamNames() {        
@@ -212,12 +268,12 @@ public class ModelService {
         Map optionalInfo = new HashMap();
         boolean verboseOn = Debug.verboseOn();
 
-        if (verboseOn) Debug.logVerbose("[ModelService.validate] : Validating context - " + test, module);
+        if (verboseOn) Debug.logVerbose("[ModelService.validate] : {" + name + "} : Validating context - " + test, module);
 
         // do not validate results with errors
         if (mode.equals(OUT_PARAM) && test != null && test.containsKey(RESPONSE_MESSAGE) &&
             test.get(RESPONSE_MESSAGE).equals(RESPOND_ERROR)) {
-            if (verboseOn) Debug.logVerbose("[ModelService.validate] : response was an error, not validating.", module);
+            if (verboseOn) Debug.logVerbose("[ModelService.validate] : {" + name + "} : response was an error, not validating.", module);
             return;
         }
 
@@ -286,9 +342,9 @@ public class ModelService {
             }
             Debug.logVerbose("[ModelService.validate] : required fields - " + requiredNames, module);
             
-            Debug.logVerbose("[ModelService.validate] : (" + mode + ") Required - " +
+            Debug.logVerbose("[ModelService.validate] : {" + name + "} : (" + mode + ") Required - " +
                 requiredTest.size() + " / " + requiredInfo.size(), module);
-            Debug.logVerbose("[ModelService.validate] : (" + mode + ") Optional - " +
+            Debug.logVerbose("[ModelService.validate] : {" + name + "} : (" + mode + ") Optional - " +
                 optionalTest.size() + " / " + optionalInfo.size(), module);
         }
 
@@ -296,7 +352,7 @@ public class ModelService {
             validate(requiredInfo, requiredTest, true);
             validate(optionalInfo, optionalTest, false);
         } catch (ServiceValidationException e) {
-            Debug.logError("[ModelService.validate] : (" + mode + ") Required test error: " + e.toString(), module);
+            Debug.logError("[ModelService.validate] : {" + name + "} : (" + mode + ") Required test error: " + e.toString(), module);
             throw e;
         }
     }
@@ -512,23 +568,13 @@ public class ModelService {
         }
         return inList;
     }
-    
-    /**
-     * Check if we need to clone and implement interfaces
-     * @return boolean
-     */
-    public boolean interfaceCheck() {
-        if (engineName.equals("group") || implServices.size() > 0)
-            return true;
-        return false;
-    }
-    
+        
     /**
      * Run the interface update and inherit all interface parameters
      * @param dctx The DispatchContext to use for service lookups
      * @return ModelService object with inherited parameters
      */
-    public void interfaceUpdate(DispatchContext dctx) throws GenericServiceException {                       
+    public synchronized void interfaceUpdate(DispatchContext dctx) throws GenericServiceException {                       
         if (!inheritedParameters) {
             // services w/ engine 'group' auto-implement the grouped services
             if (this.engineName.equals("group") && implServices.size() == 0) {
@@ -538,38 +584,41 @@ public class ModelService {
                     Iterator i = groupedServices.iterator();
                     while (i.hasNext()) {
                         GroupServiceModel sm = (GroupServiceModel) i.next();
-                        implServices.add(sm.getName());
-                        if (Debug.verboseOn())
-                            Debug.logVerbose("Adding service [" + sm.getName() + "] as interface of: [" + this.name + "]", module);
+                        implServices.add(sm.getName());                        
+                        if (Debug.verboseOn()) Debug.logVerbose("Adding service [" + sm.getName() + "] as interface of: [" + this.name + "]", module);
                     }
                 }                
             }
-            if (implServices.size() > 0 && dctx != null) {                
-                Map newInfo = new HashMap();
-                List newParams = new LinkedList();               
+            if (implServices.size() > 0 && dctx != null) {                 
+                // backup the old info                 
+                List oldParams = this.contextParamList;
+                              
+                // reset the fields
+                this.contextInfo = new HashMap();
+                this.contextParamList = new LinkedList();
+                                              
                 Iterator implIter = implServices.iterator();
                 while (implIter.hasNext()) {
                     String serviceName = (String) implIter.next();
                     ModelService model = dctx.getModelService(serviceName);
-                    if (model != null) { 
-                        if (Debug.verboseOn())                       
-                            Debug.logVerbose("Adding contextInfo from [" + model.name + "] to [" + this.name + "]", module);
-                        newInfo.putAll(model.contextInfo);
-                        newParams.addAll(model.contextParamList);                        
+                    if (model != null) {                                                                                                                                             
+                        copyParamsAndClone(model.contextInfo.values());                                                                           
                     } else {
                         Debug.logWarning("Inherited model [" + serviceName + "] not found for [" + this.name + "]", module);
                     }
                 }
                 
-                // add in the non-override parameters                
-                newInfo.putAll(this.contextInfo);
-                newParams.addAll(this.contextParamList);
+                // put the old values back on top
+                copyParams(oldParams);                           
                   
                 // now loop through the override params and override any existing params                                                     
                 Iterator keySetIter = overrideParameters.iterator();
                 while (keySetIter.hasNext()) {                    
                     ModelParam overrideParam = (ModelParam) keySetIter.next();                    
-                    ModelParam existingParam = (ModelParam) newInfo.get(overrideParam.name);                  
+                    ModelParam existingParam = (ModelParam) contextInfo.get(overrideParam.name);
+                                                           
+                    // keep the list clean, remove it then add it back
+                    contextParamList.remove(existingParam);                  
                     
                     if (existingParam != null) {                                                
                         // now re-write the parameters
@@ -593,18 +642,16 @@ public class ModelService {
                         }
                         if (overrideParam.overrideOptional) {
                             existingParam.optional = overrideParam.optional;
-                        }
-                        newInfo.put(existingParam.name, existingParam);
-                        newParams.add(existingParam);
+                        }                        
+                        addParam(existingParam);                        
                     } else {
                         Debug.logWarning("Override param found but no parameter existing; ignoring: " + overrideParam.name, module);                   
                     }
-                }
-                              
-                // overwrite the variables
-                this.contextInfo = new HashMap(newInfo);
-                this.contextParamList = new LinkedList(newParams);            
+                }                                                       
             }
+            
+            // set the flag so we don't do this again
+            this.inheritedParameters = true;
         }
     }            
 }
