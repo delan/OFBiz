@@ -1,5 +1,5 @@
 /*
- * $Id: KeywordSearch.java,v 1.8 2003/11/07 19:09:29 jonesde Exp $
+ * $Id: KeywordSearch.java,v 1.9 2003/11/12 07:47:44 jonesde Exp $
  *
  *  Copyright (c) 2001 The Open For Business Project (www.ofbiz.org)
  *  Permission is hereby granted, free of charge, to any person obtaining a
@@ -27,13 +27,7 @@ import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Timestamp;
-import java.util.ArrayList;
-import java.util.Collection;
-import java.util.HashSet;
-import java.util.Iterator;
-import java.util.List;
-import java.util.Set;
-import java.util.StringTokenizer;
+import java.util.*;
 
 import org.ofbiz.base.util.*;
 import org.ofbiz.entity.GenericDelegator;
@@ -46,12 +40,27 @@ import org.ofbiz.entity.jdbc.ConnectionFactory;
  *  <br>Special thanks to Glen Thorne and the Weblogic Commerce Server for ideas.
  *
  * @author     <a href="mailto:jonesde@ofbiz.org">David E. Jones</a>
- * @version    $Revision: 1.8 $
+ * @version    $Revision: 1.9 $
  * @since      2.1
  */
 public class KeywordSearch {
 
     public static final String module = KeywordSearch.class.getName();
+
+    public static Set thesaurusRelsToInclude = new HashSet();
+    public static Set thesaurusRelsForReplace = new HashSet();
+
+    static {
+        thesaurusRelsToInclude.add("KWTR_UF");
+        thesaurusRelsToInclude.add("KWTR_USE");
+        thesaurusRelsToInclude.add("KWTR_CS");
+        thesaurusRelsToInclude.add("KWTR_NT");
+        thesaurusRelsToInclude.add("KWTR_BT");
+        thesaurusRelsToInclude.add("KWTR_RT");
+
+        thesaurusRelsForReplace.add("KWTR_USE");
+        thesaurusRelsForReplace.add("KWTR_CS");
+    }
 
     public static List makeKeywordList(String keywordsString) {
         StringTokenizer tokenizer = new StringTokenizer(keywordsString);
@@ -75,9 +84,12 @@ public class KeywordSearch {
             Iterator thesaurusIter = thesaurusList.iterator();
             while (thesaurusIter.hasNext()) {
                 GenericValue keywordThesaurus = (GenericValue) thesaurusIter.next();
-                addToList.add(keywordThesaurus.get("alternateKeyword"));
-                if ("Y".equals(keywordThesaurus.get("replaceEntered"))) {
-                    replaceEnteredKeyword = true;
+                String relationshipEnumId = (String) keywordThesaurus.get("relationshipEnumId");
+                if (thesaurusRelsToInclude.contains(relationshipEnumId)) {
+                    addToList.addAll(makeKeywordList(keywordThesaurus.getString("alternateKeyword")));
+                    if (thesaurusRelsForReplace.contains(relationshipEnumId)) {
+                        replaceEnteredKeyword = true;
+                    }
                 }
             }
         } catch (GenericEntityException e) {

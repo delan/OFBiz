@@ -26,7 +26,7 @@
  *
  * @author     David E. Jones (jonesde@ofbiz.org)
  * @author     Andy Zeneski (jaz@ofbiz.org)
- * @version    $Revision: 1.6 $
+ * @version    $Revision: 1.7 $
  */
 -->
 
@@ -240,11 +240,14 @@
 
     <entity entity-name="KeywordThesaurus"
             package-name="org.ofbiz.common.keyword">
-      <field name="enteredKeyword" type="short-varchar"></field>
-      <field name="alternateKeyword" type="short-varchar"></field>
-      <field name="replaceEntered" type="indicator"></field>
+      <field name="enteredKeyword" type="long-varchar"></field>
+      <field name="alternateKeyword" type="long-varchar"></field>
+      <field name="relationshipEnumId" type="id"></field>
       <prim-key field="enteredKeyword"/>
       <prim-key field="alternateKeyword"/>
+      <relation type="one" fk-name="KW_THRS_RLENM" title="Relationship" rel-entity-name="Enumeration">
+        <key-map field-name="relationshipEnumId" rel-field-name="enumId"/>
+      </relation>
     </entity>
 
   <!-- ========================================================= -->
