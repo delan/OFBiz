@@ -140,6 +140,7 @@
         pool-lifetime CDATA "600000"
         pool-deadlock-maxwait CDATA "300000"
         pool-deadlock-retrywait CDATA "10000"
+        pool-xa-wrapper-class CDATA "org.enhydra.jdbc.standard.StandardXADataSource"
     >
     <!ELEMENT jndi-jdbc EMPTY>
     <!ATTLIST jndi-jdbc

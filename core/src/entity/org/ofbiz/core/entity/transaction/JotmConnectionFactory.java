@@ -34,6 +34,7 @@ import org.enhydra.jdbc.standard.StandardXADataSource;
 import org.ofbiz.core.entity.GenericEntityException;
 import org.ofbiz.core.entity.TransactionFactory;
 import org.ofbiz.core.util.Debug;
+import org.ofbiz.core.util.ObjectType;
 import org.w3c.dom.Element;
 
 /**
@@ -61,14 +62,27 @@ public class JotmConnectionFactory {
             if (pds != null) {                           
                 return pds.getConnection();
             }
-              
-            StandardXADataSource ds;          
+            
+            // the xapool wrapper class
+            String wrapperClass = jotmJdbcElement.getAttribute("pool-xa-wrapper-class");
+            
+            StandardXADataSource ds = null;         
             try {            
-                ds =  new StandardXADataSource();
+                //ds =  new StandardXADataSource();                
+                ds = (StandardXADataSource) ObjectType.getInstance(wrapperClass);
                 pds = new StandardXAPoolDataSource();
             } catch (NoClassDefFoundError e) {                
                 throw new GenericEntityException("Cannot find xapool.jar");                       
+            } catch (ClassNotFoundException e) {
+                throw new GenericEntityException("Cannot load wrapper class: " + wrapperClass, e);                
+            } catch (InstantiationException e) {
+                throw new GenericEntityException("Unable to instantiate " + wrapperClass, e);                
+            } catch (IllegalAccessException e) {
+                throw new GenericEntityException("Problems getting instance of " + wrapperClass, e);                
             }
+            
+            if (ds == null)
+                throw new GenericEntityException("StandardXaDataSource was not created, big problem!");
             
             ds.setDriverName(jotmJdbcElement.getAttribute("jdbc-driver"));
             ds.setUrl(jotmJdbcElement.getAttribute("jdbc-uri"));
@@ -92,11 +106,12 @@ public class JotmConnectionFactory {
                 }                                            
             }
             
-            // set the datasource in the pool
+            // set the datasource in the pool            
             pds.setDataSource(ds);
             pds.setDescription(ds.getDescription());
             pds.setUser(ds.getUser());
             pds.setPassword(ds.getPassword());
+            Debug.logInfo("XADataSource: " + ds.getClass().getName() + " attached to pool.", module);
             
             // set the transaction manager in the pool
             pds.setTransactionManager(TransactionFactory.getTransactionManager());
