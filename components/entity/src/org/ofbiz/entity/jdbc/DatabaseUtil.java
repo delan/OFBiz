@@ -1,5 +1,5 @@
 /*
- * $Id: DatabaseUtil.java,v 1.12 2004/02/03 08:14:41 jonesde Exp $
+ * $Id: DatabaseUtil.java,v 1.13 2004/04/23 01:45:27 doogie Exp $
  *
  * Copyright (c) 2001, 2002 The Open For Business Project - www.ofbiz.org
  *
@@ -35,7 +35,7 @@ import org.ofbiz.entity.model.*;
  * Utilities for Entity Database Maintenance
  *
  * @author     <a href="mailto:jonesde@ofbiz.org">David E. Jones</a>
- * @version    $Revision: 1.12 $
+ * @version    $Revision: 1.13 $
  * @since      2.0
  */
 public class DatabaseUtil {
@@ -386,6 +386,10 @@ public class DatabaseUtil {
                         }
 
                         ModelEntity relModelEntity = (ModelEntity) modelEntities.get(modelRelation.getRelEntityName());
+                        if (relModelEntity == null) {
+                            Debug.logError("No such relation: " + entity.getEntityName() + " -> " + modelRelation.getRelEntityName(), module);
+                            continue;
+                        }
                         String relConstraintName = makeFkConstraintName(modelRelation, datasourceInfo.constraintNameClipLength);
                         ReferenceCheckInfo rcInfo = null;
 
