@@ -26,7 +26,7 @@
  *
  * @author     David E. Jones (jonesde@ofbiz.org)
  * @author     Andy Zeneski (jaz@ofbiz.org)
- * @version    $Revision: 1.2 $
+ * @version    $Revision: 1.3 $
  */
 -->
 
@@ -97,7 +97,7 @@
     </entity>
     <entity entity-name="EntitySyncRemove"
             package-name="org.ofbiz.entity.synchronization"
-            title="Entity Synchronization Remove Entity" no-auto-sync="true">
+            title="Entity Synchronization Remove Entity" no-auto-stamp="true">
       <field name="entitySyncRemoveId" type="id-ne"></field>
       <field name="removedTime" type="date-time"></field>
       <field name="removedTxTime" type="date-time"></field>
