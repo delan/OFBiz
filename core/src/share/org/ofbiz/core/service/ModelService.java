@@ -87,7 +87,7 @@ public class ModelService {
      * @param mode Test either mode IN or mode OUT
      * @return true if the validation is successful
      */
-    public boolean validate(Map test, String mode) {
+    public void validate(Map test, String mode) throws GenericServiceException {
         Map requiredInfo = new HashMap();
         Map optionalInfo = new HashMap();
         
@@ -128,15 +128,14 @@ public class ModelService {
         Debug.logInfo("[ModelService.validate] : (" + mode + ") Required - " + requiredInfo.size() + " / " + requiredTest.size());
         Debug.logInfo("[ModelService.validate] : (" + mode + ") Optional - " + optionalInfo.size() + " / " + optionalTest.size());
         
-        boolean testRequired = validate(requiredInfo,requiredTest,true);
-        boolean testOptional = validate(optionalInfo,optionalTest,false);
         
-        Debug.logInfo("[ModelService.validate] : (" + mode + ") Required test - " + testRequired);
-        Debug.logInfo("[ModelService.validate] : (" + mode + ") Optional test - " + testOptional);
-        
-        if ( testRequired && testOptional )
-            return true;
-        return false;
+        try {
+            validate(requiredInfo,requiredTest,true);
+            validate(optionalInfo,optionalTest,false);
+        } catch (GenericServiceException e) {
+            Debug.logError("[ModelService.validate] : (" + mode + ") Required test error: " + e.toString());
+            throw e;
+        }
     }
     
     
@@ -147,9 +146,9 @@ public class ModelService {
      * @param reverse Test the maps in reverse.
      * @returns true if validation is successful
      */
-    public static boolean validate(Map info, Map test, boolean reverse) {
+    public static void validate(Map info, Map test, boolean reverse) throws GenericServiceException {
         if ( info == null || test == null )
-            throw new RuntimeException("Cannot validate NULL maps");
+            throw new GenericServiceException("Cannot validate NULL maps");
         
         // * Validate keys first
         Set testSet = test.keySet();
@@ -157,7 +156,7 @@ public class ModelService {
         
         // Quick check for sizes
         if ( info.size() == 0 && test.size() == 0 )
-            return true;
+            return;
         // This is to see if the test set contains all from the info set (reverse)
         if ( reverse && !testSet.containsAll(keySet) ) {
             Set missing = new TreeSet(keySet);
@@ -171,8 +170,7 @@ public class ModelService {
                 }
             }
             
-            Debug.logError("[ModelService.validate] the following required parameters are missing: " + missingStr);
-            return false;
+            throw new GenericServiceException("The following required parameters are missing: " + missingStr);
         }
         // This is to see if the info set contains all from the test set
         if ( !keySet.containsAll(testSet) ) {
@@ -187,8 +185,7 @@ public class ModelService {
                 }
             }
             
-            Debug.logError("[ModelService.validate] unknown paramters found in context: " + extraStr);
-            return false;
+            throw new GenericServiceException("Unknown paramters found: " + extraStr);
         }
         
         // * Validate types next
@@ -204,34 +201,31 @@ public class ModelService {
             try {
                 infoClass = ObjectType.loadClass(infoType);
             } catch (SecurityException se1) {
-                throw new RuntimeException("Problems with classloader: sercurity exception");
+                throw new GenericServiceException("Problems with classloader: sercurity exception (" + se1.getMessage() + ")");
             } catch (ClassNotFoundException e1) {
                 try {
                     infoClass = ObjectType.loadClass(LANG_PACKAGE + infoType);
                 } catch (SecurityException se2) {
-                    throw new RuntimeException("Problems with classloader: sercurity exception");
+                    throw new GenericServiceException("Problems with classloader: sercurity exception (" + se2.getMessage() + ")");
                 } catch (ClassNotFoundException e2) {
                     try {
                         infoClass = ObjectType.loadClass(SQL_PACKAGE + infoType);
                     } catch (SecurityException se3) {
-                        throw new RuntimeException("Problems with classloader: sercurity exception");
+                        throw new GenericServiceException("Problems with classloader: sercurity exception (" + se3.getMessage() + ")");
                     } catch (ClassNotFoundException e3) {
-                        throw new RuntimeException("Cannot find and load the class of type: " + infoType + " or of type: " + LANG_PACKAGE + infoType + " or of type: " + SQL_PACKAGE + infoType);
+                        throw new GenericServiceException("Cannot find and load the class of type: " + infoType + " or of type: " + LANG_PACKAGE + infoType + " or of type: " + SQL_PACKAGE + infoType + ":  (" + e3.getMessage() + ")");
                     }
                 }
             }
             
             if (infoClass == null)
-                throw new RuntimeException("Illegal type found in info map (could not load class for specified type)");
+                throw new GenericServiceException("Illegal type found in info map (could not load class for specified type)");
             
             if (!ObjectType.instanceOf(testObject, infoClass)) {
                 String testType = testObject == null ? "null" : testObject.getClass().getName();
-                Debug.logError("[ModelService.validate] Type check failed for field " + key + "; expected type is " + infoType + "; actual type is: " + testType);
-                return false;
+                throw new GenericServiceException("Type check failed for field " + key + "; expected type is " + infoType + "; actual type is: " + testType);
             }
         }
-        
-        return true;
     }
     
     /**
@@ -281,5 +275,4 @@ public class ModelService {
         }
         return target;
     }
-    
 }
