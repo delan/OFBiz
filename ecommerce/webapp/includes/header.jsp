@@ -12,7 +12,7 @@
 <html>
 <head>
 
-<title>Open For Business: <%=pageName%></title>
+<title>Open For Commerce: <%=pageName%></title>
 
 <%-- <link rel="stylesheet" href="<%=controlPath + "/view/includes/maincss.css"%>" type="text/css"> --%>
 <link rel="stylesheet" href="/ecommerce/includes/maincss.css" type="text/css">
@@ -50,7 +50,8 @@ function mClk(src){
       <TABLE width='100%' cellpadding='0' cellspacing='0' border='0'>
         <TR>
           <TD align=left width='50%' >
-            <H1 style="margin:0;"><font color="white">&nbsp;Open&nbsp;For&nbsp;eCommerce</font></H1>
+            <H1 style="margin: 0;"><font color="white">Open&nbsp;For&nbsp;Commerce</font></H1>
+            <div style="FONT-SIZE: 8pt; margin: 0;"><font color="white">Part&nbsp;of&nbsp;the&nbsp;Open&nbsp;For&nbsp;Business&nbsp;Family&nbsp;of&nbsp;Open&nbsp;Source&nbsp;Software</font></div>
           </TD>
           <TD align=right width='50%'>
 <%@ include file="/cart/microcart.jsp"%>

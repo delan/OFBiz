@@ -5,7 +5,7 @@
 <table width="100%" border="0" bgcolor="black" cellpadding="4" cellspacing="1">
   <tr>
     <td align=center valign=center bgcolor='#678475' width='100%'>
-      <div class="boxhead">Product&nbsp;Browse</div>
+      <div class="boxhead">Catalog&nbsp;Browse</div>
     </td>
   </tr>
   <tr>

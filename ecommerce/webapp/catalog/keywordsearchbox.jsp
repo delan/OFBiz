@@ -1,7 +1,7 @@
 <table width='100%' border="0" bgcolor="black" cellpadding="4" cellspacing="1">
   <tr>
     <td bgcolor='#678475' align=center valign=center width='100%'>
-      <div class="boxhead">Product&nbsp;Search</div>
+      <div class="boxhead">Catalog&nbsp;Search</div>
     </td>
   </tr>
   <tr>
