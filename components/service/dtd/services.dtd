@@ -26,7 +26,7 @@
  *  THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
  *  Service Framework - Service Definition DTD
- *  $Id: services.dtd,v 1.4 2004/02/11 16:16:02 ajzeneski Exp $
+ *  $Id: services.dtd,v 1.5 2004/02/11 16:49:35 ajzeneski Exp $
 -->
 
 <!ELEMENT services (description?, vendor?, version?, created?, service+)>
@@ -50,21 +50,17 @@
 	transaction-timout CDATA #IMPLIED
 	debug (true|false) "false"
 >
-<!ELEMENT required-permissions (permission*, entity-permission*, role-member*)>
+<!ELEMENT required-permissions (check-permission*, check-role-member*)>
 <!ATTLIST required-permissions
     join-type (AND|OR) #REQUIRED
 >
-<!ELEMENT permission EMPTY>
-<!ATTLIST permission
-    name CDATA #REQUIRED
+<!ELEMENT check-permission EMPTY>
+<!ATTLIST check-permission
+    permission CDATA #REQUIRED
+    action CDATA #IMPLIED
 >
-<!ELEMENT entity-permission EMPTY>
-<!ATTLIST entity-permission
-    base-name CDATA #REQUIRED
-    action CDATA #REQUIRED
->
-<!ELEMENT role-member EMPTY>
-<!ATTLIST role-member
+<!ELEMENT check-role-member EMPTY>
+<!ATTLIST check-role-member
     role-type CDATA #REQUIRED
 >
 <!ELEMENT implements EMPTY>
