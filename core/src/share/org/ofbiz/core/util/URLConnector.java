@@ -39,11 +39,12 @@ public class URLConnector {
     private URL url = null;
     private boolean timedOut = false;
 
-    public URLConnector(URL url) {
+    protected URLConnector() {}
+    protected URLConnector(URL url) {
         this.url = url;
     }
     
-    public synchronized URLConnection openConnection(int timeout) throws IOException {       
+    protected synchronized URLConnection openConnection(int timeout) throws IOException {       
         Thread t = new Thread(new URLConnectorThread());
         t.start();
               
