@@ -1,5 +1,5 @@
 /*
- * $Id: ServiceDispatcher.java,v 1.3 2003/08/28 19:34:57 ajzeneski Exp $
+ * $Id: ServiceDispatcher.java,v 1.4 2003/09/03 20:55:01 ajzeneski Exp $
  *
  * Copyright (c) 2001, 2002 The Open For Business Project - www.ofbiz.org
  *
@@ -55,7 +55,7 @@ import org.ofbiz.service.job.JobManager;
  * Global Service Dispatcher
  *
  * @author     <a href="mailto:jaz@ofbiz.org">Andy Zeneski</a>
- * @version    $Revision: 1.3 $
+ * @version    $Revision: 1.4 $
  * @since      2.0
  */
 public class ServiceDispatcher {
@@ -308,14 +308,14 @@ public class ServiceDispatcher {
 
             checkDebug(service, 0, debugging);
             return result;
-        } catch (GenericServiceException e) {
+        } catch (Throwable t) {
             try {
                 TransactionUtil.rollback(beganTrans);
             } catch (GenericTransactionException te) {
                 Debug.logError(te, "Cannot rollback transaction", module);
             }
             checkDebug(service, 0, debugging);
-            throw e;
+            throw new GenericServiceException("Service Failed: " , t);
         }
     }
 
@@ -433,14 +433,14 @@ public class ServiceDispatcher {
             // pre-return ECA
             if (eventMap != null) ServiceEcaUtil.evalRules(service.name, eventMap, "return", ctx, context, null, false);
             checkDebug(service, 0, debugging);
-        } catch (GenericServiceException e) {
+        } catch (Throwable t) {
             try {
                 TransactionUtil.rollback(beganTrans);
             } catch (GenericTransactionException te) {
                 Debug.logError(te, "Cannot rollback transaction", module);
             }
             checkDebug(service, 0, debugging);
-            throw e;
+            throw new GenericServiceException("Service Failed: ", t);
         }
     }
 
