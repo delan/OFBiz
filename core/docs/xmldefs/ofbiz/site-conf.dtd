@@ -38,7 +38,6 @@
     name CDATA #REQUIRED
     type (view|request) "request"
     class CDATA #REQUIRED
-    pre-load (true|false) "false"
 >
 <!ELEMENT firstvisit (event*)>
 <!ELEMENT preprocessor (event*)>
