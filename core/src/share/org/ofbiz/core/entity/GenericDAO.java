@@ -34,7 +34,8 @@ import org.ofbiz.core.entity.model.*;
  * Generic Entity Data Access Object - Handles persisntence for any defined entity.
  *
  *@author     <a href="mailto:jonesde@ofbiz.org">David E. Jones</a>
- *@author     <a href='mailto:chris_maurer@altavista.com'>Chris Maurer</a>
+ *@author     <a href="mailto:chris_maurer@altavista.com">Chris Maurer</a>
+ *@author     <a href="mailto:jaz@zsolv.com">Andy Zeneski</a>
  *@created    Wed Aug 08 2001
  *@version    1.0
  */
@@ -242,6 +243,10 @@ public class GenericDAO {
         //no non-primaryKey fields, update doesn't make sense, so don't do it
         if (fieldsToSave.size() <= 0)
             return;
+
+        // if we have a STAMP_FIELD then update it with NOW.
+        if (modelEntity.isField(ModelEntity.STAMP_FIELD))
+            entity.set(ModelEntity.STAMP_FIELD, UtilDateTime.nowTimestamp());
 
         String sql = "UPDATE " + modelEntity.tableName + " SET " + modelEntity.colNameString(fieldsToSave, "=?, ", "=?") + " WHERE " +
                 makeWhereStringAnd(modelEntity.pks, entity);
@@ -1781,7 +1786,7 @@ public class GenericDAO {
             Debug.logWarning(sqle.getMessage());
             return false;
         }
-        finally { 
+        finally {
             try {
                 if (stmt != null)
                     stmt.close();
@@ -1847,7 +1852,7 @@ public class GenericDAO {
                     connection.close();
             } catch (SQLException sqle) {
             }
-        } 
+        }
         return true;
     }
 
