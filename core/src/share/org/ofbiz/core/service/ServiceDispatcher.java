@@ -192,11 +192,11 @@ public class ServiceDispatcher {
             String username = (String) context.get("login.username");
             if ( context.containsKey("login.password") ) {
                 String password = (String) context.get("login.password");
-                context.put("userLoginObject",getLoginObject(localName,username,password));
+                context.put("userLogin",getLoginObject(localName,username,password));
                 context.remove("login.password");
             }
             else
-                context.put("userLoginObject",getLoginObject(localName,username,null));
+                context.put("userLogin",getLoginObject(localName,username,null));
             context.remove("login.username");
         }
         return context;
@@ -220,8 +220,8 @@ public class ServiceDispatcher {
         Map result = engine.runSync(model,context);
         
         GenericValue value = null;
-        if ( result.containsKey("userLoginObject") && result.get("userLoginObject") != null )
-            value = (GenericValue) result.get("userLoginObject");
+        if ( result.containsKey("userLogin") && result.get("userLogin") != null )
+            value = (GenericValue) result.get("userLogin");
         
         return value;
     }
