@@ -158,13 +158,14 @@ public class RecurrenceInfo {
     }
     
     /** Returns the first recurrence. */
-    public long first()  {        
+    public long first()  {
         return startDate.getTime();
-        // TODO: Get the recurrence of a special byXXX case.
+        // First recurrence is always the start time
     }
     
-    /** Returns the last recurrence. */
+    /** Returns the estimated last recurrence. */
     public long last()  {
+        // TODO: find the last recurrence.
         return 0;
     }
     
@@ -178,37 +179,55 @@ public class RecurrenceInfo {
         // Check for the first recurrence (StartTime is always the first recurrence)
         if ( getCurrentCount() == 0 || fromTime == 0 || fromTime == startDate.getTime() )
             return first();
-                      
+        
         // Check the rules and date list
         if ( rDateList == null && rRulesList == null )
             return 0;
-                        
-        Date fromDate = new Date(fromTime);
-        Date now = new Date();
-        Date next = null;
-        
+                
+        long nextRuleTime = fromTime;
+        boolean hasNext = true;
+                
         // Get the next recurrence from the rule(s).
-        long nextTime = 0;
         Iterator rulesIterator = getRecurrenceRuleIterator();
-        while ( rulesIterator.hasNext() && nextTime == 0 ) {            
-            RecurrenceRule rule = (RecurrenceRule) rulesIterator.next();
-            nextTime = rule.next(getStartTime(), fromTime, getCurrentCount());
+        while ( rulesIterator.hasNext() ) {
+            RecurrenceRule rule = (RecurrenceRule) rulesIterator.next();                
+            while ( hasNext ) {
+                nextRuleTime = getNextTime(rule,nextRuleTime);  // Gets the next recurrence time from the rule.
+                if ( nextRuleTime == 0 || isValid(nextRuleTime) )   // Tests the next recurrence against the exception rules.
+                    hasNext = false;                                
+            }
+        }                         
+        return nextRuleTime;
+    }
+    
+    private long getNextTime(RecurrenceRule rule, long fromTime) {
+        long nextTime = rule.next(getStartTime(), fromTime, getCurrentCount());
+        return checkDateList(rDateList,nextTime,fromTime);
+    }
+    
+    private long checkDateList(List dateList, long time, long fromTime) {
+        long nextTime = time;
+        if ( dateList != null && dateList.size() > 0 ) {
+            Iterator dateIterator = dateList.iterator();
+            while ( dateIterator.hasNext() ) {
+                Date thisDate = (Date) dateIterator.next();
+                if ( nextTime > 0 && thisDate.getTime() < nextTime && thisDate.getTime() > fromTime )
+                    nextTime = thisDate.getTime();
+                else if ( nextTime == 0 && thisDate.getTime() > fromTime )
+                    nextTime = thisDate.getTime();
+            }
         }
-        // Loop through the date list to find an earlier time
-        Iterator dateIterator = getRecurrenceDateIterator();
-        while ( dateIterator.hasNext() ) {
-            Date thisDate = (Date) dateIterator.next();
-            if ( thisDate.getTime() < nextTime && thisDate.getTime() > fromTime )
-                nextTime = thisDate.getTime();
-        }
-        // Check the exception rule(s) and dates
+        return nextTime;
+    }
+    
+    private boolean isValid(long time) {
         Iterator exceptRulesIterator = getExceptionRuleIterator();
         while ( exceptRulesIterator.hasNext() ) {
             RecurrenceRule except = (RecurrenceRule) exceptRulesIterator.next();
-            if ( except.isValid(getStartTime(),nextTime) || eDateList.contains(new Date(nextTime)) )
-                nextTime = 0;
+            if ( except.isValid(getStartTime(),time) || eDateList.contains(new Date(time)) )
+                return false;
         }
-        
-        return nextTime;
+        return true;
     }
+    
 }

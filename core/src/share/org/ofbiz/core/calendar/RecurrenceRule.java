@@ -213,10 +213,23 @@ public class RecurrenceRule {
         if ( currentCount > getCount() )        
             return 0;
         
-        // Get the next run time by frequency.
-        Date nextRun = getNextFreq(startTime,fromTime);        
+        boolean isSeeking = true;
+        long nextRuntime = 0;     
+        long seekTime = fromTime;
+        int loopProtection = 0;
+        int maxLoop = (10*10*10*10*10);
         
-        return nextRun.getTime();
+        while ( isSeeking && loopProtection < maxLoop ) {            
+            Date nextRun = getNextFreq(startTime,seekTime);              
+            seekTime = nextRun.getTime();
+            if ( validByRule(nextRun) ) {
+                isSeeking = false;
+                nextRuntime = nextRun.getTime();
+            }
+            loopProtection++;
+        }   
+        Debug.logInfo("[RecurrenceRule.next] : Loop protection - " + loopProtection);        
+        return nextRuntime;
     }
     
     /** Tests the date to see if it falls within the rules
