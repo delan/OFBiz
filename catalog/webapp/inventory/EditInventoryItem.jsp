@@ -121,9 +121,9 @@
   </tr>
 <%}%>
       <tr>
-        <td width="26%" align=right><div class="tabletext">InventoryItem Type Id</div></td>
+        <td align=right><div class="tabletext">InventoryItem Type Id</div></td>
         <td>&nbsp;</td>
-        <td width="74%">
+        <td>
           <%-- <input type="text" name="<%=paramName%>" value="<%=UtilFormatOut.checkNull(tryEntity?inventoryItem.getString(fieldName):request.getParameter(paramName))%>" size="20" maxlength="20"> --%>
           <select name="inventoryItemTypeId" size=1>
             <option selected value='<ofbiz:inputvalue entityAttr="inventoryItemType" field="inventoryItemTypeId"/>'><ofbiz:inputvalue entityAttr="inventoryItemType" field="description"/> <%--<ofbiz:entityfield attribute="inventoryItemType" field="inventoryItemTypeId" prefix="[" suffix="]"/>--%></option>
@@ -135,9 +135,9 @@
         </td>
       </tr>
       <tr>
-        <td width="26%" align=right><div class="tabletext">Product Id</div></td>
+        <td align=right><div class="tabletext">Product Id</div></td>
         <td>&nbsp;</td>
-        <td width="74%">
+        <td>
             <input type="text" <ofbiz:inputvalue entityAttr="inventoryItem" field="productId" fullattrs="true" tryEntityAttr="tryEntity"/> size="20" maxlength="20">
             <%if (inventoryItem != null && UtilValidate.isNotEmpty(inventoryItem.getString("productId"))) {%>
                 <a href='<ofbiz:url>/EditProduct?productId=<ofbiz:inputvalue entityAttr="inventoryItem" field="productId"/></ofbiz:url>' class='buttontext'>[Edit&nbsp;Product&nbsp;<ofbiz:inputvalue entityAttr="inventoryItem" field="productId"/>]</a>
@@ -145,14 +145,14 @@
         </td>
       </tr>
       <tr>
-        <td width="26%" align=right><div class="tabletext">Party Id</div></td>
+        <td align=right><div class="tabletext">Party Id</div></td>
         <td>&nbsp;</td>
-        <td width="74%"><input type="text" <ofbiz:inputvalue entityAttr="inventoryItem" field="partyId" fullattrs="true" tryEntityAttr="tryEntity"/> size="20" maxlength="20"></td>
+        <td><input type="text" <ofbiz:inputvalue entityAttr="inventoryItem" field="partyId" fullattrs="true" tryEntityAttr="tryEntity"/> size="20" maxlength="20"></td>
       </tr>
       <tr>
-        <td width="26%" align=right><div class="tabletext">Status</div></td>
+        <td align=right><div class="tabletext">Status</div></td>
         <td>&nbsp;</td>
-        <td width="74%">
+        <td>
            <select name="statusId">
              <option value='<ofbiz:inputvalue entityAttr="inventoryItem" field="statusId"/>'><ofbiz:inputvalue entityAttr="inventoryItem" field="statusId"/></option>
              <option value='<ofbiz:inputvalue entityAttr="inventoryItem" field="statusId"/>'>----</option>
@@ -163,19 +163,19 @@
          </td>
        </tr>
       <tr>
-        <td width="26%" align=right><div class="tabletext">Date Received</div></td>
+        <td align=right><div class="tabletext">Date Received</div></td>
         <td>&nbsp;</td>
-        <td width="74%"><input type="text" size="22" <ofbiz:inputvalue entityAttr="inventoryItem" field="dateReceived" fullattrs="true"/>></td>
+        <td><input type="text" size="22" <ofbiz:inputvalue entityAttr="inventoryItem" field="dateReceived" fullattrs="true"/>></td>
       </tr>
       <tr>
-        <td width="26%" align=right><div class="tabletext">Expire Date</div></td>
+        <td align=right><div class="tabletext">Expire Date</div></td>
         <td>&nbsp;</td>
-        <td width="74%"><input type="text" size="22" <ofbiz:inputvalue entityAttr="inventoryItem" field="expireDate" fullattrs="true"/>></td>
+        <td><input type="text" size="22" <ofbiz:inputvalue entityAttr="inventoryItem" field="expireDate" fullattrs="true"/>></td>
       </tr>
       <tr>
-        <td width="26%" align=right><div class="tabletext">Facility/Container</div></td>
+        <td align=right><div class="tabletext">Facility/Container</div></td>
         <td>&nbsp;</td>
-        <td width="74%">
+        <td>
             Select a Facility:
             <select name="facilityId">
               <%if (inventoryItem == null && UtilValidate.isNotEmpty(request.getParameter("facilityId"))) {%>
@@ -197,45 +197,45 @@
          </td>
        </tr>
       <tr>
-        <td width="26%" align=right><div class="tabletext">Lot Id</div></td>
+        <td align=right><div class="tabletext">Lot Id</div></td>
         <td>&nbsp;</td>
-        <td width="74%"><input type="text" <ofbiz:inputvalue entityAttr="inventoryItem" field="lotId" fullattrs="true"/> size="20" maxlength="20"></td>
+        <td><input type="text" <ofbiz:inputvalue entityAttr="inventoryItem" field="lotId" fullattrs="true"/> size="20" maxlength="20"></td>
       </tr>
       <tr>
-        <td width="26%" align=right><div class="tabletext">Uom Id</div></td>
+        <td align=right><div class="tabletext">Uom Id</div></td>
         <td>&nbsp;</td>
-        <td width="74%"><input type="text" <ofbiz:inputvalue entityAttr="inventoryItem" field="uomId" fullattrs="true"/> size="20" maxlength="20"></td>
+        <td><input type="text" <ofbiz:inputvalue entityAttr="inventoryItem" field="uomId" fullattrs="true"/> size="20" maxlength="20"></td>
       </tr>
       <tr>
-        <td width="26%" align=right><div class="tabletext">Bin Number</div></td>
+        <td align=right><div class="tabletext">Bin Number</div></td>
         <td>&nbsp;</td>
-        <td width="74%"><input type="text" <ofbiz:inputvalue entityAttr="inventoryItem" field="binNumber" fullattrs="true"/> size="20" maxlength="20"></td>
+        <td><input type="text" <ofbiz:inputvalue entityAttr="inventoryItem" field="binNumber" fullattrs="true"/> size="20" maxlength="20"></td>
       </tr>
       <tr>
-        <td width="26%" align=right><div class="tabletext">Comments</div></td>
+        <td align=right><div class="tabletext">Comments</div></td>
         <td>&nbsp;</td>
-        <td width="74%"><input type="text" <ofbiz:inputvalue entityAttr="inventoryItem" field="comments" fullattrs="true"/> size="60" maxlength="250"></td>
+        <td><input type="text" <ofbiz:inputvalue entityAttr="inventoryItem" field="comments" fullattrs="true"/> size="60" maxlength="250"></td>
       </tr>
     <%if (inventoryItem != null && "NON_SERIAL_INV_ITEM".equals(inventoryItem.getString("inventoryItemTypeId"))) {%>
       <tr>
-        <td width="26%" align=right><div class="tabletext">Available To Promise / Quantity On Hand</div></td>
+        <td align=right><div class="tabletext">Available To Promise / Quantity On Hand</div></td>
         <td>&nbsp;</td>
-        <td width="74%">
+        <td>
             <input type=text size='5' <ofbiz:inputvalue entityAttr="inventoryItem" field="availableToPromise" fullattrs="true"/>>
             / <input type=text size='5' <ofbiz:inputvalue entityAttr="inventoryItem" field="quantityOnHand" fullattrs="true"/>>
         </td>
       </tr>
     <%} else if (inventoryItem != null && "SERIALIZED_INV_ITEM".equals(inventoryItem.getString("inventoryItemTypeId"))) {%>
       <tr>
-        <td width="26%" align=right><div class="tabletext">Serial Number</div></td>
+        <td align=right><div class="tabletext">Serial Number</div></td>
         <td>&nbsp;</td>
-        <td width="74%"><input type="text" <ofbiz:inputvalue entityAttr="inventoryItem" field="serialNumber" fullattrs="true"/> size="30" maxlength="60"></td>
+        <td><input type="text" <ofbiz:inputvalue entityAttr="inventoryItem" field="serialNumber" fullattrs="true"/> size="30" maxlength="60"></td>
       </tr>
     <%} else if (inventoryItem != null) {%>
       <tr>
-        <td width="26%" align=right><div class="tabletext">Serial#/ATP/QOH</div></td>
+        <td align=right><div class="tabletext">Serial#/ATP/QOH</div></td>
         <td>&nbsp;</td>
-        <td width="74%"><div class='tabletext' style='color: red;'>Error: type <ofbiz:entityfield attribute="inventoryItem" field="inventoryItemTypeId"/> unknown; specify a type.</div></td>
+        <td><div class='tabletext' style='color: red;'>Error: type <ofbiz:entityfield attribute="inventoryItem" field="inventoryItemTypeId"/> unknown; specify a type.</div></td>
       </tr>
     <%}%>
 
