@@ -36,6 +36,13 @@
         <attribute name="fatal" type="Boolean" mode="IN" optional="true"/>
     </service>
 
+    <service name="displayXaDebugInfo" engine="java"
+            location="org.ofbiz.common.CommonServices" invoke="displayXaDebugInfo" auth="true">
+        <required-permissions join-type="AND">
+            <check-permission permission="SERVICE_INVOKE_ANY"/>
+        </required-permissions>
+    </service>
+
     <!-- DataSource Services -->
     <service name="interfaceDataSource" engine="interface" location="" invoke="">
         <attribute name="dataSourceId" type="String" mode="IN" optional="false"/>

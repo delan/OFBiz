@@ -1,5 +1,5 @@
 /*
- * $Id: CommonServices.java,v 1.10 2004/05/07 15:48:50 ajzeneski Exp $
+ * $Id: CommonServices.java,v 1.11 2004/05/25 06:45:35 ajzeneski Exp $
  *
  * Copyright (c) 2001, 2002 The Open For Business Project - www.ofbiz.org
  *
@@ -35,6 +35,7 @@ import org.ofbiz.base.util.UtilMisc;
 import org.ofbiz.entity.GenericDelegator;
 import org.ofbiz.entity.GenericEntityException;
 import org.ofbiz.entity.GenericValue;
+import org.ofbiz.entity.transaction.TransactionUtil;
 import org.ofbiz.entity.model.ModelEntity;
 import org.ofbiz.service.DispatchContext;
 import org.ofbiz.service.ModelService;
@@ -45,7 +46,7 @@ import org.ofbiz.service.ServiceXaWrapper;
  * Common Services
  *
  * @author     <a href="mailto:jaz@ofbiz.org">Andy Zeneski</a>
- * @version    $Revision: 1.10 $
+ * @version    $Revision: 1.11 $
  * @since      2.0
  */
 public class CommonServices {
@@ -306,6 +307,20 @@ public class CommonServices {
             } catch (GenericEntityException e) {
                 Debug.logError(e, module);
             }
+        }
+
+        return ServiceUtil.returnSuccess();
+    }
+
+    public static Map displayXaDebugInfo(DispatchContext dctx, Map context) {
+        if (TransactionUtil.debugResources) {
+            if (TransactionUtil.debugResMap != null && TransactionUtil.debugResMap.size() > 0) {
+                TransactionUtil.logRunningTx();
+            } else {
+                Debug.log("No running transaction to display.", module);
+            }
+        } else {
+            Debug.log("Debug resources is disabled.", module);
         }
 
         return ServiceUtil.returnSuccess();
