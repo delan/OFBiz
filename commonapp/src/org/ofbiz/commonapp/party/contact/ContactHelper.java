@@ -1,6 +1,9 @@
 /*
  * $Id$
  * $Log$
+ * Revision 1.1  2001/09/12 17:14:33  epabst
+ * added helpers
+ *
  */
 package org.ofbiz.commonapp.party.contact;
 
@@ -50,5 +53,16 @@ public class ContactHelper {
             }//else old and includeOld is false
         }
         return result;
+    }
+    
+    public static String formatCreditCard(GenericValue creditCardInfo) {
+        StringBuffer result = new StringBuffer(16);
+        result.append(creditCardInfo.getString("cardType"));
+        String cardNumber = creditCardInfo.getString("cardNumber");
+        if(cardNumber != null && cardNumber.length() > 4) {
+            result.append(' ').append(cardNumber.substring(cardNumber.length()-4));
+        }
+        result.append(' ').append(creditCardInfo.getString("expireDate"));
+        return result.toString();
     }
 }
