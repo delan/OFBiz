@@ -80,17 +80,21 @@
 <ofbiz:iterator name="webSiteCatalog" property="webSiteCatalogs">
   <%GenericValue webSite = webSiteCatalog.getRelatedOne("WebSite");%>
   <tr valign="middle">
-    <td><%--<a href='<ofbiz:url>/EditWebSite?webSiteId=<ofbiz:inputvalue entityAttr="webSiteCatalog" field="webSiteId"/></ofbiz:url>' class="buttontext">--%><ofbiz:inputvalue entityAttr="webSiteCatalog" field="webSiteId"/><%--</a>--%></td>
-    <td><%if (webSite!=null) {%><%--<a href='<ofbiz:url>/EditWebSite?webSiteId=<ofbiz:inputvalue entityAttr="webSiteCatalog" field="webSiteId"/></ofbiz:url>' class="buttontext">--%><%=webSite.getString("siteName")%><%--</a>--%><%}%>&nbsp;</td>
-    <td><div class='tabletext'><ofbiz:inputvalue entityAttr="webSiteCatalog" field="fromDate"/></div></td>
+    <td><%--<a href='<ofbiz:url>/EditWebSite?webSiteId=<ofbiz:inputvalue entityAttr="webSiteCatalog" field="webSiteId"/></ofbiz:url>' class="buttontext">--%><div class='tabletext'><ofbiz:inputvalue entityAttr="webSiteCatalog" field="webSiteId"/></div><%--</a>--%></td>
+    <td><%if (webSite!=null) {%><%--<a href='<ofbiz:url>/EditWebSite?webSiteId=<ofbiz:inputvalue entityAttr="webSiteCatalog" field="webSiteId"/></ofbiz:url>' class="buttontext">--%><div class='tabletext'><%=webSite.getString("siteName")%></div><%--</a>&nbsp;--%><%}%></td>
+    <%boolean hasntStarted = false;%>
+    <%if (webSiteCatalog.getTimestamp("fromDate") != null && UtilDateTime.nowTimestamp().before(webSiteCatalog.getTimestamp("fromDate"))) { hasntStarted = true; }%>
+    <td><div class='tabletext'<%if (hasntStarted) {%> style='color: red;'<%}%>><ofbiz:inputvalue entityAttr="webSiteCatalog" field="fromDate"/></div></td>
     <td align="center">
+        <%boolean hasExpired = false;%>
+        <%if (webSiteCatalog.getTimestamp("thruDate") != null && UtilDateTime.nowTimestamp().after(webSiteCatalog.getTimestamp("thruDate"))) { hasExpired = true; }%>
         <FORM method=POST action='<ofbiz:url>/updateProdCatalogToWebSite</ofbiz:url>'>
             <input type=hidden <ofbiz:inputvalue entityAttr="webSiteCatalog" field="prodCatalogId" fullattrs="true"/>>
             <input type=hidden <ofbiz:inputvalue entityAttr="webSiteCatalog" field="webSiteId" fullattrs="true"/>>
             <input type=hidden <ofbiz:inputvalue entityAttr="webSiteCatalog" field="fromDate" fullattrs="true"/>>
-            <input type=text size='20' <ofbiz:inputvalue entityAttr="webSiteCatalog" field="thruDate" fullattrs="true"/>>
-            <input type=text size='5' <ofbiz:inputvalue entityAttr="webSiteCatalog" field="sequenceNum" fullattrs="true"/>>
-            <INPUT type=submit value='Update'>
+            <input type=text size='20' <ofbiz:inputvalue entityAttr="webSiteCatalog" field="thruDate" fullattrs="true"/> style='font-size: x-small; <%if (hasExpired) {%>color: red;<%}%>'>
+            <input type=text size='5' <ofbiz:inputvalue entityAttr="webSiteCatalog" field="sequenceNum" fullattrs="true"/> style='font-size: x-small;'>
+            <INPUT type=submit value='Update' style='font-size: x-small;'>
         </FORM>
     </td>
     <td align="center">

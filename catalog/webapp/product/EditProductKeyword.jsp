@@ -76,7 +76,7 @@
           </TD>
           <TD align=right>
             <a href="<ofbiz:url>/EditProduct?productId=<%=productId%></ofbiz:url>" class="lightbuttontext">[Edit Product]</a>
-          </TD>
+          </td>
         </tr>
       </table>
     </TD>
@@ -86,12 +86,12 @@
       <table width='100%' border='0' cellspacing='0' cellpadding='0' class='boxbottom'>
         <tr>
           <td>
-      <form method="POST" action="<ofbiz:url>/UpdateProductKeyword</ofbiz:url>" style='margin: 0;'>
-        <input type="hidden" name="UPDATE_MODE" value="CREATE">
-        <input type="hidden" name="PRODUCT_ID" value="<%=productId%>">
-        <input type="text" size="20" name="KEYWORD" value="">
-        <input type="submit" value="Add">
-      </form>
+              <form method="POST" action="<ofbiz:url>/UpdateProductKeyword</ofbiz:url>" style='margin: 0;'>
+                <input type="hidden" name="UPDATE_MODE" value="CREATE">
+                <input type="hidden" name="PRODUCT_ID" value="<%=productId%>">
+                <input type="text" size="20" name="KEYWORD" value="" style='font-size: x-small;'>
+                <input type="submit" value="Add" style='font-size: x-small;'>
+              </form>
           </td>
         </tr>
       </table>
@@ -158,40 +158,7 @@
     </TD>
   </TR>
 </TABLE>
-<BR>
 
-<TABLE border=0 width='100%' cellspacing='0' cellpadding='0' class='boxoutside'>
-  <TR>
-    <TD width='100%'>
-      <table width='100%' border='0' cellspacing='0' cellpadding='0' class='boxtop'>
-        <tr>
-          <TD align=left>
-            <DIV class='boxhead'>Add product-keyword (enter keyword):</DIV>
-          </TD>
-          <TD align=right>
-            <a href="<ofbiz:url>/EditProduct?productId=<%=productId%></ofbiz:url>" class="lightbuttontext">[Edit Product]</a>
-          </td>
-        </tr>
-      </table>
-    </TD>
-  </TR>
-  <TR>
-    <TD width='100%'>
-      <table width='100%' border='0' cellspacing='0' cellpadding='0' class='boxbottom'>
-        <tr>
-          <td>
-              <form method="POST" action="<ofbiz:url>/UpdateProductKeyword</ofbiz:url>" style='margin: 0;'>
-                <input type="hidden" name="UPDATE_MODE" value="CREATE">
-                <input type="hidden" name="PRODUCT_ID" value="<%=productId%>">
-                <input type="text" size="20" name="KEYWORD" value="">
-                <input type="submit" value="Add">
-              </form>
-          </td>
-        </tr>
-      </table>
-    </TD>
-  </TR>
-</TABLE>
 <%}else{%>
   <div class='head2'>Product not found with Product ID "<%=productId%>"</div>
 <%}%>

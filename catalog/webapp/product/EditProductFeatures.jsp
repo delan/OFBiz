@@ -82,8 +82,8 @@
 <table border="1" cellpadding='2' cellspacing='0'>
   <tr>
     <td><div class="tabletext"><b>Description</b></div></td>
-    <td><div class="tabletext"><b>Feature&nbsp;Type</b></div></td>
-    <td><div class="tabletext"><b>Feature&nbsp;Category</b></div></td>
+    <td><div class="tabletext"><b>Type</b></div></td>
+    <td><div class="tabletext"><b>Category</b></div></td>
     <td><div class="tabletext"><b>From&nbsp;Date</b></div></td>
     <td><div class="tabletext"><b>Thru&nbsp;Date, Sequence, Application&nbsp;Type</b></div></td>
     <td><div class="tabletext">&nbsp;</div></td>
@@ -102,11 +102,15 @@
     <td><a href='<ofbiz:url>/EditFeatureCategoryFeatures?productFeatureCategoryId=<ofbiz:entityfield attribute="productFeatureAndAppl" field="productFeatureCategoryId"/>&productId=<ofbiz:entityfield attribute="productFeatureAndAppl" field="productId"/></ofbiz:url>' class='buttontext'>
         <ofbiz:entityfield attribute="curProductFeatureCategory" field="description"/>
         [<ofbiz:entityfield attribute="productFeatureAndAppl" field="productFeatureCategoryId"/>]</a></td>
-    <td><div class='tabletext'><ofbiz:inputvalue entityAttr="productFeatureAndAppl" field="fromDate"/></div></td>
+    <%boolean hasntStarted = false;%>
+    <%if (productFeatureAndAppl.getTimestamp("fromDate") != null && UtilDateTime.nowTimestamp().before(productFeatureAndAppl.getTimestamp("fromDate"))) { hasntStarted = true; }%>
+    <td><div class='tabletext'<%if (hasntStarted) {%> style='color: red;'<%}%>><ofbiz:inputvalue entityAttr="productFeatureAndAppl" field="fromDate"/></div></td>
     <td>
-        <input type=text size='18' <ofbiz:inputvalue entityAttr="productFeatureAndAppl" field="thruDate" fullattrs="true"/>>
-        <input type=text size='5' <ofbiz:inputvalue entityAttr="productFeatureAndAppl" field="sequenceNum" fullattrs="true"/>>
-      <select name='productFeatureApplTypeId' size=1>
+        <%boolean hasExpired = false;%>
+        <%if (productFeatureAndAppl.getTimestamp("thruDate") != null && UtilDateTime.nowTimestamp().after(productFeatureAndAppl.getTimestamp("thruDate"))) { hasExpired = true; }%>
+        <input type=text size='22' <ofbiz:inputvalue entityAttr="productFeatureAndAppl" field="thruDate" fullattrs="true"/> style='font-size: x-small; <%if (hasExpired) {%>color: red;<%}%>'>
+        <input type=text size='5' <ofbiz:inputvalue entityAttr="productFeatureAndAppl" field="sequenceNum" fullattrs="true"/> style='font-size: x-small;'>
+      <select name='productFeatureApplTypeId' size=1 style='font-size: x-small;'>
         <%if (productFeatureAndAppl.get("productFeatureApplTypeId") != null) {%>
           <option value='<%=productFeatureAndAppl.getString("productFeatureApplTypeId")%>'><%if (curProductFeatureApplType != null) {%><%=UtilFormatOut.checkNull(curProductFeatureApplType.getString("description"))%><%} else {%> [<%=productFeatureAndAppl.getString("productFeatureApplTypeId")%>]<%}%></option>
           <option value='<%=productFeatureAndAppl.getString("productFeatureApplTypeId")%>'>---</option>
@@ -115,7 +119,7 @@
           <option value='<%=productFeatureApplType.getString("productFeatureApplTypeId")%>'><%=productFeatureApplType.getString("description")%> <%--[<%=productFeatureApplType.getString("productFeatureApplTypeId")%>]--%></option>
         </ofbiz:iterator>
       </select>
-        <INPUT type=submit value='Update'>
+        <INPUT type=submit value='Update' style='font-size: x-small;'>
     </td>
     </FORM>
     <td>
@@ -130,35 +134,35 @@
   <input type="hidden" name="productId" value="<%=productId%>">
   <div class='head2'>Add ProductFeature from Category:</div>
   <br>
-  <select name='productFeatureCategoryId' size=1>
+  <select name='productFeatureCategoryId' size=1 style='font-size: x-small;'>
     <ofbiz:iterator name="productFeatureCategory" property="productFeatureCategories">
       <option value='<%=productFeatureCategory.getString("productFeatureCategoryId")%>'><%=productFeatureCategory.getString("description")%> [<%=productFeatureCategory.getString("productFeatureCategoryId")%>]</option>
     </ofbiz:iterator>
   </select>
-  <input type="submit" value="Add">
+  <input type="submit" value="Add" style='font-size: x-small;'>
 </form>
 <br>
 <form method="POST" action="<ofbiz:url>/ApplyFeatureToProductFromTypeAndCode</ofbiz:url>" style='margin: 0;'>
   <input type="hidden" name="productId" value="<%=productId%>">
   <div class='head2'>Add ProductFeature with Type and ID Code:</div>
   <br>
-  Feature Type: <select name='productFeatureTypeId' size=1>
+  <span class='tabletext'>Feature Type: </span><select name='productFeatureTypeId' size=1 style='font-size: x-small;'>
     <ofbiz:iterator name="productFeatureType" property="productFeatureTypes">
       <option value='<%=productFeatureType.getString("productFeatureTypeId")%>'><%=productFeatureType.getString("description")%> <%--[<%=productFeatureType.getString("productFeatureTypeId")%>]--%></option>
     </ofbiz:iterator>
   </select>
-  ID Code: <input type=text size='10' name='idCode' value=''>
+  <span class='tabletext'>ID Code: </span><input type=text size='10' name='idCode' value='' style='font-size: x-small;'>
   <br>
-  Feature Application Type: <select name='productFeatureApplTypeId' size=1>
+  <span class='tabletext'>Feature Application Type: </span><select name='productFeatureApplTypeId' size=1 style='font-size: x-small;'>
     <ofbiz:iterator name="productFeatureApplType" property="productFeatureApplTypes">
       <option value='<%=productFeatureApplType.getString("productFeatureApplTypeId")%>'><%=productFeatureApplType.getString("description")%> <%--[<%=productFeatureApplType.getString("productFeatureApplTypeId")%>]--%></option>
     </ofbiz:iterator>
   </select>
   <br>
-  From: <input type=text size='18' name='fromDate'>
-  Thru: <input type=text size='18' name='thruDate'>
-  Sequence: <input type=text size='5' name='sequenceNum'>
-  <input type="submit" value="Add">
+  <span class='tabletext'>From: </span><input type=text size='18' name='fromDate' style='font-size: x-small;'>
+  <span class='tabletext'>Thru: </span><input type=text size='18' name='thruDate' style='font-size: x-small;'>
+  <span class='tabletext'>Sequence: </span><input type=text size='5' name='sequenceNum' style='font-size: x-small;'>
+  <input type="submit" value="Add" style='font-size: x-small;'>
 </form>
 <%}%>
 <br>

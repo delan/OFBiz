@@ -139,8 +139,7 @@
 </script>
 <table border="1" width="100%" cellpadding='2' cellspacing='0'>
   <tr>
-    <td><div class="tabletext"><b>Product ID</b></div></td>
-    <td><div class="tabletext"><b>Product Name</b></div></td>
+    <td><div class="tabletext"><b>Product Name [ID]</b></div></td>
     <td><div class="tabletext"><b>From&nbsp;Date&nbsp;&amp;&nbsp;Time</b></div></td>
     <td align="center"><div class="tabletext"><b>Thru&nbsp;Date&nbsp;&amp;&nbsp;Time,&nbsp;Sequence&nbsp;&amp;&nbsp;Quantity</b></div></td>
     <td><div class="tabletext"><b>&nbsp;</b></div></td>
@@ -150,8 +149,7 @@
   <%line++;%>
   <%GenericValue product = productCategoryMember.getRelatedOne("Product");%>
   <tr valign="middle">
-    <td><a href='<ofbiz:url>/EditProduct?productId=<ofbiz:inputvalue entityAttr="productCategoryMember" field="productId"/></ofbiz:url>' class="buttontext"><ofbiz:inputvalue entityAttr="productCategoryMember" field="productId"/></a></td>
-    <td><%if (product!=null) {%><a href='<ofbiz:url>/EditProduct?productId=<ofbiz:inputvalue entityAttr="productCategoryMember" field="productId"/></ofbiz:url>' class="buttontext"><%=product.getString("productName")%></a><%}%>&nbsp;</td>
+    <td><a href='<ofbiz:url>/EditProduct?productId=<ofbiz:inputvalue entityAttr="productCategoryMember" field="productId"/></ofbiz:url>' class="buttontext"><%if (product!=null) {%><%=product.getString("productName")%><%}%> [<ofbiz:inputvalue entityAttr="productCategoryMember" field="productId"/>]</a></td>
     <td>
         <%boolean hasntStarted = false;%>
         <%if (productCategoryMember.getTimestamp("fromDate") != null && UtilDateTime.nowTimestamp().before(productCategoryMember.getTimestamp("fromDate"))) { hasntStarted = true; }%>
@@ -167,11 +165,11 @@
             <input type=hidden <ofbiz:inputvalue entityAttr="productCategoryMember" field="productId" fullattrs="true"/>>
             <input type=hidden <ofbiz:inputvalue entityAttr="productCategoryMember" field="productCategoryId" fullattrs="true"/>>
             <input type=hidden <ofbiz:inputvalue entityAttr="productCategoryMember" field="fromDate" fullattrs="true"/>>
-            <input type=text size='22' <ofbiz:inputvalue entityAttr="productCategoryMember" field="thruDate" fullattrs="true"/><%if (hasExpired) {%> style='color: red;'<%}%>>
+            <input type=text size='22' <ofbiz:inputvalue entityAttr="productCategoryMember" field="thruDate" fullattrs="true"/> style='font-size: x-small; <%if (hasExpired) {%>color: red;<%}%>'>
             <a href='#' onclick='setLineThruDate("<%=line%>")' class='buttontext'>[Now]</a>
-            <input type=text size='5' <ofbiz:inputvalue entityAttr="productCategoryMember" field="sequenceNum" fullattrs="true"/>>
-            <input type=text size='5' <ofbiz:inputvalue entityAttr="productCategoryMember" field="quantity" fullattrs="true"/>>
-            <INPUT type=submit value='Update'>
+            <input type=text size='5' <ofbiz:inputvalue entityAttr="productCategoryMember" field="sequenceNum" fullattrs="true"/> style='font-size: x-small;'>
+            <input type=text size='5' <ofbiz:inputvalue entityAttr="productCategoryMember" field="quantity" fullattrs="true"/> style='font-size: x-small;'>
+            <INPUT type=submit value='Update' style='font-size: x-small;'>
         </FORM>
     </td>
     <td align="center">

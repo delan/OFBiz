@@ -71,8 +71,7 @@
 
 <table border="1" width="100%" cellpadding='2' cellspacing='0'>
   <tr>
-    <td><div class="tabletext"><b>Promo&nbsp;ID</b></div></td>
-    <td><div class="tabletext"><b>Promo&nbsp;Name</b></div></td>
+    <td><div class="tabletext"><b>Promo&nbsp;Name&nbsp;[ID]</b></div></td>
     <td><div class="tabletext"><b>From&nbsp;Date&nbsp;&amp;&nbsp;Time</b></div></td>
     <td align="center"><div class="tabletext"><b>Thru&nbsp;Date&nbsp;&amp;&nbsp;Time,&nbsp;Sequence</b></div></td>
     <td><div class="tabletext"><b>&nbsp;</b></div></td>
@@ -80,17 +79,20 @@
 <ofbiz:iterator name="prodCatalogPromoAppl" property="prodCatalogPromoAppls">
   <%GenericValue productPromo = prodCatalogPromoAppl.getRelatedOne("ProductPromo");%>
   <tr valign="middle">
-    <td><a href='<ofbiz:url>/EditProductPromo?productPromoId=<ofbiz:inputvalue entityAttr="prodCatalogPromoAppl" field="productPromoId"/></ofbiz:url>' class="buttontext"><ofbiz:inputvalue entityAttr="prodCatalogPromoAppl" field="productPromoId"/></a></td>
-    <td><%if (productPromo!=null) {%><a href='<ofbiz:url>/EditProductPromo?productPromoId=<ofbiz:inputvalue entityAttr="prodCatalogPromoAppl" field="productPromoId"/></ofbiz:url>' class="buttontext"><%=productPromo.getString("promoName")%></a><%}%>&nbsp;</td>
-    <td><div class='tabletext'><ofbiz:inputvalue entityAttr="prodCatalogPromoAppl" field="fromDate"/></div></td>
+    <td><a href='<ofbiz:url>/EditProductPromo?productPromoId=<ofbiz:inputvalue entityAttr="prodCatalogPromoAppl" field="productPromoId"/></ofbiz:url>' class="buttontext"><%if (productPromo!=null) {%><%=productPromo.getString("promoName")%><%}%> [<ofbiz:inputvalue entityAttr="prodCatalogPromoAppl" field="productPromoId"/>]</a></td>
+    <%boolean hasntStarted = false;%>
+    <%if (prodCatalogPromoAppl.getTimestamp("fromDate") != null && UtilDateTime.nowTimestamp().before(prodCatalogPromoAppl.getTimestamp("fromDate"))) { hasntStarted = true; }%>
+    <td><div class='tabletext'<%if (hasntStarted) {%> style='color: red;'<%}%>><ofbiz:inputvalue entityAttr="prodCatalogPromoAppl" field="fromDate"/></div></td>
     <td align="center">
+        <%boolean hasExpired = false;%>
+        <%if (prodCatalogPromoAppl.getTimestamp("thruDate") != null && UtilDateTime.nowTimestamp().after(prodCatalogPromoAppl.getTimestamp("thruDate"))) { hasExpired = true; }%>
         <FORM method=POST action='<ofbiz:url>/updateProductPromoToProdCatalog</ofbiz:url>'>
             <input type=hidden <ofbiz:inputvalue entityAttr="prodCatalogPromoAppl" field="prodCatalogId" fullattrs="true"/>>
             <input type=hidden <ofbiz:inputvalue entityAttr="prodCatalogPromoAppl" field="productPromoId" fullattrs="true"/>>
             <input type=hidden <ofbiz:inputvalue entityAttr="prodCatalogPromoAppl" field="fromDate" fullattrs="true"/>>
-            <input type=text size='20' <ofbiz:inputvalue entityAttr="prodCatalogPromoAppl" field="thruDate" fullattrs="true"/>>
-            <input type=text size='5' <ofbiz:inputvalue entityAttr="prodCatalogPromoAppl" field="sequenceNum" fullattrs="true"/>>
-            <INPUT type=submit value='Update'>
+            <input type=text size='20' <ofbiz:inputvalue entityAttr="prodCatalogPromoAppl" field="thruDate" fullattrs="true"/> style='font-size: x-small; <%if (hasExpired) {%>color: red;<%}%>'>
+            <input type=text size='5' <ofbiz:inputvalue entityAttr="prodCatalogPromoAppl" field="sequenceNum" fullattrs="true"/> style='font-size: x-small;'>
+            <INPUT type=submit value='Update' style='font-size: x-small;'>
         </FORM>
     </td>
     <td align="center">

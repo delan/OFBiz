@@ -91,12 +91,13 @@
 %>
 
 <br>
-<a href="<ofbiz:url>/EditInventoryItem</ofbiz:url>" class="buttontext">[New InventoryItem]</a>
+<%--
 <%if(inventoryItemId != null && inventoryItemId.length() > 0){%>
   <a href="<ofbiz:url>/EditInventoryItem?inventoryItemId=<%=inventoryItemId%></ofbiz:url>" class="buttontextdisabled">[InventoryItem]</a>
 <%}%>
-
+--%>
 <div class="head1">Edit InventoryItem with ID "<%=UtilFormatOut.checkNull(inventoryItemId)%>"</div>
+<a href="<ofbiz:url>/EditInventoryItem</ofbiz:url>" class="buttontext">[New InventoryItem]</a>
 
 
 <%if(inventoryItem == null){%>
@@ -125,7 +126,7 @@
         <td>&nbsp;</td>
         <td>
           <%-- <input type="text" name="<%=paramName%>" value="<%=UtilFormatOut.checkNull(tryEntity?inventoryItem.getString(fieldName):request.getParameter(paramName))%>" size="20" maxlength="20"> --%>
-          <select name="inventoryItemTypeId" size=1>
+          <select name="inventoryItemTypeId" size=1 style='font-size: x-small;'>
             <option selected value='<ofbiz:inputvalue entityAttr="inventoryItemType" field="inventoryItemTypeId"/>'><ofbiz:inputvalue entityAttr="inventoryItemType" field="description"/> <%--<ofbiz:entityfield attribute="inventoryItemType" field="inventoryItemTypeId" prefix="[" suffix="]"/>--%></option>
             <option value='<ofbiz:inputvalue entityAttr="inventoryItemType" field="inventoryItemTypeId"/>'>----</option>
             <ofbiz:iterator name="nextInventoryItemType" property="inventoryItemTypes">
@@ -138,7 +139,7 @@
         <td align=right><div class="tabletext">Product Id</div></td>
         <td>&nbsp;</td>
         <td>
-            <input type="text" <ofbiz:inputvalue entityAttr="inventoryItem" field="productId" fullattrs="true" tryEntityAttr="tryEntity"/> size="20" maxlength="20">
+            <input type="text" <ofbiz:inputvalue entityAttr="inventoryItem" field="productId" fullattrs="true" tryEntityAttr="tryEntity"/> size="20" maxlength="20" style='font-size: x-small;'>
             <%if (inventoryItem != null && UtilValidate.isNotEmpty(inventoryItem.getString("productId"))) {%>
                 <a href='<ofbiz:url>/EditProduct?productId=<ofbiz:inputvalue entityAttr="inventoryItem" field="productId"/></ofbiz:url>' class='buttontext'>[Edit&nbsp;Product&nbsp;<ofbiz:inputvalue entityAttr="inventoryItem" field="productId"/>]</a>
             <%}%>
@@ -147,13 +148,13 @@
       <tr>
         <td align=right><div class="tabletext">Party Id</div></td>
         <td>&nbsp;</td>
-        <td><input type="text" <ofbiz:inputvalue entityAttr="inventoryItem" field="partyId" fullattrs="true" tryEntityAttr="tryEntity"/> size="20" maxlength="20"></td>
+        <td><input type="text" <ofbiz:inputvalue entityAttr="inventoryItem" field="partyId" fullattrs="true" tryEntityAttr="tryEntity"/> size="20" maxlength="20" style='font-size: x-small;'></td>
       </tr>
       <tr>
         <td align=right><div class="tabletext">Status</div></td>
         <td>&nbsp;</td>
         <td>
-           <select name="statusId">
+           <select name="statusId" style='font-size: x-small;'>
              <option value='<ofbiz:inputvalue entityAttr="inventoryItem" field="statusId"/>'><ofbiz:inputvalue entityAttr="inventoryItem" field="statusId"/></option>
              <option value='<ofbiz:inputvalue entityAttr="inventoryItem" field="statusId"/>'>----</option>
              <ofbiz:iterator name="statusItem" property="statusItems">
@@ -165,19 +166,19 @@
       <tr>
         <td align=right><div class="tabletext">Date Received</div></td>
         <td>&nbsp;</td>
-        <td><input type="text" size="22" <ofbiz:inputvalue entityAttr="inventoryItem" field="dateReceived" fullattrs="true"/>></td>
+        <td><input type="text" size="22" <ofbiz:inputvalue entityAttr="inventoryItem" field="dateReceived" fullattrs="true"/> style='font-size: x-small;'></td>
       </tr>
       <tr>
         <td align=right><div class="tabletext">Expire Date</div></td>
         <td>&nbsp;</td>
-        <td><input type="text" size="22" <ofbiz:inputvalue entityAttr="inventoryItem" field="expireDate" fullattrs="true"/>></td>
+        <td><input type="text" size="22" <ofbiz:inputvalue entityAttr="inventoryItem" field="expireDate" fullattrs="true"/> style='font-size: x-small;'></td>
       </tr>
       <tr>
         <td align=right><div class="tabletext">Facility/Container</div></td>
         <td>&nbsp;</td>
         <td>
-            Select a Facility:
-            <select name="facilityId">
+            <span class='tabletext'>Select a Facility:</span>
+            <select name="facilityId" style='font-size: x-small;'>
               <%if (inventoryItem == null && UtilValidate.isNotEmpty(request.getParameter("facilityId"))) {%>
                   <option value='<%=request.getParameter("facilityId")%>'>[<%=request.getParameter("facilityId")%>]</option>
               <%} else {%>
@@ -192,44 +193,44 @@
                 <a href='<ofbiz:url>/EditFacility?facilityId=<ofbiz:inputvalue entityAttr="inventoryItem" field="facilityId"/></ofbiz:url>' class='buttontext'>[Edit&nbsp;Facility&nbsp;<ofbiz:inputvalue entityAttr="inventoryItem" field="facilityId"/>]</a>
             <%}%>
             <br>
-            OR enter a Container ID:
-            <input type="text" <ofbiz:inputvalue entityAttr="inventoryItem" field="containerId" fullattrs="true"/> size="20" maxlength="20">
+            <span class='tabletext'>OR enter a Container ID:</span>
+            <input type="text" <ofbiz:inputvalue entityAttr="inventoryItem" field="containerId" fullattrs="true"/> size="20" maxlength="20" style='font-size: x-small;'>
          </td>
        </tr>
       <tr>
         <td align=right><div class="tabletext">Lot Id</div></td>
         <td>&nbsp;</td>
-        <td><input type="text" <ofbiz:inputvalue entityAttr="inventoryItem" field="lotId" fullattrs="true"/> size="20" maxlength="20"></td>
+        <td><input type="text" <ofbiz:inputvalue entityAttr="inventoryItem" field="lotId" fullattrs="true"/> size="20" maxlength="20" style='font-size: x-small;'></td>
       </tr>
       <tr>
         <td align=right><div class="tabletext">Uom Id</div></td>
         <td>&nbsp;</td>
-        <td><input type="text" <ofbiz:inputvalue entityAttr="inventoryItem" field="uomId" fullattrs="true"/> size="20" maxlength="20"></td>
+        <td><input type="text" <ofbiz:inputvalue entityAttr="inventoryItem" field="uomId" fullattrs="true"/> size="20" maxlength="20" style='font-size: x-small;'></td>
       </tr>
       <tr>
         <td align=right><div class="tabletext">Bin Number</div></td>
         <td>&nbsp;</td>
-        <td><input type="text" <ofbiz:inputvalue entityAttr="inventoryItem" field="binNumber" fullattrs="true"/> size="20" maxlength="20"></td>
+        <td><input type="text" <ofbiz:inputvalue entityAttr="inventoryItem" field="binNumber" fullattrs="true"/> size="20" maxlength="20" style='font-size: x-small;'></td>
       </tr>
       <tr>
         <td align=right><div class="tabletext">Comments</div></td>
         <td>&nbsp;</td>
-        <td><input type="text" <ofbiz:inputvalue entityAttr="inventoryItem" field="comments" fullattrs="true"/> size="60" maxlength="250"></td>
+        <td><input type="text" <ofbiz:inputvalue entityAttr="inventoryItem" field="comments" fullattrs="true"/> size="60" maxlength="250" style='font-size: x-small;'></td>
       </tr>
     <%if (inventoryItem != null && "NON_SERIAL_INV_ITEM".equals(inventoryItem.getString("inventoryItemTypeId"))) {%>
       <tr>
         <td align=right><div class="tabletext">Available To Promise / Quantity On Hand</div></td>
         <td>&nbsp;</td>
         <td>
-            <input type=text size='5' <ofbiz:inputvalue entityAttr="inventoryItem" field="availableToPromise" fullattrs="true"/>>
-            / <input type=text size='5' <ofbiz:inputvalue entityAttr="inventoryItem" field="quantityOnHand" fullattrs="true"/>>
+            <input type=text size='5' <ofbiz:inputvalue entityAttr="inventoryItem" field="availableToPromise" fullattrs="true"/> style='font-size: x-small;'>
+            / <input type=text size='5' <ofbiz:inputvalue entityAttr="inventoryItem" field="quantityOnHand" fullattrs="true"/> style='font-size: x-small;'>
         </td>
       </tr>
     <%} else if (inventoryItem != null && "SERIALIZED_INV_ITEM".equals(inventoryItem.getString("inventoryItemTypeId"))) {%>
       <tr>
         <td align=right><div class="tabletext">Serial Number</div></td>
         <td>&nbsp;</td>
-        <td><input type="text" <ofbiz:inputvalue entityAttr="inventoryItem" field="serialNumber" fullattrs="true"/> size="30" maxlength="60"></td>
+        <td><input type="text" <ofbiz:inputvalue entityAttr="inventoryItem" field="serialNumber" fullattrs="true"/> size="30" maxlength="60" style='font-size: x-small;'></td>
       </tr>
     <%} else if (inventoryItem != null) {%>
       <tr>
@@ -240,7 +241,8 @@
     <%}%>
 
   <tr>
-    <td colspan='7'><input type="submit" name="Update" value="Update"></td>
+    <td colspan='2'>&nbsp;</td>
+    <td colspan='5'><input type="submit" name="Update" value="Update" style='font-size: x-small;'></td>
   </tr>
 </table>
 </form>

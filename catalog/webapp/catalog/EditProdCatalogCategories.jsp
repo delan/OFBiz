@@ -85,15 +85,19 @@
   <%GenericValue curProdCatalogCategoryType = prodCatalogCategory.getRelatedOneCache("ProdCatalogCategoryType");%>
   <tr valign="middle">
     <td><a href='<ofbiz:url>/EditCategory?productCategoryId=<ofbiz:inputvalue entityAttr="prodCatalogCategory" field="productCategoryId"/></ofbiz:url>' class="buttontext"><%if (productCategory!=null) {%><%=productCategory.getString("description")%><%}%> [<ofbiz:inputvalue entityAttr="prodCatalogCategory" field="productCategoryId"/>]</a></td>
-    <td><div class='tabletext'><ofbiz:inputvalue entityAttr="prodCatalogCategory" field="fromDate"/></div></td>
+    <%boolean hasntStarted = false;%>
+    <%if (prodCatalogCategory.getTimestamp("fromDate") != null && UtilDateTime.nowTimestamp().before(prodCatalogCategory.getTimestamp("fromDate"))) { hasntStarted = true; }%>
+    <td><div class='tabletext'<%if (hasntStarted) {%> style='color: red;'<%}%>><ofbiz:inputvalue entityAttr="prodCatalogCategory" field="fromDate"/></div></td>
     <td align="center">
+        <%boolean hasExpired = false;%>
+        <%if (prodCatalogCategory.getTimestamp("thruDate") != null && UtilDateTime.nowTimestamp().after(prodCatalogCategory.getTimestamp("thruDate"))) { hasExpired = true; }%>
         <FORM method=POST action='<ofbiz:url>/updateProductCategoryToProdCatalog</ofbiz:url>'>
             <input type=hidden <ofbiz:inputvalue entityAttr="prodCatalogCategory" field="prodCatalogId" fullattrs="true"/>>
             <input type=hidden <ofbiz:inputvalue entityAttr="prodCatalogCategory" field="productCategoryId" fullattrs="true"/>>
             <input type=hidden <ofbiz:inputvalue entityAttr="prodCatalogCategory" field="fromDate" fullattrs="true"/>>
-            <input type=text size='20' <ofbiz:inputvalue entityAttr="prodCatalogCategory" field="thruDate" fullattrs="true"/>>
-            <input type=text size='5' <ofbiz:inputvalue entityAttr="prodCatalogCategory" field="sequenceNum" fullattrs="true"/>>
-            <select name='prodCatalogCategoryTypeId' size=1>
+            <input type=text size='20' <ofbiz:inputvalue entityAttr="prodCatalogCategory" field="thruDate" fullattrs="true"/> style='font-size: x-small; <%if (hasExpired) {%>color: red;<%}%>'>
+            <input type=text size='5' <ofbiz:inputvalue entityAttr="prodCatalogCategory" field="sequenceNum" fullattrs="true"/> style='font-size: x-small;'>
+            <select name='prodCatalogCategoryTypeId' size=1 style='font-size: x-small;'>
                 <%if (prodCatalogCategory.get("prodCatalogCategoryTypeId") != null) {%>
                   <option value='<%=prodCatalogCategory.getString("prodCatalogCategoryTypeId")%>'><%if (curProdCatalogCategoryType != null) {%><%=UtilFormatOut.checkNull(curProdCatalogCategoryType.getString("description"))%><%} else {%> [<%=prodCatalogCategory.getString("prodCatalogCategoryTypeId")%>]<%}%></option>
                   <option value='<%=prodCatalogCategory.getString("prodCatalogCategoryTypeId")%>'>---</option>
@@ -104,7 +108,7 @@
                   <option value='<%=prodCatalogCategoryType.getString("prodCatalogCategoryTypeId")%>'><%=prodCatalogCategoryType.getString("description")%> <%--[<%=prodCatalogCategoryType.getString("prodCatalogCategoryTypeId")%>]--%></option>
                 </ofbiz:iterator>
             </select>
-            <INPUT type=submit value='Update'>
+            <INPUT type=submit value='Update' style='font-size: x-small;'>
         </FORM>
     </td>
     <td align="center">

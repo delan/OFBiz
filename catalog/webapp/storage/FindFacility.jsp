@@ -45,8 +45,7 @@
 <br>
 <table border="1" cellpadding='2' cellspacing='0'>
   <tr>
-    <td><div class="tabletext"><b>Facility&nbsp;ID</b></div></td>
-    <td><div class="tabletext"><b>Name</b></div></td>
+    <td><div class="tabletext"><b>Facility&nbsp;Name&nbsp;[ID]</b></div></td>
     <td><div class="tabletext"><b>Facility&nbsp;Type</b></div></td>
     <td><div class="tabletext"><b>SqFt</b></div></td>
     <td><div class="tabletext"><b>Description</b></div></td>
@@ -56,8 +55,7 @@
   <%GenericValue facilityType = facility.getRelatedOne("FacilityType");%>
   <%if (facilityType != null) pageContext.setAttribute("facilityType", facilityType);%>
   <tr valign="middle">
-    <td><div class='tabletext'>&nbsp;<a href='<ofbiz:url>/EditFacility?facilityId=<ofbiz:inputvalue entityAttr="facility" field="facilityId"/></ofbiz:url>' class="buttontext"><ofbiz:inputvalue entityAttr="facility" field="facilityId"/></a></div></td>
-    <td><div class='tabletext'>&nbsp;<a href='<ofbiz:url>/EditFacility?facilityId=<ofbiz:inputvalue entityAttr="facility" field="facilityId"/></ofbiz:url>' class="buttontext"><ofbiz:inputvalue entityAttr="facility" field="facilityName"/></a></div></td>
+    <td><div class='tabletext'>&nbsp;<a href='<ofbiz:url>/EditFacility?facilityId=<ofbiz:inputvalue entityAttr="facility" field="facilityId"/></ofbiz:url>' class="buttontext"><ofbiz:inputvalue entityAttr="facility" field="facilityName"/> [<ofbiz:inputvalue entityAttr="facility" field="facilityId"/>]</a></div></td>
     <td><div class='tabletext'>&nbsp;<ofbiz:inputvalue entityAttr="facilityType" field="description"/></div></td>
     <td><div class='tabletext'>&nbsp;<ofbiz:inputvalue entityAttr="facility" field="squareFootage"/></div></td>
     <td><div class='tabletext'>&nbsp;<ofbiz:inputvalue entityAttr="facility" field="description"/></div></td>

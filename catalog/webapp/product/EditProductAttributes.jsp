@@ -76,8 +76,8 @@
 <%if(productId!=null && product!=null){%>
 <table border="1" cellpadding='2' cellspacing='0'>
   <tr>
-    <td><div class="tabletext"><b>Attribute Name</b></div></td>
-    <td><div class="tabletext"><b>Attribute Value, Type</b></div></td>
+    <td><div class="tabletext"><b>Name</b></div></td>
+    <td><div class="tabletext"><b>Value, Type</b></div></td>
   </tr>
 <ofbiz:iterator name="productAttribute" property="productAttributes">
   <tr valign="middle">
@@ -86,9 +86,9 @@
         <FORM method=POST action='<ofbiz:url>/UpdateProductAttribute?UPDATE_MODE=UPDATE</ofbiz:url>'>
             <input type=hidden name='PRODUCT_ID' value='<ofbiz:entityfield attribute="productAttribute" field="productId"/>'>
             <input type=hidden name='ATTRIBUTE_NAME' value='<ofbiz:entityfield attribute="productAttribute" field="attrName"/>'>
-            <input type=text size='60' name='ATTRIBUTE_VALUE' value="<ofbiz:inputvalue entityAttr='productAttribute' field='attrValue'/>">
-            <input type=text size='20' name='ATTRIBUTE_TYPE' value="<ofbiz:inputvalue entityAttr='productAttribute' field='attrType'/>">
-            <INPUT type=submit value='Update'>
+            <input type=text size='50' name='ATTRIBUTE_VALUE' value="<ofbiz:inputvalue entityAttr='productAttribute' field='attrValue'/>" style='font-size: x-small;'>
+            <input type=text size='15' name='ATTRIBUTE_TYPE' value="<ofbiz:inputvalue entityAttr='productAttribute' field='attrType'/>" style='font-size: x-small;'>
+            <INPUT type=submit value='Update' style='font-size: x-small;'>
         </FORM>
     </td>
     <td>
@@ -106,10 +106,10 @@
 
   <div class='head2'>Add ProductAttribute (enter Name, Value and Type):</div>
   <br>
-  <input type="text" name="ATTRIBUTE_NAME" size="20">&nbsp;
-  <input type="text" name="ATTRIBUTE_VALUE" size="60">&nbsp;
-  <input type="text" name="ATTRIBUTE_TYPE" size="20">&nbsp;
-  <input type="submit" value="Add">
+  <input type="text" name="ATTRIBUTE_NAME" size="15" style='font-size: x-small;'>&nbsp;
+  <input type="text" name="ATTRIBUTE_VALUE" size="50" style='font-size: x-small;'>&nbsp;
+  <input type="text" name="ATTRIBUTE_TYPE" size="15" style='font-size: x-small;'>&nbsp;
+  <input type="submit" value="Add" style='font-size: x-small;'>
 </form>
 <%}%>
 <br>

@@ -80,8 +80,7 @@
 </script>
 <table border="1" width="100%" cellpadding='2' cellspacing='0'>
   <tr>
-    <td><div class="tabletext"><b>Category ID</b></div></td>
-    <td><div class="tabletext"><b>Description</b></div></td>
+    <td><div class="tabletext"><b>Category [ID]</b></div></td>
     <td><div class="tabletext"><b>From&nbsp;Date&nbsp;&amp;&nbsp;Time</b></div></td>
     <td align="center"><div class="tabletext"><b>Thru&nbsp;Date&nbsp;&amp;&nbsp;Time,&nbsp;Sequence&nbsp;&amp;&nbsp;Quantity</b></div></td>
     <td><div class="tabletext"><b>&nbsp;</b></div></td>
@@ -91,8 +90,7 @@
   <%line++;%>
   <%GenericValue category = productCategoryMember.getRelatedOne("ProductCategory");%>
   <tr valign="middle">
-    <td><a href='<ofbiz:url>/EditCategory?productCategoryId=<ofbiz:inputvalue entityAttr="productCategoryMember" field="productCategoryId"/></ofbiz:url>' class="buttontext"><ofbiz:inputvalue entityAttr="productCategoryMember" field="productCategoryId"/></a></td>
-    <td><%if (category!=null) {%><a href='<ofbiz:url>/EditCategory?productCategoryId=<ofbiz:inputvalue entityAttr="productCategoryMember" field="productCategoryId"/></ofbiz:url>' class="buttontext"><%=category.getString("description")%></a><%}%>&nbsp;</td>
+    <td><a href='<ofbiz:url>/EditCategory?productCategoryId=<ofbiz:inputvalue entityAttr="productCategoryMember" field="productCategoryId"/></ofbiz:url>' class="buttontext"><%if (category!=null) {%><%=category.getString("description")%><%}%> [<ofbiz:inputvalue entityAttr="productCategoryMember" field="productCategoryId"/>]</a></td>
     <td>
         <%boolean hasntStarted = false;%>
         <%if (productCategoryMember.getTimestamp("fromDate") != null && UtilDateTime.nowTimestamp().before(productCategoryMember.getTimestamp("fromDate"))) { hasntStarted = true; }%>
@@ -107,11 +105,11 @@
             <input type=hidden <ofbiz:inputvalue entityAttr="productCategoryMember" field="productId" fullattrs="true"/>>
             <input type=hidden <ofbiz:inputvalue entityAttr="productCategoryMember" field="productCategoryId" fullattrs="true"/>>
             <input type=hidden <ofbiz:inputvalue entityAttr="productCategoryMember" field="fromDate" fullattrs="true"/>>
-            <input type=text size='22' <ofbiz:inputvalue entityAttr="productCategoryMember" field="thruDate" fullattrs="true"/><%if (hasExpired) {%> style='color: red;'<%}%>>
+            <input type=text size='22' <ofbiz:inputvalue entityAttr="productCategoryMember" field="thruDate" fullattrs="true"/> style='font-size: x-small;<%if (hasExpired) {%> color: red;<%}%>'>
             <a href='#' onclick='setLineThruDate("<%=line%>")' class='buttontext'>[Now]</a>
-            <input type=text size='5' <ofbiz:inputvalue entityAttr="productCategoryMember" field="sequenceNum" fullattrs="true"/>>
-            <input type=text size='5' <ofbiz:inputvalue entityAttr="productCategoryMember" field="quantity" fullattrs="true"/>>
-            <INPUT type=submit value='Update'>
+            <input type=text size='5' <ofbiz:inputvalue entityAttr="productCategoryMember" field="sequenceNum" fullattrs="true"/> style='font-size: x-small;'>
+            <input type=text size='5' <ofbiz:inputvalue entityAttr="productCategoryMember" field="quantity" fullattrs="true"/> style='font-size: x-small;'>
+            <INPUT type=submit value='Update' style='font-size: x-small;'>
         </FORM>
     </td>
     <td align="center">
@@ -131,13 +129,13 @@
   </script>
   <div class='head2'>Add ProductCategoryMember (select Category, enter From Date):</div>
   <br>
-  <select name="productCategoryId">
+  <select name="productCategoryId" style='font-size: x-small;'>
   <ofbiz:iterator name="category" property="categoryCol">
     <option value='<ofbiz:entityfield attribute="category" field="productCategoryId"/>'><ofbiz:entityfield attribute="category" field="description"/> [<ofbiz:entityfield attribute="category" field="productCategoryId"/>]</option>
   </ofbiz:iterator>
   </select>
-  <a href='#' onclick='setPcmFromDate()' class='buttontext'>[Now]</a> <input type=text size='22' name='fromDate'>
-  <input type="submit" value="Add">
+  <a href='#' onclick='setPcmFromDate()' class='buttontext'>[Now]</a> <input type=text size='22' name='fromDate' style='font-size: x-small;'>
+  <input type="submit" value="Add" style='font-size: x-small;'>
 </form>
 <%}%>
 <br>

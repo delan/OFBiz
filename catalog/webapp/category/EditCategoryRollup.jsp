@@ -82,8 +82,7 @@
 
 <table border="1" cellpadding='2' cellspacing='0'>
   <tr>
-    <td><div class="tabletext"><b>Parent Category ID</b></div></td>
-    <td><div class="tabletext"><b>Description</b></div></td>
+    <td><div class="tabletext"><b>Parent&nbsp;Category&nbsp;[ID]</b></div></td>
     <td><div class="tabletext"><b>From&nbsp;Date</b></div></td>
     <td align="center"><div class="tabletext"><b>Thru&nbsp;Date&nbsp;&amp;&nbsp;Time,&nbsp;Sequence</b></div></td>
     <td><div class="tabletext"><b>&nbsp;</b></div></td>
@@ -94,8 +93,7 @@
     <%lineParent++;%>
     <%GenericValue curCategory = productCategoryRollup.getRelatedOne("ParentProductCategory");%>
     <tr valign="middle">
-      <td><%if (curCategory!=null){%><a href="<ofbiz:url>/EditCategory?productCategoryId=<%=curCategory.getString("productCategoryId")%></ofbiz:url>" class="buttontext"><%=curCategory.getString("productCategoryId")%></a><%}%></td>
-      <td><%if (curCategory!=null){%><a href="<ofbiz:url>/EditCategory?productCategoryId=<%=curCategory.getString("productCategoryId")%></ofbiz:url>" class="buttontext"><%=curCategory.getString("description")%></a><%}%>&nbsp;</td>
+      <td><%if (curCategory!=null){%><a href="<ofbiz:url>/EditCategory?productCategoryId=<%=curCategory.getString("productCategoryId")%></ofbiz:url>" class="buttontext"><%=curCategory.getString("description")%> [<%=curCategory.getString("productCategoryId")%>]</a><%}%></td>
       <td><div class='tabletext' <%=(productCategoryRollup.getTimestamp("fromDate") != null && UtilDateTime.nowTimestamp().before(productCategoryRollup.getTimestamp("fromDate")))?"style='color: red;'":""%>><ofbiz:inputvalue entityAttr="productCategoryRollup" field="fromDate"/></div></td>
       <td align="center">
         <FORM method=POST action='<ofbiz:url>/updateProductCategoryToCategory</ofbiz:url>' name='lineParentForm<%=lineParent%>'>
@@ -103,10 +101,10 @@
             <input type=hidden <ofbiz:inputvalue entityAttr="productCategoryRollup" field="productCategoryId" fullattrs="true"/>>
             <input type=hidden <ofbiz:inputvalue entityAttr="productCategoryRollup" field="parentProductCategoryId" fullattrs="true"/>>
             <input type=hidden <ofbiz:inputvalue entityAttr="productCategoryRollup" field="fromDate" fullattrs="true"/>>
-            <input type=text size='22' <ofbiz:inputvalue entityAttr="productCategoryRollup" field="thruDate" fullattrs="true"/> <%=(productCategoryRollup.getTimestamp("thruDate") != null && UtilDateTime.nowTimestamp().after(productCategoryRollup.getTimestamp("thruDate")))?"style='color: red;'":""%>>
+            <input type=text size='22' <ofbiz:inputvalue entityAttr="productCategoryRollup" field="thruDate" fullattrs="true"/> style='font-size: x-small;<%=(productCategoryRollup.getTimestamp("thruDate") != null && UtilDateTime.nowTimestamp().after(productCategoryRollup.getTimestamp("thruDate")))?" color: red;":""%>'>
             <a href='#' onclick='setLineThruDateParent("<%=lineParent%>")' class='buttontext'>[Now]</a>
-            <input type=text size='5' <ofbiz:inputvalue entityAttr="productCategoryRollup" field="sequenceNum" fullattrs="true"/>>
-            <INPUT type=submit value='Update'>
+            <input type=text size='5' <ofbiz:inputvalue entityAttr="productCategoryRollup" field="sequenceNum" fullattrs="true"/> style='font-size: x-small;'>
+            <INPUT type=submit value='Update' style='font-size: x-small;'>
         </FORM>
       </td>
       <td>
@@ -150,8 +148,7 @@
 
 <table border="1" cellpadding='2' cellspacing='0'>
   <tr>
-    <td><div class="tabletext"><b>Child Category ID</b></div></td>
-    <td><div class="tabletext"><b>Description</b></div></td>
+    <td><div class="tabletext"><b>Child&nbsp;Category&nbsp;ID</b></div></td>
     <td><div class="tabletext"><b>From&nbsp;Date</b></div></td>
     <td align="center"><div class="tabletext"><b>Thru&nbsp;Date&nbsp;&amp;&nbsp;Time,&nbsp;Sequence</b></div></td>
     <td><div class="tabletext"><b>&nbsp;</b></div></td>
@@ -162,8 +159,7 @@
     <%lineChild++;%>
     <%GenericValue curCategory = productCategoryRollup.getRelatedOne("CurrentProductCategory");%>
     <tr valign="middle">
-      <td><a href="<ofbiz:url>/EditCategory?productCategoryId=<%=curCategory.getString("productCategoryId")%></ofbiz:url>" class="buttontext"><%=curCategory.getString("productCategoryId")%></a></td>
-      <td><%if(curCategory!=null){%><a href="<ofbiz:url>/EditCategory?productCategoryId=<%=curCategory.getString("productCategoryId")%></ofbiz:url>" class="buttontext"><%=curCategory.getString("description")%></a><%}%>&nbsp;</td>
+      <td><a href="<ofbiz:url>/EditCategory?productCategoryId=<%=curCategory.getString("productCategoryId")%></ofbiz:url>" class="buttontext"><%=curCategory.getString("description")%> [<%=curCategory.getString("productCategoryId")%>]</a></td>
       <td><div class='tabletext' <%=(productCategoryRollup.getTimestamp("fromDate") != null && UtilDateTime.nowTimestamp().before(productCategoryRollup.getTimestamp("fromDate")))?"style='color: red;'":""%>><ofbiz:inputvalue entityAttr="productCategoryRollup" field="fromDate"/></div></td>
       <td align="center">
         <FORM method=POST action='<ofbiz:url>/updateProductCategoryToCategory</ofbiz:url>' name='lineChildForm<%=lineChild%>'>
@@ -171,10 +167,10 @@
             <input type=hidden <ofbiz:inputvalue entityAttr="productCategoryRollup" field="productCategoryId" fullattrs="true"/>>
             <input type=hidden <ofbiz:inputvalue entityAttr="productCategoryRollup" field="parentProductCategoryId" fullattrs="true"/>>
             <input type=hidden <ofbiz:inputvalue entityAttr="productCategoryRollup" field="fromDate" fullattrs="true"/>>
-            <input type=text size='22' <ofbiz:inputvalue entityAttr="productCategoryRollup" field="thruDate" fullattrs="true"/> <%=(productCategoryRollup.getTimestamp("thruDate") != null && UtilDateTime.nowTimestamp().after(productCategoryRollup.getTimestamp("thruDate")))?"style='color: red;'":""%>>
+            <input type=text size='22' <ofbiz:inputvalue entityAttr="productCategoryRollup" field="thruDate" fullattrs="true"/> style='font-size: x-small;<%=(productCategoryRollup.getTimestamp("thruDate") != null && UtilDateTime.nowTimestamp().after(productCategoryRollup.getTimestamp("thruDate")))?" color: red;":""%>'>
             <a href='#' onclick='setLineThruDateChild("<%=lineChild%>")' class='buttontext'>[Now]</a>
-            <input type=text size='5' <ofbiz:inputvalue entityAttr="productCategoryRollup" field="sequenceNum" fullattrs="true"/>>
-            <INPUT type=submit value='Update'>
+            <input type=text size='5' <ofbiz:inputvalue entityAttr="productCategoryRollup" field="sequenceNum" fullattrs="true"/> style='font-size: x-small;'>
+            <INPUT type=submit value='Update' style='font-size: x-small;'>
         </FORM>
       </td>
       <td>

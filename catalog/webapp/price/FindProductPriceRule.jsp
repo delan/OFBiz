@@ -55,8 +55,7 @@
 <ofbiz:if name="productPriceRules">
   <table border="1" cellpadding='2' cellspacing='0'>
     <tr>
-      <td><div class="tabletext"><b>Price&nbsp;Rule&nbsp;ID</b></div></td>
-      <td><div class="tabletext"><b>Rule&nbsp;Name</b></div></td>
+      <td><div class="tabletext"><b>Price&nbsp;Rule&nbsp;Name&nbsp;[ID]</b></div></td>
       <td><div class="tabletext"><b>Sale&nbsp;Rule?</b></div></td>
       <td><div class="tabletext"><b>From&nbsp;Date</b></div></td>
       <td><div class="tabletext"><b>Thru&nbsp;Date</b></div></td>
@@ -64,8 +63,7 @@
     </tr>
     <ofbiz:iterator name="rule" property="productPriceRules">
     <tr>
-      <td><div class="tabletext">&nbsp;<a href='<ofbiz:url>/EditProductPriceRules?productPriceRuleId=<ofbiz:entityfield attribute="rule" field="productPriceRuleId"/></ofbiz:url>' class="buttontext"><ofbiz:entityfield attribute="rule" field="productPriceRuleId"/></a></div></td>
-      <td><div class="tabletext">&nbsp;<a href='<ofbiz:url>/EditProductPriceRules?productPriceRuleId=<ofbiz:entityfield attribute="rule" field="productPriceRuleId"/></ofbiz:url>' class="buttontext"><ofbiz:entityfield attribute="rule" field="ruleName"/></a></div></td>
+      <td><div class="tabletext">&nbsp;<a href='<ofbiz:url>/EditProductPriceRules?productPriceRuleId=<ofbiz:entityfield attribute="rule" field="productPriceRuleId"/></ofbiz:url>' class="buttontext"><ofbiz:entityfield attribute="rule" field="ruleName"/> [<ofbiz:entityfield attribute="rule" field="productPriceRuleId"/>]</a></div></td>
       <td><div class="tabletext">&nbsp;<ofbiz:entityfield attribute="rule" field="isSale"/></div></td>
       <td>
         <%boolean hasntStarted = false;%>

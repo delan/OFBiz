@@ -32,7 +32,7 @@
       <table width='100%' border='0' cellspacing='0' cellpadding='0' class='boxtop'>
         <tr>
           <td valign=middle align=center>
-            <div class="boxhead">Search&nbsp;Catalog</div>
+            <div class="boxhead">Search&nbsp;Products</div>
           </td>
         </tr>
       </table>
