@@ -20,7 +20,7 @@
  *  THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  *
  *@author     Andy Zeneski
- *@version    $Revision: 1.15 $
+ *@version    $Revision: 1.16 $
  *@since      2.1
 */
 
@@ -106,10 +106,10 @@ if (cart.getShipmentMethodTypeId() != null && cart.getCarrierPartyId() != null) 
 }
 
 // other profile defaults
-if (profiledefs.get("defaultShipAddr") != null) {
+if (profiledefs != null && profiledefs.get("defaultShipAddr") != null) {
     cart.setShippingContactMechId(profiledefs.get("defaultShipAddr"));
 }
-if (profiledefs.get("defaultPayMeth") != null) {
+if (profiledefs != null && profiledefs.get("defaultPayMeth") != null) {
     cart.setPaymentMethodAmount(profiledefs.get("defaultPayMeth"), null);
 }
 

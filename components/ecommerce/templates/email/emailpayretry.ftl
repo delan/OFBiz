@@ -20,24 +20,24 @@
  *  THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  *
  *@author     Andy Zeneski (jaz@ofbiz.org)
- *@version    $Revision: 1.1 $
+ *@version    $Revision: 1.2 $
  *@since      3.1
 -->
 
 <BR>
-<#if statusId == "ORDER_REJECTED">
-This email is to inform you there was a problem with your payment method for order #${orderId}.<br>
+<#if orderHeader.statusId == "ORDER_REJECTED">
+This email is to inform you there was a problem with your payment method for order #${orderHeader.orderId}.<br>
 At this time your order has been cancelled and will not be processed. Please contact customer service if you
 have any questions.<br>
 
-<#elseif statusId == "ORDER_APPROVED">
-This email is to inform you that your payment for order #${orderId} has been accepted.<br>
+<#elseif orderHeader.statusId == "ORDER_APPROVED">
+This email is to inform you that your payment for order #${orderHeader.orderId} has been accepted.<br>
 Your order will be processed, and you will receive an email notification once the item(s) have shipped.<br>
 <br>
 Thank you for your order!<br>
 
 <#else>
-  Sorry, there was a problem with this email, please contact customer service for information regarding your order #${orderId}.<br>
+  Sorry, there was a problem with this email, please contact customer service for information regarding your order #${orderHeader.orderId}.<br>
 </#if>
 <br>
 Customer Service (email@email.com)<br>
