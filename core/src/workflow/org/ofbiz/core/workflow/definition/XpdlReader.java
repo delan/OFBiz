@@ -1,50 +1,19 @@
 /*
  * $Id$
- */
- 
-package org.ofbiz.core.workflow.definition;
-
-import java.io.IOException;
-import java.lang.reflect.Method;
-import java.util.*;
-import java.net.*;
-
-import javax.xml.parsers.DocumentBuilder;
-import javax.xml.parsers.DocumentBuilderFactory;
-import javax.xml.parsers.FactoryConfigurationError;
-import javax.xml.parsers.ParserConfigurationException;
-
-import org.apache.log4j.Category;
-
-import org.w3c.dom.Attr;
-import org.w3c.dom.Document;
-import org.w3c.dom.DOMException;
-import org.w3c.dom.Element;
-import org.w3c.dom.NamedNodeMap;
-import org.w3c.dom.Node;
-import org.w3c.dom.NodeList;
-
-import org.xml.sax.SAXException;
-import org.xml.sax.SAXParseException;
-
-import org.ofbiz.core.util.*;
-import org.ofbiz.core.entity.*;
-
-/**
- * <p>Reads Process Definition objects from XPDL
- * <p>Copyright (c) 2001 The Open For Business Project - www.ofbiz.org
  *
- * <p>Permission is hereby granted, free of charge, to any person obtaining a
+ * Copyright (c) 2001 The Open For Business Project - www.ofbiz.org
+ *
+ * Permission is hereby granted, free of charge, to any person obtaining a
  * copy of this software and associated documentation files (the "Software"),
  * to deal in the Software without restriction, including without limitation
  * the rights to use, copy, modify, merge, publish, distribute, sublicense,
  * and/or sell copies of the Software, and to permit persons to whom the
  * Software is furnished to do so, subject to the following conditions:
  *
- * <p>The above copyright notice and this permission notice shall be included
+ * The above copyright notice and this permission notice shall be included
  * in all copies or substantial portions of the Software.
  *
- * <p>THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS
+ * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS
  * OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF
  * MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT.
  * IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY
@@ -52,19 +21,34 @@ import org.ofbiz.core.entity.*;
  * OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR
  * THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  *
- * @author <a href='mailto:jonesde@ofbiz.org'>David E. Jones</a>
- * @created Sun Nov  4 06:04:33 MST 2001
- * @version 1.0
+ */
+
+package org.ofbiz.core.workflow.definition;
+
+import java.io.IOException;
+import java.lang.reflect.Method;
+import java.util.*;
+import java.net.*;
+import javax.xml.parsers.*;
+
+import org.w3c.dom.*;
+import org.xml.sax.*;
+import org.ofbiz.core.util.*;
+import org.ofbiz.core.entity.*;
+
+/**
+ * XpdlReader - Reads Process Definition objects from XPDL
+ *
+ * @author     <a href='mailto:jonesde@ofbiz.org'>David E. Jones</a>
+ * @created    Nov 4, 2001
+ * @version    1.0
  */
 public class XpdlReader {
+
     protected GenericDelegator delegator = null;
     protected List values = null;
 
-    // LOG INITIALIZATION
-    static {
-        Log.init();
-    }
-    private static final Category cat = Category.getInstance(XpdlReader.class.getName());
+    public static final String module = XpdlReader.class.getName();
 
     public XpdlReader(GenericDelegator delegator) {
         this.delegator = delegator;
@@ -85,22 +69,20 @@ public class XpdlReader {
      * GenericValue objects from the given delegator and returns them in a
      * List; does not write to the database, just gets the entities. */
     public static List readXpdl(URL location, GenericDelegator delegator) throws DefinitionParserException {
-        cat.info("Beginning XPDL File Parse: " + location.toString());
+        Debug.logInfo("Beginning XPDL File Parse: " + location.toString(), module);
 
         XpdlReader reader = new XpdlReader(delegator);
         try {
             Document document = UtilXml.readXmlDocument(location);
             return reader.readAll(document);
         } catch (ParserConfigurationException e) {
-            cat.fatal(e.getMessage(), e);
+            Debug.logError(e, module);
             throw new DefinitionParserException("Could not configure XML reader", e);
-        }
-        catch (SAXException e) {
-            cat.error(e.getMessage(), e);
+        } catch (SAXException e) {
+            Debug.logError(e, module);
             throw new DefinitionParserException("Could not parse XML (invalid?)", e);
-        }
-        catch (IOException e) {
-            cat.error(e.getMessage(), e);
+        } catch (IOException e) {
+            Debug.logError(e, module);
             throw new DefinitionParserException("Could not load file", e);
         }
     }
@@ -114,7 +96,7 @@ public class XpdlReader {
         // puts everything in the values list for returning, etc later
         readPackage(docElement);
 
-        return(values);
+        return (values);
     }
 
     // ----------------------------------------------------------------
@@ -228,7 +210,7 @@ public class XpdlReader {
             Element responsibleElement = (Element) responsibleIter.next();
             String responsibleId = UtilXml.elementValue(responsibleElement);
             GenericValue participantListValue = delegator.makeValue("WorkflowParticipantList", null);
-            participantListValue.set("participantListId",responsibleListId);
+            participantListValue.set("participantListId", responsibleListId);
             participantListValue.set("participantId", responsibleId);
             participantListValue.set("participantIndex", new Long(responsibleIndex));
             values.add(participantListValue);
@@ -578,7 +560,7 @@ public class XpdlReader {
 
         //ExtendedAttributes?
         activityValue.set("acceptAllAssignments", getExtendedAttributeValue(activityElement, "acceptAllAssignments", "N"));
-        activityValue.set("completeAllAssignments", getExtendedAttributeValue(activityElement, "completeAllAssignments", "N"));       
+        activityValue.set("completeAllAssignments", getExtendedAttributeValue(activityElement, "completeAllAssignments", "N"));
         activityValue.set("limitService", getExtendedAttributeValue(activityElement, "limitService", null), false);
         activityValue.set("limitAfterStart", getExtendedAttributeValue(activityElement, "limitAfterStart", "Y"));
         //by default set the canStart to always be true
@@ -679,18 +661,18 @@ public class XpdlReader {
         }
         return actualParametersBuf.toString();
     }
-    
-    protected String readExtendedAttributes(List extendedAttributes) {        
-        if ( extendedAttributes == null || extendedAttributes.size() == 0) return null;
+
+    protected String readExtendedAttributes(List extendedAttributes) {
+        if (extendedAttributes == null || extendedAttributes.size() == 0) return null;
         Map ea = new HashMap();
         Iterator i = extendedAttributes.iterator();
-        while ( i.hasNext() ) {
+        while (i.hasNext()) {
             Element e = (Element) i.next();
-            ea.put(e.getAttribute("Name"),e.getAttribute("Value"));
+            ea.put(e.getAttribute("Name"), e.getAttribute("Value"));
         }
         return StringUtil.mapToStr(ea);
     }
-        
+
     // ----------------------------------------------------------------
     // Transition
     // ----------------------------------------------------------------
@@ -843,7 +825,7 @@ public class XpdlReader {
             try {
                 testValue = delegator.findByPrimaryKey("WorkflowParticipant", UtilMisc.toMap("participantId", participantId));
             } catch (GenericEntityException e) {
-                Debug.logWarning(e);
+                Debug.logWarning(e, module);
             }
             if (testValue == null) {
                 GenericValue participantValue = delegator.makeValue("WorkflowParticipant", null);
@@ -1019,21 +1001,21 @@ public class XpdlReader {
           <field name="arrayUpperIndex" type="numeric"></field>
          */
     }
-    
+
     protected String getExtendedAttributeValue(Element element, String name, String defaultValue) {
-        if (element == null || name == null) 
+        if (element == null || name == null)
             return defaultValue;
-            
+
         Element extendedAttributesElement = UtilXml.firstChildElement(element, "ExtendedAttributes");
         if (extendedAttributesElement == null)
             return defaultValue;
         List extendedAttributes = UtilXml.childElementList(extendedAttributesElement, "ExtendedAttribute");
         if (extendedAttributes == null || extendedAttributes.size() == 0)
             return defaultValue;
-        
+
         Iterator iter = extendedAttributes.iterator();
         while (iter.hasNext()) {
-            Element extendedAttribute = (Element)iter.next();
+            Element extendedAttribute = (Element) iter.next();
             String elementName = extendedAttribute.getAttribute("Name");
             if (name.equals(elementName)) {
                 return extendedAttribute.getAttribute("Value");
