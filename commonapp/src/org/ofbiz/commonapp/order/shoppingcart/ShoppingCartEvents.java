@@ -514,7 +514,7 @@ public class ShoppingCartEvents {
         // get a list of the items to delete
         String removeSelected = request.getParameter("removeSelected");
         String selectedItems[] = request.getParameterValues("selectedItem");
-        if (removeSelected.equals("true") && selectedItems.length > 0) {
+        if ("true".equals(removeSelected) && selectedItems != null && selectedItems.length > 0) {
             for (int si = 0; si < selectedItems.length; si++) {
                 String indexStr = selectedItems[si];
                 ShoppingCartItem item = null;
