@@ -130,9 +130,9 @@ if (lookupFlag != null) {
                                              "fromDate", "" + new Date(),
                                              "type", new Integer(type));
                 Map result = null;
-                result = dispatcher.runSync("getItemConfigurationTree",context);
+                result = dispatcher.runSync("getBOMTree",context);
                 if (result != null) {
-                    tree = (ItemConfigurationTree)result.get("tree");
+                    tree = (BOMTree)result.get("tree");
                 }
                 tree.setRootQuantity((float)rootQuantityFloat);
                 treeArray = new ArrayList();
