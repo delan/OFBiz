@@ -34,9 +34,9 @@
 
 <%@ page import="org.ofbiz.commonapp.workeffort.workeffort.*" %>
 <%WorkEffortWorker.getWorkEffort(pageContext, "workEffortId", "workEffort", "partyAssigns", "canView", "tryEntity", "currentStatusItem");%>
-<%WorkEffortWorker.getTaskStatusItems(pageContext, "taskStatusItems");%>
+<%WorkEffortWorker.getActivityStatusItems(pageContext, "activityStatusItems");%>
 
-<%pageContext.setAttribute("PageName", "Task Editor Page");%>
+<%pageContext.setAttribute("PageName", "Activity Editor Page");%>
 
 <%@ include file="/includes/envsetup.jsp" %>
 <%@ include file="/includes/header.jsp" %>
@@ -49,7 +49,7 @@
       <table width='100%' border='0' cellpadding='<%=boxTopPadding%>' cellspacing='0' bgcolor='<%=boxTopColor%>'>
         <tr>
           <TD align=left width='40%' >
-            <div class='boxhead'>&nbsp;Task Detail</div>
+            <div class='boxhead'>&nbsp;Activity Detail</div>
           </TD>
           <TD align=right width='60%'>
             <A href='<ofbiz:url>/tasklist</ofbiz:url>' class='lightbuttontext'>[Task&nbsp;List]</A>
@@ -70,17 +70,9 @@
                 <ofbiz:if name="workEffort">
                   <input type='hidden' name='UPDATE_MODE' value='UPDATE'>
                   <input type='hidden' name='WORK_EFFORT_ID' value='<ofbiz:print attribute="workEffortId"/>'>
-                </ofbiz:if>
-                <ofbiz:unless name="workEffort">
-                  <input type='hidden' name='UPDATE_MODE' value='CREATE'>
-                  <input type='hidden' name='WORK_EFFORT_TYPE_ID' value='EVENT'>
-                  <ofbiz:if name="workEffortId">
-                    <DIV class='tabletext'>ERROR: Could not find Task with ID "<ofbiz:print attribute="workEffortId"/>"</DIV>
-                  </ofbiz:if>
-                </ofbiz:unless>
 
                 <tr>
-                  <td width='26%' align=right><div class='tabletext'>Task Name</div></td>
+                  <td width='26%' align=right><div class='tabletext'>Activity Name</div></td>
                   <td>&nbsp;</td>
                   <td width='74%'><input type='text' size='30' maxlength='30' name='WORK_EFFORT_NAME' value='<ofbiz:inputvalue field="workEffortName" param="WORK_EFFORT_NAME" entityAttr="workEffort" tryEntityAttr="tryEntity"/>'></td>
                 </tr>
@@ -98,13 +90,13 @@
                   </td>
                 </tr>
                 <tr>
-                  <td width='26%' align=right><div class='tabletext'>Task Status</div></td>
+                  <td width='26%' align=right><div class='tabletext'>Activity Status</div></td>
                   <td>&nbsp;</td>
                   <td width='74%'>
                     <SELECT name='CURRENT_STATUS_ID'>
                       <OPTION value='<ofbiz:entityfield field="statusId" attribute="currentStatusItem"/>'><ofbiz:entityfield field="description" attribute="currentStatusItem"/></OPTION>
                       <OPTION value=''>--</OPTION>
-                      <ofbiz:iterator name="statusItem" property="taskStatusItems">
+                      <ofbiz:iterator name="statusItem" property="activityStatusItems">
                         <OPTION value='<ofbiz:entityfield field="statusId" attribute="statusItem"/>'><ofbiz:entityfield field="description" attribute="statusItem"/></OPTION>
                       </ofbiz:iterator>
                     </SELECT>
@@ -137,7 +129,6 @@
                   <td width='74%'><input type='text' size='30' maxlength='30' name='ESTIMATED_COMPLETION_DATE' value='<ofbiz:inputvalue field="estimatedCompletionDate" param="ESTIMATED_COMPLETION_DATE" entityAttr="workEffort" tryEntityAttr="tryEntity"/>'><span class='tabletext'>(YYYY-MM-DD hh:mm:ss)</span></td>
                 </tr>
 
-                <ofbiz:if name="workEffort">
                   <tr>
                     <td width='26%' align=right><div class='tabletext'>Revision #</div></td>
                     <td>&nbsp;</td>
@@ -159,16 +150,22 @@
                       by <ofbiz:entityfield field="lastModifiedByPartyId" attribute="workEffort"/>
                     </div></td>
                   </tr>
-                </ofbiz:if>
 
-                <tr>
-                  <td width='26%' align=right>
-                    <ofbiz:if name="workEffort"><input type="submit" name="Update" value="Update"></ofbiz:if>
-                    <ofbiz:unless name="workEffort"><input type="submit" name="Create" value="Create"></ofbiz:unless>
-                  </td>
-                  <td>&nbsp;</td>
-                  <td width='74%'><div class='tabletext'>&nbsp;</div></td>
-                </tr>
+                  <tr>
+                    <td width='26%' align=right>
+                      <input type="submit" name="Update" value="Update">
+                    </td>
+                    <td>&nbsp;</td>
+                    <td width='74%'><div class='tabletext'>&nbsp;</div></td>
+                  </tr>
+                </ofbiz:if>
+                <ofbiz:unless name="workEffort">
+                  <tr>
+                    <td colspan='3'>
+                      <DIV class='tabletext'>ERROR: Could not find Activity with ID "<ofbiz:print attribute="workEffortId"/>"</DIV>
+                    </td>
+                  </tr>
+                </ofbiz:unless>
               </table>
               </form>
             </ofbiz:if>

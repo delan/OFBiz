@@ -31,21 +31,26 @@
 <%@ page import="org.ofbiz.core.util.*" %>
 <%@ page import="org.ofbiz.core.security.*" %>
 
-<% pageContext.setAttribute("PageName", "Task List Page"); %> 
+<%@ page import="org.ofbiz.commonapp.workeffort.workeffort.*" %>
+<%WorkEffortWorker.getWorkEffortAssignedTasks(pageContext, "tasks");%>
+<%WorkEffortWorker.getWorkEffortAssignedActivities(pageContext, "activities");%>
 
+<% pageContext.setAttribute("PageName", "Task List Page"); %> 
 <%@ include file="/includes/envsetup.jsp" %>
 <%@ include file="/includes/header.jsp" %>
 <%@ include file="/includes/onecolumn.jsp" %>
+
 <BR>
 <TABLE border=0 width='100%' cellpadding='<%=boxBorderWidth%>' cellspacing=0 bgcolor='<%=boxBorderColor%>'>
   <TR>
     <TD width='100%'>
       <table width='100%' border='0' cellpadding='<%=boxTopPadding%>' cellspacing='0' bgcolor='<%=boxTopColor%>'>
         <tr>
-          <TD align=left width='90%' >
+          <TD align=left width='40%' >
             <div class='boxhead'>&nbsp;Task List</div>
           </TD>
-          <TD align=right width='10%'>
+          <TD align=right width='60%'>
+            <A href='<ofbiz:url>/tasklist</ofbiz:url>' class='lightbuttontextdisabled'>[Task&nbsp;List]</A>
             <A href='<ofbiz:url>/task</ofbiz:url>' class='lightbuttontext'>[New&nbsp;Task]</A>
           </TD>
         </tr>
@@ -57,7 +62,54 @@
       <table width='100%' border='0' cellpadding='<%=boxBottomPadding%>' cellspacing='0' bgcolor='<%=boxBottomColor%>'>
         <tr>
           <td>
-            <DIV class='tabletext'>NOTE: This page is currently empty, so don't bother looking for anything.</DIV>
+              <div class='head3'>Assigned Workflow Activities</div>
+              <TABLE width='100%' cellpadding='2' cellspacing='0' border='0'>
+                <TR>
+                  <TD><DIV class='tabletext'><b>Start Date/Time</b></DIV></TD>
+                  <TD><DIV class='tabletext'><b>Priority</b></DIV></TD>
+                  <TD><DIV class='tabletext'><b>Activity Status</b></DIV></TD>
+                  <TD><DIV class='tabletext'><b>My Status</b></DIV></TD>
+                  <TD><DIV class='tabletext'><b>Activity Name</b></DIV></TD>
+                </TR>
+                <ofbiz:iterator name="workEffort" property="activities">
+                  <TR>
+                    <TD><DIV class='tabletext'><ofbiz:entityfield attribute="workEffort" field="estimatedStartDate"/></DIV></TD>
+                    <TD><DIV class='tabletext'><ofbiz:entityfield attribute="workEffort" field="priority"/></DIV></TD>
+                    <TD><DIV class='tabletext'><ofbiz:entityfield attribute="workEffort" field="currentStatusId"/></DIV></TD>
+                    <TD><DIV class='tabletext'><ofbiz:entityfield attribute="workEffort" field="statusId"/></DIV></TD>
+                    <TD><A class='buttontext' href='<ofbiz:url>/activity?WORK_EFFORT_ID=<ofbiz:entityfield attribute="workEffort" field="workEffortId"/></ofbiz:url>'>
+                        <ofbiz:entityfield attribute="workEffort" field="workEffortName"/></a></DIV></TD>
+                  </TR>
+                </ofbiz:iterator>
+              </TABLE>
+          </td>
+        </tr>
+      </table>
+    </TD>
+  </TR>
+  <TR>
+    <TD width='100%'>
+      <table width='100%' border='0' cellpadding='<%=boxBottomPadding%>' cellspacing='0' bgcolor='<%=boxBottomColor%>'>
+        <tr>
+          <td>
+              <div class='head3'>Assigned Tasks</div>
+              <TABLE width='100%' cellpadding='2' cellspacing='0' border='0'>
+                <TR>
+                  <TD><DIV class='tabletext'><b>Start Date/Time</b></DIV></TD>
+                  <TD><DIV class='tabletext'><b>Priority</b></DIV></TD>
+                  <TD><DIV class='tabletext'><b>Status</b></DIV></TD>
+                  <TD><DIV class='tabletext'><b>Task Name</b></DIV></TD>
+                </TR>
+                <ofbiz:iterator name="workEffort" property="tasks">
+                  <TR>
+                    <TD><DIV class='tabletext'><ofbiz:entityfield attribute="workEffort" field="estimatedStartDate"/></DIV></TD>
+                    <TD><DIV class='tabletext'><ofbiz:entityfield attribute="workEffort" field="priority"/></DIV></TD>
+                    <TD><DIV class='tabletext'><ofbiz:entityfield attribute="workEffort" field="currentStatusId"/></DIV></TD>
+                    <TD><A class='buttontext' href='<ofbiz:url>/task?WORK_EFFORT_ID=<ofbiz:entityfield attribute="workEffort" field="workEffortId"/></ofbiz:url>'>
+                        <ofbiz:entityfield attribute="workEffort" field="workEffortName"/></a></DIV></TD>
+                  </TR>
+                </ofbiz:iterator>
+              </TABLE>
           </td>
         </tr>
       </table>
@@ -67,3 +119,4 @@
 
 <%@ include file="/includes/onecolumnclose.jsp" %>
 <%@ include file="/includes/footer.jsp" %>
+
