@@ -401,19 +401,67 @@ public class GenericDelegator {
     return this.findByAnd(relatedEntity.entityName, fields, null);
   }
 
-  
-  /**
-   * simple implementation that uses {@link getRelated(String, GenericValue)}.
+  /** Get the named Related Entity for the GenericValue from the persistent store, checking first in the cache to see if the desired value is there
+   * @param relationName String containing the relation name which is the
+   *      combination of relation.title and relation.rel-entity-name as
+   *      specified in the entity XML definition file
+   * @param value GenericValue instance containing the entity
+   * @return Collection of GenericValue instances as specified in the relation definition
+   */
+  public Collection getRelatedCache(String relationName, GenericValue value) throws GenericEntityException {
+    ModelEntity modelEntity = value.getModelEntity();
+    ModelRelation relation = modelEntity.getRelation(relationName);
+    if(relation == null) throw new GenericModelException("[GenericDAO.selectRelated] could not find relation for relationName: " + relationName + " for value " + value);
+    ModelEntity relatedEntity = modelReader.getModelEntity(relation.relEntityName);
+
+    Map fields = new HashMap();
+    for(int i=0; i<relation.keyMaps.size(); i++)
+    {
+      ModelKeyMap keyMap = (ModelKeyMap)relation.keyMaps.get(i);
+      fields.put(keyMap.relFieldName, value.get(keyMap.fieldName));
+    }
+
+    return this.findByAndCache(relatedEntity.entityName, fields, null);
+  }
+
+  /** Get related entity where relation is of type one, uses findByPrimaryKey
    * @throws IllegalArgumentException if the collection found has more than one item
    */
   public GenericValue getRelatedOne(String relationName, GenericValue value) throws GenericEntityException {
+    ModelEntity modelEntity = value.getModelEntity();
     ModelRelation relation = value.getModelEntity().getRelation(relationName);
-    if(relation == null) throw new IllegalArgumentException("[GenericHelperAbstract.getRelatedOne] could not find relation for relationName: " + relationName + " for value " + value);
+    if(relation == null) throw new GenericModelException("[GenericHelperAbstract.getRelatedOne] could not find relation for relationName: " + relationName + " for value " + value);
+    if(!"one".equals(relation.type)) throw new IllegalArgumentException("Relation is not a 'one' relation: " + relationName + " of entity " + value.getEntityName());
+    ModelEntity relatedEntity = modelReader.getModelEntity(relation.relEntityName);
     
-    Collection col = getRelated(relationName, value);
-    if ((col == null) || col.size() == 0) { return null; }
-    else if (col.size() == 1) { return (GenericValue) col.iterator().next(); }
-    else { throw new IllegalArgumentException("[GenericHelperAbstract.getRelatedOne] got multiple results for relationName: " + relationName + " for value " + value); }
+    Map fields = new HashMap();
+    for(int i=0; i<relation.keyMaps.size(); i++)
+    {
+      ModelKeyMap keyMap = (ModelKeyMap)relation.keyMaps.get(i);
+      fields.put(keyMap.relFieldName, value.get(keyMap.fieldName));
+    }
+
+    return this.findByPrimaryKey(relatedEntity.entityName, fields);
+  }
+  
+  /** Get related entity where relation is of type one, uses findByPrimaryKey, checking first in the cache to see if the desired value is there
+   * @throws IllegalArgumentException if the collection found has more than one item
+   */
+  public GenericValue getRelatedOneCache(String relationName, GenericValue value) throws GenericEntityException {
+    ModelEntity modelEntity = value.getModelEntity();
+    ModelRelation relation = value.getModelEntity().getRelation(relationName);
+    if(relation == null) throw new GenericModelException("[GenericHelperAbstract.getRelatedOne] could not find relation for relationName: " + relationName + " for value " + value);
+    if(!"one".equals(relation.type)) throw new IllegalArgumentException("Relation is not a 'one' relation: " + relationName + " of entity " + value.getEntityName());
+    ModelEntity relatedEntity = modelReader.getModelEntity(relation.relEntityName);
+    
+    Map fields = new HashMap();
+    for(int i=0; i<relation.keyMaps.size(); i++)
+    {
+      ModelKeyMap keyMap = (ModelKeyMap)relation.keyMaps.get(i);
+      fields.put(keyMap.relFieldName, value.get(keyMap.fieldName));
+    }
+
+    return this.findByPrimaryKeyCache(relatedEntity.entityName, fields);
   }
   
   /** Remove the named Related Entity for the GenericValue from the persistent store

@@ -56,7 +56,7 @@ public class GenericValue extends GenericEntity {
    *@return Collection of GenericValue instances as specified in the relation definition
    */
   public Collection getRelated(String relationName) throws GenericEntityException { 
-    return delegator.getRelated(relationName, this); 
+    return delegator.getRelated(relationName, this);
   }
   /** Get the named Related Entity for the GenericValue from the persistent
    *  store, looking first in the global generic cache (for the moment this isn't true, is same as EmbeddedCache variant)
@@ -64,7 +64,7 @@ public class GenericValue extends GenericEntity {
    *@return Collection of GenericValue instances as specified in the relation definition
    */
   public Collection getRelatedCache(String relationName) throws GenericEntityException {
-    return getRelatedEmbeddedCache(relationName);
+    return delegator.getRelatedCache(relationName, this);
   }
   /** Get the named Related Entity for the GenericValue from the persistent
    *  store, looking first in a cache associated with this entity which is
@@ -87,7 +87,7 @@ public class GenericValue extends GenericEntity {
    *@return Collection of GenericValue instances as specified in the relation definition
    */
   public GenericValue getRelatedOne(String relationName) throws GenericEntityException {
-    return delegator.getRelatedOne(relationName, this); 
+    return delegator.getRelatedOne(relationName, this);
   }
   /** Get the named Related Entity for the GenericValue from the persistent
    *  store, looking first in the global generic cache (for the moment this isn't true, is same as EmbeddedCache variant)
@@ -95,7 +95,7 @@ public class GenericValue extends GenericEntity {
    *@return Collection of GenericValue instances as specified in the relation definition
    */
   public GenericValue getRelatedOneCache(String relationName) throws GenericEntityException {
-    return getRelatedOneEmbeddedCache(relationName);
+    return delegator.getRelatedOneCache(relationName, this);
   }
   /** Get the named Related Entity for the GenericValue from the persistent
    *  store, looking first in a cache associated with this entity which is
