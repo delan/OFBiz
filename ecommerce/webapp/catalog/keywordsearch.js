@@ -25,6 +25,7 @@
 */
 
 importPackage(Packages.java.lang);
+importPackage(Packages.org.ofbiz.core.util);
 importPackage(Packages.org.ofbiz.commonapp.product.catalog);
 importPackage(Packages.org.ofbiz.commonapp.product.product);
 
@@ -45,4 +46,6 @@ var prevStr = baseSearchStr+"&VIEW_INDEX="+(viewIndex.intValue()-1);
 request.setAttribute("baseSearchStr", baseSearchStr);
 request.setAttribute("nextStr", nextStr);
 request.setAttribute("prevStr", prevStr);
+
+Debug.logError("Search results: " + request.getAttribute("searchProductList"));
 

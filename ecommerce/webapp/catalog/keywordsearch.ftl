@@ -29,11 +29,11 @@
     where <#if requestParameters.SEARCH_OPERATOR?upper_case == "OR">any keyword<#else>all keywords</#if> matched.     
 </div>
 
-<#if !searchProductList?has_content>
+<#if !requestAttributes.searchProductList?has_content>
   <br><div class='head2'>&nbsp;No results found.</div>
 </#if>
 
-<#if searchProductList?has_content>
+<#if requestAttributes.searchProductList?has_content>
 <table border="0" width="100%" cellpadding="2">
     <tr>
       <td align=right>
@@ -53,17 +53,17 @@
 </table>
 </#if>
 
-<#if searchProductList?has_content>
+<#if requestAttributes.searchProductList?has_content>
 <center>
   <table width='100%' cellpadding='0' cellspacing='0'>
-    <#assign listIndex = lowIndex>
+    <#assign listIndex = requestAttributes.lowIndex>
     <#list requestAttributes.searchProductList as product>
     ${setRequestAttribute("product", product)}
     ${setRequestAttribute("listIndex", listIndex)}
       <tr><td colspan="2"><hr class='sepbar'></td></tr>
       <tr>
         <td>
-          ${pages.get("/catalog/productsummary.jsp")}
+          ${pages.get("/catalog/productsummary.ftl")}
         </td>
       </tr>
       <#assign listIndex = listIndex + 1>
@@ -72,8 +72,9 @@
 </center>
 </#if>
 
-<#if searchProductList?has_content>
+<#if requestAttributes.searchProductList?has_content>
 <table border="0" width="100%" cellpadding="2">
+    <tr><td colspan="2"><hr class='sepbar'></td></tr>
     <tr>
       <td align=right>
         <b>
