@@ -452,13 +452,18 @@ public class ShoppingCartItem implements java.io.Serializable {
 
     /** Returns true if shipping charges apply to this item. */
     public boolean shippingApplies() {
-        if (_product != null) {        
-            Boolean shipCharge = getProduct().getBoolean("chargeShipping");
+        if (_product != null) {
+            String productTypeId = getProduct().getString("productTypeId");
+            if ("SERVICE".equals(productTypeId) || "DIGITAL_GOOD".equals(productTypeId)) {
+                // don't charge shipping on services or digital goods
+                return false;
+            }       
+            Boolean chargeShipping = getProduct().getBoolean("chargeShipping");
     
-            if (shipCharge == null) {
+            if (chargeShipping == null) {
                 return true;
             } else {
-                return shipCharge.booleanValue();
+                return chargeShipping.booleanValue();
             }
         } else {
             // we don't ship non-product items
