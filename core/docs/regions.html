@@ -63,10 +63,127 @@ specific locations in the template.</p>
 
 <P><B>A Basic Region Definition</B></P>
 
+<P>First let's look at an actual region definition that would go in the 
+<B>WEB-INF/regions.xml</B> file:</P>
+
+<pre style='border: solid black 1px; background-color: #EEEEFF; color: black;'>
+    &lt;define id='MAIN_REGION' template='/templates/main_template.jsp'&gt;
+        &lt;put section='title'&gt;Application Page&lt;/put&gt; &lt;!-- this is a default and is meant to overridden --&gt;
+        &lt;put section='header' content='/includes/header.jsp'/&gt;
+        &lt;put section='error' content='/includes/errormsg.jsp'/&gt;
+        &lt;put section='content' content='/main.jsp'/&gt; &lt;!-- this is a default and is meant to overridden --&gt;
+        &lt;put section='footer' content='/includes/footer.jsp'/&gt;
+        &lt;put section='remote' content='http://www.yahoo.com' type="http"/&gt;
+    &lt;/define&gt;
+</pre>
+
+<P>The <B>define</B> tag is used to declare a named region. The region name is specified 
+in the id attribute. This is a basic region that uses a JSP template. You can also
+define regions that inherit from other regions, and that will be covered in the next
+section. The full path of the template is specified in the template attribute and
+should be specified as a webapp resource relative to the root of the webapp, just 
+like any JSP or Serlvet in a webapp.</P>
+
+<P>Template files have general text as would be expected and can have content,  
+or other text, inserted at different locations. The content inserted in a region is referred to
+as a section. Sections are referred to by name in the region template and when 
+configuring a region the content that goes into each section is defined using
+the <B>put</B> tag.</P>
+
+<P>The name of the section is specified using the section attribute of the put 
+tag. The content to insert into the section is located using the the information
+in the content attribute. Content can also be inlined in the body of the put tag,
+as demonstrated in the title section above. This is referred to as direct content.
+By default the location specified in the content attribute is used to refer to a 
+resource in the current webapp.</P>
+
+<P>The type of the section is specified in the type attribute, and the default
+type is called default. These types are discussed below.</P>
+
+<P>Note that if a section is included in a template, but no content is
+specified for it in the region definition then nothing will be inserted there
+when the template is rendered.</P>
 
 <P><B>An Inheritance Region</B></P>
 
+<P>Here is an example of a region definition that inherits from another definition:</P>
+
+<pre style='border: solid black 1px; background-color: #EEEEFF; color: black;'>
+    &lt;define id='login' region='MAIN_REGION'&gt;
+        &lt;put section='title'&gt;Login Page&lt;/put&gt;
+        &lt;put section='content' content='/login.jsp'/&gt;
+    &lt;/define&gt;
+</pre>
+
+<P>This definition does not use the template attribute of the define tag. Instead it
+uses the region attribute and specifies the region that this region will inherit its
+base definition from. The same template as the parent region will be used and all of
+the put settings for assigning content to sections will be inherited. Any put tags
+specified in the inheriting region will override the section content assignments of
+the parent region.</P>
+
+<P>In this case the login region inherits from the MAIN_REGION. The name of the 
+MAIN_REGION is formatted the way it is because it is meant to be inherited from and
+not used directly, just another convention we find useful.</P>
+
+<P>This login region has the same layout as the MAIN_REGION, but the "content"
+section is overriden so that the login.jsp page will be rendered in the main content
+area. It also overrides the title to specify a custom title for the page.</P>
+
+<P><B>A Region Within a Region</B></P>
+
+<P>Here is an example of a region that is meant to be used as content for a section 
+in the main region. In order to use this a region that inherits from the main region
+is defined for this new style of page. Also included below is an example of a region
+that inherits from this new style of page and overrides the main content area and the
+title section so that it can be used as a real world view.</P>
+
+<pre style='border: solid black 1px; background-color: #EEEEFF; color: black;'>
+    &lt;define id='LEFTBAR_REGION' template='/templates/leftbar_template.jsp'&gt;
+        &lt;put section='first' content='/catalog/choosecatalog.jsp'/&gt;
+        &lt;put section='second' content='/catalog/keywordsearchbox.jsp'/&gt;
+        &lt;put section='third' content='/catalog/sidedeepcategory.jsp'/&gt;
+        &lt;!-- &lt;put section='fourth' content='http://www.yahoo.com' type="http"/&gt; --&gt;
+        &lt;put section='fourth' content='/catalog/minireorderprods.jsp' type="resource"/&gt;
+        &lt;!-- &lt;put section='fifth' content='/fifth.jsp'/&gt; --&gt;
+    &lt;/define&gt;
+
+    &lt;define id='LEFT_ONLY_REGION' region='MAIN_REGION'&gt;
+        &lt;put section='leftbar' content='LEFTBAR_REGION'/&gt;
+    &lt;/define&gt;
+
+    &lt;define id='showcart' region='LEFT_ONLY_REGION'&gt;
+        &lt;put section='title'&gt;Show Cart&lt;/put&gt;
+        &lt;put section='content' content='/cart/showcart.jsp'/&gt;
+    &lt;/define&gt;
+</pre>
+
 <P><B>Different Types of Sections</B></P>
+
+<P>There are just a few types of sections that are always available. In addition
+to these types you can also use any type of Control Servlet View defined in the
+controller.xml file. Examples include http, velocity, etc.</P>
+
+<P>The section types that are always available are: default, region, resource, 
+and direct.</P>
+
+<P>The direct type is the most simple. With this type the value of the content
+attribute of the put tag or the string in the body of the put tag will be directly
+inserted into the template.</P>
+
+<P>The region type is used to allow content from rendered regions to be included 
+as section content in another region.</P>
+
+<P>The resource type is used to specify that the value of the content attribute
+refers to a resource (a JSP, Servlet or other webapp resource) in the current 
+webapp.</P>
+
+<P>The default type is the only one that does not have a direct 
+meaning. When default is specified (or when no type is specified) the content
+attribute value is looked up in the list of region names and if found that 
+region will be used for the section content. If the content attribute value is 
+not a region name then it is assumed to be a resource and the regions framework
+will look up the named resource in the current webapp.</P>
 
 <hr>
 <h3><a name="Templates">Creating Region Templates</a> </h3>
@@ -74,7 +191,38 @@ specific locations in the template.</p>
 
 <P><B>Introduction</B></P>
 
+<P>The simplest way to create a region template is to create a JSP that uses the
+region taglib to render sections within the region. The template JSPs can be used
+just like any other JSP, but it is best to keep them simple and put the more 
+complex content into webapp resources that can be included as section content.</P>
+
+<P>Just as a side note, the region "stack" is stored in a request attribute and
+with it you could in theory create a servlet that can be used as a template, or
+a tool could be developed for velocity or other templating mechanisms to be used
+as region templates.</P>
+
 <P><B>The Tags</B></P>
+
+<P>The first step for using the region render tag is to declare the use of the
+region taglib as follows in the JSP:</P>
+
+<pre style='border: solid black 1px; background-color: #EEEEFF; color: black;'>
+	&lt;%@ taglib uri='regions' prefix='region' %&gt;
+</pre>
+
+<P>The "regions" uri comes from a declaration in the web.xml file, which is done
+in the standard way.</P>
+
+<P>That done you can specify where each section content will be inserted, or 
+rendered, using the region:render tag as follows:</P>
+
+<pre style='border: solid black 1px; background-color: #EEEEFF; color: black;'>
+	&lt;region:render section='header'/&gt;
+</pre>
+
+<P>There are other tags in the region taglib that can be used just like the XML
+elements in the regions.xml file to define regions and the content that is assigned
+to each section in the region.</P>
 
 </body>
 </html>
