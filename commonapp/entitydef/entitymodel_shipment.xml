@@ -64,7 +64,7 @@
       <field name="shipmentId" type="id"></field>
       <field name="shipmentItemSeqId" type="id"></field>
       <field name="issuedDateTime" type="date-time"></field>
-      <field name="issuedByUserLoginId" type="id"></field>
+      <field name="issuedByUserLoginId" type="id-vlong"></field>
       <field name="quantity" type="floating-point"></field>
       <prim-key field="itemIssuanceId"/>
       <relation type="one" fk-name="ITEM_ISS_INVITM" rel-entity-name="InventoryItem">
@@ -382,6 +382,42 @@
         <key-map field-name="statusId"/>
       </relation>
     </entity>
+    <view-entity entity-name="ShipmentAndItem"
+            package-name="org.ofbiz.commonapp.shipment.shipment"
+            title="Carrier Andy Shipment Method Type View Entity">
+      <member-entity entity-alias="SH" entity-name="Shipment"/>
+      <member-entity entity-alias="SITM" entity-name="ShipmentItem"/>
+      <alias entity-alias="SH" name="shipmentId"/>
+      <alias entity-alias="SH" name="shipmentTypeId"/>
+      <alias entity-alias="SH" name="statusId"/>
+      <alias entity-alias="SH" name="primaryOrderId"/>
+      <alias entity-alias="SH" name="estimatedReadyDate"/>
+      <alias entity-alias="SH" name="estimatedShipDate"/>
+      <alias entity-alias="SH" name="estimatedArrivalDate"/>
+      <alias entity-alias="SH" name="latestCancelDate"/>
+      <alias entity-alias="SH" name="estimatedShipCost"/>
+      <alias entity-alias="SH" name="handlingInstructions"/>
+      <alias entity-alias="SH" name="originFacilityId"/>
+      <alias entity-alias="SH" name="destinationFacilityId"/>
+      <alias entity-alias="SH" name="originContactMechId"/>
+      <alias entity-alias="SH" name="destinationContactMechId"/>
+      <alias entity-alias="SH" name="partyIdTo"/>
+      <alias entity-alias="SH" name="partyIdFrom"/>
+      <alias entity-alias="SITM" name="shipmentItemSeqId"/>
+      <alias entity-alias="SITM" name="productId"/>
+      <alias entity-alias="SITM" name="quantity"/>
+      <alias entity-alias="SITM" name="shipmentContentDescription"/>
+      <view-link entity-alias="SH" rel-entity-alias="SITM">
+        <key-map field-name="shipmentId"/>
+      </view-link>
+      <relation type="one-nofk" rel-entity-name="Shipment">
+        <key-map field-name="shipmentId"/>
+      </relation>
+      <relation type="one-nofk" rel-entity-name="ShipmentItem">
+        <key-map field-name="shipmentId"/>
+        <key-map field-name="shipmentItemSeqId"/>
+      </relation>
+    </view-entity>
     <entity entity-name="ShipmentAttribute"
             package-name="org.ofbiz.commonapp.shipment.shipment"
             title="Shipment Attribute Entity">
