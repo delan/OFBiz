@@ -39,6 +39,8 @@
 		<check-id field-name="productCategoryId" map-name="parameters"/>
         <check-errors/>
 
+        <now-timestamp-to-env env-name="nowTimestamp"/>
+
         <make-value value-name="newEntity" entity-name="ProductCategory"/>
         <set-nonpk-fields map-name="parameters" value-name="newEntity"/>
         <set-pk-fields map-name="parameters" value-name="newEntity"/>
@@ -51,8 +53,7 @@
             <make-value entity-name="ProductCategoryRollup" value-name="newRollup"/>
             <field-to-field field-name="productCategoryId" map-name="newEntity" to-field-name="productCategoryId" to-map-name="newRollup"/>
             <field-to-field field-name="primaryParentCategoryId" map-name="newEntity" to-field-name="parentProductCategoryId" to-map-name="newRollup"/>
-            <now-timestamp-to-env env-name="nowStamp"/>
-            <env-to-field env-name="nowStamp" field-name="fromDate" map-name="newRollup"/>
+            <env-to-field env-name="nowTimestamp" field-name="fromDate" map-name="newRollup"/>
             <create-value value-name="newRollup"/>
         </if-not-empty>
         -->
@@ -66,8 +67,8 @@
         	<iterate entry-name="productCategoryRole" list-name="productCategoryRoles">
         		<!-- add this new product to the category -->
 		        <make-value value-name="newLimitRollup" entity-name="ProductCategoryRollup"/>
-        		<field-to-field field-name="productCategoryId" map-nane="newEntity" to-map-name="newLimitRollup"/>
-        		<field-to-field field-name="productCategoryId" map-nane="productCategoryRole" to-field-name="parentProductCategoryId" to-map-name="newLimitRollup"/>
+        		<field-to-field field-name="productCategoryId" map-name="newEntity" to-map-name="newLimitRollup"/>
+        		<field-to-field field-name="productCategoryId" map-name="productCategoryRole" to-field-name="parentProductCategoryId" to-map-name="newLimitRollup"/>
 		        <env-to-field env-name="nowTimestamp" field-name="fromDate" map-name="newLimitRollup"/>
 		        <create-value value-name="newLimitRollup"/>
         	</iterate>
@@ -113,8 +114,8 @@
                 <make-value entity-name="ProductCategoryRollup" value-name="newRollup"/>
                 <field-to-field field-name="productCategoryId" map-name="lookedUpValue" to-field-name="productCategoryId" to-map-name="newRollup"/>
                 <field-to-field field-name="primaryParentCategoryId" map-name="lookedUpValue" to-field-name="parentProductCategoryId" to-map-name="newRollup"/>
-                <now-timestamp-to-env env-name="nowStamp"/>
-                <env-to-field env-name="nowStamp" field-name="fromDate" map-name="newRollup"/>
+                <now-timestamp-to-env env-name="nowTimestamp"/>
+                <env-to-field env-name="nowTimestamp" field-name="fromDate" map-name="newRollup"/>
                 <create-value value-name="newRollup"/>
             </if-compare-field>
         </if-not-empty>
