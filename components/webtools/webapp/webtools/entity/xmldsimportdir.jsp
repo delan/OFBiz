@@ -36,6 +36,15 @@
 <%
   String path = request.getParameter("path");
   boolean mostlyInserts = request.getParameter("mostlyInserts") != null;
+  
+  String txTimeoutStr = UtilFormatOut.checkEmpty(request.getParameter("txTimeout"), "7200");
+  Integer txTimeout = null;
+  try {
+      txTimeout = Integer.valueOf(txTimeoutStr);
+  } catch (Exception e) {
+      txTimeout = new Integer(7200);
+      %><div>ERROR: TX Timeout not a valid number, setting to 7200 seconds (2 hours): <%=e%><%
+  }
 %>
 
 <h3>XML Import to DataSource(s)</h3>
@@ -46,8 +55,9 @@
 
   <FORM method=POST action='<ofbiz:url>/xmldsimportdir</ofbiz:url>'>
     <div>Absolute directory path:</div>
-    <INPUT type=text class='inputBox' size='60' name='path' value='<%=UtilFormatOut.checkNull(path)%>'>
+    <INPUT type=text class='inputBox' size='60' name='path' value="<%=UtilFormatOut.checkNull(path)%>">
     Mostly Inserts?:<INPUT type=checkbox name='mostlyInserts' <%=mostlyInserts?"checked":""%>>
+    TX Timeout Seconds:<INPUT type="text" size="6" value="<%=txTimeoutStr%>" name='txTimeout'>
     <INPUT type=submit value='Import Files'>
   </FORM>
   <hr>
@@ -86,7 +96,10 @@
 		URL url = curFile.toURL();
 		EntitySaxReader reader = new EntitySaxReader(delegator);
         if (mostlyInserts) {
-          reader.setUseTryInsertMethod(true);
+            reader.setUseTryInsertMethod(true);
+        }
+        if (txTimeout != null) {
+            reader.setTransactionTimeout(txTimeout.intValue());
         }
 		long numberRead = reader.parse(url);
 		%><div>Got <%=numberRead%> entities from <%=curFile%></div><%
