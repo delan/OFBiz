@@ -1,6 +1,9 @@
 /*
  * $Id$
  * $Log$
+ * Revision 1.1  2001/08/30 00:27:49  jonesde
+ * Added initial revision of customer information maintenance.
+ *
  *
  */
 package org.ofbiz.ecommerce.customer;
@@ -57,21 +60,22 @@ public class CustomerEvents
     String firstName = request.getParameter("USER_FIRST_NAME");
     String middleName = request.getParameter("USER_MIDDLE_NAME");
     String lastName = request.getParameter("USER_LAST_NAME");
-    String salutation = "";
+    String personalTitle = "";
     String suffix = "";
+
     String homePhone = request.getParameter("CUSTOMER_HOME_PHONE");
     String workPhone = request.getParameter("CUSTOMER_WORK_PHONE");
     String faxPhone = request.getParameter("CUSTOMER_FAX_PHONE");
     String mobilePhone = request.getParameter("CUSTOMER_MOBILE_PHONE");
     String email = request.getParameter("CUSTOMER_EMAIL");
 
-    String street1 = request.getParameter("CUSTOMER_ADDRESS1");
-    String street2 = request.getParameter("CUSTOMER_ADDRESS2");
+    String address1 = request.getParameter("CUSTOMER_ADDRESS1");
+    String address2 = request.getParameter("CUSTOMER_ADDRESS2");
     String city = request.getParameter("CUSTOMER_CITY");
-    String county = ""; //request.getParameter(HttpRequestConstants);
     String state = request.getParameter("CUSTOMER_STATE");
-    String postalCode = request.getParameter("CUSTOMER_ZIPCODE");
-    String directions = ""; //request.getParameter(HttpRequestConstants);
+    String postalCode = request.getParameter("CUSTOMER_POSTAL_CODE");
+    String country = request.getParameter("CUSTOMER_COUNTRY");
+    String directions = "";
 
     if(firstName == null || firstName.length() <= 0)
     {
@@ -81,7 +85,7 @@ public class CustomerEvents
     {
       errMsg = errMsg + "<li>Last name missing.";
     }
-    if(street1 == null || street1.length() <= 0)
+    if(address1 == null || address1.length() <= 0)
     {
       errMsg = errMsg + "<li>Address line 1 missing.";
     }
@@ -151,22 +155,32 @@ public class CustomerEvents
     GenericValue tempUserLogin = helper.makeValue("UserLogin", UtilMisc.toMap("userLoginId", username, "currentPassword", password, "partyId", username));
     // create Party, PartyClass, Person, ContactMechs for Address, phones
     tempUserLogin.preStoreOther(helper.makeValue("Party", UtilMisc.toMap("partyId", username)));
-    tempUserLogin.preStoreOther(helper.makeValue("PartyClassification", UtilMisc.toMap("partyId", username, "partyTypeId", "PERSON", "partyClassificationTypeId", "PERSON_CLASSIFICATION")));
+    tempUserLogin.preStoreOther(helper.makeValue("PartyClassification", UtilMisc.toMap("partyId", username, "partyTypeId", "PERSON", "partyClassificationTypeId", "PERSON_CLASSIFICATION", "fromDate", new Timestamp((new java.util.Date()).getTime()))));
     tempUserLogin.preStoreOther(helper.makeValue("PartyRole", UtilMisc.toMap("partyId", username, "roleTypeId", "CUSTOMER")));
-    tempUserLogin.preStoreOther(helper.makeValue("Person", UtilMisc.toMap("partyId", username, "firstName", firstName, "middleName", middleName, "lastName", lastName)));
+    tempUserLogin.preStoreOther(helper.makeValue("Person", UtilMisc.toMap("partyId", username, "firstName", firstName, "middleName", middleName, "lastName", lastName, "personalTitle", personalTitle, "suffix", suffix)));
     
-    //need to make a sequencer tool...
-    //tempUserLogin.preStoreOther(helper.makeValue("ContactMech", UtilMisc.toMap("contactMechId", "0", "firstName", firstName, "middleName", middleName, "lastName", lastName)));
-
-    //newPerson = PersonHelper.create(username, password, firstName, middleName, lastName, salutation, suffix, homePhone, workPhone, faxPhone, mobilePhone, email, companyPromoEmail, partnerPromoEmail, null);
-    //newAddress = AddressHelper.create(street1, street2, city, county, state, postalCode, directions, geoCode, mapUrl);
-    //customerPerson = CustomerPersonHelper.create(customer.getCustomerId(), newPerson.getUsername());
-    //postalAddress = postalAddressHelper.create(customer.getCustomerId(), newAddress.getAddressId());
+    //make address
+    Long newCMId = helper.getNextSeqId("ContactMech");
+    if(newCMId == null) { errMsg = "<li>ERROR: Could not create new customer. Please contact customer service."; return "error"; }
+    tempUserLogin.preStoreOther(helper.makeValue("ContactMech", UtilMisc.toMap("contactMechId", newCMId.toString(), "contactMechTypeId", "POSTAL_ADDRESS")));
+    Map addrFields = new HashMap();
+    addrFields.put("contactMechId", newCMId.toString());
+    addrFields.put("toName", firstName + " " + lastName);
+    addrFields.put("address1", address1);
+    addrFields.put("address2", address2);
+    addrFields.put("directions", directions);
+    addrFields.put("city", city);
+    addrFields.put("postalCode", postalCode);
+    addrFields.put("stateProvinceGeoId", state);
+    addrFields.put("countryGeoId", country);
+    //addrFields.put("postalCodeGeoId", postalCodeGeoId);
+    tempUserLogin.preStoreOther(helper.makeValue("PostalAddress", addrFields));
+    tempUserLogin.preStoreOther(helper.makeValue("PartyContactMech", UtilMisc.toMap("partyId", username, "contactMechId", newCMId.toString(), "fromDate", new Timestamp((new java.util.Date()).getTime()), "roleTypeId", "CUSTOMER", "nonSolicitationIndicator", "Y")));
 
     newUserLogin = helper.create(tempUserLogin);
     if(newUserLogin == null) { errMsg = "<li>ERROR: Could not create new customer. Please contact customer service."; return "error"; }
 
-    if(UtilProperties.propertyValueEqualsIgnoreCase("ecommerce", "create.allow.password", "true")) request.getSession().setAttribute("USER_LOGIN", newUserLogin);
+    if(UtilProperties.propertyValueEqualsIgnoreCase("ecommerce", "create.allow.password", "true")) request.getSession().setAttribute(SiteDefs.USER_LOGIN, newUserLogin);
     return "success";
   }
   
@@ -229,8 +243,8 @@ public class CustomerEvents
 
     //get all parameters:
     String companyName = request.getParameter(HttpRequestConstants.CUSTOMER_COMPANY_NAME);
-    String street1 = request.getParameter(HttpRequestConstants.CUSTOMER_ADDRESS1);
-    String street2 = request.getParameter(HttpRequestConstants.CUSTOMER_ADDRESS2);
+    String address1 = request.getParameter(HttpRequestConstants.CUSTOMER_ADDRESS1);
+    String address2 = request.getParameter(HttpRequestConstants.CUSTOMER_ADDRESS2);
     String city = request.getParameter(HttpRequestConstants.CUSTOMER_CITY);
     String county = "";
     //request.getParameter(HttpRequestConstants);
@@ -258,7 +272,7 @@ public class CustomerEvents
       priceLevel = 0;
     }
 
-    if(street1 == null || street1.length() <= 0)
+    if(address1 == null || address1.length() <= 0)
     {
       errMsg = errMsg + "<li>Address line 1 missing.";
     }
@@ -308,8 +322,8 @@ public class CustomerEvents
       return false;
     }
 
-    address.setStreet1(street1);
-    address.setStreet2(street2);
+    address.setaddress1(address1);
+    address.setaddress2(address2);
     address.setCity(city);
     address.setCounty(county);
     address.setState(state);
@@ -380,8 +394,8 @@ public class CustomerEvents
     String companyPromoEmail = request.getParameter(HttpRequestConstants.COMPANY_PROMO_EMAIL);
     String partnerPromoEmail = request.getParameter(HttpRequestConstants.PARTNER_PROMO_EMAIL);
 
-    String street1 = request.getParameter(HttpRequestConstants.USER_HOME_ADDRESS1);
-    String street2 = request.getParameter(HttpRequestConstants.USER_HOME_ADDRESS2);
+    String address1 = request.getParameter(HttpRequestConstants.USER_HOME_ADDRESS1);
+    String address2 = request.getParameter(HttpRequestConstants.USER_HOME_ADDRESS2);
     String city = request.getParameter(HttpRequestConstants.USER_HOME_CITY);
     String county = "";
     //request.getParameter(HttpRequestConstants);
@@ -453,8 +467,8 @@ public class CustomerEvents
 
     if(address != null)
     {
-      address.setStreet1(street1);
-      address.setStreet2(street2);
+      address.setaddress1(address1);
+      address.setaddress2(address2);
       address.setCity(city);
       address.setCounty(county);
       address.setState(state);
@@ -465,7 +479,7 @@ public class CustomerEvents
     }
     else
     {
-      address = AddressHelper.create(street1, street2, city, county, state, postalCode, directions, geoCode, mapUrl);
+      address = AddressHelper.create(address1, address2, city, county, state, postalCode, directions, geoCode, mapUrl);
       if(address == null)
       {
         //uh oh, failed...
@@ -572,8 +586,8 @@ public class CustomerEvents
       }
     }
 
-    String street1 = request.getParameter(HttpRequestConstants.CUSTOMER_SHIPPING_ADDRESS1);
-    String street2 = request.getParameter(HttpRequestConstants.CUSTOMER_SHIPPING_ADDRESS2);
+    String address1 = request.getParameter(HttpRequestConstants.CUSTOMER_SHIPPING_ADDRESS1);
+    String address2 = request.getParameter(HttpRequestConstants.CUSTOMER_SHIPPING_ADDRESS2);
     String city = request.getParameter(HttpRequestConstants.CUSTOMER_SHIPPING_CITY);
     String county = "";
     //request.getParameter(HttpRequestConstants);
@@ -586,7 +600,7 @@ public class CustomerEvents
     String mapUrl = "";
     //request.getParameter(HttpRequestConstants);
 
-    if(street1 == null || street1.length() <= 0)
+    if(address1 == null || address1.length() <= 0)
     {
       errMsg = errMsg + "<li>Address line 1 missing.";
     }
@@ -612,7 +626,7 @@ public class CustomerEvents
       return false;
     }
 
-    Address newShippingAddress = AddressHelper.create(street1, street2, city, county, state, postalCode, directions, geoCode, mapUrl);
+    Address newShippingAddress = AddressHelper.create(address1, address2, city, county, state, postalCode, directions, geoCode, mapUrl);
     if(newShippingAddress == null)
     {
       request.setAttribute(HttpRequestConstants.ERROR_MESSAGE, "Could not create address record.");
@@ -705,8 +719,8 @@ public class CustomerEvents
       return false;
     }
 
-    String street1 = request.getParameter(HttpRequestConstants.CUSTOMER_SHIPPING_ADDRESS1);
-    String street2 = request.getParameter(HttpRequestConstants.CUSTOMER_SHIPPING_ADDRESS2);
+    String address1 = request.getParameter(HttpRequestConstants.CUSTOMER_SHIPPING_ADDRESS1);
+    String address2 = request.getParameter(HttpRequestConstants.CUSTOMER_SHIPPING_ADDRESS2);
     String city = request.getParameter(HttpRequestConstants.CUSTOMER_SHIPPING_CITY);
     String county = "";
     //request.getParameter(HttpRequestConstants);
@@ -719,7 +733,7 @@ public class CustomerEvents
     String mapUrl = "";
     //request.getParameter(HttpRequestConstants);
 
-    if(street1 == null || street1.length() <= 0)
+    if(address1 == null || address1.length() <= 0)
     {
       errMsg = errMsg + "<li>Address line 1 missing.";
     }
@@ -745,8 +759,8 @@ public class CustomerEvents
       return false;
     }
 
-    address.setStreet1(street1);
-    address.setStreet2(street2);
+    address.setaddress1(address1);
+    address.setaddress2(address2);
     address.setCity(city);
     address.setCounty(county);
     address.setState(state);
@@ -871,8 +885,8 @@ public class CustomerEvents
     String ccYear = request.getParameter(HttpRequestConstants.CUSTOMER_CREDITCARD_YEAR);
     long longCCNumber = 0;
 
-    String street1 = request.getParameter(HttpRequestConstants.CUSTOMER_CREDITCARD_ADDRESS1);
-    String street2 = request.getParameter(HttpRequestConstants.CUSTOMER_CREDITCARD_ADDRESS2);
+    String address1 = request.getParameter(HttpRequestConstants.CUSTOMER_CREDITCARD_ADDRESS1);
+    String address2 = request.getParameter(HttpRequestConstants.CUSTOMER_CREDITCARD_ADDRESS2);
     String city = request.getParameter(HttpRequestConstants.CUSTOMER_CREDITCARD_CITY);
     String county = "";
     //request.getParameter(HttpRequestConstants);
@@ -947,7 +961,7 @@ public class CustomerEvents
       }
     }
 
-    if(street1 == null || street1.length() <= 0)
+    if(address1 == null || address1.length() <= 0)
     {
       errMsg = errMsg + "<li>Address line 1 missing.";
     }
@@ -973,7 +987,7 @@ public class CustomerEvents
       return false;
     }
 
-    Address newCCAddress = AddressHelper.create(street1, street2, city, county, state, postalCode, directions, geoCode, mapUrl);
+    Address newCCAddress = AddressHelper.create(address1, address2, city, county, state, postalCode, directions, geoCode, mapUrl);
     if(newCCAddress == null)
     {
       request.setAttribute(HttpRequestConstants.ERROR_MESSAGE, "Could not create address record.");
@@ -1138,8 +1152,8 @@ public class CustomerEvents
     String ccYear = CommonUtil.checkNull(request.getParameter(HttpRequestConstants.CUSTOMER_CREDITCARD_YEAR));
     long longCCNumber = 0;
 
-    String street1 = request.getParameter(HttpRequestConstants.CUSTOMER_CREDITCARD_ADDRESS1);
-    String street2 = request.getParameter(HttpRequestConstants.CUSTOMER_CREDITCARD_ADDRESS2);
+    String address1 = request.getParameter(HttpRequestConstants.CUSTOMER_CREDITCARD_ADDRESS1);
+    String address2 = request.getParameter(HttpRequestConstants.CUSTOMER_CREDITCARD_ADDRESS2);
     String city = request.getParameter(HttpRequestConstants.CUSTOMER_CREDITCARD_CITY);
     String county = "";
     //request.getParameter(HttpRequestConstants);
@@ -1214,7 +1228,7 @@ public class CustomerEvents
       }
     }
 
-    if(street1 == null || street1.length() <= 0)
+    if(address1 == null || address1.length() <= 0)
     {
       errMsg = errMsg + "<li>Address line 1 missing.";
     }
@@ -1261,8 +1275,8 @@ public class CustomerEvents
       return false;
     }
 
-    address.setStreet1(street1);
-    address.setStreet2(street2);
+    address.setaddress1(address1);
+    address.setaddress2(address2);
     address.setCity(city);
     address.setCounty(county);
     address.setState(state);

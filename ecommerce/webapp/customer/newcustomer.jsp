@@ -83,7 +83,7 @@
     * </td>
   </tr>
   <tr>
-    <td width="26%"><div class="tabletext"><font color=<%=fontColor%>>State </font></div></td>
+    <td width="26%"><div class="tabletext"><font color='<%=fontColor%>'>State/Province</font></div></td>
     <td width="74%">
       <select name="CUSTOMER_STATE">
           <option><%=UtilFormatOut.checkNull(request.getParameter("CUSTOMER_STATE"))%></option>
@@ -92,25 +92,21 @@
       * </td>
   </tr>
   <tr>
-    <td width="26%"><div class="tabletext"><font color=<%=fontColor%>>Zip/Postal Code</font></div></td>
+    <td width="26%"><div class="tabletext"><font color='<%=fontColor%>'>Zip/Postal Code</font></div></td>
     <td width="74%">
-        <input type="text" name="CUSTOMER_ZIPCODE" value="<%=UtilFormatOut.checkNull(request.getParameter("CUSTOMER_ZIPCODE"))%>" size="12" maxlength="10">
+        <input type="text" name="CUSTOMER_POSTAL_CODE" value="<%=UtilFormatOut.checkNull(request.getParameter("CUSTOMER_POSTAL_CODE"))%>" size="12" maxlength="10">
     * </td>
   </tr>
-<%--
   <tr>
-      <td width="26%">
-          <div class="tabletext"><font color=<%=fontColor%>>Country </font></div>
-      </td>
+      <td width="26%"><div class="tabletext"><font color='<%=fontColor%>'>Country</font></div></td>
       <td width="74%">
-          <select name="<%="CUSTOMER_COUNTRY%>" >
-  <%@ include file="/includes/countries.jsp" %>
+          <select name="CUSTOMER_COUNTRY" >
+            <%@ include file="/includes/countries.jsp" %>
           </select>
       * </td>
   </tr>
---%>
   <tr>
-    <td width="26%"><div class="tabletext"><font color=<%=fontColor%>>Home phone </font></div></td>
+    <td width="26%"><div class="tabletext"><font color='<%=fontColor%>'>Home phone </font></div></td>
     <td width="74%">
         <input type="text" name="CUSTOMER_HOME_PHONE" value="<%=UtilFormatOut.checkNull(request.getParameter("CUSTOMER_HOME_PHONE"))%>" size="30" maxlength="15">
     </td>

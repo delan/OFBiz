@@ -82,7 +82,7 @@
     <request-map><uri>newcustomer</uri><secure>true</secure><auth>false</auth><success>view:newcustomer</success></request-map>
     <request-map>
         <uri>createcustomer</uri><secure>true</secure><auth>false</auth>
-        <event-type>java</event-type><event-path>org.ofbiz.ecommerce.customer.CustomerEvents</event-path><event-invoke>login</event-invoke>
+        <event-type>java</event-type><event-path>org.ofbiz.ecommerce.customer.CustomerEvents</event-path><event-invoke>createCustomer</event-invoke>
         <success>view:main</success><error>view:newcustomer</error>
     </request-map>
 
