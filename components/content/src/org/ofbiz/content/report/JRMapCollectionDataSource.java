@@ -28,9 +28,9 @@ import java.util.Collection;
 import java.util.Iterator;
 import java.util.Map;
 
-import dori.jasper.engine.JRDataSource;
-import dori.jasper.engine.JRException;
-import dori.jasper.engine.JRField;
+import net.sf.jasperreports.engine.JRDataSource;
+import net.sf.jasperreports.engine.JRException;
+import net.sf.jasperreports.engine.JRField;
 
 /**
  * <code>JRMapCollectionDataSource</code>

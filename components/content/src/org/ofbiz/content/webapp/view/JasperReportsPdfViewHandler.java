@@ -27,16 +27,17 @@ package org.ofbiz.content.webapp.view;
 import java.io.IOException;
 import java.io.InputStream;
 import java.util.Map;
+
 import javax.servlet.ServletContext;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
-import dori.jasper.engine.JRDataSource;
-import dori.jasper.engine.JREmptyDataSource;
-import dori.jasper.engine.JasperCompileManager;
-import dori.jasper.engine.JasperManager;
-import dori.jasper.engine.JasperPrint;
-import dori.jasper.engine.JasperReport;
+import net.sf.jasperreports.engine.JRDataSource;
+import net.sf.jasperreports.engine.JREmptyDataSource;
+import net.sf.jasperreports.engine.JasperCompileManager;
+import net.sf.jasperreports.engine.JasperManager;
+import net.sf.jasperreports.engine.JasperPrint;
+import net.sf.jasperreports.engine.JasperReport;
 
 import org.ofbiz.base.util.Debug;
 import org.ofbiz.base.util.UtilHttp;
