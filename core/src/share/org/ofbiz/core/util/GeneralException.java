@@ -62,6 +62,15 @@ public class GeneralException extends Exception {
         this.nested = nested;
     }
 
+    /**
+     * Constructs an <code>GeneralException</code> with the specified detail message and nested Exception.
+     * @param msg the detail message.
+     */
+    public GeneralException(Throwable nested) {
+        super();
+        this.nested = nested;
+    }
+
     /** Returns the detail message, including the message from the nested exception if there is one. */
     public String getMessage() {
         if (nested != null)
