@@ -58,20 +58,19 @@ public class GenericDelegator implements DelegatorInterface {
     protected EntityConfigUtil.DelegatorInfo delegatorInfo = null;
 
     /** set this to true for better performance; set to false to be able to reload definitions at runtime throught the cache manager */
-    public static final boolean keepLocalReaders = true;
-    ModelReader modelReader = null;
-    ModelGroupReader modelGroupReader = null;
+    public final boolean keepLocalReaders = true;
+    protected ModelReader modelReader = null;
+    protected ModelGroupReader modelGroupReader = null;
 
-    UtilCache primaryKeyCache = null;
-    UtilCache allCache = null;
-    UtilCache andCache = null;
+    protected UtilCache primaryKeyCache = null;
+    protected UtilCache allCache = null;
+    protected UtilCache andCache = null;
 
     // keeps a list of field key sets used in the by and cache, a Set (of Sets of fieldNames) for each entityName
-    protected static Map andCacheFieldSets = new HashMap();
+    protected Map andCacheFieldSets = new HashMap();
 
     protected DistributedCacheClear distributedCacheClear = null;
-
-    SequenceUtil sequencer = null;
+    protected SequenceUtil sequencer = null;
 
     public static GenericDelegator getGenericDelegator(String delegatorName) {
         GenericDelegator delegator = (GenericDelegator) delegatorCache.get(delegatorName);
@@ -1509,7 +1508,7 @@ public class GenericDelegator implements DelegatorInterface {
     public void clearAllCaches(boolean distribute) {
         if (this.allCache != null) this.allCache.clear();
         if (this.andCache != null) this.andCache.clear();
-        if (GenericDelegator.andCacheFieldSets != null) GenericDelegator.andCacheFieldSets.clear();
+        if (this.andCacheFieldSets != null) this.andCacheFieldSets.clear();
         if (this.primaryKeyCache != null) this.primaryKeyCache.clear();
         
         if (distribute && this.distributedCacheClear != null) {
