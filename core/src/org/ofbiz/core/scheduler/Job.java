@@ -1,6 +1,9 @@
 /*
  * $Id$
  * $Log$
+ * Revision 1.1  2001/07/19 20:50:22  azeneski
+ * Added the job scheduler to 'core' module.
+ *
  */
 
 package org.ofbiz.core.scheduler;
@@ -54,19 +57,21 @@ public class Job implements Comparable, Serializable {
     private long runTime = -1;
     private int runCount = 0;
     private boolean isRepeated;
+    private boolean fromConfig;
     private String eventType;
     private String eventPath;
     private String eventMethod;
     private HashMap parameters;
     private HashMap headers;
     
+    /** Creates a new Job object. */
     public Job( String jobName, Date startDate, Date endDate, int interval, int intervalType, boolean isRepeated, String eventType, String eventPath, String eventMethod, HashMap parameters, HashMap headers ) {
         this.jobName =jobName;
         this.startDate = startDate;
         this.endDate = endDate;
         this.interval = interval;
         this.intervalType = intervalType;
-        this.isRepeated = isRepeated;
+        this.isRepeated = isRepeated;        
         this.eventType = eventType;
         this.eventPath = eventPath;
         this.eventMethod = eventMethod;
@@ -111,6 +116,16 @@ public class Job implements Comparable, Serializable {
         if ( interval == -1 )
             isRepeated = false;
         return isRepeated;
+    }
+    
+    /** Notifies the job manager this job was scheduled from the config file. */
+    public void setFromConfig(boolean fromConfig) {
+        this.fromConfig = fromConfig;
+    }
+    
+    /** Returns true if this job was scheduled from the configuration file. */
+    public boolean isFromConfig() {
+        return fromConfig;
     }
     
     /** Evaluates if this job is equal to another job. */
@@ -220,11 +235,13 @@ public class Job implements Comparable, Serializable {
         return -1;
     }
     
+    /** Returns a string description of this job. */
     public String toString() {
         StringBuffer sb = new StringBuffer("Job");
         sb.append(" Name="); sb.append(jobName);
         sb.append(" Start="); sb.append(startDate);
         sb.append(" End="); sb.append(endDate);
+        sb.append(" Next-Run="); sb.append(new Date(runTime));
         sb.append(" Interval="); sb.append(interval);
         sb.append(" Interval-Type="); sb.append(intervalType);
         sb.append(" Repeats="); sb.append(isRepeated);

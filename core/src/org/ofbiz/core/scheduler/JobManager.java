@@ -1,6 +1,9 @@
 /*
  * $Id$
  * $Log$
+ * Revision 1.1  2001/07/19 20:50:22  azeneski
+ * Added the job scheduler to 'core' module.
+ *
  */
 
 package org.ofbiz.core.scheduler;
@@ -53,10 +56,12 @@ public class JobManager {
     protected JobScheduler js;
     protected SortedSet queue;
     
+    /** Create a new empty JobManager. */
     public JobManager() {
         init(null);
     }
     
+    /** Creates a new JobManager Object. Will look for the XML scheduler file in the ServletContext. */
     public JobManager(ServletContext context) {
         this.context = context;
         HashMap config = null;
@@ -73,15 +78,20 @@ public class JobManager {
         init(config);
     }
     
+    /** Creates a new JobManager object, using the HashMap of jobs to schedule. */
     public JobManager(HashMap config) {
         init(config);
     }
     
-    public void init(HashMap config) {
+    private void init(HashMap config) {
         // Create the queue and start the thread.
         queue = (SortedSet) new TreeSet();
         js = new JobScheduler(this);
-        
+        loadJobs(config);
+        Debug.log("Job Manager Inititalized: " + queue.size() + " jobs queued.");
+    }
+    
+    private void loadJobs(HashMap config) {
         if ( config != null ) {
             Set hashSet = config.keySet();
             Iterator i = hashSet.iterator();
@@ -89,7 +99,7 @@ public class JobManager {
                 Object o = i.next();
                 // Job Name
                 String name = (String) o;
-                HashMap jobMap = (HashMap) config.get(o);                
+                HashMap jobMap = (HashMap) config.get(o);
                 // Start/End Dates (must be parsed).
                 String startStr = (String) jobMap.get(ConfigXMLReader.SCHEDULER_STARTDATE);
                 String endStr = (String) jobMap.get(ConfigXMLReader.SCHEDULER_ENDDATE);
@@ -119,17 +129,17 @@ public class JobManager {
                     try {
                         SimpleDateFormat sdf = new SimpleDateFormat(SiteDefs.SCHEDULER_DATE_FORMAT);
                         ParsePosition pos = new ParsePosition(0);
-                        startDate = sdf.parse(startStr,pos);                        
+                        startDate = sdf.parse(startStr,pos);
                     }
                     catch ( Exception e ) {
                         Debug.log(e,"Problems Parsing Start Date.");
                     }
                 }
                 if ( endStr != null && !endStr.equals("") ) {
-                    try {                        
+                    try {
                         SimpleDateFormat sdf = new SimpleDateFormat(SiteDefs.SCHEDULER_DATE_FORMAT);
                         ParsePosition pos = new ParsePosition(0);
-                        endDate = sdf.parse(endStr,pos);                      
+                        endDate = sdf.parse(endStr,pos);
                     }
                     catch ( Exception e ) {
                         Debug.log(e,"Problems Parsing End Date.");
@@ -140,35 +150,38 @@ public class JobManager {
                 boolean repeat = jobRepeats.equalsIgnoreCase("true") ? true : false;
                 
                 // Add the job.
-                addJob(name,startDate,endDate,interval,intervalType,repeat,eventType,eventPath,eventMethod,params,headers);
+                Job thisJob = addJob(name,startDate,endDate,interval,intervalType,repeat,eventType,eventPath,eventMethod,params,headers);
+                thisJob.setFromConfig(true);
             }
         }
     }
     
+    /** Create a Job object and add to the queue. */
     public synchronized Job addJob( String jobName, Date startDate, Date endDate, int interval, int intervalType,
     boolean isRepeated, String eventType, String eventPath, String eventMethod, HashMap parameters, HashMap headers ) {
         Job job = new Job(jobName,startDate,endDate,interval,intervalType,isRepeated,eventType,eventPath,eventMethod,parameters,headers);
         if (queueJob(job)) {
             Debug.log("JobManager: Added Job ("+jobName+").");
             Debug.log("Job String: " + job.toString());
-        } 
+        }
         else {
             Debug.log("Job ("+jobName+") not queued.");
         }
         return job;
     }
     
+    /** Create a Job object and add to the queue. */
     public synchronized Job addJob( String jobName, int interval, boolean isRepeated, String eventType,
     String eventPath, String eventMethod, HashMap parameters ) {
         Job job = addJob(jobName,null,null,interval,1,isRepeated,eventType,eventPath,eventMethod,parameters,null);
         return job;
     }
     
-    /** Queues a job. **/
+    /** Queues a job. */
     public synchronized boolean queueJob(Job job) {
-        while (containsJob(job))
-            job.adjustRunTime();
-        if ( job.getRunTime() != -1 ) {            
+        if ( job.getRunTime() != -1 ) {
+            while (containsJob(job))
+                job.adjustRunTime();
             if (queue.add(job)) {
                 js.updateDelay( ((Job) queue.first()).getRunTime());
                 return true;
@@ -177,6 +190,7 @@ public class JobManager {
         return false;
     }
     
+    /** Remove a job from the queue. */
     public synchronized boolean removeJob(Job job) {
         if (!queue.contains(job))
             return false;
@@ -184,6 +198,7 @@ public class JobManager {
             if (queue.size() > 0)
                 js.updateDelay( ((Job) queue.first()).getRunTime());
         }
+        Debug.log(job.getJobName() + " removed from queue.");
         return true;
     }
     
@@ -220,7 +235,7 @@ public class JobManager {
         new JobInvoker(firstJob);
         
         if (firstJob.isRepeated()) {
-            firstJob.updateRunTime();            
+            firstJob.updateRunTime();
             queueJob(firstJob);
         }
         if (!queue.isEmpty()) {
@@ -246,8 +261,44 @@ public class JobManager {
         return -1;
     }
     
-    public void finish() {
+    /** Re-loads the scheduler configuration file and re-schedules each job.
+     *   This does not effect manually added jobs.
+     */
+    public void reloadJobs() {
+        if ( context == null ) {
+            Debug.log("Not able to locate the scheduler XML file.");
+            return;
+        }
+        HashMap config = null;
+        String configFileUrl = null;
+        try {
+            configFileUrl = context.getResource(context.getInitParameter(SiteDefs.SCHEDULER_CONFIG)).toString();
+        }
+        catch ( Exception e ) {
+            Debug.log(e,"Error Reading Scheduler Config File: " + configFileUrl);
+        }
+        if ( configFileUrl != null )
+            config = ConfigXMLReader.getSchedulerMap(configFileUrl);
+        
+        // Get a list of scheduled jobs.
+        List jobList = getJobList();
+        Iterator i = jobList.iterator();
+        
+        // Remove all jobs scheduled by the config file.
+        while ( i.hasNext() ) {
+            Job thisJob = (Job) i.next();
+            if ( thisJob.isFromConfig() )
+                removeJob(thisJob);
+        }
+        
+        // Re-load all config scheduled jobs.
+        loadJobs(config);
+    }
+    
+    /** Close out the scheduler thread. */
+    public void finalize() {
         if (js != null)
             js.stop();
+        Debug.log("JobManager: Stopped Scheduler Thread.");
     }
 }

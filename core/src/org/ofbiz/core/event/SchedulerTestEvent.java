@@ -1,12 +1,16 @@
 /*
  * $Id$
- * $Log$;
+ * $Log$
+ * Revision 1.1  2001/07/19 20:51:37  azeneski
+ * Added a test event for the job scheduler.
+ *;
  */
 
 package org.ofbiz.core.event;
 
 import java.util.HashMap;
 
+import org.ofbiz.core.util.HttpClient;
 import org.ofbiz.core.util.Debug;
 
 /**

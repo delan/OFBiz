@@ -1,6 +1,9 @@
 /*
  * $Id$
  * $Log$
+ * Revision 1.1  2001/07/16 14:45:48  azeneski
+ * Added the missing 'core' directory into the module.
+ *
  * Revision 1.1  2001/07/15 16:36:42  azeneski
  * Initial Import
  *
@@ -10,7 +13,10 @@ package org.ofbiz.core.event;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+import javax.servlet.ServletContext;
 
+import org.ofbiz.core.scheduler.JobManager;
+import org.ofbiz.core.util.SiteDefs;
 import org.ofbiz.core.util.Debug;
 
 /**

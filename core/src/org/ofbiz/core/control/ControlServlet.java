@@ -1,6 +1,9 @@
 /*
  * $Id$
  * $Log$
+ * Revision 1.5  2001/07/19 20:50:22  azeneski
+ * Added the job scheduler to 'core' module.
+ *
  * Revision 1.4  2001/07/17 08:51:37  jonesde
  * Updated for auth implementation & small fixes.
  *
@@ -58,7 +61,9 @@ import org.ofbiz.core.util.Debug;
  * Created on June 28, 2001, 10:12 PM
  */
 public class ControlServlet extends HttpServlet {
-            
+
+    private JobManager jm;
+    
     /** Creates new ControlServlet  */
     public ControlServlet() {
         super();
@@ -67,7 +72,7 @@ public class ControlServlet extends HttpServlet {
     public void init(ServletConfig config) throws ServletException {
         super.init(config);
         getRequestHandler();
-        getJobManager();
+       jm = new JobManager(getServletContext());
     }
     
     public void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
@@ -84,6 +89,7 @@ public class ControlServlet extends HttpServlet {
         Debug.log("Control Path: " + request.getAttribute(SiteDefs.CONTROL_PATH));
         /** Setup the SERVLET_CONTEXT for events. */
         request.setAttribute(SiteDefs.SERVLET_CONTEXT,getServletContext());
+        request.setAttribute(SiteDefs.JOB_MANAGER,jm);
         
         try {
             nextPage = getRequestHandler().doRequest(request,response, null);
@@ -110,15 +116,13 @@ public class ControlServlet extends HttpServlet {
             getServletContext().setAttribute(SiteDefs.REQUEST_HANDLER,rh);
         }
         return rh;
-    }
+    }   
     
-    private JobManager getJobManager() {
-        JobManager jm = (JobManager) getServletContext().getAttribute(SiteDefs.JOB_MANAGER);
-        if ( jm == null ) {
-            jm = new JobManager(getServletContext());
-            getServletContext().setAttribute(SiteDefs.JOB_MANAGER,jm);
+    public void destroy() {       
+        if ( jm != null ) {
+            jm.finalize();
+            jm = null;
         }
-        return jm;
     }
 }
 

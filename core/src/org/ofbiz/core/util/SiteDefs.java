@@ -1,6 +1,9 @@
 /*
  * $Id$
  * $Log$
+ * Revision 1.6  2001/07/19 20:50:22  azeneski
+ * Added the job scheduler to 'core' module.
+ *
  * Revision 1.5  2001/07/19 14:19:31  azeneski
  * Added scheduler config variable to SiteDefs.
  *
@@ -87,6 +90,6 @@ public final class SiteDefs {
     /** Used in servlet context to store the request handler */
     public static final String REQUEST_HANDLER = "_REQUEST_HANDLER_";   
     
-    /** Used in servlet context to store the job manager */
+    /** Used in servlet request to store the job manager */
     public static final String JOB_MANAGER = "_JOB_MANAGER_";
 }
