@@ -1,6 +1,10 @@
 /*
  * $Id$
  * $Log$
+ *
+ * Revision 1.5  2001/09/05 00:30:15  jonesde
+ * Initial keyword search implementation in place.
+ *
  * Revision 1.4  2001/09/04 19:48:32  jonesde
  * Added support for a '?' single char wildcard to accompany the '*' wildcard.
  *
@@ -14,7 +18,7 @@
  * Initial checkin of keyword search class.
  *
  */
-package org.ofbiz.ecommerce.catalog;
+package org.ofbiz.commonapp.product.product;
 
 import java.util.*;
 import java.sql.*;
