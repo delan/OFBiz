@@ -47,6 +47,8 @@ public class LoginServices {
         Map result = new HashMap();
         GenericDelegator delegator = ctx.getDelegator();
 
+        boolean useEncryption = "true".equals(UtilProperties.getPropertyValue("security", "password.encrypt"));
+        
         String username = (String) context.get("login.username");
         if (username == null) username = (String) context.get("username");
         String password = (String) context.get("login.password");
@@ -58,6 +60,8 @@ public class LoginServices {
         } else if(password == null || password.length() <= 0) {
             errMsg = "Password missing";
         } else {
+            String realPassword = useEncryption ? ShaEncrypt.getShaHash(password) : password;
+            
             GenericValue userLogin = null;
             try {
                 userLogin = delegator.findByPrimaryKeyCache("UserLogin", UtilMisc.toMap("userLoginId", username));
@@ -87,7 +91,10 @@ public class LoginServices {
                 
                     String successfulLogin;
                     userLogin.set("enabled", "Y");
-                    if (userLogin.get("currentPassword") != null && password.equals(userLogin.getString("currentPassword"))) {
+                    //if the password.accept.encrypted.and.plain property in security is set to true allow plain or encrypted passwords
+                    if (userLogin.get("currentPassword") != null && 
+                            (realPassword.equals(userLogin.getString("currentPassword")) || 
+                             ("true".equals(UtilProperties.getPropertyValue("security", "password.accept.encrypted.and.plain")) && password.equals(userLogin.getString("currentPassword"))))) {
                         Debug.logInfo("[LoginServices.userLogin] : Password Matched");
                         
                         //reset failed login count if necessry
@@ -105,7 +112,7 @@ public class LoginServices {
                         result.put(ModelService.RESPONSE_MESSAGE, ModelService.RESPOND_SUCCESS);
                     } else {
                         Debug.logInfo("[LoginServices.userLogin] : Password Incorrect");
-                        // password invalid, just go to badlogin page...
+                        // password invalid...
                         errMsg = "Password incorrect.";
 
                         //increment failed login count
@@ -144,12 +151,21 @@ public class LoginServices {
                     }
 
                     if ("true".equals(UtilProperties.getPropertyValue("security", "store.login.history"))) {
-                        try {
-                            delegator.create("UserLoginHistory", UtilMisc.toMap("userLoginId", username,
-                                "fromDate", UtilDateTime.nowTimestamp(), "passwordUsed", password,
-                                "partyId", userLogin.get("partyId"), "referrerUrl", "NotYetImplemented", "successfulLogin", successfulLogin));
-                        } catch(GenericEntityException e) {
-                            Debug.logWarning(e);
+                        boolean createHistory = true;
+                        if (context.get("isServiceAuth") != null && ((Boolean) context.get("isServiceAuth")).booleanValue()) {
+                            if (!"true".equals(UtilProperties.getPropertyValue("security", "store.login.history.on.service.auth"))) {
+                                createHistory = false;
+                            }
+                        }
+                        
+                        if (createHistory) {
+                            try {
+                                delegator.create("UserLoginHistory", UtilMisc.toMap("userLoginId", username,
+                                    "fromDate", UtilDateTime.nowTimestamp(), "passwordUsed", password,
+                                    "partyId", userLogin.get("partyId"), "referrerUrl", "NotYetImplemented", "successfulLogin", successfulLogin));
+                            } catch(GenericEntityException e) {
+                                Debug.logWarning(e);
+                            }
                         }
                     }
                 } else {
@@ -185,6 +201,8 @@ public class LoginServices {
         GenericValue loggedInUserLogin = (GenericValue) context.get("userLogin");
         List errorMessageList = new LinkedList();
 
+        boolean useEncryption = "true".equals(UtilProperties.getPropertyValue("security", "password.encrypt"));
+        
         String userLoginId = (String) context.get("userLoginId");
         String partyId = (String) context.get("partyId");
         String currentPassword = (String) context.get("currentPassword");
@@ -220,7 +238,7 @@ public class LoginServices {
         GenericValue userLoginToCreate = delegator.makeValue("UserLogin", UtilMisc.toMap("userLoginId", userLoginId));
         userLoginToCreate.set("passwordHint", passwordHint);
         userLoginToCreate.set("partyId", partyId);
-        userLoginToCreate.set("currentPassword", currentPassword);
+        userLoginToCreate.set("currentPassword", useEncryption ? ShaEncrypt.getShaHash(currentPassword) : currentPassword);
 
         try {
             if (delegator.findByPrimaryKey(userLoginToCreate.getPrimaryKey()) != null) {
@@ -257,6 +275,7 @@ public class LoginServices {
         Security security = ctx.getSecurity();
         GenericValue loggedInUserLogin = (GenericValue) context.get("userLogin");
 
+        boolean useEncryption = "true".equals(UtilProperties.getPropertyValue("security", "password.encrypt"));
         boolean adminUser = false;
 
         String userLoginId = (String) context.get("userLoginId");
@@ -265,12 +284,13 @@ public class LoginServices {
         }
 
         //<b>security check</b>: userLogin userLoginId must equal userLoginId, or must have PARTYMGR_UPDATE permission
-        if (!userLoginId.equals(loggedInUserLogin.getString("userLoginId"))) {
-            if (!security.hasEntityPermission("PARTYMGR", "_UPDATE", loggedInUserLogin)) {
+        //NOTE: must check permission first so that admin users can set own password without specifying old password
+        if (!security.hasEntityPermission("PARTYMGR", "_UPDATE", loggedInUserLogin)) {
+            if (!userLoginId.equals(loggedInUserLogin.getString("userLoginId"))) {
                 return ServiceUtil.returnError("You do not have permission to update the password for this user login");
-            } else {
-                adminUser = true;
             }
+        } else {
+            adminUser = true;
         }
 
         GenericValue userLoginToUpdate = null;
@@ -300,7 +320,7 @@ public class LoginServices {
             return ServiceUtil.returnError(errorMessageList);
         }
 
-        userLoginToUpdate.set("currentPassword", newPassword, false);
+        userLoginToUpdate.set("currentPassword", useEncryption ? ShaEncrypt.getShaHash(newPassword) : newPassword, false);
         userLoginToUpdate.set("passwordHint", passwordHint, false);
 
         try {
@@ -366,8 +386,18 @@ public class LoginServices {
     }
 
     public static void checkNewPassword(GenericValue userLogin, String currentPassword, String newPassword, String newPasswordVerify, String passwordHint, List errorMessageList, boolean ignoreCurrentPassword) {
+        boolean useEncryption = "true".equals(UtilProperties.getPropertyValue("security", "password.encrypt"));
+        
         if (!ignoreCurrentPassword) {
-            if ((currentPassword == null) || (userLogin != null && currentPassword != null && !currentPassword.equals(userLogin.getString("currentPassword")))) {
+            String realPassword = currentPassword;
+            if (useEncryption && currentPassword != null) {
+                realPassword = ShaEncrypt.getShaHash(currentPassword);
+            }
+            //if the password.accept.encrypted.and.plain property in security is set to true allow plain or encrypted passwords
+            boolean passwordMatches = currentPassword != null && (realPassword.equals(userLogin.getString("currentPassword")) ||
+                    ("true".equals(UtilProperties.getPropertyValue("security", "password.accept.encrypted.and.plain")) && currentPassword.equals(userLogin.getString("currentPassword"))));
+
+            if ((currentPassword == null) || (userLogin != null && currentPassword != null && !passwordMatches)) {
                 errorMessageList.add("Old Password was not correct, please re-enter.");
             }
         }

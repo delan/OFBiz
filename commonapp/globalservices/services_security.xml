@@ -12,6 +12,7 @@
         <description>Used to Automatically Authenticate a username/password; create a UserLogin object</description>
         <attribute name="login.username" type="String" mode="IN"/>
         <attribute name="login.password" type="String" mode="IN"/>
+        <attribute name="isServiceAuth" type="Boolean" mode="IN" optional="true"/>
         <attribute name="userLogin" type="org.ofbiz.core.entity.GenericValue" mode="OUT"/>
     </service>
 

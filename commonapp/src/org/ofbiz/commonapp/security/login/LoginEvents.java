@@ -277,6 +277,8 @@ public class LoginEvents {
         } catch (java.net.MalformedURLException e) {
             Debug.logWarning(e);
         }
+
+        boolean useEncryption = "true".equals(UtilProperties.getPropertyValue("security", "password.encrypt"));
         
         String userLoginId = request.getParameter("USERNAME");
         
@@ -287,10 +289,23 @@ public class LoginEvents {
         }
         
         GenericValue supposedUserLogin = null;
+        String passwordToSend = null;
         try {
             supposedUserLogin = delegator.findByPrimaryKey("UserLogin", UtilMisc.toMap("userLoginId", userLoginId));
-        } catch (GenericEntityException gee) {
-            Debug.logWarning(gee);
+            if (useEncryption) {
+                //password encrypted, can't send, generate new password and email to user
+                double randNum = Math.random();
+                //multiply by 100,000 to usually make a 5 digit number
+                passwordToSend = "auto" + ((long)(randNum * 100000));
+                supposedUserLogin.set("currentPassword", passwordToSend);
+                supposedUserLogin.store();
+            } else {
+                passwordToSend = supposedUserLogin.getString("currentPassword");
+            }
+        } catch (GenericEntityException e) {
+            Debug.logWarning(e);
+            request.setAttribute(SiteDefs.ERROR_MESSAGE, "<li>Error accessing password: " + e.toString());
+            return "error";
         }
         if (supposedUserLogin == null) {
             //the Username was not found
@@ -325,7 +340,7 @@ public class LoginEvents {
         String LOCAL_MACHINE = UtilProperties.getPropertyValue(ecommercePropertiesUrl, "smtp.local.machine");
         String PASSWORD_SENDER_EMAIL = UtilProperties.getPropertyValue(ecommercePropertiesUrl, "password.send.email");
         
-        String content = "Username: " + userLoginId + "\nPassword: " + UtilFormatOut.checkNull(supposedUserLogin.getString("currentPassword"));
+        String content = "Username: " + userLoginId + "\n" + (useEncryption ? "New Password: " : "Current Password: ") + UtilFormatOut.checkNull(passwordToSend);
         try {
             SendMailSMTP mail = new SendMailSMTP(SMTP_SERVER, PASSWORD_SENDER_EMAIL, emails.toString(), content);
             mail.setLocalMachine(LOCAL_MACHINE);
