@@ -792,6 +792,7 @@
       <field name="reservedDatetime" type="date-time"></field>
       <field name="createdDatetime" type="date-time"></field>
       <field name="promisedDatetime" type="date-time"></field>
+      <field name="currentPromisedDate" type="date-time"></field>
       <prim-key field="orderId"/>
       <prim-key field="orderItemSeqId"/>
       <prim-key field="inventoryItemId"/>
