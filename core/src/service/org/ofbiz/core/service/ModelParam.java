@@ -53,9 +53,11 @@ public class ModelParam {
 
     /** Is this Parameter required or optional? Default to false, or required. */
     public boolean optional = false;
+    public boolean overrideOptional = false;
     
     /** Is this parameter to be displayed via the form tool? */
     public boolean formDisplay = true;
+    public boolean overrideFormDisplay = false;
     
     /** Is this Parameter set internally? */
     public boolean internal = false;

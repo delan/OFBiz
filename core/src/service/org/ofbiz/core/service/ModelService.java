@@ -571,10 +571,10 @@ public class ModelService {
                             if (param.formLabel != null && param.formLabel.length() > 0) {
                                 existingParam.formLabel = param.formLabel;
                             }
-                            if (param.formDisplay != existingParam.formDisplay) {
+                            if (param.overrideFormDisplay) {
                                 existingParam.formDisplay = param.formDisplay;
                             }
-                            if (param.optional != existingParam.optional) {
+                            if (param.overrideOptional) {
                                 existingParam.optional = param.optional;
                             }
                             newInfo.put(key, existingParam);

@@ -83,8 +83,8 @@
     field-name CDATA #IMPLIED
     mode (IN|OUT|INOUT) #IMPLIED
     form-label CDATA #IMPLIED
-    form-display (true|false) "true"
-    optional (true|false) "false"
+    form-display (true|false) #IMPLIED
+    optional (true|false) #IMPLIED
 >
 
 

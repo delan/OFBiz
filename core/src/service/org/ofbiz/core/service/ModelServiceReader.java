@@ -532,9 +532,11 @@ public class ModelServiceReader {
             }
             if (attribute.getAttribute("optional") != null && attribute.getAttribute("optional").length() > 0) {                            
                 param.optional = "true".equalsIgnoreCase(attribute.getAttribute("optional")); // default to true
+                param.overrideOptional = true;
             }
             if (attribute.getAttribute("form-display") != null && attribute.getAttribute("form-display").length() > 0) {                
                 param.formDisplay = !"false".equalsIgnoreCase(attribute.getAttribute("form-display")); // default to false
+                param.overrideFormDisplay = true;
             }
                                      
             service.addParam(param);                                     
