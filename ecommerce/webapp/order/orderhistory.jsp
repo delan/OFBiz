@@ -49,15 +49,7 @@
 
   Collection orderRoleCollection = delegator.findByAnd("OrderRole", 
           UtilMisc.toMap("partyId", userLogin.get("partyId"), "roleTypeId", "PLACING_CUSTOMER"), null);
-  Collection orderHeaderList = new ArrayList(orderRoleCollection.size());
-  Iterator orderRoleIter = orderRoleCollection.iterator();
-  while (orderRoleIter.hasNext()) {
-    GenericValue orderHeader = ((GenericValue) orderRoleIter.next())
-            .getRelatedOne("OrderHeader");
-    if (orderHeader != null) {
-        orderHeaderList.add(orderHeader);
-    }
-  }
+  Collection orderHeaderList = EntityUtil.orderBy(EntityUtil.getRelated("OrderHeader", orderRoleCollection), UtilMisc.toList("orderDate ASC"));
   pageContext.setAttribute("orderHeaderList", orderHeaderList);
 %>
 <br>
