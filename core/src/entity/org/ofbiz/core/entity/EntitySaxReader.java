@@ -97,7 +97,9 @@ public class EntitySaxReader implements org.xml.sax.ContentHandler, ErrorHandler
     }
     
     public long parse(InputStream is, String docDescription) throws SAXException, java.io.IOException {
-        XMLReader reader = XMLReaderFactory.createXMLReader("org.apache.xerces.parsers.SAXParser");
+        String orgXmlSaxDriver = System.getProperty("org.xml.sax.driver");
+        if (UtilValidate.isEmpty(orgXmlSaxDriver)) orgXmlSaxDriver = "org.apache.xerces.parsers.SAXParser";
+        XMLReader reader = XMLReaderFactory.createXMLReader(orgXmlSaxDriver);
         reader.setContentHandler(this);
         reader.setErrorHandler(this);
         //LocalResolver lr = new UtilXml.LocalResolver(new DefaultHandler());
@@ -145,7 +147,7 @@ public class EntitySaxReader implements org.xml.sax.ContentHandler, ErrorHandler
     
     public void endElement(String namespaceURI, String localName, String fullName) throws org.xml.sax.SAXException {
         //Debug.logInfo("endElement: localName=" + localName + ", fullName=" + fullName + ", numberRead=" + numberRead);
-        if ("entity-engine-xml".equals(localName)) {
+        if ("entity-engine-xml".equals(fullName)) {
             return;
         }
         if (currentValue != null) {
@@ -197,19 +199,21 @@ public class EntitySaxReader implements org.xml.sax.ContentHandler, ErrorHandler
     
     public void startElement(String namepsaceURI, String localName, String fullName, org.xml.sax.Attributes attributes) throws org.xml.sax.SAXException {
         //Debug.logInfo("startElement: localName=" + localName + ", fullName=" + fullName + ", attributes=" + attributes);
-        if ("entity-engine-xml".equals(localName)) {
+        if ("entity-engine-xml".equals(fullName)) {
             return;
         }
         if (currentValue != null) {
             //we have a nested value/CDATA element
-            currentFieldName = localName;
+            currentFieldName = fullName;
         } else {
             String entityName = fullName;
             //if a dash or colon is in the tag name, grab what is after it
-            if (entityName.indexOf('-') > 0)
+            if (entityName.indexOf('-') > 0) {
                 entityName = entityName.substring(entityName.indexOf('-') + 1);
-            if (entityName.indexOf(':') > 0)
+            }
+            if (entityName.indexOf(':') > 0) {
                 entityName = entityName.substring(entityName.indexOf(':') + 1);
+            }
 
             try {
                 currentValue = delegator.makeValue(entityName, null);
@@ -221,13 +225,16 @@ public class EntitySaxReader implements org.xml.sax.ContentHandler, ErrorHandler
                 for (int i=0; i<length; i++) {
                     String name = attributes.getLocalName(i);
                     String value = attributes.getValue(i);
+                    if (name == null || name.length() == 0) {
+                        name = attributes.getQName(i);
+                    }
                     try {
                         //treat empty strings as nulls
                         if (value != null && value.length() > 0) {
                             currentValue.setString(name, value);
                         }
                     } catch (Exception e) {
-                        Debug.logWarning("Could not set field " + name + " to the value " + value);
+                        Debug.logWarning(e, "Could not set field " + name + " to the value " + value);
                     }
                 }
             }
