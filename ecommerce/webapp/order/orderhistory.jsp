@@ -69,7 +69,7 @@
       <table width='100%' border='0' cellspacing='0' cellpadding='0' class='boxbottom'>
         <tr>
           <td>
-              <table width="100%" cellpadding="3" cellspacing="0" border="0">
+              <table width="100%" cellpadding="1" cellspacing="0" border="0">
                 <tr>
                   <td width="30%">
                     <div class="tabletext"><b>Date</b></div>
