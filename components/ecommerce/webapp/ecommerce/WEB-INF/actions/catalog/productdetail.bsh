@@ -20,7 +20,7 @@
  *  THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  *
  *@author     Andy Zeneski
- *@version    $Revision: 1.10 $
+ *@version    $Revision: 1.11 $
  *@since      2.1
 */
 
@@ -170,7 +170,7 @@ if (product != null) {
             imageMap = variantTreeMap.get("variantSample");
             if (variantTree != null) {
                 request.setAttribute("variantTree", variantTree);
-                request.setAttribute("varientTreeSize", new Integer(variantTree.size()));
+                request.setAttribute("variantTreeSize", new Integer(variantTree.size()));
             }
             if (imageMap != null) {
                 request.setAttribute("variantSample", imageMap);
