@@ -1,5 +1,5 @@
 /*
- * $Id: ComponentConfig.java,v 1.19 2004/06/30 21:25:56 jonesde Exp $
+ * $Id: ComponentConfig.java,v 1.20 2004/07/01 07:57:49 jonesde Exp $
  *
  * Copyright (c) 2003 The Open For Business Project - www.ofbiz.org
  *
@@ -39,10 +39,10 @@ import java.util.TreeMap;
 import javax.xml.parsers.ParserConfigurationException;
 
 import org.ofbiz.base.util.Debug;
-import org.ofbiz.base.util.OrderedMap;
 import org.ofbiz.base.util.UtilURL;
 import org.ofbiz.base.util.UtilValidate;
 import org.ofbiz.base.util.UtilXml;
+import org.ofbiz.base.util.collections.OrderedMap;
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
 import org.xml.sax.SAXException;
@@ -52,7 +52,7 @@ import org.xml.sax.SAXException;
  *
  * @author     <a href="mailto:jonesde@ofbiz.org">David E. Jones</a>
  * @author     <a href="mailto:jaz@ofbiz.org">Andy Zeneski</a>
- * @version    $Revision: 1.19 $
+ * @version    $Revision: 1.20 $
  * @since      3.0
  */
 public class ComponentConfig {

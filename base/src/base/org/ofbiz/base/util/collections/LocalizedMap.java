@@ -1,5 +1,5 @@
 /*
- * $Id: LocalizedMap.java,v 1.1 2003/09/21 05:58:51 jonesde Exp $
+ * $Id: LocalizedMap.java,v 1.1 2004/07/01 07:57:52 jonesde Exp $
  *
  *  Copyright (c) 2003 The Open For Business Project - www.ofbiz.org
  *
@@ -21,7 +21,7 @@
  *  OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR
  *  THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  */
-package org.ofbiz.base.util;
+package org.ofbiz.base.util.collections;
 
 import java.util.Locale;
 

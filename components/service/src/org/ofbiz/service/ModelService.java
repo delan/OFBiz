@@ -1,5 +1,5 @@
 /*
- * $Id: ModelService.java,v 1.10 2004/06/17 00:52:13 ajzeneski Exp $
+ * $Id: ModelService.java,v 1.11 2004/07/01 07:57:57 jonesde Exp $
  *
  * Copyright (c) 2001, 2002 The Open For Business Project - www.ofbiz.org
  *
@@ -34,22 +34,22 @@ import java.util.Map;
 import java.util.Set;
 import java.util.TreeSet;
 
-import org.ofbiz.service.group.GroupModel;
-import org.ofbiz.service.group.GroupServiceModel;
-import org.ofbiz.service.group.ServiceGroupReader;
 import org.ofbiz.base.util.Debug;
 import org.ofbiz.base.util.GeneralException;
 import org.ofbiz.base.util.ObjectType;
-import org.ofbiz.base.util.OrderedSet;
+import org.ofbiz.base.util.collections.OrderedSet;
 import org.ofbiz.entity.GenericValue;
 import org.ofbiz.security.Security;
+import org.ofbiz.service.group.GroupModel;
+import org.ofbiz.service.group.GroupServiceModel;
+import org.ofbiz.service.group.ServiceGroupReader;
 
 /**
  * Generic Service Model Class
  *
  * @author     <a href="mailto:jaz@ofbiz.org">Andy Zeneski</a>
  * @author     <a href="mailto:jonesde@ofbiz.org">David E. Jones</a>
- * @version    $Revision: 1.10 $
+ * @version    $Revision: 1.11 $
  * @since      2.0
  */
 public class ModelService {

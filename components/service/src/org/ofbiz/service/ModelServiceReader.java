@@ -1,5 +1,5 @@
 /* 
- * $Id: ModelServiceReader.java,v 1.9 2004/06/17 00:52:13 ajzeneski Exp $
+ * $Id: ModelServiceReader.java,v 1.10 2004/07/01 07:57:57 jonesde Exp $
  *
  * Copyright (c) 2001, 2002 The Open For Business Project - www.ofbiz.org
  *
@@ -37,16 +37,18 @@ import javax.xml.parsers.ParserConfigurationException;
 
 import org.ofbiz.base.config.GenericConfigException;
 import org.ofbiz.base.config.ResourceHandler;
-import org.ofbiz.entity.*;
-import org.ofbiz.entity.model.*;
 import org.ofbiz.base.util.Debug;
 import org.ofbiz.base.util.GeneralException;
-import org.ofbiz.base.util.OrderedMap;
 import org.ofbiz.base.util.UtilCache;
 import org.ofbiz.base.util.UtilTimer;
-import org.ofbiz.base.util.UtilXml;
 import org.ofbiz.base.util.UtilValidate;
-
+import org.ofbiz.base.util.UtilXml;
+import org.ofbiz.base.util.collections.OrderedMap;
+import org.ofbiz.entity.GenericDelegator;
+import org.ofbiz.entity.GenericEntityException;
+import org.ofbiz.entity.model.ModelEntity;
+import org.ofbiz.entity.model.ModelField;
+import org.ofbiz.entity.model.ModelFieldType;
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
 import org.w3c.dom.Node;
@@ -58,7 +60,7 @@ import org.xml.sax.SAXException;
  *
  * @author     <a href="mailto:jaz@ofbiz.org">Andy Zeneski</a>
  * @author     <a href="mailto:jonesde@ofbiz.org">David E. Jones</a>
- * @version    $Revision: 1.9 $
+ * @version    $Revision: 1.10 $
  * @since      2.0
  */
 
