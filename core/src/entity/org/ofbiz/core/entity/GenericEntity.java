@@ -386,10 +386,8 @@ public class GenericEntity extends Observable implements Map, Serializable, Comp
     public GenericPK getPrimaryKey() {
         Collection pkNames = new LinkedList();
         Iterator iter = this.getModelEntity().getPksIterator();
-
         while (iter != null && iter.hasNext()) {
             ModelField curField = (ModelField) iter.next();
-
             pkNames.add(curField.getName());
         }
         return new GenericPK(getModelEntity(), this.getFields(pkNames));
@@ -857,7 +855,12 @@ public class GenericEntity extends Observable implements Map, Serializable, Comp
     }
 
     public Object get(Object key) {
-        return this.get((String) key);
+        try {
+            return this.get((String) key);
+        } catch (IllegalArgumentException e) {
+            Debug.logError(e, "The field name (or key) [" + key + "] is not valid, printing IllegalArgumentException instead of throwing it because Map interface specification does not allow throwing that exception.");
+            return null;
+        }
     }
 
     public java.util.Set keySet() {
