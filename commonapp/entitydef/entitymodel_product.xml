@@ -6,25 +6,25 @@
  *  Description: None
  *  Copyright (c) 2002 The Open For Business Project - www.ofbiz.org
  *
- *  Permission is hereby granted, free of charge, to any person obtaining a 
- *  copy of this software and associated documentation files (the "Software"), 
- *  to deal in the Software without restriction, including without limitation 
- *  the rights to use, copy, modify, merge, publish, distribute, sublicense, 
- *  and/or sell copies of the Software, and to permit persons to whom the 
+ *  Permission is hereby granted, free of charge, to any person obtaining a
+ *  copy of this software and associated documentation files (the "Software"),
+ *  to deal in the Software without restriction, including without limitation
+ *  the rights to use, copy, modify, merge, publish, distribute, sublicense,
+ *  and/or sell copies of the Software, and to permit persons to whom the
  *  Software is furnished to do so, subject to the following conditions:
  *
- *  The above copyright notice and this permission notice shall be included 
+ *  The above copyright notice and this permission notice shall be included
  *  in all copies or substantial portions of the Software.
  *
- *  THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS 
- *  OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF 
- *  MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. 
- *  IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY 
- *  CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT 
- *  OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR 
+ *  THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS
+ *  OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF
+ *  MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT.
+ *  IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY
+ *  CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT
+ *  OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR
  *  THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  *
- *@author David E. Jones (jonesde@ofbiz.org) 
+ *@author David E. Jones (jonesde@ofbiz.org)
  *@author Andy Zeneski (jaz@zsolv.com)
  *@version    1.0
  */
@@ -209,9 +209,6 @@
       </relation>
       <relation type="many" title="Primary" rel-entity-name="Product">
         <key-map field-name="productCategoryId" rel-field-name="primaryProductCategoryId"/>
-      </relation>
-      <relation type="many" rel-entity-name="PriceComponent">
-        <key-map field-name="productCategoryId"/>
       </relation>
       <relation type="many" rel-entity-name="MarketInterest">
         <key-map field-name="productCategoryId"/>
@@ -476,9 +473,6 @@
         <key-map field-name="productFeatureId"/>
       </relation>
       <relation type="many" rel-entity-name="CostComponent">
-        <key-map field-name="productFeatureId"/>
-      </relation>
-      <relation type="many" rel-entity-name="PriceComponent">
         <key-map field-name="productFeatureId"/>
       </relation>
     </entity>
@@ -850,132 +844,63 @@
   <!-- org.ofbiz.commonapp.product.price -->
   <!-- ========================================================= -->
 
-    <entity entity-name="PriceComponent"
+    <entity entity-name="ProductPriceAction"
             package-name="org.ofbiz.commonapp.product.price"
-            title="Price Component Entity">
-      <field name="priceComponentId" type="id-ne"></field>
-      <field name="priceComponentTypeId" type="id"></field>
-      <field name="partyId" type="id"></field>
-      <field name="partyClassificationGroupId" type="id"></field>
-      <field name="productId" type="id"></field>
-      <field name="productFeatureId" type="id"></field>
-      <field name="productCategoryId" type="id"></field>
-      <field name="agreementId" type="id"></field>
-      <field name="agreementItemSeqId" type="id"></field>
-      <field name="uomId" type="id"></field>
-      <field name="geoId" type="id"></field>
-      <field name="saleTypeId" type="id"></field>
-      <field name="orderValueBreakId" type="id"></field>
-      <field name="quantityBreakId" type="id"></field>
-      <field name="utilizationUomId" type="id"></field>
-      <field name="utilizationQuantity" type="floating-point"></field>
-      <field name="fromDate" type="date-time"></field>
-      <field name="thruDate" type="date-time"></field>
-      <field name="price" type="currency-amount"></field>
-      <field name="pricePercent" type="floating-point"></field>
-      <field name="comments" type="comment"></field>
-      <prim-key field="priceComponentId"/>
-      <relation type="one" fk-name="PRICE_COMP_TYPE" rel-entity-name="PriceComponentType">
-        <key-map field-name="priceComponentTypeId"/>
+            title="Product Price Action Entity">
+      <field name="productPriceRuleId" type="id-ne"></field>
+      <field name="productPriceActionSeqId" type="id-ne"></field>
+      <field name="productPriceActionTypeId" type="id-ne"></field>
+      <field name="amount" type="floating-point"></field>
+      <prim-key field="productPriceRuleId"/>
+      <prim-key field="productPriceActionSeqId"/>
+      <relation type="one" fk-name="PROD_PCACT_TYPE" rel-entity-name="ProductPriceActionType">
+        <key-map field-name="productPriceActionTypeId"/>
       </relation>
-      <relation type="many" rel-entity-name="PriceComponentTypeAttr">
-        <key-map field-name="priceComponentTypeId"/>
-      </relation>
-      <relation type="many" rel-entity-name="PriceComponentAttribute">
-        <key-map field-name="priceComponentId"/>
-      </relation>
-      <relation type="one" fk-name="PRICE_COMP_PARTY" rel-entity-name="Party">
-        <key-map field-name="partyId"/>
-      </relation>
-      <relation type="one" fk-name="PRICE_COMP_PCG" rel-entity-name="PartyClassificationGroup">
-        <key-map field-name="partyClassificationGroupId"/>
-      </relation>
-      <relation type="one" fk-name="PRICE_COMP_PRODUCT" rel-entity-name="Product">
-        <key-map field-name="productId"/>
-      </relation>
-      <relation type="one" fk-name="PRICE_COMP_PRFEAT" rel-entity-name="ProductFeature">
-        <key-map field-name="productFeatureId"/>
-      </relation>
-      <relation type="one" fk-name="PRICE_COMP_PRCAT" rel-entity-name="ProductCategory">
-        <key-map field-name="productCategoryId"/>
-      </relation>
-      <relation type="one" fk-name="PRICE_COMP_AGRMNT" rel-entity-name="Agreement">
-        <key-map field-name="agreementId"/>
-      </relation>
-      <relation type="one" fk-name="PRICE_COMP_AITEM" rel-entity-name="AgreementItem">
-        <key-map field-name="agreementId"/>
-        <key-map field-name="agreementItemSeqId"/>
-      </relation>
-      <relation type="one" fk-name="PRICE_COMP_UOM" rel-entity-name="Uom">
-        <key-map field-name="uomId"/>
-      </relation>
-      <relation type="one" fk-name="PRICE_COMP_GEO" rel-entity-name="Geo">
-        <key-map field-name="geoId"/>
-      </relation>
-      <relation type="one" fk-name="PRICE_COMP_STYPE" rel-entity-name="SaleType">
-        <key-map field-name="saleTypeId"/>
-      </relation>
-      <relation type="one" fk-name="PRICE_COMP_QBREAK" rel-entity-name="QuantityBreak">
-        <key-map field-name="quantityBreakId"/>
-      </relation>
-      <relation type="one" fk-name="PRICE_COMP_UTUOM" title="Utilization" rel-entity-name="Uom">
-        <key-map field-name="utilizationUomId" rel-field-name="uomId"/>
-      </relation>
-      <relation type="one" fk-name="PRICE_COMP_OCQBRK" title="OrderValue" rel-entity-name="QuantityBreak">
-        <key-map field-name="orderValueBreakId" rel-field-name="quantityBreakId"/>
+      <relation type="one" fk-name="PROD_PCACT_RL" rel-entity-name="ProductPriceRule">
+        <key-map field-name="productPriceRuleId"/>
       </relation>
     </entity>
-    <entity entity-name="PriceComponentAttribute"
+    <entity entity-name="ProductPriceActionType"
             package-name="org.ofbiz.commonapp.product.price"
-            title="Price Component Attribute Entity">
-      <field name="priceComponentId" type="id-ne"></field>
-      <field name="attrName" type="id-long-ne"></field>
-      <field name="attrValue" type="value"></field>
-      <prim-key field="priceComponentId"/>
-      <prim-key field="attrName"/>
-      <relation type="one" fk-name="PRICE_COMP_PRICE" rel-entity-name="PriceComponent">
-        <key-map field-name="priceComponentId"/>
-      </relation>
-      <relation type="many" rel-entity-name="PriceComponentTypeAttr">
-        <key-map field-name="attrName"/>
-      </relation>
-    </entity>
-    <entity entity-name="PriceComponentType"
-            package-name="org.ofbiz.commonapp.product.price"
-            title="Price Component Type Entity">
-      <field name="priceComponentTypeId" type="id-ne"></field>
-      <field name="parentTypeId" type="id-ne"></field>
-      <field name="hasTable" type="indicator"></field>
+            title="Product Price Type Entity">
+      <field name="productPriceActionTypeId" type="id-ne"></field>
       <field name="description" type="description"></field>
-      <prim-key field="priceComponentTypeId"/>
-      <relation type="one" fk-name="PRICE_COMP_TYPEPAR" title="Parent" rel-entity-name="PriceComponentType">
-        <key-map field-name="parentTypeId" rel-field-name="priceComponentTypeId"/>
-      </relation>
-      <relation type="many" title="Child" rel-entity-name="PriceComponentType">
-        <key-map field-name="priceComponentTypeId" rel-field-name="parentTypeId"/>
-      </relation>
-      <relation type="many" rel-entity-name="PriceComponentTypeAttr">
-        <key-map field-name="priceComponentTypeId"/>
-      </relation>
-      <relation type="many" rel-entity-name="PriceComponent">
-        <key-map field-name="priceComponentTypeId"/>
+      <prim-key field="productPriceActionTypeId"/>
+      <relation type="many" rel-entity-name="ProductPriceAction">
+        <key-map field-name="productPriceActionTypeId"/>
       </relation>
     </entity>
-    <entity entity-name="PriceComponentTypeAttr"
+    <entity entity-name="ProductPriceCond"
             package-name="org.ofbiz.commonapp.product.price"
-            title="Price Component Type Attribute Entity">
-      <field name="priceComponentTypeId" type="id-ne"></field>
-      <field name="attrName" type="id-long-ne"></field>
-      <prim-key field="priceComponentTypeId"/>
-      <prim-key field="attrName"/>
-      <relation type="one" fk-name="PRICE_COMP_TATTR" rel-entity-name="PriceComponentType">
-        <key-map field-name="priceComponentTypeId"/>
+            title="Product Price Condition Entity">
+      <field name="productPriceRuleId" type="id-ne"></field>
+      <field name="productPriceCondSeqId" type="id-ne"></field>
+      <field name="inputParamEnumId" type="id"></field>
+      <field name="operatorEnumId" type="id"></field>
+      <field name="condValue" type="long-varchar"></field>
+      <prim-key field="productPriceRuleId"/>
+      <prim-key field="productPriceCondSeqId"/>
+      <relation type="one" fk-name="PROD_PCCOND_RULE" rel-entity-name="ProductPriceRule">
+        <key-map field-name="productPriceRuleId"/>
       </relation>
-      <relation type="many" rel-entity-name="PriceComponentAttribute">
-        <key-map field-name="attrName"/>
+      <relation type="one" fk-name="PROD_PCCOND_INENUM" title="InputParam" rel-entity-name="Enumeration">
+        <key-map field-name="inputParamEnumId" rel-field-name="enumId"/>
       </relation>
-      <relation type="many" rel-entity-name="PriceComponent">
-        <key-map field-name="priceComponentTypeId"/>
+      <relation type="one" fk-name="PROD_PCCOND_OPENUM" title="Operator" rel-entity-name="Enumeration">
+        <key-map field-name="operatorEnumId" rel-field-name="enumId"/>
+      </relation>
+    </entity>
+    <entity entity-name="ProductPriceRule"
+            package-name="org.ofbiz.commonapp.product.price"
+            title="Product Pice Rule Entity">
+      <field name="productPriceRuleId" type="id-ne"></field>
+      <field name="ruleName" type="name"></field>
+      <prim-key field="productPriceRuleId"/>
+      <relation type="many" rel-entity-name="ProductPromoAction">
+        <key-map field-name="productPriceRuleId"/>
+      </relation>
+      <relation type="many" rel-entity-name="ProductPriceCond">
+        <key-map field-name="productPriceRuleId"/>
       </relation>
     </entity>
     <entity entity-name="QuantityBreak"
@@ -986,9 +911,6 @@
       <field name="fromQuantity" type="floating-point"></field>
       <field name="thruQuantity" type="floating-point"></field>
       <prim-key field="quantityBreakId"/>
-      <relation type="many" rel-entity-name="PriceComponent">
-        <key-map field-name="quantityBreakId"/>
-      </relation>
       <relation type="one" fk-name="QUANT_BRK_TYPE" rel-entity-name="QuantityBreakType">
         <key-map field-name="quantityBreakTypeId"/>
       </relation>
@@ -1009,9 +931,6 @@
       <field name="saleTypeId" type="id-ne"></field>
       <field name="description" type="description"></field>
       <prim-key field="saleTypeId"/>
-      <relation type="many" rel-entity-name="PriceComponent">
-        <key-map field-name="saleTypeId"/>
-      </relation>
     </entity>
 
   <!-- ========================================================= -->
@@ -1074,6 +993,8 @@
       <field name="listPriceUomId" type="id"></field>
       <field name="defaultPrice" type="currency-amount"></field>
       <field name="defaultPriceUomId" type="id"></field>
+      <field name="averageCost" type="currency-amount"></field>
+      <field name="averageCostUomId" type="id"></field>
       <field name="quantityUomId" type="id"></field>
       <field name="quantityIncluded" type="floating-point"></field>
       <field name="piecesIncluded" type="numeric"></field>
@@ -1132,9 +1053,6 @@
         <key-map field-name="productId"/>
       </relation>
       <relation type="many" rel-entity-name="CostComponent">
-        <key-map field-name="productId"/>
-      </relation>
-      <relation type="many" rel-entity-name="PriceComponent">
         <key-map field-name="productId"/>
       </relation>
       <relation type="many" rel-entity-name="InventoryItem">

@@ -130,9 +130,6 @@
       <relation type="many" rel-entity-name="AgreementAttribute">
         <key-map field-name="agreementId"/>
       </relation>
-      <relation type="many" rel-entity-name="PriceComponent">
-        <key-map field-name="agreementId"/>
-      </relation>
     </entity>
     <entity entity-name="AgreementAttribute"
             package-name="org.ofbiz.commonapp.party.agreement"
@@ -179,10 +176,6 @@
         <key-map field-name="agreementItemTypeId"/>
       </relation>
       <relation type="many" rel-entity-name="AgreementItemAttribute">
-        <key-map field-name="agreementId"/>
-        <key-map field-name="agreementItemSeqId"/>
-      </relation>
-      <relation type="many" rel-entity-name="PriceComponent">
         <key-map field-name="agreementId"/>
         <key-map field-name="agreementItemSeqId"/>
       </relation>
@@ -903,9 +896,6 @@
       <relation type="many" rel-entity-name="CostComponent">
         <key-map field-name="partyId"/>
       </relation>
-      <relation type="many" rel-entity-name="PriceComponent">
-        <key-map field-name="partyId"/>
-      </relation>
       <relation type="many" rel-entity-name="InventoryItem">
         <key-map field-name="partyId"/>
       </relation>
@@ -991,9 +981,6 @@
         <key-map field-name="partyClassificationGroupId"/>
       </relation>
       <relation type="many" rel-entity-name="MarketInterest">
-        <key-map field-name="partyClassificationGroupId"/>
-      </relation>
-      <relation type="many" rel-entity-name="PriceComponent">
         <key-map field-name="partyClassificationGroupId"/>
       </relation>
     </entity>
