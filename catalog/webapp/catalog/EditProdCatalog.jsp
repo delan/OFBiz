@@ -120,7 +120,7 @@
         <td width="74%"><input type="text" <ofbiz:inputvalue entityAttr="prodCatalog" field="subtitle" fullattrs="true"/> size="60" maxlength="250"></td>
       </tr>
       <tr>
-        <td width="26%" align=right><div class="tabletext">Facility</div></td>
+        <td width="26%" align=right><div class="tabletext">Inventory Facility</div></td>
         <td>&nbsp;</td>
         <td width="74%">
             <select name="inventoryFacilityId">
@@ -136,6 +136,26 @@
          </td>
        </tr>
 
+      <tr>
+        <td width="26%" align=right><div class="tabletext"><b>One Inventory Facility?</b></div></td>
+        <td>&nbsp;</td>
+        <td width="24%">
+          <SELECT name='oneInventoryFacility'>
+            <OPTION><ofbiz:inputvalue entityAttr='prodCatalog' field='oneInventoryFacility' default="Y"/></OPTION>
+            <OPTION>&nbsp;</OPTION><OPTION>Y</OPTION><OPTION>N</OPTION>
+          </SELECT>
+        </td>
+      </tr>
+      <tr>
+        <td width="26%" align=right><div class="tabletext"><b>Use Quick Add?</b></div></td>
+        <td>&nbsp;</td>
+        <td width="24%">
+          <SELECT name='useQuickAdd'>
+            <OPTION><ofbiz:inputvalue entityAttr='prodCatalog' field='useQuickAdd' default="N"/></OPTION>
+            <OPTION>&nbsp;</OPTION><OPTION>Y</OPTION><OPTION>N</OPTION>
+          </SELECT>
+        </td>
+      </tr>
   <tr>
     <td colspan='1' align=right><input type="submit" name="Update" value="Update"></td>
     <td colspan='2'>&nbsp;</td>
