@@ -98,7 +98,7 @@ public class SimpleMethod {
         return simpleMethod.exec(methodContext);
     }
 
-    protected static Map getSimpleMethods(String xmlResource, String methodName, ClassLoader loader) throws MiniLangException {
+    public static Map getSimpleMethods(String xmlResource, String methodName, ClassLoader loader) throws MiniLangException {
         Map simpleMethods = (Map) simpleMethodsResourceCache.get(xmlResource);
         if (simpleMethods == null) {
             synchronized (SimpleMethod.class) {
@@ -119,7 +119,7 @@ public class SimpleMethod {
         return simpleMethods;
     }
 
-    protected static Map getSimpleMethods(URL xmlURL, String methodName) throws MiniLangException {
+    public static Map getSimpleMethods(URL xmlURL, String methodName) throws MiniLangException {
         Map simpleMethods = (Map) simpleMethodsURLCache.get(xmlURL);
         if (simpleMethods == null) {
             synchronized (SimpleMethod.class) {
@@ -430,6 +430,8 @@ public class SimpleMethod {
                     methodOperations.add(new org.ofbiz.core.minilang.method.callops.CallServiceAsynch(curOperElem, simpleMethod));
                 } else if ("call-bsh".equals(nodeName)) {
                     methodOperations.add(new org.ofbiz.core.minilang.method.callops.CallBsh(curOperElem, simpleMethod));
+                } else if ("call-simple-method".equals(nodeName)) {
+                    methodOperations.add(new org.ofbiz.core.minilang.method.callops.CallSimpleMethod(curOperElem, simpleMethod));
 
                 } else if ("field-to-request".equals(nodeName)) {
                     methodOperations.add(new org.ofbiz.core.minilang.method.eventops.FieldToRequest(curOperElem, simpleMethod));
@@ -457,6 +459,8 @@ public class SimpleMethod {
                     methodOperations.add(new org.ofbiz.core.minilang.method.envops.StringToField(curOperElem, simpleMethod));
                 } else if ("property-to-field".equals(nodeName)) {
                     methodOperations.add(new org.ofbiz.core.minilang.method.envops.PropertyToField(curOperElem, simpleMethod));
+                } else if ("to-string".equals(nodeName)) {
+                    methodOperations.add(new org.ofbiz.core.minilang.method.envops.ToString(curOperElem, simpleMethod));
 
                 } else if ("now-timestamp-to-env".equals(nodeName)) {
                     methodOperations.add(new org.ofbiz.core.minilang.method.entityops.NowTimestampToEnv(curOperElem, simpleMethod));

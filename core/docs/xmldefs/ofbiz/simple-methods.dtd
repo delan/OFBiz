@@ -40,7 +40,7 @@
     (see further down for the Simple Map Processor Section)
 -->
 
-<!ENTITY % CallOperations "call-map-processor | call-service | call-service-asynch | call-bsh | check-errors">
+<!ENTITY % CallOperations "call-map-processor | call-service | call-service-asynch | call-bsh | call-simple-method | check-errors">
 <!ENTITY % EventOperations "field-to-request | field-to-session | request-to-field | session-to-field | webapp-property-to-field">
 <!ENTITY % ServiceOperations "field-to-result">
 <!ENTITY % EnvOperations "field-to-field | field-to-list | env-to-field | field-to-env | string-to-field | property-to-field | to-string">
@@ -210,6 +210,12 @@ Error messages go on the error list and are handled with the check-errors tag.
 <!ATTLIST call-bsh
     resource CDATA #IMPLIED
     error-list-name CDATA "error_list"
+>
+
+<!ELEMENT call-simple-method EMPTY>
+<!ATTLIST call-simple-method
+    xml-resource CDATA #IMPLIED
+    method-name CDATA #REQUIRED
 >
 
 <!ELEMENT check-errors ( error-prefix?, error-suffix?, message-prefix?, message-suffix? )>
