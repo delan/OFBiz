@@ -1071,7 +1071,7 @@
       <field name="createdDate" type="date-time"></field>
       <field name="createdByUserLogin" type="id-vlong"></field>
       <field name="lastModifiedDate" type="date-time"></field>
-      <field name="lastModifiedByUserLogin" type="id"></field>
+      <field name="lastModifiedByUserLogin" type="id-vlong"></field>
       <prim-key field="productId"/>
       <relation type="many" rel-entity-name="ProductAttribute">
         <key-map field-name="productId"/>
