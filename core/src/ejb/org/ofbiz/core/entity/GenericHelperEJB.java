@@ -127,6 +127,15 @@ public class GenericHelperEJB implements GenericHelper {
     catch(Exception e) { Debug.logWarning(e); }
   }
   
+  /** Find a number of Generic Value objects by their Primary Keys, all at once
+   *@param primaryKeys A Collection of primary keys to find by.
+   *@return Collection of GenericValue objects corresponding to the passed primaryKey objects
+   */
+  public Collection findAllByPrimaryKeys(Collection primaryKeys) throws GenericEntityException {
+    //this should be implemented through the home interface to do the entire process on the server side
+    throw new GenericNotImplementedException("Store All not yet implemented for EJB data source.");
+  }
+
   /** Finds Generic Entity records by all of the specified fields (ie: combined using AND)
    *@param entityName The Name of the Entity as defined in the entity XML file
    *@param fields The fields of the named entity to query by with their corresponging values
@@ -195,6 +204,7 @@ public class GenericHelperEJB implements GenericHelper {
    *@param values Collection of GenericValue instances containing the entities to store
    */
   public void storeAll(Collection values) throws GenericEntityException {
+    //this should be implemented through the home interface to do the entire process on the server side
     throw new GenericNotImplementedException("Store All not yet implemented for EJB data source.");
   }
 
