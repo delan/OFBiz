@@ -38,13 +38,14 @@
 <!ELEMENT service EMPTY>
 <!ATTLIST service
 	name CDATA #REQUIRED
+	mode (sync|async) "sync"
 >
 
 <!--
 	<service-group>
 		<group name="testOne" send-mode="none">
-			<service name="testScv"/>
-			<service name="testScv"/>
+			<service name="testScv" mode="async"/>
+			<service name="testScv" mode="sync"/>
 		</group>
 	</service-group>
 -->	

@@ -43,9 +43,13 @@
     <global-services loader="mainfile" location="services_workeffort.xml"/>
     <global-services loader="mainfile" location="services_workflow.xml"/>
 
+	<!-- ECA definition files -->
     <service-ecas loader="mainfile" location="secas_test.xml"/>
     <service-ecas loader="mainfile" location="secas_accounting.xml"/>
     <service-ecas loader="mainfile" location="secas_workeffort.xml"/>
+    
+    <!-- Service-Group definition files -->
+    <service-groups loader="mainfile" location="group_test.xml"/>
 
     <!-- JMS Service Queue/Topic Configuration -->
     <jms-service name="serviceMessenger" send-mode="all">

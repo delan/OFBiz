@@ -73,6 +73,12 @@
     location CDATA #REQUIRED
 >
 
+<!ELEMENT service-groups EMPTY>
+<!ATTLIST service-groups
+    loader CDATA #REQUIRED
+    location CDATA #REQUIRED
+>
+
 <!ELEMENT jms-service (server+)>
 <!ATTLIST jms-service
     name CDATA #REQUIRED
