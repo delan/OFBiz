@@ -21,20 +21,20 @@
  *  THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  *
  *@author     Andy Zeneski 
- *@version    $Revision: 1.1 $
+ *@version    $Revision: 1.2 $
  *@since      2.0
 --%>
 
 <%@ page import="java.util.*" %>
-<%@ page import="org.ofbiz.core.security.*, org.ofbiz.core.entity.*" %>
-<%@ page import="org.ofbiz.core.util.*, org.ofbiz.core.pseudotag.*" %>
-<%@ page import="org.ofbiz.core.service.*, org.ofbiz.core.calendar.*" %>
+<%@ page import="org.ofbiz.security.*, org.ofbiz.entity.*" %>
+<%@ page import="org.ofbiz.base.util.*, org.ofbiz.content.webapp.pseudotag.*" %>
+<%@ page import="org.ofbiz.service.*, org.ofbiz.core.calendar.*" %>
 
 <%@ taglib uri="ofbizTags" prefix="ofbiz" %>
 
-<jsp:useBean id="security" type="org.ofbiz.core.security.Security" scope="request" />
-<jsp:useBean id="delegator" type="org.ofbiz.core.entity.GenericDelegator" scope="request" />
-<jsp:useBean id="dispatcher" type="org.ofbiz.core.service.LocalDispatcher" scope="request" />
+<jsp:useBean id="security" type="org.ofbiz.security.Security" scope="request" />
+<jsp:useBean id="delegator" type="org.ofbiz.entity.GenericDelegator" scope="request" />
+<jsp:useBean id="dispatcher" type="org.ofbiz.service.LocalDispatcher" scope="request" />
 
 <%if(security.hasPermission("WEBTOOLS_VIEW", session)) {%>
 

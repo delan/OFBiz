@@ -1,5 +1,5 @@
 /*
- * $Id: WfEventAuditImpl.java,v 1.2 2003/08/18 18:32:07 ajzeneski Exp $
+ * $Id: WfEventAuditImpl.java,v 1.3 2003/08/19 17:45:18 jonesde Exp $
  *
  * Copyright (c) 2001, 2002 The Open For Business Project - www.ofbiz.org
  *
@@ -39,7 +39,7 @@ import org.ofbiz.workflow.WfProcess;
  * WfEventAuditImpl - Workflow Event Audit implementation
  *
  * @author     <a href="mailto:jaz@ofbiz.org">Andy Zeneski</a>
- * @version    $Revision: 1.2 $
+ * @version    $Revision: 1.3 $
  * @since      2.0
  */
 public class WfEventAuditImpl implements WfEventAudit {
@@ -55,28 +55,28 @@ public class WfEventAuditImpl implements WfEventAudit {
     }
     
     /**
-     * @see org.ofbiz.core.workflow.WfEventAudit#source()
+     * @see org.ofbiz.workflow.WfEventAudit#source()
      */
     public WfExecutionObject source() throws WfException, SourceNotAvailable {
         return object;
     }
  
     /**
-     * @see org.ofbiz.core.workflow.WfEventAudit#timeStamp()
+     * @see org.ofbiz.workflow.WfEventAudit#timeStamp()
      */
     public Timestamp timeStamp() throws WfException {
         return timeStamp;
     }
 
     /**
-     * @see org.ofbiz.core.workflow.WfEventAudit#eventType()
+     * @see org.ofbiz.workflow.WfEventAudit#eventType()
      */
     public String eventType() throws WfException {
         return eventType;
     }
 
     /**
-     * @see org.ofbiz.core.workflow.WfEventAudit#activityKey()
+     * @see org.ofbiz.workflow.WfEventAudit#activityKey()
      */
     public String activityKey() throws WfException {
         try {
@@ -89,7 +89,7 @@ public class WfEventAuditImpl implements WfEventAudit {
     }
 
     /**
-     * @see org.ofbiz.core.workflow.WfEventAudit#activityName()
+     * @see org.ofbiz.workflow.WfEventAudit#activityName()
      */
     public String activityName() throws WfException {
         try {
@@ -101,7 +101,7 @@ public class WfEventAuditImpl implements WfEventAudit {
     }
 
     /**
-     * @see org.ofbiz.core.workflow.WfEventAudit#processKey()
+     * @see org.ofbiz.workflow.WfEventAudit#processKey()
      */
     public String processKey() throws WfException {
         try {
@@ -113,7 +113,7 @@ public class WfEventAuditImpl implements WfEventAudit {
     }
 
     /**
-     * @see org.ofbiz.core.workflow.WfEventAudit#processName()
+     * @see org.ofbiz.workflow.WfEventAudit#processName()
      */
     public String processName() throws WfException {
         try {
@@ -125,7 +125,7 @@ public class WfEventAuditImpl implements WfEventAudit {
     }
 
     /**
-     * @see org.ofbiz.core.workflow.WfEventAudit#processMgrName()
+     * @see org.ofbiz.workflow.WfEventAudit#processMgrName()
      */
     public String processMgrName() throws WfException {
         try {
@@ -138,7 +138,7 @@ public class WfEventAuditImpl implements WfEventAudit {
     }
 
     /**
-     * @see org.ofbiz.core.workflow.WfEventAudit#processMgrVersion()
+     * @see org.ofbiz.workflow.WfEventAudit#processMgrVersion()
      */
     public String processMgrVersion() throws WfException {
         try {

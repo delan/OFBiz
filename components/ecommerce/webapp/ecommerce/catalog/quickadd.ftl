@@ -20,7 +20,7 @@
  *  THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  *
  *@author     Andy Zeneski (jaz@ofbiz.org)
- *@version    $Revision: 1.1 $
+ *@version    $Revision: 1.2 $
  *@since      2.1
 -->
 <#assign delegator = requestAttributes.delegator>
@@ -36,7 +36,7 @@
             <option value='${productCategory.productCategoryId}'>${productCategory.description?if_exists}</option>
             <option value='${productCategory.productCategoryId}'>--</option>
             <#list quickAddCats as quickAddCatalogId>
-              <#assign loopCategory = delegator.findByPrimaryKeyCache("ProductCategory", Static["org.ofbiz.core.util.UtilMisc"].toMap("productCategoryId", quickAddCatalogId))>
+              <#assign loopCategory = delegator.findByPrimaryKeyCache("ProductCategory", Static["org.ofbiz.base.util.UtilMisc"].toMap("productCategoryId", quickAddCatalogId))>
               <#if loopCategory?has_content>
                 <option value='${quickAddCatalogId}'>${loopCategory.description?if_exists}</option>
               </#if>

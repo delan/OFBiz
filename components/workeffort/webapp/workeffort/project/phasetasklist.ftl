@@ -151,7 +151,7 @@
                     <TD><DIV class='tabletext'>${workEffort.description}</DIV></TD>
                     <TD><DIV class='tabletext'>${workEffort.estimatedStartDate?if_exists}</DIV></TD>
                     <TD><DIV class='tabletext'>${workEffort.priority?if_exists}</DIV></TD>
-                    <#assign currentStatusItem = delegator.findByPrimaryKeyCache("StatusItem", Static["org.ofbiz.core.util.UtilMisc"].toMap("statusId", workEffort.currentStatusId))>                    
+                    <#assign currentStatusItem = delegator.findByPrimaryKeyCache("StatusItem", Static["org.ofbiz.base.util.UtilMisc"].toMap("statusId", workEffort.currentStatusId))>                    
                     <TD><DIV class='tabletext'>${(currentStatusItem.description)?if_exists}</DIV></TD>
                     <TD align=right width='1%'><A class='buttontext' href='<@ofbizUrl>/editphasetask?workEffortId=${workEffort.workEffortId}&phaseWorkEffortId=${phaseWorkEffortId}</@ofbizUrl>'>
                         [Edit]</a></DIV></TD>

@@ -31,9 +31,9 @@
 <%@ taglib uri="ofbizTags" prefix="ofbiz" %>
 
 <%@ page import="java.util.*" %>
-<%@ page import="org.ofbiz.core.util.*, org.ofbiz.core.entity.*" %>
-<jsp:useBean id="delegator" type="org.ofbiz.core.entity.GenericDelegator" scope="request" />
-<jsp:useBean id="security" type="org.ofbiz.core.security.Security" scope="request" />
+<%@ page import="org.ofbiz.base.util.*, org.ofbiz.entity.*" %>
+<jsp:useBean id="delegator" type="org.ofbiz.entity.GenericDelegator" scope="request" />
+<jsp:useBean id="security" type="org.ofbiz.security.Security" scope="request" />
 
 <%if(security.hasEntityPermission("PARTYMGR", "_VIEW", session)) {%>
 

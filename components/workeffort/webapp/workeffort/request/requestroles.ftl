@@ -21,7 +21,7 @@
  *  THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  *
  *@author     Johan Isacsson (conversion of jsp created by Andy Zeneski) 
- *@version    $Revision: 1.1 $
+ *@version    $Revision: 1.2 $
  *@since      2.1
 -->
 
@@ -64,9 +64,9 @@
                       <#list custRequestRoles as role>
                           <tr>
                             <#assign roleType = role.getRelatedOne("RoleType")>
-                            <#assign party = delegator.findByPrimaryKey("Party", Static["org.ofbiz.core.util.UtilMisc"].toMap("partyId",role.partyId))>
-                            <#assign partyGroup = delegator.findByPrimaryKey("PartyGroup", Static["org.ofbiz.core.util.UtilMisc"].toMap("partyId",party.partyId))?if_exists>
-                            <#assign person = delegator.findByPrimaryKey("Person", Static["org.ofbiz.core.util.UtilMisc"].toMap("partyId",party.partyId))?if_exists>                                                          
+                            <#assign party = delegator.findByPrimaryKey("Party", Static["org.ofbiz.base.util.UtilMisc"].toMap("partyId",role.partyId))>
+                            <#assign partyGroup = delegator.findByPrimaryKey("PartyGroup", Static["org.ofbiz.base.util.UtilMisc"].toMap("partyId",party.partyId))?if_exists>
+                            <#assign person = delegator.findByPrimaryKey("Person", Static["org.ofbiz.base.util.UtilMisc"].toMap("partyId",party.partyId))?if_exists>                                                          
                             <td><div class="tabletext"><a href="/partymgr/control/viewprofile?party_id=${party.partyId}" target="partymgr" class="buttontext">${party.partyId}</a></div></td>
                             <#if person?has_content>
                               <td><div class="tabletext">${person.firstName}&nbsp;${person.lastName}</div></td>

@@ -1,4 +1,4 @@
-<%@ page import="java.util.*, java.io.*, java.net.*, java.sql.*, org.ofbiz.core.util.*, org.ofbiz.core.entity.*, org.ofbiz.core.entity.model.*" %><jsp:useBean id="delegator" type="org.ofbiz.core.entity.GenericDelegator" scope="request" /><jsp:useBean id="security" type="org.ofbiz.core.security.Security" scope="request" /><%
+<%@ page import="java.util.*, java.io.*, java.net.*, java.sql.*, org.ofbiz.base.util.*, org.ofbiz.entity.*, org.ofbiz.entity.model.*" %><jsp:useBean id="delegator" type="org.ofbiz.entity.GenericDelegator" scope="request" /><jsp:useBean id="security" type="org.ofbiz.security.Security" scope="request" /><%
 
 if(security.hasPermission("ENTITY_MAINT", session)) {
   String helperName = request.getParameter("helperName");

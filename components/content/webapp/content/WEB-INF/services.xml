@@ -16,7 +16,7 @@
       status and user role list.  5. Check for ECA managed grants. </description>
     <attribute mode="IN" name="targetOperationList" optional="true" type="java.util.List"/>
     <attribute mode="IN" name="contentPurposeList" optional="true" type="java.util.List"/>
-    <attribute mode="IN" name="currentContent" optional="false" type="org.ofbiz.core.entity.GenericValue"/>
+    <attribute mode="IN" name="currentContent" optional="false" type="org.ofbiz.entity.GenericValue"/>
     <attribute mode="INOUT" name="roleHistory" optional="true" type="java.util.List"/>
     <attribute mode="OUT" name="permissionStatus" optional="false" type="String"/>
   </service>
@@ -26,7 +26,7 @@
     <description>Check ContentPurposeOperation table for non-role
       permissions.         </description>
     <attribute mode="IN" name="targetOperationList" optional="false" type="java.util.List"/>
-    <attribute mode="IN" name="currentContent" optional="false" type="org.ofbiz.core.entity.GenericValue"/>
+    <attribute mode="IN" name="currentContent" optional="false" type="org.ofbiz.entity.GenericValue"/>
     <attribute mode="OUT" name="contentPurposeList" optional="true" type="java.util.List"/>
     <attribute mode="OUT" name="contentPurposeOperationList"
       optional="true" type="java.util.List"/>
@@ -38,7 +38,7 @@
     <description>Check ContentPurposeOperation table for non-role
       permissions.         </description>
     <attribute mode="IN" name="targetOperationList" optional="true" type="java.util.List"/>
-    <attribute mode="IN" name="currentContent" optional="false" type="org.ofbiz.core.entity.GenericValue"/>
+    <attribute mode="IN" name="currentContent" optional="false" type="org.ofbiz.entity.GenericValue"/>
     <attribute mode="INOUT" name="roleHistory" optional="true" type="java.util.List"/>
     <attribute mode="OUT" name="contentPurposeList" optional="true" type="java.util.List"/>
     <attribute mode="OUT" name="contentPurposeOperationList"

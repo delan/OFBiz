@@ -25,10 +25,10 @@
 --%>
 
 <%@ page import="java.util.*" %>
-<%@ page import="org.ofbiz.core.security.*, org.ofbiz.core.entity.*, org.ofbiz.core.util.*, org.ofbiz.core.pseudotag.*" %>
+<%@ page import="org.ofbiz.security.*, org.ofbiz.entity.*, org.ofbiz.base.util.*, org.ofbiz.content.webapp.pseudotag.*" %>
 
 <%@ taglib uri="ofbizTags" prefix="ofbiz" %>
-<jsp:useBean id="delegator" type="org.ofbiz.core.entity.GenericDelegator" scope="request" />
+<jsp:useBean id="delegator" type="org.ofbiz.entity.GenericDelegator" scope="request" />
 
 <%@ page import="org.ofbiz.commonapp.workeffort.workeffort.*" %>
 <%@ page import="org.ofbiz.commonapp.workeffort.project.*" %>

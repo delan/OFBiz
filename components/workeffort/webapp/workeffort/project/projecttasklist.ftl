@@ -105,7 +105,7 @@
                     <TD valign=top><DIV class='tabletext'><b>${phase.workEffort.workEffortName}</b></div></TD>
                     <TD valign=top><DIV class='tabletext'><b>${phase.workEffort.description?if_exists}</b></div></TD>
                     <TD valign=top><DIV class='tabletext'><b>${phase.workEffort.estimatedStartDate?datetime?string.short}</b></DIV></TD>
-                    <#assign currentStatusItem = delegator.findByPrimaryKeyCache("StatusItem", Static["org.ofbiz.core.util.UtilMisc"].toMap("statusId", phase.workEffort.currentStatusId))>
+                    <#assign currentStatusItem = delegator.findByPrimaryKeyCache("StatusItem", Static["org.ofbiz.base.util.UtilMisc"].toMap("statusId", phase.workEffort.currentStatusId))>
                     <TD valign=top>&nbsp;</TD>
                     <TD valign=top><b><DIV class='tabletext'>${(currentStatusItem.description)?if_exists}</b></DIV></TD>
                     <TD  valign=top align=right width='1%'><A class='buttontext' href='<@ofbizUrl>/editphase?workEffortId=${phase.workEffort.workEffortId}&projectWorkEffortId=${projectWorkEffortId}</@ofbizUrl>'>
@@ -118,7 +118,7 @@
                         <TD valign=top><DIV class='tabletext'>${workEffortTask.description}</DIV></TD>
                         <TD valign=top><DIV class='tabletext'>${workEffortTask.estimatedStartDate?datetime?string.short}</DIV></TD>
                         <TD valign=top><DIV class='tabletext'>${workEffortTask.priority}</DIV></TD>
-                        <#assign currentStatusItem = delegator.findByPrimaryKeyCache("StatusItem", Static["org.ofbiz.core.util.UtilMisc"].toMap("statusId", workEffortTask.currentStatusId))>
+                        <#assign currentStatusItem = delegator.findByPrimaryKeyCache("StatusItem", Static["org.ofbiz.base.util.UtilMisc"].toMap("statusId", workEffortTask.currentStatusId))>
                         <TD valign=top><DIV class='tabletext'>${(currentStatusItem.description)?if_exists}</DIV></TD>
                         <TD  valign=top align=right width='1%'><A class='buttontext' href='<@ofbizUrl>/editphasetask?workEffortId=${workEffortTask.workEffortId}&phaseWorkEffortId=${phase.workEffort.workEffortId}</@ofbizUrl>'>
                             [Edit]</a></DIV></TD>

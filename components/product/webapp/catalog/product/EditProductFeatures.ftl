@@ -21,7 +21,7 @@
  *
  *@author     David E. Jones (jonesde@ofbiz.org)
  *@author     Brad Steiner (bsteiner@thehungersite.com)
- *@version    $Revision: 1.1 $
+ *@version    $Revision: 1.2 $
  *@since      2.2
 -->
 
@@ -65,11 +65,11 @@ ${pages.get("/product/ProductTabBar.ftl")}
                     ${(curProductFeatureCategory.description)?if_exists}
                     [${(productFeatureAndAppl.productFeatureCategoryId)?if_exists}]</a></td>
                 <#assign hasntStarted = false>
-                <#if (productFeatureAndAppl.getTimestamp("fromDate"))?exists && Static["org.ofbiz.core.util.UtilDateTime"].nowTimestamp().before(productFeatureAndAppl.getTimestamp("fromDate"))> <#assign hasntStarted = true></#if>
+                <#if (productFeatureAndAppl.getTimestamp("fromDate"))?exists && Static["org.ofbiz.base.util.UtilDateTime"].nowTimestamp().before(productFeatureAndAppl.getTimestamp("fromDate"))> <#assign hasntStarted = true></#if>
                 <td><div class='tabletext'<#if hasntStarted> style='color: red;'</#if>>${(productFeatureAndAppl.fromDate)?if_exists}></div></td>
                 <td>
                     <#assign hasExpired = false>
-                    <#if (productFeatureAndAppl.getTimestamp("thruDate"))?exists && Static["org.ofbiz.core.util.UtilDateTime"].nowTimestamp().after(productFeatureAndAppl.getTimestamp("thruDate"))> <#assign hasExpired = true></#if>
+                    <#if (productFeatureAndAppl.getTimestamp("thruDate"))?exists && Static["org.ofbiz.base.util.UtilDateTime"].nowTimestamp().after(productFeatureAndAppl.getTimestamp("thruDate"))> <#assign hasExpired = true></#if>
                     <input type='text' size='25' name='thruDate' value='${(productFeatureAndApp.thruDate)?if_exists}' class='inputBox' <#if hasExpired> style='color: red;'</#if>>
                     <a href="javascript:call_cal(document.lineForm${line}.thruDate, '${(productFeatureAndAppl.thruDate)?default(nowTimestampString)}');"><img src='/images/cal.gif' width='16' height='16' border='0' alt='Calendar'></a>
                     <input type=text size='6' name='amount' value='${(productFeatureAndAppl.amount)?if_exists}'  class='inputBox'>
@@ -87,7 +87,7 @@ ${pages.get("/product/ProductTabBar.ftl")}
                 </td>
                 </form>
                 <td>
-                <a href='<@ofbizUrl>/RemoveFeatureFromProduct?productId=${(productFeatureAndAppl.productId)?if_exists}>&productFeatureId=${(productFeatureAndAppl.productFeatureId)?if_exists}>&fromDate=${Static["org.ofbiz.core.util.UtilFormatOut"].encodeQueryValue(productFeatureAndAppl.getTimestamp("fromDate").toString())})</@ofbizUrl>' class="buttontext">
+                <a href='<@ofbizUrl>/RemoveFeatureFromProduct?productId=${(productFeatureAndAppl.productId)?if_exists}>&productFeatureId=${(productFeatureAndAppl.productFeatureId)?if_exists}>&fromDate=${Static["org.ofbiz.base.util.UtilFormatOut"].encodeQueryValue(productFeatureAndAppl.getTimestamp("fromDate").toString())})</@ofbizUrl>' class="buttontext">
                 [Delete]</a>
                 </td>
             </tr>

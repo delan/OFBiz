@@ -28,8 +28,8 @@
  */
 %>
 
-<%@ page import="org.ofbiz.core.util.*" %>
-<%@ page import="org.ofbiz.core.security.*" %>
+<%@ page import="org.ofbiz.base.util.*" %>
+<%@ page import="org.ofbiz.security.*" %>
 <%@ taglib uri="ofbizTags" prefix="ofbiz" %>
 
 <TABLE border=0 width='100%' cellspacing='0' cellpadding='0' class='boxoutside'>

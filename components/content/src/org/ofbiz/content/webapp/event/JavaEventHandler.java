@@ -1,5 +1,5 @@
 /*
- * $Id: JavaEventHandler.java,v 1.1 2003/08/17 08:40:12 ajzeneski Exp $
+ * $Id: JavaEventHandler.java,v 1.2 2003/08/19 17:45:22 jonesde Exp $
  *
  * Copyright (c) 2001, 2002 The Open For Business Project - www.ofbiz.org
  *
@@ -38,7 +38,7 @@ import org.ofbiz.base.util.Debug;
  *
  * @author     <a href="mailto:jaz@ofbiz.org">Andy Zeneski</a>
  * @author     <a href="mailto:jonesde@ofbiz.org">David E. Jones</a>
- * @version    $Revision: 1.1 $
+ * @version    $Revision: 1.2 $
  * @since      2.0
  */
 public class JavaEventHandler implements EventHandler {
@@ -48,7 +48,7 @@ public class JavaEventHandler implements EventHandler {
     private Map eventClassMap = new HashMap();
    
     /**
-     * @see org.ofbiz.core.event.EventHandler#invoke(java.lang.String, java.lang.String, javax.servlet.http.HttpServletRequest, javax.servlet.http.HttpServletResponse)
+     * @see org.ofbiz.content.webapp.event.EventHandler#invoke(java.lang.String, java.lang.String, javax.servlet.http.HttpServletRequest, javax.servlet.http.HttpServletResponse)
      */
     public String invoke(String eventPath, String eventMethod, HttpServletRequest request, HttpServletResponse response) throws EventHandlerException {
         Class eventClass = (Class) this.eventClassMap.get(eventPath);

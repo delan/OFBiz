@@ -24,10 +24,10 @@
  *@version    1.0
 --%>
  
-<%@ page import="org.ofbiz.core.util.*, org.ofbiz.core.security.*" %>
+<%@ page import="org.ofbiz.base.util.*, org.ofbiz.security.*" %>
 <%@ taglib uri="ofbizTags" prefix="ofbiz" %>
-<jsp:useBean id="security" type="org.ofbiz.core.security.Security" scope="request" />
-<jsp:useBean id="delegator" type="org.ofbiz.core.entity.GenericDelegator" scope="request" />
+<jsp:useBean id="security" type="org.ofbiz.security.Security" scope="request" />
+<jsp:useBean id="delegator" type="org.ofbiz.entity.GenericDelegator" scope="request" />
 
 <TABLE border=0 width='100%' cellspacing='0' cellpadding='0' class='boxoutside'>
   <TR>

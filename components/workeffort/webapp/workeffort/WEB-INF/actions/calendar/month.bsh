@@ -21,15 +21,15 @@
  *
  *@author     Johan Isacsson
  *@author     David E. Jones (jonesde@ofbiz.org)
- *@version    $Revision: 1.1 $
+ *@version    $Revision: 1.2 $
  *@since      2.2
  */
 
 import java.util.*;
-import org.ofbiz.core.security.*;
-import org.ofbiz.core.entity.*;
-import org.ofbiz.core.util.*;
-import org.ofbiz.core.pseudotag.*;
+import org.ofbiz.security.*;
+import org.ofbiz.entity.*;
+import org.ofbiz.base.util.*;
+import org.ofbiz.content.webapp.pseudotag.*;
 import org.ofbiz.commonapp.workeffort.workeffort.*;
 import java.sql.Timestamp;
 import java.util.Calendar;

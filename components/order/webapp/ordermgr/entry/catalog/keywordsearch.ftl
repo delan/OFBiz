@@ -20,7 +20,7 @@
  *  THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  *
  *@author     Andy Zeneski (jaz@ofbiz.org)
- *@version    $Revision: 1.1 $
+ *@version    $Revision: 1.2 $
  *@since      2.1
 -->
 
@@ -32,9 +32,9 @@
   <#if requestAttributes.featureIdByType?has_content>
   	and where 
     <#list featureIdByType.keySet() as productFeatureTypeId>
-      <#assign findPftMap = Static["org.ofbiz.core.util.UtilMisc"].toMap("productFeatureTypeId", productFeatureTypeId)>
+      <#assign findPftMap = Static["org.ofbiz.base.util.UtilMisc"].toMap("productFeatureTypeId", productFeatureTypeId)>
       <#assign productFeatureType = delegator.findByPrimaryKeyCache("ProductFeatureType", findPftMap)>
-      <#assign findProdFeatMap = Static["org.ofbiz.core.util.UtilMisc"].toMap("productFeatureId", featureIdByType[productFeatureTypeId])>
+      <#assign findProdFeatMap = Static["org.ofbiz.base.util.UtilMisc"].toMap("productFeatureId", featureIdByType[productFeatureTypeId])>
       <#assign productFeature = delegator.findByPrimaryKeyCache("ProductFeature", findProdFeatMap)>
       ${productFeatureType.description} = ${productFeature.description}
       <#if productFeatureTypeId_has_next>, and </#if>

@@ -6,33 +6,33 @@
     <owner>The Open For Business Project Copyright (c) 2002</owner>
     <errorpage>/error/error.jsp</errorpage>
     
-    <handler name="java" type="request" class="org.ofbiz.core.event.JavaEventHandler"/>
-    <handler name="soap" type="request" class="org.ofbiz.core.event.SOAPEventHandler"/>
-    <handler name="service" type="request" class="org.ofbiz.core.event.ServiceEventHandler"/>
-    <handler name="simple" type="request" class="org.ofbiz.core.event.SimpleEventHandler"/>
-    <handler name="bsf" type="request" class="org.ofbiz.core.event.BsfEventHandler"/>
+    <handler name="java" type="request" class="org.ofbiz.content.webapp.event.JavaEventHandler"/>
+    <handler name="soap" type="request" class="org.ofbiz.content.webapp.event.SOAPEventHandler"/>
+    <handler name="service" type="request" class="org.ofbiz.content.webapp.event.ServiceEventHandler"/>
+    <handler name="simple" type="request" class="org.ofbiz.content.webapp.event.SimpleEventHandler"/>
+    <handler name="bsf" type="request" class="org.ofbiz.content.webapp.event.BsfEventHandler"/>
 
-    <handler name="jpublish" type="view" class="org.ofbiz.core.view.JPublishViewHandler"/>
-    <handler name="region" type="view" class="org.ofbiz.core.view.RegionViewHandler"/>
-    <handler name="wsp" type="view" class="org.ofbiz.core.view.WspViewHandler"/>
+    <handler name="jpublish" type="view" class="org.ofbiz.content.webapp.view.JPublishViewHandler"/>
+    <handler name="region" type="view" class="org.ofbiz.content.webapp.view.RegionViewHandler"/>
+    <handler name="wsp" type="view" class="org.ofbiz.content.webapp.view.WspViewHandler"/>
 
-    <handler name="ftl" type="view" class="org.ofbiz.core.ftl.FreeMarkerViewHandler"/>
-    <handler name="velocity" type="view" class="org.ofbiz.core.view.VelocityViewHandler"/>
-    <handler name="jsp" type="view" class="org.ofbiz.core.view.JspViewHandler"/>
+    <handler name="ftl" type="view" class="org.ofbiz.content.webapp.ftl.FreeMarkerViewHandler"/>
+    <handler name="velocity" type="view" class="org.ofbiz.content.webapp.view.VelocityViewHandler"/>
+    <handler name="jsp" type="view" class="org.ofbiz.content.webapp.view.JspViewHandler"/>
     
-    <handler name="http" type="view" class="org.ofbiz.core.view.HttpViewHandler"/>
-    <handler name="datavision" type="view" class="org.ofbiz.core.view.DataVisionViewHandler"/>
-    <handler name="jasperreportspdf" type="view" class="org.ofbiz.core.view.JasperReportsPdfViewHandler"/>
-    <handler name="jasperreportsxml" type="view" class="org.ofbiz.core.view.JasperReportsXmlViewHandler"/>
+    <handler name="http" type="view" class="org.ofbiz.content.webapp.view.HttpViewHandler"/>
+    <handler name="datavision" type="view" class="org.ofbiz.content.webapp.view.DataVisionViewHandler"/>
+    <handler name="jasperreportspdf" type="view" class="org.ofbiz.content.webapp.view.JasperReportsPdfViewHandler"/>
+    <handler name="jasperreportsxml" type="view" class="org.ofbiz.content.webapp.view.JasperReportsXmlViewHandler"/>
     
     <preprocessor>
     	<!-- Events to run on every request before security (chains exempt) -->
-    	<!-- <event type="java" path="org.ofbiz.core.event.TestEvent" invoke="test"/> -->
+    	<!-- <event type="java" path="org.ofbiz.content.webapp.event.TestEvent" invoke="test"/> -->
     	<event type="java" path="org.ofbiz.commonapp.security.login.LoginEvents" invoke="checkExternalLoginKey"/>
     </preprocessor>
     <postprocessor>
     	<!-- Events to run on every request after all other processing (chains exempt) -->
-    	<!-- <event type="java" path="org.ofbiz.core.event.TestEvent" invoke="test"/> -->
+    	<!-- <event type="java" path="org.ofbiz.content.webapp.event.TestEvent" invoke="test"/> -->
     </postprocessor>
 
     <!-- Security Mappings -->
@@ -67,7 +67,7 @@
     </request-map>
     
     <request-map uri="chain">
-        <event type="java" path="org.ofbiz.core.event.TestEvent" invoke="test"/>
+        <event type="java" path="org.ofbiz.content.webapp.event.TestEvent" invoke="test"/>
         <response name="success" type="request" value="/view"/>
         <response name="error" type="view" value="error"/>
     </request-map>
@@ -78,7 +78,7 @@
     </request-map>
     
     <request-map uri="changeDelegator">
-        <event type="java" path="org.ofbiz.core.event.CoreEvents" invoke="changeDelegator"/>
+        <event type="java" path="org.ofbiz.content.webapp.event.CoreEvents" invoke="changeDelegator"/>
         <response name="success" type="view" value="main"/>
         <response name="error" type="view" value="error"/>
     </request-map>    

@@ -25,7 +25,7 @@
 <div class='contenttext'>Written By: David E. Jones, <a href="mailto:jonesde@ofbiz.org">jonesde@ofbiz.org</a></div>
 <div class='contenttext'>Minor corrections by: <a href="mailto:PDebski@a4.pl">Pawel H. Debski</a></div>
 <div class='contenttext'>Last Updated: January 28, 2003</div>
-<!-- $Id: entityconfig.html,v 1.1 2003/08/18 23:45:31 jonesde Exp $ -->
+<!-- $Id: entityconfig.html,v 1.2 2003/08/19 17:45:21 jonesde Exp $ -->
 
 <hr class='sepbar'>
 <h3>Table of Contents</h3>
@@ -114,7 +114,7 @@ attributes.</p>
 </tr>
 <tr>
     <td>class</td><td>Y</td>
-    <td>The class to use that extends the abstract class org.ofbiz.core.entity.config.ResourceLoader.
+    <td>The class to use that extends the abstract class org.ofbiz.entity.config.ResourceLoader.
     Available classes include FileLoader, UrlLoader, and ClasspathLoader, all in the
     same package as the ResourceLoader class.</td>
 </tr>
@@ -139,21 +139,21 @@ attributes.</p>
 <b><code>javax.transaction.UserTransaction</code></b> and optionally the 
 <b><code>javax.transaction.TransactionManager</code></b> interface 
 implementations for the TX Manager being used. These are retrieved through the 
-<b><code>org.ofbiz.core.entity.TransactionFactory</code></b> class. This class 
+<b><code>org.ofbiz.entity.TransactionFactory</code></b> class. This class 
 uses the class specified with the <b><code>class</code></b> attribute of the 
 <b><code>transaction-factory</code></b>. This class may be changed depending on 
 which application server or transaction manager you are running OFBiz on.</p>
 
 <p class='contenttext'>The default TX Manager is Tyrex from Exolab (www.exolab.org) and the factory 
 class for Tyrex is 
-<b><code>org.ofbiz.core.entity.transaction.TyrexFactory</code></b>. There is 
+<b><code>org.ofbiz.entity.transaction.TyrexFactory</code></b>. There is 
 also a special class for Weblogic: 
-<b><code>org.ofbiz.core.entity.transaction.WeblogicFactory</code></b>, which 
+<b><code>org.ofbiz.entity.transaction.WeblogicFactory</code></b>, which 
 must be changed to include the Weblogic specific stuff and then compiled with 
 weblogic.jar on the classpath.</p>
 
 <p class='contenttext'>The most widely useful transaction factory class is the 
-<b><code>org.ofbiz.core.entity.transaction.JNDIFactory</code></b> class. This 
+<b><code>org.ofbiz.entity.transaction.JNDIFactory</code></b> class. This 
 class uses some additional elements from the entityengine.xml file to locate
 the UserTransaction and TransactionManager objects in JNDI.</p>
 
@@ -256,8 +256,8 @@ the following sub-elements:</p>
     <td>helper-class</td><td>Y</td>
     <td>There can be many types of datasource helpers the main one used is the JDBC/DAO 
     helper. You can code you own helpers and use them by implementing the 
-    <b><code>org.ofbiz.core.entity.GenericHelper</code></b> interface. For JDBC/DAO 
-    helpers the class will be <b><code>org.ofbiz.core.entity.GenericHelperDAO</code></b>.</td>
+    <b><code>org.ofbiz.entity.GenericHelper</code></b> interface. For JDBC/DAO 
+    helpers the class will be <b><code>org.ofbiz.entity.GenericHelperDAO</code></b>.</td>
 </tr>
 <tr>
     <td>field-type-name</td><td>Y</td>

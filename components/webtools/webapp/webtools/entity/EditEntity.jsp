@@ -26,14 +26,15 @@
 --%>
 
 <%@ page import="java.util.*" %>
-<%@ page import="org.ofbiz.core.util.*, org.ofbiz.core.config.*" %>
-<%@ page import="org.ofbiz.core.entity.*" %>
-<%@ page import="org.ofbiz.core.entity.model.*" %>
+<%@ page import="org.ofbiz.base.util.*, org.ofbiz.base.config.*" %>
+<%@ page import="org.ofbiz.entity.*" %>
+<%@ page import="org.ofbiz.entity.model.*" %>
+<%@ page import="org.ofbiz.entity.util.*" %>
 
 <%@ taglib uri="ofbizTags" prefix="ofbiz" %>
 
-<jsp:useBean id="security" type="org.ofbiz.core.security.Security" scope="request" />
-<jsp:useBean id="delegator" type="org.ofbiz.core.entity.GenericDelegator" scope="request" />
+<jsp:useBean id="security" type="org.ofbiz.security.Security" scope="request" />
+<jsp:useBean id="delegator" type="org.ofbiz.entity.GenericDelegator" scope="request" />
 
 <%
 if (security.hasPermission("ENTITY_MAINT", session)) {

@@ -2,9 +2,9 @@
 <%@ taglib uri="ofbizTags" prefix="ofbiz" %>
 
 <%@ page import="java.util.*" %>
-<%@ page import="org.ofbiz.core.util.*, org.ofbiz.core.pseudotag.*" %>
-<%@ page import="org.ofbiz.core.entity.*" %>
-<jsp:useBean id="security" type="org.ofbiz.core.security.Security" scope="request" />
+<%@ page import="org.ofbiz.base.util.*, org.ofbiz.content.webapp.pseudotag.*" %>
+<%@ page import="org.ofbiz.entity.*" %>
+<jsp:useBean id="security" type="org.ofbiz.security.Security" scope="request" />
 
 <%if(security.hasEntityPermission("PARTYMGR", "_VIEW", session)) {%>
 

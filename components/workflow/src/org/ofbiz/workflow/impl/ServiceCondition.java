@@ -1,5 +1,5 @@
 /*
- * $Id: ServiceCondition.java,v 1.1 2003/08/17 09:29:34 ajzeneski Exp $
+ * $Id: ServiceCondition.java,v 1.2 2003/08/19 17:45:18 jonesde Exp $
  *
  * Copyright (c) 2003 The Open For Business Project - www.ofbiz.org
  *
@@ -42,13 +42,13 @@ import org.ofbiz.workflow.TransitionCondition;
  * to return a Boolean OUT parameter named 'evaluationResult'
  *
  * @author     <a href="mailto:jaz@ofbiz.org">Andy Zeneski</a> 
- * @version    $Revision: 1.1 $
+ * @version    $Revision: 1.2 $
  * @since      2.1
  */
 public class ServiceCondition implements TransitionCondition {
 
     /**
-     * @see org.ofbiz.core.workflow.TransitionCondition#evaluateCondition(java.util.Map, java.util.Map, java.lang.String, org.ofbiz.core.service.DispatchContext)
+     * @see org.ofbiz.workflow.TransitionCondition#evaluateCondition(java.util.Map, java.util.Map, java.lang.String, org.ofbiz.service.DispatchContext)
      */
     public Boolean evaluateCondition(Map context, Map attrs, String expression, DispatchContext dctx) throws EvaluationException {
         // get the service to call

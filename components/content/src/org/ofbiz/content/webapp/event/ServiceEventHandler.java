@@ -1,5 +1,5 @@
 /*
- * $Id: ServiceEventHandler.java,v 1.1 2003/08/17 08:40:12 ajzeneski Exp $
+ * $Id: ServiceEventHandler.java,v 1.2 2003/08/19 17:45:22 jonesde Exp $
  *
  * Copyright (c) 2001, 2002, 2003 The Open For Business Project - www.ofbiz.org
  *
@@ -50,7 +50,7 @@ import org.ofbiz.service.ServiceUtil;
  *
  * @author     <a href="mailto:jaz@ofbiz.org">Andy Zeneski</a>
  * @author     <a href="mailto:jonesde@ofbiz.org">David E. Jones</a>
- * @version    $Revision: 1.1 $
+ * @version    $Revision: 1.2 $
  * @since      2.0
  */
 public class ServiceEventHandler implements EventHandler {
@@ -61,7 +61,7 @@ public class ServiceEventHandler implements EventHandler {
     public static final String ASYNC = "async";
   
     /**
-     * @see org.ofbiz.core.event.EventHandler#invoke(java.lang.String, java.lang.String, javax.servlet.http.HttpServletRequest, javax.servlet.http.HttpServletResponse)
+     * @see org.ofbiz.content.webapp.event.EventHandler#invoke(java.lang.String, java.lang.String, javax.servlet.http.HttpServletRequest, javax.servlet.http.HttpServletResponse)
      */
     public String invoke(String eventPath, String eventMethod, HttpServletRequest request, HttpServletResponse response) throws EventHandlerException {
         // make sure we have a valid reference to the Service Engine

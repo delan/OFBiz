@@ -21,7 +21,7 @@
  *
  *@author     David E. Jones (jonesde@ofbiz.org)
  *@author     Brad Steiner (bsteiner@thehungersite.com)
- *@version    $Revision: 1.2 $
+ *@version    $Revision: 1.3 $
  *@since      2.2
 -->
 
@@ -61,14 +61,14 @@ ${pages.get("/product/ProductTabBar.ftl")}
             <td><div class='tabletext'><#if (facilityGroup.facilityGroupId)?has_content>${facilityGroup.facilityGroupName?if_exists}<#else>[${productPrice.facilityGroupId}]</#if></div></td>
             <td>
                 <#assign hasntStarted = false>
-                <#if productPrice.fromDate?exists && Static["org.ofbiz.core.util.UtilDateTime"].nowTimestamp().before(productPrice.fromDate)><#assign hasntStarted = true></#if>
+                <#if productPrice.fromDate?exists && Static["org.ofbiz.base.util.UtilDateTime"].nowTimestamp().before(productPrice.fromDate)><#assign hasntStarted = true></#if>
                 <div class='tabletext' <#if hasntStarted> style='color: red;'</#if>>
                         ${productPrice.getTimestamp("fromDate")}
                 </div>
             </td>
             <td align="center">
                 <#assign hasExpired = false>
-                <#if productPrice.thruDate?exists && Static["org.ofbiz.core.util.UtilDateTime"].nowTimestamp().after(productPrice.thruDate)><#assign hasExpired = true></#if>
+                <#if productPrice.thruDate?exists && Static["org.ofbiz.base.util.UtilDateTime"].nowTimestamp().after(productPrice.thruDate)><#assign hasExpired = true></#if>
                 <form method=POST action='<@ofbizUrl>/updateProductPrice</@ofbizUrl>' name='lineForm${line}'>
                     <input type=hidden name='productId' value='${productPrice.productId}'>
                     <input type=hidden name='productPriceTypeId' value='${productPrice.productPriceTypeId}'>
@@ -83,7 +83,7 @@ ${pages.get("/product/ProductTabBar.ftl")}
             </td>
             <td><div class='tabletext'>[${productPrice.lastModifiedByUserLogin?if_exists}] on ${productPrice.lastModifiedDate?if_exists}</div></td>
             <td align="center">
-            <a href='<@ofbizUrl>/deleteProductPrice?productId=${productPrice.productId}&productPriceTypeId=${productPrice.productPriceTypeId}&currencyUomId=${productPrice.currencyUomId}&facilityGroupId=${productPrice.facilityGroupId}&fromDate=${Static["org.ofbiz.core.util.UtilFormatOut"].encodeQueryValue(productPrice.getTimestamp("fromDate").toString())}</@ofbizUrl>' class="buttontext">
+            <a href='<@ofbizUrl>/deleteProductPrice?productId=${productPrice.productId}&productPriceTypeId=${productPrice.productPriceTypeId}&currencyUomId=${productPrice.currencyUomId}&facilityGroupId=${productPrice.facilityGroupId}&fromDate=${Static["org.ofbiz.base.util.UtilFormatOut"].encodeQueryValue(productPrice.getTimestamp("fromDate").toString())}</@ofbizUrl>' class="buttontext">
             [Delete]</a>
             </td>
         </tr>
@@ -119,7 +119,7 @@ ${pages.get("/product/ProductTabBar.ftl")}
             </div>
             <div class='tabletext'>
                 From Date: <input type='text' size='25' name='fromDate' class='inputBox' value='${(productPrice.fromDate.toString())?if_exists}'>
-                <a href="javascript:call_cal(document.createProductPriceForm.fromDate, '${Static["org.ofbiz.core.util.UtilDateTime"].nowTimestamp().toString()}');"> <img src='/images/cal.gif' width='16' height='16' border='0' alt='Calendar'></a>
+                <a href="javascript:call_cal(document.createProductPriceForm.fromDate, '${Static["org.ofbiz.base.util.UtilDateTime"].nowTimestamp().toString()}');"> <img src='/images/cal.gif' width='16' height='16' border='0' alt='Calendar'></a>
                 Price: <input type='text' size='8' name='price' class='inputBox'>&nbsp;<input type="submit" value="Add" style='font-size: x-small;'>
             </div>        
         </form>

@@ -23,8 +23,8 @@
  *@version    1.0
  */
 
-import org.ofbiz.core.entity.*;
-import org.ofbiz.core.util.*;
+import org.ofbiz.entity.*;
+import org.ofbiz.base.util.*;
 import org.ofbiz.commonapp.order.shoppingcart.*;
 import org.ofbiz.commonapp.party.party.PartyWorker;
 import org.ofbiz.commonapp.product.catalog.CatalogWorker;

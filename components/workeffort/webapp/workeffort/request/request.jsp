@@ -21,16 +21,16 @@
  *  THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  *
  *@author     Andy Zeneski 
- *@version    $Revision: 1.1 $
+ *@version    $Revision: 1.2 $
  *@since      2.0
 --%>
 
 <%@ page import="java.util.*" %>
-<%@ page import="org.ofbiz.core.security.*, org.ofbiz.core.entity.*" %>
-<%@ page import="org.ofbiz.core.util.*, org.ofbiz.core.pseudotag.*" %>
+<%@ page import="org.ofbiz.security.*, org.ofbiz.entity.*" %>
+<%@ page import="org.ofbiz.base.util.*, org.ofbiz.content.webapp.pseudotag.*" %>
 
 <%@ taglib uri="ofbizTags" prefix="ofbiz" %>
-<jsp:useBean id="delegator" type="org.ofbiz.core.entity.GenericDelegator" scope="request" />
+<jsp:useBean id="delegator" type="org.ofbiz.entity.GenericDelegator" scope="request" />
 
 <%
     // check for a requestId and get the requst object

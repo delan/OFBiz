@@ -1,5 +1,5 @@
 /*
- * $Id: WfResourceImpl.java,v 1.1 2003/08/17 09:29:34 ajzeneski Exp $
+ * $Id: WfResourceImpl.java,v 1.2 2003/08/19 17:45:18 jonesde Exp $
  *
  * Copyright (c) 2001, 2002 The Open For Business Project - www.ofbiz.org
  *
@@ -45,7 +45,7 @@ import org.ofbiz.workflow.WfResource;
  * WfResourceImpl - Workflow Resource Object implementation
  *
  * @author     <a href="mailto:jaz@ofbiz.org">Andy Zeneski</a>
- * @version    $Revision: 1.1 $
+ * @version    $Revision: 1.2 $
  * @since      2.0
  */
 public class WfResourceImpl implements WfResource {
@@ -95,21 +95,21 @@ public class WfResourceImpl implements WfResource {
     }
    
     /**
-     * @see org.ofbiz.core.workflow.WfResource#howManyWorkItem()
+     * @see org.ofbiz.workflow.WfResource#howManyWorkItem()
      */
     public int howManyWorkItem() throws WfException {
         return workItems().size();
     }
  
     /**
-     * @see org.ofbiz.core.workflow.WfResource#getIteratorWorkItem()
+     * @see org.ofbiz.workflow.WfResource#getIteratorWorkItem()
      */
     public Iterator getIteratorWorkItem() throws WfException {
         return workItems().iterator();
     }
   
     /**
-     * @see org.ofbiz.core.workflow.WfResource#getSequenceWorkItem(int)
+     * @see org.ofbiz.workflow.WfResource#getSequenceWorkItem(int)
      */
     public List getSequenceWorkItem(int maxNumber) throws WfException {
         if (maxNumber > 0)
@@ -118,42 +118,42 @@ public class WfResourceImpl implements WfResource {
     }
 
     /**
-     * @see org.ofbiz.core.workflow.WfResource#isMemberOfWorkItems(org.ofbiz.core.workflow.WfAssignment)
+     * @see org.ofbiz.workflow.WfResource#isMemberOfWorkItems(org.ofbiz.workflow.WfAssignment)
      */
     public boolean isMemberOfWorkItems(WfAssignment member) throws WfException {
         return workItems().contains(member);
     }
 
     /**
-     * @see org.ofbiz.core.workflow.WfResource#resourceKey()
+     * @see org.ofbiz.workflow.WfResource#resourceKey()
      */
     public String resourceKey() throws WfException {
         return resourceKey;
     }
 
     /**
-     * @see org.ofbiz.core.workflow.WfResource#resourceName()
+     * @see org.ofbiz.workflow.WfResource#resourceName()
      */
     public String resourceName() throws WfException {
         return resourceName;
     }
 
     /**
-     * @see org.ofbiz.core.workflow.WfResource#resourceRoleId()
+     * @see org.ofbiz.workflow.WfResource#resourceRoleId()
      */
     public String resourceRoleId() throws WfException {
         return roleTypeId;
     }
 
     /**
-     * @see org.ofbiz.core.workflow.WfResource#resourcePartyId()
+     * @see org.ofbiz.workflow.WfResource#resourcePartyId()
      */
     public String resourcePartyId() throws WfException {
         return partyId;
     }
 
     /**
-     * @see org.ofbiz.core.workflow.WfResource#release(org.ofbiz.core.workflow.WfAssignment, java.lang.String)
+     * @see org.ofbiz.workflow.WfResource#release(org.ofbiz.workflow.WfAssignment, java.lang.String)
      */
     public void release(WfAssignment fromAssignment,
         String releaseInfo) throws WfException, NotAssigned {

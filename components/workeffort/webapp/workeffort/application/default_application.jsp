@@ -3,7 +3,7 @@
 <%@ page import="java.util.Set" %>
 <%@ page import="java.lang.StringBuffer" %>
 <%@ page import="org.ofbiz.commonapp.workeffort.workeffort.*" %>
-<%@ page import="org.ofbiz.core.util.UtilFormatOut" %>
+<%@ page import="org.ofbiz.base.util.UtilFormatOut" %>
 <%-- THis page display application contexts & signatures --%>
 
 <%!

@@ -20,7 +20,7 @@
  *  THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  *
  *@author     David E. Jones (jonesde@ofbiz.org)
- *@version    $Revision: 1.1 $
+ *@version    $Revision: 1.2 $
  *@since      2.1
 -->
 
@@ -35,7 +35,7 @@
     <input type="hidden" name="productCategoryId" value="${productCategoryId}">
     <table width="100%" cellpadding="1" cellspacing="0" border="1">
         <#list productFeaturesByTypeMap.keySet() as productFeatureTypeId>
-            <#assign findPftMap = Static["org.ofbiz.core.util.UtilMisc"].toMap("productFeatureTypeId", productFeatureTypeId)>
+            <#assign findPftMap = Static["org.ofbiz.base.util.UtilMisc"].toMap("productFeatureTypeId", productFeatureTypeId)>
             <#assign productFeatureType = delegator.findByPrimaryKeyCache("ProductFeatureType", findPftMap)>
             <#assign productFeatures = productFeaturesByTypeMap[productFeatureTypeId]>
             <tr>

@@ -70,7 +70,7 @@
             <find-by-primary-key entity-name="GeoType" map-name="geoTypeValue" value-name="geoTypeValue"/>
             
             <call-bsh><![CDATA[
-                return org.ofbiz.core.util.UtilMisc.toMap("geoContext", new java.util.HashMap(geoValue));
+                return org.ofbiz.base.util.UtilMisc.toMap("geoContext", new java.util.HashMap(geoValue));
             ]]></call-bsh>
             <field-to-field map-name="geoTypeValue" field-name="description" to-map-name="geoContext"/-->
 

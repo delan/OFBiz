@@ -21,7 +21,7 @@
  *
  *@author     David E. Jones (jonesde@ofbiz.org)
  *@author     Brad Steiner (bsteiner@thehungersite.com)
- *@version    $Revision: 1.1 $
+ *@version    $Revision: 1.2 $
  *@since      2.2
 -->
 
@@ -106,7 +106,7 @@ ${pages.get("/product/ProductTabBar.ftl")}
                     <tr>                        
                         <#import "java.lang.Number.Long" as Long>
                         <#assign relevancy = productKeyword.relevancyWeight in Long>
-                        <td align=right><#if relevancy?exists>${Static["org.ofbiz.core.util.UtilFormatOut"].formatQuantity(relevancy)}</#if>&nbsp;</td>
+                        <td align=right><#if relevancy?exists>${Static["org.ofbiz.base.util.UtilFormatOut"].formatQuantity(relevancy)}</#if>&nbsp;</td>
                         <td align=left>&nbsp;${(productKeyword.keyword)?if_exists}</td>
                         <td>&nbsp;&nbsp;</td>
                         <td align=left>

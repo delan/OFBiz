@@ -127,10 +127,10 @@
         <description>Get WorkEffort</description>
         <attribute name="workEffortId" type="java.lang.String" mode="INOUT" optional="true"/>
         <attribute name="currentStatusId" type="java.lang.String" mode="IN" optional="true"/>
-        <attribute name="workEffort" type="org.ofbiz.core.entity.GenericValue" mode="OUT" optional="true"/>
+        <attribute name="workEffort" type="org.ofbiz.entity.GenericValue" mode="OUT" optional="true"/>
         <attribute name="canView" type="java.lang.Boolean" mode="OUT" optional="true"/>
         <attribute name="tryEntity" type="java.lang.Boolean" mode="OUT" optional="true"/>
-        <attribute name="currentStatusItem" type="org.ofbiz.core.entity.GenericValue" mode="OUT" optional="true"/>
+        <attribute name="currentStatusItem" type="org.ofbiz.entity.GenericValue" mode="OUT" optional="true"/>
         <attribute name="partyAssigns" type="java.util.Collection" mode="OUT" optional="true"/>
     </service>    
     <service name="getWorkEffortEventsByDays" engine="java"
