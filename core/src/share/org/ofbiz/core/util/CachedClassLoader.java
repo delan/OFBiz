@@ -40,7 +40,8 @@ public class CachedClassLoader extends URLClassLoader {
 
     public static Map localClassNameClassMap = new HashMap();
     public static Map globalClassNameClassMap = new HashMap();
-    public static HashSet badClassNameSet = new HashSet();
+    public static HashSet localBadClassNameSet = new HashSet();
+    public static HashSet globalBadClassNameSet = new HashSet();
 
     static {
         // setup some commonly used classes...
@@ -121,7 +122,7 @@ public class CachedClassLoader extends URLClassLoader {
 
         //make sure it is not a known bad class name
         if (theClass == null) {
-            if (badClassNameSet.contains(name)) {
+            if (localBadClassNameSet.contains(name) || globalBadClassNameSet.contains(name)) {
                 if (Debug.verboseOn()) Debug.logVerbose("Cached loader got a known bad class name: [" + name + "]");
                 throw new ClassNotFoundException("Cached loader got a known bad class name: " + name);
             }
@@ -135,11 +136,19 @@ public class CachedClassLoader extends URLClassLoader {
                 if (theClass == null) {
                     try {
                         theClass = super.loadClass(name, resolve);
-                        localClassNameClassMap.put(name, theClass);
+                        if (isGlobalPath(name)) {
+                            globalClassNameClassMap.put(name, theClass);
+                        } else {
+                            localClassNameClassMap.put(name, theClass);
+                        }
                     } catch (ClassNotFoundException e) {
                         //Debug.logInfo(e);
                         if (Debug.infoOn()) Debug.logInfo("Remembering invalid class name: [" + name + "]");
-                        badClassNameSet.add(name);
+                        if (isGlobalPath(name)) {
+                            globalBadClassNameSet.add(name);
+                        } else {
+                            localBadClassNameSet.add(name);
+                        }
                         throw e;
                     }
                 }
@@ -152,4 +161,12 @@ public class CachedClassLoader extends URLClassLoader {
     public synchronized URL getResource(String name) {
     }
      */
+    
+    protected boolean isGlobalPath(String name) {
+        if (name.startsWith("java.") || name.startsWith("java/") || name.startsWith("/java/")) return true;
+        if (name.startsWith("javax.") || name.startsWith("javax/") || name.startsWith("/javax/")) return true;
+        if (name.startsWith("sun.") || name.startsWith("sun/") || name.startsWith("/sun/")) return true;
+        if (name.startsWith("org.ofbiz.core.")) return true;
+        return false;
+    }
 }
