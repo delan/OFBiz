@@ -1,6 +1,9 @@
 /*
  * $Id$
  * $Log$
+ * Revision 1.2  2001/08/16 05:18:10  jonesde
+ * Made ModelReader non static, changed the way the Map convenience stuff works, now using UtilMisc.
+ *
  * Revision 1.1  2001/07/27 07:53:48  jonesde
  * Added misc utils class UtilMisc. Currently just has a toIterator routine.
  *
@@ -9,6 +12,7 @@
 
 package org.ofbiz.core.util;
 
+import javax.servlet.http.HttpServletRequest;
 import java.util.*;
 
 /**
@@ -35,6 +39,7 @@ import java.util.*;
  *  THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  *
  *@author     David E. Jones
+ *@author     Andy Zeneski (jaz@zsolv.com)
  *@created    July 26, 2001
  *@version    1.0
  */
@@ -124,4 +129,18 @@ public class UtilMisc
     fields.put(name6, value6);
     return fields;
   }
+  
+  /** Create a map from an HttpServletRequest object
+   * @return The resulting Map
+   */
+    public static Map getParameterMap(HttpServletRequest request) 
+    {
+        HashMap paramMap = new HashMap();
+        java.util.Enumeration e = request.getParameterNames();
+        while ( e.hasMoreElements() ) {
+            String name = (String) e.nextElement();
+            paramMap.put(name,request.getParameter(name));
+        }
+        return (Map) paramMap;
+    }
 }
