@@ -1,5 +1,5 @@
 /*
- * $Id: ModelForm.java,v 1.8 2004/07/01 08:37:50 jonesde Exp $
+ * $Id: ModelForm.java,v 1.9 2004/07/08 06:19:28 jonesde Exp $
  *
  * Copyright (c) 2003 The Open For Business Project - www.ofbiz.org
  *
@@ -54,7 +54,7 @@ import bsh.Interpreter;
  *
  * @author     <a href="mailto:jonesde@ofbiz.org">David E. Jones</a>
  * @author     <a href="mailto:byersa@automationgroups.com">Al Byers</a>
- * @version    $Revision: 1.8 $
+ * @version    $Revision: 1.9 $
  * @since      2.2
  */
 public class ModelForm {
@@ -121,7 +121,7 @@ public class ModelForm {
             // check if we have a resource name (part of the string before the ?)
             if (parentResource.length() > 0) {
                 try {
-                    parent = FormFactory.getFormFromClass(parentResource, parentForm, delegator, dispatcher);
+                    parent = FormFactory.getFormFromLocation(parentResource, parentForm, delegator, dispatcher);
                 } catch (Exception e) {
                     Debug.logError(e, "Failed to load parent form definition '" + parentForm + "' at resource '" + parentResource + "'", module);
                 }

@@ -1,7 +1,7 @@
 /*
- * $Id: FormFactory.java,v 1.1 2003/08/17 08:40:13 ajzeneski Exp $
+ * $Id: FormFactory.java,v 1.2 2004/07/08 06:19:28 jonesde Exp $
  *
- * Copyright (c) 2003 The Open For Business Project - www.ofbiz.org
+ * Copyright (c) 2003-2004 The Open For Business Project - www.ofbiz.org
  *
  * Permission is hereby granted, free of charge, to any person obtaining a
  * copy of this software and associated documentation files (the "Software"),
@@ -34,6 +34,7 @@ import javax.servlet.ServletContext;
 import javax.servlet.http.HttpServletRequest;
 import javax.xml.parsers.ParserConfigurationException;
 
+import org.ofbiz.base.location.FlexibleLocation;
 import org.ofbiz.base.util.UtilCache;
 import org.ofbiz.base.util.UtilHttp;
 import org.ofbiz.base.util.UtilXml;
@@ -48,32 +49,33 @@ import org.xml.sax.SAXException;
  * Widget Library - Form factory class
  *
  * @author     <a href="mailto:jonesde@ofbiz.org">David E. Jones</a>
- * @version    $Revision: 1.1 $
+ * @version    $Revision: 1.2 $
  * @since      2.2
  */
 public class FormFactory {
     
     public static final String module = FormFactory.class.getName();
 
-    public static final UtilCache formClassCache = new UtilCache("widget.form.classResource", 0, 0, false);
+    public static final UtilCache formLocationCache = new UtilCache("widget.form.locationResource", 0, 0, false);
     public static final UtilCache formWebappCache = new UtilCache("widget.form.webappResource", 0, 0, false);
     
-    public static ModelForm getFormFromClass(String resourceName, String formName, GenericDelegator delegator, LocalDispatcher dispatcher) 
+    public static ModelForm getFormFromLocation(String resourceName, String formName, GenericDelegator delegator, LocalDispatcher dispatcher) 
             throws IOException, SAXException, ParserConfigurationException {
-        Map modelFormMap = (Map) formClassCache.get(resourceName);
+        Map modelFormMap = (Map) formLocationCache.get(resourceName);
         if (modelFormMap == null) {
             synchronized (FormFactory.class) {
-                modelFormMap = (Map) formClassCache.get(resourceName);
+                modelFormMap = (Map) formLocationCache.get(resourceName);
                 if (modelFormMap == null) {
                     ClassLoader loader = Thread.currentThread().getContextClassLoader();
                     if (loader == null) {
                         loader = FormFactory.class.getClassLoader();
                     }
                     
-                    URL formFileUrl = loader.getResource(resourceName);
+                    URL formFileUrl = null;
+                    formFileUrl = FlexibleLocation.resolveLocation(resourceName, loader);
                     Document formFileDoc = UtilXml.readXmlDocument(formFileUrl, true);
                     modelFormMap = readFormDocument(formFileDoc, delegator, dispatcher);
-                    formClassCache.put(resourceName, modelFormMap);
+                    formLocationCache.put(resourceName, modelFormMap);
                 }
             }
         }
