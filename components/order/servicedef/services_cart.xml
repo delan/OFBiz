@@ -21,11 +21,27 @@
         <description>Sets The ShoppingCart Shipping Options</description>
         <attribute name="shoppingCart" type="org.ofbiz.order.shoppingcart.ShoppingCart" mode="IN" optional="false"/>
         <attribute name="groupIndex" type="Integer" mode="IN" optional="false"/>
-        <attribute name="shippingContactMechId" type="String" mode="IN" optional="false"/>
-        <attribute name="shipmentMethodString" type="String" mode="IN" optional="false"/>
+        <attribute name="shippingContactMechId" type="String" mode="IN" optional="false">
+            <type-validate>
+                <fail-property resource="OrderUiLabels" property="checkhelper.select_shipping_destination"/>
+            </type-validate>
+        </attribute>
+        <attribute name="shipmentMethodString" type="String" mode="IN" optional="false">
+            <type-validate>
+                <fail-property resource="OrderUiLabels" property="checkhelper.select_shipping_method"/>
+            </type-validate>
+        </attribute>
         <attribute name="shippingInstructions" type="String" mode="IN" optional="true"/>
-        <attribute name="maySplit" type="Boolean" mode="IN" optional="false"/>
-        <attribute name="isGift" type="Boolean" mode="IN" optional="false"/>
+        <attribute name="maySplit" type="Boolean" mode="IN" optional="false">
+            <type-validate>
+                <fail-property resource="OrderUiLabels" property="checkhelper.select_splitting_preference"/>
+            </type-validate>
+        </attribute>
+        <attribute name="isGift" type="Boolean" mode="IN" optional="false">
+            <type-validate>
+                <fail-property resource="OrderUiLabels" property="checkhelper.specify_if_order_is_gift"/>
+            </type-validate>
+        </attribute>
         <attribute name="giftMessage" type="String" mode="IN" optional="true"/>
     </service>
 
@@ -34,7 +50,11 @@
         <description>Sets The ShoppingCart Shipping Options</description>
         <attribute name="shoppingCart" type="org.ofbiz.order.shoppingcart.ShoppingCart" mode="IN" optional="false"/>
         <attribute name="groupIndex" type="Integer" mode="IN" optional="false"/>
-        <attribute name="shippingContactMechId" type="String" mode="IN" optional="false"/>
+        <attribute name="shippingContactMechId" type="String" mode="IN" optional="false">
+            <type-validate>
+                <fail-property resource="OrderUiLabels" property="checkhelper.select_shipping_destination"/>
+            </type-validate>
+        </attribute>
     </service>
 
     <service name="setCartPaymentOptions" engine="java" auth="false"
