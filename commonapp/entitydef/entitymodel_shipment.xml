@@ -377,6 +377,9 @@
       <relation type="many" rel-entity-name="ShipmentStatus">
         <key-map field-name="shipmentId"/>
       </relation>
+      <relation type="many" rel-entity-name="ItemIssuance">
+        <key-map field-name="shipmentId"/>
+      </relation>
       <relation type="one-nofk" title="Current" rel-entity-name="ShipmentStatus">
         <key-map field-name="shipmentId"/>
         <key-map field-name="statusId"/>
