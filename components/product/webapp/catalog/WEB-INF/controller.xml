@@ -1911,16 +1911,19 @@
     </request-map>
 
    <!-- ================ Lookup Requests ================= -->
-    <request-map uri="GenericLookup">
-        <security https="true" auth="true"/>
-        <response name="success" type="view" value="GenericLookup"/>
-    	</request-map> 
-   <request-map uri="LookupFixedAsset">
+    <request-map uri="LookupFixedAsset">
         <security auth="true" https="true"/>
-        <event type="java" path="org.ofbiz.accounting.AccLookupParams" invoke="lookupFixedAsset"/>
-        <response name="success" type="view" value="GenericLookup"/>
-    	</request-map>
-    
+        <response name="success" type="view" value="LookupFixedAsset"/>
+    </request-map>
+    <request-map uri="LookupProduct">
+        <security auth="true" https="true"/>
+        <response name="success" type="view" value="LookupProduct"/>
+    </request-map>
+    <request-map uri="LookupVirtualProduct">
+        <security auth="true" https="true"/>
+        <response name="success" type="view" value="LookupVirtualProduct"/>
+    </request-map>
+
     <!-- end of request mappings -->
 
     <!-- View Mappings -->
@@ -2024,7 +2027,9 @@
     <view-map name="EditProductConfigItemContentContent" type="jpublish" page="/config/EditProductConfigItemContentContent.ftl"/>
 
     <!-- Lookup request mappings -->
-    <view-map name="GenericLookup" page="/lookup/GenericLookup.ftl" type="jpublish"/>
+    <view-map name="LookupFixedAsset" page="component://accounting/widget/LookupScreens.xml#LookupFixedAsset" type="screen"/>
+    <view-map name="LookupProduct" page="component://product/widget/catalog/LookupScreens.xml#LookupProduct" type="screen"/>
+    <view-map name="LookupVirtualProduct" page="component://product/widget/catalog/LookupScreens.xml#LookupVirtualProduct" type="screen"/>
 
     <!-- end of view mappings -->
 </site-conf>

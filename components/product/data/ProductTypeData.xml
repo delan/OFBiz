@@ -287,6 +287,7 @@
     <ProductType description="Digital Good" hasTable="N" parentTypeId="GOOD" productTypeId="DIGITAL_GOOD"/>
     <ProductType description="Finished/Digital Good" hasTable="N" parentTypeId="GOOD" productTypeId="FINDIG_GOOD"/>
     <ProductType description="Configurable Good" hasTable="N" parentTypeId="GOOD" productTypeId="AGGREGATED"/>
+    <ProductType description="Work In Process" hasTable="N" parentTypeId="GOOD" productTypeId="WIP"/>
 
     <!-- inventory item status -->
     <StatusType description="Inventory Item" hasTable="N" parentTypeId="" statusTypeId="INVENTORY_ITEM_STTS"/>

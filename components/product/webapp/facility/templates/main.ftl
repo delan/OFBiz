@@ -23,7 +23,7 @@
  *
  *@author     Andy Zeneski (jaz@ofbiz.org)
  *@author     Olivier Heintz (olivier.heintz@nereide.biz)
- *@version    $Rev:$
+ *@version    $Rev$
  *@since      2.1
 -->
 
@@ -100,7 +100,7 @@ ${pages.get("/includes/appbar.ftl")}
   </div>
 </div>
 
-${pages.get("/includes/footer.ftl")}
+${common.get("/includes/footer.ftl")}
 
 </body>
 </html>
