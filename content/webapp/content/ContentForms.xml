@@ -1,0 +1,176 @@
+<?xml version="1.0" encoding="ISO-8859-1"?>
+<!DOCTYPE forms PUBLIC "-//OFBiz//DTD OFBiz Form Widget//EN" "http://www.ofbiz.org/dtds/widget-form.dtd">
+<!--
+ *  Copyright (c) 2003 The Open For Business Project - www.ofbiz.org
+ *
+ *  Permission is hereby granted, free of charge, to any person obtaining a
+ *  copy of this software and associated documentation files (the "Software"),
+ *  to deal in the Software without restriction, including without limitation
+ *  the rights to use, copy, modify, merge, publish, distribute, sublicense,
+ *  and/or sell copies of the Software, and to permit persons to whom the
+ *  Software is furnished to do so, subject to the following conditions:
+ *
+ *  The above copyright notice and this permission notice shall be included
+ *  in all copies or substantial portions of the Software.
+ *
+ *  THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS
+ *  OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF
+ *  MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT.
+ *  IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY
+ *  CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT
+ *  OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR
+ *  THE USE OR OTHER DEALINGS IN THE SOFTWARE.
+-->
+<forms>
+    <!-- ContentFind forms -->
+    <form default-title-style="tableheadtext"
+        default-tooltip-style="tabletext" default-widget-style="inputBox"
+        name="findContent" target="FindContent" title="" type="single">
+        <auto-fields-entity entity-name="Content" default-field-type="find" />
+        <field name="contentTypeId">
+            <drop-down allow-empty="true">
+                <entity-options description="${description}"
+                    entity-name="ContentType" key-field-name="contentTypeId"/>
+            </drop-down>
+        </field>
+        <field name="dataResourceId" title="" >
+		<lookup target-form-name="LookupDataResource" />
+        </field>
+        <field name="mimeTypeId">
+            <drop-down allow-empty="true">
+                <entity-options description="${description}"
+                    entity-name="MimeType" key-field-name="mimeTypeId"/>
+            </drop-down>
+        </field>
+        <field name="statusId">
+            <drop-down allow-empty="true">
+                <entity-options description="${description}"
+                    entity-name="StatusItem" key-field-name="statusId"/>
+            </drop-down>
+        </field>
+        <field name="isTemplate">
+            <drop-down allow-empty="true">
+		<option key="Y" description="Yes" />
+		<option key="N" description="No" />
+            </drop-down>
+        </field>
+        <field name="submitButton" title="Find" widget-style="standardSubmit">
+            <submit button-type="button"/>
+        </field>
+    </form>
+    <form default-title-style="tableheadtext"
+        default-tooltip-style="tabletext" default-widget-style="display"
+        list-name="entityList" name="listFindContent" paginate-target="FindContent" title="" type="list">
+        <auto-fields-entity entity-name="Content" default-field-type="display"/>
+        <field name="contentId" title="Edit" widget-style="buttontext">
+            <hyperlink also-hidden="false" description="${contentId}" target="gotoContent?contentId=${contentId}"/>
+        </field>
+<!--
+	<field name="createdDate"><ignored/></field>
+	<field name="createdByUserLogin"><ignored/></field>
+	<field name="lastModifiedDate"><ignored/></field>
+	<field name="lastModifiedByUserLogin"><ignored/></field>
+-->
+    </form>
+    <form 
+        name="EditContent" target="UpdateContent" title="" type="single"
+	default-title-style="tableheadtext"
+        default-tooltip-style="tabletext" default-widget-style="inputBox"
+	default-entity-name="Content"
+	>
+        <auto-fields-entity entity-name="Content"/>
+        <field name="contentTypeId">
+            <drop-down allow-empty="false">
+                <entity-options description="${description}"
+                    entity-name="ContentType" key-field-name="contentTypeId"/>
+            </drop-down>
+        </field>
+        <field name="submitButton" title="Update" widget-style="standardSubmit">
+            <submit button-type="button"/>
+        </field>
+        <field name="dataResourceId" title="" >
+		<lookup target-form-name="LookupDataResource" />
+        </field>
+        <field name="dataResourceGoTo" title="" 
+		use-when="valueObject!=null &amp;&amp; valueObject.get(&quot;dataResourceId&quot;)!=null"
+	>
+            <hyperlink also-hidden="false" description="Jump to Data Resource"
+		target="EditDataResource?dataResourceId=${valueObject.dataResourceId}"/>
+        </field>
+        <field name="mimeTypeId">
+            <drop-down allow-empty="true">
+                <entity-options description="${description}"
+                    entity-name="MimeType" key-field-name="mimeTypeId"/>
+            </drop-down>
+        </field>
+        <field name="statusId">
+            <drop-down allow-empty="true">
+                <entity-options description="${description}"
+                    entity-name="StatusItem" key-field-name="statusId"/>
+            </drop-down>
+        </field>
+        <field name="isTemplate">
+            <drop-down allow-empty="true">
+		<option key="Y" description="Yes" />
+		<option key="N" description="No" />
+            </drop-down>
+        </field>
+    </form>
+
+    <!-- ContentRole forms -->
+    <form default-title-style="tableheadtext"
+        default-tooltip-style="tabletext" default-widget-style="inputBox"
+        name="AddContentRole" target="addContentRole" title="" type="single">
+        <auto-fields-service service-name="createContentRole"/>
+        <field name="submitButton" title="Add" widget-style="standardSubmit">
+            <submit button-type="button"/>
+        </field>
+    </form>
+    <form default-title-style="tableheadtext"
+        default-tooltip-style="tabletext" default-widget-style="inputBox"
+        list-name="contentList" name="UpdateContentRole"
+        target="updateContentRole" title="" type="list">
+        <auto-fields-service service-name="updateContentRole"/>
+        <field name="contentRoleId" title="ContentRoleId" widget-style="buttontext">
+            <display/>
+        </field>
+        <field name="submitButton" title="Update" widget-style="standardSubmit">
+            <submit button-type="button"/>
+        </field>
+        <field name="deleteLink" title="&amp;nbsp;" widget-style="buttontext">
+            <hyperlink also-hidden="false" description="[Delete]" target="removeContentRole?contentRoleId=${contentRoleId}"/>
+        </field>
+    </form>
+
+    <!-- ContentPurpose forms -->
+    <form name="AddContentPurpose" default-title-style="tableheadtext"
+        default-tooltip-style="tabletext" default-widget-style="inputBox"
+        target="addContentPurpose" title="" type="single">
+        <auto-fields-service service-name="createContentPurpose"/>
+        <field name="contentPurposeTypeId">
+            <drop-down allow-empty="true">
+                <entity-options description="${description}"
+                    entity-name="ContentPurposeType" key-field-name="contentPurposeTypeId"/>
+            </drop-down>
+        </field>
+        <field name="submitButton" title="Add" widget-style="standardSubmit">
+            <submit button-type="button"/>
+        </field>
+    </form>
+    <form default-title-style="tableheadtext"
+        default-tooltip-style="tabletext" default-widget-style="inputBox"
+        list-name="contentList" name="UpdateContentPurpose"
+        target="updateContentPurpose" title="" type="list">
+        <auto-fields-service service-name="updateContentPurpose"/>
+        <field name="contentPurposeId" title="ContentPurposeId" widget-style="buttontext">
+            <display/>
+        </field>
+        <field name="submitButton" title="Update" widget-style="standardSubmit">
+            <submit button-type="button"/>
+        </field>
+        <field name="deleteLink" title="&amp;nbsp;" widget-style="buttontext">
+            <hyperlink also-hidden="false" description="[Delete]" target="removeContentPurpose?contentPurposeId=${contentPurposeId}"/>
+        </field>
+    </form>
+
+</forms>
