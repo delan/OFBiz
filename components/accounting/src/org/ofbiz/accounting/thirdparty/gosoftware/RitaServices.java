@@ -27,60 +27,59 @@ package org.ofbiz.accounting.thirdparty.gosoftware;
 import java.util.Map;
 import java.util.Properties;
 import java.util.List;
-import java.text.DecimalFormat;
 import java.io.IOException;
+import java.text.DecimalFormat;
 
 import org.ofbiz.service.DispatchContext;
 import org.ofbiz.service.ServiceUtil;
-import org.ofbiz.base.util.UtilProperties;
-import org.ofbiz.base.util.UtilValidate;
-import org.ofbiz.base.util.Debug;
-import org.ofbiz.base.util.StringUtil;
 import org.ofbiz.base.util.GeneralException;
+import org.ofbiz.base.util.Debug;
 import org.ofbiz.base.util.UtilMisc;
+import org.ofbiz.base.util.StringUtil;
+import org.ofbiz.base.util.UtilValidate;
+import org.ofbiz.base.util.UtilProperties;
 import org.ofbiz.entity.GenericValue;
 import org.ofbiz.accounting.payment.PaymentGatewayServices;
 
 /**
  * 
  * @author     <a href="mailto:jaz@ofbiz.org">Andy Zeneski</a>
- * @version    $Rev$
+ * @version    $Rev:$
  * @since      3.2
  */
-public class PcChargeServices {
+public class RitaServices {
 
-    public static final String module = PcChargeServices.class.getName();
+    public static final String module = RitaServices.class.getName();
 
     public static Map ccAuth(DispatchContext dctx, Map context) {
         Properties props = buildPccProperties(context);
-        PcChargeApi api = getApi(props);
+        RitaApi api = getApi(props);
         if (api == null) {
             return ServiceUtil.returnError("PCCharge is not configured properly");
         }
 
         try {
-            PcChargeServices.setCreditCardInfo(api, context);
+            RitaServices.setCreditCardInfo(api, context);
         } catch (GeneralException e) {
             return ServiceUtil.returnError(e.getMessage());
         }
 
         // basic tx info
-        api.set(PcChargeApi.TRANS_AMOUNT, getAmountString(context, "processAmount"));
-        api.set(PcChargeApi.TICKET_NUM, context.get("orderId"));
-        api.set(PcChargeApi.MANUAL_FLAG, "0");
-        api.set(PcChargeApi.PRESENT_FLAG, "1");
+        api.set(RitaApi.TRANS_AMOUNT, getAmountString(context, "processAmount"));
+        api.set(RitaApi.INVOICE, context.get("orderId"));
+        api.set(RitaApi.PRESENT_FLAG, "2"); // todo check this -- 1, no present, 2 present, 3 swiped
 
         // command setting
         if ("1".equals(props.getProperty("autoBill"))) {
             // sale
-            api.set(PcChargeApi.COMMAND, "1");
+            api.set(RitaApi.COMMAND, "SALE");
         } else {
             // pre-auth
-            api.set(PcChargeApi.COMMAND, "4");
+            api.set(RitaApi.COMMAND, "PRE_AUTH");
         }
 
         // send the transaction
-        PcChargeApi out = null;
+        RitaApi out = null;
         try {
             out = api.send();
         } catch (IOException e) {
@@ -93,14 +92,14 @@ public class PcChargeServices {
 
         if (out != null) {
             Map result = ServiceUtil.returnSuccess();
-            String resultCode = out.get(PcChargeApi.RESULT);
+            String resultCode = out.get(RitaApi.RESULT);
             boolean passed = false;
             if ("CAPTURED".equals(resultCode)) {
                 result.put("authResult", new Boolean(true));
                 result.put("captureResult", new Boolean(true));
                 passed = true;
             } else if ("APPROVED".equals(resultCode)) {
-                result.put("authCode", out.get(PcChargeApi.AUTH_CODE));
+                result.put("authCode", out.get(RitaApi.AUTH_CODE));
                 result.put("authResult", new Boolean(true));
                 passed = true;
             } else if ("PROCESSED".equals(resultCode)) {
@@ -109,25 +108,25 @@ public class PcChargeServices {
                 result.put("authResult", new Boolean(false));
             }
 
-            result.put("authRefNum", out.get(PcChargeApi.TROUTD) != null ? out.get(PcChargeApi.TROUTD) : "");
+            result.put("authRefNum", out.get(RitaApi.INTRN_SEQ_NUM) != null ? out.get(RitaApi.INTRN_SEQ_NUM) : "");
             result.put("processAmount", context.get("processAmount"));
-            result.put("authCode", out.get(PcChargeApi.AUTH_CODE));
-            result.put("authFlag", out.get(PcChargeApi.REFERENCE));
-            result.put("authMessage", out.get(PcChargeApi.RESULT));
-            result.put("cvCode", out.get(PcChargeApi.CVV2_CODE));
-            result.put("avsCode", out.get(PcChargeApi.AVS_CODE));
+            result.put("authCode", out.get(RitaApi.AUTH_CODE));
+            result.put("authFlag", out.get(RitaApi.REFERENCE));
+            result.put("authMessage", out.get(RitaApi.RESULT));
+            result.put("cvCode", out.get(RitaApi.CVV2_CODE));
+            result.put("avsCode", out.get(RitaApi.AVS_CODE));
 
             if (!passed) {
-                String respMsg = out.get(PcChargeApi.RESULT) + " / " + out.get(PcChargeApi.AUTH_CODE);
-                String refNum = out.get(PcChargeApi.TROUTD);
+                String respMsg = out.get(RitaApi.RESULT) + " / " + out.get(RitaApi.AUTH_CODE);
+                String refNum = out.get(RitaApi.INTRN_SEQ_NUM);
                 result.put("customerRespMsgs", UtilMisc.toList(respMsg, refNum));
             }
 
             if (result.get("captureResult") != null) {
-                result.put("captureCode", out.get(PcChargeApi.AUTH_CODE));
-                result.put("captureFlag", out.get(PcChargeApi.REFERENCE));
-                result.put("captureRefNum", out.get(PcChargeApi.TROUTD));
-                result.put("captureMessage", out.get(PcChargeApi.RESULT));
+                result.put("captureCode", out.get(RitaApi.AUTH_CODE));
+                result.put("captureFlag", out.get(RitaApi.REFERENCE));
+                result.put("captureRefNum", out.get(RitaApi.INTRN_SEQ_NUM));
+                result.put("captureMessage", out.get(RitaApi.RESULT));
             }
 
             return result;
@@ -153,16 +152,16 @@ public class PcChargeServices {
 
         // setup the PCCharge Interface
         Properties props = buildPccProperties(context);
-        PcChargeApi api = getApi(props);
+        RitaApi api = getApi(props);
         if (api == null) {
             return ServiceUtil.returnError("PCCharge is not configured properly");
         }
 
-        api.set(PcChargeApi.TROUTD, authTransaction.getString("referenceNum"));
-        api.set(PcChargeApi.COMMAND, "5");
+        api.set(RitaApi.ORIG_SEQ_NUM, authTransaction.getString("referenceNum"));
+        api.set(RitaApi.COMMAND, "COMPLETION");
 
         // send the transaction
-        PcChargeApi out = null;
+        RitaApi out = null;
         try {
             out = api.send();
         } catch (IOException e) {
@@ -175,17 +174,17 @@ public class PcChargeServices {
 
         if (out != null) {
             Map result = ServiceUtil.returnSuccess();
-            String resultCode = out.get(PcChargeApi.RESULT);
+            String resultCode = out.get(RitaApi.RESULT);
             if ("CAPTURED".equals(resultCode)) {
                 result.put("captureResult", new Boolean(true));
             } else {
                 result.put("captureResult", new Boolean(false));
             }
             result.put("captureAmount", context.get("captureAmount"));
-            result.put("captureRefNum", out.get(PcChargeApi.TROUTD) != null ? out.get(PcChargeApi.TROUTD) : "");
-            result.put("captureCode", out.get(PcChargeApi.AUTH_CODE));
-            result.put("captureFlag", out.get(PcChargeApi.REFERENCE));
-            result.put("captureMessage", out.get(PcChargeApi.RESULT));
+            result.put("captureRefNum", out.get(RitaApi.INTRN_SEQ_NUM) != null ? out.get(RitaApi.INTRN_SEQ_NUM) : "");
+            result.put("captureCode", out.get(RitaApi.AUTH_CODE));
+            result.put("captureFlag", out.get(RitaApi.REFERENCE));
+            result.put("captureMessage", out.get(RitaApi.RESULT));
 
             return result;
         } else {
@@ -209,13 +208,13 @@ public class PcChargeServices {
 
         // setup the PCCharge Interface
         Properties props = buildPccProperties(context);
-        PcChargeApi api = getApi(props);
+        RitaApi api = getApi(props);
         if (api == null) {
             return ServiceUtil.returnError("PCCharge is not configured properly");
         }
 
-        api.set(PcChargeApi.TROUTD, authTransaction.getString("referenceNum"));
-        api.set(PcChargeApi.COMMAND, "3");
+        api.set(RitaApi.ORIG_SEQ_NUM, authTransaction.getString("referenceNum"));
+        api.set(RitaApi.COMMAND, "VOID");
 
         // check to make sure we are configured for SALE mode
         if (!"true".equalsIgnoreCase(props.getProperty("autoBill"))) {
@@ -223,7 +222,7 @@ public class PcChargeServices {
         }
 
         // send the transaction
-        PcChargeApi out = null;
+        RitaApi out = null;
         try {
             out = api.send();
         } catch (IOException e) {
@@ -236,17 +235,17 @@ public class PcChargeServices {
 
         if (out != null) {
             Map result = ServiceUtil.returnSuccess();
-            String resultCode = out.get(PcChargeApi.RESULT);
+            String resultCode = out.get(RitaApi.RESULT);
             if ("VOIDED".equals(resultCode)) {
                 result.put("releaseResult", new Boolean(true));
             } else {
                 result.put("releaseResult", new Boolean(false));
             }
             result.put("releaseAmount", context.get("releaseAmount"));
-            result.put("releaseRefNum", out.get(PcChargeApi.TROUTD) != null ? out.get(PcChargeApi.TROUTD) : "");
-            result.put("releaseCode", out.get(PcChargeApi.AUTH_CODE));
-            result.put("releaseFlag", out.get(PcChargeApi.REFERENCE));
-            result.put("releaseMessage", out.get(PcChargeApi.RESULT));
+            result.put("releaseRefNum", out.get(RitaApi.INTRN_SEQ_NUM) != null ? out.get(RitaApi.INTRN_SEQ_NUM) : "");
+            result.put("releaseCode", out.get(RitaApi.AUTH_CODE));
+            result.put("releaseFlag", out.get(RitaApi.REFERENCE));
+            result.put("releaseMessage", out.get(RitaApi.RESULT));
 
             return result;
         } else {
@@ -270,16 +269,16 @@ public class PcChargeServices {
 
         // setup the PCCharge Interface
         Properties props = buildPccProperties(context);
-        PcChargeApi api = getApi(props);
+        RitaApi api = getApi(props);
         if (api == null) {
             return ServiceUtil.returnError("PCCharge is not configured properly");
         }
 
-        api.set(PcChargeApi.TROUTD, authTransaction.getString("referenceNum"));
-        api.set(PcChargeApi.COMMAND, "2");
+        api.set(RitaApi.INTRN_SEQ_NUM, authTransaction.getString("referenceNum"));
+        api.set(RitaApi.COMMAND, "CREDIT");
 
         // send the transaction
-        PcChargeApi out = null;
+        RitaApi out = null;
         try {
             out = api.send();
         } catch (IOException e) {
@@ -292,17 +291,17 @@ public class PcChargeServices {
 
         if (out != null) {
             Map result = ServiceUtil.returnSuccess();
-            String resultCode = out.get(PcChargeApi.RESULT);
+            String resultCode = out.get(RitaApi.RESULT);
             if ("CAPTURED".equals(resultCode)) {
                 result.put("refundResult", new Boolean(true));
             } else {
                 result.put("refundResult", new Boolean(false));
             }
             result.put("refundAmount", context.get("releaseAmount"));
-            result.put("refundRefNum", out.get(PcChargeApi.TROUTD) != null ? out.get(PcChargeApi.TROUTD) : "");
-            result.put("refundCode", out.get(PcChargeApi.AUTH_CODE));
-            result.put("refundFlag", out.get(PcChargeApi.REFERENCE));
-            result.put("refundMessage", out.get(PcChargeApi.RESULT));
+            result.put("refundRefNum", out.get(RitaApi.INTRN_SEQ_NUM) != null ? out.get(RitaApi.INTRN_SEQ_NUM) : "");
+            result.put("refundCode", out.get(RitaApi.AUTH_CODE));
+            result.put("refundFlag", out.get(RitaApi.REFERENCE));
+            result.put("refundMessage", out.get(RitaApi.RESULT));
 
             return result;
         } else {
@@ -310,7 +309,7 @@ public class PcChargeServices {
         }
     }
 
-    private static void setCreditCardInfo(PcChargeApi api, Map context) throws GeneralException {
+    private static void setCreditCardInfo(RitaApi api, Map context) throws GeneralException {
         GenericValue orderPaymentPreference = (GenericValue) context.get("orderPaymentPreference");
         GenericValue creditCard = (GenericValue) context.get("creditCard");
         if (creditCard != null) {
@@ -318,7 +317,6 @@ public class PcChargeServices {
             String month = (String) expDateList.get(0);
             String year = (String) expDateList.get(1);
             String y2d = year.substring(2);
-            String expDate = month + y2d;
 
             String title = creditCard.getString("titleOnCard");
             String fname = creditCard.getString("firstNameOnCard");
@@ -342,25 +340,26 @@ public class PcChargeServices {
                 name.append(sufix);
             }
             String nameOnCard = name.toString().trim();
-            String acctNumber = "F" + creditCard.getString("cardNumber");
+            String acctNumber = creditCard.getString("cardNumber");
             String cvNum = (String) context.get("cardSecurityCode");
 
-            api.set(PcChargeApi.ACCT_NUM, acctNumber);
-            api.set(PcChargeApi.EXP_DATE, expDate);
-            api.set(PcChargeApi.CARDHOLDER, nameOnCard);
+            api.set(RitaApi.ACCT_NUM, acctNumber);
+            api.set(RitaApi.EXP_MONTH, month);
+            api.set(RitaApi.EXP_YEAR, y2d);
+            api.set(RitaApi.CARDHOLDER, nameOnCard);
             if (UtilValidate.isNotEmpty(cvNum)) {
-                api.set(PcChargeApi.CVV2, cvNum);
+                api.set(RitaApi.CVV2, cvNum);
             }
 
             // billing address information
             GenericValue billingAddress = (GenericValue) context.get("billingAddress");
             if (billingAddress != null) {
-                api.set(PcChargeApi.STREET, billingAddress.getString("address1"));
-                api.set(PcChargeApi.ZIP_CODE, billingAddress.getString("postalCode"));
+                api.set(RitaApi.CUSTOMER_STREET, billingAddress.getString("address1"));
+                api.set(RitaApi.CUSTOMER_ZIP, billingAddress.getString("postalCode"));
             } else {
                 String zipCode = orderPaymentPreference.getString("billingPostalCode");
                 if (UtilValidate.isNotEmpty(zipCode)) {
-                    api.set(PcChargeApi.ZIP_CODE, zipCode);
+                    api.set(RitaApi.CUSTOMER_ZIP, zipCode);
                 }
             }
         } else {
@@ -368,7 +367,7 @@ public class PcChargeServices {
         }
     }
 
-    private static PcChargeApi getApi(Properties props) {
+    private static RitaApi getApi(Properties props) {
         if (props == null) {
             Debug.logError("Cannot load API w/ null properties", module);
             return null;
@@ -380,16 +379,18 @@ public class PcChargeServices {
         } catch (Exception e) {
             Debug.logError(e, module);
         }
-        PcChargeApi api = null;
+        RitaApi api = null;
         if (port > 0 && host != null) {
-            api = new PcChargeApi(host, port);
+            api = new RitaApi(host, port);
         } else {
-            api = new PcChargeApi();
+            api = new RitaApi();
         }
 
-        api.set(PcChargeApi.PROCESSOR_ID, props.getProperty("processorID"));
-        api.set(PcChargeApi.MERCH_NUM, props.getProperty("merchantID"));
-        api.set(PcChargeApi.USER_ID, props.getProperty("userID"));
+        api.set(RitaApi.CLIENT_ID, props.getProperty("clientID"));
+        api.set(RitaApi.USER_ID, props.getProperty("userID"));
+        api.set(RitaApi.USER_PW, props.getProperty("userPW"));
+        api.set(RitaApi.FORCE_FLAG, props.getProperty("forceTx"));
+        api.set(RitaApi.FUNCTION_TYPE, props.getProperty("PAYMENT")); // this may change when we implement other types
         return api;
     }
 
@@ -399,35 +400,37 @@ public class PcChargeServices {
             configString = "payment.properties";
         }
 
-        String processorId = UtilProperties.getPropertyValue(configString, "payment.pccharge.processorID");
-        String merchantId = UtilProperties.getPropertyValue(configString, "payment.pccharge.merchantID");
-        String userId = UtilProperties.getPropertyValue(configString, "payment.pccharge.userID");
-        String host = UtilProperties.getPropertyValue(configString, "payment.pccharge.host");
-        String port = UtilProperties.getPropertyValue(configString, "payment.pccharge.port");
-        String autoBill = UtilProperties.getPropertyValue(configString, "payment.pccharge.autoBill", "true");
+        String clientId = UtilProperties.getPropertyValue(configString, "payment.rita.clientID");
+        String userId = UtilProperties.getPropertyValue(configString, "payment.rita.userID");
+        String userPw = UtilProperties.getPropertyValue(configString, "payment.rita.userPW");
+        String host = UtilProperties.getPropertyValue(configString, "payment.rita.host");
+        String port = UtilProperties.getPropertyValue(configString, "payment.rita.port");
+        String autoBill = UtilProperties.getPropertyValue(configString, "payment.rita.autoBill", "0");
+        String forceTx = UtilProperties.getPropertyValue(configString, "payment.rita.forceTx", "0");
 
         // some property checking
-        if (UtilValidate.isEmpty(processorId)) {
-            Debug.logWarning("The processorID property in [" + configString + "] is not configured", module);
-            return null;
-        }
-        if (UtilValidate.isEmpty(merchantId)) {
-            Debug.logWarning("The merchantID property in [" + configString + "] is not configured", module);
+        if (UtilValidate.isEmpty(clientId)) {
+            Debug.logWarning("The clientID property in [" + configString + "] is not configured", module);
             return null;
         }
         if (UtilValidate.isEmpty(userId)) {
             Debug.logWarning("The userID property in [" + configString + "] is not configured", module);
             return null;
         }
+        if (UtilValidate.isEmpty(userPw)) {
+            Debug.logWarning("The userPW property in [" + configString + "] is not configured", module);
+            return null;
+        }
 
         // create some properties for CS Client
         Properties props = new Properties();
-        props.put("processorID", processorId);
-        props.put("merchantID", merchantId);
+        props.put("clientID", clientId);
         props.put("userID", userId);
+        props.put("userPW", userPw);
         props.put("host", host);
         props.put("port", port);
         props.put("autoBill", autoBill);
+        props.put("forceTx", forceTx);
         Debug.log("Returning properties - " + props, module);
 
         return props;
@@ -439,5 +442,4 @@ public class PcChargeServices {
         Double processAmount = (Double) context.get(amountField);
         return formatter.format(processAmount);
     }
-
 }
