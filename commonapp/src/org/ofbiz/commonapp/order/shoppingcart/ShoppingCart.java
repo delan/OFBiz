@@ -59,7 +59,8 @@ public class ShoppingCart implements java.io.Serializable {
     private List paymentMethodIds = new LinkedList();
     private Map paymentMethodAmounts = new HashMap();
     private List paymentMethodTypeIds = new LinkedList();   
-    private Map paymentMethodTypeAmounts = new HashMap(); 
+    private Map paymentMethodTypeAmounts = new HashMap();
+    private String orderType = null;
     private String poNumber = null;
     private String orderId = null;
     private String firstAttemptOrderId = null;
@@ -306,6 +307,16 @@ public class ShoppingCart implements java.io.Serializable {
         paymentMethodTypeIds.clear();
         adjustments.clear();
         cartLines.clear();
+    }
+    
+    /** Sets the order type. */
+    public void setOrderType(String orderType) {
+        this.orderType = orderType;
+    }
+    
+    /** Returns the order type. */
+    public String getOrderType() {
+        return this.orderType;
     }
 
     /** Sets the PO Number in the cart. */
