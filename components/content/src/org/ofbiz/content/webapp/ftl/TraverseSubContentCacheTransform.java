@@ -1,5 +1,5 @@
 /*
- * $Id: TraverseSubContentCacheTransform.java,v 1.3 2004/01/11 06:21:41 byersa Exp $
+ * $Id: TraverseSubContentCacheTransform.java,v 1.4 2004/01/11 07:06:35 byersa Exp $
  * 
  * Copyright (c) 2001-2003 The Open For Business Project - www.ofbiz.org
  * 
@@ -49,7 +49,7 @@ import freemarker.template.TemplateModelException;
  * TraverseSubContentCacheTransform - Freemarker Transform for URLs (links)
  * 
  * @author <a href="mailto:byersa@automationgroups.com">Al Byers</a>
- * @version $Revision: 1.3 $
+ * @version $Revision: 1.4 $
  * @since 3.0
  */
 public class TraverseSubContentCacheTransform implements TemplateTransformModel {
@@ -218,6 +218,8 @@ public class TraverseSubContentCacheTransform implements TemplateTransformModel 
                 //out.write(buf.toString());
                 //buf.setLength(0);
                 //templateCtx.put("buf", new StringBuffer());
+                boolean inProgress = ContentWorker.traverseSubContent(traverseContext);
+                if (Debug.verboseOn()) Debug.logVerbose("in TraverseSubContentCache, inProgress:"+inProgress,module);
                 Integer thisViewIndexInteger = (Integer)templateCtx.get("thisViewIndex");
                 int thisViewIndex = thisViewIndexInteger.intValue();
                 Integer thisViewSizeInteger = (Integer)templateCtx.get("thisViewSize");
@@ -243,6 +245,7 @@ public class TraverseSubContentCacheTransform implements TemplateTransformModel 
                     Object lowIndexObj = templateCtx.get("lowIndex");
                     if (lowIndexObj != null) {
                         int lowIndex = Integer.parseInt((String)lowIndexObj);
+                if (Debug.verboseOn()) Debug.logVerbose("in TraverseSubContentCache, lowIndex(w):" + lowIndex, module);
                         if ((highIndex - lowIndex) >= viewSize) {
                              return TransformControl.END_EVALUATION;
                         }
@@ -250,9 +253,6 @@ public class TraverseSubContentCacheTransform implements TemplateTransformModel 
                     templateCtx.put("thisViewIndex", new Integer(thisViewIndex + 1));
                     templateCtx.put("viewIndex", new Integer(thisViewIndex).toString());
                 }
-                FreeMarkerWorker.traceNodeTrail("6",nodeTrail);
-                boolean inProgress = ContentWorker.traverseSubContent(traverseContext);
-                if (Debug.verboseOn()) Debug.logVerbose("in TraverseSubContentCache, inProgress:"+inProgress,module);
                 FreeMarkerWorker.traceNodeTrail("7",nodeTrail);
                 if (inProgress) {
                     populateContext(traverseContext, templateCtx);
