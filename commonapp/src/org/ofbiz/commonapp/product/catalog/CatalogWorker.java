@@ -63,6 +63,10 @@ public class CatalogWorker {
         return isCatalogInventoryRequired(prodCatalogId, product, delegator);
     }
 
+    public static boolean isCatalogInventoryRequired(ShoppingCartItem item) {
+        return isCatalogInventoryRequired(item.getProdCatalogId(), item.getProduct(), item.getDelegator());
+    }
+       
     public static boolean isCatalogInventoryRequired(String prodCatalogId, GenericValue product, GenericDelegator delegator) {
         // look at the product first since it over-rides the prodCatalog setting; if empty or null use the prodCatalog setting
         try {
@@ -90,6 +94,10 @@ public class CatalogWorker {
         }
     }
 
+    public static boolean isCatalogInventoryAvailable(ShoppingCartItem item, LocalDispatcher dispatcher) {
+        return isCatalogInventoryAvailable(item.getProdCatalogId(), item.getProductId(), item.getQuantity(), item.getDelegator(), dispatcher);
+    }
+    
     /** check inventory availability for the given catalog, product, quantity, etc */
     public static boolean isCatalogInventoryAvailable(String prodCatalogId, String productId, double quantity, GenericDelegator delegator, LocalDispatcher dispatcher) {
         GenericValue prodCatalog = null;
