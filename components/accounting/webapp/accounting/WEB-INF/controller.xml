@@ -213,5 +213,6 @@
     
     <view-map name="findPayment" type="jpublish" page="/payment/findPayment.ftl"/>
     <view-map name="editPayment" type="jpublish" page="/payment/editPayment.ftl"/>
+    <view-map name="manualCcPay" type="jpublish" page="/payment/manualCCTx.ftl"/>
     <!-- end of view mappings -->
 </site-conf>
