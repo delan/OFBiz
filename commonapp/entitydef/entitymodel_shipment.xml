@@ -128,7 +128,8 @@
       <field name="receiptId" type="id-ne"></field>
       <field name="inventoryItemId" type="id"></field>
       <field name="productId" type="id"></field>
-      <field name="shipmentPackageId" type="id"></field>
+      <field name="shipmentId" type="id"></field>
+      <field name="shipmentPackageSeqId" type="id"></field>
       <field name="orderId" type="id"></field>
       <field name="orderItemSeqId" type="id"></field>
       <field name="returnId" type="id"></field>
@@ -146,7 +147,8 @@
         <key-map field-name="productId"/>
       </relation>
       <relation type="one" fk-name="SHP_RCPT_SHPKG" rel-entity-name="ShipmentPackage">
-        <key-map field-name="shipmentPackageId"/>
+        <key-map field-name="shipmentId"/>
+        <key-map field-name="shipmentPackageSeqId"/>
       </relation>
       <relation type="one-nofk" rel-entity-name="OrderHeader">
         <key-map field-name="orderId"/>
@@ -337,6 +339,9 @@
         <key-map field-name="shipmentId"/>
       </relation>
       <relation type="many" rel-entity-name="ShipmentItem">
+        <key-map field-name="shipmentId"/>
+      </relation>
+      <relation type="many" rel-entity-name="ShipmentPackage">
         <key-map field-name="shipmentId"/>
       </relation>
       <relation type="many" rel-entity-name="ShipmentStatus">
@@ -560,21 +565,29 @@
     <entity entity-name="ShipmentPackage"
             package-name="org.ofbiz.commonapp.shipment.shipment"
             title="Shipment Package Entity">
-      <field name="shipmentPackageId" type="id-ne"></field>
+      <field name="shipmentId" type="id-ne"></field>
+      <field name="shipmentPackageSeqId" type="id-ne"></field>
       <field name="dateCreated" type="date-time"></field>
       <field name="trackingCode" type="short-varchar"></field>
       <field name="boxNumber" type="short-varchar"></field>
       <field name="weight" type="floating-point"></field>
       <field name="weightUomId" type="id"></field>
-      <prim-key field="shipmentPackageId"/>
+      <prim-key field="shipmentId"/>
+      <prim-key field="shipmentPackageSeqId"/>
+      <relation type="one" fk-name="SHPKG_SHPMNT" rel-entity-name="Shipment">
+        <key-map field-name="shipmentId"/>
+      </relation>
       <relation type="many" rel-entity-name="ShipmentReceipt">
-        <key-map field-name="shipmentPackageId"/>
+        <key-map field-name="shipmentId"/>
+        <key-map field-name="shipmentPackageSeqId"/>
       </relation>
       <relation type="many" rel-entity-name="ShipmentPackageContent">
-        <key-map field-name="shipmentPackageId"/>
+        <key-map field-name="shipmentId"/>
+        <key-map field-name="shipmentPackageSeqId"/>
       </relation>
       <relation type="many" rel-entity-name="ShippingDocument">
-        <key-map field-name="shipmentPackageId"/>
+        <key-map field-name="shipmentId"/>
+        <key-map field-name="shipmentPackageSeqId"/>
       </relation>
       <relation type="one" fk-name="SHPKG_WUOM" title="Weight" rel-entity-name="Uom">
         <key-map field-name="weightUomId" rel-field-name="uomId"/>
@@ -583,15 +596,16 @@
     <entity entity-name="ShipmentPackageContent"
             package-name="org.ofbiz.commonapp.shipment.shipment"
             title="Shipment Package Content Entity">
-      <field name="shipmentPackageId" type="id-ne"></field>
       <field name="shipmentId" type="id-ne"></field>
+      <field name="shipmentPackageSeqId" type="id-ne"></field>
       <field name="shipmentItemSeqId" type="id-ne"></field>
       <field name="quantity" type="floating-point"></field>
-      <prim-key field="shipmentPackageId"/>
       <prim-key field="shipmentId"/>
+      <prim-key field="shipmentPackageSeqId"/>
       <prim-key field="shipmentItemSeqId"/>
       <relation type="one" fk-name="PCK_CNTNT_SHPKG" rel-entity-name="ShipmentPackage">
-        <key-map field-name="shipmentPackageId"/>
+        <key-map field-name="shipmentId"/>
+        <key-map field-name="shipmentPackageSeqId"/>
       </relation>
       <relation type="one-nofk" rel-entity-name="Shipment">
         <key-map field-name="shipmentId"/>
@@ -660,7 +674,7 @@
       <field name="documentId" type="id-ne"></field>
       <field name="shipmentId" type="id"></field>
       <field name="shipmentItemSeqId" type="id"></field>
-      <field name="shipmentPackageId" type="id"></field>
+      <field name="shipmentPackageSeqId" type="id"></field>
       <field name="description" type="description"></field>
       <prim-key field="documentId"/>
       <relation type="one" fk-name="SHPNG_DOC_DOC" rel-entity-name="Document">
@@ -671,7 +685,8 @@
         <key-map field-name="shipmentItemSeqId"/>
       </relation>
       <relation type="one" fk-name="SHPNG_DOC_SHPKG" rel-entity-name="ShipmentPackage">
-        <key-map field-name="shipmentPackageId"/>
+        <key-map field-name="shipmentId"/>
+        <key-map field-name="shipmentPackageSeqId"/>
       </relation>
     </entity>
 </entitymodel>
