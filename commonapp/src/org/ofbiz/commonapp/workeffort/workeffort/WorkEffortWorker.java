@@ -1,6 +1,9 @@
 /*
  * $Id$
  * $Log$
+ * Revision 1.14  2001/12/30 04:26:18  jonesde
+ * Fixed naming bug in query to get workeffort party assignments
+ *
  * Revision 1.13  2001/12/22 03:55:14  jonesde
  * Refactored status stuff to be more general
  *
@@ -83,10 +86,10 @@ public class WorkEffortWorker {
         Security security = (Security) pageContext.getServletContext().getAttribute("security");
         GenericValue userLogin = (GenericValue) pageContext.getSession().getAttribute(SiteDefs.USER_LOGIN);
 
-        String workEffortId = pageContext.getRequest().getParameter("WORK_EFFORT_ID");
+        String workEffortId = pageContext.getRequest().getParameter("workEffortId");
         //if there was no parameter, check the request attribute, this may be a newly created entity
         if (workEffortId == null)
-            workEffortId = (String) pageContext.getRequest().getAttribute("WORK_EFFORT_ID");
+            workEffortId = (String) pageContext.getRequest().getAttribute("workEffortId");
 
         GenericValue workEffort = null;
         try {
@@ -103,7 +106,7 @@ public class WorkEffortWorker {
             tryEntity = new Boolean(false);
             canView = new Boolean(true);
 
-            String statusId = pageContext.getRequest().getParameter("CURRENT_STATUS_ID");
+            String statusId = pageContext.getRequest().getParameter("currentStatusId");
             if (statusId != null && statusId.length() > 0) {
                 try {
                     currentStatus = delegator.findByPrimaryKeyCache("StatusItem", UtilMisc.toMap("statusId", statusId));
@@ -138,7 +141,7 @@ public class WorkEffortWorker {
         }
 
         //if there was an error message, don't get values from entity
-        if (pageContext.getRequest().getAttribute("ERROR_MESSAGE") != null || pageContext.getRequest().getAttribute(SiteDefs.ERROR_MESSAGE) != null) {
+        if (pageContext.getRequest().getAttribute(SiteDefs.ERROR_MESSAGE) != null) {
             tryEntity = new Boolean(false);
         }
 
@@ -319,4 +322,3 @@ public class WorkEffortWorker {
         pageContext.setAttribute(tasksAttrName, validWorkEfforts);
     }
 }
-
