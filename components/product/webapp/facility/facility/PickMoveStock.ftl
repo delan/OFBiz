@@ -21,7 +21,7 @@
  *
  *@author         David E. Jones (jonesde@ofbiz.org)
  *@author	  thierry.grauss@etu.univ-tours.fr (migration to uiLabelMap)
- *@version        $Revision: 1.6 $
+ *@version        $Revision: 1.7 $
  *@since          3.0
 -->
 
@@ -119,12 +119,11 @@ ${pages.get("/facility/FacilityTabBar.ftl")}
                             <#else>
                                 <tr><td colspan="6"><div class="head3">${uiLabelMap.ProductNoStockMovesNeeded}.</div></td></tr>
                             </#if>
-                            <#assign rowCount = 0>     
+                            <#assign messageCount = 0>
                             <#list pflWarningMessageList?if_exists as pflWarningMessage>
-                                <#assign rowCount = rowCount + 1>   
-                                <tr><td colspan="6"><div class="head3">${rowCount}:${pflWarningMessage}.</div></td></tr>
+                                <#assign messageCount = messageCount + 1>   
+                                <tr><td colspan="6"><div class="head3">${messageCount}:${pflWarningMessage}.</div></td></tr>
                             </#list>
-                            
                         </table>
                         <input type="hidden" name="_rowCount" value="${rowCount}">
                       </form>
