@@ -20,7 +20,7 @@
  *  THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  *
  *@author     David E. Jones
- *@version    $Revision: 1.2 $
+ *@version    $Revision: 1.3 $
  *@since      2.1
  */
 
@@ -57,9 +57,11 @@ if (prodCatalog != null) {
 
 HtmlFormWrapper updateProdCatalogToPartyWrapper = new HtmlFormWrapper("/catalog/ProdCatalogForms.xml", "UpdateProdCatalogToParty", request, response);
 updateProdCatalogToPartyWrapper.putInContext("prodCatalogRoleDatas", prodCatalogRoleDatas);
+updateProdCatalogToPartyWrapper.putInContext("uiLabelMap", request.getAttribute("uiLabelMap"));
 
 HtmlFormWrapper addProdCatalogToPartyWrapper = new HtmlFormWrapper("/catalog/ProdCatalogForms.xml", "AddProdCatalogToParty", request, response);
 addProdCatalogToPartyWrapper.putInContext("prodCatalog", prodCatalog);
+addProdCatalogToPartyWrapper.putInContext("uiLabelMap", request.getAttribute("uiLabelMap"));
 
 context.put("prodCatalogId", prodCatalogId);
 context.put("prodCatalog", prodCatalog);
