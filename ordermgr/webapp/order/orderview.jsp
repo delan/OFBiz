@@ -47,7 +47,6 @@
     String assignPartyId = request.getParameter("partyId");
     String assignRoleTypeId = request.getParameter("roleTypeId");
     String fromDate = request.getParameter("fromDate");
-    Debug.logWarning(workEffortId + " " + assignPartyId + " " + assignRoleTypeId + " " + fromDate);
 
     GenericValue orderHeader = null;
     GenericValue orderRole = null;
@@ -71,7 +70,6 @@
     }
 
     if(orderId != null && orderId.length() > 0) {
-    	Debug.logWarning("Getting order data");
         orderHeader = delegator.findByPrimaryKey("OrderHeader", UtilMisc.toMap("orderId", orderId));
         List orderRoles = delegator.findByAnd("OrderRole",UtilMisc.toMap("orderId", orderId, "roleTypeId", "PLACING_CUSTOMER"));
         orderRole = EntityUtil.getFirst(orderRoles);
