@@ -1,5 +1,5 @@
 /*
- * $Id: UtilHttp.java,v 1.13 2004/07/01 07:57:52 jonesde Exp $
+ * $Id: UtilHttp.java,v 1.14 2004/07/09 04:31:51 ajzeneski Exp $
  *
  *  Copyright (c) 2001, 2002 The Open For Business Project - www.ofbiz.org
  *
@@ -53,7 +53,7 @@ import org.ofbiz.base.util.collections.OrderedMap;
  *
  * @author     <a href="mailto:jaz@ofbiz.org">Andy Zeneski</a>
  * @author     <a href="mailto:jonesde@ofbiz.org">David E. Jones</a>
- * @version    $Revision: 1.13 $
+ * @version    $Revision: 1.14 $
  * @since      2.1
  */
 public class UtilHttp {
@@ -180,9 +180,9 @@ public class UtilHttp {
         return requestUrl;
     }
 
-    private static Locale getLocale(HttpServletRequest request, HttpSession  session) {
+    private static Locale getLocale(HttpServletRequest request, HttpSession session) {
         Object localeObject = session != null ? session.getAttribute("locale") : null;
-        if (localeObject == null) localeObject = request != null ? request.getLocale() : null;
+        if (localeObject == null) localeObject = request != null ? request.getLocale() : null;        
         return UtilMisc.ensureLocale(localeObject);
     }
 
