@@ -52,7 +52,8 @@
           	<#if productCategory?exists>
               <#if productCategoryMembers?has_content>
                 <table width='100%' cellspacing="0" cellpadding="1" border="0">
-                  <#list productCategoryMembers[0..viewSize] as productCategoryMember>
+                  <#assign upperBound = highIndex - 1>
+                  <#list productCategoryMembers[0..upperBound] as productCategoryMember>
                     <#assign product = productCategoryMember.getRelatedOneCache("Product")>
                     <tr>
                       <td>
@@ -65,7 +66,7 @@
                       </td>
                     </tr>
                   </#list>
-                  <#if listSize > viewSize>
+                  <#if (listSize > viewSize)>
                     <tr>
                       <td>
                         <div class='tabletext'>NOTE: Only showing the first ${viewSize} of ${listSize} products. To view the rest, use the Products tab for this category.</div>
