@@ -21,11 +21,12 @@
  *
  *@author     Andy Zeneski (jaz@ofbiz.org)
  *@author     Olivier Heintz (olivier.heintz@nereide.biz) 
- *@version    $Rev:$
+ *@version    $Rev$
  *@since      2.1
 -->
 
-<#assign uiLabelMap = requestAttributes.uiLabelMap>
+<#if requestAttributes.uiLabelMap?exists><#assign uiLabelMap = requestAttributes.uiLabelMap></#if>
+
 <#assign previousParams = sessionAttributes._PREVIOUS_PARAMS_?if_exists>
 <#if previousParams?has_content>
   <#assign previousParams = "?" + previousParams>
