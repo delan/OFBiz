@@ -23,22 +23,34 @@
  *  THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
  *  OFBiz Containers
- *  $Id$
+ *  $Id: ofbiz-containers.xml 3801 2004-10-27 20:53:04Z jaz $
 -->
 
 <ofbiz-containers>
     <!-- load the ofbiz components (always first) -->
-    <container name="component-container" class="org.ofbiz.base.container.ComponentContainer">
-        <property name="update-classpath" value="false"/>
-    </container>
+    <container name="component-container" class="org.ofbiz.base.container.ComponentContainer"/>
 
     <!-- load the cached classloader container (always second) -->
     <container name="classloader-container" class="org.ofbiz.base.container.ClassLoaderContainer"/>
 
+    <!-- load JNDI/JOTM -->
+    <container name="jotm-container" class="org.ofbiz.jotm.container.JotmContainer"/>
+
+    <!-- load Shark Workflow Engine -->
+    <container name="shark-container" class="org.ofbiz.shark.container.SharkContainer">
+        <property name="engine-name" value="Shark"/>
+        <property name="delegator-name" value="default"/>
+        <property name="dispatcher-name" value="WFDispatcher"/>
+        <property name="admin-user" value="admin"/>
+        <property name="iiop-host" value="127.0.0.1"/>
+        <property name="iiop-port" value="2000"/>
+    </container>
+
     <!-- RMI Service Dispatcher -->
     <container name="rmi-dispatcher" class="org.ofbiz.service.rmi.RmiServiceContainer">
-        <property name="use-initial-context" value="true"/>
         <property name="bound-name" value="RMIDispatcher"/>
+        <property name="bound-host" value="127.0.0.1"/>
+        <property name="bound-port" value="1099"/>
         <property name="delegator-name" value="default"/>
         <property name="client-factory" value="org.ofbiz.service.rmi.socket.ssl.SSLClientSocketFactory"/>
         <property name="server-factory" value="org.ofbiz.service.rmi.socket.ssl.SSLServerSocketFactory"/>

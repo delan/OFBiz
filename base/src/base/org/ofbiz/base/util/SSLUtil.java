@@ -42,29 +42,16 @@ public class SSLUtil {
     public static final String module = SSLUtil.class.getName();
     private static boolean loadedProps = false;
 
-    public static KeyManager[] getKeyManagers() throws IOException, GeneralSecurityException {
-        // get the default TrustManagerFactory
-        String alg = KeyManagerFactory.getDefaultAlgorithm();
-        KeyManagerFactory factory = KeyManagerFactory.getInstance(alg);
-
-        // set up the KeyStore to use
-        KeyStore ks = KeyStoreUtil.getKeyStore();
-
-        // initialise the TrustManagerFactory with this KeyStore
-        factory.init(ks, KeyStoreUtil.getKeyStorePassword().toCharArray());
-
-        // get the KeyManagers
-        KeyManager[] keyManagers = factory.getKeyManagers();
-        return keyManagers;
+    static {
+        SSLUtil. loadJsseProperties();
     }
 
-    public static KeyManager[] getKeyManagers(String alias) throws IOException, GeneralSecurityException {
-        KeyManager[] keyManagers = getKeyManagers();
-
-        // if an alias has been specified, wrap recognised KeyManagers in an AliasKeyManager
+    public static KeyManager[] getKeyManagers(KeyStore ks, String password, String alias) throws GeneralSecurityException {
+        KeyManagerFactory factory = KeyManagerFactory.getInstance("SunX509");
+        factory.init(ks, password.toCharArray());
+        KeyManager[] keyManagers = factory.getKeyManagers();
         if (alias != null) {
             for (int i = 0; i < keyManagers.length; i++) {
-                // we can only work with instances of X509KeyManager
                 if (keyManagers[i] instanceof X509KeyManager) {
                     keyManagers[i] = new AliasKeyManager((X509KeyManager)keyManagers[i], alias);
                 }
@@ -73,43 +60,45 @@ public class SSLUtil {
         return keyManagers;
     }
 
-    public static TrustManager[] getTrustManagers() throws IOException, GeneralSecurityException {
-        // get the default TrustManagerFactory
-        String alg = TrustManagerFactory.getDefaultAlgorithm();
-        TrustManagerFactory factory = TrustManagerFactory.getInstance(alg);
-
-        // set up the TrustStore to use
-        KeyStore ks = KeyStoreUtil.getTrustStore();
-
-        // initialise the TrustManagerFactory with this KeyStore
+    public static TrustManager[] getTrustManagers(KeyStore ks) throws GeneralSecurityException {
+        TrustManagerFactory factory = TrustManagerFactory.getInstance("SunX509");
         factory.init(ks);
+        return factory.getTrustManagers();
+    }
 
-        // get the TrustManagers
-        TrustManager[] trustManagers = factory.getTrustManagers();
-        return trustManagers;
+    public static SSLSocketFactory getSSLSocketFactory(KeyStore ks, String password, String alias) throws IOException, GeneralSecurityException {
+        KeyStore trustStore = KeyStoreUtil.getTrustStore();
+        TrustManager[] tm = getTrustManagers(trustStore);
+        KeyManager[] km = getKeyManagers(ks, password, alias);
+
+        SSLContext context = SSLContext.getInstance("SSL");
+        context.init(km, tm, null);
+        return context.getSocketFactory();
     }
 
     public static SSLSocketFactory getSSLSocketFactory(String alias) throws IOException, GeneralSecurityException {
-        KeyManager[] km = getKeyManagers(alias);
-        TrustManager[] tm = getTrustManagers();
-
-        // may want to have this in the properties file
-        SSLContext context = SSLContext.getInstance("SSL");
-        context.init(km, tm, null);
-        return context.getSocketFactory();
+        return getSSLSocketFactory(KeyStoreUtil.getKeyStore(), KeyStoreUtil.getKeyStorePassword(), alias);
     }
 
     public static SSLSocketFactory getSSLSocketFactory() throws IOException, GeneralSecurityException {
-        KeyManager[] km = getKeyManagers();
-        TrustManager[] tm = getTrustManagers();
-
-        // may want to have this in the properties file
-        SSLContext context = SSLContext.getInstance("SSL");
-        context.init(km, tm, null);
-        return context.getSocketFactory();
+        return getSSLSocketFactory(null);
     }
 
-    public static synchronized void loadJsseProperties() {
+    public static SSLServerSocketFactory getSSLServerSocketFactory(KeyStore ks, String password, String alias) throws IOException, GeneralSecurityException {
+        KeyStore trustStore = KeyStoreUtil.getTrustStore();
+        TrustManager[] tm = getTrustManagers(trustStore);
+        KeyManager[] km = getKeyManagers(ks, password, alias);
+
+        SSLContext context = SSLContext.getInstance("SSL");
+        context.init(km, tm, null);
+        return context.getServerSocketFactory();
+    }
+
+    public static void loadJsseProperties() {
+        loadJsseProperties(false);
+    }
+
+    public static synchronized void loadJsseProperties(boolean debug) {
         if (!loadedProps) {
             String protocol = UtilProperties.getPropertyValue("jsse.properties", "java.protocol.handler.pkgs", "NONE");
             String proxyHost = UtilProperties.getPropertyValue("jsse.properties", "https.proxyHost", "NONE");
@@ -126,6 +115,15 @@ public class SSLUtil {
             }
             if (cypher != null && !cypher.equals("NONE")) {
                 System.setProperty("https.cipherSuites", cypher);
+            }
+
+            // set up the keystore properties
+            System.setProperty("javax.net.ssl.keyStore", KeyStoreUtil.getKeyStoreFileName());
+            System.setProperty("javax.net.ssl.keyStorePassword", KeyStoreUtil.getKeyStorePassword());
+            System.setProperty("javax.net.ssl.trustStore", KeyStoreUtil.getTrustStoreFileName());
+            System.setProperty("javax.net.ssl.trustStorePassword", KeyStoreUtil.getTrustStorePassword());
+            if (debug) {
+                System.setProperty("javax.net.debug","ssl:handshake");
             }
             loadedProps = true;
         }

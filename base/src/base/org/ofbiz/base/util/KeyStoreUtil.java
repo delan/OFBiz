@@ -24,11 +24,7 @@
  */
 package org.ofbiz.base.util;
 
-import java.io.ByteArrayInputStream;
-import java.io.File;
-import java.io.FileInputStream;
-import java.io.FileOutputStream;
-import java.io.IOException;
+import java.io.*;
 import java.security.AlgorithmParameterGenerator;
 import java.security.AlgorithmParameters;
 import java.security.GeneralSecurityException;
@@ -234,9 +230,54 @@ public class KeyStoreUtil {
         return buf.toString();
     }
 
-    public static Certificate stringToCert(String certString) throws CertificateException {
+    public static Certificate pemToCert(String certString) throws IOException, CertificateException {
+        return pemToCert(new StringReader(certString));    
+    }
+
+    public static Certificate pemToCert(File certFile) throws IOException, CertificateException {
+        return pemToCert(new FileInputStream(certFile));
+    }
+
+    public static Certificate pemToCert(InputStream is) throws IOException, CertificateException {
+        return pemToCert(new InputStreamReader(is));
+    }
+
+    public static Certificate pemToCert(Reader r) throws IOException, CertificateException {
+        String header = "-----BEGIN CERTIFICATE-----";
+        String footer = "-----END CERTIFICATE-----";
+
+        BufferedReader reader = new BufferedReader(r);
+        ByteArrayOutputStream baos = new ByteArrayOutputStream();
+        PrintStream ps = new PrintStream(baos);
+
+        String line;
+
+        // ignore up to the header
+        while ((line = reader.readLine()) != null && !line.equals(header)) {
+            continue;
+        }
+
+        // no header found
+        if (line == null) {
+            throw new IOException("Error reading certificate, missing BEGIN boundary");
+        }
+
+        // in between the header and footer is the actual certificate
+        while ((line = reader.readLine()) != null && !line.equals(footer)) {
+            ps.print(line);
+        }
+
+        // no footer found
+        if (line == null) {
+            throw new IOException("Error reading certificate, missing END boundary");
+        }
+        ps.close();
+
+        // decode the buffer to a X509Certificate
+
         CertificateFactory cf = CertificateFactory.getInstance("X.509");
-        return null;
+        byte[] certBytes = Base64.base64Decode(baos.toByteArray());
+        return cf.generateCertificate(new ByteArrayInputStream(certBytes));
     }
 
     public static SecretKey generateSecretKey(PrivateKey ourKey, PublicKey theirKey) throws Exception {

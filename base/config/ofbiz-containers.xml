@@ -54,7 +54,7 @@
         <property name="delegator-name" value="default"/>
         <property name="client-factory" value="org.ofbiz.service.rmi.socket.ssl.SSLClientSocketFactory"/>
         <property name="server-factory" value="org.ofbiz.service.rmi.socket.ssl.SSLServerSocketFactory"/>
-        <property name="ssl-client-auth" value="false"/>
+        <property name="ssl-client-auth" value="true"/>
     </container>
 
     <!-- load catalina (tomcat) and all web applications -->
