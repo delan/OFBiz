@@ -42,4 +42,5 @@
         
         <create-value value-name="newEntity"/>
     </simple-method>
+</simple-methods>
  

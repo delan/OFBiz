@@ -46,7 +46,7 @@
         <attribute name="orderId" type="String" mode="OUT"/>
     </service>
 
-	<service name="createOrderAdjustment" engine="java"
+	<service name="createOrderAdjustment" engine="simple"
 			location="org/ofbiz/commonapp/order/order/OrderSimpleMethods.xml" invoke="createOrderAdjustment">
 		<description>Creates a new order adjustment record</description>
 		<attribute name="orderAdjustmentTypeId" type="String" mode="IN" optional="false"/>
@@ -54,6 +54,7 @@
 		<attribute name="orderItemSeqId" type="String" mode="IN" optional="true"/>
 		<attribute name="comments" type="String" mode="IN" optional="true"/>
 		<attribute name="description" type="String" mode="IN" optional="true"/>
+		<attribute name="amount" type="Double" mode="IN" optional="true"/>
 		<attribute name="amountPerQuantity" type="Double" mode="IN" optional="true"/>
 		<attribute name="percentage" type="Double" mode="IN" optional="true"/>
 		<attribute name="productPromoId" type="String" mode="IN" optional="true"/>
