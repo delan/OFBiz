@@ -1,6 +1,9 @@
 /*
  * $Id$
  * $Log$
+ * Revision 1.9  2001/08/25 17:29:11  azeneski
+ * Started migrating Debug.log to Debug.logInfo and Debug.logError
+ *
  * Revision 1.8  2001/08/25 08:35:04  jonesde
  * Fixed bug where checkLogin always failed because return result was ignored.
  *
@@ -179,7 +182,7 @@ public class RequestHandler implements Serializable {
             Debug.logInfo("Getting View Map: " + tempView);
             
             /* Before mapping the view, set a session attribute so we know where we are */
-            request.getSession().setAttribute(SiteDefs.CURRENT_VIEW, tempView);
+            request.setAttribute(SiteDefs.CURRENT_VIEW, tempView);
             
             tempView = rm.getViewPage(tempView);
             nextPage = tempView != null ? tempView : nextView;
