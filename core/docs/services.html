@@ -22,6 +22,7 @@ Last Updated: January 15, 2002<br>
 <hr><br>
 <h3>Table of Contents</h3>
 <ul>
+  <li><a href="#Related_Documents">Related Documents</a></li>
   <li><a href="#Introduction">Introduction</a> </li>
   <li><a href="#ServiceDispatcher">Service Dispatcher</a> </li>
   <li><a href="#DispatchContext">Dispatch Context</a> </li>
@@ -30,6 +31,13 @@ Last Updated: January 15, 2002<br>
   <li><a href="#ServiceDefinition">Service Definition</a></li>
   <li><a href="#Usage">Usage</a> <br>
   </li>
+</ul>
+<hr>
+<h3><a name="Related_Documents">Related Documents:</a></h3>
+<hr>
+<ul>
+  <li><a href="api/index.html">Core JavaDoc (including Service Engine)</a></li>
+  <li><a href="/dtds/services.dtd">Services Definition DTD</a></li>
 </ul>
 <hr>
 <h3><a name="Introduction">Introduction</a>
@@ -146,8 +154,8 @@ soap.engine=org.ofbiz.core.service.SOAPClientEngine</pre>
   only with a single dispatcher. When a LocalDispatcher is created it is passed 
   a Collection of Arils which point to these definition files. These files are 
   composed using XML and defined the necessary information needed to invoke a 
-  service. The <a href="xmldefs/ofbiz/services.dtd">DTD</a> of this file can be 
-  found <a href="xmldefs/ofbiz/services.dtd">here</a>.</p>
+  service. The <a href="/dtds/services.dtd">DTD</a> of this file can be found 
+  <a href="/dtds/services.dtd">here</a>.</p>
 <p>Services are defined with a unique name, associated to a specific service engine 
   and the input and output parameters are defined explicitly. Below is an example 
   of a service definition:</p>
