@@ -166,7 +166,8 @@ name, the corresponding table name, the package name for the entity, and meta
 data about the entity such as the author, a copyright notice, a description, and
 so forth. Here is an example of an XML entity definition:</P>
 
-<pre>    &lt;entity title=&quot;Sample Entity&quot;
+<pre style='border: solid black 1px; background-color: #EEEEFF; color: black;'>
+    &lt;entity title=&quot;Sample Entity&quot;
             copyright=&quot;Copyright (c) 2001 John Doe Enterprises&quot;
             author=&quot;John Doe&quot; version=&quot;1.0&quot;
             package-name=&quot;org.ofbiz.commonapp.sample&quot;
@@ -189,7 +190,8 @@ so forth. Here is an example of an XML entity definition:</P>
       &lt;relation type=&quot;many&quot; title=&quot;AllOne&quot; rel-entity-name=&quot;SampleEntity&quot;&gt;
         &lt;key-map field-name=&quot;primaryKeyFieldOne&quot; /&gt;
       &lt;/relation&gt;
-    &lt;/entity&gt;</pre>
+    &lt;/entity&gt;
+</pre>
 
 <P>This is a pretty simple entity that demonstrates a few small points. The meta
 data at the top is all optional, and if left unspecified will default to meta
@@ -481,7 +483,8 @@ entity group XML file, just like any normal entity. All member-entities in a
 view-entity must be in the same database, but not necessarily in the same entity
 group.</P>
 
-<pre>    &lt;view-entity title=&quot;Sample View Entity&quot;
+<pre style='border: solid black 1px; background-color: #EEEEFF; color: black;'>
+    &lt;view-entity title=&quot;Sample View Entity&quot;
             copyright=&quot;Copyright (c) 2001 John Doe Enterprises&quot;
             author=&quot;John Doe&quot; version=&quot;1.0&quot;
             package-name=&quot;org.ofbiz.commonapp.sample&quot;
@@ -503,7 +506,8 @@ group.</P>
       &lt;relation type=&quot;many&quot; title=&quot;AllOne&quot; rel-entity-name=&quot;SampleEntity&quot;&gt;
         &lt;key-map field-name=&quot;primaryKeyFieldOne&quot; /&gt;
       &lt;/relation&gt;
-    &lt;/view-entity&gt;</pre>
+    &lt;/view-entity&gt;
+</pre>
 
 
 <P><B>Member Entities</B></P>
