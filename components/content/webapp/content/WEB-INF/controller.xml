@@ -3,7 +3,7 @@
 
 <site-conf>
     <description>Content Manager Module Site Configuration File</description>
-    <owner>The Open For Business Project Copyright (c) 2002</owner>
+    <owner>The Open For Business Project Copyright (c) 2002-2003</owner>
     <errorpage>/error/error.jsp</errorpage>
     
     <handler name="java" type="request" class="org.ofbiz.content.webapp.event.JavaEventHandler"/>
@@ -825,6 +825,28 @@
         <response name="error" type="view" value="EditSurvey"/>
     </request-map>
     
+    <request-map uri="EditSurveyQuestions">
+        <security auth="true" https="true"/>
+        <response name="success" type="view" value="EditSurveyQuestions"/>
+    </request-map>
+    <request-map uri="createSurveyQuestion">
+        <security auth="true" https="true"/>
+        <event invoke="createSurveyQuestion" path="" type="service"/>
+        <response name="success" type="view" value="EditSurveyQuestions"/>
+        <response name="error" type="view" value="EditSurveyQuestions"/>
+    </request-map>
+    <request-map uri="updateSurveyQuestion">
+        <security auth="true" https="true"/>
+        <event invoke="updateSurveyQuestion" path="" type="service"/>
+        <response name="success" type="view" value="EditSurveyQuestions"/>
+        <response name="error" type="view" value="EditSurveyQuestions"/>
+    </request-map>
+    <request-map uri="deleteSurveyQuestion">
+        <security auth="true" https="true"/>
+        <event invoke="deleteteSurveyQuestion" path="" type="service"/>
+        <response name="success" type="view" value="EditSurveyQuestions"/>
+        <response name="error" type="view" value="EditSurveyQuestions"/>
+    </request-map>
     <!-- end of request mappings -->
 
     <!-- View Mappings -->
@@ -877,5 +899,6 @@
 
     <view-map name="FindSurvey" page="/survey/FindSurvey.ftl" type="jpublish"/>
     <view-map name="EditSurvey" page="/survey/EditSurvey.ftl" type="jpublish"/>
+    <view-map name="EditSurveyQuestions" page="/survey/EditSurveyQuestions.ftl" type="jpublish"/>
     <!-- end of view mappings -->
 </site-conf>
