@@ -28,6 +28,11 @@
     <library path="../../ofbiz/commonapp/lib"/>
     <library path="../../ofbiz/commonapp/etc"/>
     <library path="../../ofbiz/lib/share"/>
+    <library path="../../ofbiz/lib/scripting"/>
+    <library path="../../ofbiz/lib/wspublisher"/>
+    <library path="../../ofbiz/lib/datavision"/>
+    <library path="../../ofbiz/lib/jasperreports"/>
+    
     <library path="../../ofbiz/lib/common/castor-0.9.3.9.jar"/>
     <library path="../../ofbiz/lib/common/commons-beanutils.jar"/>
     <library path="../../ofbiz/lib/common/commons-collections.jar"/>
@@ -37,13 +42,8 @@
     <library path="../../ofbiz/lib/common/mm.mysql-2.0.14-bin.jar"/>
     <library path="../../ofbiz/lib/common/postgresql.jar"/>
     <library path="../../ofbiz/lib/common/sapdbc.jar"/>
-    <library path="../../ofbiz/lib/datavision/DataVision.jar"/>
-    <library path="../../ofbiz/lib/datavision/MinML.jar"/>
-    <library path="../../ofbiz/lib/datavision/jcalendar.jar"/>
-    <library path="../../ofbiz/lib/jasperreports/itext-0.92.jar"/>
-    <library path="../../ofbiz/lib/jasperreports/jasperreports.jar"/>
 
-        <principals path="./principals.xml" />
+    <principals path="./principals.xml" />
 
     <log>
         <file path="../log/global-application.log" />
