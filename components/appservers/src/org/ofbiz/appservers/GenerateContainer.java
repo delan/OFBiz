@@ -1,5 +1,5 @@
 /*
- * $Id: GenerateContainer.java,v 1.6 2004/06/30 19:20:43 ajzeneski Exp $
+ * $Id: GenerateContainer.java,v 1.7 2004/07/31 20:10:13 ajzeneski Exp $
  *
  */
 package org.ofbiz.appservers;
@@ -24,7 +24,7 @@ import org.ofbiz.content.webapp.ftl.FreeMarkerWorker;
  * ** This container requires the ComponentContainer to be loaded first.
  * 
  * @author     <a href="mailto:jaz@ofbiz.org">Andy Zeneski</a>
- * @version    $Revision: 1.6 $
+ * @version    $Revision: 1.7 $
  * @since      3.1
  */
 public class GenerateContainer implements Container {
@@ -33,27 +33,24 @@ public class GenerateContainer implements Container {
     public static final String source = "/components/appservers/templates/";
     public static final String target = "/setup/";
 
+    protected String configFile = null;
     protected String ofbizHome = null;
     protected String args[] = null;
 
 
     /**
-     * @see org.ofbiz.base.container.Container#init(java.lang.String[])
+     * @see org.ofbiz.base.container.Container#init(java.lang.String[], java.lang.String)
      */
-    public void init(String[] args) {
+    public void init(String[] args, String configFile) {
         this.ofbizHome = System.getProperty("ofbiz.home");
+        this.configFile = configFile;
         this.args = args;
     }
 
     /**
-     * Start the container
-     *
-     * @param configFileLocation Location of master OFBiz configuration file
-     * @return true if server started
-     * @throws org.ofbiz.base.container.ContainerException
-     *
+     * @see org.ofbiz.base.container.Container#start()
      */
-    public boolean start(String configFileLocation) throws ContainerException {
+    public boolean start() throws ContainerException {
         this.generateFiles();
         System.exit(1);
         return true;

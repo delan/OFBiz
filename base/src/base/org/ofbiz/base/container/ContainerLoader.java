@@ -1,5 +1,5 @@
 /*
- * $Id: ContainerLoader.java,v 1.10 2004/06/22 19:00:42 ajzeneski Exp $
+ * $Id: ContainerLoader.java,v 1.11 2004/07/31 20:10:12 ajzeneski Exp $
  *
  * Copyright (c) 2003 The Open For Business Project - www.ofbiz.org
  *
@@ -38,7 +38,7 @@ import org.ofbiz.base.util.Debug;
  * ContainerLoader - StartupLoader for the container
  *
  * @author     <a href="mailto:jaz@ofbiz.org">Andy Zeneski</a> 
-  *@version    $Revision: 1.10 $
+  *@version    $Revision: 1.11 $
  * @since      3.0
  */
 public class ContainerLoader implements StartupLoader {
@@ -48,20 +48,21 @@ public class ContainerLoader implements StartupLoader {
     private static boolean loaded = false;
 
     protected List loadedContainers = new LinkedList();
+    protected String configFile = null;
 
     /**
      * @see org.ofbiz.base.start.StartupLoader#load(Start.Config, String[])
      */
     public void load(Start.Config config, String args[]) throws StartupException {
-        Debug.logInfo("[Startup] Loading ContainerLoader...", module);
+        Debug.logInfo("[Startup] Loading containers...", module);
         loaded = true;
         
         // get the master container configuration file
-        String configFileLocation = config.containerConfig;
+        this.configFile = config.containerConfig;
         
         Collection containers = null;
         try {
-            containers = ContainerConfig.getContainers(configFileLocation);
+            containers = ContainerConfig.getContainers(configFile);
         } catch (ContainerException e) {            
             throw new StartupException(e);
         }
@@ -70,7 +71,26 @@ public class ContainerLoader implements StartupLoader {
             Iterator i = containers.iterator();
             while (i.hasNext()) {
                 ContainerConfig.Container containerCfg = (ContainerConfig.Container) i.next();                
-                loadedContainers.add(loadContainer(containerCfg, configFileLocation, args));
+                loadedContainers.add(loadContainer(containerCfg, args));
+            }
+        }
+    }
+
+    /**
+     * @see org.ofbiz.base.start.StartupLoader#start()
+     */
+    public void start() throws StartupException {
+        Debug.logInfo("[Startup] Starting containers...", module);
+
+        // start each container object
+        for (int i = 0; i < loadedContainers.size(); i++) {
+            Container container = (Container) loadedContainers.get(i);
+            try {
+                container.start();
+            } catch (ContainerException e) {
+                throw new StartupException("Cannot start() " + container.getClass().getName(), e);
+            } catch (java.lang.AbstractMethodError e) {
+                throw new StartupException("Cannot start() " + container.getClass().getName(), e);
             }
         }
     }
@@ -80,6 +100,7 @@ public class ContainerLoader implements StartupLoader {
      */
     public void unload() throws StartupException {
         Debug.logInfo("Shutting down containers", module);
+
         // shutting down in reverse order
         for (int i = loadedContainers.size(); i > 0; i--) {
             Container container = (Container) loadedContainers.get(i-1);
@@ -91,7 +112,7 @@ public class ContainerLoader implements StartupLoader {
         }
     }
 
-    private Container loadContainer(ContainerConfig.Container containerCfg, String configFileLocation, String[] args) throws StartupException {
+    private Container loadContainer(ContainerConfig.Container containerCfg, String[] args) throws StartupException {
         // load the container class
         ClassLoader loader = Thread.currentThread().getContextClassLoader();
         if (loader == null) {
@@ -107,7 +128,8 @@ public class ContainerLoader implements StartupLoader {
         if (containerClass == null) {
             throw new StartupException("Component container class not loaded");
         }
-        
+
+        // create a new instance of the container object
         Container containerObj = null;
         try {
             containerObj = (Container) containerClass.newInstance();
@@ -123,22 +145,15 @@ public class ContainerLoader implements StartupLoader {
             throw new StartupException("Unable to create instance of component container");
         }
 
+        // initialize the container object
         try {
-            containerObj.init(args);
+            containerObj.init(args, configFile);
         } catch (ContainerException e) {
             throw new StartupException("Cannot init() " + containerCfg.name, e);
         } catch (java.lang.AbstractMethodError e) {
             throw new StartupException("Cannot init() " + containerCfg.name, e);
         }
 
-        try {
-            containerObj.start(configFileLocation);
-        } catch (ContainerException e) {
-            throw new StartupException("Cannot start() " + containerCfg.name, e);
-        } catch (java.lang.AbstractMethodError e) {
-            throw new StartupException("Cannot start() " + containerCfg.name, e);
-        }
-        
         return containerObj;
     }
 

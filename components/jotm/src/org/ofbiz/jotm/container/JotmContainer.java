@@ -1,5 +1,5 @@
 /*
- * $Id: JotmContainer.java,v 1.2 2004/06/22 19:00:48 ajzeneski Exp $
+ * $Id: JotmContainer.java,v 1.3 2004/07/31 20:10:15 ajzeneski Exp $
  *
  * Copyright (c) 2003 The Open For Business Project - www.ofbiz.org
  *
@@ -38,23 +38,29 @@ import javax.naming.NamingException;
  * JOTM Container
  *
  * @author     <a href="mailto:jaz@ofbiz.org">Andy Zeneski</a>
- * @version    $Revision: 1.2 $
+ * @version    $Revision: 1.3 $
  * @since      3.0
  */
 public class JotmContainer implements Container {
 
     public static final String module = JotmContainer.class.getName();
 
+    protected String configFile = null;
     protected TMService jotm = null;
 
     /**
-     * @see org.ofbiz.base.container.Container#init(java.lang.String[])
+     * @see org.ofbiz.base.container.Container#init(java.lang.String[], java.lang.String)
      */
-    public void init(String[] args) {
+    public void init(String[] args, String configFile) throws ContainerException {
+        this.configFile = configFile;
+        this.startJotm();
     }
-    
-    public boolean start(String configFileLocation) throws ContainerException {
 
+    public boolean start() throws ContainerException {
+        return true;
+    }
+
+    private void startJotm() throws ContainerException {
         // initialize Carol
         try {
             org.objectweb.carol.util.configuration.CarolConfiguration.init();
@@ -87,8 +93,6 @@ public class JotmContainer implements Container {
         } catch (NamingException e) {
             throw new ContainerException("Unable to lookup bound objects", e);
         }
-
-        return true;
     }
 
     public void stop() throws ContainerException {        

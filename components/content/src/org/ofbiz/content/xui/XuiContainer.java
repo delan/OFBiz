@@ -1,5 +1,5 @@
 /*
- * $Id: XuiContainer.java,v 1.5 2004/07/19 02:43:02 ajzeneski Exp $
+ * $Id: XuiContainer.java,v 1.6 2004/07/31 20:10:14 ajzeneski Exp $
  *
  * Copyright (c) 2004 The Open For Business Project - www.ofbiz.org
  *
@@ -43,7 +43,7 @@ import org.ofbiz.entity.GenericDelegator;
 /**
  *
  * @author     <a href="mailto:jaz@ofbiz.org">Andy Zeneski</a>
- * @version    $Revision: 1.5 $
+ * @version    $Revision: 1.6 $
  * @since      3.1
  */
 public abstract class XuiContainer implements Container {
@@ -54,17 +54,19 @@ public abstract class XuiContainer implements Container {
     protected XuiScreen initialScreen = null;
     protected XuiSession session = null;
     protected String startupFile = null;
+    protected String configFile = null;
 
-    public void init(String[] args) throws ContainerException {
+    public void init(String[] args, String configFile) throws ContainerException {
+        this.configFile = configFile;
     }
 
-    public boolean start(String configFileLocation) throws ContainerException {
+    public boolean start() throws ContainerException {
         // make sure the subclass sets the config name
         if (this.getContainerConfigName() == null) {
             throw new ContainerException("Unknown container config name");
         }
         // get the container config
-        ContainerConfig.Container cc = ContainerConfig.getContainer(this.getContainerConfigName(), configFileLocation);
+        ContainerConfig.Container cc = ContainerConfig.getContainer(this.getContainerConfigName(), configFile);
         if (cc == null) {
             throw new ContainerException("No " + this.getContainerConfigName() + " configuration found in container config!");
         }

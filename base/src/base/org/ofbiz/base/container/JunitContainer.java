@@ -1,5 +1,5 @@
 /*
- * $Id: JunitContainer.java,v 1.4 2004/06/22 19:00:42 ajzeneski Exp $
+ * $Id: JunitContainer.java,v 1.5 2004/07/31 20:10:12 ajzeneski Exp $
  *
  * Copyright (c) 2004 The Open For Business Project - www.ofbiz.org
  *
@@ -37,21 +37,23 @@ import org.ofbiz.base.util.ObjectType;
 /**
  * 
  * @author     <a href="mailto:jaz@ofbiz.org">Andy Zeneski</a>
- * @version    $Revision: 1.4 $
+ * @version    $Revision: 1.5 $
  * @since      3.1
  */
 public class JunitContainer implements Container {
 
     public static final String module = JunitContainer.class.getName();
-    protected TestResult results;
+    protected TestResult results = null;
+    protected String configFile = null;
 
     /**
-     * @see org.ofbiz.base.container.Container#init(java.lang.String[])
+     * @see org.ofbiz.base.container.Container#init(java.lang.String[], java.lang.String)
      */
-    public void init(String[] args) {
+    public void init(String[] args, String configFile) {
+        this.configFile = configFile;   
     }
     
-    public boolean start(String configFile) throws ContainerException {
+    public boolean start() throws ContainerException {
         ContainerConfig.Container jc = ContainerConfig.getContainer("junit-container", configFile);
 
         // get the tests to run

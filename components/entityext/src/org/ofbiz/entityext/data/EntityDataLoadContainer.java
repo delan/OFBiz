@@ -1,5 +1,5 @@
 /*
- * $Id: EntityDataLoadContainer.java,v 1.2 2004/06/26 23:16:23 ajzeneski Exp $
+ * $Id: EntityDataLoadContainer.java,v 1.3 2004/07/31 20:10:14 ajzeneski Exp $
  *
  * Copyright (c) 2001-2004 The Open For Business Project - www.ofbiz.org
  *
@@ -45,12 +45,14 @@ import org.ofbiz.service.ServiceDispatcher;
  *
  * @author     <a href="mailto:jonesde@ofbiz.org">David E. Jones</a>
  * @author     <a href="mailto:jaz@ofbiz.org">Andy Zeneski</a>
- * @version    $Revision: 1.2 $
+ * @version    $Revision: 1.3 $
  * @since      3.1
  */
 public class EntityDataLoadContainer implements Container {
 
     public static final String module = EntityDataLoadContainer.class.getName();
+
+    protected String configFile = null;
     protected int txTimeout = -1;
 
     public EntityDataLoadContainer() {
@@ -58,9 +60,10 @@ public class EntityDataLoadContainer implements Container {
     }
 
     /**
-     * @see org.ofbiz.base.container.Container#init(java.lang.String[])
+     * @see org.ofbiz.base.container.Container#init(java.lang.String[], java.lang.String)
      */
-    public void init(String[] args) throws ContainerException {
+    public void init(String[] args, String configFile) throws ContainerException {
+        this.configFile = configFile;
         // disable job scheduler, JMS listener and startup services
         ServiceDispatcher.enableJM(false);
         ServiceDispatcher.enableJMS(false);
@@ -74,10 +77,10 @@ public class EntityDataLoadContainer implements Container {
     }
 
     /**
-     * @see org.ofbiz.base.container.Container#start(java.lang.String)
+     * @see org.ofbiz.base.container.Container#start()
      */
-    public boolean start(String configFileLocation) throws ContainerException {
-        ContainerConfig.Container cfg = ContainerConfig.getContainer("dataload-container", configFileLocation);
+    public boolean start() throws ContainerException {
+        ContainerConfig.Container cfg = ContainerConfig.getContainer("dataload-container", configFile);
         ContainerConfig.Container.Property delegatorNameProp = cfg.getProperty("delegator-name");
         ContainerConfig.Container.Property entityGroupNameProp = cfg.getProperty("entity-group-name");
 

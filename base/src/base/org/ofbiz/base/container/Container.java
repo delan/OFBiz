@@ -1,5 +1,5 @@
 /*
- * $Id: Container.java,v 1.3 2004/06/22 19:00:42 ajzeneski Exp $
+ * $Id: Container.java,v 1.4 2004/07/31 20:10:12 ajzeneski Exp $
  *
  * Copyright (c) 2003 The Open For Business Project - www.ofbiz.org
  *
@@ -28,26 +28,26 @@ package org.ofbiz.base.container;
  * Container - Interface for containers
  *
  * @author     <a href="mailto:jaz@ofbiz.org">Andy Zeneski</a> 
-  *@version    $Revision: 1.3 $
+  *@version    $Revision: 1.4 $
  * @since      3.0
  */
 public interface Container {
 
     /** Initialize the container
      *
-     * @param args Arguements from calling class
+     * @param args args from calling class
+     * @param configFile Location of master OFBiz configuration file
      * @throws ContainerException
      */
-    public void init(String[] args) throws ContainerException;
+    public void init(String[] args, String configFile) throws ContainerException;
     
     /**
      * Start the container
-     * 
-     * @param configFileLocation Location of master OFBiz configuration file
+     *
      * @return true if server started
      * @throws ContainerException
      */
-    public boolean start(String configFileLocation) throws ContainerException;
+    public boolean start() throws ContainerException;
 
     /**
      * Stop the container

@@ -1,5 +1,5 @@
 /*
- * $Id: SharkContainer.java,v 1.2 2004/06/22 19:00:49 ajzeneski Exp $
+ * $Id: SharkContainer.java,v 1.3 2004/07/31 20:10:15 ajzeneski Exp $
  *
  * Copyright (c) 2004 The Open For Business Project - www.ofbiz.org
  *
@@ -57,7 +57,7 @@ import org.enhydra.shark.api.TransactionException;
  * Shark Workflow Engine Container
  *
  * @author     <a href="mailto:jaz@ofbiz.org">Andy Zeneski</a>
- * @version    $Revision: 1.2 $
+ * @version    $Revision: 1.3 $
  * @since      3.1
  */
 public class SharkContainer implements Container, Runnable {
@@ -69,16 +69,18 @@ public class SharkContainer implements Container, Runnable {
     private static GenericValue adminUser = null;
     private static Shark shark = null;
 
+    protected String configFile = null;
     private SharkCORBAServer corbaServer = null;
     private Thread orbThread = null;
 
     /**
-     * @see org.ofbiz.base.container.Container#init(java.lang.String[])
+     * @see org.ofbiz.base.container.Container#init(java.lang.String[], java.lang.String)
      */
-    public void init(String[] args) {
+    public void init(String[] args, String configFile) {
+        this.configFile = configFile;
     }
     
-    public boolean start(String configFile) throws ContainerException {
+    public boolean start() throws ContainerException {
         ContainerConfig.Container cfg = ContainerConfig.getContainer("shark-container", configFile);
         ContainerConfig.Container.Property dispatcherProp = cfg.getProperty("dispatcher-name");
         ContainerConfig.Container.Property delegatorProp = cfg.getProperty("delegator-name");

@@ -1,5 +1,5 @@
 /*
- * $Id: ComponentContainer.java,v 1.19 2004/06/22 19:00:41 ajzeneski Exp $
+ * $Id: ComponentContainer.java,v 1.20 2004/07/31 20:10:12 ajzeneski Exp $
  *
  * Copyright (c) 2003 The Open For Business Project - www.ofbiz.org
  *
@@ -40,36 +40,33 @@ import org.ofbiz.base.util.UtilValidate;
 
 /**
  * ComponentContainer - StartupContainer implementation for Components
- * 
+ * <p/>
  * Example ofbiz-container.xml configuration:
  * <pre>
  *   <container name="component-container" class="org.ofbiz.base.component.ComponentContainer"/>
  * </pre>
  *
- * @author     <a href="mailto:jaz@ofbiz.org">Andy Zeneski</a> 
-  *@version    $Revision: 1.19 $
- * @since      3.0
+ * @author <a href="mailto:jaz@ofbiz.org">Andy Zeneski</a>
+ * @version $Revision: 1.20 $
+ * @since 3.0
  */
 public class ComponentContainer implements Container {
-    
-    public static final String module = ComponentContainer.class.getName();   
-    
+
+    public static final String module = ComponentContainer.class.getName();
+
     protected static List loadedComponents = null;
     protected Classpath classPath = new Classpath(System.getProperty("java.class.path"));
+    protected String configFileLocation = null;
 
     /**
-     * @see org.ofbiz.base.container.Container#init(java.lang.String[])
+     * @see org.ofbiz.base.container.Container#init(java.lang.String[], java.lang.String)
      */
-    public void init(String[] args) {
-    }
+    public void init(String[] args, String configFile) throws ContainerException {
+        this.configFileLocation = configFile;
 
-    /**
-     * @see org.ofbiz.base.container.Container#start(java.lang.String)
-     */
-    public boolean start(String configFileLocation) throws ContainerException {        
         // get the config for this container
         ContainerConfig.Container cc = ContainerConfig.getContainer("component-container", configFileLocation);
-        
+
         // check for an override loader config
         String loaderConfig = null;
         if (cc.getProperty("loader-config") != null) {
@@ -90,7 +87,12 @@ public class ComponentContainer implements Container {
         } catch (ComponentException e) {
             throw new ContainerException(e);
         }
+    }
 
+    /**
+     * @see org.ofbiz.base.container.Container#start()
+     */
+    public boolean start() throws ContainerException {
         return true;
     }
 
@@ -109,7 +111,7 @@ public class ComponentContainer implements Container {
         if (components != null) {
             Iterator ci = components.iterator();
             while (ci.hasNext()) {
-                ComponentLoaderConfig.ComponentDef def = (ComponentLoaderConfig.ComponentDef) ci.next();                
+                ComponentLoaderConfig.ComponentDef def = (ComponentLoaderConfig.ComponentDef) ci.next();
                 if (def.type == ComponentLoaderConfig.SINGLE_COMPONENT) {
                     ComponentConfig config = null;
                     try {
@@ -118,16 +120,16 @@ public class ComponentContainer implements Container {
                             def.name = config.getGlobalName();
                         }
                     } catch (ComponentException e) {
-                        Debug.logError("Cannot load component : " + def.name + " @ " + def.location + " : " + e.getMessage(), module);    
+                        Debug.logError("Cannot load component : " + def.name + " @ " + def.location + " : " + e.getMessage(), module);
                     }
                     if (config == null) {
-                        Debug.logError("Cannot load component : " + def.name + " @ " + def.location, module);   
+                        Debug.logError("Cannot load component : " + def.name + " @ " + def.location, module);
                     } else {
                         loadComponent(config);
-                    }                   
+                    }
                 } else if (def.type == ComponentLoaderConfig.COMPONENT_DIRECTORY) {
-                    loadComponentDirectory(def.location);    
-                }                                
+                    loadComponentDirectory(def.location);
+                }
             }
         }
 
@@ -140,7 +142,7 @@ public class ComponentContainer implements Container {
 
         Debug.logInfo("All components loaded", module);
     }
-    
+
     private void loadComponentDirectory(String directoryName) {
         Debug.logInfo("Auto-Loading component directory : [" + directoryName + "]", module);
         File parentPath = new File(directoryName);
@@ -151,32 +153,32 @@ public class ComponentContainer implements Container {
             for (int i = 0; i < subs.length; i++) {
                 try {
                     File componentPath = new File(parentPath.getCanonicalPath() + "/" + subs[i]);
-                    if (componentPath.isDirectory() && !subs[i].equals("CVS")) {                        
+                    if (componentPath.isDirectory() && !subs[i].equals("CVS")) {
                         // make sure we have a component configuraton file
                         String componentLocation = componentPath.getCanonicalPath();
-                        File configFile = new File(componentLocation + "/ofbiz-component.xml");                        
+                        File configFile = new File(componentLocation + "/ofbiz-component.xml");
                         if (configFile.exists()) {
                             ComponentConfig config = null;
                             try {
                                 // pass null for the name, will default to the internal component name
                                 config = ComponentConfig.getComponentConfig(null, componentLocation);
                             } catch (ComponentException e) {
-                                Debug.logError(e, "Cannot load component : " + componentPath.getName() + " @ " + componentLocation + " : " + e.getMessage(), module);    
+                                Debug.logError(e, "Cannot load component : " + componentPath.getName() + " @ " + componentLocation + " : " + e.getMessage(), module);
                             }
                             if (config == null) {
-                                Debug.logError("Cannot load component : " + componentPath.getName() + " @ " + componentLocation, module);    
+                                Debug.logError("Cannot load component : " + componentPath.getName() + " @ " + componentLocation, module);
                             } else {
-                                loadComponent(config);                                
-                            }                          
+                                loadComponent(config);
+                            }
                         }
                     }
                 } catch (IOException ioe) {
                     Debug.logError(ioe, module);
                 }
-            }            
-        }                           
+            }
+        }
     }
-    
+
     private void loadComponent(ComponentConfig config) {
         Debug.logInfo("Loading component : [" + config.getComponentName() + "]", module);
         List classpathInfos = config.getClasspathInfos();
@@ -195,14 +197,14 @@ public class ComponentContainer implements Container {
                 if (location.startsWith("/")) {
                     location = location.substring(1);
                 }
-                if ("dir".equals(cp.type)) {                    
+                if ("dir".equals(cp.type)) {
                     classPath.addComponent(configRoot + location);
                 } else if ("jar".equals(cp.type)) {
                     String dirLoc = location;
                     if (dirLoc.endsWith("/*")) {
                         // strip off the slash splat                        
                         dirLoc = location.substring(0, location.length() - 2);
-                    }                    
+                    }
                     File path = new File(configRoot + dirLoc);
                     if (path.exists()) {
                         if (path.isDirectory()) {
@@ -210,32 +212,33 @@ public class ComponentContainer implements Container {
                             File files[] = path.listFiles();
                             for (int i = 0; i < files.length; i++) {
                                 String file = files[i].getName();
-                                if (file.endsWith(".jar") || file.endsWith(".zip")) {                                    
+                                if (file.endsWith(".jar") || file.endsWith(".zip")) {
                                     classPath.addComponent(files[i]);
                                 }
                             }
                         } else {
                             // add a single file                                                       
-                            classPath.addComponent(configRoot + location);    
+                            classPath.addComponent(configRoot + location);
                         }
-                    } else {                                               
+                    } else {
                         Debug.logWarning("Location '" + configRoot + dirLoc + "' does not exist", module);
                     }
                 } else {
-                    Debug.logError("Classpath type '" + cp.type + "' is not supported; '" + location + "' not loaded", module);                    
+                    Debug.logError("Classpath type '" + cp.type + "' is not supported; '" + location + "' not loaded", module);
                 }
             }
-        }                
+        }
     }
-    
+
     /**
      * @see org.ofbiz.base.container.Container#stop()
      */
-    public void stop() throws ContainerException {        
+    public void stop() throws ContainerException {
     }
 
     /**
      * Static method for easy loading of components for use when the container system is not.
+     *
      * @param updateClasspath Tells the component loader to update the classpath, and thread classloader
      * @throws AlreadyLoadedException
      * @throws ComponentException

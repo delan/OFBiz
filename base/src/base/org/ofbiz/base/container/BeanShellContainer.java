@@ -1,5 +1,5 @@
 /*
- * $Id: BeanShellContainer.java,v 1.3 2004/06/22 19:00:41 ajzeneski Exp $
+ * $Id: BeanShellContainer.java,v 1.4 2004/07/31 20:10:12 ajzeneski Exp $
  *
  * Copyright (c) 2004 The Open For Business Project - www.ofbiz.org
  *
@@ -33,32 +33,29 @@ import org.ofbiz.base.util.Debug;
  * BeanShellContainer - Container implementation for BeanShell
  *
  * @author     <a href="mailto:jaz@ofbiz.org">Andy Zeneski</a>
-  *@version    $Revision: 1.3 $
+  *@version    $Revision: 1.4 $
  * @since      3.0
  */
 public class BeanShellContainer implements Container {
 
     public static final String module = BeanShellContainer.class.getName();
 
+    protected String configFileLocation = null;
     protected Interpreter bsh = null;
     protected String name;
     protected int port;
 
     /**
-     * @see org.ofbiz.base.container.Container#init(java.lang.String[])
+     * @see org.ofbiz.base.container.Container#init(java.lang.String[], java.lang.String)
      */
-    public void init(String[] args) {
+    public void init(String[] args, String configFile) {
+        this.configFileLocation = configFile;
     }
     
     /**
-     * Start the container
-     *
-     * @param configFileLocation Location of master OFBiz configuration file
-     * @return true if server started
-     * @throws ContainerException
-     *
+     * @see org.ofbiz.base.container.Container#init(java.lang.String[], java.lang.String)
      */
-    public boolean start(String configFileLocation) throws ContainerException {
+    public boolean start() throws ContainerException {
         // get the container config
         ContainerConfig.Container cfg = ContainerConfig.getContainer("beanshell-container", configFileLocation);
 

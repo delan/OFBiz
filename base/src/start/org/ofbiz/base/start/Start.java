@@ -1,5 +1,5 @@
 /*
- * $Id: Start.java,v 1.23 2004/07/31 18:33:14 ajzeneski Exp $
+ * $Id: Start.java,v 1.24 2004/07/31 20:10:13 ajzeneski Exp $
  *
  * Copyright (c) 2003 The Open For Business Project - www.ofbiz.org
  *
@@ -46,12 +46,13 @@ import java.util.Properties;
  * Start - OFBiz Container(s) Startup Class
  *
  * @author <a href="mailto:jaz@ofbiz.org">Andy Zeneski</a>
- * @version $Revision: 1.23 $
+ * @version $Revision: 1.24 $
  * @since 2.1
  */
 public class Start implements Runnable {
 
     private Classpath classPath = new Classpath(System.getProperty("java.class.path"));
+    private ClassLoader classloader = null;
     private ServerSocket serverSocket = null;
     private Thread serverThread = null;
     private boolean serverRunning = true;
@@ -79,17 +80,24 @@ public class Start implements Runnable {
                 this.loaderArgs[i - 1] = args[i];
             }
         }
-    }
 
-    public void startListenerThread() throws IOException {
-        if (config.adminPort > 0) {
-            this.serverSocket = new ServerSocket(config.adminPort, 1, config.adminAddress);
-            this.serverThread = new Thread(this, this.toString());
-            this.serverThread.setDaemon(false);
-            this.serverThread.start();
-            System.out.println("Admin socket listening on - " + config.adminAddress + ":" + config.adminPort);
+        // initialize the classpath
+        initClasspath();
+
+        // initialize the log directory
+        initLogDirectory();
+
+        // initialize the listener thread
+        initListenerThread();
+
+        // initialize the startup loaders
+        initStartLoaders();
+
+        // set the shutdown hook
+        if (config.useShutdownHook) {
+            setShutdownHook();
         } else {
-            System.out.println("Admin socket not configured; set to port 0");
+            System.out.println("Shutdown hook disabled");
         }
     }
 
@@ -140,6 +148,23 @@ public class Start implements Runnable {
         }
     }
 
+    private void initListenerThread() throws IOException {
+        if (config.adminPort > 0) {
+            this.serverSocket = new ServerSocket(config.adminPort, 1, config.adminAddress);
+            this.serverThread = new Thread(this, this.toString());
+            this.serverThread.setDaemon(false);
+            System.out.println("Admin socket configured on - " + config.adminAddress + ":" + config.adminPort);
+        } else {
+            System.out.println("Admin socket not configured; set to port 0");
+        }
+    }
+
+    private void startListenerThread() {
+        if (serverSocket != null && serverThread != null) {
+            this.serverThread.start();
+        }
+    }
+
     private void loadLibs(String path) throws IOException {
         File libDir = new File(path);
         if (libDir.exists()) {
@@ -155,7 +180,7 @@ public class Start implements Runnable {
         }
     }
 
-    private void startServer() throws IOException {
+    private void initClasspath() throws IOException {
         // load tools.jar
         if (config.toolsJar != null) {
             classPath.addComponent(config.toolsJar);
@@ -178,19 +203,11 @@ public class Start implements Runnable {
 
         // set the classpath/classloader
         System.setProperty("java.class.path", classPath.toString());
-        ClassLoader classloader = classPath.getClassLoader();
+        this.classloader = classPath.getClassLoader();
         Thread.currentThread().setContextClassLoader(classloader);
+    }
 
-        // set the shutdown hook
-        if (config.useShutdownHook) {
-            setShutdownHook();
-        } else {
-            System.out.println("Shutdown hook disabled");
-        }
-
-        // start the listener thread
-        startListenerThread();
-
+    private void initLogDirectory() {
         // stat the log directory
         boolean createdDir = false;
         File logDir = new File(config.logDir);
@@ -202,8 +219,10 @@ public class Start implements Runnable {
         if (createdDir) {
             System.out.println("Created OFBiz log dir [" + logDir.getAbsolutePath() + "]");
         }
+    }
 
-        // start the loaders
+    private void initStartLoaders() {
+        // initialize the loaders
         Iterator li = config.loaders.iterator();
         while (li.hasNext()) {
             String loaderClassName = (String) li.next();
@@ -213,6 +232,20 @@ public class Start implements Runnable {
                 loader.load(config, loaderArgs);
                 loaders.add(loader);
             } catch (Exception e) {
+                e.printStackTrace();
+                System.exit(99);
+            }
+        }
+    }
+
+    private void startStartLoaders() {
+        // start the loaders
+        Iterator i = loaders.iterator();
+        while (i.hasNext()) {
+            StartupLoader loader = (StartupLoader) i.next();
+            try {
+                loader.start();
+            } catch (StartupException e) {
                 e.printStackTrace();
                 System.exit(99);
             }
@@ -257,7 +290,15 @@ public class Start implements Runnable {
         serverRunning = false;
     }
 
-    public void start() throws IOException {
+    private void startServer() {
+        // start the listener thread
+        startListenerThread();
+
+        // start the startup loaders
+        startStartLoaders();
+    }
+
+    public void start() {
         startServer();
         if (config.shutdownAfterLoad) {
             shutdownServer();
