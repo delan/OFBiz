@@ -1,5 +1,5 @@
 /*
- * $Id: RecurrenceRule.java,v 1.4 2003/12/15 19:30:15 ajzeneski Exp $
+ * $Id: RecurrenceRule.java,v 1.5 2003/12/16 07:09:11 jonesde Exp $
  *
  * Copyright (c) 2001, 2002 The Open For Business Project - www.ofbiz.org
  *
@@ -41,7 +41,7 @@ import org.ofbiz.entity.GenericValue;
  * Recurrence Rule Object
  *
  * @author     <a href="mailto:jaz@ofbiz.org">Andy Zeneski</a>
- * @version    $Revision: 1.4 $
+ * @version    $Revision: 1.5 $
  * @since      2.0
  */
 public class RecurrenceRule {
@@ -256,7 +256,7 @@ public class RecurrenceRule {
      *@return The interval of this frequency as an integer.
      */
     public int getIntervalInt() {
-        if (Debug.verboseOn()) Debug.logVerbose("[RecurrenceInfo.getInterval] : " + getInterval(), module);
+        // if (Debug.verboseOn()) Debug.logVerbose("[RecurrenceInfo.getInterval] : " + getInterval(), module);
         return (int) getInterval();
     }
 
@@ -351,7 +351,7 @@ public class RecurrenceRule {
         long nextStartTime = startTime;
 
         while (nextStartTime < fromTime) {
-            if (Debug.verboseOn()) Debug.logVerbose("[RecurrenceInfo.getNextFreq] : Updating time - " + getFrequency(), module);
+            // if (Debug.verboseOn()) Debug.logVerbose("[RecurrenceInfo.getNextFreq] : Updating time - " + getFrequency(), module);
             switch (getFrequency()) {
             case SECONDLY:
                 cal.add(Calendar.SECOND, getIntervalInt());
