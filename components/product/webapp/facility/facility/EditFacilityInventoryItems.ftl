@@ -22,7 +22,7 @@
  *@author     David E. Jones
  *@author     Brad Steiner
  *@author     thierry.grauss@etu.univ-tours.fr (migration to uiLabelMap)
- *@version    $Revision: 1.8 $
+ *@version    $Revision: 1.9 $
  *@since      2.2
 -->
 
@@ -69,7 +69,7 @@ ${pages.get("/facility/FacilityTabBar.ftl")}
             <td><div class="tabletext"><b>${uiLabelMap.ProductLocation}</b></div></td>
             <td><div class="tabletext"><b>${uiLabelMap.ProductLotId}</b></div></td>
             <td><div class="tabletext"><b>${uiLabelMap.ProductBinNum}</b></div></td>
-            <td><div class="tabletext"><b>${uiLabelMap.ProductAtpQohSerial}#</b></div></td>
+            <td><div class="tabletext"><b>${uiLabelMap.ProductAtpQohSerial}</b></div></td>
             <td>&nbsp;</td>
             <td>&nbsp;</td>
             <#-- <td>&nbsp;</td> -->
