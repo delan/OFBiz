@@ -1,5 +1,5 @@
 /*
- * $Id: SecurityFactory.java,v 1.2 2003/08/18 03:15:10 ajzeneski Exp $
+ * $Id: SecurityFactory.java,v 1.3 2003/08/19 20:54:12 jonesde Exp $
  *
  * Copyright (c) 2001, 2002 The Open For Business Project - www.ofbiz.org
  *
@@ -42,7 +42,7 @@ import org.w3c.dom.Element;
  *
  * @author     <a href="mailto:hermanns@aixcept.de">Rainer Hermanns</a>
  * @author     <a href="mailto:jaz@ofbiz.org">Andy Zeneski</a>
- * @version    $Revision: 1.2 $
+ * @version    $Revision: 1.3 $
  * @since      2.0
  */
 public class SecurityFactory {
@@ -94,7 +94,7 @@ public class SecurityFactory {
 
     /**
      * Returns the class name of  a custom Security implementation.
-     * The default class name (org.ofbiz.core.security.OFBizSecurity) may be overridden by a customized implementation
+     * The default class name (org.ofbiz.security.OFBizSecurity) may be overridden by a customized implementation
      * class name in security.xml.
      *
      * @param securityName the security context name to be looked up
@@ -130,7 +130,7 @@ public class SecurityFactory {
             securityInfo = _securityInfo;
         }
 
-        // This is the default implementation and uses org.ofbiz.core.security.OFBizSecurity
+        // This is the default implementation and uses org.ofbiz.security.OFBizSecurity
         if (UtilValidate.isEmpty(securityInfo.className)) {
             className = DEFAULT_SECURITY;
         } else {

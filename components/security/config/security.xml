@@ -12,7 +12,7 @@
 	<!--
 	<security
 		name="myCustom"
-		class="org.ofbiz.core.security.MyCustomSecurity"
+		class="org.ofbiz.security.MyCustomSecurity"
 	/>
 	-->
 

@@ -166,6 +166,6 @@
         <description>Generic service to return an entity iterator</description>
         <attribute name="entityName" type="String" mode="IN" optional="false"/>
         <attribute name="inputFields" type="java.util.Map" mode="IN" optional="false"/>
-        <attribute name="listIt" type="org.ofbiz.core.entity.EntityListIterator" mode="OUT" optional="true"/>
+        <attribute name="listIt" type="org.ofbiz.entity.EntityListIterator" mode="OUT" optional="true"/>
     </service>
 </services>

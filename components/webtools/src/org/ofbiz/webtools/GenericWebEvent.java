@@ -1,5 +1,5 @@
 /*
- * $Id: GenericWebEvent.java,v 1.1 2003/08/18 22:03:18 jonesde Exp $
+ * $Id: GenericWebEvent.java,v 1.2 2003/08/19 20:54:12 jonesde Exp $
  *
  *  Copyright (c) 2001, 2002 The Open For Business Project - www.ofbiz.org
  *
@@ -43,7 +43,7 @@ import org.ofbiz.security.Security;
  * Web Event for doing updates on Generic Entities
  *
  * @author     <a href="mailto:jonesde@ofbiz.org">David E. Jones</a>
- * @version    $Revision: 1.1 $
+ * @version    $Revision: 1.2 $
  * @since      2.0
  */
 public class GenericWebEvent {
@@ -226,7 +226,7 @@ public class GenericWebEvent {
                 Class[] paramTypes = new Class[] {String.class};
                 Object[] params = new Object[] {findByEntity.get(field.getName()).toString()};
 
-                String className = "org.ofbiz.core.util.UtilValidate";
+                String className = "org.ofbiz.base.util.UtilValidate";
                 String methodName = curValidate;
 
                 if (curValidate.indexOf('.') > 0) {

@@ -1,5 +1,5 @@
 /*
- * $Id: ShipmentItemReportPrepare.bsh,v 1.1 2003/08/17 18:04:23 ajzeneski Exp $
+ * $Id: ShipmentItemReportPrepare.bsh,v 1.2 2003/08/19 20:54:12 jonesde Exp $
  *
  *  Copyright (c) 2003 The Open For Business Project - www.ofbiz.org
  *
@@ -22,8 +22,8 @@
  *  THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  */
 
-import org.ofbiz.core.entity.*;
-import org.ofbiz.core.util.*;
+import org.ofbiz.entity.*;
+import org.ofbiz.base.util.*;
 import org.ofbiz.core.report.*;
 
 delegator = request.getAttribute("delegator");

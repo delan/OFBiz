@@ -1,4 +1,4 @@
-<%@ page import="org.ofbiz.core.util.*" %>
+<%@ page import="org.ofbiz.base.util.*" %>
 <html>
 <head>
 <title>Open For Business Message</title>

@@ -23,7 +23,7 @@
  * @version 1.0
 --%>
 <%@ page import="java.util.*, java.net.*" %>
-<%@ page import="org.ofbiz.core.security.*, org.ofbiz.core.util.*, org.ofbiz.core.pseudotag.*" %>
+<%@ page import="org.ofbiz.security.*, org.ofbiz.base.util.*, org.ofbiz.content.webapp.pseudotag.*" %>
 <%@ page import="org.ofbiz.core.datafile.*" %>
 
 <%@ taglib uri="ofbizTags" prefix="ofbiz" %>

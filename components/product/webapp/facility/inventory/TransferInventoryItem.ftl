@@ -21,7 +21,7 @@
  *
  *@author     David E. Jones
  *@author     Brad Steiner
- *@version    $Revision: 1.1 $
+ *@version    $Revision: 1.2 $
  *@since      2.2
 -->
 
@@ -62,7 +62,7 @@
         </#if>
         
         <script language="JavaScript">
-            function setNow(field) { eval('document.transferform.${field}.value="${Static["org.ofbiz.core.util.UtilDateTime"].nowTimestamp().toString()}"'); }
+            function setNow(field) { eval('document.transferform.${field}.value="${Static["org.ofbiz.base.util.UtilDateTime"].nowTimestamp().toString()}"'); }
         </script>
         
         <table border="0" cellpadding="2" cellspacing="0">
@@ -232,7 +232,7 @@
             <td width="14%">&nbsp;</td>
             <td width="6%" align="right" nowrap><div class="tabletext">To Facility/Container</div></td>
             <td width="6%">&nbsp;</td>
-            <#assign fac = delegator.findByPrimaryKey("Facility", Static["org.ofbiz.core.util.UtilMisc"].toMap("facilityId", inventoryTransfer.facilityIdTo))>
+            <#assign fac = delegator.findByPrimaryKey("Facility", Static["org.ofbiz.base.util.UtilMisc"].toMap("facilityId", inventoryTransfer.facilityIdTo))>
             <td width="74%"><div class="tabletext">${(fac.facilityName)?if_exists}</div></td>
         </tr>
         <tr>

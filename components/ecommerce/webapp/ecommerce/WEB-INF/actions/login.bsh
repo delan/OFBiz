@@ -23,7 +23,7 @@
  *@version    1.0
  */
 
-import org.ofbiz.core.util.SiteDefs;
+import org.ofbiz.base.util.SiteDefs;
 import org.ofbiz.commonapp.common.CommonWorkers;
 
 if (session.getAttribute("autoUserLogin") != null)

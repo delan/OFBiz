@@ -1,5 +1,5 @@
 /*
- * $Id: HtmlFormRenderer.java,v 1.2 2003/08/18 18:32:07 ajzeneski Exp $
+ * $Id: HtmlFormRenderer.java,v 1.3 2003/08/19 20:54:08 jonesde Exp $
  *
  * Copyright (c) 2003 The Open For Business Project - www.ofbiz.org
  *
@@ -59,7 +59,7 @@ import org.ofbiz.content.widget.form.ModelFormField.TextareaField;
  *
  * @author     <a href="mailto:jonesde@ofbiz.org">David E. Jones</a>
  * @author     <a href="mailto:byersa@automationgroups.com">Al Byers</a>
- * @version    $Revision: 1.2 $
+ * @version    $Revision: 1.3 $
  * @since      2.2
  */
 public class HtmlFormRenderer implements FormStringRenderer {
@@ -110,7 +110,7 @@ public class HtmlFormRenderer implements FormStringRenderer {
     }
 
     /* (non-Javadoc)
-     * @see org.ofbiz.core.widget.form.FormStringRenderer#renderDisplayField(java.lang.StringBuffer, java.util.Map, org.ofbiz.core.widget.form.ModelFormField.DisplayField)
+     * @see org.ofbiz.content.widget.form.FormStringRenderer#renderDisplayField(java.lang.StringBuffer, java.util.Map, org.ofbiz.content.widget.form.ModelFormField.DisplayField)
      */
     public void renderDisplayField(StringBuffer buffer, Map context, DisplayField displayField) {
         ModelFormField modelFormField = displayField.getModelFormField();
@@ -138,7 +138,7 @@ public class HtmlFormRenderer implements FormStringRenderer {
     }
 
     /* (non-Javadoc)
-     * @see org.ofbiz.content.widget.form.FormStringRenderer#renderHyperlinkField(java.lang.StringBuffer, java.util.Map, org.ofbiz.core.widget.form.ModelFormField.HyperlinkField)
+     * @see org.ofbiz.content.widget.form.FormStringRenderer#renderHyperlinkField(java.lang.StringBuffer, java.util.Map, org.ofbiz.content.widget.form.ModelFormField.HyperlinkField)
      */
     public void renderHyperlinkField(StringBuffer buffer, Map context, HyperlinkField hyperlinkField) {
         ModelFormField modelFormField = hyperlinkField.getModelFormField();
@@ -208,7 +208,7 @@ public class HtmlFormRenderer implements FormStringRenderer {
     }
 
     /* (non-Javadoc)
-     * @see org.ofbiz.core.widget.form.FormStringRenderer#renderTextField(java.lang.StringBuffer, java.util.Map, org.ofbiz.core.widget.form.ModelFormField.TextField)
+     * @see org.ofbiz.content.widget.form.FormStringRenderer#renderTextField(java.lang.StringBuffer, java.util.Map, org.ofbiz.content.widget.form.ModelFormField.TextField)
      */
     public void renderTextField(StringBuffer buffer, Map context, TextField textField) {
         ModelFormField modelFormField = textField.getModelFormField();
@@ -259,7 +259,7 @@ public class HtmlFormRenderer implements FormStringRenderer {
     }
 
     /* (non-Javadoc)
-     * @see org.ofbiz.core.widget.form.FormStringRenderer#renderTextareaField(java.lang.StringBuffer, java.util.Map, org.ofbiz.core.widget.form.ModelFormField.TextareaField)
+     * @see org.ofbiz.content.widget.form.FormStringRenderer#renderTextareaField(java.lang.StringBuffer, java.util.Map, org.ofbiz.content.widget.form.ModelFormField.TextareaField)
      */
     public void renderTextareaField(StringBuffer buffer, Map context, TextareaField textareaField) {
         ModelFormField modelFormField = textareaField.getModelFormField();
@@ -300,7 +300,7 @@ public class HtmlFormRenderer implements FormStringRenderer {
     }
 
     /* (non-Javadoc)
-     * @see org.ofbiz.core.widget.form.FormStringRenderer#renderDateTimeField(java.lang.StringBuffer, java.util.Map, org.ofbiz.core.widget.form.ModelFormField.DateTimeField)
+     * @see org.ofbiz.content.widget.form.FormStringRenderer#renderDateTimeField(java.lang.StringBuffer, java.util.Map, org.ofbiz.content.widget.form.ModelFormField.DateTimeField)
      */
     public void renderDateTimeField(StringBuffer buffer, Map context, DateTimeField dateTimeField) {
         ModelFormField modelFormField = dateTimeField.getModelFormField();
@@ -372,7 +372,7 @@ public class HtmlFormRenderer implements FormStringRenderer {
     }
 
     /* (non-Javadoc)
-     * @see org.ofbiz.core.widget.form.FormStringRenderer#renderDropDownField(java.lang.StringBuffer, java.util.Map, org.ofbiz.core.widget.form.ModelFormField.DropDownField)
+     * @see org.ofbiz.content.widget.form.FormStringRenderer#renderDropDownField(java.lang.StringBuffer, java.util.Map, org.ofbiz.content.widget.form.ModelFormField.DropDownField)
      */
     public void renderDropDownField(StringBuffer buffer, Map context, DropDownField dropDownField) {
         ModelFormField modelFormField = dropDownField.getModelFormField();
@@ -453,7 +453,7 @@ public class HtmlFormRenderer implements FormStringRenderer {
     }
 
     /* (non-Javadoc)
-     * @see org.ofbiz.core.widget.form.FormStringRenderer#renderCheckField(java.lang.StringBuffer, java.util.Map, org.ofbiz.core.widget.form.ModelFormField.CheckField)
+     * @see org.ofbiz.content.widget.form.FormStringRenderer#renderCheckField(java.lang.StringBuffer, java.util.Map, org.ofbiz.content.widget.form.ModelFormField.CheckField)
      */
     public void renderCheckField(StringBuffer buffer, Map context, CheckField checkField) {
         // well, I don't know if this will be very useful... but here it is
@@ -492,7 +492,7 @@ public class HtmlFormRenderer implements FormStringRenderer {
     }
 
     /* (non-Javadoc)
-     * @see org.ofbiz.core.widget.form.FormStringRenderer#renderRadioField(java.lang.StringBuffer, java.util.Map, org.ofbiz.core.widget.form.ModelFormField.RadioField)
+     * @see org.ofbiz.content.widget.form.FormStringRenderer#renderRadioField(java.lang.StringBuffer, java.util.Map, org.ofbiz.content.widget.form.ModelFormField.RadioField)
      */
     public void renderRadioField(StringBuffer buffer, Map context, RadioField radioField) {
         ModelFormField modelFormField = radioField.getModelFormField();
@@ -538,7 +538,7 @@ public class HtmlFormRenderer implements FormStringRenderer {
     }
 
     /* (non-Javadoc)
-     * @see org.ofbiz.core.widget.form.FormStringRenderer#renderSubmitField(java.lang.StringBuffer, java.util.Map, org.ofbiz.core.widget.form.ModelFormField.SubmitField)
+     * @see org.ofbiz.content.widget.form.FormStringRenderer#renderSubmitField(java.lang.StringBuffer, java.util.Map, org.ofbiz.content.widget.form.ModelFormField.SubmitField)
      */
     public void renderSubmitField(StringBuffer buffer, Map context, SubmitField submitField) {
         ModelFormField modelFormField = submitField.getModelFormField();
@@ -619,7 +619,7 @@ public class HtmlFormRenderer implements FormStringRenderer {
     }
 
     /* (non-Javadoc)
-     * @see org.ofbiz.core.widget.form.FormStringRenderer#renderResetField(java.lang.StringBuffer, java.util.Map, org.ofbiz.core.widget.form.ModelFormField.ResetField)
+     * @see org.ofbiz.content.widget.form.FormStringRenderer#renderResetField(java.lang.StringBuffer, java.util.Map, org.ofbiz.content.widget.form.ModelFormField.ResetField)
      */
     public void renderResetField(StringBuffer buffer, Map context, ResetField resetField) {
         ModelFormField modelFormField = resetField.getModelFormField();
@@ -652,7 +652,7 @@ public class HtmlFormRenderer implements FormStringRenderer {
     }
 
     /* (non-Javadoc)
-     * @see org.ofbiz.core.widget.form.FormStringRenderer#renderHiddenField(java.lang.StringBuffer, java.util.Map, org.ofbiz.core.widget.form.ModelFormField.HiddenField)
+     * @see org.ofbiz.content.widget.form.FormStringRenderer#renderHiddenField(java.lang.StringBuffer, java.util.Map, org.ofbiz.content.widget.form.ModelFormField.HiddenField)
      */
     public void renderHiddenField(StringBuffer buffer, Map context, HiddenField hiddenField) {
         ModelFormField modelFormField = hiddenField.getModelFormField();
@@ -679,14 +679,14 @@ public class HtmlFormRenderer implements FormStringRenderer {
     }
 
     /* (non-Javadoc)
-     * @see org.ofbiz.core.widget.form.FormStringRenderer#renderIgnoredField(java.lang.StringBuffer, java.util.Map, org.ofbiz.core.widget.form.ModelFormField.IgnoredField)
+     * @see org.ofbiz.content.widget.form.FormStringRenderer#renderIgnoredField(java.lang.StringBuffer, java.util.Map, org.ofbiz.content.widget.form.ModelFormField.IgnoredField)
      */
     public void renderIgnoredField(StringBuffer buffer, Map context, IgnoredField ignoredField) {
         // do nothing, it's an ignored field; could add a comment or something if we wanted to
     }
 
     /* (non-Javadoc)
-     * @see org.ofbiz.core.widget.form.FormStringRenderer#renderFieldTitle(java.lang.StringBuffer, java.util.Map, org.ofbiz.core.widget.form.ModelFormField)
+     * @see org.ofbiz.content.widget.form.FormStringRenderer#renderFieldTitle(java.lang.StringBuffer, java.util.Map, org.ofbiz.content.widget.form.ModelFormField)
      */
     public void renderFieldTitle(StringBuffer buffer, Map context, ModelFormField modelFormField) {
         buffer.append("<span");
@@ -703,7 +703,7 @@ public class HtmlFormRenderer implements FormStringRenderer {
     }
 
     /* (non-Javadoc)
-     * @see org.ofbiz.core.widget.form.FormStringRenderer#renderFormOpen(java.lang.StringBuffer, java.util.Map, org.ofbiz.core.widget.form.ModelForm)
+     * @see org.ofbiz.content.widget.form.FormStringRenderer#renderFormOpen(java.lang.StringBuffer, java.util.Map, org.ofbiz.content.widget.form.ModelForm)
      */
     public void renderFormOpen(StringBuffer buffer, Map context, ModelForm modelForm) {
         buffer.append("<form method=\"POST\" ");
@@ -721,7 +721,7 @@ public class HtmlFormRenderer implements FormStringRenderer {
     }
 
     /* (non-Javadoc)
-     * @see org.ofbiz.core.widget.form.FormStringRenderer#renderFormClose(java.lang.StringBuffer, java.util.Map, org.ofbiz.core.widget.form.ModelForm)
+     * @see org.ofbiz.content.widget.form.FormStringRenderer#renderFormClose(java.lang.StringBuffer, java.util.Map, org.ofbiz.content.widget.form.ModelForm)
      */
     public void renderFormClose(StringBuffer buffer, Map context, ModelForm modelForm) {
         buffer.append("</form>");
@@ -744,7 +744,7 @@ public class HtmlFormRenderer implements FormStringRenderer {
     }
 
     /* (non-Javadoc)
-     * @see org.ofbiz.core.widget.form.FormStringRenderer#renderFormatHeaderRowOpen(java.lang.StringBuffer, java.util.Map, org.ofbiz.core.widget.form.ModelForm)
+     * @see org.ofbiz.content.widget.form.FormStringRenderer#renderFormatHeaderRowOpen(java.lang.StringBuffer, java.util.Map, org.ofbiz.content.widget.form.ModelForm)
      */
     public void renderFormatHeaderRowOpen(StringBuffer buffer, Map context, ModelForm modelForm) {
         buffer.append("<tr>");
@@ -753,7 +753,7 @@ public class HtmlFormRenderer implements FormStringRenderer {
     }
 
     /* (non-Javadoc)
-     * @see org.ofbiz.core.widget.form.FormStringRenderer#renderFormatHeaderRowClose(java.lang.StringBuffer, java.util.Map, org.ofbiz.core.widget.form.ModelForm)
+     * @see org.ofbiz.content.widget.form.FormStringRenderer#renderFormatHeaderRowClose(java.lang.StringBuffer, java.util.Map, org.ofbiz.content.widget.form.ModelForm)
      */
     public void renderFormatHeaderRowClose(StringBuffer buffer, Map context, ModelForm modelForm) {
         buffer.append("</tr>");
@@ -762,7 +762,7 @@ public class HtmlFormRenderer implements FormStringRenderer {
     }
 
     /* (non-Javadoc)
-     * @see org.ofbiz.core.widget.form.FormStringRenderer#renderFormatHeaderRowCellOpen(java.lang.StringBuffer, java.util.Map, org.ofbiz.core.widget.form.ModelForm, org.ofbiz.core.widget.form.ModelFormField)
+     * @see org.ofbiz.content.widget.form.FormStringRenderer#renderFormatHeaderRowCellOpen(java.lang.StringBuffer, java.util.Map, org.ofbiz.content.widget.form.ModelForm, org.ofbiz.content.widget.form.ModelFormField)
      */
     public void renderFormatHeaderRowCellOpen(StringBuffer buffer, Map context, ModelForm modelForm, ModelFormField modelFormField) {
         buffer.append("<td>");
@@ -771,7 +771,7 @@ public class HtmlFormRenderer implements FormStringRenderer {
     }
 
     /* (non-Javadoc)
-     * @see org.ofbiz.core.widget.form.FormStringRenderer#renderFormatHeaderRowCellClose(java.lang.StringBuffer, java.util.Map, org.ofbiz.core.widget.form.ModelForm, org.ofbiz.core.widget.form.ModelFormField)
+     * @see org.ofbiz.content.widget.form.FormStringRenderer#renderFormatHeaderRowCellClose(java.lang.StringBuffer, java.util.Map, org.ofbiz.content.widget.form.ModelForm, org.ofbiz.content.widget.form.ModelFormField)
      */
     public void renderFormatHeaderRowCellClose(StringBuffer buffer, Map context, ModelForm modelForm, ModelFormField modelFormField) {
         buffer.append("</td>");
@@ -786,7 +786,7 @@ public class HtmlFormRenderer implements FormStringRenderer {
     }
 
     /* (non-Javadoc)
-     * @see org.ofbiz.core.widget.form.FormStringRenderer#renderFormatHeaderRowFormCellClose(java.lang.StringBuffer, java.util.Map, org.ofbiz.core.widget.form.ModelForm)
+     * @see org.ofbiz.content.widget.form.FormStringRenderer#renderFormatHeaderRowFormCellClose(java.lang.StringBuffer, java.util.Map, org.ofbiz.content.widget.form.ModelForm)
      */
     public void renderFormatHeaderRowFormCellClose(StringBuffer buffer, Map context, ModelForm modelForm) {
         buffer.append("</td>");
@@ -795,7 +795,7 @@ public class HtmlFormRenderer implements FormStringRenderer {
     }
 
     /* (non-Javadoc)
-     * @see org.ofbiz.core.widget.form.FormStringRenderer#renderFormatHeaderRowFormCellTitleSeparator(java.lang.StringBuffer, java.util.Map, org.ofbiz.core.widget.form.ModelForm, boolean)
+     * @see org.ofbiz.content.widget.form.FormStringRenderer#renderFormatHeaderRowFormCellTitleSeparator(java.lang.StringBuffer, java.util.Map, org.ofbiz.content.widget.form.ModelForm, boolean)
      */
     public void renderFormatHeaderRowFormCellTitleSeparator(
         StringBuffer buffer,
@@ -819,7 +819,7 @@ public class HtmlFormRenderer implements FormStringRenderer {
     }
 
     /* (non-Javadoc)
-     * @see org.ofbiz.core.widget.form.FormStringRenderer#renderFormatItemRowOpen(java.lang.StringBuffer, java.util.Map, org.ofbiz.core.widget.form.ModelForm)
+     * @see org.ofbiz.content.widget.form.FormStringRenderer#renderFormatItemRowOpen(java.lang.StringBuffer, java.util.Map, org.ofbiz.content.widget.form.ModelForm)
      */
     public void renderFormatItemRowOpen(StringBuffer buffer, Map context, ModelForm modelForm) {
         buffer.append("<tr>");
@@ -828,7 +828,7 @@ public class HtmlFormRenderer implements FormStringRenderer {
     }
 
     /* (non-Javadoc)
-     * @see org.ofbiz.core.widget.form.FormStringRenderer#renderFormatItemRowClose(java.lang.StringBuffer, java.util.Map, org.ofbiz.core.widget.form.ModelForm)
+     * @see org.ofbiz.content.widget.form.FormStringRenderer#renderFormatItemRowClose(java.lang.StringBuffer, java.util.Map, org.ofbiz.content.widget.form.ModelForm)
      */
     public void renderFormatItemRowClose(StringBuffer buffer, Map context, ModelForm modelForm) {
         buffer.append("</tr>");
@@ -837,7 +837,7 @@ public class HtmlFormRenderer implements FormStringRenderer {
     }
 
     /* (non-Javadoc)
-     * @see org.ofbiz.core.widget.form.FormStringRenderer#renderFormatItemRowCellOpen(java.lang.StringBuffer, java.util.Map, org.ofbiz.core.widget.form.ModelForm, org.ofbiz.core.widget.form.ModelFormField)
+     * @see org.ofbiz.content.widget.form.FormStringRenderer#renderFormatItemRowCellOpen(java.lang.StringBuffer, java.util.Map, org.ofbiz.content.widget.form.ModelForm, org.ofbiz.content.widget.form.ModelFormField)
      */
     public void renderFormatItemRowCellOpen(StringBuffer buffer, Map context, ModelForm modelForm, ModelFormField modelFormField) {
         buffer.append("<td>");
@@ -846,7 +846,7 @@ public class HtmlFormRenderer implements FormStringRenderer {
     }
 
     /* (non-Javadoc)
-     * @see org.ofbiz.core.widget.form.FormStringRenderer#renderFormatItemRowCellClose(java.lang.StringBuffer, java.util.Map, org.ofbiz.core.widget.form.ModelForm, org.ofbiz.core.widget.form.ModelFormField)
+     * @see org.ofbiz.content.widget.form.FormStringRenderer#renderFormatItemRowCellClose(java.lang.StringBuffer, java.util.Map, org.ofbiz.content.widget.form.ModelForm, org.ofbiz.content.widget.form.ModelFormField)
      */
     public void renderFormatItemRowCellClose(StringBuffer buffer, Map context, ModelForm modelForm, ModelFormField modelFormField) {
         buffer.append("</td>");
@@ -855,7 +855,7 @@ public class HtmlFormRenderer implements FormStringRenderer {
     }
 
     /* (non-Javadoc)
-     * @see org.ofbiz.core.widget.form.FormStringRenderer#renderFormatItemRowFormCellOpen(java.lang.StringBuffer, java.util.Map, org.ofbiz.core.widget.form.ModelForm)
+     * @see org.ofbiz.content.widget.form.FormStringRenderer#renderFormatItemRowFormCellOpen(java.lang.StringBuffer, java.util.Map, org.ofbiz.content.widget.form.ModelForm)
      */
     public void renderFormatItemRowFormCellOpen(StringBuffer buffer, Map context, ModelForm modelForm) {
         buffer.append("<td align=\"center\">");
@@ -864,7 +864,7 @@ public class HtmlFormRenderer implements FormStringRenderer {
     }
 
     /* (non-Javadoc)
-     * @see org.ofbiz.core.widget.form.FormStringRenderer#renderFormatItemRowFormCellClose(java.lang.StringBuffer, java.util.Map, org.ofbiz.core.widget.form.ModelForm)
+     * @see org.ofbiz.content.widget.form.FormStringRenderer#renderFormatItemRowFormCellClose(java.lang.StringBuffer, java.util.Map, org.ofbiz.content.widget.form.ModelForm)
      */
     public void renderFormatItemRowFormCellClose(StringBuffer buffer, Map context, ModelForm modelForm) {
         buffer.append("</td>");
@@ -885,7 +885,7 @@ public class HtmlFormRenderer implements FormStringRenderer {
     }
 
     /* (non-Javadoc)
-     * @see org.ofbiz.core.widget.form.FormStringRenderer#renderFormatFieldRowOpen(java.lang.StringBuffer, java.util.Map, org.ofbiz.core.widget.form.ModelForm)
+     * @see org.ofbiz.content.widget.form.FormStringRenderer#renderFormatFieldRowOpen(java.lang.StringBuffer, java.util.Map, org.ofbiz.content.widget.form.ModelForm)
      */
     public void renderFormatFieldRowOpen(StringBuffer buffer, Map context, ModelForm modelForm) {
         buffer.append("<tr>");
@@ -894,7 +894,7 @@ public class HtmlFormRenderer implements FormStringRenderer {
     }
 
     /* (non-Javadoc)
-     * @see org.ofbiz.core.widget.form.FormStringRenderer#renderFormatFieldRowClose(java.lang.StringBuffer, java.util.Map, org.ofbiz.core.widget.form.ModelForm)
+     * @see org.ofbiz.content.widget.form.FormStringRenderer#renderFormatFieldRowClose(java.lang.StringBuffer, java.util.Map, org.ofbiz.content.widget.form.ModelForm)
      */
     public void renderFormatFieldRowClose(StringBuffer buffer, Map context, ModelForm modelForm) {
         buffer.append("</tr>");
@@ -903,7 +903,7 @@ public class HtmlFormRenderer implements FormStringRenderer {
     }
 
     /* (non-Javadoc)
-     * @see org.ofbiz.core.widget.form.FormStringRenderer#renderFormatFieldRowTitleCellOpen(java.lang.StringBuffer, java.util.Map, org.ofbiz.core.widget.form.ModelFormField)
+     * @see org.ofbiz.content.widget.form.FormStringRenderer#renderFormatFieldRowTitleCellOpen(java.lang.StringBuffer, java.util.Map, org.ofbiz.content.widget.form.ModelFormField)
      */
     public void renderFormatFieldRowTitleCellOpen(StringBuffer buffer, Map context, ModelFormField modelFormField) {
         buffer.append("<td width=\"20%\" align=\"right\">");
@@ -912,7 +912,7 @@ public class HtmlFormRenderer implements FormStringRenderer {
     }
 
     /* (non-Javadoc)
-     * @see org.ofbiz.core.widget.form.FormStringRenderer#renderFormatFieldRowTitleCellClose(java.lang.StringBuffer, java.util.Map, org.ofbiz.core.widget.form.ModelFormField)
+     * @see org.ofbiz.content.widget.form.FormStringRenderer#renderFormatFieldRowTitleCellClose(java.lang.StringBuffer, java.util.Map, org.ofbiz.content.widget.form.ModelFormField)
      */
     public void renderFormatFieldRowTitleCellClose(StringBuffer buffer, Map context, ModelFormField modelFormField) {
         buffer.append("</td>");
@@ -921,7 +921,7 @@ public class HtmlFormRenderer implements FormStringRenderer {
     }
 
     /* (non-Javadoc)
-     * @see org.ofbiz.core.widget.form.FormStringRenderer#renderFormatFieldRowSpacerCell(java.lang.StringBuffer, java.util.Map, org.ofbiz.core.widget.form.ModelFormField)
+     * @see org.ofbiz.content.widget.form.FormStringRenderer#renderFormatFieldRowSpacerCell(java.lang.StringBuffer, java.util.Map, org.ofbiz.content.widget.form.ModelFormField)
      */
     public void renderFormatFieldRowSpacerCell(StringBuffer buffer, Map context, ModelFormField modelFormField) {
         buffer.append("<td>&nbsp;</td>");
@@ -930,7 +930,7 @@ public class HtmlFormRenderer implements FormStringRenderer {
     }
 
     /* (non-Javadoc)
-     * @see org.ofbiz.core.widget.form.FormStringRenderer#renderFormatFieldRowWidgetCellOpen(java.lang.StringBuffer, java.util.Map, org.ofbiz.core.widget.form.ModelFormField, int)
+     * @see org.ofbiz.content.widget.form.FormStringRenderer#renderFormatFieldRowWidgetCellOpen(java.lang.StringBuffer, java.util.Map, org.ofbiz.content.widget.form.ModelFormField, int)
      */
     public void renderFormatFieldRowWidgetCellOpen(
         StringBuffer buffer,
@@ -959,7 +959,7 @@ public class HtmlFormRenderer implements FormStringRenderer {
     }
 
     /* (non-Javadoc)
-     * @see org.ofbiz.core.widget.form.FormStringRenderer#renderFormatFieldRowWidgetCellClose(java.lang.StringBuffer, java.util.Map, org.ofbiz.core.widget.form.ModelFormField, int)
+     * @see org.ofbiz.content.widget.form.FormStringRenderer#renderFormatFieldRowWidgetCellClose(java.lang.StringBuffer, java.util.Map, org.ofbiz.content.widget.form.ModelFormField, int)
      */
     public void renderFormatFieldRowWidgetCellClose(
         StringBuffer buffer,
@@ -978,7 +978,7 @@ public class HtmlFormRenderer implements FormStringRenderer {
     }
 
     /* (non-Javadoc)
-     * @see org.ofbiz.core.widget.form.FormStringRenderer#renderTextFindField(java.lang.StringBuffer, java.util.Map, org.ofbiz.core.widget.form.ModelFormField.TextFindField)
+     * @see org.ofbiz.content.widget.form.FormStringRenderer#renderTextFindField(java.lang.StringBuffer, java.util.Map, org.ofbiz.content.widget.form.ModelFormField.TextFindField)
      */
     public void renderTextFindField(StringBuffer buffer, Map context, TextFindField textFindField) {
 
@@ -1048,7 +1048,7 @@ public class HtmlFormRenderer implements FormStringRenderer {
     }
 
     /* (non-Javadoc)
-     * @see org.ofbiz.core.widget.form.FormStringRenderer#renderRangeFindField(java.lang.StringBuffer, java.util.Map, org.ofbiz.core.widget.form.ModelFormField.RangeFindField)
+     * @see org.ofbiz.content.widget.form.FormStringRenderer#renderRangeFindField(java.lang.StringBuffer, java.util.Map, org.ofbiz.content.widget.form.ModelFormField.RangeFindField)
      */
     public void renderRangeFindField(StringBuffer buffer, Map context, RangeFindField rangeFindField) {
 
@@ -1177,7 +1177,7 @@ public class HtmlFormRenderer implements FormStringRenderer {
     }
 
     /* (non-Javadoc)
-     * @see org.ofbiz.core.widget.form.FormStringRenderer#renderDateFindField(java.lang.StringBuffer, java.util.Map, org.ofbiz.core.widget.form.ModelFormField.DateFindField)
+     * @see org.ofbiz.content.widget.form.FormStringRenderer#renderDateFindField(java.lang.StringBuffer, java.util.Map, org.ofbiz.content.widget.form.ModelFormField.DateFindField)
      */
     public void renderDateFindField(StringBuffer buffer, Map context, DateFindField dateFindField) {
         ModelFormField modelFormField = dateFindField.getModelFormField();
@@ -1335,7 +1335,7 @@ public class HtmlFormRenderer implements FormStringRenderer {
     }
 
     /* (non-Javadoc)
-     * @see org.ofbiz.core.widget.form.FormStringRenderer#renderLookupField(java.lang.StringBuffer, java.util.Map, org.ofbiz.core.widget.form.ModelFormField.LookupField)
+     * @see org.ofbiz.content.widget.form.FormStringRenderer#renderLookupField(java.lang.StringBuffer, java.util.Map, org.ofbiz.content.widget.form.ModelFormField.LookupField)
      */
     public void renderLookupField(StringBuffer buffer, Map context, LookupField lookupField) {
         ModelFormField modelFormField = lookupField.getModelFormField();

@@ -1,5 +1,5 @@
 /*
- * $Id: OrderReportPrepare.bsh,v 1.1 2003/08/18 20:06:02 ajzeneski Exp $
+ * $Id: OrderReportPrepare.bsh,v 1.2 2003/08/19 20:54:10 jonesde Exp $
  *
  *  Copyright (c) 2001, 2002 The Open For Business Project - www.ofbiz.org
  *
@@ -23,8 +23,8 @@
  */
 
 import java.sql.*;
-import org.ofbiz.core.entity.*;
-import org.ofbiz.core.util.*;
+import org.ofbiz.entity.*;
+import org.ofbiz.base.util.*;
 import org.ofbiz.core.report.*;
 
 GenericDelegator delegator = (GenericDelegator) request.getAttribute("delegator");

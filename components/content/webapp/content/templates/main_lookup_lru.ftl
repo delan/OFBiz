@@ -22,7 +22,7 @@
  *  THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  *
  *@author     Andy Zeneski (jaz@ofbiz.org)
- *@version    $Revision: 1.1 $
+ *@version    $Revision: 1.2 $
  *@since      2.1
 -->
 
@@ -72,7 +72,7 @@ function set_value(value) {
             <#else>
               <div class="insideHeaderText">Welcome!</div>
             </#if>
-            <div class="insideHeaderText">&nbsp;${Static["org.ofbiz.core.util.UtilDateTime"].nowTimestamp().toString()}</div>
+            <div class="insideHeaderText">&nbsp;${Static["org.ofbiz.base.util.UtilDateTime"].nowTimestamp().toString()}</div>
           </td>
         </tr>
       </table>

@@ -338,7 +338,7 @@
     <service name="calculateProductPrice" engine="java"
                 location="org.ofbiz.product.price.PriceServices" invoke="calculateProductPrice" auth="false" use-transaction="false">
         <description>Calculate a Product's Price from ProductPriceRules</description>
-        <attribute name="product" type="org.ofbiz.core.entity.GenericValue" mode="IN" optional="false"/>
+        <attribute name="product" type="org.ofbiz.entity.GenericValue" mode="IN" optional="false"/>
         <attribute name="prodCatalogId" type="String" mode="IN" optional="false"/>
         <attribute name="webSiteId" type="String" mode="IN" optional="false"/>
         <attribute name="partyId" type="String" mode="IN" optional="true"/>
@@ -1199,14 +1199,14 @@
             location="org.ofbiz.product.product.ProductServices" invoke="prodFindProduct">
         <description>Gets a product value object.</description>
         <attribute name="productId" type="String" mode="IN"/>
-        <attribute name="product" type="org.ofbiz.core.entity.GenericValue" mode="OUT"/>
+        <attribute name="product" type="org.ofbiz.entity.GenericValue" mode="OUT"/>
     </service>
     <service name="getProductVariant" engine="java"
             location="org.ofbiz.product.product.ProductServices" invoke="prodFindSelectedVariant">
         <description>Gets a variant product value object.</description>
         <attribute name="productId" type="String" mode="IN"/>
         <attribute name="selectedFeatures" type="java.util.Map" mode="IN"/>
-        <attribute name="product" type="org.ofbiz.core.entity.GenericValue" mode="OUT"/>
+        <attribute name="product" type="org.ofbiz.entity.GenericValue" mode="OUT"/>
     </service>
     <service name="getProductFeatureSet" engine="java"
             location="org.ofbiz.product.product.ProductServices" invoke="prodFindFeatureTypes">
@@ -1253,7 +1253,7 @@
             location="org.ofbiz.product.category.CategoryServices" invoke="getCategoryMembers">
         <description>Gets ProductCategoryMembers for the category_id</description>
         <attribute name="categoryId" type="String" mode="IN"/>
-        <attribute name="category" type="org.ofbiz.core.entity.GenericValue" mode="OUT"/>
+        <attribute name="category" type="org.ofbiz.entity.GenericValue" mode="OUT"/>
         <attribute name="categoryMembers" type="java.util.Collection" mode="OUT"/>
     </service>
     <service name="getPreviousNextProducts" engine="java"
@@ -1261,7 +1261,7 @@
         <description>Gets the previous and next product Ids.</description>
         <attribute name="categoryId" type="String" mode="IN"/>
         <attribute name="productId" type="String" mode="IN"/>
-        <attribute name="category" type="org.ofbiz.core.entity.GenericValue" mode="OUT"/>
+        <attribute name="category" type="org.ofbiz.entity.GenericValue" mode="OUT"/>
         <attribute name="previousProductId" type="String" mode="OUT" optional="true"/>
         <attribute name="nextProductId" type="String" mode="OUT" optional="true"/>
     </service>
@@ -1276,7 +1276,7 @@
         <attribute name="viewIndexString" type="String" mode="IN" optional="true"/>
         <attribute name="viewSizeString" type="String" mode="IN" optional="true"/>
         <attribute name="useCacheForMembers" type="Boolean" mode="IN" optional="true"/>
-        <attribute name="productCategory" type="org.ofbiz.core.entity.GenericValue" mode="OUT" optional="true"/>
+        <attribute name="productCategory" type="org.ofbiz.entity.GenericValue" mode="OUT" optional="true"/>
         <attribute name="productCategoryMembers" type="java.util.Collection" mode="OUT" optional="true"/>
         <attribute name="viewIndex" type="Integer" mode="OUT" optional="false"/>
         <attribute name="viewSize" type="Integer" mode="OUT" optional="false"/>

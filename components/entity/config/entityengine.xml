@@ -15,7 +15,7 @@ access. For a detailed description see the core/docs/entityconfig.html file.
     <!-- Use this one for JNDI -->
     <!-- NOTE: to use the JndiFactory you must specify the necessary JNDI properties -->    
     <!--
-    <transaction-factory class="org.ofbiz.core.entity.transaction.JNDIFactory">
+    <transaction-factory class="org.ofbiz.entity.transaction.JNDIFactory">
         <user-transaction-jndi jndi-server-name="default" jndi-name="java:comp/UserTransaction"/>
         <transaction-manager-jndi jndi-server-name="default" jndi-name="java:comp/UserTransaction"/>
     </transaction-factory>   
