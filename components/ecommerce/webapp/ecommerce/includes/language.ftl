@@ -20,7 +20,7 @@
  *  THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  *
  *@author     Andy Zeneski (jaz@ofbiz.org)
- *@version    $Revision: 1.1 $
+ *@version    $Revision: 1.2 $
  *@since      3.0
 -->
 <#assign uiLabelMap = requestAttributes.uiLabelMap>
@@ -45,14 +45,14 @@
             <form method="POST" name="chooseLanguage" action="<@ofbizUrl>/setSessionLocale<#if requestAttributes._CURRENT_VIEW_?exists>/${requestAttributes._CURRENT_VIEW_}</#if></@ofbizUrl>" style="margin: 0;">
               <select name="locale" class="selectBox">
                 <#assign initialDisplayName = requestAttributes.locale.getDisplayName()>
-                <#if 15 < initialDisplayName?length>
+                <#if 18 < initialDisplayName?length>
                   <assign initialDisplayName = initialDisplayName[0..15] + "...">
                 </#if>
                 <option value="${requestAttributes.locale.toString()}">${initialDisplayName}</option>
                 <option value="${requestAttributes.locale.toString()}">----</option>
                 <#list requestAttributes.availableLocales as availableLocale>
                   <#assign displayName = availableLocale.getDisplayName()>
-                  <#if 15 < displayName?length>
+                  <#if 18 < displayName?length>
                     <#assign displayName = displayName[0..15] + "...">
                   </#if>
                   <option value="${availableLocale.toString()}">${displayName}</option>
