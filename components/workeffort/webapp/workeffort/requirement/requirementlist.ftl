@@ -20,10 +20,12 @@
  *  OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR 
  *  THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  *
- *@author     Johan Isacsson (conversion of jsp created by Andy Zeneski) 
- *@version    $Revision: 1.1 $
+ *@author     Johan Isacsson (conversion of jsp created by Andy Zeneski)
+ *@author     Eric.Barbier@nereide.biz (migration to uiLabelMap) 
+ *@version    $Revision: 1.2 $
  *@since      2.1
 -->
+<#assign uiLabelMap = requestAttributes.uiLabelMap>
 
 <TABLE border=0 width='100%' cellspacing='0' cellpadding='0' class='boxoutside'>
   <TR>
@@ -31,11 +33,11 @@
       <table width='100%' border='0' cellspacing='0' cellpadding='0' class='boxtop'>
         <tr>
           <TD align=left width='40%' >
-            <div class='boxhead'>&nbsp;Requirement List</div>
+            <div class='boxhead'>${uiLabelMap.WorkEffortRequirementList}</div>
           </TD>
           <TD align=right width='60%'>
-            <A href='<@ofbizUrl>/requirementlist</@ofbizUrl>' class='lightbuttontextdisabled'>[Requirement&nbsp;List]</A>
-            <A href='<@ofbizUrl>/requirement</@ofbizUrl>' class='lightbuttontext'>[New&nbsp;Requirement]</A>
+            <A href='<@ofbizUrl>/requirementlist</@ofbizUrl>' class='lightbuttontextdisabled'>[${uiLabelMap.WorkEffortRequirementList}]</A>
+            <A href='<@ofbizUrl>/requirement</@ofbizUrl>' class='lightbuttontext'>[${uiLabelMap.WorkEffortNewRequirement}]</A>
           </TD>
         </tr>
       </table>
@@ -48,11 +50,11 @@
           <td>
               <TABLE width='100%' cellpadding='2' cellspacing='0' border='0'>
                 <TR>
-                  <TD><DIV class='tabletext'><b>Requirement Type</b></DIV></TD>
-                  <TD><DIV class='tabletext'><b>Description</b></DIV></TD>
-                  <TD><DIV class='tabletext'><b>Required By</b></DIV></TD>
-                  <TD><DIV class='tabletext'><b>Estmated Budget</b></DIV></TD>
-                  <TD align=right><DIV class='tabletext'><b>View Tasks / Edit</b></DIV></TD>
+                  <TD><DIV class='tabletext'><b>${uiLabelMap.WorkEffortRequirementType}</b></DIV></TD>
+                  <TD><DIV class='tabletext'><b>${uiLabelMap.WorkEffortDescription}</b></DIV></TD>
+                  <TD><DIV class='tabletext'><b>${uiLabelMap.WorkEffortRequiredBy}</b></DIV></TD>
+                  <TD><DIV class='tabletext'><b>${uiLabelMap.WorkEffortEstmatedBudget}</b></DIV></TD>
+                  <TD align=right><DIV class='tabletext'><b>${uiLabelMap.WorkEffortViewTasksEdit}</b></DIV></TD>
                 </TR>
                 <TR><TD colspan='5'><HR class='sepbar'></TD></TR>                
                 <#if requirements?has_content>
@@ -63,12 +65,12 @@
                     <TD><DIV class='tabletext'>${requirement.description?if_exists}</DIV></TD>
                     <TD><DIV class='tabletext'>${requirement.requiredByDate?if_exists}</DIV></TD>
                     <TD><DIV class='tabletext'>${requirement.estimatedBudget?default(0)?string.currency}</DIV></TD>
-                    <TD align=right NOWRAP><A class="buttontext" href="<@ofbizUrl>/workefforts?requirementId=${requirement.requirementId}</@ofbizUrl>">Tasks</a>&nbsp;/&nbsp;<A class='buttontext' href='<@ofbizUrl>/requirement?requirementId=${requirement.requirementId}</@ofbizUrl>'>
-                        Edit&nbsp;[${requirement.requirementId?if_exists}]</a></DIV></TD>
+                    <TD align=right NOWRAP><A class="buttontext" href="<@ofbizUrl>/workefforts?requirementId=${requirement.requirementId}</@ofbizUrl>">${uiLabelMap.WorkEffortTasks}</a>&nbsp;/&nbsp;<A class='buttontext' href='<@ofbizUrl>/requirement?requirementId=${requirement.requirementId}</@ofbizUrl>'>
+                        ${uiLabelMap.CommonEdit}[${requirement.requirementId?if_exists}]</a></DIV></TD>
                   </TR>
                 </#list>
                 <#else>
-                	<div class="tabletext">No open requirements found.</div>
+                	<div class="tabletext">${uiLabelMap.WorkEffortNoOpenRequirementsFound}.</div>
                 </#if>
               </TABLE>
           </td>

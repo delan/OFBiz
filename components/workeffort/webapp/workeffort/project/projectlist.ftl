@@ -35,7 +35,7 @@
             <div class='boxhead'>${uiLabelMap.WorkEffortProjects}</div>
           </TD>
           <TD align=right>            
-            <#if showAllProjects = "true"><A href='<@ofbizUrl>/projectlist</@ofbizUrl>' class='submenutext'>Show Active</A><#else><A href='<@ofbizUrl>/projectlist?ShowAllProjects=true</@ofbizUrl>' class='submenutext'>${uiLabelMap.CommonShowAll}</A></#if><A href='<@ofbizUrl>/editproject</@ofbizUrl>' class='submenutextright'>${uiLabelMap.WorkEffortNewProject}</A>
+            <#if showAllProjects = "true"><A href='<@ofbizUrl>/projectlist</@ofbizUrl>' class='submenutext'>${uiLabelMap.WorkEffortShowActive}</A><#else><A href='<@ofbizUrl>/projectlist?ShowAllProjects=true</@ofbizUrl>' class='submenutext'>${uiLabelMap.CommonShowAll}</A></#if><A href='<@ofbizUrl>/editproject</@ofbizUrl>' class='submenutextright'>${uiLabelMap.WorkEffortNewProject}</A>
           </TD>
         </tr>
       </table>

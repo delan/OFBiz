@@ -22,7 +22,7 @@
  *
  *@author     Johan Isacsson (conversion of jsp created by Andy Zeneski) 
  *@author     Eric.Barbier@nereide.biz (migration to uiLabelMap)
- *@version    $Revision: 1.3 $
+ *@version    $Revision: 1.4 $
  *@since      2.1
 -->
 <#assign uiLabelMap = requestAttributes.uiLabelMap>
@@ -88,7 +88,7 @@
                   </tr>
                 <#else>
                   <tr>
-                    <td><div class="tabletext">${uiLabelMap.WorkEffortNoRolesAssociatedWithThisCustomerRequest}.</div></td>
+                    <td><div class="tabletext">${uiLabelMap.WorkEffortNoRolesAssociatedRequest}.</div></td>
                   </tr>
                 </#if>
                 <#if workEffort?exists>
@@ -117,7 +117,7 @@
                               <option value="CAL_ORGANIZER">${uiLabelMap.WorkEffortOrganizer}</option>
                             </select>
                           </td>
-                          <td align="center"><input type="submit" style="font-size: small;" value="Add"></td>
+                          <td align="center"><input type="submit" style="font-size: small;" value="${uiLabelMap.CommonAdd}"></td>
                           <td colspan="2">&nbsp;&nbsp;&nbsp;</td>
                         </tr>
                       </table>

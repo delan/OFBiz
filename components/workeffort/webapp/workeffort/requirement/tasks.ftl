@@ -20,10 +20,11 @@
  *  THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  *
  *@author     Johan Isacsson (conversion of jsp created by Andy Zeneski)
+ *@author     Eric.Barbier@nereide.biz (migration to uiLabelMap) 
  *@created    May 13, 2003
- *@version    1.0
+ *@version    1.3
 -->
-
+<#assign uiLabelMap = requestAttributes.uiLabelMap>
 
 <TABLE border=0 width='100%' cellspacing='0' cellpadding='0' class='boxoutside'>
   <TR>
@@ -31,12 +32,12 @@
       <table width='100%' border='0' cellspacing='0' cellpadding='0' class='boxtop'>
         <tr>
           <TD align=left width='40%' >
-            <div class='boxhead'>&nbsp;Task List <span class="tabletext">For Requirement: <a href="<@ofbizUrl>/requirement?requirementId=${requirementId}</@ofbizUrl>" class="lightbuttontext">[${requirementId}]</a></span></div>
+            <div class='boxhead'>${uiLabelMap.WorkEffortTaskList} <span class="tabletext">${uiLabelMap.WorkEffortForRequirement}: <a href="<@ofbizUrl>/requirement?requirementId=${requirementId}</@ofbizUrl>" class="lightbuttontext">[${requirementId}]</a></span></div>
           </TD>
           <TD align=right width='60%'>
-            <A href='<@ofbizUrl>/requirementlist</@ofbizUrl>' class='lightbuttontext'>[Requirement&nbsp;List]</A>
-            <A href='<@ofbizUrl>/requirement</@ofbizUrl>' class='lightbuttontext'>[New&nbsp;Requirement]</A>
-            <A href='<@ofbizUrl>/task?requirementId=${requirementId}</@ofbizUrl>' class='lightbuttontext'>[Add&nbsp;Task]</A>
+            <A href='<@ofbizUrl>/requirementlist</@ofbizUrl>' class='lightbuttontext'>[${uiLabelMap.WorkEffortRequirementList}]</A>
+            <A href='<@ofbizUrl>/requirement</@ofbizUrl>' class='lightbuttontext'>[${uiLabelMap.WorkEffortNewRequirement}]</A>
+            <A href='<@ofbizUrl>/task?requirementId=${requirementId}</@ofbizUrl>' class='lightbuttontext'>[${uiLabelMap.WorkEffortAddTask}]</A>
           </TD>
         </tr>
       </table>
@@ -49,11 +50,11 @@
           <td>
               <TABLE width='100%' cellpadding='2' cellspacing='0' border='0'>
                 <TR>
-                  <TD><DIV class='tabletext'><b>Start Date/Time</b></DIV></TD>
-                  <TD><DIV class='tabletext'><b>Priority</b></DIV></TD>
-                  <TD><DIV class='tabletext'><b>Status</b></DIV></TD>
-                  <TD><DIV class='tabletext'><b>Task Name</b></DIV></TD>
-                  <TD align=right><DIV class='tabletext'><b>Edit</b></DIV></TD>
+                  <TD><DIV class='tabletext'><b>${uiLabelMap.CommonStartDateTime}</b></DIV></TD>
+                  <TD><DIV class='tabletext'><b>${uiLabelMap.WorkEffortPriority}</b></DIV></TD>
+                  <TD><DIV class='tabletext'><b>${uiLabelMap.WorkEffortStatus}</b></DIV></TD>
+                  <TD><DIV class='tabletext'><b>${uiLabelMap.WorkEffortTaskName}</b></DIV></TD>
+                  <TD align=right><DIV class='tabletext'><b>${uiLabelMap.CommonEdit}</b></DIV></TD>
                 </TR>
                 <TR><TD colspan='5'><HR class='sepbar'></TD></TR>
                 <#if tasks?has_content>
@@ -66,11 +67,11 @@
                     <TD><A class='buttontext' href='<@ofbizUrl>/task?workEffortId=${workEffort.workEffortId}</@ofbizUrl>'>
                         ${workEffort.workEffortName}</a></DIV></TD>
                     <TD align=right width='1%'><A class='buttontext' href='<@ofbizUrl>/task?workEffortId=${workEffort.workEffortId}</@ofbizUrl>'>
-                        Edit&nbsp;[${workEffort.workEffortId}]</a></DIV></TD>
+                       ${uiLabelMap.CommonEdit}&nbsp;[${workEffort.workEffortId}]</a></DIV></TD>
                   </TR>
                 </#list>
                 <#else>
-                 <tr><td><div class="tabletext">No tasks currently associated with this requirement.</div></td></tr>
+                 <tr><td><div class="tabletext">${uiLabelMap.WorkEffortNoTasksAssociatedRequirement}.</div></td></tr>
                  </#if>
               </TABLE>
           </td>
@@ -85,9 +86,9 @@
         <tr valign="middle"><td>
           <form method="post" action="<@ofbizUrl>/assoctask</@ofbizUrl>">
             <input type="hidden" name="requirementId" value="${requirementId}">
-            <span class="tabletext">Add an existing task:&nbsp;(WorkEffortId)&nbsp;</span>
+            <span class="tabletext">${uiLabelMap.WorkEffortAddExistingTask}</span>
             <input type="text" name="workEffortId" class="inputBox" size="10" style="font-size: small;">
-            <input type="submit" style="font-size: small;" value="Add Task">
+            <input type="submit" style="font-size: small;" value="${uiLabelMap.WorkEffortAddTask}">
           </form>
         </td></tr>
       </table>

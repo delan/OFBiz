@@ -20,10 +20,11 @@
  *  THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  *
  *@author     Johan Isacsson (conversion of jsp created by David E. Jones)
+ *@author     Eric.Barbier@nereide.biz (migration to uiLabelMap)
  *@created    May 13 2003
- *@version    1.0
+ *@version    1.3
 -->
-
+<#assign uiLabelMap = requestAttributes.uiLabelMap>
 
 <table border=0 width='100%' cellspacing='0' cellpadding='0' class='boxoutside'>
   <tr>
@@ -31,10 +32,10 @@
       <table width='100%' border='0' cellspacing='0' cellpadding='0' class='boxtop'>
         <tr>
           <td align=left width='40%' >
-            <div class='boxhead'>&nbsp;My Current Task List</div>
+            <div class='boxhead'>${uiLabelMap.WorkEffortMyCurrentTaskList}</div>
           </td>
           <td align=right width='60%'>
-            <a href='<@ofbizUrl>/mytasks</@ofbizUrl>' class='submenutext'>Task List</a><a href='<@ofbizUrl>/task</@ofbizUrl>' class='submenutextright'>New Task</a>
+            <a href='<@ofbizUrl>/mytasks</@ofbizUrl>' class='submenutext'>${uiLabelMap.WorkEffortTaskList}</a><a href='<@ofbizUrl>/task</@ofbizUrl>' class='submenutextright'>${uiLabelMap.WorkEffortNewTask}</a>
           </td>
         </tr>
       </table>
@@ -45,14 +46,14 @@
       <table width='100%' border='0' cellspacing='0' cellpadding='0' class='boxbottom'>
         <tr>
           <td>
-              <div class='head3'>Assigned Tasks</div>
+              <div class='head3'>${uiLabelMap.WorkEffortAssignedTasks}</div>
               <table width='100%' cellpadding='2' cellspacing='0' border='0'>
                 <tr>
-                  <td><div class='tabletext'><b>Start Date/Time</b></div></td>
-                  <td><div class='tabletext'><b>Priority</b></div></td>
-                  <td><div class='tabletext'><b>Status</b></div></td>
-                  <td><div class='tabletext'><b>Task Name</b></div></td>
-                  <td align=right><div class='tabletext'><b>Edit</b></div></td>
+                  <td><div class='tabletext'><b>${uiLabelMap.CommonStartDateTime}</b></div></td>
+                  <td><div class='tabletext'><b>${uiLabelMap.WorkEffortPriority}</b></div></td>
+                  <td><div class='tabletext'><b>${uiLabelMap.WorkEffortStatus}</b></div></td>
+                  <td><div class='tabletext'><b>${uiLabelMap.WorkEffortTaskName}</b></div></td>
+                  <td align=right><div class='tabletext'><b>${uiLabelMap.CommonEdit}</b></div></td>
                 </tr>
                 <tr><td colspan='5'><HR class='sepbar'></td></tr>
                 <#list tasks as workEffort>
@@ -63,7 +64,7 @@
                     <td><A class='buttontext' href='<@ofbizUrl>/task?workEffortId=${workEffort.workEffortId}</@ofbizUrl>'>
                         ${workEffort.workEffortName}</a></div></td>
                     <td align=right width='1%'><A class='buttontext' href='<@ofbizUrl>/task?workEffortId=${workEffort.workEffortId}</@ofbizUrl>'>
-                        Edit&nbsp;[${workEffort.workEffortId}]</a></div></td>
+                        ${uiLabelMap.CommonEdit}&nbsp;[${workEffort.workEffortId}]</a></div></td>
                   </tr>
                 </#list>
               </table>
@@ -78,17 +79,17 @@
           <table width='100%' border='0' cellspacing='0' cellpadding='0' class='boxbottom'>
             <tr>
               <td>
-                  <div class='head3'>Workflow Activities Assigned to User</div>
+                  <div class='head3'>${uiLabelMap.WorkEffortWorkflowActivitiesUser}</div>
                   <table width='100%' cellpadding='2' cellspacing='0' border='0'>
                     <tr>
-                      <td><div class='tabletext'><b>Start&nbsp;Date/Time</b></div></td>
-                      <td><div class='tabletext'><b>Priority</b></div></td>
-                      <td><div class='tabletext'><b>Activity&nbsp;Status</b></div></td>
-                      <td><div class='tabletext'><b>My&nbsp;Status</b></div></td>
+                      <td><div class='tabletext'><b>${uiLabelMap.CommonStartDateTime}</b></div></td>
+                      <td><div class='tabletext'><b>${uiLabelMap.WorkEffortPriority}</b></div></td>
+                      <td><div class='tabletext'><b>${uiLabelMap.WorkEffortActivityStatus}</b></div></td>
+                      <td><div class='tabletext'><b>${uiLabelMap.WorkEffortMyStatus}</b></div></td>
                       <#-- <td><div class='tabletext'><b>Party&nbsp;ID</b></div></td> -->
-                      <td><div class='tabletext'><b>Role&nbsp;ID</b></div></td>
-                      <td><div class='tabletext'><b>Activity&nbsp;Name</b></div></td>
-                      <td align=right><div class='tabletext'><b>Edit</b></div></td>
+                      <td><div class='tabletext'><b>${uiLabelMap.PartyRoleId}</b></div></td>
+                      <td><div class='tabletext'><b>${uiLabelMap.WorkEffortActivityName}</b></div></td>
+                      <td align=right><div class='tabletext'><b>${uiLabelMap.CommonEdit}</b></div></td>
                     </tr>
                     <tr><td colspan='8'><HR class='sepbar'></td></tr>
                     <#list activities as workEffort>
@@ -102,7 +103,7 @@
                         <td><A class='buttontext' href='<@ofbizUrl>/activity?workEffortId=${workEffort.workEffortId}</@ofbizUrl>'>
                             ${workEffort.workEffortName}</a></div></td>
                         <td align=right><A class='buttontext' href='<@ofbizUrl>/activity?workEffortId=${workEffort.workEffortId}</@ofbizUrl>'>
-                            Edit&nbsp;[${workEffort.workEffortId}]</a></div></td>
+                            ${uiLabelMap.CommonEdit}&nbsp;[${workEffort.workEffortId}]</a></div></td>
                       </tr>
                     </#list>
                   </table>
@@ -118,17 +119,17 @@
           <table width='100%' border='0' cellspacing='0' cellpadding='0' class='boxbottom'>
             <tr>
               <td>
-                  <div class='head3'>Workflow Activities Assigned to User Role</div>
+                  <div class='head3'>${uiLabelMap.WorkEffortWorkflowActivitiesUserRole}</div>
                   <table width='100%' cellpadding='2' cellspacing='0' border='0'>
                     <tr>
-                      <td><div class='tabletext'><b>Start&nbsp;Date/Time</b></div></td>
-                      <td><div class='tabletext'><b>Priority</b></div></td>
-                      <td><div class='tabletext'><b>Activity&nbsp;Status</b></div></td>
-                      <td><div class='tabletext'><b>My&nbsp;Status</b></div></td>
+                      <td><div class='tabletext'><b>${uiLabelMap.CommonStartDateTime}</b></div></td>
+                      <td><div class='tabletext'><b>${uiLabelMap.WorkEffortPriority}</b></div></td>
+                      <td><div class='tabletext'><b>${uiLabelMap.WorkEffortActivityStatus}</b></div></td>
+                      <td><div class='tabletext'><b>${uiLabelMap.WorkEffortMyStatus}</b></div></td>
                       <#-- <td><div class='tabletext'><b>Party&nbsp;ID</b></div></td> -->
-                      <td><div class='tabletext'><b>Role&nbsp;ID</b></div></td>
-                      <td><div class='tabletext'><b>Activity&nbsp;Name</b></div></td>
-                      <td align=right><div class='tabletext'><b>Edit</b></div></td>
+                      <td><div class='tabletext'><b>${uiLabelMap.PartyRoleId}</b></div></td>
+                      <td><div class='tabletext'><b>${uiLabelMap.WorkEffortActivityName}</b></div></td>
+                      <td align=right><div class='tabletext'><b>${uiLabelMap.CommonEdit}</b></div></td>
                     </tr>
                     <tr><td colspan='8'><HR class='sepbar'></td></tr>
                     <#list roleActivities as workEffort>
@@ -142,7 +143,7 @@
                         <td><A class='buttontext' href='<@ofbizUrl>/activity?workEffortId=${workEffort.workEffortId}</@ofbizUrl>'>
                             ${workEffort.workEffortName}</a></div></td>
                         <td align=right><A class='buttontext' href='<@ofbizUrl>/acceptRoleAssignment?workEffortId=${workEffort.workEffortId}&partyId=${workEffort.partyId}&roleTypeId=${workEffort.roleTypeId}&fromDate=${workEffort.fromDate.toString()}</@ofbizUrl>'>
-                            Accept&nbsp;Assignment&nbsp;[${workEffort.workEffortId}]</a></div></td>
+                            ${uiLabelMap.WorkEffortAcceptAssignment}&nbsp;[${workEffort.workEffortId}]</a></div></td>
                       </tr>
                     </#list>
                   </table>
@@ -158,17 +159,17 @@
           <table width='100%' border='0' cellspacing='0' cellpadding='0' class='boxbottom'>
             <tr>
               <td>
-                  <div class='head3'>Workflow Activities Assigned to User Group</div>
+                  <div class='head3'>${uiLabelMap.WorkEffortWorkflowActivitiesUserGroup}</div>
                   <table width='100%' cellpadding='2' cellspacing='0' border='0'>
                     <tr>
-                      <td><div class='tabletext'><b>Start&nbsp;Date/Time</b></div></td>
-                      <td><div class='tabletext'><b>Priority</b></div></td>
-                      <td><div class='tabletext'><b>Activity&nbsp;Status</b></div></td>
-                      <td><div class='tabletext'><b>My&nbsp;Status</b></div></td>
-                      <td><div class='tabletext'><b>Group&nbsp;Party&nbsp;ID</b></div></td>
+                      <td><div class='tabletext'><b>${uiLabelMap.CommonStartDateTime}</b></div></td>
+                      <td><div class='tabletext'><b>${uiLabelMap.WorkEffortPriority}</b></div></td>
+                      <td><div class='tabletext'><b>${uiLabelMap.WorkEffortActivityStatus}</b></div></td>
+                      <td><div class='tabletext'><b>${uiLabelMap.WorkEffortMyStatus}</b></div></td>
+                      <td><div class='tabletext'><b>${uiLabelMap.PartyGroupPartyId}</b></div></td>
                       <#-- <td><div class='tabletext'><b>Role&nbsp;ID</b></div></td> -->
-                      <td><div class='tabletext'><b>Activity&nbsp;Name</b></div></td>
-                      <td align=right><div class='tabletext'><b>Edit</b></div></td>
+                      <td><div class='tabletext'><b>${uiLabelMap.WorkEffortActivityName}</b></div></td>
+                      <td align=right><div class='tabletext'><b>${uiLabelMap.CommonEdit}</b></div></td>
                     </tr>
                     <tr><td colspan='8'><HR class='sepbar'></td></tr>
                     <#list groupActivities as workEffort>
@@ -182,7 +183,7 @@
                         <td><A class='buttontext' href='<@ofbizUrl>/activity?workEffortId=${workEffort.workEffortId}</@ofbizUrl>'>
                             ${workEffort.workEffortName}</a></div></td>
                         <td align=right><A class='buttontext' href='<@ofbizUrl>/acceptassignment?workEffortId=${workEffort.workEffortId}&partyId=${workEffort.partyId}&roleTypeId=${workEffort.roleTypeId}&fromDate=${workEffort.fromDate}</@ofbizUrl>'>
-                            Accept&nbsp;Assignment&nbsp;[${workEffort.workEffortId}]</a></div></td>
+                            ${uiLabelMap.WorkEffortAcceptAssignment}&nbsp;[${workEffort.workEffortId}]</a></div></td>
                       </tr>
                     </#list>
                   </table>

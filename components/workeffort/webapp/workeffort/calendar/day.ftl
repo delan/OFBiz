@@ -69,11 +69,11 @@
     <#if calEntry.startOfPeriod>			  
     <td class="calendarentry" rowspan='${calEntry.periodSpan}' colspan=1 width='${entryWidth?string("#")}%' valign=top>
 	<#if (calEntry.workEffort.estimatedStartDate.compareTo(start)  <= 0 && calEntry.workEffort.estimatedCompletionDate.compareTo(next) >= 0)>
-      All day
+     ${uiLabelMap.CommonAllDay}
     <#elseif calEntry.workEffort.estimatedStartDate.before(start)>
-	  Until ${calEntry.workEffort.estimatedCompletionDate?time?string.short}
+	  ${uiLabelMap.CommonUntil}${calEntry.workEffort.estimatedCompletionDate?time?string.short}
     <#elseif calEntry.workEffort.estimatedCompletionDate.after(next)>
-      From ${calEntry.workEffort.estimatedStartDate?time?string.short}
+      ${uiLabelMap.CommonFrom} ${calEntry.workEffort.estimatedStartDate?time?string.short}
     <#else>
 	  ${calEntry.workEffort.estimatedStartDate?time?string.short}-${calEntry.workEffort.estimatedCompletionDate?time?string.short}
     </#if>
@@ -93,5 +93,5 @@
   </#list>                  
 </table>
 <#else>               
-  <p>${uiLabelMap.WorkEffortFailedToGetCalendarEntries}!</p>
+  <p>${uiLabelMap.WorkEffortFailedCalendarEntries}!</p>
 </#if>

@@ -67,7 +67,7 @@
                 <table border='0' cellpadding='2' cellspacing='0'>
                   <input type='hidden' name='workEffortTypeId' value='EVENT'>
                   <#if workEffortId?has_content>
-                    <div class='tabletext'>${uiLabelMap.WorkEffortErrorCouldNotFindEventId} "${workEffortId}"</div>
+                    <div class='tabletext'>${uiLabelMap.WorkEffortErrorNotFindEventId} "${workEffortId}"</div>
                   </#if>
               </#if>
               <#if requestParameters.communicationEventId?exists>
@@ -103,7 +103,7 @@
                       </#list>
                     </select>
                     <#if workEffort?has_content>
-                      <span class='tabletext'>Last Updated ${workEffort.lastStatusUpdate.toString()}</span>
+                      <span class='tabletext'>${uiLabelMap.CommonLastUpdated} ${workEffort.lastStatusUpdate.toString()}</span>
                     </#if>
                   </td>
                 </tr>
@@ -157,7 +157,7 @@
 
                 <tr>
                   <td width='26%' align=right>
-                    <#if workEffort?has_content><input type="submit" name="Update" value="Update">
+                    <#if workEffort?has_content><input type="submit" name="Update" value="${uiLabelMap.CommonUpdate}">
                     <#else><input type="submit" name="Create" value="Create"></#if>
                   </td>
                   <td>&nbsp;</td>
@@ -166,7 +166,7 @@
               </table>
               </form>
             <#else>
-              <div class='tabletext'>${uiLabelMap.WorkEffortEventPermissionError}</div>
+              <div class='tabletext'>${uiLabelMap.WorkEffortErrorPermissionViewEvent}</div>
             </#if>
           </td>
         </tr>
