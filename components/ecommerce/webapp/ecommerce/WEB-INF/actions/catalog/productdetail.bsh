@@ -21,7 +21,7 @@
  *
  *@author     Andy Zeneski
  *@author     David E. Jones
- *@version    $Revision: 1.24 $
+ *@version    $Revision: 1.25 $
  *@since      2.1
  */
 
@@ -320,20 +320,6 @@ if (product != null) {
                     amt.append(" } ");
                 }
                 jsBuf.append(amt.toString());
-	            jsBuf.append("function toggleAmt(toggle) { if (toggle == 'Y') changeObjectVisibility(\"add_amount\", \"visible\"); if (toggle == 'N') changeObjectVisibility(\"add_amount\", \"hidden\"); }");
-	            jsBuf.append("function findIndex(name) { for (i=0; i<OPT.length; i++) { if (OPT[i] == name) return i; } return -1; }");
-	            jsBuf.append("function getList(name, value, src) { var value2 = 'NULL'; currentOrderIndex = findIndex(name);");
-
-
-
-	            jsBuf.append("if ((currentOrderIndex >= (OPT.length-1)) || (src == 1 && OPT.length == 1)) { value2 = document.forms[\"addform\"].elements[name].options[(value*1)+1].value;");
-	            jsBuf.append("} if (currentOrderIndex < 0) { return; } if (currentOrderIndex < (OPT.length - 1) || OPT.length == 1) {");
-	            jsBuf.append("if (IMG[value] != null) { if (document.images['mainImage'] != null) document.images['mainImage'].src = IMG[value];");
-	            jsBuf.append("detailImageUrl = DET[value]; document.addform.FT" + topLevelName + ".selectedIndex = (value*1)+1;");
-	            jsBuf.append("} if (OPT.length != 1) { eval(\"list\" + OPT[currentOrderIndex+1] + value + \"()\");");
-	            jsBuf.append("document.addform.add_product_id.value = 'NULL'; } else { if (value2 == 'NULL')");
-	            jsBuf.append("value2 = value; document.addform.add_product_id.value = value2;");
-	            jsBuf.append("} } else { document.addform.add_product_id.value = value; toggleAmt(checkAmtReq(value)); } }");
 	            jsBuf.append("</script>");
 
 	            request.setAttribute("virtualJavaScript", jsBuf.toString());
