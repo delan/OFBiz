@@ -1,8 +1,6 @@
-<%
-/**
- *  Title: Main Page
+<%--
  *  Description: None
- *  Copyright (c) 2001 The Open For Business Project - www.ofbiz.org
+ *  Copyright (c) 2002 The Open For Business Project - www.ofbiz.org
  *
  *  Permission is hereby granted, free of charge, to any person obtaining a 
  *  copy of this software and associated documentation files (the "Software"), 
@@ -22,12 +20,10 @@
  *  OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR 
  *  THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  *
- *@author     Andy Zeneski (jaz@zsolv.com)
- *@author     David E. Jones
- *@created    October 18, 2001
- *@version    1.0
- */
-%>
+ *@author     Andy Zeneski 
+ *@version    $Revision$
+ *@since      2.0
+--%>
 
 <%@ taglib uri="ofbizTags" prefix="ofbiz" %>
 <%@ page import="java.util.*, java.sql.*" %>
