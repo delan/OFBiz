@@ -543,6 +543,6 @@
     <view-map name="editperson" type="region"/>
 
     <view-map name="newAffiliate" type="region"/>
-    <view-map name="ftlTest" type="wsp" page="/freemarker_test.html"/>
+    <view-map name="ftlTest" type="wsp" page="/freemarker_test.ftl"/>
     <!-- End of View Mappings -->
 </site-conf>
