@@ -1,5 +1,5 @@
 <%--
- *  Copyright (c) 2001 The Open For Business Project - www.ofbiz.org
+ *  Copyright (c) 2003 The Open For Business Project - www.ofbiz.org
  *
  *  Permission is hereby granted, free of charge, to any person obtaining a 
  *  copy of this software and associated documentation files (the "Software"), 
@@ -20,7 +20,7 @@
  *  THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  *
  *@author     David E. Jones
- *@created    May 20 2002
+ *@created    April 10 2003
  *@version    1.0
 --%>
 
@@ -41,11 +41,11 @@
     String productCategoryId = request.getParameter("productCategoryId");
     GenericValue productCategory = delegator.findByPrimaryKey("ProductCategory", UtilMisc.toMap("productCategoryId", productCategoryId));
     if (productCategory == null) tryEntity = false;
-    Collection prodCatalogCategories = productCategory.getRelated("ProductCategoryRole", null, UtilMisc.toList("roleTypeId", "sequenceNum", "partyId"));
-    if (prodCatalogCategories != null) pageContext.setAttribute("prodCatalogCategories", prodCatalogCategories);
+    Collection productFeatureCategoryAppls = productCategory.getRelated("ProductFeatureCategoryAppl", null, UtilMisc.toList("productFeatureCategoryId"));
+    if (productFeatureCategoryAppls != null) pageContext.setAttribute("productFeatureCategoryAppls", productFeatureCategoryAppls);
 
-    Collection roleTypes = delegator.findAll("RoleType", UtilMisc.toList("description"));
-    if (roleTypes != null) pageContext.setAttribute("roleTypes", roleTypes);
+    Collection productFeatureCategories = delegator.findAll("ProductFeatureCategory", UtilMisc.toList("description"));
+    if (productFeatureCategories != null) pageContext.setAttribute("productFeatureCategories", productFeatureCategories);
 
     if ("true".equalsIgnoreCase((String)request.getParameter("tryEntity"))) tryEntity = true;
 %>
@@ -56,8 +56,8 @@
     <a href="<ofbiz:url>/EditCategoryRollup?showProductCategoryId=<%=productCategoryId%></ofbiz:url>" class='tabButton'>Rollup</a>
     <a href="<ofbiz:url>/EditCategoryProducts?productCategoryId=<%=productCategoryId%></ofbiz:url>" class='tabButton'>Products</a>
     <a href="<ofbiz:url>/EditCategoryProdCatalogs?productCategoryId=<%=productCategoryId%></ofbiz:url>" class='tabButton'>Catalogs</a>
-    <a href="<ofbiz:url>/EditCategoryFeatureCats?productCategoryId=<%=productCategoryId%></ofbiz:url>" class='tabButton'>FeatureCats</a>
-    <a href="<ofbiz:url>/EditCategoryParties?productCategoryId=<%=productCategoryId%></ofbiz:url>" class='tabButtonSelected'>Parties</a>
+    <a href="<ofbiz:url>/EditCategoryFeatureCats?productCategoryId=<%=productCategoryId%></ofbiz:url>" class='tabButtonSelected'>FeatureCats</a>
+    <a href="<ofbiz:url>/EditCategoryParties?productCategoryId=<%=productCategoryId%></ofbiz:url>" class='tabButton'>Parties</a>
   </div>
 <%}%>
 
@@ -73,58 +73,52 @@
 
 <table border="1" width="100%" cellpadding='2' cellspacing='0'>
   <tr>
-    <td><div class="tabletext"><b>Party ID</b></div></td>
-    <td><div class="tabletext"><b>Role</b></div></td>
+    <td><div class="tabletext"><b>Catalog Name [ID]</b></div></td>
     <td><div class="tabletext"><b>From&nbsp;Date&nbsp;&amp;&nbsp;Time</b></div></td>
     <td align="center"><div class="tabletext"><b>Thru&nbsp;Date&nbsp;&amp;&nbsp;Time</b></div></td>
     <td><div class="tabletext"><b>&nbsp;</b></div></td>
   </tr>
 <%int line = 0;%>
-<ofbiz:iterator name="productCategoryRole" property="prodCatalogCategories">
+<ofbiz:iterator name="productFeatureCategoryAppl" property="productFeatureCategoryAppls">
   <%line++;%>
-  <%GenericValue curRoleType = productCategoryRole.getRelatedOneCache("RoleType");%>
-  <%if (curRoleType != null) pageContext.setAttribute("curRoleType", curRoleType);%>
+  <%GenericValue productFeatureCategory = productFeatureCategoryAppl.getRelatedOne("ProductFeatureCategory");%>
   <tr valign="middle">
-    <td><a href='/partymgr/control/viewprofile?party_id=<ofbiz:inputvalue entityAttr="productCategoryRole" field="partyId"/>' target="_blank" class="buttontext">[<ofbiz:inputvalue entityAttr="productCategoryRole" field="partyId"/>]</a></td>
-    <td><div class='tabletext'><ofbiz:inputvalue entityAttr="curRoleType" field="description"/></div></td>
+    <td><a href='<ofbiz:url>/EditFeatureCategoryFeatures?productFeatureCategoryId=<ofbiz:inputvalue entityAttr="productFeatureCategoryAppl" field="productFeatureCategoryId"/></ofbiz:url>' class="buttontext"><%if (productFeatureCategory!=null) {%><%=productFeatureCategory.getString("description")%><%}%> [<ofbiz:inputvalue entityAttr="productFeatureCategoryAppl" field="productFeatureCategoryId"/>]</a></td>
     <%boolean hasntStarted = false;%>
-    <%if (productCategoryRole.getTimestamp("fromDate") != null && UtilDateTime.nowTimestamp().before(productCategoryRole.getTimestamp("fromDate"))) { hasntStarted = true; }%>
-    <td><div class='tabletext'<%if (hasntStarted) {%> style='color: red;'<%}%>><ofbiz:inputvalue entityAttr="productCategoryRole" field="fromDate"/></div></td>
+    <%if (productFeatureCategoryAppl.getTimestamp("fromDate") != null && UtilDateTime.nowTimestamp().before(productFeatureCategoryAppl.getTimestamp("fromDate"))) { hasntStarted = true; }%>
+    <td><div class='tabletext'<%if (hasntStarted) {%> style='color: red;'<%}%>><ofbiz:inputvalue entityAttr="productFeatureCategoryAppl" field="fromDate"/></div></td>
     <td align="center">
-        <FORM method=POST action='<ofbiz:url>/updatePartyToCategory</ofbiz:url>' name='lineForm<%=line%>'>
+        <FORM method=POST action='<ofbiz:url>/updateProductFeatureCategoryAppl</ofbiz:url>' name='lineForm<%=line%>'>
             <%boolean hasExpired = false;%>
-            <%if (productCategoryRole.getTimestamp("thruDate") != null && UtilDateTime.nowTimestamp().after(productCategoryRole.getTimestamp("thruDate"))) { hasExpired = true; }%>
-            <input type=hidden <ofbiz:inputvalue entityAttr="productCategoryRole" field="productCategoryId" fullattrs="true"/>>
-            <input type=hidden <ofbiz:inputvalue entityAttr="productCategoryRole" field="partyId" fullattrs="true"/>>
-            <input type=hidden <ofbiz:inputvalue entityAttr="productCategoryRole" field="roleTypeId" fullattrs="true"/>>
-            <input type=hidden <ofbiz:inputvalue entityAttr="productCategoryRole" field="fromDate" fullattrs="true"/>>
-            <input type=text size='25' <ofbiz:inputvalue entityAttr="productCategoryRole" field="thruDate" fullattrs="true"/> class='inputBox' style='<%if (hasExpired) {%>color: red;<%}%>'>
-            <a href="javascript:call_cal(document.lineForm<%=line%>.thruDate, '<ofbiz:inputvalue entityAttr="productCategoryRole" field="thruDate" default="<%=nowTimestampString%>"/>');"><img src='/images/cal.gif' width='16' height='16' border='0' alt='Calendar'></a>
+            <%if (productFeatureCategoryAppl.getTimestamp("thruDate") != null && UtilDateTime.nowTimestamp().after(productFeatureCategoryAppl.getTimestamp("thruDate"))) { hasExpired = true; }%>
+            <input type=hidden <ofbiz:inputvalue entityAttr="productFeatureCategoryAppl" field="productCategoryId" fullattrs="true"/>>
+            <input type=hidden <ofbiz:inputvalue entityAttr="productFeatureCategoryAppl" field="productFeatureCategoryId" fullattrs="true"/>>
+            <input type=hidden <ofbiz:inputvalue entityAttr="productFeatureCategoryAppl" field="fromDate" fullattrs="true"/>>
+            <input type=text size='25' <ofbiz:inputvalue entityAttr="productFeatureCategoryAppl" field="thruDate" fullattrs="true"/> class='inputBox' style='<%if (hasExpired) {%>color: red;<%}%>'>
+            <a href="javascript:call_cal(document.lineForm<%=line%>.thruDate, '<ofbiz:inputvalue entityAttr="productFeatureCategoryAppl" field="thruDate" default="<%=nowTimestampString%>"/>');"><img src='/images/cal.gif' width='16' height='16' border='0' alt='Calendar'></a>
             <INPUT type=submit value='Update' style='font-size: x-small;'>
         </FORM>
     </td>
     <td align="center">
-      <a href='<ofbiz:url>/removePartyFromCategory?productCategoryId=<ofbiz:entityfield attribute="productCategoryRole" field="productCategoryId"/>&partyId=<ofbiz:entityfield attribute="productCategoryRole" field="partyId"/>&roleTypeId=<ofbiz:entityfield attribute="productCategoryRole" field="roleTypeId"/>&fromDate=<%=UtilFormatOut.encodeQueryValue(productCategoryRole.getTimestamp("fromDate").toString())%></ofbiz:url>' class="buttontext">
+      <a href='<ofbiz:url>/removeProductFeatureCategoryAppl?productFeatureCategoryId=<ofbiz:entityfield attribute="productFeatureCategoryAppl" field="productFeatureCategoryId"/>&productCategoryId=<ofbiz:entityfield attribute="productFeatureCategoryAppl" field="productCategoryId"/>&fromDate=<%=UtilFormatOut.encodeQueryValue(productFeatureCategoryAppl.getTimestamp("fromDate").toString())%></ofbiz:url>' class="buttontext">
       [Delete]</a>
     </td>
   </tr>
 </ofbiz:iterator>
 </table>
 <br>
-<form method="POST" action="<ofbiz:url>/addPartyToCategory</ofbiz:url>" style='margin: 0;' name='addNewForm'>
+<form method="POST" action="<ofbiz:url>/createProductFeatureCategoryAppl</ofbiz:url>" style='margin: 0;' name='addNewForm'>
   <input type="hidden" name="productCategoryId" value="<%=productCategoryId%>">
   <input type="hidden" name="tryEntity" value="true">
 
-  <div class='head2'>Associate Party to Category (enter Party ID, select Type, then enter optional From Date):</div>
+  <div class='head2'>Add Catalog Product Category (select Category and Type, then enter optional From Date):</div>
   <br>
-  <input type="text" class='inputBox' size="20" maxlength="20" name="partyId" value="">
-  <select name='roleTypeId' size=1 class='selectBox'>
-    <%-- <option value=''>&nbsp;</option> --%>
-    <ofbiz:iterator name="roleType" property="roleTypes">
-      <option value='<%=roleType.getString("roleTypeId")%>'<%if ("_NA_".equals(roleType.getString("roleTypeId"))) {%> selected<%}%>><%=roleType.getString("description")%><%-- [<%=roleType.getString("roleTypeId")%>]--%></option>
-    </ofbiz:iterator>
+  <select name="productFeatureCategoryId" class='selectBox'>
+  <ofbiz:iterator name="productFeatureCategory" property="productFeatureCategories">
+    <option value='<ofbiz:entityfield attribute="productFeatureCategory" field="productFeatureCategoryId"/>'><ofbiz:entityfield attribute="productFeatureCategory" field="description"/> [<ofbiz:entityfield attribute="productFeatureCategory" field="productFeatureCategoryId"/>]</option>
+  </ofbiz:iterator>
   </select>
-  <input type='text' size='25' name='fromDate' class='inputBox'>
+  <input type=text size='25' name='fromDate' class='inputBox'>
   <a href="javascript:call_cal(document.addNewForm.fromDate, '<%=nowTimestampString%>');"><img src='/images/cal.gif' width='16' height='16' border='0' alt='Calendar'></a>
   <input type="submit" value="Add">
 </form>

@@ -148,6 +148,10 @@
         <put section='title'>Edit Category Product Catalogs</put>
         <put section='content' content='/category/EditCategoryProdCatalogs.jsp'/>
     </define>
+    <define id='EditCategoryFeatureCats' region='LEFT_ONLY_REGION'>
+        <put section='title'>Edit Category FeatureCats</put>
+        <put section='content' content='/category/EditCategoryFeatureCats.jsp'/>
+    </define>
     <define id='EditCategoryParties' region='LEFT_ONLY_REGION'>
         <put section='title'>Edit Category Parties</put>
         <put section='content' content='/category/EditCategoryParties.jsp'/>

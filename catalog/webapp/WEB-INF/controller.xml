@@ -188,6 +188,26 @@
     	<response name="error" type="view" value="EditCategoryProdCatalogs"/>
     </request-map>
 
+    <!-- ================ Category FeatureCat Requests ================= -->
+    <request-map uri="EditCategoryFeatureCats"><security https="true" auth="true"/>
+    	<response name="success" type="view" value="EditCategoryFeatureCats"/>
+    </request-map>
+    <request-map uri="createProductFeatureCategoryAppl"><security https="true" auth="true"/>
+        <event type="service" path="" invoke="createProductFeatureCategoryAppl"/>
+    	<response name="success" type="view" value="EditCategoryFeatureCats"/>
+    	<response name="error" type="view" value="EditCategoryFeatureCats"/>
+    </request-map>
+    <request-map uri="updateProductFeatureCategoryAppl"><security https="true" auth="true"/>
+        <event type="service" path="" invoke="updateProductFeatureCategoryAppl"/>
+    	<response name="success" type="view" value="EditCategoryFeatureCats"/>
+    	<response name="error" type="view" value="EditCategoryFeatureCats"/>
+    </request-map>
+    <request-map uri="removeProductFeatureCategoryAppl"><security https="true" auth="true"/>
+        <event type="service" path="" invoke="removeProductFeatureCategoryAppl"/>
+    	<response name="success" type="view" value="EditCategoryFeatureCats"/>
+    	<response name="error" type="view" value="EditCategoryFeatureCats"/>
+    </request-map>
+
     <!-- ================ Category Roles Requests ================= -->
     <request-map uri="EditCategoryParties"><security https="true" auth="true"/>
     	<response name="success" type="view" value="EditCategoryParties"/>
@@ -736,6 +756,7 @@
     <view-map name="EditCategoryRollup" type="region"/>
     <view-map name="EditCategoryProducts" type="region"/>
     <view-map name="EditCategoryProdCatalogs" type="region"/>
+    <view-map name="EditCategoryFeatureCats" type="region"/>
     <view-map name="EditCategoryParties" type="region"/>
     <view-map name="UploadCategoryImage" type="region"/>
 
