@@ -1,5 +1,5 @@
 /*
- * $Id: ShoppingCart.java,v 1.54 2004/07/22 00:03:46 ajzeneski Exp $
+ * $Id: ShoppingCart.java,v 1.55 2004/07/27 06:08:35 ajzeneski Exp $
  *
  *  Copyright (c) 2001-2004 The Open For Business Project - www.ofbiz.org
  *
@@ -61,7 +61,7 @@ import org.ofbiz.service.LocalDispatcher;
  * @author     <a href="mailto:jaz@ofbiz.org">Andy Zeneski</a>
  * @author     <a href="mailto:cnelson@einnovation.com">Chris Nelson</a>
  * @author     <a href="mailto:jonesde@ofbiz.org">David E. Jones</a>
- * @version    $Revision: 1.54 $
+ * @version    $Revision: 1.55 $
  * @since      2.0
  */
 public class ShoppingCart implements Serializable {
@@ -1593,7 +1593,11 @@ public class ShoppingCart implements Serializable {
             String paymentMethodTypeId = (String) pti.next();
             GenericValue p = delegator.makeValue("OrderPaymentPreference", new HashMap());
             p.set("paymentMethodTypeId", paymentMethodTypeId);
-            p.set("statusId", "PAYMENT_NOT_RECEIVED");
+            if ("CASH".equals(paymentMethodTypeId)) {
+                p.set("statusId", "PAYMENT_RECEIVED");
+            } else {
+                p.set("statusId", "PAYMENT_NOT_RECEIVED");
+            }
             if (this.paymentMethodTypeAmounts.get(paymentMethodTypeId) != null) {
                 p.set("maxAmount", this.paymentMethodTypeAmounts.get(paymentMethodTypeId));
             }
