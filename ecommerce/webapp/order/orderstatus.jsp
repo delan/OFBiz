@@ -47,12 +47,6 @@
 <%@ include file="/includes/datepicker.js" %>
 
 <%
-  String bColorA1 = "#BBBBFF";
-  String bColorA2 = "#EEEEFF";
-  String bColorB1 = "#99FF99";
-  String bColorB2 = "#CCFFCC";
-  String bColorB = "";
-
   String orderId = request.getParameter("order_id");
   GenericValue orderHeader = null;
 
@@ -96,36 +90,14 @@
   <form name="addOrderToCartForm" action="<ofbiz:url><%="/addordertocart/orderstatus?order_id=" + orderId%></ofbiz:url>" method="GET">
   <input type="HIDDEN" name="add_all" value="false">
   <input type="HIDDEN" name="order_id" value="<%=orderId%>">
-  <table border="0" cellpadding="1" width="100%"><tr><td>
-    <table border="0" cellspacing="0" cellpadding="2" width="100%"><tr>
-      <td width="1"><div class="button" nowrap><a href="<ofbiz:url>/orderhistory</ofbiz:url>" class="buttontext">Back to Order History</a></div></td>
-      <td align="right">
-        <table border="0" cellspacing="0" cellpadding="0"><tr>
-          <td width="10"></td><td width="1"><div class="button" nowrap><a href='javascript:document.addOrderToCartForm.add_all.value="true";document.addOrderToCartForm.submit()' class="buttontext">Add All to Cart</a></div></td>
-          <td width="10"></td><td width="1"><div class="button" nowrap><a href='javascript:document.addOrderToCartForm.add_all.value="false";document.addOrderToCartForm.submit()' class="buttontext">Add Checked to Cart</a></div></td>
-        </tr></table>
-      </td>
-    </tr></table>
-  </td></tr></table>
 
 <%@ include file="orderitems.jsp" %>
 
+  </form>
 </ofbiz:if> <%-- Order --%>
 <ofbiz:unless name="orderHeader">
 <h3>The specified order was not found, please try again.</h3>
 </ofbiz:unless>
-
-  <table border="0" cellpadding="1" width="100%"><tr><td>
-    <table border="0" cellspacing="0" cellpadding="2" width="100%"><tr>
-      <td width="1"><div class="button" nowrap><a href="<ofbiz:url>/orderhistory</ofbiz:url>" class="buttontext">Back to Order History</a></div></td>
-      <td align="right">
-        <table border="0" cellspacing="0" cellpadding="0"><tr>
-          <td width="10"></td><td width="1"><div class="button" nowrap><a href='javascript:document.addOrderToCartForm.add_all.value="true";document.addOrderToCartForm.submit()' class="buttontext">Add All to Cart</a></div></td>
-          <td width="10"></td><td width="1"><div class="button" nowrap><a href='javascript:document.addOrderToCartForm.add_all.value="false";document.addOrderToCartForm.submit()' class="buttontext">Add Checked to Cart</a></div></td>
-        </tr></table>
-      </td>
-    </tr></table>
-  </td></tr></table>
 
 <%@ include file="/includes/rightcolumn.jsp" %>
 <%@ include file="/includes/footer.jsp" %>
