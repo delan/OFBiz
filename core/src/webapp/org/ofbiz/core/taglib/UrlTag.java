@@ -111,7 +111,7 @@ public class UrlTag extends BodyTagSupport {
             encodedURL = response.encodeURL(encodedURL);
             getPreviousOut().print(encodedURL);
         } catch (IOException e) {
-            throw new JspException(e.getMessage());
+            throw new JspException(e.getMessage(), e);
         }
         return SKIP_BODY;
     }

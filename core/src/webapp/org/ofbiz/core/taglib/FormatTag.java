@@ -84,7 +84,7 @@ public class FormatTag extends BodyTagSupport {
                 getPreviousOut().print(value);
             }
         } catch (Exception e) {
-            throw new JspException(e.getMessage());
+            throw new JspException(e.getMessage(), e);
         }
 
         return SKIP_BODY;

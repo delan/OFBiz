@@ -70,7 +70,7 @@ public class ContentUrlTag extends BodyTagSupport {
         try {
             getPreviousOut().print(newURL.toString());
         } catch (IOException e) {
-            throw new JspException(e.getMessage());
+            throw new JspException(e.getMessage(), e);
         }
         return SKIP_BODY;
     }

@@ -104,11 +104,11 @@ public class InputValueTag extends TagSupport {
         this.fullattrsStr = fullattrsStr;
     }
 
-    public int doStartTag() throws JspTagException {
+    public int doStartTag() throws JspException {
         try {
             InputValue.run(field, param, entityAttr, tryEntityAttr, defaultStr, fullattrsStr, pageContext);
         } catch (IOException e) {
-            throw new JspTagException(e.getMessage());
+            throw new JspException(e.getMessage(), e);
         }
 
         return (SKIP_BODY);

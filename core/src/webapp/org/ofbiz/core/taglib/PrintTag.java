@@ -61,7 +61,7 @@ public class PrintTag extends TagSupport {
         this.defaultStr = defaultStr;
     }
 
-    public int doStartTag() throws JspTagException {
+    public int doStartTag() throws JspException {
         if (attribute == null)
             return SKIP_BODY;
         Object obj = pageContext.getAttribute(attribute);
@@ -72,7 +72,7 @@ public class PrintTag extends TagSupport {
             JspWriter out = pageContext.getOut();
             out.print(obj.toString());
         } catch (IOException e) {
-            throw new JspTagException(e.getMessage());
+            throw new JspException(e.getMessage(), e);
         }
 
         return SKIP_BODY;

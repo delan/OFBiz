@@ -101,13 +101,13 @@ public class EntityFieldTag extends TagSupport {
         this.defaultStr = defaultStr;
     }
 
-    public int doStartTag() throws JspTagException {
+    public int doStartTag() throws JspException {
         try {
             EntityField.run(attribute, field, prefix, suffix, defaultStr, type, pageContext);
         } catch (IOException e) {
-            throw new JspTagException(e.getMessage());
+            throw new JspException(e.getMessage(), e);
         } catch (GenericEntityException e) {
-            throw new JspTagException("Entity Engine error: " + e.getMessage());
+            throw new JspException("Entity Engine error: " + e.getMessage(), e);
         }
 
         return (SKIP_BODY);
