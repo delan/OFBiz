@@ -21,7 +21,7 @@
  *  THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  *
  *  This is the Open for Business Base Build Script.
- *  $Id: build.xml,v 1.6 2003/08/18 01:00:23 ajzeneski Exp $
+ *  $Id: build.xml,v 1.7 2003/08/19 17:48:50 ajzeneski Exp $
 -->
 
 <project name="OFBiz - Base" default="jar" basedir=".">
@@ -46,6 +46,7 @@
             <fileset dir="${lib.dir}/logging" includes="*.jar"/>
             <fileset dir="${lib.dir}/scripting" includes="*.jar"/>
         </path>
+        <available classname="javax.crypto.Cipher" classpathref="local.class.path" property="crypto.avail"/>   
     </target>
     
     <!-- ================================================================== -->
@@ -80,20 +81,24 @@
     <!-- Compilation of the base files                                                                                                                         -->
     <!-- ================================================================== -->               
 
-    <target name="classes" depends="prepare,classpath">
+    <target name="classes" depends="prepare,classpath">        
     	<javac debug="on" deprecation="on" destdir="${build.dir}/classes/start">            
             <src path="${src.dir}/start"/>
         </javac>
         <copy todir="${build.dir}/classes/start">
           <fileset dir="${src.dir}/start" includes="**/*.properties,**/*.xml,**/*.bsh,**/*.logic,**/*.js,**/*.jacl,**/*.py"/>
         </copy>
-            
+                
+        <condition property="exclude.crypto" value="org/ofbiz/base/crypto/**">
+            <isfalse value="${crypto.avail}"/>
+        </condition>
     	<javac debug="on" deprecation="on" destdir="${build.dir}/classes/base">
             <classpath>
                 <path refid="local.class.path"/>
                 <pathelement path="${build.dir}/classes/start"/>
             </classpath>
             <src path="${src.dir}/base"/>
+            <exclude name="${exclude.crypto}"/>
         </javac>
         <!-- also put the DTDs in the jar file... -->
         <copy todir="${build.dir}/classes/base">
