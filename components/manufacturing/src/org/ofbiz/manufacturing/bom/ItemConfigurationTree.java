@@ -29,8 +29,12 @@ public class ItemConfigurationTree {
     Date fromDate;
     String bomTypeId;
     
-    /** Creates a new instance of ItemConfigurationTree */
     public ItemConfigurationTree(String productId, String bomTypeId, Date fromDate, GenericDelegator delegator) throws GenericEntityException {
+        this(productId, bomTypeId, fromDate, true, delegator);
+    }
+    
+    /** Creates a new instance of ItemConfigurationTree */
+    public ItemConfigurationTree(String productId, String bomTypeId, Date fromDate, boolean explosion, GenericDelegator delegator) throws GenericEntityException {
         // If the parameters are not valid, return.
         if (productId == null || bomTypeId == null || fromDate == null || delegator == null) return;
         String productIdForRules = productId;
@@ -69,7 +73,11 @@ public class ItemConfigurationTree {
         try {
             root = new ItemConfigurationNode(product);
             root.setProductForRules(productIdForRules);
-            root.loadChildren(bomTypeId, fromDate, productFeatures);
+            if (explosion) {
+                root.loadChildren(bomTypeId, fromDate, productFeatures);
+            } else {
+                root.loadParents(bomTypeId, fromDate, productFeatures);
+            }
         } catch(GenericEntityException gee) {
             root = null;
         }

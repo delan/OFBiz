@@ -185,6 +185,45 @@ public class ItemConfigurationNode {
         return newNode;
     }
 
+    protected void loadParents(String partBomTypeId, Date fromDate, List productFeatures) throws GenericEntityException {
+        if (part == null) {
+            throw new GenericEntityException("Part is null");
+        }
+        GenericDelegator delegator = part.getDelegator();
+        List rows = delegator.findByAnd("ProductAssoc", 
+                                            UtilMisc.toMap("productIdTo", part.get("productId"), 
+                                                  //     "fromDate", fromDate,
+                                                       "productAssocTypeId", partBomTypeId),
+                                            UtilMisc.toList("sequenceNum"));
+        if ((rows == null || rows.size() == 0) && substitutedNode != null) {
+            // If no parent is found and this is a substituted node
+            // we try to search for substituted node's parents.
+            rows = delegator.findByAnd("ProductAssoc", 
+                                        UtilMisc.toMap("productIdTo", substitutedNode.getPart().get("productId"), 
+                                                  //     "fromDate", fromDate,
+                                                       "productAssocTypeId", partBomTypeId),
+                                        UtilMisc.toList("sequenceNum"));
+        }
+        children = new ArrayList(rows);
+        childrenNodes = new ArrayList();
+        Iterator childrenIterator = children.iterator();
+        GenericValue oneChild = null;
+        ItemConfigurationNode oneChildNode = null;
+        while(childrenIterator.hasNext()) {
+            oneChild = (GenericValue)childrenIterator.next();
+            oneChildNode = new ItemConfigurationNode(oneChild.getString("productId"), delegator);
+            // Configurator
+            //oneChildNode = configurator(oneChild, productFeatures, getRootNode().getProductForRules(), delegator);
+            // If the node is null this means that the node has been discarded by the rules.
+            if (oneChildNode != null) {
+                oneChildNode.setParentNode(this);
+                oneChildNode.loadParents(partBomTypeId, fromDate, productFeatures);
+            }
+            childrenNodes.add(oneChildNode);
+        }
+    }
+
+    
     /** Getter for property parentNode.
      * @return Value of property parentNode.
      *
