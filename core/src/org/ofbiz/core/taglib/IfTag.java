@@ -1,6 +1,10 @@
 /*
  * $Id$
  * $Log$
+ * Revision 1.2  2001/09/07 21:55:40  epabst
+ * catch RuntimeException instead of Exception (better compile checking)
+ * added size() checking using Reflection API
+ *
  * Revision 1.1  2001/09/01 01:59:06  azeneski
  * Added two new JSP tags.
  * 
@@ -95,21 +99,21 @@ public class IfTag extends BodyTagSupport {
         Debug.logInfo("Found object, and is not null");
         
         if ( size == -1 && value == null && type == null )
-            return EVAL_BODY_TAG;
+            return EVAL_BODY_AGAIN;
         
         if (  size > -1 ) {
             try {
                 if (object instanceof Collection) {
                     // the object is a Collection so compare the size.
                     if ( ((Collection) object).size() > size )
-                        return EVAL_BODY_TAG;
+                        return EVAL_BODY_AGAIN;
                 } else {
                     //use reflection to find a size() method
                     try {
                         Method sizeMethod = object.getClass().getMethod("size", null);
                         int objectSize = ((Integer) sizeMethod.invoke(object, null)).intValue();
                         if ( objectSize > size )
-                            return EVAL_BODY_TAG;
+                            return EVAL_BODY_AGAIN;
                     } catch (Exception e) { return SKIP_BODY; }
                 }
             }
@@ -121,7 +125,7 @@ public class IfTag extends BodyTagSupport {
             try {
                 String s = (String) object;
                 if ( s.equals(value) )
-                    return EVAL_BODY_TAG;
+                    return EVAL_BODY_AGAIN;
             }
             catch ( RuntimeException e ) { return SKIP_BODY; }
         }
@@ -132,7 +136,7 @@ public class IfTag extends BodyTagSupport {
                 Integer i = (Integer) object;
                 Integer v = new Integer(value);
                 if ( i == v )
-                    return EVAL_BODY_TAG;
+                    return EVAL_BODY_AGAIN;
             }
             catch ( RuntimeException e ) { return SKIP_BODY; }
         }
@@ -143,7 +147,7 @@ public class IfTag extends BodyTagSupport {
                 Double d = (Double) object;
                 Double v = new Double(value);
                 if ( d == v )
-                    return EVAL_BODY_TAG;
+                    return EVAL_BODY_AGAIN;
             }
             catch ( RuntimeException e ) { return SKIP_BODY; }
         }
@@ -154,7 +158,7 @@ public class IfTag extends BodyTagSupport {
                 Boolean b = (Boolean) object;
                 Boolean v = new Boolean(value);
                 if ( b.equals(v) )
-                    return EVAL_BODY_TAG;
+                    return EVAL_BODY_AGAIN;
             }
             catch ( RuntimeException e ) { return SKIP_BODY; }
         }
@@ -165,7 +169,7 @@ public class IfTag extends BodyTagSupport {
             try {
                 valueObject = pageContext.findAttribute(value);
                 if ( valueObject != null && valueObject.equals(object) )
-                    return EVAL_BODY_TAG;
+                    return EVAL_BODY_AGAIN;
             }
             catch ( RuntimeException e ) { return SKIP_BODY; }
         }

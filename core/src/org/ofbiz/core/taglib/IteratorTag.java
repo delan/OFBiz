@@ -1,6 +1,9 @@
 /*
  * $Id$
  * $Log$
+ * Revision 1.6  2001/09/20 17:55:11  jonesde
+ * Removed some long info messages that were starting to get annoying.
+ *
  * Revision 1.5  2001/09/16 11:32:05  jonesde
  * Changed Debug.log message to Debug.logInfo
  *
@@ -111,14 +114,14 @@ public class IteratorTag extends BodyTagSupport {
         Debug.logInfo("We now have an iterator.");
         
         if ( defineElement() )
-            return EVAL_BODY_TAG;
+            return EVAL_BODY_AGAIN;
         else
             return SKIP_BODY;
     }
     
     public int doAfterBody() {
         if ( defineElement() )
-            return EVAL_BODY_TAG;
+            return EVAL_BODY_AGAIN;
         else
             return SKIP_BODY;
     }

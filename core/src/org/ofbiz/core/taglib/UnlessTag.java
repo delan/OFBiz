@@ -1,6 +1,9 @@
 /*
  * $Id$
  * $Log$
+ * Revision 1.2  2001/09/06 16:26:00  epabst
+ * simplify a ton by just extending IfTag
+ *
  * Revision 1.1  2001/09/01 01:59:06  azeneski
  * Added two new JSP tags.
  * 
@@ -45,7 +48,7 @@ import org.ofbiz.core.util.Debug;
  */
 public class UnlessTag extends IfTag {
     public int doStartTag() throws JspTagException {
-        //do the opposite of what IfTag does. EVAL_BODY_TAG -> SKIP_BODY, vice-versa
-        return (EVAL_BODY_TAG + SKIP_BODY) - super.doStartTag();
+        //do the opposite of what IfTag does. EVAL_BODY_AGAIN -> SKIP_BODY, vice-versa
+        return (EVAL_BODY_AGAIN + SKIP_BODY) - super.doStartTag();
     }
 }

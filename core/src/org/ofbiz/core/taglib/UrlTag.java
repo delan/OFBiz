@@ -1,6 +1,9 @@
 /*
  * $id$
  * $Log$
+ * Revision 1.2  2001/08/06 00:45:09  azeneski
+ * minor adjustments to tag files. added new format tag.
+ *
  * Revision 1.1  2001/08/05 00:48:47  azeneski
  * Added new core JSP tag library. Non-application specific taglibs.
  *
@@ -46,29 +49,32 @@ import org.ofbiz.core.util.Debug;
  * Created on August 4, 2001, 8:21 PM
  */
 public class UrlTag extends BodyTagSupport {
+  
+  public int doStartTag() {
+    return EVAL_BODY_AGAIN;
+  }
+  
+  public int doEndTag() throws JspException {
+    HttpServletRequest request = (HttpServletRequest) pageContext.getRequest();
+    HttpServletResponse response = (HttpServletResponse) pageContext.getResponse();
+    BodyContent body = getBodyContent();
     
-    public int doAfterBody() throws JspException {
-        HttpServletRequest request = (HttpServletRequest) pageContext.getRequest();
-        HttpServletResponse response = (HttpServletResponse) pageContext.getResponse();
-        BodyContent body = getBodyContent();
-        
-        String controlPath = (String) request.getAttribute(SiteDefs.CONTROL_PATH);                
-        String baseURL = body.getString();
-        StringBuffer buffer = new StringBuffer(controlPath);
-        buffer.append(baseURL);
-        String newURL = buffer.toString();
-        
-        body.clearBody();
-        
-        try {            
-            String encodedURL = response.encodeURL(newURL);
-            getPreviousOut().print(encodedURL);
-        }
-        catch (IOException e) {
-            throw new JspException(e.getMessage());
-        }
-        return SKIP_BODY;
+    String controlPath = (String) request.getAttribute(SiteDefs.CONTROL_PATH);
+    String baseURL = body.getString();
+    String newURL = controlPath + baseURL;
+    Debug.logInfo("baseURL: " + baseURL + "; newURL: " + newURL);
+    
+    body.clearBody();
+    
+    try {
+      String encodedURL = response.encodeURL(newURL);
+      getPreviousOut().print(encodedURL);
     }
+    catch (IOException e) {
+      throw new JspException(e.getMessage());
+    }
+    return SKIP_BODY;
+  }
 }
 
 

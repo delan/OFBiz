@@ -1,6 +1,9 @@
 /*
  * $Id$
  * $Log$
+ * Revision 1.3  2001/08/16 01:24:19  azeneski
+ * Updated property tags to use the EntityValue by default.
+ *
  * Revision 1.2  2001/08/06 00:45:09  azeneski
  * minor adjustments to tag files. added new format tag.
  *
@@ -87,7 +90,7 @@ public class IterateNextTag extends BodyTagSupport {
         // give the updated iterator back.
         iteratorTag.setIterator(iterator);
         
-        return EVAL_BODY_TAG;
+        return EVAL_BODY_AGAIN;
     }
 
     public int doAfterBody() {

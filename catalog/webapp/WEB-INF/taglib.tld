@@ -15,7 +15,7 @@
 	<tag>
 	  <name>url</name>
 	  <tagclass>org.ofbiz.core.taglib.UrlTag</tagclass>
-	  <bodycontent>tagdependent</bodycontent>
+	  <bodycontent>JSP</bodycontent>
 	  <info>
 	    Add control path and URL encode if necessary.
 	  </info>

@@ -119,12 +119,12 @@
     <!-- ================================================================== -->
     <!-- Compilation of the core component                                  -->
     <!-- ================================================================== -->
-
     <target name="tld" depends="prepare">
+<!--
         <copy file="${etc.dir}/taglib.tld"
             tofile="${build.dir}/jar/META-INF/taglib.tld" />
+-->	
     </target>
-	
     <target name="classes" depends="tld">
         <!-- deprecation="on" -->
         <javac srcdir="${src.dir}" 
