@@ -496,7 +496,8 @@ public class ContentPermissionServices {
                 
                 String entityId = entity.getString(pkFieldName);
                 List ownedContentIdList = new ArrayList();
-                ContentWorker.getEntityOwners(delegator, entityId, ownedContentIdList, "Content", "ownerContentId");
+                ContentWorker.getEntityOwners(delegator, entity, ownedContentIdList, "Content", "ownerContentId");
+
                 List ownedContentRoleIds = ContentWorker.getUserRolesFromList(delegator, ownedContentIdList, partyId, "contentId", "partyId", "roleTypeId", "ContentRole");
                 String statusId = null;
                 if (hasStatusOp && hasStatusField) {
@@ -571,6 +572,7 @@ public class ContentPermissionServices {
     }
     public static boolean checkPermissionMethod(GenericDelegator delegator, String partyId,  String entityName, List entityIdList, AuxiliaryValueGetter auxiliaryValueGetter, RelatedRoleGetter relatedRoleGetter, PermissionConditionGetter permissionConditionGetter ) throws GenericEntityException {
 
+        permissionConditionGetter.init(delegator);
         if (Debug.infoOn()) Debug.logInfo(permissionConditionGetter.dumpAsText(), module);
         boolean passed = false;
 
@@ -621,7 +623,7 @@ public class ContentPermissionServices {
         }
         
         if (auxiliaryValueGetter != null) {
-            if (Debug.infoOn()) Debug.logInfo(auxiliaryValueGetter.dumpAsText(), module);
+            //if (Debug.infoOn()) Debug.logInfo(auxiliaryValueGetter.dumpAsText(), module);
             // Check with just purposes next.
             iter = entityIdList.iterator();
             while (iter.hasNext()) {
@@ -820,7 +822,7 @@ public class ContentPermissionServices {
         List roleValueList = null;
         if (relatedRoleGetter != null) {
             if (checkAncestors) {
-                relatedRoleGetter.initWithAncestors(delegator, entityId, partyId);
+                relatedRoleGetter.initWithAncestors(delegator, entity, partyId);
             } else {
                 relatedRoleGetter.init(delegator, entityId, partyId);
             }
@@ -1341,7 +1343,9 @@ public class ContentPermissionServices {
         
         public void init(GenericDelegator delegator, String entityId) throws GenericEntityException {
             
-            this.entityList = null;
+            if (this.entityList == null) {
+               this.entityList = new ArrayList(); 
+            }
             if (UtilValidate.isEmpty(this.entityName)) {
                 return;   
             }
@@ -1369,7 +1373,7 @@ public class ContentPermissionServices {
     
     public interface RelatedRoleGetter {
         public void init(GenericDelegator delegator, String entityId, String partyId) throws GenericEntityException;
-        public void initWithAncestors(GenericDelegator delegator, String entityId, String partyId) throws GenericEntityException;
+        public void initWithAncestors(GenericDelegator delegator, GenericValue entity, String partyId) throws GenericEntityException;
         public List getList();
         public String dumpAsText();
     }
@@ -1429,12 +1433,14 @@ public class ContentPermissionServices {
            return;
         }
         
-        public void initWithAncestors(GenericDelegator delegator, String entityId, String partyId) throws GenericEntityException {
+        public void initWithAncestors(GenericDelegator delegator, GenericValue entity, String partyId) throws GenericEntityException {
             
            List ownedContentIdList = new ArrayList();
-           ContentWorker.getEntityOwners(delegator, entityId, ownedContentIdList, this.entityName, this.ownerEntityFieldName);
-           List lst = ContentWorker.getUserRolesFromList(delegator, ownedContentIdList, partyId, this.roleEntityIdName, this.partyFieldName, this.roleTypeFieldName, this.roleEntityName);
-            this.roleIdList.addAll(lst);
+           ContentWorker.getEntityOwners(delegator, entity, ownedContentIdList, this.entityName, this.ownerEntityFieldName);
+           if (ownedContentIdList.size() > 0) {
+               List lst = ContentWorker.getUserRolesFromList(delegator, ownedContentIdList, partyId, this.roleEntityIdName, this.partyFieldName, this.roleTypeFieldName, this.roleEntityName);
+               this.roleIdList.addAll(lst);
+           }
            return;
         }
         
