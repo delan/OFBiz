@@ -499,9 +499,7 @@
     <entity-group group="org.ofbiz.commonapp" entity="ProdCatalog" />	
     <entity-group group="org.ofbiz.commonapp" entity="ProdCatalogCategory" />	
     <entity-group group="org.ofbiz.commonapp" entity="ProdCatalogCategoryType" />	
-    <entity-group group="org.ofbiz.commonapp" entity="ProdCatalogPromo" />	
     <entity-group group="org.ofbiz.commonapp" entity="ProdCatalogPromoAppl" />	
-    <entity-group group="org.ofbiz.commonapp" entity="ProdCatalogPromoType" />	
     <entity-group group="org.ofbiz.commonapp" entity="WebSiteCatalog" />
 
   <!-- ========================================================= -->
@@ -580,6 +578,17 @@
     <entity-group group="org.ofbiz.commonapp" entity="ProductKeyword" />	
     <entity-group group="org.ofbiz.commonapp" entity="ProductType" />	
     <entity-group group="org.ofbiz.commonapp" entity="ProductTypeAttr" />
+
+  <!-- ========================================================= -->
+  <!-- org.ofbiz.commonapp.product.promo -->
+  <!-- ========================================================= -->
+	
+    <entity-group group="org.ofbiz.commonapp" entity="ProductPromo" />	
+    <entity-group group="org.ofbiz.commonapp" entity="ProductPromoAction" />	
+    <entity-group group="org.ofbiz.commonapp" entity="ProductPromoActionType" />	
+    <entity-group group="org.ofbiz.commonapp" entity="ProductPromoCond" />	
+    <entity-group group="org.ofbiz.commonapp" entity="ProductPromoRule" />	
+    <entity-group group="org.ofbiz.commonapp" entity="ProductPromoUsage" />
 
   <!-- ========================================================= -->
   <!-- org.ofbiz.commonapp.product.storage -->

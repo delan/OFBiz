@@ -126,43 +126,61 @@
   <EnumerationType description="Workflow Transition Condition Type" enumTypeId="WORKFLOW_TRANS_COND" hasTable="N" parentTypeId="WORKFLOW"/>
   <EnumerationType description="Workflow Data Type Enum Type" enumTypeId="WORKFLOW_DATA_TYPE" hasTable="N" parentTypeId="WORKFLOW"/>
 
+  <EnumerationType description="Product Promotion Parent Enum Type" enumTypeId="PROD_PROMO" hasTable="N" parentTypeId=""/>
+  <EnumerationType description="Product Promotion Input Parameter" enumTypeId="PROD_PROMO_IN_PARAM" hasTable="N" parentTypeId="PROD_PROMO"/>
+  <EnumerationType description="Product Promotion Condition" enumTypeId="PROD_PROMO_COND" hasTable="N" parentTypeId="PROD_PROMO"/>
+  
   <Enumeration description="For Your Information" enumCode="FYI" enumId="WEE_FYI" sequenceId="01" enumTypeId="WORK_EFF_EXPECT"/>
   <Enumeration description="Involvement Required" enumCode="REQUIRE" enumId="WEE_REQUIRE" sequenceId="02" enumTypeId="WORK_EFF_EXPECT"/>
   <Enumeration description="Involvement Requested" enumCode="REQUEST" enumId="WEE_REQUEST" sequenceId="03" enumTypeId="WORK_EFF_EXPECT"/>
   <Enumeration description="Immediate Response Requested" enumCode="IMMEDIATE" enumId="WEE_IMMEDIATE" sequenceId="04" enumTypeId="WORK_EFF_EXPECT"/>
+
   <Enumeration description="General, public access" enumCode="PUBLIC" enumId="WES_PUBLIC" sequenceId="01" enumTypeId="WORK_EFF_SCOPE"/>
   <Enumeration description="Restricted, private access" enumCode="PRIVATE" enumId="WES_PRIVATE" sequenceId="02" enumTypeId="WORK_EFF_SCOPE"/>
   <Enumeration description="Very restricted, confidential access" enumCode="CONFIDENTIAL" enumId="WES_CONFIDENTIAL" sequenceId="03" enumTypeId="WORK_EFF_SCOPE"/>
+
   <Enumeration description="No restriction on network structure (DEFAULT)" enumCode="NON_BLOCKED" enumId="WGC_NON_BLOCKED" sequenceId="01" enumTypeId="WORKFLOW_GRAPH_CONF"/>
   <Enumeration description="Network structure restricted to proper nesting of LOOP" enumCode="LOOP_BLOCKED" enumId="WGC_LOOP_BLOCKED" sequenceId="02" enumTypeId="WORKFLOW_GRAPH_CONF"/>
   <Enumeration description="Network structure restricted to proper nesting of SPLIT/JOIN and LOOP" enumCode="FULL_BLOCKED" enumId="WGC_FULL_BLOCKED" sequenceId="03" enumTypeId="WORKFLOW_GRAPH_CONF"/>
+
   <Enumeration description="Input Parameter" enumCode="IN" enumId="WPM_IN" sequenceId="01" enumTypeId="WORKFLOW_PARAM_MODE"/>
   <Enumeration description="Output Parameter" enumCode="OUT" enumId="WPM_OUT" sequenceId="02" enumTypeId="WORKFLOW_PARAM_MODE"/>
   <Enumeration description="Parameter Used for Input and Output" enumCode="INOUT" enumId="WPM_INOUT" sequenceId="03" enumTypeId="WORKFLOW_PARAM_MODE"/>
+
   <Enumeration description="Automatic Mode" enumCode="Automatic" enumId="WAM_AUTOMATIC" sequenceId="01" enumTypeId="WFLOW_ACTIVITY_MODE"/>
   <Enumeration description="Manual Mode" enumCode="Manual" enumId="WAM_MANUAL" sequenceId="02" enumTypeId="WFLOW_ACTIVITY_MODE"/>
+ 
   <Enumeration description="Route" enumCode="Route" enumId="WAT_ROUTE" sequenceId="01" enumTypeId="WFLOW_ACTIVITY_TYPE"/>
   <Enumeration description="No Implementation" enumCode="No" enumId="WAT_NO" sequenceId="02" enumTypeId="WFLOW_ACTIVITY_TYPE"/>
   <Enumeration description="Tools Implementation" enumCode="Tool" enumId="WAT_TOOL" sequenceId="03" enumTypeId="WFLOW_ACTIVITY_TYPE"/>
   <Enumeration description="Subflow Implementation" enumCode="Subflow" enumId="WAT_SUBFLOW" sequenceId="04" enumTypeId="WFLOW_ACTIVITY_TYPE"/>
   <Enumeration description="Loop Implementation" enumCode="Loop" enumId="WAT_LOOP" sequenceId="05" enumTypeId="WFLOW_ACTIVITY_TYPE"/>
+  
   <Enumeration description="Activity can only be instantiated once (DEFAULT)" enumCode="ONCE" enumId="WFI_ONCE" sequenceId="01" enumTypeId="WFLOW_INSTANTIATION"/>
   <Enumeration description="Activity can be instantiated multiple times" enumCode="MULTIPLE" enumId="WFI_MULTIPLE" sequenceId="02" enumTypeId="WFLOW_INSTANTIATION"/>
+  
   <Enumeration description="Synchronize all incoming transitions (wait for all)" enumCode="AND" enumId="WJT_AND" sequenceId="01" enumTypeId="WORKFLOW_JOIN_TYPE"/>
   <Enumeration description="No incoming synchronization required (start on first)" enumCode="XOR" enumId="WJT_XOR" sequenceId="02" enumTypeId="WORKFLOW_JOIN_TYPE"/>
+  
   <Enumeration description="Allow concurrent outgoing transitions" enumCode="AND" enumId="WST_AND" sequenceId="01" enumTypeId="WORKFLOW_SPLIT_TYPE"/>
   <Enumeration description="Only allow a single outgoing transition" enumCode="XOR" enumId="WST_XOR" sequenceId="02" enumTypeId="WORKFLOW_SPLIT_TYPE"/>
+  
   <Enumeration description="Application" enumCode="APPLICATION" enumId="WTT_APPLICATION" sequenceId="01" enumTypeId="WORKFLOW_TOOL_TYPE"/>
   <Enumeration description="Procedure" enumCode="PROCEDURE" enumId="WTT_PROCEDURE" sequenceId="02" enumTypeId="WORKFLOW_TOOL_TYPE"/>
+  
   <Enumeration description="Asynchronous Execution" enumCode="ASYNCHR" enumId="WSE_ASYNCHR" sequenceId="01" enumTypeId="WORKFLOW_SUB_EXEC"/>
   <Enumeration description="Synchronous Execution" enumCode="SYNCHR" enumId="WSE_SYNCHR" sequenceId="02" enumTypeId="WORKFLOW_SUB_EXEC"/>
+  
   <Enumeration description="While loop - go until condition evaluates to false" enumCode="WHILE" enumId="WLK_WHILE" sequenceId="01" enumTypeId="WORKFLOW_LOOP_KIND"/>
   <Enumeration description="Repeat Until loop - go until condition evaluates to true" enumCode="REPEAT_UNTIL" enumId="WLK_REPEAT_UNTIL" sequenceId="02" enumTypeId="WORKFLOW_LOOP_KIND"/>
+  
   <Enumeration description="No Loop" enumCode="NOLOOP" enumId="WTL_NOLOOP" sequenceId="01" enumTypeId="WORKFLOW_TRANS_LOOP"/>
   <Enumeration description="From Loop" enumCode="FROMLOOP" enumId="WTL_FROMLOOP" sequenceId="02" enumTypeId="WORKFLOW_TRANS_LOOP"/>
   <Enumeration description="To Loop" enumCode="TOLOOP" enumId="WTL_TOLOOP" sequenceId="03" enumTypeId="WORKFLOW_TRANS_LOOP"/>
+  
   <Enumeration description="Condition" enumCode="CONDITION" enumId="WTC_CONDITION" sequenceId="01" enumTypeId="WORKFLOW_TRANS_COND"/>
   <Enumeration description="Otherwise" enumCode="OTHERWISE" enumId="WTC_OTHERWISE" sequenceId="02" enumTypeId="WORKFLOW_TRANS_COND"/>
+  
   <Enumeration description="Boolean - Plain Type" enumCode="BOOLEAN" enumId="WDT_BOOLEAN" sequenceId="01" enumTypeId="WORKFLOW_DATA_TYPE"/>
   <Enumeration description="Unit - Plain Type" enumCode="UNIT" enumId="WDT_UNIT" sequenceId="02" enumTypeId="WORKFLOW_DATA_TYPE"/>
   <Enumeration description="Performer - Plain Type" enumCode="PERFORMER" enumId="WDT_PERFORMER" sequenceId="03" enumTypeId="WORKFLOW_DATA_TYPE"/>
@@ -177,6 +195,16 @@
   <Enumeration description="Array - Complex Type" enumCode="ARRAY" enumId="WDT_ARRAY" sequenceId="12" enumTypeId="WORKFLOW_DATA_TYPE"/>
   <Enumeration description="List - Complex Type" enumCode="LIST" enumId="WDT_LIST" sequenceId="13" enumTypeId="WORKFLOW_DATA_TYPE"/>
   <Enumeration description="Declared Type" enumCode="DECLARED" enumId="WDT_DECLARED" sequenceId="14" enumTypeId="WORKFLOW_DATA_TYPE"/>
+
+  <Enumeration description="Order Total" enumCode="ORDER_TOTAL" enumId="PPIP_ORDER_TOTAL" sequenceId="01" enumTypeId="PROD_PROMO_IN_PARAM"/>
+  <Enumeration description="Product ID Added" enumCode="PRODUCT_ID" enumId="PPIP_PRODUCT_ID" sequenceId="02" enumTypeId="PROD_PROMO_IN_PARAM"/>
+  <Enumeration description="Quantity Added" enumCode="QUANTITY" enumId="PPIP_QUANTITY" sequenceId="03" enumTypeId="PROD_PROMO_IN_PARAM"/>
+  <Enumeration description="Equals" enumCode="EQ" enumId="PPIP_EQ" sequenceId="01" enumTypeId="PROD_PROMO_COND"/>
+  <Enumeration description="Not Equals" enumCode="NEQ" enumId="PPIP_NEQ" sequenceId="02" enumTypeId="PROD_PROMO_COND"/>
+  <Enumeration description="Less Than" enumCode="LT" enumId="PPIP_LT" sequenceId="03" enumTypeId="PROD_PROMO_COND"/>
+  <Enumeration description="Less Than or Equal To" enumCode="LTE" enumId="PPIP_LTE" sequenceId="04" enumTypeId="PROD_PROMO_COND"/>
+  <Enumeration description="Greater Than" enumCode="GT" enumId="PPIP_GT" sequenceId="05" enumTypeId="PROD_PROMO_COND"/>
+  <Enumeration description="Greater Than or Equal To" enumCode="GTE" enumId="PPIP_GTE" sequenceId="06" enumTypeId="PROD_PROMO_COND"/>
 
   <FacilityType description="Building" facilityTypeId="BUILDING" hasTable="N" parentTypeId=""/>
   <FacilityType description="Floor" facilityTypeId="FLOOR" hasTable="N" parentTypeId=""/>
@@ -352,11 +380,6 @@
   <ProdCatalogCategoryType description="Promotions Cateogry" prodCatalogCategoryTypeId="PCCT_PROMOTIONS"/>
   <ProdCatalogCategoryType description="Most Popular Cateogry" prodCatalogCategoryTypeId="PCCT_MOST_POPULAR"/>
 
-  <ProdCatalogPromoType description="Gift With Purchase" prodCatalogPromoTypeId="PROMO_GWP"/>
-  <ProdCatalogPromoType description="Free Shipping" prodCatalogPromoTypeId="PROMO_FREE_SHIPPING"/>
-  <ProdCatalogPromoType description="Order Percent Discount" prodCatalogPromoTypeId="PROMO_ORDER_PERCENT"/>
-  <ProdCatalogPromoType description="Order Amount Discount" prodCatalogPromoTypeId="PROMO_ORDER_AMOUNT"/>
-  
   <ProductAssocType description="Upgrade or Up-Sell" hasTable="N" parentTypeId="" productAssocTypeId="PRODUCT_UPGRADE"/>
   <ProductAssocType description="Complementary or Cross-Sell" hasTable="N" parentTypeId="" productAssocTypeId="PRODUCT_COMPLEMENT"/>
   <ProductAssocType description="Incompatable" hasTable="N" parentTypeId="" productAssocTypeId="PRODUCT_INCOMPATABLE"/>
@@ -391,6 +414,11 @@
   <ProductFeatureType description="Software Feature" hasTable="N" parentTypeId="" productFeatureTypeId="SOFTWARE_FEATURE"/>
   <ProductFeatureType description="Dimension" hasTable="N" parentTypeId="" productFeatureTypeId="DIMENSION"/>
 
+  <ProductPromoActionType description="Gift With Purchase" productPromoActionTypeId="PROMO_GWP"/>
+  <ProductPromoActionType description="Free Shipping" productPromoActionTypeId="PROMO_FREE_SHIPPING"/>
+  <ProductPromoActionType description="Order Percent Discount" productPromoActionTypeId="PROMO_ORDER_PERCENT"/>
+  <ProductPromoActionType description="Order Amount Discount" productPromoActionTypeId="PROMO_ORDER_AMOUNT"/>
+  
   <ProductType description="Virtual Product" hasTable="N" parentTypeId="" productTypeId="VIRTUAL_PRODUCT"/>
   <ProductType description="Service" hasTable="N" parentTypeId="" productTypeId="SERVICE"/>
   <ProductType description="Good" hasTable="N" parentTypeId="" productTypeId="GOOD"/>

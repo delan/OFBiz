@@ -50,6 +50,7 @@
   <!--  - org.ofbiz.commonapp.product.inventory -->
   <!--  - org.ofbiz.commonapp.product.price -->
   <!--  - org.ofbiz.commonapp.product.product -->
+  <!--  - org.ofbiz.commonapp.product.promo -->
   <!--  - org.ofbiz.commonapp.product.storage -->
   <!--  - org.ofbiz.commonapp.product.supplier -->
   <!-- ========================================================= -->
@@ -70,6 +71,12 @@
       <prim-key field="prodCatalogId"/>
       <relation type="one" rel-entity-name="Facility">
         <key-map field-name="inventoryFacilityId" rel-field-name="facilityId"/>
+      </relation>
+      <relation type="many" rel-entity-name="ProdCatalogPromoAppl">
+        <key-map field-name="prodCatalogId"/>
+      </relation>
+      <relation type="many" rel-entity-name="ProdCatalogCategory">
+        <key-map field-name="prodCatalogId"/>
       </relation>
     </entity>
     <entity entity-name="ProdCatalogCategory"
@@ -104,47 +111,21 @@
         <key-map field-name="prodCatalogCategoryTypeId"/>
       </relation>
     </entity>
-    <entity entity-name="ProdCatalogPromo"
-            package-name="org.ofbiz.commonapp.product.catalog"
-            title="Catalog Promotion Entity">
-      <field name="prodCatalogPromoId" type="id-ne"></field>
-      <field name="prodCatalogPromoTypeId" type="id-ne"></field>
-      <field name="promoName" type="name"></field>
-      <field name="promoText" type="description"></field>
-      <field name="orderTotalBoundary" type="currency-amount"></field>
-      <field name="discountQuantity" type="floating-point"></field>
-      <field name="productId" type="id"></field>
-      <prim-key field="prodCatalogPromoId"/>
-      <relation type="one" rel-entity-name="ProdCatalogPromoType">
-        <key-map field-name="prodCatalogPromoTypeId"/>
-      </relation>
-    </entity>
     <entity entity-name="ProdCatalogPromoAppl"
             package-name="org.ofbiz.commonapp.product.catalog"
-            title="Catalog Promotion Application Entity">
-      <field name="prodCatalogPromoId" type="id-ne"></field>
+            title="Product Catalog Promotion Applicability Entity">
       <field name="prodCatalogId" type="id-ne"></field>
+      <field name="productPromoId" type="id-ne"></field>
       <field name="fromDate" type="date-time"></field>
       <field name="thruDate" type="date-time"></field>
       <field name="sequenceNum" type="numeric"></field>
-      <prim-key field="prodCatalogPromoId"/>
       <prim-key field="prodCatalogId"/>
       <prim-key field="fromDate"/>
-      <relation type="one" rel-entity-name="ProdCatalogPromo">
-        <key-map field-name="prodCatalogPromoId"/>
-      </relation>
       <relation type="one" rel-entity-name="ProdCatalog">
         <key-map field-name="prodCatalogId"/>
       </relation>
-    </entity>
-    <entity entity-name="ProdCatalogPromoType"
-            package-name="org.ofbiz.commonapp.product.catalog"
-            title="Catalog Promotion Type Entity">
-      <field name="prodCatalogPromoTypeId" type="id-ne"></field>
-      <field name="description" type="description"></field>
-      <prim-key field="prodCatalogPromoTypeId"/>
-      <relation type="many" rel-entity-name="ProdCatalogPromo">
-        <key-map field-name="prodCatalogPromoTypeId"/>
+      <relation type="one" rel-entity-name="ProductPromo">
+        <key-map field-name="productPromoId"/>
       </relation>
     </entity>
     <entity entity-name="WebSiteCatalog"
@@ -1241,6 +1222,120 @@
       </relation>
       <relation type="many" rel-entity-name="Product">
         <key-map field-name="productTypeId"/>
+      </relation>
+    </entity>
+
+  <!-- ========================================================= -->
+  <!-- org.ofbiz.commonapp.product.promo -->
+  <!-- ========================================================= -->
+
+    <entity entity-name="ProductPromo"
+            package-name="org.ofbiz.commonapp.product.promo"
+            title="Product Promotion Entity">
+      <field name="productPromoId" type="id-ne"></field>
+      <field name="promoName" type="name"></field>
+      <field name="promoText" type="description"></field>
+      <field name="singleUse" type="indicator"></field>
+      <prim-key field="productPromoId"/>
+      <relation type="many" rel-entity-name="ProductPromoRule">
+        <key-map field-name="productPromoId"/>
+      </relation>
+      <relation type="many" rel-entity-name="ProdCatalogPromoAppl">
+        <key-map field-name="productPromoId"/>
+      </relation>
+    </entity>
+    <entity entity-name="ProductPromoAction"
+            package-name="org.ofbiz.commonapp.product.promo"
+            title="Product Promotion Action Entity">
+      <field name="productPromoId" type="id-ne"></field>
+      <field name="productPromoRuleId" type="id-ne"></field>
+      <field name="productPromoActionSeqId" type="id-ne"></field>
+      <field name="productPromoActionTypeId" type="id-ne"></field>
+      <field name="quantity" type="floating-point"></field>
+      <field name="productId" type="id"></field>
+      <field name="actionLimit" type="numeric"></field>
+      <prim-key field="productPromoId"/>
+      <prim-key field="productPromoRuleId"/>
+      <prim-key field="productPromoActionSeqId"/>
+      <relation type="one" rel-entity-name="ProductPromoActionType">
+        <key-map field-name="productPromoActionTypeId"/>
+      </relation>
+      <relation type="one" rel-entity-name="ProductPromo">
+        <key-map field-name="productPromoId"/>
+      </relation>
+      <relation type="one" rel-entity-name="ProductPromoRule">
+        <key-map field-name="productPromoId"/>
+        <key-map field-name="productPromoRuleId"/>
+      </relation>
+    </entity>
+    <entity entity-name="ProductPromoActionType"
+            package-name="org.ofbiz.commonapp.product.promo"
+            title="Catalog Promotion Type Entity">
+      <field name="productPromoActionTypeId" type="id-ne"></field>
+      <field name="description" type="description"></field>
+      <prim-key field="productPromoActionTypeId"/>
+      <relation type="many" rel-entity-name="ProductPromoAction">
+        <key-map field-name="productPromoActionTypeId"/>
+      </relation>
+    </entity>
+    <entity entity-name="ProductPromoCond"
+            package-name="org.ofbiz.commonapp.product.promo"
+            title="Product Promotion Condition Entity">
+      <field name="productPromoId" type="id-ne"></field>
+      <field name="productPromoRuleId" type="id-ne"></field>
+      <field name="productPromoCondSeqId" type="id-ne"></field>
+      <field name="inputParamEnumId" type="id"></field>
+      <field name="operatorEnumId" type="id"></field>
+      <field name="condValue" type="long-varchar"></field>
+      <prim-key field="productPromoId"/>
+      <prim-key field="productPromoRuleId"/>
+      <prim-key field="productPromoCondSeqId"/>
+      <relation type="one" rel-entity-name="ProductPromo">
+        <key-map field-name="productPromoId"/>
+      </relation>
+      <relation type="one" rel-entity-name="ProductPromoRule">
+        <key-map field-name="productPromoId"/>
+        <key-map field-name="productPromoRuleId"/>
+      </relation>
+      <relation type="one" title="InputParam" rel-entity-name="Enumeration">
+        <key-map field-name="inputParamEnumId" rel-field-name="enumId"/>
+      </relation>
+      <relation type="one" title="Operator" rel-entity-name="Enumeration">
+        <key-map field-name="operatorEnumId" rel-field-name="enumId"/>
+      </relation>
+    </entity>
+    <entity entity-name="ProductPromoRule"
+            package-name="org.ofbiz.commonapp.product.promo"
+            title="Product Promotion Rule Entity">
+      <field name="productPromoId" type="id-ne"></field>
+      <field name="productPromoRuleId" type="id-ne"></field>
+      <field name="ruleName" type="name"></field>
+      <prim-key field="productPromoId"/>
+      <prim-key field="productPromoRuleId"/>
+      <relation type="one" rel-entity-name="ProductPromo">
+        <key-map field-name="productPromoId"/>
+      </relation>
+      <relation type="many" rel-entity-name="ProductPromoAction">
+        <key-map field-name="productPromoId"/>
+        <key-map field-name="productPromoRuleId"/>
+      </relation>
+      <relation type="many" rel-entity-name="ProductPromoCond">
+        <key-map field-name="productPromoId"/>
+        <key-map field-name="productPromoRuleId"/>
+      </relation>
+    </entity>
+    <entity entity-name="ProductPromoUsage"
+            package-name="org.ofbiz.commonapp.product.promo"
+            title="Product Promotion Usage Entity">
+      <field name="productPromoId" type="id-ne"></field>
+      <field name="partyId" type="id-ne"></field>
+      <field name="usageDateTime" type="date-time"></field>
+      <prim-key field="productPromoId"/>
+      <relation type="one" rel-entity-name="ProductPromo">
+        <key-map field-name="productPromoId"/>
+      </relation>
+      <relation type="one" rel-entity-name="Party">
+        <key-map field-name="partyId"/>
       </relation>
     </entity>
 
