@@ -1,5 +1,5 @@
 /*
- * $Id: DatabaseUtil.java,v 1.1 2003/08/16 22:05:50 ajzeneski Exp $
+ * $Id: DatabaseUtil.java,v 1.2 2003/09/12 19:54:04 ajzeneski Exp $
  *
  * Copyright (c) 2001, 2002 The Open For Business Project - www.ofbiz.org
  *
@@ -35,7 +35,7 @@ import org.ofbiz.entity.model.*;
  * Utilities for Entity Database Maintenance
  *
  * @author     <a href="mailto:jonesde@ofbiz.org">David E. Jones</a> 
- * @version    $Revision: 1.1 $
+ * @version    $Revision: 1.2 $
  * @since      2.0
  */
 public class DatabaseUtil {
@@ -714,9 +714,9 @@ public class DatabaseUtil {
         TreeSet tableNames = new TreeSet();
         ResultSet tableSet = null;
 
+        String lookupSchemaName = null;
         try {
-            String[] types = {"TABLE", "VIEW", "ALIAS", "SYNONYM"};
-            String lookupSchemaName = null;
+            String[] types = {"TABLE", "VIEW", "ALIAS", "SYNONYM"};            
             if (dbData.supportsSchemasInTableDefinitions()) {
                 if (this.datasourceInfo.schemaName != null && this.datasourceInfo.schemaName.length() > 0) {
                     lookupSchemaName = this.datasourceInfo.schemaName;
@@ -752,7 +752,10 @@ public class DatabaseUtil {
             while (tableSet.next()) {
                 try {
                     String tableName = tableSet.getString("TABLE_NAME");
-
+                    // for those databases which do not return the schema name with the table name (pgsql 7.3)
+                    if (tableName != null && lookupSchemaName != null && !tableName.startsWith(lookupSchemaName)) {
+                        tableName = lookupSchemaName + "." + tableName;
+                    }
                     tableName = (tableName == null) ? null : tableName.toUpperCase();
                     String tableType = tableSet.getString("TABLE_TYPE");
 
@@ -869,8 +872,8 @@ public class DatabaseUtil {
 
         Map colInfo = new HashMap();
 
-        try {
-            String lookupSchemaName = null;
+        String lookupSchemaName = null;
+        try {            
             if (dbData.supportsSchemasInTableDefinitions()) {
                 if (this.datasourceInfo.schemaName != null && this.datasourceInfo.schemaName.length() > 0) {
                     lookupSchemaName = this.datasourceInfo.schemaName;
@@ -885,6 +888,10 @@ public class DatabaseUtil {
                     ColumnCheckInfo ccInfo = new ColumnCheckInfo();
 
                     ccInfo.tableName = rsCols.getString("TABLE_NAME");
+                    // for those databases which do not return the schema name with the table name (pgsql 7.3)
+                    if (ccInfo.tableName != null && lookupSchemaName != null && !ccInfo.tableName.startsWith(lookupSchemaName)) {
+                        ccInfo.tableName = lookupSchemaName + "." + ccInfo.tableName;
+                    }
                     ccInfo.tableName = (ccInfo.tableName == null) ? null : ccInfo.tableName.toUpperCase();
                     // ignore the column info if the table name is not in the list we are concerned with
                     if (!tableNames.contains(ccInfo.tableName))
