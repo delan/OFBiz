@@ -1,6 +1,9 @@
 /*
  * $Id$
  * $Log$
+ * Revision 1.3  2002/01/22 07:47:04  jonesde
+ * A bunch more stuff for contact mech services
+ *
  * Revision 1.2  2002/01/21 23:47:02  jonesde
  * Finished first pass for cm purpose and cc info
  *
@@ -388,6 +391,491 @@ public class ContactMechServices {
         result.put(ModelService.RESPONSE_MESSAGE, ModelService.RESPOND_SUCCESS);
         return result;
     }
+
+    
+// ============================================================================
+// ============================================================================
+    
+    /** Creates a PostalAddress
+     * <b>security check</b>: userLogin partyId must equal partyId, or must have PARTYMGR_CREATE permission
+     *@param ctx The DispatchContext that this service is operating in
+     *@param context Map containing the input parameters
+     *@return Map with the result of the service, the output parameters
+     */
+    public static Map createPostalAddress(DispatchContext ctx, Map context) {
+        Map result = new HashMap();
+        GenericDelegator delegator = ctx.getDelegator();
+        Security security = ctx.getSecurity();
+        GenericValue userLogin = (GenericValue) context.get("userLogin");
+        Timestamp now = UtilDateTime.nowTimestamp();
+        Collection toBeStored = new LinkedList();
+        
+        String partyId = (String) context.get("partyId");
+        if (partyId == null || partyId.length() == 0) {
+            partyId = userLogin.getString("partyId");
+        }
+        
+        //partyId might be null, so check it
+        if (partyId == null || partyId.length() == 0) {
+            result.put(ModelService.RESPONSE_MESSAGE, ModelService.RESPOND_ERROR);
+            result.put(ModelService.ERROR_MESSAGE, "Party ID missing, cannot delete contact mechanism");
+            return result;
+        }
+        
+        //<b>security check</b>: userLogin partyId must equal partyId, or must have PARTYMGR_CREATE permission
+        if (!partyId.equals(userLogin.getString("partyId"))) {
+            if (!security.hasEntityPermission("PARTYMGR", "_CREATE", userLogin)) {
+                result.put(ModelService.RESPONSE_MESSAGE, ModelService.RESPOND_ERROR);
+                result.put(ModelService.ERROR_MESSAGE, "You do not have permission to delete contact mech for this partyId");
+                return result;
+            }
+        }
+
+        String contactMechTypeId = "POSTAL_ADDRESS";
+
+        Long newCmId = delegator.getNextSeqId("ContactMech"); 
+        if(newCmId == null) {
+            result.put(ModelService.RESPONSE_MESSAGE, ModelService.RESPOND_ERROR);
+            result.put(ModelService.ERROR_MESSAGE, "ERROR: Could not create contact info (id generation failure)");
+            return result;
+        }
+        
+        GenericValue tempContactMech = delegator.makeValue("ContactMech", UtilMisc.toMap("contactMechId", newCmId.toString(), "contactMechTypeId", contactMechTypeId));
+        toBeStored.add(tempContactMech);
+
+        toBeStored.add(delegator.makeValue("PartyContactMech", UtilMisc.toMap("partyId", partyId, "contactMechId", newCmId.toString(), 
+                "fromDate", now, "roleTypeId", "CUSTOMER", "allowSolicitation", context.get("allowSolicitation"), "extension", context.get("extension"))));
+
+        GenericValue newAddr = delegator.makeValue("PostalAddress", null);
+        newAddr.set("contactMechId", newCmId.toString());
+        newAddr.set("toName", context.get("toName"));
+        newAddr.set("attnName", context.get("attnName"));
+        newAddr.set("address1", context.get("address1"));
+        newAddr.set("address2", context.get("address2"));
+        newAddr.set("directions", context.get("directions"));
+        newAddr.set("city", context.get("city"));
+        newAddr.set("postalCode", context.get("postalCode"));
+        newAddr.set("stateProvinceGeoId", context.get("stateProvinceGeoId"));
+        newAddr.set("countryGeoId", context.get("countryGeoId"));
+        newAddr.set("postalCodeGeoId", context.get("postalCodeGeoId"));
+        toBeStored.add(newAddr);
+
+        try { 
+            delegator.storeAll(toBeStored);
+        } catch(GenericEntityException e) {
+            Debug.logWarning(e.toString());
+            result.put(ModelService.RESPONSE_MESSAGE, ModelService.RESPOND_ERROR);
+            result.put(ModelService.ERROR_MESSAGE, "Could not create contact info (write failure): " + e.getMessage());
+            return result;
+        }
+
+        result.put("contactMechId", newCmId.toString());
+        result.put(ModelService.RESPONSE_MESSAGE, ModelService.RESPOND_SUCCESS);
+        return result;
+    }
+
+    /** Updates a PostalAddress
+     * <b>security check</b>: userLogin partyId must equal partyId, or must have PARTYMGR_UPDATE permission
+     *@param ctx The DispatchContext that this service is operating in
+     *@param context Map containing the input parameters
+     *@return Map with the result of the service, the output parameters
+     */
+    public static Map updatePostalAddress(DispatchContext ctx, Map context) {
+        Map result = new HashMap();
+        GenericDelegator delegator = ctx.getDelegator();
+        Security security = ctx.getSecurity();
+        GenericValue userLogin = (GenericValue) context.get("userLogin");
+        Timestamp now = UtilDateTime.nowTimestamp();
+        Collection toBeStored = new LinkedList();
+        boolean isModified = false;
+        
+        String partyId = (String) context.get("partyId");
+        if (partyId == null || partyId.length() == 0) {
+            partyId = userLogin.getString("partyId");
+        }
+        
+        //partyId might be null, so check it
+        if (partyId == null || partyId.length() == 0) {
+            result.put(ModelService.RESPONSE_MESSAGE, ModelService.RESPOND_ERROR);
+            result.put(ModelService.ERROR_MESSAGE, "Party ID missing, cannot delete contact mechanism");
+            return result;
+        }
+        
+        //<b>security check</b>: userLogin partyId must equal partyId, or must have PARTYMGR_UPDATE permission
+        if (!partyId.equals(userLogin.getString("partyId"))) {
+            if (!security.hasEntityPermission("PARTYMGR", "_UPDATE", userLogin)) {
+                result.put(ModelService.RESPONSE_MESSAGE, ModelService.RESPOND_ERROR);
+                result.put(ModelService.ERROR_MESSAGE, "You do not have permission to delete contact mech for this partyId");
+                return result;
+            }
+        }
+
+        Long newCmId = delegator.getNextSeqId("ContactMech"); 
+        if(newCmId == null) {
+            result.put(ModelService.RESPONSE_MESSAGE, ModelService.RESPOND_ERROR);
+            result.put(ModelService.ERROR_MESSAGE, "ERROR: Could not change contact info (id generation failure)");
+            return result;
+        }
+
+        String contactMechId = (String) context.get("contactMechId");
+        GenericValue contactMech = null;
+        GenericValue partyContactMech = null;
+        try {
+            contactMech = delegator.findByPrimaryKey("ContactMech", UtilMisc.toMap("contactMechId", contactMechId));
+            //try to find a PartyContactMech with a valid date range
+            Collection partyContactMechs = EntityUtil.filterByDate(delegator.findByAnd("PartyContactMech", UtilMisc.toMap("partyId", partyId, "contactMechId", contactMechId), null));
+            partyContactMech = EntityUtil.getOnly(partyContactMechs);
+        } catch (GenericEntityException e) {
+            Debug.logWarning(e.getMessage());
+            contactMech = null;
+            partyContactMech = null;
+        }
+        if (contactMech == null) {
+            result.put(ModelService.RESPONSE_MESSAGE, ModelService.RESPOND_ERROR);
+            result.put(ModelService.ERROR_MESSAGE, "ERROR: Could not find specified contact info (read error)");
+            return result;
+        }
+        if (partyContactMech == null) {
+            result.put(ModelService.RESPONSE_MESSAGE, ModelService.RESPOND_ERROR);
+            result.put(ModelService.ERROR_MESSAGE, "ERROR: Cannot update specified contact info because it does not correspond to the specified party");
+            return result;
+        }
+        toBeStored.add(partyContactMech);
+
+        //never change a contact mech, just create a new one with the changes
+        GenericValue newContactMech = new GenericValue(contactMech);
+        GenericValue newPartyContactMech = new GenericValue(partyContactMech);
+        GenericValue relatedEntityToSet = null;
+
+        if("POSTAL_ADDRESS".equals(contactMech.getString("contactMechTypeId"))) {
+            GenericValue addr = null;
+            try {
+                addr = delegator.findByPrimaryKey("PostalAddress", UtilMisc.toMap("contactMechId", contactMechId));
+            } catch(GenericEntityException e) {
+                Debug.logWarning(e.toString());
+                addr = null;
+            }
+            relatedEntityToSet = new GenericValue(addr);
+            relatedEntityToSet.set("toName", context.get("toName"));
+            relatedEntityToSet.set("attnName", context.get("attnName"));
+            relatedEntityToSet.set("address1", context.get("address1"));
+            relatedEntityToSet.set("address2", context.get("address2"));
+            relatedEntityToSet.set("directions", context.get("directions"));
+            relatedEntityToSet.set("city", context.get("city"));
+            relatedEntityToSet.set("postalCode", context.get("postalCode"));
+            relatedEntityToSet.set("stateProvinceGeoId", context.get("stateProvinceGeoId"));
+            relatedEntityToSet.set("countryGeoId", context.get("countryGeoId"));
+            relatedEntityToSet.set("postalCodeGeoId", context.get("postalCodeGeoId"));
+            if(addr == null || !relatedEntityToSet.equals(addr)) {
+                isModified = true;
+            }
+            relatedEntityToSet.set("contactMechId", newCmId.toString());
+        } else {
+            result.put(ModelService.RESPONSE_MESSAGE, ModelService.RESPOND_ERROR);
+            result.put(ModelService.ERROR_MESSAGE, "Could not update this contact mech as a POSTAL_ADDRESS the specified contact mech is a " + contactMech.getString("contactMechTypeId"));
+            return result;
+        }
+
+        newPartyContactMech.set("allowSolicitation", context.get("allowSolicitation"));
+
+        if(!newContactMech.equals(contactMech)) isModified = true;
+        if(!newPartyContactMech.equals(partyContactMech)) isModified = true;
+
+        toBeStored.add(newContactMech);
+        toBeStored.add(newPartyContactMech);
+
+        if(isModified) {
+            if(relatedEntityToSet != null) toBeStored.add(relatedEntityToSet);
+
+            newContactMech.set("contactMechId", newCmId.toString());
+            newPartyContactMech.set("contactMechId", newCmId.toString());
+            newPartyContactMech.set("fromDate", now);
+            newPartyContactMech.set("thruDate", null);
+
+            try {
+                Iterator partyContactMechPurposes = UtilMisc.toIterator(partyContactMech.getRelated("PartyContactMechPurpose"));
+                while(partyContactMechPurposes != null && partyContactMechPurposes.hasNext()) {
+                    GenericValue tempVal = new GenericValue((GenericValue)partyContactMechPurposes.next());
+                    tempVal.set("contactMechId", newCmId.toString());
+                    toBeStored.add(tempVal);
+                }
+            } catch(GenericEntityException e) {
+                Debug.logWarning(e.toString());
+                result.put(ModelService.RESPONSE_MESSAGE, ModelService.RESPOND_ERROR);
+                result.put(ModelService.ERROR_MESSAGE, "ERROR: Could not change contact info (read purpose failure): " + e.getMessage());
+                return result;
+            }
+
+            partyContactMech.set("thruDate", now);
+            try { 
+                delegator.storeAll(toBeStored);
+            } catch(GenericEntityException e) {
+                Debug.logWarning(e.toString());
+                result.put(ModelService.RESPONSE_MESSAGE, ModelService.RESPOND_ERROR);
+                result.put(ModelService.ERROR_MESSAGE, "ERROR: Could not change contact info (write failure): " + e.getMessage());
+                return result;
+            }
+        } else {
+            result.put(ModelService.RESPONSE_MESSAGE, ModelService.RESPOND_SUCCESS);
+            result.put(ModelService.SUCCESS_MESSAGE, "No changes made, not updating contact mechanism");
+            return result;
+        }
+
+        result.put("newContactMechId", newCmId.toString());
+        result.put(ModelService.RESPONSE_MESSAGE, ModelService.RESPOND_SUCCESS);
+        return result;
+    }
+    
+// ============================================================================
+// ============================================================================
+    
+    /** Creates a TelecomNumber
+     * <b>security check</b>: userLogin partyId must equal partyId, or must have PARTYMGR_CREATE permission
+     *@param ctx The DispatchContext that this service is operating in
+     *@param context Map containing the input parameters
+     *@return Map with the result of the service, the output parameters
+     */
+    public static Map createTelecomNumber(DispatchContext ctx, Map context) {
+        Map result = new HashMap();
+        GenericDelegator delegator = ctx.getDelegator();
+        Security security = ctx.getSecurity();
+        GenericValue userLogin = (GenericValue) context.get("userLogin");
+        Timestamp now = UtilDateTime.nowTimestamp();
+        Collection toBeStored = new LinkedList();
+        
+        String partyId = (String) context.get("partyId");
+        if (partyId == null || partyId.length() == 0) {
+            partyId = userLogin.getString("partyId");
+        }
+        
+        //partyId might be null, so check it
+        if (partyId == null || partyId.length() == 0) {
+            result.put(ModelService.RESPONSE_MESSAGE, ModelService.RESPOND_ERROR);
+            result.put(ModelService.ERROR_MESSAGE, "Party ID missing, cannot delete contact mechanism");
+            return result;
+        }
+        
+        //<b>security check</b>: userLogin partyId must equal partyId, or must have PARTYMGR_CREATE permission
+        if (!partyId.equals(userLogin.getString("partyId"))) {
+            if (!security.hasEntityPermission("PARTYMGR", "_CREATE", userLogin)) {
+                result.put(ModelService.RESPONSE_MESSAGE, ModelService.RESPOND_ERROR);
+                result.put(ModelService.ERROR_MESSAGE, "You do not have permission to delete contact mech for this partyId");
+                return result;
+            }
+        }
+
+        String contactMechTypeId = "TELECOM_NUMBER";
+
+        Long newCmId = delegator.getNextSeqId("ContactMech"); 
+        if(newCmId == null) {
+            result.put(ModelService.RESPONSE_MESSAGE, ModelService.RESPOND_ERROR);
+            result.put(ModelService.ERROR_MESSAGE, "ERROR: Could not create contact info (id generation failure)");
+            return result;
+        }
+        
+        GenericValue tempContactMech = delegator.makeValue("ContactMech", UtilMisc.toMap("contactMechId", newCmId.toString(), "contactMechTypeId", contactMechTypeId));
+        toBeStored.add(tempContactMech);
+
+        toBeStored.add(delegator.makeValue("PartyContactMech", UtilMisc.toMap("partyId", partyId, "contactMechId", newCmId.toString(), 
+                "fromDate", now, "roleTypeId", "CUSTOMER", "allowSolicitation", context.get("allowSolicitation"), "extension", context.get("extension"))));
+
+        toBeStored.add(delegator.makeValue("TelecomNumber", UtilMisc.toMap("contactMechId", newCmId.toString(), 
+                "countryCode", context.get("countryCode"), "areaCode", context.get("areaCode"), "contactNumber", context.get("contactNumber"))));
+
+        try { 
+            delegator.storeAll(toBeStored);
+        } catch(GenericEntityException e) {
+            Debug.logWarning(e.toString());
+            result.put(ModelService.RESPONSE_MESSAGE, ModelService.RESPOND_ERROR);
+            result.put(ModelService.ERROR_MESSAGE, "Could not create contact info (write failure): " + e.getMessage());
+            return result;
+        }
+
+        result.put("contactMechId", newCmId.toString());
+        result.put(ModelService.RESPONSE_MESSAGE, ModelService.RESPOND_SUCCESS);
+        return result;
+    }
+
+    /** Updates a TelecomNumber
+     * <b>security check</b>: userLogin partyId must equal partyId, or must have PARTYMGR_UPDATE permission
+     *@param ctx The DispatchContext that this service is operating in
+     *@param context Map containing the input parameters
+     *@return Map with the result of the service, the output parameters
+     */
+    public static Map updateTelecomNumber(DispatchContext ctx, Map context) {
+        Map result = new HashMap();
+        GenericDelegator delegator = ctx.getDelegator();
+        Security security = ctx.getSecurity();
+        GenericValue userLogin = (GenericValue) context.get("userLogin");
+        Timestamp now = UtilDateTime.nowTimestamp();
+        Collection toBeStored = new LinkedList();
+        boolean isModified = false;
+        
+        String partyId = (String) context.get("partyId");
+        if (partyId == null || partyId.length() == 0) {
+            partyId = userLogin.getString("partyId");
+        }
+        
+        //partyId might be null, so check it
+        if (partyId == null || partyId.length() == 0) {
+            result.put(ModelService.RESPONSE_MESSAGE, ModelService.RESPOND_ERROR);
+            result.put(ModelService.ERROR_MESSAGE, "Party ID missing, cannot delete contact mechanism");
+            return result;
+        }
+        
+        //<b>security check</b>: userLogin partyId must equal partyId, or must have PARTYMGR_UPDATE permission
+        if (!partyId.equals(userLogin.getString("partyId"))) {
+            if (!security.hasEntityPermission("PARTYMGR", "_UPDATE", userLogin)) {
+                result.put(ModelService.RESPONSE_MESSAGE, ModelService.RESPOND_ERROR);
+                result.put(ModelService.ERROR_MESSAGE, "You do not have permission to delete contact mech for this partyId");
+                return result;
+            }
+        }
+
+        Long newCmId = delegator.getNextSeqId("ContactMech"); 
+        if(newCmId == null) {
+            result.put(ModelService.RESPONSE_MESSAGE, ModelService.RESPOND_ERROR);
+            result.put(ModelService.ERROR_MESSAGE, "ERROR: Could not change contact info (id generation failure)");
+            return result;
+        }
+
+        String contactMechId = (String) context.get("contactMechId");
+        GenericValue contactMech = null;
+        GenericValue partyContactMech = null;
+        try {
+            contactMech = delegator.findByPrimaryKey("ContactMech", UtilMisc.toMap("contactMechId", contactMechId));
+            //try to find a PartyContactMech with a valid date range
+            Collection partyContactMechs = EntityUtil.filterByDate(delegator.findByAnd("PartyContactMech", UtilMisc.toMap("partyId", partyId, "contactMechId", contactMechId), null));
+            partyContactMech = EntityUtil.getOnly(partyContactMechs);
+        } catch (GenericEntityException e) {
+            Debug.logWarning(e.getMessage());
+            contactMech = null;
+            partyContactMech = null;
+        }
+        if (contactMech == null) {
+            result.put(ModelService.RESPONSE_MESSAGE, ModelService.RESPOND_ERROR);
+            result.put(ModelService.ERROR_MESSAGE, "ERROR: Could not find specified contact info (read error)");
+            return result;
+        }
+        if (partyContactMech == null) {
+            result.put(ModelService.RESPONSE_MESSAGE, ModelService.RESPOND_ERROR);
+            result.put(ModelService.ERROR_MESSAGE, "ERROR: Cannot update specified contact info because it does not correspond to the specified party");
+            return result;
+        }
+        toBeStored.add(partyContactMech);
+
+        //never change a contact mech, just create a new one with the changes
+        GenericValue newContactMech = new GenericValue(contactMech);
+        GenericValue newPartyContactMech = new GenericValue(partyContactMech);
+        GenericValue relatedEntityToSet = null;
+
+        if("TELECOM_NUMBER".equals(contactMech.getString("contactMechTypeId"))) {
+            GenericValue telNum = null;
+            try { 
+                telNum = delegator.findByPrimaryKey("TelecomNumber", UtilMisc.toMap("contactMechId", contactMechId));
+            } catch(GenericEntityException e) {
+                Debug.logWarning(e.toString());
+                telNum = null;
+            }
+            relatedEntityToSet = new GenericValue(telNum);
+            relatedEntityToSet.set("countryCode", context.get("countryCode"));
+            relatedEntityToSet.set("areaCode", context.get("areaCode"));
+            relatedEntityToSet.set("contactNumber", context.get("contactNumber"));
+
+            if(telNum == null || !relatedEntityToSet.equals(telNum)) {
+                isModified = true;
+            }
+            relatedEntityToSet.set("contactMechId", newCmId.toString());
+            newPartyContactMech.set("extension", context.get("extension"));
+        } else {
+            result.put(ModelService.RESPONSE_MESSAGE, ModelService.RESPOND_ERROR);
+            result.put(ModelService.ERROR_MESSAGE, "Could not update this contact mech as a TELECOM_NUMBER the specified contact mech is a " + contactMech.getString("contactMechTypeId"));
+            return result;
+        }
+
+        newPartyContactMech.set("allowSolicitation", context.get("allowSolicitation"));
+
+        if(!newContactMech.equals(contactMech)) isModified = true;
+        if(!newPartyContactMech.equals(partyContactMech)) isModified = true;
+
+        toBeStored.add(newContactMech);
+        toBeStored.add(newPartyContactMech);
+
+        if(isModified) {
+            if(relatedEntityToSet != null) toBeStored.add(relatedEntityToSet);
+
+            newContactMech.set("contactMechId", newCmId.toString());
+            newPartyContactMech.set("contactMechId", newCmId.toString());
+            newPartyContactMech.set("fromDate", now);
+            newPartyContactMech.set("thruDate", null);
+
+            try {
+                Iterator partyContactMechPurposes = UtilMisc.toIterator(partyContactMech.getRelated("PartyContactMechPurpose"));
+                while(partyContactMechPurposes != null && partyContactMechPurposes.hasNext()) {
+                    GenericValue tempVal = new GenericValue((GenericValue)partyContactMechPurposes.next());
+                    tempVal.set("contactMechId", newCmId.toString());
+                    toBeStored.add(tempVal);
+                }
+            } catch(GenericEntityException e) {
+                Debug.logWarning(e.toString());
+                result.put(ModelService.RESPONSE_MESSAGE, ModelService.RESPOND_ERROR);
+                result.put(ModelService.ERROR_MESSAGE, "ERROR: Could not change contact info (read purpose failure): " + e.getMessage());
+                return result;
+            }
+
+            partyContactMech.set("thruDate", now);
+            try { 
+                delegator.storeAll(toBeStored);
+            } catch(GenericEntityException e) {
+                Debug.logWarning(e.toString());
+                result.put(ModelService.RESPONSE_MESSAGE, ModelService.RESPOND_ERROR);
+                result.put(ModelService.ERROR_MESSAGE, "ERROR: Could not change contact info (write failure): " + e.getMessage());
+                return result;
+            }
+        } else {
+            result.put(ModelService.RESPONSE_MESSAGE, ModelService.RESPOND_SUCCESS);
+            result.put(ModelService.SUCCESS_MESSAGE, "No changes made, not updating contact mechanism");
+            return result;
+        }
+
+        result.put("newContactMechId", newCmId.toString());
+        result.put(ModelService.RESPONSE_MESSAGE, ModelService.RESPOND_SUCCESS);
+        return result;
+    }
+    
+// ============================================================================
+// ============================================================================
+    
+    /** Creates a EmailAddress
+     * <b>security check</b>: userLogin partyId must equal partyId, or must have PARTYMGR_CREATE permission
+     *@param ctx The DispatchContext that this service is operating in
+     *@param context Map containing the input parameters
+     *@return Map with the result of the service, the output parameters
+     */
+    public static Map createEmailAddress(DispatchContext ctx, Map context) {
+        Map newContext = new HashMap(context);
+        newContext.put("infoString", newContext.get("emailAddress"));
+        newContext.remove("emailAddress");
+        newContext.put("contactMechTypeId", newContext.get("EMAIL_ADDRESS"));
+        
+        return createContactMech(ctx, newContext);
+    }
+
+    /** Updates a EmailAddress
+     * <b>security check</b>: userLogin partyId must equal partyId, or must have PARTYMGR_UPDATE permission
+     *@param ctx The DispatchContext that this service is operating in
+     *@param context Map containing the input parameters
+     *@return Map with the result of the service, the output parameters
+     */
+    public static Map updateEmailAddress(DispatchContext ctx, Map context) {
+        Map newContext = new HashMap(context);
+        newContext.put("infoString", newContext.get("emailAddress"));
+        newContext.remove("emailAddress");
+        return updateContactMech(ctx, newContext);
+    }
+    
+// ============================================================================
+// ============================================================================
     
     /** Creates a PartyContactMechPurpose
      * <b>security check</b>: userLogin partyId must equal partyId, or must have PARTYMGR_CREATE permission
