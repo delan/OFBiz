@@ -50,6 +50,17 @@ public class ServiceDispatcher {
         this.jm = new JobManager(this,this.delegator);
     }
     
+    /** Returns a pre-registered instance of the ServiceDispatcher associated with this delegator.
+     *@param delegator the local delegator
+     *@return A reference to this global ServiceDispatcher
+     */
+    public static ServiceDispatcher getInstance(String name, GenericDelegator delegator) {
+        ServiceDispatcher sd = getInstance(null,null,delegator);
+        if ( !sd.containsContext(name) )
+            return null;
+        return sd;
+    }
+    
     /** Returns an instance of the ServiceDispatcher associated with this delegator and registers the loader.
      *@param name the local dispatcher
      *@param loader classloader of the local dispatcher
@@ -63,7 +74,8 @@ public class ServiceDispatcher {
         else 
             sd = new ServiceDispatcher(delegator);       
         dispatchers.put(delegator,sd);
-        sd.register(name,context);
+        if ( name != null && context != null )
+            sd.register(name,context);
         return sd;
     }
                      
@@ -143,5 +155,13 @@ public class ServiceDispatcher {
         if ( localContext.containsKey(name) )
             return (DispatchContext) localContext.get(name);
         return null;
+    }
+    
+    /** Test if this dispatcher instance contains the local context.
+     *@param String name of the local context
+     *@returns True if the local context is found in this dispatcher.
+     */
+    public boolean containsContext(String name) {
+        return localContext.containsKey(name);
     }
 }
