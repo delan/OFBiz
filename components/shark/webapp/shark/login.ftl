@@ -1,5 +1,5 @@
 <#--
- *  Copyright (c) 2004 The Open For Business Project - www.ofbiz.org
+ *  Copyright (c) 2003 The Open For Business Project - www.ofbiz.org
  *
  *  Permission is hereby granted, free of charge, to any person obtaining a 
  *  copy of this software and associated documentation files (the "Software"), 
@@ -20,47 +20,57 @@
  *  THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  *
  *@author     Andy Zeneski (jaz@ofbiz.org)
- *@version    $Revision: 1.1 $
- *@since      3.1
+ *@author     Olivier Heintz (olivier.heintz@nereide.biz) 
+ *@version    $Revision: 1.2 $
+ *@since      2.1
 -->
 
+<#assign uiLabelMap = requestAttributes.uiLabelMap>
 <#assign previousParams = sessionAttributes._PREVIOUS_PARAMS_?if_exists>
 <#if previousParams?has_content>
   <#assign previousParams = "?" + previousParams>
 </#if>
-<table width="300" border="0" cellpadding="0" cellspacing="0" align="center">
+
+<#assign username = requestParameters.USERNAME?default((sessionAttributes.autoUserLogin.userLoginId)?default(""))>
+<#if username != "">
+  <#assign focusName = false>
+<#else>
+  <#assign focusName = true>
+</#if>
+
+<table width='300' border='0' cellpadding='0' cellspacing='0' align='center'>
   <tr>    
-    <td width="100%" valign="top">
-      <table border="0" width="100%" cellspacing="0" cellpadding="0" class="boxoutside">
+    <td width='100%' valign='top'>
+      <table border='0' width='100%' cellspacing='0' cellpadding='0' class='boxoutside'>
         <tr>
-          <td width="100%">
-            <table width="100%" border="0" cellspacing="0" cellpadding="0" class="boxtop">
+          <td width='100%'>
+            <table width='100%' border='0' cellspacing='0' cellpadding='0' class='boxtop'>
               <tr>
-                <td valign="middle" align="center">
-                  <div class="boxhead">Registered User Login</div>
+                <td valign='middle' align='center'>
+                  <div class="boxhead">${uiLabelMap.CommonRegistred}</div>
                 </td>
               </tr>
             </table>
           </td>
         </tr>
         <tr>
-          <td width="100%">
-            <table width="100%" border="0" cellspacing="0" cellpadding="0" class="boxbottom">
+          <td width='100%'>
+            <table width='100%' border='0' cellspacing='0' cellpadding='0' class='boxbottom'>
               <tr>
-                <td align="center" valign="middle" width="100%">
-                  <form method="POST" action="<@ofbizUrl>/login${previousParams?if_exists}</@ofbizUrl>" name="loginform" style="margin: 0;">
-                    <table width="100%" border="0" cellpadding="0" cellspacing="2">
+                <td align="center" valign="middle" width='100%'>
+                  <form method="POST" action="<@ofbizUrl>/login${previousParams?if_exists}</@ofbizUrl>" name="loginform" style='margin: 0;'>
+                    <table width='100%' border='0' cellpadding='0' cellspacing='2'>
                       <tr>
                         <td align="right">
-                          <span class="tabletext">Username:&nbsp;</span>
+                          <span class="tabletext">${uiLabelMap.CommonUsername}&nbsp;</span>
                         </td>
                         <td>
-                          <input type="text" class="inputBox" name="USERNAME" value="${requestParameters.USERNAME?if_exists}" size="20">
+                          <input type="text" class="inputBox" name="USERNAME" value="${username}" size="20">
                         </td>
                       </tr>
                       <tr>
                         <td align="right">
-                          <span class="tabletext">Password:&nbsp;</span>
+                          <span class="tabletext">${uiLabelMap.CommonPassword}&nbsp;</span>
                         </td>
                         <td align="left">
                           <input type="password" class="inputBox" name="PASSWORD" value="" size="20">
@@ -69,7 +79,7 @@
                       <tr>
                         <td colspan="2" align="center">
                           <!--<a href="javascript:document.loginform.submit()" class="buttontext">[Login]</a>-->
-                          <input type="submit" value="Login" class="loginButton">
+                          <input type="submit" value=${uiLabelMap.CommonLogin} class="loginButton">
                         </td>
                       </tr>
                     </table>
@@ -86,6 +96,10 @@
 
 <script language="JavaScript" type="text/javascript">
 <!--
-  document.loginform.USERNAME.focus();
+  <#if focusName>
+    document.loginform.USERNAME.focus();
+  <#else>
+    document.loginform.PASSWORD.focus();
+  </#if>
 //-->
 </script>
