@@ -1,5 +1,5 @@
 /*
- * $Id: KeywordIndex.java,v 1.4 2003/12/23 18:51:21 jonesde Exp $
+ * $Id: KeywordIndex.java,v 1.5 2003/12/26 18:04:54 jonesde Exp $
  *
  * Copyright (c) 2001, 2002 The Open For Business Project - www.ofbiz.org
  *
@@ -49,7 +49,7 @@ import org.ofbiz.entity.util.EntityUtil;
  *  Does indexing in preparation for a keyword search.
  *
  * @author     <a href="mailto:jonesde@ofbiz.org">David E. Jones</a>
- * @version    $Revision: 1.4 $
+ * @version    $Revision: 1.5 $
  * @since      2.0
  */
 public class KeywordIndex {
@@ -92,7 +92,6 @@ public class KeywordIndex {
 
             while (productFeatureAndAppls != null && productFeatureAndAppls.hasNext()) {
                 GenericValue productFeatureAndAppl = (GenericValue) productFeatureAndAppls.next();
-
                 addWeightedKeywordSourceString(productFeatureAndAppl, "description", strings);
                 addWeightedKeywordSourceString(productFeatureAndAppl, "abbrev", strings);
                 addWeightedKeywordSourceString(productFeatureAndAppl, "idCode", strings);
@@ -100,14 +99,22 @@ public class KeywordIndex {
         }
 
         if (!"0".equals(UtilProperties.getPropertyValue("prodsearch", "index.weight.ProductAttribute.attrName", "1")) ||
-            !"0".equals(UtilProperties.getPropertyValue("prodsearch", "index.weight.ProductAttribute.attrValue", "1"))) {
+                !"0".equals(UtilProperties.getPropertyValue("prodsearch", "index.weight.ProductAttribute.attrValue", "1"))) {
             Iterator productAttributes = UtilMisc.toIterator(delegator.findByAnd("ProductAttribute", UtilMisc.toMap("productId", productId)));
 
             while (productAttributes != null && productAttributes.hasNext()) {
                 GenericValue productAttribute = (GenericValue) productAttributes.next();
-
                 addWeightedKeywordSourceString(productAttribute, "attrName", strings);
                 addWeightedKeywordSourceString(productAttribute, "attrValue", strings);
+            }
+        }
+        
+        if (!"0".equals(UtilProperties.getPropertyValue("prodsearch", "index.weight.GoodIdentification.idValue", "1"))) {
+            Iterator goodIdentifications = UtilMisc.toIterator(delegator.findByAnd("GoodIdentification", UtilMisc.toMap("productId", productId)));
+
+            while (goodIdentifications != null && goodIdentifications.hasNext()) {
+                GenericValue goodIdentification = (GenericValue) goodIdentifications.next();
+                addWeightedKeywordSourceString(goodIdentification, "idValue", strings);
             }
         }
         
