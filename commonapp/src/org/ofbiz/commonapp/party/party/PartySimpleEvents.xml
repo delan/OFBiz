@@ -1,0 +1,80 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+
+<!DOCTYPE simple-events PUBLIC "-//OFBiz//DTD Simple Events//EN" "http://www.ofbiz.org/dtds/simple-events.dtd">
+
+<!--
+ * <p><b>Title:</b> PartySimpleEvents
+ * <p><b>Description:</b> Events to handle form input and other data changes
+ * <p>Copyright (c) 2001 The Open For Business Project and repected authors.
+ * <p>Permission is hereby granted, free of charge, to any person obtaining a
+ *  copy of this software and associated documentation files (the "Software"),
+ *  to deal in the Software without restriction, including without limitation
+ *  the rights to use, copy, modify, merge, publish, distribute, sublicense,
+ *  and/or sell copies of the Software, and to permit persons to whom the
+ *  Software is furnished to do so, subject to the following conditions:
+ *
+ * <p>The above copyright notice and this permission notice shall be included
+ *  in all copies or substantial portions of the Software.
+ *
+ * <p>THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS
+ *  OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF
+ *  MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT.
+ *  IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY
+ *  CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT
+ *  OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR
+ *  THE USE OR OTHER DEALINGS IN THE SOFTWARE.
+ *
+ * @author <a href="mailto:jonesde@ofbiz.org">David E. Jones</a>
+ * @version 1.0
+ * Created on January 18, 2001
+ -->
+<simple-events>
+    <!-- Party events -->
+    <simple-event event-name="deleteParty" short-description="Delete Person">
+        <simple-map-processor xml-resource="org/ofbiz/commonapp/party/party/PartyMapProcs.xml" 
+                processor-name="deleteParty" in-map-name="parameters" out-map-name="context"/>
+        <check-errors/>
+        <service service-name="deleteParty" in-map-name="context">
+            <default-message>Party successfully deleted.</default-message></service>
+    </simple-event>
+
+    <!-- Person events -->
+    <simple-event event-name="createPerson" short-description="Create Person">
+        <simple-map-processor xml-resource="org/ofbiz/commonapp/party/party/PartyMapProcs.xml" 
+                processor-name="person" in-map-name="parameters" out-map-name="context"/>
+        <check-errors/>
+        <service service-name="createPerson" in-map-name="context">
+            <default-message>Person successfully created.</default-message>
+            <result-to-request result-name="contactMechId"/></service>
+    </simple-event>
+    <simple-event event-name="updatePerson" short-description="Update Person">
+        <simple-map-processor xml-resource="org/ofbiz/commonapp/party/party/PartyMapProcs.xml" 
+                processor-name="person" in-map-name="parameters" out-map-name="context"/>
+        <simple-map-processor xml-resource="org/ofbiz/commonapp/party/party/PartyMapProcs.xml" 
+                processor-name="updateParty" in-map-name="parameters" out-map-name="context"/>
+        <check-errors/>
+        <service service-name="updatePerson" in-map-name="context">
+            <default-message>Person successfully updated.</default-message>
+            <result-to-request result-name="newPartyId" request-name="contactMechId"/></service>
+    </simple-event>
+
+    <!-- PartyGroup events -->
+    <simple-event event-name="createPartyGroup" short-description="Create Party Group">
+        <simple-map-processor xml-resource="org/ofbiz/commonapp/party/party/PartyMapProcs.xml" 
+                processor-name="partyGroup" in-map-name="parameters" out-map-name="context"/>
+        <check-errors/>
+        <service service-name="createPartyGroup" in-map-name="context">
+            <default-message>Party Group successfully created.</default-message>
+            <result-to-request result-name="contactMechId"/></service>
+    </simple-event>
+    <simple-event event-name="updatePartyGroup" short-description="Update Party Group">
+        <simple-map-processor xml-resource="org/ofbiz/commonapp/party/party/PartyMapProcs.xml" 
+                processor-name="partyGroup" in-map-name="parameters" out-map-name="context"/>
+        <simple-map-processor xml-resource="org/ofbiz/commonapp/party/party/PartyMapProcs.xml" 
+                processor-name="updateParty" in-map-name="parameters" out-map-name="context"/>
+        <check-errors/>
+        <service service-name="updatePartyGroup" in-map-name="context">
+            <default-message>Party Group successfully updated.</default-message>
+            <result-to-request result-name="newPartyId" request-name="contactMechId"/></service>
+    </simple-event>
+</simple-events>
