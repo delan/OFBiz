@@ -1522,12 +1522,23 @@ public class HtmlFormRenderer implements FormStringRenderer {
 
         buffer.append("/>");
 
+        String descriptionFieldName = lookupField.getDescriptionFieldName();
         // add lookup pop-up button 
-        buffer.append("<a href=\"javascript:call_fieldlookup2(document.");
-        buffer.append(modelFormField.getModelForm().getCurrentFormName(context));
-        buffer.append('.');
-        buffer.append(modelFormField.getParameterName(context));
-        buffer.append(", '");
+        if (UtilValidate.isNotEmpty(descriptionFieldName)) {
+        	buffer.append("<a href=\"javascript:call_fieldlookup3(document.");
+        	buffer.append(modelFormField.getModelForm().getCurrentFormName(context));
+        	buffer.append('.');
+        	buffer.append(modelFormField.getParameterName(context));
+        	buffer.append(", '");
+            buffer.append(descriptionFieldName);
+            buffer.append(", '");
+        } else {
+        	buffer.append("<a href=\"javascript:call_fieldlookup2(document.");
+        	buffer.append(modelFormField.getModelForm().getCurrentFormName(context));
+        	buffer.append('.');
+        	buffer.append(modelFormField.getParameterName(context));
+        	buffer.append(", '");
+        }
         buffer.append(lookupField.getFormName());
         buffer.append("');\">");
         buffer.append("<img src=\"");

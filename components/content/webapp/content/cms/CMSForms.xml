@@ -50,16 +50,14 @@
         </actions>
     
         <field name="editContent" title="">
-            <hyperlink also-hidden="false" description="Edit" target="CMSContentEdit?contentId=${contentId}&amp;drDataResourceId=${drDataResourceId}&amp;contentIdTo=${contentIdTo}"/> 
+            <hyperlink also-hidden="false" description="Edit" target="EditAddContent?MASTER_contentId=${contentId}&amp;MASTER_drDataResourceId=${drDataResourceId}&amp;MASTER_caContentIdTo=${caContentIdTo}&amp;MASTER_caContentAssocTypeId=${caContentAssocTypeId}&amp;MASTER_caFromDate=${caFromDate}"/> 
 <!--
             <hyperlink also-hidden="false" description="Edit" target="EditContent?caContentIdTo=${caContentIdTo}&amp;caFromDate=${caFromDate}&amp;contentId=${contentId}&amp;drDataResourceId=${drDataResourceId}&amp;caContentId=${contentId}&amp;contentIdStart=${caContentIdTo}&amp;caContentAssocTypeId=${caContentAssocTypeId}"/> 
 -->
         </field>
-<!--
         <field name="caContentIdTo" title="Publish-to content" ><display/></field>
         <field name="caMapKey" title="Map Key" ><display/></field>
         <field name="caFromDate" title="From Date" ><display/></field>
--->
         <field name="contentId" title="Content Id" ><display/></field>
         <field name="dataResourceId" title="Data Resource Id" ><display/></field>
         <field name="contentName" title="Name" ><display/></field>
@@ -439,11 +437,11 @@
             use-when="&quot;${caMapKey}&quot;.length()>0" >
             <display />
         </field>
-        <field name="caContentAssocTypeId" position="3" title="ContentAssocTypeId"
+        <field name="caContentAssocTypeId" position="1" title="ContentAssocTypeId"
             use-when="&quot;${caContentAssocTypeId}&quot;.length()>0" >
             <display />
         </field>
-        <field name="caContentAssocTypeId" position="3" title="ContentAssocTypeId"
+        <field name="caContentAssocTypeId" position="1" title="ContentAssocTypeId"
             use-when="&quot;${caContentAssocTypeId}&quot;.length()==0" >
             <drop-down allow-empty="true">
                 <entity-options description="${description}" entity-name="ContentAssocType" key-field-name="contentAssocTypeId"/>
@@ -473,7 +471,7 @@
             </lookup>
         </field>
         <field name="contentTypeId" position="1">
-            <drop-down allow-empty="false">
+            <drop-down allow-empty="true">
                 <entity-options description="${description}" entity-name="ContentType" key-field-name="contentTypeId"/>
             </drop-down>
         </field>
@@ -605,6 +603,19 @@
         <field name="submitButton" title="Upload" widget-style="standardSubmit">
             <submit button-type="button"/>
         </field>
+        
+        <field name="MASTER_contentId" ><hidden value="${MASTER_contentId}" /></field>
+        <field name="MASTER_caContentId" ><hidden value="${MASTER_caContentId}" /></field>
+        <field name="MASTER_caContentIdTo" ><hidden value="${MASTER_caContentIdTo}" /></field>
+        <field name="MASTER_caContentAssocTypeId" ><hidden value="${MASTER_caContentAssocTypeId}" /></field>
+        <field name="MASTER_caFromDate" ><hidden value="${MASTER_caFromDate}" /></field>
+        <field name="MASTER_drDataResource" ><hidden value="${MASTER_drDataResource}" /></field>
+    </form>
+    <form name="EditAddSubContentStuff" target="persistSubContentStuff" title="" type="upload"
+        default-title-style="tableheadtext"
+        default-map-name="currentValue"
+        extends="EditAddContentStuff"
+        default-tooltip-style="tabletext" default-widget-style="inputBox">
     </form>
 
 </forms>

@@ -32,6 +32,7 @@ import java.util.Iterator;
 import java.util.List;
 import java.util.Locale;
 import java.util.Map;
+import java.util.Set;
 import java.io.StringWriter;
 
 import org.ofbiz.base.util.Debug;
@@ -39,6 +40,9 @@ import org.ofbiz.base.util.GeneralException;
 import org.ofbiz.base.util.UtilDateTime;
 import org.ofbiz.base.util.UtilMisc;
 import org.ofbiz.base.util.UtilValidate;
+import org.ofbiz.base.util.UtilFormatOut;
+import org.ofbiz.base.util.UtilHttp;
+import org.ofbiz.base.util.StringUtil;
 import org.ofbiz.entity.GenericDelegator;
 import org.ofbiz.entity.GenericEntityException;
 import org.ofbiz.entity.GenericValue;
@@ -966,7 +970,7 @@ public class ContentServices {
     
     public static Map publishContent(DispatchContext dctx, Map context) throws GenericServiceException{
         
-        Map result = null;
+        Map result = new HashMap();
         GenericDelegator delegator = dctx.getDelegator();
         GenericValue content = (GenericValue)context.get("content");
         GenericValue userLogin = (GenericValue)context.get("userLogin");
@@ -981,6 +985,79 @@ public class ContentServices {
         } catch(GenericEntityException e) {
             Debug.logError(e.getMessage(), module);
             return ServiceUtil.returnError(e.getMessage());
+        }
+        return result;
+    }
+    
+    public static Map getPrefixedMembers(DispatchContext dctx, Map context) throws GenericServiceException{
+        
+        Map result = new HashMap();
+        Map mapIn = (Map)context.get("mapIn");
+        String prefix = (String)context.get("prefix");
+        Map mapOut = new HashMap();
+        result.put("mapOut", mapOut);
+        if (mapIn != null) {
+            Set entrySet = mapIn.entrySet();
+            Iterator iter = entrySet.iterator();
+            while (iter.hasNext()) {
+                Map.Entry entry = (Map.Entry)iter.next();
+                String key = (String)entry.getKey();
+                if (key.startsWith(prefix)) {
+                    String keyBase = key.substring(prefix.length());
+                    Object value = entry.getValue();
+                    mapOut.put(key, value);
+                }
+            }
+        }
+        return result;
+    }
+    
+    public static Map splitString(DispatchContext dctx, Map context) throws GenericServiceException{
+        Map result = new HashMap();
+        List outputList = new ArrayList();
+        String delimiter = UtilFormatOut.checkEmpty((String)context.get("delimiter"), "|");
+        String inputString = (String)context.get("inputString");
+        if (UtilValidate.isNotEmpty(inputString)) {
+            outputList = StringUtil.split(inputString, delimiter);   
+        }
+        result.put("outputList", outputList);
+        return result;
+    }
+    
+    public static Map joinString(DispatchContext dctx, Map context) throws GenericServiceException{
+        Map result = new HashMap();
+        String outputString = null;
+        String delimiter = UtilFormatOut.checkEmpty((String)context.get("delimiter"), "|");
+        List inputList = (List)context.get("inputList");
+        if (inputList != null) {
+            outputString = StringUtil.join(inputList, delimiter);
+        }
+        result.put("outputString", outputString);
+        return result;
+    }
+    
+    public static Map urlEncodeArgs(DispatchContext dctx, Map context) throws GenericServiceException{
+        
+        Map result = new HashMap();
+        Map mapFiltered = new HashMap();
+        Map mapIn = (Map)context.get("mapIn");
+        if (mapIn != null) {
+            Set entrySet = mapIn.entrySet();
+            Iterator iter = entrySet.iterator();
+            while (iter.hasNext()) {
+                Map.Entry entry = (Map.Entry)iter.next();
+                String key = (String)entry.getKey();
+                Object value = entry.getValue();
+                if (value instanceof String ) {
+                    if (UtilValidate.isNotEmpty((String)value)) {
+                        mapFiltered.put(key, value);
+                    }
+                } else if (value != null) {
+                    mapFiltered.put(key, value);
+                }
+            }
+            String outputString = UtilHttp.urlEncodeArgs(mapFiltered);
+            result.put("outputString", outputString );
         }
         return result;
     }

@@ -1305,6 +1305,22 @@
         <security https="true" auth="true"/>
         <response name="success" type="view" value="EditAddContent"/>
     </request-map>
+    <request-map uri="persistContentStuff">
+        <security auth="true" https="true"/>
+        <event invoke="persistContentAndAssoc" path="" type="service"/>
+        <response name="success" type="view" value="EditAddContent"/>
+        <response name="error" type="view" value="EditAddContent"/>
+    </request-map>
+   <request-map uri="EditAddSubContent">
+        <security https="true" auth="true"/>
+        <response name="success" type="view" value="EditAddSubContent"/>
+    </request-map>
+    <request-map uri="persistSubContentStuff">
+        <security auth="true" https="true"/>
+        <event invoke="persistContentAndAssoc" path="" type="service"/>
+        <response name="success" type="view" value="EditAddContent"/>
+        <response name="error" type="view" value="EditAddSubContent"/>
+    </request-map>
    <request-map uri="EditAddImage">
         <security https="true" auth="true"/>
         <response name="success" type="view" value="EditAddImage"/>
@@ -1320,12 +1336,6 @@
         <event type="java" path="org.ofbiz.content.content.UploadContentAndImage" invoke="uploadContentAndImage"/>
         <response name="success" type="view" value="CMSContentEdit"/>
         <response name="error" type="view" value="EditAddImage"/>
-    </request-map>
-    <request-map uri="persistContentStuff">
-        <security auth="true" https="true"/>
-        <event invoke="uploadContentStuff" path="org.ofbiz.content.content.UploadContentAndImage" type="java"/>
-        <response name="success" type="view" value="CMSContentEdit"/>
-        <response name="error" type="view" value="EditAddContent"/>
     </request-map>
     <request-map uri="AdminSearch">
         <security https="true" auth="true"/>
@@ -1440,6 +1450,7 @@
     <view-map name="AdminSearch" page="component://content/widget/cms/CMSScreens.xml#AdminSearch" type="screen"/>
     <view-map name="AdminIndex" page="component://content/widget/cms/CMSScreens.xml#AdminIndex" type="screen"/>
     <view-map name="CMSMenu" page="/cms/CMSMenu.ftl" type="jpublish"/>
+    <view-map name="EditAddSubContent" page="component://content/widget/cms/CMSScreens.xml#EditAddSubContent" type="screen"/>
 
     <!-- end of view mappings -->
 </site-conf>

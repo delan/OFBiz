@@ -72,8 +72,14 @@
     <form name="listLookupDataResource" 
         default-title-style="tableheadtext"
         default-tooltip-style="tabletext" default-widget-style="display"
-        list-name="entityList" paginate-target="/LookupDataResource" 
+        paginate-target="/LookupDataResource" 
         title="" type="list">
+        <actions>
+            <service service-name="performFind" result-map-list-iterator-name="listIt">
+                <field-map field-name="inputFields" env-name="requestParameters"/>
+                <field-map field-name="entityName" env-name="entityName"/>
+            </service>
+        </actions>
         <auto-fields-entity entity-name="DataResource" default-field-type="display"/>
         <field name="dataResourceId" title="&amp;nbsp;" widget-style="buttontext">
             <hyperlink also-hidden="false" target-type="plain" description="${dataResourceId}" target="javascript:set_value('${dataResourceId}')"/>

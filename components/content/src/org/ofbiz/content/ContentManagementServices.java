@@ -549,7 +549,7 @@ public class ContentManagementServices {
                     thisResult = dispatcher.runSync("createContentAssoc", contentAssocContext);
                     result.put("contentIdTo", thisResult.get("contentIdTo"));
                     result.put("contentIdFrom", thisResult.get("contentIdFrom"));
-                    result.put("contentId", thisResult.get("contentIdFrom"));
+                    //result.put("contentId", thisResult.get("contentIdFrom"));
                     result.put("contentAssocTypeId", thisResult.get("contentAssocTypeId"));
                     result.put("fromDate", thisResult.get("fromDate"));
                     

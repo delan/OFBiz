@@ -75,7 +75,7 @@ public class ContentServicesComplex {
     public static Map getAssocAndContentAndDataResource(DispatchContext dctx, Map context) {
 
         GenericDelegator delegator = dctx.getDelegator();
-        List assocTypes = (List)context.get("assocTypes");
+        List assocTypes = (List) context.get("assocTypes"); 
         List contentTypes = (List)context.get("contentTypes");
         Timestamp fromDate = (Timestamp)context.get("fromDate");
         Timestamp thruDate = (Timestamp)context.get("thruDate");
@@ -200,8 +200,24 @@ public class ContentServicesComplex {
     public static Map getAssocAndContentAndDataResourceCache(DispatchContext dctx, Map context) {
 
         GenericDelegator delegator = dctx.getDelegator();
-        List assocTypes = (List)context.get("assocTypes");
+        List assocTypes = (List) context.get("assocTypes"); 
+        String assocTypesString = (String)context.get("assocTypesString");
+        if (UtilValidate.isNotEmpty(assocTypesString)) {
+            List lst = StringUtil.split(assocTypesString, "|");
+            if (assocTypes == null) {
+                assocTypes = new ArrayList();   
+            }
+            assocTypes.addAll(lst);
+        }
         List contentTypes = (List)context.get("contentTypes");
+        String contentTypesString = (String)context.get("contentTypesString");
+        if (UtilValidate.isNotEmpty(contentTypesString)) {
+            List lst = StringUtil.split(contentTypesString, "|");
+            if (contentTypes == null) {
+                contentTypes = new ArrayList();   
+            }
+            contentTypes.addAll(lst);
+        }
         Timestamp fromDate = (Timestamp)context.get("fromDate");
         String fromDateStr = (String)context.get("fromDateStr");
         String contentId = (String)context.get("contentId");

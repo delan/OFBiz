@@ -43,8 +43,8 @@
         <widgets>
           <decorator-screen name="lookup" location="component://content/widget/CommonScreens.xml" >
             <decorator-section name="body">
-              <include-form name="lookupDataResource" location="component://content/webapp/content/content/DataResourceForms.xml" />
-              <include-form name="listLookupDataResource" location="component://content/webapp/content/content/DataResourceForms.xml" />
+              <include-form name="lookupDataResource" location="component://content/webapp/content/data/DataResourceForms.xml" />
+              <include-form name="listLookupDataResource" location="component://content/webapp/content/data/DataResourceForms.xml" />
             </decorator-section>
           </decorator-screen>
         </widgets>

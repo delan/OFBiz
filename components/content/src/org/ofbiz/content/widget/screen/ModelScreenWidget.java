@@ -762,6 +762,9 @@ public abstract class ModelScreenWidget {
                     context = new MapStack(context);
                 }
                 
+                // This is an important step to make sure that the current contentId is in the context
+                // as temples that contain "subcontent" elements will expect to find the master
+                // contentId in the context as "contentId".
                 ((MapStack) context).push();
                 context.put("contentId", expandedContentId);
                 
