@@ -2,8 +2,9 @@
 <entity-engine-xml>
   <Party partyId="admin" partyTypeId="PERSON"/>
   <Person firstName="THE" lastName="ADMINISTRATOR" middleName="PRIVILEGED" partyId="admin" personalTitle="Mr."/>
-  <RoleType roleTypeId="admins" hasTable="N" description="Role for admin users"/>
-  <PartyRole partyId="admin" roleTypeId="admins"/>
+  <RoleType roleTypeId="ADMINS" hasTable="N" description="Role for admin users"/>
+  <PartyRole partyId="admin" roleTypeId="ADMINS"/>
+
   <SecurityGroup description="Full Admin group, has all general permissions." groupId="FULLADMIN"/>
   <SecurityGroup description="Flexible Admin group, has all granular permissions." groupId="FLEXADMIN"/>
 

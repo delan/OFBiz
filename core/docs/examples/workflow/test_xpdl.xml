@@ -29,7 +29,7 @@
     <Participant Id="admins" Name="First Participant">
       <ParticipantType Type="ROLE"/>
       <Description>None</Description>
-      <ExtendedAttributes><ExtendedAttribute Name="roleTypeId" Value="admins"/></ExtendedAttributes>
+      <ExtendedAttributes><ExtendedAttribute Name="roleTypeId" Value="ADMINS"/></ExtendedAttributes>
     </Participant>
   </Participants>
 <!--
