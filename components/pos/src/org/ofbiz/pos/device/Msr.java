@@ -120,10 +120,13 @@ public class Msr extends GenericDevice {
 
         // implemented validation
         int msrType = MSR_UNKNOWN;
-        if (UtilValidate.isCreditCard(decodedData[5])) {
-            msrType = MSR_CREDIT_CARD;
-        } else if (UtilValidate.isGiftCard(decodedData[5])) {
-            msrType = MSR_GIFT_CARD;
+        try {
+            if (UtilValidate.isAnyCard(decodedData[5])) {
+                msrType = MSR_CREDIT_CARD;
+            } else if (UtilValidate.isGiftCard(decodedData[5])) {
+                msrType = MSR_GIFT_CARD;
+            }
+        } catch (NumberFormatException e) {            
         }
 
         // all implemented types

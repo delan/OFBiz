@@ -124,6 +124,9 @@ public class Journal {
                 this.appendEmpty(jmodel);
                 tx.appendPaymentDataModel(jmodel);
             }
+            if (pos.getInput().isFunctionSet("PAID")) {
+                tx.appendChangeDataModel(jmodel);
+            }
         } else {
             this.appendEmpty(jmodel);
         }
