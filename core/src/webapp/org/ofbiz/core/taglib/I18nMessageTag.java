@@ -1,7 +1,7 @@
 /*
  * $Id$
  *
- * Copyright (c) 2002 The Open For Business Project - www.ofbiz.org
+ * Copyright (c) 2001, 2002 The Open For Business Project - www.ofbiz.org
  *
  * Permission is hereby granted, free of charge, to any person obtaining a
  * copy of this software and associated documentation files (the "Software"),
@@ -22,26 +22,22 @@
  * THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  *
  */
-
 package org.ofbiz.core.taglib;
-
 
 import java.text.*;
 import java.util.*;
 import javax.servlet.jsp.*;
 import javax.servlet.jsp.tagext.*;
 
-import org.ofbiz.core.util.UtilJ2eeCompat;
-import org.ofbiz.core.util.Debug;
-
+import org.ofbiz.core.util.*;
 
 /**
  * I18nMessageTag - JSP tag to use a resource bundle to internationalize
  * content in a web page.
  *
- * @author  <a href="mailto:k3ysss@yahoo.com">Jian He</a>
- * @version 1.0
- * @created April 13, 2002
+ * @author     <a href="mailto:k3ysss@yahoo.com">Jian He</a>
+ * @version    $Revision$
+ * @since      2.0
  */
 public class I18nMessageTag extends BodyTagSupport {
 
@@ -80,7 +76,7 @@ public class I18nMessageTag extends BodyTagSupport {
     public int doStartTag() throws JspException {
         try {
             if (this.bundle == null) {
-                I18nBundleTag bundleTag = (I18nBundleTag) this.findAncestorWithClass(this, I18nBundleTag.class);
+                I18nBundleTag bundleTag = (I18nBundleTag) I18nMessageTag.findAncestorWithClass(this, I18nBundleTag.class);
 
                 if (bundleTag != null) {
                     this.bundle = bundleTag.getBundle();
