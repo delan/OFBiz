@@ -74,6 +74,11 @@
             Whatever it is called with, it will basicly get a list of InventoryItems and total the available amount.
         -->
 
+        <!-- this is not normally needed...
+        <log level="info"><string value="Getting inventory available to promise count; parameters are: "/><field field-name="parameters"/></log>
+        <log level="info" message="foo foo: "><string value="Getting inventory available to promise count; productId is: "/><field field-name="productId" map-name="parameters"/></log>
+        -->
+        
         <field-to-field field-name="productId" map-name="parameters" to-map-name="lookupFieldMap"/>
         <field-to-field field-name="facilityId" map-name="parameters" to-map-name="lookupFieldMap"/>
         <field-to-field field-name="containerId" map-name="parameters" to-map-name="lookupFieldMap"/>
