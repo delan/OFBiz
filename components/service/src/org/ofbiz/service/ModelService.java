@@ -427,7 +427,11 @@ public class ModelService implements Serializable {
             Iterator iter = extra.iterator();
             while (iter.hasNext()) {
                 String key = (String) iter.next();
-                String msg = model.getParam(key).getPrimaryFailMessage(locale);
+                ModelParam param = model.getParam(key);
+                String msg = null;
+                if (param != null) {
+                    msg = param.getPrimaryFailMessage(locale);
+                }
                 if (msg == null) {
                     msg = "Unknown parameter found: " + key;
                 }
