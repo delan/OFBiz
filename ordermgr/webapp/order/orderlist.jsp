@@ -137,21 +137,23 @@
     if (lookupErrorMessage != null) pageContext.setAttribute("lookupErrorMessage", lookupErrorMessage);
     
     Calendar fromCal = Calendar.getInstance();
-    fromCal.setTimeInMillis(System.currentTimeMillis());
-    fromCal.set(Calendar.DAY_OF_WEEK, fromCal.getActualMinimum(Calendar.DAY_OF_WEEK));
+    fromCal.setTime(new java.util.Date());
+    //fromCal.set(Calendar.DAY_OF_WEEK, fromCal.getActualMinimum(Calendar.DAY_OF_WEEK));
     fromCal.set(Calendar.HOUR_OF_DAY, fromCal.getActualMinimum(Calendar.HOUR_OF_DAY));
     fromCal.set(Calendar.MINUTE, fromCal.getActualMinimum(Calendar.MINUTE));
     fromCal.set(Calendar.SECOND, fromCal.getActualMinimum(Calendar.SECOND));
+    fromCal.set(Calendar.MILLISECOND, fromCal.getActualMinimum(Calendar.MILLISECOND));
     Timestamp fromTs = new Timestamp(fromCal.getTimeInMillis());
     String fromStr = fromTs.toString();
     fromStr = fromStr.substring(0, fromStr.indexOf('.'));
 
     Calendar toCal = Calendar.getInstance();
-    toCal.setTimeInMillis(System.currentTimeMillis());
-    toCal.set(Calendar.DAY_OF_WEEK, toCal.getActualMaximum(Calendar.DAY_OF_WEEK));
+    toCal.setTime(new java.util.Date());
+    //toCal.set(Calendar.DAY_OF_WEEK, toCal.getActualMaximum(Calendar.DAY_OF_WEEK));
     toCal.set(Calendar.HOUR_OF_DAY, toCal.getActualMaximum(Calendar.HOUR_OF_DAY));
     toCal.set(Calendar.MINUTE, toCal.getActualMaximum(Calendar.MINUTE));
     toCal.set(Calendar.SECOND, toCal.getActualMaximum(Calendar.SECOND));
+    toCal.set(Calendar.MILLISECOND, toCal.getActualMaximum(Calendar.MILLISECOND));
     Timestamp toTs = new Timestamp(toCal.getTimeInMillis());
     String toStr = toTs.toString();
     toStr = toStr.substring(0, toStr.indexOf('.'));

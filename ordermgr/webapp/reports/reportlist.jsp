@@ -43,7 +43,7 @@ these reports and helping to improve them.</div>
 
 <%
     Calendar fromCal = Calendar.getInstance();
-    fromCal.setTimeInMillis(System.currentTimeMillis());
+    fromCal.setTime(new java.util.Date());
     fromCal.set(Calendar.DAY_OF_WEEK, fromCal.getActualMinimum(Calendar.DAY_OF_WEEK));
     fromCal.set(Calendar.HOUR_OF_DAY, fromCal.getActualMinimum(Calendar.HOUR_OF_DAY));
     fromCal.set(Calendar.MINUTE, fromCal.getActualMinimum(Calendar.MINUTE));
@@ -53,7 +53,7 @@ these reports and helping to improve them.</div>
     fromStr = fromStr.substring(0, fromStr.indexOf('.'));
 
     Calendar toCal = Calendar.getInstance();
-    toCal.setTimeInMillis(System.currentTimeMillis());
+    toCal.setTime(new java.util.Date());
     toCal.set(Calendar.DAY_OF_WEEK, toCal.getActualMaximum(Calendar.DAY_OF_WEEK));
     toCal.set(Calendar.HOUR_OF_DAY, toCal.getActualMaximum(Calendar.HOUR_OF_DAY));
     toCal.set(Calendar.MINUTE, toCal.getActualMaximum(Calendar.MINUTE));
