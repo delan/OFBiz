@@ -24,7 +24,7 @@
  * THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  *
  */
- 
+
 package org.ofbiz.manufacturing.jobshopmgt;
 
 import java.sql.Timestamp;
@@ -50,34 +50,36 @@ import org.ofbiz.service.GenericServiceException;
 
 
 /**
- * ProductionRun Object used by the Jobshop management OFBiz comonents, 
+ * ProductionRun Object used by the Jobshop management OFBiz comonents,
  * 	this object is used to find or updated an existing ProductionRun.
  *
  * @author     <a href="mailto:olivier.heintz@nereide.biz">Olivier Heintz</a>
- * @version    $Rev:$
+ * @version    $Rev$
  * @since      3.0
  */
 public class ProductionRun {
-
+    
     public static final String module = ProductionRun.class.getName();
     public static final String resource = "ManufacturingUiLabels";
     
-	protected GenericValue productionRun;
-	protected GenericValue productProduced;
-	protected Double quantity;
-	protected Timestamp estimatedStartDate;
-	protected Timestamp estimatedCompletionDate;
+    protected GenericValue productionRun; // WorkEffort (PROD_ORDER_HEADER)
+    protected GenericValue productionRunProduct; // WorkEffortGoodStandard (WIP_OUTGOING_FULFIL)
+    protected GenericValue productProduced; // Product (from WorkEffortGoodStandard WIP_OUTGOING_FILFIL)
+    protected Double quantity; // the estimatedQuantity
+    
+    protected Timestamp estimatedStartDate;
+    protected Timestamp estimatedCompletionDate;
     protected String productionRunName;
-	protected String description;
-	protected GenericValue currentStatus;
-    protected GenericValue productionRunProduct;
-	protected List productionRunComponents;
-	protected List productionRunRoutingTasks;
+    protected String description;
+    protected GenericValue currentStatus;
+    protected List productionRunComponents;
+    protected List productionRunRoutingTasks;
+    
     /**
-     * indicate if quantity or estimatedStartDate has been modified and 
+     * indicate if quantity or estimatedStartDate has been modified and
      *  estimatedCompletionDate not yet recalculated with recalculateEstimatedCompletionDate() methode.
      */
-    private boolean mustBeRecalculate = false;
+    private boolean updateCompletionDate = false;
     /**
      * indicate if quantity  has been modified, used for store() method to update appropriate entity.
      */
@@ -85,9 +87,9 @@ public class ProductionRun {
     
     
     public ProductionRun(GenericDelegator delegator, String productionRunId) {
-		try {
-			if (! UtilValidate.isEmpty(productionRunId)) {
-				this.productionRun = delegator.findByPrimaryKey("WorkEffort", UtilMisc.toMap("workEffortId", productionRunId));
+        try {
+            if (! UtilValidate.isEmpty(productionRunId)) {
+                this.productionRun = delegator.findByPrimaryKey("WorkEffort", UtilMisc.toMap("workEffortId", productionRunId));
                 if (exist()) {
                     this.estimatedStartDate = productionRun.getTimestamp("estimatedStartDate");
                     this.estimatedCompletionDate = productionRun.getTimestamp("estimatedCompletionDate");
@@ -95,40 +97,40 @@ public class ProductionRun {
                     this.description = productionRun.getString("description");
                 }
             }
-		} catch (GenericEntityException e) {
-			Debug.logWarning(e.getMessage(), module);
-		}
+        } catch (GenericEntityException e) {
+            Debug.logWarning(e.getMessage(), module);
+        }
     }
-	/**
-	  * test if the productionRun exist.
-	  * @return true if it exist false otherwise.
-	  **/    
-	public boolean exist(){
-		if (productionRun != null) return true;
-		else return false;
-	}
-	/**
-	  * get the ProductionRun GenericValue .
-	  * @return the ProductionRun GenericValue 
-	  **/    
-	public GenericValue getGenericValue(){
-		return productionRun;
-	}
+    
     /**
-      * store  the modified ProductionRun object in the database.
-      *     <li>store the the productionRun header
-      *     <li> the productProduced related data
-      *     <li> the listRoutingTask related data
-      *     <li> the productComponent list related data
-      * @return true if success false otherwise
-      **/    
+     * test if the productionRun exist.
+     * @return true if it exist false otherwise.
+     **/
+    public boolean exist(){
+        return productionRun != null;
+    }
+    
+    /**
+     * get the ProductionRun GenericValue .
+     * @return the ProductionRun GenericValue
+     **/
+    public GenericValue getGenericValue(){
+        return productionRun;
+    }
+    /**
+     * store  the modified ProductionRun object in the database.
+     *     <li>store the the productionRun header
+     *     <li> the productProduced related data
+     *     <li> the listRoutingTask related data
+     *     <li> the productComponent list related data
+     * @return true if success false otherwise
+     **/
     public boolean store(){
         if (exist()){
-            if (mustBeRecalculate){ 
+            if (updateCompletionDate){
                 this.estimatedCompletionDate = recalculateEstimatedCompletionDate();
             }
             productionRun.set("estimatedStartDate",this.estimatedStartDate);
-            Debug.logInfo("dans Store2 estimatedCompletionDate="+estimatedCompletionDate,module);
             productionRun.set("estimatedCompletionDate",this.estimatedCompletionDate);
             productionRun.set("workEffortName",this.productionRunName);
             productionRun.set("description",this.description);
@@ -152,55 +154,57 @@ public class ProductionRun {
                     }
                 }
             } catch (GenericEntityException e) {
-            Debug.logWarning(e.getMessage(), module);
-            return false;
+                Debug.logWarning(e.getMessage(), module);
+                return false;
             }
             return true;
         }
         return false;
     }
-	/**
-	  * get the Product GenericValue corresponding to the productProduced.
-      *     In the same time this method read the quantity property from SGBD
-	  * @return the productProduced related object 
-	  **/    
-	public GenericValue getProductProduced(){
-		if (exist()) {
-			if (productProduced == null) {
-				try {
-					List productionRunProducts = productionRun.getRelated("WorkEffortGoodStandard", UtilMisc.toMap("statusId", "WIP_OUTGOING_FULFIL"),null);
-					this.productionRunProduct = EntityUtil.getFirst(productionRunProducts);
-					quantity = productionRunProduct.getDouble("estimatedQuantity");
-					productProduced = productionRunProduct.getRelatedOneCache("Product");
-				} catch (GenericEntityException e) {
-					Debug.logWarning(e.getMessage(), module);
-				}
-			}
-			return productProduced;
-		}
-		return null;
-	}
+    
     /**
-      * get the quantity property.
-      * @return the quantity property 
-      **/    
+     * get the Product GenericValue corresponding to the productProduced.
+     *     In the same time this method read the quantity property from SGBD
+     * @return the productProduced related object
+     **/
+    public GenericValue getProductProduced(){
+        if (exist()) {
+            if (productProduced == null) {
+                try {
+                    List productionRunProducts = productionRun.getRelated("WorkEffortGoodStandard", UtilMisc.toMap("statusId", "WIP_OUTGOING_FULFIL"),null);
+                    this.productionRunProduct = EntityUtil.getFirst(productionRunProducts);
+                    quantity = productionRunProduct.getDouble("estimatedQuantity");
+                    productProduced = productionRunProduct.getRelatedOneCache("Product");
+                } catch (GenericEntityException e) {
+                    Debug.logWarning(e.getMessage(), module);
+                }
+            }
+            return productProduced;
+        }
+        return null;
+    }
+    
+    /**
+     * get the quantity property.
+     * @return the quantity property
+     **/
     public Double getQuantity(){
-    	if (exist()) {
+        if (exist()) {
             if (quantity == null)  getProductProduced();
             return quantity;
         }
-    	else return null;
+        else return null;
     }
     /**
-      * set the quantity property and recalculated the productComponent quantity.
-      * @return  
-      **/    
-    public void setQuantity(Double newQuantity){
+     * set the quantity property and recalculated the productComponent quantity.
+     * @return
+     **/
+    public void setQuantity(Double newQuantity) {
         if (quantity == null) getProductProduced();
-        double previousQuantity = quantity.doubleValue(), componentQuantity; 
+        double previousQuantity = quantity.doubleValue(), componentQuantity;
         this.quantity = newQuantity;
         this.quantityIsUpdated = true;
-        this.mustBeRecalculate = true;
+        this.updateCompletionDate = true;
         if (productionRunComponents == null) getProductionRunComponents();
         for (Iterator iter = productionRunComponents.iterator(); iter.hasNext();){
             GenericValue component = (GenericValue) iter.next();
@@ -210,50 +214,49 @@ public class ProductionRun {
         return;
     }
     /**
-      * get the estimatedStartDate property.
-      * @return the estimatedStartDate property 
-      **/    
+     * get the estimatedStartDate property.
+     * @return the estimatedStartDate property
+     **/
     public Timestamp getEstimatedStartDate(){
-    	if (exist()) return this.estimatedStartDate;
-        else return null;
+        return (exist()? this.estimatedStartDate: null);
     }
     /**
-      * set the estimatedStartDate property.
-      * @return  
-      **/    
+     * set the estimatedStartDate property.
+     * @return
+     **/
     public void setEstimatedStartDate(Timestamp estimatedStartDate){
         this.estimatedStartDate = estimatedStartDate;
-        this.mustBeRecalculate = true;
+        this.updateCompletionDate = true;
     }
-	/**
-	  * get the estimatedCompletionDate property.
-	  * @return the estimatedCompletionDate property 
-	  **/    
-	public Timestamp getEstimatedCompletionDate(){
-		if (exist()) {
-            if (mustBeRecalculate) {
+    /**
+     * get the estimatedCompletionDate property.
+     * @return the estimatedCompletionDate property
+     **/
+    public Timestamp getEstimatedCompletionDate(){
+        if (exist()) {
+            if (updateCompletionDate) {
                 this.estimatedCompletionDate = recalculateEstimatedCompletionDate();
             }
             return this.estimatedCompletionDate;
-        } 
-		else return null;
-	}
+        }
+        else return null;
+    }
     /**
-      * set the estimatedCompletionDate property without any control or calculation.
-      * usage productionRun.setEstimatedCompletionDate(productionRun.recalculateEstimatedCompletionDate(priority);
-      * @return  
-      **/    
+     * set the estimatedCompletionDate property without any control or calculation.
+     * usage productionRun.setEstimatedCompletionDate(productionRun.recalculateEstimatedCompletionDate(priority);
+     * @return
+     **/
     public void setEstimatedCompletionDate(Timestamp estimatedCompletionDate){
         this.estimatedCompletionDate = estimatedCompletionDate;
     }
     /**
-      * recalculated  the estimatedCompletionDate property.
-      *     Use the quantity and the estimatedStartDate properties as entries parameters.
-      *     <br>read the listRoutingTask and for each recalculated and update the estimatedStart and endDate in the object.
-      *     <br> no store in the database is done.
-      * @param priority give the routingTask start point to recalculated 
-      * @return the estimatedCompletionDate calculated 
-      **/    
+     * recalculated  the estimatedCompletionDate property.
+     *     Use the quantity and the estimatedStartDate properties as entries parameters.
+     *     <br>read the listRoutingTask and for each recalculated and update the estimatedStart and endDate in the object.
+     *     <br> no store in the database is done.
+     * @param priority give the routingTask start point to recalculated
+     * @return the estimatedCompletionDate calculated
+     **/
     public Timestamp recalculateEstimatedCompletionDate(Long priority, Timestamp startDate){
         if (exist()) {
             getProductionRunRoutingTasks();
@@ -263,7 +266,7 @@ public class ProductionRun {
                 GenericValue routingTask = (GenericValue) iter.next();
                 if (priority.compareTo(routingTask.getLong("priority")) <= 0){
                     // Calculate the estimatedCompletionDate
-                    long duringTime = (long)  (routingTask.getDouble("estimatedSetupMillis").doubleValue() + (routingTask.getDouble("estimatedMilliSeconds").doubleValue() * quantity.doubleValue()));
+                    long duringTime = (long)(routingTask.getDouble("estimatedSetupMillis").doubleValue() + (routingTask.getDouble("estimatedMilliSeconds").doubleValue() * quantity.doubleValue()));
                     endDate = TechDataServices.addForward(TechDataServices.getTechDataCalendar(routingTask),startDate, duringTime);
                     // update the routingTask
                     routingTask.set("estimatedStartDate",startDate);
@@ -272,62 +275,63 @@ public class ProductionRun {
                 }
             }
             return endDate;
-        } 
-        else return null;
+        } else {
+            return null;
+        }
     }
     /**
      * call recalculateEstimatedCompletionDate(0,estimatedStartDate), so recalculated for all the routingtask.
      */
     public Timestamp recalculateEstimatedCompletionDate(){
-        this.mustBeRecalculate = false;
+        this.updateCompletionDate = false;
         return recalculateEstimatedCompletionDate(new Long(0), estimatedStartDate);
     }
-	/**
-	  * get the productionRunName property.
-	  * @return the productionRunName property 
-	  **/    
-	public String getProductionRunName(){
-		if (exist()) return this.productionRunName;
-		else return null;
-	}
+    /**
+     * get the productionRunName property.
+     * @return the productionRunName property
+     **/
+    public String getProductionRunName(){
+        if (exist()) return this.productionRunName;
+        else return null;
+    }
     public  void setProductionRunName(String name){
         this.productionRunName = name;
     }
-	/**
-	  * get the description property.
-	  * @return the description property 
-	  **/    
-	public String getDescription(){
-		if (exist()) return productionRun.getString("description");
-		else return null;
-	}
-    public void setDescription(String description){
-        this.description = description; 
+    /**
+     * get the description property.
+     * @return the description property
+     **/
+    public String getDescription(){
+        if (exist()) return productionRun.getString("description");
+        else return null;
     }
-	/**
-	  * get the GenericValue currentStatus.
-	  * @return the currentStatus related object 
-	  **/    
-	public GenericValue getCurrentStatus(){
-		if (exist()) {
-			if (currentStatus == null) {
-				try {
-					currentStatus = productionRun.getRelatedOneCache("StatusItem");
-				} catch (GenericEntityException e) {
-					Debug.logWarning(e.getMessage(), module);
-				}
-			}
-			return currentStatus;
-		}
-		return null;
-	}
-	/**
-	  * get the list of all the productionRunComponents as a list of GenericValue.
-	  * @return the productionRunComponents related object 
-	  **/    
-	public List getProductionRunComponents(){
-		if (exist()) {
-			if (productionRunComponents == null) {
+    public void setDescription(String description){
+        this.description = description;
+    }
+    /**
+     * get the GenericValue currentStatus.
+     * @return the currentStatus related object
+     **/
+    public GenericValue getCurrentStatus(){
+        if (exist()) {
+            if (currentStatus == null) {
+                try {
+                    currentStatus = productionRun.getRelatedOneCache("StatusItem");
+                } catch (GenericEntityException e) {
+                    Debug.logWarning(e.getMessage(), module);
+                }
+            }
+            return currentStatus;
+        }
+        return null;
+    }
+    /**
+     * get the list of all the productionRunComponents as a list of GenericValue.
+     * @return the productionRunComponents related object
+     **/
+    public List getProductionRunComponents(){
+        if (exist()) {
+            if (productionRunComponents == null) {
                 if (productionRunRoutingTasks == null)  this.getProductionRunRoutingTasks();
                 if (productionRunRoutingTasks != null) {
                     try {
@@ -336,38 +340,58 @@ public class ProductionRun {
                         for (Iterator iter=productionRunRoutingTasks.iterator(); iter.hasNext();) {
                             routingTask = (GenericValue)iter.next();
                             productionRunComponents.addAll(routingTask.getRelated("WorkEffortGoodStandard", UtilMisc.toMap("statusId", "WIP_INCOMING_FULFIL"),null));
-                       }    
+                            productionRunComponents.addAll(routingTask.getRelated("WorkEffortGoodStandard", UtilMisc.toMap("statusId", "WIP_INCOMING_DONE"),null));
+                        }
                     } catch (GenericEntityException e) {
                         Debug.logWarning(e.getMessage(), module);
                     }
                 }
-			}
-			return productionRunComponents;
-		}
-		return null;
-	}
-	/**
-	  * get the list of all the productionRunRoutingTasks as a list of GenericValue.
-	  * @return the productionRunRoutingTasks related object 
-	  **/    
-	public List getProductionRunRoutingTasks(){
-		if (exist()) {
-			if (productionRunRoutingTasks == null) {
-				try {
-					productionRunRoutingTasks = productionRun.getRelated("ChildWorkEffort",UtilMisc.toMap("workEffortTypeId","PROD_ORDER_TASK"),UtilMisc.toList("priority"));
-				} catch (GenericEntityException e) {
-					Debug.logWarning(e.getMessage(), module);
-				}
-			}
-			return productionRunRoutingTasks;
-		}
-		return null;
-	}
+            }
+            return productionRunComponents;
+        }
+        return null;
+    }
     /**
-      * clear list of all the productionRunRoutingTasks to force re-reading at the next need.
-      * This methode is used when the routingTasks ordering is changed. 
-      * @return  
-      **/    
+     * get the list of all the productionRunRoutingTasks as a list of GenericValue.
+     * @return the productionRunRoutingTasks related object
+     **/
+    public List getProductionRunRoutingTasks(){
+        if (exist()) {
+            if (productionRunRoutingTasks == null) {
+                try {
+                    productionRunRoutingTasks = productionRun.getRelated("ChildWorkEffort",UtilMisc.toMap("workEffortTypeId","PROD_ORDER_TASK"),UtilMisc.toList("priority"));
+                } catch (GenericEntityException e) {
+                    Debug.logWarning(e.getMessage(), module);
+                }
+            }
+            return productionRunRoutingTasks;
+        }
+        return null;
+    }
+    
+    /**
+     * get the list of all the productionRunRoutingTasks as a list of GenericValue.
+     * @return the productionRunRoutingTasks related object
+     **/
+    public GenericValue getLastProductionRunRoutingTask(){
+        if (exist()) {
+            if (productionRunRoutingTasks == null) {
+                try {
+                    productionRunRoutingTasks = productionRun.getRelated("ChildWorkEffort",UtilMisc.toMap("workEffortTypeId","PROD_ORDER_TASK"),UtilMisc.toList("priority"));
+                } catch (GenericEntityException e) {
+                    Debug.logWarning(e.getMessage(), module);
+                }
+            }
+            return (GenericValue)(productionRunRoutingTasks != null? productionRunRoutingTasks.get(productionRunRoutingTasks.size() - 1): null);
+        }
+        return null;
+    }
+
+    /**
+     * clear list of all the productionRunRoutingTasks to force re-reading at the next need.
+     * This methode is used when the routingTasks ordering is changed.
+     * @return
+     **/
     public void clearRoutingTasksList(){
         this.productionRunRoutingTasks = null;
     }

@@ -58,44 +58,45 @@ import org.ofbiz.manufacturing.techdata.TechDataServices;
  * Helper for Production Run maintenance
  *
  * @author     <a href="mailto:olivier.heintz@nereide.biz">Olivier Heintz</a>
- * @version    $Rev:$
+ * @version    $Rev$
  * @since      3.0
  */
 public class ProductionRunHelper {
-
+    
     public static final String module = ProductionRunHelper.class.getName();
     public static final String resource = "ManufacturingUiLabels";
-
-
+    
+    
     /**
      * Get a Production Run.
      *  <li> check if routing - product link exist
      * @param ctx The DispatchContext that this service is operating in.
      * @param context Map containing the input parameters, productionRunId
-     * @return Map with the result of the service, the output parameters are 
+     * @return Map with the result of the service, the output parameters are
      * 	<li> the productionRun
      * 	<li> the productionRunProduct
      */
     public static Map getProductionRun(GenericDelegator delegator, String productionRunId) {
         Map result = new HashMap();
-//        Timestamp now = UtilDateTime.nowTimestamp();
-
-		try {
-			if (productionRunId != null ) {
-				GenericValue productionRun = delegator.findByPrimaryKey("WorkEffort", UtilMisc.toMap("workEffortId", productionRunId));
-				if (productionRun != null) {
-					List productionRunProducts = productionRun.getRelated("WorkEffortGoodStandard", UtilMisc.toMap("statusId", "WIP_OUTGOING_FULFIL"),null);
-					GenericValue productionRunProduct = EntityUtil.getFirst(productionRunProducts);
-					GenericValue productProduced = productionRunProduct.getRelatedOneCache("Product");
-					List productionRunComponents = productionRun.getRelated("WorkEffortGoodStandard", UtilMisc.toMap("statusId", "WIP_INCOMING_FULFIL"),null);
-					List productionRunRoutingTasks = productionRun.getRelated("FromWorkEffortAssoc",UtilMisc.toMap("workEffortTypeId","PROD_ORDER_TASK"),null);
-					
-				}
-			}
-		} catch (GenericEntityException e) {
-			Debug.logWarning(e.getMessage(), module);
-		}
+        //        Timestamp now = UtilDateTime.nowTimestamp();
+        
+        try {
+            if (productionRunId != null ) {
+                GenericValue productionRun = delegator.findByPrimaryKey("WorkEffort", UtilMisc.toMap("workEffortId", productionRunId));
+                if (productionRun != null) {
+                    List productionRunProducts = productionRun.getRelated("WorkEffortGoodStandard", UtilMisc.toMap("statusId", "WIP_OUTGOING_FULFIL"),null);
+                    GenericValue productionRunProduct = EntityUtil.getFirst(productionRunProducts);
+                    GenericValue productProduced = productionRunProduct.getRelatedOneCache("Product");
+                    List productionRunComponents = productionRun.getRelated("WorkEffortGoodStandard", UtilMisc.toMap("statusId", "WIP_INCOMING_FULFIL"),null);
+                    productionRunComponents.addAll(productionRun.getRelated("WorkEffortGoodStandard", UtilMisc.toMap("statusId", "WIP_INCOMING_DONE"),null));
+                    List productionRunRoutingTasks = productionRun.getRelated("FromWorkEffortAssoc",UtilMisc.toMap("workEffortTypeId","PROD_ORDER_TASK"),null);
+                    
+                }
+            }
+        } catch (GenericEntityException e) {
+            Debug.logWarning(e.getMessage(), module);
+        }
         return result;
     }
-
+    
 }
