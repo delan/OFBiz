@@ -1,5 +1,5 @@
 /*
- * $Id: DataResourceWorker.java,v 1.14 2003/12/23 15:03:23 jonesde Exp $
+ * $Id: DataResourceWorker.java,v 1.15 2003/12/23 18:51:21 jonesde Exp $
  *
  *  Copyright (c) 2001, 2002 The Open For Business Project - www.ofbiz.org
  *
@@ -62,7 +62,7 @@ import freemarker.template.TemplateException;
  * 
  * @author <a href="mailto:byersa@automationgroups.com">Al Byers</a>
  * @author <a href="mailto:jonesde@ofbiz.org">David E. Jones</a>
- * @version $Revision: 1.14 $
+ * @version $Revision: 1.15 $
  * @since 3.0
  */
 public class DataResourceWorker {
@@ -294,8 +294,17 @@ public class DataResourceWorker {
         return imageType;
     }
 
+    public static String renderDataResourceAsText(GenericDelegator delegator, String dataResourceId, Map templateContext, GenericValue view, Locale locale, String mimeTypeId) throws GeneralException, IOException {
+        Writer outWriter = new StringWriter();
+        renderDataResourceAsText(delegator, dataResourceId, outWriter, templateContext, view, locale, mimeTypeId);
+        return outWriter.toString();
+    }
+    
     public static void renderDataResourceAsText(GenericDelegator delegator, String dataResourceId, Writer out, Map templateContext, GenericValue view, Locale locale, String mimeTypeId) throws GeneralException, IOException {
-        // TODO: is this really where the context comes from? where is it put there?
+        if (templateContext == null) {
+            templateContext = new HashMap();
+        }
+        
         Map context = (Map) templateContext.get("context");
         if (context == null) {
             context = new HashMap();
