@@ -89,15 +89,15 @@ public final class BeanShellEngine extends GenericAsyncEngine {
         // locate the script
         String path = null;
         try {
-            File file = new File(modelService.location);
+            java.io.File file = new java.io.File(modelService.location);
             if (!file.exists()) {
                 Debug.logInfo("[BeanShellEngine.invoke] : File not found: " +
                         modelService.location);
-                file = new File(scriptPath + modelService.location);
+                file = new java.io.File(scriptPath + modelService.location);
                 if (!file.exists()) {
                     Debug.logInfo("[BeanShellEngine.invoke] : File not found: " +
                             scriptPath + modelService.location);
-                    file = new File(globalScriptPath + modelService.location);
+                    file = new java.io.File(globalScriptPath + modelService.location);
                     if (!file.exists()) {
                         Debug.logInfo( "[BeanShellEngine.invoke] : File not found: " +
                                 globalScriptPath + modelService.location);
