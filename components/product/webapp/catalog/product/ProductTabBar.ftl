@@ -20,7 +20,7 @@
  *  THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  *
  *@author     David E. Jones (jonesde@ofbiz.org)
- *@version    $Revision: 1.2 $
+ *@version    $Revision: 1.3 $
  *@since      2.2
 -->
 
@@ -29,21 +29,21 @@
 
 <#if productId?has_content>
     <div class="tabContainer">
-	    <a href="<@ofbizUrl>/EditProduct?productId=${productId}</@ofbizUrl>" class="${selectedClassMap.EditProduct?default(unselectedClassName)}">Product</a>
-	    <a href="<@ofbizUrl>/EditProductPrices?productId=${productId}</@ofbizUrl>" class="${selectedClassMap.EditProductPrices?default(unselectedClassName)}">Prices</a>
-	    <a href="<@ofbizUrl>/EditProductContent?productId=${productId}</@ofbizUrl>" class="${selectedClassMap.EditProductContent?default(unselectedClassName)}">Content</a>
-	    <a href="<@ofbizUrl>/EditProductGoodIdentifications?productId=${productId}</@ofbizUrl>" class="${selectedClassMap.EditProductGoodIdentifications?default(unselectedClassName)}">IDs</a>
-	    <a href="<@ofbizUrl>/EditProductCategories?productId=${productId}</@ofbizUrl>" class="${selectedClassMap.EditProductCategories?default(unselectedClassName)}">Categories</a>
-	    <a href="<@ofbizUrl>/EditProductKeyword?PRODUCT_ID=${productId}</@ofbizUrl>" class="${selectedClassMap.EditProductKeyword?default(unselectedClassName)}">Keywords</a>
-	    <a href="<@ofbizUrl>/EditProductAssoc?PRODUCT_ID=${productId}</@ofbizUrl>" class="${selectedClassMap.EditProductAssoc?default(unselectedClassName)}">Associations</a>
-	    <a href="<@ofbizUrl>/EditProductAttributes?PRODUCT_ID=${productId}</@ofbizUrl>" class="${selectedClassMap.EditProductAttributes?default(unselectedClassName)}">Attributes</a>
-	    <a href="<@ofbizUrl>/EditProductFeatures?productId=${productId}</@ofbizUrl>" class="${selectedClassMap.EditProductFeatures?default(unselectedClassName)}">Features</a>
-	    <a href="<@ofbizUrl>/EditProductFacilities?productId=${productId}</@ofbizUrl>" class="${selectedClassMap.EditProductFacilities?default(unselectedClassName)}">Facilities</a>
-	    <a href="<@ofbizUrl>/EditProductFacilityLocations?productId=${productId}</@ofbizUrl>" class="${selectedClassMap.EditProductFacilityLocations?default(unselectedClassName)}">Locations</a>
-	    <a href="<@ofbizUrl>/EditProductInventoryItems?productId=${productId}</@ofbizUrl>" class="${selectedClassMap.EditProductInventoryItems?default(unselectedClassName)}">Inventory</a>
-	    <a href="<@ofbizUrl>/EditProductGlAccounts?productId=${productId}</@ofbizUrl>" class="${selectedClassMap.EditProductGlAccounts?default(unselectedClassName)}">Accounts</a>
-	    <#if product?exists && product.isVirtual?if_exists == "Y">
-	        <a href="<@ofbizUrl>/QuickAddVariants?productId=${productId}</@ofbizUrl>" class="${selectedClassMap.QuickAddVariants?default(unselectedClassName)}">Variants</a>
-	    </#if>
+        <a href="<@ofbizUrl>/EditProduct?productId=${productId}</@ofbizUrl>" class="${selectedClassMap.EditProduct?default(unselectedClassName)}">Product</a>
+        <a href="<@ofbizUrl>/EditProductPrices?productId=${productId}</@ofbizUrl>" class="${selectedClassMap.EditProductPrices?default(unselectedClassName)}">Prices</a>
+        <a href="<@ofbizUrl>/EditProductContent?productId=${productId}</@ofbizUrl>" class="${selectedClassMap.EditProductContent?default(unselectedClassName)}">Content</a>
+        <a href="<@ofbizUrl>/EditProductGoodIdentifications?productId=${productId}</@ofbizUrl>" class="${selectedClassMap.EditProductGoodIdentifications?default(unselectedClassName)}">IDs</a>
+        <a href="<@ofbizUrl>/EditProductCategories?productId=${productId}</@ofbizUrl>" class="${selectedClassMap.EditProductCategories?default(unselectedClassName)}">Categories</a>
+        <a href="<@ofbizUrl>/EditProductKeyword?PRODUCT_ID=${productId}</@ofbizUrl>" class="${selectedClassMap.EditProductKeyword?default(unselectedClassName)}">Keywords</a>
+        <a href="<@ofbizUrl>/EditProductAssoc?PRODUCT_ID=${productId}</@ofbizUrl>" class="${selectedClassMap.EditProductAssoc?default(unselectedClassName)}">Associations</a>
+        <a href="<@ofbizUrl>/EditProductAttributes?PRODUCT_ID=${productId}</@ofbizUrl>" class="${selectedClassMap.EditProductAttributes?default(unselectedClassName)}">Attributes</a>
+        <a href="<@ofbizUrl>/EditProductFeatures?productId=${productId}</@ofbizUrl>" class="${selectedClassMap.EditProductFeatures?default(unselectedClassName)}">Features</a>
+        <a href="<@ofbizUrl>/EditProductFacilities?productId=${productId}</@ofbizUrl>" class="${selectedClassMap.EditProductFacilities?default(unselectedClassName)}">Facilities</a>
+        <a href="<@ofbizUrl>/EditProductFacilityLocations?productId=${productId}</@ofbizUrl>" class="${selectedClassMap.EditProductFacilityLocations?default(unselectedClassName)}">Locations</a>
+        <a href="<@ofbizUrl>/EditProductInventoryItems?productId=${productId}</@ofbizUrl>" class="${selectedClassMap.EditProductInventoryItems?default(unselectedClassName)}">Inventory</a>
+        <a href="<@ofbizUrl>/EditProductGlAccounts?productId=${productId}</@ofbizUrl>" class="${selectedClassMap.EditProductGlAccounts?default(unselectedClassName)}">Accounts</a>
+        <#if product?exists && product.isVirtual?if_exists == "Y">
+            <a href="<@ofbizUrl>/QuickAddVariants?productId=${productId}</@ofbizUrl>" class="${selectedClassMap.QuickAddVariants?default(unselectedClassName)}">Variants</a>
+        </#if>
     </div>
 </#if>
