@@ -204,7 +204,7 @@ public class ControlServlet extends HttpServlet {
                         if (readerURL != null)
                             readers.add(readerURL);
                     } catch (NullPointerException npe) {
-                        Debug.logInfo("[ControlServlet.init] ERROR: Null pointer exception thrown.", module);
+                        Debug.logInfo(npe, "[ControlServlet.init] ERROR: Null pointer exception thrown.", module);
                     } catch (MalformedURLException e) {
                         Debug.logError(e, "[ControlServlet.init] ERROR: cannot get URL from String.", module);
                     }
@@ -212,10 +212,13 @@ public class ControlServlet extends HttpServlet {
             }
             // get the root path (sub-path) from init parameter
             String scriptPath = getServletContext().getInitParameter("scriptLocationPath");
-            if (scriptPath == null) scriptPath = "/";
+            if (scriptPath == null)
+                scriptPath = "/";
             String rootPath = getServletContext().getRealPath("/");
-            dispatcher = new LocalDispatcher(getServletContext().getServletContextName(), rootPath,
-                                             scriptPath, delegator, readers);
+            String dispatcherName = getServletContext().getInitParameter("localDispatcherName");
+            if (dispatcherName == null)
+                Debug.logError("No localDispatcherName specified in the web.xml file", module);
+            dispatcher = new LocalDispatcher(dispatcherName, rootPath, scriptPath, delegator, readers);
             getServletContext().setAttribute("dispatcher", dispatcher);
             if (dispatcher == null)
                 Debug.logError("[ControlServlet.init] ERROR: dispatcher could not be initialized.", module);
