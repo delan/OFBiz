@@ -1,5 +1,5 @@
 <#--
- *  Copyright (c) 2002-2004 The Open For Business Project - www.ofbiz.org
+ *  Copyright (c) 2002-2005 The Open For Business Project - www.ofbiz.org
  *
  *  Permission is hereby granted, free of charge, to any person obtaining a
  *  copy of this software and associated documentation files (the "Software"),
@@ -35,52 +35,17 @@
     function setNowFromDate(formName) { eval('document.' + formName + '.fromDate.value="${nowStr}"'); }
 </script>
 
-<#if party?has_content>
 <#-- Main Heading -->
-<table width='100%' cellpadding='0' cellspacing='0' border='0'>
-  <tr>
-    <td align='left'>
-      <div class="head1">${uiLabelMap.PartyTheProfileOf}
-        <#if lookupPerson?has_content>
-          ${lookupPerson.personalTitle?if_exists}
-          ${lookupPerson.firstName?if_exists}
-          ${lookupPerson.middleName?if_exists}
-          ${lookupPerson.lastName?if_exists}
-          ${lookupPerson.suffix?if_exists}
-        <#elseif lookupGroup?has_content>
-          ${lookupGroup.groupName?default("${uiLabelMap.PartyNoNameGroup}")}
-        <#else>
-          ${uiLabelMap.PartyNewUser}
-       </#if>
-      </div>
-    </td>
-    <td align='right'>
-      <div class='tabContainer'>
-        <a href="<@ofbizUrl>/viewprofile?partyId=${party.partyId}</@ofbizUrl>" class="tabButtonSelected">${uiLabelMap.PartyProfile}</a>
-        <a href="<@ofbizUrl>/viewvendor?partyId=${party.partyId}</@ofbizUrl>" class="tabButton">${uiLabelMap.PartyVendor}</a>
-        <a href="<@ofbizUrl>/viewroles?partyId=${party.partyId}</@ofbizUrl>" class="tabButton">${uiLabelMap.PartyRoles}</a>
-        <a href="<@ofbizUrl>/viewrelationships?partyId=${party.partyId}</@ofbizUrl>" class="tabButton">${uiLabelMap.PartyRelationships}</a>
-        <a href="<@ofbizUrl>/viewcommunications?partyId=${partyId}</@ofbizUrl>" class="tabButton">${uiLabelMap.PartyCommunications}</a>
-      </div>
-    </td>
-  </tr>
-  <tr>
-    <td colspan="2" align="right" nowrap>
+<#include "ProfileTabBar.ftl"/>
+
+<#if party?has_content>
+<div style="text-align: right;">
       <#if showOld>
         <a href="<@ofbizUrl>/viewprofile?partyId=${party.partyId}</@ofbizUrl>" class="buttontext">[${uiLabelMap.PartyHideOld}]</a>
       <#else>
         <a href="<@ofbizUrl>/viewprofile?partyId=${party.partyId}&SHOW_OLD=true</@ofbizUrl>" class="buttontext">[${uiLabelMap.PartyShowOld}]</a>
       </#if>
-      <a href="/accounting/control/FindBillingAccount?partyId=${partyId}${externalKeyParam}" class="buttontext">[${uiLabelMap.AccountingBillingAccount}]</a>
-      <#if security.hasRolePermission("ORDERMGR", "_VIEW", "", "", session)>
-        <a href="/ordermgr/control/findorders?lookupFlag=Y&hideFields=Y&partyId=${partyId}${externalKeyParam}" class="buttontext">[${uiLabelMap.OrderOrders}]</a>
-      </#if>
-      <#if security.hasEntityPermission("ORDERMGR", "_CREATE", session)>
-        <a href="/ordermgr/control/orderentry?mode=SALES_ORDER&partyId=${partyId}${externalKeyParam}" class="buttontext">[${uiLabelMap.OrderNewOrder}]</a>
-      </#if>
-    </td>
-  </tr>
-</table>
+</div>
 <br>
 
 <TABLE border=0 width='100%' cellspacing='0' cellpadding='0' class='boxoutside'>

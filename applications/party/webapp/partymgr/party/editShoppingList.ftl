@@ -1,5 +1,5 @@
 <#--
- *  Copyright (c) 2003 The Open For Business Project - www.ofbiz.org
+ *  Copyright (c) 2003-2005 The Open For Business Project - www.ofbiz.org
  *
  *  Permission is hereby granted, free of charge, to any person obtaining a 
  *  copy of this software and associated documentation files (the "Software"), 
@@ -26,6 +26,8 @@
 -->
 <#assign uiLabelMap = requestAttributes.uiLabelMap>
 
+<#include "ProfileTabBar.ftl"/>
+
 <TABLE border=0 width='100%' cellspacing='0' cellpadding='0' class='boxoutside'>
   <TR>
     <TD width='100%'>
@@ -35,8 +37,8 @@
             <div class="boxhead">&nbsp;${uiLabelMap.PartyShoppingLists}</div>
           </td>
           <td valign="middle" align="right">
-            <a href="<@ofbizUrl>/createEmptyShoppingList</@ofbizUrl>?partyId=${partyId?if_exists}" class="submenutext">${uiLabelMap.CommonCreateNew}</a>
-            <a href="<@ofbizUrl>/viewprofile?partyId=${partyId?if_exists}</@ofbizUrl>" class="submenutextright">${uiLabelMap.PartyProfile}</a>
+            <a href="<@ofbizUrl>createEmptyShoppingList</@ofbizUrl>?partyId=${partyId?if_exists}" class="submenutextright">${uiLabelMap.CommonCreateNew}</a>
+            <#-- <a href="<@ofbizUrl>viewprofile?partyId=${partyId?if_exists}</@ofbizUrl>" class="submenutextright">${uiLabelMap.PartyProfile}</a> -->
           </td>
         </tr>
       </table>

@@ -31,9 +31,16 @@ import org.ofbiz.entity.util.*;
 import org.ofbiz.entity.condition.*;
 import org.ofbiz.product.catalog.*;
 
+externalLoginKey = request.getAttribute("externalLoginKey");
+externalKeyParam = (externalLoginKey == null) ? "" : ("&externalLoginKey=" + externalLoginKey);
+context.put("externalKeyParam", externalKeyParam);
+
 delegator = request.getAttribute("delegator");
 dispatcher = request.getAttribute("dispatcher");
 userLogin = session.getAttribute("userLogin");
+
+parameterMap = UtilHttp.getParameterMap(request);
+
 prodCatalogId = CatalogWorker.getCurrentCatalogId(request);
 webSiteId = CatalogWorker.getWebSiteId(request);
 
@@ -46,7 +53,12 @@ context.put("currencyUomId", currencyUomId);
 partyId = request.getParameter("partyId");
 if (partyId == null) partyId = (String) request.getAttribute("partyId");
 
-parameterMap = UtilHttp.getParameterMap(request);
+party = delegator.findByPrimaryKey("Party", UtilMisc.toMap("partyId", partyId));
+context.put("party", party);
+if (party != null) {
+    context.put("lookupPerson", party.getRelatedOne("Person"));
+    context.put("lookupGroup", party.getRelatedOne("PartyGroup"));
+}
 
 shoppingListId = parameterMap.get("shoppingListId");
 if (shoppingListId == null || shoppingListId.equals("")) 

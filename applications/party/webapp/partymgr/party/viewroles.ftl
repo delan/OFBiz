@@ -25,40 +25,11 @@
  * @version    1.0
  */ 
 -->
-<#assign uiLabelMap = requestAttributes.uiLabelMap>
+<#if (requestAttributes.uiLabelMap)?exists><#assign uiLabelMap = requestAttributes.uiLabelMap></#if>
 <#if hasViewPermission>
 
 <#-- Main Heading -->
-<table width="100%" cellpadding="0" cellspacing="0" border="0">
-  <tr>
-    <td align="left">
-      <div class="head1">${uiLabelMap.PartyTheProfileOf}
-        <#if lookupPerson?exists>
-          ${lookupPerson.personalTitle?if_exists}
-          ${lookupPerson.firstName?if_exists}
-          ${lookupPerson.middleName?if_exists}
-          ${lookupPerson.lastName?if_exists}
-          ${lookupPerson.suffix?if_exists}
-        <#else>
-          <#if lookupGroup?exists>
-            ${lookupGroup.groupName?default(uiLabelMap.PartyNoNameGroup)}
-          <#else>
-          "${uiLabelMap.PartyNewUser}"
-          </#if>
-        </#if>
-      </div>
-    </td>
-    <td align="right">
-	  <div class="tabContainer">
-        <a href="<@ofbizUrl>/viewprofile?party_id=${partyId}</@ofbizUrl>" class="tabButton">${uiLabelMap.PartyProfile}</a>
-        <a href="<@ofbizUrl>/viewvendor?party_id=${partyId}</@ofbizUrl>" class="tabButton">${uiLabelMap.PartyVendor}</a>
-        <a href="<@ofbizUrl>/viewroles?party_id=${partyId}</@ofbizUrl>" class="tabButtonSelected">${uiLabelMap.PartyRoles}</a>
-        <a href="<@ofbizUrl>/viewrelationships?party_id=${partyId}</@ofbizUrl>" class="tabButton">${uiLabelMap.PartyRelationships}</a>
-        <a href="<@ofbizUrl>/viewcommunications?partyId=${partyId}</@ofbizUrl>" class="tabButton">${uiLabelMap.PartyCommunications}</a>
-      </div>
-    </td>
-  </tr>
-</table>
+<#include "ProfileTabBar.ftl"/>
 
 <#-- Party Roles -->
 <br>

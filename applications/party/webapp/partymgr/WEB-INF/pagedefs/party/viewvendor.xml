@@ -4,5 +4,6 @@
     <property name="title">View Vendor Party Info</property>
     <property name="title-property">PageTitleViewVendorParty</property>
     <property name="headerItem">view</property>
+    <property name="tabButtonItem">viewvendor</property>
     <content-action name="/party/viewvendor.bsh"/>
 </page>
