@@ -6,7 +6,7 @@
     <vendor>OFBiz</vendor>
     <version>1.0</version>
     
-    <service name="testScv" engine="java" export="true" validate="false"
+    <service name="testScv" engine="java" export="true" validate="false" require-new-transaction="true"
             location="org.ofbiz.commonapp.common.CommonServices" invoke="testService">
         <description>Test service</description>
         <attribute name="message" type="String" mode="IN" optional="true"/>
