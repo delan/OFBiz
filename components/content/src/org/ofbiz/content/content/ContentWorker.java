@@ -1,5 +1,5 @@
 /*
- * $Id: ContentWorker.java,v 1.8 2003/12/21 09:34:12 jonesde Exp $
+ * $Id: ContentWorker.java,v 1.9 2003/12/21 10:32:54 jonesde Exp $
  * 
  * Copyright (c) 2001, 2002 The Open For Business Project - www.ofbiz.org
  * 
@@ -53,7 +53,7 @@ import freemarker.template.SimpleHash;
  * ContentWorker Class
  * 
  * @author <a href="mailto:byersa@automationgroups.com">Al Byers</a>
- * @version $Revision: 1.8 $
+ * @version $Revision: 1.9 $
  * @since 2.2
  * 
  *  
@@ -451,7 +451,7 @@ public class ContentWorker {
         return;
     }
 
-    public static Map pullEntityValues(GenericDelegator delegator, String entityName, Map context) throws GenericEntityException {
+    public static Map pullEntityValues(GenericDelegator delegator, String entityName, Map context) {
         GenericValue entOut = delegator.makeValue(entityName, null);
         entOut.setPKFields(context);
         entOut.setNonPKFields(context);
