@@ -49,8 +49,9 @@ import org.ofbiz.entity.model.ModelEntity;
 import org.ofbiz.entity.serialize.SerializeException;
 import org.ofbiz.entity.serialize.XmlSerializer;
 import org.ofbiz.entity.util.EntityListIterator;
+import org.ofbiz.entityext.synchronization.EntitySyncContext.SyncAbortException;
+import org.ofbiz.entityext.synchronization.EntitySyncContext.SyncErrorException;
 import org.ofbiz.service.DispatchContext;
-import org.ofbiz.service.GeneralServiceException;
 import org.ofbiz.service.GenericServiceException;
 import org.ofbiz.service.LocalDispatcher;
 import org.ofbiz.service.ServiceUtil;
@@ -110,7 +111,9 @@ public class EntitySyncServices {
 
             esc.saveFinalSyncResults();
             
-        } catch (GeneralServiceException e) {
+        } catch (SyncAbortException e) {
+            return e.returnError(module);
+        } catch (SyncErrorException e) {
             if (esc != null) {
                 List errorList = new LinkedList();
                 esc.saveSyncErrorInfo("ESR_DATA_ERROR", errorList);
@@ -408,7 +411,9 @@ public class EntitySyncServices {
             if (!esc.hasMoreTimeToSync() ) {
                 esc.saveFinalSyncResults();
             }
-        } catch (GeneralServiceException e) {
+        } catch (SyncAbortException e) {
+            return e.returnError(module);
+        } catch (SyncErrorException e) {
             if (esc != null) {
                 List errorList = new LinkedList();
                 esc.saveSyncErrorInfo("ESR_DATA_ERROR", errorList);
