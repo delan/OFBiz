@@ -1,5 +1,5 @@
 /*
- * $Id: EntityExpr.java,v 1.14 2004/07/14 06:36:17 doogie Exp $
+ * $Id: EntityExpr.java,v 1.15 2004/07/14 15:23:19 doogie Exp $
  *
  * Copyright (c) 2001, 2002 The Open For Business Project - www.ofbiz.org
  *
@@ -39,7 +39,7 @@ import org.ofbiz.entity.model.ModelField;
  * Encapsulates simple expressions used for specifying queries
  *
  * @author     <a href="mailto:jonesde@ofbiz.org">David E. Jones</a>
- * @version    $Revision: 1.14 $
+ * @version    $Revision: 1.15 $
  * @since      2.0
  */
 public class EntityExpr extends EntityCondition {
@@ -148,7 +148,7 @@ public class EntityExpr extends EntityCondition {
     public String makeWhereString(ModelEntity modelEntity, List entityConditionParams) {
         // if (Debug.verboseOn()) Debug.logVerbose("makeWhereString for entity " + modelEntity.getEntityName(), module);
         StringBuffer sql = new StringBuffer();
-        operator.addSqlValue(sql, modelEntity, entityConditionParams, false, lhs, rhs);
+        operator.addSqlValue(sql, modelEntity, entityConditionParams, true, lhs, rhs);
         return sql.toString();
     }
 
