@@ -816,6 +816,10 @@
         <response name="error" type="view" value="profilesurvey"/>
     </request-map>
 
+    <request-map uri="defaultcontent">
+        <security https="true" auth="false"/>
+        <response name="success" type="view" value="defaultcontent"/>
+    </request-map>
     <!-- End of Request Mappings -->
 
     <!-- View Mappings -->
@@ -870,5 +874,7 @@
     <view-map name="giftcardbalance" type="jpublish" page="/customer/giftcardbalance.ftl"/>
     <view-map name="giftcardlink" type="jpublish" page="/customer/giftcardlink.ftl"/>
     <view-map name="profilesurvey" type="jpublish" page="/customer/customersurvey.ftl"/>
+    
+    <view-map name="defaultcontent" type="jpublish" page="/content/defaultcontent.ftl"/>
     <!-- End of View Mappings -->
 </site-conf>
