@@ -35,6 +35,7 @@
         <description>Quick Ships An Entire Order</description>      
         <attribute name="orderId" type="String" mode="IN" optional="false"/>
         <attribute name="originFacilityId" type="String" mode="IN" optional="true"/>
+        <attribute name="shipmentId" type="String" mode="OUT" optional="false"/>
     </service>
         
     <service name="createShipment" default-entity-name="Shipment" engine="simple"
