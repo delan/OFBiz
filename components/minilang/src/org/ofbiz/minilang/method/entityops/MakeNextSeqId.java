@@ -1,7 +1,7 @@
 /*
  * $Id$
  *
- *  Copyright (c) 2001, 2002 The Open For Business Project - www.ofbiz.org
+ *  Copyright (c) 2001-2004 The Open For Business Project - www.ofbiz.org
  *
  *  Permission is hereby granted, free of charge, to any person obtaining a
  *  copy of this software and associated documentation files (the "Software"),
@@ -28,7 +28,6 @@ import java.util.List;
 
 import org.ofbiz.base.util.Debug;
 import org.ofbiz.base.util.UtilFormatOut;
-import org.ofbiz.base.util.UtilMisc;
 import org.ofbiz.base.util.UtilValidate;
 import org.ofbiz.entity.GenericValue;
 import org.ofbiz.minilang.SimpleMethod;
@@ -38,10 +37,10 @@ import org.ofbiz.minilang.method.MethodOperation;
 import org.w3c.dom.Element;
 
 /**
- * Gets a sequenced ID from the delegator and puts it in the env
+ * Look at existing values for a sub-entity with a sequenced secondary ID, and get the highest plus 1
  *
  * @author     <a href="mailto:jonesde@ofbiz.org">David E. Jones</a>
- * @version    $Rev:$
+ * @version    $Rev$
  * @since      2.0
  */
 public class MakeNextSeqId extends MethodOperation {
@@ -85,37 +84,40 @@ public class MakeNextSeqId extends MethodOperation {
 
         GenericValue value = (GenericValue) valueAcsr.get(methodContext);
         if (UtilValidate.isEmpty(value.getString(seqFieldName))) {
+            String sequencedIdPrefix = methodContext.getDelegator().getSequencedIdPrefix();
+
             value.remove(seqFieldName);
             GenericValue lookupValue = methodContext.getDelegator().makeValue(value.getEntityName(), null);
             lookupValue.setPKFields(value);
             try {
-                // get values in reverse order
-                List allValues = methodContext.getDelegator().findByAnd(value.getEntityName(), lookupValue, UtilMisc.toList("-" + seqFieldName));
+                // get values in whatever order, we will go through all of them to find the highest value
+                List allValues = methodContext.getDelegator().findByAnd(value.getEntityName(), lookupValue, null);
                 //Debug.logInfo("Get existing values from entity " + value.getEntityName() + " with lookupValue: " + lookupValue + ", and the seqFieldName: " + seqFieldName + ", and the results are: " + allValues, module);
                 Iterator allValueIter = allValues.iterator();
-                Integer seqVal = null;
-                while (seqVal == null && allValueIter.hasNext()) {
-                    GenericValue first = (GenericValue) allValueIter.next();
-                    String currentSeqId = null;
-                    if (first != null) {
-                        currentSeqId = first.getString(seqFieldName);
-                    }
-                    try {
-                        if (currentSeqId != null) {
-                            seqVal = Integer.valueOf(currentSeqId);
+                int highestSeqVal = 1;
+                while (allValueIter.hasNext()) {
+                    GenericValue curValue = (GenericValue) allValueIter.next();
+                    String currentSeqId = curValue.getString(seqFieldName);
+                    if (currentSeqId != null) {
+                        if (UtilValidate.isNotEmpty(sequencedIdPrefix)) {
+                            if (currentSeqId.startsWith(sequencedIdPrefix)) {
+                                currentSeqId = currentSeqId.substring(sequencedIdPrefix.length());
+                            } else {
+                                continue;
+                            }
                         }
-                    } catch (Exception e) {
-                        seqVal = null;
-                        Debug.logWarning("Error converting last SeqId to a number: " + e.toString(), module);
+                        try {
+                            int seqVal = Integer.parseInt(currentSeqId);
+                            if (seqVal > highestSeqVal) {
+                                highestSeqVal = seqVal;
+                            }
+                        } catch (Exception e) {
+                            Debug.logWarning("Error in make-next-seq-id converting SeqId [" + currentSeqId + "] to a number: " + e.toString(), module);
+                        }
                     }
                 }
 
-                String newSeqId = null;
-                if (seqVal != null) {
-                    newSeqId = UtilFormatOut.formatPaddedNumber(seqVal.intValue() + incrementBy, numericPadding);
-                } else {
-                    newSeqId = UtilFormatOut.formatPaddedNumber(1, numericPadding);
-                }
+                String newSeqId = sequencedIdPrefix + UtilFormatOut.formatPaddedNumber(highestSeqVal + incrementBy, numericPadding);
 
                 value.set(seqFieldName, newSeqId);
             } catch (Exception e) {
