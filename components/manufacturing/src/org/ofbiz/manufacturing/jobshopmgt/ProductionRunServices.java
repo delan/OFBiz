@@ -1122,6 +1122,17 @@ public class ProductionRunServices {
                 return ServiceUtil.returnError(e.getMessage());
             }
         }
+        
+        GenericValue orderItem = null;
+        try {
+            // Find the related order item (if exists)
+            List orderItems = productionRun.getGenericValue().getRelated("WorkOrderItemFulfillment");
+            orderItem = EntityUtil.getFirst(orderItems);
+        } catch (GenericEntityException e) {
+            Debug.logWarning(e.getMessage(), module);
+            return ServiceUtil.returnError(e.getMessage());
+        }
+        
         if (createSerializedInventory.booleanValue()) {
             try {
                 int numOfItems = quantity.intValue();
@@ -1183,6 +1194,11 @@ public class ProductionRunServices {
                 serviceContext = new HashMap();
                 serviceContext.put("inventoryItemId", inventoryItemId);
                 serviceContext.put("userLogin", userLogin);
+                if (orderItem != null) {
+                    // the reservations of this order item are privileged reservations
+                    serviceContext.put("priorityOrderId", orderItem.getString("orderId"));
+                    serviceContext.put("priorityOrderItemSeqId", orderItem.getString("orderItemSeqId"));
+                }
                 resultService = resultService = dispatcher.runSync("balanceInventoryItems", serviceContext);
             } catch(Exception exc) {
                 return ServiceUtil.returnError(exc.getMessage());
