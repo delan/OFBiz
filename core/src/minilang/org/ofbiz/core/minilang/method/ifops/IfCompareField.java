@@ -60,7 +60,7 @@ public class IfCompareField extends MethodOperation {
         
         this.toMapAcsr = new ContextAccessor(element.getAttribute("to-map-name"));
         // set fieldAcsr to their defualt value of fieldAcsr if empty
-        this.toFieldAcsr = new ContextAccessor(element.getAttribute("to-field-name"), this.fieldAcsr.toString());
+        this.toFieldAcsr = new ContextAccessor(element.getAttribute("to-field-name"), element.getAttribute("field-name"));
 
         // do NOT default the to-map-name to the map-name because that
         //would make it impossible to compare from a map field to an 
