@@ -20,7 +20,7 @@
  *  THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  *
  *@author     Andy Zeneski (jaz@ofbiz.org)
- *@version    $Revision: 1.6 $
+ *@version    $Revision: 1.7 $
  *@since      3.0
 -->
 
@@ -70,8 +70,8 @@ function refreshInfo() {
               </td>
             </tr>
           </table>
+          <#assign extInfo = requestParameters.extInfo?default("N")>
           <#if requestParameters.hideFields?default("N") != "Y">
-            <#assign extInfo = requestParameters.extInfo?default("N")>
             <table width='100%' border='0' cellspacing='0' cellpadding='2' class='boxbottom'>
               <tr>
                 <td align='center' width='100%'>
@@ -253,7 +253,12 @@ function refreshInfo() {
               <td><div class="tableheadtext">Party #</div></td>
               <td><div class="tableheadtext">User Login</div></td>
               <td><div class="tableheadtext">Name</div></td>
-              <td><div class="tableheadtext">Postal Code</div></td>
+              <#if extInfo?default("") == "P">
+                <td><div class="tableheadtext">Postal Code</div></td>
+              </#if>
+              <#if extInfo?default("") == "T">
+                <td><div class="tableheadtext">Area Code</div></td>
+              </#if>
               <td><div class="tableheadtext">Type</div></td>
               <td>&nbsp;</td>
             </tr>
@@ -275,7 +280,12 @@ function refreshInfo() {
                         (No Name Found)
                       </#if>
                   </td>
-                  <td><div class="tabletext">${partyRow.postalCode?if_exists}</div></td>
+                  <#if extInfo?default("") == "P">
+                    <td><div class="tabletext">${partyRow.postalCode?if_exists}</div></td>
+                  </#if>
+                  <#if extInfo?default("") == "T">
+                    <td><div class="tabletext">${partyRow.areaCode?if_exists}</div></td>
+                  </#if>
                   <td><div class="tabletext">${partyType.description?default("???")}</div></td>
                   <td align="right">
                     <!-- this is all on one line so that no break will be inserted -->
