@@ -30,6 +30,7 @@ import java.util.LinkedList;
 import java.util.List;
 import java.util.ListIterator;
 import java.util.Map;
+import java.util.NoSuchElementException;
 import java.util.Set;
 import java.util.TreeSet;
 
@@ -956,6 +957,14 @@ public class ModelForm {
         formStringRenderer.renderFormatHeaderRowClose(buffer, context, this);
     }
 
+    protected Object safeNext(ListIterator listIt) {
+        try {
+            return listIt.next();
+        } catch (NoSuchElementException e) {
+            return null;
+        }
+    }
+    
     public void renderItemRows(StringBuffer buffer, Map context, FormStringRenderer formStringRenderer, boolean formPerItem) {
         this.rowCount = 0;
         String lookupName = getListIteratorName();
@@ -977,7 +986,7 @@ public class ModelForm {
         if (obj instanceof ListIterator) {
             iter = (ListIterator)obj;   
             setPaginate(true);
-        } else  if (obj instanceof List) {
+        } else if (obj instanceof List) {
             items = (List)obj;
             iter = items.listIterator();
             setPaginate(false);
@@ -985,26 +994,28 @@ public class ModelForm {
         // set low and high index
 
         getListLimits(context, obj);
-        
+
         if (iter != null) {
             // render item rows
             int itemIndex = -1;
-            while (iter.hasNext()) {
+            Object item = null;
+            while ((item = this.safeNext(iter)) != null) {
                 itemIndex++;
                 if (itemIndex >= highIndex) {
                     break;
                 }
-                Map localContext = new HashMap(context);
-                Object item = iter.next();
+
+                // TODO: this is a bad design, for EntityListIterators we should skip to the lowIndex and go from there, MUCH more efficient...
                 if (itemIndex < lowIndex) {
                     continue;
                 }
+                
+                Map localContext = new HashMap(context);
                 if (UtilValidate.isNotEmpty(this.getListEntryName())) {
                     localContext.put(this.getListEntryName(), item);
                 } else {
                     Map itemMap = (Map) item;
                     localContext.putAll(itemMap);
-                    
                 }
                 
                 localContext.put("itemIndex", new Integer(itemIndex));
@@ -1116,17 +1127,16 @@ public class ModelForm {
                 // render row formatting close
                 formStringRenderer.renderFormatItemRowClose(buffer, localContext, this);
             }
-            if ((itemIndex + 1) < highIndex)
+            if ((itemIndex + 1) < highIndex) {
                 setHighIndex(itemIndex + 1);
+            }
             setActualPageSize(highIndex - lowIndex);
             
-            if (iter != null) {
-                if (iter instanceof EntityListIterator) {
-                    try {
-                    	((EntityListIterator)iter).close();
-                    } catch(GenericEntityException e) {
-                    	throw new RuntimeException(e.getMessage());
-                    }
+            if (iter instanceof EntityListIterator) {
+                try {
+                	((EntityListIterator)iter).close();
+                } catch(GenericEntityException e) {
+                	throw new RuntimeException(e.getMessage());
                 }
             }
 //            if (listSize < actualPageSize) {
