@@ -687,4 +687,22 @@ public class PartyServices {
         return result;
     }
 
+    public static Map createRoleType(DispatchContext dctx, Map context) {
+        Map result = new HashMap();
+        GenericDelegator delegator = dctx.getDelegator();
+        String roleTypeId = (String) context.get("roleTypeId");
+        String description = (String) context.get("description");
+        GenericValue roleType = null;
+        try {
+            roleType = delegator.makeValue("RoleType", UtilMisc.toMap("roleTypeId", roleTypeId, "description", description));
+            roleType = delegator.create(roleType);
+        } catch (GenericEntityException e) {
+            Debug.logError(e);
+            return ServiceUtil.returnError("Cannot create role type entity (write failure): " + e.getMessage());
+        }
+        if (roleType != null) {
+            result.put("roleType", roleType);
+        }
+        return result;
+    }
 }
