@@ -11,9 +11,9 @@
 
   .button	{border-style: outset; border-color: #9999CC; border-width: 2px; background-color: #dddddd; padding-right: 5px; padding-left: 5px;}
   A.buttontext {font-family: Helvetica,sans-serif; font-size: 8pt; font-weight: bold; text-decoration: none; color: blue; }
-  A.buttontext:hover {color:red;}
+  A.buttontext:hover {color: red;}
   A.lightbuttontext {font-family: Helvetica,sans-serif; font-size: 8pt; font-weight: bold; text-decoration: none; color: yellow;}
-  A.lightbuttontext:hover {color:red;}
+  A.lightbuttontext:hover {color: red;}
 
   .ontab {FONT-SIZE: 10pt; background-color: black; padding: 2; border-style: inset; border-width: 3;}
   a.onlnk {FONT-SIZE: 10pt; FONT: bold; COLOR: white; FONT-FAMILY: Arial, Helvetica, sans-serif; TEXT-DECORATION: none; padding: 2;}

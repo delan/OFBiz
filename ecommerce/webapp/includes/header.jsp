@@ -52,7 +52,7 @@ function mClk(src){
       <TABLE width='100%' cellpadding='0' cellspacing='0' border='0'>
         <TR>
           <TD align=left width='50%' >
-            <H1 style="margin: 0;"><font color="white">Open&nbsp;For&nbsp;Commerce</font></H1>
+            <div style="margin: 0; font-size: 24pt; font-weight: bold; color: white;">Open&nbsp;For&nbsp;Commerce</div>
             <div style="FONT-SIZE: 8pt; margin: 0; color: white;">Part&nbsp;of&nbsp;the&nbsp;Open&nbsp;For&nbsp;Business&nbsp;Family&nbsp;of&nbsp;Open&nbsp;Source&nbsp;Software</font></div>
           </TD>
           <TD align=right width='50%'>

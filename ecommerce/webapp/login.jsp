@@ -35,26 +35,50 @@
 <%String loginFormUrl=controlPath + "/login"; if(previousParams != null) loginFormUrl=loginFormUrl + "?" + previousParams;%>
 
 <br>
-<h2 style='margin: 0;'>Log In</h2>
-
-<table border="1" cellpadding="3" cellspacing="0">
+<div class="head1">Log&nbsp;In</div>
+<br>
+<table width='100%' border='0' cellpadding='0' cellspacing='0'>
   <tr>
-    <form method="POST" action="<%=response.encodeURL(loginFormUrl)%>" name="loginform">
-      <td><b>Registered&nbsp;User</b></td>
-      <td> 
-        Username: <input type="text" name="USERNAME" value="<%=UtilFormatOut.checkNull(request.getParameter("USERNAME"))%>" size="20">
-        <br>
-        Password: <input type="password" name="PASSWORD" value="" size="20">
-      </td>
-      <td><input type="submit" value="Login"></td>
-    </form>
+    <td width='50%' valign=top>
+<table width='100%' border="0" bgcolor="black" cellpadding="4" cellspacing="1">
+  <tr>
+    <td bgcolor='#678475' align=center valign=center width='100%'>
+      <div class="boxhead">Registered&nbsp;User</div>
+    </td>
   </tr>
   <tr>
-    <form method="POST" action="<%=response.encodeURL(controlPath + "/newcustomer")%>">
-      <td><b>New&nbsp;User</b></td>
-      <td>You may create a new account here:</td>
-      <td><input type="submit" value="Create"></td>
-    </form>
+    <td align="center" valign="center" bgcolor='white' width='100%'>
+      <form method="POST" action="<%=response.encodeURL(loginFormUrl)%>" name="loginform" style='margin: 0;'>
+        <div align=center>Username:&nbsp;<input type="text" name="USERNAME" value="<%=UtilFormatOut.checkNull(request.getParameter("USERNAME"))%>" size="20"></div>
+        <div align=center>Password:&nbsp;<input type="password" name="PASSWORD" value="" size="20"></div>
+        <div align=center><input type="submit" value="Login"></div>
+      </form>
+    </td>
+  </tr>
+</table>
+    </td>
+    <td>&nbsp;&nbsp;&nbsp;</td>
+    <td width='50%' valign=top>
+<table width='100%' border="0" bgcolor="black" cellpadding="4" cellspacing="1">
+  <tr>
+    <td bgcolor='#678475' align=center valign=center width='100%'>
+      <div class="boxhead">New&nbsp;User</div>
+    </td>
+  </tr>
+  <tr>
+    <td align="center" valign="center" bgcolor='white' width='100%'>
+      <table border="0" cellpadding="0" cellspacing="0" width='100%'>
+        <tr>
+          <form method="POST" action="<%=response.encodeURL(controlPath + "/newcustomer")%>" style='margin: 0;'>
+            <div align=center>You may create a new account here:</div>
+            <div align=center><input type="submit" value="Create"></div>
+          </form>
+        </tr>
+      </table>
+    </td>
+  </tr>
+</table>
+    </td>
   </tr>
 </table>
 
