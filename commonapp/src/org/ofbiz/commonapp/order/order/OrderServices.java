@@ -361,7 +361,7 @@ public class OrderServices {
         if ("SALES_ORDER".equals(orderTypeId)) {  
             userOrderRoleTypes = UtilMisc.toList("END_USER_CUSTOMER", "SHIP_TO_CUSTOMER", "BILL_TO_CUSTOMER", "PLACING_CUSTOMER");    
         } else if ("PURCHASE_ORDER".equals(orderTypeId)) {
-            userOrderRoleTypes = UtilMisc.toList("SHIP_FROM_VENDOR", "BILL_FROM_VENDOR");
+            userOrderRoleTypes = UtilMisc.toList("SHIP_FROM_VENDOR", "BILL_FROM_VENDOR", "SUPPLIER_AGENT");
         } else if ("WORK_ORDER".equals(orderTypeId)) {
             // TODO: set the work order roles
         } else {

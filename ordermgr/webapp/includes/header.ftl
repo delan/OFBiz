@@ -33,7 +33,7 @@
 <div class="apptitle">&nbsp;Order Manager Application&nbsp;</div>
 <div class="row">
   <div class="col"><a href="<@ofbizUrl>/main</@ofbizUrl>" class="${selectedLeftClassMap.main?default(unselectedLeftClassName)}">Main</a></div>
-  <#if security.hasRolePermission("ORDERMGR", "_VIEW", "", "", session)>
+  <#if security.hasRolePermission("ORDERMGR", "_VIEW", "", "", session) || security.hasRolePermission("ORDERMGR_ROLE", "_VIEW", "", "", session)>
   <div class="col"><a href="<@ofbizUrl>/tasklist</@ofbizUrl>" class="${selectedLeftClassMap.orderlist?default(unselectedLeftClassName)}">Order&nbsp;List</a></div>
   </#if>
   <#if security.hasEntityPermission("ORDERMGR", "_VIEW", session)>

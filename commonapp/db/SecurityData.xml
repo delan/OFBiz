@@ -12,6 +12,9 @@
   <PartyRole partyId="ltdadmin" roleTypeId="ORDER_CLERK"/>
   <PartyRole partyId="ltdadmin" roleTypeId="LTD_ADMIN"/>
   
+  <Party partyId="externaluser" partyTypeId="PERSON"/>
+  <Person firstName="External" lastName="User" middleName="" partyId="externaluser" personalTitle="Mr."/>    
+  
   <SecurityGroup description="Full Admin group, has all general permissions." groupId="FULLADMIN"/>
   <SecurityGroup description="Flexible Admin group, has all granular permissions." groupId="FLEXADMIN"/>
   <SecurityGroup description="Demo Admin group, has all view permissions." groupId="VIEWADMIN"/>
@@ -20,6 +23,8 @@
   <SecurityGroup description="Catalog Admin group, has all catalog permissions." groupId="CATALOGADMIN"/>
   <SecurityGroup description="Limited Catalog Admin group, has limited catalog permissions." groupId="CATALOGADMIN_LTD"/>
   <SecurityGroup description="Order Admin group, has all order permissions." groupId="ORDERADMIN"/>
+  <SecurityGroup description="Limited Order Admin group, has all limited order permissions." groupId="ORDERADMIN_LTD"/>
+  <SecurityGroup description="Limited Order Admin group for Supplier Agents." groupId="ORDERSUPPLIER_LTD"/>
   <SecurityGroup description="Party Admin group, has all party permissions." groupId="PARTYADMIN"/>
 
   <SecurityPermission description="View the Server Statistics pages." permissionId="SERVER_STATS_VIEW"/>
@@ -292,6 +297,15 @@
   <SecurityGroupPermission groupId="ORDERENTRY" permissionId="PAY_INFO_UPDATE"/>
   <SecurityGroupPermission groupId="ORDERENTRY" permissionId="PAY_INFO_CREATE"/>
   <SecurityGroupPermission groupId="ORDERENTRY" permissionId="CATALOG_VIEW"/>
+
+  <SecurityGroupPermission groupId="ORDERADMIN_LTD" permissionId="ORDERMGR_ROLE_VIEW"/>
+  <SecurityGroupPermission groupId="ORDERADMIN_LTD" permissionId="ORDERMGR_ROLE_CREATE"/>
+  <SecurityGroupPermission groupId="ORDERADMIN_LTD" permissionId="ORDERMGR_ROLE_UPDATE"/>
+  <SecurityGroupPermission groupId="ORDERADMIN_LTD" permissionId="ORDERMGR_ROLE_DELETE"/>
+
+  <SecurityGroupPermission groupId="ORDERSUPPLIER_LTD" permissionId="ORDERMGR_ROLE_VIEW"/>
+  <SecurityGroupPermission groupId="ORDERSUPPLIER_LTD" permissionId="ORDERMGR_ROLE_CREATE"/>
+  <SecurityGroupPermission groupId="ORDERSUPPLIER_LTD" permissionId="ORDERMGR_ROLE_UPDATE"/>
   
   <SecurityGroupPermission groupId="CATALOGADMIN" permissionId="CATALOG_ADMIN"/>  
   <SecurityGroupPermission groupId="ORDERADMIN" permissionId="ORDER_ADMIN"/>
@@ -300,8 +314,8 @@
   <UserLogin userLoginId="admin" partyId="admin" currentPassword="ofbiz" passwordHint="" />
   <UserLogin userLoginId="flexadmin" partyId="admin" currentPassword="ofbiz" passwordHint="" />
   <UserLogin userLoginId="demoadmin" partyId="admin" currentPassword="ofbiz" passwordHint="" />
-
   <UserLogin userLoginId="ltdadmin" partyId="ltdadmin" currentPassword="ofbiz" passwordHint="" />
+  <UserLogin userLoginId="supplier" partyId="externaluser" currentPassword="ofbiz" passwordHint="" />
 
   <UserLoginSecurityGroup groupId="FULLADMIN" userLoginId="admin" fromDate="2001-01-01 12:00:00.0"/>
   <UserLoginSecurityGroup groupId="FLEXADMIN" userLoginId="flexadmin" fromDate="2001-01-01 12:00:00.0"/>
@@ -309,4 +323,6 @@
   
   <UserLoginSecurityGroup groupId="VIEWADMIN" userLoginId="ltdadmin" fromDate="2001-01-01 12:00:00.0"/>
   <UserLoginSecurityGroup groupId="CATALOGADMIN_LTD" userLoginId="ltdadmin" fromDate="2001-01-01 12:00:00.0"/>
+
+  <UserLoginSecurityGroup groupId="ORDERSUPPLIER_LTD" userLoginId="supplier" fromDate="2001-01-01 12:00:00.0"/>
 </entity-engine-xml>

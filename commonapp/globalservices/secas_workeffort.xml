@@ -3,6 +3,7 @@
 
 <service-eca>
     <eca service="createWorkEffort" event="commit">
+        <condition field-name="quickAssignPartyId" operator="is-not-empty"/>
         <action service="quickAssignPartyToWorkEffort" mode="sync"/>
     </eca>
 </service-eca>

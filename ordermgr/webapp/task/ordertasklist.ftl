@@ -45,7 +45,7 @@
 // -->
 </script>
 
-<#if security.hasRolePermission("ORDERMGR", "_VIEW", "", "", session)>
+<#if security.hasRolePermission("ORDERMGR", "_VIEW", "", "", session) || security.hasRolePermission("ORDERMGR_ROLE", "_VIEW", "", "", session)>
 <table border=0 width='100%' cellspacing='0' cellpadding='0' class='boxoutside'>
   <tr>
     <td width='100%'>
