@@ -102,6 +102,39 @@ function removeSelected() {
 </script>
 
 <div>&nbsp;</div>
+
+<#-- Receiving Results -->
+<#if receivedItems?has_content>
+  <table width="100%" border='0' cellpadding='2' cellspacing='0'>
+    <tr><td colspan="7"><div class="head3">Receipt(s) For Purchase Order #${purchaseOrder.orderId}</div></td></tr>
+    <tr><td colspan="7"><hr class="sepbar"></td></tr>
+    <tr>
+      <td><div class="tableheadtext">Receipt #</div></td>
+      <td><div class="tableheadtext">Date</div></td>
+      <td><div class="tableheadtext">PO #</div></td>
+      <td><div class="tableheadtext">Line #</div></td>
+      <td><div class="tableheadtext">Product ID</div></td>
+      <td><div class="tableheadtext">Rejected</div></td>
+      <td><div class="tableheadtext">Accepted</div></td>
+    </tr>
+    <tr><td colspan="7"><hr class="sepbar"></td></tr>
+    <#list receivedItems as item>
+      <tr>
+        <td><div class="tabletext">${item.receiptId}</div></td>
+        <td><div class="tabletext">${item.getString("datetimeReceived").toString()}</div></td>
+        <td><div class="tabletext">${item.orderId}</div></td>
+        <td><div class="tabletext">${item.orderItemSeqId}</div></td>
+        <td><div class="tabletext">${item.productId?default("Not Found")}</div></td>
+        <td><div class="tabletext">${item.quantityRejected?default(0)?string.number}</div></td>
+        <td><div class="tabletext">${item.quantityAccepted?string.number}</div></td>
+      </tr>
+    </#list>
+    <tr><td colspan="7"><hr class="sepbar"></td></tr>
+  </table>
+  <br>
+</#if>
+
+<#-- Single Product Receiving -->
 <#if requestParameters.initialSelected?exists && product?has_content>
   <form method="post" action="<@ofbizUrl>/receiveInventoryProduct</@ofbizUrl>" name='receiveform' style='margin: 0;'>
     <table border='0' cellpadding='2' cellspacing='0'>
@@ -239,6 +272,8 @@ function removeSelected() {
       document.receiveform.quantityAccepted.focus();
     </script>
   </form>
+  
+<#-- Multi-Item PO Receiving -->
 <#elseif requestParameters.initialSelected?exists && purchaseOrder?has_content>
   <form method="post" action="<@ofbizUrl>/receiveInventoryProduct</@ofbizUrl>" name='receiveform' style='margin: 0;'>
     <#-- general request fields -->
@@ -258,11 +293,14 @@ function removeSelected() {
             <div class="head3">Receive Purchase Order #${purchaseOrder.orderId}</div>
           </td>
           <td align="right">
+            <span class="tableheadtext">Select All</span>&nbsp;
             <input type="checkbox" name="selectAll" value="Y" onclick="javascript:toggleAll(this);">
           </td>
         </tr>
                
         <#list purchaseOrderItems as orderItem>
+          <#assign defaultQuantity = orderItem.quantity - receivedQuantities[orderItem.orderItemSeqId]?double>
+          <#if 0 < defaultQuantity>
           <#assign orderItemType = orderItem.getRelatedOne("OrderItemType")>
           <input type="hidden" name="orderId_o_${rowCount}" value="${orderItem.orderId}">
           <input type="hidden" name="orderItemSeqId_o_${rowCount}" value="${orderItem.orderItemSeqId}"> 
@@ -301,8 +339,8 @@ function removeSelected() {
                   <td align="right">
                     <div class="tableheadtext">Qty Received:</div>
                   </td>
-                  <td align="right">
-                    <input type="text" class="inputBox" name="quantityAccepted_o_${rowCount}" size="6" value="${orderItem.quantity?string.number}">
+                  <td align="right">                    
+                    <input type="text" class="inputBox" name="quantityAccepted_o_${rowCount}" size="6" value="${defaultQuantity?string.number}">
                   </td>                                                      
                 </tr>
                 <tr>
@@ -339,27 +377,39 @@ function removeSelected() {
             </td>
           </tr>          
           <#assign rowCount = rowCount + 1>
+          </#if>
         </#list> 
         <tr>
           <td colspan="2">
             <hr class="sepbar">
           </td>
         </tr>
-        <tr>
-          <td colspan="2" align="right">
-            <a href="javascript:document.receiveform.submit();" class="buttontext">Receive Selected Product(s)</a>
-          </td>
-        </tr>     
-      </#if>
+        <#if rowCount == 0>
+          <tr>
+            <td colspan="2">
+              <div class="tabletext">No items in PO #${purchaseOrder.orderId} to receive.</div>
+            </td>
+          </tr>
+        <#else>        
+          <tr>
+            <td colspan="2" align="right">
+              <a href="javascript:document.receiveform.submit();" class="buttontext">Receive Selected Product(s)</a>
+            </td>
+          </tr>
+        </#if>
+      </#if>      
     </table>
     <input type="hidden" name="_rowCount" value="${rowCount}">
   </form>
   <script language="JavaScript">selectAll();</script>
+  
+<#-- Initial Screen -->
 <#else>
   <form name="receiveform" method="post" action="<@ofbizUrl>/ReceiveInventory</@ofbizUrl>" style='margin: 0;'>
     <input type="hidden" name="facilityId" value="${requestParameters.facilityId?if_exists}">
     <input type="hidden" name="initialSelected" value="Y">
 	<table border='0' cellpadding='2' cellspacing='0'>
+	  <tr><td colspan="4"><div class="head3">Receive Item(s)</div></td></tr>
       <tr>        
         <td width="25%" align='right'><div class="tabletext">Purchase Order Number</div></td>
         <td>&nbsp;</td>

@@ -58,11 +58,39 @@ if (purchaseOrder != null) {
         purchaseOrderItems = purchaseOrder.getRelated("OrderItem");
     }
 }
+
+receivedQuantities = new HashMap();
 if (purchaseOrderItems != null && purchaseOrderItems.size() > 0) {
     context.put("firstOrderItem", EntityUtil.getFirst(purchaseOrderItems));
     context.put("purchaseOrderItemsSize", purchaseOrderItems.size());
+    itemsIter = purchaseOrderItems.iterator();
+    while (itemsIter.hasNext()) {
+        totalReceived = 0.0;
+        thisItem = itemsIter.next();
+        receipts = thisItem.getRelated("ShipmentReceipt");
+        if (receipts != null && receipts.size() > 0) {
+            recIter = receipts.iterator();
+            while (recIter.hasNext()) {
+                rec = recIter.next(); 
+                accepted = rec.getDouble("quantityAccepted");
+                rejected = rec.getDouble("quantityRejected");
+                if (accepted != null)
+                    totalReceived += accepted.doubleValue();
+                if (rejected != null)
+                    totalReceived += rejected.doubleValue();                                            
+            }            
+        }
+        receivedQuantities.put(thisItem.getString("orderItemSeqId"), new Double(totalReceived));        
+    }
 }
 context.put("purchaseOrderItems", purchaseOrderItems);
+context.put("receivedQuantities", receivedQuantities);
+
+receivedItems = null;
+if (purchaseOrder != null) {
+    receivedItems = delegator.findByAnd("ShipmentReceipt", UtilMisc.toMap("orderId", purchaseOrderId));
+    context.put("receivedItems", receivedItems);
+}
 
 String invalidProductId = null;
 if (productId != null && productId.length() > 0 && product == null) {
