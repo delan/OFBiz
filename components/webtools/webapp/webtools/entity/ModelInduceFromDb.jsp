@@ -82,7 +82,7 @@ ERRORS:
     ModelEntity entity = (ModelEntity) ecIter.next();
 %>
     <entity entity-name="<%=entity.getEntityName()%>"<%if(!entity.getEntityName().equals(ModelUtil.dbNameToClassName(entity.getPlainTableName()))){
-          %> table-name="<%=entity.getPlainTableName()%>"<%}%> 
+          %> table-name="<%=entity.getPlainTableName()%>"<%}%>
             package-name="<%=entity.getPackageName()%>"<%if(entity.getDependentOn().length() > 0){%>
             dependent-on="<%=entity.getDependentOn()%>"<%}%><%if(!title.equals(entity.getTitle())){%>
             title="<%=entity.getTitle()%>"<%}%><%if(!copyright.equals(entity.getCopyright())){%>
@@ -96,12 +96,12 @@ ERRORS:
       %> col-name="<%=field.getColName()%>"<%}%> type="<%=field.getType()%>"><%
     for (int v = 0; v<field.getValidatorsSize(); v++) {
       String valName = (String) field.getValidator(v);
-      %><validate name="<%=valName%>" /><%
+      %><validate name="<%=valName%>"/><%
     }%></field><%
   }
   for (int y = 0; y < entity.getPksSize(); y++) {
-    ModelField field = entity.getPk(y);%>	
-      <prim-key field="<%=field.getName()%>" /><%
+    ModelField field = entity.getPk(y);%>
+      <prim-key field="<%=field.getName()%>"/><%
   }
   if (entity.getRelationsSize() > 0) {
     for (int r = 0; r < entity.getRelationsSize(); r++) {
@@ -113,7 +113,7 @@ ERRORS:
     }
   }%>
     </entity><%
-  }%>  
+  }%>
 </entitymodel>
 <%
       }
