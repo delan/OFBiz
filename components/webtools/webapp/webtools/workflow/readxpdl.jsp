@@ -23,9 +23,9 @@
  * @version 1.0
 --%>
 
-<%@ page import="java.util.*, java.net.*" %>
+<%@ page import="java.util.*, java.net.*, org.ofbiz.entity.transaction.*" %>
 <%@ page import="org.ofbiz.security.*, org.ofbiz.entity.*, org.ofbiz.base.util.*, org.ofbiz.content.webapp.pseudotag.*" %>
-<%@ page import="org.ofbiz.workflow.definition.*" %>
+<%@ page import="org.ofbiz.workflow.definition.*, org.ofbiz.entity.util.*, org.ofbiz.entity.condition.*" %>
 
 <%@ taglib uri="ofbizTags" prefix="ofbiz" %>
 
@@ -67,7 +67,7 @@
 <%if(security.hasPermission("WORKFLOW_MAINT", session)) {%>
   <FORM method=POST action='<ofbiz:url>/readxpdl</ofbiz:url>'>
     XPDL Filename or URL: <INPUT name='XPDL_LOCATION' class='inputBox' type=text size='60' value='<%=UtilFormatOut.checkNull(xpdlLoc)%>'> Is URL?:<INPUT type=checkbox name='XPDL_IS_URL' <%=xpdlIsUrl?"checked":""%>><BR>
-    Import/Update to DB?:<INPUT type=checkbox name='XPDL_IMPORT'> <INPUT type=submit value='View'>
+    Import/Update to DB?:<INPUT type=checkbox name='XPDL_IMPORT'> <INPUT type=submit class=smallSubmit value='View'>
   </FORM>
 
   <hr>
