@@ -232,15 +232,33 @@ public class SQLProcessor {
      * @throws GenericEntityException
      */
     public void prepareStatement(String sql) throws GenericDataSourceException, GenericEntityException {
+        this.prepareStatement(sql, false, 0, 0);
+    }
+    
+    /**
+     * Prepare a statement. In case no connection has been given, allocate a
+     * new one.
+     *
+     * @param sql  The SQL statement to be executed
+     *
+     * @throws GenericDataSourceException
+     * @throws GenericEntityException
+     */
+    public void prepareStatement(String sql, boolean specifyTypeAndConcur, int resultSetType, int resultSetConcurrency) throws GenericDataSourceException, GenericEntityException {
         Debug.logVerbose("[SQLProcessor.prepareStatement] sql=" + sql, module);
         
-        if (_connection == null)
+        if (_connection == null) {
             getConnection();
+        }
         
         try {
             _sql = sql;
             _ind = 1;
-            _ps = _connection.prepareStatement(sql);
+            if (specifyTypeAndConcur) {
+                _ps = _connection.prepareStatement(sql, resultSetType, resultSetConcurrency);
+            } else {
+                _ps = _connection.prepareStatement(sql);
+            }
         } catch (SQLException sqle) {
             throw new GenericDataSourceException("SQL Exception while executing the following:" + sql, sqle);
         }

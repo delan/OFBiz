@@ -131,8 +131,8 @@ public class EntityListIterator implements ListIterator {
                 return false;
             } else {
                 //do a quick game to see if the resultSet is empty:
-                // in this case it's easy, if we haven't made any values yet, just return false
-                if (!haveMadeValue) {
+                // if we are not in the last or afterLast positions and we haven't made any values yet, the result set is empty so return false
+                if (!haveMadeValue && !resultSet.isAfterLast() && !resultSet.isLast()) {
                     return false;
                 } else {
                     return true;
@@ -202,7 +202,8 @@ public class EntityListIterator implements ListIterator {
     public Collection getCompleteCollection() throws GenericEntityException {
         try {
             //if the resultSet has been moved forward at all, move back to the beginning
-            if (!resultSet.isBeforeFirst()) {
+            if (haveMadeValue && !resultSet.isBeforeFirst()) {
+                //do a quick check to see if the ResultSet is empty
                 resultSet.beforeFirst();
             }
             Collection collection = new LinkedList();

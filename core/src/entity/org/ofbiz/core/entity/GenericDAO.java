@@ -311,7 +311,7 @@ public class GenericDAO {
         SQLProcessor sqlP = new SQLProcessor(helperName, connection);
         
         try {
-            sqlP.prepareStatement(sql);
+            sqlP.prepareStatement(sql, true, ResultSet.TYPE_FORWARD_ONLY, ResultSet.CONCUR_READ_ONLY);
             SqlJdbcUtil.setPkValues(sqlP, modelEntity, entity, modelFieldTypeReader);
             sqlP.executeQuery();
             
@@ -379,7 +379,7 @@ public class GenericDAO {
         SQLProcessor sqlP = new SQLProcessor(helperName);
         
         try {
-            sqlP.prepareStatement(sql);
+            sqlP.prepareStatement(sql, true, ResultSet.TYPE_FORWARD_ONLY, ResultSet.CONCUR_READ_ONLY);
             SqlJdbcUtil.setPkValues(sqlP, modelEntity, entity, modelFieldTypeReader);
             sqlP.executeQuery();
             
@@ -413,7 +413,7 @@ public class GenericDAO {
 
         EntityListIterator entityListIterator = null;
         try {
-            entityListIterator = selectListIteratorByCondition(modelEntity, entityCondition, fieldsToSelect, orderBy);
+            entityListIterator = selectListIteratorByCondition(modelEntity, entityCondition, fieldsToSelect, orderBy, true, ResultSet.TYPE_FORWARD_ONLY, ResultSet.CONCUR_READ_ONLY);
             return entityListIterator.getCompleteCollection();
         } finally {
             if (entityListIterator != null) {
@@ -435,7 +435,7 @@ public class GenericDAO {
 
         EntityListIterator entityListIterator = null;
         try {
-            entityListIterator = selectListIteratorByCondition(modelEntity, entityCondition, fieldsToSelect, orderBy);
+            entityListIterator = selectListIteratorByCondition(modelEntity, entityCondition, fieldsToSelect, orderBy, true, ResultSet.TYPE_FORWARD_ONLY, ResultSet.CONCUR_READ_ONLY);
             return entityListIterator.getCompleteCollection();
         } finally {
             if (entityListIterator != null) {
@@ -457,7 +457,7 @@ public class GenericDAO {
 
         EntityListIterator entityListIterator = null;
         try {
-            entityListIterator = selectListIteratorByCondition(modelEntity, entityCondition, fieldsToSelect, orderBy);
+            entityListIterator = selectListIteratorByCondition(modelEntity, entityCondition, fieldsToSelect, orderBy, true, ResultSet.TYPE_FORWARD_ONLY, ResultSet.CONCUR_READ_ONLY);
             return entityListIterator.getCompleteCollection();
         } finally {
             if (entityListIterator != null) {
@@ -479,7 +479,7 @@ public class GenericDAO {
 
         EntityListIterator entityListIterator = null;
         try {
-            entityListIterator = selectListIteratorByCondition(modelEntity, entityCondition, fieldsToSelect, orderBy);
+            entityListIterator = selectListIteratorByCondition(modelEntity, entityCondition, fieldsToSelect, orderBy, true, ResultSet.TYPE_FORWARD_ONLY, ResultSet.CONCUR_READ_ONLY);
             return entityListIterator.getCompleteCollection();
         } finally {
             if (entityListIterator != null) {
@@ -519,10 +519,11 @@ public class GenericDAO {
         
         String sql = "SELECT ";
         
-        if (selectFields.size() > 0)
+        if (selectFields.size() > 0) {
             sql += modelEntity.colNameString(selectFields, ", ", "");
-        else
+        } else {
             sql += "*";
+        }
         sql += " FROM " + modelEntity.getTableName();
         if (fields != null && fields.size() > 0)
             sql += " WHERE " + modelEntity.colNameString(whereFields, " LIKE ? AND ", " LIKE ?");
@@ -531,7 +532,7 @@ public class GenericDAO {
         SQLProcessor sqlP = new SQLProcessor(helperName);
         
         try {
-            sqlP.prepareStatement(sql);
+            sqlP.prepareStatement(sql, true, ResultSet.TYPE_FORWARD_ONLY, ResultSet.CONCUR_READ_ONLY);
             
             GenericValue dummyValue = new GenericValue(modelEntity, fields);
 
@@ -765,7 +766,7 @@ public class GenericDAO {
         
         try {
             sql = select.toString() + " " + from.toString() + " " + where.toString() + (order.toString().trim().length() > 0 ? order.toString() : "");
-            sqlP.prepareStatement(sql);
+            sqlP.prepareStatement(sql, true, ResultSet.TYPE_FORWARD_ONLY, ResultSet.CONCUR_READ_ONLY);
             
             GenericValue dummyValue = new GenericValue(modelEntity, fields);
             
@@ -806,7 +807,7 @@ public class GenericDAO {
     public Collection selectByCondition(ModelEntity modelEntity, EntityCondition entityCondition, Set fieldsToSelect, List orderBy) throws GenericEntityException {
         EntityListIterator entityListIterator = null;
         try {
-            entityListIterator = selectListIteratorByCondition(modelEntity, entityCondition, fieldsToSelect, orderBy);
+            entityListIterator = selectListIteratorByCondition(modelEntity, entityCondition, fieldsToSelect, orderBy, true, ResultSet.TYPE_FORWARD_ONLY, ResultSet.CONCUR_READ_ONLY);
             return entityListIterator.getCompleteCollection();
         } finally {
             if (entityListIterator != null) {
@@ -823,6 +824,10 @@ public class GenericDAO {
      *@return EntityListIterator representing the result of the query: NOTE THAT THIS MUST BE CLOSED WHEN YOU ARE DONE WITH IT, AND DON'T LEAVE IT OPEN TOO LONG BEACUSE IT WILL MAINTAIN A DATABASE CONNECTION.
      */
     public EntityListIterator selectListIteratorByCondition(ModelEntity modelEntity, EntityCondition entityCondition, Set fieldsToSelect, List orderBy) throws GenericEntityException {
+        return this.selectListIteratorByCondition(modelEntity, entityCondition, fieldsToSelect, orderBy, true, ResultSet.TYPE_SCROLL_INSENSITIVE, ResultSet.CONCUR_READ_ONLY);
+    }
+    
+    public EntityListIterator selectListIteratorByCondition(ModelEntity modelEntity, EntityCondition entityCondition, Set fieldsToSelect, List orderBy, boolean specifyTypeAndConcur, int resultSetType, int resultSetConcurrency) throws GenericEntityException {
         if (modelEntity == null) {
             return null;
         }
@@ -893,7 +898,7 @@ public class GenericDAO {
         String sql = sqlBuffer.toString();
         
         SQLProcessor sqlP = new SQLProcessor(helperName);
-        sqlP.prepareStatement(sql);
+        sqlP.prepareStatement(sql, specifyTypeAndConcur, resultSetType, resultSetConcurrency);
         if (Debug.verboseOn()) {
             //put this inside an if statement so that we don't have to generate the string when not used...
             Debug.logVerbose("Setting the entityConditionParams: " + entityConditionParams);
