@@ -923,21 +923,14 @@
             title="Accounting Period Entity">
       <field name="accountingPeriodId" type="id-ne"></field>
       <field name="partyId" type="id"></field>
-      <field name="roleTypeId" type="id"></field>
       <field name="periodTypeId" type="id"></field>
       <field name="acctgPeriodNum" type="numeric"></field>
+      <field name="yearNum" type="numeric"></field>
       <field name="fromDate" type="date-time"></field>
       <field name="thruDate" type="date-time"></field>
       <prim-key field="accountingPeriodId"/>
       <relation type="one" fk-name="ACCT_PRD_PARTY" rel-entity-name="Party">
         <key-map field-name="partyId"/>
-      </relation>
-      <relation type="one" fk-name="ACCT_PRD_RLETYP" rel-entity-name="RoleType">
-        <key-map field-name="roleTypeId"/>
-      </relation>
-      <relation type="one-nofk" rel-entity-name="PartyRole">
-        <key-map field-name="partyId"/>
-        <key-map field-name="roleTypeId"/>
       </relation>
       <relation type="one" fk-name="ACCT_PRD_PERTYP" rel-entity-name="PeriodType">
         <key-map field-name="periodTypeId"/>

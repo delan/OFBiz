@@ -1627,6 +1627,8 @@
       <field name="facilityName" type="name"></field>
       <field name="primaryFacilityGroupId" type="id"></field>
       <field name="squareFootage" type="numeric"></field>
+      <field name="openedDate" type="date-time"></field>
+      <field name="closedDate" type="date-time"></field>
       <field name="description" type="description"></field>
       <prim-key field="facilityId"/>
       <relation type="one" fk-name="FACILITY_FCTYP" rel-entity-name="FacilityType">

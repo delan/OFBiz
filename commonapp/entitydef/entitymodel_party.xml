@@ -1671,10 +1671,6 @@
         <key-map field-name="partyId"/>
         <key-map field-name="roleTypeId"/>
       </relation>
-      <relation type="many" rel-entity-name="AccoutingPeriod">
-        <key-map field-name="partyId"/>
-        <key-map field-name="roleTypeId"/>
-      </relation>
       <relation type="many" rel-entity-name="FinAccountRole">
         <key-map field-name="partyId"/>
         <key-map field-name="roleTypeId"/>
