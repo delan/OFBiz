@@ -1,7 +1,7 @@
 /*
  * $Id$
  *
- *  Copyright (c) 2001 The Open For Business Project - www.ofbiz.org
+ *  Copyright (c) 2001, 2002 The Open For Business Project - www.ofbiz.org
  *
  *  Permission is hereby granted, free of charge, to any person obtaining a
  *  copy of this software and associated documentation files (the "Software"),
@@ -27,7 +27,6 @@ import java.util.*;
 import java.text.*;
 
 import javax.servlet.http.*;
-import javax.servlet.*;
 
 import org.ofbiz.core.service.*;
 import org.ofbiz.core.entity.*;

@@ -1,7 +1,7 @@
 /*
  * $Id$
  *
- *  Copyright (c) 2002 The Open For Business Project and repected authors.
+ *  Copyright (c) 2001, 2002 The Open For Business Project - www.ofbiz.org
  *
  *  Permission is hereby granted, free of charge, to any person obtaining a
  *  copy of this software and associated documentation files (the "Software"),
@@ -21,9 +21,7 @@
  *  OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR
  *  THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  */
-
 package org.ofbiz.commonapp.order.shoppingcart;
-
 
 import java.util.*;
 
@@ -33,15 +31,14 @@ import org.ofbiz.core.util.*;
 
 import org.ofbiz.commonapp.order.order.*;
 
-
 /**
  * <p><b>Title:</b> ShoppingCartItem.java
  * <p><b>Description:</b> Shopping cart item object.
  *
  * @author     <a href="mailto:jaz@jflow.net.com">Andy Zeneski</a>
  * @author     <a href="mailto:jonesde@ofbiz.org">David E. Jones</a>
- * @version    1.1
- * @created    August 4, 2001
+ * @version    $Revision$
+ * @since      2.0
  */
 public class ShoppingCartItem implements java.io.Serializable {
 
