@@ -1085,7 +1085,7 @@
       <view-link entity-alias="WE" rel-entity-alias="WEPA">
         <key-map field-name="workEffortId"/>
       </view-link>
-      <view-link entity-alias="WEPA" rel-entity-alias="PREK">
+      <view-link entity-alias="WEPA" rel-entity-alias="PREL">
         <key-map field-name="partyId" rel-field-name="partyIdTo"/>
       </view-link>
       <relation type="one-nofk" rel-entity-name="WorkEffort">
