@@ -33,6 +33,13 @@
     <!-- ================================================================== -->
 
     <target name="init">
+        <!-- Allow any user specific values to override the defaults -->
+        <property file="${user.home}/build.properties"/>
+        <!-- Allow project-level defaults for this build -->
+        <property file="../build.properties"/>
+        <!-- Allow module-level defaults for this build -->
+        <property file="build.properties"/>
+        
         <property environment="env" />
         <property name="name"           value="ofbcore" />
         <property name="src.dir"        value="src" />
