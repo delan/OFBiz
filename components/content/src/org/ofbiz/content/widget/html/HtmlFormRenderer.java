@@ -738,6 +738,29 @@ public class HtmlFormRenderer implements FormStringRenderer {
         this.appendWhitespace(buffer);
     }
 
+    /* (non-Javadoc)
+     * @see org.ofbiz.content.widget.form.FormStringRenderer#renderFormClose(java.lang.StringBuffer, java.util.Map, org.ofbiz.content.widget.form.ModelForm)
+     */
+    public void renderMultiFormClose(StringBuffer buffer, Map context, ModelForm modelForm) {
+        String rowCount = modelForm.getRowCount(context);
+        if (UtilValidate.isNotEmpty(rowCount)) {
+        	buffer.append("<input type=\"hidden\" name=\"_rowCount\" value=\"" + rowCount + "\"/>");
+        }
+        ModelFormField submitField = modelForm.getMultiSubmitField();
+        if (submitField != null) {
+
+            this.renderFormatItemRowCellOpen(buffer, context, modelForm, submitField);
+
+            submitField.renderFieldString(buffer, context, this);
+
+            this.renderFormatItemRowCellClose(buffer, context, modelForm, submitField);
+        	
+        }
+        buffer.append("</form>");
+
+        this.appendWhitespace(buffer);
+    }
+
     public void renderFormatListWrapperOpen(StringBuffer buffer, Map context, ModelForm modelForm) {
         buffer.append("<table border=\"1\" cellpadding=\"2\" cellspacing=\"0\" width=\"100%\">");
 
