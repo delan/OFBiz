@@ -47,12 +47,17 @@ public class MenuEvents {
     // extended number events
     public static void triggerClear(PosScreen pos) {
         // clear the components
-        if (pos.getInput().getFunction("PAID") != null) {
+        String[] totalFunc = pos.getInput().getFunction("TOTAL");
+        String[] paidFunc = pos.getInput().getFunction("PAID");
+        if (paidFunc != null) {
             pos.getInput().clear();
             pos.showPage("main/pospanel");
-        } else if (pos.getInput().getFunction("TOTAL") == null) {
+        } else {
             if (UtilValidate.isEmpty(pos.getInput().value())) {
                 pos.getInput().clear();
+            }
+            if (totalFunc != null) {
+                pos.getInput().setFunction("TOTAL", totalFunc[1]);
             }
         }
 

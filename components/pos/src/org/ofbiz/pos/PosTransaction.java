@@ -29,6 +29,7 @@ import java.util.Iterator;
 import java.util.List;
 import java.util.Locale;
 import java.util.Map;
+import java.util.HashMap;
 
 import net.xoetrope.xui.data.XModel;
 
@@ -52,6 +53,8 @@ import org.ofbiz.entity.GenericEntityException;
 import org.ofbiz.entity.util.EntityUtil;
 import org.ofbiz.product.store.ProductStoreWorker;
 import org.ofbiz.service.ServiceUtil;
+import org.ofbiz.service.LocalDispatcher;
+import org.ofbiz.service.GenericServiceException;
 
 /**
  * 
@@ -423,6 +426,36 @@ public class PosTransaction {
                 Journal.appendNode(changeLine, "td", "qty", "-");
                 Journal.appendNode(changeLine, "td", "price", UtilFormatOut.formatPrice(changeDue));
             }
+        }
+    }
+
+    public String makeCreditCardVo(String cardNumber, String expDate, String firstName, String lastName) {
+        LocalDispatcher dispatcher = session.getDispatcher();
+        String expMonth = expDate.substring(0, 2);
+        String expYear = expDate.substring(2);
+        Map svcCtx = new HashMap();
+        svcCtx.put("userLogin", session.getUserLogin());
+        svcCtx.put("partyId", partyId);
+        svcCtx.put("cardNumber", cardNumber);
+        svcCtx.put("firstNameOnCard", firstName == null ? "" : firstName);
+        svcCtx.put("lastNameOnCard", lastName == null ? "" : lastName);
+        svcCtx.put("expMonth", expMonth);
+        svcCtx.put("expYear", expYear);
+        svcCtx.put("cardType", UtilValidate.getCardType(cardNumber));
+
+        Debug.log("Create CC : " + svcCtx, module);
+        Map svcRes = null;
+        try {
+            svcRes = dispatcher.runSync("createCreditCard", svcCtx);
+        } catch (GenericServiceException e) {
+            Debug.logError(e, module);
+            return null;
+        }
+        if (ServiceUtil.isError(svcRes)) {
+            Debug.logError(ServiceUtil.getErrorMessage(svcRes) + " - " + svcRes, module);
+            return null;
+        } else {
+            return (String) svcRes.get("paymentMethodId");
         }
     }
 

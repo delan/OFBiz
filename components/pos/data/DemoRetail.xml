@@ -33,7 +33,7 @@
         authErrorMessage="Problem connecting to payment processor; we will continue to retry and notify you by email."
         styleSheet="" headerLogo=""/>
 
-    <ProductStorePaymentSetting productStoreId="9100" paymentMethodTypeId="CREDIT_CARD" paymentServiceTypeEnumId="PRDS_PAY_AUTH" paymentService="alwaysApproveWithCapture"/>
+    <ProductStorePaymentSetting productStoreId="9100" paymentMethodTypeId="CREDIT_CARD" paymentServiceTypeEnumId="PRDS_PAY_AUTH" paymentService="alwaysApproveWithCaptureCCProcessor"/>
     <ProductStorePaymentSetting productStoreId="9100" paymentMethodTypeId="CREDIT_CARD" paymentServiceTypeEnumId="PRDS_PAY_RELEASE" paymentService="testCCRelease"/>
     <ProductStorePaymentSetting productStoreId="9100" paymentMethodTypeId="CREDIT_CARD" paymentServiceTypeEnumId="PRDS_PAY_CAPTURE" paymentService="testCCCapture"/>
     <ProductStorePaymentSetting productStoreId="9100" paymentMethodTypeId="CREDIT_CARD" paymentServiceTypeEnumId="PRDS_PAY_REAUTH" paymentService="alwaysApproveCCProcessor"/>
