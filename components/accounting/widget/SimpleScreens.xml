@@ -1,0 +1,204 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE screens PUBLIC "-//OFBiz//DTD OFBiz Screen Widget//EN" "http://www.ofbiz.org/dtds/widget-screen.dtd">
+
+<!--
+ *  Copyright (c) 2004 The Open For Business Project - www.ofbiz.org
+ *
+ *  Permission is hereby granted, free of charge, to any person obtaining a
+ *  copy of this software and associated documentation files (the "Software"),
+ *  to deal in the Software without restriction, including without limitation
+ *  the rights to use, copy, modify, merge, publish, distribute, sublicense,
+ *  and/or sell copies of the Software, and to permit persons to whom the
+ *  Software is furnished to do so, subject to the following conditions:
+ *
+ *  The above copyright notice and this permission notice shall be included
+ *  in all copies or substantial portions of the Software.
+ *
+ *  THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS
+ *  OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF
+ *  MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT.
+ *  IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY
+ *  CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT
+ *  OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR
+ *  THE USE OR OTHER DEALINGS IN THE SOFTWARE.
+ *
+ *  $Id: ProductScreens.xml 3183 2004-08-26 22:06:24Z jonesde $
+-->
+
+<screens>
+    <screen name="GenericDecorator">
+        <section>
+            <actions>
+                <!--set field="leftbarScreenName" value="leftbar"/ -->
+    
+                <set field="productId" from-field="parameters.productId"/>
+                <entity-one entity-name="Product" value-name="product"/>
+            </actions>
+            <widgets>
+				<!-- main defines the regions of the HTML page -->
+                <decorator-screen name="main" location="component://accounting/widget/CommonScreens.xml">
+				<!-- body is the primary display for this page and is called recursively -->
+                    <decorator-section name="body">
+                        <section>
+                            <!-- do check for CATALOG, _VIEW permission -->
+                            <condition>
+                                <if-has-permission permission="CATALOG" action="_VIEW"/>
+                            </condition>
+                            <widgets>
+                                <platform-specific>
+                                    <html><html-template location="component://product/webapp/catalog/product/ProductTabBar.ftl"/></html>
+                                </platform-specific>
+            
+                                <container>
+                                    <label style="head1">${uiLabelMap.${labelTitleProperty}} ${product.internalName} [${uiLabelMap.CommonId}:${productId}]</label>
+                                </container>
+                                
+                                <!-- add Create Product and View Product (in ecommerce) links -->
+                                <container>
+                                    <link target="EditProduct" text="[${uiLabelMap.ProductNewProduct}]" style="buttontext"/>
+                                    <!-- TODO: make link conditional on non-empty productId... -->
+                                    <link target="/ecommerce/control/product?product_id=${productId}" url-mode="raw" text="[${uiLabelMap.ProductProductPage}]" style="buttontext"/>
+                                </container>
+								
+								<!-- Now call the SimpleScreen form -->
+                                <decorator-section-include name="body"/>
+                            </widgets>
+                            <fail-widgets>
+                                <label style="head3">${uiLabelMap.ProductCatalogViewPermissionError}</label>
+                            </fail-widgets>
+                        </section>                    
+                    </decorator-section>
+                </decorator-screen>
+            </widgets>
+        </section>
+    </screen>
+    
+    <screen name="SimpleScreen">
+        <section>
+            <actions>
+                <set field="title" value="Simple Screen Example"/>
+                <set field="titleProperty" value="PageTitleEditProduct"/>
+                <set field="tabButtonItem" value="EditProduct"/>
+                <set field="labelTitleProperty" value="ProductProduct"/>
+    
+                <set field="productId" from-field="parameters.productId"/>
+                <entity-one entity-name="Product" value-name="product"/>
+            </actions>
+            <widgets>
+                <decorator-screen name="GenericDecorator">
+                    <decorator-section name="body">
+                        <include-form name="EditProduct" location="component://product/webapp/catalog/product/ProductForms.xml"/>
+            			<!-- include-form name="ListGlAccount" location="component://accounting/webapp/accounting/chartofaccounts/GlAccountForms.xml"/ -->
+                        
+                        <!-- include the duplicate product form template -->
+                        <!-- platform-specific>
+                            <html><html-template location="component://product/webapp/catalog/product/EditProductDupForm.ftl"/></html>
+                        </platform-specific -->
+                    </decorator-section>
+                </decorator-screen>
+            </widgets>
+        </section>
+    </screen>
+	
+    <screen name="CommonProductDecorator">
+        <section>
+            <actions>
+                <set field="leftbarScreenName" value="leftbar"/>
+                <!-- <set field="leftbarScreenLocation" value=""/> -->
+    
+                <set field="productId" from-field="parameters.productId"/>
+                <entity-one entity-name="Product" value-name="product"/>
+            </actions>
+            <widgets>
+                <decorator-screen name="main" location="component://product/widget/catalog/CommonScreens.xml">
+                    <decorator-section name="body">
+                        <section>
+                            <!-- do check for CATALOG, _VIEW permission -->
+                            <condition>
+                                <if-has-permission permission="CATALOG" action="_VIEW"/>
+                            </condition>
+                            <widgets>
+                                <platform-specific>
+                                    <html><html-template location="component://product/webapp/catalog/product/ProductTabBar.ftl"/></html>
+                                </platform-specific>
+            
+                                <container>
+                                    <label style="head1">${uiLabelMap.${labelTitleProperty}} ${product.internalName} [${uiLabelMap.CommonId}:${productId}]</label>
+                                </container>
+                                
+                                <!-- add Create Product and View Product (in ecommerce) links -->
+                                <container>
+                                    <link target="EditProduct" text="[${uiLabelMap.ProductNewProduct}]" style="buttontext"/>
+                                    <!-- TODO: make link conditional on non-empty productId... -->
+                                    <link target="/ecommerce/control/product?product_id=${productId}" url-mode="raw" text="[${uiLabelMap.ProductProductPage}]" style="buttontext"/>
+                                </container>
+                                <decorator-section-include name="body"/>
+                            </widgets>
+                            <fail-widgets>
+                                <label style="head3">${uiLabelMap.ProductCatalogViewPermissionError}</label>
+                            </fail-widgets>
+                        </section>                    
+                    </decorator-section>
+                </decorator-screen>
+            </widgets>
+        </section>
+    </screen>	
+	
+    <screen name="EditProductPrices">
+        <section>
+            <actions>
+                <set field="title" value="Edit Product Prices"/>
+                <set field="titleProperty" value="PageTitleEditProductPrices"/>
+                <set field="tabButtonItem" value="EditProductPrices"/>
+                <set field="labelTitleProperty" value="ProductPrices"/>
+    
+                <set field="productId" from-field="parameters.productId"/>
+                <entity-one entity-name="Product" value-name="product"/>
+                <entity-and entity-name="ProductPrice" list-name="productPrices">
+                    <field-map env-name="productId"/>
+                    <order-by field-name="productStoreGroupId"/>
+                    <order-by field-name="productPriceTypeId"/>
+                    <order-by field-name="currencyUomId"/>
+                    <order-by field-name="fromDate"/>
+                </entity-and>
+                
+                <property-to-field field="defaultCurrencyUomId" resource="general" property="currency.uom.id.default" default="USD"/>
+            </actions>
+            <widgets>
+                <decorator-screen name="CommonProductDecorator">
+                    <decorator-section name="body">
+                        <include-form name="UpdateProductPrice" location="component://product/webapp/catalog/product/ProductForms.xml"/>
+                        <include-form name="AddProductPrice" location="component://product/webapp/catalog/product/ProductForms.xml"/>
+                    </decorator-section>
+                </decorator-screen>
+            </widgets>
+        </section>
+    </screen>
+    <screen name="EditProductConfigs">
+        <section>
+            <actions>
+                <set field="title" value="Edit Product Configs"/>
+                <set field="titleProperty" value="PageTitleEditProductConfigs"/>
+                <set field="tabButtonItem" value="EditProductConfigs"/>
+                <set field="labelTitleProperty" value="ProductConfigs"/>
+    
+                <set field="productId" from-field="parameters.productId"/>
+                <entity-one entity-name="Product" value-name="product"/>
+                <entity-and entity-name="ProductConfig" list-name="productConfigs">
+                    <field-map env-name="productId"/>
+                    <order-by field-name="sequenceNum"/>
+                    <order-by field-name="fromDate"/>
+                </entity-and>
+            </actions>
+            <widgets>
+                <decorator-screen name="CommonProductDecorator">
+                    <decorator-section name="body">
+                        <include-form name="UpdateProductConfig" location="component://product/webapp/catalog/product/ProductForms.xml"/>
+                        <include-form name="AddProductConfig" location="component://product/webapp/catalog/product/ProductForms.xml"/>
+                    </decorator-section>
+                </decorator-screen>
+            </widgets>
+        </section>
+    </screen>
+</screens>
+
