@@ -1,6 +1,9 @@
 /*
  * $Id$
  * $Log$
+ * Revision 1.10  2001/12/30 04:21:00  jonesde
+ * Finished WorkEffortPartyAssignment services, cleaned up WorkEffort services
+ *
  * Revision 1.9  2001/12/29 12:26:08  jonesde
  * Finished moving WorkEffort functionality to services, party assignment still needs to be done
  *
@@ -38,6 +41,7 @@ import java.sql.Timestamp;
 
 import org.ofbiz.core.util.*;
 import org.ofbiz.core.entity.*;
+import org.ofbiz.core.minilang.*;
 import org.ofbiz.core.security.*;
 import org.ofbiz.core.service.*;
 
@@ -74,20 +78,18 @@ public class WorkEffortEvents {
      *@return String specifying the exit status of this event
      */
     public static String updateWorkEffort(HttpServletRequest request, HttpServletResponse response) {
-        String errMsg = "";
         LocalDispatcher dispatcher = (LocalDispatcher) request.getSession().getServletContext().getAttribute("dispatcher");
-        //GenericDelegator delegator = (GenericDelegator) request.getAttribute("delegator");
         Security security = (Security) request.getAttribute("security");
 
         GenericValue userLogin = (GenericValue) request.getSession().getAttribute(SiteDefs.USER_LOGIN);
         if (userLogin == null) {
-            request.setAttribute("ERROR_MESSAGE", "You must be logged in to update a Work Effort.");
+            request.setAttribute(SiteDefs.ERROR_MESSAGE, "You must be logged in to update a Work Effort.");
             return "error";
         }
 
         String updateMode = request.getParameter("UPDATE_MODE");
         if (updateMode == null || updateMode.length() <= 0) {
-            request.setAttribute("ERROR_MESSAGE", "Update Mode was not specified, but is required.");
+            request.setAttribute(SiteDefs.ERROR_MESSAGE, "Update Mode was not specified, but is required.");
             Debug.logWarning("[WorkEffortEvents.updateWorkEffort] Update Mode was not specified, but is required");
             return "error";
         }
@@ -97,7 +99,7 @@ public class WorkEffortEvents {
             // invoke the service
             Map result = null;
             Map context = new HashMap();
-            context.put("workEffortId", request.getParameter("WORK_EFFORT_ID"));
+            context.put("workEffortId", request.getParameter("workEffortId"));
             context.put("userLogin", userLogin);
             try {
                 result = dispatcher.runSync("deleteWorkEffort",context);
@@ -107,138 +109,35 @@ public class WorkEffortEvents {
                 return "error";
             }
 
-            request.setAttribute(SiteDefs.EVENT_MESSAGE, "Work Effort successfully deleted.");
-            //always do this last, may override defaults EVENT_MESSAGE
-            ServiceUtil.getHtmlMessages(request, result);
+            ServiceUtil.getHtmlMessages(request, result, "Work Effort successfully deleted.");
             // return the result
             return result.containsKey(ModelService.RESPONSE_MESSAGE) ? (String)result.get(ModelService.RESPONSE_MESSAGE) : "success";
         }
 
-        Long priority = null;
+        Map context = new HashMap();
+        List messages = new LinkedList();
+        
+        //Map strings = request.getParameterMap();
+        Map strings = UtilMisc.getParameterMap(request);
 
-        java.sql.Timestamp estimatedStartDate = null;
-        java.sql.Timestamp estimatedCompletionDate = null;
-
-        java.sql.Timestamp actualStartDate = null;
-        java.sql.Timestamp actualCompletionDate = null;
-
-        Double estimatedMilliSeconds = null;
-        Double actualMilliSeconds = null;
-
-        Double totalMilliSecondsAllowed = null;
-        Double totalMoneyAllowed = null;
-        Long timeTransparency = null;
-
-
-        if (UtilValidate.isNotEmpty(request.getParameter("PRIORITY"))) {
-            try {
-                priority = Long.valueOf(request.getParameter("PRIORITY"));
-            } catch (Exception e) {
-                errMsg += "<li>Priority is not a valid whole number.";
+        try {
+            StringProcessor.runStringProcessor("org/ofbiz/commonapp/workeffort/workeffort/WorkEffortProcessor.xml", strings, context, messages);
+        } catch (MiniLangException e) {
+            messages.add("Error running StringProcessor: " + e.toString());
+        }
+        
+        if (context.get("estimatedStartDate") != null && context.get("estimatedCompletionDate") != null) {
+            Timestamp estimatedStartDate = (Timestamp) context.get("estimatedStartDate");
+            Timestamp estimatedCompletionDate = (Timestamp) context.get("estimatedCompletionDate");
+            if (estimatedStartDate.after(estimatedCompletionDate)) {
+                messages.add("Start date/time cannot be after end date/time.");
             }
         }
-
-        if (UtilValidate.isNotEmpty(request.getParameter("ESTIMATED_START_DATE"))) {
-            try {
-                estimatedStartDate = Timestamp.valueOf(request.getParameter("ESTIMATED_START_DATE"));
-            } catch (Exception e) {
-                errMsg += "<li>Estimated Start Date is not a valid Date-Time.";
-            }
-        }
-        if (UtilValidate.isNotEmpty(request.getParameter("ESTIMATED_COMPLETION_DATE"))) {
-            try {
-                estimatedCompletionDate = Timestamp.valueOf(request.getParameter("ESTIMATED_COMPLETION_DATE"));
-            } catch (Exception e) {
-                errMsg += "<li>Estimated Completion Date is not a valid Date-Time.";
-            }
-        }
-
-        if (UtilValidate.isNotEmpty(request.getParameter("ACTUAL_START_DATE"))) {
-            try {
-                actualStartDate = Timestamp.valueOf(request.getParameter("ACTUAL_START_DATE"));
-            } catch (Exception e) {
-                errMsg += "<li>Actual Start Date is not a valid Date-Time.";
-            }
-        }
-        if (UtilValidate.isNotEmpty(request.getParameter("ACTUAL_COMPLETION_DATE"))) {
-            try {
-                actualCompletionDate = Timestamp.valueOf(request.getParameter("ACTUAL_COMPLETION_DATE"));
-            } catch (Exception e) {
-                errMsg += "<li>Actual Completion Date is not a valid Date-Time.";
-            }
-        }
-
-        if (UtilValidate.isNotEmpty(request.getParameter("ESTIMATED_MILLI_SECONDS"))) {
-            try {
-                estimatedMilliSeconds = Double.valueOf(request.getParameter("ESTIMATED_MILLI_SECONDS"));
-            } catch (Exception e) {
-                errMsg += "<li>Estimated Milli-seconds is not a valid number.";
-            }
-        }
-        if (UtilValidate.isNotEmpty(request.getParameter("ACTUAL_MILLI_SECONDS"))) {
-            try {
-                actualMilliSeconds = Double.valueOf(request.getParameter("ACTUAL_MILLI_SECONDS"));
-            } catch (Exception e) {
-                errMsg += "<li>Actual Milli-seconds is not a valid number.";
-            }
-        }
-        if (UtilValidate.isNotEmpty(request.getParameter("TOTAL_MILLI_SECONDS_ALLOWED"))) {
-            try {
-                totalMilliSecondsAllowed = Double.valueOf(request.getParameter("TOTAL_MILLI_SECONDS_ALLOWED"));
-            } catch (Exception e) {
-                errMsg += "<li>Total Milli-seconds Allows is not a valid number.";
-            }
-        }
-
-        if (UtilValidate.isNotEmpty(request.getParameter("TOTAL_MONEY_ALLOWED"))) {
-            try {
-                totalMoneyAllowed = Double.valueOf(request.getParameter("TOTAL_MONEY_ALLOWED"));
-            } catch (Exception e) {
-                errMsg += "<li>Total Money Allowed is not a valid number.";
-            }
-        }
-        if (UtilValidate.isNotEmpty(request.getParameter("TIME_TRANSPARENCY"))) {
-            try {
-                timeTransparency = Long.valueOf(request.getParameter("TIME_TRANSPARENCY"));
-            } catch (Exception e) {
-                errMsg += "<li>Time Transparency is not a valid whole number.";
-            }
-        }
-
-        if (!UtilValidate.isNotEmpty(request.getParameter("WORK_EFFORT_NAME")))
-            errMsg += "<li>Name is missing.";
-        if (!UtilValidate.isNotEmpty(request.getParameter("CURRENT_STATUS_ID")))
-            errMsg += "<li>Status is missing.";
-        if (estimatedStartDate != null && estimatedCompletionDate != null && estimatedStartDate.after(estimatedCompletionDate)) {
-            errMsg += "<li>Start date/time cannot be after end date/time.";
-        }
-        if (errMsg.length() > 0) {
-            errMsg = "<b>The following errors occured:</b><br><ul>" + errMsg + "</ul>";
-            request.setAttribute("ERROR_MESSAGE", errMsg);
+        if (messages.size() > 0) {
+            String errMsg = "<b>The following errors occured:</b><br><ul>" + ServiceUtil.makeHtmlMessageList(messages) + "</ul>";
+            request.setAttribute(SiteDefs.ERROR_MESSAGE, errMsg);
             return "error";
         }
-
-        Map context = new HashMap();
-        context.put("workEffortTypeId", request.getParameter("WORK_EFFORT_TYPE_ID"));
-        context.put("currentStatusId", request.getParameter("CURRENT_STATUS_ID"));
-        context.put("universalId", request.getParameter("UNIVERSAL_ID"));
-        context.put("scopeEnumId", request.getParameter("SCOPE_ENUM_ID"));
-        context.put("priority", priority);
-        context.put("workEffortName", request.getParameter("WORK_EFFORT_NAME"));
-        context.put("description", request.getParameter("DESCRIPTION"));
-        context.put("locationDesc", request.getParameter("LOCATION_DESC"));
-        context.put("estimatedStartDate", estimatedStartDate);
-        context.put("estimatedCompletionDate", estimatedCompletionDate);
-        context.put("actualStartDate", actualStartDate);
-        context.put("actualCompletionDate", actualCompletionDate);
-        context.put("estimatedMilliSeconds", estimatedMilliSeconds);
-        context.put("actualMilliSeconds", actualMilliSeconds);
-        context.put("totalMilliSecondsAllowed", totalMilliSecondsAllowed);
-        context.put("totalMoneyAllowed", totalMoneyAllowed);
-        context.put("moneyUomId", request.getParameter("MONEY_UOM_ID"));
-        context.put("specialTerms", request.getParameter("SPECIAL_TERMS"));
-        context.put("timeTransparency", timeTransparency);
-        context.put("infoUrl", request.getParameter("INFO_URL"));
 
         context.put("userLogin", userLogin);
 
@@ -248,38 +147,32 @@ public class WorkEffortEvents {
             try {
                 result = dispatcher.runSync("createWorkEffort",context);
             } catch (GenericServiceException e) {
-                request.setAttribute(SiteDefs.ERROR_MESSAGE,"ERROR: Could not delete WorkEffort (problem invoking the service: " + e.getMessage() + ")");
+                request.setAttribute(SiteDefs.ERROR_MESSAGE,"ERROR: Could not create WorkEffort (problem invoking the service: " + e.getMessage() + ")");
                 Debug.logError(e);
                 return "error";
             }
 
-            request.setAttribute(SiteDefs.EVENT_MESSAGE, "Work Effort successfully created.");
-            //always do this last, may override defaults EVENT_MESSAGE
-            ServiceUtil.getHtmlMessages(request, result);
-            
-            request.setAttribute("WORK_EFFORT_ID", result.get("workEffortId"));
+            ServiceUtil.getHtmlMessages(request, result, "Work Effort successfully created.");
+            request.setAttribute("workEffortId", result.get("workEffortId"));
 
             // return the result
             return result.containsKey(ModelService.RESPONSE_MESSAGE) ? (String)result.get(ModelService.RESPONSE_MESSAGE) : "success";
         } else if (updateMode.equals("UPDATE")) {
             // invoke the service
             Map result = null;
-            context.put("workEffortId", request.getParameter("WORK_EFFORT_ID"));
             try {
                 result = dispatcher.runSync("updateWorkEffort",context);
             } catch (GenericServiceException e) {
-                request.setAttribute(SiteDefs.ERROR_MESSAGE,"ERROR: Could not delete WorkEffort (problem invoking the service: " + e.getMessage() + ")");
+                request.setAttribute(SiteDefs.ERROR_MESSAGE,"ERROR: Could not update WorkEffort (problem invoking the service: " + e.getMessage() + ")");
                 Debug.logError(e);
                 return "error";
             }
 
-            request.setAttribute(SiteDefs.EVENT_MESSAGE, "Work Effort successfully updated.");
-            //always do this last, may override defaults EVENT_MESSAGE
-            ServiceUtil.getHtmlMessages(request, result);
+            ServiceUtil.getHtmlMessages(request, result, "Work Effort successfully updated.");
             // return the result
             return result.containsKey(ModelService.RESPONSE_MESSAGE) ? (String)result.get(ModelService.RESPONSE_MESSAGE) : "success";
         } else {
-            request.setAttribute("ERROR_MESSAGE", "Specified update mode: \"" + updateMode + "\" is not supported.");
+            request.setAttribute(SiteDefs.ERROR_MESSAGE, "Specified update mode: \"" + updateMode + "\" is not supported.");
             return "error";
         }
     }
@@ -298,13 +191,13 @@ public class WorkEffortEvents {
 
         GenericValue userLogin = (GenericValue) request.getSession().getAttribute(SiteDefs.USER_LOGIN);
         if (userLogin == null) {
-            request.setAttribute("ERROR_MESSAGE", "You must be logged in to update a Work Effort.");
+            request.setAttribute(SiteDefs.ERROR_MESSAGE, "You must be logged in to update a Work Effort.");
             return "error";
         }
 
         String updateMode = request.getParameter("UPDATE_MODE");
         if (updateMode == null || updateMode.length() <= 0) {
-            request.setAttribute("ERROR_MESSAGE", "Update Mode was not specified, but is required.");
+            request.setAttribute(SiteDefs.ERROR_MESSAGE, "Update Mode was not specified, but is required.");
             Debug.logWarning("[WorkEffortEvents.updateWorkEffort] Update Mode was not specified, but is required");
             return "error";
         }
@@ -334,7 +227,7 @@ public class WorkEffortEvents {
         
         if (errMsg.length() > 0) {
             errMsg = "<b>The following errors occured:</b><br><ul>" + errMsg + "</ul>";
-            request.setAttribute("ERROR_MESSAGE", errMsg);
+            request.setAttribute(SiteDefs.ERROR_MESSAGE, errMsg);
             return "error";
         }
 
@@ -356,9 +249,7 @@ public class WorkEffortEvents {
                 return "error";
             }
 
-            request.setAttribute(SiteDefs.EVENT_MESSAGE, "Work Effort Party Assignment successfully deleted.");
-            //always do this last, may override defaults EVENT_MESSAGE
-            ServiceUtil.getHtmlMessages(request, result);
+            ServiceUtil.getHtmlMessages(request, result, "Work Effort Party Assignment successfully deleted.");
             // return the result
             return result.containsKey(ModelService.RESPONSE_MESSAGE) ? (String)result.get(ModelService.RESPONSE_MESSAGE) : "success";
         }
@@ -374,7 +265,7 @@ public class WorkEffortEvents {
         
         if (errMsg.length() > 0) {
             errMsg = "<b>The following errors occured:</b><br><ul>" + errMsg + "</ul>";
-            request.setAttribute("ERROR_MESSAGE", errMsg);
+            request.setAttribute(SiteDefs.ERROR_MESSAGE, errMsg);
             return "error";
         }
 
@@ -399,10 +290,7 @@ public class WorkEffortEvents {
                 return "error";
             }
 
-            request.setAttribute(SiteDefs.EVENT_MESSAGE, "Work Effort Party Assignment successfully created.");
-            //always do this last, may override defaults EVENT_MESSAGE
-            ServiceUtil.getHtmlMessages(request, result);
-
+            ServiceUtil.getHtmlMessages(request, result, "Work Effort Party Assignment successfully created.");
             request.setAttribute("fromDate", result.get("fromDate"));
 
             // return the result
@@ -419,14 +307,11 @@ public class WorkEffortEvents {
                 return "error";
             }
 
-            request.setAttribute(SiteDefs.EVENT_MESSAGE, "Work Effort Party Assignment successfully updated.");
-            //always do this last, may override defaults EVENT_MESSAGE
-            ServiceUtil.getHtmlMessages(request, result);
-
+            ServiceUtil.getHtmlMessages(request, result, "Work Effort Party Assignment successfully updated.");
             // return the result
             return result.containsKey(ModelService.RESPONSE_MESSAGE) ? (String)result.get(ModelService.RESPONSE_MESSAGE) : "success";
         } else {
-            request.setAttribute("ERROR_MESSAGE", "Specified update mode: \"" + updateMode + "\" is not supported.");
+            request.setAttribute(SiteDefs.ERROR_MESSAGE, "Specified update mode: \"" + updateMode + "\" is not supported.");
             return "error";
         }
     }

@@ -1,0 +1,63 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+
+<!DOCTYPE string-processor PUBLIC "-//OFBiz//DTD String Processor//EN" "http://www.ofbiz.org/dtds/string-processor.dtd">
+
+<!--
+ * <p><b>Title:</b> WorkEffortProcessor
+ * <p><b>Description:</b> Events to handle form input and other data changes
+ * <p>Copyright (c) 2001 The Open For Business Project and repected authors.
+ * <p>Permission is hereby granted, free of charge, to any person obtaining a
+ *  copy of this software and associated documentation files (the "Software"),
+ *  to deal in the Software without restriction, including without limitation
+ *  the rights to use, copy, modify, merge, publish, distribute, sublicense,
+ *  and/or sell copies of the Software, and to permit persons to whom the
+ *  Software is furnished to do so, subject to the following conditions:
+ *
+ * <p>The above copyright notice and this permission notice shall be included
+ *  in all copies or substantial portions of the Software.
+ *
+ * <p>THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS
+ *  OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF
+ *  MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT.
+ *  IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY
+ *  CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT
+ *  OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR
+ *  THE USE OR OTHER DEALINGS IN THE SOFTWARE.
+ *
+ * @author <a href="mailto:jonesde@ofbiz.org">David E. Jones</a>
+ * @version 1.0
+ * Created on January 1, 2001
+ -->
+<string-processor>
+    <string-process field="workEffortId"><copy replace="false"/></string-process>
+    <string-process field="workEffortTypeId"><copy/></string-process>
+    <string-process field="universalId"><copy/></string-process>
+    <string-process field="scopeEnumId"><copy/></string-process>
+    <string-process field="currentStatusId"><copy/><not-empty><fail-message message="Status is missing."/></not-empty></string-process>
+    <string-process field="priority"><convert type="Long"><fail-message message="Priority is not a valid whole number."/></convert></string-process>
+    <string-process field="workEffortName"><copy/><not-empty><fail-message message="Name is missing."/></not-empty></string-process>
+    <string-process field="description"><copy/></string-process>
+    <string-process field="locationDesc"><copy/></string-process>
+    <string-process field="estimatedStartDate"><convert type="Timestamp">
+        <fail-message message="Estimated Start Date is not a valid Date-Time."/></convert></string-process>
+    <string-process field="estimatedCompletionDate"><convert type="Timestamp">
+        <fail-message message="Estimated Completion Date is not a valid Date-Time."/></convert></string-process>
+    <string-process field="actualStartDate"><convert type="Timestamp">
+        <fail-message message="Actual Start Date is not a valid Date-Time."/></convert></string-process>
+    <string-process field="actualCompletionDate"><convert type="Timestamp">
+        <fail-message message="Actual Completion Date is not a valid Date-Time."/></convert></string-process>
+    <string-process field="estimatedMilliSeconds"><convert type="Double">
+        <fail-message message="Estimated Milli-seconds is not a valid number."/></convert></string-process>
+    <string-process field="actualMilliSeconds"><convert type="Double">
+        <fail-message message="Actual Milli-seconds is not a valid number."/></convert></string-process>
+    <string-process field="totalMilliSecondsAllowed"><convert type="Double">
+        <fail-message message="Total Milli-seconds Allowed is not a valid number."/></convert></string-process>
+    <string-process field="totalMoneyAllowed"><convert type="Double">
+        <fail-message message="Total Money Allowed is not a valid number."/></convert></string-process>
+    <string-process field="timeTransparency"><convert type="Double">
+        <fail-message message="Time Transparency is not a valid whole number."/></convert></string-process>
+    <string-process field="moneyUomId"><copy/></string-process>
+    <string-process field="specialTerms"><copy/></string-process>
+    <string-process field="timeTransparency"><copy/></string-process>
+    <string-process field="infoUrl"><copy/></string-process>
+</string-processor>
