@@ -73,6 +73,10 @@ public class PaymentGatewayServices {
             return result;
         }
 
+        if (orderHeader == null) {
+            return ServiceUtil.returnError("Could not find OrderHeader with orderId: " + orderId + "; not processing payments.");
+        }
+        
         OrderReadHelper orh = new OrderReadHelper(orderHeader);
         double amountToBill = orh.getOrderGrandTotal();
 
