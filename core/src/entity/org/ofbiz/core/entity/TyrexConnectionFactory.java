@@ -34,6 +34,7 @@ import org.ofbiz.core.util.*;
 
 // For Tyrex 0.9.8.5
 import tyrex.resource.jdbc.xa.*;
+import tyrex.tm.*;
 
 // For Tyrex 0.9.7.0
 //import tyrex.jdbc.xa.*;
@@ -48,7 +49,7 @@ import tyrex.resource.jdbc.xa.*;
 public class TyrexConnectionFactory {
 
     static UtilCache dsCache = new UtilCache("entity.TyrexDataSources", 0, 0);
-
+    
     public static Connection getConnection(String helperName, Element inlineJdbcElement) throws SQLException, GenericEntityException {
         boolean usingTyrex = true;
 

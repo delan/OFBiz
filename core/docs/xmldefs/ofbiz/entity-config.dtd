@@ -102,7 +102,7 @@
 >
 
 <!ELEMENT datasource ANY>
-<!-- main subelements of datasource are (sql-load-path*, (inline-jdbc | jndi-jdbc | ANY), but ANY must be used alone for certain XML parsers -->
+<!-- main subelements of datasource are (sql-load-path*, (inline-jdbc | jndi-jdbc | tyrex-dataSource | ANY), but ANY must be used alone for certain XML parsers -->
 <!ATTLIST datasource
     name CDATA #REQUIRED
     helper-class CDATA #REQUIRED
@@ -125,10 +125,16 @@
         jdbc-uri CDATA #REQUIRED
         jdbc-username CDATA #REQUIRED
         jdbc-password CDATA #REQUIRED
-        isolation-level ( ReadCommitted | ReadUncommitted | RepeatableRead | Serializable ) "Serializable"
+        isolation-level ( None | ReadCommitted | ReadUncommitted | RepeatableRead | Serializable ) "Serializable"
     >
     <!ELEMENT jndi-jdbc EMPTY>
     <!ATTLIST jndi-jdbc
         jndi-server-name CDATA #REQUIRED
         jndi-name CDATA #REQUIRED
+        isolation-level ( None | ReadCommitted | ReadUncommitted | RepeatableRead | Serializable ) #IMPLIED
+    >
+    <!ELEMENT tyrex-dataSource EMPTY>
+    <!ATTLIST tyrex-dataSource
+        dataSource-name CDATA #REQUIRED
+        isolation-level ( None | ReadCommitted | ReadUncommitted | RepeatableRead | Serializable ) #IMPLIED
     >

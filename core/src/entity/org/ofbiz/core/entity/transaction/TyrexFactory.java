@@ -28,11 +28,14 @@ package org.ofbiz.core.entity.transaction;
 import java.net.*;
 import java.util.*;
 import java.security.*;
+import java.sql.*;
+import javax.sql.*;
 import javax.naming.*;
 import javax.transaction.*;
 
 import org.ofbiz.core.util.*;
-import tyrex.tm.TransactionDomain;
+import tyrex.tm.*;
+import tyrex.resource.*;
 
 
 /**
@@ -44,35 +47,64 @@ import tyrex.tm.TransactionDomain;
  */
 public class TyrexFactory implements TransactionFactoryInterface {
 
-    protected TransactionDomain td = null;
+    protected static TransactionDomain td = null;
+    protected static String DOMAIN_NAME = "default";
 
-    public TyrexFactory() {
+    static {
 
         /* For Tyrex version 0.9.8.5 */
+        /* This is not used because we are now using the tyrex.config file
         try {
             String resourceName = "tyrexdomain.xml";
             URL url = UtilURL.fromResource(resourceName);
 
             if (url != null) {
                 td = TransactionDomain.createDomain(url.toString());
-                td.recover();
             } else {
                 Debug.logError("ERROR: Could not create Tyrex Transaction Domain (resource not found):" + resourceName);
             }
         } catch (tyrex.tm.DomainConfigurationException e) {
             Debug.logError("Could not create Tyrex Transaction Domain (configuration):");
             Debug.logError(e);
-        } catch (tyrex.tm.RecoveryException e) {
-            Debug.logError("Could not create Tyrex Transaction Domain (recovery):");
-            Debug.logError(e);
         }
-
+        */
+        
+        td = TransactionDomain.getDomain(DOMAIN_NAME);
+        if (td != null) {
+            try {
+                td.recover();
+            } catch (tyrex.tm.RecoveryException e) {
+                Debug.logError("Could not create Tyrex Transaction Domain (recovery):");
+                Debug.logError(e);
+            }
+        }
         /* For Tyrex version 0.9.7.0 * /
          tyrex.resource.ResourceLimits rls = new tyrex.resource.ResourceLimits();
          td = new TransactionDomain("ofbiztx", rls);
          */
     }
 
+    public static Resources getResources() {
+        if (td != null)
+            return td.getResources();
+        else
+            return null;
+    }
+    
+    public static DataSource getDataSource(String dsName) {
+        Resources resources = getResources();
+        if (resources != null) {
+            try {
+                return (DataSource) resources.getResource(dsName);
+            } catch (tyrex.resource.ResourceException e) {
+                Debug.logError(e, "Could not get tyrex dataSource resource with name " + dsName);
+                return null;
+            }
+        } else {
+            return null;
+        }
+    }
+    
     public TransactionManager getTransactionManager() {
         if (td != null)
             return td.getTransactionManager();

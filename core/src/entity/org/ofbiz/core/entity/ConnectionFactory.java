@@ -32,6 +32,7 @@ import org.w3c.dom.Element;
 
 import org.ofbiz.core.util.*;
 import org.ofbiz.core.entity.config.*;
+import org.ofbiz.core.entity.transaction.*;
 
 /**
  * ConnectionFactory - central source for JDBC connections
@@ -101,6 +102,22 @@ public class ConnectionFactory {
                             DataSource nds = (DataSource) ds;
                             con = nds.getConnection();
                         }
+                        
+                        String isolationLevel = jndiJdbcElement.getAttribute("isolation-level");
+                        if (con != null && isolationLevel != null && isolationLevel.length() > 0) {
+                            if ("Serializable".equals(isolationLevel)) {
+                                con.setTransactionIsolation(Connection.TRANSACTION_SERIALIZABLE);
+                            } else if ("RepeatableRead".equals(isolationLevel)) {
+                                con.setTransactionIsolation(Connection.TRANSACTION_REPEATABLE_READ);
+                            } else if ("ReadUncommitted".equals(isolationLevel)) {
+                                con.setTransactionIsolation(Connection.TRANSACTION_READ_UNCOMMITTED);
+                            } else if ("ReadCommitted".equals(isolationLevel)) {
+                                con.setTransactionIsolation(Connection.TRANSACTION_READ_COMMITTED);
+                            } else if ("None".equals(isolationLevel)) {
+                                con.setTransactionIsolation(Connection.TRANSACTION_NONE);
+                            }
+                        }
+                        
                         //if (con != null) Debug.logInfo("[ConnectionFactory.getConnection] Got JNDI connection with catalog: " + con.getCatalog());
                         return con;
                     }
@@ -110,6 +127,37 @@ public class ConnectionFactory {
             }
         }
 
+        //see if there is a tyrex-dataSource configured
+        Element tyrexDataSourceElement = UtilXml.firstChildElement(datasourceElement, "tyrex-dataSource");
+        if (tyrexDataSourceElement != null) {
+            String dataSourceName = tyrexDataSourceElement.getAttribute("dataSource-name");
+            if (UtilValidate.isEmpty(dataSourceName)) {
+                Debug.logError("dataSource-name not set for tyrex-dataSource element in the " + helperName + " data-source definition");
+            } else {
+                DataSource tyrexDataSource = TyrexFactory.getDataSource(dataSourceName);
+                if (tyrexDataSource == null) {
+                    Debug.logError("Got a null data source for dataSource-name " + dataSourceName + " for tyrex-dataSource element in the " + helperName + " data-source definition");
+                } else {
+                    Connection con = tyrexDataSource.getConnection();
+                    String isolationLevel = tyrexDataSourceElement.getAttribute("isolation-level");
+                    if (con != null && isolationLevel != null && isolationLevel.length() > 0) {
+                        if ("Serializable".equals(isolationLevel)) {
+                            con.setTransactionIsolation(Connection.TRANSACTION_SERIALIZABLE);
+                        } else if ("RepeatableRead".equals(isolationLevel)) {
+                            con.setTransactionIsolation(Connection.TRANSACTION_REPEATABLE_READ);
+                        } else if ("ReadUncommitted".equals(isolationLevel)) {
+                            con.setTransactionIsolation(Connection.TRANSACTION_READ_UNCOMMITTED);
+                        } else if ("ReadCommitted".equals(isolationLevel)) {
+                            con.setTransactionIsolation(Connection.TRANSACTION_READ_COMMITTED);
+                        } else if ("None".equals(isolationLevel)) {
+                            con.setTransactionIsolation(Connection.TRANSACTION_NONE);
+                        }
+                    }
+                    return con;
+                }
+            }
+        }
+        
         Element inlineJdbcElement = UtilXml.firstChildElement(datasourceElement, "inline-jdbc");
         if (inlineJdbcElement != null) {
             //If JNDI sources are not specified, or found, try Tyrex
@@ -124,7 +172,7 @@ public class ConnectionFactory {
                 if (con != null)
                     return con;
             } catch (Exception ex) {
-                Debug.logWarning(ex, "There was an error loading Tyrex, this may not be a serious problem, but you probably want to know anyway.");
+                Debug.logWarning(ex, "There was an error loading Tyrex, this may not be a serious problem, but you probably want to know anyway. Will continue with probably very slow manual JDBC load.");
             }
 
             // Default to plain JDBC.
