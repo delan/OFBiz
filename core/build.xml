@@ -109,6 +109,8 @@
       <mkdir dir="${build.dir}/crypto/META-INF" />
       <mkdir dir="${build.dir}/workflow/META-INF" />
       <mkdir dir="${build.dir}/rules/META-INF" />
+      <mkdir dir="${build.dir}/datafile/META-INF" />
+      <mkdir dir="${build.dir}/minilang/META-INF" />
       <mkdir dir="${lib.dir}" />
     </target>
 	
@@ -128,8 +130,7 @@
 
     <target name="classes" depends="tld">
     	<javac debug="on" destdir="${build.dir}/share" classpath="${classpath}">
-    		<src path="${src.dir}/share" />
-        </javac>
+    		<src path="${src.dir}/share" /></javac>
         <!-- also put the DTDs in this jar file... -->
         <copy todir="${build.dir}/share">
             <fileset dir="${doc.dir}/xmldefs/ofbiz" includes="*.dtd" />
@@ -137,25 +138,24 @@
         </copy>
 		
     	<javac debug="on" destdir="${build.dir}/webapp" classpath="${classpath}:${build.dir}/share">
-    		<src path="${src.dir}/webapp" />
-        </javac>
-        <copy todir="${build.dir}/webapp">
-            <fileset dir="${src.dir}" includes="**/*.properties,**/*.xml,**/*.bsh,**/*.logic" />
-        </copy>
+    		<src path="${src.dir}/webapp" /></javac>
+        <copy todir="${build.dir}/webapp"><fileset dir="${src.dir}" includes="**/*.properties,**/*.xml,**/*.bsh,**/*.logic" /></copy>
     	
     	<javac debug="on" destdir="${build.dir}/workflow" classpath="${classpath}:${build.dir}/share">
-    		<src path="${src.dir}/workflow" />    
-        </javac>
-        <copy todir="${build.dir}/workflow">
-            <fileset dir="${src.dir}" includes="**/*.properties,**/*.xml,**/*.bsh,**/*.logic" />
-        </copy>
+            <src path="${src.dir}/workflow" /></javac>
+        <copy todir="${build.dir}/workflow"><fileset dir="${src.dir}" includes="**/*.properties,**/*.xml,**/*.bsh,**/*.logic" /></copy>
 
     	<javac debug="on" destdir="${build.dir}/rules" classpath="${classpath}:${build.dir}/share">
-    		<src path="${src.dir}/rules" />    
-        </javac>
-        <copy todir="${build.dir}/rules">
-            <fileset dir="${src.dir}" includes="**/*.properties,**/*.xml,**/*.bsh,**/*.logic" />
-        </copy>
+            <src path="${src.dir}/rules" /></javac>
+        <copy todir="${build.dir}/rules"><fileset dir="${src.dir}" includes="**/*.properties,**/*.xml,**/*.bsh,**/*.logic" /></copy>
+
+    	<javac debug="on" destdir="${build.dir}/datafile" classpath="${classpath}:${build.dir}/share">
+            <src path="${src.dir}/datafile" /></javac>
+        <copy todir="${build.dir}/datafile"><fileset dir="${src.dir}" includes="**/*.properties,**/*.xml,**/*.bsh,**/*.logic" /></copy>
+
+    	<javac debug="on" destdir="${build.dir}/minilang" classpath="${classpath}:${build.dir}/share:${build.dir}/webapp">
+            <src path="${src.dir}/minilang" /></javac>
+        <copy todir="${build.dir}/minilang"><fileset dir="${src.dir}" includes="**/*.properties,**/*.xml,**/*.bsh,**/*.logic" /></copy>
 
 <!--
   	<javac destdir="${build.dir}/crypto" classpath="${classpath}:${build.dir}/share">
@@ -166,17 +166,15 @@
     </target>
 
     <target name="jar" depends="classes">
-        <jar jarfile="${lib.dir}/${name}-share.jar"
-            basedir="${build.dir}/share" />
-        <jar jarfile="${lib.dir}/${name}-webapp.jar"
-            basedir="${build.dir}/webapp" />
-        <jar jarfile="${lib.dir}/${name}-workflow.jar"
-            basedir="${build.dir}/workflow" />
-        <jar jarfile="${lib.dir}/${name}-rules.jar"
-            basedir="${build.dir}/rules" />
+        <jar jarfile="${lib.dir}/${name}-share.jar" basedir="${build.dir}/share" />
+        <jar jarfile="${lib.dir}/${name}-webapp.jar" basedir="${build.dir}/webapp" />
+        <jar jarfile="${lib.dir}/${name}-workflow.jar" basedir="${build.dir}/workflow" />
+        <jar jarfile="${lib.dir}/${name}-rules.jar" basedir="${build.dir}/rules" />
+        <jar jarfile="${lib.dir}/${name}-datafile.jar" basedir="${build.dir}/datafile" />
+        <jar jarfile="${lib.dir}/${name}-minilang.jar" basedir="${build.dir}/minilang" />
+
 <!--
-        <jar jarfile="${lib.dir}/${name}-crypto.jar"
-            basedir="${build.dir}/crypto" />
+        <jar jarfile="${lib.dir}/${name}-crypto.jar" basedir="${build.dir}/crypto" />
 -->
     </target>
 
@@ -214,6 +212,8 @@
             <sourcepath path="${src.dir}/webapp" />
             <sourcepath path="${src.dir}/workflow" />
             <sourcepath path="${src.dir}/rules" />
+            <sourcepath path="${src.dir}/datafile" />
+            <sourcepath path="${src.dir}/minilang" />
             <sourcepath path="${src.dir}/ejb" />
             <sourcepath path="${src.dir}/crypto" />
         </javadoc>
@@ -253,4 +253,3 @@
     <target name="all" depends="jar,pkg-dist" />
 
 </project>
-

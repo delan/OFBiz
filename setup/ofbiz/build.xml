@@ -276,8 +276,10 @@
         <copy file="commonapp/etc/tyrexdomain.xml" toFile="${classes.dir}/tyrexdomain.xml" />
 
         <copy file="core/lib/ofbcore-share.jar" toFile="${lib.dir}/ofbcore-share.jar" />
-        <copy file="core/lib/ofbcore-rules.jar" toFile="${lib.dir}/ofbcore-rules.jar" />
         <copy file="core/lib/ofbcore-workflow.jar" toFile="${lib.dir}/ofbcore-workflow.jar" />
+        <copy file="core/lib/ofbcore-rules.jar" toFile="${lib.dir}/ofbcore-rules.jar" />
+        <copy file="core/lib/ofbcore-datafile.jar" toFile="${lib.dir}/ofbcore-datafile.jar" />
+        <copy file="core/lib/ofbcore-minilang.jar" toFile="${lib.dir}/ofbcore-minilang.jar" />
     
         <copy file="commonapp/lib/commonapp.jar" toFile="${lib.dir}/commonapp.jar" />
     </target>
