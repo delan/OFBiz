@@ -24,19 +24,11 @@
  */
 package org.ofbiz.core.security;
 
-import org.ofbiz.core.util.UtilCache;
-import org.ofbiz.core.util.UtilMisc;
-import org.ofbiz.core.util.Debug;
-import org.ofbiz.core.util.SiteDefs;
-import org.ofbiz.core.entity.GenericDelegator;
-import org.ofbiz.core.entity.GenericEntityException;
-import org.ofbiz.core.entity.EntityUtil;
-import org.ofbiz.core.entity.GenericValue;
+import java.util.*;
+import javax.servlet.http.*;
 
-import javax.servlet.http.HttpSession;
-import java.util.Iterator;
-import java.util.List;
-import java.util.LinkedList;
+import org.ofbiz.core.entity.*;
+import org.ofbiz.core.util.*;
 
 /**
  * <code>OFBizSecurity</code>
@@ -45,10 +37,18 @@ import java.util.LinkedList;
  *
  * @author     <a href="mailto:jonesde@ofbiz.org">David E. Jones</a>
  * @author     <a href="mailto:hermanns@aixcept.de">Rainer Hermanns</a>
+ * @author     <a href="mailto:jaz@jflow.net">Andy Zeneski</a>
  * @version    $Revision$
  * @since      2.0
  */
 public class OFBizSecurity extends Security {
+    
+    public static final String module = OFBizSecurity.class.getName();
+    
+    public static final Map simpleRoleEntity = UtilMisc.toMap(
+        "ORDERMGR", UtilMisc.toMap("name", "OrderRole", "pkey", "orderId"),
+        "FACILITY", UtilMisc.toMap("name", "FacilityRole", "pkey", "facilityId"),
+        "MARKETING", UtilMisc.toMap("name", "MarketingCampaignRole", "pkey", "marketingCampaignId"));    
 
     /** 
      * Hashtable to cache a Collection of UserLoginSecurityGroup entities for each UserLogin, by userLoginId.
@@ -78,11 +78,9 @@ public class OFBizSecurity extends Security {
         this.delegator = delegator;
     }
 
-    /** 
-     * Uses userLoginSecurityGroupByUserLoginId cache to speed up the finding of the userLogin's security group list.
-     * @param userLoginId The userLoginId to find security groups by
-     * @return An iterator made from the Collection either cached or retrieved from the database through the UserLoginSecurityGroup Delegator.
-     */
+    /**
+     * @see org.ofbiz.core.security.Security#findUserLoginSecurityGroupByUserLoginId(java.lang.String)
+     */   
     public Iterator findUserLoginSecurityGroupByUserLoginId(String userLoginId) {
         List collection = (List) userLoginSecurityGroupByUserLoginId.get(userLoginId);
 
@@ -101,14 +99,9 @@ public class OFBizSecurity extends Security {
         return collection.iterator();
     }
 
-    /** 
-     * Finds whether or not a SecurityGroupPermission row exists given a groupId and permission.
-     * Uses the securityGroupPermissionCache to speed this up.
-     * The groupId,permission pair is cached instead of the userLoginId,permission pair to keep the cache small and to make it more changeable.
-     * @param groupId The ID of the group
-     * @param permission The name of the permission
-     * @return boolean specifying whether or not a SecurityGroupPermission row exists
-     */
+    /**
+     * @see org.ofbiz.core.security.Security#securityGroupPermissionExists(java.lang.String, java.lang.String)
+     */   
     public boolean securityGroupPermissionExists(String groupId, String permission) {
         GenericValue securityGroupPermissionValue = delegator.makeValue("SecurityGroupPermission",
                 UtilMisc.toMap("groupId", groupId, "permissionId", permission));
@@ -129,12 +122,9 @@ public class OFBizSecurity extends Security {
         return exists.booleanValue();
     }
 
-    /** 
-     * Checks to see if the currently logged in userLogin has the passed permission.
-     * @param permission Name of the permission to check.
-     * @param session The current HTTP session, contains the logged in userLogin as an attribute.
-     * @return Returns true if the currently logged in userLogin has the specified permission, otherwise returns false.
-     */
+    /**
+     * @see org.ofbiz.core.security.Security#hasPermission(java.lang.String, javax.servlet.http.HttpSession)
+     */    
     public boolean hasPermission(String permission, HttpSession session) {
         GenericValue userLogin = (GenericValue) session.getAttribute(SiteDefs.USER_LOGIN);
 
@@ -143,12 +133,9 @@ public class OFBizSecurity extends Security {
         return hasPermission(permission, userLogin);
     }
 
-    /** 
-     * Checks to see if the userLogin has the passed permission.
-     * @param permission Name of the permission to check.
-     * @param userLogin The userLogin object for user to check against.
-     * @return Returns true if the currently logged in userLogin has the specified permission, otherwise returns false.
-     */
+    /**
+     * @see org.ofbiz.core.security.Security#hasPermission(java.lang.String, org.ofbiz.core.entity.GenericValue)
+     */    
     public boolean hasPermission(String permission, GenericValue userLogin) {
         if (userLogin == null) return false;
 
@@ -163,13 +150,9 @@ public class OFBizSecurity extends Security {
         return false;
     }
 
-    /** 
-     * Like hasPermission above, except it has functionality specific to Entity permissions. Checks the entity for the specified action, as well as for "_ADMIN" to allow for simplified general administration permission.
-     * @param entity The name of the Entity corresponding to the desired permission.
-     * @param action The action on the Entity corresponding to the desired permission.
-     * @param session The current HTTP session, contains the logged in userLogin as an attribute.
-     * @return Returns true if the currently logged in userLogin has the specified permission, otherwise returns false.
-     */
+    /**
+     * @see org.ofbiz.core.security.Security#hasEntityPermission(java.lang.String, java.lang.String, javax.servlet.http.HttpSession)
+     */    
     public boolean hasEntityPermission(String entity, String action, HttpSession session) {
         GenericValue userLogin = (GenericValue) session.getAttribute(SiteDefs.USER_LOGIN);
 
@@ -177,13 +160,9 @@ public class OFBizSecurity extends Security {
         return hasEntityPermission(entity, action, userLogin);
     }
 
-    /** 
-     * Like hasPermission above, except it has functionality specific to Entity permissions. Checks the entity for the specified action, as well as for "_ADMIN" to allow for simplified general administration permission.
-     * @param entity The name of the Entity corresponding to the desired permission.
-     * @param action The action on the Entity corresponding to the desired permission.
-     * @param userLogin The userLogin object for user to check against.
-     * @return Returns true if the currently logged in userLogin has the specified permission, otherwise returns false.
-     */
+    /**
+     * @see org.ofbiz.core.security.Security#hasEntityPermission(java.lang.String, java.lang.String, org.ofbiz.core.entity.GenericValue)
+     */   
     public boolean hasEntityPermission(String entity, String action, GenericValue userLogin) {
         if (userLogin == null) return false;
 
@@ -205,4 +184,62 @@ public class OFBizSecurity extends Security {
 
         return false;
     }
+    
+    /**
+     * @see org.ofbiz.core.security.Security#hasRolePermission(java.lang.String, java.lang.String, java.lang.String, java.lang.String, javax.servlet.http.HttpSession)
+     */
+    public boolean hasRolePermission(String application, String action, String primaryKey, String role, HttpSession session) {
+        GenericValue userLogin = (GenericValue) session.getAttribute(SiteDefs.USER_LOGIN);
+        return hasRolePermission(application, action, primaryKey, role, userLogin);
+    }
+    
+    /**
+     * @see org.ofbiz.core.security.Security#hasRolePermission(java.lang.String, java.lang.String, java.lang.String, java.lang.String, org.ofbiz.core.entity.GenericValue)
+     */
+    public boolean hasRolePermission(String application, String action, String primaryKey, String role, GenericValue userLogin) {        
+        String entityName = null;
+        Map fields = null;
+                                
+        // now get the role info for this application
+        Map simpleRoleMap = (Map) OFBizSecurity.simpleRoleEntity.get(application);
+        if (simpleRoleMap != null) {
+            entityName = (String) simpleRoleMap.get("name");
+            String pkey = (String) simpleRoleMap.get("pkey");
+            if (pkey != null) 
+                fields = UtilMisc.toMap(pkey, primaryKey, "roleTypeId", role, "partyId", userLogin.getString("partyId"));
+        }
+        
+        return hasRolePermission(application, action, entityName, fields, userLogin);
+    }
+    
+    /**
+     * @see org.ofbiz.core.security.Security#hasRolePermission(java.lang.String, java.lang.String, java.lang.String, java.util.Map, org.ofbiz.core.entity.GenericValue)
+     */
+    public boolean hasRolePermission(String application, String action, String entityName, Map fields, GenericValue userLogin) {
+        if (userLogin == null) return false;
+        
+        // first check the standard permission
+        if (hasEntityPermission(application, action, userLogin)) return true;
+        
+        // make sure we have what's needed for role security
+        if (entityName == null || fields == null || fields.size() == 0) return false;
+        
+        // now check the user for the role permission
+        if (hasEntityPermission(application, action + "_ROLE", userLogin)) {
+            // we have the permission now, we check to make sure we are allowed access
+            GenericValue roleTest = null;
+            try {
+                roleTest = delegator.findByPrimaryKey(entityName, fields);
+            } catch (GenericEntityException e) {
+                Debug.logError(e, "Problems doing role security lookup on entity [" + entityName + "] using fields [" + fields + "]", module);
+                return false;
+            }
+            
+            // if we pass all tests
+            if (roleTest != null) return true;
+        }
+        
+        return false;
+    }
+            
 }
