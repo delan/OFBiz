@@ -25,6 +25,8 @@
 package org.ofbiz.core.event;
 
 import java.util.*;
+import javax.servlet.*;
+import javax.servlet.http.*;
 
 import org.ofbiz.core.control.*;
 import org.ofbiz.core.util.*;
@@ -68,5 +70,20 @@ public class EventFactory {
         }
         return handler;
     }
+    
+    public static String runRequestEvent(HttpServletRequest request, HttpServletResponse response, String requestUri) throws EventHandlerException {
+        ServletContext application = ((ServletContext) request.getAttribute("servletContext"));
+        RequestHandler handler = (RequestHandler) application.getAttribute(SiteDefs.REQUEST_HANDLER);
+        RequestManager rm = handler.getRequestManager();
+        String eventType = rm.getEventType(requestUri);
+        String eventPath = rm.getEventPath(requestUri);
+        String eventMethod = rm.getEventMethod(requestUri);
+        if (eventType != null && eventPath != null && eventMethod != null) {
+            EventHandler eh = EventFactory.getEventHandler(handler, eventType);
+            return eh.invoke(eventPath, eventMethod, request, response);
+        } else {
+            throw new EventHandlerException("Invocation error; cannot locate event details.");
+        }
+    }        
 }
 

@@ -1,7 +1,7 @@
 /*
  * $Id$
  *
- * Copyright (c) 2002 The Open For Business Project - www.ofbiz.org
+ * Copyright (c) 2001, 2002 The Open For Business Project - www.ofbiz.org
  *
  * Permission is hereby granted, free of charge, to any person obtaining a
  * copy of this software and associated documentation files (the "Software"),
@@ -22,25 +22,20 @@
  * THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  *
  */
-
 package org.ofbiz.core.view;
 
-
 import java.sql.*;
-import java.util.*;
 
 import org.ofbiz.core.entity.*;
 import org.ofbiz.core.util.*;
 import jimm.datavision.*;
-import jimm.datavision.sql.*;
-
 
 /**
  * Custom DataVision Database class for OFBiz connections
  *
- *@author     <a href="mailto:jonesde@ofbiz.org">David E. Jones</a>
- *@created    July 9, 2002
- *@version    1.0
+ * @author     <a href="mailto:jonesde@ofbiz.org">David E. Jones</a>
+ * @version    $Revision$
+ * @since      2.0
  */
 public class DataVisionDatabase extends jimm.datavision.sql.Database {
     protected String datasourceName;

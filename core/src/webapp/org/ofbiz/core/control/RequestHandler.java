@@ -28,11 +28,9 @@ import java.io.*;
 import java.util.*;
 import javax.servlet.*;
 import javax.servlet.http.*;
-import javax.naming.*;
 
 import org.ofbiz.core.entity.*;
 import org.ofbiz.core.event.*;
-import org.ofbiz.core.service.*;
 import org.ofbiz.core.stats.*;
 import org.ofbiz.core.util.*;
 import org.ofbiz.core.view.*;
@@ -215,7 +213,6 @@ public class RequestHandler implements Serializable {
                 try {
                     long eventStartTime = System.currentTimeMillis();
                     EventHandler eh = EventFactory.getEventHandler(this, eventType);
-
                     eventReturnString = eh.invoke(eventPath, eventMethod, request, response);
                     ServerHitBin.countEvent(cname + "." + eventMethod, request, eventStartTime,
                         System.currentTimeMillis() - eventStartTime, userLogin, delegator);
@@ -327,7 +324,6 @@ public class RequestHandler implements Serializable {
     /** Returns the default error page for this request. */
     public String getDefaultErrorPage(HttpServletRequest request) {
         String requestUri = RequestHandler.getRequestUri(request.getPathInfo());
-
         return rm.getErrorPage(requestUri);
     }
 

@@ -23,15 +23,9 @@
  */
 package org.ofbiz.core.control;
 
-import java.net.*;
-import java.sql.*;
-import java.util.*;
 import javax.servlet.http.*;
 
-import org.ofbiz.core.entity.*;
-import org.ofbiz.core.security.*;
 import org.ofbiz.core.util.*;
-import org.ofbiz.core.stats.*;
 
 /**
  * HttpSessionListener that gathers and tracks various information and statistics

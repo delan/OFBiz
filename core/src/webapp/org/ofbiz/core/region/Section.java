@@ -2,7 +2,7 @@
  * $Id$
  *
  * Copyright (c) 2001 Sun Microsystems Inc., published in "Advanced Java Server Pages" by Prentice Hall PTR
- * Copyright (c) 2002 The Open For Business Project - www.ofbiz.org
+ * Copyright (c) 2001, 2002 The Open For Business Project - www.ofbiz.org
  *
  * Permission is hereby granted, free of charge, to any person obtaining a
  * copy of this software and associated documentation files (the "Software"),
@@ -23,21 +23,15 @@
  * THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  *
  */
-
 package org.ofbiz.core.region;
 
-
 import java.net.*;
-import javax.servlet.jsp.JspException;
-import javax.servlet.jsp.PageContext;
 import javax.servlet.*;
+import javax.servlet.jsp.*;
 import javax.servlet.http.*;
-
-import org.w3c.dom.*;
 
 import org.ofbiz.core.util.*;
 import org.ofbiz.core.view.*;
-
 
 /**
  * A section is content with a name that implements Content.render. 
@@ -48,10 +42,10 @@ import org.ofbiz.core.view.*;
  * <p>Note that a section's content can also be a region;if so,
  * Region.render is called from Section.Render().</p>
  *
- *@author     David M. Geary in the book "Advanced Java Server Pages"
- *@author     <a href="mailto:jonesde@ofbiz.org">David E. Jones</a>
- *@created    February 26, 2002
- *@version    1.0
+ * @author     David M. Geary in the book "Advanced Java Server Pages"
+ * @author     <a href="mailto:jonesde@ofbiz.org">David E. Jones</a>
+ * @version    $Revision$
+ * @since      2.0
  */
 public class Section extends Content {
 

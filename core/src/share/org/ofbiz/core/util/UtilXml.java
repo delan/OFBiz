@@ -1,7 +1,7 @@
 /*
  * $Id$
  *
- *  Copyright (c) 2001 The Open For Business Project - www.ofbiz.org
+ *  Copyright (c) 2001, 2002 The Open For Business Project - www.ofbiz.org
  *
  *  Permission is hereby granted, free of charge, to any person obtaining a
  *  copy of this software and associated documentation files (the "Software"),
@@ -21,45 +21,27 @@
  *  OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR
  *  THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  */
-
 package org.ofbiz.core.util;
-
 
 import java.io.*;
 import java.net.*;
 import java.util.*;
-
-import javax.xml.parsers.DocumentBuilder;
-import javax.xml.parsers.DocumentBuilderFactory;
-import javax.xml.parsers.FactoryConfigurationError;
-import javax.xml.parsers.ParserConfigurationException;
-
-import org.xml.sax.SAXException;
-import org.xml.sax.SAXParseException;
-import org.xml.sax.ErrorHandler;
-import org.xml.sax.EntityResolver;
-import org.xml.sax.InputSource;
-import org.xml.sax.helpers.DefaultHandler;
-
-import org.w3c.dom.Document;
-import org.w3c.dom.DOMException;
-import org.w3c.dom.Element;
-import org.w3c.dom.Node;
-import org.w3c.dom.NodeList;
-import org.w3c.dom.Text;
+import javax.xml.parsers.*;
+import org.xml.sax.*;
+import org.xml.sax.helpers.*;
+import org.w3c.dom.*;
 
 // needed for XML writing with Crimson
 // import org.apache.crimson.tree.*;
 // needed for XML writing with Xerces
 import org.apache.xml.serialize.*;
 
-
 /**
  * Utilities methods to simplify dealing with JAXP & DOM XML parsing
  *
  * @author     <a href="mailto:jonesde@ofbiz.org">David E. Jones</a>
- * @created    Nov 15, 2001
- * @version    1.0
+ * @version    $Revision$
+ * @since      2.0
  */
 public class UtilXml {
 

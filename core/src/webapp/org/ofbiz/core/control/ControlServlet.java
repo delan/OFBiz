@@ -26,7 +26,6 @@ package org.ofbiz.core.control;
 import java.io.*;
 import java.net.*;
 import java.util.*;
-import java.lang.reflect.*;
 import javax.servlet.*;
 import javax.servlet.http.*;
 

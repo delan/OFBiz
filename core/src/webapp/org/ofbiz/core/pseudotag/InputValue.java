@@ -24,11 +24,11 @@
 package org.ofbiz.core.pseudotag;
 
 import java.io.*;
-import java.text.*;
 import java.util.*;
+
 import javax.servlet.jsp.*;
+
 import org.ofbiz.core.entity.*;
-import org.ofbiz.core.entity.model.*;
 import org.ofbiz.core.util.*;
 
 /**

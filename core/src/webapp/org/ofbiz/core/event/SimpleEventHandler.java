@@ -24,8 +24,6 @@
  */
 package org.ofbiz.core.event;
 
-import java.util.*;
-import javax.servlet.*;
 import javax.servlet.http.*;
 
 import org.ofbiz.core.minilang.*;

@@ -24,17 +24,13 @@
  */
 package org.ofbiz.core.event;
 
-import java.io.*;
-import java.net.*;
 import java.util.*;
-import javax.servlet.*;
 import javax.servlet.http.*;
 
 import org.ofbiz.core.calendar.*;
 import org.ofbiz.core.entity.*;
 import org.ofbiz.core.security.*;
 import org.ofbiz.core.service.*;
-import org.ofbiz.core.service.job.*;
 import org.ofbiz.core.util.*;
 
 /**

@@ -29,7 +29,6 @@ import java.util.*;
 import javax.servlet.jsp.*;
 import org.ofbiz.core.entity.*;
 import org.ofbiz.core.entity.model.*;
-import org.ofbiz.core.util.*;
 
 /**
  * Pseudo-Tag to Print Localized Entity Fields

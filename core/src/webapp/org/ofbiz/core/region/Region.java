@@ -2,7 +2,7 @@
  * $Id$
  *
  * Copyright (c) 2001 Sun Microsystems Inc., published in "Advanced Java Server Pages" by Prentice Hall PTR
- * Copyright (c) 2002 The Open For Business Project - www.ofbiz.org
+ * Copyright (c) 2001, 2002 The Open For Business Project - www.ofbiz.org
  *
  * Permission is hereby granted, free of charge, to any person obtaining a
  * copy of this software and associated documentation files (the "Software"),
@@ -23,30 +23,23 @@
  * THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  *
  */
-
 package org.ofbiz.core.region;
 
-
-import java.net.*;
 import java.util.*;
-import javax.servlet.jsp.PageContext;
-import javax.servlet.jsp.JspException;
 import javax.servlet.*;
+import javax.servlet.jsp.*;
 import javax.servlet.http.*;
 
-import org.w3c.dom.*;
-
 import org.ofbiz.core.util.*;
-
 
 /**
  * A region is content that contains a set of sections that can render in a PageContext
  * <br>Implements abstract render(PageContext) from Content
  *
- *@author     David M. Geary in the book "Advanced Java Server Pages"
- *@author     <a href="mailto:jonesde@ofbiz.org">David E. Jones</a>
- *@created    February 26, 2002
- *@version    1.0
+ * @author     David M. Geary in the book "Advanced Java Server Pages"
+ * @author     <a href="mailto:jonesde@ofbiz.org">David E. Jones</a>
+ * @version    $Revision$
+ * @since      2.0
  */
 public class Region extends Content {
 

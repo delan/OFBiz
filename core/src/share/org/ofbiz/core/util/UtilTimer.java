@@ -1,7 +1,7 @@
 /*
  * $Id$
  *
- *  Copyright (c) 2001 The Open For Business Project - www.ofbiz.org
+ *  Copyright (c) 2001, 2002 The Open For Business Project - www.ofbiz.org
  *
  *  Permission is hereby granted, free of charge, to any person obtaining a
  *  copy of this software and associated documentation files (the "Software"),
@@ -21,20 +21,16 @@
  *  OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR
  *  THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  */
-
 package org.ofbiz.core.util;
 
-
-import java.util.*;
-
-
 /**
- * <p>Timer handling utility
- * <p>Utility class for simple reporting of the progress of a process. Steps are labelled, and the time between each label (or message) and the time since the start are reported in each call to timerString.
+ * Timer  handling utility
+ * Utility class for simple reporting of the progress of a process. Steps are labelled, and the time between each label
+ * (or message) and the time since the start are reported in each call to timerString.
  *
- *@author     <a href="mailto:jonesde@ofbiz.org">David E. Jones</a>
- *@created    May 21, 2001
- *@version    1.0
+ * @author     <a href="mailto:jonesde@ofbiz.org">David E. Jones</a>
+ * @version    $Revision$
+ * @since      2.0
  */
 public class UtilTimer {
 

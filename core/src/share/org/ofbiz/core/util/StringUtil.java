@@ -24,7 +24,6 @@
 package org.ofbiz.core.util;
 
 import java.net.*;
-import java.text.*;
 import java.util.*;
 
 /**

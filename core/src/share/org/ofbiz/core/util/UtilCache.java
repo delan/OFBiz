@@ -1,7 +1,7 @@
 /*
  * $Id$
  *
- *  Copyright (c) 2001 The Open For Business Project - www.ofbiz.org
+ *  Copyright (c) 2001, 2002 The Open For Business Project - www.ofbiz.org
  *
  *  Permission is hereby granted, free of charge, to any person obtaining a
  *  copy of this software and associated documentation files (the "Software"),
@@ -21,14 +21,9 @@
  *  OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR
  *  THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  */
-
 package org.ofbiz.core.util;
 
-
 import java.util.*;
-import javax.servlet.*;
-import javax.servlet.http.*;
-
 
 /**
  * <p> Generalized caching utility. Provides a number of caching features:
@@ -40,9 +35,9 @@ import javax.servlet.http.*;
  *    <li>Counts misses and hits
  *   </ul>
  *
- *@author     <a href="mailto:jonesde@ofbiz.org">David E. Jones</a>
- *@created    May 16, 2001
- *@version    1.0
+ * @author     <a href="mailto:jonesde@ofbiz.org">David E. Jones</a>
+ * @version    $Revision$
+ * @since      2.0
  */
 public class UtilCache {
 
@@ -142,13 +137,13 @@ public class UtilCache {
     }
 
     protected String getNextDefaultIndex(String cacheName) {
-        Integer curInd = (Integer) this.defaultIndices.get(cacheName);
+        Integer curInd = (Integer) UtilCache.defaultIndices.get(cacheName);
 
         if (curInd == null) {
-            this.defaultIndices.put(cacheName, new Integer(1));
+            UtilCache.defaultIndices.put(cacheName, new Integer(1));
             return "";
         } else {
-            this.defaultIndices.put(cacheName, new Integer(curInd.intValue() + 1));
+            UtilCache.defaultIndices.put(cacheName, new Integer(curInd.intValue() + 1));
             return Integer.toString(curInd.intValue() + 1);
         }
     }

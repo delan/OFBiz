@@ -24,10 +24,8 @@
  */
 package org.ofbiz.core.event;
 
-import javax.servlet.*;
 import javax.servlet.http.*;
 
-import org.ofbiz.core.service.job.*;
 import org.ofbiz.core.util.*;
 
 /**

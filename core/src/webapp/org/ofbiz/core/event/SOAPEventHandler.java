@@ -26,14 +26,12 @@ package org.ofbiz.core.event;
 
 import java.io.*;
 import java.util.*;
-import javax.servlet.*;
 import javax.servlet.http.*;
 
 import org.apache.axis.*;
 import org.apache.axis.message.*;
 import org.apache.axis.server.*;
 import org.apache.log4j.Category;
-import org.w3c.dom.*;
 import org.ofbiz.core.service.*;
 import org.ofbiz.core.util.*;
 
