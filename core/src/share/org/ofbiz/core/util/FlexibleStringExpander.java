@@ -90,6 +90,7 @@ public class FlexibleStringExpander {
     public static String expandString(String original, Map context) {
         StringBuffer expanded = new StringBuffer();
         ParseElementHandler handler = new OnTheFlyHandler(expanded, context);
+        parseString(original, handler);
         
         //call back into this method with new String to take care of any/all nested expands
         return expandString(expanded.toString(), context);
