@@ -114,13 +114,13 @@ public class PriceServices {
        
         //get the prices we need: list, default, average cost, min, max
         Collection listPrices = EntityUtil.filterByAnd(productPrices, UtilMisc.toMap("productPriceTypeId", "LIST_PRICE"));
-        GenericValue listPriceValue = EntityUtil.getFirst(productPrices);
+        GenericValue listPriceValue = EntityUtil.getFirst(listPrices);
         if (listPrices != null && listPrices.size() > 1) {
             Debug.logWarning("There is more than one LIST_PRICE with the currencyUomId " + currencyUomId + " and productId " + productId + ", using the latest found with price: " + listPriceValue.getDouble("price"));
         }
         
         Collection defaultPrices = EntityUtil.filterByAnd(productPrices, UtilMisc.toMap("productPriceTypeId", "DEFAULT_PRICE"));
-        GenericValue defaultPriceValue = EntityUtil.getFirst(productPrices);
+        GenericValue defaultPriceValue = EntityUtil.getFirst(defaultPrices);
         if (defaultPrices != null && defaultPrices.size() > 1) {
             Debug.logWarning("There is more than one DEFAULT_PRICE with the currencyUomId " + currencyUomId + " and productId " + productId + ", using the latest found with price: " + defaultPriceValue.getDouble("price"));
         }
@@ -144,7 +144,6 @@ public class PriceServices {
         }
         
         double defaultPrice = (defaultPriceValue != null && defaultPriceValue.get("price") != null) ? defaultPriceValue.getDouble("price").doubleValue() : 0;
-        
         Double listPriceDbl = listPriceValue != null ? listPriceValue.getDouble("price") : null;
         if (listPriceDbl == null) {
             //no list price, use defaultPrice for the final price
@@ -167,8 +166,8 @@ public class PriceServices {
             try {
                 //get some of the base values to calculate with
                 double listPrice = listPriceDbl.doubleValue();
-                double averageCostPrice = (averageCostValue != null && averageCostValue.get("price") != null) ? averageCostValue.getDouble("price").doubleValue() : listPrice;
-                double margin = listPrice - averageCostPrice;
+                double averageCost = (averageCostValue != null && averageCostValue.get("price") != null) ? averageCostValue.getDouble("price").doubleValue() : listPrice;
+                double margin = listPrice - averageCost;
                 
                 //calculate running sum based on listPrice and rules found
                 double price = listPrice;
@@ -342,7 +341,7 @@ public class PriceServices {
                     condsDescription.append("[list:");
                     condsDescription.append(listPrice);
                     condsDescription.append(";avgCost:");
-                    condsDescription.append(averageCostPrice);
+                    condsDescription.append(averageCost);
                     condsDescription.append(";margin:");
                     condsDescription.append(margin);
                     condsDescription.append("] ");
@@ -369,7 +368,7 @@ public class PriceServices {
                                 }
                             } else if ("PRICE_POAC".equals(productPriceAction.getString("productPriceActionTypeId"))) {
                                 if (productPriceAction.get("amount") != null) {
-                                    modifyAmount = averageCostPrice * (productPriceAction.getDouble("amount").doubleValue()/100.0);
+                                    modifyAmount = averageCost * (productPriceAction.getDouble("amount").doubleValue()/100.0);
                                 }
                             } else if ("PRICE_POM".equals(productPriceAction.getString("productPriceActionTypeId"))) {
                                 if (productPriceAction.get("amount") != null) {
@@ -455,7 +454,7 @@ public class PriceServices {
                 result.put("price", new Double(price));
                 result.put("listPrice", new Double(listPrice));
                 result.put("defaultPrice", new Double(defaultPrice));
-                result.put("averageCost", new Double(averageCostPrice));
+                result.put("averageCost", new Double(averageCost));
             } catch (GenericEntityException e) {
                 Debug.logError(e, "Error getting rules from the database while calculating price", module);
                 return ServiceUtil.returnError("Error getting rules from the database while calculating price: " + e.toString());
