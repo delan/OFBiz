@@ -30,7 +30,7 @@
     		Parameters:
     			orderHeaderList: List of OrderHeaders to create a picklist for
     		Returns:
-    			inventoryItemInfoList: List of Maps with inventoryItem, facilityLocation, orderItems, quantity
+    			inventoryItemInfoList: List of Maps with inventoryItem, facilityLocation, orderItems, product, quantity
     			orderHeaderInfoList: List of Maps with orderHeader and orderItemInfo which is a Map with orderItem and orderItemInventoryResList
     			wrongQuantityReservedList: List of Maps with reservedQuantity and orderItem
     			insufficientQohList: List of Maps with inventoryItem and quantityNeeded
@@ -174,6 +174,9 @@
 				<field-to-field field-name="${inventoryItemId}" map-name="inventoryItems" to-field-name="inventoryItem" to-map-name="inventoryItemInfo"/>
 				<field-to-field field-name="${inventoryItemId}" map-name="inventoryItemOrderItems" to-field-name="orderItems" to-map-name="inventoryItemInfo"/>
 				<field-to-field field-name="${inventoryItemId}" map-name="inventoryItemQuantities" to-field-name="quantity" to-map-name="inventoryItemInfo"/>
+				<env-to-field env-name="inventoryItemInfo.inventoryItem.productId" field-name="productId" map-name="productLkUpMap"/>
+				<find-by-primary-key entity-name="Product" map-name="productLkUpMap" value-name="inventoryItemInfo.product"/>
+
 				<field-to-list field-name="inventoryItemInfo" list-name="inventoryItemInfoList"/>
 				<clear-field field-name="inventoryItemInfo"/>
     		</iterate>
@@ -184,6 +187,9 @@
 	    	<field-to-field field-name="${inventoryItemId}" map-name="inventoryItems" to-field-name="inventoryItem" to-map-name="inventoryItemInfo"/>
 	    	<field-to-field field-name="${inventoryItemId}" map-name="inventoryItemOrderItems" to-field-name="orderItems" to-map-name="inventoryItemInfo"/>
 	    	<field-to-field field-name="${inventoryItemId}" map-name="inventoryItemQuantities" to-field-name="quantity" to-map-name="inventoryItemInfo"/>
+			<env-to-field env-name="inventoryItemInfo.inventoryItem.productId" field-name="productId" map-name="productLkUpMap"/>
+			<find-by-primary-key entity-name="Product" map-name="productLkUpMap" value-name="inventoryItemInfo.product"/>
+
 			<field-to-list field-name="inventoryItemInfo" list-name="inventoryItemInfoList"/>
 	    	<clear-field field-name="inventoryItemInfo"/>
     	</iterate>
