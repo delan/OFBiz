@@ -34,14 +34,14 @@
 	engine CDATA #REQUIRED
 	location CDATA #REQUIRED
 	invoke CDATA #REQUIRED
-	export (true|false) #IMPLIED
-	validate (true|false) #IMPLIED
+	export (true|false) "false"
+	validate (true|false) "true"
 >
 <!ELEMENT attribute EMPTY>
 <!ATTLIST attribute
 	name CDATA #REQUIRED
 	type CDATA #REQUIRED
 	mode (IN|OUT|INOUT) #REQUIRED
-	optional (true|false) #IMPLIED
+	optional (true|false) "false"
 >
 	
