@@ -1,5 +1,5 @@
 /*
- * $Id: ContainerLoader.java,v 1.6 2003/08/20 05:55:59 ajzeneski Exp $
+ * $Id: ContainerLoader.java,v 1.7 2003/12/01 20:43:39 ajzeneski Exp $
  *
  * Copyright (c) 2003 The Open For Business Project - www.ofbiz.org
  *
@@ -38,7 +38,7 @@ import org.ofbiz.base.util.Debug;
  * ContainerLoader - StartupLoader for the container
  *
  * @author     <a href="mailto:jaz@ofbiz.org">Andy Zeneski</a> 
-  *@version    $Revision: 1.6 $
+  *@version    $Revision: 1.7 $
  * @since      3.0
  */
 public class ContainerLoader implements StartupLoader {
@@ -49,7 +49,7 @@ public class ContainerLoader implements StartupLoader {
     protected List loadedContainers = new LinkedList();    
 
     /**
-     * @see org.ofbiz.base.start.StartupLoader#load(java.lang.String)
+     * @see org.ofbiz.base.start.StartupLoader#load(Start.Config)
      */
     public void load(Start.Config config) throws StartupException {
         Debug.logInfo("[Startup] Loading ContainerLoader...", module);
@@ -78,15 +78,15 @@ public class ContainerLoader implements StartupLoader {
      */
     public void unload() throws StartupException {
         Debug.logInfo("Shutting down containers", module);
-        Iterator i = loadedContainers.iterator();
-        while (i.hasNext()) {
-            Container container = (Container) i.next();
+        // shutting down in reverse order
+        for (int i = loadedContainers.size(); i > 0; i--) {
+            Container container = (Container) loadedContainers.get(i-1);
             try {
                 container.stop();
             } catch (ContainerException e) {
-                throw new StartupException(e);                
+                Debug.logError(e, module);
             }
-        }              
+        }
     }
 
     private Container loadContainer(String classname, String configFileLocation) throws StartupException {
