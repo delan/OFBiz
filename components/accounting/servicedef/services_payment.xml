@@ -332,6 +332,7 @@
         <attribute name="contactEmail" type="GenericValue" mode="IN" optional="true"/>
         <attribute name="billingAddress" type="GenericValue" mode="IN" optional="true"/>
         <attribute name="shippingAddress" type="GenericValue" mode="IN" optional="true"/>
+        <attribute name="customerIpAddress" type="String" mode="IN" optional="true"/>
         <attribute name="currency" type="String" mode="IN" optional="true"/>
         <attribute name="paymentConfig" type="String" mode="IN" optional="true"/>
         <attribute name="authResult" type="Boolean" mode="OUT" optional="true"/>
