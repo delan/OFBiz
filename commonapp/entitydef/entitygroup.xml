@@ -774,6 +774,7 @@
     <entity-group group="org.ofbiz.commonapp" entity="ShipmentItem" />
     <entity-group group="org.ofbiz.commonapp" entity="ShipmentItemBilling" />
     <entity-group group="org.ofbiz.commonapp" entity="ShipmentItemFeature" />
+    <entity-group group="org.ofbiz.commonapp" entity="ShipmentManifestView" />
     <entity-group group="org.ofbiz.commonapp" entity="ShipmentMethodType" />
     <entity-group group="org.ofbiz.commonapp" entity="ShipmentPackage" />
     <entity-group group="org.ofbiz.commonapp" entity="ShipmentPackageContent" />

@@ -395,7 +395,7 @@
     </entity>
     <view-entity entity-name="ShipmentAndItem"
             package-name="org.ofbiz.commonapp.shipment.shipment"
-            title="Carrier Andy Shipment Method Type View Entity">
+            title="Shipment and Item View Entity">
       <member-entity entity-alias="SH" entity-name="Shipment"/>
       <member-entity entity-alias="SITM" entity-name="ShipmentItem"/>
       <alias entity-alias="SH" name="shipmentId"/>
@@ -623,6 +623,106 @@
         <key-map field-name="productFeatureId"/>
       </relation>
     </entity>
+    <view-entity entity-name="ShipmentManifestView"
+            package-name="org.ofbiz.commonapp.shipment.shipment"
+            title="Shipment Manifest View Entity">
+      <member-entity entity-alias="SITM" entity-name="ShipmentItem"/>
+      <member-entity entity-alias="ITMI" entity-name="ItemIssuance"/>
+      <member-entity entity-alias="SPCT" entity-name="ShipmentPackageContent"/>
+      <member-entity entity-alias="SPKG" entity-name="ShipmentPackage"/>
+      <member-entity entity-alias="WTUOM" entity-name="Uom"/>
+      <member-entity entity-alias="SPRS" entity-name="ShipmentPackageRouteSeg"/>
+      <member-entity entity-alias="SRTS" entity-name="ShipmentRouteSegment"/>
+      <member-entity entity-alias="OFAC" entity-name="Facility"/>
+      <member-entity entity-alias="DFAC" entity-name="Facility"/>
+      <member-entity entity-alias="OPAD" entity-name="PostalAddress"/>
+      <member-entity entity-alias="DPAD" entity-name="PostalAddress"/>
+      <member-entity entity-alias="CPER" entity-name="Person"/>
+      <member-entity entity-alias="CPGP" entity-name="PartyGroup"/>
+      <member-entity entity-alias="SHMT" entity-name="ShipmentMethodType"/>
+      <alias entity-alias="SITM" name="shipmentId"/>
+      <alias entity-alias="SITM" name="shipmentItemSeqId"/>
+      <alias entity-alias="SITM" name="productId"/>
+      <alias entity-alias="SITM" name="quantity"/>
+      <alias entity-alias="SITM" name="shipmentContentDescription"/>
+      <alias entity-alias="SPCT" name="packageQuantity" field="quantity"/>
+      <alias entity-alias="SPKG" name="shipmentPackageSeqId"/>
+      <alias entity-alias="SPKG" name="packageDateCreated" field="dateCreated"/>
+      <alias entity-alias="SPKG" name="weight"/>
+      <alias entity-alias="WTUOM" name="weightUomAbbreviation" field="abbreviation"/>
+      <alias entity-alias="WTUOM" name="weightUomDescription" field="description"/>
+      <alias entity-alias="SPRS" name="trackingCode"/>
+      <alias entity-alias="SPRS" name="boxNumber"/>
+      <alias entity-alias="SRTS" name="shipmentRouteSegmentId"/>
+      <alias entity-alias="SRTS" name="deliveryId"/>
+      <alias entity-alias="SRTS" name="originFacilityId"/>
+      <alias entity-alias="SRTS" name="destFacilityId"/>
+      <alias entity-alias="SRTS" name="originContactMechId"/>
+      <alias entity-alias="SRTS" name="destContactMechId"/>
+      <alias entity-alias="SRTS" name="carrierPartyId"/>
+      <alias entity-alias="SRTS" name="shipmentMethodTypeId"/>
+      <alias entity-alias="SRTS" name="actualCost"/>
+      <alias entity-alias="SRTS" name="actualStartDate"/>
+      <alias entity-alias="SRTS" name="actualArrivalDate"/>
+      <alias entity-alias="SRTS" name="estimatedStartDate"/>
+      <alias entity-alias="SRTS" name="estimatedArrivalDate"/>
+      <alias entity-alias="OFAC" name="originFacilityName" field="facilityName"/>
+      <alias entity-alias="DFAC" name="destFacilityName" field="facilityName"/>
+      <alias entity-alias="OPAD" name="originCity" field="city"/>
+      <alias entity-alias="OPAD" name="originStateProvinceGeoId" field="stateProvinceGeoId"/>
+      <alias entity-alias="OPAD" name="originCountryGeoId" field="countryGeoId"/>
+      <alias entity-alias="DPAD" name="destCity" field="city"/>
+      <alias entity-alias="DPAD" name="destStateProvinceGeoId" field="stateProvinceGeoId"/>
+      <alias entity-alias="DPAD" name="destCountryGeoId" field="countryGeoId"/>
+      <alias entity-alias="CPER" name="carrierFirstName" field="firstName"/>
+      <alias entity-alias="CPER" name="carrierLastName" field="lastName"/>
+      <alias entity-alias="CPGP" name="carrierGroupName" field="groupName"/>
+      <alias entity-alias="SHMT" name="shipmentMethodDescription" field="description"/>
+      <view-link entity-alias="SITM" rel-entity-alias="ITMI">
+        <key-map field-name="shipmentId"/>
+        <key-map field-name="shipmentItemSeqId"/>
+      </view-link>
+      <view-link entity-alias="SITM" rel-entity-alias="SPCT">
+        <key-map field-name="shipmentId"/>
+        <key-map field-name="shipmentItemSeqId"/>
+      </view-link>
+      <view-link entity-alias="SPCT" rel-entity-alias="SPKG">
+        <key-map field-name="shipmentId"/>
+        <key-map field-name="shipmentPackageSeqId"/>
+      </view-link>
+      <view-link entity-alias="SPKG" rel-entity-alias="WTUOM">
+        <key-map field-name="weightUomId" rel-field-name="uomId"/>
+      </view-link>
+      <view-link entity-alias="SPKG" rel-entity-alias="SPRS">
+        <key-map field-name="shipmentId"/>
+        <key-map field-name="shipmentPackageSeqId"/>
+      </view-link>
+      <view-link entity-alias="SPRS" rel-entity-alias="SRTS">
+        <key-map field-name="shipmentId"/>
+        <key-map field-name="shipmentRouteSegmentId"/>
+      </view-link>
+      <view-link entity-alias="SRTS" rel-entity-alias="OFAC" rel-optional="true">
+        <key-map field-name="originFacilityId" rel-field-name="facilityId"/>
+      </view-link>
+      <view-link entity-alias="SRTS" rel-entity-alias="DFAC" rel-optional="true">
+        <key-map field-name="destFacilityId" rel-field-name="facilityId"/>
+      </view-link>
+      <view-link entity-alias="SRTS" rel-entity-alias="OPAD" rel-optional="true">
+        <key-map field-name="originContactMechId" rel-field-name="contactMechId"/>
+      </view-link>
+      <view-link entity-alias="SRTS" rel-entity-alias="DPAD" rel-optional="true">
+        <key-map field-name="destContactMechId" rel-field-name="contactMechId"/>
+      </view-link>
+      <view-link entity-alias="SRTS" rel-entity-alias="CPER" rel-optional="true">
+        <key-map field-name="carrierPartyId" rel-field-name="partyId"/>
+      </view-link>
+      <view-link entity-alias="SRTS" rel-entity-alias="CPGP" rel-optional="true">
+        <key-map field-name="carrierPartyId" rel-field-name="partyId"/>
+      </view-link>
+      <view-link entity-alias="SRTS" rel-entity-alias="SHMT" rel-optional="true">
+        <key-map field-name="shipmentMethodTypeId" rel-field-name="shipmentMethodTypeId"/>
+      </view-link>
+    </view-entity>
     <entity entity-name="ShipmentMethodType"
             package-name="org.ofbiz.commonapp.shipment.shipment"
             title="Shipment Method Type Entity">
