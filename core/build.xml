@@ -85,6 +85,7 @@
 
     <target name="clean-lib" depends="init">
         <delete dir="${lib.dir}" />
+        <delete file="../ofbiz.jar" /> 
     </target>
 
     <!-- ================================================================== -->
