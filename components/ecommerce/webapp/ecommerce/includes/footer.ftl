@@ -21,17 +21,13 @@
  *
  *@author     David E. Jones (jonesde@ofbiz.org)
  *@author     Andy Zeneski (jaz@ofbiz.org)
- *@version    $Revision: 1.1 $
+ *@version    $Revision: 1.2 $
  *@since      2.1
 -->
 
 <br><br>
-<div align="center">
-
-  <a href="http://www.ofbiz.org" target="_blank"><img src="/images/ofbiz_powered.gif" width="88" height="31" border="0" alt="Powered By OFBiz"/></a>   
-  <a href="http://sf.net/projects/ofbiz" target="_blank"><img src="http://sourceforge.net/sflogo.php?group_id=27173" width="88" height="31" border="0" alt="OFBiz Hosted By SourceForge"/></a>  
-  <a href="http://www.jpublish.org/" target="_blank"><img src="http://www.jpublish.org/images/powered-by-jpublish.gif" height="32" width="77" border="0" alt="Powered By JPublish!"/></a>  
-  <a href="http://freemarker.org/" target="_blank"><img src="http://freemarker.org/images/poweredby_sq_simple.png" width="88" height="31" border="0" alt="Powered by FreeMarker"/></a>
+<div class="tabletext" align="center">
+  <font size="-1">(c) 2003 The Open For Business Project - <a href="http://www.ofbiz.org" target="_blank">www.ofbiz.org</a></font>
 </div>
 
 </body>
