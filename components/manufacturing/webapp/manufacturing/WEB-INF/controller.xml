@@ -321,10 +321,6 @@
 
     <!-- BOM request mappings -->
     
-    <request-map uri="findParts">
-        <security https="true" auth="true"/>
-        <response name="success" type="view" value="findParts"/>
-    </request-map>
     <request-map uri="findBom">
         <security https="true" auth="true"/>
         <response name="success" type="view" value="findBom"/>
@@ -335,7 +331,7 @@
     </request-map>
     <request-map uri="UpdateProductBom">
         <security https="true" auth="true"/>
-        <event type="java" path="org.ofbiz.manufacturing.bom.BOMEvents" invoke="updateProductBom"/>
+        <event type="simple" path="org/ofbiz/manufacturing/bom/BomSimpleMethods.xml" invoke="eventEditBOM"/>
         <response name="success" type="view" value="EditProductBom"/>
         <response name="error" type="view" value="EditProductBom"/>
     </request-map>
@@ -461,7 +457,6 @@
     <view-map name="EditRoutingTaskAssoc" type="jpublish" page="/routing/EditRoutingTaskAssoc.ftl"/>
     <view-map name="EditRoutingProductLink" type="jpublish" page="/routing/EditRoutingProductLink.ftl"/>
     <!-- BOM view mappings -->
-    <view-map name="findParts" type="jpublish" page="/bom/findParts.ftl"/>
     <view-map name="findBom" type="jpublish" page="/bom/findBom.ftl"/>
     <view-map name="EditProductBom" type="jpublish" page="/bom/EditProductBom.ftl"/>
     <view-map name="InitLowLevelCode" type="jpublish" page="/bom/InitLowLevelCode.ftl"/>
