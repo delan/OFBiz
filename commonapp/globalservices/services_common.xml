@@ -48,6 +48,12 @@
         <attribute name="webSiteId" type="String" mode="IN" optional="true"/>
     </service>
     
+    <service name="sendGenericNotificationEmail" engine="java"
+            location="org.ofbiz.commonapp.common.NotificationServices" invoke="sendNotification">
+        <description>Generic Template Based Notification Service</description>   
+        <implements service="sendNotificationInterface"/>        
+    </service>    
+    
     <service name="sendMailFromUrl" engine="java"
             location="org.ofbiz.commonapp.common.CommonServices" invoke="sendMailFromUrl">
         <description>Send E-Mail From URL Service</description>
