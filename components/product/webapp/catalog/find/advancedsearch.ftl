@@ -21,7 +21,7 @@
  *
  *@author     David E. Jones (jonesde@ofbiz.org)
  *@author     Andy Zeneski (jaz@ofbiz.org)
- *@version    $Revision: 1.5 $
+ *@version    $Revision: 1.6 $
  *@since      2.1
 -->
 <#assign uiLabelMap = requestAttributes.uiLabelMap>
@@ -121,10 +121,14 @@
           <select name="sortOrder" class="selectBox">
             <option value="SortKeywordRelevancy">${uiLabelMap.ProductKeywordRelevency}</option>
             <option value="SortProductField:productName">${uiLabelMap.ProductProductName}</option>
+            <option value="SortProductField:internalName">Internal Name</option>
             <option value="SortProductField:totalQuantityOrdered">Popularity by Orders</option>
             <option value="SortProductField:totalTimesViewed">Popularity by Views</option>
             <option value="SortProductPrice:LIST_PRICE">List Price</option>
             <option value="SortProductPrice:DEFAULT_PRICE">Default Price</option>
+            <option value="SortProductPrice:AVERAGE_COST">Average Cost</option>
+            <option value="SortProductPrice:MINIMUM_PRICE">Minimum Price</option>
+            <option value="SortProductPrice:MAXIMUM_PRICE">Maximum Price</option>
           </select>
           Low to High<input type="RADIO" name="sortAscending" value="Y" checked>
           High to Low<input type="RADIO" name="sortAscending" value="N">
