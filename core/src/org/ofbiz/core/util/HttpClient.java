@@ -1,6 +1,10 @@
 /* 
  * $Id$
  * $Log$
+ * Revision 1.1  2001/07/23 18:38:14  azeneski
+ * Added in new HttpClient. Makes behind the scenes HTTP request (GET/POST)
+ * and returns the output as a string.
+ *
  */
 
 package org.ofbiz.core.util;
@@ -196,7 +200,10 @@ public class HttpClient {
             BufferedReader post = new BufferedReader(new InputStreamReader(in));
             String line = new String();
             while ((line = post.readLine()) != null)
+            {
                 buf.append(line);
+                buf.append("\n");
+            }
         }
         catch ( Exception e ) {
             throw new HttpClientException(e.getMessage());
