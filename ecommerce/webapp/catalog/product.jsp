@@ -10,7 +10,6 @@
 <%
   // Get the value object of the request product id.
   org.ofbiz.ecommerce.catalog.CatalogHelper.getProduct(pageContext,"productValue",request.getParameter("product_id"));
-
   org.ofbiz.ecommerce.catalog.CatalogHelper.getAssociatedProducts(pageContext,"productValue","");
 %>
 
@@ -22,7 +21,7 @@
   <br>
   <table border="0" width="100%" cellpadding="3">
   <ofbiz:object name="mainProduct" property="productValue" />
-    <tr><td colspan="2" height="1" bgcolor="#999999"></td></tr>
+    <tr><td colspan="2"><div style='height: 1; background-color: #999999;'></div></td></tr>
     <tr>
       <td align="left" valign="top" width="0">
         <%String largeImageUrl = mainProduct.getString("largeImageUrl");%>
@@ -46,13 +45,13 @@
            (Reg. <%=UtilFormatOut.formatPrice(mainProduct.getDouble("defaultPrice"))%>)</div>
       </td>
     </tr>
-    <tr><td colspan="2" height="1" bgcolor="#999999"></td></tr>
+    <tr><td colspan="2"><div style='height: 1; background-color: #999999;'></div></td></tr>
     <tr>
       <td colspan="2">
         <div class="tabletext"><%=UtilFormatOut.checkNull(mainProduct.getString("longDescription"))%></div>
       </td>
     </tr>
-    <tr><td colspan="2" height="1" bgcolor="#999999"></td></tr>
+    <tr><td colspan="2"><div style='height: 1; background-color: #999999;'></div></td></tr>
   </table>
 
   <table width='100%'>
@@ -61,7 +60,8 @@
     <ofbiz:if name="obsoleteby">
       <tr><td>&nbsp;</td></tr>
       <tr><td colspan="2"><div class="head2"><%=UtilFormatOut.checkNull(mainProduct.getString("name"))%> is made obsolete by these products:</div></td></tr>
-      <tr><td height="1" bgcolor="#999999"></td></tr>
+      <tr><td><div style='height: 1; background-color: #999999;'></div></td></tr>
+
       <ofbiz:iterator name="productAssoc" property="obsoleteby">
         <tr><td>
           <div class="tabletext">
@@ -71,6 +71,7 @@
         </td></tr>
         <%{%>
           <%GenericValue product = productAssoc.getRelatedOneCache("AssocProduct");%>
+          <%pageContext.setAttribute("product", product);%>
           <tr>
             <td>
               <%@ include file="/catalog/productsummary.jsp"%>
@@ -86,7 +87,8 @@
     <ofbiz:if name="complement">
       <tr><td>&nbsp;</td></tr>
       <tr><td colspan="2"><div class="head2">You might be interested in these as well:</div></td></tr>
-      <tr><td height="1" bgcolor="#999999"></td></tr>
+      <tr><td><div style='height: 1; background-color: #999999;'></div></td></tr>
+
       <ofbiz:iterator name="productAssoc" property="complement">
         <tr><td>
           <div class="tabletext">
@@ -96,6 +98,7 @@
         </td></tr>
         <%{%>
           <%GenericValue product = productAssoc.getRelatedOneCache("AssocProduct");%>
+          <%pageContext.setAttribute("product", product);%>
           <tr>
             <td>
               <%@ include file="/catalog/productsummary.jsp"%>
@@ -111,7 +114,8 @@
     <ofbiz:if name="upgrade">
       <tr><td>&nbsp;</td></tr>
       <tr><td colspan="2"><div class="head2">Try these instead of <%=UtilFormatOut.checkNull(mainProduct.getString("name"))%>:</div></td></tr>
-      <tr><td height="1" bgcolor="#999999"></td></tr>
+      <tr><td><div style='height: 1; background-color: #999999;'></div></td></tr>
+
       <ofbiz:iterator name="productAssoc" property="upgrade">
         <tr><td>
           <div class="tabletext">
@@ -121,6 +125,7 @@
         </td></tr>
         <%{%>
           <%GenericValue product = productAssoc.getRelatedOneCache("AssocProduct");%>
+          <%pageContext.setAttribute("product", product);%>
           <tr>
             <td>
               <%@ include file="/catalog/productsummary.jsp"%>
@@ -136,7 +141,8 @@
     <ofbiz:if name="obsolescence">
       <tr><td>&nbsp;</td></tr>
       <tr><td colspan="2"><div class="head2"><%=UtilFormatOut.checkNull(mainProduct.getString("name"))%> makes these products obsolete:</div></td></tr>
-      <tr><td height="1" bgcolor="#999999"></td></tr>
+      <tr><td><div style='height: 1; background-color: #999999;'></div></td></tr>
+
       <ofbiz:iterator name="productAssoc" property="obsolescence">
         <tr><td>
           <div class="tabletext">
@@ -146,6 +152,7 @@
         </td></tr>
         <%{%>
           <%GenericValue product = productAssoc.getRelatedOneCache("MainProduct");%>
+          <%pageContext.setAttribute("product", product);%>
           <tr>
             <td>
               <%@ include file="/catalog/productsummary.jsp"%>

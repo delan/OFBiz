@@ -1,6 +1,9 @@
 /*
  * $Id$
  * $Log$
+ * Revision 1.27  2001/10/03 00:12:08  jonesde
+ * Added product complements to shopping cart; Formatting cleanup
+ *
  * Revision 1.26  2001/09/28 21:57:53  jonesde
  * Big update for fromDate PK use, organization stuff
  *
@@ -503,6 +506,98 @@ public class CatalogHelper {
         cartAssocs.remove(toRemove);
       }
       pageContext.setAttribute(assocsAttrName, cartAssocs);
+    }
+    catch(GenericEntityException e) {
+      Debug.logWarning(e);
+    }
+  }
+
+  public static void getQuickReorderProducts(PageContext pageContext, String productsAttrName, String quantitiesAttrName) {
+    GenericDelegator delegator = (GenericDelegator)pageContext.getServletContext().getAttribute("delegator");
+    GenericValue userLogin = (GenericValue)pageContext.getSession().getAttribute(SiteDefs.USER_LOGIN);
+    if(userLogin == null) return;
+    
+    try {
+      Map products = (Map)pageContext.getSession().getAttribute("_QUICK_REORDER_PRODUCTS_");
+      Map productQuantities = (Map)pageContext.getSession().getAttribute("_QUICK_REORDER_PRODUCT_QUANTITIES_");
+      
+      if(products == null || productQuantities == null) {
+        products = new HashMap();
+        productQuantities = new HashMap();
+        //keep track of how many times a product occurs in order to find averages
+        Map productOccurances = new HashMap();
+
+        //get all order role entities for user by customer role type
+        //final String[] USER_ORDER_ROLE_TYPES = {"END_USER_CUSTOMER", "SHIP_TO_CUSTOMER", "BILL_TO_CUSTOMER", "PLACING_CUSTOMER"};
+        final String[] USER_ORDER_ROLE_TYPES = {"PLACING_CUSTOMER"};
+        for(int i = 0; i < USER_ORDER_ROLE_TYPES.length; i++) {
+          Collection orderRoles = delegator.findByAnd("OrderRole", UtilMisc.toMap("partyId", userLogin.get("partyId"), "roleTypeId", USER_ORDER_ROLE_TYPES[i]), null);
+          Iterator ordersIter = UtilMisc.toIterator(orderRoles);
+          while(ordersIter != null && ordersIter.hasNext()) {
+            GenericValue orderRole = (GenericValue)ordersIter.next();
+            //for each order role get all order items
+            Collection orderItems = orderRole.getRelated("OrderItem");
+            Iterator orderItemsIter = UtilMisc.toIterator(orderItems);
+            while(orderItemsIter != null && orderItemsIter.hasNext()) {
+              GenericValue orderItem = (GenericValue)orderItemsIter.next();
+              //for each order item get the associated product
+              GenericValue product = orderItem.getRelatedOneCache("Product");
+              products.put(product.get("productId"), product);
+
+              Integer curQuant = (Integer)productQuantities.get(product.get("productId"));
+              if(curQuant == null) curQuant = new Integer(0);
+              Double orderQuant = orderItem.getDouble("quantity");
+              if(orderQuant == null) orderQuant = new Double(0.0);
+              productQuantities.put(product.get("productId"), new Integer(curQuant.intValue() + orderQuant.intValue()));
+
+              Integer curOcc = (Integer)productOccurances.get(product.get("productId"));
+              if(curOcc == null) curOcc = new Integer(0);
+              productOccurances.put(product.get("productId"), new Integer(curOcc.intValue() + 1));
+            }
+          }
+        }
+        
+        //go through each product quantity and divide it by the occurances to get the average
+        Iterator quantEntries = productQuantities.entrySet().iterator();
+        while(quantEntries.hasNext()) {
+          Map.Entry entry = (Map.Entry)quantEntries.next();
+          Object prodId = entry.getKey();
+          Integer quantity = (Integer)entry.getValue();
+          Integer occs = (Integer)productOccurances.get(prodId);
+          int nqint = quantity.intValue()/occs.intValue();
+          if(nqint < 1) nqint = 1;
+          productQuantities.put(prodId, new Integer(nqint));
+        }
+        
+        pageContext.getSession().setAttribute("_QUICK_REORDER_PRODUCTS_", new HashMap(products));
+        pageContext.getSession().setAttribute("_QUICK_REORDER_PRODUCT_QUANTITIES_", new HashMap(productQuantities));
+      }
+      else {
+        // make a copy since we are going to change them
+        products = new HashMap(products);
+        productQuantities = new HashMap(productQuantities);
+      }
+
+      //remove all products that are already in the cart
+      ShoppingCart cart = (ShoppingCart)pageContext.getSession().getAttribute("_SHOPPING_CART_");
+      if(cart != null && cart.size() > 0) {
+        Iterator cartiter = cart.iterator();
+        while(cartiter.hasNext()) {
+          ShoppingCartItem item = (ShoppingCartItem)cartiter.next();
+          products.remove(item.getProductId());
+          productQuantities.remove(item.getProductId());
+        }
+      }
+
+      ArrayList reorderProds = new ArrayList(products.values());
+      //randomly remove products while there are more than 5
+      while(reorderProds.size() > 5) {
+        int toRemove = (int)(Math.random()*(double)(reorderProds.size()));
+        reorderProds.remove(toRemove);
+      }
+      
+      pageContext.setAttribute(productsAttrName, reorderProds);
+      pageContext.setAttribute(quantitiesAttrName, productQuantities);
     }
     catch(GenericEntityException e) {
       Debug.logWarning(e);

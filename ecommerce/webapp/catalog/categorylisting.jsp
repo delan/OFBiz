@@ -26,7 +26,7 @@
 <%String categoryLongDescription = category.getString("longDescription");%>
 <%if (UtilValidate.isNotEmpty(categoryImageUrl) || UtilValidate.isNotEmpty(categoryLongDescription)) pageContext.setAttribute("showCategoryDetails", "true");%>
 <ofbiz:if name="showCategoryDetails">
-<tr><td colspan="2" height="1" bgcolor="#999999"></td></tr>
+<tr><td><div style='height: 1; background-color: #999999;'></div></td></tr>
 <tr>
   <td align="left" valign="top" width="0">
     <div class="tabletext">

@@ -101,7 +101,7 @@
           <tr><td colspan="7"><div style='height: 1; background-color: #999999;'></div></td></tr>
           <TR>
             <TD><div class='tabletext'><%-- <b><%= cart.getItemIndex(item)%></b> - --%><a href='<ofbiz:url>/product?product_id=<%=item.getProductId()%></ofbiz:url>' class='buttontext'><%= item.getProductId()%> - <%= item.getName()%></a> : <%= item.getDescription()%></div></TD>
-            <TD NOWRAP ALIGN="center"><div class='tabletext'><input size="5" type="text" name="update_<%=cart.getItemIndex(item) %>" value="<ofbiz:format><%= item.getQuantity() %></ofbiz:format>"></div></TD>
+            <TD NOWRAP ALIGN="center"><div class='tabletext'><input size="10" type="text" name="update_<%=cart.getItemIndex(item) %>" value="<ofbiz:format><%= item.getQuantity() %></ofbiz:format>"></div></TD>
             <TD NOWRAP ALIGN="right"><div class='tabletext'><ofbiz:format type="c"><%=item.getBasePrice()%></ofbiz:format></div></TD>
             <TD NOWRAP ALIGN="right"><div class='tabletext'><ofbiz:format type="c"><%=item.getTotalPrice()%></ofbiz:format></div></TD>
             <%-- <TD NOWRAP ALIGN="center"><div class='tabletext'><input type="checkbox" name="delete_<%= cart.getItemIndex(item) %>" value="0"></div></TD> --%>
@@ -176,7 +176,6 @@
 --%>
 </TABLE>
 
-<ofbiz:if name="_SHOPPING_CART_">
  <ofbiz:if name="associatedProducts" size="0">
   <BR>
   <TABLE border=0 width='100%' cellpadding='<%=boxBorderWidth%>' cellspacing=0 bgcolor='<%=boxBorderColor%>'>
@@ -219,7 +218,6 @@
     </TR>
   </TABLE>
  </ofbiz:if>
-</ofbiz:if>
 
 <%@ include file="/includes/onecolumnclose.jsp" %>
 <%@ include file="/includes/footer.jsp" %>

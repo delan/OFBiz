@@ -1,6 +1,9 @@
 /*
  * $Id$
  * $Log$
+ * Revision 1.20  2001/09/27 07:10:16  jonesde
+ * Moved ecommerce.properties to WEB-INF
+ *
  * Revision 1.19  2001/09/26 18:41:44  epabst
  * renamed getActive to filterByDate()
  * renamed getContactMech to getContactMechByPurpose/ByType
@@ -198,7 +201,10 @@ public class CheckOutEvents {
     GenericDelegator delegator = (GenericDelegator)request.getAttribute("delegator");
     StringBuffer errorMessage = new StringBuffer();
 
-    Debug.log("[createOrder] Start");
+    //remove these whenever creating an order so quick reorder cache will refresh/recalc
+    request.getSession().removeAttribute("_QUICK_REORDER_PRODUCTS_");
+    request.getSession().removeAttribute("_QUICK_REORDER_PRODUCT_QUANTITIES_");
+
     if (cart != null && cart.size() > 0) {
       String orderId = delegator.getNextSeqId("OrderHeader").toString();
       Debug.log("[createOrder] Got next OrderHeader seq id " + orderId);
@@ -212,8 +218,6 @@ public class CheckOutEvents {
       order.preStoreOther(delegator.makeValue("OrderAdjustment", UtilMisc.toMap("orderAdjustmentId", delegator.getNextSeqId("OrderAdjustment").toString(), "orderAdjustmentTypeId", "SALES_TAX", "orderId", orderId, "orderItemSeqId", null, "amount", new Double(cart.getSalesTax()))));
       order.preStoreOther(delegator.makeValue("OrderContactMech", UtilMisc.toMap( "contactMechId", cart.getShippingContactMechId(), "contactMechPurposeTypeId", "SHIPPING_LOCATION", "orderId", orderId)));
 
-    Debug.log("[createOrder] got here 1");
-      
       GenericValue orderShipmentPreference = delegator.makeValue("OrderShipmentPreference", UtilMisc.toMap("orderId", orderId, "orderItemSeqId", DataModelConstants.SEQ_ID_NA, "shipmentMethodTypeId", cart.getShipmentMethodTypeId(), "carrierPartyId", cart.getCarrierPartyId(), "carrierRoleTypeId", "CARRIER" /* XXX */, "shippingInstructions", cart.getShippingInstructions()));
       orderShipmentPreference.set("maySplit", cart.getMaySplit());
       order.preStoreOther(orderShipmentPreference);
@@ -248,7 +252,6 @@ public class CheckOutEvents {
       try {
         delegator.create(order);
         cart.clear();
-    Debug.log("[createOrder] got here 2");
         
         request.setAttribute("order_id", orderId);
         request.setAttribute("orderAdditionalEmails", cart.getOrderAdditionalEmails());
@@ -268,7 +271,6 @@ public class CheckOutEvents {
       return "error";
     }
     else {
-    Debug.log("[createOrder] got here 3");
       return "success";
     }
   }
