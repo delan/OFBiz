@@ -30,7 +30,7 @@
 <simple-methods>
     <simple-method method-name="createOrderDeliverySchedule" short-description="Creates a new Purchase Order Schedule">
         <!-- Verify the user is allowed to set the fields -->
-        <string-to-field string="createSchedule" field-name="callingMethodName"/>
+        <string-to-field string="createOrderDeliverySchedule" field-name="callingMethodName"/>
         <string-to-field string="CREATE" field-name="checkAction"/>
         <call-simple-method method-name="checkSupplierRelatedPermission"/>
         <check-errors/>
@@ -54,7 +54,7 @@
     </simple-method>
     <simple-method method-name="updateOrderDeliverySchedule" short-description="Updates an existing Purchase Order Schedule">
         <!-- Verify the user is allowed to edit the fields -->
-        <string-to-field string="updateSchedule" field-name="callingMethodName"/>
+        <string-to-field string="updateOrderDeliverySchedule" field-name="callingMethodName"/>
         <string-to-field string="UPDATE" field-name="checkAction"/>
         <call-simple-method method-name="checkSupplierRelatedPermission"/>
         <check-errors/>
@@ -76,6 +76,68 @@
         
         <!-- Update the actual schedule -->
         <store-value value-name="schedule"/>
+    </simple-method>
+    <simple-method method-name="sendOrderDeliveryScheduleNotification" short-description="Send Order Delivery Schedule Notification">
+        <string-to-field string="sendOrderDeliveryScheduleNotification" field-name="callingMethodName"/>
+        <string-to-field string="UPDATE" field-name="checkAction"/>
+        <call-simple-method method-name="checkSupplierRelatedPermission"/>
+        <check-errors/>
+
+        <if-empty field-name="parameters.orderItemSeqId">
+            <string-to-field string="_NA_" field-name="parameters.orderItemSeqId"/>
+        </if-empty>
+        
+        <make-value entity-name="OrderDeliverySchedule" value-name="orderDeliverySchedule"/>
+        <set-pk-fields value-name="orderDeliverySchedule" map-name="parameters"/>
+        <find-by-primary-key map-name="orderDeliverySchedule" value-name="orderDeliverySchedule"/>
+        
+        <!-- find email address for currently logged in user, set as sendFrom -->
+        <field-to-field field-name="partyId" map-name="userLogin" to-map-name="curUserPcmFindMap"/>
+        <string-to-field string="EMAIL_ADDRESS" field-name="contactMechTypeId" map-name="curUserPcmFindMap"/>
+        <find-by-and entity-name="PartyAndContactMech" map-name="curUserPcmFindMap" list-name="curUserPartyAndContactMechs"/>
+        <first-from-list entry-name="curUserPartyAndContactMech" list-name="curUserPartyAndContactMechs"/>
+        <string-append field-name="sendEmailMap.sendFrom" string="${curUserPartyAndContactMech.infoString}" prefix=","/>
+        
+        <!-- find email addresses of all parties in SHIPMENT_CLERK roleTypeId, set as sendTo -->
+        <string-to-field string="SHIPMENT_CLERK" field-name="roleTypeId" map-name="shipmentClerkFindMap"/>
+        <find-by-and entity-name="PartyRole" map-name="shipmentClerkFindMap" list-name="shipmentClerkRoles"/>
+        <iterate entry-name="shipmentClerkRole" list-name="shipmentClerkRoles">
+            <env-to-env env-name="shipmentClerkRole.partyId" to-env-name="sendToPartyIdMap.${shipmentClerkRole.partyId}"/>
+        </iterate>
+        
+        <!-- go through all send to parties and get email addresses -->
+        <iterate-map key-name="sendToPartyId" value-name="sendToPartyIdValue" map-name="sendToPartyIdMap">
+            <env-to-field env-name="sendToPartyId" field-name="partyId" map-name="sendToPartyPcmFindMap"/>
+            <string-to-field string="EMAIL_ADDRESS" field-name="contactMechTypeId" map-name="sendToPartyPcmFindMap"/>
+            <find-by-and entity-name="PartyAndContactMech" map-name="sendToPartyPcmFindMap" list-name="sendToPartyPartyAndContactMechs"/>
+            <iterate entry-name="sendToPartyPartyAndContactMech" list-name="sendToPartyPartyAndContactMechs">
+                <string-append field-name="sendEmailMap.sendTo" string="${sendToPartyPartyAndContactMech.infoString}" prefix=","/>
+            </iterate>
+        </iterate-map>
+        
+        <!-- set subject, contentType, templateName, templateData -->
+        <string-to-field string="Delivery Information Updated for Order #${orderDeliverySchedule.orderId}" field-name="subject" map-name="sendEmailMap"/>
+        <if-compare field-name="orderDeliverySchedule.orderItemSeqId" operator="not-equals" value="_NA_">
+            <string-append string=" Item #${orderDeliverySchedule.orderItemSeqId}" field-name="subject" map-name="sendEmailMap"/>
+        </if-compare>
+        <string-to-field string="text/html" field-name="contentType" map-name="sendEmailMap"/>
+        <string-to-field string="org/ofbiz/commonapp/order/order/OrderDeliveryUpdatedNotice.ftl" field-name="templateName" map-name="sendEmailMap"/>
+        <env-to-env env-name="orderDeliverySchedule" to-env-name="sendEmailMap.templateData.orderDeliverySchedule"/>
+        
+        <!-- call sendGenericNotificationEmail service, if enough information was found -->
+        <log level="info" message="Sending generic notification email (if all info is in place): ${sendEmailMap}"/>
+        <if>
+            <condition>
+                <not><if-empty field-name="sendTo" map-name="sendEmailMap"/></not>
+                <not><if-empty field-name="sendFrom" map-name="sendEmailMap"/></not>
+            </condition>
+            <then>
+                <call-service service-name="sendGenericNotificationEmail" in-map-name="sendEmailMap"/>
+            </then>
+            <else>
+                <log level="error" message="Insufficient data to send notice email: ${sendEmailMap}"/>
+            </else>
+        </if>
     </simple-method>
 
     <simple-method method-name="checkSupplierRelatedOrderPermissionService" short-description="Check Supplier Related Permission Service">

@@ -52,6 +52,14 @@
     	<action service="createOrderNotificationLog" mode="sync"/>
     </eca>        
     
+	<!-- Order Delivery Schedule ECAs -->
+    <eca service="createOrderDeliverySchedule" event="commit">
+    	<action service="sendOrderDeliveryScheduleNotification" mode="async"/>
+    </eca>        
+    <eca service="updateOrderDeliverySchedule" event="commit">
+    	<action service="sendOrderDeliveryScheduleNotification" mode="async"/>
+    </eca>        
+
     <!-- Return ECAs -->
     <eca service="updateReturnStatusFromReceipt" event="commit">
         <condition field-name="returnHeaderStatus" operator="equals" value="RETURN_RECEIVED"/>        

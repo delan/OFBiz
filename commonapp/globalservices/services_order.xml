@@ -636,6 +636,12 @@
         <auto-attributes include="pk" mode="IN" optional="false"/>
         <auto-attributes include="nonpk" mode="IN" optional="true"/>
     </service>
+    <service name="sendOrderDeliveryScheduleNotification" engine="simple"
+            location="org/ofbiz/commonapp/order/order/OrderDeliveryServices.xml" invoke="sendOrderDeliveryScheduleNotification">
+        <description>Send Order Delivery Schedule Notification</description>
+        <attribute name="orderId" type="String" mode="IN" optional="false"/>
+        <attribute name="orderItemSeqId" type="String" mode="IN" optional="true"/>
+    </service>
 
     <service name="checkSupplierRelatedOrderPermission" engine="simple"
             location="org/ofbiz/commonapp/order/order/OrderDeliveryServices.xml" invoke="checkSupplierRelatedOrderPermissionService">
