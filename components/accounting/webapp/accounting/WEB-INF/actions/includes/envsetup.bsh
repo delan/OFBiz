@@ -13,14 +13,16 @@
  *
  *  THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS 
  *  OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF 
- *  MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. 
+ *  MERCHANTABILIT`Y, FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. 
  *  IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY 
  *  CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT 
  *  OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR 
  *  THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  *
  *@author     Andy Zeneski (jaz@ofbiz.org)
- *@version    $Revision: 1.4 $
+ *@author     Olivier Heintz (olivier.heintz@nereide.biz)
+ *@author     Arukala (arukala100@gmx.de)
+ *@version    $Revision: 1.5 $
  *@since      2.2
  */
 
@@ -51,11 +53,21 @@ controlPath = request.getAttribute("_CONTROL_PATH_");
 contextRoot = request.getAttribute("_CONTEXT_ROOT_");
 serverRoot = request.getAttribute("_SERVER_ROOT_URL_");
 
+/* reading of the uiLabel */
+// TODO: write an event to change the user's current locale
+locale = UtilHttp.getLocale(request);
+request.setAttribute("locale",locale);
+uiLabelMap = UtilProperties.getResourceBundleMap("AccountingUiLabels", locale);
+request.setAttribute("uiLabelMap", uiLabelMap);
+
 layoutSettings = new HashMap();
 request.setAttribute("layoutSettings", layoutSettings);
-    
-layoutSettings.put("companyName", "OFBiz: Accounting Manager");
-layoutSettings.put("companySubtitle", "Part of the Open For Business Family of Open Source Software");
+
+layoutSettings.put("companyName", uiLabelMap.get("AccountingCompanyName"));
+layoutSettings.put("companySubtitle", uiLabelMap.get("AccountingCompanySubtitle"));
+//layoutSettings.put("companyName", "OFBiz: Accounting Manager");
+//layoutSettings.put("companySubtitle", "Part of the Open For Business Family of Open Source Software");
+
 layoutSettings.put("headerImageUrl", "/images/ofbiz_logo.jpg");
 layoutSettings.put("headerMiddleBackgroundUrl", null);
 layoutSettings.put("headerRightBackgroundUrl", null);

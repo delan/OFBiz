@@ -20,31 +20,33 @@
  *  THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  *
  *@author     Andy Zeneski (jaz@ofbiz.org)
- *@version    $Revision: 1.1 $
+ *@author     David E. Jones (jonesde@ofbiz.org)
+ *@author     Olivier Heintz (olivier.heintz@nereide.biz)
+ *@version    $Revision: 1.2 $
  *@since      2.1
 -->
 
-<TABLE border=0 width='100%' cellspacing='0' cellpadding='0' class='boxoutside'>
-  <TR>
-    <TD width='100%'>
-      <table width='100%' border='0' cellspacing='0' cellpadding='0' class='boxtop'>
+<table border="0" width="100%" cellspacing="0" cellpadding="0" class="boxoutside">
+  <tr>
+    <td width="100%">
+      <table width="100%" border="0" cellspacing="0" cellpadding="0" class="boxtop">
         <tr>
-          <TD align=left width='90%' >
-            <div class='boxhead'>&nbsp;Accounting Manager Main Page</div>
-          </TD>        
+          <td align=left width="90%" >
+            <div class="boxhead">&nbsp;${requestAttributes.uiLabelMap.AccountingMainPage}</div>
+          </td>        
         </tr>
       </table>
-    </TD>
-  </TR>
-  <TR>
-    <TD width='100%'>
-      <table width='100%' border='0' cellspacing='0' cellpadding='0' class='boxbottom'>
+    </td>
+  </tr>
+  <tr>
+    <td width="100%">
+      <table width="100%" border="0" cellspacing="0" cellpadding="0" class="boxbottom">
         <tr>
           <td>
-            <DIV class='tabletext'>NOTE: This application is currently in development. This page will change.</DIV>  
+            <div class="tabletext">${requestAttributes.uiLabelMap.AccountingMainPageNote}</div>
           </td>
         </tr>
       </table>
-    </TD>
-  </TR>
-</TABLE>
+    </td>
+  </tr>
+</table>

@@ -20,23 +20,26 @@
  *  THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  *
  *@author     Andy Zeneski (jaz@ofbiz.org)
- *@version    $Revision: 1.1 $
+ *@author     David E. Jones (jonesde@ofbiz.org)
+ *@author     Olivier Heintz (olivier.heintz@nereide.biz)
+ *@version    $Revision: 1.2 $
  *@since      2.1
 -->
+<#assign uiLabelMap = requestAttributes.uiLabelMap>
 
-<div class="head1">Billing Accounts</div>
-<div><a href="<@ofbizUrl>/editBillingAccount</@ofbizUrl>" class="buttontext">[New Account]</a></div>
+<div class="head1">${uiLabelMap.AccountingBillingAccounts}</div>
+<div><a href="<@ofbizUrl>/EditBillingAccount</@ofbizUrl>" class="buttontext">[${uiLabelMap.AccountingNewAccount}]</a></div>
 
 <br>
 <table width="100%" border="0" cellpadding="0" cellspacing="0"> 
   <tr>
-    <td><div class="tableheadtext">Account ID</div></td>
-    <td><div class="tableheadtext">Account Limit</div></td>
+    <td><div class="tableheadtext">${uiLabelMap.AccountingAccId}</div></td>
+    <td><div class="tableheadtext">${uiLabelMap.AccountingAccLimit}</div></td>
     <#if billingAccountRolesByParty?has_content>
-    <#assign colSpan = "4">
-    <td><div class="tableheadtext">RoleType ID</div></td>
+      <#assign colSpan = "4">
+      <td><div class="tableheadtext">${uiLabelMap.PartyRoleTypeId}</div></td>
     <#else>
-    <#assign colSpan = "3">
+      <#assign colSpan = "3">
     </#if>
     <td>&nbsp;</td>
   </tr>  
@@ -50,7 +53,7 @@
         <td><div class="tabletext">${billingAccount.accountLimit?default(0)?string.currency}</div></td>
         <td><div class="tabletext">${roleType.description}</div></td>
         <td align="right">
-          <a href="<@ofbizUrl>/editBillingAccount?billingAccountId=${billingAccount.billingAccountId}</@ofbizUrl>" class="buttontext">[Edit]</a>
+          <a href="<@ofbizUrl>/EditBillingAccount?billingAccountId=${billingAccount.billingAccountId}</@ofbizUrl>" class="buttontext">[Edit]</a>
         </td>
       </tr>
     </#list>
@@ -60,14 +63,13 @@
         <td><div class="tabletext">${billingAccount.billingAccountId}</div></td>
         <td><div class="tabletext">${billingAccount.accountLimit?default(0)?string.currency}</div></td>
         <td align="right">
-          <a href="<@ofbizUrl>/editBillingAccount?billingAccountId=${billingAccount.billingAccountId}</@ofbizUrl>" class="buttontext">[Edit]</a>
+          <a href="<@ofbizUrl>/EditBillingAccount?billingAccountId=${billingAccount.billingAccountId}</@ofbizUrl>" class="buttontext">[Edit]</a>
         </td>        
       </tr>
     </#list>
   <#else>
     <tr>
-      <td colspan='3'><div class="tabletext">No billing accounts found.</div></td>
+      <td colspan='3'><div class="tabletext">${uiLabelMap.AccountingNoBillAccFound}</div></td>
     </tr>    
   </#if>
 </table>
-    

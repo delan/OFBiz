@@ -84,66 +84,70 @@
     </request-map>    
     
     <!-- Billing Account requests -->
-    <request-map uri="findBillingAccount">
+    <request-map uri="FindBillingAccount">
         <security https="true" auth="true"/>
-        <response name="success" type="view" value="findBillingAccount"/>
+        <response name="success" type="view" value="FindBillingAccount"/>
     </request-map>    
-    <request-map uri="editBillingAccount">
+    <request-map uri="EditBillingAccount">
         <security https="true" auth="true"/>
-        <response name="success" type="view" value="editBillingAccount"/>
+        <response name="success" type="view" value="EditBillingAccount"/>
     </request-map>
     <request-map uri="createBillingAccount">
         <security https="true" auth="true"/>
         <event type="service" invoke="createBillingAccount"/>
-        <response name="success" type="view" value="editBillingAccount"/>
+        <response name="success" type="view" value="EditBillingAccount"/>
+        <response name="error" type="view" value="EditBillingAccount"/>
     </request-map> 
     <request-map uri="updateBillingAccount">
         <security https="true" auth="true"/>
         <event type="service" invoke="updateBillingAccount"/>
-        <response name="success" type="view" value="editBillingAccount"/>
+        <response name="success" type="view" value="EditBillingAccount"/>
+        <response name="error" type="view" value="EditBillingAccount"/>
     </request-map>
 
-    <request-map uri="editBillingAccountRoles">
+    <request-map uri="EditBillingAccountRoles">
         <security https="true" auth="true"/>
-        <response name="success" type="view" value="editBillingAccountRoles"/>
+        <response name="success" type="view" value="EditBillingAccountRoles"/>
     </request-map>
     <request-map uri="createBillingAccountRole">
         <security https="true" auth="true"/>
         <event type="service" invoke="createBillingAccountRole"/>
-        <response name="success" type="view" value="editBillingAccountRoles"/>
+        <response name="success" type="view" value="EditBillingAccountRoles"/>
+        <response name="error" type="view" value="EditBillingAccountRoles"/>
     </request-map> 
     <request-map uri="updateBillingAccountRole">
         <security https="true" auth="true"/>
         <event type="service" invoke="updateBillingAccountRole"/>
-        <response name="success" type="view" value="editBillingAccountRoles"/>
+        <response name="success" type="view" value="EditBillingAccountRoles"/>
+        <response name="error" type="view" value="EditBillingAccountRoles"/>
     </request-map>  
     
-    <request-map uri="editBillingAccountTerms">
+    <request-map uri="EditBillingAccountTerms">
         <security https="true" auth="true"/>
-        <response name="success" type="view" value="editBillingAccountTerms"/>
+        <response name="success" type="view" value="EditBillingAccountTerms"/>
     </request-map>
     <request-map uri="createBillingAccountTerm">
         <security https="true" auth="true"/>
         <event type="service" invoke="createBillingAccountTerm"/>
-        <response name="success" type="view" value="editBillingAccountTerms"/>
+        <response name="success" type="view" value="EditBillingAccountTerms"/>
     </request-map> 
     <request-map uri="updateBillingAccountTerm">
         <security https="true" auth="true"/>
         <event type="service" invoke="updateBillingAccountTerm"/>
-        <response name="success" type="view" value="editBillingAccountTerms"/>
+        <response name="success" type="view" value="EditBillingAccountTerms"/>
     </request-map>
     <request-map uri="removeBillingAccountTerm">
         <security https="true" auth="true"/>
         <event type="service" invoke="removeBillingAccountTerm"/>
-        <response name="success" type="view" value="editBillingAccountTerms"/>
+        <response name="success" type="view" value="EditBillingAccountTerms"/>
     </request-map>        
-    <request-map uri="viewBillingAccountInvoices">
+    <request-map uri="BillingAccountInvoices">
         <security https="true" auth="true"/>
-        <response name="success" type="view" value="billingAccountInvoices"/>
+        <response name="success" type="view" value="BillingAccountInvoices"/>
     </request-map>      
-    <request-map uri="viewBillingAccountPayments">
+    <request-map uri="BillingAccountPayments">
         <security https="true" auth="true"/>
-        <response name="success" type="view" value="billingAccountPayments"/>
+        <response name="success" type="view" value="BillingAccountPayments"/>
     </request-map>       
     
     <!-- invoice requests -->
@@ -192,12 +196,12 @@
     <view-map name="main" type="jpublish" page="/main.ftl"/>
     <view-map name="login" type="jpublish" page="/login.ftl"/>
     
-    <view-map name="findBillingAccount" type="jpublish" page="/billingaccount/FindBillingAccount.ftl"/>
-    <view-map name="editBillingAccount" type="jpublish" page="/billingaccount/EditBillingAccount.ftl"/>
-    <view-map name="editBillingAccountRoles" type="jpublish" page="/billingaccount/EditBillingAccountRoles.ftl"/>
-    <view-map name="editBillingAccountTerms" type="jpublish" page="/billingaccount/EditBillingAccountTerms.ftl"/>
-    <view-map name="billingAccountInvoices" type="jpublish" page="/billingaccount/BillingAccountInvoices.ftl"/>
-    <view-map name="billingAccountPayments" type="jpublish" page="/billingaccount/BillingAccountPayments.ftl"/>    
+    <view-map name="FindBillingAccount" type="jpublish" page="/billingaccount/FindBillingAccount.ftl"/>
+    <view-map name="EditBillingAccount" type="jpublish" page="/billingaccount/EditBillingAccount.ftl"/>
+    <view-map name="EditBillingAccountRoles" type="jpublish" page="/billingaccount/EditBillingAccountRoles.ftl"/>
+    <view-map name="EditBillingAccountTerms" type="jpublish" page="/billingaccount/EditBillingAccountTerms.ftl"/>
+    <view-map name="BillingAccountInvoices" type="jpublish" page="/billingaccount/BillingAccountInvoices.ftl"/>
+    <view-map name="BillingAccountPayments" type="jpublish" page="/billingaccount/BillingAccountPayments.ftl"/>    
     
     <view-map name="findInvoices" type="jpublish" page="/invoice/findInvoices.ftl"/>
     <view-map name="editInvoice" type="jpublish" page="/invoice/editInvoice.ftl"/>

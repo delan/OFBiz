@@ -1,7 +1,8 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <page>
     <template>main</template>
-    <property name="title">Billing Account Invoices</property> 
-    <property name="headerItem">billingaccount</property>   
-    <page-action name="/billingaccount/BillingAccountInvoices.bsh"/> 
+    <property name="title">Billing Account Invoices</property>
+    <property name="headerItem">billingaccount</property>
+    <property name="tabButtonItem">BillingAccountInvoices</property>
+    <page-action name="/billingaccount/BillingAccountInvoices.bsh"/>
 </page>
