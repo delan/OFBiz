@@ -415,11 +415,13 @@ public class ModelForm {
     public void renderSingleFormString(StringBuffer buffer, Map context, FormStringRenderer formStringRenderer, int positions) {
         Iterator fieldIter = null;
         
+        Set alreadyRendered = new TreeSet();
+
         // render form open
         formStringRenderer.renderFormOpen(buffer, context, this);
             
         // render all hidden & ignored fields
-        this.renderHiddenIgnoredFields(buffer, context, formStringRenderer);
+        this.renderHiddenIgnoredFields(buffer, context, formStringRenderer, alreadyRendered);
             
         // render formatting wrapper open
         formStringRenderer.renderFormatSingleWrapperOpen(buffer, context, this);
@@ -436,8 +438,6 @@ public class ModelForm {
             nextFormField = (ModelFormField) fieldIter.next();
         }
         
-        Set alreadyRendered = new TreeSet();
-
         boolean isFirstPass = true;            
         while (currentFormField != null) {
             // do the check/get next stuff at the beginning so we can still use the continue stuff easily
@@ -766,7 +766,7 @@ public class ModelForm {
                 }
                     
                 // do all of the hidden fields...
-                this.renderHiddenIgnoredFields(buffer, localContext, formStringRenderer);
+                this.renderHiddenIgnoredFields(buffer, localContext, formStringRenderer, null);
             
                 Iterator innerFormFieldIter = this.fieldList.iterator();
                 while (innerFormFieldIter.hasNext()) {
@@ -829,7 +829,7 @@ public class ModelForm {
         }
     }
     
-    public void renderHiddenIgnoredFields(StringBuffer buffer, Map context, FormStringRenderer formStringRenderer) {
+    public void renderHiddenIgnoredFields(StringBuffer buffer, Map context, FormStringRenderer formStringRenderer, Set alreadyRendered) {
         Iterator fieldIter = this.fieldList.iterator();
         while (fieldIter.hasNext()) {
             ModelFormField modelFormField = (ModelFormField) fieldIter.next();
@@ -841,6 +841,7 @@ public class ModelForm {
                 case ModelFormField.FieldInfo.IGNORED:
                 if (modelFormField.shouldUse(context)) {
                     modelFormField.renderFieldString(buffer, context, formStringRenderer);
+                    if (alreadyRendered != null) alreadyRendered.add(modelFormField.getName());
                 }
                 break;
                     
@@ -848,6 +849,7 @@ public class ModelForm {
                 ModelFormField.DisplayField displayField = (ModelFormField.DisplayField) fieldInfo;
                 if (displayField.getAlsoHidden() && modelFormField.shouldUse(context)) {
                     formStringRenderer.renderHiddenField(buffer, context, modelFormField, modelFormField.getEntry(context));
+                    if (alreadyRendered != null) alreadyRendered.add(modelFormField.getName());
                 }
                 break;
                     
@@ -855,6 +857,7 @@ public class ModelForm {
                 ModelFormField.HyperlinkField hyperlinkField = (ModelFormField.HyperlinkField) fieldInfo;
                 if (hyperlinkField.getAlsoHidden() && modelFormField.shouldUse(context)) {
                     formStringRenderer.renderHiddenField(buffer, context, modelFormField, modelFormField.getEntry(context));
+                    if (alreadyRendered != null) alreadyRendered.add(modelFormField.getName());
                 }
                 break;
             }
