@@ -33,6 +33,7 @@
     	    <condition>
   	            <and>
     	            <not><if-empty field-name="partyId" map-name="parameters"/></not>
+    	            <not><if-compare-field field-name="partyId" map-name="parameters" operator="equals" to-map-name="userLogin"/></not>
     	            <not><if-has-permission permission="PARTYMGR" action="_CREATE"/></not>
     	        </and>
     	    </condition>
