@@ -25,6 +25,7 @@
 package org.ofbiz.entity.condition;
 
 import java.util.ArrayList;
+import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 
@@ -54,9 +55,9 @@ public class EntityJoinOperator extends EntityOperator {
     public void addSqlValue(StringBuffer sql, ModelEntity modelEntity, List entityConditionParams, boolean compat, Object lhs, Object rhs) {
         sql.append('(');
         sql.append(((EntityCondition) lhs).makeWhereString(modelEntity, entityConditionParams));
-        sql.append(") ");
+        sql.append(' ');
         sql.append(getCode());
-        sql.append(" (");
+        sql.append(' ');
         if (rhs instanceof EntityCondition) {
             sql.append(((EntityCondition) rhs).makeWhereString(modelEntity, entityConditionParams));
         } else {
@@ -68,10 +69,15 @@ public class EntityJoinOperator extends EntityOperator {
     public void addSqlValue(StringBuffer sql, ModelEntity modelEntity, List entityConditionParams, List conditionList) {
         if (conditionList != null && conditionList.size() > 0) {
             sql.append('(');
-            for (int i = 0; i < conditionList.size(); i++) {
-                if (i != 0) sql.append(' ').append(getCode()).append(' ');
-                EntityCondition condition = (EntityCondition) conditionList.get(i);
+            Iterator conditionIter = conditionList.iterator();
+            while (conditionIter.hasNext()) {
+                EntityCondition condition = (EntityCondition) conditionIter.next();
                 sql.append(condition.makeWhereString(modelEntity, entityConditionParams));
+                 if (conditionIter.hasNext()) {
+                     sql.append(' ');
+                     sql.append(getCode());
+                     sql.append(' ');
+                 }
             }
             sql.append(')');
         }
