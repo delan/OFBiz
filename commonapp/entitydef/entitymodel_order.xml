@@ -576,6 +576,8 @@
       <field name="paymentMethodId" type="id"></field>
       <field name="maxAmount" type="currency-amount"></field>
       <field name="authRefNum" type="short-varchar"></field>
+      <field name="authCode" type="short-varchar"></field>
+      <field name="authFlag" type="short-varchar"></field>
       <field name="authMessage" type="long-varchar"></field>
       <field name="statusId" type="id"></field>
       <prim-key field="orderPaymentPreferenceId"/>
