@@ -402,7 +402,7 @@ public class SimpleMethod {
 
             String response = (String) methodContext.getEnv(serviceResponseMessageName);
             if (response == null || response.length() == 0) {
-                Debug.logWarning("No response code string found, assuming success");
+                Debug.logVerbose("No response code string found, assuming success");
                 response = defaultSuccessCode;
             }
             methodContext.putResult(ModelService.RESPONSE_MESSAGE, response);
