@@ -152,7 +152,9 @@ access. For a detailed description see the core/docs/entityconfig.html file.
                 jdbc-uri="jdbc:derby:ofbiz;create=true"
                 jdbc-username="ofbiz"
                 jdbc-password="ofbiz"
-                isolation-level="ReadCommitted"/>
+                isolation-level="ReadCommitted"
+                pool-minsize="2"
+                pool-maxsize="20"/>
     </datasource>
 
     <datasource name="localcloudscape"
@@ -168,7 +170,9 @@ access. For a detailed description see the core/docs/entityconfig.html file.
                 jdbc-uri="jdbc:cloudscape:../../data/ofbiz; create=true"
                 jdbc-username="ofbiz"
                 jdbc-password="ofbiz"
-                isolation-level="ReadCommitted"/>
+                isolation-level="ReadCommitted"
+                pool-minsize="2"
+                pool-maxsize="20"/>
         <!-- <jndi-jdbc jndi-server-name="localjndi" jndi-name="java:/CloudscapeDataSource" isolation-level="Serializable"/> -->
     </datasource>
 
@@ -186,7 +190,9 @@ access. For a detailed description see the core/docs/entityconfig.html file.
                 jdbc-uri="jdbc:axiondb:ofbiz:data/axion/ofbiz"
                 jdbc-username="ofbiz"
                 jdbc-password="ofbiz"
-                isolation-level="ReadCommitted"/>
+                isolation-level="ReadCommitted"
+                pool-minsize="2"
+                pool-maxsize="20"/>
     </datasource>
 
     <datasource name="localmysql"
@@ -204,7 +210,9 @@ access. For a detailed description see the core/docs/entityconfig.html file.
                 jdbc-uri="jdbc:mysql://127.0.0.1/ofbiz?autoReconnect=true"
                 jdbc-username="ofbiz"
                 jdbc-password="ofbiz"
-                isolation-level="ReadCommitted"/>
+                isolation-level="ReadCommitted"
+                pool-minsize="2"
+                pool-maxsize="20"/>
         <!-- <jndi-jdbc jndi-server-name="localjndi" jndi-name="java:/MySqlDataSource" isolation-level="Serializable"/> -->
     </datasource>
 
@@ -251,7 +259,9 @@ access. For a detailed description see the core/docs/entityconfig.html file.
                 jdbc-driver="oracle.jdbc.driver.OracleDriver"
                 jdbc-uri="jdbc:oracle:thin:@127.0.0.1:1521:ofbiz"
                 jdbc-username="ofbiz"
-                jdbc-password="ofbiz"/>
+                jdbc-password="ofbiz"
+                pool-minsize="2"
+                pool-maxsize="20"/>
     </datasource>
     <datasource name="localoracledd"
             helper-class="org.ofbiz.entity.datasource.GenericHelperDAO"
@@ -265,7 +275,9 @@ access. For a detailed description see the core/docs/entityconfig.html file.
                 jdbc-driver="com.ddtek.jdbc.oracle.OracleDriver"
                 jdbc-uri="jdbc:datadirect:oracle://127.0.0.1:1521;SID=ofbiz"
                 jdbc-username="ofbiz"
-                jdbc-password="ofbiz"/>
+                jdbc-password="ofbiz"
+                pool-minsize="2"
+                pool-maxsize="20"/>
     </datasource>
 
     <datasource name="localsybase"
@@ -284,7 +296,9 @@ access. For a detailed description see the core/docs/entityconfig.html file.
                 jdbc-uri="jdbc:sybase:Tds:10.1.1.10:11222/ofbiz?DYNAMIC_PREPARE=true"
                 jdbc-username="ofbiz"
                 jdbc-password="ofbiz1"
-                isolation-level="ReadCommitted"/>
+                isolation-level="ReadCommitted"
+                pool-minsize="2"
+                pool-maxsize="20"/>
     </datasource>
 
     <datasource name="localsapdb"
@@ -326,7 +340,9 @@ access. For a detailed description see the core/docs/entityconfig.html file.
                 jdbc-uri="jdbc:firebirdsql://localhost:3050//opt/interbase/data/ofbiz.gdb"
                 jdbc-username="OFBIZ"
                 jdbc-password="ofbiz"
-                isolation-level="ReadCommitted"/>
+                isolation-level="ReadCommitted"
+                pool-minsize="2"
+                pool-maxsize="20"/>
         <!-- <jndi-jdbc jndi-server-name="default" jndi-name="comp/env/jdbc/xa/localfirebird" isolation-level="ReadCommitted"/> --> <!-- Orion Style JNDI name -->
         <!-- <tyrex-dataSource dataSource-name="firebird" isolation-level="ReadCommitted"/>  -->
     </datasource>
@@ -347,7 +363,9 @@ access. For a detailed description see the core/docs/entityconfig.html file.
                 jdbc-uri="jdbc:microsoft:sqlserver://localhost:1433;DatabaseName=ofbiz;SelectMethod=Cursor"
                 jdbc-username="ofbiz"
                 jdbc-password="ofbiz"
-                isolation-level="ReadCommitted"/>
+                isolation-level="ReadCommitted"
+                pool-minsize="2"
+                pool-maxsize="20"/>
         <!-- <jndi-jdbc jndi-server-name="default" jndi-name="comp/env/jdbc/xa/localmssql" isolation-level="ReadCommitted"/> --> <!-- Orion Style JNDI name -->
     </datasource>
 
@@ -366,7 +384,9 @@ access. For a detailed description see the core/docs/entityconfig.html file.
                 jdbc-uri="jdbc:postgresql://127.0.0.1/ofbiz"
                 jdbc-username="ofbiz"
                 jdbc-password="ofbiz"
-                isolation-level="ReadCommitted"/>
+                isolation-level="ReadCommitted"
+                pool-minsize="2"
+                pool-maxsize="20"/>
         <!-- <jndi-jdbc jndi-server-name="localjndi" jndi-name="java:/OracleDataSource" isolation-level="Serializable"/> -->
     </datasource>
 
