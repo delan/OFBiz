@@ -1,6 +1,9 @@
 /*
  * $Id$
  * $Log$
+ * Revision 1.13  2001/09/06 03:48:29  azeneski
+ * Catalog trail partially working. Need to add in recursion.
+ *
  * Revision 1.12  2001/09/05 20:45:54  jonesde
  * Major speedup by adding cache calls.
  *
@@ -340,7 +343,7 @@ public class CatalogHelper {
     
     public static boolean checkTrailItem(PageContext pageContext,String category) {
         Collection crumb = getTrail(pageContext);
-        if ( crumb.contains(category) )
+        if(crumb != null && crumb.contains(category))
             return true;
         else
             return false;
