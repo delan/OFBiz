@@ -349,6 +349,12 @@
         <attribute name="availableToPromiseDiff" type="Double" mode="INOUT" optional="true"/>
         <attribute name="quantityOnHandDiff" type="Double" mode="INOUT" optional="true"/>
     </service>
+    <service name="quickReceiveReturn" engine="simple"
+            location="org/ofbiz/shipment/receipt/ShipmentReceiptServices.xml" invoke="quickReceiveReturn" auth="true">
+        <attribute name="returnId" type="String" mode="IN" optional="false"/>
+        <attribute name="inventoryItemTypeId" type="String" mode="IN" optional="true"/>
+        <attribute name="statusId" type="String" mode="IN" optional="true"/>
+    </service>
     
     <service name="interfaceShipmentReceiptRole" engine="interface" location="" invoke="">
         <description>Interface for ShipmentReceiptRole</description>

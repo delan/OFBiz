@@ -37,7 +37,7 @@ ${pages.get("/facility/FacilityTabBar.ftl")}
 <#-- Receiving Results -->
 <#if receivedItems?has_content>
   <table width="100%" border='0' cellpadding='2' cellspacing='0'>
-    <tr><td colspan="7"><div class="head3">${uiLabelMap.ProductReceiptForReturn} #${returnHeader.returnId}</div></td></tr>
+    <tr><td colspan="7"><div class="head3">${uiLabelMap.ProductReceiptForReturn} <a href="/ordermgr/control/returnMain?returnId=${returnHeader.returnId}${requestAttributes.externalKeyParam?if_exists}" class="buttontext">#${returnHeader.returnId}</a></div></td></tr>
     <tr><td colspan="7"><hr class="sepbar"></td></tr>
     <tr>
       <td><div class="tableheadtext">${uiLabelMap.ProductReceipt}</div></td>
@@ -80,7 +80,7 @@ ${pages.get("/facility/FacilityTabBar.ftl")}
       <#else>
         <tr>
           <td>
-            <div class="head3">${uiLabelMap.ProductReceiveReturn} #${returnHeader.returnId}</div>
+            <div class="head3">${uiLabelMap.ProductReceiveReturn} <a href="/ordermgr/control/returnMain?returnId=${returnHeader.returnId}${requestAttributes.externalKeyParam?if_exists}" class="buttontext">#${returnHeader.returnId}</a></div>
           </td>
           <td align="right">
             <span class="tableheadtext">${uiLabelMap.ProductSelectAll}</span>&nbsp;
