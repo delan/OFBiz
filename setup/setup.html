@@ -154,7 +154,6 @@ in the catalina directory they need be copied to.</p>
   <tr><td>tyrex-0.9.7.0.jar</td><td>catalina/common/lib</td><td>REMOVE (comes with catalina)</td></tr>
   <tr><td>ots-jts_1.0.jar</td><td>ofbiz/lib/common</td><td>catalina/common/lib</td></tr>
   <tr><td>log4j.jar</td><td>ofbiz/lib/common</td><td>catalina/common/lib</td></tr>
-  <tr><td>poolman.jar</td><td>ofbiz/lib/common</td><td>catalina/common/lib</td></tr>
   <tr><td>axis.jar</td><td>ofbiz/lib/share</td><td>catalina/lib</td></tr>
   <tr><td>clutil.jar</td><td>ofbiz/lib/share</td><td>catalina/lib</td></tr>
   <tr><td>wsdl4j.jar</td><td>ofbiz/lib/share</td><td>catalina/lib</td></tr>
@@ -196,14 +195,13 @@ can find them. If you need any additional ones put them there.</p>
     <td><b>Original Location</b></td>
     <td><b>Destination Location</b></td>
   </tr>
-  <tr><td>entityengine.properties</td><td>ofbiz/commonapp/etc</td><td>catalina/classes</td></tr>
-  <tr><td>servicesengine.properties</td><td>ofbiz/commonapp/etc</td><td>catalina/classes</td></tr>
-  <tr><td>security.properties</td><td>ofbiz/commonapp/etc</td><td>catalina/classes</td></tr>
-  <tr><td>debug.properties</td><td>ofbiz/commonapp/etc</td><td>catalina/classes</td></tr>
   <tr><td>cache.properties</td><td>ofbiz/commonapp/etc</td><td>catalina/classes</td></tr>
-  <tr><td>poolman.xml</td><td>ofbiz/commonapp/etc</td><td>catalina/classes</td></tr>
-  <tr><td>jndi.properties</td><td>ofbiz/commonapp/etc</td><td>catalina/classes</td></tr>
+  <tr><td>debug.properties</td><td>ofbiz/commonapp/etc</td><td>catalina/classes</td></tr>
+  <tr><td>entityengine.properties</td><td>ofbiz/commonapp/etc</td><td>catalina/classes</td></tr>
   <tr><td>localdtds.properties</td><td>ofbiz/commonapp/etc</td><td>catalina/classes</td></tr>
+  <tr><td>security.properties</td><td>ofbiz/commonapp/etc</td><td>catalina/classes</td></tr>
+  <tr><td>serverstats.properties</td><td>ofbiz/commonapp/etc</td><td>catalina/classes</td></tr>
+  <tr><td>servicesengine.properties</td><td>ofbiz/commonapp/etc</td><td>catalina/classes</td></tr>
   <tr><td>tyrexdomain.xml</td><td>ofbiz/commonapp/etc</td><td>catalina/classes</td></tr>
 </table>
 
@@ -303,17 +301,67 @@ going to a JSP, which is listed below in the Running section.</p>
 <h3><a name="DeployOptions">Alternative Deployment Options</a></h3>
 <hr>
 <p>Future releases of The Open For Business Project will support alternative deployment 
-  options, for use with application servers other then Jakarta Tomcat and JBoss. 
-  The <i>webapp</i> directory in each module is a fully self sufficient web application. 
-  Each of these may be packaged into a WAR file and deployed normally. Please 
-  keep in mind the OFBiz required libraries must be in the global classpath. An 
-  alternative method of deploying with Catalina would be not to modify the server.xml 
-  file, but instead place the required files in the /lib and /classes directory 
-  as described above and deploy the WAR files in the /webapps directory. <br>
-  <br>
-  Full testing and deployment instructions for WebSphere, WebLogic, iPlanet, Orion, 
-  JRun, ServletExec, and others are forthcoming in future releases. If you are interested 
-  in helping with this please contact one of the project administrators.</p>
+options, for use with application servers other then Jakarta Tomcat and JBoss. 
+The <i>webapp</i> directory in each module is a fully self sufficient web application. 
+Each of these may be packaged into a WAR file and deployed normally. Please 
+keep in mind the OFBiz required libraries must be in the global classpath. An 
+alternative method of deploying with Catalina would be not to modify the server.xml 
+file, but instead place the required files in the /lib and /classes directory 
+as described above and deploy the WAR files in the /webapps directory.</p>
+
+<p>Sample configuration files and start scripts for various app servers are 
+available in the setup module of OFBiz (see ofbiz/setup in the distro). Open For
+Business uses a few primary components of J2EE and needs a container for these
+components. The components needed for OFBiz include Servlet 2.3, JSP 1.2, and
+a JTA implementation with a JDBC XA Wrapper and Connection Pool.</p>
+
+<p>The following configurations have been tested and are included:</p>
+<table border='1' cellpadding='2' cellspacing='0'>
+    <tr>
+        <td><b>Servlet/JSP&nbsp;Container</b></td>
+        <td><b>JTA&nbsp;&amp;&nbsp;XA&nbsp;JDBC&nbsp;Container</b></td>
+        <td><b>Comments</b></td>
+    </tr>
+    <tr>
+        <td><a href='http://jakarta.apache.org'>Tomcat 4.0.1 - Catalina</a></td>
+        <td><a href='http://www.exolab.org'>Tyrex 0.9.8.5</a></td>
+        <td>Default config; freely available; comparatively slow</td>
+    </tr>
+    <tr>
+        <td><a href='http://jetty.mortbay.com'>Jetty 4</a></td>
+        <td><a href='http://www.exolab.org'>Tyrex 0.9.8.5</a></td>
+        <td>Freely available; also slow, Jetty appears to run even slower than Tomcat4</td>
+    </tr>
+    <tr>
+        <td><a href='http://jakarta.apache.org'>Tomcat 4.0.1 - Catalina</a></td>
+        <td><a href='http://www.jboss.org'>JBoss 2.4.4</a></td>
+        <td>Freely available; same speed at Catalina/Tyrex, but can interoperate 
+            with other JBoss resources like EJBs, etc</td>
+    </tr>
+    <tr>
+        <td><a href='http://www.caucho.com'>Caucho Resin 2.0.5</a></td>
+        <td><a href='http://www.exolab.org'>Tyrex 0.9.8.5</a></td>
+        <td>Resin $500/server, Tyrex free; runs MUCH faster than Tomcat or Jetty</td>
+    </tr>
+    <tr>
+        <td><a href='http://www.orionserver.com'>Orion 1.5.3</a></td>
+        <td><a href='http://www.orionserver.com'>Orion 1.5.3</a> or 
+            <a href='http://www.exolab.org'>Tyrex 0.9.8.5</a></td>
+        <td>Orion $1,500/server; OFBiz can interoperate with other Orion resources;
+            the fastest and best scaling container we have tested</td>
+    </tr>
+    <tr>
+        <td><a href='http://www.bea.com'>BEA Weblogic 6.1</a></td>
+        <td><a href='http://www.bea.com'>BEA Weblogic 6.1</a></td>
+        <td>Weblogic ~$10,000/CPU (used to be, I don't know how much it is now), 
+            OFBiz can interoperate with other Weblogic resources, but is slower 
+            than Resin or Orion</td>
+    </tr>
+</table>
+
+<p>Full testing and deployment instructions for WebSphere, iPlanet,
+JRun, ServletExec, and others are forthcoming in future releases. If you are interested 
+in helping with this please contact one of the project administrators.</p>
 
 <p>&nbsp;</p>
 </body>
