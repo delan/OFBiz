@@ -267,12 +267,11 @@ public class HtmlScreenRenderer implements ScreenStringRenderer {
     public void renderContentBegin(Writer writer, Map context, ModelScreenWidget.Content content) throws IOException {
 
         String editRequest = content.getEditRequest(context);
+        String editContainerStyle = content.getEditContainerStyle(context);
         Debug.logInfo("directEditRequest:" + editRequest, module);
         if (UtilValidate.isNotEmpty(editRequest)) {
             writer.write("<div");
-    
-            writer.write(" class=\"editWrapper\">");
-
+            writer.write(" class=\"" + editContainerStyle + "\"> ");
             appendWhitespace(writer);
         }
     }
@@ -317,6 +316,7 @@ public class HtmlScreenRenderer implements ScreenStringRenderer {
                 //Debug.logInfo("renderContentEnd, context:" + context, module);
         String editMode = "Edit";
         String editRequest = content.getEditRequest(context);
+        String editContainerStyle = content.getEditContainerStyle(context);
         if (editRequest != null && editRequest.toUpperCase().indexOf("IMAGE") > 0) {
             editMode += " Image";
         }
@@ -334,7 +334,9 @@ public class HtmlScreenRenderer implements ScreenStringRenderer {
                 String linkString = "<a href=\"" + urlString + "\">" + editMode + "</a>";
                 writer.write(linkString);
             }
-            writer.write("</div>");
+            if (UtilValidate.isNotEmpty(editContainerStyle)) {
+                writer.write("</div>");
+            }
             appendWhitespace(writer);
         }
     }
@@ -343,9 +345,10 @@ public class HtmlScreenRenderer implements ScreenStringRenderer {
     public void renderSubContentBegin(Writer writer, Map context, ModelScreenWidget.SubContent content) throws IOException {
 
         String editRequest = content.getEditRequest(context);
-        if (UtilValidate.isNotEmpty(editRequest)) {
+        String editContainerStyle = content.getEditContainerStyle(context);
+        if (UtilValidate.isNotEmpty(editRequest) && UtilValidate.isNotEmpty(editContainerStyle) ) {
             writer.write("<div");
-            writer.write(" class=\"editWrapper\">");
+            writer.write(" class=\"" + editContainerStyle + "\"> ");
     
             writer.write(">");
             appendWhitespace(writer);
@@ -397,6 +400,7 @@ public class HtmlScreenRenderer implements ScreenStringRenderer {
 
         String editMode = "Edit";
         String editRequest = content.getEditRequest(context);
+        String editContainerStyle = content.getEditContainerStyle(context);
     	Map params = (Map)context.get("parameters");
         if (editRequest != null && editRequest.toUpperCase().indexOf("IMAGE") > 0) {
             editMode += " Image";
@@ -407,6 +411,7 @@ public class HtmlScreenRenderer implements ScreenStringRenderer {
             if (request != null && response != null) {
                 HttpSession session = request.getSession();
                 GenericValue userLogin = (GenericValue)session.getAttribute("userLogin");
+                /* don't know why this is here. might come to me later. -amb
                 GenericDelegator delegator = (GenericDelegator)request.getAttribute("delegator");
                 String contentIdTo = content.getContentId(context);
                 String mapKey = content.getAssocName(context);
@@ -416,13 +421,16 @@ public class HtmlScreenRenderer implements ScreenStringRenderer {
                 } catch(GenericEntityException e) {
                     throw new IOException("Originally a GenericEntityException. " + e.getMessage());
                 }
+                */
                 ServletContext ctx = (ServletContext) request.getAttribute("servletContext");
                 RequestHandler rh = (RequestHandler) ctx.getAttribute("_REQUEST_HANDLER_");
                 String urlString = rh.makeLink(request, response, editRequest, false, false, false);
                 String linkString = "<a href=\"" + urlString + "\">" + editMode + "</a>";
                 writer.write(linkString);
             }
-            writer.write("</div>");
+            if (UtilValidate.isNotEmpty(editContainerStyle)) {
+                writer.write("</div>");
+            }
             appendWhitespace(writer);
         }
     }

@@ -1243,6 +1243,7 @@
         <attribute mode="IN" name="contentId" optional="true" type="String"/>
         <attribute mode="IN" name="subContentId" optional="true" type="String"/>
         <attribute mode="IN" name="assocTypes" optional="true" type="List"/>
+        <attribute mode="IN" name="assocTypesString" optional="true" type="String"/>
         <attribute mode="IN" name="contentTypes" optional="true" type="List"/>
         <attribute mode="IN" name="fromDate" optional="true" type="Timestamp"/>
         <attribute mode="OUT" name="view" optional="true" type="GenericValue"/>

@@ -8,7 +8,7 @@
     <ContentAssocType contentAssocTypeId="GRAPH_LINK" description="Graph Link"/>
     <ContentAssocType contentAssocTypeId="ALTERNATE_LOCALE" description="Alternate Locale"/>
     <ContentAssocType contentAssocTypeId="RESPONSE" description="Response"/>
-    <ContentAssocType contentAssocTypeId="SUB_CONTENT" description="SubContent"/>
+    <ContentAssocType contentAssocTypeId="SUB_CONTENT" description="Sub Section"/>
     <ContentAssocType contentAssocTypeId="TOPIC" description="Topic"/>
     <ContentAssocType contentAssocTypeId="DESCRIPTION" description="Description"/>
 
@@ -18,6 +18,7 @@
     <ContentAssocType contentAssocTypeId="PUBLISH_LINK" description="Publish link"/>
     <ContentAssocType contentAssocTypeId="ATTRIBUTE" description="Attribute"/>
     <ContentAssocType contentAssocTypeId="AUTHOR" description="Author"/>
+    <ContentAssocType contentAssocTypeId="SUMMARY" description="Summary"/>
 
     <ContentAssocPredicate contentAssocPredicateId="member-of" description="The object is a member of the subject."/>
     <ContentAssocPredicate contentAssocPredicateId="defines" description="The object defines the subject."/>
@@ -119,6 +120,7 @@
     <DataTemplateType dataTemplateTypeId="VTL" description="Velocity" extension="vtl"/>
     <DataTemplateType dataTemplateTypeId="WM" description="WebMacro" extension="wm"/>
     <DataTemplateType dataTemplateTypeId="XSLT" description="XSLT" extension="xsl"/>
+    <DataTemplateType dataTemplateTypeId="SCREEN_COMBINED" description="Screen widget" extension="xml"/>
 
     <DocumentType description="Shipping" documentTypeId="SHIPPING_DOCUMENT" hasTable="Y" parentTypeId=""/>
     <DocumentType description="Bill Of Lading" documentTypeId="BILL_OF_LADING" hasTable="N" parentTypeId="SHIPPING_DOCUMENT"/>
