@@ -92,7 +92,7 @@ public class ControlServlet extends HttpServlet {
         long requestStartTime = System.currentTimeMillis();
         
         // workaraound if we are in the root webapp
-        String cname = UtilMisc.getApplicationName(request);
+        String webappName = UtilMisc.getApplicationName(request);
 		
         String rname = request.getPathInfo().substring(1);
         if (rname.indexOf('/') > 0) {
@@ -197,7 +197,7 @@ public class ControlServlet extends HttpServlet {
             session.setAttribute(SiteDefs.CLIENT_USER_AGENT, initialUserAgent);
             session.setAttribute(SiteDefs.CLIENT_REFERER, initialUserAgent);
             
-            VisitHandler.setInitials(session, initialLocale, initialRequest, initialReferrer, initialUserAgent);
+            VisitHandler.setInitials(session, initialLocale, initialRequest, initialReferrer, initialUserAgent, webappName);
         }
 
         //setup chararcter encoding and content type, do before so that view can override
@@ -249,7 +249,7 @@ public class ControlServlet extends HttpServlet {
 
         if (Debug.timingOn()) timer.timerString("[" + rname + "] Done rendering page, Servlet Finished", module);
 
-        ServerHitBin.countRequest(cname + "." + rname, VisitHandler.getVisitId(session), requestStartTime, System.currentTimeMillis() - requestStartTime, userLogin, delegator);
+        ServerHitBin.countRequest(webappName + "." + rname, VisitHandler.getVisitId(session), requestStartTime, System.currentTimeMillis() - requestStartTime, userLogin, delegator);
     }
 
     private RequestHandler getRequestHandler() {

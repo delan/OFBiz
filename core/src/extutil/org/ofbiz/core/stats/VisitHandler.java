@@ -45,13 +45,14 @@ public class VisitHandler {
     //Debug module name
     public static final String module = VisitHandler.class.getName();
     
-    public static void setInitials(HttpSession session, String initialLocale, String initialRequest, String initialReferrer, String initialUserAgent) {
+    public static void setInitials(HttpSession session, String initialLocale, String initialRequest, String initialReferrer, String initialUserAgent, String webappName) {
         GenericValue visit = getVisit(session);
         if (visit != null) {
             visit.set("initialLocale", initialLocale);
             if (initialRequest != null) visit.set("initialRequest", initialRequest.length() > 250 ? initialRequest.substring(0, 250) : initialRequest);
             if (initialReferrer != null) visit.set("initialReferrer", initialReferrer.length() > 250 ? initialReferrer.substring(0, 250) : initialReferrer);
             if (initialUserAgent != null) visit.set("initialUserAgent", initialUserAgent.length() > 250 ? initialUserAgent.substring(0, 250) : initialUserAgent);
+            visit.set("webappName", webappName);
             try {
                 visit.store();
             } catch (GenericEntityException e) {

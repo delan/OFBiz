@@ -1315,6 +1315,7 @@
       <field name="sessionId" type="id-long"></field>
       <field name="serverIpAddress" type="id"></field>
       <field name="serverHostName" type="long-varchar"></field>
+      <field name="webappName" type="short-varchar"></field>
       <field name="initialLocale" type="short-varchar"></field>
       <field name="initialRequest" type="url"></field>
       <field name="initialReferrer" type="url"></field>
