@@ -21,7 +21,7 @@
  *
  *@author     David E. Jones (jonesde@ofbiz.org)
  *@author     Catherine Heintz (catherine.heintz@nereide.biz)
- *@version    $Revision: 1.8 $
+ *@version    $Revision: 1.9 $
  *@since      2.1
 -->
 
@@ -93,7 +93,7 @@ ${pages.get("/category/CategoryTabBar.ftl")}
                         <a href="javascript:call_cal(document.lineForm${line}.thruDate, '${(productCategoryMember.thruDate)?default(nowTimestampString)}');"><img src="/images/cal.gif" width="16" height="16" border="0" alt="Calendar"></a>
                         <input type=text size="5" name="sequenceNum" value="${(productCategoryMember.sequenceNum)?if_exists}" class="inputBox">
                         <input type=text size="5" name="quantity" value="${(productCategoryMember.quantity)?if_exists}" class="inputBox">
-                        <INPUT type=submit value="Update" style="font-size: x-small;">
+                        <INPUT type=submit value="${uiLabelMap.CommonUpdate}" style="font-size: x-small;">
                     </FORM>
                 </td>
                 <td align="center">

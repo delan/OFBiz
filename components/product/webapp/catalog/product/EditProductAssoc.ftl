@@ -21,19 +21,20 @@
  *
  *@author     David E. Jones (jonesde@ofbiz.org)
  *@author     Brad Steiner (bsteiner@thehungersite.com)
- *@version    $Revision: 1.4 $
+ *@author     Catherine.Heintz@nereide.biz (migration to UiLabel)
+ *@version    $Revision: 1.5 $
  *@since      2.2
 -->
-
+<#assign uiLabelMap = requestAttributes.uiLabelMap>
 <#if hasPermission>
 
 ${pages.get("/product/ProductTabBar.ftl")}
     
-    <div class="head1">Associations <span class="head2">for <#if product?exists>${(product.internalName)?if_exists}</#if>[ID:${productId?if_exists}]</span></div>
+    <div class="head1">${uiLabelMap.ProductAssociations} <span class="head2">${uiLabelMap.CommonFor} <#if product?exists>${(product.productName)?if_exists}</#if>[${uiLabelMap.CommonId}:${productId?if_exists}]</span></div>
     
-    <a href="<@ofbizUrl>/EditProduct</@ofbizUrl>" class="buttontext">[New Product]</a>
+    <a href="<@ofbizUrl>/EditProduct</@ofbizUrl>" class="buttontext">[${uiLabelMap.ProductNewProduct}]</a>
     <#if productId?has_content>
-        <a href="/ecommerce/control/product?product_id=${productId}" class="buttontext" target="_blank">[Product Page]</a>
+        <a href="/ecommerce/control/product?product_id=${productId}" class="buttontext" target="_blank">[${uiLabelMap.ProductProductPage}]</a>
     </#if>
     <br>
     <br>
@@ -43,20 +44,21 @@ ${pages.get("/product/ProductTabBar.ftl")}
     
     <#if !(productAssoc?exists)>
         <#if productId?exists && productIdTo?exists && productAssocTypeId?exists && fromDate?exists>
-            <div class="tabletext"><b>Association not found: Product Id=${productId?if_exists}, Product Id To=${productIdTo?if_exists}, Association Type Id=${productAssocTypeId?if_exists}, From Date=${fromDate?if_exists}.</b></div>
+<#--            <div class="tabletext"><b>Association not found: Product Id=${productId?if_exists}, Product Id To=${productIdTo?if_exists}, Association Type Id=${productAssocTypeId?if_exists}, From Date=${fromDate?if_exists}.</b></div> -->
+            <div class="tabletext"><b><#assign uiLabelWithVar=uiLabelMap.ProductAssociationNotFound?interpret><@uiLabelWithVar/></b></div>
             <input type=hidden name="UPDATE_MODE" value="CREATE">
             <tr>
-            <td align=right><div class="tabletext">Product ID</div></td>
+            <td align=right><div class="tabletext">${uiLabelMap.ProductProductId}</div></td>
             <td>&nbsp;</td>
             <td><input type="text" class="inputBox" name="PRODUCT_ID" size="20" maxlength="40" value="${productId?if_exists}"></td>
             </tr>
             <tr>
-            <td align=right><div class="tabletext">Product ID To</div></td>
+            <td align=right><div class="tabletext">${uiLabelMap.ProductProductIdTo}</div></td>
             <td>&nbsp;</td>
             <td><input type="text" class="inputBox" name="PRODUCT_ID_TO" size="20" maxlength="40" value="${productIdTo?if_exists}"></td>
             </tr>
             <tr>
-            <td align=right><div class="tabletext">Association Type ID</div></td>
+            <td align=right><div class="tabletext">${uiLabelMap.ProductAssociationTypeId}</div></td>
             <td>&nbsp;</td>
             <td>
                 <select class="selectBox" name="PRODUCT_ASSOC_TYPE_ID" size=1>
@@ -74,30 +76,30 @@ ${pages.get("/product/ProductTabBar.ftl")}
             </td>
             </tr>
             <tr>
-            <td align=right><div class="tabletext">From Date</div></td>
+            <td align=right><div class="tabletext">${uiLabelMap.CommonFromDate}</div></td>
             <td>&nbsp;</td>
             <td>
                 <div class="tabletext">
                     <input type="text" class="inputBox" name="FROM_DATE" size="25" maxlength="40" value="${fromDate?if_exists}">
                     <a href="javascript:call_cal(document.editProductAssocForm.FROM_DATE, '${fromDate?default(nowTimestampString)}');"><img src="/images/cal.gif" width="16" height="16" border="0" alt="Calendar"></a>
-                    (Will be set to now if empty)
+                    ${uiLabelMap.CommonSetNowEmpty}
                 </div>
             </td>
             </tr>
         <#else>
             <input type=hidden name="UPDATE_MODE" value="CREATE">
             <tr>
-            <td align=right><div class="tabletext">Product ID</div></td>
+            <td align=right><div class="tabletext">${uiLabelMap.ProductProductId}</div></td>
             <td>&nbsp;</td>
             <td><input type="text" class="inputBox" name="PRODUCT_ID" size="20" maxlength="40" value="${productId?if_exists}"></td>
             </tr>
             <tr>
-            <td align=right><div class="tabletext">Product ID To</div></td>
+            <td align=right><div class="tabletext">${uiLabelMap.ProductProductIdTo}</div></td>
             <td>&nbsp;</td>
             <td><input type="text" class="inputBox" name="PRODUCT_ID_TO" size="20" maxlength="40" value="${productIdTo?if_exists}"></td>
             </tr>
             <tr>
-            <td align=right><div class="tabletext">Association Type ID</div></td>
+            <td align=right><div class="tabletext">${uiLabelMap.ProductAssociationTypeId}</div></td>
             <td>&nbsp;</td>
             <td>
                 <select class="selectBox" name="PRODUCT_ASSOC_TYPE_ID" size=1>
@@ -109,13 +111,13 @@ ${pages.get("/product/ProductTabBar.ftl")}
             </td>
             </tr>
             <tr>
-            <td align=right><div class="tabletext">From Date</div></td>
+            <td align=right><div class="tabletext">${uiLabelMap.CommonFromDate}</div></td>
             <td>&nbsp;</td>
             <td>
                 <div class="tabletext">
                     <input type="text" class="inputBox" name="FROM_DATE" size="25" maxlength="40" value="">
                     <a href="javascript:call_cal(document.editProductAssocForm.FROM_DATE, '${nowTimestampString}');"><img src="/images/cal.gif" width="16" height="16" border="0" alt="Calendar"></a>
-                    (Will be set to now if empty)
+                    ${uiLabelMap.CommonSetNowEmpty}
                 </div>
             </td>
             </tr>
@@ -129,28 +131,28 @@ ${pages.get("/product/ProductTabBar.ftl")}
         <input type=hidden name="PRODUCT_ASSOC_TYPE_ID" value="${productAssocTypeId?if_exists}">
         <input type=hidden name="FROM_DATE" value="${fromDate?if_exists}">
         <tr>
-            <td align=right><div class="tabletext">Product ID</div></td>
+            <td align=right><div class="tabletext">${uiLabelMap.ProductProductId}</div></td>
             <td>&nbsp;</td>
-            <td><b>${productId?if_exists}</b> (You must re-create the association to change this.)</td>
+            <td><b>${productId?if_exists}</b> ${uiLabelMap.ProductRecreateAssociation}</td>
         </tr>
         <tr>
-            <td align=right><div class="tabletext">Product ID To</div></td>
+            <td align=right><div class="tabletext">${uiLabelMap.ProductProductIdTo}</div></td>
             <td>&nbsp;</td>
-            <td><b>${productIdTo?if_exists}</b> (You must re-create the association to change this.)</td>
+            <td><b>${productIdTo?if_exists}</b> ${uiLabelMap.ProductRecreateAssociation}</td>
         </tr>
         <tr>
-            <td align=right><div class="tabletext">Association Type</div></td>
+            <td align=right><div class="tabletext">${uiLabelMap.ProductAssociationType}</div></td>
             <td>&nbsp;</td>
             <td><b><#if curProductAssocType?exists>${(curProductAssocType.description)?if_exists}<#else> ${productAssocTypeId?if_exists}</#if></b> (You must re-create the association to change this.)</td>
         </tr>
         <tr>
-            <td align=right><div class="tabletext">From Date</div></td>
+            <td align=right><div class="tabletext">${uiLabelMap.CommonFromDate}</div></td>
             <td>&nbsp;</td>
-            <td><b>${fromDate?if_exists}</b> (You must re-create the association to change this.)</td>
+            <td><b>${fromDate?if_exists}</b> ${uiLabelMap.ProductRecreateAssociation}</td>
         </tr>
     </#if>
     <tr>
-        <td width="26%" align=right><div class="tabletext">Thru Date</div></td>
+        <td width="26%" align=right><div class="tabletext">${uiLabelMap.CommonThruDate}</div></td>
         <td>&nbsp;</td>
         <td width="74%">
         <div class="tabletext">
@@ -160,46 +162,46 @@ ${pages.get("/product/ProductTabBar.ftl")}
         </td>
     </tr>
     <tr>
-        <td width="26%" align=right><div class="tabletext">SequenceNum</div></td>
+        <td width="26%" align=right><div class="tabletext">${uiLabelMap.ProductSequenceNum}</div></td>
         <td>&nbsp;</td>
         <td width="74%"><input type="text" class="inputBox" name="SEQUENCE_NUM" <#if useValues>value="${(productAssoc.sequenceNum)?if_exists}"<#else>value="${(request.getParameter("SEQUENCE_NUM"))?if_exists}"</#if> size="5" maxlength="10"></td>
     </tr>
     <tr>
-        <td width="26%" align=right><div class="tabletext">Reason</div></td>
+        <td width="26%" align=right><div class="tabletext">${uiLabelMap.ProductReason}</div></td>
         <td>&nbsp;</td>
         <td width="74%"><input type="text" class="inputBox" name="REASON" <#if useValues>value="${(productAssoc.reason)?if_exists}"<#else>value="${(request.getParameter("REASON"))?if_exists}"</#if> size="60" maxlength="255"></td>
     </tr>
     <tr>
-        <td width="26%" align=right><div class="tabletext">Instruction</div></td>
+        <td width="26%" align=right><div class="tabletext">${uiLabelMap.ProductInstruction}</div></td>
         <td>&nbsp;</td>
         <td width="74%"><input type="text" class="inputBox" name="INSTRUCTION" <#if useValues>value="${(productAssoc.instruction)?if_exists}"<#else>value="${(request.getParameter("INSTRUCTION"))?if_exists}"</#if> size="60" maxlength="255"></td>
     </tr>
     
     <tr>
-        <td width="26%" align=right><div class="tabletext">Quantity</div></td>
+        <td width="26%" align=right><div class="tabletext">${uiLabelMap.ProductQuantity}</div></td>
         <td>&nbsp;</td>
         <td width="74%"><input type="text" class="inputBox" name="QUANTITY" <#if useValues>value="${(productAssoc.quantity)?if_exists}"<#else>value="${(request.getParameter("QUANTITY"))?if_exists}"</#if> size="10" maxlength="15"></td>
     </tr>
     
     <tr>
         <td colspan="2">&nbsp;</td>
-        <td align=left><input type="submit" <#if isCreate>value="Create"<#else>value="Update"</#if>></td>
+        <td align=left><input type="submit" <#if isCreate>value="${uiLabelMap.CommonCreate}"<#else>value="${uiLabelMap.CommonUpdate}"</#if>></td>
     </tr>
     </table>
     </form>
     <br>
     <#if productId?exists && product?exists>
         <hr class="sepbar">
-        <div class="head2">Associations FROM this Product to...</div>
+        <div class="head2">${uiLabelMap.ProductAssociationsFromProduct}...</div>
         
         <table border="1" cellpadding="2" cellspacing="0">
             <tr>
-            <td><div class="tabletext"><b>To Product ID</b></div></td>
-            <td><div class="tabletext"><b>Name</b></div></td>
-            <td><div class="tabletext"><b>From&nbsp;Date&nbsp;&amp;&nbsp;Time</b></div></td>
-            <td><div class="tabletext"><b>Thru&nbsp;Date&nbsp;&amp;&nbsp;Time</b></div></td>
-            <td><div class="tabletext"><b>SeqNum</b></div></td>
-            <td><div class="tabletext"><b>Association&nbsp;Type</b></div></td>
+            <td><div class="tabletext"><b>${uiLabelMap.ProductProductId}</b></div></td>
+            <td><div class="tabletext"><b>${uiLabelMap.ProductName}</b></div></td>
+            <td><div class="tabletext"><b>${uiLabelMap.CommonFromDateTime}</b></div></td>
+            <td><div class="tabletext"><b>${uiLabelMap.CommonThruDateTime}</b></div></td>
+            <td><div class="tabletext"><b>${uiLabelMap.ProductSeqNum}</b></div></td>
+            <td><div class="tabletext"><b>${uiLabelMap.ProductAssociationType}</b></div></td>
             <td><div class="tabletext"><b>&nbsp;</b></div></td>
             <td><div class="tabletext"><b>&nbsp;</b></div></td>
             </tr>
@@ -217,25 +219,25 @@ ${pages.get("/product/ProductTabBar.ftl")}
                 <td><div class="tabletext"><#if curProductAssocType?exists> ${(curProductAssocType.description)?if_exists}<#else>${(assocFromProduct.productAssocTypeId)?if_exists}</#if></div></td>
                 <td>
                 <a href="<@ofbizUrl>/UpdateProductAssoc?UPDATE_MODE=DELETE&PRODUCT_ID=${productId}&PRODUCT_ID_TO=${(assocFromProduct.productIdTo)?if_exists}&PRODUCT_ASSOC_TYPE_ID=${(assocFromProduct.productAssocTypeId)?if_exists}&FROM_DATE=${Static["org.ofbiz.base.util.UtilFormatOut"].encodeQueryValue(assocFromProduct.getTimestamp("fromDate").toString())}&useValues=true</@ofbizUrl>" class="buttontext">
-                [Delete]</a>
+                [${uiLabelMap.CommonDelete}]</a>
                 </td>
                 <td>
                 <a href="<@ofbizUrl>/EditProductAssoc?PRODUCT_ID=${productId}&PRODUCT_ID_TO=${(assocFromProduct.productIdTo)?if_exists}&PRODUCT_ASSOC_TYPE_ID=${(assocFromProduct.productAssocTypeId)?if_exists}&FROM_DATE=${Static["org.ofbiz.base.util.UtilFormatOut"].encodeQueryValue(assocFromProduct.getTimestamp("fromDate").toString())}&useValues=true</@ofbizUrl>" class="buttontext">
-                [Edit]</a>
+                [${uiLabelMap.CommonEdit}]</a>
                 </td>
             </tr>
             </#list>
         </table>
         
         <hr class="sepbar">
-        <div class="head2">Associations TO this Product from...</div>
+        <div class="head2">${uiLabelMap.ProductAssociationsToProduct}...</div>
         <table border="1" cellpadding="2" cellspacing="0">
             <tr>
-            <td><div class="tabletext"><b>Product ID</b></div></td>
-            <td><div class="tabletext"><b>Name</b></div></td>
-            <td><div class="tabletext"><b>From&nbsp;Date&nbsp;&amp;&nbsp;Time</b></div></td>
-            <td><div class="tabletext"><b>Thru&nbsp;Date&nbsp;&amp;&nbsp;Time</b></div></td>
-            <td><div class="tabletext"><b>Association&nbsp;Type</b></div></td>
+            <td><div class="tabletext"><b>${uiLabelMap.ProductProductId}</b></div></td>
+            <td><div class="tabletext"><b>${uiLabelMap.ProductName}</b></div></td>
+            <td><div class="tabletext"><b>${uiLabelMap.CommonFromDateTime}</b></div></td>
+            <td><div class="tabletext"><b>${uiLabelMap.CommonThruDateTime}</b></div></td>
+            <td><div class="tabletext"><b>${uiLabelMap.ProductAssociationType}</b></div></td>
             <td><div class="tabletext"><b>&nbsp;</b></div></td>
             </tr>
             <#list assocToProducts as assocToProduct>
@@ -249,15 +251,15 @@ ${pages.get("/product/ProductTabBar.ftl")}
                 <td><div class="tabletext"><#if curProductAssocType?exists> ${(curProductAssocType.description)?if_exists}<#else> ${(assocToProduct.productAssocTypeId)?if_exists}</#if></div></td>
                 <td>
                 <a href="<@ofbizUrl>/UpdateProductAssoc?UPDATE_MODE=DELETE&PRODUCT_ID=${(assocToProduct.productId)?if_exists}&PRODUCT_ID_TO=${(assocToProduct.productIdTo)?if_exists}&PRODUCT_ASSOC_TYPE_ID=${(assocToProduct.productAssocTypeId)?if_exists}&FROM_DATE=${Static["org.ofbiz.base.util.UtilFormatOut"].encodeQueryValue(assocToProduct.getTimestamp("fromDate").toString())}&useValues=true</@ofbizUrl>" class="buttontext">
-                [Delete]</a>
+                [${uiLabelMap.CommonDelete}]</a>
                 </td>
             </tr>
             </#list>
         </table>
 
         <br>
-        <div class="tabletext">NOTE: <b style="color: red;">Red</b> date/time entries denote that the current time is before the From Date or after the Thru Date. If the From Date is <b style="color: red;">red</b>, association has not started yet; if Thru Date is <b style="color: red;">red</b>, association has expired (<u>and should probably be deleted</u>).</div>
+        <div class="tabletext">${uiLabelMap.CommonNote} : ${uiLabelMap.ProductRedExplanation}</div>
     </#if>
 <#else>
-  <h3>You do not have permission to view this page. ("CATALOG_VIEW" or "CATALOG_ADMIN" needed)</h3>
+  <h3>${uiLabelMap.ProductViewPermissionError}</h3>
 </#if>
