@@ -1,22 +1,22 @@
 @echo off
-# -----------------------------------------------------------------------------
-# ofbiz.bat - OFBIZ Wrapper for the Start/Stop Script for the CATALINA Server
-#
-# Environment Variable Prequisites
-#
-#   OFBIZ_HOME    (Optional) May point at your Catalina "build" directory.
-#                 If not present, %CATALINA_HOME%\..\ofbiz is assumed, in
-#                 other words %CATALINA_HOME% and the top 'ofbiz' directory
-#                 are sibling directories.
-#
-#   CATALINA_HOME (Optional) May point at your Catalina "build" directory.
-#                 If not present, the parent directory of the current working
-#                 directory is assumed.
-#
-#   JAVA_HOME     Must point at your Java Development Kit installation.
-#
-# $Id$
-# -----------------------------------------------------------------------------
+rem -----------------------------------------------------------------------------
+rem ofbiz.bat - OFBIZ Wrapper for the Start/Stop Script for the CATALINA Server
+rem
+rem Environment Variable Prequisites
+rem
+rem   OFBIZ_HOME    (Optional) May point at your Catalina "build" directory.
+rem                 If not present, %CATALINA_HOME%\..\ofbiz is assumed, in
+rem                 other words %CATALINA_HOME% and the top 'ofbiz' directory
+rem                 are sibling directories.
+rem
+rem   CATALINA_HOME (Optional) May point at your Catalina "build" directory.
+rem                 If not present, the parent directory of the current working
+rem                 directory is assumed.
+rem
+rem   JAVA_HOME     Must point at your Java Development Kit installation.
+rem
+rem $Id$
+rem -----------------------------------------------------------------------------
 
 rem ----- Save Environment Variables That May Change --------------------------
 
@@ -59,7 +59,7 @@ echo  OFBIZ_HOME=%OFBIZ_HOME%
 echo  CATALINA_OPTS=%CATALINA_OPTS%
 echo  -- RUNNING %CATALINA_HOME%/bin/catalina.sh %1 --
 
-call %CATALINA_HOME%/bin/catalina.sh %1
+call %CATALINA_HOME%/bin/catalina.bat %1
 
 
 rem ----- Restore Environment Variables ---------------------------------------
