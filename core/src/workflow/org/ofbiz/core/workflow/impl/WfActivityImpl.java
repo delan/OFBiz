@@ -655,7 +655,7 @@ public class WfActivityImpl extends WfExecutionObjectImpl implements WfActivity 
                 module);
     }
 
-    Map actualContext(String actualParameters, String extendedAttr, List contextSignature) throws WfException {
+    Map actualContext(String actualParameters, String extendedAttr, List serviceSignature) throws WfException {
         Map actualContext = new HashMap();
         Map context = processContext();
 
@@ -684,8 +684,9 @@ public class WfActivityImpl extends WfExecutionObjectImpl implements WfActivity 
             WfResource res = assign.assignee();
             context.put("assignedPartyId", res.resourcePartyId());
             context.put("assignedRoleTypeId", res.resourceRoleId());
-        }            
-            
+        }   
+                        
+        // first we will pull out the values from the context for the actual parameters   
         if (actualParameters != null) {
             List params = StringUtil.split(actualParameters, ",");
             Iterator i = params.iterator();
@@ -693,24 +694,38 @@ public class WfActivityImpl extends WfExecutionObjectImpl implements WfActivity 
             while (i.hasNext()) {
                 Object key = i.next();
                 String keyStr = (String) key;
-
+                
                 if (keyStr != null && keyStr.trim().toLowerCase().startsWith("expr:")) {
+                    // check for bsh expressions; this does not place values into the context
                     try {
                         BshUtil.eval(keyStr.trim().substring(5).trim(), context);
                     } catch (bsh.EvalError e) {
                         throw new WfException("Bsh evaluation error.", e);
                     }
                 } else if (keyStr != null && keyStr.trim().toLowerCase().startsWith("name:")) {
+                    // name mapping; for renaming of the context values
                     List couple = StringUtil.split(keyStr.trim().substring(5).trim(), "=");
-                    if (contextSignature.contains(((String) couple.get(0)).trim()))
+                    if (context.containsKey(((String) couple.get(0)).trim()))
                         actualContext.put(((String) couple.get(0)).trim(), context.get(((String)couple.get(1)).trim()));
                 } else if (context.containsKey(key)) {
-                    if (contextSignature.contains(key))
-                        actualContext.put(key, context.get(key));
+                    // direct assignment from context                   
+                    actualContext.put(key, context.get(key));
                 } else if (!actualContext.containsKey(key))
                     throw new WfException("Context does not contain the key: '" + (String) key + "'");
             }
         }
+        
+        // the serviceSignature should not limit which parameters are in the actualContext
+        // so instead we will use this signature to pull out values so they do not all have to be defined
+        if (serviceSignature != null) {
+            Iterator si = serviceSignature.iterator();
+            while (si.hasNext()) {
+                Object key = si.next();
+                String keyStr = (String) key;
+                if (!actualContext.containsKey(key) && context.containsKey(key))
+                    actualContext.put(keyStr, context.get(keyStr));
+            }
+        }        
         return actualContext;
     }
 
