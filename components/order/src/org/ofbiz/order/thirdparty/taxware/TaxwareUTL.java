@@ -1,5 +1,5 @@
 /*
- * $Id: TaxwareUTL.java,v 1.2 2003/08/19 00:31:52 jonesde Exp $
+ * $Id: TaxwareUTL.java,v 1.3 2003/08/22 18:21:08 ajzeneski Exp $
  *
  * Copyright (c) 2002 The Open For Business Project and repective authors.
  *
@@ -244,7 +244,7 @@ public class TaxwareUTL {
         DataFile df = null;
 
         try {
-            df = DataFile.makeDataFile(UtilURL.fromResource("org/ofbiz/commonapp/thirdparty/taxware/TaxwareFiles.xml"), dataFile);
+            df = DataFile.makeDataFile(UtilURL.fromResource("org/ofbiz/thirdparty/taxware/TaxwareFiles.xml"), dataFile);
         } catch (DataFileException e) {
             Debug.logError(e, module);
             throw new TaxwareException("Cannot load datafile.");

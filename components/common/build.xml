@@ -21,7 +21,7 @@
  *  THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  *
  *  This is the Open for Business Common Build Script.
- *  $Id: build.xml,v 1.4 2003/08/20 09:38:53 jonesde Exp $
+ *  $Id: build.xml,v 1.5 2003/08/22 18:21:08 ajzeneski Exp $
 -->
 
 <project name="OFBiz - Common" default="jar" basedir=".">
@@ -81,7 +81,7 @@
     </target>
     
     <!-- ================================================================== -->
-    <!-- Compilation of the base files                                                                                                                         -->
+    <!-- Compilation of the source files                                                                                                                         -->
     <!-- ================================================================== -->               
 
     <target name="classes" depends="prepare,classpath">
@@ -106,7 +106,7 @@
     <!-- Build JavaDoc                                                      -->
     <!-- ================================================================== -->
 
-    <target name="docs" depends="prepare-docs">
+    <target name="docs" depends="prepare-docs,classpath">
         <javadoc packagenames="org.ofbiz.common.*" 
                  classpathref="local.class.path"
                  destdir="${build.dir}/javadocs" 

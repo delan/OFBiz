@@ -22,7 +22,7 @@
  *  THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  *
  *  This is the Open for Business Main build script.
- *  $Id: build.xml,v 1.19 2003/08/21 00:01:50 ajzeneski Exp $
+ *  $Id: build.xml,v 1.20 2003/08/22 18:21:08 ajzeneski Exp $
 -->
 
 <project name="OFBiz Main Build" default="build" basedir=".">
@@ -465,21 +465,17 @@
     <!-- WebSite Targets                                                    -->
     <!-- ================================================================== -->
        
-    <target name="update-website">
-        <cvs command="update -P -d website" compression="true"/>
+    <target name="build-website" depends="docs">
+        <property name="site.dir" value="website"/>        
+        <antcall target="copy-apis"/>       
+        <antcall target="copy-dtds"/>
     </target>
     
-    <target name="init-website" depends="update-website">
-        <property name="site.dir" value="${basedir}/site"/>
-    </target>    
-    
-    <target name="build-website" depends="init-website">
-        <delete dir="${site.dir}"/>
-        <mkdir dir="${site.dir}"/>
-        <copy todir="${site.dir}">
-            <fileset dir="${basedir}/website"/>
+    <target name="copy-apis">
+        <mkdir dir="${site.dir}/api"/>
+        <copy todir="${site.dir}/api">
+            <fileset dir="${basedir}" includes="**/build/javadocs/*"/>
         </copy>
-        <antcall target="copy-dtds"/>
     </target>
     
     <target name="copy-dtds">        

@@ -31,7 +31,7 @@
     <simple-method method-name="createProductPrice" short-description="Create an ProductPrice">
 		<string-to-field string="createProductPrice" field-name="callingMethodName"/>
 		<string-to-field string="CREATE" field-name="checkAction"/>
-    	<call-simple-method method-name="checkProductRelatedPermission" xml-resource="org/ofbiz/commonapp/product/product/ProductServices.xml"/>
+    	<call-simple-method method-name="checkProductRelatedPermission" xml-resource="org/ofbiz/product/product/ProductServices.xml"/>
         <check-errors/>
 
         <make-value value-name="newEntity" entity-name="ProductPrice"/>
@@ -55,7 +55,7 @@
     <simple-method method-name="updateProductPrice" short-description="Update an ProductPrice">
 		<string-to-field string="updateProductPrice" field-name="callingMethodName"/>
 		<string-to-field string="UPDATE" field-name="checkAction"/>
-    	<call-simple-method method-name="checkProductRelatedPermission" xml-resource="org/ofbiz/commonapp/product/product/ProductServices.xml"/>
+    	<call-simple-method method-name="checkProductRelatedPermission" xml-resource="org/ofbiz/product/product/ProductServices.xml"/>
         <check-errors/>
 
         <make-value entity-name="ProductPrice" value-name="lookupPKMap"/>
@@ -76,7 +76,7 @@
     <simple-method method-name="deleteProductPrice" short-description="Delete an ProductPrice">
 		<string-to-field string="deleteProductPrice" field-name="callingMethodName"/>
 		<string-to-field string="DELETE" field-name="checkAction"/>
-    	<call-simple-method method-name="checkProductRelatedPermission" xml-resource="org/ofbiz/commonapp/product/product/ProductServices.xml"/>
+    	<call-simple-method method-name="checkProductRelatedPermission" xml-resource="org/ofbiz/product/product/ProductServices.xml"/>
         <check-errors/>
 
         <make-value entity-name="ProductPrice" value-name="lookupPKMap"/>

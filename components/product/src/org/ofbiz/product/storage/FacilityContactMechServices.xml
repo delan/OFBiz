@@ -25,7 +25,7 @@
  * @author     Andy Zeneski (jaz@ofbiz.org)
  * @author     Johan Isacsson
  * @author     David E. Jones
- * @version    $Revision: 1.1 $
+ * @version    $Revision: 1.2 $
  * @since      2.2
 -->
 
@@ -39,7 +39,7 @@
         <log level="info" message="contactMechId is ${parameters.contactMechId}"/>
         
 		<if-empty map-name="parameters" field-name="contactMechId">
-            <call-map-processor xml-resource="org/ofbiz/commonapp/party/contact/ContactMechMapProcs.xml"
+            <call-map-processor xml-resource="org/ofbiz/party/contact/ContactMechMapProcs.xml"
                 processor-name="contactMech" in-map-name="parameters" out-map-name="context"/>
             <call-service service-name="createContactMech" in-map-name="context">
                 <default-message>Contact Mechanism successfully created.</default-message>
@@ -84,7 +84,7 @@
         <!-- If we already have a new contactMechId don't update ContactMech -->
         <if-empty map-name="parameters" field-name="newContactMechId">                
         	<log level="info" message="Calling map procs"/>
-        	<call-map-processor xml-resource="org/ofbiz/commonapp/party/contact/ContactMechMapProcs.xml"
+        	<call-map-processor xml-resource="org/ofbiz/party/contact/ContactMechMapProcs.xml"
                 processor-name="updateContactMech" in-map-name="parameters" out-map-name="context"/>
         	<to-string field-name="contactMechId" map-name="context"/>
         	<log level="info" message="Calling generic updateContactMech method"/>
@@ -143,14 +143,14 @@
 		
     	<make-value entity-name="FacilityContactMech" value-name="newFacilityContactMech"/>
         <log level="info" message="Creating postal address"/>
-        <call-map-processor xml-resource="org/ofbiz/commonapp/party/contact/ContactMechMapProcs.xml"
+        <call-map-processor xml-resource="org/ofbiz/party/contact/ContactMechMapProcs.xml"
                 processor-name="postalAddress" in-map-name="parameters" out-map-name="context"/>   		
         <call-service in-map-name="context" service-name="createPostalAddress">
             <default-message>Postal Address successfully created</default-message>
             <result-to-field result-name="contactMechId" map-name="newFacilityContactMech"/>             
         </call-service>
         <log level="info" message="ContactMech for postal address was ${newFacilityContactMech.contactMechId}, now creating facility contact mech"/>
-        <call-map-processor xml-resource="org/ofbiz/commonapp/product/storage/FacilityContactMechMapProcs.xml"
+        <call-map-processor xml-resource="org/ofbiz/product/storage/FacilityContactMechMapProcs.xml"
                 processor-name="facilityContactMech" in-map-name="parameters" out-map-name="context2"/>  
         <field-to-field field-name="contactMechId" map-name="newFacilityContactMech" to-map-name="context2"/> 
         <log level="info" message="Copied id to context2: ${context2.contactMechId}"/> 		
@@ -168,13 +168,13 @@
 		<make-value entity-name="FacilityContactMech" value-name="newFacilityContactMech"/>
 		<make-value entity-name="FacilityContactMech" value-name="newFacilityContactMech"/>    	
         
-        <call-map-processor xml-resource="org/ofbiz/commonapp/party/contact/ContactMechMapProcs.xml"
+        <call-map-processor xml-resource="org/ofbiz/party/contact/ContactMechMapProcs.xml"
                 processor-name="postalAddress" in-map-name="parameters" out-map-name="context"/>   		
         <call-service in-map-name="context" service-name="updatePostalAddress">
             <default-message>Postal Address successfully updated</default-message>
             <result-to-field result-name="newContactMechId" map-name="newFacilityContactMech" field-name="contactMechId" />             
         </call-service>
-        <call-map-processor xml-resource="org/ofbiz/commonapp/product/storage/FacilityContactMechMapProcs.xml"
+        <call-map-processor xml-resource="org/ofbiz/product/storage/FacilityContactMechMapProcs.xml"
                 processor-name="updateFacilityContactMech" in-map-name="parameters" out-map-name="context2"/>  
         <field-to-field map-name="newFacilityContactMech" field-name="contactMechId"  to-map-name="context2" to-field-name="newContactMechId"/> 	
         <string-to-field map-name="context2" field-name="contactMechTypeId" string="POSTAL_ADDRESS"/>
@@ -192,13 +192,13 @@
 		
     	<make-value entity-name="FacilityContactMech" value-name="newFacilityContactMech"/>
         <log level="info" message="Creating telecom number"/>
-        <call-map-processor xml-resource="org/ofbiz/commonapp/party/contact/ContactMechMapProcs.xml"
+        <call-map-processor xml-resource="org/ofbiz/party/contact/ContactMechMapProcs.xml"
                 processor-name="telecomNumber" in-map-name="parameters" out-map-name="context"/>   		
         <call-service in-map-name="context" service-name="createTelecomNumber">
             <default-message>Telecom number successfully created</default-message>
             <result-to-field result-name="contactMechId" map-name="newFacilityContactMech"/>             
         </call-service>
-        <call-map-processor xml-resource="org/ofbiz/commonapp/product/storage/FacilityContactMechMapProcs.xml"
+        <call-map-processor xml-resource="org/ofbiz/product/storage/FacilityContactMechMapProcs.xml"
                 processor-name="facilityContactMech" in-map-name="parameters" out-map-name="context2"/>  
         <field-to-field field-name="contactMechId" map-name="newFacilityContactMech" to-map-name="context2"/> 
         <log level="info" message="Copied id to context2: ${context2.contactMechId}"/> 		
@@ -214,14 +214,14 @@
     	<check-errors/>
     	
 		<make-value entity-name="FacilityContactMech" value-name="newFacilityContactMech"/>        
-        <call-map-processor xml-resource="org/ofbiz/commonapp/party/contact/ContactMechMapProcs.xml"
+        <call-map-processor xml-resource="org/ofbiz/party/contact/ContactMechMapProcs.xml"
                 processor-name="telecomNumber" in-map-name="parameters" out-map-name="context"/>  		
         <call-service in-map-name="context" service-name="updateTelecomNumber">
             <default-message>Telecom Number successfully updated</default-message>
             <result-to-field result-name="newContactMechId" map-name="newFacilityContactMech" field-name="contactMechId" />             
         </call-service>
         
-        <call-map-processor xml-resource="org/ofbiz/commonapp/product/storage/FacilityContactMechMapProcs.xml"
+        <call-map-processor xml-resource="org/ofbiz/product/storage/FacilityContactMechMapProcs.xml"
                 processor-name="updateFacilityContactMech" in-map-name="parameters" out-map-name="context2"/>  
         <field-to-field map-name="newFacilityContactMech" field-name="contactMechId"  to-map-name="context2" to-field-name="newContactMechId"/> 	
         <string-to-field map-name="context2" field-name="contactMechTypeId" string="TELECOM_NUMBER"/>
@@ -238,7 +238,7 @@
     	<check-permission permission="FACILITY" action="_UPDATE"><fail-message message="You do not have permission to perform this operation for this facility."/></check-permission>
     	<check-errors/>
     	
-        <call-map-processor xml-resource="org/ofbiz/commonapp/product/storage/FacilityContactMechMapProcs.xml"
+        <call-map-processor xml-resource="org/ofbiz/product/storage/FacilityContactMechMapProcs.xml"
             processor-name="emailAddress" in-map-name="parameters" out-map-name="context"/>
         <check-errors/>
         <string-to-field map-name="context" field-name="contactMechTypeId" string="EMAIL_ADDRESS"/>
@@ -253,7 +253,7 @@
     	<check-permission permission="FACILITY" action="_UPDATE"><fail-message message="You do not have permission to perform this operation for this facility."/></check-permission>
     	<check-errors/>
     	
-        <call-map-processor xml-resource="org/ofbiz/commonapp/product/storage/FacilityContactMechMapProcs.xml"
+        <call-map-processor xml-resource="org/ofbiz/product/storage/FacilityContactMechMapProcs.xml"
             processor-name="emailAddress" in-map-name="parameters" out-map-name="context"/>
         <check-errors/>
         <string-to-field map-name="context" field-name="contactMechTypeId" string="EMAIL_ADDRESS"/>

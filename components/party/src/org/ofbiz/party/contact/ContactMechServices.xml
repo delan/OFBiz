@@ -23,7 +23,7 @@
  *  THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  *
  * @author     Johan Isacsson
- * @version    $Revision: 1.1 $
+ * @version    $Revision: 1.2 $
  * @since      2.2
 -->
 
@@ -56,7 +56,7 @@
         	<log level="info" message="Contact mech need updating"/> 
             <clone-value value-name="oldValue" new-value-name="newValue"/>
             <set-nonpk-fields map-name="parameters" value-name="newValue" set-if-null="false"/>        	  
-            <call-map-processor xml-resource="org/ofbiz/commonapp/party/contact/ContactMechMapProcs.xml"
+            <call-map-processor xml-resource="org/ofbiz/party/contact/ContactMechMapProcs.xml"
                 processor-name="contactMech" in-map-name="newValue" out-map-name="context"/>
             <call-service service-name="createContactMech" in-map-name="context">
                 <default-message>Contact Mechanism successfully created.</default-message>
@@ -89,7 +89,7 @@
         </if-compare>                        
         <check-errors/>
         <make-value entity-name="PostalAddress" value-name="newValue"/>
-        <call-map-processor xml-resource="org/ofbiz/commonapp/party/contact/ContactMechMapProcs.xml"
+        <call-map-processor xml-resource="org/ofbiz/party/contact/ContactMechMapProcs.xml"
             processor-name="contactMech" in-map-name="parameters" out-map-name="context"/>
         <string-to-field map-name="context" field-name="contactMechTypeId" string="POSTAL_ADDRESS"/>
         <call-service service-name="createContactMech" in-map-name="context">
@@ -123,7 +123,7 @@
         <find-by-primary-key entity-name="PostalAddress" map-name="newValue" value-name="oldValue" />
         <set-nonpk-fields map-name="parameters" value-name="newValue"/>
           
-        <call-map-processor xml-resource="org/ofbiz/commonapp/party/contact/ContactMechMapProcs.xml"
+        <call-map-processor xml-resource="org/ofbiz/party/contact/ContactMechMapProcs.xml"
             processor-name="contactMech" in-map-name="parameters" out-map-name="context"/>
         <string-to-field map-name="context" field-name="contactMechTypeId" string="POSTAL_ADDRESS"/>
         
@@ -156,7 +156,7 @@
     
     <simple-method method-name="createTelecomNumber" short-description="Create Contact Mechanism with Telecom Number">
         <make-value entity-name="TelecomNumber" value-name="newValue"/>
-        <call-map-processor xml-resource="org/ofbiz/commonapp/party/contact/ContactMechMapProcs.xml"
+        <call-map-processor xml-resource="org/ofbiz/party/contact/ContactMechMapProcs.xml"
             processor-name="contactMech" in-map-name="parameters" out-map-name="context"/>
         <string-to-field map-name="context" field-name="contactMechTypeId" string="TELECOM_NUMBER"/>
         <call-service service-name="createContactMech" in-map-name="context">
@@ -176,7 +176,7 @@
         <set-nonpk-fields map-name="parameters" value-name="newValue"/>
         
         
-        <call-map-processor xml-resource="org/ofbiz/commonapp/party/contact/ContactMechMapProcs.xml"
+        <call-map-processor xml-resource="org/ofbiz/party/contact/ContactMechMapProcs.xml"
             processor-name="contactMech" in-map-name="parameters" out-map-name="context"/>
         <string-to-field map-name="context" field-name="contactMechTypeId" string="TELECOM_NUMBER"/>
         
@@ -208,7 +208,7 @@
     </simple-method>
     
     <simple-method method-name="createEmailAddress" short-description="Create an email address contact mechanism">
-        <call-map-processor xml-resource="org/ofbiz/commonapp/party/contact/ContactMechMapProcs.xml"
+        <call-map-processor xml-resource="org/ofbiz/party/contact/ContactMechMapProcs.xml"
             processor-name="emailAddress" in-map-name="parameters" out-map-name="context"/>
         <check-errors/>
         <string-to-field map-name="context" field-name="contactMechTypeId" string="EMAIL_ADDRESS"/>
@@ -220,7 +220,7 @@
     </simple-method>
     
     <simple-method method-name="updateEmailAddress" short-description="Update an email address contact mechanism">
-        <call-map-processor xml-resource="org/ofbiz/commonapp/party/contact/ContactMechMapProcs.xml"
+        <call-map-processor xml-resource="org/ofbiz/party/contact/ContactMechMapProcs.xml"
             processor-name="emailAddress" in-map-name="parameters" out-map-name="context"/>
         <check-errors/>
         <string-to-field map-name="context" field-name="contactMechTypeId" string="EMAIL_ADDRESS"/>

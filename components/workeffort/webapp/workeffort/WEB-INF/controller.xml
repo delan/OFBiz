@@ -256,13 +256,13 @@
     </request-map>
     <request-map uri="acceptAssignment">
     	<security https="true" auth="true"/>
-        <event type="simple" path="org/ofbiz/commonapp/workeffort/workeffort/WorkflowSimpleEvents.xml" invoke="acceptAssignment"/>
+        <event type="simple" path="org/ofbiz/workeffort/workeffort/WorkflowSimpleEvents.xml" invoke="acceptAssignment"/>
     	<response name="success" type="view" value="mytasks"/>
         <response name="error" type="view" value="mytasks"/>
     </request-map>
     <request-map uri="acceptRoleAssignment">
     	<security https="true" auth="true"/>
-        <event type="simple" path="org/ofbiz/commonapp/workeffort/workeffort/WorkflowSimpleEvents.xml" invoke="acceptRoleAssignment"/>
+        <event type="simple" path="org/ofbiz/workeffort/workeffort/WorkflowSimpleEvents.xml" invoke="acceptRoleAssignment"/>
     	<response name="success" type="view" value="mytasks"/>
         <response name="error" type="view" value="mytasks"/>
     </request-map>
@@ -353,42 +353,42 @@
     
     <request-map uri="createPostalAddress">
         <security https="true" auth="true"/>
-        <event type="simple" path="org/ofbiz/commonapp/workeffort/workeffort/WorkEffortSimpleServices.xml" invoke="createWorkEffortPostalAddress"/>
+        <event type="simple" path="org/ofbiz/workeffort/workeffort/WorkEffortSimpleServices.xml" invoke="createWorkEffortPostalAddress"/>
     	<response name="success" type="view" value="eventContactMechs"/> 
     	<response name="error" type="view" value="editContactMech"/>  
     </request-map>
 
     <request-map uri="updatePostalAddress">
         <security https="true" auth="true"/>
-        <event type="simple" path="org/ofbiz/commonapp/workeffort/workeffort/WorkEffortSimpleServices.xml" invoke="updateWorkEffortPostalAddress"/>
+        <event type="simple" path="org/ofbiz/workeffort/workeffort/WorkEffortSimpleServices.xml" invoke="updateWorkEffortPostalAddress"/>
     	<response name="success" type="view" value="eventContactMechs"/> 
     	<response name="error" type="view" value="editContactMech"/> 
     </request-map>
      
     <request-map uri="createTelecomNumber">
         <security https="true" auth="true"/>
-        <event type="simple" path="org/ofbiz/commonapp/workeffort/workeffort/WorkEffortSimpleServices.xml" invoke="createWorkEffortTelecomNumber"/>
+        <event type="simple" path="org/ofbiz/workeffort/workeffort/WorkEffortSimpleServices.xml" invoke="createWorkEffortTelecomNumber"/>
     	<response name="success" type="view" value="eventContactMechs"/> 
     	<response name="error" type="view" value="editContactMech"/> 
     </request-map>
 
     <request-map uri="updateTelecomNumber">
         <security https="true" auth="true"/>
-        <event type="simple" path="org/ofbiz/commonapp/workeffort/workeffort/WorkEffortSimpleServices.xml" invoke="updateWorkEffortTelecomNumber"/>
+        <event type="simple" path="org/ofbiz/workeffort/workeffort/WorkEffortSimpleServices.xml" invoke="updateWorkEffortTelecomNumber"/>
     	<response name="success" type="view" value="eventContactMechs"/> 
     	<response name="error" type="view" value="editContactMech"/> 
     </request-map>
 
     <request-map uri="createEmailAddress">
         <security https="true" auth="true"/>
-        <event type="simple" path="org/ofbiz/commonapp/workeffort/workeffort/WorkEffortSimpleServices.xml" invoke="createWorkEffortEmailAddress"/>
+        <event type="simple" path="org/ofbiz/workeffort/workeffort/WorkEffortSimpleServices.xml" invoke="createWorkEffortEmailAddress"/>
     	<response name="success" type="view" value="eventContactMechs"/> 
     	<response name="error" type="view" value="editContactMech"/> 
     </request-map>
 
     <request-map uri="updateEmailAddress">
         <security https="true" auth="true"/>
-        <event type="simple" path="org/ofbiz/commonapp/workeffort/workeffort/WorkEffortSimpleServices.xml" invoke="updateWorkEffortEmailAddress"/>
+        <event type="simple" path="org/ofbiz/workeffort/workeffort/WorkEffortSimpleServices.xml" invoke="updateWorkEffortEmailAddress"/>
     	<response name="success" type="view" value="eventContactMechs"/> 
     	<response name="error" type="view" value="editContactMech"/> 
     </request-map>

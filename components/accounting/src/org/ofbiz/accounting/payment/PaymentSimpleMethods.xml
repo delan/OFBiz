@@ -25,7 +25,7 @@
  *
  * @author     Andy Zeneski (jaz@ofbiz.org)
  * @author     David E. Jones (jonesde@ofbiz.org)
- * @version    $Revision: 1.2 $
+ * @version    $Revision: 1.3 $
  * @since      2.0
 -->
 
@@ -117,7 +117,7 @@
     </simple-method>        
     
     <simple-method method-name="deletePaymentMethod" short-description="Delete Payment Method">
-        <call-map-processor xml-resource="org/ofbiz/commonapp/accounting/payment/PaymentMapProcs.xml"
+        <call-map-processor xml-resource="org/ofbiz/accounting/payment/PaymentMapProcs.xml"
                 processor-name="deletePaymentMethod" in-map-name="parameters" out-map-name="context"/>
         <check-errors/>
         <call-service service-name="deletePaymentMethod" in-map-name="context">
@@ -126,7 +126,7 @@
 
     <!-- CreditCard events -->
     <simple-method method-name="createCreditCard" short-description="Create Credit Card">
-        <call-map-processor xml-resource="org/ofbiz/commonapp/accounting/payment/PaymentMapProcs.xml"
+        <call-map-processor xml-resource="org/ofbiz/accounting/payment/PaymentMapProcs.xml"
                 processor-name="createCreditCard" in-map-name="parameters" out-map-name="context"/>
         <check-errors/>
         <call-service service-name="createCreditCard" in-map-name="context">
@@ -144,10 +144,10 @@
 
     </simple-method>
     <simple-method method-name="updateCreditCard" short-description="Update Credit Card">
-        <call-map-processor xml-resource="org/ofbiz/commonapp/accounting/payment/PaymentMapProcs.xml"
+        <call-map-processor xml-resource="org/ofbiz/accounting/payment/PaymentMapProcs.xml"
                 processor-name="updateCreditCard" in-map-name="parameters" out-map-name="context"/>
         <!-- before check-errors also call createCreditCard, which completes the checking, etc for updateCreditCard -->
-        <call-map-processor xml-resource="org/ofbiz/commonapp/accounting/payment/PaymentMapProcs.xml"
+        <call-map-processor xml-resource="org/ofbiz/accounting/payment/PaymentMapProcs.xml"
                 processor-name="createCreditCard" in-map-name="parameters" out-map-name="context"/>
         <check-errors/>
         <call-service service-name="updateCreditCard" in-map-name="context">
@@ -166,7 +166,7 @@
 
     <!-- EftAccount events -->
     <simple-method method-name="createEftAccount" short-description="Create EFT Account">
-        <call-map-processor xml-resource="org/ofbiz/commonapp/accounting/payment/PaymentMapProcs.xml"
+        <call-map-processor xml-resource="org/ofbiz/accounting/payment/PaymentMapProcs.xml"
                 processor-name="createEftAccount" in-map-name="parameters" out-map-name="context"/>
         <check-errors/>
         <call-service service-name="createEftAccount" in-map-name="context">
@@ -174,10 +174,10 @@
             <result-to-request result-name="paymentMethodId"/></call-service>
     </simple-method>
     <simple-method method-name="updateEftAccount" short-description="Update EFT Account">
-        <call-map-processor xml-resource="org/ofbiz/commonapp/accounting/payment/PaymentMapProcs.xml"
+        <call-map-processor xml-resource="org/ofbiz/accounting/payment/PaymentMapProcs.xml"
                 processor-name="updateEftAccount" in-map-name="parameters" out-map-name="context"/>
         <!-- before check-errors also call createEftAccount, which completes the checking, etc for updateEftAccount -->
-        <call-map-processor xml-resource="org/ofbiz/commonapp/accounting/payment/PaymentMapProcs.xml"
+        <call-map-processor xml-resource="org/ofbiz/accounting/payment/PaymentMapProcs.xml"
                 processor-name="createEftAccount" in-map-name="parameters" out-map-name="context"/>
         <check-errors/>
         <call-service service-name="updateEftAccount" in-map-name="context">

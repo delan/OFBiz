@@ -78,7 +78,7 @@
 		<string-to-field string="createProductFacility" field-name="callingMethodName"/>
 		<string-to-field string="CREATE" field-name="checkAction"/>
 		<string-to-field string="FACILITY" field-name="alternatePermissionRoot"/>
-    	<call-simple-method method-name="checkProductRelatedPermission" xml-resource="org/ofbiz/commonapp/product/product/ProductServices.xml"/>
+    	<call-simple-method method-name="checkProductRelatedPermission" xml-resource="org/ofbiz/product/product/ProductServices.xml"/>
         <check-errors/>
 
         <make-value value-name="newEntity" entity-name="ProductFacility"/>
@@ -90,7 +90,7 @@
 		<string-to-field string="updateProductFacility" field-name="callingMethodName"/>
 		<string-to-field string="UPDATE" field-name="checkAction"/>
 		<string-to-field string="FACILITY" field-name="alternatePermissionRoot"/>
-    	<call-simple-method method-name="checkProductRelatedPermission" xml-resource="org/ofbiz/commonapp/product/product/ProductServices.xml"/>
+    	<call-simple-method method-name="checkProductRelatedPermission" xml-resource="org/ofbiz/product/product/ProductServices.xml"/>
         <check-errors/>
 
         <make-value entity-name="ProductFacility" value-name="lookupPKMap"/>
@@ -103,7 +103,7 @@
 		<string-to-field string="deleteProductFacility" field-name="callingMethodName"/>
 		<string-to-field string="DELETE" field-name="checkAction"/>
 		<string-to-field string="FACILITY" field-name="alternatePermissionRoot"/>
-    	<call-simple-method method-name="checkProductRelatedPermission" xml-resource="org/ofbiz/commonapp/product/product/ProductServices.xml"/>
+    	<call-simple-method method-name="checkProductRelatedPermission" xml-resource="org/ofbiz/product/product/ProductServices.xml"/>
         <check-errors/>
 
         <make-value entity-name="ProductFacility" value-name="lookupPKMap"/>

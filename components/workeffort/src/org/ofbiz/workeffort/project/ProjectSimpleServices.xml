@@ -28,7 +28,7 @@
  -->
 <simple-methods>
     <simple-method method-name="createPhase" short-description="Create Project Phase">
-        <call-map-processor xml-resource="org/ofbiz/commonapp/workeffort/workeffort/WorkflowMapProcessors.xml" 
+        <call-map-processor xml-resource="org/ofbiz/workeffort/workeffort/WorkflowMapProcessors.xml" 
                 processor-name="createWorkEffortMap" in-map-name="parameters" out-map-name="toCreate"/>
         <call-service service-name="createWorkEffort" in-map-name="toCreate">
             <default-message>Phase successfully created.</default-message>
@@ -42,7 +42,7 @@
         <create-value value-name="newEntity"/>
     </simple-method>
     <simple-method method-name="createPhaseTask" short-description="Create Phase Task">
-        <call-map-processor xml-resource="org/ofbiz/commonapp/workeffort/workeffort/WorkflowMapProcessors.xml" 
+        <call-map-processor xml-resource="org/ofbiz/workeffort/workeffort/WorkflowMapProcessors.xml" 
                 processor-name="createWorkEffortMap" in-map-name="parameters" out-map-name="toCreate"/>
         <call-service service-name="createWorkEffort" in-map-name="toCreate">
             <default-message>Task successfully created.</default-message>
