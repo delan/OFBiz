@@ -1249,13 +1249,13 @@
                 <field-map field-name="itemIssuanceId" env-name="itemMap.itemIssuanceId"/>
             </entity-one>
 
+            <clear-field field-name="shipItemContext"/>
             <field-to-field field-name="packageMap.${itemMap.trackingNum}" to-field-name="shipItemContext.shipmentPackageSeqId"/>
             <if-empty field-name="shipItemContext.shipmentPackageSeqId">
                 <string-to-field string="New" field-name="shipItemContext.shipmentPackageSeqId"/>
             </if-empty>
             <log level="info" message="Package SeqID : ${shipItemContext.shipmentPackageSeqId}"/>
 
-            <clear-field field-name="shipItemContext"/>
             <field-to-field field-name="shipmentId" map-name="itemIssuance" to-map-name="shipItemContext"/>
             <field-to-field field-name="shipmentItemSeqId" map-name="itemIssuance" to-map-name="shipItemContext"/>
             <field-to-field field-name="quantity" map-name="itemIssuance" to-map-name="shipItemContext"/>
