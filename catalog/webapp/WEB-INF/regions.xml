@@ -12,10 +12,10 @@
     </define>
 
     <define id='LEFTBAR_REGION' template='/templates/leftbar_template.jsp'>
-        <put section='first' content='/find/keywordsearchbox.jsp'/>
-        <put section='second' content='/find/sidecatalogs.jsp'/>
-        <put section='third' content='/find/sidedeepcategory.jsp'/>        
-        <put section='fourth' content='/find/miniproductlist.jsp'/>
+        <put section='first' type="jpublish" content='/find/keywordsearchbox.ftl'/>
+        <put section='second' type="jpublish" content='/find/sidecatalogs.ftl'/>
+        <put section='third' type="jpublish" content='/find/sidedeepcategory.ftl'/>        
+        <put section='fourth' type="jpublish" content='/find/miniproductlist.ftl'/>
     </define>
 
     <define id='RIGHTBAR_REGION' template='/templates/rightbar_template.jsp'>
