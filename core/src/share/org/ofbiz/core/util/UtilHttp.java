@@ -30,6 +30,7 @@ import java.util.Map;
 import java.util.Set;
 
 import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 
 /**
@@ -190,5 +191,19 @@ public class UtilHttp {
             }
         }
         return buf.toString();
-    }    
+    }
+    
+    public static String setResponseBrowserProxyNoCache(HttpServletRequest request, HttpServletResponse response) {
+        long nowMillis = System.currentTimeMillis();
+        //response.setHeader("Expires", "Mon, 26 Jul 1997 05:00:00 GMT"); // Date in the past
+        //SimpleDateFormat sdf = new SimpleDateFormat("EEE, dd MMM yyyy hh:mm:ss z", Locale.US);
+        //sdf.setTimeZone(TimeZone.getTimeZone("GMT"));
+        response.setDateHeader("Expires", nowMillis);
+        response.setDateHeader("Last-Modified", nowMillis); // always modified
+        response.setHeader("Cache-Control", "no-store, no-cache, must-revalidate"); // HTTP/1.1
+        response.addHeader("Cache-Control", "post-check=0, pre-check=0, false");
+        response.setHeader("Pragma", "no-cache"); // HTTP/1.0
+        
+        return "success";
+    }
 }
