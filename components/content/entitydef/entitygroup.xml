@@ -26,7 +26,7 @@
  *
  *@author     David E. Jones (jonesde@ofbiz.org)
  *@author     Andy Zeneski (jaz@ofbiz.org)
- *@version    $Revision: 1.6 $
+ *@version    $Revision: 1.7 $
  */
 -->
 
@@ -38,6 +38,8 @@
 
     <entity-group group="org.ofbiz" entity="Content" />
     <entity-group group="org.ofbiz" entity="ContentAssoc" />
+    <entity-group group="org.ofbiz" entity="ContentAssocDataResourceViewFrom" />
+    <entity-group group="org.ofbiz" entity="ContentAssocDataResourceViewTo" />
     <entity-group group="org.ofbiz" entity="ContentAssocPredicate" />
     <entity-group group="org.ofbiz" entity="ContentAssocType" />
     <entity-group group="org.ofbiz" entity="ContentAssocViewFrom" />
