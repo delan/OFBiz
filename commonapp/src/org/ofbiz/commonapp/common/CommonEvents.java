@@ -37,28 +37,35 @@ import org.ofbiz.core.util.*;
  *
  * @author     <a href="mailto:jaz@ofbiz.org">Andy Zeneski</a>
  * @version    $Revision$
- * @since      2.0.1
+ * @since      2.1
  */
 public class CommonEvents {
     
     public static final String module = CommonEvents.class.getName();
-    
-    // cache for applet sessions; 10min duration and uses soft references
-    public static UtilCache appletSessions = new UtilCache("AppletSessions", 0, 600000, true);
+           
+    public static UtilCache appletSessions = new UtilCache("AppletSessions", 0, 600000, true);            
     
     public static String checkAppletRequest(HttpServletRequest request, HttpServletResponse response) { 
-        Debug.logVerbose("Running checkAppletRequest", module);       
-        String sessionId = request.getParameter("sessionId");   
-        Debug.logVerbose("Got session: " + sessionId, module);
-        Debug.logVerbose("Checking session now", module);
+        GenericDelegator delegator = (GenericDelegator) request.getAttribute("delegator");                
+        String sessionId = request.getParameter("sessionId");
+        String visitId = request.getParameter("visitId");
+        sessionId = sessionId.trim();
+        visitId = visitId.trim();
         
-        String responseString = "";      
-        if (appletSessions.containsKey(sessionId)) {            
-            responseString = (String) appletSessions.remove(sessionId);   
-            Debug.logVerbose("AppletSessions: " + appletSessions.size(), module);
-        } else {
-            Debug.logVerbose("Session not found in cache.", module);      
+        String responseString = "";
+        
+        GenericValue visit = null;
+        try {
+            visit = delegator.findByPrimaryKey("Visit", UtilMisc.toMap("visitId", visitId));                             
+        } catch (GenericEntityException e) {
+            Debug.logError(e, "Cannot Visit Object", module);
         }
+       
+        if (visit != null && visit.getString("sessionId").equals(sessionId) && appletSessions.containsKey(sessionId)) {            
+            Map sessionMap = (Map) appletSessions.get(sessionId);
+            if (sessionMap != null && sessionMap.containsKey("followPage"))
+                responseString = (String) sessionMap.remove("followPage");                                                             
+        } 
         
         try {
             PrintWriter out = response.getWriter();
@@ -73,39 +80,37 @@ public class CommonEvents {
     }   
     
     public static String receiveAppletRequest(HttpServletRequest request, HttpServletResponse response) {
-        GenericDelegator delegator = (GenericDelegator) request.getAttribute("delegator");
-        Security security = (Security) request.getAttribute("security");
-        String userLoginId = request.getParameter("userLoginId");
+        GenericDelegator delegator = (GenericDelegator) request.getAttribute("delegator");                
         String sessionId = request.getParameter("sessionId");
-        
-        List visits = null;
-        GenericValue userLogin = null;
-        try {
-            visits = delegator.findByAnd("Visit", UtilMisc.toMap("userLoginId", userLoginId, "sessionId", sessionId));
-            if (visits != null && visits.size() > 0)
-                userLogin = delegator.findByPrimaryKey("UserLogin", UtilMisc.toMap("userLoginId", userLoginId));            
-        } catch (GenericEntityException e) {
-            Debug.logError(e, "Cannot get UserLogin from visit session.", module);
-        }
-                      
-        String responseString = "";
-        if (security.hasPermission("SERVICE_INVOKE_ANY", userLogin)) {                        
-            String followers = (String) request.getParameter("followers");
-            String currentPage = (String) request.getParameter("currentPage");
-        
-            List sessionList = StringUtil.split(followers, ",");
-            Iterator si = sessionList.iterator();
-            while (si.hasNext()) {                
-                String toSession = (String) si.next();
-                Debug.logVerbose("Adding session: " + toSession, module);
-                appletSessions.put(toSession, currentPage);     
-                Debug.logVerbose("AppletSessions: " + appletSessions.size(), module); 
-            }
-            responseString = "OK";
-        } else {
-            responseString = "ERROR";
-        }
+        String visitId = request.getParameter("visitId");
+        sessionId = sessionId.trim();
+        visitId = visitId.trim();
                 
+        String responseString = "ERROR";
+        
+        GenericValue visit = null;
+        try {
+            visit = delegator.findByPrimaryKey("Visit", UtilMisc.toMap("visitId", visitId));                             
+        } catch (GenericEntityException e) {
+            Debug.logError(e, "Cannot Visit Object", module);
+        }        
+        
+        if (visit.getString("sessionId").equals(sessionId)) {                                                                             
+            String currentPage = (String) request.getParameter("currentPage");
+            if (appletSessions.containsKey(sessionId)) {              
+                Map sessionMap = (Map) appletSessions.get(sessionId);
+                String followers = (String) sessionMap.get("followers");
+                List folList = StringUtil.split(followers, ",");
+                Iterator i = folList.iterator();
+                while (i.hasNext()) {
+                    String follower = (String) i.next();
+                    Map folSesMap = UtilMisc.toMap("followPage", currentPage);
+                    appletSessions.put(follower, folSesMap);
+                }
+            }           
+            responseString = "OK";
+        }
+                                      
         try {
             PrintWriter out = response.getWriter();
             response.setContentType("text/plain");
@@ -117,5 +122,44 @@ public class CommonEvents {
                 
         return "success";         
     }
+    
+    public static String setAppletFollower(HttpServletRequest request, HttpServletResponse response) {
+        Security security = (Security) request.getAttribute("security");
+        GenericValue userLogin = (GenericValue) request.getSession().getAttribute("userLogin");
+        String visitId = request.getParameter("visitId");
+        if (visitId != null) request.setAttribute("visitId", visitId);
+        if (security.hasPermission("SEND_CONTROL_APPLET", userLogin)) { 
+            String followerSessionId = request.getParameter("followerSid");
+            String followSessionId = request.getParameter("followSid");
+            Map follow = (Map) appletSessions.get(followSessionId);
+            if (follow == null) follow = new HashMap();
+            String followerListStr = (String) follow.get("followers");
+            if (followerListStr == null) {
+                followerListStr = followerSessionId;
+            } else {
+                followerListStr = followerListStr + "," + followerSessionId;
+            }
+            appletSessions.put(followSessionId, follow);
+            appletSessions.put(followerSessionId, null);            
+        }
+        return "success";                
+    }
+
+    public static String setFollowerPage(HttpServletRequest request, HttpServletResponse response) {
+        Security security = (Security) request.getAttribute("security");
+        GenericValue userLogin = (GenericValue) request.getSession().getAttribute("userLogin");
+        String visitId = request.getParameter("visitId");
+        if (visitId != null) request.setAttribute("visitId", visitId);
+        if (security.hasPermission("SEND_CONTROL_APPLET", userLogin)) { 
+            String followerSessionId = request.getParameter("followerSid");
+            String pageUrl = request.getParameter("pageUrl");
+            Map follow = (Map) appletSessions.get(followerSessionId);
+            if (follow == null) follow = new HashMap();
+            follow.put("followPage", pageUrl);            
+            appletSessions.put(followerSessionId, follow);            
+        }
+        return "success";                
+    }    
+    
     
 }
