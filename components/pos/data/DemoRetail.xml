@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <entity-engine-xml>
     <UserLogin userLoginId="1" partyId="admin" currentPassword="1" passwordHint=""/>
-    <UserLoginSecurityGroup groupId="FULLADMIN" userLoginId="1" fromDate="2001-01-01 12:00:00.0"/>
+    <UserLoginSecurityGroup groupId="POSCLERK" userLoginId="1" fromDate="2001-01-01 12:00:00.0"/>
     <Facility facilityId="MyRetailStore" facilityTypeId="RETAIL_STORE" facilityName="My Retail Store" description="Example Retail (POS) Store"/>
     <ContactMech contactMechId="9300" contactMechTypeId="POSTAL_ADDRESS"/>
     <ContactMech contactMechId="9301" contactMechTypeId="TELECOM_NUMBER"/>
