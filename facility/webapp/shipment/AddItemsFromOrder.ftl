@@ -61,6 +61,15 @@ ${pages.get("/shipment/ShipmentTabBar.ftl")}
     <#else>
         <div class="head3" style="color: red;">WARNING: Order Status is ${(orderHeaderStatus.description)?default(orderHeader.statusId?if_exists)}; should generally be Approved before shipping.</div>
     </#if>
+
+    <#assign rowCount = 0>
+    <#if isSalesOrder>
+        <form action="<@ofbizUrl>/issueOrderItemInventoryResToShipment</@ofbizUrl>" name="issueOrderItemInventoryResToShipmentForm">
+    <#else>
+        <form action="<@ofbizUrl>/issueOrderItemToShipment</@ofbizUrl>" name="issueOrderItemToShipmentForm">
+    </#if>
+    <input type="hidden" name="shipmentId" value="${shipmentId}">
+    <input type="hidden" name="_useRowSubmit" value="N">
     <table width="100%" cellpadding="2" cellspacing="0" border="1">
         <tr>
             <td><div class="tableheadtext">Order Item</div></td>
@@ -123,13 +132,11 @@ ${pages.get("/shipment/ShipmentTabBar.ftl")}
                     <#assign quantityNotIssued = orderItem.quantity - totalQuantityIssued>
                     <#if (quantityNotIssued > 0)>
                         <td>
-                            <form action="<@ofbizUrl>/issueOrderItemToShipment</@ofbizUrl>" name="issueOrderItemToShipmentForm${orderItemData_index}">
-                                <input type="hidden" name="shipmentId" value="${shipmentId}"/>
-                                <input type="hidden" name="orderId" value="${orderItem.orderId}"/>
-                                <input type="hidden" name="orderItemSeqId" value="${orderItem.orderItemSeqId}"/>
-                                <input type="text" class='inputBox' size="5" name="quantity" value="${quantityNotIssued}"/>
-                                <a href="javascript:document.issueOrderItemToShipmentForm${orderItemData_index}.submit();" class="buttontext">Issue</a>
-                            </form>
+                            <input type="hidden" name="shipmentId_o_${rowCount}" value="${shipmentId}"/>
+                            <input type="hidden" name="orderId_o_${rowCount}" value="${orderItem.orderId}"/>
+                            <input type="hidden" name="orderItemSeqId_o_${rowCount}" value="${orderItem.orderItemSeqId}"/>
+                            <input type="text" class='inputBox' size="5" name="quantity_o_${rowCount}" value="${quantityNotIssued}"/>
+                            <#assign rowCount = rowCount + 1>   
                         </td>
                     <#else>
                         <td><div class="tabletext">&nbsp;</div></td>
@@ -158,14 +165,12 @@ ${pages.get("/shipment/ShipmentTabBar.ftl")}
                         <td><div class="tabletext">${orderItemInventoryRes.quantity}</div></td>
                         <td>
                             <#if originFacility?exists && originFacility.facilityId == inventoryItem.facilityId?if_exists>
-                                <form action="<@ofbizUrl>/issueOrderItemInventoryResToShipment</@ofbizUrl>" name="addOrderItemToShipmentForm${orderItemData_index}${orderItemInventoryResData_index}">
-                                    <input type="hidden" name="shipmentId" value="${shipmentId}"/>
-                                    <input type="hidden" name="orderId" value="${orderItemInventoryRes.orderId}"/>
-                                    <input type="hidden" name="orderItemSeqId" value="${orderItemInventoryRes.orderItemSeqId}"/>
-                                    <input type="hidden" name="inventoryItemId" value="${orderItemInventoryRes.inventoryItemId}"/>
-                                    <input type="text" class='inputBox' size="5" name="quantity" value="${orderItemInventoryRes.quantity}"/>
-                                    <a href="javascript:document.addOrderItemToShipmentForm${orderItemData_index}${orderItemInventoryResData_index}.submit();" class="buttontext">Issue</a>
-                                </form>
+                                <input type="hidden" name="shipmentId_o_${rowCount}" value="${shipmentId}"/>
+                                <input type="hidden" name="orderId_o_${rowCount}" value="${orderItemInventoryRes.orderId}"/>
+                                <input type="hidden" name="orderItemSeqId_o_${rowCount}" value="${orderItemInventoryRes.orderItemSeqId}"/>
+                                <input type="hidden" name="inventoryItemId_o_${rowCount}" value="${orderItemInventoryRes.inventoryItemId}"/>
+                                <input type="text" class='inputBox' size="5" name="quantity_o_${rowCount}" value="${orderItemInventoryRes.quantity}"/>
+                                <#assign rowCount = rowCount + 1>   
                             <#else>
                                 <div class="tabletext">Not In Origin Facility</div>
                             </#if>
@@ -174,7 +179,12 @@ ${pages.get("/shipment/ShipmentTabBar.ftl")}
                 </#list>
             </#if>
         </#list>
+        <tr>
+            <td colspan="6" align="right"><input type="submit" value="Issue All"/></td>
+        </tr>
     </table>
+    <input type="hidden" name="_rowCount" value="${rowCount}">
+    </form>
 </#if>
 
 <#else>
