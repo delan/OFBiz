@@ -26,7 +26,7 @@
  *
  * @author     David E. Jones (jonesde@ofbiz.org)
  * @author     Andy Zeneski (jaz@ofbiz.org)
- * @version    $Revision: 1.28 $
+ * @version    $Revision: 1.29 $
  */
 -->
 
@@ -2007,7 +2007,7 @@
       <prim-key field="productPromoId"/>
       <prim-key field="productPromoRuleId"/>
       <prim-key field="productPromoActionSeqId"/>
-      <relation type="one" fk-name="PROD_PRACT_ENUM" rel-entity-name="Enumeration">
+      <relation type="one" fk-name="PROD_PRACT_ENUM" title="Action" rel-entity-name="Enumeration">
         <key-map field-name="productPromoActionEnumId" rel-field-name="enumId"/>
       </relation>
       <relation type="one" fk-name="PROD_PRACT_PR" rel-entity-name="ProductPromo">
