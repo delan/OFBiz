@@ -27,14 +27,14 @@ package org.ofbiz.commonapp.thirdparty.worldpay;
 import java.io.*;
 import java.net.*;
 import java.util.*;
+
 import javax.servlet.*;
 import javax.servlet.http.*;
 
 import org.ofbiz.core.entity.*;
 import org.ofbiz.core.service.*;
 import org.ofbiz.core.util.*;
-import org.ofbiz.core.workflow.*;
-import org.ofbiz.core.workflow.client.*;
+import org.ofbiz.commonapp.order.order.*;
 import org.ofbiz.commonapp.order.shoppingcart.*;
 
 import com.worldpay.select.*;
@@ -79,6 +79,7 @@ public class SelectRespServlet extends SelectServlet implements SelectDefs {
             userLogin = delegator.findByPrimaryKey("UserLogin", UtilMisc.toMap("userLoginId", userLoginId));      
         } catch (GenericEntityException e) {
             Debug.logError(e, "Cannot get admin UserLogin entity", module);
+            callError(request);
         }
                 
         // get the properties file       
@@ -95,7 +96,25 @@ public class SelectRespServlet extends SelectServlet implements SelectDefs {
         Debug.logInfo("Got the payment configuration", module);    
         
         String orderId = request.getParameter(SelectDefs.SEL_cartId);
+        String authAmount = request.getParameter(SelectDefs.SEL_authAmount);
         String transStatus = request.getParameter(SelectDefs.SEL_transStatus);
+        
+        // get the order header
+        GenericValue orderHeader = null;
+        try {
+            orderHeader = delegator.findByPrimaryKey("OrderHeader", UtilMisc.toMap("orderId", orderId));
+        } catch (GenericEntityException e) {
+            Debug.logError(e, "Cannot get the order header for the returned orderId", module);
+            callError(request);
+        }
+        
+        // the order total MUST match the auth amount or we do not process
+        Double wpTotal = new Double(authAmount);
+        Double orderTotal = orderHeader != null ? orderHeader.getDouble("grandTotal") : null;
+        if (orderTotal != null && wpTotal != null) {
+            if (orderTotal.doubleValue() != wpTotal.doubleValue())
+                callError(request);
+        }
         
         // store some stuff for calling existing events
         HttpSession session = request.getSession(true);
@@ -126,11 +145,11 @@ public class SelectRespServlet extends SelectServlet implements SelectDefs {
         if (transStatus.equalsIgnoreCase("Y")) {
             // order was approved
             Debug.logInfo("Order #" + orderId + " approved", module);
-            approveOrder(orderId);                       
+            OrderChangeHelper.approveOrder(dispatcher, userLogin, orderId, orderPropertiesUrl);                  
         } else {
             // order was cancelled
             Debug.logInfo("Order #" + orderId + " cancelled", module);
-            cancelOrder(orderId);
+            OrderChangeHelper.cancelOrder(dispatcher, userLogin, orderId, orderPropertiesUrl);
         }
         
         // set the payment preference
@@ -142,32 +161,8 @@ public class SelectRespServlet extends SelectServlet implements SelectDefs {
             Debug.logError(gte, "Unable to commit transaction", module);
         }
         
-        // find the workEffortId for this order
-        GenericValue workEffort = null;
-        try {
-            List workEfforts = delegator.findByAnd("WorkEffort", UtilMisc.toMap("sourceReferenceId", orderId, "currentStatusId", "WF_SUSPENDED"));
-            if (workEfforts != null && workEfforts.size() > 0) {
-                Debug.logWarning("More then order suspended activity with order ref number: " + orderId, module);                
-            }
-            workEffort = EntityUtil.getFirst(workEfforts);
-        } catch (GenericEntityException e) {
-            Debug.logError(e, "Problems getting WorkEffort with order ref number: " + orderId, module);
-        }
-        
-        // release the order workflow from 'Hold' status (resume workflow)
-        if (workEffort != null) {
-            final String HEADER_APPROVE_STATUS = UtilProperties.getPropertyValue(orderPropertiesUrl, "order.header.payment.approved.status", "ORDER_APPROVED");
-            String workEffortId = workEffort.getString("workEffortId");
-            try {            
-                WorkflowClient client = new WorkflowClient(dctx);
-                // first send the new order status to the workflow
-                client.appendContext(workEffortId, UtilMisc.toMap("orderStatusId", HEADER_APPROVE_STATUS));
-                // next resume the activity
-                client.resume(workEffortId);                 
-            } catch (WfException e) {
-                Debug.logError(e, "Problem resuming workflow", module);                       
-            }
-        }
+        // release the offline hold on the order (workflow)
+        OrderChangeHelper.relaeaseOfflineOrderHold(dispatcher, orderId, orderPropertiesUrl); 
                 
         // call the existing confirm order events (calling direct)
         String confirm = CheckOutEvents.renderConfirmOrder(request, response);
@@ -182,64 +177,7 @@ public class SelectRespServlet extends SelectServlet implements SelectDefs {
         else
             out.println("Error getting content");                                         
     }
-        
-    private void approveOrder(String orderId) {        
-        // get some payment related strings from order.properties.
-        final String HEADER_APPROVE_STATUS = UtilProperties.getPropertyValue(orderPropertiesUrl, "order.header.payment.approved.status", "ORDER_APPROVED");
-        final String ITEM_APPROVE_STATUS = UtilProperties.getPropertyValue(orderPropertiesUrl, "order.item.payment.approved.status", "ITEM_APPROVED");
-        
-        try {
-            // set the status on the order header
-            Map statusFields = UtilMisc.toMap("orderId", orderId, "statusId", HEADER_APPROVE_STATUS, "userLogin", userLogin);
-            Map statusResult = dispatcher.runSync("changeOrderStatus", statusFields);                               
-            if (statusResult.containsKey(ModelService.ERROR_MESSAGE)) {
-                Debug.logError("Problems adjusting order header status for order #" + orderId, module);                            
-            }
-                        
-            // set the status on the order item(s)
-            Map itemStatusFields = UtilMisc.toMap("orderId", orderId, "statusId", ITEM_APPROVE_STATUS, "userLogin", userLogin);
-            Map itemStatusResult = dispatcher.runSync("changeOrderItemStatus", itemStatusFields);                        
-            if (itemStatusResult.containsKey(ModelService.ERROR_MESSAGE)) {
-                Debug.logError("Problems adjusting order item status for order #" + orderId, module);
-            }
-                                                                                                                
-        } catch (GenericServiceException e) {
-            Debug.logError(e, "Service invocation error, status changes were not updated for order #" + orderId, module);
-        }
-    }
-    
-    private void cancelOrder(String orderId) {
-        // get some payment related strings from order.properties.
-        final String HEADER_DECLINE_STATUS = UtilProperties.getPropertyValue(orderPropertiesUrl, "order.header.payment.declined.status", "ORDER_REJECTED");
-        final String ITEM_DECLINE_STATUS = UtilProperties.getPropertyValue(orderPropertiesUrl, "order.item.payment.declined.status", "ITEM_REJECTED");
-        
-        try {
-            // set the status on the order header
-            Map statusFields = UtilMisc.toMap("orderId", orderId, "statusId", HEADER_DECLINE_STATUS, "userLogin", userLogin);
-            Map statusResult = dispatcher.runSync("changeOrderStatus", statusFields);                               
-            if (statusResult.containsKey(ModelService.ERROR_MESSAGE)) {
-                Debug.logError("Problems adjusting order header status for order #" + orderId, module);                            
-            }
-                        
-            // set the status on the order item(s)
-            Map itemStatusFields = UtilMisc.toMap("orderId", orderId, "statusId", ITEM_DECLINE_STATUS, "userLogin", userLogin);
-            Map itemStatusResult = dispatcher.runSync("changeOrderItemStatus", itemStatusFields);                        
-            if (itemStatusResult.containsKey(ModelService.ERROR_MESSAGE)) {
-                Debug.logError("Problems adjusting order item status for order #" + orderId, module);
-            }
-                        
-            // cancel the inventory reservations
-            Map cancelInvFields = UtilMisc.toMap("orderId", orderId, "userLogin", userLogin);
-            Map cancelInvResult = dispatcher.runSync("cancelOrderInventoryReservation", cancelInvFields);
-            if (ModelService.RESPOND_ERROR.equals((String) cancelInvResult.get(ModelService.RESPONSE_MESSAGE))) {
-                Debug.logError("Problems reversing inventory reservations for order #" + orderId, module);
-            }                                                         
-                                           
-        } catch (GenericServiceException e) {
-            Debug.logError(e, "Service invocation error, status/reservations were not updated for order #" + orderId, module);
-        }
-    }
-    
+               
     private void setPaymentPreferences(String orderId, ServletRequest request) {
         List paymentPrefs = null;
         try {
@@ -287,5 +225,17 @@ public class SelectRespServlet extends SelectServlet implements SelectDefs {
         } catch (GenericEntityException e) {
             Debug.logError(e, "Cannot set payment preference info", module);
         }                   
-    }    
+    }  
+    
+    private void callError(ServletRequest request) throws ServletException {
+        Enumeration e = request.getParameterNames();
+        Debug.logError("###### SelectRespServlet Error:", module);
+        while (e.hasMoreElements()) {
+            String name = (String) e.nextElement();
+            String value = request.getParameter(name);
+            Debug.logError("### Parameter: " + name + " => " + value, module);  
+        }
+        Debug.logError("###### The order was not processed!", module);
+        throw new ServletException("Order Error");
+    }
 }
