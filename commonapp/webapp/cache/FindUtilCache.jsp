@@ -29,20 +29,19 @@
 %> 
 
 <%@ page import="org.ofbiz.core.util.*" %>
-<%@ page import="org.ofbiz.commonapp.security.*" %>
 <%@ page import="java.util.*" %>
 
-<%boolean hasUtilCacheEdit=Security.hasPermission("UTIL_CACHE_EDIT", session);%>
-<%String controlPath=(String)request.getAttribute(SiteDefs.CONTROL_PATH);%>
-
 <% pageContext.setAttribute("PageName", "FindUtilCache"); %> 
-
 <%@ include file="/includes/header.jsp" %>
 <%@ include file="/includes/onecolumn.jsp" %> 
+
+<%boolean hasUtilCacheEdit=security.hasPermission("UTIL_CACHE_EDIT", session);%>
+<%String controlPath=(String)request.getAttribute(SiteDefs.CONTROL_PATH);%>
+
 <br>
 <h2 style='margin:0;'>Cache Maintenance Page</h2>
 
-<%if(Security.hasPermission("UTIL_CACHE_VIEW", session)){%>
+<%if(security.hasPermission("UTIL_CACHE_VIEW", session)){%>
 <TABLE border='0' cellpadding='2' cellspacing='2'>
 <%
   String rowColor1 = "99CCFF";

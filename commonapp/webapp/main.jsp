@@ -26,7 +26,7 @@
  *@created    May 22 2001
  *@version    1.0
  */
-%> 
+%>
 
 <%@ page import="org.ofbiz.core.util.*" %>
 

@@ -29,20 +29,19 @@
 %> 
 
 <%@ page import="org.ofbiz.core.util.*" %>
-<%@ page import="org.ofbiz.commonapp.security.*" %>
 <%@ page import="java.util.*" %>
+
+<% pageContext.setAttribute("PageName", "EditUtilCache"); %> 
+<%@ include file="/includes/header.jsp" %>
+<%@ include file="/includes/onecolumn.jsp" %> 
 
 <%String cacheName=request.getParameter("UTIL_CACHE_NAME");%>
 <%String controlPath=(String)request.getAttribute(SiteDefs.CONTROL_PATH);%>
 
-<% pageContext.setAttribute("PageName", "EditUtilCache"); %> 
-
-<%@ include file="/includes/header.jsp" %>
-<%@ include file="/includes/onecolumn.jsp" %> 
 <br>
 <h2 style='margin:0;'>Cache Maintenance Edit Page</h2>
 
-<%if(Security.hasPermission("UTIL_CACHE_EDIT", session)){%>
+<%if(security.hasPermission("UTIL_CACHE_EDIT", session)){%>
   <%if(cacheName!=null){%>
    <%UtilCache utilCache = (UtilCache)UtilCache.utilCacheTable.get(cacheName);%>
    <%if(utilCache!=null){%>
