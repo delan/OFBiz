@@ -22,21 +22,19 @@
  *
  *@author     David E. Jones (jonesde@ofbiz.org)
  *@author     Andy Zeneski (jaz@ofbiz.org)
- *@version    $Rev:$
+ *@version    $Rev$
  *@since      2.1
 -->
 
 ${pages.get("/includes/header.ftl")}
 
-<table width='100%' border='0' cellpadding='0' cellspacing='0'>
- <tr>
+<div class="ecom-mainarea">
   ${pages.get("/templates/leftbar.ftl")}
-  <td width='100%' valign='top' align='left'>
+  ${pages.get("/templates/rightbar.ftl")}
+  <div class="ecom-column-main">
     ${common.get("/includes/messages.ftl")}
     ${pages.get(page.path)}
-  </td>
-  ${pages.get("/templates/rightbar.ftl")}
- </tr>
-</table>
+  </div>
+</div>
 
 ${pages.get("/includes/footer.ftl")}

@@ -2,7 +2,7 @@
 <page>
     <template>main_lr</template>    
     <property name="title">Main Page</property>
-    <property name="title.property">PageTitleMain</property>
+    <property name="title-property">PageTitleMain</property>
     <property name="headerItem">main</property>
     <property name="randomSurveyGroup">testSurveyGroup</property>
     <content-action name="main.bsh"/>

@@ -1,5 +1,5 @@
 <#--
- *  Copyright (c) 2003 The Open For Business Project - www.ofbiz.org
+ *  Copyright (c) 2003-2004 The Open For Business Project - www.ofbiz.org
  *
  *  Permission is hereby granted, free of charge, to any person obtaining a 
  *  copy of this software and associated documentation files (the "Software"), 
@@ -20,14 +20,13 @@
  *  THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  *
  *@author     Andy Zeneski (jaz@ofbiz.org)
- *@version    $Rev:$
+ *@version    $Rev$
  *@since      2.1
 -->
-<#assign uiLabelMap = requestAttributes.uiLabelMap>
+<#if requestAttributes.uiLabelMap?exists><#assign uiLabelMap = requestAttributes.uiLabelMap></#if>
 <#if productCategory?has_content>
-  ${pages.get(detailTemplate)}
+  <#if pages?exists>${pages.get(detailTemplate)}</#if>
+  <#if screens?exists>${screens.render("component://ecommerce/widget/CatalogScreens.xml#categorydetail")}</#if>
 <#else>  
   <center><div class='head2'>${uiLabelMap.ProductCategoryNotFoundforCategoryID} ${requestParameters.category_id?if_exists}!</div></center>
 </#if>
-
-

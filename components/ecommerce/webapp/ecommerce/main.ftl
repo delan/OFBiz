@@ -20,13 +20,14 @@
  *  THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  *
  *@author     Andy Zeneski
- *@version    $Rev:$
+ *@version    $Rev$
  *@since      2.1
 -->
 
 <#-- Render the category page -->
 <#if requestAttributes.productCategoryId?has_content>
-  ${pages.get("/catalog/category.ftl")}
+  <#if pages?exists>${pages.get("/catalog/category.ftl")}</#if>
+  <#if screens?exists>${screens.render("component://ecommerce/widget/CatalogScreens.xml#category-include")}</#if>
 <#else>
   <center><h2>No PROMOTION Category found for CATALOG</h2></center>
 </#if>

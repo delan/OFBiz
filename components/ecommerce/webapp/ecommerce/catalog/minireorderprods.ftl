@@ -21,10 +21,10 @@
  *
  *@author     David E. Jones (jonesde@ofbiz.org)
  *@author     Andy Zeneski (jaz@ofbiz.org)
- *@version    $Rev:$
+ *@version    $Rev$
  *@since      2.1
 -->
-<#assign uiLabelMap = requestAttributes.uiLabelMap>
+<#if requestAttributes.uiLabelMap?exists><#assign uiLabelMap = requestAttributes.uiLabelMap></#if>
 <#if reorderProducts?has_content>
   <table border=0 width='100%' cellspacing='0' cellpadding='0' class='boxoutside'>
     <tr>
@@ -50,7 +50,8 @@
                       ${setRequestAttribute("miniProdQuantity", reorderQuantities.get(miniProduct.productId))}
                       ${setRequestAttribute("miniProdFormName", "theminireorderprod" + miniProduct_index + "form")}
                       ${setRequestAttribute("optProductId", miniProduct.productId)}
-                      ${pages.get("/catalog/miniproductsummary.ftl")}
+                      <#if pages?exists>${pages.get("/catalog/miniproductsummary.ftl")}</#if>
+                      <#if screens?exists>${screens.render("component://ecommerce/widget/CatalogScreens.xml#miniproductsummary")}</#if>
                     </td>
                   </tr>
                   <#if miniProduct_has_next>

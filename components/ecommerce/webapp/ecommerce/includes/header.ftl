@@ -25,7 +25,8 @@
  *@since      2.1
 -->
 <!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN">
-<#assign uiLabelMap = requestAttributes.uiLabelMap>
+
+<#if requestAttributes.uiLabelMap?exists><#assign uiLabelMap = requestAttributes.uiLabelMap></#if>
 
 <html>
 <head>
@@ -37,7 +38,7 @@
 
     <#-- Append CSS for catalog -->
     <#if catalogStyleSheet?exists>
-    <link rel="stylesheet" href="${catalogStyleSheet}" type="text/css">
+        <link rel="stylesheet" href="${catalogStyleSheet}" type="text/css">
     </#if>
     <#-- Append CSS for tracking codes -->
     <#if sessionAttributes.overrideCss?exists>
@@ -52,7 +53,7 @@
     </#if>
 </head>
 
-<body class="ecbody" >
+<body class="ecbody">
 
 <table border="0" width="100%" cellspacing="0" cellpadding="0" class="headerboxoutside">
   <tr>
@@ -74,7 +75,8 @@
               <#if (productStore.subtitle)?exists><br><span class="headerCompanySubtitle">${productStore.subtitle}</span></#if>
           </td>
           <td align=right width="1%" nowrap <#if (productStore.headerRightBackground)?has_content>background="<@ofbizContentUrl>${productStore.headerRightBackground}</@ofbizContentUrl>"</#if> >
-            ${pages.get("/cart/microcart.ftl")}
+            <#if pages?exists>${pages.get("/cart/microcart.ftl")}</#if>
+            <#if screens?exists>${screens.render("component://ecommerce/widget/CartScreens.xml#microcart")}</#if>
           </td>
         </tr>
       </table>

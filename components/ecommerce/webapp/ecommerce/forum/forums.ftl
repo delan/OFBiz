@@ -20,12 +20,12 @@
  *  THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  *
  *@author     Al Byers (byersa@automationgroups.com)
- *@version    $Rev:$
+ *@version    $Rev$
  *@since      3.1
 -->
 <#assign forumRootId = "WebStoreFORUM" />
 
-<#assign uiLabelMap = requestAttributes.uiLabelMap>
+<#if requestAttributes.uiLabelMap?exists><#assign uiLabelMap = requestAttributes.uiLabelMap></#if>
 <#-- variable setup and worker calls -->
 <#assign curCategoryId = requestAttributes.curCategoryId?if_exists>
 <#assign forumTrailCsv=requestParameters.forumTrailCsv?if_exists/>
@@ -80,6 +80,5 @@
     </td>
   </tr>
 </table>
-        <br>
 
-
+<br>

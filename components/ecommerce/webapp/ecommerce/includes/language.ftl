@@ -20,11 +20,13 @@
  *  THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  *
  *@author     Andy Zeneski (jaz@ofbiz.org)
- *@version    $Rev:$
+ *@version    $Rev$
  *@since      3.0
 -->
-<#assign uiLabelMap = requestAttributes.uiLabelMap>
+<#if requestAttributes.uiLabelMap?exists><#assign uiLabelMap = requestAttributes.uiLabelMap></#if>
 <#assign locale = Static["org.ofbiz.base.util.UtilHttp"].getLocale(session)>
+<#if requestAttributes.availableLocales?exists><#assign availableLocales = requestAttributes.availableLocales></#if>
+
 
 <table border=0 width='100%' cellspacing='0' cellpadding='0' class='boxoutside'>
   <tr>
@@ -49,9 +51,9 @@
                 <#if 18 < initialDisplayName?length>
                   <assign initialDisplayName = initialDisplayName[0..15] + "...">
                 </#if>
-                <option value="${requestAttributes.locale.toString()}">${initialDisplayName}</option>
-                <option value="${requestAttributes.locale.toString()}">----</option>
-                <#list requestAttributes.availableLocales as availableLocale>
+                <option value="${locale.toString()}">${initialDisplayName}</option>
+                <option value="${locale.toString()}">----</option>
+                <#list availableLocales as availableLocale>
                   <#assign displayName = availableLocale.getDisplayName(locale)>
                   <#if 18 < displayName?length>
                     <#assign displayName = displayName[0..15] + "...">

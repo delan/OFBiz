@@ -2,5 +2,5 @@
 <page>
     <template>main_lr</template>
     <property name="title">Last Viewed Products</property>  
-     <property name="title.property">PageTitleLastViewProducts</property>
+     <property name="title-property">PageTitleLastViewProducts</property>
 </page>

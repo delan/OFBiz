@@ -146,7 +146,7 @@ ${requestAttributes.virtualJavaScript?if_exists}
  //-->
  </script>
 
-<table border="0" width="100%" cellpadding="2" cellspacing='0'>
+<table border="0" cellpadding="2" cellspacing='0'>
   <#-- Category next/previous -->
   <#if requestAttributes.category?exists>
     <tr>
@@ -416,7 +416,7 @@ ${requestAttributes.virtualJavaScript?if_exists}
       <#assign postedPerson = postedUserLogin.getRelatedOne("Person")?if_exists>
       <tr>
         <td colspan="2">
-          <table border="0" width="100%" cellpadding="0" cellspacing='0'>
+          <table border="0" cellpadding="0" cellspacing='0'>
             <tr>
               <td>
                 <div class="tabletext"><b>${uiLabelMap.CommonBy}: </b><#if productReview.postedAnonymous?default("N") == "Y">${uiLabelMap.EcommerceAnonymous}<#else>${postedPerson.firstName} ${postedPerson.lastName}</#if></div>
@@ -504,7 +504,7 @@ ${requestAttributes.virtualJavaScript?if_exists}
 <#assign listIndex = 1>
 ${setRequestAttribute("productValue", productValue)}
 
-<table width="100%">
+<table>
   <#-- obsolete -->
   <@associated assocProducts=obsoleteProducts beforeName="" showName="Y" afterName=" is made obsolete by these products:" formNamePrefix="obs" targetRequestName=""/>
   <#-- cross sell -->

@@ -2,7 +2,7 @@
 <page>
     <template>main_left</template>    
     <property name="title">Content Page</property>
-<!-- <property name="title.property">PageTitleMain</property>-->
+<!-- <property name="title-property">PageTitleMain</property>-->
     <property name="headerItem">main</property>
     <content-action name="main.bsh"/>
     <content-action name="/content/contentprep.bsh"/>

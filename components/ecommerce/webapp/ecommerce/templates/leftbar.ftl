@@ -21,11 +21,11 @@
  *
  *@author     David E. Jones (jonesde@ofbiz.org)
  *@author     Andy Zeneski (jaz@ofbiz.org)
- *@version    $Rev:$
+ *@version    $Rev$
  *@since      2.1
 -->
 
-  <td width='950' valign='top' align='left'>
+  <div class="ecom-column-left">
     ${pages.get("/catalog/choosecatalog.ftl")}
     ${pages.get("/catalog/keywordsearchbox.ftl")}
     ${pages.get("/catalog/sidedeepcategory.ftl")}
@@ -33,5 +33,4 @@
     ${pages.get("/content/minipoll.ftl")}
     ${pages.get("/forum/forums.ftl")}
     ${pages.get("/content/content_categories.ftl")}
-  </td>
-  <td width='5'>&nbsp;&nbsp;&nbsp;</td>
+  </div>

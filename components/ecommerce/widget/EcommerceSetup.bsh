@@ -1,5 +1,5 @@
-<#--
- *  Copyright (c) 2003 The Open For Business Project - www.ofbiz.org
+/*
+ *  Copyright (c) 2003-2004 The Open For Business Project - www.ofbiz.org
  *
  *  Permission is hereby granted, free of charge, to any person obtaining a
  *  copy of this software and associated documentation files (the "Software"),
@@ -20,19 +20,30 @@
  *  THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  *
  *@author     David E. Jones (jonesde@ofbiz.org)
- *@author     Andy Zeneski (jaz@ofbiz.org)
  *@version    $Rev$
  *@since      2.1
--->
+ */
 
-  <div class="ecom-column-right">
-    ${pages.get("/includes/language.ftl")}
-    ${pages.get("/cart/minicart.ftl")}    
-    ${pages.get("/cart/minipromotext.ftl")}
-    ${pages.get("/catalog/miniassocprods.ftl")}
-    ${pages.get("/catalog/minilastviewedcategories.ftl")}
-    ${pages.get("/catalog/minilastviewedproducts.ftl")}
-    ${pages.get("/catalog/minilastproductsearches.ftl")}
-    ${pages.get("/content/factoids.ftl")}
-    ${pages.get("/content/recentlyviewed.ftl")}
-  </div>
+import java.util.*;
+import org.ofbiz.base.util.*;
+import org.ofbiz.entity.*;
+import org.ofbiz.product.catalog.CatalogWorker;
+import org.ofbiz.product.store.ProductStoreWorker;
+import org.ofbiz.common.CommonWorkers;
+import org.ofbiz.order.shoppingcart.*;
+import org.ofbiz.content.webapp.control.*;
+
+productStore = ProductStoreWorker.getProductStore(request);
+
+prodCatalog = CatalogWorker.getProdCatalog(request);
+if (prodCatalog != null) {
+    catalogStyleSheet = prodCatalog.get("styleSheet");
+    if (catalogStyleSheet != null) globalContext.put("catalogStyleSheet", catalogStyleSheet);
+    catalogHeaderLogo = prodCatalog.get("headerLogo");
+    if (catalogHeaderLogo != null) globalContext.put("catalogHeaderLogo", catalogHeaderLogo);
+}
+
+globalContext.put("productStore", productStore);
+globalContext.put("checkLoginUrl", LoginWorker.makeLoginUrl(request, "checkLogin"));
+globalContext.put("catalogQuickaddUse", CatalogWorker.getCatalogQuickaddUse(request));
+

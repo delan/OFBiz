@@ -2,6 +2,6 @@
 <page>
     <template>main</template>    
     <property name="title">New Customer</property>
-     <property name="title.property">PageTitleNewCustomer</property>
+     <property name="title-property">PageTitleNewCustomer</property>
     <content-action name="/customer/newcustomer.bsh"/>
 </page>

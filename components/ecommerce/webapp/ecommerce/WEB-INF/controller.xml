@@ -38,6 +38,7 @@
     <handler name="ftl" type="view" class="org.ofbiz.content.webapp.ftl.FreeMarkerViewHandler"/>
     <handler name="http" type="view" class="org.ofbiz.content.webapp.view.HttpViewHandler"/>
     <handler name="jpublish" type="view" class="org.ofbiz.content.webapp.view.JPublishViewHandler"/>
+    <handler name="screen" type="view" class="org.ofbiz.content.webapp.view.ScreenWidgetViewHandler"/>
 
     <!-- Events run from here for the first hit in a visit -->
     <firstvisit>
@@ -1082,8 +1083,13 @@
 
     <!-- View Mappings -->
     <view-map name="error" page="/error/error.jsp"/>
+    <view-map name="main" type="screen" page="component://ecommerce/widget/CommonScreens.xml#main"/>
+    <view-map name="login" type="screen" page="component://ecommerce/widget/CommonScreens.xml#login"/>
+    <!--
     <view-map name="main" type="jpublish" page="/main.ftl"/>
     <view-map name="login" type="jpublish" page="/login.ftl"/>
+    -->
+
     <view-map name="contactus" type="jpublish" page="/contactus.ftl"/>
     <view-map name="survey" type="jpublish" page="/survey.ftl"/>
     <view-map name="passwordemail" page="/customer/passwordemail.jsp"/>
