@@ -11,15 +11,15 @@ access. For a detailed description see the core/docs/entityconfig.html file.
     <resource-loader name="mainurl" class="org.ofbiz.core.config.UrlLoader"/>
 
     <!-- the transaction factory class to use, one is needed for each way of getting JTA interfaces -->
-    <transaction-factory class="org.ofbiz.core.entity.transaction.TyrexFactory"/>
+    <!-- <transaction-factory class="org.ofbiz.core.entity.transaction.TyrexFactory"/> -->
 
     <!-- NOTE: to use the JndiFactory you must specify the necessary JNDI properties -->
-    <!--
+    
     <transaction-factory class="org.ofbiz.core.entity.transaction.JNDIFactory">
         <user-transaction-jndi jndi-server-name="default" jndi-name="java:comp/UserTransaction"/>
         <transaction-manager-jndi jndi-server-name="default" jndi-name="java:comp/UserTransaction"/>
     </transaction-factory>
-    -->
+    
     <!-- It is common to use UserTransaction for the TransactionManager, but if that doesn't work, try this: <transaction-manager-jndi jndi-server-name="default" jndi-name="java:comp/TransactionManager"/> -->
 
 
@@ -159,13 +159,13 @@ access. For a detailed description see the core/docs/entityconfig.html file.
             fk-style="name_fk">
         <sql-load-path path="commonapp/db" prepend-env="ofbiz.home"/>
         <sql-load-path path="ecommerce/etc" prepend-env="ofbiz.home"/>
-        <inline-jdbc
+        <!-- <inline-jdbc
                 jdbc-driver="com.sap.dbtech.jdbc.DriverSapDB"
                 jdbc-uri="jdbc:sapdb://localhost/OFBIZ"
                 jdbc-username="ofbiz"
                 jdbc-password="ofbiz"
-                isolation-level="ReadCommitted"/>
-        <!-- <jndi-jdbc jndi-server-name="default" jndi-name="java:comp/env/jdbc/localsapdb" isolation-level="ReadCommitted"/> -->
+                isolation-level="ReadCommitted"/> -->
+        <jndi-jdbc jndi-server-name="default" jndi-name="comp/env/jdbc/xa/localsapdb" isolation-level="ReadCommitted"/>
         <!-- <tyrex-dataSource dataSource-name="localsapdb" isolation-level="ReadCommitted"/> -->
     </datasource>
 
