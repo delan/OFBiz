@@ -504,12 +504,12 @@
   <!-- org.ofbiz.commonapp.product.price -->
   <!-- ========================================================= -->
 	
-    <entity-group group="org.ofbiz.commonapp" entity="OrderValueBreak" />	
     <entity-group group="org.ofbiz.commonapp" entity="PriceComponent" />	
     <entity-group group="org.ofbiz.commonapp" entity="PriceComponentAttribute" />	
     <entity-group group="org.ofbiz.commonapp" entity="PriceComponentType" />	
     <entity-group group="org.ofbiz.commonapp" entity="PriceComponentTypeAttr" />	
     <entity-group group="org.ofbiz.commonapp" entity="QuantityBreak" />	
+    <entity-group group="org.ofbiz.commonapp" entity="QuantityBreakType" />
     <entity-group group="org.ofbiz.commonapp" entity="SaleType" />
 
   <!-- ========================================================= -->

@@ -71,14 +71,14 @@ definitions, checking them with the current database, and generating text based 
     <li>Entity Maintenance Utilities
     <ul>
       <li><a href="<%=response.encodeURL(controlPath + "/entitymaint")%>" class='buttontext'>Entity Data Maintenance</A>
-      <li><a href="<%=response.encodeURL(controlPath + "/view/entityref")%>" class='buttontext'>Entity Reference</A>
+      <li><a href="<%=response.encodeURL(controlPath + "/view/entityref")%>" class='buttontext' target='_blank'>Entity Reference</A>
 <%--
       <li><a href="<%=response.encodeURL(controlPath + "/view/tablesMySql")%>" class='buttontext'>MySQL Table Creation SQL</A>
       <li><a href="<%=response.encodeURL(controlPath + "/view/dataMySql")%>" class='buttontext'>MySQL Auto Data SQL</A>
 --%>
       <li><a href="<%=response.encodeURL(controlPath + "/view/checkdb")%>" class='buttontext'>Check/Update Database</A>
-      <li><a href="<%=response.encodeURL(controlPath + "/view/ModelWriter")%>" class='buttontext'>Generate Entity Model XML</A>
-      <li><a href="<%=response.encodeURL(controlPath + "/view/EditEntity")%>" class='buttontext'>Edit Entity Definitions</A> (also see the Entity Reference for this)
+      <li><a href="<%=response.encodeURL(controlPath + "/view/ModelWriter")%>" class='buttontext' target='_blank'>Generate Entity Model XML</A>
+      <li><a href="<%=response.encodeURL(controlPath + "/view/EditEntity")%>" class='buttontext' target='_blank'>Edit Entity Definitions</A> (also see the Entity Reference for this)
     </ul>
   <%}%>
   <%if(security.hasPermission("UTIL_CACHE_VIEW", session)){%>

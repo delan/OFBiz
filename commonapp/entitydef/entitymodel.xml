@@ -24,7 +24,7 @@
  *  THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  *
  *@author David E. Jones (jonesde@ofbiz.org)
- *@created    Tue Oct 02 22:00:55 MDT 2001
+ *@created    Mon Oct 08 17:32:55 EDT 2001
  *@version    1.0
  */
 -->
@@ -5643,17 +5643,6 @@
   <!-- org.ofbiz.commonapp.product.price -->
   <!-- ========================================================= -->
 	
-    <entity entity-name="OrderValueBreak" 
-            package-name="org.ofbiz.commonapp.product.price"
-            title="Order Value Break Entity">
-      <field name="orderValueBreakId" type="id-ne"></field>
-      <field name="fromAmount" type="currency-amount"></field>
-      <field name="thruAmount" type="currency-amount"></field>	
-      <prim-key field="orderValueBreakId" />
-      <relation type="many" rel-entity-name="PriceComponent">
-        <key-map field-name="orderValueBreakId" />
-      </relation>
-    </entity>	
     <entity entity-name="PriceComponent" 
             package-name="org.ofbiz.commonapp.product.price"
             title="Price Component Entity">
@@ -5719,14 +5708,14 @@
       <relation type="one" rel-entity-name="SaleType">
         <key-map field-name="saleTypeId" />
       </relation>
-      <relation type="one" rel-entity-name="OrderValueBreak">
-        <key-map field-name="orderValueBreakId" />
-      </relation>
       <relation type="one" rel-entity-name="QuantityBreak">
         <key-map field-name="quantityBreakId" />
       </relation>
       <relation type="one" title="Utilization" rel-entity-name="Uom">
         <key-map field-name="utilizationUomId" rel-field-name="uomId" />
+      </relation>
+      <relation type="one" title="OrderValue" rel-entity-name="QuantityBreak">
+        <key-map field-name="orderValueBreakId" rel-field-name="quantityBreakId" />
       </relation>
     </entity>	
     <entity entity-name="PriceComponentAttribute" 
@@ -5786,11 +5775,25 @@
             package-name="org.ofbiz.commonapp.product.price"
             title="Quantity Break Entity">
       <field name="quantityBreakId" type="id-ne"></field>
+      <field name="quantityBreakTypeId" type="id"></field>
       <field name="fromQuantity" type="floating-point"></field>
       <field name="thruQuantity" type="floating-point"></field>	
       <prim-key field="quantityBreakId" />
       <relation type="many" rel-entity-name="PriceComponent">
         <key-map field-name="quantityBreakId" />
+      </relation>
+      <relation type="one" rel-entity-name="QuantityBreakType">
+        <key-map field-name="quantityBreakTypeId" />
+      </relation>
+    </entity>	
+    <entity entity-name="QuantityBreakType" 
+            package-name="org.ofbiz.commonapp.product.price"
+            title="Quantity Break Type Entity">
+      <field name="quantityBreakTypeId" type="id-ne"></field>
+      <field name="description" type="description"></field>	
+      <prim-key field="quantityBreakTypeId" />
+      <relation type="many" rel-entity-name="QuantityBreak">
+        <key-map field-name="quantityBreakTypeId" />
       </relation>
     </entity>	
     <entity entity-name="SaleType" 
@@ -6605,10 +6608,16 @@
       <field name="shipmentMethodTypeId" type="id"></field>
       <field name="partyId" type="id"></field>
       <field name="roleTypeId" type="id"></field>
-      <field name="weightUomId" type="id"></field>
-      <field name="weightUnitPrice" type="currency-amount"></field>
       <field name="geoIdTo" type="id"></field>
       <field name="geoIdFrom" type="id"></field>
+      <field name="weightBreakId" type="id"></field>
+      <field name="weightUomId" type="id"></field>
+      <field name="weightUnitPrice" type="currency-amount"></field>
+      <field name="quantityBreakId" type="id"></field>
+      <field name="quantityUomId" type="id"></field>
+      <field name="quantityUnitPrice" type="currency-amount"></field>
+      <field name="priceBreakId" type="id"></field>
+      <field name="priceUnitPrice" type="currency-amount"></field>
       <field name="orderFlatPrice" type="currency-amount"></field>
       <field name="orderPricePercent" type="floating-point"></field>
       <field name="orderItemFlatPrice" type="currency-amount"></field>	
@@ -6636,6 +6645,15 @@
       </relation>
       <relation type="one" title="From" rel-entity-name="Geo">
         <key-map field-name="geoIdFrom" rel-field-name="geoId" />
+      </relation>
+      <relation type="one" title="Weight" rel-entity-name="QuantityBreak">
+        <key-map field-name="weightBreakId" rel-field-name="quantityBreakId" />
+      </relation>
+      <relation type="one" title="Quantity" rel-entity-name="QuantityBreak">
+        <key-map field-name="quantityBreakId" />
+      </relation>
+      <relation type="one" title="Price" rel-entity-name="QuantityBreak">
+        <key-map field-name="priceBreakId" rel-field-name="quantityBreakId" />
       </relation>
     </entity>	
     <entity entity-name="ShipmentItem" 
