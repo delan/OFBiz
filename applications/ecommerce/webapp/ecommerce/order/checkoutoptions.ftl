@@ -470,7 +470,7 @@ function toggleBillingAccount(box) {
                             <td align="left" valign="top" width="99%" nowrap>
                               <div class="tabletext">
                                ${billingAccount.description?default("Bill Account")} #<b>${billingAccount.billingAccountId}</b>&nbsp;(<@ofbizCurrency amount=availableAmount isoCode=billingAccount.accountCurrencyUomId?default(cart.getCurrency())/>)<br>
-                               ${billingAccount.description?default("Bill Account")} #<b>${billingAccount.billingAccountId}</b>&nbsp;(${(availableAmount)?string.currency})<br>
+                               ${billingAccount.description?default("Bill Account")} #<b>${billingAccount.billingAccountId}</b>&nbsp;(${availableAmount})<br>
                                <b>${uiLabelMap.OrderBillUpTo}:</b> <input type="text" size="5" class="inputBox" name="amount_${billingAccount.billingAccountId}" value="${availableAmount?double?string("##0.00")}" <#if !(billingAccount.billingAccountId == selectedBillingAccount?default(""))>disabled</#if>>
                               </div>
                             </td>

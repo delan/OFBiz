@@ -66,12 +66,12 @@
                         <div class="tabletext"><b>${cartLine.getItemTypeDescription()?if_exists}</b></div>
                       </#if>
                     </td>
-                    <td align="right" valign="top"><div class="tabletext" nowrap>${cartLine.getItemSubTotal()?string.currency}</div></td>
+                    <td align="right" valign="top"><div class="tabletext" nowrap>${cartLine.getItemSubTotal()}</div></td>
                   </tr>
                 </#list>
                 <tr>
                   <td colspan="3" align="right">
-                    <div class="tabletext"><b>Total: ${shoppingCart.getGrandTotal()?string.currency}</b></div>
+                    <div class="tabletext"><b>Total: ${shoppingCart.getGrandTotal()}</b></div>
                     <div class='insideHeaderDisabled'>
                       <a href="/salesrep/control/orderentry" class="insideHeaderLink">[View Order]</a>
                     </div>

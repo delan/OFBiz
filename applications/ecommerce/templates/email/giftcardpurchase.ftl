@@ -42,7 +42,7 @@ You have been sent a MyCompany.com Gift Card from ${senderName}!<br><br>
 <pre>
   Your Card Number: ${cardNumber?if_exists}
   Your Pin Number : ${pinNumber?if_exists}
-  Gift Amount     : ${amount?string.currency?if_exists}
+  Gift Amount     : ${amount?if_exists}
 </pre>
 
 

@@ -63,7 +63,7 @@
                        <#if cart.getShippingContactMechId()?exists>
                          <#assign shippingEstMap = Static["org.ofbiz.order.shoppingcart.shipping.ShippingEvents"].getShipEstimate(delegator, cart, shippingMethod)>
                          <#if shippingEstMap?has_content && shippingEstMap.shippingTotal?exists>
-                           <#assign shippingEstimate = " - " + shippingEstMap.shippingTotal?string.currency>
+                           <#assign shippingEstimate = " - " + shippingEstMap.shippingTotal>
                          </#if>
                        </#if>
                       <#if carrierShipmentMethod.partyId != "_NA_">${carrierShipmentMethod.partyId?if_exists}&nbsp;</#if>${carrierShipmentMethod.description?if_exists}${shippingEstimate?if_exists}

@@ -64,7 +64,7 @@
                     <TD><DIV class='tabletext'>${(requirementType.description)?if_exists}</DIV></TD>
                     <TD><DIV class='tabletext'>${requirement.description?if_exists}</DIV></TD>
                     <TD><DIV class='tabletext'>${requirement.requiredByDate?if_exists}</DIV></TD>
-                    <TD><DIV class='tabletext'>${requirement.estimatedBudget?default(0)?string.currency}</DIV></TD>
+                    <TD><DIV class='tabletext'>${requirement.estimatedBudget?default(0)}</DIV></TD>
                     <TD align=right NOWRAP><A class="buttontext" href="<@ofbizUrl>/workefforts?requirementId=${requirement.requirementId}</@ofbizUrl>">${uiLabelMap.WorkEffortTasks}</a>&nbsp;/&nbsp;<A class='buttontext' href='<@ofbizUrl>/requirement?requirementId=${requirement.requirementId}</@ofbizUrl>'>
                         ${uiLabelMap.CommonEdit}[${requirement.requirementId?if_exists}]</a></DIV></TD>
                   </TR>

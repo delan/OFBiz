@@ -216,7 +216,7 @@ function lookupPayment() {
               <td><div class='tabletext'>${payment.partyIdFrom}</div></td>
               <td><div class='tabletext'>${payment.partyIdTo}</div></td>
               <td><div class='tabletext'>${(payment.effectiveDate?string)?if_exists}</div></td>
-              <td align='right'><div class='tabletext'>${payment.amount?string.currency}</div></td>
+              <td align='right'><div class='tabletext'>${payment.amount}</div></td>
               <td align='right'><a href="<@ofbizUrl>/editPayment?paymentId=${payment.paymentId}</@ofbizUrl>" class='buttontext'>Edit</a></td>
             </tr>
             <#-- toggle the row color -->

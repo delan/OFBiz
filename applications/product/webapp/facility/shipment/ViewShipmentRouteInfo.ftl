@@ -103,10 +103,10 @@
         <td>
         	<div class="tabletext">${shipmentRouteSegment.billingWeight?if_exists} ${(billingWeightUom.description)?if_exists} [${(billingWeightUom.abbreviation)?if_exists}]</div>
         	<div class="tabletext">${(currencyUom.description)?default("&nbsp;")}</div>
-        	<div class="tabletext">${(shipmentRouteSegment.actualTransportCost?string.currency)?default("&nbsp;")}</div>
-        	<div class="tabletext">${(shipmentRouteSegment.actualServiceCost?string.currency)?default("&nbsp;")}</div>
-        	<div class="tabletext">${(shipmentRouteSegment.actualOtherCost?string.currency)?default("&nbsp;")}</div>
-        	<div class="tabletext">${(shipmentRouteSegment.actualCost?string.currency)?default("&nbsp;")}</div>
+        	<div class="tabletext">${(shipmentRouteSegment.actualTransportCost)?default("&nbsp;")}</div>
+        	<div class="tabletext">${(shipmentRouteSegment.actualServiceCost)?default("&nbsp;")}</div>
+        	<div class="tabletext">${(shipmentRouteSegment.actualOtherCost)?default("&nbsp;")}</div>
+        	<div class="tabletext">${(shipmentRouteSegment.actualCost)?default("&nbsp;")}</div>
         </td>
     </tr>
     <#list shipmentPackageRouteSegs as shipmentPackageRouteSeg>

@@ -202,7 +202,7 @@
                       <a href="<@ofbizUrl>/editShoppingList?shoppingListId=${childShoppingList.shoppingListId}</@ofbizUrl>" class="buttontext">${childShoppingList.listName?default(childShoppingList.shoppingListId)}</a>
 					</td>                      
 					<td nowrap align="right">
-					  <div class="tabletext">${totalPrice?string.currency}</div>
+					  <div class="tabletext">${totalPrice}</div>
 					</td>                      
 					<td align="right">
                       <a href="<@ofbizUrl>/editShoppingList?shoppingListId=${childShoppingList.shoppingListId}</@ofbizUrl>" class="buttontext">[${uiLabelMap.EcommerceGoToList}]</a>
@@ -215,7 +215,7 @@
 			  <tr>
 				<td><div class="tabletext">&nbsp;</div></td>
 				<td nowrap align="right">
-				  <div class="tableheadtext">${shoppingListChildTotal?string.currency}</div>
+				  <div class="tableheadtext">${shoppingListChildTotal}</div>
 				</td>                      
 				<td><div class="tabletext">&nbsp;</div></td>
 			  </tr>
@@ -290,10 +290,10 @@
                         </td>
                         -->
                         <td nowrap align="right">
-                          <div class="tabletext">${unitPrice?string.currency}</div>
+                          <div class="tabletext">${unitPrice}</div>
                         </td>
                         <td nowrap align="right">
-                          <div class="tabletext">${totalPrice?string.currency}</div>
+                          <div class="tabletext">${totalPrice}</div>
                         </td>
                         <td align="right">
                         	<a href="javascript:document.listform_${shoppingListItem.shoppingListItemSeqId}.submit();" class="buttontext">[${uiLabelMap.CommonUpdate}]</a>
@@ -332,7 +332,7 @@
 					<#--<td><div class="tabletext">&nbsp;</div></td>-->
 					<td><div class="tabletext">&nbsp;</div></td>
 					<td nowrap align="right">
-					  <div class="tableheadtext">${shoppingListItemTotal?string.currency}</div>
+					  <div class="tableheadtext">${shoppingListItemTotal}</div>
 					</td>                      
 					<td><div class="tabletext">&nbsp;</div></td>
 				  </tr>
@@ -370,7 +370,7 @@
           	<div class="tabletext">${uiLabelMap.EcommerceChildListTotalPrice}</div>
           </td>
           <td align="right" width="5%">
-          	<div class="tabletext">${shoppingListChildTotal?string.currency}</div>
+          	<div class="tabletext">${shoppingListChildTotal}</div>
           </td>
           <td width="90%"><div class="tabletext">&nbsp;</div></td>
         </tr>
@@ -379,7 +379,7 @@
           	<div class="tabletext">${uiLabelMap.EcommerceListItemsTotalPrice}&nbsp;</div>
           </td>
           <td align="right">
-          	<div class="tabletext">${shoppingListItemTotal?string.currency}</div>
+          	<div class="tabletext">${shoppingListItemTotal}</div>
           </td>
           <td><div class="tabletext">&nbsp;</div></td>
         </tr>
@@ -388,7 +388,7 @@
           	<div class="tableheadtext">${uiLabelMap.OrderGrandTotal}</div>
           </td>
           <td align="right">
-          	<div class="tableheadtext">${shoppingListTotalPrice?string.currency}</div>
+          	<div class="tableheadtext">${shoppingListTotalPrice}</div>
           </td>
           <td><div class="tabletext">&nbsp;</div></td>
         </tr>

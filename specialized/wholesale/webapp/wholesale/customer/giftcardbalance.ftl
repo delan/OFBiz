@@ -44,7 +44,7 @@
       <td colspan="2">
         <div class="graybox">
           <#if (requestAttributes.balance?default(0) > 0)>
-            ${requestAttributes.balance?string.currency}
+            ${requestAttributes.balance}
           <#else>
             Problem checking you balance; check your card and pin number and try again
           </#if>
