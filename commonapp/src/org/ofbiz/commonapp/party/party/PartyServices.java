@@ -1,6 +1,9 @@
 /*
  * $Id$
  * $Log$
+ * Revision 1.1  2002/01/26 11:21:32  jonesde
+ * Changed old party events to new service and simple events, added event and services for party group
+ *
  * 
  */
 
@@ -43,13 +46,25 @@ import org.ofbiz.core.service.*;
  * @created January 25, 2002
  */
 public class PartyServices {
-    
     /** Deletes a Party
      *@param ctx The DispatchContext that this service is operating in
      *@param context Map containing the input parameters
      *@return Map with the result of the service, the output parameters
      */
     public static Map deleteParty(DispatchContext ctx, Map context) {
+        /*
+         * pretty serious operation, would delete:
+         * - Party
+         * - PartyRole
+         * - PartyRelationship: from and to
+         * - PartyDataObject
+         * - Person or PartyGroup
+         * - PartyContactMech, but not ContactMech itself
+         * - PartyContactMechPurpose
+         * - Order?
+         *
+         * We may want to not allow this, but rather have some sort of delete flag for it if it's REALLY that big of a deal...
+         */
         return ServiceUtil.returnError("Cannot delete party, operation not yet implemented");
     }
     
