@@ -92,7 +92,12 @@ public class SimpleMethodBsfEngine extends BSFEngineImpl {
         if (!(expr instanceof String)) throw new BSFException("BeanShell expression must be a string");
 
         //right now only supports one method per file, so get all methods and just run the first...
-        Map simpleMethods = SimpleMethod.getDirectSimpleMethods(source, (String) expr);
+        Map simpleMethods = null;
+        try {
+            simpleMethods = SimpleMethod.getDirectSimpleMethods(source, (String) expr);
+        } catch (MiniLangException e) {
+            throw new BSFException("Error loading/parsing simple-method XML source: " + e.getMessage());
+        }
         Set smNames = simpleMethods.keySet();
         if (smNames.size() == 0) throw new BSFException("Did not find any simple-methods in the file");
 

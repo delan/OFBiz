@@ -212,6 +212,8 @@ public class SimpleMethod {
             if (content != null) {
                 document = UtilXml.readXmlDocument(content, true);
             }
+        } catch (java.io.IOException e) {
+            throw new MiniLangException("Could not read XML content", e);
         } catch (org.xml.sax.SAXException e) {
             throw new MiniLangException("Could not parse direct XML content", e);
         } catch (javax.xml.parsers.ParserConfigurationException e) {
