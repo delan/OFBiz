@@ -36,7 +36,7 @@ public class MasterDAO
 {
   public static String fileName = "f:\\ofbiz\\work\\ofbiz\\commonapp\\entitydef\\commonapp.xml";
   
-  public static Connection getConnection() throws SQLException { return ConnectionFactory.getConnection(); }
+  public static Connection getConnection() throws SQLException { return ConnectionFactory.getConnection("default"); }
   
   public static void initMasterDAO()
   {
