@@ -18,7 +18,7 @@
     <handler name="ftl" type="view" class="org.ofbiz.content.webapp.ftl.FreeMarkerViewHandler"/>
     <handler name="velocity" type="view" class="org.ofbiz.content.webapp.view.VelocityViewHandler"/>
     <handler name="jsp" type="view" class="org.ofbiz.content.webapp.view.JspViewHandler"/>
-    
+
     <handler name="http" type="view" class="org.ofbiz.content.webapp.view.HttpViewHandler"/>
     <handler name="datavision" type="view" class="org.ofbiz.content.webapp.view.DataVisionViewHandler"/>
     <handler name="jasperreportspdf" type="view" class="org.ofbiz.content.webapp.view.JasperReportsPdfViewHandler"/>
@@ -72,7 +72,7 @@
         <response name="success" type="view" value="main"/>
         <response name="error" type="view" value="main"/>
     </request-map>
-    
+
     <request-map uri="main"><security https="true" auth="true"/>
         <response name="success" type="view" value="main"/>
     </request-map>
@@ -466,7 +466,7 @@
         <response name="success" type="view" value="EditProductFacilities"/>
         <response name="error" type="view" value="EditProductFacilities"/>
     </request-map>
-    
+
     <!-- ================ Product Facility Locations Requests ================= -->
     <request-map uri="EditProductFacilityLocations"><security https="true" auth="true"/>
         <response name="success" type="view" value="EditProductFacilityLocations"/>
@@ -486,7 +486,7 @@
         <response name="success" type="view" value="EditProductFacilityLocations"/>
         <response name="error" type="view" value="EditProductFacilityLocations"/>
     </request-map>
-    
+
     <!-- ================ Inventory Requests ================= -->
     <request-map uri="EditProductInventoryItems"><security https="true" auth="true"/>
         <response name="success" type="view" value="EditProductInventoryItems"/>
@@ -771,8 +771,8 @@
     <request-map uri="createProductPriceRule">
         <security https="true" auth="true"/>
         <event type="service" path="" invoke="createProductPriceRule"/>
-        <response name="success" type="view" value="EditProductPriceRules"/>
-        <response name="error" type="view" value="EditProductPriceRules"/>
+        <response name="success" type="view" value="FindPriceRules"/>
+        <response name="error" type="view" value="FindPriceRules"/>
     </request-map>
     <request-map uri="updateProductPriceRule">
         <security https="true" auth="true"/>
@@ -824,12 +824,12 @@
         <response name="success" type="view" value="EditProductPriceRules"/>
         <response name="error" type="view" value="EditProductPriceRules"/>
     </request-map>
-    
+
     <!-- ================ Product Store Requests ============= -->
     <request-map uri="FindProductStore">
         <security https="true" auth="true"/>
         <response name="success" type="view" value="FindProductStore"/>
-    </request-map>    
+    </request-map>
     <request-map uri="EditProductStore">
         <security https="true" auth="true"/>
         <response name="success" type="view" value="EditProductStore"/>
@@ -846,7 +846,7 @@
         <response name="success" type="view" value="EditProductStore"/>
         <response name="error" type="view" value="EditProductStore"/>
     </request-map>
-    
+
     <!-- ================ ProductStore WebSite Requests ================= -->
     <request-map uri="EditProductStoreWebSites">
         <security https="true" auth="true"/>
@@ -858,7 +858,7 @@
         <response name="success" type="view" value="EditProductStoreWebSites"/>
         <response name="error" type="view" value="EditProductStoreWebSites"/>
     </request-map>
-    
+
     <!-- ================ ProductStore Role Requests ================= -->
     <request-map uri="EditProductStoreRoles">
         <security https="true" auth="true"/>
@@ -875,8 +875,8 @@
         <event type="service" invoke="removeProductStoreRole"/>
         <response name="success" type="view" value="EditProductStoreRoles"/>
         <response name="error" type="view" value="EditProductStoreRoles"/>
-    </request-map>       
-    
+    </request-map>
+
     <!-- ================ ProductStore Payment Requests ================= -->
     <request-map uri="EditProductStorePaySetup">
         <security https="true" auth="true"/>
@@ -893,14 +893,14 @@
         <event type="service" invoke="updateProductStorePaymentSetting"/>
         <response name="success" type="view" value="EditProductStorePaySetup"/>
         <response name="error" type="view" value="EditProductStorePaySetup"/>
-    </request-map>    
+    </request-map>
     <request-map uri="storeRemovePaySetting">
         <security https="true" auth="true"/>
         <event type="service" invoke="deleteProductStorePaymentSetting"/>
         <response name="success" type="view" value="EditProductStorePaySetup"/>
         <response name="error" type="view" value="EditProductStorePaySetup"/>
     </request-map>
-           
+
     <!-- ================ ProductStore Tax Requests ================= -->
     <request-map uri="EditProductStoreTaxSetup">
         <security https="true" auth="true"/>
@@ -918,7 +918,7 @@
         <response name="success" type="view" value="EditProductStoreTaxSetup"/>
         <response name="error" type="view" value="EditProductStoreTaxSetup"/>
     </request-map>
-    
+
     <!-- ================ ProductStore Shipping Requests ================= -->
     <request-map uri="EditProductStoreShipSetup">
         <security https="true" auth="true"/>
@@ -953,7 +953,7 @@
         <event type="service" invoke="removeProductStoreShipMeth"/>
         <response name="success" type="view" value="EditProductStoreShipSetup"/>
         <response name="error" type="view" value="EditProductStoreShipSetup"/>
-    </request-map>            
+    </request-map>
     <request-map uri="createShipmentMethodType">
         <security https="true" auth="true"/>
         <event type="service" invoke="createShipmentMethodType"/>
@@ -965,7 +965,7 @@
         <event type="service" invoke="updateShipmentMethodType"/>
         <response name="success" type="view" value="EditProductStoreShipSetup"/>
         <response name="error" type="view" value="EditProductStoreShipSetup"/>
-    </request-map>        
+    </request-map>
     <request-map uri="createCarrierShipmentMethod">
         <security https="true" auth="true"/>
         <event type="service" invoke="createCarrierShipmentMethod"/>
@@ -977,7 +977,7 @@
         <event type="service" invoke="updateCarrierShipmentMethod"/>
         <response name="success" type="view" value="EditProductStoreShipSetup"/>
         <response name="error" type="view" value="EditProductStoreShipSetup"/>
-    </request-map>           
+    </request-map>
 
     <!-- ================ ProductStore Promos Requests ================= -->
     <request-map uri="EditProductStorePromos"><security https="true" auth="true"/>
@@ -1022,7 +1022,7 @@
         <response name="success" type="view" value="EditProductStoreCatalogs"/>
         <response name="error" type="view" value="EditProductStoreCatalogs"/>
     </request-map>
-    
+
     <!-- ================ ProductStore Email Requests ================= -->
     <request-map uri="EditProductStoreEmails">
         <security https="true" auth="true"/>
@@ -1045,7 +1045,7 @@
         <event type="service" path="" invoke="removeProductStoreEmailSetting"/>
         <response name="success" type="view" value="EditProductStoreEmails"/>
         <response name="error" type="view" value="EditProductStoreEmails"/>
-    </request-map>       
+    </request-map>
 
     <!-- end of request mappings -->
 

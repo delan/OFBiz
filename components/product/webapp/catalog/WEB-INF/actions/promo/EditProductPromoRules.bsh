@@ -1,27 +1,27 @@
 /*
  *  Copyright (c) 2003 The Open For Business Project - www.ofbiz.org
  *
- *  Permission is hereby granted, free of charge, to any person obtaining a 
- *  copy of this software and associated documentation files (the "Software"), 
- *  to deal in the Software without restriction, including without limitation 
- *  the rights to use, copy, modify, merge, publish, distribute, sublicense, 
- *  and/or sell copies of the Software, and to permit persons to whom the 
+ *  Permission is hereby granted, free of charge, to any person obtaining a
+ *  copy of this software and associated documentation files (the "Software"),
+ *  to deal in the Software without restriction, including without limitation
+ *  the rights to use, copy, modify, merge, publish, distribute, sublicense,
+ *  and/or sell copies of the Software, and to permit persons to whom the
  *  Software is furnished to do so, subject to the following conditions:
  *
- *  The above copyright notice and this permission notice shall be included 
+ *  The above copyright notice and this permission notice shall be included
  *  in all copies or substantial portions of the Software.
  *
- *  THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS 
- *  OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF 
- *  MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. 
- *  IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY 
- *  CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT 
- *  OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR 
+ *  THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS
+ *  OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF
+ *  MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT.
+ *  IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY
+ *  CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT
+ *  OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR
  *  THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  *
  *@author     David E. Jones
  *@author     Brad Steiner
- *@version    $Revision: 1.3 $
+ *@version    $Revision: 1.4 $
  *@since      2.2
  */
 
@@ -42,25 +42,22 @@ if(security.hasEntityPermission("CATALOG", "_VIEW", session)) {
 }
 
 String productPromoId = request.getParameter("productPromoId");
-if (productPromoId != null) context.put("productPromoId", productPromoId);
 
 GenericValue productPromo = delegator.findByPrimaryKey("ProductPromo", UtilMisc.toMap("productPromoId", productPromoId));
 List productPromoRules = null;
 if (productPromo != null) {
-    context.put("productPromo", productPromo);
     productPromoRules = productPromo.getRelated("ProductPromoRule", null, UtilMisc.toList("ruleName"));
-    if (productPromoRules != null)     
-        context.put("productPromoRules", productPromoRules);
 }
 
 List inputParamEnums = delegator.findByAndCache("Enumeration", UtilMisc.toMap("enumTypeId", "PROD_PROMO_IN_PARAM"), UtilMisc.toList("sequenceId"));
-if (inputParamEnums != null) context.put("inputParamEnums", inputParamEnums);
-
 List condOperEnums = delegator.findByAndCache("Enumeration", UtilMisc.toMap("enumTypeId", "PROD_PROMO_COND"), UtilMisc.toList("sequenceId"));
-if (condOperEnums != null) context.put("condOperEnums", condOperEnums);
-
 List productPromoActionEnums = delegator.findByAndCache("Enumeration", UtilMisc.toMap("enumTypeId", "PROD_PROMO_ACTION"), UtilMisc.toList("sequenceId"));
-if (productPromoActionEnums != null) context.put("productPromoActionEnums", productPromoActionEnums);
-
 List orderAdjustmentTypes = delegator.findAllCache("OrderAdjustmentType", UtilMisc.toList("description"));
-if (orderAdjustmentTypes != null) context.put("orderAdjustmentTypes", orderAdjustmentTypes);
+
+context.put("productPromoId", productPromoId);
+context.put("productPromo", productPromo);
+context.put("productPromoRules", productPromoRules);
+context.put("inputParamEnums", inputParamEnums);
+context.put("condOperEnums", condOperEnums);
+context.put("productPromoActionEnums", productPromoActionEnums);
+context.put("orderAdjustmentTypes", orderAdjustmentTypes);
