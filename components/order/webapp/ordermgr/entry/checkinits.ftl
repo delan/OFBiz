@@ -36,17 +36,17 @@ var defaultSuppText = "!";
 var defaultSuppValue = "!";
 
 function setOrderType(po) {
-    var storeBox = document.entryform.productStoreId;
+//    var storeBox = document.entryform.productStoreId;
     var suppBox = document.entryform.supplierPartyId;
     if (po) {
-        if (defaultStoreText == "!") {
-            defaultStoreText = storeBox.options[storeBox.selectedIndex].text;
-        }
-        if (defaultStoreValue == "!") {
-            defaultStoreValue = storeBox.options[storeBox.selectedIndex].value;
-        }
-        storeBox.options[storeBox.selectedIndex].text = ${uiLabelMap.OrderNotUsedForPurchase};
-        storeBox.options[storeBox.selectedIndex].value = "";
+//        if (defaultStoreText == "!") {
+//            defaultStoreText = storeBox.options[storeBox.selectedIndex].text;
+//        }
+//        if (defaultStoreValue == "!") {
+//            defaultStoreValue = storeBox.options[storeBox.selectedIndex].value;
+//        }
+//        storeBox.options[storeBox.selectedIndex].text = "${uiLabelMap.OrderNotUsedForPurchase}";
+//        storeBox.options[storeBox.selectedIndex].value = "";
 
         if (defaultSuppText != "!") {
             suppBox.options[suppBox.selectedIndex].text = defaultSuppText;
@@ -55,12 +55,12 @@ function setOrderType(po) {
             suppBox.options[suppBox.selectedIndex].value = defaultSuppValue;
         }
     } else {
-        if (defaultStoreText != "!") {
-            storeBox.options[storeBox.selectedIndex].text = defaultStoreText;
-        }
-        if (defaultStoreValue != "!") {
-            storeBox.options[storeBox.selectedIndex].value = defaultStoreValue;
-        }
+//        if (defaultStoreText != "!") {
+//            storeBox.options[storeBox.selectedIndex].text = defaultStoreText;
+//        }
+//        if (defaultStoreValue != "!") {
+//            storeBox.options[storeBox.selectedIndex].value = defaultStoreValue;
+//        }
 
         if (defaultSuppText == "!") {
             defaultSuppText = suppBox.options[suppBox.selectedIndex].text;
@@ -68,10 +68,10 @@ function setOrderType(po) {
         if (defaultSuppValue == "!") {
             defaultSuppValue = suppBox.options[suppBox.selectedIndex].value;
         }
-        suppBox.options[suppBox.selectedIndex].text = ${uiLabelMap.OrderNotUsedForSales};
+        suppBox.options[suppBox.selectedIndex].text = "${uiLabelMap.OrderNotUsedForSales}";
         suppBox.options[suppBox.selectedIndex].value = "";
     }
-    storeBox.disabled = po;
+//    storeBox.disabled = po;
     suppBox.disabled = !po;
 }
 
