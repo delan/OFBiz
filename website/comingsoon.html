@@ -29,8 +29,9 @@
 <h3>Table of Contents</h3>
 <ul>
   <li class='contenttext'><a href="#Inroduction">Inroduction</a>
-  <li class='contenttext'><a href="#Warehousing20030416">Warehousing &amp; eCommerce - Notes as of 16 April 2003</a>
-  <li class='contenttext'><a href="#Content20030416">Content Management - Notes as of 16 April 2003</a>
+  <li class='contenttext'><a href="#Accounting">Accounting</a>
+  <li class='contenttext'><a href="#Content">Content Management</a>
+  <li class='contenttext'><a href="#Manufacturing">Manufacturing Management</a>
 </ul>
 <br>
 
@@ -77,38 +78,38 @@ members of the community, we have limited design and development resources so we
 somewhat careful about where we use them.</p>
 
 <hr class='sepbar'>
-<h3><a name="Warehousing20030416">Warehousing &amp; eCommerce - Notes as of 16 April 2003</a></h3>
+<h3><a name="Accounting">Accounting - Notes updated Feb 2004</a></h3>
 <hr class='sepbar'>
 
-<p class='contenttext'>Most of this functionality is sponsored by clients, so you can expect to
-see it implemented within the next couple of months. The high level goal of this functionality
-is to make it possible to run a retail merchandise business doing everything but accounting with
-OFBiz. In addition to the current catalog, order and party infrastructure the major pieces needed
-are related to warehouse management, purchase orders, incoming delivery management, shipping of
-merchandise, back ordered merchandise, and returns &amp; refunds.</p>
+<p class='contenttext'>This is </p>
+
+<p class='contenttext'>For more information see the Wiki pages on plans for accounting, starting with: 
+<a href="http://ofbizwiki.go-integral.com/Wiki.jsp?page=Accounting">Accounting Wiki Page</a>
+</p>
 
 <ul>
-  <li class='contenttext'>Shipping
+  <li class='contenttext'>Chart of Accounts
   <ul>
-	<li class='contenttext'>Generate pick-lists for groups of orders, sorted by facility location
-	<li class='contenttext'>Shipping label and manifest printing
-	<li class='contenttext'>Shipment creation and tracking
+    <li class='contenttext'>Global Chart of Accounts
+    <li class='contenttext'>Subset Chart of Accounts for Companies/Divisions/Departments/etc
+    <li class='contenttext'>Enables reporting for organizations at any level, limited only by the level granularity of entered data
   </ul>
-  <li class='contenttext'>Back Orders: includes customer notification, delivery estimates, partial CC settlements, CC refunds, etc
-  <li class='contenttext'>Returns &amp; Refunds: based on order items, track reasons, put refunds on CC, billing account, mail a check, store credit, etc.
-  <li class='contenttext'>Purchase Orders
+  <li class='contenttext'>Journalized Transaction Entry and Posting
+  <li class='contenttext'>General Ledger
+  <li class='contenttext'>Basic Financial Statements
   <ul>
-	<li class='contenttext'>Manual entry of purchase orders
-	<li class='contenttext'>Assisted creation of purchase orders based on products needed for specific facilities
-	<li class='contenttext'>Schedule and manage receipt of purchase orders
-	<li class='contenttext'>PO based receiving
-	<li class='contenttext'>PO invoicing and payables
+    <li class='contenttext'>Income Statement
+    <li class='contenttext'>Statement of Owner's Equity
+    <li class='contenttext'>Balance Sheet
+    <li class='contenttext'>Statement of Cash Flows
   </ul>
+  <li class='contenttext'>Other Reports and Statements
 </ul>
+
 <br>
 
 <hr class='sepbar'>
-<h3><a name="Content20030416">Content Management - Notes as of 16 April 2003</a></h3>
+<h3><a name="Content">Content Management - Notes updated Feb 2004</a></h3>
 <hr class='sepbar'>
 
 <p class='contenttext'>The Content Management portion of OFBiz is one of the big next things 
@@ -122,15 +123,8 @@ facilities for template controlled content such as legal forms, surveys, etc.</p
 management should include, and this information will change as time goes on and ideas are better
 nailed down.</p>
 
+
 <ul>
-  <li class='contenttext'>Basic Content application screens for creating/updating content, data 
-  resources, meta data, content structure, etc.
-  <li class='contenttext'>Use slightly modified WYSISWIG editors from WSPublisher for editing of HTML, XML, plain text and other content
-  <li class='contenttext'>Tools to mount content structures as webapp resources (just the top-level 
-  content piece will be mounted and a tree browser and main content view area 
-  will be used to allow the user to browse the content)
-  <li class='contenttext'>Add categorization and security features so that sets of content can be 
-  administered and view by limited groups of users.
   <li class='contenttext'>Add versioning to the data resource entities so that previous revisions can 
   be maintained (planning on using a simple mechanism when revision control is 
   desired and a certain resource is updated the old data will be put into 
@@ -142,15 +136,7 @@ nailed down.</p>
   versions; the other options would be construct a new content structure that 
   will be published when finished so that the current stuff remains untouched 
   until all of the new stuff is in place)
-
   <li class='contenttext'>Incorporate Lucene for text searching of content
-  <li class='contenttext'>Incorporate FreeMarker/XSLT/Velocity to allow for scripting in content text, makes it more 
-  flexible like JSPs for dynamic content when needed
-  <li class='contenttext'>Allow for transformation of content based on FreeMarker scripts or XSLT stylesheets
-  <li class='contenttext'>Add some utility classes that will be put in the FreeMarker/Velocity context for 
-  content templates that will allow for calling services, including other 
-  content, refering to external resources such as images, javascript files, CSS 
-  files, etc.
   <li class='contenttext'>Custom set of pages for public and private forums. These are 
   ad-hoc administered (with optional permissions) and (with optional permissions) browsed 
   content organized in threads or topics. The 
@@ -162,10 +148,16 @@ nailed down.</p>
   definitions like DTDs or XML Schemas. The document definition will be a piece of content and
   may have a workflow associated with it that is automatically started when content based on that
   doc type is created/updated/etc.
-  <li class='contenttext'>Associate parties with content for administrative purposes or for things
-  like keeping track of who has read and who must read specific content
 </ul>
 
+<hr class='sepbar'>
+<h3><a name="Manufacturing">Manufacturing Management - Notes updated Feb 2004</a></h3>
+<hr class='sepbar'>
+
+<p class='contenttext'>For more information see the Wiki pages on plans for accounting, starting with: 
+<a href="http://ofbizwiki.go-integral.com/Wiki.jsp?page=Manufacturing">Manufacturing Wiki Page</a> and
+<a href="http://ofbizwiki.go-integral.com/Wiki.jsp?page=ProductConfiguratorNotes">Product Configurator Notes Wiki Page</a>
+</p>
 
 
 </BODY>
