@@ -1,4 +1,4 @@
-/*
+<#--
  *  Copyright (c) 2003 The Open For Business Project - www.ofbiz.org
  *
  *  Permission is hereby granted, free of charge, to any person obtaining a 
@@ -21,33 +21,7 @@
  *
  *@author     David E. Jones (jonesde@ofbiz.org)
  *@version    $Revision$
- *@since      2.2
-*/
+ *@since      2.1
+-->
 
-import java.util.*;
-import java.sql.Timestamp;
-import org.ofbiz.core.entity.*;
-import org.ofbiz.core.service.*;
-import org.ofbiz.core.util.*;
-
-/*
- * This script allows the findOrders.bsh script run before it,
- * populating the orderHeaderList and putting it into the context.
- */
-
-dispatcher = request.getAttribute("dispatcher");
-userLogin = session.getAttribute("userLogin");
-
-// if this is null or empty the service will get all approved orders
-orderHeaderList = context.get("orderHeaderList");
-inMap = UtilMisc.toMap("orderHeaderList", orderHeaderList, "userLogin", userLogin);
-outMap = dispatcher.runSync("getPicklistData", inMap);
-     
-context.put("inventoryItemInfoList", outMap.get("inventoryItemInfoList"));
-context.put("orderHeaderInfoList", outMap.get("orderHeaderInfoList"));
-context.put("wrongQuantityReservedList", outMap.get("wrongQuantityReservedList"));
-context.put("insufficientQohList", outMap.get("insufficientQohList"));
-
-if ("error".equals(outMap.get("responseMessage"))) {
-    Debug.logError("errorMessage: " + ServiceUtil.makeErrorMessage(outMap, "", "", "", ""));
-}
+${pages.get(page.path)}

@@ -28,4 +28,6 @@
     layoutSettings.put("headerImageUrl", "/images/ofbiz_logo.jpg");
     layoutSettings.put("headerMiddleBackgroundUrl", null);
     layoutSettings.put("headerRightBackgroundUrl", null);
+
+    request.setAttribute("activeApp", "facilitymgr");
 %>

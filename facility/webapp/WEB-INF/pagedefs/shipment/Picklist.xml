@@ -1,0 +1,7 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<page>
+    <template>main</template>
+    <property name="title">Pick List</property>
+    <property name="headerItem">picklist</property>
+    <page-action name="/shipment/Picklist.bsh"/> 
+</page>

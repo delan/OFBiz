@@ -19,28 +19,14 @@
  *  OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR 
  *  THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  *
+ *@author     David E. Jones (jonesde@ofbiz.org)
  *@author     Andy Zeneski (jaz@ofbiz.org)
  *@version    $Revision$
  *@since      2.2
 -->
 
-<script language="JavaScript">
-<!-- //
-function lookupOrders() {
-    orderIdValue = document.lookuporder.order_id.value;
-    if (orderIdValue.length > 1) {
-        document.lookuporder.action = "<@ofbizUrl>/orderview</@ofbizUrl>";
-    } else {
-        document.lookuporder.action = "<@ofbizUrl>/view/findorders</@ofbizUrl>";
-    }
-    document.lookuporder.submit();
-}
-// -->
-</script>
-
 <#if security.hasEntityPermission("ORDERMGR", "_VIEW", session)>
-<form method='post' name="lookuporder" action="<@ofbizUrl>/view/findorders</@ofbizUrl>">
-<input type='hidden' name='lookupFlag' value='Y'>
+<form method='post' name="PicklistOptions" action="<@ofbizUrl>/Picklist</@ofbizUrl>">
 <table border=0 width='100%' cellspacing='0' cellpadding='0' class='boxoutside'>
   <tr>
     <td width='100%'>
@@ -48,19 +34,10 @@ function lookupOrders() {
         <tr>
           <td><div class='boxhead'>Find Orders</div></td>
           <td align='right'>
-            <div class="tabletext">
-              <#if requestParameters.hideFields?default("N") == "Y">
-                <a href="<@ofbizUrl>/findorders?hideFields=N${paramList}</@ofbizUrl>" class="submenutextright">Show Fields</a>
-              <#else>
-                <#if orderHeaderList?exists><a href="<@ofbizUrl>/findorders?hideFields=Y${paramList}</@ofbizUrl>" class="submenutext">Hide Fields</a></#if>
-                <a href="javascript:lookupOrders();" class="submenutext">Lookup Order(s)</a>
-                <a href="/partymgr/control/findparty?externalLoginKey=${requestAttributes.externalLoginKey?if_exists}" class="submenutextright">Lookup Party</a>
-              </#if>
-            </div>
+            <a href="javascript:document.PicklistOptions.submit();" class="submenutext">Create Pick List</a>
           </td>
         </tr>
       </table>
-      <#if requestParameters.hideFields?default("N") != "Y">
       <table width='100%' border='0' cellspacing='0' cellpadding='2' class='boxbottom'>
         <tr>
           <td align='center' width='100%'>
@@ -182,131 +159,11 @@ function lookupOrders() {
           </td>
         </tr>
       </table>
-      </#if>
     </td>
   </tr>
 </table>
 </form> 
 
-
-<#if orderHeaderList?exists>
-<br>
-<table border=0 width='100%' cellspacing='0' cellpadding='0' class='boxoutside'>
-  <tr>
-    <td width='100%'>
-      <table width='100%' border='0' cellspacing='0' cellpadding='0' class='boxtop'>
-        <tr>
-          <td width="50%"><div class="boxhead">Orders Found</div></td>
-          <td width="50%">
-            <div class="boxhead" align=right>
-              <#if 0 < orderHeaderList?size>             
-                <#if 0 < viewIndex>
-                  <a href="<@ofbizUrl>/findorders?VIEW_SIZE=${viewSize}&VIEW_INDEX=${viewIndex-1}&hideFields=${requestParameters.hideFields?default("N")}${paramList}</@ofbizUrl>" class="submenutext">Previous</a>
-                <#else>
-                  <span class="submenutextdisabled">Previous</span>
-                </#if>
-                <#if 0 < listSize>
-                  <span class="submenutextinfo">${lowIndex+1} - ${highIndex} of ${listSize}</span>
-                </#if>
-                <#if highIndex < listSize>
-                  <a href="<@ofbizUrl>/findorders?VIEW_SIZE=${viewSize}&VIEW_INDEX=${viewIndex+1}&hideFields=${requestParameters.hideFields?default("N")}${paramList}</@ofbizUrl>" class="submenutextright">Next</a>
-                <#else>
-                  <span class="submenutextrightdisabled">Next</span>
-                </#if>
-              </#if>
-              &nbsp;
-            </div>
-          </td>
-        </tr>
-      </table>
-      <table width='100%' border='0' cellspacing='0' cellpadding='2' class='boxbottom'>
-        <tr>
-          <td width="5%" align="left"><div class="tableheadtext">Type</div></td>
-          <td width="5%" align="left"><div class="tableheadtext">OrderID</div></td>
-          <td width="20%" align="left"><div class="tableheadtext">Name</div></td>
-          <td width="5%" align="right"><div class="tableheadtext">Total Items</div></td>
-          <td width="10%" align="right"><div class="tableheadtext">Order Total</div></td>
-          <td width="5%" align="left"><div class="tableheadtext">&nbsp;</div></td>
-          <td width="20%" align="left"><div class="tableheadtext">Status</div></td>
-          <td width="20%" align="left"><div class="tableheadtext">Order Date</div></td>
-          <td width="5%" align="left"><div class="tableheadtext">PartyID</div></td>
-          <td width="10%">&nbsp;</td>
-        </tr>
-        <tr>
-          <td colspan='10'><hr class='sepbar'></td>
-        </tr>
-        <#if orderHeaderList?has_content>
-          <#assign rowClass = "viewManyTR2">
-          <#list orderHeaderList[lowIndex..highIndex-1] as orderHeader>
-            <#assign orh = Static["org.ofbiz.commonapp.order.order.OrderReadHelper"].getHelper(orderHeader)>
-            <#assign statusItem = orderHeader.getRelatedOneCache("StatusItem")>
-            <#assign orderType = orderHeader.getRelatedOneCache("OrderType")>
-            <#assign placingParty = orh.getPlacingParty()?if_exists>
-            <tr class='${rowClass}'>
-              <td><div class='tabletext'>${orderType.description?default(orderType.orderTypeId?default(""))}</div></td>
-              <td><a href="<@ofbizUrl>/orderview?order_id=${orderHeader.orderId}</@ofbizUrl>" class='buttontext'>${orderHeader.orderId}</a></td>
-              <td>
-                <div class='tabletext'>
-                <#assign partyId = "_NA_">
-                <#if placingParty?has_content>
-                  <#assign partyId = placingParty.partyId>
-                  <#if placingParty.getEntityName() == "Person">
-                    <#if placingParty.lastName?exists>
-                      ${placingParty.lastName}<#if placingParty.firstName?exists>, ${placingParty.firstName}</#if>
-                    <#else>
-                      N/A
-                    </#if>
-                  <#else>
-                    <#if placingParty.groupName?exists>
-                      ${placingParty.groupName}
-                    <#else>
-                      N/A
-                    </#if>
-                  </#if>
-                <#else>
-                  N/A
-                </#if>
-                </div>
-              </td>
-              <td align="right"><div class="tabletext">${orh.getTotalOrderItemsQuantity()?string.number}</div></td>
-              <td align="right"><div class="tabletext">${orh.getOrderGrandTotal()?string.currency}</div></td>
-              <td>&nbsp;</td>
-              <td><div class="tabletext">${statusItem.description?default(statusItem.statusId?default("N/A"))}</div></td>
-              <td><div class="tabletext"><nobr>${orderHeader.getString("orderDate")}</nobr></div></td>              
-              <td>
-                <#if partyId != "_NA_">
-                  <a href="/partymgr/control/viewprofile?party_id=${partyId}${requestAttributes.externalKeyParam}" class="buttontext">${partyId}</a>
-                <#else>
-                  <span class='tabletext'>N/A</span>
-                </#if>
-              </td>
-              <td align='right'>
-                <a href="<@ofbizUrl>/orderview?order_id=${orderHeader.orderId}</@ofbizUrl>" class='buttontext'>View</a>
-              </td>
-            </tr>
-            <#-- toggle the row color -->
-            <#if rowClass == "viewManyTR2">
-              <#assign rowClass = "viewManyTR1">
-            <#else>
-              <#assign rowClass = "viewManyTR2">
-            </#if>
-          </#list>          
-        <#else>
-          <tr>
-            <td colspan='4'><div class='head3'>No orders found.</div></td>
-          </tr>        
-        </#if>
-        <#if lookupErrorMessage?exists>
-          <tr>
-            <td colspan='4'><div class="head3">${lookupErrorMessage}</div></td>
-          </tr>
-        </#if>
-      </table>
-    </td>
-  </tr>
-</table>
-        
-</#if> 
 <#else>
   <h3>You do not have permission to view this page. ("ORDERMGR_VIEW" or "ORDERMGR_ADMIN" needed)</h3>
 </#if>

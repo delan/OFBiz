@@ -87,10 +87,6 @@
         <security https="true" auth="true"/>
         <response name="success" type="view" value="findorders"/>
     </request-map>
-    <request-map uri="picklist">
-        <security https="true" auth="true"/>
-        <response name="success" type="view" value="picklist"/>
-    </request-map>
     <request-map uri="tasklist">
     	<security https="true" auth="true"/>
     	<response name="success" type="view" value="ordertasklist"/>
@@ -450,7 +446,6 @@
     <view-map name="login" type="jpublish" page="/login.ftl"/>
 
     <view-map name="findorders" type="jpublish" page="/order/findOrders.ftl"/>
-    <view-map name="picklist" type="jpublish" page="/order/picklist.ftl"/>   
     <view-map name="schedulepo" type="jpublish" page="/order/schedulepo.ftl"/>
     <view-map name="orderview" type="region"/>   
     <view-map name="ordertasklist" type="jpublish" page="/task/ordertasklist.ftl"/>    
