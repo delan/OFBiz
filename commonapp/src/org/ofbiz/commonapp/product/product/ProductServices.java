@@ -138,7 +138,40 @@ public class ProductServices {
         while (i.hasNext()) {
             String productIdTo = (String) ((GenericValue) i.next()).get("productIdTo");
             
-            //check inventory for each item
+            //first check to see if intro and discontinue dates are within range
+            GenericValue productTo = null;
+            try {
+                productTo = delegator.findByPrimaryKeyCache("Product", UtilMisc.toMap("productId", productIdTo));
+            } catch (GenericEntityException e) {
+                Debug.logError(e);
+                result.put(ModelService.RESPONSE_MESSAGE, ModelService.RESPOND_ERROR);
+                result.put(ModelService.ERROR_MESSAGE, "Error finding associated variant with ID " + productIdTo + ", error was: " + e.toString());
+                return result;
+            }
+            if (productTo == null) {
+                Debug.logWarning("Could not find associated variant with ID " + productIdTo + ", not showing in list");
+                continue;
+            }
+            
+            java.sql.Timestamp nowTimestamp = UtilDateTime.nowTimestamp();
+            //check to see if introductionDate hasn't passed yet
+            if (productTo.get("introductionDate") != null && nowTimestamp.before(productTo.getTimestamp("introductionDate"))) {
+                String excMsg = "Tried to view the Product " + productTo.getString("productName") + 
+                        " (productId: " + productTo.getString("productId") + ") as a variant. This product has not yet been made available for sale, so not adding for view.";
+                Debug.logVerbose(excMsg);
+                continue;
+            }
+
+            //check to see if salesDiscontinuationDate has passed
+            if (productTo.get("salesDiscontinuationDate") != null && nowTimestamp.after(productTo.getTimestamp("salesDiscontinuationDate"))) {
+                String excMsg = "Tried to view the Product " + productTo.getString("productName") + 
+                        " (productId: " + productTo.getString("productId") + ") as a variant. This product is no longer available for sale, so not adding for view.";
+                Debug.logVerbose(excMsg);
+                continue;
+            }
+            
+            
+            //next check inventory for each item
             if (org.ofbiz.commonapp.product.catalog.CatalogWorker.isCatalogInventoryAvailable(prodCatalogId, productIdTo, 1.0, delegator, dispatcher)) {
                 items.add(productIdTo);
             }
@@ -154,6 +187,7 @@ public class ProductServices {
             selectableFeatures = delegator.findByAndCache("ProductFeatureAndAppl", fields, sort);
             selectableFeatures = EntityUtil.filterByDate(selectableFeatures);
         } catch (GenericEntityException e) {
+            Debug.logError(e);
             result.put(ModelService.RESPONSE_MESSAGE, ModelService.RESPOND_ERROR);
             result.put(ModelService.ERROR_MESSAGE, "Empty list of selectable features found");
             return result;
@@ -179,6 +213,7 @@ public class ProductServices {
         try {
             tree = makeGroup(delegator, features, items, featureOrder, 0);
         } catch (Exception e) {
+            Debug.logError(e);
             result.put(ModelService.RESPONSE_MESSAGE, ModelService.RESPOND_ERROR);
             result.put(ModelService.ERROR_MESSAGE, e.getMessage());
             return result;
