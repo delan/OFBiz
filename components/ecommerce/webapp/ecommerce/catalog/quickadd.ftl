@@ -20,14 +20,14 @@
  *  THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  *
  *@author     Andy Zeneski (jaz@ofbiz.org)
- *@version    $Rev:$
+ *@version    $Rev$
  *@since      2.1
 -->
 
 <#assign uiLabelMap = requestAttributes.uiLabelMap>
 <#assign delegator = requestAttributes.delegator>
 <#if productCategory?has_content>
-  <table border='0' width="100%" cellpadding='3' cellspacing='0'>
+  <table border='0'  cellpadding='3' cellspacing='0'>
     <tr>
       <td align=left>
         <div class="head2">${productCategory.description?if_exists}</div>
@@ -72,7 +72,7 @@
     <div class="tabletext" align="right">
       <a href="javascript:document.bulkaddform.submit()" class="buttontext"><nobr>[${uiLabelMap.EcommerceAddAlltoCart}]</nobr></a>
     </div>     
-    <table border='1' width='100%' cellpadding='2' cellspacing='0'>      
+    <table border='1' cellpadding='2' cellspacing='0'>      
       <#list productCategoryMembers as productCategoryMember>
         <#assign product = productCategoryMember.getRelatedOneCache("Product")>
         <tr>
@@ -87,7 +87,7 @@
   </form>
   </center>
 <#else>
-  <table border="0" width="100%" cellpadding="2">
+  <table border="0" cellpadding="2">
     <tr><td colspan="2"><hr class='sepbar'></td></tr>
     <tr>
       <td>

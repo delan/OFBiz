@@ -20,7 +20,7 @@
  *  THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  *
  *@author     Al Byers (byersa@automationgroups.com)
- *@version    $Rev:$
+ *@version    $Rev$
  *@since      3.1
 -->
 
@@ -66,7 +66,7 @@
 <#assign dummy=Static["org.ofbiz.base.util.Debug"].logInfo("in viewcontent, subContent:" + subContent, "")/>
 <br/>
 <div class="head1">Content for [${subContentId}] ${subContent.contentName?if_exists} - ${subContent.description?if_exists}:</div><br/>
-<table border="0" width="100%" class="blogtext">
+<table border="0" class="blogtext">
     <tr>
     <td width="40">&nbsp;</td>
     <td>

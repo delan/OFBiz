@@ -1090,8 +1090,8 @@
     <view-map name="login" type="jpublish" page="/login.ftl"/>
     -->
 
-    <view-map name="contactus" type="jpublish" page="/contactus.ftl"/>
-    <view-map name="survey" type="jpublish" page="/survey.ftl"/>
+    <view-map name="contactus" type="jpublish" page="/customer/contactus.ftl"/>
+    <view-map name="survey" type="jpublish" page="/customer/survey.ftl"/>
     <view-map name="passwordemail" page="/customer/passwordemail.jsp"/>
 
     <view-map name="editShoppingList" type="jpublish" page="/shoppinglist/editShoppingList.ftl"/>
