@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <page>
-    <template>/templates/main_left.html</template>
+    <template>/templates/main_left.ftl</template>
     <property name="title">Shopping Cart</property>
 
     <generator name="jsp"/>
