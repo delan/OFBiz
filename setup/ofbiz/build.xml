@@ -81,7 +81,6 @@
         <copy file="lib/common/jdbc7.1-1.3.jar" toDir="${catalina.dir}/common/lib"/> 
         <copy file="lib/common/log4j.jar" toDir="${catalina.dir}/common/lib"/>
         <copy file="lib/common/mm.mysql-2.0.8-bin.jar" toDir="${catalina.dir}/common/lib"/> 
-        <copy file="lib/common/poolman.jar" toDir="${catalina.dir}/common/lib"/> 
         
         <copy file="lib/common/ots-jts_1.0.jar" toDir="${catalina.dir}/common/lib"/> 
         <copy file="lib/common/tyrex-0.9.8.5.jar" toDir="${catalina.dir}/common/lib"/> 
@@ -131,8 +130,6 @@
         <delete file="${classes.dir}/security.properties" />
         <delete file="${classes.dir}/debug.properties" />
         <delete file="${classes.dir}/cache.properties" />
-        <delete file="${classes.dir}/poolman.xml" />
-        <delete file="${classes.dir}/jndi.properties" />
         <delete file="${classes.dir}/localdtds.properties" />
         <delete file="${classes.dir}/servicesengine.properties" />
         <delete file="${classes.dir}/tyrexdomain.xml" />
