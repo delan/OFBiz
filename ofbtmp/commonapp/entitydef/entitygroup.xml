@@ -33,849 +33,432 @@
 <entitygroup>
 
   <!-- ========================================================= -->
-  <!-- org.ofbiz.commonapp.accounting.budget -->
-  <!-- ========================================================= -->
-
-    <entity-group group="org.ofbiz.commonapp" entity="Budget" />
-    <entity-group group="org.ofbiz.commonapp" entity="BudgetAttribute" />
-    <entity-group group="org.ofbiz.commonapp" entity="BudgetItem" />
-    <entity-group group="org.ofbiz.commonapp" entity="BudgetItemAttribute" />
-    <entity-group group="org.ofbiz.commonapp" entity="BudgetItemType" />
-    <entity-group group="org.ofbiz.commonapp" entity="BudgetItemTypeAttr" />
-    <entity-group group="org.ofbiz.commonapp" entity="BudgetReview" />
-    <entity-group group="org.ofbiz.commonapp" entity="BudgetReviewResultType" />
-    <entity-group group="org.ofbiz.commonapp" entity="BudgetRevision" />
-    <entity-group group="org.ofbiz.commonapp" entity="BudgetRevisionImpact" />
-    <entity-group group="org.ofbiz.commonapp" entity="BudgetRole" />
-    <entity-group group="org.ofbiz.commonapp" entity="BudgetScenario" />
-    <entity-group group="org.ofbiz.commonapp" entity="BudgetScenarioApplication" />
-    <entity-group group="org.ofbiz.commonapp" entity="BudgetScenarioRule" />
-    <entity-group group="org.ofbiz.commonapp" entity="BudgetStatus" />
-    <entity-group group="org.ofbiz.commonapp" entity="BudgetType" />
-    <entity-group group="org.ofbiz.commonapp" entity="BudgetTypeAttr" />
-
-  <!-- ========================================================= -->
-  <!-- org.ofbiz.commonapp.accounting.fixedasset -->
-  <!-- ========================================================= -->
-
-    <entity-group group="org.ofbiz.commonapp" entity="DepreciationMethod" />
-    <entity-group group="org.ofbiz.commonapp" entity="FixedAsset" />
-    <entity-group group="org.ofbiz.commonapp" entity="FixedAssetAttribute" />
-    <entity-group group="org.ofbiz.commonapp" entity="FixedAssetDepMethod" />
-    <entity-group group="org.ofbiz.commonapp" entity="FixedAssetType" />
-    <entity-group group="org.ofbiz.commonapp" entity="FixedAssetTypeAttr" />
-    <entity-group group="org.ofbiz.commonapp" entity="PartyFixedAssetAssignment" />
-
-  <!-- ========================================================= -->
-  <!-- org.ofbiz.commonapp.accounting.invoice -->
-  <!-- ========================================================= -->
-
-    <entity-group group="org.ofbiz.commonapp" entity="Invoice" />
-    <entity-group group="org.ofbiz.commonapp" entity="InvoiceAttribute" />
-    <entity-group group="org.ofbiz.commonapp" entity="InvoiceContactMech" />
-    <entity-group group="org.ofbiz.commonapp" entity="InvoiceItem" />
-    <entity-group group="org.ofbiz.commonapp" entity="InvoiceItemAttribute" />
-    <entity-group group="org.ofbiz.commonapp" entity="InvoiceItemType" />
-    <entity-group group="org.ofbiz.commonapp" entity="InvoiceItemTypeAttr" />
-    <entity-group group="org.ofbiz.commonapp" entity="InvoiceItemTypeMap" />
-    <entity-group group="org.ofbiz.commonapp" entity="InvoiceRole" />
-    <entity-group group="org.ofbiz.commonapp" entity="InvoiceStatus" />
-    <entity-group group="org.ofbiz.commonapp" entity="InvoiceTerm" />
-    <entity-group group="org.ofbiz.commonapp" entity="InvoiceTermAttribute" />
-    <entity-group group="org.ofbiz.commonapp" entity="InvoiceType" />
-    <entity-group group="org.ofbiz.commonapp" entity="InvoiceTypeAttr" />
+  <!-- org.ofbiz.accounting.budget -->
+  <!-- ========================================================= -->
+
+    <entity-group group="org.ofbiz" entity="Budget" />
+    <entity-group group="org.ofbiz" entity="BudgetAttribute" />
+    <entity-group group="org.ofbiz" entity="BudgetItem" />
+    <entity-group group="org.ofbiz" entity="BudgetItemAttribute" />
+    <entity-group group="org.ofbiz" entity="BudgetItemType" />
+    <entity-group group="org.ofbiz" entity="BudgetItemTypeAttr" />
+    <entity-group group="org.ofbiz" entity="BudgetReview" />
+    <entity-group group="org.ofbiz" entity="BudgetReviewResultType" />
+    <entity-group group="org.ofbiz" entity="BudgetRevision" />
+    <entity-group group="org.ofbiz" entity="BudgetRevisionImpact" />
+    <entity-group group="org.ofbiz" entity="BudgetRole" />
+    <entity-group group="org.ofbiz" entity="BudgetScenario" />
+    <entity-group group="org.ofbiz" entity="BudgetScenarioApplication" />
+    <entity-group group="org.ofbiz" entity="BudgetScenarioRule" />
+    <entity-group group="org.ofbiz" entity="BudgetStatus" />
+    <entity-group group="org.ofbiz" entity="BudgetType" />
+    <entity-group group="org.ofbiz" entity="BudgetTypeAttr" />
+
+  <!-- ========================================================= -->
+  <!-- org.ofbiz.accounting.fixedasset -->
+  <!-- ========================================================= -->
+
+    <entity-group group="org.ofbiz" entity="DepreciationMethod" />
+    <entity-group group="org.ofbiz" entity="FixedAsset" />
+    <entity-group group="org.ofbiz" entity="FixedAssetAttribute" />
+    <entity-group group="org.ofbiz" entity="FixedAssetDepMethod" />
+    <entity-group group="org.ofbiz" entity="FixedAssetType" />
+    <entity-group group="org.ofbiz" entity="FixedAssetTypeAttr" />
+    <entity-group group="org.ofbiz" entity="PartyFixedAssetAssignment" />
+
+  <!-- ========================================================= -->
+  <!-- org.ofbiz.accounting.invoice -->
+  <!-- ========================================================= -->
+
+    <entity-group group="org.ofbiz" entity="Invoice" />
+    <entity-group group="org.ofbiz" entity="InvoiceAttribute" />
+    <entity-group group="org.ofbiz" entity="InvoiceContactMech" />
+    <entity-group group="org.ofbiz" entity="InvoiceItem" />
+    <entity-group group="org.ofbiz" entity="InvoiceItemAttribute" />
+    <entity-group group="org.ofbiz" entity="InvoiceItemType" />
+    <entity-group group="org.ofbiz" entity="InvoiceItemTypeAttr" />
+    <entity-group group="org.ofbiz" entity="InvoiceItemTypeMap" />
+    <entity-group group="org.ofbiz" entity="InvoiceRole" />
+    <entity-group group="org.ofbiz" entity="InvoiceStatus" />
+    <entity-group group="org.ofbiz" entity="InvoiceTerm" />
+    <entity-group group="org.ofbiz" entity="InvoiceTermAttribute" />
+    <entity-group group="org.ofbiz" entity="InvoiceType" />
+    <entity-group group="org.ofbiz" entity="InvoiceTypeAttr" />
+
+  <!-- ========================================================= -->
+  <!-- org.ofbiz.accounting.ledger -->
+  <!-- ========================================================= -->
+
+    <entity-group group="org.ofbiz" entity="AcctgTrans" />
+    <entity-group group="org.ofbiz" entity="AcctgTransAttribute" />
+    <entity-group group="org.ofbiz" entity="AcctgTransEntry" />
+    <entity-group group="org.ofbiz" entity="AcctgTransEntryType" />
+    <entity-group group="org.ofbiz" entity="AcctgTransType" />
+    <entity-group group="org.ofbiz" entity="AcctgTransTypeAttr" />
+    <entity-group group="org.ofbiz" entity="GlAccount" />
+    <entity-group group="org.ofbiz" entity="GlAccountClass" />
+    <entity-group group="org.ofbiz" entity="GlAccountHistory" />
+    <entity-group group="org.ofbiz" entity="GlAccountOrganization" />
+    <entity-group group="org.ofbiz" entity="GlAccountRole" />
+    <entity-group group="org.ofbiz" entity="GlAccountType" />
+    <entity-group group="org.ofbiz" entity="GlBudgetXref" />
+    <entity-group group="org.ofbiz" entity="GlFiscalType" />
+    <entity-group group="org.ofbiz" entity="GlJournal" />
+    <entity-group group="org.ofbiz" entity="GlReconciliation" />
+    <entity-group group="org.ofbiz" entity="GlReconciliationEntry" />
+    <entity-group group="org.ofbiz" entity="GlResourceType" />
+    <entity-group group="org.ofbiz" entity="GlXbrlClass" />
+    <entity-group group="org.ofbiz" entity="SettlementTerm" />
+
+  <!-- ========================================================= -->
+  <!-- org.ofbiz.accounting.payment -->
+  <!-- ========================================================= -->
+
+    <entity-group group="org.ofbiz" entity="BillingAccount" />
+    <entity-group group="org.ofbiz" entity="BillingAccountAndRole" />
+    <entity-group group="org.ofbiz" entity="BillingAccountRole" />
+    <entity-group group="org.ofbiz" entity="BillingAccountTerm" />
+    <entity-group group="org.ofbiz" entity="BillingAccountTermAttr" />
+    <entity-group group="org.ofbiz" entity="CreditCard" />
+    <entity-group group="org.ofbiz" entity="Deduction" />
+    <entity-group group="org.ofbiz" entity="DeductionType" />
+    <entity-group group="org.ofbiz" entity="EftAccount" />
+    <entity-group group="org.ofbiz" entity="FinAccount" />
+    <entity-group group="org.ofbiz" entity="FinAccountAttribute" />
+    <entity-group group="org.ofbiz" entity="FinAccountRole" />
+    <entity-group group="org.ofbiz" entity="FinAccountTrans" />
+    <entity-group group="org.ofbiz" entity="FinAccountTransAttribute" />
+    <entity-group group="org.ofbiz" entity="FinAccountTransType" />
+    <entity-group group="org.ofbiz" entity="FinAccountTransTypeAttr" />
+    <entity-group group="org.ofbiz" entity="FinAccountType" />
+    <entity-group group="org.ofbiz" entity="FinAccountTypeAttr" />
+    <entity-group group="org.ofbiz" entity="Payment" />
+    <entity-group group="org.ofbiz" entity="PaymentAndApplication" />
+    <entity-group group="org.ofbiz" entity="PaymentApplication" />
+    <entity-group group="org.ofbiz" entity="PaymentAttribute" />
+    <entity-group group="org.ofbiz" entity="PaymentBudgetAllocation" />
+    <entity-group group="org.ofbiz" entity="PaymentMethod" />
+    <entity-group group="org.ofbiz" entity="PaymentMethodType" />
+    <entity-group group="org.ofbiz" entity="PaymentType" />
+    <entity-group group="org.ofbiz" entity="PaymentTypeAttr" />
 
   <!-- ========================================================= -->
-  <!-- org.ofbiz.commonapp.accounting.ledger -->
+  <!-- org.ofbiz.content.content -->
   <!-- ========================================================= -->
 
-    <entity-group group="org.ofbiz.commonapp" entity="AcctgTrans" />
-    <entity-group group="org.ofbiz.commonapp" entity="AcctgTransAttribute" />
-    <entity-group group="org.ofbiz.commonapp" entity="AcctgTransEntry" />
-    <entity-group group="org.ofbiz.commonapp" entity="AcctgTransEntryType" />
-    <entity-group group="org.ofbiz.commonapp" entity="AcctgTransType" />
-    <entity-group group="org.ofbiz.commonapp" entity="AcctgTransTypeAttr" />
-    <entity-group group="org.ofbiz.commonapp" entity="GlAccount" />
-    <entity-group group="org.ofbiz.commonapp" entity="GlAccountClass" />
-    <entity-group group="org.ofbiz.commonapp" entity="GlAccountHistory" />
-    <entity-group group="org.ofbiz.commonapp" entity="GlAccountOrganization" />
-    <entity-group group="org.ofbiz.commonapp" entity="GlAccountRole" />
-    <entity-group group="org.ofbiz.commonapp" entity="GlAccountType" />
-    <entity-group group="org.ofbiz.commonapp" entity="GlBudgetXref" />
-    <entity-group group="org.ofbiz.commonapp" entity="GlFiscalType" />
-    <entity-group group="org.ofbiz.commonapp" entity="GlJournal" />
-    <entity-group group="org.ofbiz.commonapp" entity="GlReconciliation" />
-    <entity-group group="org.ofbiz.commonapp" entity="GlReconciliationEntry" />
-    <entity-group group="org.ofbiz.commonapp" entity="GlResourceType" />
-    <entity-group group="org.ofbiz.commonapp" entity="GlXbrlClass" />
-    <entity-group group="org.ofbiz.commonapp" entity="SettlementTerm" />
+    <entity-group group="org.ofbiz" entity="Content" />
+    <entity-group group="org.ofbiz" entity="ContentAssoc" />
+    <entity-group group="org.ofbiz" entity="ContentAssocPredicate" />
+    <entity-group group="org.ofbiz" entity="ContentAssocType" />
+    <entity-group group="org.ofbiz" entity="ContentAttribute" />
+    <entity-group group="org.ofbiz" entity="ContentMetaData" />
+    <entity-group group="org.ofbiz" entity="ContentOperation" />
+    <entity-group group="org.ofbiz" entity="ContentPurpose" />
+    <entity-group group="org.ofbiz" entity="ContentPurposeOperation" />
+    <entity-group group="org.ofbiz" entity="ContentPurposeType" />
+    <entity-group group="org.ofbiz" entity="ContentRole" />
+    <entity-group group="org.ofbiz" entity="ContentType" />
+    <entity-group group="org.ofbiz" entity="ContentTypeAttr" />
 
   <!-- ========================================================= -->
-  <!-- org.ofbiz.commonapp.accounting.payment -->
+  <!-- org.ofbiz.content.data -->
   <!-- ========================================================= -->
 
-    <entity-group group="org.ofbiz.commonapp" entity="BillingAccount" />
-    <entity-group group="org.ofbiz.commonapp" entity="BillingAccountAndRole" />
-    <entity-group group="org.ofbiz.commonapp" entity="BillingAccountRole" />
-    <entity-group group="org.ofbiz.commonapp" entity="BillingAccountTerm" />
-    <entity-group group="org.ofbiz.commonapp" entity="BillingAccountTermAttr" />
-    <entity-group group="org.ofbiz.commonapp" entity="CreditCard" />
-    <entity-group group="org.ofbiz.commonapp" entity="Deduction" />
-    <entity-group group="org.ofbiz.commonapp" entity="DeductionType" />
-    <entity-group group="org.ofbiz.commonapp" entity="EftAccount" />
-    <entity-group group="org.ofbiz.commonapp" entity="FinAccount" />
-    <entity-group group="org.ofbiz.commonapp" entity="FinAccountAttribute" />
-    <entity-group group="org.ofbiz.commonapp" entity="FinAccountRole" />
-    <entity-group group="org.ofbiz.commonapp" entity="FinAccountTrans" />
-    <entity-group group="org.ofbiz.commonapp" entity="FinAccountTransAttribute" />
-    <entity-group group="org.ofbiz.commonapp" entity="FinAccountTransType" />
-    <entity-group group="org.ofbiz.commonapp" entity="FinAccountTransTypeAttr" />
-    <entity-group group="org.ofbiz.commonapp" entity="FinAccountType" />
-    <entity-group group="org.ofbiz.commonapp" entity="FinAccountTypeAttr" />
-    <entity-group group="org.ofbiz.commonapp" entity="Payment" />
-    <entity-group group="org.ofbiz.commonapp" entity="PaymentAndApplication" />
-    <entity-group group="org.ofbiz.commonapp" entity="PaymentApplication" />
-    <entity-group group="org.ofbiz.commonapp" entity="PaymentAttribute" />
-    <entity-group group="org.ofbiz.commonapp" entity="PaymentBudgetAllocation" />
-    <entity-group group="org.ofbiz.commonapp" entity="PaymentMethod" />
-    <entity-group group="org.ofbiz.commonapp" entity="PaymentMethodType" />
-    <entity-group group="org.ofbiz.commonapp" entity="PaymentType" />
-    <entity-group group="org.ofbiz.commonapp" entity="PaymentTypeAttr" />
+    <entity-group group="org.ofbiz" entity="CharacterSet" />
+    <entity-group group="org.ofbiz" entity="DataCategory" />
+    <entity-group group="org.ofbiz" entity="DataResource" />
+    <entity-group group="org.ofbiz" entity="DataResourceAttribute" />
+    <entity-group group="org.ofbiz" entity="DataResourceMetaData" />
+    <entity-group group="org.ofbiz" entity="DataResourcePurpose" />
+    <entity-group group="org.ofbiz" entity="DataResourceRole" />
+    <entity-group group="org.ofbiz" entity="DataResourceType" />
+    <entity-group group="org.ofbiz" entity="DataResourceTypeAttr" />
+    <entity-group group="org.ofbiz" entity="ElectronicText" />
+    <entity-group group="org.ofbiz" entity="FileExtension" />
+    <entity-group group="org.ofbiz" entity="ImageDataResource" />
+    <entity-group group="org.ofbiz" entity="MetaDataPredicate" />
+    <entity-group group="org.ofbiz" entity="MimeType" />
+    <entity-group group="org.ofbiz" entity="OtherDataResource" />
 
   <!-- ========================================================= -->
-  <!-- org.ofbiz.commonapp.common.datasource -->
+  <!-- org.ofbiz.content.document -->
   <!-- ========================================================= -->
 
-    <entity-group group="org.ofbiz.commonapp" entity="DataSource" />
-    <entity-group group="org.ofbiz.commonapp" entity="DataSourceType" />
+    <entity-group group="org.ofbiz" entity="Document" />
+    <entity-group group="org.ofbiz" entity="DocumentAttribute" />
+    <entity-group group="org.ofbiz" entity="DocumentType" />
+    <entity-group group="org.ofbiz" entity="DocumentTypeAttr" />
 
   <!-- ========================================================= -->
-  <!-- org.ofbiz.commonapp.common.enum -->
+  <!-- org.ofbiz.content.preference -->
   <!-- ========================================================= -->
 
-    <entity-group group="org.ofbiz.commonapp" entity="Enumeration" />
-    <entity-group group="org.ofbiz.commonapp" entity="EnumerationType" />
+    <entity-group group="org.ofbiz" entity="WebPreferenceType" />
+    <entity-group group="org.ofbiz" entity="WebUserPreference" />
 
   <!-- ========================================================= -->
-  <!-- org.ofbiz.commonapp.common.geo -->
+  <!-- org.ofbiz.content.subscription -->
   <!-- ========================================================= -->
 
-    <entity-group group="org.ofbiz.commonapp" entity="CountryCapital" />
-    <entity-group group="org.ofbiz.commonapp" entity="CountryCode" />
-    <entity-group group="org.ofbiz.commonapp" entity="CountryTeleCode" />
-    <entity-group group="org.ofbiz.commonapp" entity="Geo" />
-    <entity-group group="org.ofbiz.commonapp" entity="GeoAssoc" />
-    <entity-group group="org.ofbiz.commonapp" entity="GeoAssocType" />
-    <entity-group group="org.ofbiz.commonapp" entity="GeoType" />
+    <entity-group group="org.ofbiz" entity="Subscription" />
+    <entity-group group="org.ofbiz" entity="SubscriptionActivity" />
+    <entity-group group="org.ofbiz" entity="SubscriptionAttribute" />
+    <entity-group group="org.ofbiz" entity="SubscriptionFulfillmentPiece" />
+    <entity-group group="org.ofbiz" entity="SubscriptionType" />
+    <entity-group group="org.ofbiz" entity="SubscriptionTypeAttr" />
 
   <!-- ========================================================= -->
-  <!-- org.ofbiz.commonapp.common.language -->
+  <!-- org.ofbiz.content.visit -->
   <!-- ========================================================= -->
 
-    <entity-group group="org.ofbiz.commonapp" entity="StandardLanguage" />
+    <entity-group group="org.ofbiz" entity="BrowserType" />
+    <entity-group group="org.ofbiz" entity="PlatformType" />
+    <entity-group group="org.ofbiz" entity="ProtocolType" />
+    <entity-group group="org.ofbiz" entity="ServerHit" />
+    <entity-group group="org.ofbiz" entity="ServerHitBin" />
+    <entity-group group="org.ofbiz" entity="ServerHitType" />
+    <entity-group group="org.ofbiz" entity="UserAgent" />
+    <entity-group group="org.ofbiz" entity="UserAgentMethodType" />
+    <entity-group group="org.ofbiz" entity="UserAgentType" />
+    <entity-group group="org.ofbiz" entity="Visit" />
 
   <!-- ========================================================= -->
-  <!-- org.ofbiz.commonapp.common.note -->
+  <!-- org.ofbiz.content.website -->
   <!-- ========================================================= -->
 
-    <entity-group group="org.ofbiz.commonapp" entity="NoteData" />
+    <entity-group group="org.ofbiz" entity="WebPage" />
+    <entity-group group="org.ofbiz" entity="WebSite" />
+    <entity-group group="org.ofbiz" entity="WebSiteRole" />
 
   <!-- ========================================================= -->
-  <!-- org.ofbiz.commonapp.common.period -->
+  <!-- org.ofbiz.humanres.ability -->
   <!-- ========================================================= -->
 
-    <entity-group group="org.ofbiz.commonapp" entity="CustomTimePeriod" />
-    <entity-group group="org.ofbiz.commonapp" entity="PeriodType" />
-    <entity-group group="org.ofbiz.commonapp" entity="StandardTimePeriod" />
+    <entity-group group="org.ofbiz" entity="PartyQual" />
+    <entity-group group="org.ofbiz" entity="PartyQualType" />
+    <entity-group group="org.ofbiz" entity="PartyResume" />
+    <entity-group group="org.ofbiz" entity="PartySkill" />
+    <entity-group group="org.ofbiz" entity="PerfRatingType" />
+    <entity-group group="org.ofbiz" entity="PerfReview" />
+    <entity-group group="org.ofbiz" entity="PerfReviewItem" />
+    <entity-group group="org.ofbiz" entity="PerfReviewItemType" />
+    <entity-group group="org.ofbiz" entity="PerformanceNote" />
+    <entity-group group="org.ofbiz" entity="PersonTraining" />
+    <entity-group group="org.ofbiz" entity="ResponsibilityType" />
+    <entity-group group="org.ofbiz" entity="SkillType" />
+    <entity-group group="org.ofbiz" entity="TrainingClassType" />
 
   <!-- ========================================================= -->
-  <!-- org.ofbiz.commonapp.common.sequence -->
+  <!-- org.ofbiz.humanres.employment -->
   <!-- ========================================================= -->
 
-    <entity-group group="org.ofbiz.commonapp" entity="SequenceValueItem" />
+    <entity-group group="org.ofbiz" entity="BenefitType" />
+    <entity-group group="org.ofbiz" entity="Employment" />
+    <entity-group group="org.ofbiz" entity="EmploymentApp" />
+    <entity-group group="org.ofbiz" entity="EmploymentAppSourceType" />
+    <entity-group group="org.ofbiz" entity="PartyBenefit" />
+    <entity-group group="org.ofbiz" entity="PayGrade" />
+    <entity-group group="org.ofbiz" entity="PayHistory" />
+    <entity-group group="org.ofbiz" entity="PayrollPreference" />
+    <entity-group group="org.ofbiz" entity="SalaryStep" />
+    <entity-group group="org.ofbiz" entity="TerminationReason" />
+    <entity-group group="org.ofbiz" entity="TerminationType" />
+    <entity-group group="org.ofbiz" entity="UnemploymentClaim" />
 
   <!-- ========================================================= -->
-  <!-- org.ofbiz.commonapp.common.status -->
+  <!-- org.ofbiz.humanres.position -->
   <!-- ========================================================= -->
 
-    <entity-group group="org.ofbiz.commonapp" entity="StatusItem" />
-    <entity-group group="org.ofbiz.commonapp" entity="StatusType" />
-    <entity-group group="org.ofbiz.commonapp" entity="StatusValidChange" />
-    <entity-group group="org.ofbiz.commonapp" entity="StatusValidChangeToDetail" />
+    <entity-group group="org.ofbiz" entity="EmplPosition" />
+    <entity-group group="org.ofbiz" entity="EmplPositionClassType" />
+    <entity-group group="org.ofbiz" entity="EmplPositionFulfillment" />
+    <entity-group group="org.ofbiz" entity="EmplPositionReportingStruct" />
+    <entity-group group="org.ofbiz" entity="EmplPositionResponsibility" />
+    <entity-group group="org.ofbiz" entity="EmplPositionType" />
+    <entity-group group="org.ofbiz" entity="EmplPositionTypeClass" />
+    <entity-group group="org.ofbiz" entity="ValidResponsibility" />
 
   <!-- ========================================================= -->
-  <!-- org.ofbiz.commonapp.common.uom -->
+  <!-- org.ofbiz.marketing.campaign -->
   <!-- ========================================================= -->
 
-    <entity-group group="org.ofbiz.commonapp" entity="Uom" />
-    <entity-group group="org.ofbiz.commonapp" entity="UomConversion" />
-    <entity-group group="org.ofbiz.commonapp" entity="UomType" />
+    <entity-group group="org.ofbiz" entity="MarketingCampaign" />
+    <entity-group group="org.ofbiz" entity="MarketingCampaignNote" />
+    <entity-group group="org.ofbiz" entity="MarketingCampaignPrice" />
+    <entity-group group="org.ofbiz" entity="MarketingCampaignPromo" />
+    <entity-group group="org.ofbiz" entity="MarketingCampaignRole" />
 
   <!-- ========================================================= -->
-  <!-- org.ofbiz.commonapp.content.content -->
-  <!-- ========================================================= -->
-
-    <entity-group group="org.ofbiz.commonapp" entity="Content" />
-    <entity-group group="org.ofbiz.commonapp" entity="ContentAssoc" />
-    <entity-group group="org.ofbiz.commonapp" entity="ContentAssocPredicate" />
-    <entity-group group="org.ofbiz.commonapp" entity="ContentAssocType" />
-    <entity-group group="org.ofbiz.commonapp" entity="ContentAttribute" />
-    <entity-group group="org.ofbiz.commonapp" entity="ContentMetaData" />
-    <entity-group group="org.ofbiz.commonapp" entity="ContentOperation" />
-    <entity-group group="org.ofbiz.commonapp" entity="ContentPurpose" />
-    <entity-group group="org.ofbiz.commonapp" entity="ContentPurposeOperation" />
-    <entity-group group="org.ofbiz.commonapp" entity="ContentPurposeType" />
-    <entity-group group="org.ofbiz.commonapp" entity="ContentRole" />
-    <entity-group group="org.ofbiz.commonapp" entity="ContentType" />
-    <entity-group group="org.ofbiz.commonapp" entity="ContentTypeAttr" />
-
-  <!-- ========================================================= -->
-  <!-- org.ofbiz.commonapp.content.data -->
-  <!-- ========================================================= -->
-
-    <entity-group group="org.ofbiz.commonapp" entity="CharacterSet" />
-    <entity-group group="org.ofbiz.commonapp" entity="DataCategory" />
-    <entity-group group="org.ofbiz.commonapp" entity="DataResource" />
-    <entity-group group="org.ofbiz.commonapp" entity="DataResourceAttribute" />
-    <entity-group group="org.ofbiz.commonapp" entity="DataResourceMetaData" />
-    <entity-group group="org.ofbiz.commonapp" entity="DataResourcePurpose" />
-    <entity-group group="org.ofbiz.commonapp" entity="DataResourceRole" />
-    <entity-group group="org.ofbiz.commonapp" entity="DataResourceType" />
-    <entity-group group="org.ofbiz.commonapp" entity="DataResourceTypeAttr" />
-    <entity-group group="org.ofbiz.commonapp" entity="ElectronicText" />
-    <entity-group group="org.ofbiz.commonapp" entity="FileExtension" />
-    <entity-group group="org.ofbiz.commonapp" entity="ImageDataResource" />
-    <entity-group group="org.ofbiz.commonapp" entity="MetaDataPredicate" />
-    <entity-group group="org.ofbiz.commonapp" entity="MimeType" />
-    <entity-group group="org.ofbiz.commonapp" entity="OtherDataResource" />
-
-  <!-- ========================================================= -->
-  <!-- org.ofbiz.commonapp.content.document -->
-  <!-- ========================================================= -->
-
-    <entity-group group="org.ofbiz.commonapp" entity="Document" />
-    <entity-group group="org.ofbiz.commonapp" entity="DocumentAttribute" />
-    <entity-group group="org.ofbiz.commonapp" entity="DocumentType" />
-    <entity-group group="org.ofbiz.commonapp" entity="DocumentTypeAttr" />
-
-  <!-- ========================================================= -->
-  <!-- org.ofbiz.commonapp.content.preference -->
-  <!-- ========================================================= -->
-
-    <entity-group group="org.ofbiz.commonapp" entity="WebPreferenceType" />
-    <entity-group group="org.ofbiz.commonapp" entity="WebUserPreference" />
-
-  <!-- ========================================================= -->
-  <!-- org.ofbiz.commonapp.content.subscription -->
-  <!-- ========================================================= -->
-
-    <entity-group group="org.ofbiz.commonapp" entity="Subscription" />
-    <entity-group group="org.ofbiz.commonapp" entity="SubscriptionActivity" />
-    <entity-group group="org.ofbiz.commonapp" entity="SubscriptionAttribute" />
-    <entity-group group="org.ofbiz.commonapp" entity="SubscriptionFulfillmentPiece" />
-    <entity-group group="org.ofbiz.commonapp" entity="SubscriptionType" />
-    <entity-group group="org.ofbiz.commonapp" entity="SubscriptionTypeAttr" />
-
-  <!-- ========================================================= -->
-  <!-- org.ofbiz.commonapp.content.visit -->
-  <!-- ========================================================= -->
-
-    <entity-group group="org.ofbiz.commonapp" entity="BrowserType" />
-    <entity-group group="org.ofbiz.commonapp" entity="PlatformType" />
-    <entity-group group="org.ofbiz.commonapp" entity="ProtocolType" />
-    <entity-group group="org.ofbiz.commonapp" entity="ServerHit" />
-    <entity-group group="org.ofbiz.commonapp" entity="ServerHitBin" />
-    <entity-group group="org.ofbiz.commonapp" entity="ServerHitType" />
-    <entity-group group="org.ofbiz.commonapp" entity="UserAgent" />
-    <entity-group group="org.ofbiz.commonapp" entity="UserAgentMethodType" />
-    <entity-group group="org.ofbiz.commonapp" entity="UserAgentType" />
-    <entity-group group="org.ofbiz.commonapp" entity="Visit" />
-
-  <!-- ========================================================= -->
-  <!-- org.ofbiz.commonapp.content.website -->
-  <!-- ========================================================= -->
-
-    <entity-group group="org.ofbiz.commonapp" entity="WebPage" />
-    <entity-group group="org.ofbiz.commonapp" entity="WebSite" />
-    <entity-group group="org.ofbiz.commonapp" entity="WebSiteRole" />
-
-  <!-- ========================================================= -->
-  <!-- org.ofbiz.commonapp.humanres.ability -->
-  <!-- ========================================================= -->
-
-    <entity-group group="org.ofbiz.commonapp" entity="PartyQual" />
-    <entity-group group="org.ofbiz.commonapp" entity="PartyQualType" />
-    <entity-group group="org.ofbiz.commonapp" entity="PartyResume" />
-    <entity-group group="org.ofbiz.commonapp" entity="PartySkill" />
-    <entity-group group="org.ofbiz.commonapp" entity="PerfRatingType" />
-    <entity-group group="org.ofbiz.commonapp" entity="PerfReview" />
-    <entity-group group="org.ofbiz.commonapp" entity="PerfReviewItem" />
-    <entity-group group="org.ofbiz.commonapp" entity="PerfReviewItemType" />
-    <entity-group group="org.ofbiz.commonapp" entity="PerformanceNote" />
-    <entity-group group="org.ofbiz.commonapp" entity="PersonTraining" />
-    <entity-group group="org.ofbiz.commonapp" entity="ResponsibilityType" />
-    <entity-group group="org.ofbiz.commonapp" entity="SkillType" />
-    <entity-group group="org.ofbiz.commonapp" entity="TrainingClassType" />
-
-  <!-- ========================================================= -->
-  <!-- org.ofbiz.commonapp.humanres.employment -->
-  <!-- ========================================================= -->
-
-    <entity-group group="org.ofbiz.commonapp" entity="BenefitType" />
-    <entity-group group="org.ofbiz.commonapp" entity="Employment" />
-    <entity-group group="org.ofbiz.commonapp" entity="EmploymentApp" />
-    <entity-group group="org.ofbiz.commonapp" entity="EmploymentAppSourceType" />
-    <entity-group group="org.ofbiz.commonapp" entity="PartyBenefit" />
-    <entity-group group="org.ofbiz.commonapp" entity="PayGrade" />
-    <entity-group group="org.ofbiz.commonapp" entity="PayHistory" />
-    <entity-group group="org.ofbiz.commonapp" entity="PayrollPreference" />
-    <entity-group group="org.ofbiz.commonapp" entity="SalaryStep" />
-    <entity-group group="org.ofbiz.commonapp" entity="TerminationReason" />
-    <entity-group group="org.ofbiz.commonapp" entity="TerminationType" />
-    <entity-group group="org.ofbiz.commonapp" entity="UnemploymentClaim" />
-
-  <!-- ========================================================= -->
-  <!-- org.ofbiz.commonapp.humanres.position -->
-  <!-- ========================================================= -->
-
-    <entity-group group="org.ofbiz.commonapp" entity="EmplPosition" />
-    <entity-group group="org.ofbiz.commonapp" entity="EmplPositionClassType" />
-    <entity-group group="org.ofbiz.commonapp" entity="EmplPositionFulfillment" />
-    <entity-group group="org.ofbiz.commonapp" entity="EmplPositionReportingStruct" />
-    <entity-group group="org.ofbiz.commonapp" entity="EmplPositionResponsibility" />
-    <entity-group group="org.ofbiz.commonapp" entity="EmplPositionType" />
-    <entity-group group="org.ofbiz.commonapp" entity="EmplPositionTypeClass" />
-    <entity-group group="org.ofbiz.commonapp" entity="ValidResponsibility" />
-
-  <!-- ========================================================= -->
-  <!-- org.ofbiz.commonapp.marketing.campaign -->
-  <!-- ========================================================= -->
-
-    <entity-group group="org.ofbiz.commonapp" entity="MarketingCampaign" />
-    <entity-group group="org.ofbiz.commonapp" entity="MarketingCampaignNote" />
-    <entity-group group="org.ofbiz.commonapp" entity="MarketingCampaignPrice" />
-    <entity-group group="org.ofbiz.commonapp" entity="MarketingCampaignPromo" />
-    <entity-group group="org.ofbiz.commonapp" entity="MarketingCampaignRole" />
-
-  <!-- ========================================================= -->
-  <!-- org.ofbiz.commonapp.marketing.contact -->
-  <!-- ========================================================= -->
-
-    <entity-group group="org.ofbiz.commonapp" entity="ContactList" />
-    <entity-group group="org.ofbiz.commonapp" entity="ContactListParty" />
-    <entity-group group="org.ofbiz.commonapp" entity="ContactListType" />
-
-  <!-- ========================================================= -->
-  <!-- org.ofbiz.commonapp.marketing.tracking -->
-  <!-- ========================================================= -->
-
-    <entity-group group="org.ofbiz.commonapp" entity="TrackingCode" />
-    <entity-group group="org.ofbiz.commonapp" entity="TrackingCodeOrder" />
-    <entity-group group="org.ofbiz.commonapp" entity="TrackingCodeType" />
-    <entity-group group="org.ofbiz.commonapp" entity="TrackingCodeVisit" />
-
-  <!-- ========================================================= -->
-  <!-- org.ofbiz.commonapp.order.order -->
-  <!-- ========================================================= -->
-
-    <entity-group group="org.ofbiz.commonapp" entity="OrderAdjustment" />
-    <entity-group group="org.ofbiz.commonapp" entity="OrderAdjustmentAttribute" />
-    <entity-group group="org.ofbiz.commonapp" entity="OrderAdjustmentType" />
-    <entity-group group="org.ofbiz.commonapp" entity="OrderAdjustmentTypeAttr" />
-    <entity-group group="org.ofbiz.commonapp" entity="OrderAttribute" />
-    <entity-group group="org.ofbiz.commonapp" entity="OrderBlacklist" />
-    <entity-group group="org.ofbiz.commonapp" entity="OrderBlacklistType" />
-    <entity-group group="org.ofbiz.commonapp" entity="OrderContactMech" />
-    <entity-group group="org.ofbiz.commonapp" entity="OrderDeliverySchedule" />
-    <entity-group group="org.ofbiz.commonapp" entity="OrderHeader" />
-    <entity-group group="org.ofbiz.commonapp" entity="OrderHeaderAndItems" />
-    <entity-group group="org.ofbiz.commonapp" entity="OrderHeaderAndPaymentPref" />
-    <entity-group group="org.ofbiz.commonapp" entity="OrderHeaderAndRoles" />
-    <entity-group group="org.ofbiz.commonapp" entity="OrderHeaderItemAndRoles" />    
-    <entity-group group="org.ofbiz.commonapp" entity="OrderHeaderNote" />
-    <entity-group group="org.ofbiz.commonapp" entity="OrderHeaderNoteView" />
-    <entity-group group="org.ofbiz.commonapp" entity="OrderItem" />
-    <entity-group group="org.ofbiz.commonapp" entity="OrderItemAssociation" />
-    <entity-group group="org.ofbiz.commonapp" entity="OrderItemAttribute" />
-    <entity-group group="org.ofbiz.commonapp" entity="OrderItemBilling" />
-    <entity-group group="org.ofbiz.commonapp" entity="OrderItemContactMech" />
-    <entity-group group="org.ofbiz.commonapp" entity="OrderItemInventoryRes" />
-    <entity-group group="org.ofbiz.commonapp" entity="OrderItemPriceInfo" />
-    <entity-group group="org.ofbiz.commonapp" entity="OrderItemRole" />
-    <entity-group group="org.ofbiz.commonapp" entity="OrderItemType" />
-    <entity-group group="org.ofbiz.commonapp" entity="OrderItemTypeAttr" />
-    <entity-group group="org.ofbiz.commonapp" entity="OrderNotification" />
-    <entity-group group="org.ofbiz.commonapp" entity="OrderPaymentPreference" />
-    <entity-group group="org.ofbiz.commonapp" entity="OrderReportView" />
-    <entity-group group="org.ofbiz.commonapp" entity="OrderRole" />
-    <entity-group group="org.ofbiz.commonapp" entity="OrderShipment" />
-    <entity-group group="org.ofbiz.commonapp" entity="OrderShipmentPreference" />
-    <entity-group group="org.ofbiz.commonapp" entity="OrderStatus" />
-    <entity-group group="org.ofbiz.commonapp" entity="OrderSummaryEntry" />
-    <entity-group group="org.ofbiz.commonapp" entity="OrderTaskList" />
-    <entity-group group="org.ofbiz.commonapp" entity="OrderTerm" />
-    <entity-group group="org.ofbiz.commonapp" entity="OrderTermAttribute" />
-    <entity-group group="org.ofbiz.commonapp" entity="OrderType" />
-    <entity-group group="org.ofbiz.commonapp" entity="OrderTypeAttr" />
-    <entity-group group="org.ofbiz.commonapp" entity="ProductOrderItem" />
-    <entity-group group="org.ofbiz.commonapp" entity="SimpleSalesTaxLookup" />
-    <entity-group group="org.ofbiz.commonapp" entity="ReturnHeader" />
-    <entity-group group="org.ofbiz.commonapp" entity="ReturnItem" />
-    <entity-group group="org.ofbiz.commonapp" entity="ReturnItemResponse" />
-    <entity-group group="org.ofbiz.commonapp" entity="ReturnReason" />
-    <entity-group group="org.ofbiz.commonapp" entity="ReturnStatus" /> 
-    <entity-group group="org.ofbiz.commonapp" entity="ReturnType" />   
-    <entity-group group="org.ofbiz.commonapp" entity="WorkOrderItemFulfillment" />
-
-  <!-- ========================================================= -->
-  <!-- org.ofbiz.commonapp.order.quote -->
-  <!-- ========================================================= -->
-
-    <entity-group group="org.ofbiz.commonapp" entity="Quote" />
-    <entity-group group="org.ofbiz.commonapp" entity="QuoteAttribute" />
-    <entity-group group="org.ofbiz.commonapp" entity="QuoteItem" />
-    <entity-group group="org.ofbiz.commonapp" entity="QuoteRole" />
-    <entity-group group="org.ofbiz.commonapp" entity="QuoteTerm" />
-    <entity-group group="org.ofbiz.commonapp" entity="QuoteTermAttribute" />
-    <entity-group group="org.ofbiz.commonapp" entity="QuoteType" />
-    <entity-group group="org.ofbiz.commonapp" entity="QuoteTypeAttr" />
-
-  <!-- ========================================================= -->
-  <!-- org.ofbiz.commonapp.order.request -->
-  <!-- ========================================================= -->
-
-    <entity-group group="org.ofbiz.commonapp" entity="CustRequest" />
-    <entity-group group="org.ofbiz.commonapp" entity="CustRequestAndRole" />
-    <entity-group group="org.ofbiz.commonapp" entity="CustRequestAttribute" />
-    <entity-group group="org.ofbiz.commonapp" entity="CustRequestCategory" />
-    <entity-group group="org.ofbiz.commonapp" entity="CustRequestItem" />
-    <entity-group group="org.ofbiz.commonapp" entity="CustRequestItemNote" />
-    <entity-group group="org.ofbiz.commonapp" entity="CustRequestItemNoteView" />
-    <entity-group group="org.ofbiz.commonapp" entity="CustRequestResolution" />
-    <entity-group group="org.ofbiz.commonapp" entity="CustRequestRole" />
-    <entity-group group="org.ofbiz.commonapp" entity="CustRequestStatus" />
-    <entity-group group="org.ofbiz.commonapp" entity="CustRequestType" />
-    <entity-group group="org.ofbiz.commonapp" entity="CustRequestTypeAttr" />
-    <entity-group group="org.ofbiz.commonapp" entity="DesiredFeature" />
-    <entity-group group="org.ofbiz.commonapp" entity="OrderRequirementCommitment" />
-    <entity-group group="org.ofbiz.commonapp" entity="Requirement" />
-    <entity-group group="org.ofbiz.commonapp" entity="RequirementAndRole" />
-    <entity-group group="org.ofbiz.commonapp" entity="RequirementAttribute" />
-    <entity-group group="org.ofbiz.commonapp" entity="RequirementBudgetAllocation" />
-    <entity-group group="org.ofbiz.commonapp" entity="RequirementCustRequest" />
-    <entity-group group="org.ofbiz.commonapp" entity="RequirementCustRequestView" />
-    <entity-group group="org.ofbiz.commonapp" entity="RequirementRole" />
-    <entity-group group="org.ofbiz.commonapp" entity="RequirementStatus" />
-    <entity-group group="org.ofbiz.commonapp" entity="RequirementType" />
-    <entity-group group="org.ofbiz.commonapp" entity="RequirementTypeAttr" />
-    <entity-group group="org.ofbiz.commonapp" entity="RespondingParty" />
-    <entity-group group="org.ofbiz.commonapp" entity="WorkReqFulfType" />
-    <entity-group group="org.ofbiz.commonapp" entity="WorkRequirementFulfillment" />
-
-  <!-- ========================================================= -->
-  <!-- org.ofbiz.commonapp.order.shoppingcart -->
-  <!-- ========================================================= -->
-
-    <entity-group group="org.ofbiz.commonapp" entity="CartAbandonedLine" />
-
-  <!-- ========================================================= -->
-  <!-- org.ofbiz.commonapp.order.shoppinglist -->
-  <!-- ========================================================= -->
-
-    <entity-group group="org.ofbiz.commonapp" entity="ShoppingList" />
-    <entity-group group="org.ofbiz.commonapp" entity="ShoppingListItem" />
-    <entity-group group="org.ofbiz.commonapp" entity="ShoppingListType" />
-
-  <!-- ========================================================= -->
-  <!-- org.ofbiz.commonapp.party.agreement -->
-  <!-- ========================================================= -->
-
-    <entity-group group="org.ofbiz.commonapp" entity="Addendum" />
-    <entity-group group="org.ofbiz.commonapp" entity="Agreement" />
-    <entity-group group="org.ofbiz.commonapp" entity="AgreementAttribute" />
-    <entity-group group="org.ofbiz.commonapp" entity="AgreementGeographicalApplic" />
-    <entity-group group="org.ofbiz.commonapp" entity="AgreementItem" />
-    <entity-group group="org.ofbiz.commonapp" entity="AgreementItemAttribute" />
-    <entity-group group="org.ofbiz.commonapp" entity="AgreementItemType" />
-    <entity-group group="org.ofbiz.commonapp" entity="AgreementItemTypeAttr" />
-    <entity-group group="org.ofbiz.commonapp" entity="AgreementPartyApplic" />
-    <entity-group group="org.ofbiz.commonapp" entity="AgreementProductApplic" />
-    <entity-group group="org.ofbiz.commonapp" entity="AgreementRole" />
-    <entity-group group="org.ofbiz.commonapp" entity="AgreementTerm" />
-    <entity-group group="org.ofbiz.commonapp" entity="AgreementTermAttribute" />
-    <entity-group group="org.ofbiz.commonapp" entity="AgreementType" />
-    <entity-group group="org.ofbiz.commonapp" entity="AgreementTypeAttr" />
-    <entity-group group="org.ofbiz.commonapp" entity="TermType" />
-    <entity-group group="org.ofbiz.commonapp" entity="TermTypeAttr" />
-
-  <!-- ========================================================= -->
-  <!-- org.ofbiz.commonapp.party.communication -->
-  <!-- ========================================================= -->
-
-    <entity-group group="org.ofbiz.commonapp" entity="CommunicationEvent" />
-    <entity-group group="org.ofbiz.commonapp" entity="CommunicationEventPrpTyp" />
-    <entity-group group="org.ofbiz.commonapp" entity="CommunicationEventPurpose" />
-    <entity-group group="org.ofbiz.commonapp" entity="CommunicationEventRole" />
-    <entity-group group="org.ofbiz.commonapp" entity="CommunicationEventType" />
-
-  <!-- ========================================================= -->
-  <!-- org.ofbiz.commonapp.party.contact -->
-  <!-- ========================================================= -->
-
-    <entity-group group="org.ofbiz.commonapp" entity="ContactMech" />
-    <entity-group group="org.ofbiz.commonapp" entity="ContactMechAttribute" />
-    <entity-group group="org.ofbiz.commonapp" entity="ContactMechLink" />
-    <entity-group group="org.ofbiz.commonapp" entity="ContactMechPurposeType" />
-    <entity-group group="org.ofbiz.commonapp" entity="ContactMechType" />
-    <entity-group group="org.ofbiz.commonapp" entity="ContactMechTypeAttr" />
-    <entity-group group="org.ofbiz.commonapp" entity="ContactMechTypePurpose" />
-    <entity-group group="org.ofbiz.commonapp" entity="PartyContactMech" />
-    <entity-group group="org.ofbiz.commonapp" entity="PartyContactMechPurpose" />
-    <entity-group group="org.ofbiz.commonapp" entity="PostalAddress" />
-    <entity-group group="org.ofbiz.commonapp" entity="PostalAddressBoundary" />
-    <entity-group group="org.ofbiz.commonapp" entity="TelecomNumber" />
-    <entity-group group="org.ofbiz.commonapp" entity="ValidContactMechRole" />
-
-  <!-- ========================================================= -->
-  <!-- org.ofbiz.commonapp.party.need -->
-  <!-- ========================================================= -->
-
-    <entity-group group="org.ofbiz.commonapp" entity="NeedType" />
-    <entity-group group="org.ofbiz.commonapp" entity="PartyNeed" />
-
-  <!-- ========================================================= -->
-  <!-- org.ofbiz.commonapp.party.party -->
-  <!-- ========================================================= -->
-
-    <entity-group group="org.ofbiz.commonapp" entity="Affiliate" />
-    <entity-group group="org.ofbiz.commonapp" entity="Party" />
-    <entity-group group="org.ofbiz.commonapp" entity="PartyAndContactMech" />
-    <entity-group group="org.ofbiz.commonapp" entity="PartyAndUserLogin" />
-    <entity-group group="org.ofbiz.commonapp" entity="PartyAttribute" />
-    <entity-group group="org.ofbiz.commonapp" entity="PartyClassification" />
-    <entity-group group="org.ofbiz.commonapp" entity="PartyClassificationGroup" />
-    <entity-group group="org.ofbiz.commonapp" entity="PartyClassificationType" />
-    <entity-group group="org.ofbiz.commonapp" entity="PartyContactWithPurpose" />
-    <entity-group group="org.ofbiz.commonapp" entity="PartyContent" />
-    <entity-group group="org.ofbiz.commonapp" entity="PartyDataSource" />
-    <entity-group group="org.ofbiz.commonapp" entity="PartyGroup" />
-    <entity-group group="org.ofbiz.commonapp" entity="PartyIcsAvsOverride" />
-    <entity-group group="org.ofbiz.commonapp" entity="PartyNote" />
-    <entity-group group="org.ofbiz.commonapp" entity="PartyNoteView" />
-    <entity-group group="org.ofbiz.commonapp" entity="PartyRelationship" />
-    <entity-group group="org.ofbiz.commonapp" entity="PartyRelationshipType" />
-    <entity-group group="org.ofbiz.commonapp" entity="PartyRole" />
-    <entity-group group="org.ofbiz.commonapp" entity="PartyRoleAndPerson" />
-    <entity-group group="org.ofbiz.commonapp" entity="PartySurveyResponse" />
-    <entity-group group="org.ofbiz.commonapp" entity="PartyType" />
-    <entity-group group="org.ofbiz.commonapp" entity="PartyTypeAttr" />
-    <entity-group group="org.ofbiz.commonapp" entity="Person" />
-    <entity-group group="org.ofbiz.commonapp" entity="PersonRoleView" />
-    <entity-group group="org.ofbiz.commonapp" entity="PriorityType" />
-    <entity-group group="org.ofbiz.commonapp" entity="RoleType" />
-    <entity-group group="org.ofbiz.commonapp" entity="RoleTypeAndParty" />
-    <entity-group group="org.ofbiz.commonapp" entity="RoleTypeAttr" />
-    <entity-group group="org.ofbiz.commonapp" entity="Vendor" />
-
-  <!-- ========================================================= -->
-  <!-- org.ofbiz.commonapp.product.catalog -->
-  <!-- ========================================================= -->
-
-    <entity-group group="org.ofbiz.commonapp" entity="ProdCatalog" />
-    <entity-group group="org.ofbiz.commonapp" entity="ProdCatalogCategory" />
-    <entity-group group="org.ofbiz.commonapp" entity="ProdCatalogCategoryType" />
-    <entity-group group="org.ofbiz.commonapp" entity="ProdCatalogInvFacility" />
-    <entity-group group="org.ofbiz.commonapp" entity="ProdCatalogRole" />
-
-  <!-- ========================================================= -->
-  <!-- org.ofbiz.commonapp.product.category -->
-  <!-- ========================================================= -->
-
-    <entity-group group="org.ofbiz.commonapp" entity="ProductCategory" />
-    <entity-group group="org.ofbiz.commonapp" entity="ProductCategoryAndMember" />
-    <entity-group group="org.ofbiz.commonapp" entity="ProductCategoryAttribute" />
-    <entity-group group="org.ofbiz.commonapp" entity="ProductCategoryMember" />
-    <entity-group group="org.ofbiz.commonapp" entity="ProductCategoryMemberAndRole" />
-    <entity-group group="org.ofbiz.commonapp" entity="ProductCategoryRole" />
-    <entity-group group="org.ofbiz.commonapp" entity="ProductCategoryRollup" />
-    <entity-group group="org.ofbiz.commonapp" entity="ProductCategoryRollupAndRole" />
-    <entity-group group="org.ofbiz.commonapp" entity="ProductCategoryType" />
-    <entity-group group="org.ofbiz.commonapp" entity="ProductCategoryTypeAttr" />
-
-  <!-- ========================================================= -->
-  <!-- org.ofbiz.commonapp.product.cost -->
-  <!-- ========================================================= -->
-
-    <entity-group group="org.ofbiz.commonapp" entity="CostComponent" />
-    <entity-group group="org.ofbiz.commonapp" entity="CostComponentAttribute" />
-    <entity-group group="org.ofbiz.commonapp" entity="CostComponentType" />
-    <entity-group group="org.ofbiz.commonapp" entity="CostComponentTypeAttr" />
-
-  <!-- ========================================================= -->
-  <!-- org.ofbiz.commonapp.product.feature -->
-  <!-- ========================================================= -->
-
-    <entity-group group="org.ofbiz.commonapp" entity="ProductFeature" />
-    <entity-group group="org.ofbiz.commonapp" entity="ProductFeatureAndAppl" />
-    <entity-group group="org.ofbiz.commonapp" entity="ProductFeatureAppl" />
-    <entity-group group="org.ofbiz.commonapp" entity="ProductFeatureApplType" />
-    <entity-group group="org.ofbiz.commonapp" entity="ProductFeatureCategory" />
-    <entity-group group="org.ofbiz.commonapp" entity="ProductFeatureCategoryAppl" />
-    <entity-group group="org.ofbiz.commonapp" entity="ProductFeatureContent" />
-    <entity-group group="org.ofbiz.commonapp" entity="ProductFeatureIactn" />
-    <entity-group group="org.ofbiz.commonapp" entity="ProductFeatureIactnType" />
-    <entity-group group="org.ofbiz.commonapp" entity="ProductFeatureType" />
-
-  <!-- ========================================================= -->
-  <!-- org.ofbiz.commonapp.product.inventory -->
-  <!-- ========================================================= -->
-
-    <entity-group group="org.ofbiz.commonapp" entity="InventoryItem" />
-    <entity-group group="org.ofbiz.commonapp" entity="InventoryItemAttribute" />
-    <entity-group group="org.ofbiz.commonapp" entity="InventoryItemStatus" />
-    <entity-group group="org.ofbiz.commonapp" entity="InventoryItemTempRes" />
-    <entity-group group="org.ofbiz.commonapp" entity="InventoryItemType" />
-    <entity-group group="org.ofbiz.commonapp" entity="InventoryItemTypeAttr" />
-    <entity-group group="org.ofbiz.commonapp" entity="InventoryItemVariance" />
-    <entity-group group="org.ofbiz.commonapp" entity="InventoryTransfer" />
-    <entity-group group="org.ofbiz.commonapp" entity="Lot" />
-    <entity-group group="org.ofbiz.commonapp" entity="PhysicalInventory" />
-    <entity-group group="org.ofbiz.commonapp" entity="ProductFacility" />
-    <entity-group group="org.ofbiz.commonapp" entity="VarianceReason" />
-
-  <!-- ========================================================= -->
-  <!-- org.ofbiz.commonapp.product.price -->
-  <!-- ========================================================= -->
-
-    <entity-group group="org.ofbiz.commonapp" entity="ProductPrice" />
-    <entity-group group="org.ofbiz.commonapp" entity="ProductPriceAction" />
-    <entity-group group="org.ofbiz.commonapp" entity="ProductPriceActionType" />
-    <entity-group group="org.ofbiz.commonapp" entity="ProductPriceAutoNotice" />
-    <entity-group group="org.ofbiz.commonapp" entity="ProductPriceChange" />
-    <entity-group group="org.ofbiz.commonapp" entity="ProductPriceCond" />
-    <entity-group group="org.ofbiz.commonapp" entity="ProductPriceRule" />
-    <entity-group group="org.ofbiz.commonapp" entity="ProductPriceType" />
-    <entity-group group="org.ofbiz.commonapp" entity="QuantityBreak" />
-    <entity-group group="org.ofbiz.commonapp" entity="QuantityBreakType" />
-    <entity-group group="org.ofbiz.commonapp" entity="SaleType" />
-
-  <!-- ========================================================= -->
-  <!-- org.ofbiz.commonapp.product.product -->
-  <!-- ========================================================= -->
-
-    <entity-group group="org.ofbiz.commonapp" entity="GoodIdentification" />
-    <entity-group group="org.ofbiz.commonapp" entity="GoodIdentificationType" />
-    <entity-group group="org.ofbiz.commonapp" entity="Product" />
-    <entity-group group="org.ofbiz.commonapp" entity="ProductAssoc" />
-    <entity-group group="org.ofbiz.commonapp" entity="ProductAssocType" />
-    <entity-group group="org.ofbiz.commonapp" entity="ProductAttribute" />
-    <entity-group group="org.ofbiz.commonapp" entity="ProductContent" />
-    <entity-group group="org.ofbiz.commonapp" entity="ProductGlAccount" />
-    <entity-group group="org.ofbiz.commonapp" entity="ProductGlAccountType" />
-    <entity-group group="org.ofbiz.commonapp" entity="ProductKeyword" />
-    <entity-group group="org.ofbiz.commonapp" entity="ProductKeywordResult" />
-    <entity-group group="org.ofbiz.commonapp" entity="ProductReview" />
-    <entity-group group="org.ofbiz.commonapp" entity="ProductType" />
-    <entity-group group="org.ofbiz.commonapp" entity="ProductTypeAttr" />
-    <entity-group group="org.ofbiz.commonapp" entity="ProductVirtualAndAssocPrices" />
-    <entity-group group="org.ofbiz.commonapp" entity="ProductVirtualAndVariantInfo" />
-
-  <!-- ========================================================= -->
-  <!-- org.ofbiz.commonapp.product.promo -->
-  <!-- ========================================================= -->
-
-    <entity-group group="org.ofbiz.commonapp" entity="ProductPromo" />
-    <entity-group group="org.ofbiz.commonapp" entity="ProductPromoAction" />
-    <entity-group group="org.ofbiz.commonapp" entity="ProductPromoActionType" />
-    <entity-group group="org.ofbiz.commonapp" entity="ProductPromoCond" />
-    <entity-group group="org.ofbiz.commonapp" entity="ProductPromoRule" />
-    <entity-group group="org.ofbiz.commonapp" entity="ProductPromoUsage" />
-
-  <!-- ========================================================= -->
-  <!-- org.ofbiz.commonapp.product.storage -->
-  <!-- ========================================================= -->
-
-    <entity-group group="org.ofbiz.commonapp" entity="Container" />
-    <entity-group group="org.ofbiz.commonapp" entity="ContainerType" />
-    <entity-group group="org.ofbiz.commonapp" entity="Facility" />
-    <entity-group group="org.ofbiz.commonapp" entity="FacilityAttribute" />
-    <entity-group group="org.ofbiz.commonapp" entity="FacilityCarrierShipment" />
-    <entity-group group="org.ofbiz.commonapp" entity="FacilityContactMech" />
-    <entity-group group="org.ofbiz.commonapp" entity="FacilityContactMechPurpose" />
-    <entity-group group="org.ofbiz.commonapp" entity="FacilityGroup" />
-    <entity-group group="org.ofbiz.commonapp" entity="FacilityGroupMember" />
-    <entity-group group="org.ofbiz.commonapp" entity="FacilityGroupRole" />
-    <entity-group group="org.ofbiz.commonapp" entity="FacilityGroupRollup" />
-    <entity-group group="org.ofbiz.commonapp" entity="FacilityGroupType" />
-    <entity-group group="org.ofbiz.commonapp" entity="FacilityLocation" />
-    <entity-group group="org.ofbiz.commonapp" entity="FacilityRole" />
-    <entity-group group="org.ofbiz.commonapp" entity="FacilityType" />
-    <entity-group group="org.ofbiz.commonapp" entity="FacilityTypeAttr" />
-
-  <!-- ========================================================= -->
-  <!-- org.ofbiz.commonapp.product.store -->
-  <!-- ========================================================= -->
-
-    <entity-group group="org.ofbiz.commonapp" entity="ProductStore" />
-    <entity-group group="org.ofbiz.commonapp" entity="ProductStoreCatalog" />
-    <entity-group group="org.ofbiz.commonapp" entity="ProductStoreEmailSetting" />
-    <entity-group group="org.ofbiz.commonapp" entity="ProductStoreFacility" />
-    <entity-group group="org.ofbiz.commonapp" entity="ProductStoreFacilityByOrder" />
-    <entity-group group="org.ofbiz.commonapp" entity="ProductStorePaymentSetting" />
-    <entity-group group="org.ofbiz.commonapp" entity="ProductStorePromoAppl" />
-    <entity-group group="org.ofbiz.commonapp" entity="ProductStoreRole" />    
-    <entity-group group="org.ofbiz.commonapp" entity="ProductStoreShipmentMeth" />
-    <entity-group group="org.ofbiz.commonapp" entity="ProductStoreShipmentMethView" />
-
-  <!-- ========================================================= -->
-  <!-- org.ofbiz.commonapp.product.supplier -->
-  <!-- ========================================================= -->
-
-    <entity-group group="org.ofbiz.commonapp" entity="MarketInterest" />
-    <entity-group group="org.ofbiz.commonapp" entity="ReorderGuideline" />
-    <entity-group group="org.ofbiz.commonapp" entity="SupplierPrefOrder" />
-    <entity-group group="org.ofbiz.commonapp" entity="SupplierProduct" />
-    <entity-group group="org.ofbiz.commonapp" entity="SupplierRatingType" />
-
-  <!-- ========================================================= -->
-  <!-- org.ofbiz.commonapp.security.login -->
-  <!-- ========================================================= -->
-
-    <entity-group group="org.ofbiz.commonapp" entity="UserLogin" />
-    <entity-group group="org.ofbiz.commonapp" entity="UserLoginHistory" />
-    <entity-group group="org.ofbiz.commonapp" entity="UserLoginSession" />
-
-  <!-- ========================================================= -->
-  <!-- org.ofbiz.commonapp.security.securitygroup -->
-  <!-- ========================================================= -->
-
-    <entity-group group="org.ofbiz.commonapp" entity="SecurityGroup" />
-    <entity-group group="org.ofbiz.commonapp" entity="SecurityGroupPermission" />
-    <entity-group group="org.ofbiz.commonapp" entity="SecurityPermission" />
-    <entity-group group="org.ofbiz.commonapp" entity="UserLoginSecurityGroup" />
+  <!-- org.ofbiz.marketing.contact -->
+  <!-- ========================================================= -->
+
+    <entity-group group="org.ofbiz" entity="ContactList" />
+    <entity-group group="org.ofbiz" entity="ContactListParty" />
+    <entity-group group="org.ofbiz" entity="ContactListType" />
+
+  <!-- ========================================================= -->
+  <!-- org.ofbiz.marketing.tracking -->
+  <!-- ========================================================= -->
+
+    <entity-group group="org.ofbiz" entity="TrackingCode" />
+    <entity-group group="org.ofbiz" entity="TrackingCodeOrder" />
+    <entity-group group="org.ofbiz" entity="TrackingCodeType" />
+    <entity-group group="org.ofbiz" entity="TrackingCodeVisit" />
+
+  <!-- ========================================================= -->
+  <!-- org.ofbiz.order.order -->
+  <!-- ========================================================= -->
+
+    <entity-group group="org.ofbiz" entity="OrderAdjustment" />
+    <entity-group group="org.ofbiz" entity="OrderAdjustmentAttribute" />
+    <entity-group group="org.ofbiz" entity="OrderAdjustmentType" />
+    <entity-group group="org.ofbiz" entity="OrderAdjustmentTypeAttr" />
+    <entity-group group="org.ofbiz" entity="OrderAttribute" />
+    <entity-group group="org.ofbiz" entity="OrderBlacklist" />
+    <entity-group group="org.ofbiz" entity="OrderBlacklistType" />
+    <entity-group group="org.ofbiz" entity="OrderContactMech" />
+    <entity-group group="org.ofbiz" entity="OrderDeliverySchedule" />
+    <entity-group group="org.ofbiz" entity="OrderHeader" />
+    <entity-group group="org.ofbiz" entity="OrderHeaderAndItems" />
+    <entity-group group="org.ofbiz" entity="OrderHeaderAndPaymentPref" />
+    <entity-group group="org.ofbiz" entity="OrderHeaderAndRoles" />
+    <entity-group group="org.ofbiz" entity="OrderHeaderItemAndRoles" />    
+    <entity-group group="org.ofbiz" entity="OrderHeaderNote" />
+    <entity-group group="org.ofbiz" entity="OrderHeaderNoteView" />
+    <entity-group group="org.ofbiz" entity="OrderItem" />
+    <entity-group group="org.ofbiz" entity="OrderItemAssociation" />
+    <entity-group group="org.ofbiz" entity="OrderItemAttribute" />
+    <entity-group group="org.ofbiz" entity="OrderItemBilling" />
+    <entity-group group="org.ofbiz" entity="OrderItemContactMech" />
+    <entity-group group="org.ofbiz" entity="OrderItemInventoryRes" />
+    <entity-group group="org.ofbiz" entity="OrderItemPriceInfo" />
+    <entity-group group="org.ofbiz" entity="OrderItemRole" />
+    <entity-group group="org.ofbiz" entity="OrderItemType" />
+    <entity-group group="org.ofbiz" entity="OrderItemTypeAttr" />
+    <entity-group group="org.ofbiz" entity="OrderNotification" />
+    <entity-group group="org.ofbiz" entity="OrderPaymentPreference" />
+    <entity-group group="org.ofbiz" entity="OrderReportView" />
+    <entity-group group="org.ofbiz" entity="OrderRole" />
+    <entity-group group="org.ofbiz" entity="OrderShipment" />
+    <entity-group group="org.ofbiz" entity="OrderShipmentPreference" />
+    <entity-group group="org.ofbiz" entity="OrderStatus" />
+    <entity-group group="org.ofbiz" entity="OrderSummaryEntry" />
+    <entity-group group="org.ofbiz" entity="OrderTaskList" />
+    <entity-group group="org.ofbiz" entity="OrderTerm" />
+    <entity-group group="org.ofbiz" entity="OrderTermAttribute" />
+    <entity-group group="org.ofbiz" entity="OrderType" />
+    <entity-group group="org.ofbiz" entity="OrderTypeAttr" />
+    <entity-group group="org.ofbiz" entity="ProductOrderItem" />
+    <entity-group group="org.ofbiz" entity="SimpleSalesTaxLookup" />
+    <entity-group group="org.ofbiz" entity="ReturnHeader" />
+    <entity-group group="org.ofbiz" entity="ReturnItem" />
+    <entity-group group="org.ofbiz" entity="ReturnItemResponse" />
+    <entity-group group="org.ofbiz" entity="ReturnReason" />
+    <entity-group group="org.ofbiz" entity="ReturnStatus" /> 
+    <entity-group group="org.ofbiz" entity="ReturnType" />   
+    <entity-group group="org.ofbiz" entity="WorkOrderItemFulfillment" />
 
   <!-- ========================================================= -->
-  <!-- org.ofbiz.commonapp.shipment.issuance -->
+  <!-- org.ofbiz.order.quote -->
   <!-- ========================================================= -->
 
-    <entity-group group="org.ofbiz.commonapp" entity="ItemIssuance" />
-    <entity-group group="org.ofbiz.commonapp" entity="ItemIssuanceRole" />
+    <entity-group group="org.ofbiz" entity="Quote" />
+    <entity-group group="org.ofbiz" entity="QuoteAttribute" />
+    <entity-group group="org.ofbiz" entity="QuoteItem" />
+    <entity-group group="org.ofbiz" entity="QuoteRole" />
+    <entity-group group="org.ofbiz" entity="QuoteTerm" />
+    <entity-group group="org.ofbiz" entity="QuoteTermAttribute" />
+    <entity-group group="org.ofbiz" entity="QuoteType" />
+    <entity-group group="org.ofbiz" entity="QuoteTypeAttr" />
 
   <!-- ========================================================= -->
-  <!-- org.ofbiz.commonapp.shipment.receipt -->
+  <!-- org.ofbiz.order.request -->
   <!-- ========================================================= -->
 
-    <entity-group group="org.ofbiz.commonapp" entity="RejectionReason" />
-    <entity-group group="org.ofbiz.commonapp" entity="ShipmentReceipt" />
-    <entity-group group="org.ofbiz.commonapp" entity="ShipmentReceiptRole" />
+    <entity-group group="org.ofbiz" entity="CustRequest" />
+    <entity-group group="org.ofbiz" entity="CustRequestAndRole" />
+    <entity-group group="org.ofbiz" entity="CustRequestAttribute" />
+    <entity-group group="org.ofbiz" entity="CustRequestCategory" />
+    <entity-group group="org.ofbiz" entity="CustRequestItem" />
+    <entity-group group="org.ofbiz" entity="CustRequestItemNote" />
+    <entity-group group="org.ofbiz" entity="CustRequestItemNoteView" />
+    <entity-group group="org.ofbiz" entity="CustRequestResolution" />
+    <entity-group group="org.ofbiz" entity="CustRequestRole" />
+    <entity-group group="org.ofbiz" entity="CustRequestStatus" />
+    <entity-group group="org.ofbiz" entity="CustRequestType" />
+    <entity-group group="org.ofbiz" entity="CustRequestTypeAttr" />
+    <entity-group group="org.ofbiz" entity="DesiredFeature" />
+    <entity-group group="org.ofbiz" entity="OrderRequirementCommitment" />
+    <entity-group group="org.ofbiz" entity="Requirement" />
+    <entity-group group="org.ofbiz" entity="RequirementAndRole" />
+    <entity-group group="org.ofbiz" entity="RequirementAttribute" />
+    <entity-group group="org.ofbiz" entity="RequirementBudgetAllocation" />
+    <entity-group group="org.ofbiz" entity="RequirementCustRequest" />
+    <entity-group group="org.ofbiz" entity="RequirementCustRequestView" />
+    <entity-group group="org.ofbiz" entity="RequirementRole" />
+    <entity-group group="org.ofbiz" entity="RequirementStatus" />
+    <entity-group group="org.ofbiz" entity="RequirementType" />
+    <entity-group group="org.ofbiz" entity="RequirementTypeAttr" />
+    <entity-group group="org.ofbiz" entity="RespondingParty" />
+    <entity-group group="org.ofbiz" entity="WorkReqFulfType" />
+    <entity-group group="org.ofbiz" entity="WorkRequirementFulfillment" />
 
   <!-- ========================================================= -->
-  <!-- org.ofbiz.commonapp.shipment.shipment -->
+  <!-- org.ofbiz.order.shoppingcart -->
   <!-- ========================================================= -->
 
-    <entity-group group="org.ofbiz.commonapp" entity="Delivery" />
-    <entity-group group="org.ofbiz.commonapp" entity="CarrierAndShipmentMethod" />
-    <entity-group group="org.ofbiz.commonapp" entity="CarrierShipmentMethod" />
-    <entity-group group="org.ofbiz.commonapp" entity="CarrierShipmentBoxType" />
-    <entity-group group="org.ofbiz.commonapp" entity="Shipment" />
-    <entity-group group="org.ofbiz.commonapp" entity="ShipmentAndItem" />
-    <entity-group group="org.ofbiz.commonapp" entity="ShipmentAttribute" />
-    <entity-group group="org.ofbiz.commonapp" entity="ShipmentBoxType" />
-    <entity-group group="org.ofbiz.commonapp" entity="ShipmentContactMech" />
-    <entity-group group="org.ofbiz.commonapp" entity="ShipmentContactMechType" />
-    <entity-group group="org.ofbiz.commonapp" entity="ShipmentCostEstimate" />
-    <entity-group group="org.ofbiz.commonapp" entity="ShipmentItem" />
-    <entity-group group="org.ofbiz.commonapp" entity="ShipmentItemBilling" />
-    <entity-group group="org.ofbiz.commonapp" entity="ShipmentItemFeature" />
-    <entity-group group="org.ofbiz.commonapp" entity="ShipmentManifestView" />
-    <entity-group group="org.ofbiz.commonapp" entity="ShipmentMethodType" />
-    <entity-group group="org.ofbiz.commonapp" entity="ShipmentPackage" />
-    <entity-group group="org.ofbiz.commonapp" entity="ShipmentPackageContent" />
-    <entity-group group="org.ofbiz.commonapp" entity="ShipmentPackageRouteSeg" />
-    <entity-group group="org.ofbiz.commonapp" entity="ShipmentRouteSegment" />
-    <entity-group group="org.ofbiz.commonapp" entity="ShipmentStatus" />
-    <entity-group group="org.ofbiz.commonapp" entity="ShipmentType" />
-    <entity-group group="org.ofbiz.commonapp" entity="ShipmentTypeAttr" />
-    <entity-group group="org.ofbiz.commonapp" entity="ShippingDocument" />
+    <entity-group group="org.ofbiz" entity="CartAbandonedLine" />
 
   <!-- ========================================================= -->
-  <!-- org.ofbiz.commonapp.workeffort.definition -->
+  <!-- org.ofbiz.order.shoppinglist -->
   <!-- ========================================================= -->
 
-    <entity-group group="org.ofbiz.commonapp" entity="WorkflowActivity" />
-    <entity-group group="org.ofbiz.commonapp" entity="WorkflowActivityLoop" />
-    <entity-group group="org.ofbiz.commonapp" entity="WorkflowActivitySubFlow" />
-    <entity-group group="org.ofbiz.commonapp" entity="WorkflowActivityTool" />
-    <entity-group group="org.ofbiz.commonapp" entity="WorkflowApplication" />
-    <entity-group group="org.ofbiz.commonapp" entity="WorkflowComplexTypeInfo" />
-    <entity-group group="org.ofbiz.commonapp" entity="WorkflowDataField" />
-    <entity-group group="org.ofbiz.commonapp" entity="WorkflowFormalParam" />
-    <entity-group group="org.ofbiz.commonapp" entity="WorkflowPackage" />
-    <entity-group group="org.ofbiz.commonapp" entity="WorkflowPackageExternal" />
-    <entity-group group="org.ofbiz.commonapp" entity="WorkflowParticipant" />
-    <entity-group group="org.ofbiz.commonapp" entity="WorkflowParticipantList" />
-    <entity-group group="org.ofbiz.commonapp" entity="WorkflowParticipantType" />
-    <entity-group group="org.ofbiz.commonapp" entity="WorkflowProcess" />
-    <entity-group group="org.ofbiz.commonapp" entity="WorkflowSpecification" />
-    <entity-group group="org.ofbiz.commonapp" entity="WorkflowTransition" />
-    <entity-group group="org.ofbiz.commonapp" entity="WorkflowTransitionRef" />
-    <entity-group group="org.ofbiz.commonapp" entity="WorkflowTypeDeclaration" />
+    <entity-group group="org.ofbiz" entity="ShoppingList" />
+    <entity-group group="org.ofbiz" entity="ShoppingListItem" />
+    <entity-group group="org.ofbiz" entity="ShoppingListType" />
 
   <!-- ========================================================= -->
-  <!-- org.ofbiz.commonapp.workeffort.scheduler -->
+  <!-- org.ofbiz.shipment.issuance -->
   <!-- ========================================================= -->
 
-    <entity-group group="org.ofbiz.commonapp" entity="JobSandbox" />
-    <entity-group group="org.ofbiz.commonapp" entity="RecurrenceInfo" />
-    <entity-group group="org.ofbiz.commonapp" entity="RecurrenceRule" />
-    <entity-group group="org.ofbiz.commonapp" entity="RuntimeData" />
+    <entity-group group="org.ofbiz" entity="ItemIssuance" />
+    <entity-group group="org.ofbiz" entity="ItemIssuanceRole" />
 
   <!-- ========================================================= -->
-  <!-- org.ofbiz.commonapp.workeffort.timesheet -->
+  <!-- org.ofbiz.shipment.receipt -->
   <!-- ========================================================= -->
 
-    <entity-group group="org.ofbiz.commonapp" entity="PartyRate" />
-    <entity-group group="org.ofbiz.commonapp" entity="RateType" />
-    <entity-group group="org.ofbiz.commonapp" entity="TimeEntry" />
-    <entity-group group="org.ofbiz.commonapp" entity="TimeEntryBilling" />
-    <entity-group group="org.ofbiz.commonapp" entity="Timesheet" />
-    <entity-group group="org.ofbiz.commonapp" entity="TimesheetRole" />
-    <entity-group group="org.ofbiz.commonapp" entity="WorkEffortAssignmentRate" />
+    <entity-group group="org.ofbiz" entity="RejectionReason" />
+    <entity-group group="org.ofbiz" entity="ShipmentReceipt" />
+    <entity-group group="org.ofbiz" entity="ShipmentReceiptRole" />
 
   <!-- ========================================================= -->
-  <!-- org.ofbiz.commonapp.workeffort.workeffort -->
+  <!-- org.ofbiz.shipment.shipment -->
   <!-- ========================================================= -->
 
-    <entity-group group="org.ofbiz.commonapp" entity="ApplicationSandbox" />
-    <entity-group group="org.ofbiz.commonapp" entity="CommunicationEventWorkEff" />
-    <entity-group group="org.ofbiz.commonapp" entity="Deliverable" />
-    <entity-group group="org.ofbiz.commonapp" entity="DeliverableType" />
-    <entity-group group="org.ofbiz.commonapp" entity="WorkEffort" />
-    <entity-group group="org.ofbiz.commonapp" entity="WorkEffortAndFulfillment" />
-    <entity-group group="org.ofbiz.commonapp" entity="WorkEffortAndPartyAssign" />
-    <entity-group group="org.ofbiz.commonapp" entity="WorkEffortAssoc" />
-    <entity-group group="org.ofbiz.commonapp" entity="WorkEffortAssocAttribute" />
-    <entity-group group="org.ofbiz.commonapp" entity="WorkEffortAssocType" />
-    <entity-group group="org.ofbiz.commonapp" entity="WorkEffortAssocTypeAttr" />
-    <entity-group group="org.ofbiz.commonapp" entity="WorkEffortAttribute" />
-    <entity-group group="org.ofbiz.commonapp" entity="WorkEffortBilling" />
-    <entity-group group="org.ofbiz.commonapp" entity="WorkEffortContactMech" />    
-    <entity-group group="org.ofbiz.commonapp" entity="WorkEffortDeliverableProd" />
-    <entity-group group="org.ofbiz.commonapp" entity="WorkEffortFixedAssetAssign" />
-    <entity-group group="org.ofbiz.commonapp" entity="WorkEffortFixedAssetStd" />
-    <entity-group group="org.ofbiz.commonapp" entity="WorkEffortGoodStandard" />
-    <entity-group group="org.ofbiz.commonapp" entity="WorkEffortInventoryAssign" />
-    <entity-group group="org.ofbiz.commonapp" entity="WorkEffortInventoryProduced" />
-    <entity-group group="org.ofbiz.commonapp" entity="WorkEffortNote" />
-    <entity-group group="org.ofbiz.commonapp" entity="WorkEffortNoteAndData" />
-    <entity-group group="org.ofbiz.commonapp" entity="WorkEffortPartyAssignByGroup" />
-    <entity-group group="org.ofbiz.commonapp" entity="WorkEffortPartyAssignByRole" />
-    <entity-group group="org.ofbiz.commonapp" entity="WorkEffortPartyAssignment" />
-    <entity-group group="org.ofbiz.commonapp" entity="WorkEffortPurposeType" />
-    <entity-group group="org.ofbiz.commonapp" entity="WorkEffortSkillStandard" />
-    <entity-group group="org.ofbiz.commonapp" entity="WorkEffortStatus" />
-    <entity-group group="org.ofbiz.commonapp" entity="WorkEffortTransBox" />
-    <entity-group group="org.ofbiz.commonapp" entity="WorkEffortType" />
-    <entity-group group="org.ofbiz.commonapp" entity="WorkEffortTypeAttr" />
+    <entity-group group="org.ofbiz" entity="Delivery" />
+    <entity-group group="org.ofbiz" entity="CarrierAndShipmentMethod" />
+    <entity-group group="org.ofbiz" entity="CarrierShipmentMethod" />
+    <entity-group group="org.ofbiz" entity="CarrierShipmentBoxType" />
+    <entity-group group="org.ofbiz" entity="Shipment" />
+    <entity-group group="org.ofbiz" entity="ShipmentAndItem" />
+    <entity-group group="org.ofbiz" entity="ShipmentAttribute" />
+    <entity-group group="org.ofbiz" entity="ShipmentBoxType" />
+    <entity-group group="org.ofbiz" entity="ShipmentContactMech" />
+    <entity-group group="org.ofbiz" entity="ShipmentContactMechType" />
+    <entity-group group="org.ofbiz" entity="ShipmentCostEstimate" />
+    <entity-group group="org.ofbiz" entity="ShipmentItem" />
+    <entity-group group="org.ofbiz" entity="ShipmentItemBilling" />
+    <entity-group group="org.ofbiz" entity="ShipmentItemFeature" />
+    <entity-group group="org.ofbiz" entity="ShipmentManifestView" />
+    <entity-group group="org.ofbiz" entity="ShipmentMethodType" />
+    <entity-group group="org.ofbiz" entity="ShipmentPackage" />
+    <entity-group group="org.ofbiz" entity="ShipmentPackageContent" />
+    <entity-group group="org.ofbiz" entity="ShipmentPackageRouteSeg" />
+    <entity-group group="org.ofbiz" entity="ShipmentRouteSegment" />
+    <entity-group group="org.ofbiz" entity="ShipmentStatus" />
+    <entity-group group="org.ofbiz" entity="ShipmentType" />
+    <entity-group group="org.ofbiz" entity="ShipmentTypeAttr" />
+    <entity-group group="org.ofbiz" entity="ShippingDocument" />
 </entitygroup>
 
