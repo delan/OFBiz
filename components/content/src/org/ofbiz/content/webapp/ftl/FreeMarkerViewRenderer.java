@@ -1,5 +1,5 @@
 /*
- * $Id: FreeMarkerViewRenderer.java,v 1.10 2004/07/22 04:43:13 ajzeneski Exp $
+ * $Id: FreeMarkerViewRenderer.java,v 1.11 2004/07/30 21:45:17 ajzeneski Exp $
  *
  * Copyright (c) 2003 The Open For Business Project - www.ofbiz.org
  *
@@ -40,6 +40,7 @@ import org.jpublish.page.PageInstance;
 import org.jpublish.view.ViewRenderException;
 import org.ofbiz.base.util.Debug;
 import org.ofbiz.base.util.UtilProperties;
+import org.ofbiz.base.util.UtilHttp;
 
 import freemarker.ext.beans.BeansWrapper;
 import freemarker.template.SimpleHash;
@@ -51,7 +52,7 @@ import freemarker.template.WrappingTemplateModel;
  *
  * @author     <a href="mailto:jaz@ofbiz.org">Andy Zeneski</a>
  * @author     <a href="mailto:jonesde@ofbiz.org">David E. Jones</a>
- * @version    $Revision: 1.10 $
+ * @version    $Revision: 1.11 $
  * @since      2.1
  */
 public class FreeMarkerViewRenderer extends org.jpublish.view.freemarker.FreeMarkerViewRenderer {
@@ -100,7 +101,7 @@ public class FreeMarkerViewRenderer extends org.jpublish.view.freemarker.FreeMar
             Page page = (Page)context.get(JPublishContext.JPUBLISH_PAGE);
             Object viewContext = createViewContext(context, path);
 
-            Template template = fmConfig.getTemplate(path, page.getLocale());
+            Template template = fmConfig.getTemplate(path, UtilHttp.getLocale(context.getRequest()));
             template.setObjectWrapper(BeansWrapper.getDefaultInstance());
 
             /* NEVER add content to the beginning of templates; this effects XML processing which requires the

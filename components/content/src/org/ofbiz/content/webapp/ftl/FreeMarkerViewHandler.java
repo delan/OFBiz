@@ -1,5 +1,5 @@
 /*
- * $Id: FreeMarkerViewHandler.java,v 1.7 2003/12/23 13:50:40 jonesde Exp $
+ * $Id: FreeMarkerViewHandler.java,v 1.8 2004/07/30 21:45:17 ajzeneski Exp $
  *
  * Copyright (c) 2001-2003 The Open For Business Project - www.ofbiz.org
  *
@@ -53,7 +53,7 @@ import freemarker.template.WrappingTemplateModel;
  * FreemarkerViewHandler - Freemarker Template Engine View Handler
  *
  * @author     <a href="mailto:jaz@ofbiz.org">Andy Zeneski</a>
- * @version    $Revision: 1.7 $
+ * @version    $Revision: 1.8 $
  * @since      2.1
  */
 public class FreeMarkerViewHandler implements ViewHandler {
@@ -94,7 +94,7 @@ public class FreeMarkerViewHandler implements ViewHandler {
         // get the template
         Template template = null;
         try {
-            template = config.getTemplate(page, request.getLocale());
+            template = config.getTemplate(page, UtilHttp.getLocale(request));
         } catch (IOException e) {
             throw new ViewHandlerException("Cannot open template file: " + page, e);
         }
