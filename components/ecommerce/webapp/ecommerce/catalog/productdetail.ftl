@@ -20,7 +20,7 @@
  *  THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  *
  *@author     Andy Zeneski (jaz@ofbiz.org)
- *@version    $Revision: 1.12 $
+ *@version    $Revision: 1.13 $
  *@since      2.1
 -->
 <#assign uiLabelMap = requestAttributes.uiLabelMap>
@@ -164,7 +164,12 @@ ${requestAttributes.virtualJavaScript?if_exists}
         <#-- check to see if the product requires inventory check and has inventory -->
         <#else>
           <#if inStock>
-            <div id="add_amount" class="tabletexthidden">
+            <#if product.requireAmount?default("N") == "Y">
+              <#assign hiddenStyle = "tabletext">
+            <#else>
+              <#assign hiddenStyle = "tabletexthidden">
+            </#if>
+            <div id="add_amount" class="${hiddenStyle}">
               <nobr><b>Amount:</b></nobr>&nbsp;
               <input type="text" class="inputBox" size="5" name="add_amount" value="">
             </div>
