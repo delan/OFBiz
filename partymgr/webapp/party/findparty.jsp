@@ -39,7 +39,8 @@
     <TD width='100%'>
       <table width='100%' border='0' cellspacing='0' cellpadding='0' class='boxtop'>
         <tr>
-          <td width="100%"><div class="boxhead">Find Parties</div></td>
+          <td width="50%"><div class="boxhead">Find Parties</div></td>
+          <td width="50%" align='right'><a href="<ofbiz:url>/editperson?create_new=Y</ofbiz:url>" class="lightbuttontext">[Create Person]</a></td>
         </tr>
       </table>
       <table width='100%' border='0' cellspacing='0' cellpadding='2' class='boxbottom'>
