@@ -69,9 +69,9 @@ public class ServiceDispatcher {
             } catch (SecurityConfigurationException e) {
                 Debug.logError(e, "[ServiceDispatcher.init] : No instance of security imeplemtation found.", module);
             }
-            this.jm = new JobManager(this, this.delegator);
-            this.jlf = new JmsListenerFactory(this);
         }
+        this.jm = new JobManager(this, this.delegator);
+        this.jlf = new JmsListenerFactory(this);        
     }
 
     /**

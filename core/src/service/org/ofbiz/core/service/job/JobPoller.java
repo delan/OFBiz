@@ -53,7 +53,7 @@ public class JobPoller implements Runnable {
     protected Thread thread = null;
     protected LinkedList pool = null;
     protected LinkedList run = null;
-    protected JobManager jm= null;
+    protected JobManager jm = null;
 
     /**
      * Creates a new JobScheduler
@@ -65,7 +65,7 @@ public class JobPoller implements Runnable {
         
         // create the thread pool
         this.pool = createThreadPool();
-
+               
         // start the thread only if polling is enabled
         if (pollEnabled()) {
                         
@@ -256,6 +256,13 @@ public class JobPoller implements Runnable {
 
         if (enabled.equalsIgnoreCase("false"))
             return false;
+            
+        // also make sure we have a delegator to use for polling
+        if (jm.getDelegator() == null) {
+            Debug.logWarning("No delegator referenced; not starting job poller.", module);
+            return false;
+        }
+            
         return true;
     }
 }

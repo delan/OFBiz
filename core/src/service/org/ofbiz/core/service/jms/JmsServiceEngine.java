@@ -331,8 +331,7 @@ public class JmsServiceEngine implements GenericEngine {
     /**
      * @see org.ofbiz.core.service.engine.GenericEngine#runAsync(java.lang.String, org.ofbiz.core.service.ModelService, java.util.Map, org.ofbiz.core.service.GenericRequester, boolean)
      */
-    public void runAsync(String localName, ModelService modelService, Map context, GenericRequester requester, boolean persist)
-        throws GenericServiceException {
+    public void runAsync(String localName, ModelService modelService, Map context, GenericRequester requester, boolean persist) throws GenericServiceException {        
         Map result = run(modelService, context);
 
         requester.receiveResult(result);

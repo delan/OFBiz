@@ -153,6 +153,11 @@ public class JobManager {
         String dataId = null;
         String infoId = null;
         String jobName = new String(new Long((new Date().getTime())).toString());
+        
+        if (delegator == null) {
+            Debug.logWarning("No delegator referenced; cannot schedule job.", module);
+            return;
+        }
 
         try {
             dataId = delegator.getNextSeqId("RuntimeData").toString();

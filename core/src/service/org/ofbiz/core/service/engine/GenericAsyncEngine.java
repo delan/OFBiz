@@ -77,6 +77,10 @@ public abstract class GenericAsyncEngine implements GenericEngine {
         Job job = null;
 
         if (persist) {
+            // check for a delegator
+            if (dispatcher.getDelegator() == null)
+                throw new GenericServiceException("No reference to delegator; cannot run persisted services.");
+                
             // suspend the current transaction
             TransactionManager tm = TransactionFactory.getTransactionManager();
 
