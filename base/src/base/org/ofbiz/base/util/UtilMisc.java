@@ -1,5 +1,5 @@
 /*
- * $Id: UtilMisc.java,v 1.4 2003/09/26 17:05:35 jonesde Exp $
+ * $Id: UtilMisc.java,v 1.5 2003/10/11 20:34:09 ajzeneski Exp $
  *
  *  Copyright (c) 2001, 2002 The Open For Business Project - www.ofbiz.org
  *
@@ -32,20 +32,21 @@ import java.util.LinkedList;
 import java.util.List;
 import java.util.Locale;
 import java.util.Map;
+import java.util.TreeMap;
 
 /**
  * UtilMisc - Misc Utility Functions
  *
  * @author     <a href="mailto:jonesde@ofbiz.org">David E. Jones</a>
- * @author     <a href="mailto:jaz@ofbiz.org">Andy Zeneski</a> 
- * @version    $Revision: 1.4 $
+ * @author     <a href="mailto:jaz@ofbiz.org">Andy Zeneski</a>
+ * @version    $Revision: 1.5 $
  * @since      2.0
  */
 public class UtilMisc {
-    
+
     public static final String module = UtilMisc.class.getName();
 
-    /** 
+    /**
      * Get an iterator from a collection, returning null if collection is null
      * @param col The collection to be turned in to an iterator
      * @return The resulting Iterator
@@ -57,7 +58,7 @@ public class UtilMisc {
             return col.iterator();
     }
 
-    /** 
+    /**
      * Create a map from passed nameX, valueX parameters
      * @return The resulting Map
      */
@@ -69,7 +70,7 @@ public class UtilMisc {
          return fields;*/
     }
 
-    /** 
+    /**
      * Create a map from passed nameX, valueX parameters
      * @return The resulting Map
      */
@@ -82,7 +83,7 @@ public class UtilMisc {
          return fields;*/
     }
 
-    /** 
+    /**
      * Create a map from passed nameX, valueX parameters
      * @return The resulting Map
      */
@@ -96,7 +97,7 @@ public class UtilMisc {
          return fields;*/
     }
 
-    /** 
+    /**
      * Create a map from passed nameX, valueX parameters
      * @return The resulting Map
      */
@@ -112,7 +113,7 @@ public class UtilMisc {
          return fields;*/
     }
 
-    /** 
+    /**
      * Create a map from passed nameX, valueX parameters
      * @return The resulting Map
      */
@@ -128,7 +129,7 @@ public class UtilMisc {
         return fields;
     }
 
-    /** 
+    /**
      * Create a map from passed nameX, valueX parameters
      * @return The resulting Map
      */
@@ -144,8 +145,8 @@ public class UtilMisc {
         fields.put(name6, value6);
         return fields;
     }
-    
-    /** 
+
+    /**
      * Create a map from passed nameX, valueX parameters
      * @return The resulting Map
      */
@@ -162,7 +163,7 @@ public class UtilMisc {
         }
         return map;
     }
-    
+
     /**
      * Sort a List of Maps by specified consistent keys.
      * @param listOfMaps List of Map objects to sort.
@@ -183,7 +184,7 @@ public class UtilMisc {
         return toSort;
     }
 
-    /** 
+    /**
      * Create a list from passed objX parameters
      * @return The resulting List
      */
@@ -194,7 +195,7 @@ public class UtilMisc {
         return list;
     }
 
-    /** 
+    /**
      * Create a list from passed objX parameters
      * @return The resulting List
      */
@@ -206,7 +207,7 @@ public class UtilMisc {
         return list;
     }
 
-    /** 
+    /**
      * Create a list from passed objX parameters
      * @return The resulting List
      */
@@ -219,7 +220,7 @@ public class UtilMisc {
         return list;
     }
 
-    /** 
+    /**
      * Create a list from passed objX parameters
      * @return The resulting List
      */
@@ -233,7 +234,7 @@ public class UtilMisc {
         return list;
     }
 
-    /** 
+    /**
      * Create a list from passed objX parameters
      * @return The resulting List
      */
@@ -248,7 +249,7 @@ public class UtilMisc {
         return list;
     }
 
-    /** 
+    /**
      * Create a list from passed objX parameters
      * @return The resulting List
      */
@@ -293,7 +294,7 @@ public class UtilMisc {
         if (localeString == null || localeString.length() == 0) {
             return null;
         }
-        
+
         Locale locale = null;
         if (localeString.length() == 2) {
             // two letter language code
@@ -312,7 +313,7 @@ public class UtilMisc {
         } else {
             Debug.logWarning("Do not know what to do with the localeString [" + localeString + "], should be length 2, 5, or greater than 6, returning null", module);
         }
-        
+
         return locale;
     }
 
@@ -322,21 +323,31 @@ public class UtilMisc {
     public static Locale ensureLocale(Object localeObject) {
         if (localeObject != null && localeObject instanceof String) {
             localeObject = UtilMisc.parseLocale((String) localeObject);
-        } 
+        }
         if (localeObject != null && localeObject instanceof Locale) {
             return (Locale) localeObject;
         } else {
             return Locale.getDefault();
-        }                                
+        }
     }
-    
+
+    /** Returns a Collection of available locales sorted by display name */
+    public static Collection availableLocales() {
+        TreeMap localeMap = new TreeMap();
+        Locale[] locales = Locale.getAvailableLocales();
+        for (int i = 0; i < locales.length; i++) {
+            localeMap.put(locales[i].getDisplayName(), locales[i]);
+        }
+        return localeMap.values();
+    }
+
     /** This is meant to be very quick to create and use for small sized maps, perfect for how we usually use UtilMisc.toMap */
     protected static class SimpleMap implements Map, java.io.Serializable {
         protected Map realMapIfNeeded = null;
 
         String[] names;
         Object[] values;
-        
+
         public SimpleMap() {
             names = new String[0];
             values = new Object[0];
@@ -525,7 +536,7 @@ public class UtilMisc {
                 return outString.toString();
             }
         }
-        
+
         public int hashCode() {
             if (realMapIfNeeded != null) {
                 return realMapIfNeeded.hashCode();
@@ -540,21 +551,21 @@ public class UtilMisc {
                 return hashCode;
             }
         }
-        
+
         public boolean equals(Object obj) {
             if (realMapIfNeeded != null) {
                 return realMapIfNeeded.equals(obj);
             } else {
                 Map mapObj = (Map) obj;
-                
+
                 //first check the size
                 if (mapObj.size() != names.length) return false;
-                
+
                 //okay, same size, now check each entry
                 for (int i = 0; i < names.length; i++) {
                     //first check the name
                     if (!mapObj.containsKey(names[i])) return false;
-                    
+
                     //if that passes, check the value
                     Object mapValue = mapObj.get(names[i]);
                     if (mapValue == null) {
@@ -563,7 +574,7 @@ public class UtilMisc {
                         if (!mapValue.equals(values[i])) return false;
                     }
                 }
-                
+
                 return true;
             }
         }
