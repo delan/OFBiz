@@ -4,6 +4,7 @@
 	<description>OFBiz Security Services</description>
 	<vendor>OFBiz</vendor>
 	<version>1.0</version>
+    
 	<!-- UserLogin services -->
 	<service name="userLogin" engine="java" location="org.ofbiz.securityext.login.LoginServices" invoke="userLogin">
 		<description>Used to Automatically Authenticate a username/password; create a UserLogin object</description>
@@ -43,6 +44,7 @@
 		<attribute name="disabledDateTime" type="java.sql.Timestamp" mode="IN" optional="true"/>
 		<attribute name="successiveFailedLogins" type="Long" mode="IN" optional="true"/>
 	</service>
+
 	<!-- SecurityGroup services -->
 	<service name="createSecurityGroup" engine="simple" location="org/ofbiz/securityext/securitygroup/SecurityGroupServices.xml" invoke="createSecurityGroup" auth="true">
 		<description>Create an SecurityGroup</description>
@@ -65,6 +67,7 @@
 		<attribute name="permissionId" type="String" mode="IN" optional="false"/>
 		<attribute name="description" type="String" mode="IN" optional="false"/>
 	</service>
+
 	<!-- SecurityPermission to SecurityGroup services -->
 	<service name="addSecurityPermissionToSecurityGroup" engine="simple" location="org/ofbiz/securityext/securitygroup/SecurityGroupServices.xml" invoke="addSecurityPermissionToSecurityGroup" auth="true">
 		<description>Add a SecurityPermission to a SecurityGroup</description>
@@ -76,6 +79,7 @@
 		<attribute name="groupId" type="String" mode="IN" optional="false"/>
 		<attribute name="permissionId" type="String" mode="IN" optional="false"/>
 	</service>
+
 	<!-- UserLogin to SecurityGroup services -->
 	<service name="addUserLoginToSecurityGroup" engine="simple" location="org/ofbiz/securityext/securitygroup/SecurityGroupServices.xml" invoke="addUserLoginToSecurityGroup" auth="true">
 		<description>Add a UserLogin to a SecurityGroup</description>
