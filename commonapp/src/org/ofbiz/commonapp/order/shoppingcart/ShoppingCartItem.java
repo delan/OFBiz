@@ -66,7 +66,6 @@ public class ShoppingCartItem implements java.io.Serializable {
 
     private String delegatorName = null;
     private String prodCatalogId = null;
-    private String webSiteId = null;
     private String productId = null;
     private String itemType = null;
     private String itemComment = null;
@@ -147,7 +146,7 @@ public class ShoppingCartItem implements java.io.Serializable {
      * @throws CartItemModifyException
      */
     public static ShoppingCartItem makeItem(Integer cartLocation, GenericValue product, double quantity, Map additionalProductFeatureAndAppls, Map attributes, String prodCatalogId, LocalDispatcher dispatcher, ShoppingCart cart, boolean doPromotions) throws CartItemModifyException {
-        ShoppingCartItem newItem = new ShoppingCartItem(product, additionalProductFeatureAndAppls, attributes, prodCatalogId, cart.getWebSiteId());
+        ShoppingCartItem newItem = new ShoppingCartItem(product, additionalProductFeatureAndAppls, attributes, prodCatalogId);
 
         // check to see if product is virtual
         if ("Y".equals(product.getString("isVirtual"))) {
@@ -188,6 +187,7 @@ public class ShoppingCartItem implements java.io.Serializable {
         try {
             newItem.setQuantity(quantity, dispatcher, cart, doPromotions);
         } catch (CartItemModifyException e) {
+            cart.removeCartItem(cart.getItemIndex(newItem), dispatcher);
             cart.removeEmptyCartItems();
             throw e;
         }
@@ -214,7 +214,7 @@ public class ShoppingCartItem implements java.io.Serializable {
      * @throws CartItemModifyException
      */
     public static ShoppingCartItem makeItem(Integer cartLocation, GenericDelegator delegator, String itemType, String itemDescription, String productCategoryId, double basePrice, double quantity, Map attributes, String prodCatalogId, LocalDispatcher dispatcher, ShoppingCart cart, boolean doPromotions) throws CartItemModifyException {
-        ShoppingCartItem newItem = new ShoppingCartItem(delegator, itemType, itemDescription, productCategoryId, basePrice, attributes, prodCatalogId, cart.getWebSiteId());
+        ShoppingCartItem newItem = new ShoppingCartItem(delegator, itemType, itemDescription, productCategoryId, basePrice, attributes, prodCatalogId);
         
         // add to cart before setting quantity so that we can get order total, etc
         if (cartLocation == null) {
@@ -243,7 +243,6 @@ public class ShoppingCartItem implements java.io.Serializable {
         this.delegator = item.getDelegator();      
         this.delegatorName = delegator.getDelegatorName();
         this.prodCatalogId = item.getProdCatalogId();
-        this.webSiteId = item.getWebSiteId();
         this.productId = item.getProductId();
         this.itemType = item.getItemType();
         this.itemComment = item.getItemComment(); 
@@ -269,12 +268,11 @@ public class ShoppingCartItem implements java.io.Serializable {
     protected ShoppingCartItem() {}
 
     /** Creates new ShoppingCartItem object. */
-    protected ShoppingCartItem(GenericValue product, Map additionalProductFeatureAndAppls, Map attributes, String prodCatalogId, String webSiteId) {
+    protected ShoppingCartItem(GenericValue product, Map additionalProductFeatureAndAppls, Map attributes, String prodCatalogId) {
         this._product = product;
         this.productId = _product.getString("productId");
         this.itemType = "PRODUCT_ORDER_ITEM";
         this.prodCatalogId = prodCatalogId;
-        this.webSiteId = webSiteId;
         this.itemComment = null;
         this.attributes = attributes;
         this.delegator = _product.getDelegator();
@@ -284,7 +282,7 @@ public class ShoppingCartItem implements java.io.Serializable {
     }
     
     /** Creates new ShopingCartItem object. */
-    protected ShoppingCartItem(GenericDelegator delegator, String itemTypeId, String description, String categoryId, double basePrice, Map attributes, String prodCatalogId, String webSiteId) {
+    protected ShoppingCartItem(GenericDelegator delegator, String itemTypeId, String description, String categoryId, double basePrice, Map attributes, String prodCatalogId) {
         this.delegator = delegator;      
         this.itemType = itemTypeId;
         this.itemDescription = description;
@@ -292,7 +290,6 @@ public class ShoppingCartItem implements java.io.Serializable {
         this.basePrice = basePrice;
         this.attributes = attributes;
         this.prodCatalogId = prodCatalogId;
-        this.webSiteId = webSiteId;
         this.delegatorName = delegator.getDelegatorName();
     }
 
@@ -300,10 +297,6 @@ public class ShoppingCartItem implements java.io.Serializable {
         return this.prodCatalogId;
     }
     
-    public String getWebSiteId() {
-        return this.webSiteId;
-    }
-
     /** Sets the base price for the item; use with caution */
     public void setBasePrice(double basePrice) {
         this.basePrice = basePrice; 
@@ -359,7 +352,7 @@ public class ShoppingCartItem implements java.io.Serializable {
                 priceContext.put("currencyUomId", cart.getCurrency());
                 priceContext.put("product", this.getProduct());
                 priceContext.put("prodCatalogId", this.getProdCatalogId());
-                priceContext.put("webSiteId", this.getWebSiteId());            
+                priceContext.put("webSiteId", cart.getWebSiteId());            
                 
                 String partyId = cart.getPartyId();
                 if (partyId != null)

@@ -195,7 +195,7 @@ public class ShoppingCart implements java.io.Serializable {
     }
 
     /** Get a ShoppingCartItem from the cart object. */
-    public ShoppingCartItem findCartItem(String productId, HashMap features, HashMap attributes, String prodCatalogId) {
+    public ShoppingCartItem findCartItem(String productId, Map features, Map attributes, String prodCatalogId) {
         // Check for existing cart item.
         for (int i = 0; i < this.cartLines.size(); i++) {
             ShoppingCartItem cartItem = (ShoppingCartItem) cartLines.get(i);
@@ -251,6 +251,7 @@ public class ShoppingCart implements java.io.Serializable {
 
     /** Remove an item from the cart object. */
     public void removeCartItem(int index, LocalDispatcher dispatcher) throws CartItemModifyException {
+        if (index < 0) return;
         if (cartLines.size() <= index) return;
         ShoppingCartItem item = (ShoppingCartItem) cartLines.remove(index);
 

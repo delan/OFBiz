@@ -237,7 +237,7 @@ public class ProductPromoWorker {
                                     cartChanged = actionChangedCart;
                                 }
                             } catch (CartItemModifyException e) {
-                                Debug.logWarning("Possible error modifying the cart in perform promotion action: " + e.toString(), module);
+                                Debug.logError("Error modifying the cart in perform promotion action: " + e.toString(), module);
                             }
                         }
                     }
@@ -380,8 +380,14 @@ public class ProductPromoWorker {
                 double quantity = productPromoAction.get("quantity") == null ? 0.0 : productPromoAction.getDouble("quantity").doubleValue();
 
                 // pass null for cartLocation to add to end of cart, pass false for doPromotions to avoid infinite recursion
-                // TODO fixme - changed prodCatalogId to null
-                ShoppingCartItem gwpItem = ShoppingCartItem.makeItem(null, product, quantity, null, null, null, dispatcher, cart, false);
+                ShoppingCartItem gwpItem = null;
+                try {
+                    gwpItem = ShoppingCartItem.makeItem(null, product, quantity, null, null, cartItem.getProdCatalogId(), dispatcher, cart, false);
+                } catch (CartItemModifyException e) {
+                    int gwpItemIndex = cart.getItemIndex(gwpItem);
+                    cart.removeCartItem(gwpItemIndex, dispatcher);
+                    throw e;
+                }
 
                 double discountAmount = quantity * gwpItem.getBasePrice();
                 GenericValue orderAdjustment = delegator.makeValue("OrderAdjustment",
