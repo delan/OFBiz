@@ -40,7 +40,14 @@ import org.ofbiz.core.util.*;
 public class ContactMechWorker {
     public static void getPartyContactMechValueMaps(PageContext pageContext, String partyId, boolean showOld, String partyContactMechValueMapsAttr) {
         GenericDelegator delegator = (GenericDelegator) pageContext.getRequest().getAttribute("delegator");
-        Collection partyContactMechValueMaps = new LinkedList();
+        List partyContactMechValueMaps = getPartyContactMechValueMaps(delegator, partyId, showOld);
+        if (partyContactMechValueMaps.size() > 0) {
+            pageContext.setAttribute(partyContactMechValueMapsAttr, partyContactMechValueMaps);
+        }
+    }
+    
+    public static List getPartyContactMechValueMaps(GenericDelegator delegator, String partyId, boolean showOld) {
+        List partyContactMechValueMaps = new LinkedList();
 
         Iterator allPartyContactMechs = null;
 
@@ -96,9 +103,7 @@ public class ContactMechWorker {
             }
         }
 
-        if (partyContactMechValueMaps.size() > 0) {
-            pageContext.setAttribute(partyContactMechValueMapsAttr, partyContactMechValueMaps);
-        }
+        return partyContactMechValueMaps;
     }
 
     public static void getOrderContactMechValueMaps(PageContext pageContext, String orderId, String orderContactMechValueMapsAttr) {

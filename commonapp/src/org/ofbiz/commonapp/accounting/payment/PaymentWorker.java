@@ -43,9 +43,13 @@ public class PaymentWorker {
     
     public static void getPartyPaymentMethodValueMaps(PageContext pageContext, String partyId, boolean showOld, String paymentMethodValueMapsAttr) {
         GenericDelegator delegator = (GenericDelegator) pageContext.getRequest().getAttribute("delegator");
+        List paymentMethodValueMaps = getPartyPaymentMethodValueMaps(delegator, partyId, showOld);
+        pageContext.setAttribute(paymentMethodValueMapsAttr, paymentMethodValueMaps);
+    }
 
+    public static List getPartyPaymentMethodValueMaps(GenericDelegator delegator, String partyId, boolean showOld) {
+        List paymentMethodValueMaps = new LinkedList();
         try {
-            List paymentMethodValueMaps = new LinkedList();
             List paymentMethods = delegator.findByAnd("PaymentMethod", UtilMisc.toMap("partyId", partyId));
 
             if (!showOld) paymentMethods = EntityUtil.filterByDate(paymentMethods, true);
@@ -69,10 +73,10 @@ public class PaymentWorker {
                     }
                 }
             }
-            pageContext.setAttribute(paymentMethodValueMapsAttr, paymentMethodValueMaps);
         } catch (GenericEntityException e) {
             Debug.logWarning(e);
         }
+        return paymentMethodValueMaps;
     }
 
     public static void getPaymentMethodAndRelated(PageContext pageContext, String partyId,
