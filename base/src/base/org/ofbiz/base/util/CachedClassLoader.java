@@ -1,5 +1,5 @@
 /*
- * $Id: CachedClassLoader.java,v 1.3 2003/08/18 01:04:01 ajzeneski Exp $
+ * $Id: CachedClassLoader.java,v 1.4 2003/11/11 18:19:35 ajzeneski Exp $
  *
  * Copyright (c) 2003 The Open For Business Project - www.ofbiz.org
  *
@@ -33,7 +33,7 @@ import java.util.Map;
  * Caching Class Loader
  *
  * @author     <a href="mailto:jonesde@ofbiz.org">David E. Jones</a>
- * @version    $Revision: 1.3 $
+ * @version    $Revision: 1.4 $
  * @since      2.1
  */
 public class CachedClassLoader extends URLClassLoader {
@@ -113,7 +113,18 @@ public class CachedClassLoader extends URLClassLoader {
         
     public CachedClassLoader(URL[] url, ClassLoader parent, String contextName) {
         super(url, parent);
-        this.contextName = contextName;      
+        this.contextName = contextName;
+        if (Debug.verboseOn()) {
+            Package[] paks = this.getPackages();
+            StringBuffer pakList = new StringBuffer();
+            for (int i = 0; i < paks.length; i++) {
+                pakList.append(paks[i].getName());
+                if (i < (paks.length - 1)) {
+                    pakList.append(":");
+                }
+            }
+            Debug.logVerbose("Cached ClassLoader Packages : " + pakList.toString(), module);
+        }
     }
     
     public CachedClassLoader(ClassLoader parent, String contextName) {
