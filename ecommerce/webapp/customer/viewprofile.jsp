@@ -28,6 +28,8 @@
  */
 %>
 
+<%UtilTimer timer = new UtilTimer();%>
+<%Debug.logTiming(timer.timerString("Start viewprofile"));%>
 <%@ page import="java.util.*" %>
 <%@ page import="org.ofbiz.core.entity.*" %>
 <%@ page import="org.ofbiz.commonapp.party.contact.*, org.ofbiz.commonapp.party.party.*" %>
@@ -36,6 +38,7 @@
 <%@ include file="/includes/envsetup.jsp" %>
 <%@ include file="/includes/header.jsp" %>
 <%@ include file="/includes/onecolumn.jsp" %>
+<%Debug.logTiming(timer.timerString("Before workers"));%>
 <%
     PartyWorker.getPartyOtherValues(pageContext, userLogin.getString("partyId"), "party", "person", "partyGroup");
     boolean showOld = "true".equals(request.getParameter("SHOW_OLD"));
@@ -43,19 +46,30 @@
     ContactMechWorker.getPartyContactMechValueMaps(pageContext, userLogin.getString("partyId"), showOld, "partyContactMechValueMaps");
     ContactMechWorker.getPartyCreditCardInfos(pageContext, userLogin.getString("partyId"), showOld, "creditCardInfos");
 %>
+<%Debug.logTiming(timer.timerString("After workers, before page"));%>
 <ofbiz:if name="party">
 <%-- Main Heading --%>
 <table width='100%' cellpadding='0' cellspacing='0' border='0'>
   <tr>
     <td align=left>
       <div class="head1">The Profile of
+<%Debug.logTiming(timer.timerString("Test time, before before if"));%>
+<%Debug.logTiming(timer.timerString("Before if person"));%>
         <ofbiz:if name="person">
+<%Debug.logTiming(timer.timerString("After if person, before fields"));%>
           <ofbiz:entityfield attribute="person" field="personalTitle"/>
+<%Debug.logTiming(timer.timerString("After personalTitle"));%>
           <ofbiz:entityfield attribute="person" field="firstName"/>
+<%Debug.logTiming(timer.timerString("After firstName"));%>
           <ofbiz:entityfield attribute="person" field="middleName"/>
+<%Debug.logTiming(timer.timerString("After middleName"));%>
           <ofbiz:entityfield attribute="person" field="lastName"/>
+<%Debug.logTiming(timer.timerString("After lastName"));%>
           <ofbiz:entityfield attribute="person" field="suffix"/>
+<%Debug.logTiming(timer.timerString("After suffix"));%>
+<%Debug.logTiming(timer.timerString("After fields, before close if"));%>
         </ofbiz:if>
+<%Debug.logTiming(timer.timerString("After close if"));%>
         <ofbiz:unless name="person">"New User"</ofbiz:unless>
       </div>
     </td>
@@ -107,6 +121,7 @@
         </div>
       </td>
     </tr>
+<%Debug.logTiming(timer.timerString("Before all person fields"));%>
     <ofbiz:entityfield attribute="person" field="nickname" prefix="<tr><td align=right nowrap><div class='tabletext'><b>Nickname</b></div></td><td>&nbsp;</td><td align=left><div class='tabletext'>" suffix="</div></td></tr>"/>
     <ofbiz:entityfield attribute="person" field="gender" prefix="<tr><td align=right nowrap><div class='tabletext'><b>Gender</b></div></td><td>&nbsp;</td><td align=left><div class='tabletext'>" suffix="</div></td></tr>"/>
     <ofbiz:entityfield attribute="person" field="birthDate" prefix="<tr><td align=right nowrap><div class='tabletext'><b>Birth Date</b></div></td><td>&nbsp;</td><td align=left><div class='tabletext'>" suffix="</div></td></tr>"/>
@@ -119,6 +134,7 @@
     <ofbiz:entityfield attribute="person" field="passportExpireDate" prefix="<tr><td align=right nowrap><div class='tabletext'><b>Passport Expire</b></div></td><td>&nbsp;</td><td align=left><div class='tabletext'>" suffix="</div></td></tr>"/>
     <ofbiz:entityfield attribute="person" field="totalYearsWorkExperience" prefix="<tr><td align=right nowrap><div class='tabletext'><b>Years Work</b></div></td><td>&nbsp;</td><td align=left><div class='tabletext'>" suffix="</div></td></tr>"/>
     <ofbiz:entityfield attribute="person" field="comments" prefix="<tr><td align=right nowrap><div class='tabletext'><b>Comments</b></div></td><td>&nbsp;</td><td align=left><div class='tabletext'>" suffix="</div></td></tr>"/>
+<%Debug.logTiming(timer.timerString("After all person fields"));%>
   </table>
 </ofbiz:if>
 <ofbiz:unless name="person">
@@ -162,7 +178,9 @@
         <th colspan='2'>Soliciting&nbsp;OK?</th>
         <th>&nbsp;</th>
       </tr>
+<%Debug.logTiming(timer.timerString("Before ContactMechs iterator"));%>
       <ofbiz:iterator name="partyContactMechValueMap" property="partyContactMechValueMaps" type="java.util.Map" expandMap="true">
+<%Debug.logTiming(timer.timerString("Start ContactMechs iterator"));%>
         <%GenericValue contactMech = (GenericValue) pageContext.getAttribute("contactMech");%>
           <tr><td colspan="7"><hr class='sepbar'></td></tr>
           <tr>
@@ -244,7 +262,9 @@
               [Delete]</a>&nbsp;&nbsp;</div>
             </td>
           </tr>
+<%Debug.logTiming(timer.timerString("End ContactMechs iterator"));%>
       </ofbiz:iterator>
+<%Debug.logTiming(timer.timerString("After ContactMechs iterator"));%>
     </table>
   </ofbiz:if>
   <ofbiz:unless name="partyContactMechValueMaps" size="0">
@@ -359,6 +379,8 @@
 <ofbiz:unless name="party">
     No party found for current user with user name: <ofbiz:entityfield attribute="userLogin" field="userLoginId"/>
 </ofbiz:unless>
+
+<%Debug.logTiming(timer.timerString("After page"));%>
 
 <%@ include file="/includes/onecolumnclose.jsp" %>
 <%@ include file="/includes/footer.jsp" %> 
