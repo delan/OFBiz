@@ -78,7 +78,7 @@ public class PayPalEvents {
         // get the payment properties file
         String configString = null;
         try {
-            GenericValue webSitePayment = delegator.findByPrimaryKey("WebSitePaymentSetting", UtilMisc.toMap("webSiteId", webSiteId, "paymentMethodTypeId", "EXT_WORLDPAY"));
+            GenericValue webSitePayment = delegator.findByPrimaryKey("WebSitePaymentSetting", UtilMisc.toMap("webSiteId", webSiteId, "paymentMethodTypeId", "EXT_PAYPAL"));
             if (webSitePayment != null)
                 configString = webSitePayment.getString("paymentConfiguration");
         } catch (GenericEntityException e) {
