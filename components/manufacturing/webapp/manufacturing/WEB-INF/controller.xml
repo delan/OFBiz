@@ -314,10 +314,16 @@
         <response name="error" type="view" value="EditRoutingProductLink"/>
     </request-map>
     <!-- BOM request mappings -->
-    <request-map uri="findBom">
+    <request-map uri="BomSimulation">
         <security https="true" auth="true"/>
         <response name="success" type="view" value="BomSimulation"/>
     </request-map>
+    <request-map uri="runBomSimulation">
+        <security https="true" auth="true"/>
+        <event type="service" invoke="getBOMTree"/>
+        <response name="success" type="view" value="BomSimulation"/>
+    </request-map>
+  
     <request-map uri="EditProductBom">
         <security https="true" auth="true"/>
         <response name="success" type="view" value="EditProductBom"/>

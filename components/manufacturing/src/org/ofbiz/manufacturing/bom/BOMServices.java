@@ -305,6 +305,7 @@ public class BOMServices {
         String fromDateStr = (String) context.get("fromDate");
         String bomType = (String) context.get("bomType");
         Integer type = (Integer) context.get("type");
+        Double quantity = (Double) context.get("quantity");
         if (type == null) {
             type = new Integer(0);
         }
@@ -326,7 +327,9 @@ public class BOMServices {
         } catch(GenericEntityException gee) {
             return ServiceUtil.returnError("Error creating bill of materials tree: " + gee.getMessage());
         }
-
+        if (tree != null && quantity != null) {
+            tree.setRootQuantity(quantity.doubleValue());
+        }
         result.put("tree", tree);
 
         return result;
