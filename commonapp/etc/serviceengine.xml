@@ -37,13 +37,16 @@
                  type="topic"
                  broker="localhost"
                  topic-queue="topicName"
+                 publisher-enabled="false"
                  listener-enabled="true"
                  listener-class="org.ofbiz.core.service.jms.JMSTopicListener"/>
     <jms-service name="lookupName2"
+                 service-type="consumer"
                  jndi-name="default"
                  type="queue"
                  broker="localhost"
                  topic-queue="queueName"
+                 publisher-enabled="true"
                  listener-enabled="true"
                  listener-class="org.ofbiz.core.service.jms.JMSQueueListener"/>
 </service-config>

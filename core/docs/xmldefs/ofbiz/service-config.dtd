@@ -73,6 +73,7 @@
     type (topic|queue) #REQUIRED
     topic-queue CDATA #REQUIRED
     jndi-name CDATA #REQUIRED
+    publisher-enabled (true|false) "false"
     listener-enabled (true|false) "false"
     listener-class CDATA #IMPLIED
 >
