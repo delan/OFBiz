@@ -41,6 +41,8 @@ import org.ofbiz.service.GenericServiceException;
 import org.ofbiz.service.config.ServiceConfigUtil;
 import org.ofbiz.base.util.Debug;
 import org.ofbiz.base.util.UtilXml;
+import org.ofbiz.base.util.UtilCache;
+
 import org.w3c.dom.Element;
 
 /**
@@ -48,28 +50,21 @@ import org.w3c.dom.Element;
  *
  * @author     <a href="mailto:jaz@ofbiz.org">Andy Zeneski</a>
  * @author     <a href="mailto:jonesde@ofbiz.org">David E. Jones</a>
- * @version    $Rev:$
+ * @version    $Rev$
  * @since      2.0
  */
 public class ServiceEcaUtil {
 
     public static final String module = ServiceEcaUtil.class.getName();
-    
-    //NOTE: the Service ECA cache is a Map instead of a UtilCache because there is no way to 
-    // reload ecas for inidividual services if their cache line is cleared, leading to potential 
-    // problems; the symantics of UtilCaches dictate that the user of the cache should know how
-    // to reload ANY cleared cache line because a user could muck up the system pretty bad otherwise 
-    public static Map ecaCache = null;
-    //public static UtilCache ecaCache = new UtilCache("service.ServiceECAs", 0, 0, false);
+
+    public static UtilCache ecaCache = new UtilCache("service.ServiceECAs", 0, 0, false);
 
     public static void reloadConfig() {
-        ServiceEcaUtil.ecaCache = null;
+        ecaCache.clear();
         readConfig();
     }
 
     public static void readConfig() {
-        ServiceEcaUtil.ecaCache = new HashMap();
-        
         Element rootElement = null;
         try {
             rootElement = ServiceConfigUtil.getXmlRootElement();
