@@ -466,6 +466,7 @@
     <entity-group group="org.ofbiz.commonapp" entity="PartyRelationship" />	
     <entity-group group="org.ofbiz.commonapp" entity="PartyRelationshipType" />	
     <entity-group group="org.ofbiz.commonapp" entity="PartyRole" />	
+    <entity-group group="org.ofbiz.commonapp" entity="PartySurveyResponse" />	
     <entity-group group="org.ofbiz.commonapp" entity="PartyType" />	
     <entity-group group="org.ofbiz.commonapp" entity="PartyTypeAttr" />	
     <entity-group group="org.ofbiz.commonapp" entity="Person" />	
