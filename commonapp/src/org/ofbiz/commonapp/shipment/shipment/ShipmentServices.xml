@@ -738,6 +738,10 @@
         <make-next-seq-id value-name="newEntity" seq-field-name="shipmentRouteSegmentId"/>
         <field-to-result field-name="shipmentRouteSegmentId" map-name="newEntity" result-name="shipmentRouteSegmentId"/>
         
+        <if-empty field-name="carrierServiceStatusId" map-name="newEntity">
+            <string-to-field string="SHRSCS_NOT_STARTED" field-name="carrierServiceStatusId" map-name="newEntity"/>
+        </if-empty>
+        
         <create-value value-name="newEntity"/>
 
 		<field-to-env map-name="newEntity" env-name="shipmentId"/>
@@ -756,6 +760,11 @@
         <set-pk-fields map-name="parameters" value-name="lookupPKMap"/>
         <find-by-primary-key entity-name="ShipmentRouteSegment" map-name="lookupPKMap" value-name="lookedUpValue"/>
         <set-nonpk-fields map-name="parameters" value-name="lookedUpValue"/>
+
+        <if-empty field-name="carrierServiceStatusId" map-name="newEntity">
+            <string-to-field string="SHRSCS_NOT_STARTED" field-name="carrierServiceStatusId" map-name="newEntity"/>
+        </if-empty>
+        
         <store-value value-name="lookedUpValue"/>
 
 		<field-to-env map-name="lookedUpValue" env-name="shipmentId"/>
