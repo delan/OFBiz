@@ -862,9 +862,8 @@ public class ProductEvents {
         }
 
         if ((numberSpecified == null) && (prodFeature != null)) {
-            // exists, but we want it set to null, so remove it
-            prodFeature.removeRelated("ProductFeatureAppl");
-            prodFeature.remove();
+            // exists, but we want it set to null, so remove it from the product
+            delegator.removeByAnd("ProductFeatureAppl", UtilMisc.toMap("productId", productId, "productFeatureId", prodFeature.get("productFeatureId")));
         } else if (numberSpecified != null) {
             if (prodFeature == null) {
                 // doesn't exist, so create it and its relation
@@ -961,6 +960,7 @@ public class ProductEvents {
                             description = null;
                         }
                         GenericValue productFeature = null;
+                        GenericValue productFeatureAppl = null;
                         String productFeatureId = null;
     
                         // get features for variant
@@ -969,7 +969,7 @@ public class ProductEvents {
                         Iterator variantFeatureApplIter = variantFeatureAppls.iterator();
                         while (variantFeatureApplIter.hasNext()) {
                             GenericValue variantFeatureAppl = (GenericValue) variantFeatureApplIter.next();
-                            GenericValue variantFeature = variantFeatureAppl.getRelatedOneCache("ProductFeature");
+                            GenericValue variantFeature = variantFeatureAppl.getRelatedOne("ProductFeature");
                             if (variantFeature.getString("productFeatureTypeId").equals(productFeatureTypeId)) {
                                 // found our feature
                                 productFeature = variantFeature;
@@ -1017,9 +1017,8 @@ public class ProductEvents {
                             }
                         } else {
                             if (description == null) {
-                                // delete feature and appls
-                                productFeature.removeRelated("ProductFeatureAppl");
-                                productFeature.remove();
+                                // delete feature appl
+                                productFeatureAppl.remove();
                             } else {
                                 // just update description, date
                                 productFeature.set("description", description);
