@@ -20,7 +20,7 @@
  *  THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  *
  *@author     Andy Zeneski (jaz@ofbiz.org)
- *@version    $Revision: 1.8 $
+ *@version    $Revision: 1.9 $
  *@since      2.2
 -->
 
@@ -226,6 +226,25 @@
                                 <#if eftAccount.companyNameOnAccount?exists>${eftAccount.companyNameOnAccount}<br></#if>
                                 Bank: ${eftAccount.bankName}, ${eftAccount.routingNumber}<br>
                                 Account#: ${eftAccount.accountNumber}
+                              </div>
+                            </td>
+                          </tr>
+                        <#elseif paymentMethod.paymentMethodTypeId?if_exists == "GIFT_CARD">
+                          <#assign giftCard = paymentMethod.getRelatedOne("GiftCard")>
+                          <tr>
+                            <td align="right" valign="top" width="15%">
+                              <div class="tabletext">&nbsp;<b>Gift Card</b></div>
+                            </td>
+                            <td width="5">&nbsp;</td>
+                            <td align="left" valign="top" width="80%">
+                              <div class="tabletext">
+                                <#if security.hasEntityPermission("PAY_INFO", "_VIEW", session)>
+                                  ${giftCard.physicalNumber?default("N/A")} [${giftCard.physicalPin?default("N/A")}]
+                                  &nbsp;-&nbsp;
+                                  ${giftCard.virtualNumber?default("N/A")} [${giftCard.virtualPin?default("N/A")}]
+                                <#else>
+                                  ${giveCard.physicalNumber?default("N/A")} - ${giftCard.virtualNumber?default("N/A")}
+                                </#if>
                               </div>
                             </td>
                           </tr>
