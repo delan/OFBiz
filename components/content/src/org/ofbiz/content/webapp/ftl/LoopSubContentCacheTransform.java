@@ -1,5 +1,5 @@
 /*
- * $Id: LoopSubContentCacheTransform.java,v 1.22 2004/06/08 19:53:11 byersa Exp $
+ * $Id: LoopSubContentCacheTransform.java,v 1.23 2004/06/10 00:10:07 byersa Exp $
  * 
  * Copyright (c) 2001-2003 The Open For Business Project - www.ofbiz.org
  * 
@@ -49,7 +49,7 @@ import freemarker.template.TransformControl;
  * LoopSubContentCacheTransform - Freemarker Transform for URLs (links)
  * 
  * @author <a href="mailto:byersa@automationgroups.com">Al Byers</a>
- * @version $Revision: 1.22 $
+ * @version $Revision: 1.23 $
  * @since 3.0
  */
 public class LoopSubContentCacheTransform implements TemplateTransformModel {
@@ -74,7 +74,7 @@ public class LoopSubContentCacheTransform implements TemplateTransformModel {
         return FreeMarkerWorker.getArg(args, key, ctx);
     }
 
-    public static boolean prepCtx(GenericDelegator delegator, Map ctx) throws GeneralException {
+    public static boolean prepCtx(GenericDelegator delegator, Map ctx, Environment env) throws GeneralException {
 
         //String contentId = (String)ctx.get("contentId");
         //String mimeTypeId = (String)ctx.get("mimeTypeId");
@@ -91,7 +91,7 @@ public class LoopSubContentCacheTransform implements TemplateTransformModel {
         String subContentIdSub = (String) view.get("contentId");
         //String contentAssocTypeId = (String) view.get("caContentAssocTypeId");
         //String mapKey = (String) view.get("caMapKey");
-        //if (Debug.infoOn()) Debug.logInfo("in LoopSubContentCache(0), subContentIdSub ." + subContentIdSub, module);
+        if (Debug.infoOn()) Debug.logInfo("in LoopSubContentCache(0), subContentIdSub ." + subContentIdSub, module);
         // This order is taken so that the dataResourceType can be overridden in the transform arguments.
         String subDataResourceTypeId = (String)ctx.get("subDataResourceTypeId");
         if (UtilValidate.isEmpty(subDataResourceTypeId)) {
@@ -141,6 +141,7 @@ public class LoopSubContentCacheTransform implements TemplateTransformModel {
 //                ctx.put("textData", electronicText.get("textData"));
 //            else
 //                ctx.put("textData", null);
+
             ctx.put("subDataResourceTypeId", subDataResourceTypeId);
             ctx.put("mimeTypeId", mimeTypeId);
             ctx.put("subContentId", subContentIdSub);
@@ -148,13 +149,21 @@ public class LoopSubContentCacheTransform implements TemplateTransformModel {
 //            ctx.put("drDataResourceId", dataResourceId);
 //            ctx.put("dataResourceId", dataResourceId);
 //            ctx.put("subContentIdSub", subContentIdSub);
+
+            env.setVariable("subDataResourceTypeId", FreeMarkerWorker.autoWrap(subDataResourceTypeId, env));
+            env.setVariable("indent", FreeMarkerWorker.autoWrap(new Integer(indentSz), env));
+            env.setVariable("nodeTrailCsv", FreeMarkerWorker.autoWrap(csvTrail, env));
+            env.setVariable("globalNodeTrail", FreeMarkerWorker.autoWrap(globalNodeTrail, env));
+            env.setVariable("content", FreeMarkerWorker.autoWrap(view, env));
+            env.setVariable("mimeTypeId", FreeMarkerWorker.autoWrap(mimeTypeId, env));
+            env.setVariable("subContentId", FreeMarkerWorker.autoWrap(subContentIdSub, env));
             return true;
         } else {
             return false;
         }
     }
 
-    public static boolean getNextMatchingEntity(Map templateRoot, GenericDelegator delegator) throws IOException {
+    public static boolean getNextMatchingEntity(Map templateRoot, GenericDelegator delegator, Environment env) throws IOException {
 
                 int lowIndex = ((Integer)templateRoot.get("lowIndex")).intValue(); 
                 int entityIndex = ((Integer)templateRoot.get("entityIndex")).intValue(); 
@@ -164,7 +173,7 @@ public class LoopSubContentCacheTransform implements TemplateTransformModel {
  
                 while (!matchFound && entityIndex < listSize) {
                     try {
-                        matchFound = prepCtx(delegator, templateRoot);
+                        matchFound = prepCtx(delegator, templateRoot, env);
                     } catch(GeneralException e) {
                         throw new IOException(e.getMessage());
                     }
@@ -181,6 +190,8 @@ public class LoopSubContentCacheTransform implements TemplateTransformModel {
                 }
         //if (Debug.infoOn()) Debug.logInfo("in LoopSubContentCache, getNextMatchingEntity, outputIndex :" + outputIndex, module);
                 templateRoot.put("outputIndex", new Integer(outputIndex));
+                env.setVariable("outputIndex", FreeMarkerWorker.autoWrap(new Integer(outputIndex), env));
+                env.setVariable("entityIndex", FreeMarkerWorker.autoWrap(new Integer(entityIndex), env));
                 return matchFound;
     }
 
@@ -280,11 +291,11 @@ public class LoopSubContentCacheTransform implements TemplateTransformModel {
             int highIndex = (viewIndex + 1) * viewSize;
             if (highIndex > listSize)
                 highIndex = listSize;
-            //if (Debug.infoOn()) Debug.logInfo("viewIndexStr(0):" + viewIndexStr + " viewIndex:" + viewIndex, "");
-            //if (Debug.infoOn()) Debug.logInfo("viewSizeStr(0):" + viewSizeStr + " viewSize:" + viewSize, "");
-            //if (Debug.infoOn()) Debug.logInfo("listSize(0):" + listSize , "");
-            //if (Debug.infoOn()) Debug.logInfo("highIndex(0):" + highIndex , "");
-            //if (Debug.infoOn()) Debug.logInfo("lowIndex(0):" + lowIndex , "");
+            if (Debug.infoOn()) Debug.logInfo("viewIndexStr(0):" + viewIndexStr + " viewIndex:" + viewIndex, "");
+            if (Debug.infoOn()) Debug.logInfo("viewSizeStr(0):" + viewSizeStr + " viewSize:" + viewSize, "");
+            if (Debug.infoOn()) Debug.logInfo("listSize(0):" + listSize , "");
+            if (Debug.infoOn()) Debug.logInfo("highIndex(0):" + highIndex , "");
+            if (Debug.infoOn()) Debug.logInfo("lowIndex(0):" + lowIndex , "");
             Iterator it = longList.iterator();
             //List entityList = longList.subList(lowIndex, highIndex);
             List entityList = longList;
@@ -294,6 +305,13 @@ public class LoopSubContentCacheTransform implements TemplateTransformModel {
             templateRoot.put("lowIndex", new Integer(lowIndex));
             templateRoot.put("highIndex", new Integer(highIndex));
             templateRoot.put("listSize", new Integer(listSize));
+
+            env.setVariable("entityList", FreeMarkerWorker.autoWrap(entityList, env));
+            env.setVariable("viewIndex", FreeMarkerWorker.autoWrap(new Integer(viewIndex), env));
+            env.setVariable("viewSize", FreeMarkerWorker.autoWrap(new Integer(viewSize), env));
+            env.setVariable("lowIndex", FreeMarkerWorker.autoWrap(new Integer(lowIndex), env));
+            env.setVariable("highIndex", FreeMarkerWorker.autoWrap(new Integer(highIndex), env));
+            env.setVariable("listSize", FreeMarkerWorker.autoWrap(new Integer(listSize), env));
         }
 
         return new LoopWriter(out) {
@@ -325,18 +343,27 @@ public class LoopSubContentCacheTransform implements TemplateTransformModel {
                 if (highIndex > listSize)
                     highIndex = listSize;
                 int outputIndex = 0;
-        //if (Debug.infoOn()) Debug.logInfo( " viewIndex:" + viewIndex, "");
-        //if (Debug.infoOn()) Debug.logInfo( " viewSize:" + viewSize, "");
-        //if (Debug.infoOn()) Debug.logInfo("listSize(1):" + listSize , "");
-        //if (Debug.infoOn()) Debug.logInfo("highIndex(1):" + highIndex , "");
-        //if (Debug.infoOn()) Debug.logInfo("lowIndex(1):" + lowIndex , "");
-                templateRoot.put("lowIndex", new Integer(lowIndex));
-                templateRoot.put("highIndex", new Integer(highIndex));
-                templateRoot.put("outputIndex", new Integer(outputIndex));
-                templateRoot.put("entityIndex", new Integer(0));
+                Integer highIndexInteger = new Integer(highIndex);
+                Integer lowIndexInteger = new Integer(lowIndex);
+                Integer outputIndexInteger = new Integer(outputIndex);
+                Integer entityIndexInteger = new Integer(0);
+                templateRoot.put("lowIndex", lowIndexInteger);
+                templateRoot.put("highIndex", highIndexInteger);
+                templateRoot.put("outputIndex", outputIndexInteger);
+                templateRoot.put("entityIndex", outputIndexInteger);
+
+                env.setVariable("lowIndex", FreeMarkerWorker.autoWrap(lowIndexInteger, env));
+                env.setVariable("highIndex", FreeMarkerWorker.autoWrap(highIndexInteger, env));
+                env.setVariable("outputIndex", FreeMarkerWorker.autoWrap(outputIndexInteger, env));
+                env.setVariable("entityIndex", FreeMarkerWorker.autoWrap(outputIndexInteger, env));
+                if (Debug.infoOn()) Debug.logInfo( " viewIndex:" + viewIndex, "");
+                if (Debug.infoOn()) Debug.logInfo( " viewSize:" + viewSize, "");
+                if (Debug.infoOn()) Debug.logInfo("listSize(1):" + listSize , "");
+                if (Debug.infoOn()) Debug.logInfo("highIndex(1):" + highIndexInteger , "");
+                if (Debug.infoOn()) Debug.logInfo("lowIndex(1):" + lowIndexInteger , "");
                 boolean inProgress = false;
                 if (outputIndex < highIndex) {
-                    inProgress = getNextMatchingEntity(templateRoot, delegator);
+                    inProgress = getNextMatchingEntity(templateRoot, delegator, env);
                 }
                 FreeMarkerWorker.saveContextValues(templateRoot, saveKeyNames, savedValues);
                 if (inProgress) {
@@ -351,12 +378,16 @@ public class LoopSubContentCacheTransform implements TemplateTransformModel {
                 List list = (List)templateRoot.get("globalNodeTrail");
                 List subList = list.subList(0, list.size() - 1 );
                 templateRoot.put("globalNodeTrail", subList);
+                env.setVariable("globalNodeTrail", FreeMarkerWorker.autoWrap(subList, env));
                 
                 int outputIndex = ((Integer)templateRoot.get("outputIndex")).intValue(); 
                 int highIndex = ((Integer)templateRoot.get("highIndex")).intValue(); 
+                Integer highIndexInteger = new Integer(highIndex);
+                env.setVariable("highIndex", FreeMarkerWorker.autoWrap(highIndexInteger, env));
+                if (Debug.infoOn()) Debug.logInfo("highIndex(2):" + highIndexInteger , "");
                 boolean inProgress = false;
                 if (outputIndex < highIndex) {
-                    inProgress = getNextMatchingEntity(templateRoot, delegator);
+                    inProgress = getNextMatchingEntity(templateRoot, delegator, env);
                 }
 
                 FreeMarkerWorker.saveContextValues(templateRoot, saveKeyNames, savedValues);
@@ -373,13 +404,18 @@ public class LoopSubContentCacheTransform implements TemplateTransformModel {
                 }
                 FreeMarkerWorker.reloadValues(templateRoot, savedValuesUp);
                 int outputIndex = ((Integer)templateRoot.get("outputIndex")).intValue(); 
-                //if (Debug.infoOn()) Debug.logInfo("outputIndex(2):" + outputIndex , "");
+                if (Debug.infoOn()) Debug.logInfo("outputIndex(3):" + outputIndex , "");
                 int highIndex = ((Integer)templateRoot.get("highIndex")).intValue(); 
-                //if (Debug.infoOn()) Debug.logInfo("highIndex(2):" + highIndex , "");
+                Integer highIndexInteger = new Integer(highIndex);
+                env.setVariable("highIndex", FreeMarkerWorker.autoWrap(highIndexInteger, env));
+                if (Debug.infoOn()) Debug.logInfo("highIndex(3):" + highIndexInteger , "");
                 if (outputIndex < highIndex) {
                     templateRoot.put("highIndex", new Integer(outputIndex));
+                    if (Debug.infoOn()) Debug.logInfo("highIndex(4):" + highIndex , "");
                     templateRoot.put("listSize", new Integer(outputIndex));
                 }
+                Object highIndexObj = FreeMarkerWorker.getWrappedObject("highIndex", env);
+                if (Debug.infoOn()) Debug.logInfo("highIndex(3b):" + highIndexObj , "");
                 String wrappedContent = buf.toString();
                 out.write(wrappedContent);
                 //if (Debug.infoOn()) Debug.logInfo("in LoopSubContent, wrappedContent:" + wrappedContent, module);

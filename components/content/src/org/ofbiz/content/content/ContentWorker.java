@@ -1,5 +1,5 @@
 /*
- * $Id: ContentWorker.java,v 1.28 2004/06/08 19:53:09 byersa Exp $
+ * $Id: ContentWorker.java,v 1.29 2004/06/10 00:10:05 byersa Exp $
  *
  *  Copyright (c) 2001, 2002 The Open For Business Project - www.ofbiz.org
  *
@@ -25,6 +25,8 @@ package org.ofbiz.content.content;
 
 import java.io.IOException;
 import java.io.Writer;
+import java.io.StringWriter;
+import java.io.StringReader;
 import java.sql.Timestamp;
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -54,6 +56,10 @@ import org.ofbiz.minilang.MiniLangException;
 import org.ofbiz.minilang.SimpleMapProcessor;
 import org.ofbiz.service.GenericServiceException;
 import org.ofbiz.service.LocalDispatcher;
+import freemarker.ext.dom.NodeModel;
+import org.xml.sax.InputSource;
+import org.xml.sax.SAXException;
+import javax.xml.parsers.ParserConfigurationException;
 
 import bsh.EvalError;
 //import com.clarkware.profiler.Profiler;
@@ -62,7 +68,7 @@ import bsh.EvalError;
  * ContentWorker Class
  * 
  * @author <a href="mailto:byersa@automationgroups.com">Al Byers</a>
- * @version $Revision: 1.28 $
+ * @version $Revision: 1.29 $
  * @since 2.2
  * 
  *  
@@ -976,24 +982,22 @@ public class ContentWorker {
     public static Map renderContentAsTextCache(GenericDelegator delegator, String contentId, Writer out, Map templateContext, GenericValue view, Locale locale, String mimeTypeId) throws GeneralException, IOException {
 
         Map results = new HashMap();
-        //Map context = (Map) FreeMarkerWorker.get(templateContext, "context");
  
-        //Map ctx = (Map)templateContext.get("context");
         GenericValue content = null;
 
         if (view == null) {
             if (contentId == null) {
-                throw new IOException("ContentId is null");
+                throw new GeneralException("ContentId is null");
             }
             try {
                 List lst = delegator.findByAndCache("SubContentDataResourceView", UtilMisc.toMap("contentId", contentId), UtilMisc.toList("-fromDate"));
                 if (lst != null && lst.size() > 0) {
                     view = (GenericValue) lst.get(0);
                 } else {
-                    throw new IOException("SubContentDataResourceView not found in renderSubContentAsText" + " for contentId=" + contentId);
+                    throw new GeneralException("SubContentDataResourceView not found in renderSubContentAsText" + " for contentId=" + contentId);
                 }
             } catch (GenericEntityException e) {
-                throw new IOException(e.getMessage());
+                throw new GeneralException(e.getMessage());
             }
         }
         if (view != null) {
@@ -1013,11 +1017,16 @@ public class ContentWorker {
             String targetLocaleString = locale.toString();
             String thisLocaleString = (String) view.get("localeString");
             thisLocaleString = (thisLocaleString != null) ? thisLocaleString : "";
+            if (Debug.infoOn()) Debug.logInfo("renderContentAsTextCache, thisLocaleString(2):" + thisLocaleString, "");
             //if (Debug.infoOn()) Debug.logInfo("thisLocaleString" + thisLocaleString, "");
             if (targetLocaleString != null && !targetLocaleString.equalsIgnoreCase(thisLocaleString)) {
-                view = findAlternateLocaleContent(delegator, view, locale);
+                GenericValue localeView = findAlternateLocaleContent(delegator, view, locale);
+                if (localeView != null)
+                    view = localeView;
             }
         }
+
+        String templateDataResourceId = (String)view.get("templateDataResourceId");
 
         //String contentTypeId = (String) view.get("contentTypeId");
         String dataResourceId = null;
@@ -1033,13 +1042,43 @@ public class ContentWorker {
         }
 
         // TODO: what should we REALLY do here? looks like there is no decision between Java and Service style error handling...
-        //try {
-        if (UtilValidate.isNotEmpty(dataResourceId) || view != null)
-            DataResourceWorker.renderDataResourceAsTextCache(delegator, dataResourceId, out, templateContext, view, locale, mimeTypeId);
-        //} catch (IOException e) {
-        //    return ServiceUtil.returnError(e.getMessage());
-        //}
 
+        if (UtilValidate.isEmpty(templateDataResourceId)) {
+            if (UtilValidate.isNotEmpty(dataResourceId) || view != null)
+                DataResourceWorker.renderDataResourceAsTextCache(delegator, dataResourceId, out, templateContext, view, locale, mimeTypeId);
+
+        } else {
+            if (UtilValidate.isNotEmpty(dataResourceId) || view != null) {
+                StringWriter sw = new StringWriter();
+                DataResourceWorker.renderDataResourceAsTextCache(delegator, dataResourceId, sw, templateContext, view, locale, mimeTypeId);
+                
+                String reqdType = null;
+                try {
+                    reqdType = DataResourceWorker.getDataResourceMimeType(delegator, dataResourceId, view);
+                } catch(GenericEntityException e) {
+                    throw new GeneralException(e.getMessage());
+                }
+                if (UtilValidate.isNotEmpty(reqdType)) {
+                    if (reqdType.toLowerCase().indexOf("xml") >= 0) {
+                        StringReader sr = new StringReader(sw.toString());
+                        try {
+                            NodeModel nodeModel = NodeModel.parse(new InputSource(sr));
+                            templateContext.put("doc", nodeModel);
+                        } catch(SAXException e) {
+                            throw new GeneralException(e.getMessage());
+                        } catch(ParserConfigurationException e2) {
+                            throw new GeneralException(e2.getMessage());
+                        }
+                    } else {
+                        // must be text
+                        templateContext.put("textData", sw.toString());
+                    }
+                } else {
+                    templateContext.put("textData", sw.toString());
+                }
+            }
+            DataResourceWorker.renderDataResourceAsTextCache(delegator, templateDataResourceId, out, templateContext, null, locale, mimeTypeId);
+        }
         return results;
     }
 
