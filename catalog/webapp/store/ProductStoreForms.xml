@@ -47,7 +47,7 @@
 			</drop-down>
 		</field>
 		<field use-when="productStore!=null&amp;&amp;productStore.getString(&quot;inventoryFacilityId&quot;)!=null" name="inventoryFacilityLink" title="&amp;nbsp;" widget-style="buttontext">
-			<hyperlink target="EditFacility?facilityId=${productStore.inventoryFacilityId}"
+			<hyperlink target="/facility/control/EditFacility?facilityId=${productStore.inventoryFacilityId}" target-type="inter-app"
 				description="[Edit Facility ${productStore.inventoryFacilityId}]" also-hidden="false"/>
 		</field>
 
