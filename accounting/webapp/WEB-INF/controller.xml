@@ -153,6 +153,11 @@
         <event type="service" invoke="createInvoiceItem"/>
         <response name="success" type="view" value="editInvoice"/>
     </request-map>
+    
+    <request-map uri="viewBillingAccountPayments">
+        <security https="true" auth="true"/>
+        <response name="success" type="view" value="billingAccountPayments"/>
+    </request-map>     
                 
     <!-- end of request mappings -->
 
@@ -166,6 +171,7 @@
     <view-map name="editBillingAccountRoles" type="jpublish" page="/billingaccount/EditBillingAccountRoles.ftl"/>
     <view-map name="editBillingAccountTerms" type="jpublish" page="/billingaccount/EditBillingAccountTerms.ftl"/>
     <view-map name="billingAccountInvoices" type="jpublish" page="/billingaccount/BillingAccountInvoices.ftl"/>
+    <view-map name="billingAccountPayments" type="jpublish" page="/billingaccount/BillingAccountPayments.ftl"/>    
     
     <view-map name="editInvoice" type="jpublish" page="/invoice/EditInvoice.ftl"/>
     <!-- end of view mappings -->

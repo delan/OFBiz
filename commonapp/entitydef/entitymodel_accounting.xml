@@ -1853,6 +1853,37 @@
         <key-map field-name="paymentId"/>
       </relation>
     </entity>
+    <view-entity entity-name="PaymentAndApplication"
+            package-name="org.ofbiz.commonapp.accounting.payment"
+            never-cache="true"
+            title="Payment and Application View Entity">
+      <member-entity entity-alias="PY" entity-name="Payment"/>
+      <member-entity entity-alias="PA" entity-name="PaymentApplication"/>
+      <alias entity-alias="PY" name="paymentId"/>
+      <alias entity-alias="PY" name="paymentTypeId"/>
+      <alias entity-alias="PY" name="paymentMethodTypeId"/>
+      <alias entity-alias="PY" name="paymentMethodId"/>
+      <alias entity-alias="PY" name="paymentPreferenceId"/>
+      <alias entity-alias="PY" name="partyIdFrom"/>
+      <alias entity-alias="PY" name="partyIdTo"/>
+      <alias entity-alias="PY" name="roleTypeIdTo"/>
+      <alias entity-alias="PY" name="effectiveDate"/>
+      <alias entity-alias="PY" name="paymentRefNum"/>
+      <alias entity-alias="PY" name="amount"/>
+      <alias entity-alias="PY" name="comments"/>
+      <alias entity-alias="PY" name="finAccountTransId"/>
+      <alias entity-alias="PY" name="originFacilityId"/>
+      <alias entity-alias="PA" name="invoiceId"/>
+      <alias entity-alias="PA" name="invoiceItemSeqId"/>
+      <alias entity-alias="PA" name="billingAccountId"/>
+      <alias entity-alias="PA" name="amountApplied"/>
+      <view-link entity-alias="PY" rel-entity-alias="PA">
+        <key-map field-name="paymentId"/>
+      </view-link> 
+      <relation type="one-nofk" rel-entity-name="PaymentMethodType">
+        <key-map field-name="paymentMethodTypeId"/>
+      </relation>      
+    </view-entity>        
     <entity entity-name="PaymentApplication"
             package-name="org.ofbiz.commonapp.accounting.payment"
             title="Payment Application Entity">

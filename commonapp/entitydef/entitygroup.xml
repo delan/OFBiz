@@ -132,6 +132,7 @@
     <entity-group group="org.ofbiz.commonapp" entity="FinAccountType" />
     <entity-group group="org.ofbiz.commonapp" entity="FinAccountTypeAttr" />
     <entity-group group="org.ofbiz.commonapp" entity="Payment" />
+    <entity-group group="org.ofbiz.commonapp" entity="PaymentAndApplication" />
     <entity-group group="org.ofbiz.commonapp" entity="PaymentApplication" />
     <entity-group group="org.ofbiz.commonapp" entity="PaymentAttribute" />
     <entity-group group="org.ofbiz.commonapp" entity="PaymentBudgetAllocation" />

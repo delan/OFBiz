@@ -29,6 +29,7 @@
   <a href="<@ofbizUrl>/editBillingAccountRoles?billingAccountId=${billingAccount.billingAccountId}</@ofbizUrl>" class="tabButton">Roles</a>
   <a href="<@ofbizUrl>/editBillingAccountTerms?billingAccountId=${billingAccount.billingAccountId}</@ofbizUrl>" class="tabButtonSelected">Terms</a>
   <a href="<@ofbizUrl>/viewBillingAccountInvoices?billingAccountId=${billingAccount.billingAccountId}</@ofbizUrl>" class="tabButton">Invoices</a>
+  <a href="<@ofbizUrl>/viewBillingAccountPayments?billingAccountId=${billingAccount.billingAccountId}</@ofbizUrl>" class="tabButton">Payments</a>
 </div>
 
 <div class="head1">Billing Account Terms</div>

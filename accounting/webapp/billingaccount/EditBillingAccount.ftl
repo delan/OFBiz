@@ -30,6 +30,7 @@
     <a href="<@ofbizUrl>/editBillingAccountRoles?billingAccountId=${billingAccount.billingAccountId}</@ofbizUrl>" class="tabButton">Roles</a>
     <a href="<@ofbizUrl>/editBillingAccountTerms?billingAccountId=${billingAccount.billingAccountId}</@ofbizUrl>" class="tabButton">Terms</a>
     <a href="<@ofbizUrl>/viewBillingAccountInvoices?billingAccountId=${billingAccount.billingAccountId}</@ofbizUrl>" class="tabButton">Invoices</a>
+    <a href="<@ofbizUrl>/viewBillingAccountPayments?billingAccountId=${billingAccount.billingAccountId}</@ofbizUrl>" class="tabButton">Payments</a>
   </div>
   <div class="head1">Update Billing Account</div>
   <form name="billingform" method="post" action="<@ofbizUrl>/updateBillingAccount</@ofbizUrl>">
