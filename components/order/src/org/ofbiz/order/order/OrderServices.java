@@ -1886,6 +1886,10 @@ public class OrderServices {
             }
             result.put("orderShipmentInfoSummaryList", orderShipmentInfoSummaryList);
 
+            // is this from a demo store?
+            GenericValue productStore = orderHeader.getRelatedOne("ProductStore");
+            boolean isDemoStore = !"N".equals(productStore.getString("isDemoStore"));
+            result.put("isDemoStore", new Boolean(isDemoStore));
         } catch (GenericEntityException e) {
             Debug.logError(e, "Entity read error", module);
             return ServiceUtil.returnError("Problem with entity lookup, see error log");

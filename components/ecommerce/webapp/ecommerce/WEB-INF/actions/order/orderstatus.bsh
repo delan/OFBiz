@@ -53,7 +53,6 @@ if (orderId != null && orderId.length() > 0) {
 }
 
 if (orderHeader != null) {
-    //context.put("orderHeader", orderHeader);   
     orderReadHelper = new OrderReadHelper(orderHeader);
     orderItems = orderReadHelper.getOrderItems();
     orderAdjustments = orderReadHelper.getAdjustments();
@@ -62,7 +61,7 @@ if (orderHeader != null) {
     orderItemShipGroups = orderReadHelper.getOrderItemShipGroups();
     headerAdjustmentsToShow = orderReadHelper.getOrderHeaderAdjustmentsToShow();
 
-	context.put("orderId", orderId);
+    context.put("orderId", orderId);
     context.put("orderHeader", orderHeader);
     context.put("localOrderReadHelper", orderReadHelper);
     context.put("orderItems", orderItems);
@@ -113,8 +112,7 @@ if (orderHeader != null) {
 
     webSiteId = CatalogWorker.getWebSiteId(request);
     
-    productStore = ProductStoreWorker.getProductStore(request);
-
+    productStore = orderHeader.getRelatedOne("ProductStore");
     isDemoStore = !"N".equals(productStore.getString("isDemoStore"));
     context.put("isDemoStore", isDemoStore);
     
@@ -154,8 +152,8 @@ if (orderHeader != null) {
                 ritem = rii.next();
                 rh = ritem.getRelatedOne("ReturnHeader");
                 if (!rh.getString("statusId").equals("RETURN_CANCELLED")) {
-	                returned += ritem.getDouble("returnQuantity").doubleValue();
-	            }
+                    returned += ritem.getDouble("returnQuantity").doubleValue();
+                }
             }           
         }
     }
