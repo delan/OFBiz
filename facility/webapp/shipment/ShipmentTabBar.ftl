@@ -24,12 +24,16 @@
  *@since      2.2
 -->
 
-<#if security.hasEntityPermission("FACILITY", "_VIEW", session)>
+<#assign unselectedClassName = "tabButton">
+<#assign selectedClassMap = {page.tabButtonItem?default("void") : "tabButtonSelected"}>
 
-${pages.get("/shipment/ShipmentTabBar.ftl")}
-
-${editShipmentWrapper.renderFormString()}
-
-<#else>
-  <h3>You do not have permission to view this page. ("FACILITY_VIEW" or "FACILITY_ADMIN" needed)</h3>
+<#if shipmentId?has_content>
+  <div class='tabContainer'>
+    <a href="<@ofbizUrl>/ViewShipment?shipmentId=${shipmentId}</@ofbizUrl>" class="${selectedClassMap.ViewShipment?default(unselectedClassName)}">View</a>
+    <a href="<@ofbizUrl>/EditShipment?shipmentId=${shipmentId}</@ofbizUrl>" class="${selectedClassMap.EditShipment?default(unselectedClassName)}">Edit</a>
+    <a href="<@ofbizUrl>/EditShipmentItems?shipmentId=${shipmentId}</@ofbizUrl>" class="${selectedClassMap.EditShipmentItems?default(unselectedClassName)}">Items</a>
+    <a href="<@ofbizUrl>/EditShipmentPackages?shipmentId=${shipmentId}</@ofbizUrl>" class="${selectedClassMap.EditShipmentPackages?default(unselectedClassName)}">Packages</a>
+    <a href="<@ofbizUrl>/EditShipmentRouteSegments?shipmentId=${shipmentId}</@ofbizUrl>" class="${selectedClassMap.EditShipmentRouteSegments?default(unselectedClassName)}">Route Segments</a>
+    <a href="<@ofbizUrl>/AddItemsFromOrder?shipmentId=${shipmentId}</@ofbizUrl>" class="${selectedClassMap.AddItemsFromOrder?default(unselectedClassName)}">Order Items</a>
+  </div>
 </#if>

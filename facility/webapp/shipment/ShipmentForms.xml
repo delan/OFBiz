@@ -37,12 +37,12 @@
 		<!-- this to be taken care of with auto-fields-service as soon as it uses entity field info too -->
 		<field use-when="shipment==null&amp;&amp;shipmentId==null" name="shipmentId"><text size="20" maxlength="20"/></field>
 
-		<field name="shipmentTypeId" widget-style="selectBox">
+		<field name="shipmentTypeId" title="Shipment Type" widget-style="selectBox">
 			<drop-down allow-empty="false" current="first-in-list">
 				<entity-options entity-name="ShipmentType" description="${description}"/>
 			</drop-down>
 		</field>		
-		<field name="statusId" widget-style="selectBox">
+		<field name="statusId" title="Status" widget-style="selectBox">
 			<drop-down allow-empty="false" current="first-in-list">
 				<entity-options entity-name="StatusItem" description="${description}">
 					<entity-constraint name="statusTypeId" value="SHIPMENT_STATUS"/>
@@ -50,9 +50,9 @@
 				</entity-options>
 			</drop-down>
 		</field>
-		<field name="originFacilityId" widget-style="selectBox">
-			<drop-down allow-empty="false" current="first-in-list">
-				<entity-options entity-name="StatusItem" key-field-name="facilityId" description="${facilityName} [${facilityId}]">
+		<field name="originFacilityId" title="Origin Facility" widget-style="selectBox">
+			<drop-down allow-empty="true" current="first-in-list">
+				<entity-options entity-name="Facility" key-field-name="facilityId" description="${facilityName} [${facilityId}]">
 					<entity-order-by field-name="facilityName"/>
 				</entity-options>
 			</drop-down>
@@ -60,19 +60,19 @@
 		
 		<field name="submitButton" title="Update" widget-style="standardSubmit"><submit button-type="button"/></field>
 	</form>
-	<form name="CreateRouteSegment" type="single" 
-		target="createRouteSegment" title=""
+	<form name="CreateShipmentRouteSegment" type="single" 
+		target="createShipmentRouteSegment" title=""
 		default-title-style="tableheadtext" default-widget-style="inputBox" default-tooltip-style="tabletext">
-		<auto-fields-service service-name="createRouteSegment"/>
+		<auto-fields-service service-name="createShipmentRouteSegment"/>
 		<field name="shipmentId" map-name="shipment"><hidden/></field>
 		<field name="shipmentRouteSegmentId" map-name="shipment"><ignored/></field>
 		
 		<field name="submitButton" title="Create" widget-style="standardSubmit"><submit button-type="button"/></field>
 	</form>
-	<form name="UpdateRouteSegment" type="list" 
-		target="updateRouteSegment" title="" list-name="shipmentRouteSegmentDatas"
+	<form name="UpdateShipmentRouteSegment" type="list" 
+		target="updateShipmentRouteSegment" title="" list-name="shipmentRouteSegmentDatas"
 		default-title-style="tableheadtext" default-widget-style="inputBox" default-tooltip-style="tabletext">
-		<auto-fields-service service-name="updateRouteSegment" map-name="shipmentRouteSegment"/>
+		<auto-fields-service service-name="updateShipmentRouteSegment" map-name="shipmentRouteSegment"/>
 		<field name="shipmentId"><hidden/></field>
 		<field name="submitButton" title="Update" widget-style="standardSubmit"><submit button-type="button"/></field>
 		<field name="deleteLink" title="&amp;nbsp;" widget-style="buttontext">

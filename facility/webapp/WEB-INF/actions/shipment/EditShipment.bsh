@@ -27,9 +27,17 @@
 import java.util.*;
 import org.ofbiz.core.entity.*;
 import org.ofbiz.core.util.*;
+import org.ofbiz.core.widgetimpl.*;
 
 delegator = request.getAttribute("delegator");
 
 shipmentId = request.getParameter("shipmentId");
-context.put("shipmentId", shipmentId);
+shipment = delegator.findByPrimaryKey("Shipment", UtilMisc.toMap("shipmentId", shipmentId));
 
+HtmlFormWrapper editShipmentWrapper = new HtmlFormWrapper("/shipment/ShipmentForms.xml", "EditShipment", request, response);
+editShipmentWrapper.putInContext("shipment", shipment);
+editShipmentWrapper.putInContext("shipmentId", shipmentId);
+
+context.put("shipmentId", shipmentId);
+context.put("shipment", shipment);
+context.put("editShipmentWrapper", editShipmentWrapper);

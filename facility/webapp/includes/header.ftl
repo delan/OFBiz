@@ -35,6 +35,7 @@
   <div class="col"><a href="<@ofbizUrl>/main</@ofbizUrl>" class="${selectedLeftClassMap.main?default(unselectedLeftClassName)}">Main</a></div>
   <div class="col"><a href="<@ofbizUrl>/FindFacility</@ofbizUrl>" class="${selectedLeftClassMap.facility?default(unselectedLeftClassName)}">Facilities</a></div> 
   <div class="col"><a href="<@ofbizUrl>/FindFacilityGroup</@ofbizUrl>" class="${selectedLeftClassMap.facilityGroup?default(unselectedLeftClassName)}">Facility&nbsp;Groups</a></div>
+  <div class="col"><a href="<@ofbizUrl>/FindShipment</@ofbizUrl>" class="${selectedLeftClassMap.shipment?default(unselectedLeftClassName)}">Shipments</a></div> 
   
   <#if requestAttributes.userLogin?has_content>
     <div class="col-right"><a href="<@ofbizUrl>/logout</@ofbizUrl>" class="${selectedRightClassMap.logout?default(unselectedRightClassName)}">Logout</a></div>

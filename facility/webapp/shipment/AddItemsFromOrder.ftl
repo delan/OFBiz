@@ -25,16 +25,7 @@
 -->
 
 <#if security.hasEntityPermission("FACILITY", "_VIEW", session)>
-<#if shipmentId?has_content>
-  <div class='tabContainer'>
-    <a href="<@ofbizUrl>/ViewShipment?shipmentId=${shipmentId}</@ofbizUrl>" class="tabButton">View</a>
-    <a href="<@ofbizUrl>/EditShipment?shipmentId=${shipmentId}</@ofbizUrl>" class="tabButton">Edit</a>
-    <a href="<@ofbizUrl>/EditShipmentItems?shipmentId=${shipmentId}</@ofbizUrl>" class="tabButton">Items</a>
-    <a href="<@ofbizUrl>/EditShipmentPackages?shipmentId=${shipmentId}</@ofbizUrl>" class="tabButton">Packages</a>
-    <a href="<@ofbizUrl>/EditShipmentRouteSegments?shipmentId=${shipmentId}</@ofbizUrl>" class="tabButton">Route Segments</a>
-    <a href="<@ofbizUrl>/AddItemsFromOrder?shipmentId=${shipmentId}</@ofbizUrl>" class="tabButtonSelected">Order Items</a>
-  </div>
-</#if>
+${pages.get("/shipment/ShipmentTabBar.ftl")}
 
 <form action="<@ofbizUrl>/AddItemsFromOrder</@ofbizUrl>">
 	<input type="hidden" name="shipmentId" value="${shipmentId}"/>

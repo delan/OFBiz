@@ -37,6 +37,7 @@
     <a href="<@ofbizUrl>/FindFacilityTransfers?facilityId=${facilityId}</@ofbizUrl>" class="tabButton">Inventory&nbsp;Xfers</a>
     <a href="<@ofbizUrl>/ReceiveReturn?facilityId=${facilityId}</@ofbizUrl>" class="tabButton">Receive Return</a>
     <a href="<@ofbizUrl>/PicklistOptions?facilityId=${facilityId}</@ofbizUrl>" class="tabButtonSelected">Picklist</a>
+    <a href="<@ofbizUrl>/FindShipment?facilityId=${facilityId}</@ofbizUrl>" class="tabButton">Shipments</a>
   </div>
 </#if>
 

@@ -3,5 +3,6 @@
     <template>main</template>
     <property name="title">Edit Shipment Packages</property>
     <property name="headerItem">shipment</property>
+    <property name="tabButtonItem">EditShipmentPackages</property>
     <page-action name="/shipment/EditShipmentPackages.bsh"/> 
 </page>

@@ -3,5 +3,6 @@
     <template>main</template>
     <property name="title">View Shipment</property>
     <property name="headerItem">shipment</property>
+    <property name="tabButtonItem">ViewShipment</property>
     <page-action name="/shipment/ViewShipment.bsh"/> 
 </page>
