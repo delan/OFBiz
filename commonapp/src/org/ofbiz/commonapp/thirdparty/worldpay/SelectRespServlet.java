@@ -220,7 +220,7 @@ public class SelectRespServlet extends SelectServlet implements SelectDefs {
         // set up the output stream for the response
         response.setContentType("text/html");
         ServletOutputStream out = response.getOutputStream();  
-        if (confirmUrl != null) {                                    
+        if (confirmTemplate != null) {                                    
             // render the thank-you / confirm page
             String content = null;
             try {
