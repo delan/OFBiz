@@ -36,43 +36,51 @@
 
 <%if (security.hasEntityPermission("CATALOG", "_VIEW", session)) {%>
 <%
-        boolean useValues = true;
-        int viewIndex = 0;
-        try {
-            viewIndex = Integer.valueOf((String) pageContext.getRequest().getParameter("VIEW_INDEX")).intValue();
-        } catch (Exception e) {
-            viewIndex = 0;
-        }
+    boolean activeOnly = "true".equals(request.getParameter("activeOnly"));
 
-        int viewSize = 20;
-        try {
-            viewSize = Integer.valueOf((String) pageContext.getRequest().getParameter("VIEW_SIZE")).intValue();
-        } catch (Exception e) {
-            viewSize = 20;
-        }
+    boolean useValues = true;
+    int viewIndex = 0;
+    try {
+        viewIndex = Integer.valueOf((String) pageContext.getRequest().getParameter("VIEW_INDEX")).intValue();
+    } catch (Exception e) {
+        viewIndex = 0;
+    }
 
-        if (request.getAttribute(SiteDefs.ERROR_MESSAGE) != null) useValues = false;
+    int viewSize = 20;
+    try {
+        viewSize = Integer.valueOf((String) pageContext.getRequest().getParameter("VIEW_SIZE")).intValue();
+    } catch (Exception e) {
+        viewSize = 20;
+    }
 
-        String productCategoryId = request.getParameter("productCategoryId");
-        GenericValue productCategory = delegator.findByPrimaryKey("ProductCategory", UtilMisc.toMap("productCategoryId", productCategoryId));
-        if (productCategory == null) useValues = false;
+    if (request.getAttribute(SiteDefs.ERROR_MESSAGE) != null) useValues = false;
 
-        Collection productCategoryMembers = productCategory.getRelated("ProductCategoryMember", null, UtilMisc.toList("sequenceNum", "productId"));
-        if (productCategoryMembers != null)
-            pageContext.setAttribute("productCategoryMembers", productCategoryMembers);
+    String productCategoryId = request.getParameter("productCategoryId");
+    GenericValue productCategory = delegator.findByPrimaryKey("ProductCategory", UtilMisc.toMap("productCategoryId", productCategoryId));
+    if (productCategory == null) useValues = false;
 
-        if ("true".equalsIgnoreCase((String)request.getParameter("useValues"))) useValues = true;
+    Collection productCategoryMembers = productCategory.getRelated("ProductCategoryMember", null, UtilMisc.toList("sequenceNum", "productId"));
+    if (activeOnly) {
+        productCategoryMembers = EntityUtil.filterByDate(productCategoryMembers);
+    }
+    if (productCategoryMembers != null) {
+        pageContext.setAttribute("productCategoryMembers", productCategoryMembers);
+    }
 
-        int highIndex = 0;
-        int lowIndex = 0;
-        int listSize = 0;
-        if (productCategoryMembers != null)
-            listSize = productCategoryMembers.size();
+    if ("true".equalsIgnoreCase((String)request.getParameter("useValues"))) useValues = true;
 
-        lowIndex = viewIndex * viewSize;
-        highIndex = (viewIndex + 1) * viewSize;
-        if (listSize < highIndex)
-            highIndex = listSize;
+    int highIndex = 0;
+    int lowIndex = 0;
+    int listSize = 0;
+    if (productCategoryMembers != null) {
+        listSize = productCategoryMembers.size();
+    }
+
+    lowIndex = viewIndex * viewSize;
+    highIndex = (viewIndex + 1) * viewSize;
+    if (listSize < highIndex) {
+        highIndex = listSize;
+    }
 
     Debug.logInfo("Low Index: " + lowIndex);
     Debug.logInfo("View Size: " + viewSize);
@@ -93,6 +101,11 @@
   with ID "<%=UtilFormatOut.checkNull(productCategoryId)%>"</div>
 
 <br>
+<%if (activeOnly) {%>
+  <a href="<ofbiz:url>/EditCategoryProducts?productCategoryId=<%=productCategoryId%>&activeOnly=false</ofbiz:url>" class="buttontext">[Active and Inactive]</a>
+<%} else {%>
+  <a href="<ofbiz:url>/EditCategoryProducts?productCategoryId=<%=productCategoryId%>&activeOnly=true</ofbiz:url>" class="buttontext">[Active Only]</a>
+<%}%>
 <br>
 <%-- Edit 'ProductCategoryMember's --%>
 <%if(productCategoryId!=null && productCategory!=null){%>
@@ -104,13 +117,13 @@
       <td align=right>
         <b>
         <%if(viewIndex > 0){%>
-          <a href="<ofbiz:url><%="/EditCategoryProducts?productCategoryId=" + productCategoryId + "&VIEW_SIZE=" + viewSize + "&VIEW_INDEX=" + (viewIndex-1)%></ofbiz:url>" class="buttontext">[Previous]</a> |
+          <a href="<ofbiz:url><%="/EditCategoryProducts?productCategoryId=" + productCategoryId + "&VIEW_SIZE=" + viewSize + "&VIEW_INDEX=" + (viewIndex-1)%>&activeOnly=<%=new Boolean(activeOnly).toString()%></ofbiz:url>" class="buttontext">[Previous]</a> |
         <%}%>
         <%if(listSize > 0){%>
           <%=lowIndex+1%> - <%=highIndex%> of <%=listSize%>
         <%}%>
         <%if(listSize > highIndex){%>
-          | <a href="<ofbiz:url><%="/EditCategoryProducts?productCategoryId=" + productCategoryId + "&VIEW_SIZE=" + viewSize + "&VIEW_INDEX=" + (viewIndex+1)%></ofbiz:url>" class="buttontext">[Next]</a>
+          | <a href="<ofbiz:url><%="/EditCategoryProducts?productCategoryId=" + productCategoryId + "&VIEW_SIZE=" + viewSize + "&VIEW_INDEX=" + (viewIndex+1)%>&activeOnly=<%=new Boolean(activeOnly).toString()%></ofbiz:url>" class="buttontext">[Next]</a>
         <%}%>
         </b>
       </td>
@@ -157,13 +170,13 @@
       <td align=right>
         <b>
         <%if(viewIndex > 0){%>
-          <a href="<ofbiz:url><%="/EditCategoryProducts?productCategoryId=" + productCategoryId + "&VIEW_SIZE=" + viewSize + "&VIEW_INDEX=" + (viewIndex-1)%></ofbiz:url>" class="buttontext">[Previous]</a> |
+          <a href="<ofbiz:url><%="/EditCategoryProducts?productCategoryId=" + productCategoryId + "&VIEW_SIZE=" + viewSize + "&VIEW_INDEX=" + (viewIndex-1)%>&activeOnly=<%=new Boolean(activeOnly).toString()%></ofbiz:url>" class="buttontext">[Previous]</a> |
         <%}%>
         <%if(listSize > 0){%>
           <%=lowIndex+1%> - <%=highIndex%> of <%=listSize%>
         <%}%>
         <%if(listSize > highIndex){%>
-          | <a href="<ofbiz:url><%="/EditCategoryProducts?productCategoryId=" + productCategoryId + "&VIEW_SIZE=" + viewSize + "&VIEW_INDEX=" + (viewIndex+1)%></ofbiz:url>" class="buttontext">[Next]</a>
+          | <a href="<ofbiz:url><%="/EditCategoryProducts?productCategoryId=" + productCategoryId + "&VIEW_SIZE=" + viewSize + "&VIEW_INDEX=" + (viewIndex+1)%>&activeOnly=<%=new Boolean(activeOnly).toString()%></ofbiz:url>" class="buttontext">[Next]</a>
         <%}%>
         </b>
       </td>
