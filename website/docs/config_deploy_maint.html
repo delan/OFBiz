@@ -1,7 +1,7 @@
 <!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN">
 <html>
 <head>
-<!--  $Id: config_deploy_maint.html,v 1.4 2004/04/28 11:11:08 dengkane Exp $ -->
+<!--  $Id: config_deploy_maint.html,v 1.5 2004/08/05 06:59:43 jonesde Exp $ -->
   <title>The Open For Business Project: General Setup</title>
 </head>
 <body>
@@ -9,12 +9,13 @@
 <br>
 Written By: Kane Deng<br>
 Email: <a href="mailto:kane@freebsd-uk.eu.org">kane@freebsd-uk.eu.org</a><br>
+Edited by Les Austin<br>
 Open For Business Site: <a href="http://www.ofbiz.org/">http://www.ofbiz.org</a>
 <br>
 &nbsp;
 <br>
 Founders and Lead Architects: David E. Jones &amp; Andy Zeneski <br>
-Last Updated: April 24, 2004<br>
+Last Updated: 04 August 2004<br>
 <h3 align="left"><a name="Table of Contents">Table of Contents</a></h3>
 <ol>
   <li><a href="#Introduction">Introduction</a></li>
@@ -54,47 +55,52 @@ you exactly how to use OFBiz.<br>
 <h3>Operating System Recommendations</h3>
 <h4>Linux<br>
 </h4>
-<p>Linux is becoming more and more popular nowadays. Not only many
-advanced developers are using Linux, but also more and more web sites
-begin to use Linux. With over 10 years development, Linux has become
+<p>Linux is becoming more and more popular nowadays. Not only are many
+advanced developers using Linux, but also more and more web sites
+have begun to use Linux. With over 10 years development, Linux has
+become
 strong enough for enterprise level platform. At the same time, Linux's
 X Windows desktop environments are becoming more and more easy to use.
 So using Linux as OFBiz's system platform is not a bad choice. Sun and
-IBM(two biggest Java advocates) both take supporting Java running on
-Linux as one of the biggest tasks. The Linux version is almost the
+IBM (two of the biggest Java advocates) both consider support for Java
+running on
+Linux as one of their biggest tasks. The Linux version is almost always
+the
 first released when new Java version appears.</p>
 <h4>OS X</h4>
 <p>N/A <br>
 </p>
 <h4>Unix Varieties</h4>
-<p>Sun Solaris, FreeBSD, SCO Unix, HP Unix, etc. all belong to Unix
-varieties. It is sure that they are both very stable, and have been
-taken the role of Internet backbones for many years, Linux is just an
+<p>Sun Solaris, FreeBSD, SCO Unix, HP Unix, etc, are each varieties of
+Unix. They are all very stable, and have taken on the role of Internet
+backbones for many years. Linux is just an
 elder brother compared with them. But they are not easy to use, and
-everyone has its own special usage and configuration. Don't worry, most
+each has its own special usage and configuration. Don't worry, most
 of the administration tasks are the same. <br>
 </p>
-<p>There are many big companies are using them, in spite Linux is
+<p>There are many big companies using them, and in spite of Linux is
 becoming more and more popular, big enterprises still trust commercial
 Unix more.<br>
 </p>
 <h4>Windows Server</h4>
-<p>For enterprise applications, Windows server&nbsp; belongs to
-low-level servers, and not very stable under high load. But it is
-enough for most of small-medium sized enterprise applications. Windows
+<p>For enterprise applications, Windows server is a
+low-level servers, and is not very stable under high load. But it is
+enough for most of small-to-medium sized enterprise applications.
+Windows
 server is easy to learn, and easy to maintain. So many administrators
-love to use it, it can be used as development environment rather than
-production environment.<br>
+love to use it, and it can be used in a development environment rather
+than
+a production environment.<br>
 </p>
 <h3>Database Server Recommendations</h3>
 <h4>MySQL MaxDB (was SAP DB)<br>
 </h4>
 <p>Max DB (SAP DB) is another good open source
 and it deserves special mention. SAP decided to start making it easier
-for users to use commercial databases instead of their own and open
-sourced their
-database, SAP DB. While maybe not as good in some ways as Oracle or
-some other commercial DBs it
+for users to use commercial databases instead of their own and
+open-sourced their
+database, SAP DB. While perhaps not as good in some ways as Oracle or
+some other commercial DBs, it
 has many development and production features and performs very well
 with a very complete and advanced feature set.<br>
 </p>
@@ -159,14 +165,15 @@ any database that has a JDBC driver.</p>
 Jetty is a high quality 100% java HTTP Server and Servlet container.
 While Jetty can be used stand-alone, the project is not attempting to
 provide a full application server. Instead their approach is to develop
-Jetty as a component that can be used within other project/products to
+Jetty as a component that can be used within other projects/products to
 provide HTTP and/or servlets.<br>
 <br>
-From OFBiz 3.0, OFBiz begins to use Jetty as embeded HTTP Server,
+From OFBiz 3.0, OFBiz began to use Jetty as an embedded HTTP Server,
 because Jetty is very easy to use. In previous versions, OFBiz
 developers had to maintain different deployment configurations for
 different servlet containers or J2EE servers, such as Jakarta Tomcat,
-Jetty, WebLogic, etc. This is a tedious job, and takes a lot time. From
+Jetty, WebLogic, etc. This is a tedious job, and takes a lot of time.
+From
 OFBiz 3.0, they will only think of Jetty, and they can devote all their
 efforts to the core and component development of OFBiz. But many people
 are using old OFBiz versions, such as 2.00 or 2.11, they don't know how
@@ -190,8 +197,8 @@ application on any other servlet containers if you can run it on Tomcat.<br>
 Tomcat is released under the Apache Software License, and intended to
 be a collaboration of the best-of-breed developers from the world. <br>
 <br>
-You can configure Tomcat work with Apahce easily, because they both
-belongs to Apache.org, they can work together perfectly.<br>
+You can configure Tomcat to work with Apahce easily; because they both
+belong to Apache.org, they can work together perfectly.<br>
 <br>
 Get Tomcat here:<br>
 <br>
@@ -209,9 +216,9 @@ accepted by the commercial world.<br>
 <br>
 But because of their own special features, it will be difficult to
 migrate onto others if you make full use of them. You will have to
-stick to use one if you choose it from the start.<br>
+stick to using one if you choose it from the start.<br>
 <br>
-Lear more about Orion here:<br>
+Learn more about Orion here:<br>
 <br>
 <a href="http://www.orionserver.com/" target="_blank">http://www.orionserver.com/</a><br>
 <br>
@@ -225,13 +232,15 @@ JOTM is an open source transaction manager implemented in Java. For
 more than four years, JOTM has been the transaction manager of JOnAS, a
 J2EE server. It supports several transaction models and specifications
 providing transaction support for clients using a wide range of
-middleware platforms(J2EE, CORBA, Web Services).<br>
+middleware platforms (J2EE, CORBA, Web Services).<br>
 <br>
 JOTM embeds open source projects, such as CAROL, for transaction
 context propagation on both RMI/JRMP and RMI/IIOP, and XAPool, and
 XA-compliant JDBC connection pool. JOTM is bundled with OFBiz
-now,&nbsp; Old OFBiz versions had been using Tyrex, it is said OFBiz
-team had run into many problems with Tyrex, so they choose JOTM.<br>
+now.&nbsp; Old OFBiz versions had been using Tyrex; it is said the
+OFBiz
+team had run into many problems with Tyrex, so they chose JOTM as a
+suitable replacement.<br>
 <br>
 Since OFBiz only requires a Servlet container and a Transaction
 manager, using a full blown J2EE application can be too much overhead
@@ -256,8 +265,10 @@ as you use Tomcat with JOTM.<br>
 <h5>XAPool</h5>
 XAPool is an XA datasource connection pool: it implements
 javax.sql.XADataSource, and provides connection pooling facilities.
-XAPool allows to pool objects, JDBC connections and XA connections. It
-comes from Enhydra application server from Lutris. Now the project is
+XAPool allows one to pool objects, JDBC connections and XA connections.
+It
+comes from the Enhydra application server from Lutris. Now the project
+is
 hosted by the ObjectWeb consortium and managed by ExperLog.<br>
 <br>
 XAPool has been successfully tested with MySQL, PostgreSQL, Oracle, SAP
@@ -288,14 +299,18 @@ you can refer to their documentation for how to use.<br>
 <h4>Single Server - all in one</h4>
 If you download the complete OFBiz&nbsp; package, it is bundled with
 everything you need to run immediately. This package can be taken as
-all-in-one single server. Single Server is easy to use, and don't do
-many tedious configurations, so can be used as development environment.
-For production environment, it is not suitable, because its scalability
+all-in-one single server. Single Server is easy to use, and installers
+don't do
+many tedious configurations, so itcan be used in a development
+environment.
+For a production environment, it is not suitable, because its
+scalability
 is poor.<br>
 <h4>Separate Application &amp; Database Servers</h4>
-One good choice is to separate application server from database server.
-The database bundled with OFBiz is HSQL, which is a embed database
-engine and can't support high load, just for demonstration or
+One good choice is to separate the application server from the database
+server.
+The database bundled with OFBiz is HSQL, which is an embed database
+engine and can't support a high load; use it just for demonstration or
 development. For production environment, you can use MySQL or
 PostgreSQL, or other commercial databases mentioned above. You setup
 your database server first, then configure OFBiz running on one
@@ -303,10 +318,11 @@ application server to access the database server.<br>
 <br>
 <h4>Independent Static Content Server Option</h4>
 For performance issues, you can run an independent static content
-server. There is a component named "content" in OFBiz, OFBiz put all
+server. There is a component named "content" in OFBiz, OFBiz puts all
 static files, such as .html, .gif, and .css, etc. under this component.
-This way can let you re-use common static contents between different
-applications. Just do some configuration on application servers, let
+This allows you to re-use common static contents between different
+applications. Just do some configuration on application servers, and
+let
 them point to the content server they will use.<br>
 <br>
 <h4>Load Balanced Application Server Farm Options</h4>
@@ -317,23 +333,26 @@ them point to the content server they will use.<br>
 <h5>Application Server Specific Load Balancers</h5>
 This is to run your application on multiple application servers, and
 lower
-the load on single one. Load balancing will increase your application's
+the load on a single one. Load balancing will increase your
+application's
 high-availability, especially under mission critical environments. All
-application server will access the same database server.<br>
+application servers will access the same database server.<br>
 <br>
-Tomcat 5 just added load balancing feature, and almost every commercial
-servlet containers all provide their own load-blancing mechanism. <br>
+Tomcat 5 just added a load balancing feature, and almost every
+commercial
+servlet container provides their own load-blancing mechanism. <br>
 <br>
 <h4>Load Balanced Database Options</h4>
-Load balanced database is an advanced topic. This is to run one
+Load balanced database is an advanced topic. This means to run one
 database on multiple database servers. It is said that MySQL will
 provide such capability, and it will threaten the biggest commercial
 database providers, such as Oracle, DB2, etc. Most of the commercial
 database providers have such capability.<br>
 <br>
-Another choice is not database-based, but add a cluster handling on
+Another choice is not database-based, but to add cluster handling on
+the
 JDBC level. There is an open source project named "C-JDBC", which means
-clustered JDBC. It is interesting, C-JDBC is a database cluster
+clustered JDBC. It is interesting; C-JDBC is database cluster
 middleware that allows any Java application (standalone application,
 servlet or EJB container, ...) to transparently access a cluster of
 databases through JDBC. C-JDBC provides a flexible architecture that
@@ -346,16 +365,16 @@ You can learn more about C-JDBC here:<br>
 <hr>
 <h3><a name="Setting_Up_a_Database">Setting Up a Database</a></h3>
 <hr>
-<p>You should set up a database server before using OFBiz. There is a
+<p>You should set up a database server before using OFBiz. There is an
 embedded Hypersonic SQL database in OFBiz, you don't need to do any
 configuration to run OFBiz. Maybe you want to use MySQL or PostgreSQL,
-or other commercial databases, you should install first and create a
+or other commercial databases, you should first install and create a
 database for OFBiz. <br>
 </p>
 <p>Every database has detailed documentation on how to use, and it is
 not difficult to manage a database. Here one thing you should remember,
 every database has their own JDBC driver, .jar files. OFBiz already
-bundle some JDBC drivers in it, but for reducing problems, you should
+bundles some JDBC drivers in it, but for reducing problems, you should
 replace the original JDBC driver with the driver released with the
 database.<br>
 </p>
@@ -374,8 +393,9 @@ The installation is simple, but you should set JAVA_HOME after you
 install. This system environment parameter is very important, many
 applications will use it. You can set it in Control Panel if you are
 using Windows, and edit your .profile if your are using Unix. For
-convenience, you can add JAVA_HOME/bin to PATH too, this can ease you
-using Java.<br>
+convenience, you can add JAVA_HOME/bin to PATH too, this can simplify
+your
+use of Java.<br>
 <br>
 <hr>
 <h3><a name="OFBiz">OFBiz</a></h3>
@@ -384,7 +404,7 @@ using Java.<br>
 <hr style="width: 100%; height: 2px;">
 <h5>Download a Release</h5>
 You can download a release, which is best for demonstration,
-evaluation, low profile deployments.<br>
+evaluation, and low profile deployments.<br>
 <br>
 OFBiz comes and runs by default with Jetty for a Servlet/JSP
 container and
@@ -415,8 +435,8 @@ and see if they meet your needs.<br>
 </p>
 <p>Download OFBiz releases here:<br>
 </p>
-<p><a target="_blank"
- href="https://ofbiz.dev.java.net/servlets/ProjectDocumentList?folderID=207">https://ofbiz.dev.java.net/servlets/ProjectDocumentList?folderID=207</a><br>
+<p><a href="http://www.ofbiz.org/">www.ofbiz.org</a>&nbsp; (and see the
+download section on the left side of the page)<br>
 <br>
 </p>
 <h5>Getting from CVS</h5>
@@ -428,14 +448,14 @@ If you are using command line CVS, you can get OFBiz using following
 commands:<br>
 <code>cvs -d :pserver:guest@cvs.dev.java.net:/cvs login</code><br>
 <br>
-press "Enter" if cvs prompt you for password, then using this command:<br>
+press "Enter" if cvs prompts you for password, then using this command:<br>
 <br>
 <code>cvs -d :pserver:guest@cvs.dev.java.net:/cvs checkout ofbiz</code><br>
 <br>
 If you are using WinCVS or other GUI cvs client, you should
 set CVSROOT parameter in Preferences, set as follows:<br>
 <br>
-&nbsp;<code>:guest:dengkane@cvs.dev.java.net:/cvs</code><br>
+&nbsp;<code>:pserver:guest@cvs.dev.java.net:/cvs</code><br>
 <br>
 then you can login and check out OFBiz.
 <br>
@@ -443,17 +463,17 @@ For more about how to use CVS, you can refer to this site:
 <a target="_blank" href="http://www.cvshome.org/">http://www.cvshome.org/</a><br>
 <h5>Building</h5>
 <br>
-You don't need to build if you download the OFBiz release, and
-you have to build if you get OFBiz with cvs. Before building you should
-download and install Ant, for more about Ant,<br>
+You don't need to build if you download the OFBiz release, but you have
+to build if you get OFBiz with cvs. Before building you should
+download and install Ant. For more about Ant, see:<br>
 <br>
 <a href="http://ant.apache.org/" target="_blank">http://ant.apache.org/</a><br>
 <br>
-They have great documentation on how to install and use ant, you just
+They have great documentation on how to install and use ant; just
 install it according to their manuals.<br>
 <br>
-You can start to build OFBiz if your ant installation is ok, just goto
-the OFBiz directory in command line window, and key in "ant" command,
+You can start to build OFBiz if your ant installation is ok, just go to
+the OFBiz directory in a command line window, and key in "ant" command.
 Ant will build OFBiz immediately. The whole building process may last
 for several minutes, it depends on your computer.<br>
 <br>
@@ -466,7 +486,7 @@ Configuring OFBiz</h4>
 <h5>Database Configuration</h5>
 <span style="font-weight: bold;">jndiservers.xml</span><br>
 <br>
-jndiservers.xml is used to configure JNDI parameters. You must be
+jndiservers.xml is used to configure JNDI parameters. You may be
 familiar with jndi.properties if you have used JNDI. You can take
 jndiservers.xml as a collection of several jndi.peroperties, and you
 can define several JNDI servers in a single file and don't need to
@@ -491,7 +511,8 @@ jndi-server-name to use other JNDI servers defined in jndiservers.xml,
 such as <br>
 <pre>    &lt;jndi-server name="OpenJMS"<br>            context-provider-url="rmi://127.0.0.1:1099/JndiServer"<br>            initial-context-factory="org.exolab.jms.jndi.rmi.RmiJndiInitialContextFactory"/&gt;<br><br>	&lt;!-- Note that in most cases this is not necessary or desired for Orion, the default above is easier/better --&gt;<br>    &lt;jndi-server name="localorion"<br>            context-provider-url="ormi://localhost/default"<br>            initial-context-factory="com.evermind.server.ApplicationClientInitialContextFactory"<br>            security-principal="admin"<br>            security-credentials="admin"/&gt;<br><br>	&lt;!-- Note that in most cases this is not necessary or desired for Weblogic, the default above is easier/better --&gt;<br>    &lt;jndi-server name="localweblogic" <br>            context-provider-url="t3://127.0.0.1:7001"<br>            initial-context-factory="weblogic.jndi.WLInitialContextFactory"<br>            url-pkg-prefixes=""<br>            security-principal=""<br>            security-credentials=""/&gt;<br></pre>
 <br>
-The above lines define OpenJMS, localorion, and localweblogic three
+The above lines define OpenJMS, localorion, and localweblogic, for all
+three
 JNDI servers.<br>
 <br>
 <br>
@@ -514,18 +535,20 @@ provide the same performance or scalability that a major database would.<br>
 <pre>    &lt;delegator name="default" entity-model-reader="main" entity-group-reader="main" entity-eca-reader="main" distributed-cache-clear-enabled="false"&gt;<br>        &lt;group-map group-name="org.ofbiz" datasource-name="localhsql"/&gt;<br>    &lt;/delegator&gt;<br></pre>
 <p><br>
 </p>
-<p>the datasource "localhsql" is defined as following in
+<p>the datasource "localhsql" is defined as follows in
 entityengine.xml:<br>
 </p>
 <pre>    &lt;datasource name="localhsql"<br>            helper-class="org.ofbiz.entity.datasource.GenericHelperDAO"<br>            field-type-name="hsql"<br>            check-on-start="true"<br>            add-missing-on-start="true"<br>            check-indices-on-start="true"<br>            use-foreign-keys="true"<br>            use-foreign-key-indices="true"<br>            use-fk-initially-deferred="false"<br>            join-style="ansi-no-parenthesis"<br>            alias-view-columns="true"&gt;<br>        &lt;read-data reader-name="main"/&gt;<br>        &lt;inline-jdbc<br>                jdbc-driver="org.hsqldb.jdbcDriver"<br>                jdbc-uri="jdbc:hsqldb:data/ofbiz"<br>                jdbc-username="sa"<br>                jdbc-password=""<br>                isolation-level="ReadUncommitted"<br>                pool-minsize="2"<br>                pool-maxsize="20"/&gt;<br>        &lt;!-- &lt;jndi-jdbc jndi-server-name="localjndi" jndi-name="java:/HsqlDataSource" isolation-level="ReadUncommitted"/&gt; --&gt;<br>        &lt;!-- &lt;jndi-jdbc jndi-server-name="default" jndi-name="comp/env/jdbc/xa/localhsql" isolation-level="ReadUncommitted"/&gt; --&gt; <br>        &lt;!-- Orion Style JNDI name --&gt;<br>        &lt;!-- &lt;jndi-jdbc jndi-server-name="localjndi" jndi-name="localhsqlDataSource"/&gt; --&gt; &lt;!-- Weblogic Style JNDI name --&gt;<br>    &lt;/datasource&gt;<br></pre>
 <br>
 There are other datasource definitions in entityengine.xml too,
-includes HSQL, Cloudscape, MySQL, PostgreSQL, Oracle, SyBase, SAP DB,
-MS SQL, etc. You can change the datasource definition for different
+which includes HSQL, Cloudscape, MySQL, PostgreSQL, Oracle, SyBase, SAP
+DB,
+MS SQL, etc. You can change the datasource definition for a different
 database type, and then modify the default delegator to use it, just
-same as using HSQL above. <br>
+the same as using HSQL above. <br>
 <br>
-Eg. if you want to configure OFBiz to use MySQL, just modify following
+Eg. if you want to configure OFBiz to use MySQL, just modify the
+following
 lines according to your MySQL server...<br>
 <br>
 <pre>    &lt;datasource name="localmysql"<br>            helper-class="org.ofbiz.entity.datasource.GenericHelperDAO"<br>            field-type-name="mysql"<br>            check-on-start="true"<br>            add-missing-on-start="true"<br>            use-foreign-keys="false"<br>            join-style="ansi-no-parenthesis"&gt;<br>        &lt;read-data reader-name="main"/&gt;<br>        &lt;inline-jdbc<br>                jdbc-driver="org.gjt.mm.mysql.Driver"<br>                jdbc-uri="jdbc:mysql://127.0.0.1/ofbiz?autoReconnect=true"<br>                jdbc-username="ofbiz"<br>                jdbc-password="ofbiz"<br>                isolation-level="ReadCommitted"/&gt;<br>        &lt;!-- &lt;jndi-jdbc jndi-server-name="localjndi" jndi-name="java:/MySqlDataSource" isolation-level="Serializable"/&gt; --&gt;<br>    &lt;/datasource&gt;<br></pre>
@@ -535,7 +558,7 @@ your database. Then modify this line:<br>
 <br>
 <pre>    &lt;delegator name="default" entity-model-reader="main" entity-group-reader="main" entity-eca-reader="main" distributed-cache-clear-enabled="false"&gt;<br>        &lt;group-map group-name="org.ofbiz" datasource-name="localhsql"/&gt;<br>    &lt;/delegator&gt;<br></pre>
 <br>
-change datasource-name from "localhsql" to "localmysql".<br>
+and change datasource-name from "localhsql" to "localmysql".<br>
 <p>There is no need to run any SQL scripts to create the tables or
 populate them
 with the default data. The entity engine can create missing tables or
@@ -576,7 +599,7 @@ other containers.<br>
 OFBiz 3.0 is using JOTM as its transaction manager, previous versions
 had been using Tyrex.<br>
 <br>
-We configure the transaction manger in entityengine.xml, there are
+We configure the transaction manger in entityengine.xml, there are the
 following lines in entityengine.xml...<br>
 <br>
 <pre>    &lt;!-- the transaction factory class to use, one is needed for each way of getting JTA interfaces --&gt;<br>    &lt;!-- Use this one for JOTM --&gt;<br>    &lt;!--<br>    &lt;transaction-factory class="org.ofbiz.entity.transaction.JotmFactory"/&gt;<br>    --&gt;<br><br>    &lt;!-- Use this one for JNDI --&gt;<br>    &lt;!-- NOTE: to use the JndiFactory you must specify the necessary JNDI properties --&gt;<br>    &lt;transaction-factory class="org.ofbiz.entity.transaction.JNDIFactory"&gt;<br>        &lt;user-transaction-jndi jndi-server-name="default" jndi-name="java:comp/UserTransaction"/&gt;<br>        &lt;transaction-manager-jndi jndi-server-name="default" jndi-name="java:comp/UserTransaction"/&gt;<br>    &lt;/transaction-factory&gt;<br><br></pre>
@@ -589,7 +612,8 @@ under JNDI naming service using name "java:comp/UserTransaction". Other
 programs will get the transaction by accessing the JNDI using
 "java:comp/UserTransaction". You can see the <span
  style="font-weight: bold;">ofbiz/base/config/ofbiz-containers.xml</span>
-to learn how OFBiz start JNDI service, there are following lines in
+to learn how OFBiz starts JNDI service. There are the following lines
+in
 ofbiz-containers.xml file...<br>
 <br>
 <pre>    &lt;!-- load JNDI/JOTM --&gt;<br>    &lt;container name="jotm-container" class="org.ofbiz.entity.transaction.JotmContainer"/&gt;</pre>
@@ -602,7 +626,7 @@ using the name "java:comp/UserTransaction".<br>
 <br>
 OFBiz uses both Minerva connection pool and DBCP connection pool, and
 will try to obtain a connection from Minerva first, and will use it if
-can get. If OFBiz can't get a connection from Minerva, it will try
+can. If OFBiz can't get a connection from Minerva, it will try
 DBCP, and if DBCP fails too, OFBiz will try to obtain a connection
 using plain JDBC.<br>
 <br>
@@ -617,10 +641,10 @@ jndi-jdbc and OFBiz can't obtain a connection from it, OFBiz will try
 to
 get connections using Minerva and DBCP, as configured in inline-jdbc.<br>
 <br>
-You can set the connection pooling parameters in inline-jdbc,
+You can set the connection pooling parameters in inline-jdbc;
 currently, there are <span style="font-weight: bold;">pool-maxsize</span>,
-<span style="font-weight: bold;">pool-minsize</span> two parameters.
-Set these too parameter like this:<br>
+<span style="font-weight: bold;">pool-minsize</span>, two parameters.
+Set these two parameter like this:<br>
 <br>
 <pre>    &lt;datasource name="localmysql"<br>            helper-class="org.ofbiz.entity.datasource.GenericHelperDAO"<br>            field-type-name="mysql"<br>            check-on-start="true"<br>            add-missing-on-start="true"<br>            use-foreign-keys="false"<br>            join-style="ansi-no-parenthesis"&gt;<br>        &lt;read-data reader-name="main"/&gt;<br>        &lt;inline-jdbc<br>                jdbc-driver="org.gjt.mm.mysql.Driver"<br>                jdbc-uri="jdbc:mysql://127.0.0.1/ofbiz?autoReconnect=true"<br>                jdbc-username="ofbiz"<br>                jdbc-password="ofbiz"<br>                isolation-level="ReadCommitted"<br><span
  style="font-weight: bold;">                pool-minsize="2"</span><br
@@ -638,8 +662,8 @@ N/A<br>
 <h5>Production Oriented Settings</h5>
 <span style="font-weight: bold;">URL Settings</span><br>
 <br>
-You can define URL settings with the <span style="font-weight: bold;">ofbiz/components/content/config/url.properties</span>
-, the HTTPS port setting is as following:<br>
+You can define URL settings with the <span style="font-weight: bold;">ofbiz/components/content/config/url.properties</span>.
+The HTTPS port setting is as following:<br>
 <br>
 <pre># HTTPS Port (Secure port)<br>port.https.enabled=Y<br>port.https=8443<br>force.https.host=<br><br></pre>
 <br>
@@ -652,19 +676,20 @@ We can set the <span style="font-weight: bold;">force.http.host</span>
 to redirect HTTP requests to other servers, but this is not necessary.<br>
 <br>
 Maybe you want to move static contents to other servers, and this can
-lower load on this server, the settings is:<br>
+lower load on this server. The settings are:<br>
 <br>
 <pre>content.url.prefix.secure=<br>content.url.prefix.standard=<br><br></pre>
 <br>
 If the above two settings are empty, OFBiz will use current server. You
-can set above lines as following to redirect static page requests to
+can set those lines above as follows to redirect static page requests
+to
 another server.<br>
 <br>
 <pre>content.url.prefix.secure=https://the_host_name<br>content.url.prefix.standard=http://the_host_name<br><br></pre>
 <br>
 Detailed settings of content component are in <span
  style="font-weight: bold;">ofbiz/components/content/config/content.properties</span>
-file, current settings are as follows:<br>
+file. The current settings are as follows:<br>
 <br>
 <pre>owner.content.id=CONTENT_ROOT<br>img.request=/content/control/img/<br>img.request.param.name=imgId<br>#baseUrl=http://localhost:8080<br>disable.ftl.template.cache=true<br>permissionRecorderOn=true<br></pre>
 <br>
@@ -678,14 +703,14 @@ You can modify these settings according to your needs.<br>
 Cache handling is very important for software production running
 environments. <br>
 <br>
-The cache.properties file contains cache setting used by UtilCache
+The cache.properties file contains cache settings used by UtilCache
 class. Default cache parameters can be passed in when a cache is
 created but if cache parameters exist in this file for the given cache
 name then they will be loaded from the cache.properties file.<br>
 <br>
 There are three optional properties in this file for each named cache:
 {cache-name}.maxSize (whole number), {cache-name}.expireTime (whole
-number) and {cache-name}.useSoftReference (true of false). The maxSize
+number) and {cache-name}.useSoftReference (true or false). The maxSize
 property specifies the maximum number of entries in the cache, but does
 nothing with respect to the size of each cache entry. The expireTime
 property specifies how long in milliseconds each cache entry will be
