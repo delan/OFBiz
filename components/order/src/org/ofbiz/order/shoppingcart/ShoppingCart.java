@@ -1,5 +1,5 @@
 /*
- * $Id: ShoppingCart.java,v 1.4 2003/09/04 03:29:09 ajzeneski Exp $
+ * $Id: ShoppingCart.java,v 1.5 2003/09/04 06:28:19 ajzeneski Exp $
  *
  *  Copyright (c) 2001, 2002 The Open For Business Project - www.ofbiz.org
  *
@@ -50,7 +50,7 @@ import org.ofbiz.service.LocalDispatcher;
  * @author     <a href="mailto:jaz@ofbiz.org">Andy Zeneski</a>
  * @author     <a href="mailto:cnelson@einnovation.com">Chris Nelson</a>
  * @author     <a href="mailto:jonesde@ofbiz.org">David E. Jones</a>
- * @version    $Revision: 1.4 $
+ * @version    $Revision: 1.5 $
  * @since      2.0
  */
 public class ShoppingCart implements java.io.Serializable {
@@ -65,6 +65,7 @@ public class ShoppingCart implements java.io.Serializable {
     private String orderId = null;
     private String firstAttemptOrderId = null;
     private String billingAccountId = null;
+    private double billingAccountAmt = 0.00;
     private String currencyUom = null;
 
     private GenericValue orderShipmentPreference = null;
@@ -409,13 +410,19 @@ public class ShoppingCart implements java.io.Serializable {
     }
 
     /** Sets the billing account id string. */
-    public void setBillingAccountId(String billingAccountId) {
+    public void setBillingAccount(String billingAccountId, double amount) {
         this.billingAccountId = billingAccountId;
+        this.billingAccountAmt = amount;
     }
-
+        
     /** Returns the billing message string. */
     public String getBillingAccountId() {
-        return billingAccountId;
+        return this.billingAccountId;
+    }
+    
+    /** Returns the amount to be billed to the billing account.*/
+    public double getBillingAccountAmount() {
+        return this.billingAccountAmt;
     }
 
     /** Sets the shipping contact mech id. */

@@ -1,5 +1,5 @@
 /*
- * $Id: CheckOutHelper.java,v 1.5 2003/09/03 16:29:38 ajzeneski Exp $
+ * $Id: CheckOutHelper.java,v 1.6 2003/09/04 06:28:19 ajzeneski Exp $
  *
  *  Copyright (c) 2001, 2002 The Open For Business Project - www.ofbiz.org
  *
@@ -63,7 +63,7 @@ import org.ofbiz.service.ServiceUtil;
  * @author     <a href="mailto:cnelson@einnovation.com">Chris Nelson</a>
  * @author     <a href="mailto:jonesde@ofbiz.org">David E. Jones</a>
  * @author     <a href="mailto:tristana@twibble.org">Tristan Austin</a>
- * @version    $Revision: 1.5 $
+ * @version    $Revision: 1.6 $
  * @since      2.0
  */
 public class CheckOutHelper {
@@ -81,17 +81,26 @@ public class CheckOutHelper {
     }    
          
     public Map setCheckOutOptions(String shippingMethod, String shippingContactMechId, String checkOutPaymentId,            
-            String correspondingPoId, String shippingInstructions, String orderAdditionalEmails,
-            String maySplit, String giftMessage, String isGift) {
+            String billingAccountId, Double billingAccountAmt, String correspondingPoId, String shippingInstructions, 
+            String orderAdditionalEmails, String maySplit, String giftMessage, String isGift) {
         List errorMessages = new ArrayList();
         Map result;
 
-        if (this.cart != null && this.cart.size() > 0) {
+        if (this.cart != null && this.cart.size() > 0) {            
+            /* no longer needed 
             String billingAccountId = null;
             if (checkOutPaymentId != null && checkOutPaymentId.startsWith("EXT_BILLACT")) {
                 billingAccountId = checkOutPaymentId.substring(checkOutPaymentId.indexOf('|')+1);
                 checkOutPaymentId = "EXT_BILLACT"; 
             } 
+            */
+            
+            // set the billing account amount
+            if (billingAccountId != null && billingAccountAmt != null && !billingAccountId.equals("_NA")) {
+                cart.setBillingAccount(billingAccountId, billingAccountAmt.doubleValue());
+            } else {
+                cart.setBillingAccount(null, 0.00);
+            }          
             
             if (UtilValidate.isNotEmpty(shippingMethod)) {
                 int delimiterPos = shippingMethod.indexOf('@');
@@ -135,19 +144,27 @@ public class CheckOutHelper {
                 // clear out the old payments
                 this.cart.clearPaymentMethodTypeIds();
                 this.cart.clearPaymentMethodIds();
+                 
+                // if we are EXT_BILLACT then we need to make sure we have enough credit
+                if ("EXT_BILLACT".equals(checkOutPaymentId)) {
+                    double accountCredit = this.availableAccountBalance(cart.getBillingAccountId());                                                            
+                    // make sure we have enough to cover
+                    if (cart.getGrandTotal() > accountCredit) {
+                        errorMessages.add("Insufficient credit available on account.");
+                    }
+                }
+                
                 // all payment method ids will be numeric, type ids will start with letter
                 if (Character.isLetter(checkOutPaymentId.charAt(0))) {
                     this.cart.addPaymentMethodTypeId(checkOutPaymentId);
                 } else {
                     this.cart.setPaymentMethodAmount(checkOutPaymentId, null);
-                }            
+                }                
+                           
             } else if (UtilValidate.isEmpty(checkOutPaymentId)) {
-                errorMessages.add("Please Select a Method of Billing");
+                errorMessages.add("Please select a method of billing.");
             }
-                
-            // set the billingAccountId - if null then set it to null (resetting)
-            this.cart.setBillingAccountId(billingAccountId);
-            
+                                       
             // set the PO number              
             if (UtilValidate.isNotEmpty(correspondingPoId)) {
                 this.cart.setPoNumber(correspondingPoId);
@@ -405,18 +422,21 @@ public class CheckOutHelper {
         // Get the orderId from the cart.
         String orderId = this.cart.getOrderId();
         
-        // Get the paymentMethodTypeId - this will need to change when ecom supports multiple payments
-        List paymentMethodTypeId = this.cart.getPaymentMethodTypeIds(); 
+        // Get the paymentMethodTypeIds - this will need to change when ecom supports multiple payments
+        List paymentMethodTypeIds = this.cart.getPaymentMethodTypeIds(); 
 
         // Check the payment preferences; if we have ANY w/ status PAYMENT_NOT_AUTH invoke payment service.
         boolean requireAuth = false;
-        List paymentPreferences = null;
-        try {
-            Map paymentFields = UtilMisc.toMap("orderId", orderId, "statusId", "PAYMENT_NOT_AUTH");
-            paymentPreferences = this.delegator.findByAnd("OrderPaymentPreference", paymentFields);
+        List allPaymentPreferences = null;
+        try {            
+            allPaymentPreferences = this.delegator.findByAnd("OrderPaymentPreference", UtilMisc.toMap("orderId", orderId));
         } catch (GenericEntityException e) {
             throw new GeneralException("Problems getting payment preferences", e);
         }
+        
+        Map paymentFields = UtilMisc.toMap("statusId", "PAYMENT_NOT_AUTH");
+        List paymentPreferences = EntityUtil.filterByAnd(allPaymentPreferences, paymentFields);
+        
         if (paymentPreferences != null && paymentPreferences.size() > 0)
             requireAuth = true;
         
@@ -489,15 +509,41 @@ public class CheckOutHelper {
                     return ServiceUtil.returnError(ERROR_MESSAGE);
                 }                                                                                               
             }
-        } else if (this.cart.getBillingAccountId() != null || paymentMethodTypeId.contains("EXT_COD")) {
-            // approve all billing account or COD transactions (would not be able to use account if limit is reached)
-            // note this is okay for now since only one payment method can be used; but this will need to be adjusted later
-            boolean ok = OrderChangeHelper.approveOrder(dispatcher, userLogin, orderId);
-            if (!ok) {
-                throw new GeneralException("Problem with order change; see above error");
-            }   
+        } else if (paymentMethodTypeIds.contains("EXT_COD") || paymentMethodTypeIds.contains("EXT_BILLACT")) {                                
+            boolean hasOther = false;
+            boolean validAmount = false;
             
-            return ServiceUtil.returnSuccess();                      
+            Iterator pmti = paymentMethodTypeIds.iterator();
+            while (pmti.hasNext()) {
+                String type = (String) pmti.next();
+                if (!"EXT_COD".equals(type) && !"EXT_BILLACT".equals(type)) {
+                    hasOther = true;
+                    break;
+                }
+            }
+                        
+            if (!hasOther) {
+                if (!paymentMethodTypeIds.contains("EXT_COD")) {
+                    // only billing account, make sure we have enough to cover
+                    String billingAccountId = cart.getBillingAccountId();
+                    double billAcctCredit = this.availableAccountBalance(billingAccountId);
+                    double billingAcctAmt = cart.getBillingAccountAmount();
+                    if (billAcctCredit >= billingAcctAmt) {
+                        if (cart.getGrandTotal() > billAcctCredit) {
+                            validAmount = false;
+                        } else {
+                            validAmount = true;
+                        }                    
+                    }
+                }
+                
+                // approve this as long as there are only COD and Billing Account types
+                boolean ok = OrderChangeHelper.approveOrder(dispatcher, userLogin, orderId);
+                if (!ok) {
+                    throw new GeneralException("Problem with order change; see above error");   
+                }                    
+            }
+            return ServiceUtil.returnSuccess();                                     
         } else {
             // Handle NO payment gateway as a success.
             return ServiceUtil.returnSuccess();            
@@ -629,7 +675,7 @@ public class CheckOutHelper {
             result.put("type", "none");
             return result;
         } else {
-            result = ServiceUtil.returnError("Error, cannot located order for processing.");
+            result = ServiceUtil.returnError("Error, cannot locate order for processing.");
             result.put("type", "error");
             return result;
         }        
@@ -927,5 +973,47 @@ public class CheckOutHelper {
             errorMsgMap = (Map)callResult.get(ModelService.ERROR_MESSAGE_MAP);
             targetMap.putAll(errorMsgMap);
         }
+    }
+        
+    public double availableAccountBalance(String billingAccountId) {
+        GenericValue billingAccount = null;
+        Double accountBalance = new Double(0.00);
+        Double accountLimit = new Double(0.00);
+        
+        if (billingAccountId != null) {
+            try {
+                Map res = dispatcher.runSync("calcBillingAccountBalance", UtilMisc.toMap("billingAccountId", billingAccountId));
+                billingAccount = (GenericValue) res.get("billingAccount");
+                accountBalance = (Double) res.get("accountBalance");
+            } catch (GenericServiceException e) {
+                Debug.logError(e, module);
+            }
+            if (billingAccount != null) {
+                accountLimit = billingAccount.getDouble("accountLimit");
+            }
+                          
+            if (accountLimit == null) {
+                accountLimit = new Double(0.00);
+            }
+            if (accountBalance == null) {
+                accountBalance = new Double(0.00);
+            }
+        }
+        Debug.logInfo("Billing Account : " + billingAccountId + " - " + (accountLimit.doubleValue() - accountBalance.doubleValue()), module);     
+        return accountLimit.doubleValue() - accountBalance.doubleValue();                
+    }
+    
+    public Map makeBillingAccountMap(List paymentPrefs) {
+        Map accountMap = new HashMap();
+        if (paymentPrefs != null) {
+            Iterator i = accountMap.keySet().iterator();
+            while (i.hasNext()) {
+                GenericValue pp = (GenericValue) i.next();
+                if (pp.get("billingAccountId") != null) {
+                    accountMap.put(pp.getString("billingAccountId"), pp.getDouble("maxAmount"));
+                }
+            }
+        }
+        return accountMap;
     }
 }

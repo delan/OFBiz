@@ -1,5 +1,5 @@
 /*
- * $Id: CheckOutEvents.java,v 1.5 2003/09/03 04:34:28 ajzeneski Exp $
+ * $Id: CheckOutEvents.java,v 1.6 2003/09/04 06:28:19 ajzeneski Exp $
  *
  *  Copyright (c) 2001, 2002 The Open For Business Project - www.ofbiz.org
  *
@@ -23,6 +23,8 @@
  */
 package org.ofbiz.order.shoppingcart;
 
+import java.text.DecimalFormat;
+import java.text.ParseException;
 import java.util.List;
 import java.util.Map;
 
@@ -35,6 +37,7 @@ import org.ofbiz.base.util.Debug;
 import org.ofbiz.base.util.GeneralException;
 import org.ofbiz.base.util.UtilHttp;
 import org.ofbiz.base.util.UtilMisc;
+import org.ofbiz.base.util.UtilProperties;
 import org.ofbiz.content.stats.VisitHandler;
 import org.ofbiz.entity.GenericDelegator;
 import org.ofbiz.entity.GenericValue;
@@ -53,7 +56,7 @@ import org.ofbiz.service.ServiceUtil;
  * @author     <a href="mailto:cnelson@einnovation.com">Chris Nelson</a>
  * @author     <a href="mailto:jonesde@ofbiz.org">David E. Jones</a>
  * @author     <a href="mailto:tristana@twibble.org">Tristan Austin</a>
- * @version    $Revision: 1.5 $
+ * @version    $Revision: 1.6 $
  * @since      2.0
  */
 public class CheckOutEvents {
@@ -98,10 +101,40 @@ public class CheckOutEvents {
         String resp = setCheckOutOptions(request, response);
         request.setAttribute("_ERROR_MESSAGE_", null);
         return "success";
-    }       
+    } 
+    
+    public static String checkBillingAccounts(HttpServletRequest request, HttpServletResponse response) {
+        ShoppingCart cart = (ShoppingCart) request.getSession().getAttribute("shoppingCart"); 
+        LocalDispatcher dispatcher = (LocalDispatcher) request.getAttribute("dispatcher");
+        GenericDelegator delegator = (GenericDelegator) request.getAttribute("delegator");
+        
+        CheckOutHelper checkOutHelper = new CheckOutHelper(dispatcher, delegator, cart);
+        String billingAccountId = cart.getBillingAccountId();
+        double billingAccountAmt = cart.getBillingAccountAmount();                               
+        double availableAmount = checkOutHelper.availableAccountBalance(billingAccountId);
+        if (billingAccountAmt > availableAmount) {
+            request.setAttribute("_ERROR_MESSAGE_", "<li>Not enough available on account #" + billingAccountId);
+            return "error";
+        }        
+        
+        // payment by billing account only requires more checking
+        List paymentMethods = cart.getPaymentMethodIds();
+        List paymentTypes = cart.getPaymentMethodTypeIds();
+        if (paymentTypes.contains("EXT_BILLACT") && paymentTypes.size() == 1 && paymentMethods.size() == 0) {            
+            if (cart.getGrandTotal() > availableAmount) {
+                request.setAttribute("_ERROR_MESSAGE_", "<li>Insufficient credit available on accounts.");
+                return "error";
+            }
+        }
+                
+        return "success";
+    }      
          
     public static String setCheckOutOptions(HttpServletRequest request, HttpServletResponse response) {
-        ShoppingCart cart = (ShoppingCart) request.getSession().getAttribute("shoppingCart");        
+        ShoppingCart cart = (ShoppingCart) request.getSession().getAttribute("shoppingCart"); 
+        LocalDispatcher dispatcher = (LocalDispatcher) request.getAttribute("dispatcher");
+        GenericDelegator delegator = (GenericDelegator) request.getAttribute("delegator");
+               
         String shippingMethod = request.getParameter("shipping_method");
         String shippingContactMechId = request.getParameter("shipping_contact_mech_id");
         String checkOutPaymentId = request.getParameter("checkOutPaymentId");            
@@ -111,11 +144,30 @@ public class CheckOutEvents {
         String maySplit = request.getParameter("may_split");
         String giftMessage = request.getParameter("gift_message");
         String isGift = request.getParameter("is_gift");
-        Map callResult;
         
-        CheckOutHelper checkOutHelper = new CheckOutHelper(null, null, cart);
-        callResult = checkOutHelper.setCheckOutOptions(shippingMethod, shippingContactMechId, 
-            checkOutPaymentId, correspondingPoId, shippingInstructions, orderAdditionalEmails,
+        // get the billing account and amount
+        String currencyFormat = UtilProperties.getPropertyValue("general.properties", "currency.decimal.format", "##0.00");
+        DecimalFormat formatter = new DecimalFormat(currencyFormat);
+        
+        String billingAccountId = request.getParameter("billingAccountId");
+        String billingAcctAmtStr = request.getParameter(billingAccountId + "_amount");                                               
+        Double billingAccountAmt = null;
+        // parse the amount to a decimal
+        if (billingAcctAmtStr != null) {
+            try {
+                billingAccountAmt = new Double(formatter.parse(billingAcctAmtStr).doubleValue());
+            } catch (ParseException e) {
+                Debug.logError(e, module);
+                request.setAttribute("_ERROR_MESSAGE_", "<li>Invalid amount set for Billing Account #" + billingAccountId);
+                return "error";
+            }
+        }
+                
+        Map callResult = null;
+        
+        CheckOutHelper checkOutHelper = new CheckOutHelper(dispatcher, delegator, cart);
+        callResult = checkOutHelper.setCheckOutOptions(shippingMethod, shippingContactMechId, checkOutPaymentId,
+            billingAccountId, billingAccountAmt, correspondingPoId, shippingInstructions, orderAdditionalEmails,
             maySplit, giftMessage, isGift);
             
        ServiceUtil.getMessages(request, callResult, null, "<li>", "</li>", "<ul>", "</ul>", null, null);
