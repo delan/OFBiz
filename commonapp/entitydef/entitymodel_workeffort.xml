@@ -24,6 +24,7 @@
  *  THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  *
  *@author David E. Jones (jonesde@ofbiz.org) 
+ *@author Andy Zeneski (jaz@zsolv.com)
  *@version    1.0
  */
 -->
@@ -187,6 +188,53 @@
       <relation type="many" rel-entity-name="WorkEffortTypeAttr">
         <key-map field-name="attrName" />
       </relation>
+    </entity>	
+    <entity entity-name="WorkflowPackage" 
+            package-name="org.ofbiz.commonapp.workeffort.definition"
+            title="Workflow Package Entity">
+      <field name="packageId" type="id-ne"></field>
+      <field name="packageName" type="name"></field>
+      <field name="description" type="description"></field>
+      <field name="specificationVersion" type="very-short"></field>
+      <field name="specificationId" type="id"></field>
+      <field name="sourceVendorInfo" type="long-varchar"></field>
+      <field name="creationDateTime" type="date-time"></field>
+      <field name="packageVersion" type="very-short"></field>
+      <field name="author" type="name"></field>
+      <field name="codepage" type="short-varchar"></field>
+      <field name="countryGeoId" type="id"></field>
+      <field name="publicationStatusId" type="id"></field>
+      <field name="graphConformanceEnumId" type="id"></field>
+      <field name="priorityUomId" type="id"></field>
+      <field name="costUomId" type="id"></field>
+      <field name="responsibleParticipantId" type="id"></field>
+      <field name="documentationContentId" type="id"></field>
+      <field name="iconContentId" type="id"></field>	
+      <prim-key field="packageId" />
+    </entity>	
+    <entity entity-name="WorkflowPackageExternal" 
+            package-name="org.ofbiz.commonapp.workeffort.definition"
+            title="Workflow Package External Entity">
+      <field name="packageId" type="id-ne"></field>
+      <field name="externalPackageId" type="id-ne"></field>
+      <field name="href" type="url"></field>	
+      <prim-key field="packageId" />	
+      <prim-key field="externalPackageId" />
+      <relation type="one" title="Main" rel-entity-name="WorkflowPackage">
+        <key-map field-name="packageId" />
+      </relation>
+      <relation type="one" title="External" rel-entity-name="WorkflowPackage">
+        <key-map field-name="externalPackageId" rel-field-name="packageId" />
+      </relation>
+    </entity>	
+    <entity entity-name="WorkflowSpecification" 
+            package-name="org.ofbiz.commonapp.workeffort.definition"
+            title="Workflow Specification Entity">
+      <field name="specificationId" type="id-ne"></field>
+      <field name="specificationName" type="name"></field>
+      <field name="description" type="description"></field>
+      <field name="currentVersion" type="very-short"></field>	
+      <prim-key field="specificationId" />
     </entity>
 
   <!-- ========================================================= -->
@@ -198,8 +246,8 @@
             title="Job Scheduler Sandbox Entity">
       <field name="jobName" type="name"></field>
       <field name="serviceName" type="name"></field>
-      <field name="recurrenceInfoId" type="id-ne"></field>
-      <field name="runtimeDataId" type="id-ne"></field>
+      <field name="recurrenceInfoId" type="id"></field>
+      <field name="runtimeDataId" type="id"></field>
       <field name="lastRuntime" type="date-time"></field>
       <field name="runCount" type="numeric"></field>	
       <prim-key field="jobName" />
@@ -355,7 +403,7 @@
       <field name="currentStatusId" type="id"></field>
       <field name="lastStatusUpdate" type="date-time"></field>
       <field name="universalId" type="short-varchar"></field>
-      <field name="scopeId" type="id"></field>
+      <field name="scopeEnumId" type="id"></field>
       <field name="priority" type="numeric"></field>
       <field name="workEffortName" type="name"></field>
       <field name="description" type="description"></field>
@@ -530,13 +578,6 @@
       <prim-key field="workEffortId" />	
       <prim-key field="deliverableId" />
     </entity>	
-    <entity entity-name="WorkEffortExpectation" 
-            package-name="org.ofbiz.commonapp.workeffort.workeffort"
-            title="Work Effort Expectation Entity">
-      <field name="expectationId" type="id-ne"></field>
-      <field name="description" type="description"></field>	
-      <prim-key field="expectationId" />
-    </entity>	
     <entity entity-name="WorkEffortFixedAssetAssign" 
             package-name="org.ofbiz.commonapp.workeffort.workeffort"
             title="Work Effort Fixed Asset Assignment Entity">
@@ -601,18 +642,11 @@
       <field name="statusId" type="id"></field>
       <field name="comments" type="comment"></field>
       <field name="mustRsvp" type="indicator"></field>
-      <field name="expectationId" type="id"></field>	
+      <field name="expectationEnumId" type="id"></field>	
       <prim-key field="workEffortId" />	
       <prim-key field="partyId" />	
       <prim-key field="roleTypeId" />	
       <prim-key field="fromDate" />
-    </entity>	
-    <entity entity-name="WorkEffortScope" 
-            package-name="org.ofbiz.commonapp.workeffort.workeffort"
-            title="Work Effort Scope Entity">
-      <field name="workEffortScopeId" type="id-ne"></field>
-      <field name="description" type="description"></field>	
-      <prim-key field="workEffortScopeId" />
     </entity>	
     <entity entity-name="WorkEffortSkillStandard" 
             package-name="org.ofbiz.commonapp.workeffort.workeffort"
