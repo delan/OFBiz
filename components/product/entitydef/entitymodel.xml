@@ -26,7 +26,7 @@
  *
  * @author     David E. Jones (jonesde@ofbiz.org)
  * @author     Andy Zeneski (jaz@ofbiz.org)
- * @version    $Revision: 1.9 $
+ * @version    $Revision: 1.10 $
  */
 -->
 
@@ -1070,6 +1070,24 @@
         <key-map field-name="physicalInventoryId"/>
       </relation>
     </entity>
+    <view-entity entity-name="PhysicalInventoryAndVariance"
+            package-name="org.ofbiz.product.inventory"
+            title="PhysicalInventory and InventoryItemVariance View Entity">
+      <member-entity entity-alias="PI" entity-name="PhysicalInventory"/>
+      <member-entity entity-alias="IIV" entity-name="InventoryItemVariance"/>
+      <alias entity-alias="PI" name="physicalInventoryId"/>
+      <alias entity-alias="PI" name="physicalInventoryDate"/>
+      <alias entity-alias="PI" name="partyId"/>
+      <alias entity-alias="PI" name="globalComments" field="comments"/>
+      <alias entity-alias="IIV" name="inventoryItemId"/>
+      <alias entity-alias="IIV" name="varianceReasonId"/>
+      <alias entity-alias="IIV" name="availableToPromise"/>
+      <alias entity-alias="IIV" name="quantityOnHand"/>
+      <alias entity-alias="IIV" name="comments"/>
+      <view-link entity-alias="PI" rel-entity-alias="IIV">
+        <key-map field-name="physicalInventoryId"/>
+      </view-link>
+    </view-entity>
     <entity entity-name="ProductFacility"
             package-name="org.ofbiz.product.inventory"
             title="Product Facility Entity">
