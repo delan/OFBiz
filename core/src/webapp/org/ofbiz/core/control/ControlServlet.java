@@ -84,14 +84,6 @@ public class ControlServlet extends HttpServlet {
     }
 
     public void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-        // setup chararcter encoding and content type, do before so that view can override
-        String charset = getServletContext().getInitParameter("charset");
-
-        if (charset == null || charset.length() == 0) charset = request.getCharacterEncoding();
-        if (charset == null || charset.length() == 0) charset = "UTF-8";
-        request.setCharacterEncoding(charset);
-        response.setContentType("text/html; charset=" + charset);
-
         long requestStartTime = System.currentTimeMillis();
         HttpSession session = request.getSession();
         session.setAttribute("webSiteId", getWebSiteId());
