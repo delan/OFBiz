@@ -1,5 +1,5 @@
 <#--
- *  Copyright (c) 2003 The Open For Business Project - www.ofbiz.org
+ *  Copyright (c) 2003-2005 The Open For Business Project - www.ofbiz.org
  *
  *  Permission is hereby granted, free of charge, to any person obtaining a
  *  copy of this software and associated documentation files (the "Software"),
@@ -20,14 +20,10 @@
  *  THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  *
  *@author     Andy Zeneski (jaz@ofbiz.org)
- *@version    $Rev:$
+ *@version    $Rev$
  *@since      3.0
 -->
 
-<#assign uiLabelMap = requestAttributes.uiLabelMap>
-<#if hasPermission>
-
-${pages.get("/feature/FeatureTabBar.ftl")}
 <div class="head1">Product Feature Group Applications</div>
 
 <br>
@@ -125,8 +121,4 @@ ${pages.get("/feature/FeatureTabBar.ftl")}
     </#list>
   </table>
   <a href="<@ofbizUrl>/EditFeatureGroupAppls?productFeatureGroupId=${requestParameters.productFeatureGroupId}</@ofbizUrl>" class="buttontext">[Finished w/ This Category]</a>
-</#if>
-
-<#else>
-  <h3>${uiLabelMap.ProductCatalogViewPermissionError}</h3>
 </#if>

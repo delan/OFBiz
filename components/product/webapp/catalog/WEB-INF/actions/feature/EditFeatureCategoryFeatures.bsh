@@ -21,7 +21,7 @@
  *
  *@author     David E. Jones
  *@author     Brad Steiner
- *@version    $Rev:$
+ *@version    $Rev$
  *@since      2.2
  */
 
@@ -75,13 +75,13 @@ int lowIndex = 0;
 int listSize = (int) productFeaturesSize;
 
 try {
-    viewIndex = Integer.valueOf((String) context.getRequest().getParameter("VIEW_INDEX")).intValue();
+    viewIndex = Integer.valueOf((String) request.getParameter("VIEW_INDEX")).intValue();
 } catch (Exception e) {
     viewIndex = 0;
 }
 
 try {
-    viewSize = Integer.valueOf((String) context.getRequest().getParameter("VIEW_SIZE")).intValue();
+    viewSize = Integer.valueOf((String) request.getParameter("VIEW_SIZE")).intValue();
 } catch (Exception e) {
     viewSize = 10;
 }

@@ -112,5 +112,33 @@
         </field>
     </form>
 
+    <form name="ListFeatureTypes" default-title-style="tableheadtext"
+            default-tooltip-style="tabletext" default-widget-style="tabletext"
+            list-name="featureTypes" target="" paginate-target="EditFeatureTypes" title="" type="list">
+        <auto-fields-entity entity-name="ProductFeatureType" default-field-type="display"/>
+        <field name="editFeatureType" title="" widget-style="buttontext">
+            <hyperlink target="EditFeatureType?productFeatureTypeId=${productFeatureTypeId}" description="[${uiLabelMap.CommonEdit}]"/>
+        </field>
+        <field name="removeFeatureType" title="" widget-style="buttontext">
+            <hyperlink target="removeProductFeatureType?productFeatureTypeId=${productFeatureTypeId}" description="[${uiLabelMap.CommonDelete}]"/>
+        </field>
+    </form>
+    <form name="EditFeatureType" type="single" 
+            target="updateProductFeatureType" title="" default-map-name="productFeatureType"
+            default-title-style="tableheadtext" default-widget-style="inputBox" default-tooltip-style="tabletext">
+        <alt-target use-when="productFeatureType==null" target="createProductFeatureType"/>
+        <auto-fields-entity entity-name="ProductFeatureType"/>
+        <field use-when="productFeatureType!=null" name="productFeatureTypeId"><display/></field>
+        <field use-when="productFeatureType==null&amp;&amp;productFeatureTypeId!=null" name="productFeatureTypeId" tooltip="Could not find ProductFeatureType with ID [${productFeatureTypeId}]"><text size="20" maxlength="20"/></field>
+        <field name="parentTypeId" title="${uiLabelMap.ProductParentType}" widget-style="selectBox">
+            <drop-down allow-empty="true">
+                <entity-options entity-name="ProductFeatureType" key-field-name="productFeatureTypeId" description="${description}">
+                    <entity-order-by field-name="description"/>
+                </entity-options>
+            </drop-down>
+        </field>
+        <field name="submitButton" title="${uiLabelMap.CommonUpdate}" widget-style="standardSubmit"><submit button-type="button"/></field>
+    </form>
+
 </forms>
 

@@ -1,5 +1,5 @@
 <#--
- *  Copyright (c) 2003-2004 The Open For Business Project - www.ofbiz.org
+ *  Copyright (c) 2003-2005 The Open For Business Project - www.ofbiz.org
  *
  *  Permission is hereby granted, free of charge, to any person obtaining a 
  *  copy of this software and associated documentation files (the "Software"), 
@@ -21,14 +21,10 @@
  *
  *@author     David E. Jones (jonesde@ofbiz.org)
  *@author     Catherine Heintz (catherine.heintz@nereide.biz)
- *@version    $Rev:$
+ *@version    $Rev$
  *@since      2.2
 -->
 
-<#assign uiLabelMap = requestAttributes.uiLabelMap>
-<#if hasPermission>
-
-${pages.get("/feature/FeatureTabBar.ftl")}
 <div class="head1">${uiLabelMap.ProductEditFeaturesForFeatureCategory} "${(curProductFeatureCategory.description)?if_exists}"</div>
 <a href="<@ofbizUrl>/EditFeature?productFeatureCategoryId=${productFeatureCategoryId?if_exists}</@ofbizUrl>" class="buttontext">[${uiLabelMap.ProductCreateNewFeature}]</a>
 
@@ -117,6 +113,3 @@ ${pages.get("/feature/FeatureTabBar.ftl")}
 </#if>
 </table>
 <br>
-<#else>
-  <h3>${uiLabelMap.ProductCatalogViewPermissionError}</h3>
-</#if>

@@ -194,4 +194,23 @@
         <attribute name="productFeatureId" type="String" mode="IN" optional="false"/>
         <attribute name="fromDate" type="java.sql.Timestamp" mode="IN" optional="false"/>
     </service>
+    
+    <!-- ProductFeatureType Services -->
+    <service name="createProductFeatureType" default-entity-name="ProductFeatureType" engine="simple"
+                location="org/ofbiz/product/feature/ProductFeatureServices.xml" invoke="createProductFeatureType" auth="true">
+        <description>Create a ProductFeatureType</description>
+        <auto-attributes include="pk" mode="IN" optional="false"/>
+        <auto-attributes include="nonpk" mode="IN" optional="true"/>
+    </service>
+    <service name="updateProductFeatureType" default-entity-name="ProductFeatureType" engine="simple"
+                location="org/ofbiz/product/feature/ProductFeatureServices.xml" invoke="updateProductFeatureType" auth="true">
+        <description>Update a ProductFeatureType</description>
+        <auto-attributes include="pk" mode="IN" optional="false"/>
+        <auto-attributes include="nonpk" mode="IN" optional="true"/>
+    </service>
+    <service name="removeProductFeatureType" default-entity-name="ProductFeatureType" engine="simple"
+                location="org/ofbiz/product/feature/ProductFeatureServices.xml" invoke="removeProductFeatureType" auth="true">
+        <description>Remove a ProductFeatureType</description>
+        <auto-attributes include="pk" mode="IN" optional="false"/>
+    </service>
 </services>

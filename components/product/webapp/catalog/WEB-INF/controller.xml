@@ -984,6 +984,32 @@
         <response name="success" type="view" value="EditFeatureGroupAppls"/>
         <response name="error" type="view" value="EditFeatureGroupAppls"/>
     </request-map>
+    <request-map uri="EditFeatureTypes">
+        <security https="true" auth="true"/>
+        <response name="success" type="view" value="EditFeatureTypes"/>
+    </request-map>
+    <request-map uri="EditFeatureType">
+        <security https="true" auth="true"/>
+        <response name="success" type="view" value="EditFeatureType"/>
+    </request-map>
+    <request-map uri="createProductFeatureType">
+        <security https="true" auth="true"/>
+        <event type="service" path="" invoke="createProductFeatureType"/>
+        <response name="success" type="view" value="EditFeatureTypes"/>
+        <response name="error" type="view" value="EditFeatureType"/>
+    </request-map>
+    <request-map uri="updateProductFeatureType">
+        <security https="true" auth="true"/>
+        <event type="service" path="" invoke="updateProductFeatureType"/>
+        <response name="success" type="view" value="EditFeatureTypes"/>
+        <response name="error" type="view" value="EditFeatureType"/>
+    </request-map>
+    <request-map uri="removeProductFeatureType">
+        <security https="true" auth="true"/>
+        <event type="service" path="" invoke="removeProductFeatureType"/>
+        <response name="success" type="view" value="EditFeatureTypes"/>
+        <response name="error" type="view" value="EditFeatureType"/>
+    </request-map>
 
     <!-- ================ Product Feature Requests ================= -->
     <request-map uri="EditProductFeatures">
@@ -1942,6 +1968,10 @@
         <security auth="true" https="true"/>
         <response name="success" type="view" value="LookupVirtualProduct"/>
     </request-map>
+    <request-map uri="LookupProductFeature">
+        <security auth="true" https="true"/>
+        <response name="success" type="view" value="LookupProductFeature"/>
+    </request-map>
 
     <!-- end of request mappings -->
 
@@ -1999,13 +2029,15 @@
 
     <view-map name="QuickAddVariants" type="jpublish" page="/product/QuickAddVariants.ftl"/>
     <view-map name="CreateVirtualWithVariantsForm" type="jpublish" page="/product/CreateVirtualWithVariantsForm.ftl"/>
-
-    <view-map name="EditFeature" type="jpublish" page="/feature/EditFeature.ftl"/>
-    <view-map name="EditFeatureCategories" type="jpublish" page="/feature/EditFeatureCategories.ftl"/>
-    <view-map name="EditFeatureCategoryFeatures" type="jpublish" page="/feature/EditFeatureCategoryFeatures.ftl"/>
-    <view-map name="EditFeatureGroups" type="jpublish" page="/feature/EditFeatureGroups.ftl"/>
-    <view-map name="EditFeatureGroupAppls" type="jpublish" page="/feature/EditFeatureGroupAppls.ftl"/>
-
+    
+    <view-map name="EditFeature" type="screen" page="component://product/widget/catalog/FeatureScreens.xml#EditFeature"/>
+    <view-map name="EditFeatureCategories" type="screen" page="component://product/widget/catalog/FeatureScreens.xml#EditFeatureCategories"/>
+    <view-map name="EditFeatureCategoryFeatures" type="screen" page="component://product/widget/catalog/FeatureScreens.xml#EditFeatureCategoryFeatures"/>
+    <view-map name="EditFeatureGroups" type="screen" page="component://product/widget/catalog/FeatureScreens.xml#EditFeatureGroups"/>
+    <view-map name="EditFeatureGroupAppls" type="screen" page="component://product/widget/catalog/FeatureScreens.xml#EditFeatureGroupAppls"/>
+    <view-map name="EditFeatureTypes" type="screen" page="component://product/widget/catalog/FeatureScreens.xml#EditFeatureTypes"/>
+    <view-map name="EditFeatureType" type="screen" page="component://product/widget/catalog/FeatureScreens.xml#EditFeatureType"/>
+    
     <view-map name="FindProdCatalog" type="jpublish" page="/catalog/FindProdCatalog.ftl"/>
     <view-map name="EditProdCatalog" type="jpublish" page="/catalog/EditProdCatalog.ftl"/>
     <view-map name="EditProdCatalogCategories" type="jpublish" page="/catalog/EditProdCatalogCategories.ftl"/>
@@ -2049,6 +2081,6 @@
     <view-map name="LookupFixedAsset" page="component://accounting/widget/LookupScreens.xml#LookupFixedAsset" type="screen"/>
     <view-map name="LookupProduct" page="component://product/widget/catalog/LookupScreens.xml#LookupProduct" type="screen"/>
     <view-map name="LookupVirtualProduct" page="component://product/widget/catalog/LookupScreens.xml#LookupVirtualProduct" type="screen"/>
-
+    <view-map name="LookupProductFeature" page="component://product/widget/catalog/LookupScreens.xml#LookupProductFeature" type="screen"/>
     <!-- end of view mappings -->
 </site-conf>

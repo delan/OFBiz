@@ -165,7 +165,13 @@ ${pages.get("/product/ProductTabBar.ftl")}
         <input type="hidden" name="productId" value="${productId}">
         <div class="head2">Add Product Feature with ID:</div>
         <br>
-        <span class="tabletext">${uiLabelMap.CommonId}: </span><input type=text size="10" name="productFeatureId" value="" class="inputBox">
+        <span class="tabletext">${uiLabelMap.CommonId}: </span>
+        <input type=text size="10" name="productFeatureId" value="" class="inputBox">
+        <span class='tabletext'>
+            <a href="javascript:call_fieldlookup2(document.addFeatureById.productFeatureId,'LookupProductFeature');">
+                <img src='/images/fieldlookup.gif' width='15' height='14' border='0' alt='Click here For Field Lookup'>
+            </a> 
+        </span>
         <span class="tabletext">${uiLabelMap.ProductFeatureApplicationType}: </span><select class="selectBox" name="productFeatureApplTypeId" size=1>
             <#list productFeatureApplTypes as productFeatureApplType>
             <option value="${(productFeatureApplType.productFeatureApplTypeId)?if_exists}">${(productFeatureApplType.description)?if_exists} </option>
