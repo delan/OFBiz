@@ -1,8 +1,0 @@
-<jxu>
-	<loop count="10" reportLabel="HttpSessionsLoadTest">
-
-	<generic name="org.ofbiz.jxtest.JXGenericWebRequest" 
-			input="JXHttpLogin.xml"/>
-
-	</loop>
-</jxu>

@@ -1,8 +1,0 @@
-<?xml version="1.0" encoding="UTF-8"?>
-<page>
-    <template>main</template>
-    <property name="title">Find Shipment</property>
-    <property name="titleProperty">ProductFindShipment</property>
-    <property name="headerItem">shipment</property>
-    <content-action name="/shipment/FindShipment.bsh"/> 
-</page>

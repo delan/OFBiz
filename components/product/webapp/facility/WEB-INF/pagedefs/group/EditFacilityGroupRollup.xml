@@ -1,9 +1,0 @@
-<?xml version="1.0" encoding="UTF-8"?>
-<page>
-    <template>main</template> 
-    <property name="title">Edit Facility Group Rollup</property>
-    <property name="titleProperty">PageTitleEditFacilityGroupRollup</property>
-    <property name="headerItem">facilityGroup</property>
-    <property name="tabButtonItem">EditFacilityGroupRollup</property>
-    <content-action name="/group/EditFacilityGroupRollup.bsh"/>
-</page>

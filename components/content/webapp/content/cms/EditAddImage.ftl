@@ -1,2 +1,0 @@
-    ${singleWrapper.renderFormString()}
-

@@ -1,6 +1,0 @@
-<?xml version="1.0" encoding="UTF-8"?>
-<page>
-    <property name="defaultSubMenu">/content/control/FindDataResource</property>    
-    <property name="headerItem">Data</property>    
-    <page-action name="/includes/redirectpage.bsh"/>
-</page>

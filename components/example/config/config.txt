@@ -1,3 +1,0 @@
-
-This directory is usually placed on the classpath for configuration and
-property files.

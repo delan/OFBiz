@@ -1,7 +1,0 @@
-<?xml version="1.0" encoding="UTF-8"?>
-<page>
-    <template>main</template>
-    <property name="title">Process Detail List</property>
-    <property name="headerItem">main</property>
-    <content-action name="/process/processDetailList.bsh"/>
-</page>
