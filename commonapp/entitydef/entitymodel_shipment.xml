@@ -206,6 +206,7 @@
       <alias entity-alias="CS" name="shipmentMethodTypeId"/>
       <alias entity-alias="CS" name="partyId"/>
       <alias entity-alias="CS" name="roleTypeId"/>
+      <alias entity-alias="CS" name="productStoreId"/>
       <alias entity-alias="CS" name="isDisplayable"/>
       <alias entity-alias="CS" name="sequenceNumber"/>
       <alias entity-alias="SM" name="description"/>
@@ -219,6 +220,7 @@
       <field name="shipmentMethodTypeId" type="id-ne"></field>
       <field name="partyId" type="id-ne"></field>
       <field name="roleTypeId" type="id-ne"></field>
+      <field name="productStoreId" type="id"></field>
       <field name="isDisplayable" type="indicator"></field>
       <field name="sequenceNumber" type="numeric"></field>
       <field name="carrierServiceCode" type="very-short"></field>
