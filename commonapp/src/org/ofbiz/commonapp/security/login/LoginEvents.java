@@ -1,6 +1,9 @@
 /*
  * $Id$
  * $Log$
+ * Revision 1.3  2002/01/25 06:59:06  jonesde
+ * A small addition for ecommerce to maintain the current catalog setting
+ *
  *
  * Revision 1.1  2001/10/19 16:44:42  azeneski
  * Moved Party/ContactMech/Login events to more appropiate packages.
@@ -59,26 +62,31 @@ public class LoginEvents {
     public static String checkLogin(HttpServletRequest request, HttpServletResponse response) throws java.rmi.RemoteException, java.io.IOException, javax.servlet.ServletException {
         GenericValue userLogin = (GenericValue)request.getSession().getAttribute(SiteDefs.USER_LOGIN);
         
-        if(userLogin == null) {
+        if (userLogin == null) {
             String queryString = null;
             Enumeration params = request.getParameterNames();
-            while(params != null && params.hasMoreElements()) {
+            while (params != null && params.hasMoreElements()) {
                 String paramName = (String) params.nextElement();
-                if(paramName != null) {
-                    if (queryString == null) queryString = paramName + "=" + request.getParameter(paramName);
-                    else queryString = queryString + "&" + paramName + "=" + request.getParameter(paramName);
+                if (paramName != null) {
+                    if (queryString == null) {
+                        queryString = paramName + "=" + request.getParameter(paramName);
+                    } else {
+                        queryString = queryString + "&" + paramName + "=" + request.getParameter(paramName);
+                    }
                 }
             }
             
             request.getSession().setAttribute(SiteDefs.PREVIOUS_REQUEST, request.getPathInfo());
-            if(queryString != null) request.getSession().setAttribute(SiteDefs.PREVIOUS_PARAMS, queryString);
+            if (queryString != null)
+                request.getSession().setAttribute(SiteDefs.PREVIOUS_PARAMS, queryString);
             
             Debug.logInfo("SecurityEvents.checkLogin: queryString=" + queryString);
             Debug.logInfo("SecurityEvents.checkLogin: PathInfo=" + request.getPathInfo());
             
             return "error";
+        } else {
+            return "success";
         }
-        else { return "success"; }
     }
     
     /** An HTTP WebEvent handler that logs in a userLogin. This should run before the security check.
@@ -98,31 +106,30 @@ public class LoginEvents {
         
         if(username == null || username.length() <= 0) {
             errMsg = "Username missing.";
-        }
-        else if(password == null || password.length() <= 0) {
+        } else if(password == null || password.length() <= 0) {
             errMsg = "Password missing";
-        }
-        else {
+        } else {
             GenericValue userLogin = null;
-            try { userLogin = delegator.findByPrimaryKey("UserLogin", UtilMisc.toMap("userLoginId", username)); }
-            catch(GenericEntityException e) { Debug.logWarning(e); }
+            try {
+                userLogin = delegator.findByPrimaryKey("UserLogin", UtilMisc.toMap("userLoginId", username));
+            } catch(GenericEntityException e) {
+                Debug.logWarning(e);
+            }
             if(userLogin != null) {
                 if(password.compareTo(userLogin.getString("currentPassword")) == 0) {
                     request.getSession().setAttribute(SiteDefs.USER_LOGIN, userLogin);
-                    try { delegator.create("UserLoginHistory", UtilMisc.toMap("userLoginId", username,
-                    "fromDate", UtilDateTime.nowTimestamp(),
-                    "passwordUsed", password,
-                    "partyId", userLogin.get("partyId"),
-                    "referrerUrl", "NotYetImplemented"));
+                    try {
+                        delegator.create("UserLoginHistory", UtilMisc.toMap("userLoginId", username,
+                            "fromDate", UtilDateTime.nowTimestamp(), "passwordUsed", password,
+                            "partyId", userLogin.get("partyId"), "referrerUrl", "NotYetImplemented"));
+                    } catch(GenericEntityException e) {
+                        Debug.logWarning(e);
                     }
-                    catch(GenericEntityException e) { Debug.logWarning(e); }
-                }
-                else {
+                } else {
                     // password invalid, just go to badlogin page...
                     errMsg = "Password incorrect.";
                 }
-            }
-            else {
+            } else {
                 //userLogin record not found, user does not exist
                 errMsg = "User not found.";
             }
@@ -146,58 +153,18 @@ public class LoginEvents {
         //invalidate the security group list cache
         GenericValue userLogin = (GenericValue) request.getSession().getAttribute(SiteDefs.USER_LOGIN);
         Security sec = (Security)request.getAttribute("security");
-        if(sec != null && userLogin != null) sec.userLoginSecurityGroupByUserLoginId.remove(userLogin.getString("userLoginId"));
+        
+        if(sec != null && userLogin != null)
+            sec.userLoginSecurityGroupByUserLoginId.remove(userLogin.getString("userLoginId"));
         
         //this is a setting we don't want to lose, although it would be good to have a more general solution here...
         String currCatalog = (String) request.getSession().getAttribute("CURRENT_CATALOG_ID");
         request.getSession().invalidate();
         request.getSession(true);
-        if(currCatalog != null) 
+        if(currCatalog != null) {
             request.getSession().setAttribute("CURRENT_CATALOG_ID", currCatalog);
-        
-        return "success";
-    }
-    
-    
-    /** Change the password for the current UserLogin in the session to the
-     *  password specified in the request object.
-     *@param request The HTTPRequest object for the current request
-     *@param response The HTTPResponse object for the current request
-     *@return String specifying the exit status of this event
-     */
-    public static String changePassword(HttpServletRequest request, HttpServletResponse response) {
-        GenericDelegator delegator = (GenericDelegator)request.getAttribute("delegator");
-        
-        GenericValue userLogin = (GenericValue)request.getSession().getAttribute(SiteDefs.USER_LOGIN);
-        if(userLogin == null) { request.setAttribute(SiteDefs.ERROR_MESSAGE, "<li>ERROR: User not logged in, cannot update password. Please contact customer service."); return "error"; }
-        
-        String password = request.getParameter("OLD_PASSWORD");
-        String newPassword = request.getParameter("NEW_PASSWORD");
-        String confirmPassword = request.getParameter("NEW_PASSWORD_CONFIRM");
-        String passwordHint = request.getParameter("PASSWORD_HINT");
-        
-        if(!UtilValidate.isNotEmpty(password)) {
-            //the password was incomplete
-            request.setAttribute(SiteDefs.ERROR_MESSAGE, "<li>The password was empty, please re-enter.");
-            return "error";
         }
         
-        if(!password.equals(userLogin.getString("currentPassword"))) {
-            //password was NOT correct, send back to changepassword page with an error
-            request.setAttribute(SiteDefs.ERROR_MESSAGE, "<li>Old Password was not correct, please re-enter.");
-            return "error";
-        }
-        
-        String errMsg = setPassword(userLogin, newPassword, confirmPassword, passwordHint);
-        if (UtilValidate.isNotEmpty(errMsg)) {
-            request.setAttribute(SiteDefs.ERROR_MESSAGE, errMsg);
-            return "error";
-        }
-        
-        try { userLogin.store(); }
-        catch(Exception e) { request.setAttribute(SiteDefs.ERROR_MESSAGE, "<li>ERROR: Could not change password (write failure). Please contact customer service."); return "error"; }
-        
-        request.setAttribute(SiteDefs.EVENT_MESSAGE, "Password Changed.");
         return "success";
     }
     
@@ -233,7 +200,9 @@ public class LoginEvents {
         GenericValue supposedUserLogin = null;
         try {
             supposedUserLogin = delegator.findByPrimaryKey("UserLogin", UtilMisc.toMap("userLoginId", userLoginId));
-        } catch (GenericEntityException gee) { Debug.logWarning(gee); }
+        } catch (GenericEntityException gee) {
+            Debug.logWarning(gee);
+        }
         if (supposedUserLogin == null) {
             //the Username was not found
             request.setAttribute(SiteDefs.ERROR_MESSAGE, "<li>The Username was not found, please re-enter.");
@@ -262,12 +231,15 @@ public class LoginEvents {
         //getServletContext appears to be new on the session object for Servlet 2.3
         ServletContext application = request.getSession().getServletContext();
         URL ecommercePropertiesUrl = null;
-        try { ecommercePropertiesUrl = application.getResource("/WEB-INF/ecommerce.properties"); }
-        catch(java.net.MalformedURLException e) { Debug.logWarning(e); }
+        try {
+            ecommercePropertiesUrl = application.getResource("/WEB-INF/ecommerce.properties");
+        } catch (java.net.MalformedURLException e) {
+            Debug.logWarning(e);
+        }
         
         String userLoginId = request.getParameter("USERNAME");
         
-        if(!UtilValidate.isNotEmpty(userLoginId)) {
+        if (!UtilValidate.isNotEmpty(userLoginId)) {
             //the password was incomplete
             request.setAttribute(SiteDefs.ERROR_MESSAGE, "<li>The Username was empty, please re-enter.");
             return "error";
@@ -276,7 +248,9 @@ public class LoginEvents {
         GenericValue supposedUserLogin = null;
         try {
             supposedUserLogin = delegator.findByPrimaryKey("UserLogin", UtilMisc.toMap("userLoginId", userLoginId));
-        } catch (GenericEntityException gee) { Debug.logWarning(gee); }
+        } catch (GenericEntityException gee) {
+            Debug.logWarning(gee);
+        }
         if (supposedUserLogin == null) {
             //the Username was not found
             request.setAttribute(SiteDefs.ERROR_MESSAGE, "<li>The Username was not found, please re-enter.");
@@ -285,12 +259,16 @@ public class LoginEvents {
         
         StringBuffer emails = new StringBuffer();
         GenericValue party = null;
-        try { party = supposedUserLogin.getRelatedOne("Party"); }
-        catch(GenericEntityException e) { Debug.logWarning(e.getMessage()); party = null; }
-        if(party != null) {
+        try {
+            party = supposedUserLogin.getRelatedOne("Party");
+        } catch (GenericEntityException e) {
+            Debug.logWarning(e.getMessage());
+            party = null;
+        }
+        if (party != null) {
             //Iterator emailIter = UtilMisc.toIterator(ContactHelper.getContactMech(party, "PRIMARY_EMAIL", "EMAIL_ADDRESS", false));
             Iterator emailIter = UtilMisc.toIterator(ContactHelper.getContactMechByPurpose(party, "PRIMARY_EMAIL", false));
-            while(emailIter != null && emailIter.hasNext()) {
+            while (emailIter != null && emailIter.hasNext()) {
                 GenericValue email = (GenericValue) emailIter.next();
                 emails.append(emails.length() > 0 ? "," : "").append(email.getString("infoString"));
             }
@@ -302,9 +280,9 @@ public class LoginEvents {
             return "error";
         }
         
-        final String SMTP_SERVER = UtilProperties.getPropertyValue(ecommercePropertiesUrl, "smtp.relay.host");
-        final String LOCAL_MACHINE = UtilProperties.getPropertyValue(ecommercePropertiesUrl, "smtp.local.machine");
-        final String PASSWORD_SENDER_EMAIL = UtilProperties.getPropertyValue(ecommercePropertiesUrl, "password.send.email");
+        String SMTP_SERVER = UtilProperties.getPropertyValue(ecommercePropertiesUrl, "smtp.relay.host");
+        String LOCAL_MACHINE = UtilProperties.getPropertyValue(ecommercePropertiesUrl, "smtp.local.machine");
+        String PASSWORD_SENDER_EMAIL = UtilProperties.getPropertyValue(ecommercePropertiesUrl, "password.send.email");
         
         String content = "Username: " + userLoginId + "\nPassword: " + UtilFormatOut.checkNull(supposedUserLogin.getString("currentPassword"));
         try {
@@ -323,42 +301,4 @@ public class LoginEvents {
         request.setAttribute(SiteDefs.EVENT_MESSAGE, "Your password has been sent to you.  Please check your Email.");
         return "success";
     }
-    
-    /**
-     * Will not persist the password - just set the attribute
-     *
-     * @return empty String if success or the error message
-     */
-    public static String setPassword(GenericValue userLogin, String password, String confirmPassword, String passwordHint) {
-        String errMsg = "";
-        if (UtilValidate.isEmpty(passwordHint)) passwordHint = null;
-        
-        if(!UtilValidate.isNotEmpty(password) || !UtilValidate.isNotEmpty(confirmPassword)) {
-            errMsg += "<li>Password(s) missing.";
-        } else if(!password.equals(confirmPassword)) {
-            errMsg += "<li>Password confirmation did not match.";
-        } else {
-            int minPasswordLength;
-            try { minPasswordLength = Integer.parseInt(UtilProperties.getPropertyValue("security", "password.length.min", "0"));
-            } catch (NumberFormatException nfe) { minPasswordLength = 0; };
-            if(!(password.length() >= minPasswordLength)) {
-                errMsg += "<li>Password must be at least " + minPasswordLength + " characters long.";
-            }
-            if(password.equalsIgnoreCase(userLogin.getString("userLoginId"))) {
-                errMsg += "<li>Password may not equal the Username.";
-            }
-            if(UtilValidate.isNotEmpty(passwordHint) && (passwordHint.toUpperCase().indexOf(password.toUpperCase()) >= 0)) {
-                errMsg += "<li>Password hint may not contain the password.";
-            }
-        }
-        
-        if (errMsg.length() == 0) {
-            //all is well, update password
-            userLogin.set("currentPassword", password);
-            userLogin.set("passwordHint", passwordHint);
-        }
-        
-        return errMsg;
-    }
 }
-

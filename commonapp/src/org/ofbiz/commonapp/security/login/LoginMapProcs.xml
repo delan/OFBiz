@@ -1,0 +1,41 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+
+<!DOCTYPE simple-map-processors PUBLIC "-//OFBiz//DTD Simple Map Processors//EN" "http://www.ofbiz.org/dtds/simple-map-processors.dtd">
+
+<!--
+ * <p><b>Title:</b> Map processors for Login info maintenance
+ * <p><b>Description:</b> None
+ * <p>Copyright (c) 2001 The Open For Business Project and repected authors.
+ * <p>Permission is hereby granted, free of charge, to any person obtaining a
+ *  copy of this software and associated documentation files (the "Software"),
+ *  to deal in the Software without restriction, including without limitation
+ *  the rights to use, copy, modify, merge, publish, distribute, sublicense,
+ *  and/or sell copies of the Software, and to permit persons to whom the
+ *  Software is furnished to do so, subject to the following conditions:
+ *
+ * <p>The above copyright notice and this permission notice shall be included
+ *  in all copies or substantial portions of the Software.
+ *
+ * <p>THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS
+ *  OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF
+ *  MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT.
+ *  IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY
+ *  CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT
+ *  OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR
+ *  THE USE OR OTHER DEALINGS IN THE SOFTWARE.
+ *
+ * @author <a href="mailto:jonesde@ofbiz.org">David E. Jones</a>
+ * @version 1.0
+ * Created on January 18, 2001
+ -->
+<simple-map-processors>
+  <simple-map-processor name="updatePassword">
+    <process field="currentPassword"><copy/><not-empty><fail-message message="Current (old) Password is missing"/></not-empty></process>
+    <process field="newPassword"><copy/><not-empty><fail-message message="New Password is missing"/></not-empty></process>
+    <process field="newPasswordVerify">
+        <compare-field operator="equals" field="newPassword"><fail-message message="New Password does not equal Verfiy Password"/></compare-field>
+        <not-empty><fail-message message="New Password Verify is missing"/></not-empty>
+        <copy/></process>
+    <process field="passwordHint"><copy/></process>
+  </simple-map-processor>
+</simple-map-processors>
