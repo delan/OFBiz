@@ -36,8 +36,6 @@ import org.ofbiz.core.stats.*;
 import org.ofbiz.core.config.*;
 import org.ofbiz.core.util.*;
 
-import com.ibm.bsf.BSFManager;
-
 /**
  * ControlServlet.java - Master servlet for the web application.
  *
