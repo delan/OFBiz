@@ -45,6 +45,6 @@
                  broker="localhost"
                  topic-queue="queueName"
                  listener-enabled="true"
-                 listener-class="org.ofbiz.core.service.jms.JMSQueueListener">
+                 listener-class="org.ofbiz.core.service.jms.JMSQueueListener"/>
 </service-config>
 
