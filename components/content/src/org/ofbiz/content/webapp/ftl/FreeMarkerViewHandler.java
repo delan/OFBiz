@@ -1,5 +1,5 @@
 /*
- * $Id: FreeMarkerViewHandler.java,v 1.6 2003/12/23 12:34:17 jonesde Exp $
+ * $Id: FreeMarkerViewHandler.java,v 1.7 2003/12/23 13:50:40 jonesde Exp $
  *
  * Copyright (c) 2001-2003 The Open For Business Project - www.ofbiz.org
  *
@@ -53,7 +53,7 @@ import freemarker.template.WrappingTemplateModel;
  * FreemarkerViewHandler - Freemarker Template Engine View Handler
  *
  * @author     <a href="mailto:jaz@ofbiz.org">Andy Zeneski</a>
- * @version    $Revision: 1.6 $
+ * @version    $Revision: 1.7 $
  * @since      2.1
  */
 public class FreeMarkerViewHandler implements ViewHandler {
@@ -88,10 +88,8 @@ public class FreeMarkerViewHandler implements ViewHandler {
             throw new ViewHandlerException("Invalid template source");
         
         // make the root context (data model) for freemarker
-        Map prepRoot = new HashMap();
-        prepOfbizRoot(prepRoot, request, response);
         SimpleHash root = new SimpleHash(BeansWrapper.getDefaultInstance());
-        root.putAll(prepRoot);
+        prepOfbizRoot(root, request, response);
                        
         // get the template
         Template template = null;
@@ -111,6 +109,12 @@ public class FreeMarkerViewHandler implements ViewHandler {
         } catch (IOException ie) {
             throw new ViewHandlerException("Problems writing to output stream", ie);
         }       
+    }
+    
+    public static void prepOfbizRoot(SimpleHash root, HttpServletRequest request, HttpServletResponse response) {
+        Map rootPrep = new HashMap();
+        prepOfbizRoot(rootPrep, request, response);
+        root.putAll(rootPrep);
     }
     
     public static void prepOfbizRoot(Map root, HttpServletRequest request, HttpServletResponse response) {

@@ -1,5 +1,5 @@
 /*
- * $Id: FreeMarkerViewRenderer.java,v 1.4 2003/12/23 12:34:17 jonesde Exp $
+ * $Id: FreeMarkerViewRenderer.java,v 1.5 2003/12/23 13:50:40 jonesde Exp $
  *
  * Copyright (c) 2003 The Open For Business Project - www.ofbiz.org
  *
@@ -35,25 +35,22 @@ import javax.servlet.http.HttpServletResponse;
 
 import org.jpublish.JPublishContext;
 import org.jpublish.Page;
+import org.jpublish.SiteContext;
+import org.jpublish.page.PageInstance;
 import org.jpublish.view.ViewRenderException;
 import org.ofbiz.base.util.Debug;
 
 import freemarker.ext.beans.BeansWrapper;
-import freemarker.ext.beans.MapModel;
 import freemarker.template.SimpleHash;
 import freemarker.template.Template;
 import freemarker.template.WrappingTemplateModel;
-import freemarker.template.TemplateHashModel;
-
-import org.jpublish.page.PageInstance;
-import org.jpublish.SiteContext;
 
 /**
  * JPublish View Renderer For Freemarker Template Engine
  *
  * @author     <a href="mailto:jaz@ofbiz.org">Andy Zeneski</a>
  * @author     <a href="mailto:jonesde@ofbiz.org">David E. Jones</a>
- * @version    $Revision: 1.4 $
+ * @version    $Revision: 1.5 $
  * @since      2.1
  */
 public class FreeMarkerViewRenderer extends org.jpublish.view.freemarker.FreeMarkerViewRenderer {
@@ -91,9 +88,7 @@ public class FreeMarkerViewRenderer extends org.jpublish.view.freemarker.FreeMar
              }
              root.put("context", wrapper.wrap(contextMap));                          
              //root.put("jpublishContext", wrapper.wrap(context));
-             Map rootPrep = new HashMap();
-             FreeMarkerViewHandler.prepOfbizRoot(rootPrep, request, response);
-             root.putAll(rootPrep);
+             FreeMarkerViewHandler.prepOfbizRoot(root, request, response);
          } catch (Exception e) {
              throw new ViewRenderException(e);            
          }          
