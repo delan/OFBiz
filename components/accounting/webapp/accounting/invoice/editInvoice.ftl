@@ -20,9 +20,12 @@
  *  THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  *
  *@author     Andy Zeneski (jaz@ofbiz.org)
- *@version    $Revision: 1.3 $
+ *@author     Eric.Barbier@nereide.biz (migration to uiLabelMap)
+ *@version    $Revision: 1.4 $
  *@since      2.1
 -->
+<#assign uiLabelMap = requestAttributes.uiLabelMap>
+
 
 <table width="100%" border="0" cellpadding="0" cellspacing="0">
   <tr>
@@ -35,7 +38,7 @@
             <table width='100%' border='0' cellspacing='0' cellpadding='0' class='boxtop'>
               <tr>
                 <td valign="middle" align="left">
-                  <div class="boxhead">&nbsp;Invoice&nbsp;<#if invoice?has_content>#${invoice.invoiceId}&nbsp;</#if>Information</div>
+                  <div class="boxhead">&nbsp;${uiLabelMap.AccountingInvoice}&nbsp;<#if invoice?has_content>#${invoice.invoiceId}&nbsp;</#if>${uiLabelMap.AccountingInformation}</div>
                 </td>
               </tr>
             </table>
@@ -51,7 +54,7 @@
                     <#if billingParty?has_content>
                       <tr>
                         <td align="right" valign="top" width="15%">
-                          <div class="tabletext">&nbsp;<b>Name</b></div>
+                          <div class="tabletext">&nbsp;<b>${uiLabelMap.AccountingName}</b></div>
                         </td>   
                         <td width="5">&nbsp;</td>
                         <#if billingPerson?has_content>
@@ -76,7 +79,7 @@
                     <#-- invoice status information -->
                     <tr>
                       <td align="right" valign="top" width="15%">
-                        <div class="tabletext">&nbsp;<b>Status</b></div>
+                        <div class="tabletext">&nbsp;<b>${uiLabelMap.AccountingStatus}</b></div>
                       </td>
                       <td width="5">&nbsp;</td>
                       <td align="left" valign="top" width="80%">
@@ -84,7 +87,7 @@
                       </td>
                       <#if payments?has_content>
                       <td align="right" width="5%" nowrap>
-                        <a href="<@ofbizUrl>/invoicePayments?invoiceId=${invoice.invoiceId}</@ofbizUrl>" class="buttontext">Payments</a>&nbsp;
+                        <a href="<@ofbizUrl>/invoicePayments?invoiceId=${invoice.invoiceId}</@ofbizUrl>" class="buttontext">${uiLabelMap.AccountingPayments}</a>&nbsp;
                       </td>
                       </#if>
                     </tr>
@@ -92,7 +95,7 @@
                     <tr><td colspan="7"><hr class='sepbar'></td></tr>
                     <tr>
                       <td align="right" valign="top" width="15%">
-                        <div class="tabletext">&nbsp;<b>Date</b></div>
+                        <div class="tabletext">&nbsp;<b>${uiLabelMap.AccountingDate}</b></div>
                       </td>
                       <td width="5">&nbsp;</td>
                       <td align="left" valign="top" width="80%">
@@ -104,7 +107,7 @@
                       <tr><td colspan="7"><hr class='sepbar'></td></tr>
                       <tr>
                         <td align="right" valign="top" width="15%">
-                          <div class="tabletext">&nbsp;<b>Orders</b></div>
+                          <div class="tabletext">&nbsp;<b>${uiLabelMap.AccountingOrders}</b></div>
                         </td>
                         <td width="5">&nbsp;</td>
                         <td align="left" valign="top" width="80%">
@@ -132,7 +135,7 @@
             <table width='100%' border='0' cellspacing='0' cellpadding='0' class='boxtop'>
               <tr>
                 <td valign="middle" align="left">
-                  <div class="boxhead">&nbsp;Billing Information</div>
+                  <div class="boxhead">&nbsp;${uiLabelMap.AccountingBillingInformation}</div>
                 </td>
               </tr>
             </table>
@@ -148,13 +151,13 @@
                     <#if billingAddress?has_content>
                       <tr>
                         <td align="right" valign="top" width="15%">
-                          <div class="tabletext">&nbsp;<b>Billing</b></div>
+                          <div class="tabletext">&nbsp;<b>${uiLabelMap.AccountingBilling}</b></div>
                         </td>
                         <td width="5">&nbsp;</td>
                         <td align="left" valign="top" width="80%">
                           <div class="tabletext">
-                            <#if billingAddress.toName?has_content><b>To:</b> ${billingAddress.toName}<br></#if>
-                            <#if billingAddress.attnName?has_content><b>Attn:</b> ${billingAddress.attnName}<br></#if>
+                            <#if billingAddress.toName?has_content><b>${uiLabelMap.CommonTo}:</b> ${billingAddress.toName}<br></#if>
+                            <#if billingAddress.attnName?has_content><b>${uiLabelMap.CommonAttn}:</b> ${billingAddress.attnName}<br></#if>
                             ${billingAddress.address1}<br>
                             <#if billingAddress.address2?has_content>${billingAddress.address2}<br></#if>                            
                             ${billingAddress.city}<#if billingAddress.stateProvinceGeoId?has_content>, ${billingAddress.stateProvinceGeoId} </#if>
@@ -165,7 +168,7 @@
                       </tr>
                     <#else>
                       <tr>
-                        <td><div class="tabletext">No contact information set.</div></td>
+                        <td><div class="tabletext">${uiLabelMap.AccountingNocontactinformationset}.</div></td>
                       </tr>
                     </#if>                                                                                           
                   </table>
@@ -187,7 +190,7 @@
       <table width='100%' border='0' cellspacing='0' cellpadding='0' class='boxtop'>
         <tr>
           <td valign="middle" align="left">
-            <div class="boxhead">&nbsp;Invoice Items</div>
+            <div class="boxhead">&nbsp;${uiLabelMap.AccountingInvoiceItems}</div>
           </td>         
         </tr>
       </table>
@@ -200,12 +203,12 @@
           <td>
             <table width="100%" border="0" cellpadding="0">
               <tr align='left' valign='bottom'>
-                <td width="20%" align="left"><span class="tableheadtext">Type</span></td>
-                <td width="15%" aligh="left"><span class="tableheadtext">Product</span></td>
-                <td width="40%" align="left"><span class="tableheadtext">Description</span></td>
-                <td width="5%" align="right"><span class="tableheadtext">Quantity</span></td>
-                <td width="10%" align="right"><span class="tableheadtext">Amount</span></td>            
-                <td width="10%" align="right"><span class="tableheadtext">Line Total</span></td>
+                <td width="20%" align="left"><span class="tableheadtext">${uiLabelMap.AccountingType}</span></td>
+                <td width="15%" aligh="left"><span class="tableheadtext">${uiLabelMap.AccountingProduct}</span></td>
+                <td width="40%" align="left"><span class="tableheadtext">${uiLabelMap.AccountingDescription}</span></td>
+                <td width="5%" align="right"><span class="tableheadtext">${uiLabelMap.AccountingQuantity}</span></td>
+                <td width="10%" align="right"><span class="tableheadtext">${uiLabelMap.AccountingAmount}</span></td>            
+                <td width="10%" align="right"><span class="tableheadtext">${uiLabelMap.AccountingLineTotal}</span></td>
               </tr>
               <#assign seqId = 1>
               <#list invoiceItems as invoiceItem>
@@ -234,7 +237,7 @@
                 <#assign seqId = seqId + 1>               
               </#list>
               <#if !invoiceItems?has_content || invoiceItems?size == 0>
-                <tr><td><font color="red">No current invoice line items.</font></td></tr>
+                <tr><td><font color="red">${uiLabelMap.AccountingNocurrentinvoicelineitems}.</font></td></tr>
               </#if>
               <#if editInvoice?default(false)>
                 <form name="additem" method="post" action="<@ofbizUrl>/createInvoiceItem</@ofbizUrl>">
@@ -271,7 +274,7 @@
               </#if>
               <tr><td colspan="8"><hr class='sepbar'></td></tr>                                                                     
               <tr>
-                <td align="right" colspan="4"><div class="tabletext"><b>Invoice Total</b></div></td>
+                <td align="right" colspan="4"><div class="tabletext"><b>${uiLabelMap.AccountingInvoiceTotal}</b></div></td>
                 <td align="right" nowrap>
                   <div class="tabletext">${invoiceTotal?string.currency}</div>
                 </td>

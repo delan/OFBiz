@@ -20,24 +20,26 @@
  *  THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  *
  *@author     Andy Zeneski (jaz@ofbiz.org)
- *@version    $Revision: 1.3 $
+ *@author     Eric.Barbier@nereide.biz (migration to uiLabelMap)
+ *@version    $Revision: 1.4 $
  *@since      2.2
 -->
+<#assign uiLabelMap = requestAttributes.uiLabelMap>
 
-<div class="head1">Invoice Payments</div>
+<div class="head1">${uiLabelMap.AccountingInvoicePayments}</div>
 
 <br>
 <table width="100%" border="0" cellpadding="0" cellspacing="0">
   <tr>
-    <td><div class="tableheadtext">Payment #</div></td>
-    <td><div class="tableheadtext">Type</div></td>
-    <td><div class="tableheadtext">Status</div></td>
-    <td><div class="tableheadtext">Invoice #</div></td>
-    <td><div class="tableheadtext">Invoice Item</div></td>
-    <td><div class="tableheadtext">Billing Acct</div></td>
-    <td><div class="tableheadtext">Payment Date</div></td>
+    <td><div class="tableheadtext">${uiLabelMap.AccountingPayment} #</div></td>
+    <td><div class="tableheadtext">${uiLabelMap.AccountingType}</div></td>
+    <td><div class="tableheadtext">${uiLabelMap.AccountingStatus}</div></td>
+    <td><div class="tableheadtext">${uiLabelMap.AccountingInvoice} #</div></td>
+    <td><div class="tableheadtext">${uiLabelMap.AccountingInvoiceItem}</div></td>
+    <td><div class="tableheadtext">${uiLabelMap.AccountingBillingAcct}</div></td>
+    <td><div class="tableheadtext">${uiLabelMap.AccountingPaymentDate}</div></td>
     <td><div class="tableheadtext">Ref #</div></td>
-    <td align="right"><div class="tableheadtext">Amount</div></td>
+    <td align="right"><div class="tableheadtext">${uiLabelMap.AccountingAmount}</div></td>
   </tr>
   <tr><td colspan="9"><hr class="sepbar"></td></tr>
   <#list payments as payment>
