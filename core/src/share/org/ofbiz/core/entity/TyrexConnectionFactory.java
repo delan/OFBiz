@@ -46,15 +46,6 @@ public class TyrexConnectionFactory {
 
     public static Connection getConnection(String helperName) throws SQLException, GenericEntityException {
         boolean usingTyrex = true;
-        try {
-            // For Tyrex 0.9.8.5
-            Class.forName("tyrex.resource.jdbc.xa.EnabledDataSource").newInstance();
-            // For Tyrex 0.9.7.0
-            //Class.forName("tyrex.jdbc.xa.EnabledDataSource").newInstance();
-            //Debug.logInfo("Found Tyrex Driver...");
-        } catch (Exception ex) {
-            usingTyrex = false;
-        }
 
         if (usingTyrex) {
             EnabledDataSource ds;

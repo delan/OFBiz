@@ -87,9 +87,18 @@ public class ConnectionFactory {
         }
 
         //If JNDI sources are not specified, or found, try Tyrex
-        Connection con = TyrexConnectionFactory.getConnection(helperName);
-        if (con != null)
-            return con;
+        try {
+            // For Tyrex 0.9.8.5
+            Class.forName("tyrex.resource.jdbc.xa.EnabledDataSource").newInstance();
+            // For Tyrex 0.9.7.0
+            //Class.forName("tyrex.jdbc.xa.EnabledDataSource").newInstance();
+            //Debug.logInfo("Found Tyrex Driver...");
+
+            Connection con = TyrexConnectionFactory.getConnection(helperName);
+            if (con != null)
+                return con;
+        } catch (Exception ex) {
+        }
 
         // Default to plain JDBC.
         String driverClassName = UtilProperties.getPropertyValue("entityengine", helperName + ".jdbc.driver");
