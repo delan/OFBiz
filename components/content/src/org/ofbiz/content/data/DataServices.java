@@ -6,10 +6,13 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Locale;
 import java.util.Map;
+import java.io.IOException;
+import java.io.Writer;
 
 import org.ofbiz.base.util.Debug;
 import org.ofbiz.base.util.UtilDateTime;
 import org.ofbiz.base.util.UtilMisc;
+import org.ofbiz.base.util.UtilValidate;
 import org.ofbiz.entity.GenericDelegator;
 import org.ofbiz.entity.GenericEntityException;
 import org.ofbiz.entity.GenericValue;
@@ -22,7 +25,7 @@ import org.ofbiz.service.ServiceUtil;
  * DataServices Class
  *
  * @author     <a href="mailto:byersa@automationgroups.com">Al Byers</a>
- * @version    $Revision: 1.3 $
+ * @version    $Revision: 1.4 $
  * @since      3.0
  *
  * 
@@ -134,8 +137,10 @@ public class DataServices {
         HashMap result = new HashMap();
         GenericDelegator delegator = dctx.getDelegator();
         LocalDispatcher dispatcher = dctx.getDispatcher();
+Debug.logInfo("in create ETextMethod context:" + context, null);
         String permissionStatus = DataResourceWorker.callDataResourcePermissionCheck( delegator, dispatcher,
                                       context );
+Debug.logInfo("in create ETextMethod permissionStatus:" + permissionStatus, null);
         if (permissionStatus != null && permissionStatus.equalsIgnoreCase("granted") ) {
             String dataResourceId = (String)context.get("dataResourceId");
             String textData = (String)context.get("textData");
@@ -144,6 +149,7 @@ public class DataServices {
                        UtilMisc.toMap("dataResourceId", dataResourceId, "textData", textData));
                 try {
                     electronicText.create();
+                    result.put("dataResourceId", dataResourceId);
                 } catch(GenericEntityException e) {
                     return ServiceUtil.returnError(e.getMessage());
                 }
@@ -171,7 +177,7 @@ public class DataServices {
                                       context);
         if (permissionStatus != null && permissionStatus.equalsIgnoreCase("granted") ) {
             context.put("skipPermissionCheck", "granted");
-            Map thisResult = createDataResourceMethod(dctx, context );
+            Map thisResult = updateDataResourceMethod(dctx, context );
             if (thisResult.get(ModelService.RESPONSE_MESSAGE) != null) {
                 return ServiceUtil.returnError((String)thisResult.get(ModelService.ERROR_MESSAGE));
             }
@@ -281,5 +287,33 @@ public class DataServices {
         return result;
     }
 
+    public static void renderDataResourceAsText(DispatchContext dctx, Map context) throws IOException {
+
+        Map results = new HashMap();
+        GenericDelegator delegator = dctx.getDelegator();
+        LocalDispatcher dispatcher = dctx.getDispatcher();
+        Writer out = (Writer) context.get("outWriter"); 
+        Map templateContext = (Map) context.get("templateContext"); 
+        GenericValue userLogin = (GenericValue)context.get("userLogin");
+        String dataResourceId = (String) context.get("dataResourceId"); 
+        if (templateContext != null && UtilValidate.isEmpty(dataResourceId)) {
+            dataResourceId = (String)templateContext.get("dataResourceId");
+        }
+        String mimeTypeId = (String) context.get("mimeTypeId"); 
+        if (templateContext != null && UtilValidate.isEmpty(mimeTypeId)) {
+            mimeTypeId = (String)templateContext.get("mimeTypeId");
+        }
+
+        Locale locale = (Locale) context.get("locale"); 
+
+        if (templateContext == null)
+            templateContext = new HashMap();
+
+        GenericValue view = (GenericValue)context.get("subContentDataResourceView");
+        DataResourceWorker.renderDataResourceAsText(delegator, dataResourceId, out, 
+                          templateContext, view, locale, mimeTypeId);
+        return;
+
+    }
 
 }

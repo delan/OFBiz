@@ -14,13 +14,14 @@ import org.ofbiz.entity.GenericDelegator;
 import org.ofbiz.entity.GenericPK;
 import org.ofbiz.entity.GenericValue;
 import org.ofbiz.service.GenericServiceException;
+import org.ofbiz.entity.GenericEntityException;
 import org.ofbiz.service.LocalDispatcher;
 
 /**
  * DataEvents Class
  *
  * @author     <a href="mailto:byersa@automationgroups.com">Al Byers</a>
- * @version    $Revision: 1.4 $
+ * @version    $Revision: 1.5 $
  * @since      3.0
  *
  * 
@@ -38,18 +39,34 @@ public class DataEvents {
     /** Streams ImageDataResource data to the output. */
     public static String serveImage(HttpServletRequest request, HttpServletResponse response) {
 
-        byte[] b = DataResourceWorker.acquireImage(request, "imgId");
-        if (b == null) return "error";
-
-        String imageType = DataResourceWorker.getImageType(request, "imgId");
-        if (imageType == null || imageType.equals("error")) return "error";
+        GenericDelegator delegator = (GenericDelegator) request.getAttribute("delegator");
+        String dataResourceId = request.getParameter("imgId");
+        byte[] b = null;
+        String imageType = null;
         try {
-            UtilHttp.streamContentToBrowser(response, b, imageType);
-        } catch (IOException e) {
-            String errorMsg = "Error writing image to OutputStream: " + e.toString();
+            b = DataResourceWorker.acquireImage(delegator, dataResourceId);
+            imageType = DataResourceWorker.getImageType(delegator, dataResourceId);
+        } catch (GenericEntityException e) {
+            String errorMsg = "Error getting image record from db: " + e.toString();
             Debug.logError(e, errorMsg, module);
             request.setAttribute("_ERROR_MESSAGE_", errorMsg);
             return "error";
+        }
+
+        if (imageType == null || b == null) {
+                String errorMsg = "image(" + b + ") or type(" + imageType + ") is null.";
+                Debug.logInfo(errorMsg, module);
+                request.setAttribute("_ERROR_MESSAGE_", errorMsg);
+                return "error";
+        } else {
+            try {
+                UtilHttp.streamContentToBrowser(response, b, imageType);
+            } catch (IOException e) {
+                String errorMsg = "Error writing image to OutputStream: " + e.toString();
+                Debug.logError(e, errorMsg, module);
+                request.setAttribute("_ERROR_MESSAGE_", errorMsg);
+                return "error";
+            }
         }
 
         return "success";
@@ -100,7 +117,7 @@ public class DataEvents {
         // Save the primary key so that it can be used in a "quick pick" list later
         GenericPK pk = dataResource.getPrimaryKey();
         HttpSession session = request.getSession();
-        //ContentManagementWorker.lruAdd(session, pk);
+        //ContentManagementWorker.mruAdd(session, pk);
 
         String returnStr = "success";
         if (mode.equals("CREATE") ) {

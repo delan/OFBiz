@@ -1,5 +1,5 @@
 /*
- * $Id: DataResourceWorker.java,v 1.5 2003/11/25 07:48:14 jonesde Exp $
+ * $Id: DataResourceWorker.java,v 1.6 2003/12/05 21:07:13 byersa Exp $
  *
  * Copyright (c) 2001, 2002 The Open For Business Project - www.ofbiz.org
  *
@@ -28,6 +28,11 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Locale;
+import java.io.IOException;
+import java.io.Writer;
+import java.io.Reader;
+import java.io.StringReader;
 
 import javax.servlet.http.HttpServletRequest;
 
@@ -36,18 +41,40 @@ import org.apache.commons.fileupload.FileItem;
 import org.apache.commons.fileupload.FileUploadException;
 import org.ofbiz.base.util.Debug;
 import org.ofbiz.base.util.UtilMisc;
+import org.ofbiz.base.util.UtilProperties;
+import org.ofbiz.base.util.UtilValidate;
 import org.ofbiz.entity.GenericDelegator;
 import org.ofbiz.entity.GenericEntityException;
 import org.ofbiz.entity.GenericValue;
 import org.ofbiz.service.GenericServiceException;
 import org.ofbiz.service.LocalDispatcher;
+import org.ofbiz.content.email.NotificationServices;
+import org.ofbiz.minilang.SimpleMapProcessor;
+import org.ofbiz.minilang.MiniLangException;
+
+import freemarker.ext.beans.BeansWrapper;
+import freemarker.ext.servlet.HttpRequestHashModel;
+import freemarker.ext.servlet.HttpSessionHashModel;
+import freemarker.template.Configuration;
+import freemarker.template.SimpleHash;
+import freemarker.template.TemplateException;
+import freemarker.template.WrappingTemplateModel;
+import freemarker.template.Environment;
+
+import freemarker.ext.beans.BeanModel;
+import freemarker.template.SimpleScalar;
+import freemarker.template.TemplateModelException;
+import freemarker.template.TemplateScalarModel;
+import freemarker.template.TemplateTransformModel;
+import freemarker.template.TemplateHashModel;
+import freemarker.template.Template;
 
 
 /**
  * DataResourceWorker Class
  *
  * @author     <a href="mailto:byersa@automationgroups.com">Al Byers</a>
- * @version    $Revision: 1.5 $
+ * @version    $Revision: 1.6 $
  * @since      3.0
  *
  * 
@@ -282,28 +309,16 @@ Debug.logInfo("in uploadAndStoreImage, idFieldValue:" + idFieldValue, "");
     /**
      * Gets image data from ImageDataResource and returns it as a byte array.
      */
-    public static byte[] acquireImage(HttpServletRequest request, String imgFieldName) {
+    public static byte[] acquireImage(GenericDelegator delegator, String dataResourceId) 
+            throws GenericEntityException{
 
-        GenericDelegator delegator = (GenericDelegator) request.getAttribute("delegator");
-        String dataResourceId = request.getParameter(imgFieldName);
-        //never read: GenericValue dataResource = null;
-        GenericValue imageDataResource = null;
-        try {
-            imageDataResource = delegator.findByPrimaryKey("ImageDataResource",
+        GenericValue imageDataResource = delegator.findByPrimaryKey("ImageDataResource",
                              UtilMisc.toMap("dataResourceId", dataResourceId)); 
-        } catch (GenericEntityException e) {
-            String errorMsg = "Error getting image record from db: " + e.toString();
-            Debug.logError(e, errorMsg, module);
-            request.setAttribute("_ERROR_MESSAGE_", errorMsg);
-            return null;
-        }
 
-        byte[] b = (byte[])imageDataResource.get("imageData");
-        if (b == null || b.length == 0) {
-            request.setAttribute("_ERROR_MESSAGE_", "There was no image data available.");
-            return null;
+        byte[] b = null;
+        if (imageDataResource != null) {
+            b = (byte[])imageDataResource.get("imageData");
         }
-
         return b;
 
     }
@@ -311,25 +326,253 @@ Debug.logInfo("in uploadAndStoreImage, idFieldValue:" + idFieldValue, "");
     /**
      * Returns the image type.
      */
-    public static String getImageType(HttpServletRequest request, String imgFieldName) {
+    public static String getImageType(GenericDelegator delegator, String dataResourceId) 
+            throws GenericEntityException{
 
-        GenericDelegator delegator = (GenericDelegator) request.getAttribute("delegator");
-        String dataResourceId = request.getParameter(imgFieldName);
-        GenericValue dataResource = null;
-        // never read: GenericValue imageDataResource = null;
-        try {
-            dataResource = delegator.findByPrimaryKey("DataResource",
+        GenericValue dataResource = delegator.findByPrimaryKey("DataResource",
                              UtilMisc.toMap("dataResourceId", dataResourceId)); 
-        } catch (GenericEntityException e) {
-            String errorMsg = "Error getting image record from db: " + e.toString();
-            Debug.logError(e, errorMsg, module);
-            request.setAttribute("_ERROR_MESSAGE_", errorMsg);
-            return "error";
-        }
-
 
         String imageType = (String)dataResource.get("mimeTypeId");
         return imageType;
     }
 
+    public static void renderDataResourceAsText(GenericDelegator delegator,
+        String dataResourceId, Writer out, Map templateContext, GenericValue view, 
+           Locale locale, String mimeTypeId)
+                     throws IOException {
+
+        //Debug.logInfo(" in renderDataResourceAsText, mimeTypeId:" + mimeTypeId, module);
+        if (UtilValidate.isEmpty(mimeTypeId)) 
+            mimeTypeId = "text/html";
+   
+        GenericValue dataResource = null;
+        if (view != null) {
+            Map dataResourceMap = new HashMap();
+            try {
+                SimpleMapProcessor.runSimpleMapProcessor(
+                      "org/ofbiz/content/ContentManagementMapProcessors.xml", "dataResourceIn",
+                      view, dataResourceMap, new ArrayList(), locale);
+            } catch(MiniLangException e) {
+                throw new IOException("[MiniLang]" +e.getMessage());
+            }
+            //Debug.logInfo("in renderDAtaResource(work), dataResourceMap:" + dataResourceMap, "");
+            dataResource = delegator.makeValue("DataResource", dataResourceMap);
+            dataResource.setPKFields(view);
+            dataResource.setNonPKFields(view);
+            dataResourceId = (String)dataResource.get("dataResourceId"); 
+        }
+        
+  
+        if (dataResource == null || dataResource.isEmpty()) {
+            if (dataResourceId == null) {
+                throw new IOException("DataResourceId is null");
+            }
+            try {
+                dataResource = delegator.findByPrimaryKey("DataResource",
+                             UtilMisc.toMap("dataResourceId", dataResourceId)); 
+            } catch(GenericEntityException e) {
+                throw new IOException(e.getMessage());
+            }
+        }
+        if (dataResource == null || dataResource.isEmpty()) {
+            throw new IOException("DataResource not found with id=" + dataResourceId);
+        }
+
+        String dataResourceTypeId = (String)dataResource.get("dataResourceTypeId"); 
+        if (dataResourceTypeId == null) 
+            dataResourceTypeId = "SHORT_TEXT";
+
+        String dataTemplateTypeId = (String)dataResource.get("dataTemplateTypeId"); 
+        if (dataTemplateTypeId == null) 
+            dataTemplateTypeId = "NONE";
+
+        String text = null;
+
+        if (dataTemplateTypeId.equals("FTL")) {
+
+            if (templateContext == null) {
+               templateContext = new HashMap();
+            }
+            Reader templateReader = getDataResourceAsReader(delegator, dataResourceId, 
+                                     dataResource, templateContext, locale, mimeTypeId);
+            Configuration config = Configuration.getDefaultConfiguration();
+            config.setObjectWrapper(BeansWrapper.getDefaultInstance());
+            try {
+                config.setSetting("datetime_format", "yyyy-MM-dd HH:mm:ss.SSS");
+            } catch(TemplateException e) {
+                throw new IOException(e.getMessage());
+            }
+
+            BeansWrapper wrapper = BeansWrapper.getDefaultInstance();
+            TemplateHashModel staticModels = wrapper.getStaticModels();
+            templateContext.put("Static", staticModels);
+            String templateName = (String)dataResource.get("dataResourceName");
+            Template template = new Template(templateName, templateReader, config);
+
+
+            // process the template with the given data and write
+            try {
+                template.process(templateContext, out);
+            } catch(TemplateException e) {
+                throw new IOException(e.getMessage());
+            }
+
+        } else if (dataResourceTypeId.equals("ELECTRONIC_TEXT")) {
+
+            if (mimeTypeId.equals("text/plain")) {
+                text = getDataResourceAsString(delegator, dataResourceId, dataResource,
+                            templateContext, locale, mimeTypeId);
+            } else {
+                text = getDataResourceAsHtml(delegator, dataResourceId, dataResource,
+                            templateContext, locale, mimeTypeId);
+            }
+            out.write(text);
+        } else if (dataResourceTypeId.equals("IMAGE_OBJECT")) {
+            if (mimeTypeId.equals("text/plain")) {
+                text = getDataResourceAsString(delegator, dataResourceId, dataResource,
+                            templateContext, locale, mimeTypeId);
+            } else {
+                text = getDataResourceAsHtml(delegator, dataResourceId, dataResource,
+                            templateContext, locale, mimeTypeId);
+            }
+            out.write(text);
+        } else if (dataResourceTypeId.equals("URL_RESOURCE")) {
+            if (mimeTypeId.equals("text/plain")) {
+                text = getDataResourceAsString(delegator, dataResourceId, dataResource,
+                            templateContext, locale, mimeTypeId);
+            } else {
+                text = getDataResourceAsHtml(delegator, dataResourceId, dataResource,
+                            templateContext, locale, mimeTypeId);
+            }
+            out.write(text);
+        } else if (dataResourceTypeId.equals("SHORT_TEXT")) {
+            text = (String)dataResource.get("objectInfo");
+            out.write(text);
+        }
+        return;
+    }
+
+    public static String getDataResourceAsHtml(GenericDelegator delegator, String dataResourceId, 
+           GenericValue dataResource, Map templateContext, Locale locale, String mimeTypeId)
+       throws IOException {
+
+            //Debug.logInfo("in renderDAtaResourceAsHtml(work), dataResource:" + dataResource, "");
+            //Debug.logInfo("in renderDAtaResourceAsHtml(work), mimeTypeId:" + mimeTypeId, "");
+        String outString = null;
+/*
+        if (dataResource != null) {
+            Map dataResourceMap = new HashMap();
+            try {
+                SimpleMapProcessor.runSimpleMapProcessor(
+                      "org/ofbiz/content/ContentManagementMapProcessors.xml", "dataResourceIn",
+                      dataResource, dataResourceMap, new ArrayList(), locale);
+            } catch(MiniLangException e) {
+                throw new IOException(e.getMessage());
+            }
+            //Debug.logInfo("in renderDAtaResourceAsHtml(work), dataResourceMap:" + dataResourceMap, "");
+            dataResource = delegator.makeValue("DataResource", dataResourceMap);
+        }
+*/
+        
+        if (dataResourceId == null) {
+            throw new IOException("DataResourceId is null");
+        }
+  
+        if (dataResource == null || dataResource.isEmpty()) {
+            try {
+                dataResource = delegator.findByPrimaryKey("DataResource",
+                             UtilMisc.toMap("dataResourceId", dataResourceId)); 
+            } catch(GenericEntityException e) {
+                throw new IOException(e.getMessage());
+            }
+        }
+        if (dataResource == null || dataResource.isEmpty()) {
+            throw new IOException("DataResource not found with id=" + dataResourceId);
+        }
+
+        String dataResourceTypeId = (String)dataResource.get("dataResourceTypeId"); 
+        if (dataResourceTypeId == null) 
+            dataResourceTypeId = "SHORT_TEXT";
+
+        String dataTemplateTypeId = (String)dataResource.get("dataTemplateTypeId"); 
+        if (dataTemplateTypeId == null) 
+            dataTemplateTypeId = "NONE";
+
+        if (dataResourceTypeId.equals("ELECTRONIC_TEXT")) {
+            outString = getDataResourceAsString(delegator, dataResourceId, dataResource,
+                            templateContext, locale, mimeTypeId);
+        } else if (dataResourceTypeId.equals("IMAGE_OBJECT")) {
+            String requestName = UtilProperties.getMessage("content", "img.request", locale);
+            String requestParamName = UtilProperties.getMessage("content", "img.request.param.name", locale);
+            String url = requestName + "?" + requestParamName + "=" + dataResourceId;
+            String prefix = buildRequestPrefix(delegator);
+            //Debug.logInfo("in renderDAtaResourceAsHtml(work), prefix:" + prefix, "");
+            String s = prefix + url;
+            outString = "<img src=\"" + s + "\"/>";
+        } else if (dataResourceTypeId.equals("URL_RESOURCE")) {
+            String href = (String)dataResource.get("objectInfo"); 
+            String val = (String)dataResource.get("description"); 
+            outString = "<a href=\"" + href + "\">" + val + "</a>";
+        }
+        return outString;
+    }
+
+    public static Reader getDataResourceAsReader(GenericDelegator delegator, 
+                            String dataResourceId, GenericValue dataResource, Map templateContext,
+                            Locale locale, String mimeTypeId) throws IOException {
+        String s = getDataResourceAsString(delegator, dataResourceId, dataResource, 
+                            templateContext, locale, mimeTypeId);
+        StringReader reader = new StringReader(s);
+        return reader;
+    }
+
+    public static String getDataResourceAsString(GenericDelegator delegator, 
+                            String dataResourceId, GenericValue dataResource, Map templateContext,
+                            Locale locale, String mimeTypeId) throws IOException {
+
+        String s = null;
+        if (dataResourceId == null && dataResource == null) {
+                throw new IOException("Both dataResource and dataResourceId are null");
+        }
+
+            //Debug.logInfo("in renderDAtaResourceAsString(work), dataResource(0):" + dataResource, "");
+        if (dataResource == null) {
+            try {
+                dataResource = delegator.findByPrimaryKey("DataResource", 
+                                UtilMisc.toMap("dataResourceId", dataResourceId));
+            } catch(GenericEntityException e) {
+                throw new IOException(e.getMessage());
+            }
+        }
+            //Debug.logInfo("in renderDAtaResourceAsString(work), dataResource(1):" + dataResource, "");
+        
+        String dataResourceTypeId = (String)dataResource.get("dataResourceTypeId");
+            //Debug.logInfo("in renderDAtaResourceAsString(work), dataResourceTypeId(1):" + dataResourceTypeId, "");
+        if (dataResourceTypeId.equals("ELECTRONIC_TEXT")) {
+            try {
+                GenericValue electronicText = delegator.findByPrimaryKey("ElectronicText", 
+                                UtilMisc.toMap("dataResourceId", dataResourceId));
+                s = (String)electronicText.get("textData");
+            } catch(GenericEntityException e) {
+                throw new IOException(e.getMessage());
+            }
+        } else if (dataResourceTypeId.equals("IMAGE_OBJECT")) {
+            s = (String)dataResource.get("dataResourceId");
+        } else {
+            s = (String)dataResource.get("objectInfo");
+        }
+        return s;
+    }
+
+    public static String buildRequestPrefix(GenericDelegator delegator) {
+        String prefix = null;
+        Map prefixValues = new HashMap();
+        String webSiteId = null;
+        NotificationServices.setBaseUrl(delegator, webSiteId, prefixValues);
+        prefix = (String)prefixValues.get("baseUrl");
+
+        return prefix;
+    }
 }
+
+
