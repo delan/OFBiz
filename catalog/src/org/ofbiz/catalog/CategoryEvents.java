@@ -1,3 +1,27 @@
+/*
+ * $Id$
+ *
+ *  Copyright (c) 2001 The Open For Business Project - www.ofbiz.org
+ *
+ *  Permission is hereby granted, free of charge, to any person obtaining a
+ *  copy of this software and associated documentation files (the "Software"),
+ *  to deal in the Software without restriction, including without limitation
+ *  the rights to use, copy, modify, merge, publish, distribute, sublicense,
+ *  and/or sell copies of the Software, and to permit persons to whom the
+ *  Software is furnished to do so, subject to the following conditions:
+ *
+ *  The above copyright notice and this permission notice shall be included
+ *  in all copies or substantial portions of the Software.
+ *
+ *  THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS
+ *  OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF
+ *  MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT.
+ *  IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY
+ *  CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT
+ *  OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR
+ *  THE USE OR OTHER DEALINGS IN THE SOFTWARE.
+ */
+
 package org.ofbiz.catalog;
 
 import javax.servlet.http.*;
@@ -10,27 +34,7 @@ import org.ofbiz.core.entity.*;
 import org.ofbiz.core.security.*;
 
 /**
- * <p><b>Title:</b> Product Category Related Events
- * <p><b>Description:</b> None
- * <p>Copyright (c) 2001 The Open For Business Project - www.ofbiz.org
- *
- * <p>Permission is hereby granted, free of charge, to any person obtaining a
- *  copy of this software and associated documentation files (the "Software"),
- *  to deal in the Software without restriction, including without limitation
- *  the rights to use, copy, modify, merge, publish, distribute, sublicense,
- *  and/or sell copies of the Software, and to permit persons to whom the
- *  Software is furnished to do so, subject to the following conditions:
- *
- * <p>The above copyright notice and this permission notice shall be included
- *  in all copies or substantial portions of the Software.
- *
- * <p>THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS
- *  OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF
- *  MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT.
- *  IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY
- *  CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT
- *  OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR
- *  THE USE OR OTHER DEALINGS IN THE SOFTWARE.
+ * Product Category Information Related Events
  *
  *@author     <a href="mailto:jonesde@ofbiz.org">David E. Jones</a>
  *@created    May 21, 2001
@@ -227,6 +231,16 @@ public class CategoryEvents {
                 return "error";
             }
             
+            String quantityStr = request.getParameter("QUANTITY");
+            Long quantity = null;
+            try {
+                if (UtilValidate.isNotEmpty(quantityStr))
+                    quantity = Long.valueOf(quantityStr);
+            } catch (Exception e) {
+                request.setAttribute(SiteDefs.ERROR_MESSAGE, "<li>ERROR: Could not update product-category entry, quantity number \"" + quantityStr + "\" was not valid.");
+                return "error";
+            }
+            
             GenericValue productCategoryMember = null;
             try {
                 productCategoryMember = delegator.findByPrimaryKey("ProductCategoryMember",
@@ -244,7 +258,8 @@ public class CategoryEvents {
             productCategoryMember.set("thruDate", thruDate, false);
             productCategoryMember.set("comments", request.getParameter("COMMENTS"), false);
             //if an empty string was passed, go ahead and set sequenceNum to null, otherwise don't
-            productCategoryMember.set("sequenceNum", sequenceNum, (thruDateStr != null));
+            productCategoryMember.set("sequenceNum", sequenceNum, (sequenceNumStr != null));
+            productCategoryMember.set("quantity", quantity, (quantityStr != null));
             
             try {
                 productCategoryMember.store();
