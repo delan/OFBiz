@@ -20,7 +20,7 @@
  *  THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  *
  *@author     Andy Zeneski (jaz@ofbiz.org)
- *@version    $Revision: 1.19 $
+ *@version    $Revision: 1.20 $
  *@since      2.2
 -->
 
@@ -524,7 +524,7 @@
                             <#list orderShipmentInfoSummaryList as orderShipmentInfoSummary>
                               <div class="tabletext">
                                 <#if (orderShipmentInfoSummaryList?size > 1)>${orderShipmentInfoSummary.shipmentPackageSeqId}: </#if>
-                                Code ${orderShipmentInfoSummary.trackingCode?default("[Not Yet Known]")}
+                                Code: ${orderShipmentInfoSummary.trackingCode?default("[Not Yet Known]")}
                                 <#if orderShipmentInfoSummary.boxNumber?has_content> Box #${orderShipmentInfoSummary.boxNumber}</#if> 
                                 <#if orderShipmentInfoSummary.carrierPartyId?has_content>(Carrier: ${orderShipmentInfoSummary.carrierPartyId})</#if>
                               </div>
@@ -612,15 +612,16 @@
                         </td>
                         <td width="5">&nbsp;</td>
                         <td align="left" valign="top" width="80%">
-                            <div class="tabletext"><a href="<@ofbizUrl>/OrderDeliveryScheduleInfo?orderId=${orderId}</@ofbizUrl>" class="buttontext">View/Edit Delivery Schedule Info</a></div>
-                            <#if orderHeader.statusId != "ORDER_COMPLETED" && orderHeader.statusId != "ORDER_CANCELLED">                            
-                                <#if productStore?has_content && productStore.oneInventoryFacility?exists && productStore.oneInventoryFacility.equals("N")>
-                                    <div class="tabletext"><a href="<@ofbizUrl>/quickShipOrderMultiFacility?orderId=${orderId}&${paramString}</@ofbizUrl>" class="buttontext">Quick-Ship Order</a></div>
-                                <#else>
-                                    <div class="tabletext"><a href="<@ofbizUrl>/quickShipOrder?orderId=${orderId}&${paramString}</@ofbizUrl>" class="buttontext">Quick-Ship Order</a></div>
-                                </#if>
-                            
-                            <div class="tabletext"><a href="/facility/control/EditShipment?primaryOrderId=${orderId}&externalLoginKey=${requestAttributes.externalLoginKey}" class="buttontext">New Shipment</a></div>
+                            <#if orderHeader.statusId != "ORDER_COMPLETED" && orderHeader.statusId != "ORDER_CANCELLED">
+                              <div class="tabletext"><a href="<@ofbizUrl>/OrderDeliveryScheduleInfo?orderId=${orderId}</@ofbizUrl>" class="buttontext">View/Edit Delivery Schedule Info</a></div>
+                            </#if>
+                            <#if orderHeader.statusId == "ORDER_APPROVED" || orderHeader.statusId == "ORDER_SENT">
+                              <#if productStore?has_content && productStore.oneInventoryFacility?exists && productStore.oneInventoryFacility.equals("N")>
+                                <div class="tabletext"><a href="<@ofbizUrl>/quickShipOrderMultiFacility?orderId=${orderId}&${paramString}</@ofbizUrl>" class="buttontext">Quick-Ship Order</a></div>
+                              <#else>
+                                <div class="tabletext"><a href="<@ofbizUrl>/quickShipOrder?orderId=${orderId}&${paramString}</@ofbizUrl>" class="buttontext">Quick-Ship Order</a></div>
+                              </#if>
+                              <div class="tabletext"><a href="/facility/control/EditShipment?primaryOrderId=${orderId}&externalLoginKey=${requestAttributes.externalLoginKey}" class="buttontext">New Shipment</a></div>
                             </#if>
                             <#if security.hasEntityPermission("ORDERMGR", "_RETURN", session) && orderHeader.statusId == "ORDER_COMPLETED">
                               <div class="tabletext"><a href="<@ofbizUrl>/quickreturn?order_id=${orderId}&party_id=${partyId?if_exists}</@ofbizUrl>" class="buttontext">Create Return</a></div>
