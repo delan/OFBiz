@@ -363,6 +363,11 @@
     </request-map>
 
     <!-- PerformanceTest requests -->
+    <request-map uri="EntityPerformanceTest">
+        <security https="true" auth="true"/>
+        <response name="success" type="view" value="EntityPerformanceTest"/>
+    </request-map>
+
     <request-map uri="EntitySyncStatus">
         <security https="true" auth="true"/>
         <response name="success" type="view" value="EntitySyncStatus"/>
