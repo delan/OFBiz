@@ -1,5 +1,5 @@
 /*
- * $Id: UtilValidate.java,v 1.3 2003/12/06 23:28:44 ajzeneski Exp $
+ * $Id: UtilValidate.java,v 1.4 2003/12/13 23:55:49 ajzeneski Exp $
  *
  *  Copyright (c) 2001 The Open For Business Project - www.ofbiz.org
  *
@@ -32,7 +32,7 @@ import java.util.Collection;
  * See detailed description below.
  *
  * @author     <a href="mailto:jonesde@ofbiz.org">David E. Jones</a>
- * @version    $Revision: 1.3 $
+ * @version    $Revision: 1.4 $
  * @since      1.0
  *
  *
@@ -883,6 +883,37 @@ public class UtilValidate {
         return isValueLinkCard(stPassed);
     }
 
+    public static int getLuhnSum(String stPassed, boolean includesDigit) {
+        stPassed = stPassed.replaceAll("\\D", ""); // nuke any non-digit characters
+        int adj = 0;
+        if (includesDigit) adj = 1;                // if the string includes the check digit
+
+        int sum = 0;
+        for (int i = stPassed.length() - adj; i >= 0; i -= 2) {
+            sum += Integer.parseInt(stPassed.substring(i, i + 1));
+            if (i > 0) {
+                int d = 2 * Integer.parseInt(stPassed.substring(i - 1, i));
+                if (d > 9) d -= 9;
+                sum += d;
+            }
+        }
+        return sum;
+    }
+
+    public static int getLuhnCheckDigit(String stPassed) {
+        int sum = getLuhnSum(stPassed, false);
+        return ((sum / 10 + 1) * 10 - sum) % 10;
+    }
+
+    public static boolean sumIsMod10(int sum) {
+        return ((sum % 10) == 0);
+    }
+
+    public static String appendCheckDigit(String stPassed) {
+        String checkDigit = new Integer(getLuhnCheckDigit(stPassed)).toString();
+        return stPassed + checkDigit;
+    }
+
     /** Checks credit card number with Luhn Mod-10 test
      *
      * @param stPassed a string representing a credit card number
@@ -892,44 +923,9 @@ public class UtilValidate {
         if (isEmpty(stPassed)) return defaultEmptyOK;
         String st = stripCharsInBag(stPassed, creditCardDelimiters);
 
-        int sum = 0;
-        int mul = 1;
-        int l = st.length();
-
-        // Encoding only works on cards with less than 19 digits
-        if (l > 19) return (false);
-        for (int i = 0; i < l; i++) {
-            String digit = st.substring(l - i - 1, l - i);
-            int tproduct = 0;
-
-            try {
-                tproduct = Integer.parseInt(digit, 10) * mul;
-            } catch (Exception e) {
-                Debug.logWarning(e.getMessage(), module);
-                return false;
-            }
-            if (tproduct >= 10)
-                sum += (tproduct % 10) + 1;
-            else
-                sum += tproduct;
-            if (mul == 1)
-                mul++;
-            else
-                mul--;
-        }
-        // Uncomment the following line to help create credit card numbers
-        // 1. Create a dummy number with a 0 as the last digit
-        // 2. Examine the sum written out
-        // 3. Replace the last digit with the difference between the sum and
-        // the next multiple of 10.
-
-        // document.writeln("<BR>Sum      = ",sum,"<BR>");
-        // alert("Sum      = " + sum);
-
-        if ((sum % 10) == 0)
-            return true;
-        else
-            return false;
+        // encoding only works on cars with less the 19 digits
+        if (st.length() > 19) return false;
+        return sumIsMod10(getLuhnSum(st, true));
     }
 
     /** Checks to see if the cc number is a valid Visa number
