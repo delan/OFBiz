@@ -298,8 +298,7 @@
     <td width="50%" nowrap>
       <span class="tabletext">Offline:&nbsp;Check/Money Order</span>
     </td>
-  </tr>
-  <tr><td colspan="2"><hr class='sepbar'></td></tr>
+  </tr> 
   <tr>
     <td width="1%" nowrap>
       <input type="radio" name="checkOutPaymentId" value="EXT_WORLDPAY"
@@ -308,8 +307,7 @@
     <td width="50%" nowrap>
       <span class="tabletext">Pay With WorldPay</span>
     </td>
-  </tr>  
-  <tr><td colspan="2"><hr class='sepbar'></td></tr>
+  </tr>    
   <tr>
     <td width="1%" nowrap>
       <input type="radio" name="checkOutPaymentId" value="EXT_PAYPAL"
