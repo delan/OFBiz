@@ -366,12 +366,24 @@ public class WfProcessImpl extends WfExecutionObjectImpl implements WfProcess {
 
         if (Debug.verboseOn()) Debug.logVerbose("[WfProcess.startActivity] : Attempting to start activity (" + activity.name() + ")", module);
         
-        // using the StartActivityJob class to run the activity within its own thread        
+        // locate the dispatcher to use
+        ServiceDispatcher dispatcher = this.getDispatcher();
+        if (dispatcher == null) {
+            throw new WfException("Service Dispatcher not found for thie process; cannot start activity");
+        }
+        
+        // get the job manager
+        JobManager jm = dispatcher.getJobManager();
+        if (jm == null) {
+            throw new WfException("No job manager found on the service dispatcher; cannot start activity");
+        }
+          
+        // using the StartActivityJob class to run the activity within its own thread              
         try {            
-            Job activityJob = new StartActivityJob(activity, req);            
-            this.getDispatcher().getJobManager().runJob(activityJob);  
+            Job activityJob = new StartActivityJob(activity, req);                                   
+            jm.runJob(activityJob);  
         } catch (JobManagerException e) {
-            throw new WfException("Problems with job queue", e);
+            throw new WfException("JobManager error", e);
         }
          
         // the GenericRequester object will hold any exceptions; and report the job as failed       
