@@ -6,9 +6,9 @@
 	<enterprise-beans>
 	  	<session>  	
 		    	<ejb-name>WorkflowBean</ejb-name>
-	                <home>org.ofbiz.service.workflow.WorkflowHome</home>
-			<remote>org.ofbiz.service.workflow.Workflow</remote>
-			<ejb-class>org.ofbiz.core.workflow.WFEngine</ejb-class>
+	                <home>org.ofbiz.wfengine.WorkflowHome</home>
+			<remote>org.ofbiz.wfengine.Workflow</remote>
+			<ejb-class>org.ofbiz.wfengine.impl.WFEngine</ejb-class>
 			<session-type>Stateless</session-type>
 	                <transaction-type>Container</transaction-type>
 	       </session>
