@@ -1,5 +1,5 @@
 /*
- * $Id: MenuFactory.java,v 1.2 2004/04/11 08:28:18 jonesde Exp $
+ * $Id: MenuFactory.java,v 1.3 2004/07/16 18:53:24 byersa Exp $
  *
  * Copyright (c) 2003 The Open For Business Project - www.ofbiz.org
  *
@@ -34,6 +34,7 @@ import javax.servlet.ServletContext;
 import javax.servlet.http.HttpServletRequest;
 import javax.xml.parsers.ParserConfigurationException;
 
+import org.ofbiz.base.location.FlexibleLocation;
 import org.ofbiz.base.util.UtilCache;
 import org.ofbiz.base.util.UtilHttp;
 import org.ofbiz.base.util.UtilXml;
@@ -48,7 +49,7 @@ import org.xml.sax.SAXException;
  * Widget Library - Menu factory class
  *
  * @author     <a href="mailto:jonesde@ofbiz.org">David E. Jones</a>
- * @version    $Revision: 1.2 $
+ * @version    $Revision: 1.3 $
  * @since      2.2
  */
 public class MenuFactory {
@@ -57,6 +58,7 @@ public class MenuFactory {
 
     public static final UtilCache menuClassCache = new UtilCache("widget.menu.classResource", 0, 0, false);
     public static final UtilCache menuWebappCache = new UtilCache("widget.menu.webappResource", 0, 0, false);
+    public static final UtilCache menuLocationCache = new UtilCache("widget.menu.locationResource", 0, 0, false);
     
     public static ModelMenu getMenuFromClass(String resourceName, String menuName, GenericDelegator delegator, LocalDispatcher dispatcher) 
             throws IOException, SAXException, ParserConfigurationException {
@@ -130,4 +132,33 @@ public class MenuFactory {
         }
         return modelMenuMap;
     }
+
+    public static ModelMenu getMenuFromLocation(String resourceName, String menuName, GenericDelegator delegator, LocalDispatcher dispatcher) 
+            throws IOException, SAXException, ParserConfigurationException {
+        Map modelMenuMap = (Map) menuLocationCache.get(resourceName);
+        if (modelMenuMap == null) {
+            synchronized (MenuFactory.class) {
+                modelMenuMap = (Map) menuLocationCache.get(resourceName);
+                if (modelMenuMap == null) {
+                    ClassLoader loader = Thread.currentThread().getContextClassLoader();
+                    if (loader == null) {
+                        loader = MenuFactory.class.getClassLoader();
+                    }
+                    
+                    URL menuFileUrl = null;
+                    menuFileUrl = FlexibleLocation.resolveLocation(resourceName); //, loader);
+                    Document menuFileDoc = UtilXml.readXmlDocument(menuFileUrl, true);
+                    modelMenuMap = readMenuDocument(menuFileDoc, delegator, dispatcher);
+                    menuLocationCache.put(resourceName, modelMenuMap);
+                }
+            }
+        }
+        
+        ModelMenu modelMenu = (ModelMenu) modelMenuMap.get(menuName);
+        if (modelMenu == null) {
+            throw new IllegalArgumentException("Could not find menu with name [" + menuName + "] in class resource [" + resourceName + "]");
+        }
+        return modelMenu;
+    }
+    
 }
