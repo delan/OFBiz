@@ -1,5 +1,5 @@
 /*
- * $Id: WfExecutionObject.java,v 1.2 2003/08/28 19:06:14 ajzeneski Exp $
+ * $Id$
  *
  * Copyright (c) 2001, 2002 The Open For Business Project - www.ofbiz.org
  *
@@ -36,7 +36,7 @@ import org.ofbiz.entity.GenericValue;
  * WfExecutionObject - Workflow Execution Object Interface
  *
  * @author     <a href="mailto:jaz@ofbiz.org">Andy Zeneski</a>
- * @version    $Revision: 1.2 $
+ * @version    $Rev:$
  * @since      2.0
  */
 public interface WfExecutionObject {

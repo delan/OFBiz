@@ -1,5 +1,5 @@
 /*
- * $Id: WorkflowEngine.java,v 1.5 2004/07/01 15:27:16 ajzeneski Exp $
+ * $Id$
  *
  * Copyright (c) 2001, 2002 The Open For Business Project - www.ofbiz.org
  *
@@ -57,7 +57,7 @@ import org.ofbiz.service.job.JobManagerException;
  * WorkflowEngine - Workflow Service Engine
  *
  * @author     <a href="mailto:jaz@ofbiz.org">Andy Zeneski</a>
- * @version    $Revision: 1.5 $
+ * @version    $Rev:$
  * @since      2.0
  */
 public class WorkflowEngine extends AbstractEngine {

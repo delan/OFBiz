@@ -1,5 +1,5 @@
 /*
- * $Id: EvaluationException.java,v 1.1 2003/08/17 09:29:33 ajzeneski Exp $
+ * $Id$
  *
  * Copyright (c) 2003 The Open For Business Project - www.ofbiz.org
  *
@@ -28,7 +28,7 @@ package org.ofbiz.workflow;
  * Transition Evaluation Workflow Exception
  *
  * @author     <a href="mailto:jaz@ofbiz.org">Andy Zeneski</a> 
- * @version    $Revision: 1.1 $
+ * @version    $Rev:$
  * @since      2.1
  */
 public class EvaluationException extends WfException {
