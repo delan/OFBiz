@@ -24,129 +24,140 @@
 -->
 
 <forms>
-	<form name="EditProductSimpleTest" type="single" 
-		target="updateProduct" title="" default-title-style="tableheadtext" default-widget-style="inputBox" default-tooltip-style="tabletext">
-		<auto-fields-service service-name="updateProduct" map-name="product"/>
-	</form>
-	<form name="EditProduct" type="single" 
-		target="updateProduct" title="" default-map-name="product"
-		default-title-style="tableheadtext" default-widget-style="inputBox" default-tooltip-style="tabletext">
-		
-		<alt-target use-when="product==null" target="createProduct"/>
-		
-		<field use-when="product==null" name="isCreate"><hidden value="true"/></field>
-		
-		<field use-when="product!=null" name="productId" tooltip="This cannot be changed without re-creating the product."><display/></field>
-		<field use-when="product==null&amp;&amp;productId==null" name="productId"><text size="20" maxlength="20"/></field>
-		<field use-when="product==null&amp;&amp;productId!=null" name="productId" tooltip="Could not find product with ID [${productId}]"><text size="20" maxlength="20"/></field>
-		
-		<field position="1" name="isVirtual" title="Is VIRTUAL Product?" widget-style="selectBox">
-			<drop-down allow-empty="true"><option key="Y"/><option key="N"/></drop-down>
-		</field>
-		<field position="2" name="isVariant" title="Is VARIANT Product?" widget-style="selectBox">
-			<drop-down allow-empty="true"><option key="Y"/><option key="N"/></drop-down>
-		</field>
-		<field name="productTypeId" title="Product Type" widget-style="selectBox">
-			<drop-down>
-				<entity-options entity-name="ProductType" description="${description}"> <!-- [${productTypeId}] -->
-					<entity-order-by field-name="description"/>
-				</entity-options>
-			</drop-down>
-		</field>
-		<field name="primaryProductCategoryId" title="Primary Category" widget-style="selectBox">
-			<drop-down allow-empty="true">
-				<entity-options entity-name="ProductCategory" key-field-name="productCategoryId" description="${description} [${productCategoryId}]">
-					<entity-order-by field-name="description"/>
-				</entity-options>
-			</drop-down>
-		</field>
-		
-		<field name="productName"><text size="30" maxlength="60"/></field>
-		<field name="internalName"><text size="30" maxlength="60"/></field>
-		<field name="brandName"><text size="30" maxlength="60"/></field>
-		<field name="description" widget-style="textAreaBox"><textarea cols="60" rows="2"/></field>
-		<field name="longDescription" widget-style="textAreaBox"><textarea cols="60" rows="7"/></field>
-		<field name="comments"><text size="60" maxlength="250"/></field>
-		
-		<field position="1" name="introductionDate" title="Intro Date" red-when="after-now"><date-time/></field>
-		<field position="2" name="salesDiscontinuationDate" title="Sales Thru Date" red-when="before-now"><date-time/></field>
-		<field position="1" name="supportDiscontinuationDate" title="Support Thru Date" red-when="before-now"><date-time/></field>
-		<field position="2" name="manufacturerPartyId" title="OEM Party ID" red-when="before-now"><text size="20" maxlength="20"/></field>
-		
-		<field position="1" name="requireInventory" widget-style="selectBox" tooltip="Should inventory be required to purchase this product? If not specified defaults to the Catalog setting.">
-			<drop-down allow-empty="true"><option key="Y"/><option key="N"/></drop-down>
-		</field>
-		<field position="2" name="inventoryMessage"><text size="20" maxlength="255"/></field>
-		<field position="1" name="weight"><text size="10" maxlength="20"/></field>
-		<field position="2" name="weightUomId"><text size="10" maxlength="20"/></field>
-		<field position="1" name="quantityIncluded"><text size="10" maxlength="20"/></field>
-		<field position="2" name="quantityUomId"><text size="10" maxlength="20"/></field>
-		<field position="1" name="piecesIncluded"><text size="10" maxlength="20"/></field>
+    <form name="EditProductSimpleTest" type="single" 
+        target="updateProduct" title="" default-title-style="tableheadtext" default-widget-style="inputBox" default-tooltip-style="tabletext">
+        <auto-fields-service service-name="updateProduct" map-name="product"/>
+    </form>
+    <form name="EditProduct" type="single" 
+        target="updateProduct" title="" default-map-name="product"
+        default-title-style="tableheadtext" default-widget-style="inputBox" default-tooltip-style="tabletext">
+        
+        <alt-target use-when="product==null" target="createProduct"/>
+        
+        <field use-when="product==null" name="isCreate"><hidden value="true"/></field>
+        
+        <field use-when="product!=null" name="productId" tooltip="This cannot be changed without re-creating the product."><display/></field>
+        <field use-when="product==null&amp;&amp;productId==null" name="productId"><text size="20" maxlength="20"/></field>
+        <field use-when="product==null&amp;&amp;productId!=null" name="productId" tooltip="Could not find product with ID [${productId}]"><text size="20" maxlength="20"/></field>
+        
+        <field position="1" name="isVirtual" title="Is VIRTUAL Product?" widget-style="selectBox">
+            <drop-down allow-empty="true"><option key="Y"/><option key="N"/></drop-down>
+        </field>
+        <field position="2" name="isVariant" title="Is VARIANT Product?" widget-style="selectBox">
+            <drop-down allow-empty="true"><option key="Y"/><option key="N"/></drop-down>
+        </field>
+        <field name="productTypeId" title="Product Type" widget-style="selectBox">
+            <drop-down>
+                <entity-options entity-name="ProductType" description="${description}"> <!-- [${productTypeId}] -->
+                    <entity-order-by field-name="description"/>
+                </entity-options>
+            </drop-down>
+        </field>
+        <field name="primaryProductCategoryId" title="Primary Category" widget-style="selectBox">
+            <drop-down allow-empty="true">
+                <entity-options entity-name="ProductCategory" key-field-name="productCategoryId" description="${description} [${productCategoryId}]">
+                    <entity-order-by field-name="description"/>
+                </entity-options>
+            </drop-down>
+        </field>
+        
+        <field name="productName"><text size="30" maxlength="60"/></field>
+        <field name="internalName"><text size="30" maxlength="60"/></field>
+        <field name="brandName"><text size="30" maxlength="60"/></field>
+        <field name="description" widget-style="textAreaBox"><textarea cols="60" rows="2"/></field>
+        <field name="longDescription" widget-style="textAreaBox"><textarea cols="60" rows="7"/></field>
+        <field name="comments"><text size="60" maxlength="250"/></field>
+        
+        <field position="1" name="introductionDate" title="Intro Date" red-when="after-now"><date-time/></field>
+        <field position="2" name="salesDiscontinuationDate" title="Sales Thru Date" red-when="before-now"><date-time/></field>
+        <field position="1" name="supportDiscontinuationDate" title="Support Thru Date" red-when="before-now"><date-time/></field>
+        <field position="2" name="salesDiscWhenNotAvail" title="Disc. When Inv. Not Avail?" widget-style="selectBox">
+            <drop-down allow-empty="true"><option key="Y"/><option key="N"/></drop-down>
+        </field>
+                
+        <field position="1" name="manufacturerPartyId" title="OEM Party ID" red-when="before-now"><text size="20" maxlength="20"/></field>
+        
+        <field position="1" name="requireInventory" widget-style="selectBox" tooltip="Should inventory be required to purchase this product? If not specified defaults to the Catalog setting.">
+            <drop-down allow-empty="true"><option key="Y"/><option key="N"/></drop-down>
+        </field>
+        <field position="2" name="inventoryMessage"><text size="20" maxlength="255"/></field>
+        <field position="1" name="weight"><text size="10" maxlength="20"/></field>
+        <field position="2" name="weightUomId">
+            <drop-down allow-empty="true">
+                <entity-options entity-name="Uom" key-field-name="uomId" description="${description} [${abbreviation}]">
+                    <entity-constraint name="uomTypeId" value="WEIGHT_MEASURE"/>
+                    <entity-order-by field-name="description"/>
+                </entity-options>
+            </drop-down>
+        </field>
+        <field position="1" name="quantityIncluded"><text size="10" maxlength="20"/></field>
+        <field position="2" name="quantityUomId"><text size="10" maxlength="20"/></field>
+        <field position="1" name="piecesIncluded"><text size="10" maxlength="20"/></field>
 
-		<field position="1" name="taxable" widget-style="selectBox">
-			<drop-down allow-empty="true"><option key="Y"/><option key="N"/></drop-down>
-		</field>
-		<field position="2" name="taxCategory"><text size="10" maxlength="20"/></field>
-		<field position="1" name="taxVatCode"><text size="10" maxlength="20"/></field>
-		<field position="2" name="taxDutyCode"><text size="10" maxlength="20"/></field>
+        <field position="1" name="taxable" widget-style="selectBox">
+            <drop-down allow-empty="true"><option key="Y"/><option key="N"/></drop-down>
+        </field>
+        <field position="2" name="taxCategory"><text size="10" maxlength="20"/></field>
+        <field position="1" name="taxVatCode"><text size="10" maxlength="20"/></field>
+        <field position="2" name="taxDutyCode"><text size="10" maxlength="20"/></field>
 
-		<field position="1" name="chargeShipping" widget-style="selectBox">
-			<drop-down allow-empty="true"><option key="Y"/><option key="N"/></drop-down>
-		</field>
-		<field position="2" name="autoCreateKeywords" widget-style="selectBox">
-			<drop-down allow-empty="true"><option key="Y"/><option key="N"/></drop-down>
-		</field>
+        <field position="1" name="chargeShipping" widget-style="selectBox">
+            <drop-down allow-empty="true"><option key="Y"/><option key="N"/></drop-down>
+        </field>
+        <field position="2" name="autoCreateKeywords" widget-style="selectBox">
+            <drop-down allow-empty="true"><option key="Y"/><option key="N"/></drop-down>
+        </field>
 
-		<field name="contentInfoText" title="Content" widget-style="tabletext">
-			<display description="NOTE: For more content options, use the Content tab." also-hidden="false"/>
-		</field>
-		<field name="smallImageUrl"><text size="60" maxlength="255"/></field>
-		<field name="mediumImageUrl"><text size="60" maxlength="255"/></field>
-		<field name="largeImageUrl"><text size="60" maxlength="255"/></field>
-		<field name="detailImageUrl"><text size="60" maxlength="255"/></field>
-		<field name="detailTemplate"><text size="60" maxlength="250"/></field>
+        <field name="contentInfoText" title="Content" widget-style="tabletext">
+            <display description="NOTE: For more content options, use the Content tab." also-hidden="false"/>
+        </field>
+        <field name="smallImageUrl"><text size="60" maxlength="255"/></field>
+        <field name="mediumImageUrl"><text size="60" maxlength="255"/></field>
+        <field name="largeImageUrl"><text size="60" maxlength="255"/></field>
+        <field name="detailImageUrl"><text size="60" maxlength="255"/></field>
+        <field name="detailTemplate"><text size="60" maxlength="250"/></field>
 
-		<field name="submitButton" title="Update Product" widget-style="standardSubmit"><submit button-type="button"/></field>
+        <field name="submitButton" title="Update Product" widget-style="standardSubmit"><submit button-type="button"/></field>
 
-		<field use-when="product!=null" position="1" name="lastUpdatedByText" title="Last Modified By:" widget-style="tabletext">
-			<display description="[${product.lastModifiedByUserLogin}] on ${product.lastModifiedDate}" also-hidden="false"/>
-		</field>
-		<field use-when="product!=null" position="2" name="createdByText" title="Created By:" widget-style="tabletext">
-			<display description="[${product.createdByUserLogin}] on ${product.createdDate}" also-hidden="false"/>
-		</field>
-	</form>
-	<form name="AddProductCategoryMember" type="single" 
-		target="addProductToCategory" title="Add ProductCategoryMember (select Category, enter From Date):"
-		default-title-style="tableheadtext" default-widget-style="inputBox" default-tooltip-style="tabletext">
-		<auto-fields-service service-name="safeAddProductToCategory"/>
-		<field name="productId" map-name="product"><hidden/></field>
-		<field name="productCategoryId" widget-style="selectBox">
-			<drop-down>
-				<entity-options entity-name="ProductCategory" description="${description} [${productCategoryId}]">
-					<entity-order-by field-name="description"/>
-				</entity-options>
-			</drop-down>
-		</field>
-		<field name="comments"><ignored/></field>
-		<field name="submitButton" title="Add" widget-style="standardSubmit"><submit button-type="button"/></field>
-	</form>
-	<form name="UpdateProductCategoryMemeber" type="list" 
-		target="updateProductToCategory" title="" list-name="productCategoryMemberDatas"
-		default-title-style="tableheadtext" default-widget-style="inputBox" default-tooltip-style="tabletext">
-		<!-- each entry in the list will be a Map with the entries: productCategoryMember and productCategory -->
-		<auto-fields-service service-name="updateProductToCategory" map-name="productCategoryMember"/>
-		<field name="productId"><hidden/></field>
-		<field name="productCategoryId" title="Category [ID]" widget-style="buttontext">
-			<hyperlink target="EditCategory?productCategoryId=${productCategoryMember.productCategoryId}"
-				description="${productCategory.description} [${productCategory.productCategoryId}]"/>
-		</field>
-		<field name="fromDate" title="From Date &amp;amp; Time" widget-style="tabletext"><display/></field>
-		<field name="thruDate" title="Thru Date &amp;amp; Time"></field>
-		<field name="comments"><ignored/></field>
-		<field name="submitButton" title="Update" widget-style="standardSubmit"><submit button-type="button"/></field>
-		<field name="deleteLink" title="&amp;nbsp;" widget-style="buttontext">
-			<hyperlink target="removeProductFromCategory?productId=${productCategoryMember.productId}&amp;productCategoryId=${productCategoryMember.productCategoryId}&amp;fromDate=${productCategoryMember.fromDate}"
-				description="[Delete]" also-hidden="false"/>
-		</field>
-	</form>
+        <field use-when="product!=null" position="1" name="lastUpdatedByText" title="Last Modified By:" widget-style="tabletext">
+            <display description="[${product.lastModifiedByUserLogin}] on ${product.lastModifiedDate}" also-hidden="false"/>
+        </field>
+        <field use-when="product!=null" position="2" name="createdByText" title="Created By:" widget-style="tabletext">
+            <display description="[${product.createdByUserLogin}] on ${product.createdDate}" also-hidden="false"/>
+        </field>
+    </form>
+    <form name="AddProductCategoryMember" type="single" 
+        target="addProductToCategory" title="Add ProductCategoryMember (select Category, enter From Date):"
+        default-title-style="tableheadtext" default-widget-style="inputBox" default-tooltip-style="tabletext">
+        <auto-fields-service service-name="safeAddProductToCategory"/>
+        <field name="productId" map-name="product"><hidden/></field>
+        <field name="productCategoryId" widget-style="selectBox">
+            <drop-down>
+                <entity-options entity-name="ProductCategory" description="${description} [${productCategoryId}]">
+                    <entity-order-by field-name="description"/>
+                </entity-options>
+            </drop-down>
+        </field>
+        <field name="comments"><ignored/></field>
+        <field name="submitButton" title="Add" widget-style="standardSubmit"><submit button-type="button"/></field>
+    </form>
+    <form name="UpdateProductCategoryMemeber" type="list" 
+        target="updateProductToCategory" title="" list-name="productCategoryMemberDatas"
+        default-title-style="tableheadtext" default-widget-style="inputBox" default-tooltip-style="tabletext">
+        <!-- each entry in the list will be a Map with the entries: productCategoryMember and productCategory -->
+        <auto-fields-service service-name="updateProductToCategory" map-name="productCategoryMember"/>
+        <field name="productId"><hidden/></field>
+        <field name="productCategoryId" title="Category [ID]" widget-style="buttontext">
+            <hyperlink target="EditCategory?productCategoryId=${productCategoryMember.productCategoryId}"
+                description="${productCategory.description} [${productCategory.productCategoryId}]"/>
+        </field>
+        <field name="fromDate" title="From Date &amp;amp; Time" widget-style="tabletext"><display/></field>
+        <field name="thruDate" title="Thru Date &amp;amp; Time"></field>
+        <field name="comments"><ignored/></field>
+        <field name="submitButton" title="Update" widget-style="standardSubmit"><submit button-type="button"/></field>
+        <field name="deleteLink" title="&amp;nbsp;" widget-style="buttontext">
+            <hyperlink target="removeProductFromCategory?productId=${productCategoryMember.productId}&amp;productCategoryId=${productCategoryMember.productCategoryId}&amp;fromDate=${productCategoryMember.fromDate}"
+                description="[Delete]" also-hidden="false"/>
+        </field>
+    </form>
 </forms>
