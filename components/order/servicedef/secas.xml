@@ -195,4 +195,15 @@
     	<condition field-name="custRequestItemSeqId" operator="is-not-empty"/>
     	<action service="associatedRequirementWithRequestItem" mode="sync"/>
     </eca>
+    
+    <!-- Requirement / stock level -->
+    <eca service="createItemIssuance" event="invoke">
+    	<condition field-name="quantity" value="0" operator="greater" type="Double"/>
+    	<action service="checkCreateStockRequirement" mode="sync"/>
+    </eca>
+    <eca service="updateItemIssuance" event="invoke">
+    	<condition field-name="quantity" value="0" operator="greater" type="Double"/>
+    	<action service="checkCreateStockRequirement" mode="sync"/>
+    </eca>
+
 </service-eca>
