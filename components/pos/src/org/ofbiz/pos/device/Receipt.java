@@ -134,6 +134,10 @@ public class Receipt extends GenericDevice implements DialogCallback {
                     }
                 }
             }
+
+            this.println();
+            this.println();
+            this.println(PAPER_CUT);
         }
     }
 
@@ -183,11 +187,7 @@ public class Receipt extends GenericDevice implements DialogCallback {
         String toPrint = FlexibleStringExpander.expandString(template, expandMap);
         String[] lines = toPrint.split("\\n");
         for (int i = 0; i < lines.length; i++) {
-            try {
-                ((POSPrinter) control).printNormal(POSPrinterConst.PTR_S_RECEIPT, lines[i]);
-            } catch (jpos.JposException e) {
-                Debug.logError(e, module);
-            }
+            this.println(lines[i]);
         }
     }
 

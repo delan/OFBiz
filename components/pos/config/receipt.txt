@@ -1,16 +1,16 @@
-${CENTER}${DOUBLE_HEIGHT}${BOLD}Company XYZ${LF}
-${CENTER}${BOLD}7 E. 8th St. #308${LF}
-${CENTER}${BOLD}New York, NY 10003${LF}
-${CENTER}${BOLD}212.655.3052${LF}
-${LF}
-DESC                       PRICE    QTY${LF}
-=======================================${LF}
-Test Description            0.00     1 ${LF}
-                                       ${LF}
-                                       ${LF}
-                          TOTAL:   0.00${LF}
-                         CHANGE:   0.00${LF}
-${LF}
-${LF}
+${CENTER}${DOUBLE_HEIGHT}${BOLD}Company XYZ
+${CENTER}${BOLD}7 E. 8th St. #308$
+${CENTER}${BOLD}New York, NY 10003
+${CENTER}${BOLD}212.655.3052
+
+DESC                       PRICE    QTY
+=======================================
+Test Description            0.00     1
+
+
+                          TOTAL:   0.00
+                         CHANGE:   0.00
+
+
 [ORDER BARCODE]
-${CENTER}${DOUBLE_HEIGHT}${BOLD}THANK-YOU${LF}
+${CENTER}${DOUBLE_HEIGHT}${BOLD}THANK-YOU
