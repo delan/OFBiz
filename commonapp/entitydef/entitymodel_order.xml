@@ -449,6 +449,10 @@
         <key-map field-name="orderId" rel-field-name="purchaseOrderId"/>
         <key-map field-name="orderItemSeqId" rel-field-name="poItemSeqId"/>
       </relation>
+      <relation type="many" rel-entity-name="OrderItemInventoryRes">
+        <key-map field-name="orderId"/>
+        <key-map field-name="orderItemSeqId"/>
+      </relation>
       <relation type="many" rel-entity-name="OrderItemBilling">
         <key-map field-name="orderId"/>
         <key-map field-name="orderItemSeqId"/>
