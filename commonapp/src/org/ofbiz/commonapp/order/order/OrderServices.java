@@ -1246,6 +1246,7 @@ public class OrderServices {
         GenericValue shippingAddress = (GenericValue) context.get("shippingAddress");
 
         // Simple Tax Calc only uses the state from the address and the SalesTaxLookup entity.
+        String countryCode = shippingAddress.getString("countryGeoId");
         String stateCode = shippingAddress.getString("stateProvinceGeoId");
 
         // Setup the return lists.
@@ -1257,16 +1258,12 @@ public class OrderServices {
             GenericValue product = (GenericValue) itemProductList.get(i);
             Double itemAmount = (Double) itemAmountList.get(i);
             Double shippingAmount = (Double) itemShippingList.get(i);
-            Double taxAmount = getTaxAmount(delegator, product, stateCode, itemAmount.doubleValue(), shippingAmount.doubleValue());
-
-            itemAdjustments.add(UtilMisc.toList(delegator.makeValue("OrderAdjustment",
-                        UtilMisc.toMap("amount", taxAmount, "orderAdjustmentTypeId", "SALES_TAX", "comments", stateCode))));
+            List taxList = getTaxAmount(delegator, product, countryCode, stateCode, itemAmount.doubleValue(), shippingAmount.doubleValue());
+            itemAdjustments.add(taxList);          
         }
         if (orderShippingAmount.doubleValue() > 0) {
-            Double taxAmount = getTaxAmount(delegator, null, stateCode, 0.00, orderShippingAmount.doubleValue());
-
-            orderAdjustments.add(delegator.makeValue("OrderAdjustment",
-                    UtilMisc.toMap("amount", taxAmount, "orderAdjustmentTypeId", "SALES_TAX", "comments", stateCode)));
+            List taxList = getTaxAmount(delegator, null, countryCode, stateCode, 0.00, orderShippingAmount.doubleValue());
+            orderAdjustments.addAll(taxList);
         }
 
         Map result = UtilMisc.toMap("orderAdjustments", orderAdjustments, "itemAdjustments", itemAdjustments);
@@ -1275,61 +1272,72 @@ public class OrderServices {
 
     }
 
-    private static Double getTaxAmount(GenericDelegator delegator, GenericValue item, String stateCode, double itemAmount, double shippingAmount) {
-        Map lookupMap = null;
-
-        if (item != null)
-            lookupMap = UtilMisc.toMap("stateProvinceGeoId", stateCode, "taxCategory", item.get("taxCategory"));
-        else
-            lookupMap = UtilMisc.toMap("stateProvinceGeoId", stateCode, "taxCategory", "_NA_");
+    private static List getTaxAmount(GenericDelegator delegator, GenericValue item, String countryCode, String stateCode, double itemAmount, double shippingAmount) {                              
+        List adjustments = new ArrayList();
+       
+        // build the country expressions
+        List countryExprs = UtilMisc.toList(new EntityExpr("countryGeoId", EntityOperator.EQUALS, countryCode), new EntityExpr("countryGeoId", EntityOperator.EQUALS, "_NA_"));
+        EntityCondition countryCond = new EntityConditionList(countryExprs, EntityOperator.OR);
+        
+        // build the state expression
+        List stateExprs = UtilMisc.toList(new EntityExpr("stateProvinceGeoId", EntityOperator.EQUALS, stateCode), new EntityExpr("stateProvinceGeoId", EntityOperator.EQUALS, "_NA_"));
+        EntityCondition stateCond = new EntityConditionList(stateExprs, EntityOperator.OR);
+        
+        // build the tax cat expression
+        List taxCatExprs = UtilMisc.toList(new EntityExpr("taxCategory", EntityOperator.EQUALS, "_NA_"));
+        if (item != null && item.get("taxCategory") != null) {
+            taxCatExprs.add(new EntityExpr("taxCategory", EntityOperator.EQUALS, item.getString("taxCategory")));
+        }
+        EntityCondition taxCatCond = new EntityConditionList(taxCatExprs, EntityOperator.OR);
+        
+        // build the main condition clause
+        List mainExprs = UtilMisc.toList(countryCond, stateCond);
+        if (taxCatExprs.size() > 1) {
+            mainExprs.add(taxCatCond);
+        } else {
+            mainExprs.add(taxCatExprs.get(0));
+        }
+        EntityCondition mainCondition = new EntityConditionList(mainExprs, EntityOperator.AND);
+        
+        // create the orderby clause
         List orderList = UtilMisc.toList("minPurchase", "fromDate");
-
+            
         try {
-            List lookupList = delegator.findByAndCache("SimpleSalesTaxLookup", lookupMap, orderList);
-
-            if (lookupList.size() == 0 && !"_NA_".equals((String) lookupMap.get("taxCategory"))) {
-                lookupMap.put("taxCategory", "_NA_");
-                lookupList = delegator.findByAndCache("SimpleSalesTaxLookup", lookupMap, orderList);
-            }
+            List lookupList = delegator.findByCondition("SimpleSalesTaxLookup", mainCondition, null, orderList);
             List filteredList = EntityUtil.filterByDate(lookupList);
 
             if (filteredList.size() == 0) {
                 Debug.logWarning("SimpleTaxCalc: No State/TaxCategory pair found (with or without taxCat).", module);
-                return new Double(0.00);
+                return adjustments;
             }
             
-            // find the right entry based on purchase amount
-            GenericValue taxLookup = null;
+            // find the right entry(s) based on purchase amount                    
             Iterator flIt = filteredList.iterator();
             while (flIt.hasNext()) {
-                GenericValue tl = (GenericValue) flIt.next();
-                Debug.logInfo("Testing " + itemAmount + " with : " + tl, module);
-                if (itemAmount >= tl.getDouble("minPurchase").doubleValue()) 
-                    taxLookup = tl;
-            }
-            
-            Debug.logInfo("TaxLookup: " + taxLookup, module);
-            
-            if (taxLookup == null) {
-                Debug.logWarning("SimpleTaxCalc: No tax entry found for state/category with matching min-purchase.", module);
-                return new Double(0.00);
-            }
-            
-            double taxRate = taxLookup.get("salesTaxPercentage") != null ? taxLookup.getDouble("salesTaxPercentage").doubleValue() : 0;
-            double taxable = 0.00;
-
-            if (item != null && (item.get("taxable") == null || (item.get("taxable") != null && item.getBoolean("taxable").booleanValue())))
-                taxable += itemAmount;
-            if (taxLookup != null && (taxLookup.get("taxShipping") == null || (taxLookup.get("taxShipping") != null && taxLookup.getBoolean("taxShipping").booleanValue())))
-                taxable += shippingAmount;
-            return new Double(taxable * taxRate);
+                GenericValue taxLookup = (GenericValue) flIt.next();
+                Debug.logInfo("Testing " + itemAmount + " with : " + taxLookup, module);
+                if (itemAmount >= taxLookup.getDouble("minPurchase").doubleValue()) {                
+                    Debug.logInfo("TaxLookup: " + taxLookup, module);
+                    
+                    double taxRate = taxLookup.get("salesTaxPercentage") != null ? taxLookup.getDouble("salesTaxPercentage").doubleValue() : 0;
+                    double taxable = 0.00;
+                    
+                    if (item != null && (item.get("taxable") == null || (item.get("taxable") != null && item.getBoolean("taxable").booleanValue()))) {            
+                        taxable += itemAmount;
+                    }
+                    if (taxLookup != null && (taxLookup.get("taxShipping") == null || (taxLookup.get("taxShipping") != null && taxLookup.getBoolean("taxShipping").booleanValue()))) {            
+                        taxable += shippingAmount;
+                    }
+                    
+                    Double taxAmount = new Double(taxable * taxRate);
+                    adjustments.add(delegator.makeValue("OrderAdjustment", UtilMisc.toMap("amount", taxAmount, "orderAdjustmentTypeId", "SALES_TAX", "comments", taxLookup.getString("description"))));                        
+                }                                              
+            }                                                                                             
         } catch (GenericEntityException e) {
-            Debug.logError(e);
-            return new Double(0.00);
+            Debug.logError(e, "Problems looking up tax rates", module);
+            return new ArrayList();            
         }
-    }
-    
-    
-    
-    
+        
+        return adjustments;
+    }  
 }

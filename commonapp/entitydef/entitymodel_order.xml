@@ -1142,13 +1142,16 @@
     <entity entity-name="SimpleSalesTaxLookup"
             package-name="org.ofbiz.commonapp.order.order"
             title="Simple Sales Tax Lookup Entity">
+      <field name="countryGeoId" type="id-ne"></field>
       <field name="stateProvinceGeoId" type="id-ne"></field>
-      <field name="taxCategory" type="id-ne"></field>
-      <field name="minPurchase" type="currency-amount"></field>
+      <field name="taxCategory" type="id-ne"></field>      
       <field name="fromDate" type="date-time"></field>
       <field name="thruDate" type="date-time"></field>
+      <field name="description" type="description"></field>
+      <field name="minPurchase" type="currency-amount"></field>
       <field name="taxShipping" type="indicator"></field>
-      <field name="salesTaxPercentage" type="floating-point"></field>
+      <field name="salesTaxPercentage" type="floating-point"></field>      
+      <prim-key field="countryGeoId"/>
       <prim-key field="stateProvinceGeoId"/>
       <prim-key field="taxCategory"/>
       <prim-key field="minPurchase"/>

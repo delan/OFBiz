@@ -178,10 +178,12 @@
     <service name="createTaxRate" engine="simple"
             location="org/ofbiz/commonapp/order/order/TaxRateServices.xml" invoke="createTaxRate">
         <description>Create a Tax Rate entry</description>
+        <attribute name="countryGeoId" type="String" mode="IN" optional="false"/>
         <attribute name="stateProvinceGeoId" type="String" mode="IN" optional="false"/>
         <attribute name="taxCategory" type="String" mode="IN" optional="false"/>
         <attribute name="taxShipping" type="String" mode="IN" optional="false"/>
         <attribute name="minPurchase" type="Double" mode="IN" optional="false"/>
+        <attribute name="description" type="String" mode="IN" optional="true"/>
         <attribute name="salesTaxPercentage" type="Double" mode="IN" optional="false"/>
         <attribute name="fromDate" type="Timestamp" mode="IN" optional="true"/>
         <attribute name="thruDate" type="Timestamp" mode="IN" optional="true"/>
@@ -190,6 +192,7 @@
     <service name="removeTaxRate" engine="simple"
             location="org/ofbiz/commonapp/order/order/TaxRateServices.xml" invoke="removeTaxRate">
         <description>Remove a Tax Rate entry</description>
+        <attribute name="countryGeoId" type="String" mode="IN" optional="false"/>
         <attribute name="stateProvinceGeoId" type="String" mode="IN" optional="false"/>
         <attribute name="taxCategory" type="String" mode="IN" optional="false"/>
         <attribute name="minPurchase" type="Double" mode="IN" optional="false"/>
