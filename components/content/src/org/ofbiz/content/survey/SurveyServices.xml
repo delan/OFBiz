@@ -28,7 +28,7 @@
  -->
 <simple-methods>
     <!-- Methods for Survey -->
-    <simple-method method-name="createSurvey" short-description="Create Data Resource Role">
+    <simple-method method-name="createSurvey" short-description="Create Survey">
         <check-permission action="_CREATE" permission="CONTENTMGR">
             <fail-message message="Security Error: to run createSurvey you must have the CONTENTMGR_CREATE or CONTENTMGR_ADMIN permission"/>
         </check-permission>
@@ -39,30 +39,30 @@
         <create-value value-name="newEntity"/>
         <field-to-result field-name="surveyId" map-name="newEntity"/>
     </simple-method>
-    <simple-method method-name="updateSurvey" short-description="Update Data Resource Role">
+    <simple-method method-name="updateSurvey" short-description="Update Survey">
         <check-permission action="_UPDATE" permission="CONTENTMGR">
             <fail-message message="Security Error: to run updateSurvey you must have the CONTENTMGR_UPDATE or CONTENTMGR_ADMIN permission"/>
         </check-permission>
         <check-errors/>
         <make-value entity-name="Survey" value-name="lookupKeyValue"/>
         <set-pk-fields map-name="parameters" value-name="lookupKeyValue"/>
-        <find-by-primary-key entity-name="Survey" map-name="lookupKeyValue" value-name="lookedUpValue"/>
+        <find-by-primary-key map-name="lookupKeyValue" value-name="lookedUpValue"/>
         <set-nonpk-fields map-name="parameters" value-name="lookedUpValue"/>
         <store-value value-name="lookedUpValue"/>
     </simple-method>
-    <simple-method method-name="removeSurvey" short-description="Remove Data Resource Role">
+    <simple-method method-name="deleteSurvey" short-description="Delete Survey">
         <check-permission action="_DELETE" permission="CONTENTMGR">
-            <fail-message message="Security Error: to run removeSurveyt you must have the CONTENTMGR_DELETE or CONTENTMGR_ADMIN permission"/>
+            <fail-message message="Security Error: to run deleteSurveyt you must have the CONTENTMGR_DELETE or CONTENTMGR_ADMIN permission"/>
         </check-permission>
         <check-errors/>
         <make-value entity-name="Survey" value-name="lookupKeyValue"/>
         <set-pk-fields map-name="parameters" value-name="lookupKeyValue"/>
-        <find-by-primary-key entity-name="Survey" map-name="lookupKeyValue" value-name="lookedUpValue"/>
+        <find-by-primary-key map-name="lookupKeyValue" value-name="lookedUpValue"/>
         <remove-value value-name="lookedUpValue"/>
     </simple-method>
     
     <!-- Methods for SurveyApplType -->
-    <simple-method method-name="createSurveyApplType" short-description="Create Data Resource Role">
+    <simple-method method-name="createSurveyApplType" short-description="Create SurveyApplType">
         <check-permission action="_CREATE" permission="CONTENTMGR">
             <fail-message message="Security Error: to run createSurveyApplType you must have the CONTENTMGR_CREATE or CONTENTMGR_ADMIN permission"/>
         </check-permission>
@@ -72,30 +72,30 @@
         <set-pk-fields map-name="parameters" value-name="newEntity"/>
         <create-value value-name="newEntity"/>
     </simple-method>
-    <simple-method method-name="updateSurveyApplType" short-description="Update Data Resource Role">
+    <simple-method method-name="updateSurveyApplType" short-description="Update SurveyApplType">
         <check-permission action="_UPDATE" permission="CONTENTMGR">
             <fail-message message="Security Error: to run updateSurveyApplType you must have the CONTENTMGR_UPDATE or CONTENTMGR_ADMIN permission"/>
         </check-permission>
         <check-errors/>
         <make-value entity-name="Survey" value-name="lookupKeyValue"/>
         <set-pk-fields map-name="parameters" value-name="lookupKeyValue"/>
-        <find-by-primary-key entity-name="Survey" map-name="lookupKeyValue" value-name="lookedUpValue"/>
+        <find-by-primary-key map-name="lookupKeyValue" value-name="lookedUpValue"/>
         <set-nonpk-fields map-name="parameters" value-name="lookedUpValue"/>
         <store-value value-name="lookedUpValue"/>
     </simple-method>
-    <simple-method method-name="removeSurveyApplType" short-description="Remove Data Resource Role">
+    <simple-method method-name="deleteSurveyApplType" short-description="Delete SurveyApplType">
         <check-permission action="_DELETE" permission="CONTENTMGR">
-            <fail-message message="Security Error: to run removeSurveyApplType you must have the CONTENTMGR_DELETE or CONTENTMGR_ADMIN permission"/>
+            <fail-message message="Security Error: to run deleteSurveyApplType you must have the CONTENTMGR_DELETE or CONTENTMGR_ADMIN permission"/>
         </check-permission>
         <check-errors/>
         <make-value entity-name="SurveyApplType" value-name="lookupKeyValue"/>
         <set-pk-fields map-name="parameters" value-name="lookupKeyValue"/>
-        <find-by-primary-key entity-name="SurveyApplType" map-name="lookupKeyValue" value-name="lookedUpValue"/>
+        <find-by-primary-key map-name="lookupKeyValue" value-name="lookedUpValue"/>
         <remove-value value-name="lookedUpValue"/>
     </simple-method>        
     
     <!-- Methods for SurveyQuestion -->
-    <simple-method method-name="createSurveyQuestion" short-description="Create Data Resource Role">
+    <simple-method method-name="createSurveyQuestion" short-description="Create Survey Question">
         <check-permission action="_CREATE" permission="CONTENTMGR">
             <fail-message message="Security Error: to run createSurveyQuestion you must have the CONTENTMGR_CREATE or CONTENTMGR_ADMIN permission"/>
         </check-permission>
@@ -107,30 +107,30 @@
         <create-value value-name="newEntity"/>
         <field-to-result field-name="surveyQuestionSeqId" map-name="newEntity"/>
     </simple-method>
-    <simple-method method-name="updateSurveyQuestion" short-description="Update Data Resource Role">
+    <simple-method method-name="updateSurveyQuestion" short-description="Update Survey Question">
         <check-permission action="_UPDATE" permission="CONTENTMGR">
             <fail-message message="Security Error: to run updateSurveyQuestion you must have the CONTENTMGR_UPDATE or CONTENTMGR_ADMIN permission"/>
         </check-permission>
         <check-errors/>
         <make-value entity-name="SurveyQuestion" value-name="lookupKeyValue"/>
         <set-pk-fields map-name="parameters" value-name="lookupKeyValue"/>
-        <find-by-primary-key entity-name="SurveyQuestion" map-name="lookupKeyValue" value-name="lookedUpValue"/>
+        <find-by-primary-key map-name="lookupKeyValue" value-name="lookedUpValue"/>
         <set-nonpk-fields map-name="parameters" value-name="lookedUpValue"/>
         <store-value value-name="lookedUpValue"/>
     </simple-method>
-    <simple-method method-name="removeSurveyQuestion" short-description="Remove Data Resource Role">
+    <simple-method method-name="deleteSurveyQuestion" short-description="Delete Survey Question">
         <check-permission action="_DELETE" permission="CONTENTMGR">
-            <fail-message message="Security Error: to run removeSurveyQuestion you must have the CONTENTMGR_DELETE or CONTENTMGR_ADMIN permission"/>
+            <fail-message message="Security Error: to run deleteSurveyQuestion you must have the CONTENTMGR_DELETE or CONTENTMGR_ADMIN permission"/>
         </check-permission>
         <check-errors/>
         <make-value entity-name="SurveyQuestion" value-name="lookupKeyValue"/>
         <set-pk-fields map-name="parameters" value-name="lookupKeyValue"/>
-        <find-by-primary-key entity-name="SurveyQuestion" map-name="lookupKeyValue" value-name="lookedUpValue"/>
+        <find-by-primary-key map-name="lookupKeyValue" value-name="lookedUpValue"/>
         <remove-value value-name="lookedUpValue"/>
     </simple-method>        
     
     <!-- Methods for SurveyQuestionType -->
-    <simple-method method-name="createSurveyQuestion" short-description="Create Data Resource Role">
+    <simple-method method-name="createSurveyQuestionType" short-description="Create SurveyQuestionType">
         <check-permission action="_CREATE" permission="CONTENTMGR">
             <fail-message message="Security Error: to run createSurveyQuestionType you must have the CONTENTMGR_CREATE or CONTENTMGR_ADMIN permission"/>
         </check-permission>
@@ -140,30 +140,30 @@
         <set-pk-fields map-name="parameters" value-name="newEntity"/>
         <create-value value-name="newEntity"/>
     </simple-method>
-    <simple-method method-name="updateSurveyQuestionType" short-description="Update Data Resource Role">
+    <simple-method method-name="updateSurveyQuestionType" short-description="Update SurveyQuestionType">
         <check-permission action="_UPDATE" permission="CONTENTMGR">
             <fail-message message="Security Error: to run updateSurveyQuestionType you must have the CONTENTMGR_UPDATE or CONTENTMGR_ADMIN permission"/>
         </check-permission>
         <check-errors/>
         <make-value entity-name="SurveyQuestionType" value-name="lookupKeyValue"/>
         <set-pk-fields map-name="parameters" value-name="lookupKeyValue"/>
-        <find-by-primary-key entity-name="SurveyQuestionType" map-name="lookupKeyValue" value-name="lookedUpValue"/>
+        <find-by-primary-key map-name="lookupKeyValue" value-name="lookedUpValue"/>
         <set-nonpk-fields map-name="parameters" value-name="lookedUpValue"/>
         <store-value value-name="lookedUpValue"/>
     </simple-method>
-    <simple-method method-name="removeSurveyQuestionType" short-description="Remove Data Resource Role">
+    <simple-method method-name="deleteSurveyQuestionType" short-description="Delete SurveyQuestionType">
         <check-permission action="_DELETE" permission="CONTENTMGR">
-            <fail-message message="Security Error: to run removeSurveyQuestion you must have the CONTENTMGR_DELETE or CONTENTMGR_ADMIN permission"/>
+            <fail-message message="Security Error: to run deleteSurveyQuestionType you must have the CONTENTMGR_DELETE or CONTENTMGR_ADMIN permission"/>
         </check-permission>
         <check-errors/>
         <make-value entity-name="SurveyQuestionType" value-name="lookupKeyValue"/>
         <set-pk-fields map-name="parameters" value-name="lookupKeyValue"/>
-        <find-by-primary-key entity-name="SurveyQuestionType" map-name="lookupKeyValue" value-name="lookedUpValue"/>
+        <find-by-primary-key map-name="lookupKeyValue" value-name="lookedUpValue"/>
         <remove-value value-name="lookedUpValue"/>
     </simple-method>
     
     <!-- Methods for SurveyTrigger -->
-    <simple-method method-name="createSurveyTrigger" short-description="Create Data Resource Role">
+    <simple-method method-name="createSurveyTrigger" short-description="Create SurveyTrigger">
         <check-permission action="_CREATE" permission="CONTENTMGR">
             <fail-message message="Security Error: to run createSurveyTrigger you must have the CONTENTMGR_CREATE or CONTENTMGR_ADMIN permission"/>
         </check-permission>
@@ -173,7 +173,7 @@
         <set-pk-fields map-name="parameters" value-name="newEntity"/>
         <create-value value-name="newEntity"/>
     </simple-method>
-    <simple-method method-name="updateSurveyTrigger" short-description="Update Data Resource Role">
+    <simple-method method-name="updateSurveyTrigger" short-description="Update SurveyTrigger">
         <check-permission action="_UPDATE" permission="CONTENTMGR">
             <fail-message message="Security Error: to run updateSurveyTrigger you must have the CONTENTMGR_UPDATE or CONTENTMGR_ADMIN permission"/>
         </check-permission>
@@ -184,9 +184,9 @@
         <set-nonpk-fields map-name="parameters" value-name="lookedUpValue"/>
         <store-value value-name="lookedUpValue"/>
     </simple-method>
-    <simple-method method-name="removeSurveyTrigger" short-description="Remove Data Resource Role">
+    <simple-method method-name="deleteSurveyTrigger" short-description="Delete SurveyTrigger">
         <check-permission action="_DELETE" permission="CONTENTMGR">
-            <fail-message message="Security Error: to run removeSurveyTrigger you must have the CONTENTMGR_DELETE or CONTENTMGR_ADMIN permission"/>
+            <fail-message message="Security Error: to run deleteSurveyTrigger you must have the CONTENTMGR_DELETE or CONTENTMGR_ADMIN permission"/>
         </check-permission>
         <check-errors/>
         <make-value entity-name="SurveyTrigger" value-name="lookupKeyValue"/>

@@ -656,11 +656,11 @@
         <auto-attributes include="pk" mode="IN" optional="false"/>
         <auto-attributes include="nonpk" mode="IN" optional="true"/>
     </service>
-    <service name="removeSurvey" engine="simple"  
+    <service name="deleteSurvey" engine="simple"  
             location="org/ofbiz/content/survey/SurveyServices.xml"
-            invoke="removeSurvey" 
+            invoke="deleteSurvey" 
             default-entity-name="Survey" auth="true">
-        <description>Remove Survey</description>
+        <description>Delete Survey</description>
         <auto-attributes include="pk" mode="IN" optional="false"/>
     </service>
 
@@ -681,11 +681,11 @@
         <auto-attributes include="pk" mode="IN" optional="false"/>
         <auto-attributes include="nonpk" mode="IN" optional="true"/>
     </service>
-    <service name="removeSurveyApplType" engine="simple"  
+    <service name="deleteSurveyApplType" engine="simple"  
             location="org/ofbiz/content/survey/SurveyServices.xml"
-            invoke="removeSurveyApplType" 
+            invoke="deleteSurveyApplType" 
             default-entity-name="SurveyApplType" auth="true">
-        <description>Remove SurveyApplType</description>
+        <description>Delete SurveyApplType</description>
         <auto-attributes include="pk" mode="IN" optional="false"/>
     </service>
 
@@ -707,11 +707,11 @@
         <auto-attributes include="pk" mode="IN" optional="false"/>
         <auto-attributes include="nonpk" mode="IN" optional="true"/>
     </service>
-    <service name="SurveyQuestion" engine="simple"  
+    <service name="deleteSurveyQuestion" engine="simple"  
             location="org/ofbiz/content/survey/SurveyServices.xml"
-            invoke="removeSurveyQuestion" 
+            invoke="deleteSurveyQuestion" 
             default-entity-name="SurveyQuestion" auth="true">
-        <description>Remove SurveyQuestion</description>
+        <description>Delete SurveyQuestion</description>
         <auto-attributes include="pk" mode="IN" optional="false"/>
     </service>
     
@@ -732,11 +732,11 @@
         <auto-attributes include="pk" mode="IN" optional="false"/>
         <auto-attributes include="nonpk" mode="IN" optional="true"/>
     </service>
-    <service name="SurveyQuestion" engine="simple"  
+    <service name="deleteSurveyQuestionType" engine="simple"  
             location="org/ofbiz/content/survey/SurveyServices.xml"
-            invoke="removeSurveyQuestionType" 
+            invoke="deleteSurveyQuestionType" 
             default-entity-name="SurveyQuestionType" auth="true">
-        <description>Remove SurveyQuestionType</description>
+        <description>Delete SurveyQuestionType</description>
         <auto-attributes include="pk" mode="IN" optional="false"/>
     </service> 
    
@@ -757,11 +757,11 @@
         <auto-attributes include="pk" mode="IN" optional="false"/>
         <auto-attributes include="nonpk" mode="IN" optional="true"/>
     </service>
-    <service name="SurveyTrigger" engine="simple"  
+    <service name="deleteSurveyTrigger" engine="simple"  
             location="org/ofbiz/content/survey/SurveyServices.xml"
-            invoke="removeSurveyTrigger" 
+            invoke="deleteSurveyTrigger" 
             default-entity-name="SurveyTrigger" auth="true">
-        <description>Remove SurveyTrigger</description>
+        <description>Delete SurveyTrigger</description>
         <auto-attributes include="pk" mode="IN" optional="false"/>
     </service>
 </services>

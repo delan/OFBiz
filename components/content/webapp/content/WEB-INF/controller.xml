@@ -797,6 +797,34 @@
         <response name="error" type="view" value="EditContentPurposeOperation"/>
     </request-map>
 
+    <!-- ================ Survey Requests ================= -->
+    <request-map uri="FindSurvey">
+        <security auth="true" https="true"/>
+        <response name="success" type="view" value="FindSurvey"/>
+    </request-map>
+    <request-map uri="EditSurvey">
+        <security auth="true" https="true"/>
+        <response name="success" type="view" value="EditSurvey"/>
+    </request-map>
+    <request-map uri="createSurvey">
+        <security auth="true" https="true"/>
+        <event invoke="createSurvey" path="" type="service"/>
+        <response name="success" type="view" value="EditSurvey"/>
+        <response name="error" type="view" value="EditSurvey"/>
+    </request-map>
+    <request-map uri="updateSurvey">
+        <security auth="true" https="true"/>
+        <event invoke="updateSurvey" path="" type="service"/>
+        <response name="success" type="view" value="EditSurvey"/>
+        <response name="error" type="view" value="EditSurvey"/>
+    </request-map>
+    <request-map uri="deleteSurvey">
+        <security auth="true" https="true"/>
+        <event invoke="deleteSurvey" path="" type="service"/>
+        <response name="success" type="view" value="EditSurvey"/>
+        <response name="error" type="view" value="EditSurvey"/>
+    </request-map>
+    
     <!-- end of request mappings -->
 
     <!-- View Mappings -->
@@ -846,5 +874,8 @@
     <view-map name="ContentSetupMenu" page="/contentsetup/ContentSetupMenu.ftl" type="jpublish"/>
     <view-map name="DataMenu" page="/data/DataMenu.ftl" type="jpublish"/>
     <view-map name="DataSetupMenu" page="/datasetup/DataSetupMenu.ftl" type="jpublish"/>
+
+    <view-map name="FindSurvey" page="/survey/FindSurvey.ftl" type="jpublish"/>
+    <view-map name="EditSurvey" page="/survey/EditSurvey.ftl" type="jpublish"/>
     <!-- end of view mappings -->
 </site-conf>
