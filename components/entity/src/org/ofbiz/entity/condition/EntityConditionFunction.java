@@ -1,5 +1,5 @@
 /*
- * $Id: EntityConditionFunction.java,v 1.1 2003/11/05 12:08:00 jonesde Exp $
+ * $Id: EntityConditionFunction.java,v 1.2 2004/04/23 01:38:20 doogie Exp $
  *
  *  Copyright (c) 2002 The Open For Business Project - www.ofbiz.org
  *
@@ -83,6 +83,7 @@ public abstract class EntityConditionFunction extends EntityCondition {
 */
 
     public boolean equals(Object obj) {
+        if (!(obj instanceof EntityConditionFunction)) return false;
         EntityConditionFunction otherFunc = (EntityConditionFunction) obj;
         return
             this.idInt == otherFunc.idInt
