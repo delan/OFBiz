@@ -24,13 +24,9 @@
 package org.ofbiz.commonapp.order.shoppingcart;
 
 import java.text.NumberFormat;
-import java.text.ParseException;
-import java.util.ArrayList;
-import java.util.Collection;
-import java.util.HashMap;
 import java.util.Iterator;
+import java.util.List;
 import java.util.Map;
-import java.util.Set;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
@@ -38,52 +34,58 @@ import javax.servlet.http.HttpSession;
 
 import org.ofbiz.commonapp.product.catalog.CatalogWorker;
 import org.ofbiz.core.entity.GenericDelegator;
-import org.ofbiz.core.entity.GenericEntityException;
 import org.ofbiz.core.entity.GenericValue;
 import org.ofbiz.core.security.Security;
 import org.ofbiz.core.service.LocalDispatcher;
+import org.ofbiz.core.service.ModelService;
 import org.ofbiz.core.util.Debug;
 import org.ofbiz.core.util.SiteDefs;
 import org.ofbiz.core.util.UtilFormatOut;
 import org.ofbiz.core.util.UtilHttp;
-import org.ofbiz.core.util.UtilMisc;
 
 /**
  * Shopping cart events.
  *
  * @author     <a href="mailto:jaz@ofbiz.org">Andy Zeneski</a>
+ * @author     <a href="mailto:tristana@twibble.org">Tristan Austin</a>
  * @version    $Revision$
  * @since      2.0
  */
 public class ShoppingCartEvents {
     
     public static String module = ShoppingCartEvents.class.getName();
+    
+    private static final String NO_ERROR = "noerror";
+    private static final String NON_CRITICAL_ERROR = "noncritical";
+    private static final String ERROR = "error";
 
     /** Event to add an item to the shopping cart. */
     public static String addToCart(HttpServletRequest request, HttpServletResponse response) {
         GenericDelegator delegator = (GenericDelegator) request.getAttribute("delegator");
         LocalDispatcher dispatcher = (LocalDispatcher) request.getAttribute("dispatcher");        
         ShoppingCart cart = getCartObject(request);
-
+        ShoppingCartHelper cartHelper = new ShoppingCartHelper(delegator, dispatcher, cart);
+        String controlDirective;
+        Map result;
         String productId = null;
         String itemType = null;
         String itemDescription = null; 
-        String productCategoryId = null;
-     
+        String productCategoryId = null; 
         String priceStr = null;
         double price = 0.00;
-        
+    
         String quantityStr = null;
         double quantity = 0;
         Map attributes = null;
-
+        String catalogId = CatalogWorker.getCurrentCatalogId(request);
+        
         // Get the parameters as a MAP, remove the productId and quantity params.        
         Map paramMap = UtilHttp.getParameterMap(request);
         
-        // Get shoppingList info if passed
+            // Get shoppingList info if passed
         String shoppingListId = request.getParameter("shoppingListId");
         String shoppingListItemSeqId = request.getParameter("shoppingListItemSeqId");
-
+        
         if (paramMap.containsKey("ADD_PRODUCT_ID")) {
             productId = (String) paramMap.remove("ADD_PRODUCT_ID");
         } else if (paramMap.containsKey("add_product_id")) {
@@ -111,7 +113,7 @@ public class ShoppingCartEvents {
                 return "success"; // not critical return to same page
             }
         }
-        
+    
         // check for an itemDescription
         if (paramMap.containsKey("ADD_ITEM_DESCRIPTION")) {
             itemDescription = (String) paramMap.remove("ADD_ITEM_DESCRIPTION");
@@ -121,7 +123,7 @@ public class ShoppingCartEvents {
         if (itemDescription != null && itemDescription.length() == 0) {
             itemDescription = null;
         }
-
+    
         // get the override price
         if (paramMap.containsKey("PRICE")) {
             priceStr = (String) paramMap.remove("PRICE");
@@ -130,7 +132,7 @@ public class ShoppingCartEvents {
         }
         if (priceStr == null) 
             priceStr = "0.00";  // default price is 0.00
-            
+    
         // get the quantity
         if (paramMap.containsKey("QUANTITY")) {
             quantityStr = (String) paramMap.remove("QUANTITY");
@@ -139,7 +141,7 @@ public class ShoppingCartEvents {
         }
         if (quantityStr == null)
             quantityStr = "1";  // default quantity is 1
-
+    
         // parse the price
         try {
             price = NumberFormat.getNumberInstance().parse(priceStr).doubleValue();
@@ -147,7 +149,7 @@ public class ShoppingCartEvents {
             Debug.logWarning(e, "Problems parsing price string: " + priceStr, module);
             price = 0.00;   
         }
-        
+    
         // parse the quantity
         try {
             quantity = NumberFormat.getNumberInstance().parse(quantityStr).doubleValue();
@@ -156,44 +158,17 @@ public class ShoppingCartEvents {
             quantity = 1;
         }
         
-        // price sanity check
-        if (productId == null && price < 0) {
-            request.setAttribute(SiteDefs.ERROR_MESSAGE, "Price must be a positive number.");
+        // Translate the parameters and add to the cart
+        result = cartHelper.addToCart(catalogId, shoppingListId, shoppingListItemSeqId, productId, productCategoryId, 
+            itemType, itemDescription, price, quantity, paramMap);
+        controlDirective = processResult(result, request);
+        
+        //Determine where to send the browser
+        if (controlDirective.equals(NON_CRITICAL_ERROR)) {
+            return "success";
+        } else if (controlDirective.equals(ERROR)) {
             return "error";
-        }
-        
-        // quantity sanity check
-        if (quantity < 0) {
-            request.setAttribute(SiteDefs.ERROR_MESSAGE, "Quantity must be a positive number.");
-            return "error";
-        }
-
-        // Create a HashMap of product attributes - From ShoppingCartItem.attributeNames[]
-        for (int namesIdx = 0; namesIdx < ShoppingCartItem.attributeNames.length; namesIdx++) {
-            if (attributes == null) attributes = new HashMap();
-            if (paramMap.containsKey(ShoppingCartItem.attributeNames[namesIdx])) {
-                attributes.put(ShoppingCartItem.attributeNames[namesIdx], paramMap.get(ShoppingCartItem.attributeNames[namesIdx]));
-            }
-        }
-        
-        try {
-            int itemId;
-            if (productId != null) {            
-                itemId = cart.addOrIncreaseItem(productId, quantity, null, attributes, CatalogWorker.getCurrentCatalogId(request), dispatcher);
-            } else {
-                itemId = cart.addNonProductItem(delegator, itemType, itemDescription, productCategoryId, price, quantity, attributes, CatalogWorker.getCurrentCatalogId(request), dispatcher);
-            } 
-            
-            if (shoppingListId != null && shoppingListItemSeqId != null) {
-                ShoppingCartItem item = cart.findCartItem(itemId);
-                item.setShoppingList(shoppingListId, shoppingListItemSeqId);
-            }                
-        } catch (CartItemModifyException e) {
-            request.setAttribute(SiteDefs.ERROR_MESSAGE, e.getMessage());
-            return "success"; // don't return error because this is a non-critical error and should go back to the same page
-        }
-        
-        if (cart.viewCartOnAdd()) {
+        } else if (cart.viewCartOnAdd()) {
             return "viewcart";
         } else {
             return "success";
@@ -204,89 +179,24 @@ public class ShoppingCartEvents {
         String orderId = request.getParameter("order_id");
         String[] itemIds = request.getParameterValues("item_id");
 
-        if (orderId == null || orderId.length() <= 0) {
-            request.setAttribute(SiteDefs.ERROR_MESSAGE, "No order specified to add from.");
-            return "error";
-        }
-
         ShoppingCart cart = getCartObject(request);
         GenericDelegator delegator = (GenericDelegator) request.getAttribute("delegator");
         LocalDispatcher dispatcher = (LocalDispatcher) request.getAttribute("dispatcher");
-
-        boolean noItems = true;
-
-        if ("true".equals(request.getParameter("add_all"))) {
-            Iterator itemIter = null;
-
-            try {
-                itemIter = UtilMisc.toIterator(delegator.findByAnd("OrderItem", UtilMisc.toMap("orderId", orderId), null));
-            } catch (GenericEntityException e) {
-                Debug.logWarning(e.getMessage(), module);
-                itemIter = null;
-            }
-
-            if (itemIter != null && itemIter.hasNext()) {
-                String errMsg = "";
-
-                while (itemIter.hasNext()) {
-                    GenericValue orderItem = (GenericValue) itemIter.next();
-
-                    if (orderItem.get("productId") != null && orderItem.get("quantity") != null) {
-                        try {
-                            cart.addOrIncreaseItem(orderItem.getString("productId"), orderItem.getDouble("quantity").doubleValue(), null, null, CatalogWorker.getCurrentCatalogId(request), dispatcher);
-                            noItems = false;
-                        } catch (CartItemModifyException e) {
-                            errMsg += "<li>" + e.getMessage();
-                        }
-                    }
-                }
-                if (errMsg.length() > 0) {
-                    request.setAttribute(SiteDefs.ERROR_MESSAGE, "<ul>" + errMsg + "</ul>");
-                    return "success"; // don't return error because this is a non-critical error and should go back to the same page
-                }
-            } else {
-                noItems = true;
-            }
+        ShoppingCartHelper cartHelper = new ShoppingCartHelper(delegator, dispatcher, cart);
+        String catalogId = CatalogWorker.getCurrentCatalogId(request);
+        Map result;
+        String controlDirective;
+        
+        boolean addAll = ("true".equals(request.getParameter("add_all")));
+        result = cartHelper.addToCartFromOrder(catalogId, orderId, itemIds, addAll);
+        controlDirective = processResult(result, request);
+    
+        //Determine where to send the browser 
+        if (controlDirective.equals(ERROR)) {
+            return "error";
         } else {
-            noItems = true;
-            if (itemIds != null) {
-                String errMsg = "";
-
-                for (int i = 0; i < itemIds.length; i++) {
-                    String orderItemSeqId = itemIds[i];
-                    GenericValue orderItem = null;
-
-                    try {
-                        orderItem = delegator.findByPrimaryKey("OrderItem", UtilMisc.toMap("orderId", orderId, "orderItemSeqId", orderItemSeqId));
-                    } catch (GenericEntityException e) {
-                        Debug.logWarning(e.getMessage(), module);
-                        errMsg += "<li>Order line \"" + orderItemSeqId + "\" not found, so not added.";
-                        continue;
-                    }
-                    if (orderItem != null) {
-                        if (orderItem.get("productId") != null && orderItem.get("quantity") != null) {
-                            try {
-                                cart.addOrIncreaseItem(orderItem.getString("productId"), orderItem.getDouble("quantity").doubleValue(), null, null, CatalogWorker.getCurrentCatalogId(request), dispatcher);
-                                noItems = false;
-                            } catch (CartItemModifyException e) {
-                                errMsg += "<li>" + e.getMessage();
-                            }
-                        }
-                    }
-                }
-                if (errMsg.length() > 0) {
-                    request.setAttribute(SiteDefs.ERROR_MESSAGE, "<ul>" + errMsg + "</ul>");
-                    return "success"; // don't return error because this is a non-critical error and should go back to the same page
-                }
-            }// else no items
+            return "success";
         }
-
-        if (noItems) {
-            request.setAttribute(SiteDefs.ERROR_MESSAGE, "No items found to add.");
-            return "success"; // don't return error because this is a non-critical error and should go back to the same page
-        }
-
-        return "success";
     }
 
     /** Adds all products in a category according to quantity request parameter
@@ -295,61 +205,25 @@ public class ShoppingCartEvents {
      */
     public static String addToCartBulk(HttpServletRequest request, HttpServletResponse response) {
         String categoryId = request.getParameter("category_id");
-
-        if (categoryId == null || categoryId.length() <= 0) {
-            request.setAttribute(SiteDefs.ERROR_MESSAGE, "No category specified to add from.");
-            return "error";
-        }
-
         ShoppingCart cart = getCartObject(request);
         GenericDelegator delegator = (GenericDelegator) request.getAttribute("delegator");
         LocalDispatcher dispatcher = (LocalDispatcher) request.getAttribute("dispatcher");
+        ShoppingCartHelper cartHelper = new ShoppingCartHelper(delegator, dispatcher, cart);
+        String controlDirective;
+        Map result;
 
-        Collection prodCatMemberCol = null;
+        //Convert the params to a map to pass in
+        Map paramMap = UtilHttp.getParameterMap(request);
+        String catalogId = CatalogWorker.getCurrentCatalogId(request);
+        result = cartHelper.addToCartBulk(catalogId, categoryId, paramMap);
+        controlDirective = processResult(result, request);
 
-        try {
-            prodCatMemberCol = delegator.findByAndCache("ProductCategoryMember", UtilMisc.toMap("productCategoryId", categoryId));
-        } catch (GenericEntityException e) {
-            Debug.logWarning(e.getMessage(), module);
-            request.setAttribute(SiteDefs.ERROR_MESSAGE, "Could not get products in category " + categoryId + " to add to cart (read error): " + e.getMessage());
+        //Determine where to send the browser
+        if (controlDirective.equals(ERROR)) {
             return "error";
+        } else {
+            return "success";
         }
-
-        if (prodCatMemberCol == null) {
-            request.setAttribute(SiteDefs.ERROR_MESSAGE, "Could not get products in category " + categoryId + " to add to cart (read error).");
-            return "error";
-        }
-
-        String errMsg = "";
-        Iterator pcmIter = prodCatMemberCol.iterator();
-
-        while (pcmIter.hasNext()) {
-            GenericValue productCategoryMember = (GenericValue) pcmIter.next();
-            String quantStr = request.getParameter("quantity_" + productCategoryMember.getString("productId"));
-
-            if (quantStr != null && quantStr.length() > 0) {
-                double quantity = 0;
-
-                try {
-                    quantity = Double.parseDouble(quantStr);
-                } catch (NumberFormatException nfe) {
-                    quantity = 0;
-                }
-                if (quantity > 0.0) {
-                    try {
-                        cart.addOrIncreaseItem(productCategoryMember.getString("productId"), quantity, null, null, CatalogWorker.getCurrentCatalogId(request), dispatcher);
-                    } catch (CartItemModifyException e) {
-                        errMsg += "<li>" + e.getMessage();
-                    }
-                }
-            }
-        }
-        if (errMsg.length() > 0) {
-            request.setAttribute(SiteDefs.ERROR_MESSAGE, "<ul>" + errMsg + "</ul>");
-            return "success"; // don't return error because this is a non-critical error and should go back to the same page
-        }
-
-        return "success";
     }
 
     /** Adds all products in a category according to default quantity on ProductCategoryMember
@@ -358,90 +232,47 @@ public class ShoppingCartEvents {
      */
     public static String addCategoryDefaults(HttpServletRequest request, HttpServletResponse response) {
         String categoryId = request.getParameter("category_id");
-
-        if (categoryId == null || categoryId.length() <= 0) {
-            request.setAttribute(SiteDefs.ERROR_MESSAGE, "No category specified to add from.");
-            return "error";
-        }
-
+        String catalogId = CatalogWorker.getCurrentCatalogId(request);
         ShoppingCart cart = getCartObject(request);
         GenericDelegator delegator = (GenericDelegator) request.getAttribute("delegator");
         LocalDispatcher dispatcher = (LocalDispatcher) request.getAttribute("dispatcher");
+        ShoppingCartHelper cartHelper = new ShoppingCartHelper(delegator, dispatcher, cart);
+        String controlDirective;
+        Map result;
+        Double totalQuantity;
 
-        Collection prodCatMemberCol = null;
-
-        try {
-            prodCatMemberCol = delegator.findByAndCache("ProductCategoryMember", UtilMisc.toMap("productCategoryId", categoryId));
-        } catch (GenericEntityException e) {
-            Debug.logWarning(e.toString(), module);
-            request.setAttribute(SiteDefs.ERROR_MESSAGE, "Could not get products in category " + categoryId + " to add to cart (read error): " + e.getMessage());
+        result = cartHelper.addCategoryDefaults(catalogId, categoryId);
+        controlDirective = processResult(result, request);
+        
+        //Determine where to send the browser 
+        if (controlDirective.equals(ERROR)) {
             return "error";
+        } else {
+            totalQuantity = (Double)result.get("totalQuantity");
+            request.setAttribute(SiteDefs.EVENT_MESSAGE, "Added " + UtilFormatOut.formatQuantity(totalQuantity) + " items to the cart.");
+            return "success";
         }
-
-        if (prodCatMemberCol == null) {
-            request.setAttribute(SiteDefs.ERROR_MESSAGE, "Could not get products in category " + categoryId + " to add to cart (read error).");
-            return "error";
-        }
-
-        String errMsg = "";
-        double totalQuantity = 0;
-        Iterator pcmIter = prodCatMemberCol.iterator();
-
-        while (pcmIter.hasNext()) {
-            GenericValue productCategoryMember = (GenericValue) pcmIter.next();
-            Double quantity = productCategoryMember.getDouble("quantity");
-
-            if (quantity != null && quantity.doubleValue() > 0.0) {
-                try {
-                    cart.addOrIncreaseItem(productCategoryMember.getString("productId"), quantity.doubleValue(), null, null, CatalogWorker.getCurrentCatalogId(request), dispatcher);
-                    totalQuantity += quantity.doubleValue();
-                } catch (CartItemModifyException e) {
-                    errMsg += "<li>" + e.getMessage();
-                }
-            }
-        }
-        if (errMsg.length() > 0) {
-            request.setAttribute(SiteDefs.ERROR_MESSAGE, "<ul>" + errMsg + "</ul>");
-            return "success"; // don't return error because this is a non-critical error and should go back to the same page
-        }
-
-        request.setAttribute(SiteDefs.EVENT_MESSAGE, "Added " + UtilFormatOut.formatQuantity(totalQuantity) + " items to the cart.");
-        return "success";
     }
 
     /** Delete an item from the shopping cart. */
     public static String deleteFromCart(HttpServletRequest request, HttpServletResponse response) {
         ShoppingCart cart = getCartObject(request);
         LocalDispatcher dispatcher = (LocalDispatcher) request.getAttribute("dispatcher");
+        ShoppingCartHelper cartHelper = new ShoppingCartHelper(null, dispatcher, cart);
+        String controlDirective;
+        Map result;
         Map paramMap = UtilHttp.getParameterMap(request);
-        Set names = paramMap.keySet();
-        Iterator i = names.iterator();
+        
+        //Delegate the cart helper
+        result = cartHelper.deleteFromCart(paramMap);
+        controlDirective = processResult(result, request);
 
-        String errMsg = "";
-
-        while (i.hasNext()) {
-            String o = (String) i.next();
-
-            if (o.toUpperCase().startsWith("DELETE")) {
-                try {
-                    String indexStr = o.substring(o.lastIndexOf('_') + 1);
-                    int index = Integer.parseInt(indexStr);
-
-                    try {
-                        cart.removeCartItem(index, dispatcher);
-                    } catch (CartItemModifyException e) {
-                        errMsg += "<li>" + e.getMessage();
-                    }
-                } catch (NumberFormatException nfe) {}
-            }
+        //Determine where to send the browser
+        if (controlDirective.equals(ERROR)) {
+            return "error";
+        } else {
+            return "success";
         }
-
-        if (errMsg.length() > 0) {
-            request.setAttribute(SiteDefs.ERROR_MESSAGE, "<ul>" + errMsg + "</ul>");
-            return "success"; // don't return error because this is a non-critical error and should go back to the same page
-        }
-
-        return "success";
     }
 
     /** Update the items in the shopping cart. */
@@ -451,111 +282,24 @@ public class ShoppingCartEvents {
         GenericValue userLogin = (GenericValue) session.getAttribute(SiteDefs.USER_LOGIN);
         LocalDispatcher dispatcher = (LocalDispatcher) request.getAttribute("dispatcher");
         Security security = (Security) request.getAttribute("security");
+        ShoppingCartHelper cartHelper = new ShoppingCartHelper(null, dispatcher, cart);
+        String controlDirective;
+        Map result;
         
-        ArrayList deleteList = new ArrayList();
         Map paramMap = UtilHttp.getParameterMap(request);
-        String errMsg = "";
 
-        Set names = paramMap.keySet();
-        Iterator i = names.iterator();
-
-        while (i.hasNext()) {
-            String o = (String) i.next();
-            int underscorePos = o.lastIndexOf('_');
-
-            if (underscorePos >= 0) {
-                try {
-                    String indexStr = o.substring(underscorePos + 1);
-                    int index = Integer.parseInt(indexStr);
-                    String quantString = (String) paramMap.get(o);
-                    double quantity = NumberFormat.getNumberInstance().parse(quantString).doubleValue();
-                    
-                    if (quantity < 0) {
-                        request.setAttribute(SiteDefs.ERROR_MESSAGE, "Quantity must be a positive number.");
-                        return "error";
-                    }
-                    
-                    if (o.toUpperCase().startsWith("UPDATE")) {
-                        if (quantity == 0.0) {
-                            deleteList.add(cart.findCartItem(index));                            
-                        } else {
-                            ShoppingCartItem item = cart.findCartItem(index);
-
-                            if (item != null) {
-                                try {                                   
-                                    item.setQuantity(quantity, dispatcher, cart);
-                                } catch (CartItemModifyException e) {
-                                    errMsg += "<li>" + e.getMessage();
-                                }
-                            }
-                        }
-                    }
-                    
-                    if (o.toUpperCase().startsWith("PRICE")) {
-                        if (security.hasEntityPermission("ORDERMGR", "_CREATE", userLogin)) {
-                            ShoppingCartItem item = cart.findCartItem(index);
-                            item.setBasePrice(quantity); // this is quanity because the parsed number variable is the same as quantity
-                        }                       
-                    }
-
-                    if (o.toUpperCase().startsWith("DELETE")) {
-                        deleteList.add(cart.findCartItem(index));                       
-                    }
-                } catch (NumberFormatException nfe) {
-                    Debug.logWarning(nfe, "Caught number format exception on cart update.", module);
-                } catch (ParseException pe) {
-                    Debug.logWarning(pe, "Caught parse exception on cart update.", module);
-                } catch (Exception e) {
-                    Debug.logWarning(e, "Caught exception on cart update.", module);
-                }
-            }// else not a parameter we need
-        }
-        
-        // get a list of the items to delete
-        String removeSelected = request.getParameter("removeSelected");
+        String removeSelectedFlag = request.getParameter("removeSelected");
         String selectedItems[] = request.getParameterValues("selectedItem");
-        if ("true".equals(removeSelected) && selectedItems != null && selectedItems.length > 0) {
-            for (int si = 0; si < selectedItems.length; si++) {
-                String indexStr = selectedItems[si];
-                ShoppingCartItem item = null;
-                try {
-                    int index = Integer.parseInt(indexStr);
-                    item = cart.findCartItem(index);
-                } catch (Exception e) {
-                    Debug.logWarning(e, "Problems getting the cart item by index", module);
-                }
-                if (item != null) {
-                    deleteList.add(item);
-                }
-            }
-        }
-                                    
-        Iterator di = deleteList.iterator();
+        boolean removeSelected = ("true".equals(removeSelectedFlag) && selectedItems != null && selectedItems.length > 0);
+        result = cartHelper.modifyCart(security, userLogin, paramMap, removeSelected, selectedItems);
+        controlDirective = processResult(result, request);
 
-        while (di.hasNext()) {
-            ShoppingCartItem item = (ShoppingCartItem) di.next();
-            int itemIndex = cart.getItemIndex(item);
-
-            if (Debug.infoOn()) Debug.logInfo("Removing item index: " + itemIndex, module);
-            try {
-                cart.removeCartItem(itemIndex, dispatcher);
-            } catch (CartItemModifyException e) {
-                errMsg += "<li>" + e.getMessage();
-            }
-        }
-
-        if (paramMap.containsKey("alwaysShowcart")) {
-            cart.setViewCartOnAdd(true);
-        } else {
-            cart.setViewCartOnAdd(false);
-        }
-
-        if (errMsg.length() > 0) {
-            request.setAttribute(SiteDefs.ERROR_MESSAGE, "<ul>" + errMsg + "</ul>");
+        //Determine where to send the browser
+        if (controlDirective.equals(ERROR)) {
             return "error";
+        } else {
+            return "success";
         }
-
-        return "success";
     }
 
     /** Empty the shopping cart. */
@@ -576,15 +320,58 @@ public class ShoppingCartEvents {
     }
 
     /** Gets the shopping cart from the session. Used by all events. */
-    public static ShoppingCart getCartObject(HttpServletRequest request) {        
-        HttpSession session = request.getSession(true);        
-        ShoppingCart cart = (ShoppingCart) session.getAttribute(SiteDefs.SHOPPING_CART);        
+    public static ShoppingCart getCartObject(HttpServletRequest request) {
+        HttpSession session = request.getSession(true);
+        ShoppingCart cart = (ShoppingCart) session.getAttribute(SiteDefs.SHOPPING_CART);
         
         if (cart == null) {
-            cart = new ShoppingCart(request);
+            cart = new WebShoppingCart(request);
             session.setAttribute(SiteDefs.SHOPPING_CART, cart);
         }
-        
         return cart;
-    }        
+    }
+    
+    /**
+     * This should be called to translate the error messages of the
+     * <code>ShoppingCartHelper</code> to an appropriately formatted
+     * <code>String</code> in the request object and indicate whether
+     * the result was an error or not and whether the errors were
+     * critical or not
+     * 
+     * @param result    The result returned from the 
+     * <code>ShoppingCartHelper</code> 
+     * @param request The servlet request instance to set the error messages
+     * in
+     * @return one of NON_CRITICAL_ERROR, ERROR or NO_ERROR.
+     */
+    private static String processResult(Map result, HttpServletRequest request) {
+        //Check for errors
+        StringBuffer errMsg = new StringBuffer();
+        if (result.containsKey(ModelService.ERROR_MESSAGE_LIST)) {
+            List errorMsgs = (List)result.get(ModelService.ERROR_MESSAGE_LIST);
+            Iterator iterator = errorMsgs.iterator();
+            errMsg.append("<ul>");
+            while (iterator.hasNext()) {
+                errMsg.append("<li>");
+                errMsg.append(iterator.next());
+                errMsg.append("</li>");
+            }
+            errMsg.append("</ul>");
+        } else if (result.containsKey(ModelService.ERROR_MESSAGE)) {
+            errMsg.append(result.get(ModelService.ERROR_MESSAGE));
+            request.setAttribute(SiteDefs.ERROR_MESSAGE, errMsg.toString());
+        }
+        
+        //See whether there was an error
+        if (errMsg.length() > 0) {
+            request.setAttribute(SiteDefs.ERROR_MESSAGE, errMsg.toString());
+            if (result.get(ModelService.RESPONSE_MESSAGE).equals(ModelService.RESPOND_SUCCESS)) {
+                return NON_CRITICAL_ERROR;
+            } else {
+                return ERROR;
+            }   
+        } else {        
+            return NO_ERROR;
+        }
+    }
 }

@@ -32,11 +32,7 @@ import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
 
-import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpSession;
-
 import org.ofbiz.commonapp.order.order.OrderReadHelper;
-import org.ofbiz.commonapp.product.store.ProductStoreWorker;
 import org.ofbiz.core.entity.GenericDelegator;
 import org.ofbiz.core.entity.GenericEntityException;
 import org.ofbiz.core.entity.GenericPK;
@@ -57,7 +53,6 @@ import org.ofbiz.core.util.UtilProperties;
  * @since      2.0
  */
 public class ShoppingCart implements java.io.Serializable {
-    
     public static final String module = ShoppingCart.class.getName();
        
     private List paymentMethodIds = new LinkedList();
@@ -83,18 +78,20 @@ public class ShoppingCart implements java.io.Serializable {
 
     private transient GenericDelegator delegator = null;
     private String delegatorName = null;
-    private String productStoreId = null;
-    private HttpSession session = null;
+    private String productStoreId = null; 
+    
+    private GenericValue userLogin;
+    private GenericValue autoUserLogin;
+    private String webSiteId;
 
     /** don't allow empty constructor */
     protected ShoppingCart() {}
 
     /** Creates a new cloned ShoppingCart Object. */
-    public ShoppingCart(ShoppingCart cart, HttpSession session) {
+    public ShoppingCart(ShoppingCart cart) {
         this.delegator = cart.getDelegator();
         this.delegatorName = delegator.getDelegatorName();
         this.productStoreId = cart.getProductStoreId();
-        this.session = session;
         this.paymentMethodIds = cart.getPaymentMethodIds();
         this.paymentMethodTypeIds = cart.getPaymentMethodTypeIds();
         this.poNumber = cart.getPoNumber();
@@ -116,11 +113,10 @@ public class ShoppingCart implements java.io.Serializable {
     }
 
     /** Creates new empty ShoppingCart object. */
-    public ShoppingCart(HttpServletRequest request) {
-        this.delegator = (GenericDelegator) request.getAttribute("delegator");
+    public ShoppingCart(GenericDelegator delegator, String productStoreId) {
+        this.delegator = delegator;
         this.delegatorName = delegator.getDelegatorName();
-        this.productStoreId = ProductStoreWorker.getProductStoreId(request);
-        this.session = request.getSession();
+        this.productStoreId = productStoreId;
         this.orderShipmentPreference = delegator.makeValue("OrderShipmentPreference", null);
     }
 
@@ -132,7 +128,7 @@ public class ShoppingCart implements java.io.Serializable {
     }
     
     public String getProductStoreId() {
-        return this.productStoreId;
+    	return this.productStoreId;
     }
 
     // =======================================================================
@@ -286,19 +282,32 @@ public class ShoppingCart implements java.io.Serializable {
 
     /** Gets the userLogin from the session; may be null */
     public GenericValue getUserLogin() {
-        return (GenericValue) this.session.getAttribute("userLogin");
+        return this.userLogin;
+    }
+    
+    public void setUserLogin(GenericValue userLogin) {
+        this.userLogin = userLogin;
     }
 
     public GenericValue getAutoUserLogin() {
-        return (GenericValue) this.session.getAttribute("autoUserLogin");
+        return this.autoUserLogin;
+    }
+
+    public void setAutoUserLogin(GenericValue autoUserLogin) {
+        this.autoUserLogin = autoUserLogin;
     }
     
     public String getWebSiteId() {
-        return (String) session.getAttribute("webSiteId");
+        return this.webSiteId;
+    }
+    
+    public void setWebSiteId(String webSiteId) {
+        this.webSiteId = webSiteId;
     }
     
     public String getPartyId() {
-    	String partyId = (String) session.getAttribute("orderPartyId");
+        String partyId = null;
+        
     	if (partyId == null && getUserLogin() != null)
     		partyId = getUserLogin().getString("partyId");
     	if (partyId == null && getAutoUserLogin() != null)
