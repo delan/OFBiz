@@ -2,6 +2,31 @@
 <entity-engine-xml>
     <RecurrenceRule recurrenceRuleId="270" untilDateTime="1969-12-31 19:00:00.000" frequency="DAILY" intervalNumber="1" countNumber="-1"/>
     <RecurrenceInfo recurrenceInfoId="270" startDateTime="2000-01-01 00:00:00.000" recurrenceRuleId="270" recurrenceCount="0"/>
-    
     <JobSandbox jobName="Clear EntitySyncRemove Info" runTime="2000-01-01 00:00:00.000" serviceName="cleanSyncRemoveInfo" poolId="pool" runAsUser="admin" recurrenceInfoId="270"/>
+
+<!-- EntitySync example, with Job demo -->
+<!--
+    <EntitySync entitySyncId="1500" runStatusId="ESR_NOT_STARTED" syncSplitMillis="10000" targetServiceName="remoteStoreEntitySyncDataRmi" keepRemoveInfoHours="24"/>
+    <EntitySyncInclude entitySyncId="1500" entityOrPackage="org.ofbiz." applEnumId="ESIA_INCLUDE"/>
+    <RecurrenceRule recurrenceRuleId="1500" untilDateTime="1969-12-31 19:00:00.000" frequency="MINUTELY" intervalNumber="1" countNumber="-1"/>
+    <RecurrenceInfo recurrenceInfoId="1500" startDateTime="2000-01-01 00:00:00.000" recurrenceRuleId="1500" recurrenceCount="0"/>
+    <JobSandbox jobName="Run Demo EntitySync" runtimeDataId="1500" runTime="2000-01-01 00:00:00.000" serviceName="cleanSyncRemoveInfo" poolId="pool" runAsUser="admin" recurrenceInfoId="1500"/>
+    <RuntimeData runtimeDataId="1500">
+        <runtimeInfo><![CDATA[
+<?xml version="1.0" encoding="UTF-8"?>
+<ofbiz-ser>
+  <map-HashMap>
+    <map-Entry>
+      <map-Key>
+        <std-String value="entitySyncId"/>
+      </map-Key>
+      <map-Value>
+        <std-Locale value="1500"/>
+      </map-Value>
+    </map-Entry>
+  </map-HashMap>
+</ofbiz-ser>
+        ]]></runtimeInfo>
+    </RuntimeData>
+-->
 </entity-engine-xml>
