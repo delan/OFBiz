@@ -1,5 +1,5 @@
 /*
- * $Id: ZipSalesServices.java,v 1.15 2004/02/12 20:42:54 ajzeneski Exp $
+ * $Id: ZipSalesServices.java,v 1.16 2004/02/13 21:07:22 ajzeneski Exp $
  *
  *  Copyright (c) 2001-2003 The Open For Business Project - www.ofbiz.org
  *
@@ -51,7 +51,7 @@ import java.io.File;
  * Zip-Sales Database Services
  *
  * @author     <a href="mailto:jaz@ofbiz.org">Andy Zeneski</a>
- * @version    $Revision: 1.15 $
+ * @version    $Revision: 1.16 $
  * @since      3.0
  */
 public class ZipSalesServices {
@@ -381,74 +381,76 @@ public class ZipSalesServices {
                 } else {
                     // except if conditions are met
                     boolean qualify = false;
-                    char[] conditions = condition.toCharArray();
-                    for (int i = 0; i < conditions.length; i++) {
-                        switch (conditions[i]) {
-                            case 'A' :
-                                // SHIPPING CHARGE SEPARATELY STATED ON INVOICE
-                                qualify = true; // OFBiz does this by default
-                                break;
-                            case 'B' :
-                                // SHIPPING CHARGE SEPARATED ON INVOICE FROM HANDLING OR SIMILAR CHARGES
-                                qualify = false; // we do not support this currently
-                                break;
-                            case 'C' :
-                                // ITEM NOT SOLD FOR GUARANTEED SHIPPED PRICE
-                                qualify = false; // we don't support this currently
-                                break;
-                            case 'D' :
-                                // SHIPPING CHARGE IS COST ONLY
-                                qualify = false; // we assume a handling charge is included
-                                break;
-                            case 'E' :
-                                // SHIPPED DIRECTLY TO PURCHASER
-                                qualify = true; // this is true, unless gifts do not count?
-                                break;
-                            case 'F' :
-                                // SHIPPED VIA COMMON CARRIER
-                                qualify = true; // best guess default
-                                break;
-                            case 'G' :
-                                // SHIPPED VIA CONTRACT CARRIER
-                                qualify = false; // best guess default
-                                break;
-                            case 'H' :
-                                // SHIPPED VIA VENDOR EQUIPMENT
-                                qualify = false; // best guess default
-                                break;
-                            case 'I' :
-                                // SHIPPED F.O.B. ORIGIN
-                                qualify = false; // no clue
-                                break;
-                            case 'J' :
-                                // SHIPPED F.O.B. DESTINATION
-                                qualify = false; // no clue
-                                break;
-                            case 'K' :
-                                // F.O.B. IS PURCHASERS OPTION
-                                qualify = false; // no clue
-                                break;
-                            case 'L' :
-                                // SHIPPING ORIGINATES OR TERMINATES IN DIFFERENT STATES
-                                qualify = false; // not determined at order time, no way to know
-                                break;
-                            case 'M' :
-                                // PROOF OF VENDOR ACTING AS SHIPPING AGENT FOR PURCHASER
-                                qualify = false; // no clue
-                                break;
-                            case 'N' :
-                                // SHIPPED FROM VENDOR LOCATION
-                                qualify = true; // sure why not
-                                break;
-                            case 'O' :
-                                // SHIPPING IS BY PURCHASER OPTION
-                                qualify = false; // most online stores require shipping
-                                break;
-                            case 'P' :
-                                // CREDIT ALLOWED FOR SHIPPING CHARGE PAID BY PURCHASER TO CARRIER
-                                qualify = false; // best guess default
-                                break;
-                            default: break;
+                    if (condition != null && condition.length() > 0) {
+                        char[] conditions = condition.toCharArray();
+                        for (int i = 0; i < conditions.length; i++) {
+                            switch (conditions[i]) {
+                                case 'A' :
+                                    // SHIPPING CHARGE SEPARATELY STATED ON INVOICE
+                                    qualify = true; // OFBiz does this by default
+                                    break;
+                                case 'B' :
+                                    // SHIPPING CHARGE SEPARATED ON INVOICE FROM HANDLING OR SIMILAR CHARGES
+                                    qualify = false; // we do not support this currently
+                                    break;
+                                case 'C' :
+                                    // ITEM NOT SOLD FOR GUARANTEED SHIPPED PRICE
+                                    qualify = false; // we don't support this currently
+                                    break;
+                                case 'D' :
+                                    // SHIPPING CHARGE IS COST ONLY
+                                    qualify = false; // we assume a handling charge is included
+                                    break;
+                                case 'E' :
+                                    // SHIPPED DIRECTLY TO PURCHASER
+                                    qualify = true; // this is true, unless gifts do not count?
+                                    break;
+                                case 'F' :
+                                    // SHIPPED VIA COMMON CARRIER
+                                    qualify = true; // best guess default
+                                    break;
+                                case 'G' :
+                                    // SHIPPED VIA CONTRACT CARRIER
+                                    qualify = false; // best guess default
+                                    break;
+                                case 'H' :
+                                    // SHIPPED VIA VENDOR EQUIPMENT
+                                    qualify = false; // best guess default
+                                    break;
+                                case 'I' :
+                                    // SHIPPED F.O.B. ORIGIN
+                                    qualify = false; // no clue
+                                    break;
+                                case 'J' :
+                                    // SHIPPED F.O.B. DESTINATION
+                                    qualify = false; // no clue
+                                    break;
+                                case 'K' :
+                                    // F.O.B. IS PURCHASERS OPTION
+                                    qualify = false; // no clue
+                                    break;
+                                case 'L' :
+                                    // SHIPPING ORIGINATES OR TERMINATES IN DIFFERENT STATES
+                                    qualify = false; // not determined at order time, no way to know
+                                    break;
+                                case 'M' :
+                                    // PROOF OF VENDOR ACTING AS SHIPPING AGENT FOR PURCHASER
+                                    qualify = false; // no clue
+                                    break;
+                                case 'N' :
+                                    // SHIPPED FROM VENDOR LOCATION
+                                    qualify = true; // sure why not
+                                    break;
+                                case 'O' :
+                                    // SHIPPING IS BY PURCHASER OPTION
+                                    qualify = false; // most online stores require shipping
+                                    break;
+                                case 'P' :
+                                    // CREDIT ALLOWED FOR SHIPPING CHARGE PAID BY PURCHASER TO CARRIER
+                                    qualify = false; // best guess default
+                                    break;
+                                default: break;
+                            }
                         }
                     }
 
