@@ -5,6 +5,7 @@
 package org.ofbiz.core.util;
 
 import java.net.*;
+import java.io.*;
 import java.util.*;
 import javax.xml.parsers.*;
 
@@ -55,6 +56,10 @@ public class ConfigXMLReader {
     public static final String POSTPROCESSOR = "postprocessor";
 
     /** URI Config Variables */
+    public static final String INCLUDE = "include";
+    public static final String INCLUDE_FILE = "file";
+    public static final String INCLUDE_URL = "url";
+
     public static final String REQUEST_MAPPING = "request-map";
     public static final String REQUEST_URI = "uri";
     public static final String REQUEST_EDIT = "edit";
@@ -133,7 +138,39 @@ public class ConfigXMLReader {
         Element root = loadDocument(xml);
         if (root == null) return map;
 
-        NodeList list = root.getElementsByTagName(REQUEST_MAPPING);
+        NodeList list = root.getElementsByTagName(INCLUDE);
+        for (int rootCount = 0; rootCount < list.getLength(); rootCount++) {
+            Node node = list.item(rootCount);
+            // Make sure we are an element.
+            if (node instanceof Element) {
+                // Get the file to include
+                Element mapping = (Element) node;
+                String includeFile = mapping.getAttribute(INCLUDE_FILE);
+                if((includeFile != null) && (includeFile.length() > 0)) {
+                    File oldFile = new File(xml.getFile());
+                    File newFile = new java.io.File("" + oldFile.getParent() + java.io.File.separator + includeFile);
+                    try {
+                        HashMap subMap = loadRequestMap(newFile.toURL());
+                        map.putAll(subMap);
+                    } catch (MalformedURLException mue) {
+                        mue.printStackTrace();
+                    }
+                }
+                
+                String includeURL = mapping.getAttribute(INCLUDE_URL);
+                if((includeURL != null) && (includeURL.length() > 0)) {
+                    try {
+                        HashMap subMap = loadRequestMap(new URL(includeURL));
+                        map.putAll(subMap);
+                    } catch (MalformedURLException mue) {
+                        mue.printStackTrace();
+                    }
+                }
+                
+            }
+        }
+        
+        list = root.getElementsByTagName(REQUEST_MAPPING);
         for (int rootCount = 0; rootCount < list.getLength(); rootCount++) {
             // Create a URI-MAP for each element found.
             HashMap uriMap = new HashMap();
@@ -272,7 +309,39 @@ public class ConfigXMLReader {
         if (root == null)
             return map;
 
-        NodeList list = root.getElementsByTagName(VIEW_MAPPING);
+        NodeList list = root.getElementsByTagName(INCLUDE);
+        for (int rootCount = 0; rootCount < list.getLength(); rootCount++) {
+            Node node = list.item(rootCount);
+            // Make sure we are an element.
+            if (node instanceof Element) {
+                // Get the file to include
+                Element mapping = (Element) node;
+                String includeFile = mapping.getAttribute(INCLUDE_FILE);
+                if((includeFile != null) && (includeFile.length() > 0)) {
+                    File oldFile = new File(xml.getFile());
+                    File newFile = new java.io.File("" + oldFile.getParent() + java.io.File.separator + includeFile);
+                    try {
+                        HashMap subMap = loadViewMap(newFile.toURL());
+                        map.putAll(subMap);
+                    } catch (MalformedURLException mue) {
+                        mue.printStackTrace();
+                    }
+                }
+                
+                String includeURL = mapping.getAttribute(INCLUDE_URL);
+                if((includeURL != null) && (includeURL.length() > 0)) {
+                    try {
+                        HashMap subMap = loadViewMap(new URL(includeURL));
+                        map.putAll(subMap);
+                    } catch (MalformedURLException mue) {
+                        mue.printStackTrace();
+                    }
+                }
+                
+            }
+        }
+        
+        list = root.getElementsByTagName(VIEW_MAPPING);
         for (int rootCount = 0; rootCount < list.getLength(); rootCount++) {
             // Create a URI-MAP for each element found.
             HashMap uriMap = new HashMap();
