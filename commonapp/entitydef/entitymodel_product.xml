@@ -552,6 +552,9 @@
       <relation type="one" rel-entity-name="Uom">
         <key-map field-name="uomId"/>
       </relation>
+      <relation type="many" rel-entity-name="InventoryItemStatus">
+        <key-map field-name="inventoryItemId"/>
+      </relation>
       <relation type="many" rel-entity-name="InventoryItemVariance">
         <key-map field-name="inventoryItemId"/>
       </relation>
@@ -572,6 +575,22 @@
       </relation>
       <relation type="many" rel-entity-name="InventoryItemTypeAttr">
         <key-map field-name="attrName"/>
+      </relation>
+    </entity>
+    <entity entity-name="InventoryItemStatus"
+            package-name="org.ofbiz.commonapp.product.inventory"
+            title="Inventory Item Status History Entity">
+      <field name="inventoryItemId" type="id-ne"></field>
+      <field name="statusId" type="id-ne"></field>
+      <field name="statusDatetime" type="date-time"></field>
+      <prim-key field="inventoryItemId"/>
+      <prim-key field="statusId"/>
+      <prim-key field="statusDatetime"/>
+      <relation type="one" rel-entity-name="InventoryItem">
+        <key-map field-name="inventoryItemId"/>
+      </relation>
+      <relation type="one" rel-entity-name="StatusItem">
+        <key-map field-name="statusId"/>
       </relation>
     </entity>
     <entity entity-name="InventoryItemType"

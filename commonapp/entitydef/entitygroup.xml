@@ -526,6 +526,7 @@
 
     <entity-group group="org.ofbiz.commonapp" entity="InventoryItem" />
     <entity-group group="org.ofbiz.commonapp" entity="InventoryItemAttribute" />
+    <entity-group group="org.ofbiz.commonapp" entity="InventoryItemStatus" />
     <entity-group group="org.ofbiz.commonapp" entity="InventoryItemType" />
     <entity-group group="org.ofbiz.commonapp" entity="InventoryItemTypeAttr" />
     <entity-group group="org.ofbiz.commonapp" entity="InventoryItemVariance" />
