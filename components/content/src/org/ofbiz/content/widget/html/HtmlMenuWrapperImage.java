@@ -1,5 +1,5 @@
 /*
- * $Id: HtmlMenuWrapperImage.java,v 1.3 2004/04/25 05:34:57 byersa Exp $
+ * $Id: HtmlMenuWrapperImage.java,v 1.4 2004/05/11 12:56:45 jonesde Exp $
  *
  * Copyright (c) 2003 The Open For Business Project - www.ofbiz.org
  *
@@ -24,19 +24,16 @@
 package org.ofbiz.content.widget.html;
 
 import java.io.IOException;
+import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
-import java.util.HashMap;
 
-
-import javax.servlet.http.HttpSession;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.xml.parsers.ParserConfigurationException;
 
 import org.ofbiz.base.util.UtilMisc;
-import org.ofbiz.base.util.Debug;
 import org.ofbiz.content.widget.menu.MenuStringRenderer;
 import org.ofbiz.content.widget.menu.ModelMenuItem;
 import org.ofbiz.entity.GenericDelegator;
@@ -48,7 +45,7 @@ import org.xml.sax.SAXException;
  * Widget Library - HTML Menu Wrapper class - makes it easy to do the setup and render of a menu
  *
  * @author     <a href="mailto:byersa@automationgroups.com">Al Byers</a>
- * @version    $Revision: 1.3 $
+ * @version    $Revision: 1.4 $
  * @since      3.0
  */
 public class HtmlMenuWrapperImage extends HtmlMenuWrapper {

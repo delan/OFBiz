@@ -1,5 +1,5 @@
 /*
- * $Id: HtmlMenuRenderer.java,v 1.11 2004/05/03 14:02:16 byersa Exp $
+ * $Id: HtmlMenuRenderer.java,v 1.12 2004/05/11 12:56:45 jonesde Exp $
  *
  * Copyright (c) 2003 The Open For Business Project - www.ofbiz.org
  *
@@ -40,13 +40,12 @@ import org.ofbiz.content.content.ContentPermissionServices;
 import org.ofbiz.content.content.ContentWorker;
 import org.ofbiz.content.webapp.control.RequestHandler;
 import org.ofbiz.content.webapp.taglib.ContentUrlTag;
+import org.ofbiz.content.widget.WidgetWorker;
 import org.ofbiz.content.widget.menu.MenuStringRenderer;
 import org.ofbiz.content.widget.menu.ModelMenu;
 import org.ofbiz.content.widget.menu.ModelMenuItem;
-import org.ofbiz.content.widget.menu.ModelMenuItem.MenuTarget;
 import org.ofbiz.content.widget.menu.ModelMenuItem.MenuImage;
-import org.ofbiz.content.widget.WidgetWorker;
-import org.ofbiz.content.ContentManagementWorker;
+import org.ofbiz.content.widget.menu.ModelMenuItem.MenuTarget;
 import org.ofbiz.entity.GenericDelegator;
 import org.ofbiz.entity.GenericEntityException;
 import org.ofbiz.entity.GenericValue;
@@ -57,7 +56,7 @@ import org.ofbiz.security.Security;
  *
  * @author     <a href="mailto:jonesde@ofbiz.org">David E. Jones</a>
  * @author     <a href="mailto:byersa@automationgroups.com">Al Byers</a>
- * @version    $Revision: 1.11 $
+ * @version    $Revision: 1.12 $
  * @since      2.2
  */
 public class HtmlMenuRenderer implements MenuStringRenderer {

@@ -1,5 +1,5 @@
 /*
- * $Id: WidgetWorker.java,v 1.2 2004/05/03 14:02:15 byersa Exp $
+ * $Id: WidgetWorker.java,v 1.3 2004/05/11 12:56:44 jonesde Exp $
  *
  * Copyright (c) 2003 The Open For Business Project - www.ofbiz.org
  *
@@ -23,35 +23,20 @@
  */
 package org.ofbiz.content.widget;
 
-import java.lang.StringBuffer;
-import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 
-
 import javax.servlet.ServletContext;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
-import org.ofbiz.base.util.UtilValidate;
-import org.ofbiz.base.util.UtilProperties;
 import org.ofbiz.base.util.UtilHttp;
-import org.ofbiz.base.util.Debug;
+import org.ofbiz.base.util.UtilValidate;
 import org.ofbiz.content.webapp.control.RequestHandler;
 import org.ofbiz.content.webapp.taglib.ContentUrlTag;
-import org.ofbiz.content.widget.menu.MenuStringRenderer;
-import org.ofbiz.content.widget.menu.ModelMenu;
-import org.ofbiz.content.widget.menu.ModelMenuItem;
-import org.ofbiz.content.widget.menu.ModelMenuItem.MenuTarget;
-import org.ofbiz.content.widget.menu.ModelMenuItem.MenuImage;
 import org.ofbiz.content.widget.menu.ModelMenuItem.MenuParam;
-import org.ofbiz.content.ContentManagementWorker;
-import org.ofbiz.entity.GenericDelegator;
-import org.ofbiz.entity.GenericEntityException;
-import org.ofbiz.entity.GenericValue;
-import org.ofbiz.security.Security;
 
 public class WidgetWorker {
 
