@@ -1,5 +1,5 @@
 /*
- * $Id: EntityConditionFunction.java,v 1.4 2004/04/23 01:42:15 doogie Exp $
+ * $Id: EntityConditionFunction.java,v 1.5 2004/05/02 05:08:48 doogie Exp $
  *
  *  Copyright (c) 2002 The Open For Business Project - www.ofbiz.org
  *
@@ -45,6 +45,9 @@ public abstract class EntityConditionFunction extends EntityCondition {
 
     public static class NOT extends EntityConditionFunction {
         public NOT(EntityCondition nested) { super(ID_NOT, "NOT", nested); }
+        public boolean entityMatches(GenericEntity entity) {
+            return !condition.entityMatches(entity);
+        }
     };
 
     protected int idInt;
@@ -90,10 +93,5 @@ public abstract class EntityConditionFunction extends EntityCondition {
 
     public void checkCondition(ModelEntity modelEntity) throws GenericModelException {
         condition.checkCondition(modelEntity);
-    }
-
-    public boolean entityMatches(GenericEntity entity)
-    {
-        return !condition.entityMatches(entity);
     }
 }
