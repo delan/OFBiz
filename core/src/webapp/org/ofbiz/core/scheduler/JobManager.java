@@ -1,6 +1,9 @@
 /*
  * $Id$
  * $Log$
+ * Revision 1.6  2001/11/05 15:57:21  azeneski
+ * reworking scheduler to use XAPIA's CSA Specification for rule grammer
+ *
  * Revision 1.5  2001/11/03 00:19:35  azeneski
  * Changed the compareTo to not change the runTime of a job.
  *
@@ -115,20 +118,7 @@ public class JobManager {
             jobList.add(iterator.next());
         return jobList;
     }
-        
-    /** Returns the integer value of the Interval Type String */
-    private int getIntervalTypeFromString(String type) {
-        if ( type.equalsIgnoreCase("minute") )
-            return Job.INTERVAL_MINUTE;
-        if ( type.equalsIgnoreCase("hour") )
-            return Job.INTERVAL_HOUR;
-        if ( type.equalsIgnoreCase("day") )
-            return Job.INTERVAL_DAY;
-        if ( type.equalsIgnoreCase("month") )
-            return Job.INTERVAL_MONTH;
-        return -1;
-    }
-            
+                     
     /** Close out the scheduler thread. */
     public void finalize() {
         if (js != null) {

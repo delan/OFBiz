@@ -32,6 +32,16 @@ public class RecurrenceInfo {
     /** Initializes the rules for this RecurrenceInfo object. */
     public void init() throws RecurrenceInfoException {
         
+        // Get start date
+        long startTime = info.getTimestamp("startDateTime").getTime();
+        if ( startTime > 0 ) {
+            int nanos = info.getTimestamp("startDateTime").getNanos();
+            startTime += (nanos/1000000);
+        }
+        else
+            throw new RecurrenceInfoException("Recurrence's must have a start date.");
+        startDate = new Date(startTime);
+        
         // Get the recurrence rules objects
         try {
             Collection c = info.getRelated("RecurrenceRules");
@@ -41,7 +51,7 @@ public class RecurrenceInfo {
                 rRulesList.add(new RecurrenceRule((GenericValue)i.next()));
         }
         catch ( GenericEntityException gee ) {
-            throw new RecurrenceInfoException("No recurrence rule associated with this entity.");
+            rRulesList = null;
         }
         catch ( RecurrenceRuleException rre ) {
             throw new RecurrenceInfoException("Illegal rule format.");
@@ -140,30 +150,38 @@ public class RecurrenceInfo {
         if ( fromTime == 0 || fromTime == startDate.getTime() )
             return first();
         
+        // Check the rules and date list
+        if ( rDateList == null && rRulesList == null )
+            return 0;
+        
         Date fromDate = new Date(fromTime);
         Date now = new Date();
         Date next = null;
         
-        // Loop through the date list.
-        Iterator dateIterator = getRecurrenceDateIterator();
-        while ( dateIterator.hasNext() && next == null ) {
-            Date thisDate = (Date) dateIterator.next();
-            // Test if this date is valid and not in the exception list.
-            if ( thisDate.getTime() > fromTime && !eDateList.contains(thisDate))
-                next = thisDate;
-        }
-        if ( next != null )
-            return next.getTime();
-        
-        // Test the rules.
+        // Get the next recurrence from the rule(s).
         long nextTime = 0;
         Iterator rulesIterator = getRecurrenceRuleIterator();
         while ( rulesIterator.hasNext() ) {
             RecurrenceRule rule = (RecurrenceRule) rulesIterator.next();
-            if ( nextTime == 0 )
+            if ( nextTime == 0 ) {
                 nextTime = rule.next(getStartTime(), fromTime, getCurrentCount());
+                // Loop through the date list to find an earlier time
+                Iterator dateIterator = getRecurrenceDateIterator();
+                while ( dateIterator.hasNext() ) {
+                    Date thisDate = (Date) dateIterator.next();
+                    if ( thisDate.getTime() < nextTime && thisDate.getTime() > fromTime )
+                        nextTime = thisDate.getTime();
+                }
+                // Check the exception rule(s) and dates
+                Iterator exceptRulesIterator = getExceptionRuleIterator();
+                while ( exceptRulesIterator.hasNext() ) {
+                    RecurrenceRule except = (RecurrenceRule) exceptRulesIterator.next();
+                    if ( except.isValid(getStartTime(),nextTime) || eDateList.contains(new Date(nextTime)) )
+                        nextTime = 0;
+                }
+            }
         }
-                
+        
         return nextTime;
     }
 }

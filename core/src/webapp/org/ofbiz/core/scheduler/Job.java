@@ -1,15 +1,5 @@
 /*
  * $Id$
- * $Log$
- * Revision 1.4  2001/11/03 01:38:25  azeneski
- * Renamed runTime to runtime.
- *
- * Revision 1.3  2001/11/03 00:19:35  azeneski
- * Changed the compareTo to not change the runtime of a job.
- *
- * Revision 1.2  2001/11/02 23:11:14  azeneski
- * Some non-functional services implementation.
- *
  */
 
 package org.ofbiz.core.scheduler;
@@ -48,35 +38,12 @@ import org.ofbiz.core.util.*;
 
 public class Job implements Comparable, Serializable {
     
-    public static final int INTERVAL_MINUTE = 1;
-    public static final int INTERVAL_HOUR = 2;
-    public static final int INTERVAL_DAY = 3;
-    public static final int INTERVAL_MONTH = 4;
-    
+    private RecurrenceInfo recurrence;
     private GenericValue job;
     private Map context;
     private long runtime;
     private long seqNum;
     
-    private List exceptionList;
-    private List recurrenceList;
-    
-    /* Entity: JobSandbox
-     * jobName - string
-     * serviceName - string
-     * recurrenceInfoId - string
-     * lastRuntime - timestamp
-     * runCount - integer
-     *
-     * Entity: RecurrenceInfo
-     * startDateTime - timestamp
-     * endDateTime - timestamp
-     * exceptionDateTimes - string (';')
-     * exceptionRule - string
-     * recurrenceDateTimes - string (';')
-     * recurrenceRule - string
-     */
-            
     /** Creates a new Job object. */
     public Job(GenericValue job, Map context) {
         this.job = job;
@@ -94,18 +61,23 @@ public class Job implements Comparable, Serializable {
     
     // Initialize the job.
     private void init() {
-        exceptionList = new ArrayList();
-        recurrenceList = new ArrayList();
-        // build the lists.
+        try {
+            recurrence = new RecurrenceInfo(job.getRelatedOne("RecurrenceInfo"));
+        }
+        catch ( GenericEntityException gee ) {
+            recurrence = null;
+        }
+        catch ( RecurrenceInfoException rie ) {
+            recurrence = null;
+        }
         updateRuntime();
     }
     
     /** Updates the runtime based on the interval (minutes). */
     public void updateRuntime() {
-        if ( job.getDate("startDate") == null )
-            job.set("startDate", new Date());
-        if ( job.getInteger("interval").intValue() != -1 )
-            runtime = getNextStartTime();
+        if ( recurrence == null )
+            return;
+        runtime = recurrence.next();
     }
     
     /** Checks to see if this Job is scheduled to run within the next second. */
@@ -190,7 +162,7 @@ public class Job implements Comparable, Serializable {
                 return 1;
             return 0;
         }
-        else {            
+        else {
             if (this.runtime < testJob.getRuntime())
                 return -1;
             if (this.runtime > testJob.getRuntime())
@@ -198,70 +170,10 @@ public class Job implements Comparable, Serializable {
         }
         return 0;
     }
-    
-    private long getNextStartTime() {
-        // Build the calendar object.
-        Calendar eventCal = Calendar.getInstance();
-        eventCal.setTime(job.getDate("startDate"));
         
-        // Get the current times.
-        long startTime = job.getDate("startDate").getTime();
-        long currentTime = System.currentTimeMillis();
-        long endTime = -1;
-        if ( job.getDate("endDate") != null )
-            endTime = job.getDate("endDate").getTime();
-        
-        // If Job end time has past, run no more.
-        if ( (endTime != -1) && (endTime < currentTime) )
-            return -1;
-        
-        // If Job has run and does not repeat, run no more.
-        if ( !job.getBoolean("isRepeated").booleanValue() && getRunCount() > 0 )
-            return -1;
-        
-        // If startTime has not yet arrived use it.
-        if ( startTime > currentTime )
-            return startTime;
-        
-        // The end time has not yet arrived, get the next start time.
-        long nextStartTime = startTime;
-        if ( job.getInteger("intervalType").intValue() > 0 ) {
-            while ( nextStartTime < currentTime ) {
-                switch(job.getInteger("intervalType").intValue()) {
-                    case INTERVAL_MINUTE:
-                        eventCal.add(Calendar.MINUTE, job.getInteger("interval").intValue());
-                        break;
-                    case INTERVAL_HOUR:
-                        eventCal.add(Calendar.HOUR, job.getInteger("interval").intValue());
-                        break;
-                    case INTERVAL_DAY:
-                        eventCal.add(Calendar.DAY_OF_MONTH, job.getInteger("interval").intValue());
-                        break;
-                    case INTERVAL_MONTH:
-                        eventCal.add(Calendar.MONTH, job.getInteger("interval").intValue());
-                        break;
-                    default:
-                        break;
-                }
-                nextStartTime = eventCal.getTime().getTime();
-            }
-            return nextStartTime;
-        }
-        return -1;
-    }
-    
     /** Returns a string description of this Job. */
     public String toString() {
-        StringBuffer sb = new StringBuffer("Job");
-        sb.append(" Name="); sb.append(job.getString("jobName"));
-        sb.append(" Start="); sb.append(job.getDate("startDate"));
-        sb.append(" End="); sb.append(job.getDate("endDate"));
-        sb.append(" Next-Run="); sb.append(new Date(runtime));
-        sb.append(" Interval="); sb.append(job.getInteger("interval"));
-        sb.append(" Interval-Type="); sb.append(job.getInteger("intervalType"));
-        sb.append(" Repeats="); sb.append(job.getBoolean("isRepeated"));
-        sb.append(" Service="); sb.append(job.getString("serviceName"));
-        return sb.toString();
+        return "Not implemented yet.";        
     }
 }
 

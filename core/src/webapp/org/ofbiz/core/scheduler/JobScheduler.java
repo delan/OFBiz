@@ -1,6 +1,9 @@
 /*
  * $Id$
  * $Log$
+ * Revision 1.4  2001/11/03 01:38:25  azeneski
+ * Renamed runTime to runtime.
+ *
  * Revision 1.3  2001/11/03 00:19:35  azeneski
  * Changed the compareTo to not change the runtime of a job.
  *
@@ -71,14 +74,14 @@ public class JobScheduler implements Runnable {
         if ( job.getRuntime() != -1 ) {
             if ( !containsJob(job) ) {
                 queue.add(job);
-                updateDelay( ((Job) queue.first()).getRuntime());            
+                updateDelay( ((Job) queue.first()).getRuntime());
             }
             else {
                 throw new JobSchedulerException("Job conflicts with existing job.");
-            }                        
+            }
         }
     }
-
+    
     /** Clears the jobs from the queue. */
     public synchronized void clearJobs() {
         this.sleep = -1;
@@ -86,16 +89,16 @@ public class JobScheduler implements Runnable {
     }
     
     /** Remove a job from the queue. */
-    public synchronized void removeJob(Job job)  throws JobSchedulerException {       
+    public synchronized void removeJob(Job job)  throws JobSchedulerException {
         if (queue.contains(job)) {
             queue.remove(job);
-            updateDelay( ((Job) queue.first()).getRuntime());   
+            updateDelay( ((Job) queue.first()).getRuntime());
         }
         else {
-            throw new JobSchedulerException("Job not in queue.");         
+            throw new JobSchedulerException("Job not in queue.");
         }
     }
-        
+    
     private synchronized void updateDelay(long sleep) {
         this.sleep = sleep;
         notify();
@@ -124,7 +127,7 @@ public class JobScheduler implements Runnable {
         }
         Debug.logInfo("JobScheduler: (" + thread.getName() + ") Thread ending...");
     }
-
+    
     /** Spawns the invoker thread. */
     private synchronized void invokeJob() {
         if (queue.isEmpty())
@@ -132,12 +135,12 @@ public class JobScheduler implements Runnable {
         Job firstJob = (Job) queue.first();
         queue.remove(firstJob);
         
-        // Get a new thread and invoke the service.        
+        // Get a new thread and invoke the service.
         new JobInvoker(firstJob,jm.getDispatcher());
         
         // Re-schedule the job if it repeats.
-        if (firstJob.isRepeated()) {
-            firstJob.updateRuntime();
+        firstJob.updateRuntime();
+        if ( firstJob.getRuntime() > 0 ) {
             boolean queued = false;
             while (!queued) {
                 try {
@@ -160,7 +163,7 @@ public class JobScheduler implements Runnable {
             else
                 updateDelay(nextDelayTime);
         }
-    }    
+    }
     
     public synchronized void stop() {
         isRunning = false;
