@@ -6,6 +6,14 @@
     <vendor>OFBiz</vendor>
     <version>1.0</version>
 
+    <!-- Product Services -->
+    <service name="duplicateProduct" engine="simple"
+                location="org/ofbiz/commonapp/product/product/ProductServices.xml" invoke="duplicateProduct" auth="true">
+        <description>Duplicate a Product using a new productId</description>
+        <attribute name="productId" type="String" mode="IN" optional="false"/>
+        <attribute name="newProductId" type="String" mode="IN" optional="false"/>
+    </service>
+    
     <!-- Product Feature Services -->
     <service name="createProductFeatureCategory" engine="simple"
                 location="org/ofbiz/commonapp/product/feature/ProductFeatureServices.xml" invoke="createProductFeatureCategory" auth="true">
