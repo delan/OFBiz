@@ -23,26 +23,28 @@
  */
 package org.ofbiz.content.search;
 
-import java.util.Map;
-import java.util.HashMap;
-import java.util.List;
-import java.util.ArrayList;
-import java.util.Iterator;
 import java.io.FileNotFoundException;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.Iterator;
+import java.util.List;
+import java.util.Map;
+
+import org.ofbiz.base.util.Debug;
+import org.ofbiz.base.util.UtilDateTime;
+import org.ofbiz.base.util.UtilMisc;
 import org.ofbiz.base.util.UtilProperties;
 import org.ofbiz.base.util.UtilValidate;
-import org.ofbiz.base.util.UtilMisc;
-import org.ofbiz.base.util.UtilDateTime;
-
-import org.apache.lucene.document.*;
-import org.apache.lucene.analysis.standard.StandardAnalyzer;
-import org.apache.lucene.index.*;
-
-import org.ofbiz.entity.GenericDelegator;
-import org.ofbiz.entity.GenericValue;
-import org.ofbiz.entity.GenericEntityException;
-import org.ofbiz.base.util.Debug;
 import org.ofbiz.content.content.ContentWorker;
+import org.ofbiz.entity.GenericDelegator;
+import org.ofbiz.entity.GenericEntityException;
+import org.ofbiz.entity.GenericValue;
+
+import org.apache.lucene.analysis.standard.StandardAnalyzer;
+import org.apache.lucene.document.Document;
+import org.apache.lucene.index.IndexReader;
+import org.apache.lucene.index.IndexWriter;
+import org.apache.lucene.index.Term;
 
 
 
@@ -50,7 +52,7 @@ import org.ofbiz.content.content.ContentWorker;
  * SearchWorker Class
  * 
  * @author <a href="mailto:byersa@automationgroups.com">Al Byers</a> Hacked from Lucene demo file
- * @version $Rev:$
+ * @version $Rev$
  * @since 3.1
  * 
  *  

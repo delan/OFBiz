@@ -30,7 +30,6 @@ import java.util.HashMap;
 import java.util.Iterator;
 import java.util.LinkedList;
 import java.util.Map;
-
 import javax.servlet.http.HttpServletRequest;
 
 import org.ofbiz.base.util.Debug;
@@ -47,7 +46,7 @@ import org.ofbiz.entity.GenericValue;
  *  stats according to settings in the serverstats.properties file.
  *
  * @author     <a href="mailto:jonesde@ofbiz.org">David E. Jones</a>
- * @version    $Rev:$
+ * @version    $Rev$
  * @since      2.0
  */
 public class ServerHitBin {

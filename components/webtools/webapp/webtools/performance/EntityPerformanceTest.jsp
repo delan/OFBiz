@@ -24,7 +24,8 @@
  *@version    1.0
 --%> 
 
-<%@ page import="java.util.*, java.net.*" %>
+<%@ page import="java.util.*, java.net.*,
+                 org.ofbiz.base.util.cache.UtilCache" %>
 <%@ page import="org.ofbiz.security.*, org.ofbiz.entity.*, org.ofbiz.base.util.*, org.ofbiz.content.webapp.pseudotag.*" %>
 
 <%@ taglib uri="ofbizTags" prefix="ofbiz" %>

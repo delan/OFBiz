@@ -1,5 +1,5 @@
 /*
- * $Id: OfbizBshBsfEngine.java,v 1.6 2004/07/18 09:35:06 jonesde Exp $
+ * $Id$
  *
  * Copyright (c) 2001-2004 The Open For Business Project - www.ofbiz.org
  *
@@ -45,6 +45,8 @@ import com.ibm.bsf.BSFDeclaredBean;
 import com.ibm.bsf.BSFException;
 import com.ibm.bsf.BSFManager;
 import com.ibm.bsf.util.BSFEngineImpl;
+
+import org.ofbiz.base.util.cache.UtilCache;
 
 /**
  * This is the BeanShell adapter for IBM's Bean Scripting Famework.

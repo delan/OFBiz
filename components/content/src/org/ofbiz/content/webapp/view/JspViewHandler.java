@@ -25,7 +25,6 @@
 package org.ofbiz.content.webapp.view;
 
 import java.io.IOException;
-
 import javax.servlet.RequestDispatcher;
 import javax.servlet.ServletContext;
 import javax.servlet.ServletException;
@@ -40,7 +39,7 @@ import org.ofbiz.content.webapp.control.ContextFilter;
  * ViewHandlerException - View Handler Exception
  *
  * @author     <a href="mailto:jaz@ofbiz.org">Andy Zeneski</a>
- * @version    $Rev:$
+ * @version    $Rev$
  * @since      2.0
  */
 public class JspViewHandler implements ViewHandler {

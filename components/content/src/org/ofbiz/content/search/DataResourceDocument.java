@@ -24,7 +24,6 @@
 
 package org.ofbiz.content.search;
 
-import org.apache.lucene.document.*;
 import java.io.IOException;
 import java.io.StringWriter;
 import java.util.Locale;
@@ -39,11 +38,14 @@ import org.ofbiz.entity.GenericDelegator;
 import org.ofbiz.entity.GenericEntityException;
 import org.ofbiz.entity.GenericValue;
 
+import org.apache.lucene.document.Document;
+import org.apache.lucene.document.Field;
+
 /**
  * DataResourceDocument Class
  * 
  * @author <a href="mailto:byersa@automationgroups.com">Al Byers</a>
- * @version $Rev:$
+ * @version $Rev$
  * @since 3.1
  * 
  *  

@@ -22,13 +22,15 @@
  */
 package org.ofbiz.content.barcode;
 
-import org.ofbiz.base.util.UtilURL;
-import org.ofbiz.base.util.Debug;
-
-import java.util.Map;
-import java.util.HashMap;
+import java.io.BufferedReader;
+import java.io.IOException;
+import java.io.InputStreamReader;
 import java.net.URL;
-import java.io.*;
+import java.util.HashMap;
+import java.util.Map;
+
+import org.ofbiz.base.util.Debug;
+import org.ofbiz.base.util.UtilURL;
 
 /**
  * Factory for the creation of barcode generators.  The barcode generator is based

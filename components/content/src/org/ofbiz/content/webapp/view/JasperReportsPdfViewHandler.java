@@ -27,17 +27,9 @@ package org.ofbiz.content.webapp.view;
 import java.io.IOException;
 import java.io.InputStream;
 import java.util.Map;
-
 import javax.servlet.ServletContext;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
-
-import org.ofbiz.base.util.Debug;
-import org.ofbiz.base.util.UtilCache;
-import org.ofbiz.base.util.UtilHttp;
-import org.ofbiz.content.webapp.control.ContextFilter;
-import org.ofbiz.entity.GenericDelegator;
-import org.ofbiz.entity.jdbc.ConnectionFactory;
 
 import dori.jasper.engine.JRDataSource;
 import dori.jasper.engine.JREmptyDataSource;
@@ -46,11 +38,18 @@ import dori.jasper.engine.JasperManager;
 import dori.jasper.engine.JasperPrint;
 import dori.jasper.engine.JasperReport;
 
+import org.ofbiz.base.util.Debug;
+import org.ofbiz.base.util.UtilHttp;
+import org.ofbiz.base.util.cache.UtilCache;
+import org.ofbiz.content.webapp.control.ContextFilter;
+import org.ofbiz.entity.GenericDelegator;
+import org.ofbiz.entity.jdbc.ConnectionFactory;
+
 /**
  * Handles JasperReports PDF view rendering
  *
  * @author     <a href="mailto:jonesde@ofbiz.org">David E. Jones</a>
- * @version    $Rev:$
+ * @version    $Rev$
  * @since      2.0
  */
 public class JasperReportsPdfViewHandler implements ViewHandler {

@@ -24,9 +24,8 @@
 package org.ofbiz.content.webapp.control;
 
 import java.sql.Timestamp;
-import java.util.Map;
 import java.util.Enumeration;
-
+import java.util.Map;
 import javax.servlet.http.HttpSession;
 import javax.servlet.http.HttpSessionEvent;
 import javax.servlet.http.HttpSessionListener;
@@ -43,7 +42,7 @@ import org.ofbiz.entity.serialize.XmlSerializer;
  * HttpSessionListener that gathers and tracks various information and statistics
  *
  * @author     <a href="mailto:jonesde@ofbiz.org">David E. Jones</a>
- * @version    $Rev:$
+ * @version    $Rev$
  * @since      2.0
  */
 public class ControlEventListener implements HttpSessionListener {

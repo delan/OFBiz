@@ -36,10 +36,11 @@ import javax.servlet.http.HttpServletResponse;
 
 import org.ofbiz.base.util.Debug;
 import org.ofbiz.base.util.StringUtil;
-import org.ofbiz.base.util.UtilCache;
+import org.ofbiz.base.util.cache.UtilCache;
 import org.ofbiz.base.util.UtilMisc;
 import org.ofbiz.base.util.UtilValidate;
 import org.ofbiz.base.util.UtilHttp;
+import org.ofbiz.base.util.cache.UtilCache;
 import org.ofbiz.entity.GenericDelegator;
 import org.ofbiz.entity.GenericEntityException;
 import org.ofbiz.entity.GenericValue;
@@ -50,14 +51,14 @@ import org.ofbiz.security.Security;
  *
  * @author     <a href="mailto:jaz@ofbiz.org">Andy Zeneski</a>
  * @author     <a href="mailto:jonesde@ofbiz.org">David E. Jones</a>
- * @version    $Rev:$
+ * @version    $Rev$
  * @since      2.1
  */
 public class CommonEvents {
     
     public static final String module = CommonEvents.class.getName();
            
-    public static UtilCache appletSessions = new UtilCache("AppletSessions", 0, 600000, true);            
+    public static UtilCache appletSessions = new UtilCache("AppletSessions", 0, 600000, true);
     
     public static String checkAppletRequest(HttpServletRequest request, HttpServletResponse response) { 
         GenericDelegator delegator = (GenericDelegator) request.getAttribute("delegator");                

@@ -27,22 +27,21 @@ package org.ofbiz.content.webapp.event;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
-
 import javax.servlet.ServletContext;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
-
-import org.ofbiz.base.util.UtilCache;
 
 import com.ibm.bsf.BSFException;
 import com.ibm.bsf.BSFManager;
 import com.ibm.bsf.util.IOUtils;
 
+import org.ofbiz.base.util.cache.UtilCache;
+
 /**
  * BsfEventHandler - BSF Event Handler
  *
  * @author     <a href="mailto:jaz@ofbiz.org">Andy Zeneski</a>
- * @version    $Rev:$
+ * @version    $Rev$
  * @since      2.2
  */
 public class BsfEventHandler implements EventHandler {

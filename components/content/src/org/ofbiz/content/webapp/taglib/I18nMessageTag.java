@@ -28,7 +28,6 @@ import java.text.MessageFormat;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.ResourceBundle;
-
 import javax.servlet.jsp.JspException;
 import javax.servlet.jsp.tagext.BodyTagSupport;
 import javax.servlet.jsp.tagext.TagSupport;
@@ -43,7 +42,7 @@ import org.ofbiz.base.util.UtilJ2eeCompat;
  * @author     <a href="mailto:k3ysss@yahoo.com">Jian He</a>
  * @author     <a href="mailto:">Quake Wang</a>
  * @author     <a href="mailto:jonesde@ofbiz.org">David E. Jones</a>
- * @version    $Rev:$
+ * @version    $Rev$
  * @since      2.0
  */
 public class I18nMessageTag extends BodyTagSupport {

@@ -30,9 +30,10 @@ import java.util.List;
 import java.util.Locale;
 import java.util.Map;
 
-import org.ofbiz.base.util.UtilCache;
+import org.ofbiz.base.util.cache.UtilCache;
 import org.ofbiz.base.util.UtilURL;
 import org.ofbiz.base.util.UtilXml;
+import org.ofbiz.base.util.cache.UtilCache;
 import org.ofbiz.minilang.operation.MapProcessor;
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
@@ -41,7 +42,7 @@ import org.w3c.dom.Element;
  * SimpleMapProcessor Mini Language
  *
  * @author     <a href="mailto:jonesde@ofbiz.org">David E. Jones</a>
- * @version    $Rev:$
+ * @version    $Rev$
  * @since      2.0
  */
 public class SimpleMapProcessor {

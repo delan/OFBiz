@@ -25,7 +25,6 @@
 package org.ofbiz.content.webapp.event;
 
 import java.util.Locale;
-
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
@@ -40,7 +39,7 @@ import org.ofbiz.minilang.SimpleMethod;
  *
  * @author     <a href="mailto:jonesde@ofbiz.org">David E. Jones</a>
  * @author     <a href="mailto:jaz@ofbiz.org">Andy Zeneski</a>
- * @version    $Rev:$
+ * @version    $Rev$
  * @since      2.0
  */
 public class SimpleEventHandler implements EventHandler {

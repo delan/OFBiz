@@ -24,15 +24,19 @@ import java.util.Iterator;
 import java.util.List;
 import java.util.Locale;
 import java.util.Map;
-
 import javax.servlet.http.HttpServletRequest;
 
+import freemarker.core.Environment;
+import freemarker.template.TemplateModelException;
+import freemarker.template.TemplateTransformModel;
+import freemarker.template.TransformControl;
+
+import org.ofbiz.base.util.Debug;
 import org.ofbiz.base.util.GeneralException;
 import org.ofbiz.base.util.StringUtil;
 import org.ofbiz.base.util.UtilDateTime;
-import org.ofbiz.base.util.UtilValidate;
 import org.ofbiz.base.util.UtilProperties;
-import org.ofbiz.base.util.Debug;
+import org.ofbiz.base.util.UtilValidate;
 import org.ofbiz.content.content.ContentServicesComplex;
 import org.ofbiz.content.content.ContentWorker;
 import org.ofbiz.entity.GenericDelegator;
@@ -40,16 +44,11 @@ import org.ofbiz.entity.GenericEntityException;
 import org.ofbiz.entity.GenericValue;
 import org.ofbiz.minilang.MiniLangException;
 
-import freemarker.core.Environment;
-import freemarker.template.TemplateModelException;
-import freemarker.template.TemplateTransformModel;
-import freemarker.template.TransformControl;
-
 /**
  * LoopSubContentCacheTransform - Freemarker Transform for URLs (links)
  * 
  * @author <a href="mailto:byersa@automationgroups.com">Al Byers</a>
- * @version $Rev:$
+ * @version $Rev$
  * @since 3.0
  */
 public class LoopSubContentCacheTransform implements TemplateTransformModel {

@@ -28,17 +28,17 @@ import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.io.StringWriter;
 import java.io.Writer;
-
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+
+import org.ofbiz.base.util.Debug;
+import org.ofbiz.base.util.UtilXml;
 
 import org.apache.avalon.framework.logger.Log4JLogger;
 import org.apache.avalon.framework.logger.Logger;
 import org.apache.fop.apps.Driver;
 import org.apache.fop.messaging.MessageHandler;
 import org.apache.fop.tools.DocumentInputSource;
-import org.ofbiz.base.util.Debug;
-import org.ofbiz.base.util.UtilXml;
 import org.w3c.dom.Document;
 import org.xml.sax.InputSource;
 
@@ -47,7 +47,7 @@ import org.xml.sax.InputSource;
  * This handler will use JPublish to generate the XSL-FO
  *
  * @author     <a href="mailto:jaz@ofbiz.org">Andy Zeneski</a>
- * @version    $Rev:$
+ * @version    $Rev$
  * @since      3.0
  */
 public class FopPdfViewHandler extends JPublishViewHandler {

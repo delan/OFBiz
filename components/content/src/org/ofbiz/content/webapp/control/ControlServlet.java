@@ -25,7 +25,6 @@ package org.ofbiz.content.webapp.control;
 
 import java.io.IOException;
 import java.util.Enumeration;
-
 import javax.servlet.RequestDispatcher;
 import javax.servlet.ServletConfig;
 import javax.servlet.ServletContext;
@@ -34,6 +33,8 @@ import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
+
+import com.ibm.bsf.BSFManager;
 
 import org.ofbiz.base.util.Debug;
 import org.ofbiz.base.util.UtilHttp;
@@ -47,14 +48,12 @@ import org.ofbiz.entity.GenericValue;
 import org.ofbiz.security.Security;
 import org.ofbiz.service.LocalDispatcher;
 
-import com.ibm.bsf.BSFManager;
-
 /**
  * ControlServlet.java - Master servlet for the web application.
  *
  * @author     <a href="mailto:jaz@ofbiz.org">Andy Zeneski</a>
  * @author     <a href="mailto:jonesde@ofbiz.org">David E. Jones</a> 
- * @version    $Rev:$
+ * @version    $Rev$
  * @since      2.0
  */
 public class ControlServlet extends HttpServlet {

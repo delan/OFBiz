@@ -24,9 +24,9 @@
 package org.ofbiz.content.content;
 
 import java.io.IOException;
-import java.io.Writer;
-import java.io.StringWriter;
 import java.io.StringReader;
+import java.io.StringWriter;
+import java.io.Writer;
 import java.sql.Timestamp;
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -34,6 +34,10 @@ import java.util.Iterator;
 import java.util.List;
 import java.util.Locale;
 import java.util.Map;
+import javax.xml.parsers.ParserConfigurationException;
+
+import bsh.EvalError;
+import freemarker.ext.dom.NodeModel;
 
 import org.ofbiz.base.util.BshUtil;
 import org.ofbiz.base.util.Debug;
@@ -56,12 +60,9 @@ import org.ofbiz.minilang.MiniLangException;
 import org.ofbiz.minilang.SimpleMapProcessor;
 import org.ofbiz.service.GenericServiceException;
 import org.ofbiz.service.LocalDispatcher;
-import freemarker.ext.dom.NodeModel;
+
 import org.xml.sax.InputSource;
 import org.xml.sax.SAXException;
-import javax.xml.parsers.ParserConfigurationException;
-
-import bsh.EvalError;
 //import com.clarkware.profiler.Profiler;
 
 /**

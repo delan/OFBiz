@@ -33,8 +33,9 @@ import java.util.Map;
 import java.util.Set;
 
 import org.ofbiz.base.util.Debug;
-import org.ofbiz.base.util.UtilCache;
 import org.ofbiz.base.util.UtilXml;
+import org.ofbiz.base.util.cache.UtilCache;
+
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
 import org.w3c.dom.Node;
@@ -44,7 +45,7 @@ import org.w3c.dom.NodeList;
  * ConfigXMLReader.java - Reads and parses the XML site config files.
  *
  * @author     <a href="mailto:jaz@ofbiz.org">Andy Zeneski</a>
- * @version    $Rev:$
+ * @version    $Rev$
  * @since      2.0
  */
 public class ConfigXMLReader {

@@ -29,7 +29,6 @@ import java.text.NumberFormat;
 import java.util.Date;
 import java.util.Locale;
 import java.util.Map;
-
 import javax.servlet.jsp.JspWriter;
 import javax.servlet.jsp.PageContext;
 
@@ -43,7 +42,7 @@ import org.ofbiz.entity.model.ModelField;
  *
  * @author     <a href="mailto:jaz@ofbiz.org">Andy Zeneski</a>
  * @author     <a href="mailto:jonesde@ofbiz.org">David E. Jones</a>
- * @version    $Rev:$
+ * @version    $Rev$
  * @since      2.0
  */
 public class EntityField {

@@ -33,7 +33,6 @@ import java.util.Iterator;
 import java.util.List;
 import java.util.Locale;
 import java.util.Map;
-
 import javax.servlet.ServletContext;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
@@ -64,7 +63,7 @@ import org.ofbiz.entity.GenericValue;
  * @author     <a href="mailto:jaz@ofbiz.org">Andy Zeneski</a>
  * @author     <a href="mailto:jonesde@ofbiz.org">David E. Jones</a>
  * @author     Dustin Caldwell
- * @version    $Rev:$
+ * @version    $Rev$
  * @since      2.0
  */
 public class RequestHandler implements Serializable {

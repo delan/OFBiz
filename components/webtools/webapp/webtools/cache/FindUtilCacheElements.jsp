@@ -28,7 +28,9 @@
  */
 %> 
 
-<%@ page import="java.util.*, java.net.*" %>
+<%@ page import="java.util.*, java.net.*,
+                 org.ofbiz.base.util.cache.UtilCache,
+                 org.ofbiz.base.util.cache.CacheLine" %>
 <%@ page import="org.ofbiz.security.*, org.ofbiz.entity.*, org.ofbiz.base.util.*, org.ofbiz.content.webapp.pseudotag.*" %>
 
 <%@ taglib uri="ofbizTags" prefix="ofbiz" %>
@@ -60,54 +62,12 @@
         <TD></TD>
       </TR>
 
-      <%if(utilCache.getMaxSize() > 0) {%>
-          <%Iterator iter = utilCache.keyLRUList.iterator();%>
-          <%if(iter!=null && iter.hasNext()){%>
-            <%while(iter.hasNext()){%>
-              <%Object key = iter.next();%>
-              <%UtilCache.CacheLine line = (UtilCache.CacheLine) utilCache.cacheLineTable.get(key);%>
-              <%rowColor=(rowColor==rowColor1?rowColor2:rowColor1);%>
-              <tr class="<%=rowColor%>">
-                <TD><%=key%></TD>
-                <%--
-                <TD>
-                  <%if(createTime!=null){%>
-                    <%=(new Date(createTime.longValue())).toString()%>
-                  <%}%>
-                  &nbsp;
-                </TD>
-                --%>
-                <TD>
-                  <%long expireTime = utilCache.getExpireTime();%>
-                  <%if (line != null && line.loadTime > 0){%>
-                    <%=(new Date(line.loadTime + expireTime)).toString()%>
-                  <%}%>
-                  &nbsp;
-                </TD>
-                <TD>
-                  <%=line.getSizeInBytes()%>
-                  &nbsp;
-                </TD>
-                <TD>
-                  <%if(hasUtilCacheEdit){%>
-                    <a href='<ofbiz:url>/FindUtilCacheElementsRemoveElement?UTIL_CACHE_NAME=<%=cacheName%>&UTIL_CACHE_ELEMENT_NUMBER=<%=utilCache.keyLRUList.indexOf(key)%></ofbiz:url>' class='buttontext'>Remove</a>
-                  <%}%>
-                </TD>
-              </TR>
-            <%}%>
-          <%}else{%>
-              <%rowColor=(rowColor==rowColor1?rowColor2:rowColor1);%><tr class="<%=rowColor%>">
-                <TD colspan="5">No UtilCache elements found.</TD>
-              </TR>
-          <%}%>
-      <%} else {%>
-          <%Iterator iter = utilCache.cacheLineTable.entrySet().iterator();%>
+          <%Iterator iter = utilCache.cacheLineTable.keySet().iterator();%>
           <%if(iter!=null && iter.hasNext()){%>
             <%int keyNum = 0;%>
             <%while(iter.hasNext()){%>
-              <%Map.Entry entry = (Map.Entry)iter.next();%>
-              <%Object key = entry.getKey();%>
-              <%UtilCache.CacheLine line = (UtilCache.CacheLine) entry.getValue();%>
+              <%Object key = iter.next();%>
+              <%CacheLine line = (CacheLine) utilCache.cacheLineTable.get(key);%>
               <%rowColor=(rowColor==rowColor1?rowColor2:rowColor1);%>
               <tr class="<%=rowColor%>">
                 <TD><%=key%></TD>
@@ -135,7 +95,7 @@
                 <TD colspan="5">No UtilCache elements found.</TD>
               </TR>
           <%}%>
-      <%}%>
+
     </TABLE>
    <%}else{%>
     <H2>&nbsp;<%=cacheName%> Not Found</H2>

@@ -28,7 +28,6 @@ import java.net.MalformedURLException;
 import java.net.URL;
 import java.util.Map;
 import java.util.Properties;
-
 import javax.mail.Message;
 import javax.mail.Session;
 import javax.mail.Transport;
@@ -47,7 +46,7 @@ import org.ofbiz.service.ServiceUtil;
  * Email Services
  *
  * @author     <a href="mailto:jaz@ofbiz.org">Andy Zeneski</a>
- * @version    $Rev:$
+ * @version    $Rev$
  * @since      2.0
  */
 public class EmailServices {

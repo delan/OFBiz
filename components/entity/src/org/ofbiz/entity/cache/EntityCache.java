@@ -1,5 +1,5 @@
 /*
- * $Id: EntityCache.java,v 1.2 2004/07/13 11:29:46 jonesde Exp $
+ * $Id$
  *
  * Copyright (c) 2001-2004 The Open For Business Project - www.ofbiz.org
  *
@@ -27,7 +27,8 @@ package org.ofbiz.entity.cache;
 import java.util.Iterator;
 
 import org.ofbiz.base.util.Debug;
-import org.ofbiz.base.util.UtilCache;
+import org.ofbiz.base.util.cache.UtilCache;
+import org.ofbiz.base.util.cache.CacheLine;
 import org.ofbiz.entity.GenericEntity;
 import org.ofbiz.entity.GenericPK;
 import org.ofbiz.entity.condition.EntityCondition;
@@ -71,8 +72,8 @@ public class EntityCache extends AbstractCache {
         if (entityCache == null) return;
         Iterator it = entityCache.getCacheLineValues().iterator();
         while (it.hasNext()) {
-            UtilCache.CacheLine line = (UtilCache.CacheLine) it.next();
-            if (line.hasExpired()) continue;
+            CacheLine line = (CacheLine) it.next();
+            if (entityCache.hasExpired(line)) continue;
             GenericEntity entity = (GenericEntity) line.getValue();
             if (entity == null) continue;
             if (condition.entityMatches(entity)) it.remove();

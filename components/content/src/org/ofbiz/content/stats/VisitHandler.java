@@ -25,7 +25,6 @@ package org.ofbiz.content.stats;
 
 import java.net.InetAddress;
 import java.sql.Timestamp;
-
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpSession;
 
@@ -41,7 +40,7 @@ import org.ofbiz.entity.GenericValue;
  * Handles saving and maintaining visit information
  *
  * @author     <a href="mailto:jonesde@ofbiz.org">David E. Jones</a>
- * @version    $Rev:$
+ * @version    $Rev$
  * @since      2.0
  */
 public class VisitHandler {

@@ -37,20 +37,20 @@ import freemarker.template.TemplateModelException;
 import freemarker.template.TemplateTransformModel;
 
 import org.ofbiz.base.util.Debug;
-import org.ofbiz.base.util.UtilCache;
+import org.ofbiz.base.util.cache.UtilCache;
 
 import org.jpublish.RepositoryWrapper;
 
 /**
  * 
  * @author     <a href="mailto:jaz@ofbiz.org">Andy Zeneski</a>
- * @version    $Rev:$
+ * @version    $Rev$
  * @since      3.2
  */
 public class JpCacheIncludeTransform implements TemplateTransformModel {
 
     public static final String module = JpCacheIncludeTransform.class.getName();
-    protected static UtilCache pageCache = new UtilCache("webapp.JpInclude", 0, 0, false);
+    protected static UtilCache pageCache = new UtilCache("webapp.JpInclude", 0, 10, 0, false, true);
 
     public Writer getWriter(final Writer writer, Map args) throws TemplateModelException, IOException {
         Environment env = Environment.getCurrentEnvironment();

@@ -26,7 +26,6 @@ package org.ofbiz.content.webapp.view;
 
 import java.util.HashMap;
 import java.util.Map;
-
 import javax.servlet.ServletContext;
 
 import org.ofbiz.base.util.Debug;
@@ -38,7 +37,7 @@ import org.ofbiz.content.webapp.control.RequestManager;
  * ViewFactory - View Handler Factory
  *
  * @author     <a href="mailto:jaz@ofbiz.org">Andy Zeneski</a>
- * @version    $Rev:$
+ * @version    $Rev$
  * @since      2.0
  */
 public class ViewFactory {

@@ -29,16 +29,9 @@ import java.io.InputStream;
 import java.io.PipedInputStream;
 import java.io.PipedOutputStream;
 import java.util.Map;
-
 import javax.servlet.ServletContext;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
-
-import org.ofbiz.base.util.Debug;
-import org.ofbiz.base.util.UtilHttp;
-import org.ofbiz.content.webapp.control.ContextFilter;
-import org.ofbiz.entity.GenericDelegator;
-import org.ofbiz.entity.jdbc.ConnectionFactory;
 
 import dori.jasper.engine.JREmptyDataSource;
 import dori.jasper.engine.JasperCompileManager;
@@ -46,11 +39,17 @@ import dori.jasper.engine.JasperFillManager;
 import dori.jasper.engine.JasperPrintManager;
 import dori.jasper.engine.JasperReport;
 
+import org.ofbiz.base.util.Debug;
+import org.ofbiz.base.util.UtilHttp;
+import org.ofbiz.content.webapp.control.ContextFilter;
+import org.ofbiz.entity.GenericDelegator;
+import org.ofbiz.entity.jdbc.ConnectionFactory;
+
 /**
  * Handles JasperReports PDF view rendering
  *
  * @author     <a href="mailto:jonesde@ofbiz.org">David E. Jones</a>
- * @version    $Rev:$
+ * @version    $Rev$
  * @since      2.0
  */
 public class JasperReportsXmlViewHandler implements ViewHandler {

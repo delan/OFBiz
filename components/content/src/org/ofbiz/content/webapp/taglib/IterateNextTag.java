@@ -1,5 +1,5 @@
 /*
- * $Id: IterateNextTag.java,v 1.2 2003/09/14 05:36:48 jonesde Exp $
+ * $Id$
  *
  * Copyright (c) 2002-2003 The Open For Business Project - www.ofbiz.org
  *
@@ -27,7 +27,6 @@ package org.ofbiz.content.webapp.taglib;
 import java.io.IOException;
 import java.util.Iterator;
 import java.util.Map;
-
 import javax.servlet.jsp.JspTagException;
 import javax.servlet.jsp.JspWriter;
 import javax.servlet.jsp.tagext.BodyContent;

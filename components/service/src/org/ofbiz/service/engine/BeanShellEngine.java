@@ -33,8 +33,9 @@ import org.ofbiz.service.ModelService;
 import org.ofbiz.service.ServiceDispatcher;
 import org.ofbiz.base.util.HttpClient;
 import org.ofbiz.base.util.HttpClientException;
-import org.ofbiz.base.util.UtilCache;
+import org.ofbiz.base.util.cache.UtilCache;
 import org.ofbiz.base.util.UtilURL;
+import org.ofbiz.base.util.cache.UtilCache;
 
 import bsh.EvalError;
 import bsh.Interpreter;
@@ -43,7 +44,7 @@ import bsh.Interpreter;
  * BeanShell Script Service Engine
  *
  * @author     <a href="mailto:jaz@ofbiz.org">Andy Zeneski</a> 
- * @version    $Rev:$
+ * @version    $Rev$
  * @since      2.0
  */
 public final class BeanShellEngine extends GenericAsyncEngine {

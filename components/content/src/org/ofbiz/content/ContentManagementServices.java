@@ -29,7 +29,6 @@ import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
-
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpSession;
 
@@ -51,9 +50,6 @@ import org.ofbiz.entity.condition.EntityOperator;
 import org.ofbiz.entity.model.ModelUtil;
 import org.ofbiz.entity.util.ByteWrapper;
 import org.ofbiz.entity.util.EntityUtil;
-import org.ofbiz.entity.util.EntityListIterator;
-import org.ofbiz.entity.transaction.TransactionUtil;
-import org.ofbiz.entity.transaction.GenericTransactionException;
 import org.ofbiz.security.Security;
 import org.ofbiz.service.DispatchContext;
 import org.ofbiz.service.GenericServiceException;

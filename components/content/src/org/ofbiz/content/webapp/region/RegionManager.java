@@ -31,9 +31,10 @@ import java.util.List;
 import java.util.Map;
 
 import org.ofbiz.base.util.Debug;
-import org.ofbiz.base.util.UtilCache;
 import org.ofbiz.base.util.UtilValidate;
 import org.ofbiz.base.util.UtilXml;
+import org.ofbiz.base.util.cache.UtilCache;
+
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
 
@@ -41,7 +42,7 @@ import org.w3c.dom.Element;
  * A class to manage the region cache and read a region XML file
  *
  * @author     <a href="mailto:jonesde@ofbiz.org">David E. Jones</a>
- * @version    $Rev:$
+ * @version    $Rev$
  * @since      2.0
  */
 public class RegionManager {

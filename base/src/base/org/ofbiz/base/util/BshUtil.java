@@ -36,6 +36,7 @@ import java.util.Map;
 import java.util.Set;
 
 import org.ofbiz.base.location.FlexibleLocation;
+import org.ofbiz.base.util.cache.UtilCache;
 
 import bsh.BshClassManager;
 import bsh.EvalError;
@@ -50,7 +51,7 @@ import bsh.ParseException;
  *@author     <a href="mailto:jonesde@ofbiz.org">David E. Jones</a>
  *@author     Oswin Ondarza and Manuel Soto
  *@created    Oct 22, 2002
- *@version    $Rev:$
+ *@version    $Rev$
  */
 public final class BshUtil {
 

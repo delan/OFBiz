@@ -34,6 +34,8 @@ import java.net.UnknownHostException;
 import java.util.HashMap;
 import java.util.Map;
 
+import freemarker.template.TemplateException;
+
 import org.ofbiz.base.util.Debug;
 import org.ofbiz.base.util.UtilMisc;
 import org.ofbiz.base.util.UtilProperties;
@@ -47,8 +49,6 @@ import org.ofbiz.service.GenericServiceException;
 import org.ofbiz.service.LocalDispatcher;
 import org.ofbiz.service.ModelService;
 import org.ofbiz.service.ServiceUtil;
-
-import freemarker.template.TemplateException;
 
 /**
  * Provides generic services related to preparing and
@@ -103,7 +103,7 @@ import freemarker.template.TemplateException;
  *
  * @author     <a href="mailto:tristana@twibble.org">Tristan Austin</a>
  * @author     <a href="mailto:jaz@ofbiz.org">Andy Zeneski</a>
- * @version    $Rev:$
+ * @version    $Rev$
  * @since      2.2
  */
 public class NotificationServices {

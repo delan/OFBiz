@@ -21,12 +21,10 @@
  *  OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR
  *  THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  */
-package org.ofbiz.base.util;
+package org.ofbiz.base.util.cache;
 
-import java.util.*;
 import java.io.Serializable;
-import java.lang.ref.SoftReference;
-import java.lang.ref.ReferenceQueue;
+import java.util.*;
 
 /**
  * Generalized caching utility. Provides a number of caching features:
@@ -39,6 +37,7 @@ import java.lang.ref.ReferenceQueue;
  * </ul>
  *
  * @author     <a href="mailto:jonesde@ofbiz.org">David E. Jones</a>
+ * @author     <a href="mailto:jaz@ofbiz.org">Andy Zeneski</a>
  * @version    $Rev$
  * @since      2.0
  */
@@ -51,15 +50,13 @@ public class UtilCache implements Serializable {
 
     /** An index number appended to utilCacheTable names when there are conflicts. */
     protected static Map defaultIndices = new HashMap();
+    protected static jdbm.RecordManager jdbmMgr = null;
 
     /** The name of the UtilCache instance, is also the key for the instance in utilCacheTable. */
-    protected String name;
-
-    /** A list of the elements order by Least Recent Use */
-    public LinkedList keyLRUList = new LinkedList();
+    protected String name = null;
 
     /** A hashtable containing a CacheLine object with a value and a loadTime for each element. */
-    public Map cacheLineTable = new HashMap();
+    public CacheLineTable cacheLineTable = null;
 
     /** A count of the number of cache hits */
     protected long hitCount = 0;
@@ -70,7 +67,8 @@ public class UtilCache implements Serializable {
     /** The maximum number of elements in the cache.
      * If set to 0, there will be no limit on the number of elements in the cache.
      */
-    protected long maxSize = 0;
+    protected int maxSize = 0;
+    protected int maxInMemory = 0;
 
     /** Specifies the amount of time since initial loading before an element will be reported as expired.
      * If set to 0, elements will never expire.
@@ -79,6 +77,9 @@ public class UtilCache implements Serializable {
 
     /** Specifies whether or not to use soft references for this cache, defaults to false */
     protected boolean useSoftReference = false;
+
+    /** Specifies whether or not to use file base stored for this cache, defautls to false */
+    protected boolean useFileSystemStore = false;
 
     /** The set of listeners to receive notifcations when items are modidfied(either delibrately or because they were expired). */
     protected HashSet listeners = new HashSet();
@@ -90,14 +91,20 @@ public class UtilCache implements Serializable {
      * @param cacheName The name of the cache.
      * @param useSoftReference Specifies whether or not to use soft references for this cache.
      */
-    public UtilCache(String cacheName, long maxSize, long expireTime, boolean useSoftReference) {
+    public UtilCache(String cacheName, int maxSize, int maxMemorySize, long expireTime, boolean useSoftReference, boolean useFileSystemStore) {
         this.useSoftReference = useSoftReference;
         this.maxSize = maxSize;
         this.expireTime = expireTime;
         setPropertiesParams(cacheName);
 
         name = cacheName + this.getNextDefaultIndex(cacheName);
+        cacheLineTable = new CacheLineTable(name, useFileSystemStore, maxMemorySize);
+
         utilCacheTable.put(name, this);
+    }
+
+    public UtilCache(String cacheName, int maxSize, long expireTime, boolean useSoftReference) {
+        this(cacheName, maxSize, maxSize, expireTime, useSoftReference, false);
     }
 
     /** Constructor which specifies the cacheName as well as the maxSize and expireTime.
@@ -106,7 +113,7 @@ public class UtilCache implements Serializable {
      * @param expireTime The expireTime member is set to this value
      * @param cacheName The name of the cache.
      */
-    public UtilCache(String cacheName, long maxSize, long expireTime) {
+    public UtilCache(String cacheName, int maxSize, long expireTime) {
         this(cacheName, maxSize, expireTime, false);
     }
 
@@ -114,7 +121,7 @@ public class UtilCache implements Serializable {
      * @param maxSize The maxSize member is set to this value
      * @param expireTime The expireTime member is set to this value
      */
-    public UtilCache(long maxSize, long expireTime) {
+    public UtilCache(int maxSize, long expireTime) {
         this.useSoftReference = false;
         this.maxSize = maxSize;
         this.expireTime = expireTime;
@@ -192,10 +199,10 @@ public class UtilCache implements Serializable {
         if (res != null) {
             try {
                 String value = getPropertyParam(res, propNames, "maxSize");
-                Long longValue = new Long(value);
+                Integer intValue = new Integer(value);
 
-                if (longValue != null) {
-                    maxSize = longValue.longValue();
+                if (intValue != null) {
+                    maxSize = intValue.intValue();
                 }
             } catch (Exception e) {}
             try {
@@ -215,6 +222,8 @@ public class UtilCache implements Serializable {
                 }
             } catch (Exception e) {}
         }
+
+        this.cacheLineTable = new CacheLineTable(name, useFileSystemStore, (int) maxSize);
     }
 
     /** Puts or loads the passed element into the cache
@@ -231,26 +240,13 @@ public class UtilCache implements Serializable {
      * @param expireTime how long to keep this key in the cache
      */
     public synchronized Object put(Object key, Object value, long expireTime) {
-        if (maxSize > 0) {
-            // when maxSize is changed, the setter will take care of filling the LRU list
-            if (cacheLineTable.containsKey(key)) {
-                keyLRUList.remove(key);
-                keyLRUList.addFirst(key);
-            } else {
-                keyLRUList.addFirst(key);
-            }
+        CacheLine oldCacheLine;
+        if (expireTime > 0) {
+            oldCacheLine = (CacheLine) cacheLineTable.put(key, new CacheLine(value, useSoftReference, System.currentTimeMillis(), expireTime));
+        } else {
+            oldCacheLine = (CacheLine) cacheLineTable.put(key, new CacheLine(value, useSoftReference, expireTime));
         }
 
-        UtilCache.CacheLine oldCacheLine;
-        if (expireTime > 0) {
-            oldCacheLine = (UtilCache.CacheLine) cacheLineTable.put(key, new UtilCache.CacheLine(this, value, useSoftReference, System.currentTimeMillis(), expireTime));
-        } else {
-            oldCacheLine = (UtilCache.CacheLine) cacheLineTable.put(key, new UtilCache.CacheLine(this, value, useSoftReference, expireTime));
-        }
-        if (maxSize > 0 && cacheLineTable.size() > maxSize) {
-            Object lastKey = keyLRUList.getLast();
-            remove(lastKey);
-        }
         if (oldCacheLine == null) {
             noteAddition(key, value);
             return null;
@@ -267,9 +263,9 @@ public class UtilCache implements Serializable {
      * @return The value of the element specified by the key
      */
     public Object get(Object key) {
-        UtilCache.CacheLine line = (UtilCache.CacheLine) cacheLineTable.get(key);
+        CacheLine line = (CacheLine) cacheLineTable.get(key);
 
-        if (hasExpired(line)) {
+        if (this.hasExpired(line)) {
             // note that print.info in debug.properties cannot be checked through UtilProperties here, it would cause infinite recursion...
             // if (Debug.infoOn()) Debug.logInfo("Element has expired with key " + key, module);
             remove(key);
@@ -277,19 +273,11 @@ public class UtilCache implements Serializable {
         }
 
         if (line == null) {
-            // if (Debug.infoOn()) Debug.logInfo("Element not found with key " + key, module);
             missCount++;
             return null;
         }
-        // if (Debug.infoOn()) Debug.logInfo("Element found with key " + key, module);
         hitCount++;
 
-        if (maxSize > 0) {
-        	synchronized (this) {
-	            keyLRUList.remove(key);
-	            keyLRUList.addFirst(key);
-        	}
-        }
         return line.getValue();
     }
 
@@ -312,7 +300,7 @@ public class UtilCache implements Serializable {
         long totalSize = 0;
         Iterator i = cacheLineTable.values().iterator();
         while (i.hasNext()) {
-            totalSize += ((UtilCache.CacheLine) i.next()).getSizeInBytes();
+            totalSize += ((CacheLine) i.next()).getSizeInBytes();
         }
         return totalSize;
     }
@@ -322,9 +310,8 @@ public class UtilCache implements Serializable {
      * @return The value of the removed element specified by the key
      */
     public synchronized Object remove(Object key) {
-        UtilCache.CacheLine line = (UtilCache.CacheLine) cacheLineTable.remove(key);
+        CacheLine line = (CacheLine) cacheLineTable.remove(key);
         if (line != null) {
-            if (maxSize > 0) keyLRUList.remove(key);
             noteRemoval(key, line.getValue());
             return line.getValue();
         } else {
@@ -335,13 +322,13 @@ public class UtilCache implements Serializable {
 
     /** Removes all elements from this cache */
     public synchronized void clear() {
-        Iterator it = cacheLineTable.entrySet().iterator();
+        Iterator it = cacheLineTable.keySet().iterator();
         while (it.hasNext()) {
-            Map.Entry entry = (Map.Entry) it.next();
-            noteRemoval(entry.getKey(), entry.getValue());
+            Object key = it.next();
+            Object value = cacheLineTable.get(key);
+            noteRemoval(key, value);
         }
         cacheLineTable.clear();
-        keyLRUList.clear();
         clearCounters();
     }
 
@@ -387,28 +374,8 @@ public class UtilCache implements Serializable {
      * If 0, there is no maximum.
      * @param maxSize The maximum number of elements in the cache
      */
-    public void setMaxSize(long maxSize) {
-        // if the new maxSize is <= 0, clear keyLRUList
-        if (maxSize <= 0) {
-            keyLRUList.clear();
-        } else if (maxSize > 0 && this.maxSize <= 0) {
-            // if the new maxSize > 0 and the old is <= 0, fill in LRU list - order will be meaningless for now
-            Iterator keys = cacheLineTable.keySet().iterator();
-
-            while (keys.hasNext()) {
-                keyLRUList.add(keys.next());
-            }
-        }
-
-        // if the new maxSize is less than the current cache size, shrink the cache.
-        if (maxSize > 0 && cacheLineTable.size() > maxSize) {
-            while (cacheLineTable.size() > maxSize) {
-                Object lastKey = keyLRUList.getLast();
-
-                remove(lastKey);
-            }
-        }
-
+    public void setMaxSize(int maxSize) {
+        cacheLineTable.setLru((int) maxSize);
         this.maxSize = maxSize;
     }
 
@@ -429,7 +396,7 @@ public class UtilCache implements Serializable {
             long currentTime = System.currentTimeMillis();
             Iterator values = cacheLineTable.values().iterator();
             while (values.hasNext()) {
-                UtilCache.CacheLine line = (UtilCache.CacheLine) values.next();
+                CacheLine line = (CacheLine) values.next();
                 line.loadTime = currentTime;
             }
         } else if (this.expireTime <= 0 && expireTime > 0) {// if expire time was > 0 and is now <=, do nothing, just leave the load times in place, won't hurt anything...
@@ -451,7 +418,7 @@ public class UtilCache implements Serializable {
             this.useSoftReference = useSoftReference;
             Iterator values = cacheLineTable.values().iterator();
             while (values.hasNext()) {
-                UtilCache.CacheLine line = (UtilCache.CacheLine) values.next();
+                CacheLine line = (CacheLine) values.next();
                 line.setUseSoftReference(useSoftReference);
             }
         }
@@ -475,7 +442,7 @@ public class UtilCache implements Serializable {
      * @return True is the cache contains an element corresponding to the specified key, otherwise false
      */
     public boolean containsKey(Object key) {
-        UtilCache.CacheLine line = (UtilCache.CacheLine) cacheLineTable.get(key);
+        CacheLine line = (CacheLine) cacheLineTable.get(key);
 
         if (hasExpired(line)) {
             remove(key);
@@ -496,10 +463,6 @@ public class UtilCache implements Serializable {
         return cacheLineTable.values();
     }
 
-    public Set entrySet() {
-        return cacheLineTable.entrySet();
-    }
-
     /** Returns a boolean specifying whether or not the element corresponding to the key has expired.
      * Only returns true if element is in cache and has expired. Error conditions return false, if no expireTable entry, returns true.
      * Always returns false if expireTime <= 0.
@@ -509,12 +472,11 @@ public class UtilCache implements Serializable {
      * @return True is the element corresponding to the specified key has expired, otherwise false
      */
     public boolean hasExpired(Object key) {
-        UtilCache.CacheLine line = (UtilCache.CacheLine) cacheLineTable.get(key);
-
+        CacheLine line = (CacheLine) cacheLineTable.get(key);
         return hasExpired(line);
     }
 
-    protected boolean hasExpired(UtilCache.CacheLine line) {
+    protected boolean hasExpired(CacheLine line) {
         if (line == null) return false;
         // check this BEFORE checking to see if expireTime <= 0, ie if time expiration is enabled
         // check to see if we are using softReference first, slight performance increase
@@ -627,91 +589,5 @@ public class UtilCache implements Serializable {
             if (cache == null) return;
             cache.clear();
         }
-    }
-
-    public static class CacheLine implements Serializable {
-        public UtilCache utilCache;
-        public Object valueRef = null;
-        public long loadTime = 0;
-        public long expireTime = 0;
-        public boolean useSoftReference = false;
-
-        public CacheLine(UtilCache utilCache, Object value, boolean useSoftReference, long expireTime) {
-            this.utilCache = utilCache;
-            if (useSoftReference) {
-                this.valueRef = new UtilCache.CacheSoftRef(value);
-            } else {
-                this.valueRef = value;
-            }
-            this.useSoftReference = useSoftReference;
-            this.expireTime = expireTime;
-        }
-
-        public CacheLine(UtilCache utilCache, Object value, boolean useSoftReference, long loadTime, long expireTime) {
-            this(utilCache, value, useSoftReference, expireTime);
-            this.loadTime = loadTime;
-        }
-
-        public Object getValue() {
-            if (valueRef == null) return null;
-            if (useSoftReference) {
-                return ((java.lang.ref.SoftReference) valueRef).get();
-            } else {
-                return valueRef;
-            }
-        }
-
-        public void setUseSoftReference(boolean useSoftReference) {
-            if (this.useSoftReference != useSoftReference) {
-                synchronized (this) {
-                    this.useSoftReference = useSoftReference;
-                    if (useSoftReference) {
-                        this.valueRef = new java.lang.ref.SoftReference(this.valueRef);
-                    } else {
-                        this.valueRef = ((java.lang.ref.SoftReference) this.valueRef).get();
-                    }
-                }
-            }
-        }
-
-        public boolean hasExpired() {
-            return utilCache.hasExpired(this);
-        }
-
-        public long getSizeInBytes() {
-            return UtilObject.getByteCount(this);
-        }
-    }
-
-    public static class CacheSoftRef extends SoftReference implements Serializable {
-
-        public CacheSoftRef(Object o) {
-            super(o);
-        }
-
-        public CacheSoftRef(Object o, ReferenceQueue referenceQueue) {
-            super(o, referenceQueue);
-        }
-
-        public void clear() {
-            if (Debug.verboseOn()) {
-                Debug.logVerbose(new Exception("UtilCache.CacheSoftRef.clear()"), "Clearing UtilCache SoftReference - " + get(), module);
-            }
-            super.clear();
-        }
-
-        public void finalize() throws Throwable {
-            if (Debug.verboseOn()) {
-                Debug.logVerbose(new Exception("UtilCache.CacheSoftRef.finalize()"), "Finalize UtilCache SoftReference - " + get(), module);
-            }
-            super.finalize();
-        }
-    }
-
-    /** Implement this interface if you wish to receive events of key modifications. */
-    public interface CacheListener {
-        public void noteKeyRemoval(UtilCache cache, Object key, Object oldValue);
-        public void noteKeyAddition(UtilCache cache, Object key, Object newValue);
-        public void noteKeyUpdate(UtilCache cache, Object key, Object newValue, Object oldValue);
     }
 }

@@ -31,7 +31,7 @@ import java.sql.Timestamp;
 
 import net.xoetrope.xui.XProjectManager;
 
-import org.ofbiz.base.util.UtilCache;
+import org.ofbiz.base.util.cache.UtilCache;
 import org.ofbiz.base.util.Debug;
 import org.ofbiz.base.util.UtilMisc;
 import org.ofbiz.base.util.UtilDateTime;

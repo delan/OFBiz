@@ -28,17 +28,17 @@ import java.io.IOException;
 import java.io.Writer;
 import java.util.Map;
 
-import org.ofbiz.base.util.Debug;
-import org.ofbiz.base.util.UtilValidate;
-
 import freemarker.core.Environment;
 import freemarker.template.TemplateTransformModel;
+
+import org.ofbiz.base.util.Debug;
+import org.ofbiz.base.util.UtilValidate;
 
 /**
  * RenderWrappedTextTransform - Freemarker Transform for URLs (links)
  *
  * @author     <a href="mailto:byersa@automationgroups.com">Al Byers</a>
- * @version    $Rev:$
+ * @version    $Rev$
  * @since      3.0
  */
 public class RenderWrappedTextTransform implements  TemplateTransformModel {

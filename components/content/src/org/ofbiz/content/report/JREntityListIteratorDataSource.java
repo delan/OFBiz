@@ -24,21 +24,21 @@
 
 package org.ofbiz.content.report;
 
+import dori.jasper.engine.JRDataSource;
+import dori.jasper.engine.JRException;
+import dori.jasper.engine.JRField;
+
 import org.ofbiz.base.util.Debug;
 import org.ofbiz.entity.GenericEntity;
 import org.ofbiz.entity.GenericEntityException;
 import org.ofbiz.entity.util.EntityListIterator;
-
-import dori.jasper.engine.JRDataSource;
-import dori.jasper.engine.JRException;
-import dori.jasper.engine.JRField;
 
 /**
  * <code>JREntityListIteratorDataSource</code>
  * 
  * @author <a href="mailto:jonesde@ofbiz.org">David E. Jones</a>
  * @author <a href="mailto:gielen@aixcept.de">Rene Gielen</a>
- * @version $Rev:$
+ * @version $Rev$
  */
 public class JREntityListIteratorDataSource implements JRDataSource {
     

@@ -9,9 +9,7 @@ import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
-import java.lang.StringBuffer;
 import java.util.StringTokenizer;
-
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpSession;
 
@@ -21,6 +19,7 @@ import org.ofbiz.base.util.StringUtil;
 import org.ofbiz.base.util.UtilHttp;
 import org.ofbiz.base.util.UtilMisc;
 import org.ofbiz.base.util.UtilValidate;
+import org.ofbiz.base.util.collections.LifoSet;
 import org.ofbiz.content.content.ContentPermissionServices;
 import org.ofbiz.content.content.ContentServicesComplex;
 import org.ofbiz.entity.GenericDelegator;
@@ -28,14 +27,13 @@ import org.ofbiz.entity.GenericEntity;
 import org.ofbiz.entity.GenericEntityException;
 import org.ofbiz.entity.GenericPK;
 import org.ofbiz.entity.GenericValue;
-import org.ofbiz.entity.util.EntityUtil;
-import org.ofbiz.minilang.MiniLangException;
-import org.ofbiz.security.Security;
-import org.ofbiz.base.util.collections.LifoSet;
 import org.ofbiz.entity.condition.EntityCondition;
 import org.ofbiz.entity.condition.EntityConditionList;
 import org.ofbiz.entity.condition.EntityExpr;
 import org.ofbiz.entity.condition.EntityOperator;
+import org.ofbiz.entity.util.EntityUtil;
+import org.ofbiz.minilang.MiniLangException;
+import org.ofbiz.security.Security;
 
 
 /**

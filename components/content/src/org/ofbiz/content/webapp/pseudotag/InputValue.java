@@ -25,7 +25,6 @@ package org.ofbiz.content.webapp.pseudotag;
 
 import java.io.IOException;
 import java.util.Map;
-
 import javax.servlet.jsp.PageContext;
 
 import org.ofbiz.base.util.UtilFormatOut;
@@ -39,7 +38,7 @@ import org.ofbiz.entity.GenericValue;
  *  attribute is false, always tries to use the request parameter and ignores the entity field.
  *
  * @author     <a href="mailto:jonesde@ofbiz.org">David E. Jones</a>
- * @version    $Rev:$
+ * @version    $Rev$
  * @since      2.0
  */
 public class InputValue {

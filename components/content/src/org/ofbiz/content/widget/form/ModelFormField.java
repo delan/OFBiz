@@ -30,6 +30,9 @@ import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
 
+import bsh.EvalError;
+import bsh.Interpreter;
+
 import org.ofbiz.base.util.BshUtil;
 import org.ofbiz.base.util.Debug;
 import org.ofbiz.base.util.UtilDateTime;
@@ -48,17 +51,15 @@ import org.ofbiz.service.GenericServiceException;
 import org.ofbiz.service.LocalDispatcher;
 import org.ofbiz.service.ModelParam;
 import org.ofbiz.service.ModelService;
-import org.w3c.dom.Element;
 
-import bsh.EvalError;
-import bsh.Interpreter;
+import org.w3c.dom.Element;
 
 /**
  * Widget Library - Form model class
  *
  * @author     <a href="mailto:jonesde@ofbiz.org">David E. Jones</a>
  * @author     <a href="mailto:byersa@automationgroups.com">Al Byers</a>
- * @version    $Rev:$
+ * @version    $Rev$
  * @since      2.2
  */
 public class ModelFormField {

@@ -31,8 +31,9 @@ import org.ofbiz.base.config.GenericConfigException;
 import org.ofbiz.base.config.MainResourceHandler;
 import org.ofbiz.base.config.ResourceHandler;
 import org.ofbiz.base.util.Debug;
-import org.ofbiz.base.util.UtilCache;
+import org.ofbiz.base.util.cache.UtilCache;
 import org.ofbiz.base.util.UtilXml;
+import org.ofbiz.base.util.cache.UtilCache;
 import org.ofbiz.service.config.ServiceConfigUtil;
 import org.w3c.dom.Element;
 
@@ -40,7 +41,7 @@ import org.w3c.dom.Element;
  * ServiceGroupReader.java
  * 
  * @author     <a href="mailto:jaz@ofbiz.org">Andy Zeneski</a>
- * @version    $Rev:$
+ * @version    $Rev$
  * @since      2.0
  */
 public class ServiceGroupReader {

@@ -26,7 +26,6 @@ package org.ofbiz.content.webapp.taglib;
 
 import java.text.DateFormat;
 import java.text.NumberFormat;
-
 import javax.servlet.jsp.JspException;
 import javax.servlet.jsp.tagext.BodyContent;
 import javax.servlet.jsp.tagext.BodyTagSupport;
@@ -38,7 +37,7 @@ import org.ofbiz.base.util.UtilJ2eeCompat;
  * FormatTag - JSP Tag to format numbers and dates.
  *
  * @author     <a href="mailto:jaz@ofbiz.org">Andy Zeneski</a>
- * @version    $Rev:$
+ * @version    $Rev$
  * @since      2.0
  */
 public class FormatTag extends BodyTagSupport {

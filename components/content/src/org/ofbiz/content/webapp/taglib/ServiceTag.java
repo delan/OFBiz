@@ -26,7 +26,6 @@ package org.ofbiz.content.webapp.taglib;
 
 import java.util.Iterator;
 import java.util.Map;
-
 import javax.servlet.jsp.JspTagException;
 import javax.servlet.jsp.PageContext;
 
@@ -39,7 +38,7 @@ import org.ofbiz.service.LocalDispatcher;
  * ServiceTag - Service invocation tag.
  *
  * @author     <a href="mailto:jaz@ofbiz.org">Andy Zeneski</a>
- * @version    $Rev:$
+ * @version    $Rev$
  * @since      2.0
  */
 public class ServiceTag extends AbstractParameterTag {

@@ -27,7 +27,6 @@ package org.ofbiz.content.webapp.region;
 
 import java.util.HashMap;
 import java.util.Map;
-
 import javax.servlet.RequestDispatcher;
 import javax.servlet.ServletContext;
 import javax.servlet.ServletException;
@@ -45,7 +44,7 @@ import org.ofbiz.base.util.UtilJ2eeCompat;
  *
  * @author     David M. Geary in the book "Advanced Java Server Pages"
  * @author     <a href="mailto:jonesde@ofbiz.org">David E. Jones</a>
- * @version    $Rev:$
+ * @version    $Rev$
  * @since      2.0
  */
 public class Region extends Content {

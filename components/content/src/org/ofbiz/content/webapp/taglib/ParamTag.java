@@ -25,7 +25,6 @@
 package org.ofbiz.content.webapp.taglib;
 
 import java.util.Map;
-
 import javax.servlet.jsp.JspTagException;
 import javax.servlet.jsp.tagext.TagSupport;
 
@@ -33,7 +32,7 @@ import javax.servlet.jsp.tagext.TagSupport;
  * ParamTag - Defines a parameter for the service tag.
  *
  * @author     <a href="mailto:jaz@ofbiz.org">Andy Zeneski</a>
- * @version    $Rev:$
+ * @version    $Rev$
  * @since      2.0
  */
 public class ParamTag extends TagSupport {

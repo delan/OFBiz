@@ -26,7 +26,6 @@ package org.ofbiz.content.widget.html;
 import java.io.IOException;
 import java.util.HashMap;
 import java.util.Map;
-
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.xml.parsers.ParserConfigurationException;
@@ -37,6 +36,7 @@ import org.ofbiz.base.util.UtilValidate;
 import org.ofbiz.content.widget.form.FormFactory;
 import org.ofbiz.content.widget.form.FormStringRenderer;
 import org.ofbiz.content.widget.form.ModelForm;
+
 import org.xml.sax.SAXException;
 
 
@@ -44,7 +44,7 @@ import org.xml.sax.SAXException;
  * Widget Library - HTML Form Wrapper class - makes it easy to do the setup and render of a form
  *
  * @author     <a href="mailto:jonesde@ofbiz.org">David E. Jones</a>
- * @version    $Rev:$
+ * @version    $Rev$
  * @since      2.2
  */
 public class HtmlFormWrapper {

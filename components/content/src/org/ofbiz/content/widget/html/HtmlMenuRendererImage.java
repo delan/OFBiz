@@ -24,7 +24,6 @@
 package org.ofbiz.content.widget.html;
 
 import java.util.Map;
-
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
@@ -39,7 +38,7 @@ import org.ofbiz.entity.GenericValue;
  * Widget Library - HTML Menu Renderer implementation
  *
  * @author     <a href="mailto:byersa@automationgroups.com">Al Byers</a>
- * @version    $Rev:$
+ * @version    $Rev$
  * @since      2.2
  */
 

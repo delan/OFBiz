@@ -26,12 +26,13 @@ import java.io.IOException;
 import java.io.Writer;
 import java.util.Map;
 
-import org.krysalis.barcode.BarcodeException;
-import org.ofbiz.base.util.Debug;
-
 import freemarker.template.TemplateModelException;
 import freemarker.template.TemplateScalarModel;
 import freemarker.template.TemplateTransformModel;
+
+import org.ofbiz.base.util.Debug;
+
+import org.krysalis.barcode.BarcodeException;
 
 /**
  * BarcodeTransform - Freemarker Transform for Barcodes

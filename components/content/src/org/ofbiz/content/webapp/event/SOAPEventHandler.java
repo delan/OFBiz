@@ -30,11 +30,16 @@ import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
-
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 import javax.xml.soap.SOAPException;
+
+import org.ofbiz.base.util.Debug;
+import org.ofbiz.base.util.UtilMisc;
+import org.ofbiz.service.GenericServiceException;
+import org.ofbiz.service.LocalDispatcher;
+import org.ofbiz.service.ModelService;
 
 import org.apache.axis.AxisFault;
 import org.apache.axis.Constants;
@@ -45,11 +50,6 @@ import org.apache.axis.message.RPCParam;
 import org.apache.axis.message.SOAPEnvelope;
 import org.apache.axis.server.AxisServer;
 import org.apache.log4j.Category;
-import org.ofbiz.base.util.Debug;
-import org.ofbiz.base.util.UtilMisc;
-import org.ofbiz.service.GenericServiceException;
-import org.ofbiz.service.LocalDispatcher;
-import org.ofbiz.service.ModelService;
 
 /**
  * SOAPEventHandler - SOAP Event Handler implementation
@@ -57,7 +57,7 @@ import org.ofbiz.service.ModelService;
  * @author     <a href="mailto:jaz@ofbiz.org">Andy Zeneski</a> 
  * @author     <a href="mailto:">Andy Chen</a>
  * @author     <a href="mailto:jonesde@ofbiz.org">David E. Jones</a>
- * @version    $Rev:$
+ * @version    $Rev$
  * @since      2.0
  */
 public class SOAPEventHandler implements EventHandler {
