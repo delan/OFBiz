@@ -1,5 +1,5 @@
 /*
- * $Id: DataResourceWorker.java,v 1.7 2003/12/08 08:39:57 byersa Exp $
+ * $Id: DataResourceWorker.java,v 1.8 2003/12/15 11:58:36 byersa Exp $
  *
  * Copyright (c) 2001, 2002 The Open For Business Project - www.ofbiz.org
  *
@@ -32,7 +32,13 @@ import java.util.Locale;
 import java.io.IOException;
 import java.io.Writer;
 import java.io.Reader;
+import java.io.InputStream;
 import java.io.StringReader;
+import java.io.StringWriter;
+import java.io.File;
+import java.io.FileNotFoundException;
+import java.io.FileReader;
+import java.net.URL;
 
 import javax.servlet.http.HttpServletRequest;
 
@@ -51,6 +57,7 @@ import org.ofbiz.service.LocalDispatcher;
 import org.ofbiz.content.email.NotificationServices;
 import org.ofbiz.minilang.SimpleMapProcessor;
 import org.ofbiz.minilang.MiniLangException;
+import org.ofbiz.content.webapp.ftl.FreeMarkerWorker;
 
 import freemarker.ext.beans.BeansWrapper;
 import freemarker.ext.servlet.HttpRequestHashModel;
@@ -74,7 +81,7 @@ import freemarker.template.Template;
  * DataResourceWorker Class
  *
  * @author     <a href="mailto:byersa@automationgroups.com">Al Byers</a>
- * @version    $Revision: 1.7 $
+ * @version    $Revision: 1.8 $
  * @since      3.0
  *
  * 
@@ -336,24 +343,32 @@ Debug.logInfo("in uploadAndStoreImage, idFieldValue:" + idFieldValue, "");
         return imageType;
     }
 
-    public static void renderDataResourceAsText(GenericDelegator delegator,
-        String dataResourceId, Writer out, Map templateContext, GenericValue view, 
+    public static void renderDataResourceAsHtml(GenericDelegator delegator,
+        String dataResourceId, Writer out, SimpleHash templateContext, GenericValue view, 
            Locale locale, String mimeTypeId)
                      throws IOException {
+           Map context = (Map)FreeMarkerWorker.get(templateContext, "context");
+           if (context == null)
+               context = new HashMap();
 
-        //Debug.logInfo(" in renderDataResourceAsText, mimeTypeId:" + mimeTypeId, module);
+         String webSiteId = (String)context.get("webSiteId");
+         String https = (String)context.get("https");
+        //Debug.logInfo(" in renderDataResourceAsHtml, mimeTypeId:" + mimeTypeId, module);
         if (UtilValidate.isEmpty(mimeTypeId)) 
             mimeTypeId = "text/html";
    
         GenericValue dataResource = null;
         if (view != null) {
             Map dataResourceMap = new HashMap();
-            try {
-                SimpleMapProcessor.runSimpleMapProcessor(
-                      "org/ofbiz/content/ContentManagementMapProcessors.xml", "dataResourceIn",
-                      view, dataResourceMap, new ArrayList(), locale);
-            } catch(MiniLangException e) {
-                throw new IOException("[MiniLang]" +e.getMessage());
+            String entityName = view.getEntityName();
+            if (entityName != null && !entityName.equals("DataResource")) {
+                try {
+                    SimpleMapProcessor.runSimpleMapProcessor(
+                          "org/ofbiz/content/ContentManagementMapProcessors.xml", "dataResourceIn",
+                          view, dataResourceMap, new ArrayList(), locale);
+                } catch(MiniLangException e) {
+                    throw new IOException("[MiniLang]" +e.getMessage());
+                }
             }
             //Debug.logInfo("in renderDAtaResource(work), dataResourceMap:" + dataResourceMap, "");
             dataResource = delegator.makeValue("DataResource", dataResourceMap);
@@ -381,70 +396,139 @@ Debug.logInfo("in uploadAndStoreImage, idFieldValue:" + idFieldValue, "");
         String dataResourceTypeId = (String)dataResource.get("dataResourceTypeId"); 
         if (dataResourceTypeId == null) 
             dataResourceTypeId = "SHORT_TEXT";
+        Debug.logInfo(" in renderDataResourceAsHtml, dataResourceTypeId:" + dataResourceTypeId, module);
 
         String dataTemplateTypeId = (String)dataResource.get("dataTemplateTypeId"); 
         if (dataTemplateTypeId == null) 
             dataTemplateTypeId = "NONE";
 
+        Debug.logInfo(" in renderDataResourceAsHtml, dataTemplateTypeId:" + dataTemplateTypeId, module);
         String text = null;
+        dataResourceId = (String)dataResource.get("dataResourceId"); 
+        Debug.logInfo(" in renderDataResourceAsHtml, dataResourceId:" + dataResourceId, module);
+        String objectInfo = (String)dataResource.get("objectInfo"); 
+        Debug.logInfo(" in renderDataResourceAsHtml, objectInfo:" + objectInfo, module);
 
         if (dataTemplateTypeId.equals("FTL")) {
 
-            if (templateContext == null) {
-               templateContext = new HashMap();
-            }
-            Reader templateReader = getDataResourceAsReader(delegator, dataResourceId, 
-                                     dataResource, templateContext, locale, mimeTypeId);
             Configuration config = Configuration.getDefaultConfiguration();
-            config.setObjectWrapper(BeansWrapper.getDefaultInstance());
-            try {
-                config.setSetting("datetime_format", "yyyy-MM-dd HH:mm:ss.SSS");
-            } catch(TemplateException e) {
-                throw new IOException(e.getMessage());
-            }
-
-            BeansWrapper wrapper = BeansWrapper.getDefaultInstance();
-            TemplateHashModel staticModels = wrapper.getStaticModels();
-            templateContext.put("Static", staticModels);
             String templateName = (String)dataResource.get("dataResourceName");
-            Template template = new Template(templateName, templateReader, config);
-
-
-            // process the template with the given data and write
-            try {
-                template.process(templateContext, out);
-            } catch(TemplateException e) {
-                throw new IOException(e.getMessage());
+            if (templateContext == null) {
+               templateContext = new SimpleHash();
+                config.setObjectWrapper(BeansWrapper.getDefaultInstance());
+                try {
+                    config.setSetting("datetime_format", "yyyy-MM-dd HH:mm:ss.SSS");
+                } catch(TemplateException e) {
+                    throw new IOException(e.getMessage());
+                }
+    
+                BeansWrapper wrapper = BeansWrapper.getDefaultInstance();
+                TemplateHashModel staticModels = wrapper.getStaticModels();
+                templateContext.put("Static", staticModels);
             }
+            String subContentId = (String)context.get("subContentId");
+        Debug.logInfo(" in renderDataResourceAsHtml, subContentId:" + subContentId, module);
+            if (UtilValidate.isNotEmpty(subContentId)) {
+                context.put("contentId", subContentId);
+                context.put("subContentId", null);
+            }
+            String subContentId2 = (String)context.get("subContentId");
+        Debug.logInfo(" in renderDataResourceAsHtml, subContentId2:" + subContentId2, module);
+            dataResource.set("dataTemplateTypeId", "NONE"); // Set so it won't come here again
+            StringWriter sOut = new StringWriter();
+        Debug.logInfo(" in renderDataResourceAsHtml, recalling renderDAtaResourceAsText to sOut", module);
+            renderDataResourceAsText(delegator, dataResourceId, sOut, 
+                    templateContext, dataResource, locale, mimeTypeId);
+            String subContentId3 = (String)context.get("subContentId");
+        Debug.logInfo(" in renderDataResourceAsHtml, subContentId3:" + subContentId3, module);
+            //Debug.logInfo(" in renderDataResourceAsHtml, sOut:" + sOut.toString(), module);
+                Reader templateReader = new StringReader(sOut.toString());
+                Template template = new Template(templateName, templateReader, config);
+    
+    
+                // process the template with the given data and write
+                try {
+                    //SimpleHash templateRoot = FreeMarkerWorker.buildNewRoot(templateContext);
+                    context.put("mimeTypeId", null);
+                    templateContext.put("context", context);
+            Debug.logInfo(" in renderDataResourceAsHtml, calling template.process", module);
+                    template.process(templateContext, out);
+                } catch(TemplateException e) {
+                    throw new IOException(e.getMessage());
+                }
 
         } else if (dataResourceTypeId.equals("ELECTRONIC_TEXT")) {
 
-            if (mimeTypeId.equals("text/plain")) {
-                text = getDataResourceAsString(delegator, dataResourceId, dataResource,
-                            templateContext, locale, mimeTypeId);
-            } else {
-                text = getDataResourceAsHtml(delegator, dataResourceId, dataResource,
-                            templateContext, locale, mimeTypeId);
+            try {
+                GenericValue electronicText = delegator.findByPrimaryKey("ElectronicText", 
+                                UtilMisc.toMap("dataResourceId", dataResourceId));
+                text = (String)electronicText.get("textData");
+            } catch(GenericEntityException e) {
+                throw new IOException(e.getMessage());
             }
             out.write(text);
         } else if (dataResourceTypeId.equals("IMAGE_OBJECT")) {
+                Debug.logInfo(" in renderDataResourceAsHtml(IMAGE), mimeTypeId:" + mimeTypeId, module);
             if (mimeTypeId.equals("text/plain")) {
-                text = getDataResourceAsString(delegator, dataResourceId, dataResource,
-                            templateContext, locale, mimeTypeId);
+                text  = (String)dataResource.get("dataResourceId");
             } else {
-                text = getDataResourceAsHtml(delegator, dataResourceId, dataResource,
-                            templateContext, locale, mimeTypeId);
+                Debug.logInfo(" in renderDataResourceAsHtml(IMAGE), locale:" + locale, module);
+                String requestName = UtilProperties.getMessage("content", "img.request", locale);
+                String requestParamName = UtilProperties.getMessage("content", "img.request.param.name", locale);
+                String url = requestName + "?" + requestParamName + "=" + dataResourceId;
+                Debug.logInfo(" in renderDataResourceAsHtml(IMAGE), url:" + url, module);
+                if (UtilValidate.isEmpty(url)) {
+                    throw new IOException("Image url object is null.");
+                }
+                String prefix = buildRequestPrefix(delegator, locale, webSiteId, https);
+                Debug.logInfo(" in renderDataResourceAsHtml(IMAGE), prefix:" + prefix, module);
+                String sep = "";
+                String s = "";
+                if ( url.indexOf("/") != 0 && prefix.lastIndexOf("/") != (prefix.length() -1)) {
+                    sep = "/";
+                }
+                text = "<img src=\"" + prefix + sep + url + "\"/>";
+                Debug.logInfo(" in renderDataResourceAsHtml(IMAGE), text:" + text, module);
+            }
+            out.write(text);
+        } else if (dataResourceTypeId.equals("LINK")) {
+            if (mimeTypeId.equals("text/plain")) {
+                text = objectInfo;
+            } else {
+                String href = (String)dataResource.get("objectInfo"); 
+                String val = (String)dataResource.get("dataResourceName"); 
+                text = "<a href=\"" + href + "\">" + val + "</a>";
             }
             out.write(text);
         } else if (dataResourceTypeId.equals("URL_RESOURCE")) {
-            if (mimeTypeId.equals("text/plain")) {
-                text = getDataResourceAsString(delegator, dataResourceId, dataResource,
-                            templateContext, locale, mimeTypeId);
+            URL url = new URL(objectInfo);
+            if (url.getHost() != null) { // is absolute
+                InputStream in = url.openStream();
+                int c;
+                StringWriter sw = new StringWriter();
+                while ((c = in.read()) != -1 ) {
+                    sw.write(c);
+                }
+                sw.close();
+                text = sw.toString();
+                Debug.logInfo(" in renderDataResourceAsHtml(URL-ABS), text:" + text, module);
             } else {
-                text = getDataResourceAsHtml(delegator, dataResourceId, dataResource,
-                            templateContext, locale, mimeTypeId);
+                String prefix = buildRequestPrefix(delegator, locale, webSiteId, https);
+                String sep = "";
+                String s = "";
+                if ( url.toString().indexOf("/") != 0 && prefix.lastIndexOf("/") != (prefix.length() -1)) {
+                    sep = "/";
+                }
+                String s2 = prefix + sep + url.toString();
+                URL url2 = new URL(s2);
+                Debug.logInfo(" in renderDataResourceAsHtml(URL-REL), s2:" + s2, module);
+                text = (String)url2.getContent();
+                Debug.logInfo(" in renderDataResourceAsHtml(URL-REL), text:" + text, module);
             }
             out.write(text);
+        } else if (dataResourceTypeId.indexOf("_FILE") >= 0) {
+            String rootDir = (String)context.get( "rootDir");
+            renderFile(dataResourceTypeId, objectInfo, rootDir, out);
         } else if (dataResourceTypeId.equals("SHORT_TEXT")) {
             text = (String)dataResource.get("objectInfo");
             out.write(text);
@@ -452,33 +536,45 @@ Debug.logInfo("in uploadAndStoreImage, idFieldValue:" + idFieldValue, "");
         return;
     }
 
-    public static String getDataResourceAsHtml(GenericDelegator delegator, String dataResourceId, 
-           GenericValue dataResource, Map templateContext, Locale locale, String mimeTypeId)
-       throws IOException {
+    public static void renderDataResourceAsText(GenericDelegator delegator,
+        String dataResourceId, Writer out, SimpleHash templateContext, GenericValue view, 
+           Locale locale, String mimeTypeId)
+                     throws IOException {
+           Map context = (Map)FreeMarkerWorker.get(templateContext, "context");
+           if (context == null)
+               context = new HashMap();
 
-            //Debug.logInfo("in renderDAtaResourceAsHtml(work), dataResource:" + dataResource, "");
-            //Debug.logInfo("in renderDAtaResourceAsHtml(work), mimeTypeId:" + mimeTypeId, "");
-        String outString = null;
-/*
-        if (dataResource != null) {
+         String webSiteId = (String)context.get("webSiteId");
+         String https = (String)context.get("https");
+        //Debug.logInfo(" in renderDataResourceAsHtml, mimeTypeId:" + mimeTypeId, module);
+        if (UtilValidate.isEmpty(mimeTypeId)) 
+            mimeTypeId = "text/html";
+   
+        GenericValue dataResource = null;
+        if (view != null) {
             Map dataResourceMap = new HashMap();
-            try {
-                SimpleMapProcessor.runSimpleMapProcessor(
-                      "org/ofbiz/content/ContentManagementMapProcessors.xml", "dataResourceIn",
-                      dataResource, dataResourceMap, new ArrayList(), locale);
-            } catch(MiniLangException e) {
-                throw new IOException(e.getMessage());
+            String entityName = view.getEntityName();
+            if (entityName != null && !entityName.equals("DataResource")) {
+                try {
+                    SimpleMapProcessor.runSimpleMapProcessor(
+                          "org/ofbiz/content/ContentManagementMapProcessors.xml", "dataResourceIn",
+                          view, dataResourceMap, new ArrayList(), locale);
+                } catch(MiniLangException e) {
+                    throw new IOException("[MiniLang]" +e.getMessage());
+                }
             }
-            //Debug.logInfo("in renderDAtaResourceAsHtml(work), dataResourceMap:" + dataResourceMap, "");
+            //Debug.logInfo("in renderDAtaResource(work), dataResourceMap:" + dataResourceMap, "");
             dataResource = delegator.makeValue("DataResource", dataResourceMap);
+            dataResource.setPKFields(view);
+            dataResource.setNonPKFields(view);
+            dataResourceId = (String)dataResource.get("dataResourceId"); 
         }
-*/
         
-        if (dataResourceId == null) {
-            throw new IOException("DataResourceId is null");
-        }
   
         if (dataResource == null || dataResource.isEmpty()) {
+            if (dataResourceId == null) {
+                throw new IOException("DataResourceId is null");
+            }
             try {
                 dataResource = delegator.findByPrimaryKey("DataResource",
                              UtilMisc.toMap("dataResourceId", dataResourceId)); 
@@ -493,92 +589,176 @@ Debug.logInfo("in uploadAndStoreImage, idFieldValue:" + idFieldValue, "");
         String dataResourceTypeId = (String)dataResource.get("dataResourceTypeId"); 
         if (dataResourceTypeId == null) 
             dataResourceTypeId = "SHORT_TEXT";
+        Debug.logInfo(" in renderDataResourceAsHtml, dataResourceTypeId:" + dataResourceTypeId, module);
 
         String dataTemplateTypeId = (String)dataResource.get("dataTemplateTypeId"); 
         if (dataTemplateTypeId == null) 
             dataTemplateTypeId = "NONE";
 
-        if (dataResourceTypeId.equals("ELECTRONIC_TEXT")) {
-            outString = getDataResourceAsString(delegator, dataResourceId, dataResource,
-                            templateContext, locale, mimeTypeId);
-        } else if (dataResourceTypeId.equals("IMAGE_OBJECT")) {
-            String requestName = UtilProperties.getMessage("content", "img.request", locale);
-            String requestParamName = UtilProperties.getMessage("content", "img.request.param.name", locale);
-            String url = requestName + "?" + requestParamName + "=" + dataResourceId;
-            if (UtilValidate.isEmpty(url)) {
-                throw new IOException("Image url object is null.");
+        Debug.logInfo(" in renderDataResourceAsHtml, dataTemplateTypeId:" + dataTemplateTypeId, module);
+        String text = null;
+        dataResourceId = (String)dataResource.get("dataResourceId"); 
+        Debug.logInfo(" in renderDataResourceAsHtml, dataResourceId:" + dataResourceId, module);
+        String objectInfo = (String)dataResource.get("objectInfo"); 
+        Debug.logInfo(" in renderDataResourceAsHtml, objectInfo:" + objectInfo, module);
+
+        if (dataTemplateTypeId.equals("FTL")) {
+
+            Configuration config = Configuration.getDefaultConfiguration();
+            String templateName = (String)dataResource.get("dataResourceName");
+            if (templateContext == null) {
+               templateContext = new SimpleHash();
+                config.setObjectWrapper(BeansWrapper.getDefaultInstance());
+                try {
+                    config.setSetting("datetime_format", "yyyy-MM-dd HH:mm:ss.SSS");
+                } catch(TemplateException e) {
+                    throw new IOException(e.getMessage());
+                }
+    
+                BeansWrapper wrapper = BeansWrapper.getDefaultInstance();
+                TemplateHashModel staticModels = wrapper.getStaticModels();
+                templateContext.put("Static", staticModels);
             }
-            String prefix = buildRequestPrefix(delegator, locale);
-            String sep = "";
-            String s = "";
-            if ( url.indexOf("/") != 0 && prefix.lastIndexOf("/") != (prefix.length() -1)) {
-                sep = "/";
+            String subContentId = (String)context.get("subContentId");
+        Debug.logInfo(" in renderDataResourceAsHtml, subContentId:" + subContentId, module);
+            if (UtilValidate.isNotEmpty(subContentId)) {
+                context.put("contentId", subContentId);
+                context.put("subContentId", null);
             }
-            s = prefix + sep + url;
-            outString = "<img src=\"" + s + "\"/>";
-        } else if (dataResourceTypeId.equals("URL_RESOURCE")) {
-            String href = (String)dataResource.get("objectInfo"); 
-            String val = (String)dataResource.get("description"); 
-            outString = "<a href=\"" + href + "\">" + val + "</a>";
-        }
-        return outString;
-    }
+            String subContentId2 = (String)context.get("subContentId");
+        Debug.logInfo(" in renderDataResourceAsHtml, subContentId2:" + subContentId2, module);
+            dataResource.set("dataTemplateTypeId", "NONE"); // Set so it won't come here again
+            StringWriter sOut = new StringWriter();
+        Debug.logInfo(" in renderDataResourceAsHtml, recalling renderDAtaResourceAsText to sOut", module);
+            renderDataResourceAsText(delegator, dataResourceId, sOut, 
+                    templateContext, dataResource, locale, mimeTypeId);
+            String subContentId3 = (String)context.get("subContentId");
+        Debug.logInfo(" in renderDataResourceAsHtml, subContentId3:" + subContentId3, module);
+            //Debug.logInfo(" in renderDataResourceAsHtml, sOut:" + sOut.toString(), module);
+                out.write(sOut.toString());
 
-    public static Reader getDataResourceAsReader(GenericDelegator delegator, 
-                            String dataResourceId, GenericValue dataResource, Map templateContext,
-                            Locale locale, String mimeTypeId) throws IOException {
-        String s = getDataResourceAsString(delegator, dataResourceId, dataResource, 
-                            templateContext, locale, mimeTypeId);
-        StringReader reader = new StringReader(s);
-        return reader;
-    }
+        } else if (dataResourceTypeId.equals("ELECTRONIC_TEXT")) {
 
-    public static String getDataResourceAsString(GenericDelegator delegator, 
-                            String dataResourceId, GenericValue dataResource, Map templateContext,
-                            Locale locale, String mimeTypeId) throws IOException {
-
-        String s = null;
-        if (dataResourceId == null && dataResource == null) {
-                throw new IOException("Both dataResource and dataResourceId are null");
-        }
-
-            //Debug.logInfo("in renderDAtaResourceAsString(work), dataResource(0):" + dataResource, "");
-        if (dataResource == null) {
-            try {
-                dataResource = delegator.findByPrimaryKey("DataResource", 
-                                UtilMisc.toMap("dataResourceId", dataResourceId));
-            } catch(GenericEntityException e) {
-                throw new IOException(e.getMessage());
-            }
-        }
-            //Debug.logInfo("in renderDAtaResourceAsString(work), dataResource(1):" + dataResource, "");
-        
-        String dataResourceTypeId = (String)dataResource.get("dataResourceTypeId");
-            //Debug.logInfo("in renderDAtaResourceAsString(work), dataResourceTypeId(1):" + dataResourceTypeId, "");
-        if (dataResourceTypeId.equals("ELECTRONIC_TEXT")) {
             try {
                 GenericValue electronicText = delegator.findByPrimaryKey("ElectronicText", 
                                 UtilMisc.toMap("dataResourceId", dataResourceId));
-                s = (String)electronicText.get("textData");
+                text = (String)electronicText.get("textData");
             } catch(GenericEntityException e) {
                 throw new IOException(e.getMessage());
             }
+            out.write(text);
         } else if (dataResourceTypeId.equals("IMAGE_OBJECT")) {
-            s = (String)dataResource.get("dataResourceId");
-        } else {
-            s = (String)dataResource.get("objectInfo");
+            Debug.logInfo(" in renderDataResourceAsHtml(IMAGE), mimeTypeId:" + mimeTypeId, module);
+            text  = (String)dataResource.get("dataResourceId");
+            out.write(text);
+        } else if (dataResourceTypeId.equals("LINK")) {
+            text = objectInfo;
+            out.write(text);
+        } else if (dataResourceTypeId.equals("URL_RESOURCE")) {
+            URL url = new URL(objectInfo);
+            if (url.getHost() != null) { // is absolute
+                InputStream in = url.openStream();
+                int c;
+                StringWriter sw = new StringWriter();
+                while ((c = in.read()) != -1 ) {
+                    sw.write(c);
+                }
+                sw.close();
+                text = sw.toString();
+                Debug.logInfo(" in renderDataResourceAsHtml(URL-ABS), text:" + text, module);
+            } else {
+                String prefix = buildRequestPrefix(delegator, locale, webSiteId, https);
+                String sep = "";
+                String s = "";
+                if ( url.toString().indexOf("/") != 0 && prefix.lastIndexOf("/") != (prefix.length() -1)) {
+                    sep = "/";
+                }
+                String s2 = prefix + sep + url.toString();
+                URL url2 = new URL(s2);
+                Debug.logInfo(" in renderDataResourceAsHtml(URL-REL), s2:" + s2, module);
+                text = (String)url2.getContent();
+                Debug.logInfo(" in renderDataResourceAsHtml(URL-REL), text:" + text, module);
+            }
+            out.write(text);
+        } else if (dataResourceTypeId.indexOf("_FILE") >= 0) {
+            String rootDir = (String)context.get( "rootDir");
+            renderFile(dataResourceTypeId, objectInfo, rootDir, out);
+        } else if (dataResourceTypeId.equals("SHORT_TEXT")) {
+            text = (String)dataResource.get("objectInfo");
+            out.write(text);
         }
-        return s;
+        return;
     }
 
-    public static String buildRequestPrefix(GenericDelegator delegator, Locale locale) {
-        String prefix = UtilProperties.getMessage("content", "baseUrl", locale);
-        Debug.logInfo("in buildRequestPrefix, prefix(baseUrl):" + prefix, "");
+    public static void renderFile(String dataResourceTypeId, String objectInfo, 
+                                  String rootDir, Writer out) 
+                     throws IOException {
+
+        if (dataResourceTypeId.equals("LOCAL_FILE")) {
+            File file = new File(objectInfo);
+            if (!file.isAbsolute()) {
+                throw new IOException("File (" + objectInfo + ") is not absolute");
+            }
+            int c;
+            Debug.logInfo(" in renderDataResourceAsHtml(LOCAL), file:" + file, module);
+            FileReader in = new FileReader( file);
+            while ((c = in.read()) != -1)
+                out.write(c);
+        } else if (dataResourceTypeId.equals("OFBIZ_FILE")) {
+            String prefix = System.getProperty("ofbiz.home");
+            String sep = "";
+            if ( objectInfo.indexOf("/") != 0 && prefix.lastIndexOf("/") != (prefix.length() -1)) {
+                sep = "/";
+            }
+            File file = new File(prefix + sep + objectInfo );
+            Debug.logInfo(" in renderDataResourceAsHtml(OFBIZ_FILE), file:" + file, module);
+            int c;
+            FileReader in = new FileReader( file);
+            while ((c = in.read()) != -1)
+                out.write(c);
+        } else if (dataResourceTypeId.equals("CONTEXT_FILE")) {
+            String prefix = rootDir;
+            String sep = "";
+            if ( objectInfo.indexOf("/") != 0 && prefix.lastIndexOf("/") != (prefix.length() -1)) {
+                sep = "/";
+            }
+            File file = new File(prefix + sep + objectInfo );
+            int c;
+            Debug.logInfo(" in renderDataResourceAsHtml(CONTEXT_FILE), file:" + file + " abs:" + file.isAbsolute(), module);
+            FileReader in = null;
+            try {
+                in = new FileReader( file);
+            } catch(FileNotFoundException e) {
+            Debug.logInfo(" in renderDataResourceAsHtml(CONTEXT_FILE), in FNFexception:" + e.getMessage(), module);
+                throw new IOException(e.getMessage());
+            } catch(Exception e) {
+            Debug.logInfo(" in renderDataResourceAsHtml(CONTEXT_FILE), in exception:" + e.getMessage(), module);
+            }
+            Debug.logInfo(" in renderDataResourceAsHtml(CONTEXT_FILE), after FileReader:", module);
+            while ((c = in.read()) != -1) {
+                out.write(c);
+            }
+        }
+        return;
+    }
+
+
+    public static String buildRequestPrefix(GenericDelegator delegator, Locale locale, 
+                            String webSiteId, String https) {
+        String prefix = null;
+        Map prefixValues = new HashMap();
+        NotificationServices.setBaseUrl(delegator, webSiteId, prefixValues);
+        if (https != null && https.equalsIgnoreCase("true")) {
+            prefix = (String)prefixValues.get("baseSecureUrl");
+        } else {
+            prefix = (String)prefixValues.get("baseUrl");
+        }
         if (UtilValidate.isEmpty(prefix)) {
-             Map prefixValues = new HashMap();
-             String webSiteId = null;
-             NotificationServices.setBaseUrl(delegator, webSiteId, prefixValues);
-             prefix = (String)prefixValues.get("baseUrl");
+            if (https != null && https.equalsIgnoreCase("true")) {
+                prefix = UtilProperties.getMessage("content", "baseSecureUrl", locale);
+            } else {
+                prefix = UtilProperties.getMessage("content", "baseUrl", locale);
+            }
         }
         Debug.logInfo("in buildRequestPrefix, prefix:" + prefix, "");
 
