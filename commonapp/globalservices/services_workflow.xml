@@ -78,4 +78,25 @@
         <attribute name="fromDate" type="Timestamp" mode="IN"/>
         <attribute name="result" type="java.util.Map" mode="IN" optional="true"/>
     </service>
+    
+    <service name="wfActivateApplication" engine="java"
+            location="org.ofbiz.core.workflow.WfApplicationServices" invoke="activateAppliaction">
+        <description>Activate a workflow assignment</description>
+        <attribute name="workEffortId" type="String" mode="IN"/>
+        <attribute name="applicationId" type="String" mode="OUT" optional="true"/>
+    </service>
+    
+    <service name="wfGetApplicationContext" engine="java"
+            location="org.ofbiz.core.workflow.WfApplicationServices" invoke="getAppliactionContext">
+        <description>Get the application Context</description>
+        <attribute name="applicationId" type="String" mode="IN"/>
+        <attribute name="applicationContext" type="java.util.Map" mode="OUT" optional="true"/>
+    </service>
+    
+    <service name="wfCompleteApplication" engine="java"
+            location="org.ofbiz.core.workflow.WfApplicationServices" invoke="completeAppliaction">
+        <description>Complete a workflow assignment</description>
+        <attribute name="applicationId" type="String" mode="IN"/>
+        <attribute name="result" type="java.util.Map" mode="IN" optional="true"/>
+    </service>    
 </services>
