@@ -26,7 +26,7 @@
  *
  * @author     David E. Jones (jonesde@ofbiz.org)
  * @author     Andy Zeneski (jaz@ofbiz.org)
- * @version    $Revision: 1.4 $
+ * @version    $Revision: 1.5 $
  */
 -->
 
@@ -105,6 +105,9 @@
       <field name="removedTxTime" type="date-time"></field>
       <field name="primaryKeyRemoved" type="very-long"></field>
       <prim-key field="entitySyncRemoveId"/>
+      <index name="ENTSNC_REM_TXTM" unique="false">
+      	<index-field name="removedTxTime"/>
+      </index>
     </entity>
 </entitymodel>
 

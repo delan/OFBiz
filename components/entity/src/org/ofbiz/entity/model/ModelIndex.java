@@ -1,5 +1,5 @@
 /*
- * $Id: ModelIndex.java,v 1.1 2003/08/16 22:05:48 ajzeneski Exp $
+ * $Id: ModelIndex.java,v 1.2 2003/12/11 01:58:19 jonesde Exp $
  *
  *  Copyright (c) 2001, 2002 The Open For Business Project - www.ofbiz.org
  *
@@ -32,7 +32,7 @@ import org.ofbiz.base.util.*;
  * Generic Entity - Relation model class
  *
  * @author     <a href="mailto:jonesde@ofbiz.org">David E. Jones</a>
- * @version    $Revision: 1.1 $
+ * @version    $Revision: 1.2 $
  * @since      2.0
  */
 public class ModelIndex {
@@ -53,6 +53,13 @@ public class ModelIndex {
     public ModelIndex() {
         name = "";
         unique = false;
+    }
+
+    /** Direct Create Constructor */
+    public ModelIndex(ModelEntity mainEntity, String name, boolean unique) {
+        this.mainEntity = mainEntity;
+        this.name = name;
+        this.unique = unique;
     }
 
     /** XML Constructor */

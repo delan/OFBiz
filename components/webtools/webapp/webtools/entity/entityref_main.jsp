@@ -68,9 +68,10 @@ if(security.hasPermission("ENTITY_MAINT", session)) {
   int numberShowed = 0;
   search = (String) request.getParameter("search");
   //as we are iterating through, check a few things and put any warnings here inside <li></li> tags
-  String warningString = "";
+  List warningList = new LinkedList();
 
   TreeSet fkNames = new TreeSet();
+  TreeSet indexNames = new TreeSet();
 %>
 
 <html>
@@ -118,15 +119,15 @@ if(security.hasPermission("ENTITY_MAINT", session)) {
         ModelEntity entity = reader.getModelEntity(entityName);
         if (checkWarnings) {
           if (helperName == null) {
-            warningString = warningString + "<li><div style=\"color: red;\">[HelperNotFound]</div> No Helper (DataSource) definition found for entity <A href=\"#" + entity.getEntityName() + "\">" + entity.getEntityName() + "</A>.</li>";
+            warningList.add("<span style=\"color: red;\">[HelperNotFound]</span> No Helper (DataSource) definition found for entity <A href=\"#" + entity.getEntityName() + "\">" + entity.getEntityName() + "</A>.");
             //only show group name warning if helper name not found
             if (groupName == null)
-              warningString = warningString + "<li><div style=\"color: red;\">[GroupNotFound]</div> No Group Name found for entity <A href=\"#" + entity.getEntityName() + "\">" + entity.getEntityName() + "</A>.</li>";
+              warningList.add("<span style=\"color: red;\">[GroupNotFound]</span> No Group Name found for entity <A href=\"#" + entity.getEntityName() + "\">" + entity.getEntityName() + "</A>.");
           }
           if (entity.getPlainTableName() != null && entity.getPlainTableName().length() > 30)
-            warningString = warningString + "<li><div style=\"color: red;\">[TableNameGT30]</div> Table name <b>" + entity.getPlainTableName() + "</b> of entity <A href=\"#" + entity.getEntityName() + "\">" + entity.getEntityName() + "</A> is longer than 30 characters.</li>";
+            warningList.add("<span style=\"color: red;\">[TableNameGT30]</span> Table name <b>" + entity.getPlainTableName() + "</b> of entity <A href=\"#" + entity.getEntityName() + "\">" + entity.getEntityName() + "</A> is longer than 30 characters.");
           if (entity.getPlainTableName() != null && reservedWords.contains(entity.getPlainTableName().toUpperCase()))
-            warningString = warningString + "<li><div style=\"color: red;\">[TableNameRW]</div> Table name <b>" + entity.getPlainTableName() + "</b> of entity <A href=\"#" + entity.getEntityName() + "\">" + entity.getEntityName() + "</A> is a reserved word.</li>";
+            warningList.add("<span style=\"color: red;\">[TableNameRW]</span> Table name <b>" + entity.getPlainTableName() + "</b> of entity <A href=\"#" + entity.getEntityName() + "\">" + entity.getEntityName() + "</A> is a reserved word.");
         }
 %>	
   <a name="<%= entityName %>"></a>
@@ -155,22 +156,22 @@ if(security.hasPermission("ENTITY_MAINT", session)) {
     ModelField field = entity.getField(y);	
     ModelFieldType type = delegator.getEntityFieldType(entity, field.getType());
     String javaName = null;
-    javaName = field.getIsPk() ? "<div style=\"color: red;\">" + field.getName() + "</div>" : field.getName();
+    javaName = field.getIsPk() ? "<span style=\"color: red;\">" + field.getName() + "</span>" : field.getName();
 
     if(checkWarnings) {
       if(ufields.contains(field.getName())) {
-        warningString += "<li><div style=\"color: red;\">[FieldNotUnique]</div> Field <b>" + field.getName() + "</b> of entity <A href=\"#" + entity.getEntityName() + "\">" + entity.getEntityName() + "</A> is not unique for that entity.</li>";
+        warningList.add("<span style=\"color: red;\">[FieldNotUnique]</span> Field <b>" + field.getName() + "</b> of entity <A href=\"#" + entity.getEntityName() + "\">" + entity.getEntityName() + "</A> is not unique for that entity.");
       } else {
         ufields.add(field.getName());
       }
       if(field.getColName().length() > 30 && !(entity instanceof ModelViewEntity)) {
-        warningString += "<li><div style=\"color: red;\">[FieldNameGT30]</div> Column name <b>" + field.getColName() + "</b> of entity <A href=\"#" + entity.getEntityName() + "\">" + entity.getEntityName() + "</A> is longer than 30 characters.</li>";
+        warningList.add("<span style=\"color: red;\">[FieldNameGT30]</span> Column name <b>" + field.getColName() + "</b> of entity <A href=\"#" + entity.getEntityName() + "\">" + entity.getEntityName() + "</A> is longer than 30 characters.");
       }
       if(field.getColName().length() == 0) {
-        warningString += "<li><div style=\"color: red;\">[FieldNameEQ0]</div> Column name for field name <b>\"" + field.getName() + "\"</b> of entity <A href=\"#" + entity.getEntityName() + "\">" + entity.getEntityName() + "</A> is empty (zero length).</li>";
+        warningList.add("<span style=\"color: red;\">[FieldNameEQ0]</span> Column name for field name <b>\"" + field.getName() + "\"</b> of entity <A href=\"#" + entity.getEntityName() + "\">" + entity.getEntityName() + "</A> is empty (zero length).");
       }
       if(reservedWords.contains(field.getColName().toUpperCase()))
-        warningString += "<li><div style=\"color: red;\">[FieldNameRW]</div> Column name <b>" + field.getColName() + "</b> of entity <A href=\"#" + entity.getEntityName() + "\">" + entity.getEntityName() + "</A> is a reserved word.</li>";
+        warningList.add("<span style=\"color: red;\">[FieldNameRW]</span> Column name <b>" + field.getColName() + "</b> of entity <A href=\"#" + entity.getEntityName() + "\">" + entity.getEntityName() + "</A> is a reserved word.");
     }
 %>	
     <tr bgcolor="#EFFFFF">
@@ -185,10 +186,13 @@ if(security.hasPermission("ENTITY_MAINT", session)) {
       <td><div align="left" class='entitytext'>NOT FOUND</div></td>
       <%
         if(checkWarnings) {
-            warningString += "<li><div style=\"color: red;\">[FieldTypeNotFound]</div> Field type <b>" + field.getType() + "</b> of entity <A href=\"#" + entity.getEntityName() + "\">" + entity.getEntityName() + "</A> not found in field type definitions";
-            if (helperName == null)
-                warningString += " (no helper definition found)";
-            warningString += ".</li>";
+            StringBuffer warningMsg = new StringBuffer();
+            warningMsg.append("<span style=\"color: red;\">[FieldTypeNotFound]</span> Field type <b>" + field.getType() + "</b> of entity <A href=\"#" + entity.getEntityName() + "\">" + entity.getEntityName() + "</A> not found in field type definitions");
+            if (helperName == null) {
+                warningMsg.append(" (no helper definition found)");
+            }
+            warningMsg.append(".");
+            warningList.add(warningMsg.toString());
         }
       %>
     <%}%>
@@ -206,31 +210,66 @@ if(security.hasPermission("ENTITY_MAINT", session)) {
       
     </tr>
 <%
+  // TODO: not displaying indexes, but do some checks on them anyway
+  if (checkWarnings) {
+    Iterator indexIter = entity.getIndexesIterator();
+    while (indexIter.hasNext()) {
+      ModelIndex index = (ModelIndex) indexIter.next();
+      
+      if (indexNames.contains(index.getName())) {
+        warningList.add("<span style=\"color: red;\">[IndexDuplicateName]</span> Index on entity <A href=\"#" + entity.getEntityName() + "\">" + entity.getEntityName() + "</A> has a duplicate index-name \"" + index.getName() + "\".");
+      } else {
+        indexNames.add(index.getName());
+      }
+      
+      if (tableNames.contains(index.getName())) {
+        warningList.add("<span style=\"color: red;\">[IndexTableDupName]</span> Index on entity <A href=\"#" + entity.getEntityName() + "\">" + entity.getEntityName() + "</A> has an index-name \"" + index.getName() + "\" that is also being used as a table name.");
+      }
+
+      if (fkNames.contains(index.getName())) {
+        warningList.add("<span style=\"color: red;\">[IndexFKDupName]</span> Index on entity <A href=\"#" + entity.getEntityName() + "\">" + entity.getEntityName() + "</A> has an index-name \"" + index.getName() + "\" that is also being used as a Foreign Key name.");
+      }
+
+      // make sure all names are <= 18 characters
+      if (index.getName().length() > 18) {
+        warningList.add("<span style=\"color: red;\">[IndexNameGT18]</span> The index name " + index.getName() + " (length:" + index.getName().length() + ") was greater than 18 characters in length for entity <A href=\"#" + entity.getEntityName() + "\">" + entity.getEntityName() + "</A>.");
+      }
+    }
+  }
+
   TreeSet relations = new TreeSet();
-  for ( int r = 0; r < entity.getRelationsSize(); r++ ) {
+  for (int r = 0; r < entity.getRelationsSize(); r++) {
     ModelRelation relation = entity.getRelation(r);
     
     if (checkWarnings) {
       if (!entityNames.contains(relation.getRelEntityName())) {
-        warningString = warningString + "<li><div style=\"color: red;\">[RelatedEntityNotFound]</div> Related entity <b>" + relation.getRelEntityName() + "</b> of entity <A href=\"#" + entity.getEntityName() + "\">" + entity.getEntityName() + "</A> not found.</li>";
+        warningList.add("<span style=\"color: red;\">[RelatedEntityNotFound]</span> Related entity <b>" + relation.getRelEntityName() + "</b> of entity <A href=\"#" + entity.getEntityName() + "\">" + entity.getEntityName() + "</A> not found.");
       }
       if (relations.contains(relation.getTitle() + relation.getRelEntityName())) {
-        warningString = warningString + "<li><div style=\"color: red;\">[RelationNameNotUnique]</div> Relation <b>" + relation.getTitle() + relation.getRelEntityName() + "</b> of entity <A href=\"#" + entity.getEntityName() + "\">" + entity.getEntityName() + "</A> is not unique for that entity.</li>";
+        warningList.add("<span style=\"color: red;\">[RelationNameNotUnique]</span> Relation <b>" + relation.getTitle() + relation.getRelEntityName() + "</b> of entity <A href=\"#" + entity.getEntityName() + "\">" + entity.getEntityName() + "</A> is not unique for that entity.");
       } else {
         relations.add(relation.getTitle() + relation.getRelEntityName());
       }
 
       if (relation.getFkName().length() > 0) {
-          if (fkNames.contains(relation.getFkName())) {
-            warningString = warningString + "<li><div style=\"color: red;\">[RelationFkDuplicate]</div> Relation to <b>" + relation.getRelEntityName() + "</b> from entity <A href=\"#" + entity.getEntityName() + "\">" + entity.getEntityName() + "</A> has a duplicate fk-name \"" + relation.getFkName() + "\".</li>";
-          } else {
-            fkNames.add(relation.getFkName());
-          }
-          if (tableNames.contains(relation.getFkName())) {
-            warningString = warningString + "<li><div style=\"color: red;\">[RelationFkTableDup]</div> Relation to <b>" + relation.getRelEntityName() + "</b> from entity <A href=\"#" + entity.getEntityName() + "\">" + entity.getEntityName() + "</A> has an fk-name \"" + relation.getFkName() + "\" that is also being used as a table name.</li>";
-          }
+        if (fkNames.contains(relation.getFkName())) {
+          warningList.add("<span style=\"color: red;\">[RelationFkDuplicate]</span> Relation to <b>" + relation.getRelEntityName() + "</b> from entity <A href=\"#" + entity.getEntityName() + "\">" + entity.getEntityName() + "</A> has a duplicate fk-name \"" + relation.getFkName() + "\".");
+        } else {
+          fkNames.add(relation.getFkName());
+        }
+        if (tableNames.contains(relation.getFkName())) {
+          warningList.add("<span style=\"color: red;\">[RelationFkTableDup]</span> Relation to <b>" + relation.getRelEntityName() + "</b> from entity <A href=\"#" + entity.getEntityName() + "\">" + entity.getEntityName() + "</A> has an fk-name \"" + relation.getFkName() + "\" that is also being used as a table name.");
+        }
+        if (indexNames.contains(relation.getFkName())) {
+          warningList.add("<span style=\"color: red;\">[RelationFkTableDup]</span> Relation to <b>" + relation.getRelEntityName() + "</b> from entity <A href=\"#" + entity.getEntityName() + "\">" + entity.getEntityName() + "</A> has an fk-name \"" + relation.getFkName() + "\" that is also being used as an index name.");
+        }
       }
 
+      // make sure all FK names are <= 18 characters
+      if (relation.getFkName().length() > 18) {
+        warningList.add("<span style=\"color: red;\">[RelFKNameGT18]</span> The foregn key name (length:" + relation.getFkName().length() + ") was greater than 18 characters in length for relation <b>" +  relation.getTitle() + relation.getRelEntityName() + "</b> of entity <A href=\"#" + entity.getEntityName() + "\">" + entity.getEntityName() + "</A>.");
+      }
+        
       ModelEntity relatedEntity = null;
       try {
       	relatedEntity = reader.getModelEntity(relation.getRelEntityName());
@@ -241,11 +280,11 @@ if(security.hasPermission("ENTITY_MAINT", session)) {
         //if relation is of type one, make sure keyMaps match the PK of the relatedEntity
         if ("one".equals(relation.getType()) || "one-nofk".equals(relation.getType())) {
           if (relatedEntity.getPksSize() != relation.getKeyMapsSize())
-            warningString = warningString + "<li><div style=\"color: red;\">[RelatedOneKeyMapsWrongSize]</div> The number of primary keys (" + relatedEntity.getPksSize() + ") of related entity <b>" + relation.getRelEntityName() + "</b> does not match the number of keymaps (" + relation.getKeyMapsSize() + ") for relation of type one \"" +  relation.getTitle() + relation.getRelEntityName() + "\" of entity <A href=\"#" + entity.getEntityName() + "\">" + entity.getEntityName() + "</A>.</li>";
+            warningList.add("<span style=\"color: red;\">[RelatedOneKeyMapsWrongSize]</span> The number of primary keys (" + relatedEntity.getPksSize() + ") of related entity <b>" + relation.getRelEntityName() + "</b> does not match the number of keymaps (" + relation.getKeyMapsSize() + ") for relation of type one \"" +  relation.getTitle() + relation.getRelEntityName() + "\" of entity <A href=\"#" + entity.getEntityName() + "\">" + entity.getEntityName() + "</A>.");
           for (int repks = 0; repks < relatedEntity.getPksSize(); repks++) {
             ModelField pk = relatedEntity.getPk(repks);
             if(relation.findKeyMapByRelated(pk.getName()) == null) {
-              warningString = warningString + "<li><div style=\"color: red;\">[RelationOneRelatedPrimaryKeyMissing]</div> The primary key \"<b>" + pk.getName() + "</b>\" of related entity <b>" + relation.getRelEntityName() + "</b> is missing in the keymaps for relation of type one <b>" +  relation.getTitle() + relation.getRelEntityName() + "</b> of entity <A href=\"#" + entity.getEntityName() + "\">" + entity.getEntityName() + "</A>.</li>";
+              warningList.add("<span style=\"color: red;\">[RelationOneRelatedPrimaryKeyMissing]</span> The primary key \"<b>" + pk.getName() + "</b>\" of related entity <b>" + relation.getRelEntityName() + "</b> is missing in the keymaps for relation of type one <b>" +  relation.getTitle() + relation.getRelEntityName() + "</b> of entity <A href=\"#" + entity.getEntityName() + "\">" + entity.getEntityName() + "</A>.");
             }
           }
         }
@@ -262,15 +301,15 @@ if(security.hasPermission("ENTITY_MAINT", session)) {
           rfield = relatedEntity.getField(keyMap.getRelFieldName());
         }
         if(rfield == null) {
-          warningString = warningString + "<li><div style=\"color: red;\">[RelationRelatedFieldNotFound]</div> The field \"<b>" + keyMap.getRelFieldName() + "</b>\" of related entity <b>" + relation.getRelEntityName() + "</b> was specified in the keymaps but is not found for relation <b>" +  relation.getTitle() + relation.getRelEntityName() + "</b> of entity <A href=\"#" + entity.getEntityName() + "\">" + entity.getEntityName() + "</A>.</li>";
+          warningList.add("<span style=\"color: red;\">[RelationRelatedFieldNotFound]</span> The field \"<b>" + keyMap.getRelFieldName() + "</b>\" of related entity <b>" + relation.getRelEntityName() + "</b> was specified in the keymaps but is not found for relation <b>" +  relation.getTitle() + relation.getRelEntityName() + "</b> of entity <A href=\"#" + entity.getEntityName() + "\">" + entity.getEntityName() + "</A>.");
         }
         if(field == null) {
-          warningString = warningString + "<li><div style=\"color: red;\">[RelationFieldNotFound]</div> The field <b>" + keyMap.getFieldName() + "</b> was specified in the keymaps but is not found for relation <b>" +  relation.getTitle() + relation.getRelEntityName() + "</b> of entity <A href=\"#" + entity.getEntityName() + "\">" + entity.getEntityName() + "</A>.</li>";
+          warningList.add("<span style=\"color: red;\">[RelationFieldNotFound]</span> The field <b>" + keyMap.getFieldName() + "</b> was specified in the keymaps but is not found for relation <b>" +  relation.getTitle() + relation.getRelEntityName() + "</b> of entity <A href=\"#" + entity.getEntityName() + "\">" + entity.getEntityName() + "</A>.");
         }
         if(field != null && rfield != null) {
           //this was the old check, now more constrained to keep things cleaner: if(!field.getType().equals(rfield.getType()) && !field.getType().startsWith(rfield.getType()) && !rfield.getType().startsWith(field.getType())) {
           if(!field.getType().equals(rfield.getType()) && !field.getType().equals(rfield.getType() + "-ne") && !rfield.getType().equals(field.getType() + "-ne")) {
-            warningString = warningString + "<li><div style=\"color: red;\">[RelationFieldTypesDifferent]</div> The field type (" + field.getType() + ") of <b>" + field.getName() + "</b> of entity <A href=\"#" + entity.getEntityName() + "\">" + entity.getEntityName() + "</A> is not the same as field type (" + rfield.getType() + ") of <b>" + rfield.getName() + "</b> of entity <A href=\"#" + relation.getRelEntityName() + "\">" + relation.getRelEntityName() + "</A> for relation <b>" +  relation.getTitle() + relation.getRelEntityName() + "</b>.</li>";
+            warningList.add("<span style=\"color: red;\">[RelationFieldTypesDifferent]</span> The field type (" + field.getType() + ") of <b>" + field.getName() + "</b> of entity <A href=\"#" + entity.getEntityName() + "\">" + entity.getEntityName() + "</A> is not the same as field type (" + rfield.getType() + ") of <b>" + rfield.getName() + "</b> of entity <A href=\"#" + relation.getRelEntityName() + "\">" + relation.getRelEntityName() + "</A> for relation <b>" +  relation.getTitle() + relation.getRelEntityName() + "</b>.");
           }
         }
       }
@@ -314,7 +353,10 @@ if(security.hasPermission("ENTITY_MAINT", session)) {
 <%if(checkWarnings) {%>
   <A name='WARNINGS'>WARNINGS:</A>
   <OL>
-  <%=warningString%>
+    <%Iterator warningIter = warningList.iterator();%>
+    <%while (warningIter.hasNext()) {%>
+  	<li><%=warningIter.next()%></li>
+    <%}%>
   </OL>
 <%}%>
 
