@@ -90,7 +90,7 @@ public class CartEventListener implements HttpSessionListener {
                     GenericValue cartAbandonedLine = delegator.makeValue("CartAbandonedLine", null);
 
                     cartAbandonedLine.set("visitId", visit.get("visitId"));
-                    cartAbandonedLine.set("cartAbandonedLineSeqId", new Integer(seqId));
+                    cartAbandonedLine.set("cartAbandonedLineSeqId", (new Integer(seqId)).toString());
                     cartAbandonedLine.set("productId", cartItem.getProductId());
                     cartAbandonedLine.set("prodCatalogId", cartItem.getProdCatalogId());
                     cartAbandonedLine.set("quantity", new Double(cartItem.getQuantity()));
