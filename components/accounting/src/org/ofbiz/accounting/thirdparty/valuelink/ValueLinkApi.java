@@ -1,5 +1,5 @@
 /*
- * $Id: ValueLinkApi.java,v 1.1 2004/01/14 04:50:06 ajzeneski Exp $
+ * $Id: ValueLinkApi.java,v 1.2 2004/02/23 16:44:42 ajzeneski Exp $
  *
  * Copyright (c) 2003 The Open For Business Project - www.ofbiz.org
  *
@@ -52,7 +52,7 @@ import java.text.ParseException;
  * ValueLinkApi - Implementation of ValueLink Encryption & Transport
  *
  * @author     <a href="mailto:jaz@ofbiz.org">Andy Zeneski</a>
- * @version    $Revision: 1.1 $
+ * @version    $Revision: 1.2 $
  * @since      3.0
  */
 public class ValueLinkApi {
@@ -552,6 +552,10 @@ public class ValueLinkApi {
         }
         Double doubleAmount = new Double(amount);
         return new Double(doubleAmount.doubleValue() / 100);
+    }
+    
+    public String getCurrency(String currency) {
+        return "804"; // todo make this multi-currency
     }
 
     /**
