@@ -1,0 +1,24 @@
+<service-config name="User ">
+    <service service-name="createPersonAndUserLogin" mode="sync" >
+		<attribute name="userLoginId" type="String" instruction="auto" mapNameOut="testuser"></attribute>
+		<attribute name="currentPassword" type="String">abc123</attribute>
+		<attribute name="currentPasswordVerify" type="String">abc123</attribute>
+		<attribute name="passwordHint" type="String">Something</attribute>
+		<!-- person attributes -->
+		<attribute name="firstName" type="String">TestCreatePerson</attribute>
+        <attribute name="middleName" type="String">TestCreatePerson</attribute>
+        <attribute name="lastName" type="String">TestCreatePerson</attribute>
+        <attribute name="personalTitle" type="String"></attribute> 
+        <attribute name="suffix" type="String">Mr.</attribute>
+        <attribute name="nickname" type="String">Mr. Test</attribute>
+        <attribute name="gender" type="String">M</attribute>
+        <attribute name="birthDate" type="Date">1985-01-01</attribute>
+        <attribute name="mothersMaidenName" type="String">Something</attribute>
+        <attribute name="maritalStatus" type="String">N</attribute>
+        <attribute name="socialSecurityNumber" type="String">123-54-1234</attribute>
+        <attribute name="passportNumber" type="String">1234567890</attribute>
+        <attribute name="passportExpireDate" type="Date">2003-08-13</attribute>
+        <attribute name="comments" type="String">This is a test user created with JXUnit</attribute>
+    </service>
+</service-config>
+

@@ -1,0 +1,8 @@
+<entity-config name="Test User Login Security Permissions">
+    <entity entity-name="UserLoginSecurityGroup" >
+      <field name="userLoginId" type="id-vlong-ne" mapNameIn="testuser"/>
+      <field name="groupId" type="id-ne">TEST_SECURITY_GRP_1</field>
+      <field name="fromDate" type="date-time" instruction="currentdate"></field>
+    </entity>
+</entity-config>
+

@@ -1,0 +1,9 @@
+<service-config name="User ">
+    <service service-name="createUserLogin" mode="sync" >
+			<attribute name="userLoginId" type="String" instruction="auto" mapNameOut="userLoginId"></attribute>
+			<attribute name="currentPassword" type="String">Z123X</attribute>
+			<attribute name="currentPasswordVerify" type="String">Z123X</attribute>
+			<attribute name="passwordHint" type="String">somepassword</attribute>
+    </service>
+</service-config>
+
