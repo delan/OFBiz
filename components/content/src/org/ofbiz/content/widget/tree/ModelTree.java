@@ -84,6 +84,7 @@ public class ModelTree {
     protected List trail = new ArrayList();
     protected List currentNodeTrail;
     protected int openDepth;
+    protected int postTrailOpenDepth;
     protected int [] nodeIndices = new int[20];
     protected String entityName;
     protected String pkName;
@@ -107,6 +108,12 @@ public class ModelTree {
         	openDepth = Integer.parseInt(treeElement.getAttribute("open-depth"));
         } catch(NumberFormatException e) {
         	openDepth = 0;
+        }
+
+        try {
+        	postTrailOpenDepth = Integer.parseInt(treeElement.getAttribute("post-trail-open-depth"));
+        } catch(NumberFormatException e) {
+        	postTrailOpenDepth = 999;
         }
 
         List nodeElements = UtilXml.childElementList(treeElement, "node");
@@ -158,6 +165,10 @@ public class ModelTree {
     
     public int getOpenDepth() {
     	return openDepth;
+    }
+    
+    public int getPostTrailOpenDepth() {
+    	return postTrailOpenDepth;
     }
     
     public int getNodeIndexAtDepth(int i) {
@@ -262,6 +273,46 @@ public class ModelTree {
         return this.renderStyle;
     }
     
+    public boolean isExpandCollapse() {
+    	boolean isExpCollapse = false;
+        if (renderStyle != null && renderStyle.equals("expand-collapse"))
+            isExpCollapse = true;
+        
+        return isExpCollapse;
+    }
+    
+    public boolean isFollowTrail() {
+    	boolean isFollowTrail = false;
+        if (renderStyle != null && (renderStyle.equals("follow-trail") || renderStyle.equals("show-peers") || renderStyle.equals("follow-trail")))
+            isFollowTrail = true;
+        
+        return isFollowTrail;
+    }
+
+    public boolean showPeers(int currentDepth) {
+    
+    	int trailSize = 0;
+        if (trail != null)
+        	trailSize = trail.size();
+        	
+    	boolean showPeers = false;
+        if (renderStyle == null )
+            showPeers = true;
+        else if (!isFollowTrail() )
+            showPeers = true;
+        else if ((currentDepth < trailSize) && (renderStyle != null) &&  (renderStyle.equals("show-peers") || renderStyle.equals("expand-collapse")))
+            showPeers = true;
+        else if (openDepth >= currentDepth)
+            showPeers = true;
+        else {
+            
+            int depthAfterTrail = currentDepth - trailSize;
+            if (depthAfterTrail >= 0 && depthAfterTrail <= postTrailOpenDepth)
+            	showPeers = true;
+        }
+        
+        return showPeers;
+    }
 
     public static class ModelNode {
 
@@ -376,18 +427,28 @@ public class ModelTree {
                     getChildren(context, subNodeValues);
                     Iterator nodeIter = subNodeValues.iterator();
                     int nodeIndex = -1;
+                    int newDepth = depth + 1;
                     while (nodeIter.hasNext()) {
                         nodeIndex++;	
-                    	modelTree.setNodeIndexAtDepth(depth, nodeIndex);
+                    	modelTree.setNodeIndexAtDepth(newDepth, nodeIndex);
                         Object [] arr = (Object [])nodeIter.next();
                         ModelNode node = (ModelNode)arr[0];
                         Map val = (Map)arr[1];
                         //GenericPK pk = val.getPrimaryKey();
                         //if (Debug.infoOn()) Debug.logInfo(" pk:" + pk, module);
+                        String pkName = this.modelTree.getPkName();
+                        String thisEntityId = (String)val.get(pkName);
                         Map newContext = ((MapStack) context).standAloneChildStack();
                         newContext.putAll(val);
-                        boolean lastNode = !nodeIter.hasNext(); 
-                        node.renderNodeString(writer, newContext, treeStringRenderer, depth + 1, lastNode);
+                        String targetEntityId = null;
+            			List targetNodeTrail = this.modelTree.getTrailList();
+                        if (newDepth < targetNodeTrail.size()) {
+                            targetEntityId = (String)targetNodeTrail.get(newDepth);
+                        }
+                        if ((targetEntityId != null && targetEntityId.equals(thisEntityId)) || this.modelTree.showPeers(newDepth)) {
+                        	boolean lastNode = !nodeIter.hasNext(); 
+                        	node.renderNodeString(writer, newContext, treeStringRenderer, newDepth, lastNode);
+                        }
                     }
                 }
             } catch(SAXException e) {
@@ -424,7 +485,7 @@ public class ModelTree {
                  String id = (String)context.get(modelTree.getPkName());
                  if (UtilValidate.isNotEmpty(id)) {
                  	try {
-                 		int leafCount = ContentManagementWorker.updateStatsTopDown(delegator, id, UtilMisc.toList("SUB_CONTENT"));
+                 		int leafCount = ContentManagementWorker.updateStatsTopDown(delegator, id, UtilMisc.toList("SUB_CONTENT", "PUBLISH_LINK"));
                  		GenericValue entity = delegator.findByPrimaryKeyCache(entName, UtilMisc.toMap(modelTree.getPkName(), id));
                  		obj = entity.get("childBranchCount");
                         if (obj != null)

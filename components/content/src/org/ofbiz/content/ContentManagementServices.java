@@ -182,6 +182,33 @@ public class ContentManagementServices {
         List contentPurposeList = (List)context.get("contentPurposeList");
         //if (Debug.infoOn()) Debug.logInfo("in persist... contentPurposeList(0):" + contentPurposeList, null);
         if (Debug.infoOn()) Debug.logInfo("in persist... textData(0):" + context.get("textData"), null);
+        
+        
+        // save expected primary keys on result now in case there is no operation that uses them
+        String s = (String)context.get("contentId");
+        result.put("contentId", s);
+        s = (String)context.get("dataResourceId");
+        if (UtilValidate.isEmpty(s))
+            s = (String)context.get("drDataResourceId");
+        result.put("dataResourceId", s);
+        result.put("drDataResourceId", s);
+        
+        s = (String)context.get("contentIdTo");
+        if (UtilValidate.isEmpty(s))
+            s = (String)context.get("caContentIdTo");
+        result.put("contentIdTo", s);
+        result.put("caContentIdTo", s);
+        s = (String)context.get("contentAssocTypeId");
+        if (UtilValidate.isEmpty(s))
+            s = (String)context.get("caContentAssocTypeId");
+        result.put("contentAssocTypeId", s);
+        result.put("caContentAssocTypeId", s);
+        Object o = context.get("fromDate");
+        if (o == null)
+            o = context.get("caFromDate");
+        result.put("fromDate", o);
+        result.put("caFromDate", o);
+
 
         GenericValue content = delegator.makeValue("Content", null);
         content.setPKFields(context);
@@ -249,8 +276,12 @@ public class ContentManagementServices {
                         dataResource = (GenericValue)thisResult.get("dataResource");
                         context.put("dataResource", dataResource);
                         ByteWrapper byteWrapper = (ByteWrapper)context.get("imageData");
-                        if (byteWrapper != null) 
+                        if (byteWrapper != null) {
                             context.put("binData", byteWrapper);
+                            String m = updateTypeAndFile(dataResource, context);
+                            if (UtilValidate.isNotEmpty(m))
+                            	return ServiceUtil.returnError(m);
+                        }
                         thisResult = DataServices.createFileMethod(dctx, context);
                         errorMsg = ServiceUtil.getErrorMessage(thisResult);
                         if (UtilValidate.isNotEmpty(errorMsg)) {
@@ -260,6 +291,10 @@ public class ContentManagementServices {
                         ByteWrapper byteWrapper = (ByteWrapper)context.get("imageData");
                         if (byteWrapper != null) {
                             context.put("dataResourceId", dataResourceId);
+                            String m = updateTypeAndFile(dataResource, context);
+                            if (UtilValidate.isNotEmpty(m))
+                            	return ServiceUtil.returnError(m);
+                                
                             thisResult = DataServices.createImageMethod(dctx, context);
                         } else {
                             return ServiceUtil.returnError("'byteWrapper' empty when trying to create database image.");
@@ -292,8 +327,12 @@ public class ContentManagementServices {
                     if (dataResourceTypeId.indexOf("_FILE") >=0) {
                         dataResource = (GenericValue)thisResult.get("dataResource");
                         ByteWrapper byteWrapper = (ByteWrapper)context.get("imageData");
-                        if (byteWrapper != null) 
+                        if (byteWrapper != null) {
                             context.put("binData", byteWrapper);
+                            String m = updateTypeAndFile(dataResource, context);
+                            if (UtilValidate.isNotEmpty(m))
+                            	return ServiceUtil.returnError(m);
+                        }
                         context.put("dataResource", dataResource);
                         try {
                             thisResult = DataServices.updateFileMethod(dctx, context);
@@ -301,7 +340,17 @@ public class ContentManagementServices {
                             return ServiceUtil.returnError(e.getMessage());
                         }
                     } else if (dataResourceTypeId.equals("IMAGE_OBJECT")) {
-                        thisResult = DataServices.updateImageMethod(dctx, context);
+                        ByteWrapper byteWrapper = (ByteWrapper)context.get("imageData");
+                        if (byteWrapper != null) {
+                            context.put("dataResourceId", dataResourceId);
+                            String m = updateTypeAndFile(dataResource, context);
+                            if (UtilValidate.isNotEmpty(m))
+                            	return ServiceUtil.returnError(m);
+                                
+                            thisResult = DataServices.updateImageMethod(dctx, context);
+                        } else {
+                            return ServiceUtil.returnError("'byteWrapper' empty when trying to create database image.");
+                        }
                     } else if (dataResourceTypeId.equals("SHORT_TEXT")) {
                     } else {
                         Map newContext = new HashMap();
@@ -979,4 +1028,21 @@ Debug.logInfo("updateSiteRoles, serviceContext(2):" + serviceContext, module);
         }
         return results;
     }
+    
+    public static String updateTypeAndFile(GenericValue dataResource, Map context) {
+		String retVal = null;
+		String mimeTypeId = (String) context.get("_imageData_contentType");
+		String fileName = (String) context.get("_imageData_fileName");
+		try {
+			if (UtilValidate.isNotEmpty(fileName))
+				dataResource.set("objectInfo", fileName);
+			if (UtilValidate.isNotEmpty(mimeTypeId))
+				dataResource.set("mimeTypeId", mimeTypeId);
+			dataResource.store();
+		} catch (GenericEntityException e) {
+			retVal = "Unable to update the DataResource record";
+		}
+		return retVal;
+	}
+
 }

@@ -606,12 +606,14 @@ public abstract class ModelScreenWidget {
             TreeStringRenderer treeStringRenderer = (TreeStringRenderer) context.get("treeStringRenderer");
             // if there was no treeStringRenderer put in place, now try finding the request/response in the context and creating a new one
             if (treeStringRenderer == null) {
+                treeStringRenderer = new HtmlTreeRenderer();
+                /*
                 String renderClassStyle = modelTree.getRenderStyle();
                 if (UtilValidate.isNotEmpty(renderClassStyle) && renderClassStyle.equals("simple")) 
                     treeStringRenderer = new HtmlTreeRenderer();
                 else
                     treeStringRenderer = new HtmlTreeExpandCollapseRenderer();
-        
+                */ 
             }
             // still null, throw an error
             if (treeStringRenderer == null) {

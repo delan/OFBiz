@@ -33,6 +33,9 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
 import org.ofbiz.base.util.UtilValidate;
+import org.ofbiz.base.util.Debug;
+import org.ofbiz.base.util.UtilFormatOut;
+import org.ofbiz.base.util.StringUtil;
 import org.ofbiz.content.webapp.control.RequestHandler;
 import org.ofbiz.content.webapp.taglib.ContentUrlTag;
 import org.ofbiz.content.widget.screen.ScreenRenderer;
@@ -57,7 +60,7 @@ public class HtmlTreeRenderer implements TreeStringRenderer {
     
     public static String buildPathString(ModelTree modelTree, int depth) {
     	StringBuffer buf = new StringBuffer();
-        for (int i=0; i < depth; i++) {
+        for (int i=1; i <= depth; i++) {
             int idx = modelTree.getNodeIndexAtDepth(i);
        		buf.append(".");
         	buf.append(Integer.toString(idx + 1));
@@ -67,7 +70,7 @@ public class HtmlTreeRenderer implements TreeStringRenderer {
 
     public void renderNodeBegin(Writer writer, Map context, ModelTree.ModelNode node, int depth, boolean isLast, List subNodeValues) throws IOException {
 
-    	String pathString = buildPathString(node.getModelTree(), depth);
+        String pathString = buildPathString(node.getModelTree(), depth);
         context.put("nodePathString", pathString);
         //int idx = node.getModelTree().getNodeIndexAtDepth(depth);
         context.put("depth", Integer.toString(depth));
@@ -85,8 +88,82 @@ public class HtmlTreeRenderer implements TreeStringRenderer {
             writer.write("\"");
         }
         writer.write(">");
-        // in early implementations, this next line retrieves the children
+
+        String pkName = node.getModelTree().getPkName();
+        String entityId = (String)context.get(pkName);
+        /*
+        if (targetNodeTrail == null) {
+            targetNodeTrail = node.getModelTree().getTrailList();
+    
+            Debug.logInfo("HtmlTreeExpandCollapseRenderer, targetNodeTrail(2):" + targetNodeTrail, module);
+            currentNodeTrail = new ArrayList();
+        }
+        */
         boolean hasChildren = node.hasChildren(context, subNodeValues);
+            Debug.logInfo("HtmlTreeExpandCollapseRenderer, hasChildren(1):" + hasChildren, module);
+
+        // check to see if this node needs to be expanded.
+        if (hasChildren && node.getModelTree().isExpandCollapse()) {
+            String targetEntityId = null;
+            List targetNodeTrail = node.getModelTree().getTrailList();
+            if (depth < targetNodeTrail.size()) {
+                targetEntityId = (String)targetNodeTrail.get(depth);
+            }
+            Debug.logInfo("HtmlTreeExpandCollapseRenderer, targetEntityId(1):" + targetEntityId, module);
+            Debug.logInfo("HtmlTreeExpandCollapseRenderer, depth(1):" + depth, module);
+    
+            ModelTree.ModelNode.Image expandCollapseImage = new ModelTree.ModelNode.Image();
+            expandCollapseImage.setBorder("0");
+            ModelTree.ModelNode.Link expandCollapseLink = new ModelTree.ModelNode.Link();
+            String expandCollapseStyle = UtilFormatOut.checkEmpty(node.getExpandCollapseStyle(), "expandcollapse");
+            expandCollapseLink.setStyle(expandCollapseStyle);
+            expandCollapseLink.setImage(expandCollapseImage);
+            //String currentNodeTrailCsv = (String)context.get("currentNodeTrailCsv");
+            String currentNodeTrailPiped = null;
+            List currentNodeTrail = node.getModelTree().getCurrentNodeTrail();
+    
+            int openDepth = node.getModelTree().getOpenDepth();
+            if (targetEntityId == null || !targetEntityId.equals(entityId)) {
+                if( node.getModelTree().showPeers(depth)) {
+                	context.put("processChildren", new Boolean(false));
+                	//expandCollapseLink.setText("&nbsp;+&nbsp;");
+                	currentNodeTrailPiped = StringUtil.join(currentNodeTrail, "|");
+                	context.put("currentNodeTrailPiped", currentNodeTrailPiped);
+                	//context.put("currentNodeTrailCsv", currentNodeTrailCsv);
+                	expandCollapseImage.setSrc("/images/expand.gif");
+                	String target = node.getModelTree().getExpandCollapseRequest(context);
+                	String trailName = node.getModelTree().getTrailName(context);
+                	target += "?" + trailName + "=" + currentNodeTrailPiped;
+                	//expandCollapseLink.setTarget("/ViewOutline?docRootContentId=${docRootContentId}&targetNodeTrailCsv=${currentNodeTrailCsv}");
+                	expandCollapseLink.setTarget(target);
+                }
+            } else {
+                context.put("processChildren", new Boolean(true));
+                //expandCollapseLink.setText("&nbsp;-&nbsp;");
+                String lastContentId = (String)currentNodeTrail.remove(currentNodeTrail.size() - 1);
+                currentNodeTrailPiped = StringUtil.join(currentNodeTrail, "|");
+                if (currentNodeTrailPiped == null)
+                    currentNodeTrailPiped = "";
+                context.put("currentNodeTrailPiped", currentNodeTrailPiped);
+                //context.put("currentNodeTrailCsv", currentNodeTrailCsv);
+                expandCollapseImage.setSrc("/images/collapse.gif");
+                String target = node.getModelTree().getExpandCollapseRequest(context);
+                String trailName = node.getModelTree().getTrailName(context);
+                target += "?" + trailName + "=" + currentNodeTrailPiped;
+                expandCollapseLink.setTarget(target);
+                // add it so it can be remove in renderNodeEnd
+                currentNodeTrail.add(lastContentId);
+                currentNodeTrailPiped = StringUtil.join(currentNodeTrail, "|");
+                if (currentNodeTrailPiped == null)
+                    currentNodeTrailPiped = "";
+                context.put("currentNodeTrailPiped", currentNodeTrailPiped);
+            }
+            renderLink( writer, context, expandCollapseLink);
+        } else if (!hasChildren){
+                writer.write("&nbsp;");
+                context.put("processChildren", new Boolean(false));
+                //currentNodeTrail.add(contentId);
+        }
         return;
     }
 
