@@ -29,7 +29,7 @@
 
 <%@ page import="java.util.*" %>
 <%@ page import="org.ofbiz.base.util.*, org.ofbiz.content.webapp.pseudotag.*" %>
-<%@ page import="org.ofbiz.entity.*" %>
+<%@ page import="org.ofbiz.entity.*, org.ofbiz.entity.util.*, org.ofbiz.entity.condition.*" %>
 <%@ page import="org.ofbiz.party.contact.*, org.ofbiz.party.party.*" %>
 <%@ page import="org.ofbiz.accounting.payment.*" %>
 <jsp:useBean id="delegator" type="org.ofbiz.entity.GenericDelegator" scope="request" />
