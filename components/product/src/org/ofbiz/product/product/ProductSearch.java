@@ -1,5 +1,5 @@
 /*
- * $Id: ProductSearch.java,v 1.10 2003/10/19 09:54:36 jonesde Exp $
+ * $Id: ProductSearch.java,v 1.11 2003/10/19 10:08:03 jonesde Exp $
  *
  *  Copyright (c) 2001 The Open For Business Project (www.ofbiz.org)
  *  Permission is hereby granted, free of charge, to any person obtaining a
@@ -64,7 +64,7 @@ import org.ofbiz.product.product.KeywordSearch;
  *  Utilities for product search based on various constraints including categories, features and keywords.
  *
  * @author <a href="mailto:jonesde@ofbiz.org">David E. Jones</a>
- * @version    $Revision: 1.10 $
+ * @version    $Revision: 1.11 $
  * @since      3.0
  */
 public class ProductSearch {
@@ -73,43 +73,6 @@ public class ProductSearch {
     
     /** This cache contains a Set with the IDs of the entire sub-category tree, including the current productCategoryId */
     public static UtilCache subCategoryCache = new UtilCache("product.SubCategory", 0, 0, true);
-    
-    public static void getAllSubCategoryIds(String productCategoryId, Set productCategoryIdSet, GenericDelegator delegator, Timestamp nowTimestamp) {
-        // TODO: cache the sub-category so this will run faster
-        Set subCategoryIdSet = (Set) subCategoryCache.get(productCategoryId);
-        if (subCategoryIdSet == null) {
-            synchronized (ProductSearch.class) {
-                subCategoryIdSet = (Set) subCategoryCache.get(productCategoryId);
-                if (subCategoryIdSet == null) {
-                    subCategoryIdSet = new HashSet();
-                    
-                    // first make sure the current category id is in the Set
-                    subCategoryIdSet.add(productCategoryId);
-
-                    // now find all sub-categories, filtered by effective dates, and call this routine for them
-                    List conditions = new LinkedList();
-                    conditions.add(new EntityExpr("parentProductCategoryId", EntityOperator.EQUALS, productCategoryId));
-                    conditions.add(new EntityExpr(new EntityExpr("thruDate", EntityOperator.EQUALS, null), EntityOperator.OR, new EntityExpr("thruDate", EntityOperator.GREATER_THAN, nowTimestamp)));
-                    conditions.add(new EntityExpr("fromDate", EntityOperator.LESS_THAN, nowTimestamp));
-                    try {
-                        List productCategoryRollupList = delegator.findByCondition("ProductCategoryRollup", new EntityConditionList(conditions, EntityOperator.AND), null, null);
-                        Iterator productCategoryRollupIter = productCategoryRollupList.iterator();
-                        while (productCategoryRollupIter.hasNext()) {
-                            GenericValue productCategoryRollup = (GenericValue) productCategoryRollupIter.next();
-                            getAllSubCategoryIds(productCategoryRollup.getString("productCategoryId"), subCategoryIdSet, delegator, nowTimestamp);
-                        }
-                    } catch (GenericEntityException e) {
-                        Debug.logError(e, "Error finding sub-categories for product search", module);
-                    }
-                    
-                    subCategoryCache.put(productCategoryId, subCategoryIdSet);
-                }
-            }
-        }
-        if (subCategoryIdSet != null) {
-            productCategoryIdSet.addAll(subCategoryIdSet);
-        }
-    }
     
     public static ArrayList parametricKeywordSearch(Map featureIdByType, String keywordsString, GenericDelegator delegator, String productCategoryId, String visitId, boolean anyPrefix, boolean anySuffix, boolean isAnd) {
         Set featureIdSet = new HashSet();
@@ -159,15 +122,55 @@ public class ProductSearch {
         // set the sort order
         productSearchContext.setResultSortOrder(resultSortOrder);
 
+        long startMillis = System.currentTimeMillis();
+        
         // do the query
         EntityListIterator eli = productSearchContext.doQuery(delegator);
-
         ArrayList productIds = productSearchContext.makeProductIdList(eli);
 
+        long endMillis = System.currentTimeMillis();
+        
         // store info about results in the database, attached to the user's visitId, if specified
-        productSearchContext.saveSearchResultInfo(visitId, new Long((long) productIds.size()), delegator);
+        productSearchContext.saveSearchResultInfo(visitId, new Long(productIds.size()), new Double(((double)endMillis - (double)startMillis)/1000.0), delegator);
         
         return productIds;
+    }
+    
+    public static void getAllSubCategoryIds(String productCategoryId, Set productCategoryIdSet, GenericDelegator delegator, Timestamp nowTimestamp) {
+        // TODO: cache the sub-category so this will run faster
+        Set subCategoryIdSet = (Set) subCategoryCache.get(productCategoryId);
+        if (subCategoryIdSet == null) {
+            synchronized (ProductSearch.class) {
+                subCategoryIdSet = (Set) subCategoryCache.get(productCategoryId);
+                if (subCategoryIdSet == null) {
+                    subCategoryIdSet = new HashSet();
+                    
+                    // first make sure the current category id is in the Set
+                    subCategoryIdSet.add(productCategoryId);
+
+                    // now find all sub-categories, filtered by effective dates, and call this routine for them
+                    List conditions = new LinkedList();
+                    conditions.add(new EntityExpr("parentProductCategoryId", EntityOperator.EQUALS, productCategoryId));
+                    conditions.add(new EntityExpr(new EntityExpr("thruDate", EntityOperator.EQUALS, null), EntityOperator.OR, new EntityExpr("thruDate", EntityOperator.GREATER_THAN, nowTimestamp)));
+                    conditions.add(new EntityExpr("fromDate", EntityOperator.LESS_THAN, nowTimestamp));
+                    try {
+                        List productCategoryRollupList = delegator.findByCondition("ProductCategoryRollup", new EntityConditionList(conditions, EntityOperator.AND), null, null);
+                        Iterator productCategoryRollupIter = productCategoryRollupList.iterator();
+                        while (productCategoryRollupIter.hasNext()) {
+                            GenericValue productCategoryRollup = (GenericValue) productCategoryRollupIter.next();
+                            getAllSubCategoryIds(productCategoryRollup.getString("productCategoryId"), subCategoryIdSet, delegator, nowTimestamp);
+                        }
+                    } catch (GenericEntityException e) {
+                        Debug.logError(e, "Error finding sub-categories for product search", module);
+                    }
+                    
+                    subCategoryCache.put(productCategoryId, subCategoryIdSet);
+                }
+            }
+        }
+        if (subCategoryIdSet != null) {
+            productCategoryIdSet.addAll(subCategoryIdSet);
+        }
     }
     
     public static class ProductSearchContext {
@@ -300,7 +303,7 @@ public class ProductSearch {
             return productIds;
         }
         
-        public void saveSearchResultInfo(String visitId, Long numResults, GenericDelegator delegator) {
+        public void saveSearchResultInfo(String visitId, Long numResults, Double secondsTotal, GenericDelegator delegator) {
             // uses entities: ProductSearchResult and ProductSearchConstraint
             
             try {
@@ -318,6 +321,7 @@ public class ProductSearch {
                     productSearchResult.set("orderByName", this.resultSortOrder.getOrderName());
                     productSearchResult.set("isAscending", this.resultSortOrder.isAscending() ? "Y" : "N");
                     productSearchResult.set("numResults", numResults);
+                    productSearchResult.set("secondsTotal", secondsTotal);
                     productSearchResult.set("searchDate", nowTimestamp);
                     productSearchResult.create();
                     
@@ -351,6 +355,7 @@ public class ProductSearch {
         }
         
         public abstract void addConstraint(ProductSearchContext productSearchContext, GenericDelegator delegator);
+        public abstract String prettyPrintConstraint(GenericDelegator delegator);
     }
     
     public static class CategoryConstraint extends ProductSearchConstraint {
@@ -391,6 +396,11 @@ public class ProductSearch {
             // add in productSearchConstraint, don't worry about the productSearchResultId or constraintSeqId, those will be fill in later
             productSearchContext.productSearchConstraintList.add(delegator.makeValue("ProductSearchConstraint", UtilMisc.toMap("constraintName", constraintName, "infoString", this.productCategoryId, "includeSubCategories", this.includeSubCategories ? "Y" : "N")));
         }
+
+        public String prettyPrintConstraint(GenericDelegator delegator) {
+            // TODO: implement the pretty print for log messages and even UI stuff
+            return null;
+        }
     }
     
     public static class FeatureConstraint extends ProductSearchConstraint {
@@ -418,6 +428,11 @@ public class ProductSearch {
             
             // add in productSearchConstraint, don't worry about the productSearchResultId or constraintSeqId, those will be fill in later
             productSearchContext.productSearchConstraintList.add(delegator.makeValue("ProductSearchConstraint", UtilMisc.toMap("constraintName", constraintName, "infoString", this.productFeatureId)));
+        }
+
+        public String prettyPrintConstraint(GenericDelegator delegator) {
+            // TODO: implement the pretty print for log messages and even UI stuff
+            return null;
         }
     }
     
@@ -459,6 +474,11 @@ public class ProductSearch {
             valueMap.put("removeStems", this.removeStems ? "Y" : "N");
             productSearchContext.productSearchConstraintList.add(delegator.makeValue("ProductSearchConstraint", valueMap));
         }
+
+        public String prettyPrintConstraint(GenericDelegator delegator) {
+            // TODO: implement the pretty print for log messages and even UI stuff
+            return null;
+        }
     }
     
     public static class LastUpdatedRangeConstraint extends ProductSearchConstraint {
@@ -474,6 +494,11 @@ public class ProductSearch {
         public void addConstraint(ProductSearchContext productSearchContext, GenericDelegator delegator) {
             // TODO: implement LastUpdatedRangeConstraint makeEntityCondition
         }
+
+        public String prettyPrintConstraint(GenericDelegator delegator) {
+            // TODO: implement the pretty print for log messages and even UI stuff
+            return null;
+        }
     }
 
     public static class ListPriceRangeConstraint extends ProductSearchConstraint {
@@ -488,6 +513,11 @@ public class ProductSearch {
         
         public void addConstraint(ProductSearchContext productSearchContext, GenericDelegator delegator) {
             // TODO: implement ListPriceRangeConstraint makeEntityCondition
+        }
+
+        public String prettyPrintConstraint(GenericDelegator delegator) {
+            // TODO: implement the pretty print for log messages and even UI stuff
+            return null;
         }
     }
 
