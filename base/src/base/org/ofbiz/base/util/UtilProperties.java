@@ -444,8 +444,7 @@ public class UtilProperties implements java.io.Serializable {
         if (bundleMap == null) {
             return null;
         }
-        //return (ResourceBundle) bundleMap.get("_RESOURCE_BUNDLE_");
-        return ((ResourceBundleMapWrapper) bundleMap).getResourceBundle();
+        return ((ResourceBundleMapWrapper) bundleMap).getInitialResourceBundle();
     }
     
     /** Returns the specified resource/properties file as a Map with the original ResourceBundle in the Map under the key _RESOURCE_BUNDLE_

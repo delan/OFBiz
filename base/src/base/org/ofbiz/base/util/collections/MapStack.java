@@ -38,14 +38,14 @@ import java.util.Set;
  * Map Stack
  * 
  * @author     <a href="mailto:jonesde@ofbiz.org">David E. Jones</a>
- * @version    $Rev:$
+ * @version    $Rev$
  * @since      3.1
  */
 public class MapStack implements Map {
 
     public static final String module = MapStack.class.getName();
 
-    List stackList = new LinkedList();
+    protected List stackList = new LinkedList();
     
     public MapStack() {
         super();
@@ -67,6 +67,22 @@ public class MapStack implements Map {
     /** Puts a new Map on the top of the stack */
     public void push() {
         this.stackList.add(0, new HashMap());
+    }
+    
+    /** Puts an existing Map on the top of the stack (top meaning will override lower layers on the stack) */
+    public void push(Map existingMap) {
+        if (existingMap == null) {
+            throw new IllegalArgumentException("Error: cannot push null existing Map onto a MapStack");
+        }
+        this.stackList.add(0, existingMap);
+    }
+    
+    /** Puts an existing Map on the BOTTOM of the stack (bottom meaning will be overriden by lower layers on the stack, ie everything else already there) */
+    public void addToBottom(Map existingMap) {
+        if (existingMap == null) {
+            throw new IllegalArgumentException("Error: cannot add null existing Map to bottom of a MapStack");
+        }
+        this.stackList.add(existingMap);
     }
     
     /** Remove and returns the Map from the top of the stack; if there is only one Map on the stack it returns null and does not remove it */
