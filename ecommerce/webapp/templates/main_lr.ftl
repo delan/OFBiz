@@ -1,12 +1,12 @@
 
 ${pages.get("/templates/header.ftl")}
 
-<table width="100%" border="0" cellpadding="0" cellspacing="0">
+<table width='100%' border='0' cellpadding='0' cellspacing='0'>
  <tr>
-  $pages.get("/templates/leftbar.ftl")}
-  <td width='100%' valign=top align=left>
+  ${pages.get("/templates/leftbar.ftl")}
+  <td width='100%' valign='top' align='left'>
     ${pages.get("/templates/errormsg.ftl")}
-    $pages.get(content.path)}
+    ${pages.get(content.path)}
   </td>
   ${pages.get("/templates/rightbar.ftl")}
  </tr>
