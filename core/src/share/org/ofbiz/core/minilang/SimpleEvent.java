@@ -58,6 +58,9 @@ public class SimpleEvent {
             loader = Thread.currentThread().getContextClassLoader();
         
         SimpleEvent simpleEvent = getSimpleEvent(xmlURL, eventName);
+        if (simpleEvent == null) {
+            throw new MiniLangException("Could not find SimpleEvent " + eventName + " in XML document in resource: " + xmlURL.toString());
+        }
         return simpleEvent.exec(request, loader);
     }
 
@@ -353,10 +356,10 @@ public class SimpleEvent {
             if (errorListName == null || errorListName.length() == 0)
                 errorListName = "_error_list_";
 
-            errorPrefix = new FlexibleMessage(UtilXml.firstChildElement(element, "error-prefix"));
-            errorSuffix = new FlexibleMessage(UtilXml.firstChildElement(element, "error-suffix"));
-            messagePrefix = new FlexibleMessage(UtilXml.firstChildElement(element, "message-prefix"));
-            messageSuffix = new FlexibleMessage(UtilXml.firstChildElement(element, "message-suffix"));
+            errorPrefix = new FlexibleMessage(UtilXml.firstChildElement(element, "error-prefix"), "check.error.prefix");
+            errorSuffix = new FlexibleMessage(UtilXml.firstChildElement(element, "error-suffix"), "check.error.suffix");
+            messagePrefix = new FlexibleMessage(UtilXml.firstChildElement(element, "message-prefix"), "check.message.prefix");
+            messageSuffix = new FlexibleMessage(UtilXml.firstChildElement(element, "message-suffix"), "check.message.suffix");
         }
         
         public boolean exec(Map env, HttpServletRequest request, ClassLoader loader) {
@@ -413,13 +416,13 @@ public class SimpleEvent {
             if (successCode == null || successCode.length() == 0)
                 successCode = "success";
 
-            errorPrefix = new FlexibleMessage(UtilXml.firstChildElement(element, "error-prefix"));
-            errorSuffix = new FlexibleMessage(UtilXml.firstChildElement(element, "error-suffix"));
-            successPrefix = new FlexibleMessage(UtilXml.firstChildElement(element, "success-prefix"));
-            successSuffix = new FlexibleMessage(UtilXml.firstChildElement(element, "success-suffix"));
-            messagePrefix = new FlexibleMessage(UtilXml.firstChildElement(element, "message-prefix"));
-            messageSuffix = new FlexibleMessage(UtilXml.firstChildElement(element, "message-suffix"));
-            defaultMessage = new FlexibleMessage(UtilXml.firstChildElement(element, "default-message"));
+            errorPrefix = new FlexibleMessage(UtilXml.firstChildElement(element, "error-prefix"), "service.error.prefix");
+            errorSuffix = new FlexibleMessage(UtilXml.firstChildElement(element, "error-suffix"), "service.error.suffix");
+            successPrefix = new FlexibleMessage(UtilXml.firstChildElement(element, "success-prefix"), "service.success.prefix");
+            successSuffix = new FlexibleMessage(UtilXml.firstChildElement(element, "success-suffix"), "service.success.suffix");
+            messagePrefix = new FlexibleMessage(UtilXml.firstChildElement(element, "message-prefix"), "service.message.prefix");
+            messageSuffix = new FlexibleMessage(UtilXml.firstChildElement(element, "message-suffix"), "service.message.suffix");
+            defaultMessage = new FlexibleMessage(UtilXml.firstChildElement(element, "default-message"), "service.default.message");
             
             List resultsToMapElements = UtilXml.childElementList(element, "results-to-map");
             if (resultsToMapElements != null && resultsToMapElements.size() > 0) {
@@ -580,10 +583,16 @@ public class SimpleEvent {
         String propertyResource = null;
         boolean isProperty = false;
 
-        public FlexibleMessage(Element element) {
-            String resAttr = element.getAttribute("resource");
-            String propAttr = element.getAttribute("property");
-            String elVal = UtilXml.elementValue(element);
+        public FlexibleMessage(Element element, String defaultProperty) {
+            String resAttr = null;
+            String propAttr = null;
+            String elVal = null;
+            if (element != null) {
+                resAttr = element.getAttribute("resource");
+                propAttr = element.getAttribute("property");
+                elVal = UtilXml.elementValue(element);
+            }
+            
             if (resAttr != null && resAttr.length() > 0) {
                 propertyResource = resAttr;
                 message = propAttr;
@@ -591,6 +600,11 @@ public class SimpleEvent {
             } else if (elVal != null && elVal.length() > 0) {
                 message = elVal;
                 isProperty = false;
+            } else {
+                //put in default property
+                propertyResource = "DefaultMessages";
+                message = defaultProperty;
+                isProperty = true;
             }
         }
 
@@ -600,15 +614,16 @@ public class SimpleEvent {
                 //Debug.logInfo("[FlexibleMessage.getMessage] Adding message: " + message);
                 return message;
             } else if (isProperty && propertyResource != null && message != null) {
-                String propMsg = UtilProperties.getPropertyValue(UtilURL.fromResource(propertyResource, loader), message);
-                //Debug.logInfo("[FlexibleMessage.getMessage] Adding property message: " + propMsg);
+                URL propertyURL = UtilURL.fromResource(propertyResource, loader);
+                String propMsg = UtilProperties.getPropertyValue(propertyURL, message);
+                //Debug.logInfo("[FlexibleMessage.getMessage] Got property message: " + propMsg);
                 if (propMsg == null || propMsg.length() == 0)
-                    return "Simple Map Processing error occurred, but no message was found, sorry.";
+                    return "In Simple Map Processing property message could not be found in resource " + propertyResource + " [" + propertyURL + "] with name " + message + ". ";
                 else
                     return propMsg;
             } else {
+                Debug.logInfo("[FlexibleMessage.getMessage] No message found, returning empty string");
                 return "";
-                //Debug.logInfo("[FlexibleMessage.getMessage] No message found, returning empty string");
             }
         }
     }

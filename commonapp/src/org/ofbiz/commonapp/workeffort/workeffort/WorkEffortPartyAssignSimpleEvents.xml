@@ -32,38 +32,23 @@
     <simple-event event-name="create" short-description="Create Work Effort Party Assignment">
         <simple-map-processor xml-resource="org/ofbiz/commonapp/workeffort/workeffort/WorkEffortPartyAssignMapProcs.xml" 
                 processor-name="create" in-map-name="parameters" out-map-name="context"/>
-        <check-errors>
-            <error-prefix><![CDATA[The following errors occured:<ul>]]></error-prefix><error-suffix><![CDATA[</ul>]]></error-suffix>
-            <message-prefix><![CDATA[<li>]]></message-prefix><message-suffix><![CDATA[</li>]]></message-suffix></check-errors>
+        <check-errors/>
         <service service-name="createWorkEffortPartyAssignment" in-map-name="context">
-            <error-prefix><![CDATA[The following errors occured:<ul>]]></error-prefix><error-suffix><![CDATA[</ul>]]></error-suffix>
-            <success-prefix><![CDATA[<ul>]]></success-prefix><success-suffix><![CDATA[</ul>]]></success-suffix>
-            <message-prefix><![CDATA[<li>]]></message-prefix><message-suffix><![CDATA[</li>]]></message-suffix>
             <default-message>Work Effort Party Assignment successfully created.</default-message>
             <result-to-request result-name="workEffortId"/></service>
     </simple-event>
     <simple-event event-name="update" short-description="Update Work Effort Party Assignment">
         <simple-map-processor xml-resource="org/ofbiz/commonapp/workeffort/workeffort/WorkEffortPartyAssignMapProcs.xml" 
                 processor-name="update" in-map-name="parameters" out-map-name="context"/>
-        <check-errors>
-            <error-prefix><![CDATA[The following errors occured:<ul>]]></error-prefix><error-suffix><![CDATA[</ul>]]></error-suffix>
-            <message-prefix><![CDATA[<li>]]></message-prefix><message-suffix><![CDATA[</li>]]></message-suffix></check-errors>
+        <check-errors/>
         <service service-name="updateWorkEffortPartyAssignment" in-map-name="context">
-            <error-prefix><![CDATA[The following errors occured:<ul>]]></error-prefix><error-suffix><![CDATA[</ul>]]></error-suffix>
-            <success-prefix><![CDATA[<ul>]]></success-prefix><success-suffix><![CDATA[</ul>]]></success-suffix>
-            <message-prefix><![CDATA[<li>]]></message-prefix><message-suffix><![CDATA[</li>]]></message-suffix>
             <default-message>Work Effort Party Assignment successfully updated.</default-message></service>
     </simple-event>
     <simple-event event-name="delete" short-description="Delete Work Effort Party Assignment">
         <simple-map-processor xml-resource="org/ofbiz/commonapp/workeffort/workeffort/WorkEffortPartyAssignMapProcs.xml" 
                 processor-name="delete" in-map-name="parameters" out-map-name="context"/>
-        <check-errors>
-            <error-prefix><![CDATA[The following errors occured:<ul>]]></error-prefix><error-suffix><![CDATA[</ul>]]></error-suffix>
-            <message-prefix><![CDATA[<li>]]></message-prefix><message-suffix><![CDATA[</li>]]></message-suffix></check-errors>
+        <check-errors/>
         <service service-name="deleteWorkEffortPartyAssignment" in-map-name="context">
-            <error-prefix><![CDATA[The following errors occured:<ul>]]></error-prefix><error-suffix><![CDATA[</ul>]]></error-suffix>
-            <success-prefix><![CDATA[<ul>]]></success-prefix><success-suffix><![CDATA[</ul>]]></success-suffix>
-            <message-prefix><![CDATA[<li>]]></message-prefix><message-suffix><![CDATA[</li>]]></message-suffix>
             <default-message>Work Effort Party Assignment successfully deleted.</default-message></service>
     </simple-event>
 </simple-events>
