@@ -52,7 +52,7 @@ public class CategoryWorker {
 
     /**
      * Puts the following into the pageContext attribute list with a prefix, if specified:
-     *  productList, categoryId, viewIndex, viewSize, lowIndex, highIndex, listSize
+     *  productList, productCategoryMembers, categoryId, viewIndex, viewSize, lowIndex, highIndex, listSize
      * Puts the following into the session attribute list:
      *  CACHE_SEARCH_RESULTS, CACHE_SEARCH_RESULTS_NAME
      *@param pageContext The pageContext of the calling JSP
@@ -61,7 +61,47 @@ public class CategoryWorker {
      */
     public static void getRelatedProducts(PageContext pageContext, String attributePrefix, String parentId, boolean limitView) {
         GenericDelegator delegator = (GenericDelegator) pageContext.getRequest().getAttribute("delegator");
+        if (attributePrefix == null)
+            attributePrefix = "";
+        
+        getRelatedProductCategoryMembers(pageContext, attributePrefix, parentId, limitView);
+        
+        int lowIndex = ((Integer) pageContext.getAttribute(attributePrefix + "lowIndex")).intValue();
+        int highIndex = ((Integer) pageContext.getAttribute(attributePrefix + "highIndex")).intValue();
+        ArrayList prodCatMembers = (ArrayList) pageContext.getAttribute(attributePrefix + "productCategoryMembers");
+
+        ArrayList someProducts = new ArrayList();
+        if (prodCatMembers != null) {
+            for (int ind = lowIndex; ind <= highIndex; ind++) {
+                GenericValue prodCatMember = (GenericValue) prodCatMembers.get(ind - 1);
+                GenericValue prod = null;
+                try {
+                    prod = delegator.findByPrimaryKeyCache("Product", UtilMisc.toMap("productId", prodCatMember.get("productId")));
+                } catch (GenericEntityException e) {
+                    Debug.logWarning(e.getMessage());
+                    prod = null;
+                }
+                if (prod != null)
+                    someProducts.add(prod);
+            }
+        }
+
+        if (someProducts.size() > 0)
+            pageContext.setAttribute(attributePrefix + "productList", someProducts);
+    }
+
+    /**
+     * Puts the following into the pageContext attribute list with a prefix, if specified:
+     *  productCategoryMembers, categoryId, viewIndex, viewSize, lowIndex, highIndex, listSize
+     * Puts the following into the session attribute list:
+     *  CACHE_SEARCH_RESULTS, CACHE_SEARCH_RESULTS_NAME
+     *@param pageContext The pageContext of the calling JSP
+     *@param attributePrefix A prefix to put on each attribute name in the pageContext
+     *@param parentId The ID of the parent category
+     */
+    public static void getRelatedProductCategoryMembers(PageContext pageContext, String attributePrefix, String parentId, boolean limitView) {
         ServletRequest request = pageContext.getRequest();
+        GenericDelegator delegator = (GenericDelegator) request.getAttribute("delegator");
         if (attributePrefix == null)
             attributePrefix = "";
 
@@ -139,30 +179,12 @@ public class CategoryWorker {
             highIndex = listSize;
         }
 
-        ArrayList someProducts = new ArrayList();
-        if (prodCatMembers != null) {
-            for (int ind = lowIndex; ind <= highIndex; ind++) {
-                GenericValue prodCatMember = (GenericValue) prodCatMembers.get(ind - 1);
-                GenericValue prod = null;
-                try {
-                    prod = delegator.findByPrimaryKeyCache("Product", UtilMisc.toMap("productId", prodCatMember.get("productId")));
-                } catch (GenericEntityException e) {
-                    Debug.logWarning(e.getMessage());
-                    prod = null;
-                }
-                if (prod != null)
-                    someProducts.add(prod);
-            }
-        }
-
         pageContext.setAttribute(attributePrefix + "viewIndex", new Integer(viewIndex));
         pageContext.setAttribute(attributePrefix + "viewSize", new Integer(viewSize));
         pageContext.setAttribute(attributePrefix + "lowIndex", new Integer(lowIndex));
         pageContext.setAttribute(attributePrefix + "highIndex", new Integer(highIndex));
         pageContext.setAttribute(attributePrefix + "listSize", new Integer(listSize));
         pageContext.setAttribute(attributePrefix + "categoryId", parentId);
-        if (someProducts.size() > 0)
-            pageContext.setAttribute(attributePrefix + "productList", someProducts);
         if (prodCatMembers != null && prodCatMembers.size() > 0)
             pageContext.setAttribute(attributePrefix + "productCategoryMembers", prodCatMembers);
     }

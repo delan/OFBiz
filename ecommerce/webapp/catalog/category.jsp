@@ -8,7 +8,7 @@
 <%@ include file="/includes/leftcolumn.jsp" %> 
 
 <%-- Get a list of all products in the current category. --%>
-<%CategoryWorker.getRelatedProducts(pageContext,"",request.getParameter("category_id"),true);%>
+<%CategoryWorker.getRelatedProductCategoryMembers(pageContext,"",request.getParameter("category_id"),true);%>
 <br>
 <%@ include file="/catalog/categorylisting.jsp" %>
 

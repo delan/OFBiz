@@ -94,7 +94,7 @@
 </ofbiz:if>
 --%>
 
-<ofbiz:if name="productList" size="0">
+<ofbiz:if name="productCategoryMembers" size="0">
 <table border="0" width="100%" cellpadding="2">
     <tr>
       <td align=right>
@@ -114,19 +114,21 @@
 </table>
 
 <center>
-  <table width='100%'>
-    <%int listIndex = lowIndex.intValue();%>
-    <ofbiz:iterator name="product" property="productList">
-      <tr><td><hr class='sepbar'></td></tr>
-      <tr>
-        <td>
-          <%@ include file="/catalog/productsummary.jsp" %>
-        </td>
-      </tr>
-      <%listIndex++;%>
-    </ofbiz:iterator>
-    <tr><td colspan="2"><hr class='sepbar'></td></tr>
-  </table>
+    <table width='100%'>
+        <%int listIndex = lowIndex.intValue();%>
+        <ofbiz:iterator name="productCategoryMember" property="productCategoryMembers">
+            <%GenericValue product = delegator.findByPrimaryKeyCache("Product", UtilMisc.toMap("productId", productCategoryMember.get("productId")));%>
+            <%if (product != null) pageContext.setAttribute("product", product);%>
+            <tr><td><hr class='sepbar'></td></tr>
+            <tr>
+                <td>
+                    <%@ include file="/catalog/productsummary.jsp" %>
+                </td>
+            </tr>
+            <%listIndex++;%>
+        </ofbiz:iterator>
+        <tr><td colspan="2"><hr class='sepbar'></td></tr>
+    </table>
 </center>
 
 <table border="0" width="100%" cellpadding="2">
@@ -148,7 +150,7 @@
 </table>
 </ofbiz:if>
 
-<ofbiz:unless name="productList" size="0">
+<ofbiz:unless name="productCategoryMembers" size="0">
 <table border="0" width="100%" cellpadding="2">
     <tr><td colspan="2"><hr class='sepbar'></td></tr>
     <tr>
