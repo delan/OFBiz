@@ -125,11 +125,6 @@ public class VelocityViewHandler implements ViewHandler {
             throw new ViewHandlerException(e.getMessage(), e);
         }
 
-        // set the default content-type and charset encoding
-        if (contentType == null) contentType = "text/html";
-        if (encoding == null) encoding = "UTF-8";
-        response.setContentType(contentType + "; charset=" + encoding);               
-
         ServletOutputStream out = null;
         VelocityWriter vw = null;
 

@@ -60,11 +60,6 @@ public class JspViewHandler implements ViewHandler {
         request.setAttribute(SiteDefs.FORWARDED_FROM_CONTROL_SERVLET, new Boolean(true));
         RequestDispatcher rd = request.getRequestDispatcher(page);
         
-        // set the default content-type and charset encoding
-        if (contentType == null) contentType = "text/html";
-        if (encoding == null) encoding = "UTF-8";
-        response.setContentType(contentType + "; charset=" + encoding);
-
         if (rd == null)
             throw new ViewHandlerException("Source returned a null dispatcher (" + page + ")");
         try {
