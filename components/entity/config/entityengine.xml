@@ -201,13 +201,13 @@ access. For a detailed description see the core/docs/entityconfig.html file.
             field-type-name="mysql"
             check-on-start="true"
             add-missing-on-start="true"
-            use-foreign-keys="false"
+            use-foreign-keys="true"
             join-style="ansi-no-parenthesis">
         <read-data reader-name="seed"/>
         <read-data reader-name="demo"/>
         <read-data reader-name="ext"/>
         <inline-jdbc
-                jdbc-driver="org.gjt.mm.mysql.Driver"
+                jdbc-driver="com.mysql.jdbc.Driver"
                 jdbc-uri="jdbc:mysql://127.0.0.1/ofbiz?autoReconnect=true"
                 jdbc-username="ofbiz"
                 jdbc-password="ofbiz"
