@@ -1,50 +1,55 @@
 <!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN">
 <html>
 <head>
-  <title>The Open For Business Project: Entity Engine Configuration Guide</title>
-  <link rel="stylesheet" href="http://www.ofbiz.org/maincss.css" type="text/css">
+  <title>The Open For Business Project: Entity Engine Configuration
+Guide</title>
+  <link rel="stylesheet" href="http://www.ofbiz.org/maincss.css"
+ type="text/css">
 </head>
-
 <body>
-
 <table width="100%">
-  <tr>
-    <td width="50%" align="left" valign="center">
-        <a href="http://www.ofbiz.org"><img src="http://www.ofbiz.org/images/ofbiz_logo.jpg"  border="0" alt="The Open For Business Project"></a>
-    </td>
-    <td width="50%" align="right" valign="center">
-        <a href="http://sf.net/projects/ofbiz"><img src="http://sourceforge.net/sflogo.php?group_id=27173" width="88" height="31" border="0" alt="SourceForge Logo"></a> 
-        <a href="http://www.ofbiz.org"><img src="http://www.ofbiz.org/images/ofbiz_powered.gif" width="88" border="0"></a>
-    </td>
-  </tr>
+  <tbody>
+    <tr>
+      <td align="left" valign="center" width="50%"> <a
+ href="http://www.ofbiz.org"><img
+ src="http://www.ofbiz.org/images/ofbiz_logo.jpg"
+ alt="The Open For Business Project" border="0"></a> </td>
+      <td align="right" valign="center" width="50%"> <a
+ href="http://sf.net/projects/ofbiz"><img
+ src="http://sourceforge.net/sflogo.php?group_id=27173"
+ alt="SourceForge Logo" border="0" height="31" width="88"></a> <a
+ href="http://www.ofbiz.org"><img
+ src="http://www.ofbiz.org/images/ofbiz_powered.gif" border="0"
+ width="88"></a> </td>
+    </tr>
+  </tbody>
 </table>
 <hr class="sepbar">
-
-<h2 align="center">The Open For Business Project: Entity Engine Configuration Guide</h2>
- 
-<div class="contenttext">Written By: David E. Jones, <a href="mailto:jonesde@ofbiz.org">jonesde@ofbiz.org</a></div>
-<div class="contenttext">Minor corrections by: <a href="mailto:PDebski@a4.pl">Pawel H. Debski</a></div>
-<div class="contenttext">Last Updated: March 6, 2004</div>
-<!-- $Id: entityconfig.html,v 1.3 2004/03/07 03:28:30 jonesde Exp $ -->
-
+<h2 align="center">The Open For Business Project: Entity Engine
+Configuration Guide</h2>
+<div class="contenttext">Written by: David E. Jones, <a
+ href="mailto:jonesde@ofbiz.org">jonesde@ofbiz.org</a></div>
+<div class="contenttext">Minor corrections by: <a
+ href="mailto:PDebski@a4.pl">Pawel H. Debski</a></div>
+<div class="contenttext">Edited by: Les Austin<br>
+Last Updated: August 6, 2004</div>
+<!-- $Id: entityconfig.html,v 1.4 2004/08/06 23:57:19 jonesde Exp $ -->
 <hr class="sepbar">
 <h3>Table of Contents</h3>
-
 <ul>
-  <li><a href="#Related_Documents">Related Documents</a>
-  <li><a href="#Introduction">Introduction</a>
-  <li><a href="#Resource">Resource Loaders</a>
-  <li><a href="#JTA_Elements">JTA Elements</a>
-  <li><a href="#Delegator_Elements">Delegator Elements</a>
-  <li><a href="#Entity_Model">Entity Model XML Files</a>
-  <li><a href="#Entity_Group">Entity Group XML Files</a>
-  <li><a href="#Entity_ECA">Entity ECA XML Files</a>
-  <li><a href="#Field_Type">Field Type XML Files</a>
+  <li><a href="#Related_Documents">Related Documents</a> </li>
+  <li><a href="#Introduction">Introduction</a> </li>
+  <li><a href="#Resource">Resource Loaders</a> </li>
+  <li><a href="#JTA_Elements">JTA Elements</a> </li>
+  <li><a href="#Delegator_Elements">Delegator Elements</a> </li>
+  <li><a href="#Entity_Model">Entity Model XML Files</a> </li>
+  <li><a href="#Entity_Group">Entity Group XML Files</a> </li>
+  <li><a href="#Entity_ECA">Entity ECA XML Files</a> </li>
+  <li><a href="#Field_Type">Field Type XML Files</a> </li>
   <li><a href="#Datasource">Data Source Elements</a>
+  </li>
 </ul>
-
 <hr class="sepbar">
-
 <h3><a name="Related_Documents">Related Documents:</a></h3>
 <hr class="sepbar">
 <ul>
@@ -53,443 +58,550 @@
   <li><a href="serviceconfig.html">Service Engine Configuration Guide</a></li>
   <li><a href="../dtds/entity-config.html">Entity Engine Config DTD</a></li>
 </ul>
-
 <hr class="sepbar">
 <h3><a name="Introduction">Introduction</a></h3>
 <hr class="sepbar">
-
-<p class="contenttext">This document describes the configuration of the Entity Engine. It starts
-with an introduction to general ideas and then goes through each part of the
-entityengine.xml file and explains the available elements and their 
+<p class="contenttext">This document describes the configuration of the
+Entity Engine. It starts
+with an introduction to general ideas and then goes through each part
+of the
+entityengine.xml file and explains the available elements and their
 usage. The entityengine.xml file used for the OFBiz applications has
 examples of a number of different options and is located in <b><code>ofbiz/commonapp/etc/entityengine.xml</code></b>.</p>
-
-<p class="contenttext">The configuration of the Entity Engine is done through a simple XML
-file called <b><code>entityengine.xml</code></b> that must exist somewhere on the classpath. This
+<p class="contenttext">The configuration of the Entity Engine is done
+through a simple XML
+file called <b><code>entityengine.xml</code></b> that must exist
+somewhere on the classpath. This
 file is used to define parameters for persistence servers such as EJB
-server parameters or JDBC server parameters. It is also used to specify which
-XML entity model, entity group, and field type model files will be used for that server.
+server parameters or JDBC server parameters. It is also used to specify
+which
+XML entity model, entity group, and field type model files will be used
+for that server.
 The default file for the OFBiz distribution can be found in <b><code>ofbiz/commonapp/etc/entityengine.xml</code></b>.</p>
-
-<p class="contenttext">Each application that uses the Entity Engine does so through a <b><code>GenericDelegator</code></b>
-instance. The delegator name must be passed to the static factory method that
-is then passed to the constructor if a new instance is needed. This delegator
+<p class="contenttext">Each application that uses the Entity Engine
+does so through a <b><code>GenericDelegator</code></b>
+instance. The delegator name must be passed to the static factory
+method that
+is then passed to the constructor if a new instance is needed. This
+delegator
 name is used to look up settings for that delegator in the <b><code>entityengine.xml</code></b>
-file. Each delegator uses an entity model reader and an entity group reader
-that specifies a group name for each named entity in the entity model file. The
-<b><code>entityengine.xml</code></b> file contains the settings that map each group name
-to a <b><code>GenericHelper</code></b> for that group. <b><code>GenericHelper</code></b> is an interface
-that must be implemented for each type of data source (i.e.: JDBC, EJB, SOAP,
+file. Each delegator uses an entity model reader and an entity group
+reader
+that specifies a group name for each named entity in the entity model
+file. The
+<b><code>entityengine.xml</code></b> file contains the settings that
+map each group name
+to a <b><code>GenericHelper</code></b> for that group. <b><code>GenericHelper</code></b>
+is an interface
+that must be implemented for each type of data source (i.e.: JDBC, EJB,
+SOAP,
 HTTP, et cetera).&nbsp;</p>
-
-<p class="contenttext">The settings for each named <b><code>GenericHelper</code></b> are specified 
-<b><code>datsource</code></b> elements in the <b><code>entityengine.xml</code></b>
-file. For a JDBC helper these would include database connection parameters such
-as either the JNDI data source parameters or the JDBC parameters including the driver
-name, the JDBC URI, and the username and password for the database. An EJB
-helper would contain JNDI parameters such as the context provider URL, the initial context factory, and
+<p class="contenttext">The settings for each named <b><code>GenericHelper</code></b>
+are specified <b><code>datsource</code></b> elements in the <b><code>entityengine.xml</code></b>
+file. For a JDBC helper these would include database connection
+parameters such
+as either the JNDI data source parameters or the JDBC parameters
+including the driver
+name, the JDBC URI, and the username and password for the database. An
+EJB
+helper would contain JNDI parameters such as the context provider URL,
+the initial context factory, and
 the URL package prefixes.</p>
-
-<p class="contenttext">The <b><code>GenericDelegator</code></b> is the primary access method for Entity Engine
-services. Each service request is dispatched to the helper that corresponds to
-the entity that the service is requested for according to the group name of the
-entity specified in the entity group XML file and the helper for that group
-specified in the <b><code>entityengine.xml</code></b> file. The default entity group XML
+<p class="contenttext">The <b><code>GenericDelegator</code></b> is the
+primary access method for Entity Engine
+services. Each service request is dispatched to the helper that
+corresponds to
+the entity that the service is requested for according to the group
+name of the
+entity specified in the entity group XML file and the helper for that
+group
+specified in the <b><code>entityengine.xml</code></b> file. The
+default entity group XML
 file for the OFBiz entity model can be found in <b><code>ofbiz/commonapp/entitydef/entitygroup.xml</code></b>.</p>
-
 <hr class="sepbar">
 <h3><a name="Resource">Resource Loaders</a></h3>
 <hr class="sepbar">
-<p class="contenttext">The <b><code>resource-loader</code></b> tag is used to configure a named resource loader
-that can be used elsewhere to load XML and other resources. It has the following
+<p class="contenttext">The <b><code>resource-loader</code></b> tag is
+used to configure a named resource loader
+that can be used elsewhere to load XML and other resources. It has the
+following
 attributes.</p>
-<table cellpadding="2" cellspacing="0" border="1">
-<tr>
-    <td><b>Attribute&nbsp;Name</b></td>
-    <td><b>Required?</b></td>
-    <td><b>Description</b></td>
-</tr>
-<tr>
-    <td>name</td><td>Y</td>
-    <td>The name of the resource loader. Used in other tags in the "loader" attribute.</td>
-</tr>
-<tr>
-    <td>class</td><td>Y</td>
-    <td>The class to use that extends the abstract class org.ofbiz.entity.config.ResourceLoader.
-    Available classes include FileLoader, UrlLoader, and ClasspathLoader, all in the
-    same package as the ResourceLoader class.</td>
-</tr>
-<tr>
-    <td>prepend-env</td><td>N</td>
-    <td>The name of a Java environment property to put at the very beginning of 
-    the full location, before the prefix. This is optional.</td>
-</tr>
-<tr>
-    <td>prefix</td><td>N</td>
-    <td>A string to put before the location when making the full location. This is optional.
-    If used will go after the prepended environment property and before the location
-    specified for each resource.</td>
-</tr>
+<table border="1" cellpadding="2" cellspacing="0">
+  <tbody>
+    <tr>
+      <td><b>Attribute&nbsp;Name</b></td>
+      <td><b>Required?</b></td>
+      <td><b>Description</b></td>
+    </tr>
+    <tr>
+      <td>name</td>
+      <td>Y</td>
+      <td>The name of the resource loader. Used in other tags in the
+"loader" attribute.</td>
+    </tr>
+    <tr>
+      <td>class</td>
+      <td>Y</td>
+      <td>The class to use that extends the abstract class
+org.ofbiz.entity.config.ResourceLoader. Available classes include
+FileLoader, UrlLoader, and ClasspathLoader, all in the same package as
+the ResourceLoader class.</td>
+    </tr>
+    <tr>
+      <td>prepend-env</td>
+      <td>N</td>
+      <td>The name of a Java environment property to put at the very
+beginning of the full location, before the prefix. This is optional.</td>
+    </tr>
+    <tr>
+      <td>prefix</td>
+      <td>N</td>
+      <td>A string to put before the location when making the full
+location. This is optional. If used will go after the prepended
+environment property and before the location specified for each
+resource.</td>
+    </tr>
+  </tbody>
 </table>
-
 <br>
 <hr class="sepbar">
 <h3><a name="JTA_Elements">JTA Elements</a></h3>
 <hr class="sepbar">
-<p class="contenttext">For JTA support the Entity Engine needs access to the 
-<b><code>javax.transaction.UserTransaction</code></b> and optionally the 
-<b><code>javax.transaction.TransactionManager</code></b> interface 
-implementations for the TX Manager being used. These are retrieved through the 
-<b><code>org.ofbiz.entity.TransactionFactory</code></b> class. This class 
-uses the class specified with the <b><code>class</code></b> attribute of the 
-<b><code>transaction-factory</code></b>. This class may be changed depending on 
-which application server or transaction manager you are running OFBiz on.</p>
-
-<p class="contenttext">The default TX Manager is JOTM from ObjectWeb and the factory 
-class for JOTM is 
-<b><code>org.ofbiz.entity.transaction.JotmFactory</code></b>. There is 
-also a special class for Weblogic: 
-<b><code>org.ofbiz.entity.transaction.WeblogicFactory</code></b>, which 
-must be changed to include the Weblogic specific stuff and then compiled with 
-weblogic.jar on the classpath.</p>
-
-<p class="contenttext">The most widely useful transaction factory class is the 
-<b><code>org.ofbiz.entity.transaction.JNDIFactory</code></b> class. This 
-class uses some additional elements from the entityengine.xml file to locate
+<p class="contenttext">For JTA support the Entity Engine needs access
+to the <b><code>javax.transaction.UserTransaction</code></b> and
+optionally the <b><code>javax.transaction.TransactionManager</code></b>
+interface implementations for the TX Manager being used. These are
+retrieved through the <b><code>org.ofbiz.entity.TransactionFactory</code></b>
+class. This class uses the class specified with the <b><code>class</code></b>
+attribute of the <b><code>transaction-factory</code></b>. This class
+may be changed depending on which application server or transaction
+manager you are running OFBiz on.</p>
+<p class="contenttext">The default TX Manager is JOTM from ObjectWeb
+and the factory class for JOTM is <b><code>org.ofbiz.entity.transaction.JotmFactory</code></b>.
+There is also a special class for Weblogic: <b><code>org.ofbiz.entity.transaction.WeblogicFactory</code></b>,
+which must be changed to include the Weblogic specific stuff and then
+compiled with weblogic.jar on the classpath.</p>
+<p class="contenttext">The most widely useful transaction factory class
+is the <b><code>org.ofbiz.entity.transaction.JNDIFactory</code></b>
+class. This class uses some additional elements from the
+entityengine.xml file to locate
 the UserTransaction and TransactionManager objects in JNDI.</p>
-
-<p class="contenttext">The <b><code>user-transaction-jndi</code></b> and <b><code>transaction-manager-jndi</code></b> 
-tags are used to specify the object names in JNDI and the name of the JNDI Server to use, 
-as configured above. Both tags have two required attributes: 
-<b><code>jndi-server-name</code></b> and <b><code>jndi-name</code></b>. An example
-jndi-name for the UserTransaction object is <b><code>java:comp/UserTransaction</code></b> and
+<p class="contenttext">The <b><code>user-transaction-jndi</code></b>
+and <b><code>transaction-manager-jndi</code></b> tags are used to
+specify the object names in JNDI and the name of the JNDI Server to
+use, as configured above. Both tags have two required attributes: <b><code>jndi-server-name</code></b>
+and <b><code>jndi-name</code></b>. An example
+jndi-name for the UserTransaction object is <b><code>java:comp/UserTransaction</code></b>
+and
 for the TransactionManager object is <b><code>java:comp/TransactionManager</code></b>.</p>
-
 <hr class="sepbar">
 <h3><a name="Delegator_Elements">Delegator Elements</a></h3>
 <hr class="sepbar">
-<p class="contenttext">The GenericDelagator is created through a factory method that takes a String
-argument containing the delegator name. This delegator name is used to look up
+<p class="contenttext">The GenericDelagator is created through a
+factory method that takes a String
+argument containing the delegator name. This delegator name is used to
+look up
 a <b><code>delegator</code></b> tag in the entityengine.xml file.</p>
-
-<table cellpadding="2" cellspacing="0" border="1">
-<tr>
-    <td><b>Attribute&nbsp;Name</b></td>
-    <td><b>Required?</b></td>
-    <td><b>Description</b></td>
-</tr>
-<tr>
-    <td>name</td><td>Y</td>
-    <td>The name of the Delegator. Used to look up this tag by delegator name.</td>
-</tr>
-<tr>
-    <td>entity-model-reader</td><td>Y</td>
-    <td>The name of the entity-model-reader to use for this delegator.</td>
-</tr>
-<tr>
-    <td>entity-group-reader</td><td>Y</td>
-    <td>The name of the entity-group-reader to use for this delegator.</td>
-</tr>
-<tr>
-    <td>entity-eca-reader</td><td>N</td>
-    <td>The name of the entity-eca-reader to use for this delegator. If not specified no Entity ECAs will be used.</td>
-</tr>
-<tr>
-    <td>distributed-cache-clear-enabled</td><td>N</td>
-    <td>Used to specify if the distributed cache clear should be enabled. If not specified defaults to "false". If set to true the other DCC attributes will be used.</td>
-</tr>
-<tr>
-    <td>distributed-cache-clear-class-name</td><td>N</td>
-    <td>Used to specify if the name of the class to use for DCC and that implements the distributed cache clear interface. 
-        If not specified defaults to "org.ofbiz.entityext.cache.EntityCacheServices", which is a good default for most 
-        cases that uses the Service Engine for configuration and remote calls.</td>
-</tr>
-<tr>
-    <td>distributed-cache-clear-user-login-id</td><td>N</td>
-    <td>Used to specify if the userLoginId to use for any security checks needed related to distributed cache clear operation.
-        If not specified defaults to "admin".</td>
-</tr>
+<table border="1" cellpadding="2" cellspacing="0">
+  <tbody>
+    <tr>
+      <td><b>Attribute&nbsp;Name</b></td>
+      <td><b>Required?</b></td>
+      <td><b>Description</b></td>
+    </tr>
+    <tr>
+      <td>name</td>
+      <td>Y</td>
+      <td>The name of the Delegator. Used to look up this tag by
+delegator name.</td>
+    </tr>
+    <tr>
+      <td>entity-model-reader</td>
+      <td>Y</td>
+      <td>The name of the entity-model-reader to use for this delegator.</td>
+    </tr>
+    <tr>
+      <td>entity-group-reader</td>
+      <td>Y</td>
+      <td>The name of the entity-group-reader to use for this delegator.</td>
+    </tr>
+    <tr>
+      <td>entity-eca-reader</td>
+      <td>N</td>
+      <td>The name of the entity-eca-reader to use for this delegator.
+If not specified no Entity ECAs will be used.</td>
+    </tr>
+    <tr>
+      <td>distributed-cache-clear-enabled</td>
+      <td>N</td>
+      <td>Used to specify if the distributed cache clear should be
+enabled. If not specified defaults to "false". If set to true the other
+DCC attributes will be used.</td>
+    </tr>
+    <tr>
+      <td>distributed-cache-clear-class-name</td>
+      <td>N</td>
+      <td>Used to specify if the name of the class to use for DCC and
+that implements the distributed cache clear interface. If not specified
+defaults to "org.ofbiz.entityext.cache.EntityCacheServices", which is a
+good default for most cases that uses the Service Engine for
+configuration and remote calls.</td>
+    </tr>
+    <tr>
+      <td>distributed-cache-clear-user-login-id</td>
+      <td>N</td>
+      <td>Used to specify if the userLoginId (to use for any security
+checks) is needed related to distributed cache clear operation. If not
+specified defaults to "admin".</td>
+    </tr>
+  </tbody>
 </table>
-
-<p class="contenttext">The delegator tag must contain one or more <b><code>group-map</code></b> tags 
-specifying a datasource to use for each group of entities that the delegator will know about
-from the entity-group-reader. The delegator uses this file 
-to assign a group to each entity. When an operation on an entity is performed it 
-looks up the group and the datasource helper that corresponds to the group
-and uses that Helper to perform lower level Data Source operations. With this
-technique when the application is written it does not have to know which Helper 
-is responsible for a given entity, and can therefore handle an entity or groups 
-of entities assigned to different Data Sources with a simple configuration.</p>
-
+<p class="contenttext">The delegator tag must contain one or more <b><code>group-map</code></b>
+tags specifying a datasource to use for each group of entities that the
+delegator will know about
+from the entity-group-reader. The delegator uses this file to assign a
+group to each entity. When an operation on an entity is performed it
+looks up the group and the datasource helper that corresponds to the
+group
+and uses that Helper to perform lower level Data Source operations.
+With this
+technique when the application is written it does not have to know
+which Helper is responsible for a given entity, and can therefore
+handle an entity or groups of entities assigned to different Data
+Sources with a simple configuration.</p>
 <hr class="sepbar">
 <h3><a name="Entity_Model">Entity Model XML Files</a></h3>
 <hr class="sepbar">
-<p class="contenttext">The <b><code>entity-model-reader</code></b> tag is used to configure each named
-entity model reader. The tag has a <b><code>name</code></b> attribute used to specify the entity model
-reader's name. Each reader may load from multiple resources that are each 
-specified with a <b><code>resource</code></b> tag inside the main tag.</p>
-
-<p class="contenttext">Each <b><code>resource</code></b> tag has two required attributes: 
-<b><code>loader</code></b> which specifies which resource-loader to use and
-<b><code>location</code></b> which specifies the location that the resource-loader
+<p class="contenttext">The <b><code>entity-model-reader</code></b> tag
+is used to configure each named
+entity model reader. The tag has a <b><code>name</code></b> attribute
+used to specify the entity model
+reader's name. Each reader may load from multiple resources that are
+each specified with a <b><code>resource</code></b> tag inside the main
+tag.</p>
+<p class="contenttext">Each <b><code>resource</code></b> tag has two
+required attributes: <b><code>loader</code></b> which specifies which
+resource-loader to use and
+<b><code>location</code></b> which specifies the location that the
+resource-loader
 will use inside itself to load the resource.</p>
-
 <hr class="sepbar">
 <h3><a name="Entity_Group">Entity Group XML Files</a></h3>
 <hr class="sepbar">
-<p class="contenttext">The <b><code>entity-group-reader</code></b> tag is used to configure each named
-entity group reader. The tag has a <b><code>name</code></b> attribute used to specify the entity group
-reader's name. The group reader uses XML files to get the entity-group mappings.</p>
-<p class="contenttext">The tag has two optional attributes: 
-<b><code>loader</code></b> which specifies which resource-loader to use and
-<b><code>location</code></b> which specifies the location that the resource-loader
-will use inside itself to load the resource. There is also a sub-element named "resource" that has
-these same attributes and can be used to specify addition resources for addition files.</p>
-
+<p class="contenttext">The <b><code>entity-group-reader</code></b> tag
+is used to configure each named
+entity group reader. The tag has a <b><code>name</code></b> attribute
+used to specify the entity group
+reader's name. The group reader uses XML files to get the entity-group
+mappings.</p>
+<p class="contenttext">The tag has two optional attributes: <b><code>loader</code></b>
+which specifies which resource-loader to use and
+<b><code>location</code></b> which specifies the location that the
+resource-loader
+will use inside itself to load the resource. There is also a
+sub-element named "resource" that has
+these same attributes and can be used to specify addition resources for
+addition files.</p>
 <hr class="sepbar">
 <h3><a name="Entity_ECA">Entity ECA XML Files</a></h3>
 <hr class="sepbar">
-<p class="contenttext">The <b><code>entity-eca-reader</code></b> tag is used to configure each named
-entity ECA reader. The tag has a <b><code>name</code></b> attribute used to specify the entity ECA
-reader's name. The ECA reader uses XML files to get the entity ECA rule definitions.
-Each reader may load from multiple resources that are each 
-specified with a <b><code>resource</code></b> tag inside the main tag.</p>
-
-<p class="contenttext">Each <b><code>resource</code></b> tag has two required attributes: 
-<b><code>loader</code></b> which specifies which resource-loader to use and
-<b><code>location</code></b> which specifies the location that the resource-loader
+<p class="contenttext">The <b><code>entity-eca-reader</code></b> tag
+is used to configure each named
+entity ECA reader. The tag has a <b><code>name</code></b> attribute
+used to specify the entity ECA
+reader's name. The ECA reader uses XML files to get the entity ECA rule
+definitions.
+Each reader may load from multiple resources that are each specified
+with a <b><code>resource</code></b> tag inside the main tag.</p>
+<p class="contenttext">Each <b><code>resource</code></b> tag has two
+required attributes: <b><code>loader</code></b> which specifies which
+resource-loader to use and
+<b><code>location</code></b> which specifies the location that the
+resource-loader
 will use inside itself to load the resource.</p>
-
 <hr class="sepbar">
 <h3><a name="Field_Type">Field Type XML Files</a></h3>
 <hr class="sepbar">
-<p class="contenttext">The <b><code>field-type</code></b> tag is used to configure each named
-field type. The tag has a <b><code>name</code></b> attribute used to specify the field type's
-name. The group reader uses a single XML file to get the field type information.</p>
-<p class="contenttext">The tag has two required attributes: 
-<b><code>loader</code></b> which specifies which resource-loader to use and
-<b><code>location</code></b> which specifies the location that the resource-loader
+<p class="contenttext">The <b><code>field-type</code></b> tag is used
+to configure each named
+field type. The tag has a <b><code>name</code></b> attribute used to
+specify the field type's
+name. The group reader uses a single XML file to get the field type
+information.</p>
+<p class="contenttext">The tag has two required attributes: <b><code>loader</code></b>
+which specifies which resource-loader to use and
+<b><code>location</code></b> which specifies the location that the
+resource-loader
 will use inside itself to load the resource.</p>
-
 <hr class="sepbar">
 <h3><a name="Datasource">Data Source Elements</a></h3>
 <hr class="sepbar">
-<p class="contenttext">Many datasources can be configured using one <b><code>datasource</code></b> 
-tag for each datasource. This tag has the following attributes, and may contain 
-the following sub-elements:</p>
-<table cellpadding="2" cellspacing="0" border="1">
-<tr>
-    <td><b>Attribute&nbsp;Name</b></td>
-    <td><b>Required?</b></td>
-    <td><b>Description</b></td>
-</tr>
-<tr>
-    <td>name</td><td>Y</td>
-    <td>That name of the datasource.</td>
-</tr>
-<tr>
-    <td>helper-class</td><td>Y</td>
-    <td>There can be many types of datasource helpers the main one used is the JDBC/DAO 
-    helper. You can code you own helpers and use them by implementing the 
-    <b><code>org.ofbiz.entity.GenericHelper</code></b> interface. For JDBC/DAO 
-    helpers the class will be <b><code>org.ofbiz.entity.GenericHelperDAO</code></b>.</td>
-</tr>
-<tr>
-    <td>field-type-name</td><td>Y</td>
-    <td>The name of the field-type to use. Must match the name of an existing 
-    field-type tag as defined above.</td>
-</tr>
-<tr>
-    <td>schema-name</td><td>N</td>
-    <td>The name of the schema to use in the database. If not specified no schema name 
-        will be used. This is a case sensitive value and different database may expect different casing.</td>
-</tr>
-	<tr>
-    <td>check-on-start</td><td>N</td>
-    <td>Check the datasource on startup? Must be true or false, defaults to true.</td>
-</tr>
-<tr>
-    <td>add-missing-on-start</td><td>N</td>
-    <td>Add missing entities and fields to the datasource on startup when checking
-    is done? Must be true or false, defaults to false.</td>
-</tr>
-<tr>
-    <td>use-foreign-keys</td><td>N</td>
-    <td>Use/Create foreign keys for "one" relationships? Must be true or false, defaults to true.</td>
-</tr>
-<tr>
-    <td>use-foreign-key-indices</td><td>N</td>
-    <td>Use/Create indices for foreign keys (i.e. an index on the foreign key columns)?
-    Note that creating foreign keys is not required for this to work and that
-    indices are created for type "one" relationship definitions. 
-    Must be true or false, defaults to true.</td>
-</tr>
-<tr>
-    <td>check-fks-on-start</td><td>N</td>
-    <td>Check foreign keys at startup and add missing as needed? Must be true or false, defaults to false.
-    Some databases have a hard time with this and do not return a full list of foreign keys
-    resulting in duplicate foreign keys being added to the database.</td>
-</tr>
-<tr>
-    <td>check-fk-indices-on-start</td><td>N</td>
-    <td>Check foreign key indices at startup and add missing as needed? Must be true or false, defaults to false.</td>
-</tr>
-
-<tr>
-    <td>use-pk-constraint-names</td><td>N</td>
-    <td>Use constraint names for Primary Keys? Some databases have a problem
-    with this, but work fine if they assign their own names. Must be true or false, defaults to true.</td>
-</tr>
-<tr>
-    <td>constraint-name-clip-length</td><td>N</td>
-    <td>Used to specify max length of a constraint name. Constraint names are clipped
-    to this length. When playing with this watch for duplicate constraint names. Must be an integer, defaults to 30.</td>
-</tr>
-<tr>
-    <td>fk-style</td><td>N</td>
-    <td>Used to specify the foreign key syntax style, either naming the foreign key
-    constraint, or naming the foreign key itself. Most databases use the
-    name_constraint syntax, but SAP DB is an exception to that and there may be
-    others. Must be either "name_constraint" or "name_fk". Defaults to
-    name_constraint.</td>
-</tr>
-<tr>
-    <td>use-fk-initially-deferred</td><td>N</td>
-    <td>Used to specify whether or not to use the INITIALLY DEFERRED option available
-    in many databases when creating foreign keys. Not all databases support
-    this option. When enabled and supported the foreign keys will not be checked
-    until a transaction is committed, as opposed to checking foreign keys as
-    operations are done inside a transaction. Must be set to "true" or "false".
-    Defaults to true.</td>
-</tr>
-<tr>
-    <td>join-style</td><td>N</td>
-    <td>Used to specify the syntax to use when doing table joins in view-entity
-    operations. Many databases are adopting the ANSI JOIN standard, but before
-    that was introduced theta joins were much more common. Two theta join 
-    styles are supported: Oracle and MS SQL. Must be "ansi", "ansi-no-parenthesis", 
-    "theta-oracle" or "theta-mssql". Defaults to "ansi".</td>
-</tr>
-<tr>
-    <td>use-indices</td><td>N</td>
-    <td>Used to specify whether or not declared indices/indexes should be created 
-        in the database. Must be "true" or "false", defaults to "true".</td>
-</tr>
-<tr>
-    <td>check-indices-on-start</td><td>N</td>
-    <td>Used to specify whether or not indices/indexes should be checked when 
-        the server starts. Will add missing declared indexes. Note that many
-        JDBC drivers do not support this sort of meta-data check and this may
-        cause problems. Must be "true" or "false", defaults to "false".</td>
-</tr>
-<tr>
-    <td>alias-view-columns</td><td>N</td>
-    <td>This is used to compensate for a variation seen in some JDBC drivers
-        where column names returned for aliased fields (especially in view
-        entities) be either be the alias name, or the full text of what makes
-        up that alias name. Most databases return the alias name, so this
-        will generally be set to true. Must be "true" or "false", defaults to "true".</td>
-</tr>
+<p class="contenttext">Many datasources can be configured using one <b><code>datasource</code></b>
+tag for each datasource. This tag has the following attributes, and may
+contain the following sub-elements:</p>
+<table border="1" cellpadding="2" cellspacing="0">
+  <tbody>
+    <tr>
+      <td><b>Attribute&nbsp;Name</b></td>
+      <td><b>Required?</b></td>
+      <td><b>Description</b></td>
+    </tr>
+    <tr>
+      <td>name</td>
+      <td>Y</td>
+      <td>That name of the datasource.</td>
+    </tr>
+    <tr>
+      <td>helper-class</td>
+      <td>Y</td>
+      <td>There can be many types of datasource helpers; the main one
+used is the JDBC/DAO helper. You can code you own helpers and use them
+by implementing the <b><code>org.ofbiz.entity.GenericHelper</code></b>
+interface. For JDBC/DAO helpers the class will be <b><code>org.ofbiz.entity.GenericHelperDAO</code></b>.</td>
+    </tr>
+    <tr>
+      <td>field-type-name</td>
+      <td>Y</td>
+      <td>The name of the field-type to use. Must match the name of an
+existing field-type tag as defined above.</td>
+    </tr>
+    <tr>
+      <td>schema-name</td>
+      <td>N</td>
+      <td>The name of the schema to use in the database. If not
+specified no schema name will be used. This is a case sensitive value
+and a different database may expect a different casing.</td>
+    </tr>
+    <tr>
+      <td>check-on-start</td>
+      <td>N</td>
+      <td>Check the datasource on startup? Must be true or false,
+defaults to true.</td>
+    </tr>
+    <tr>
+      <td>add-missing-on-start</td>
+      <td>N</td>
+      <td>Add missing entities and fields to the datasource on startup
+when checking is done? Must be true or false, defaults to false.</td>
+    </tr>
+    <tr>
+      <td>use-foreign-keys</td>
+      <td>N</td>
+      <td>Use/Create foreign keys for "one" relationships? Must be true
+or false, defaults to true.</td>
+    </tr>
+    <tr>
+      <td>use-foreign-key-indices</td>
+      <td>N</td>
+      <td>Use/Create indices for foreign keys (i.e. an index on the
+foreign key columns)? Note that creating foreign keys is not required
+for this to work and that indices are created for type "one"
+relationship definitions. Must be true or false, defaults to true.</td>
+    </tr>
+    <tr>
+      <td>check-fks-on-start</td>
+      <td>N</td>
+      <td>Check foreign keys at startup and add missing as needed? Must
+be true or false, defaults to false. Some databases have a hard time
+with this and do not return a full list of foreign keys resulting in
+duplicate foreign keys being added to the database.</td>
+    </tr>
+    <tr>
+      <td>check-fk-indices-on-start</td>
+      <td>N</td>
+      <td>Check foreign key indices at startup and add missing as
+needed? Must be true or false, defaults to false.</td>
+    </tr>
+    <tr>
+      <td>use-pk-constraint-names</td>
+      <td>N</td>
+      <td>Use constraint names for Primary Keys? Some databases have a
+problem with this, but work fine if they assign their own names. Must
+be true or false, defaults to true.</td>
+    </tr>
+    <tr>
+      <td>constraint-name-clip-length</td>
+      <td>N</td>
+      <td>Used to specify max length of a constraint name. Constraint
+names are clipped to this length. When playing with this watch for
+duplicate constraint names. Must be an integer, defaults to 30.</td>
+    </tr>
+    <tr>
+      <td>fk-style</td>
+      <td>N</td>
+      <td>Used to specify the foreign key syntax style, either naming
+the foreign key constraint, or naming the foreign key itself. Most
+databases use the name_constraint syntax, but SAP DB is an exception to
+that and there may be others. Must be either "name_constraint" or
+"name_fk". Defaults to name_constraint.</td>
+    </tr>
+    <tr>
+      <td>use-fk-initially-deferred</td>
+      <td>N</td>
+      <td>Used to specify whether or not to use the INITIALLY DEFERRED
+option available in many databases when creating foreign keys. Not all
+databases support this option. When enabled and supported the foreign
+keys will not be checked until a transaction is committed, as opposed
+to checking foreign keys as operations are done inside a transaction.
+Must be set to "true" or "false". Defaults to true.</td>
+    </tr>
+    <tr>
+      <td>join-style</td>
+      <td>N</td>
+      <td>Used to specify the syntax to use when doing table joins in
+view-entity operations. Many databases are adopting the ANSI JOIN
+standard, but before that was introduced theta joins were much more
+common. Two theta join styles are supported: Oracle and MS SQL. Must be
+"ansi", "ansi-no-parenthesis", "theta-oracle" or "theta-mssql".
+Defaults to "ansi".</td>
+    </tr>
+    <tr>
+      <td>use-indices</td>
+      <td>N</td>
+      <td>Used to specify whether or not declared indices/indexes
+should be created in the database. Must be "true" or "false", defaults
+to "true".</td>
+    </tr>
+    <tr>
+      <td>check-indices-on-start</td>
+      <td>N</td>
+      <td>Used to specify whether or not indices/indexes should be
+checked when the server starts. Will add missing declared indexes. Note
+that many JDBC drivers do not support this sort of meta-data check and
+this may cause problems. Must be "true" or "false", defaults to "false".</td>
+    </tr>
+    <tr>
+      <td>alias-view-columns</td>
+      <td>N</td>
+      <td>This is used to compensate for a variation seen in some JDBC
+drivers where column names returned for aliased fields (especially in
+view entities) be either be the alias name, or the full text of what
+makes up that alias name. Most databases return the alias name, so this
+will generally be set to true. Must be "true" or "false", defaults to
+"true".</td>
+    </tr>
+  </tbody>
 </table>
-
 <br>
-<table cellpadding="2" cellspacing="0" border="1">
-<tr>
-    <td><b>Sub-Element&nbsp;Name</b></td>
-    <td><b>How&nbsp;Many</b></td>
-    <td><b>Description</b></td>
-</tr>
-<tr>
-    <td>sql-load-path</td><td>0 to many</td>
-    <td>Used to specify a list of full paths to directories that will be searched for XML and SQL files to import
-    into the data source by the <b><code>install</code></b> page in the WebTools webapp.
-    Each tag has two attributes: path for the path location, and prepend-env to optionally specify
-    a Java environment property to prepend to the specified path.</td>
-</tr>
-<tr>
-    <td>inline-jdbc</td><td>0 or 1</td>
-    <td>Used to specify the JDBC parameters to be used either by the connection pool or if no connection pool
-    is available then by directly loading the driver (very slow). You must specify
-    either inline-jdbc or jndi-jdbc, but not both, for the datasource.</td>
-</tr>
-<tr>
-    <td>jndi-jdbc</td><td>0 or 1</td>
-    <td>Used to specify the jndi-server and jndi-name to get a Connection or XAConnection
-    from JNDI. You must specify either inline-jdbc or jndi-jdbc, but not both, for the datasource.</td>
-</tr>
-<tr>
-    <td>ANY</td><td>0 or 1</td>
-    <td>Any tag may go inside the datasource tag to specify parameters for other
-    GenericHelper implementations. These will not be checked at load time unless
-    the DTD is modified to describe them.</td>
-</tr>
+<table border="1" cellpadding="2" cellspacing="0">
+  <tbody>
+    <tr>
+      <td><b>Sub-Element&nbsp;Name</b></td>
+      <td><b>How&nbsp;Many</b></td>
+      <td><b>Description</b></td>
+    </tr>
+    <tr>
+      <td>sql-load-path</td>
+      <td>0 to many</td>
+      <td>Used to specify a list of full paths to directories that will
+be searched for XML and SQL files to import into the data source by the
+      <b><code>install</code></b> page in the WebTools webapp. Each tag
+has two attributes: path for the path location, and prepend-env to
+optionally specify a Java environment property to prepend to the
+specified path.</td>
+    </tr>
+    <tr>
+      <td>inline-jdbc</td>
+      <td>0 or 1</td>
+      <td>Used to specify the JDBC parameters to be used either by the
+connection pool or if no connection pool is available then by directly
+loading the driver (very slow). You must specify either inline-jdbc or
+jndi-jdbc, but not both, for the datasource.</td>
+    </tr>
+    <tr>
+      <td>jndi-jdbc</td>
+      <td>0 or 1</td>
+      <td>Used to specify the jndi-server and jndi-name to get a
+Connection or XAConnection from JNDI. You must specify either
+inline-jdbc or jndi-jdbc, but not both, for the datasource.</td>
+    </tr>
+    <tr>
+      <td>ANY</td>
+      <td>0 or 1</td>
+      <td>Any tag may go inside the datasource tag to specify
+parameters for other GenericHelper implementations. These will not be
+checked at load time unless the DTD is modified to describe them.</td>
+    </tr>
+  </tbody>
 </table>
-
-<p class="contenttext">The <b><code>inline-jdbc</code></b> tag has the following attributes:</p>
-<table cellpadding="2" cellspacing="0" border="1">
-<tr>
-    <td><b>Attribute&nbsp;Name</b></td>
-    <td><b>Required?</b></td>
-    <td><b>Description</b></td>
-</tr>
-<tr>
-    <td>jdbc-driver</td><td>Y</td>
-    <td>The JDBC driver class for the database.</td>
-</tr>
-<tr>
-    <td>jdbc-uri</td><td>Y</td>
-    <td>The URI used to specify the type and location of the database.</td>
-</tr>
-<tr>
-    <td>jdbc-username</td><td>Y</td>
-    <td>The username to connect to the database as.</td>
-</tr>
-<tr>
-    <td>jdbc-password</td><td>Y</td>
-    <td>The username's password.</td>
-</tr>
-<tr>
-    <td>isolation-level</td><td>N</td>
-    <td>This is used by Tyrex to specify the transaction isolation level. 
-    The standard JDBC transaction isolation levels are available:<br>
-    <ul>
-        <li>"None"
-        <li>"ReadCommitted"
-        <li>"ReadUncommitted"
-        <li>"RepeatableRead"
-        <li>"Serializable"
-    </ul>
-    </td>
-</tr>
+<p class="contenttext">The <b><code>inline-jdbc</code></b> tag has the
+following attributes:</p>
+<table border="1" cellpadding="2" cellspacing="0">
+  <tbody>
+    <tr>
+      <td><b>Attribute&nbsp;Name</b></td>
+      <td><b>Required?</b></td>
+      <td><b>Description</b></td>
+    </tr>
+    <tr>
+      <td>jdbc-driver</td>
+      <td>Y</td>
+      <td>The JDBC driver class for the database.</td>
+    </tr>
+    <tr>
+      <td>jdbc-uri</td>
+      <td>Y</td>
+      <td>The URI used to specify the type and location of the database.</td>
+    </tr>
+    <tr>
+      <td>jdbc-username</td>
+      <td>Y</td>
+      <td>The username to connect to the database as.</td>
+    </tr>
+    <tr>
+      <td>jdbc-password</td>
+      <td>Y</td>
+      <td>The username's password.</td>
+    </tr>
+    <tr>
+      <td>isolation-level</td>
+      <td>N</td>
+      <td>This is used by Tyrex to specify the transaction isolation
+level. The standard JDBC transaction isolation levels are available:<br>
+      <ul>
+        <li>"None" </li>
+        <li>"ReadCommitted" </li>
+        <li>"ReadUncommitted" </li>
+        <li>"RepeatableRead" </li>
+        <li>"Serializable" </li>
+      </ul>
+      </td>
+    </tr>
+  </tbody>
 </table>
-
-<p class="contenttext">The <b><code>jndi-jdbc</code></b> tag has the following attributes:</p>
-<table cellpadding="2" cellspacing="0" border="1">
-<tr>
-    <td><b>Attribute&nbsp;Name</b></td>
-    <td><b>Required?</b></td>
-    <td><b>Description</b></td>
-</tr>
-<tr>
-    <td>jndi-server-name</td><td>Y</td>
-    <td>The name of the JNDI Server to use as configured in this file
-    with the jndi-server tag, described above.</td>
-</tr>
-<tr>
-    <td>jndi-name</td><td>Y</td>
-    <td>The name of the Connection or XAConnection object in JNDI.</td>
-</tr>
+<p class="contenttext">The <b><code>jndi-jdbc</code></b> tag has the
+following attributes:</p>
+<table border="1" cellpadding="2" cellspacing="0">
+  <tbody>
+    <tr>
+      <td><b>Attribute&nbsp;Name</b></td>
+      <td><b>Required?</b></td>
+      <td><b>Description</b></td>
+    </tr>
+    <tr>
+      <td>jndi-server-name</td>
+      <td>Y</td>
+      <td>The name of the JNDI Server to use as configured in this file
+with the jndi-server tag, described above.</td>
+    </tr>
+    <tr>
+      <td>jndi-name</td>
+      <td>Y</td>
+      <td>The name of the Connection or XAConnection object in JNDI.</td>
+    </tr>
+  </tbody>
 </table>
-
-<p class="contenttext">The data source retrieved from JNDI should be pooled and transactional, with 
-connections already enlisted if a JTA transaction has been started. It can be 
-either a DataSource or an XADataSource object.</p>
-
-<p class="contenttext">If the JNDI elements are not specified the ConnectionFactory will get the
+<p class="contenttext">The data source retrieved from JNDI should be
+pooled and transactional, with connections already enlisted if a JTA
+transaction has been started. It can be either a DataSource or an
+XADataSource object.</p>
+<p class="contenttext">If the JNDI elements are not specified the
+ConnectionFactory will get the
 JDBC parameters from entityengine.xml file and try to use Tyrex for the
-transaction manager and connection pool. If Tyrex is not available the Entity
-Engine will hobble along creating a JDBC connection manually each time one is
+transaction manager and connection pool. If Tyrex is not available the
+Entity
+Engine will hobble along creating a JDBC connection manually each time
+one is
 requested. A warning will be printed when this happens.</p>
-
 </body>
 </html>

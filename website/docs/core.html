@@ -2,155 +2,180 @@
 <html>
 <head>
   <title>The Open For Business Project: Core Overview</title>
-  <link rel="stylesheet" href="http://www.ofbiz.org/maincss.css" type="text/css">
+  <link rel="stylesheet" href="http://www.ofbiz.org/maincss.css"
+ type="text/css">
 </head>
 <body>
-
-<table width='100%'>
-  <tr>
-    <td width='50%' align='left' valign='center'>
-        <a href="http://www.ofbiz.org"><img src="http://www.ofbiz.org/images/ofbiz_logo.jpg"  border="0" alt='The Open For Business Project'></a>
-    </td>
-    <td width='50%' align='right' valign='center'>
-        <a href="http://sf.net/projects/ofbiz"><img src="http://sourceforge.net/sflogo.php?group_id=27173" width="88" height="31" border="0" alt="SourceForge Logo"></a> 
-        <a href="http://www.ofbiz.org"><img src="http://www.ofbiz.org/images/ofbiz_powered.gif" width="88" border="0"></a>
-    </td>
-  </tr>
+<table width="100%">
+  <tbody>
+    <tr>
+      <td align="left" valign="center" width="50%"> <a
+ href="http://www.ofbiz.org"><img
+ src="http://www.ofbiz.org/images/ofbiz_logo.jpg"
+ alt="The Open For Business Project" border="0"></a> </td>
+      <td align="right" valign="center" width="50%"> <a
+ href="http://sf.net/projects/ofbiz"><img
+ src="http://sourceforge.net/sflogo.php?group_id=27173"
+ alt="SourceForge Logo" border="0" height="31" width="88"></a> <a
+ href="http://www.ofbiz.org"><img
+ src="http://www.ofbiz.org/images/ofbiz_powered.gif" border="0"
+ width="88"></a> </td>
+    </tr>
+  </tbody>
 </table>
-<hr class='sepbar'>
-
+<hr class="sepbar">
 <h2 align="center">The Open For Business Project: Core Overview</h2>
- 
-<div class='contenttext'>Written By: David E. Jones, <a href="mailto:jonesde@ofbiz.org">jonesde@ofbiz.org</a></div>
-<div class='contenttext'>Last Updated: January 11, 2003</div>
-<!-- $Id: core.html,v 1.1 2003/08/18 23:45:31 jonesde Exp $ -->
-
-<hr class='sepbar'>
+<div class="contenttext">Written by: David E. Jones, <a
+ href="mailto:jonesde@ofbiz.org">jonesde@ofbiz.org</a></div>
+<div class="contenttext">Edited by: Les Austin<br>
+Last Updated: August 05, 2004</div>
+<!-- $Id: core.html,v 1.2 2004/08/06 23:57:18 jonesde Exp $ -->
+<hr class="sepbar">
 <h3>Table of Contents</h3>
-
 <ul>
-  <li><a href="#Related_Documents">Related Documents</a>
+  <li><a href="#Related_Documents">Related Documents</a> </li>
   <li><a href="#Dependencies">Module Dependencies</a>
+  </li>
 </ul>
-
-<hr class='sepbar'>
-
+<hr class="sepbar">
 <h3><a name="Related_Documents">Related Documents:</a></h3>
-<hr class='sepbar'>
+<hr class="sepbar">
 <ul>
-  <li class='contenttext'><a href="api/index.html">Core JavaDoc</a></li>
-  <li class='contenttext'><a href="coreconfig.html">Core Configuration Guide</a></li>
-  <li class='contenttext'><a href="entity.html">Entity Engine Guide</a></li>
-  <li class='contenttext'><a href="entityconfig.html">Entity Engine Configuration Guide</a></li>
-  <li class='contenttext'><a href="services.html">Service Engine Guide</a></li>
-  <li class='contenttext'><a href="serviceconfig.html">Service Engine Configuration Guide</a></li>
-  <li class='contenttext'><a href="workflow.html">Workflow Engine Guide</a></li>
-  <li class='contenttext'><a href="rules.html">Rule Engine Guide</a></li>
-  <li class='contenttext'><a href="datafile.html">Data File Guide</a></li>
-  <li class='contenttext'><a href="minilang.html">Mini-Languages Guide</a></li>
-  <li class='contenttext'><a href="control.html">Control Servlet Guide</a></li>
-  <li class='contenttext'><a href="regions.html">Regions Guide</a></li>
-  <li class='contenttext'><a href="taglib.html">JSP Tag Library Guide</a></li>
-  <li class='contenttext'>General XML Definitions
+  <li class="contenttext"><a href="api/index.html">Core JavaDoc</a></li>
+  <li class="contenttext"><a href="coreconfig.html">Core Configuration
+Guide</a></li>
+  <li class="contenttext"><a href="entity.html">Entity Engine Guide</a></li>
+  <li class="contenttext"><a href="entityconfig.html">Entity Engine
+Configuration Guide</a></li>
+  <li class="contenttext"><a href="services.html">Service Engine Guide</a></li>
+  <li class="contenttext"><a href="serviceconfig.html">Service Engine
+Configuration Guide</a></li>
+  <li class="contenttext"><a href="workflow.html">Workflow Engine Guide</a></li>
+  <li class="contenttext"><a href="rules.html">Rule Engine Guide</a></li>
+  <li class="contenttext"><a href="datafile.html">Data File Guide</a></li>
+  <li class="contenttext"><a href="minilang.html">Mini-Languages Guide</a></li>
+  <li class="contenttext"><a href="control.html">Control Servlet Guide</a></li>
+  <li class="contenttext"><a href="regions.html">Regions Guide</a></li>
+  <li class="contenttext"><a href="taglib.html">JSP Tag Library Guide</a></li>
+  <li class="contenttext">General XML Definitions
+    <ul>
+      <li class="contenttext"><a href="dtds/jndi-config.dtd">JNDI
+Server Config DTD (jndiservers.xml)</a></li>
+      <li class="contenttext"><a href="dtds/security-config.dtd">Security
+Config DTD (security.xml)</a></li>
+    </ul>
+  </li>
+  <li class="contenttext">Entity Engine XML Definitions
+    <ul>
+      <li class="contenttext"><a href="dtds/entity-config.dtd">Entity
+Config DTD (entityengine.xml)</a></li>
+      <li class="contenttext"><a href="dtds/entitygroup.dtd">Entity
+Group DTD (entitygroup.xml)</a></li>
+      <li class="contenttext"><a href="dtds/entitymodel.dtd">Entity
+Model DTD (entitymodel_*.xml)</a></li>
+      <li class="contenttext"><a href="dtds/fieldtypemodel.dtd">Field
+Type Model DTD (fieldtype*.xml)</a></li>
+    </ul>
+  </li>
+  <li class="contenttext">Service Engine XML Definitions
+    <ul>
+      <li class="contenttext"><a href="dtds/service-config.dtd">Service
+Config DTD (serviceengine.xml)</a></li>
+      <li class="contenttext"><a href="dtds/services.dtd">Service
+Definition DTD (services_*.xml)</a></li>
+      <li class="contenttext"><a href="dtds/service-eca.dtd">Service
+ECAs DTD (secas_*.xml)</a></li>
+      <li class="contenttext"><a href="dtds/service-group.dtd">Service
+Groups DTD (groups_*.xml)</a></li>
+    </ul>
+  </li>
+  <li class="contenttext">Mini-Language XML Definitions
+    <ul>
+      <li class="contenttext"><a href="dtds/simple-methods.dtd">Simple
+Methods DTD</a></li>
+    </ul>
+  </li>
+  <li class="contenttext">Webapp Framework XML Definitions
+    <ul>
+      <li class="contenttext"><a href="dtds/site-conf.dtd">Site Config
+DTD (controller.xml)</a></li>
+      <li class="contenttext"><a href="dtds/regions.dtd">Regions
+Definition DTD (regions.xml)</a></li>
+    </ul>
+  </li>
+</ul>
+<hr class="sepbar">
+<h3><a name="Dependencies">Module Dependencies</a></h3>
+<hr class="sepbar">
+<p class="contenttext">Here is a list of the core modules and their
+dependencies on other modules.
+Note that most of the dependencies are compile-time dependencies, but
+some are
+run-time dependencies handled through configured dynamic class loading.
+An example of this is how the Service Engine invokes Workflows. All
+dependencies
+are compile-time unless specified as run-time. Run-time dependencies
+are considered optional and are only required if used.<br>
+</p>
+<ul>
+  <li><b>share</b></li>
   <ul>
-    <li class='contenttext'><a href="dtds/jndi-config.dtd">JNDI Server Config DTD (jndiservers.xml)</a></li>
-    <li class='contenttext'><a href="dtds/security-config.dtd">Security Config DTD (security.xml)</a></li>
+    <li>no dependencies</li>
   </ul>
-  <li class='contenttext'>Entity Engine XML Definitions
+  <li><b>entity</b></li>
   <ul>
-    <li class='contenttext'><a href="dtds/entity-config.dtd">Entity Config DTD (entityengine.xml)</a></li>
-    <li class='contenttext'><a href="dtds/entitygroup.dtd">Entity Group DTD (entitygroup.xml)</a></li>
-    <li class='contenttext'><a href="dtds/entitymodel.dtd">Entity Model DTD (entitymodel_*.xml)</a></li>
-    <li class='contenttext'><a href="dtds/fieldtypemodel.dtd">Field Type Model DTD (fieldtype*.xml)</a></li>
+    <li>share</li>
   </ul>
-  <li class='contenttext'>Service Engine XML Definitions
+  <li><b>extutil</b></li>
   <ul>
-    <li class='contenttext'><a href="dtds/service-config.dtd">Service Config DTD (serviceengine.xml)</a></li>
-    <li class='contenttext'><a href="dtds/services.dtd">Service Definition DTD (services_*.xml)</a></li>
-    <li class='contenttext'><a href="dtds/service-eca.dtd">Service ECAs DTD (secas_*.xml)</a></li>
-    <li class='contenttext'><a href="dtds/service-group.dtd">Service Groups DTD (groups_*.xml)</a></li>
+    <li>share</li>
+    <li>entity</li>
   </ul>
-  <li class='contenttext'>Mini-Language XML Definitions
+  <li><b>service</b></li>
   <ul>
-    <li class='contenttext'><a href="dtds/simple-methods.dtd">Simple Methods DTD</a></li>
+    <li>share</li>
+    <li>entity</li>
+    <li>extutil</li>
+    <li>workflow (run-time)</li>
+    <li>rules (run-time)</li>
   </ul>
-  <li class='contenttext'>Webapp Framework XML Definitions
+  <li><b>extentity</b></li>
   <ul>
-    <li class='contenttext'><a href="dtds/site-conf.dtd">Site Config DTD (controller.xml)</a></li>
-    <li class='contenttext'><a href="dtds/regions.dtd">Regions Definition DTD (regions.xml)</a></li>
+    <li>share</li>
+    <li>entity</li>
+    <li>extutil</li>
+    <li>service</li>
+  </ul>
+  <li><b>minilang</b></li>
+  <ul>
+    <li>share</li>
+    <li>entity</li>
+    <li>service</li>
+  </ul>
+  <li><b>webapp</b></li>
+  <ul>
+    <li>share</li>
+    <li>entity</li>
+    <li>extutil</li>
+    <li>service</li>
+    <li>minilang</li>
+  </ul>
+  <li><b>workflow</b></li>
+  <ul>
+    <li>share</li>
+    <li>entity</li>
+    <li>extutil</li>
+    <li>service</li>
+  </ul>
+  <li><b>rules</b></li>
+  <ul>
+    <li>share</li>
+    <li>entity</li>
+  </ul>
+  <li><b>datafile</b></li>
+  <ul>
+    <li>share</li>
   </ul>
 </ul>
-
-<hr class='sepbar'>
-<h3><a name="Dependencies">Module Dependencies</a></h3>
-<hr class='sepbar'>
-<p class='contenttext'>Here is a list of the core modules and their dependencies on other modules.
-Note that most of the dependencies are compile-time dependencies, but some are
-run-time dependencies handled through configured dynamic class loading. An 
-example of this is how the Service Engine invokes Workflows. All dependencies
-are compile-time unless specified as run-time. Run-time dependencies are 
-considered optional and are only required if used.</p>
-
-<UL>
-<LI><B>share</B></LI>
-    <UL>
-    <LI>no dependencies</LI>
-    </UL>
-<LI><B>entity</B></LI>
-    <UL>
-    <LI>share</LI>
-    </UL>
-<LI><B>extutil</B></LI>
-    <UL>
-    <LI>share</LI>
-    <LI>entity</LI>
-    </UL>
-<LI><B>service</B></LI>
-    <UL>
-    <LI>share</LI>
-    <LI>entity</LI>
-    <LI>extutil</LI>
-    <LI>workflow (run-time)</LI>
-    <LI>rules (run-time)</LI>
-    </UL>
-<LI><B>extentity</B></LI>
-    <UL>
-    <LI>share</LI>
-    <LI>entity</LI>
-    <LI>extutil</LI>
-    <LI>service</LI>
-    </UL>
-<LI><B>minilang</B></LI>
-    <UL>
-    <LI>share</LI>
-    <LI>entity</LI>
-    <LI>service</LI>
-    </UL>
-<LI><B>webapp</B></LI>
-    <UL>
-    <LI>share</LI>
-    <LI>entity</LI>
-    <LI>extutil</LI>
-    <LI>service</LI>
-    <LI>minilang</LI>
-    </UL>
-<LI><B>workflow</B></LI>
-    <UL>
-    <LI>share</LI>
-    <LI>entity</LI>
-    <LI>extutil</LI>
-    <LI>service</LI>
-    </UL>
-<LI><B>rules</B></LI>
-    <UL>
-    <LI>share</LI>
-    <LI>entity</LI>
-    </UL>
-<LI><B>datafile</B></LI>
-    <UL>
-    <LI>share</LI>
-    </UL>
-</UL>
-
 </body>
 </html>

@@ -1,20 +1,23 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN">
 <html>
 <head>
-<!--  $Id: setup.html,v 1.10 2004/06/24 02:16:33 jonesde Exp $ -->
-<title>The Open For Business Project: General Setup</title>
+<!--  $Id: setup.html,v 1.11 2004/08/06 23:57:19 jonesde Exp $ -->
+  <title>The Open For Business Project: General Setup</title>
 </head>
-
 <body>
-
 <h2 align="center">The Open For Business Project: General Setup</h2>
-
 <br>
-  Written By: David E. Jones and Andy Zeneski<br>
-  Email: <a href="mailto:jonesde@ofbiz.org">jonesde@ofbiz.org</a> or <a href="mailto:jaz@ofbiz.org">jaz@ofbiz.org</a> <br>
-  Open For Business Site: <a href="http://www.ofbiz.org/">http://www.ofbiz.org</a> <br>
-<a href="http://sf.net/projects/ofbiz"> <img src="http://sourceforge.net/sflogo.php?group_id=27173" border="0" alt="SourceForge Logo"></a> <br>
-  Founders and Lead Architects: David E. Jones &amp; Andy Zeneski <br>
-  Last Updated: March 12, 2004<br>
+Written by: David E. Jones and Andy Zeneski<br>
+Email: <a href="mailto:jonesde@ofbiz.org">jonesde@ofbiz.org</a> or <a
+ href="mailto:jaz@ofbiz.org">jaz@ofbiz.org</a> <br>
+Edited by Les Austin<br>
+Open For Business Site: <a href="http://www.ofbiz.org/">http://www.ofbiz.org</a>&nbsp;
+<br>
+<a href="http://sf.net/projects/ofbiz"> <img
+ src="http://sourceforge.net/sflogo.php?group_id=27173"
+ alt="SourceForge Logo" border="0"></a> <br>
+Founders and Lead Architects: David E. Jones &amp; Andy Zeneski <br>
+Last Updated: August 04, 2004<br>
 <h3 align="left"><a name="Table of Contents">Table of Contents</a></h3>
 <ul>
   <li><a href="#Introduction">Introduction</a></li>
@@ -23,119 +26,159 @@
   <li><a href="#Database_Setup">Database Setup</a></li>
   <li><a href="#J2EE_Containers">J2EE Containers</a></li>
 </ul>
-
 <hr>
 <h3><a name="Introduction">Introduction</a></h3>
 <hr>
-<p>This document describes an initial setup process and basic configuration options
-for the Open For Business Project. For more detail see related documents such
-as the OFBiz Framework Configuration Guide, the Entity Engine Configuration Guide,
+<p>This document describes an initial setup process and basic
+configuration options
+for the Open For Business Project. For more detail see related
+documents such
+as the OFBiz Framework Configuration Guide, the Entity Engine
+Configuration Guide,
 the Service Engine Configuration Guide, and other related documents.</p>
 <br>
-
 <hr>
 <h3><a name="Quick_Easy_Setup">Quick &amp; Easy Setup</a></h3>
 <hr>
-
 <p>You can get up and running quickly by downloading the OFBiz Complete
 distribution and following some simple instructions. For more
 options and explanations, see the rest of this document.</p>
 <ol>
-  <li>Download and install the Java 2 v1.4 or later JDK/J2SDK (not the JRE) from <a href='java.sun.com'>Sun's Java site</a>, and make sure your JAVA_HOME environment variable is set to this JDK after installation</li>
-  <li>Download the OFBiz Apps archive and unzip it in the directory of your choice.
-    This should create one sub-directory: <b>ofbiz</b>. This will be the OFBIZ_HOME location.</li>
-  <li>Start OFBiz with embedded Jetty by going into the <b>ofbiz</b> directory and then running
-    <b>&quot;startofbiz.bat&quot;</b> (or &quot;%JAVA_HOME%\bin\java -jar ofbiz.jar&quot;) for Windows,
-    or <b>&quot;./startofbiz.sh&quot;</b> (or &quot;$JAVA_HOME/bin/java -jar ofbiz.jar&quot;) for Linux/Unix.</li>
-  <li>Open a browser and go to <b><a href='http://127.0.0.1:8080/ecommerce/control/main'>http://127.0.0.1:8080/ecommerce</a></b> for the ecommerce application or
-      <b><a href='https://127.0.0.1:8443/webtools/control/main'>https://127.0.0.1:8443/webtools</a></b> for the WebTools application or
-      <b><a href='https://127.0.0.1:8443/catalog/control/main'>https://127.0.0.1:8443/catalog</a></b> for the Catalog Manager application.</li>
-  <li>The default administrative account is username: "admin", password: "ofbiz".</li>
-  <li>Have fun with it! You are running on a Java database, which isn't the best for deployment, but it's great for a demo...</li>
+  <li>Download and install the Java 2 v1.4 or later JDK/J2SDK (not the
+JRE) from <a href="java.sun.com">Sun's Java site</a>, and make sure
+your JAVA_HOME environment variable is set to this JDK after
+installation</li>
+  <li>Download the OFBiz Apps archive and unzip it in the directory of
+your choice. This should create one sub-directory: <b>ofbiz</b>. This
+will be the OFBIZ_HOME location.</li>
+  <li>Start OFBiz with embedded Jetty by going into the <b>ofbiz</b>
+directory and then running <b>"startofbiz.bat"</b> (or
+"%JAVA_HOME%\bin\java -jar ofbiz.jar") for Windows, or <b>"./startofbiz.sh"</b>
+(or "$JAVA_HOME/bin/java -jar ofbiz.jar") for Linux/Unix.</li>
+  <li>Open a browser and go to <b><a
+ href="http://127.0.0.1:8080/ecommerce/control/main">http://127.0.0.1:8080/ecommerce</a></b>
+for the ecommerce application or <b><a
+ href="https://127.0.0.1:8443/webtools/control/main">https://127.0.0.1:8443/webtools</a></b>
+for the WebTools application or <b><a
+ href="https://127.0.0.1:8443/catalog/control/main">https://127.0.0.1:8443/catalog</a></b>
+for the Catalog Manager application.</li>
+  <li>The default administrative account is username: "admin",
+password: "ofbiz".</li>
+  <li>Have fun with it! You are running on a Java database, which isn't
+the best for deployment, but it's great for a demo...</li>
   <li>For more detailed options and configuration information, read on!</li>
 </ol>
-
 <hr>
 <h3><a name="Building">Building From CVS</a></h3>
 <hr>
-
-<p>When building from CVS you will need to have Ant (see http://ant.apache.org) installed and setup properly in addition to a Java 1.4 or newer J2SDK as mentioned above.</p>
-<p>In the directory where you want OFBiz to be do a CVS checkout of the ofbiz module on the java.net servers. For example: </p>
-
+<p>When building from CVS you will need to have Ant (see
+http://ant.apache.org) installed and setup properly in addition to a
+Java 1.4 or newer J2SDK as mentioned above.</p>
+<p>In the directory where you want OFBiz to be, do a CVS checkout of
+the ofbiz module on the java.net servers. For example: </p>
 <p><code>cvs -z3 -d:pserver:guest@cvs.dev.java.net:/cvs login</code></p>
-<p>When using the guest account, use an empty password (ie just press enter when it asks for a password).</p>
+<p>When using the guest account, use an empty password (ie just press
+enter when it asks for a password).</p>
 <p><code>cvs -z3 -d:pserver:guest@cvs.dev.java.net:/cvs co ofbiz</code></p>
-
-<p>For information on connecting to CVS <a href="https://ofbiz.dev.java.net/source/browse/ofbiz/" target="_blank">click here.</a></p>
-<p>Now go into the "ofbiz" directory and run "ant". It will complile all modules and leave you an
-executable jar (ofbiz.jar) in the "ofbiz" directory. 
-
-<p>To load the seed data run &quot;ant run-install&quot;, or &quot;$JAVA_HOME/bin/java -jar ofbiz.jar install&quot;, or &quot;%JAVA_HOME%\bin\java -jar ofbiz.jar install&quot;</p>
-
-<p>To start the server run &quot;ant run-install&quot;, or &quot;$JAVA_HOME/bin/java -jar ofbiz.jar&quot;,or &quot;%JAVA_HOME%\bin\java -jar ofbiz.jar&quot;</p>
-
-<p>Another build option in the Ant build script that is useful is "ant clean". That will clean out all built classes allowing you to run "ant" again to get a clean build.
-If you are running into funny errors after updating from CVS in the future, give this a try first.</p>
-
+<p>For information on connecting to CVS <a
+ href="https://ofbiz.dev.java.net/source/browse/ofbiz/" target="_blank">click
+here.</a></p>
+<p>Now go into the "ofbiz" directory and run "ant". It will compile all
+modules and leave you an
+executable jar (ofbiz.jar) in the "ofbiz" directory. </p>
+<p>To load the seed data, run "ant run-install", or
+"$JAVA_HOME/bin/java -jar ofbiz.jar install", or "%JAVA_HOME%\bin\java
+-jar ofbiz.jar install"</p>
+<p>To start the server run "ant run-install", or "$JAVA_HOME/bin/java
+-jar ofbiz.jar",or "%JAVA_HOME%\bin\java -jar ofbiz.jar"</p>
+<p>Another build option in the Ant build script that is useful is "ant
+clean". That will clean out all built classes allowing you to run "ant"
+again to get a clean build.
+If you are running into funny errors after updating from CVS in the
+future, give this a try first.</p>
 <hr>
 <h3><a name="Database_Setup">Database Setup</a></h3>
 <hr>
-
 <p>Database setup is done in the entityengine.xml file. There are many
-options there which are described in the Entity Engine Configuration Guide.</p>
-
-<p>The OFBiz Apps archive comes with Hypersonic SQL, a Java database that
-runs in memory. This database is good for demonstration purposes because it is
-easy to setup and use. It is not meant to handle large data sets and does not
+options there which are described in the Entity Engine Configuration
+Guide.</p>
+<p>The OFBiz Apps archive comes with Hypersonic SQL, a Java database
+that
+runs in memory. This database is good for demonstration purposes
+because it is
+easy to setup and use. It is not meant to handle large data sets and
+does not
 provide the same performance or scalability that a major database would.</p>
-
-<p>There are many open source databases that will scale well and deliver good performance.
-The two most popular are MySQL Max DB (was SAP DB) and PostgreSQL. Postgres is a very full featured
-database with transaction support, foreign keys, stored procedures, et cetera. Max DB (SAP DB) is another good open source
+<p>There are many open source databases that will scale well and
+deliver good performance.
+The two most popular are MySQL Max DB (was SAP DB) and PostgreSQL.
+Postgres is a very full featured
+database with transaction support, foreign keys, stored procedures, et
+cetera. Max DB (SAP DB) is another good open source
 and it deserves special mention. SAP decided to start making it easier
-for users to use commercial databases instead of their own and open sourced their
-database, SAP DB. While maybe not as good in some ways as Oracle or some other commercial DBs it
-has many development and production features and performs very well with a very complete and advanced feature set.</p>
-
-<p>Commercial databases are also supported. If you have database licenses for other
-needs, or have major in-house familiarity with and support for a certain commercial
-database, then there is no reason not to take advantage of that. OFBiz has been tested
-with Oracle, Sybase, SQL Server and others and should work fine with any database that has a JDBC driver.</p>
-
-<p>There is no need to run any SQL scripts to create the tables or populate them
-with the default data. The entity engine can create missing tables or fields
-when the server starts up and does so if the appropriate property is set in the
-entityengine.xml file. This is the file that configures the servers for the
+for users to use commercial databases instead of their own and open
+sourced their
+database, SAP DB. While maybe not as good in some ways as Oracle or
+some other commercial DBs it
+has many development and production features and performs very well
+with a very complete and advanced feature set.</p>
+<p>Commercial databases are also supported. If you have database
+licenses for other
+needs, or have major in-house familiarity with and support for a
+certain commercial
+database, then there is no reason not to take advantage of that. OFBiz
+has been tested
+with Oracle, Sybase, SQL Server and others and should work fine with
+any database that has a JDBC driver.</p>
+<p>There is no need to run any SQL scripts to create the tables or
+populate them
+with the default data. The entity engine can create missing tables or
+fields
+when the server starts up and does so if the appropriate property is
+set in the
+entityengine.xml file. This is the file that configures the servers for
+the
 entity engine.</p>
-<p>For the table creation routine to work properly, the field types must be set
-up by specifying the corresponding fieldtypeXXX.xml (where XXX is the database
-name) file for the server in the entityengine.xml file. These fieldtypeXXX.xml
-files are located in the <b>ofbiz/components/entity/fieldtype</b> directory.</p>
-<p>Default data can be loaded automatically once the server has been started by
-going to a JSP, which is described above (ie the install page in WebTools).</p>
-
+<p>For the table creation routine to work properly, the field types
+must be set
+up. Do this by specifying the corresponding fieldtypeXXX.xml (where XXX
+is the database
+name) file for the server in the entityengine.xml file. These
+fieldtypeXXX.xml
+files are located in the <b>ofbiz/components/entity/fieldtype</b>
+directory.</p>
+<p>Default data can be loaded automatically once the server has been
+started by
+going to a JSP, which is described above (ie the install page in
+WebTools).</p>
 <hr>
 <h3><a name="J2EE_Containers">J2EE Containers</a></h3>
 <hr>
-
-<p>OFBiz comes and runs by default with Jetty for a Servlet/JSP container and
-JOTM for a transaction (JTA) manager. A patched version of Minerva (included in CVS)
-is the current preference for a transaction aware connection pool, though as
+<p>OFBiz comes and runs by default with Jetty for a Servlet/JSP
+container and
+JOTM for a transaction (JTA) manager. A patched version of Minerva
+(included in CVS)
+is the current preference for a transaction aware connection pool,
+though as
 other options are made available that may change.</p>
-
-<p>OFBiz can also be configured to run in different containers, but there may
-be issues with certain quirks that other containers have, especially with
-servlet containers. We have always been able to find work-arounds for these,
-but they also seem to keep on appearing, so that is just something to watch for.</p>
-
-<p>We are not maintaining sample configurations in CVS any more because it became
-too difficult to keep up with changes in new versions for a dozen different app
-servers. We may eventually start this again if there is sufficient demand and
-corresponding contributions. If you are looking for a good commercial J2EE app
-server, Orion is a good place to start, but we recommend trying out Jetty and JOTM
+<p>OFBiz can also be configured to run in different containers, but
+there may
+be issues with certain quirks that other containers have, especially
+with
+servlet containers. We have always been able to find work-arounds for
+these,
+but they also seem to keep on appearing, so that is just something to
+watch for.</p>
+<p>We are not maintaining sample configurations in CVS any more because
+it became
+too difficult to keep up with changes in new versions for a dozen
+different app
+servers. We may eventually start this again if there is sufficient
+demand and
+corresponding contributions. If you are looking for a good commercial
+J2EE app
+server, Orion is a good place to start, but we recommend trying out
+Jetty and JOTM
 and see if they meet your needs.</p>
-
 </body>
-
 </html>
-

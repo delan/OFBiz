@@ -1,66 +1,79 @@
 <!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN">
 <html>
 <head>
-  <meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1">
+  <meta http-equiv="Content-Type"
+ content="text/html; charset=iso-8859-1">
   <title>Open For Business Data File Guide</title>
-  <link rel="stylesheet" href="http://www.ofbiz.org/maincss.css" type="text/css">
+  <link rel="stylesheet" href="http://www.ofbiz.org/maincss.css"
+ type="text/css">
 </head>
 <body>
-
-<table width='100%'>
-  <tr>
-    <td width='50%' align='left' valign='center'>
-        <a href="http://www.ofbiz.org"><img src="http://www.ofbiz.org/images/ofbiz_logo.jpg"  border="0" alt='The Open For Business Project'></a>
-    </td>
-    <td width='50%' align='right' valign='center'>
-        <a href="http://sf.net/projects/ofbiz"><img src="http://sourceforge.net/sflogo.php?group_id=27173" width="88" height="31" border="0" alt="SourceForge Logo"></a> 
-        <a href="http://www.ofbiz.org"><img src="http://www.ofbiz.org/images/ofbiz_powered.gif" width="88" border="0"></a>
-    </td>
-  </tr>
+<table width="100%">
+  <tbody>
+    <tr>
+      <td align="left" valign="center" width="50%"> <a
+ href="http://www.ofbiz.org"><img
+ src="http://www.ofbiz.org/images/ofbiz_logo.jpg"
+ alt="The Open For Business Project" border="0"></a> </td>
+      <td align="right" valign="center" width="50%"> <a
+ href="http://sf.net/projects/ofbiz"><img
+ src="http://sourceforge.net/sflogo.php?group_id=27173"
+ alt="SourceForge Logo" border="0" height="31" width="88"></a> <a
+ href="http://www.ofbiz.org"><img
+ src="http://www.ofbiz.org/images/ofbiz_powered.gif" border="0"
+ width="88"></a> </td>
+    </tr>
+  </tbody>
 </table>
-<hr class='sepbar'>
-
-<h2 align="Center">The Open For Business Project: Data File Guide</h2>
- 
-<div class='contenttext'>Written By: David E. Jones, <a href="mailto:jonesde@ofbiz.org">jonesde@ofbiz.org</a></div>
-<div class='contenttext'>Last Updated: January 11, 2003</div>
-<!-- $Id: datafile.html,v 1.1 2003/08/18 23:45:31 jonesde Exp $ -->
-
-<hr class='sepbar'>
+<hr class="sepbar">
+<h2 align="center">The Open For Business Project: Data File Guide</h2>
+<div class="contenttext">Written by: David E. Jones, <a
+ href="mailto:jonesde@ofbiz.org">jonesde@ofbiz.org</a></div>
+<div class="contenttext">Edited by Les Austin<br>
+Last Updated: August 6, 2004<br>
+</div>
+<!-- $Id: datafile.html,v 1.2 2004/08/06 23:57:18 jonesde Exp $ -->
+<hr class="sepbar">
 <h3>Table of Contents</h3>
 <ul>
   <li><a href="#Related_Documents">Related Documents</a></li>
   <li><a href="#Introduction">Introduction</a> </li>
 </ul>
-<hr class='sepbar'>
+<hr class="sepbar">
 <h3><a name="#Related_Documents">Related Documents</a></h3>
 <ul>
   <li><a href="api/index.html">Core JavaDoc (including datafile)</a></li>
   <li><a href="/dtds/datafiles.dtd">Data Files Definition DTD</a></li>
 </ul>
-<hr class='sepbar'>
+<hr class="sepbar">
 <h3><a name="Introduction">Introduction</a> </h3>
-<hr class='sepbar'>
-
-<P>The Data File Library is a tool used to read and write "flat" files. It
-allows you to work with the flat file data in a more natural way using generic
-objects similar to the Entity Engine GenericValue object.</P>
-
-<P>The design is very similar to the Entity Engine in that there is an XML
-configuration file that is used to specify the format and structure of the flat
-file and a generic API used to deal with the records in the file. One major
-difference is that datafile records are hierarchical and a record can have
-various sub-records. The descriptor file is also structured this way so that
-each record type can have a parent record type.</P>
-
-<P>When the file is read the library will convert strings of various formats and
-styles into numbers, dates, etc. It also supports common flat-file formats such
-as zero padded numbers, implied fixed decimal point numbers, and dates with no 
-delimeters.</P>
-
-<P>Sorry about the lack of further documentation on this. For more info see the
-datafiles.dtd file, or throw us an email to let us know that there is further
-interest in documentation for this component.</P>
-
+<hr class="sepbar">
+<p>The Data File Library is a tool used to read and write "flat" files.
+It
+allows you to work with the flat file data in a more natural way using
+generic
+objects similar to the Entity Engine GenericValue object.</p>
+<p>The design is very similar to the Entity Engine in that there is an
+XML
+configuration file that is used to specify the format and structure of
+the flat
+file and a generic API used to deal with the records in the file. One
+major
+difference is that datafile records are hierarchical and a record can
+have
+various sub-records. The descriptor file is also structured this way so
+that
+each record type can have a parent record type.</p>
+<p>When the file is read the library will convert strings of various
+formats and
+styles into numbers, dates, etc. It also supports common flat-file
+formats such
+as zero padded numbers, implied fixed decimal point numbers, and dates
+with no delimeters.</p>
+<p>We apologize for the lack of further documentation on this. For more
+info see the
+datafiles.dtd file, or throw us an email to let us know that there is
+further
+interest in documentation for this component.</p>
 </body>
 </html>
