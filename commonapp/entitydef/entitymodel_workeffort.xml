@@ -521,6 +521,180 @@
         <key-map field-name="workEffortId"/>
       </relation>
     </entity>
+    <view-entity entity-name="WorkEffortAndFullfillment"
+            package-name="org.ofbiz.commonapp.order.request"
+            title="WorkEffort Requirement View Entity">
+      <member-entity entity-alias="WRF" entity-name="WorkRequirementFulfillment"/>
+      <member-entity entity-alias="WEF" entity-name="WorkEffort"/>
+      <member-entity entity-alias="REQ" entity-name="Requirement"/>
+      <alias entity-alias="WRF" name="requirementId"/>
+      <alias entity-alias="WRF" name="workEffortId"/>
+      <alias entity-alias="WEF" name="workEffortTypeId"/>
+      <alias entity-alias="WEF" name="workEffortParentId"/>
+      <alias entity-alias="WEF" name="workflowPackageId"/>
+      <alias entity-alias="WEF" name="workflowPackageVersion"/>
+      <alias entity-alias="WEF" name="workflowProcessId"/>
+      <alias entity-alias="WEF" name="workflowProcessVersion"/>
+      <alias entity-alias="WEF" name="workflowActivityId"/>
+      <alias entity-alias="WEF" name="currentStatusId"/>
+      <alias entity-alias="WEF" name="lastStatusUpdate"/>
+      <alias entity-alias="WEF" name="universalId"/>
+      <alias entity-alias="WEF" name="scopeEnumId"/>
+      <alias entity-alias="WEF" name="priority"/>
+      <alias entity-alias="WEF" name="workEffortName"/>
+      <alias entity-alias="WEF" name="workEffortDescription" field="description"/>
+      <alias entity-alias="WEF" name="locationDesc"/>
+      <alias entity-alias="WEF" name="revisionNumber"/>
+      <alias entity-alias="WEF" name="fixedAssetId"/>
+      <alias entity-alias="WEF" name="facilityId"/>
+      <alias entity-alias="WEF" name="createdDate"/>
+      <alias entity-alias="WEF" name="createdByPartyId"/>
+      <alias entity-alias="WEF" name="lastModifiedDate"/>
+      <alias entity-alias="WEF" name="lastModifiedByPartyId"/>
+      <alias entity-alias="WEF" name="estimatedStartDate"/>
+      <alias entity-alias="WEF" name="estimatedCompletionDate"/>
+      <alias entity-alias="WEF" name="estimatedMilliSeconds"/>
+      <alias entity-alias="WEF" name="totalMilliSecondsAllowed"/>
+      <alias entity-alias="WEF" name="totalMoneyAllowed"/>
+      <alias entity-alias="WEF" name="moneyUomId"/>
+      <alias entity-alias="WEF" name="actualStartDate"/>
+      <alias entity-alias="WEF" name="actualCompletionDate"/>
+      <alias entity-alias="WEF" name="actualMilliSeconds"/>
+      <alias entity-alias="WEF" name="specialTerms"/>
+      <alias entity-alias="WEF" name="timeTransparency"/>
+      <alias entity-alias="WEF" name="infoUrl"/>
+      <alias entity-alias="WEF" name="recurrenceInfoId"/>
+      <alias entity-alias="WEF" name="runtimeDataId"/>
+      <alias entity-alias="WEF" name="noteId"/>
+      <alias entity-alias="WEF" name="serviceLoaderName"/>
+      <alias entity-alias="REQ" name="requirementTypeId"/>
+      <alias entity-alias="REQ" name="facilityId"/>
+      <alias entity-alias="REQ" name="deliverableId"/>
+      <alias entity-alias="REQ" name="fixedAssetId"/>
+      <alias entity-alias="REQ" name="productId"/>
+      <alias entity-alias="REQ" name="requirementDescription" field="description"/>
+      <alias entity-alias="REQ" name="requirementCreationDate"/>
+      <alias entity-alias="REQ" name="requiredByDate"/>
+      <alias entity-alias="REQ" name="quantity"/>
+      <alias entity-alias="REQ" name="story"/>
+      <alias entity-alias="REQ" name="reason"/>
+      <view-link entity-alias="WEF" rel-entity-alias="WRF">
+        <key-map field-name="workEffortId"/>
+      </view-link>
+      <relation type="one-nofk" rel-entity-name="Requirement">
+        <key-map field-name="requirementId"/>
+      </relation>
+      <relation type="one-nofk" rel-entity-name="WorkEffortType">
+        <key-map field-name="workEffortTypeId"/>
+      </relation>
+      <relation type="one-nofk" title="Parent" rel-entity-name="WorkEffort">
+        <key-map field-name="workEffortParentId" rel-field-name="workEffortId"/>
+      </relation>
+      <relation type="many" rel-entity-name="WorkEffortTypeAttr">
+        <key-map field-name="workEffortTypeId"/>
+      </relation>
+      <relation type="many" rel-entity-name="WorkEffortAttribute">
+        <key-map field-name="workEffortId"/>
+      </relation>
+      <relation type="many" rel-entity-name="WorkOrderItemFulfillment">
+        <key-map field-name="workEffortId"/>
+      </relation>
+      <relation type="one-nofk" title="Current" rel-entity-name="StatusItem">
+        <key-map field-name="currentStatusId" rel-field-name="statusId"/>
+      </relation>
+      <relation type="one-nofk" title="Scope" rel-entity-name="Enumeration">
+        <key-map field-name="scopeEnumId" rel-field-name="enumId"/>
+      </relation>
+      <relation type="one-nofk" rel-entity-name="FixedAsset">
+        <key-map field-name="fixedAssetId"/>
+      </relation>
+      <relation type="one-nofk" rel-entity-name="Facility">
+        <key-map field-name="facilityId"/>
+      </relation>
+      <relation type="one-nofk" title="Money" rel-entity-name="Uom">
+        <key-map field-name="moneyUomId" rel-field-name="uomId"/>
+      </relation>
+      <relation type="one-nofk" rel-entity-name="RecurrenceInfo">
+        <key-map field-name="recurrenceInfoId"/>
+      </relation>
+      <relation type="one-nofk" rel-entity-name="RuntimeData">
+        <key-map field-name="runtimeDataId"/>
+      </relation>
+      <relation type="one-nofk" rel-entity-name="NoteData">
+        <key-map field-name="noteId"/>
+      </relation>
+      <relation type="many" title="From" rel-entity-name="WorkEffortAssoc">
+        <key-map field-name="workEffortId" rel-field-name="workEffortIdFrom"/>
+      </relation>
+      <relation type="many" title="To" rel-entity-name="WorkEffortAssoc">
+        <key-map field-name="workEffortId" rel-field-name="workEffortIdTo"/>
+      </relation>
+      <relation type="many" rel-entity-name="WorkEffortCategoryMember">
+        <key-map field-name="workEffortId"/>
+      </relation>
+      <relation type="many" rel-entity-name="WorkEffortPartyAssignment">
+        <key-map field-name="workEffortId"/>
+      </relation>
+      <relation type="many" rel-entity-name="WorkEffortStatus">
+        <key-map field-name="workEffortId"/>
+      </relation>
+      <relation type="one-nofk" rel-entity-name="WorkflowPackage">
+        <key-map field-name="workflowPackageId" rel-field-name="packageId"/>
+        <key-map field-name="workflowPackageVersion" rel-field-name="packageVersion"/>
+      </relation>
+      <relation type="one-nofk" rel-entity-name="WorkflowProcess">
+        <key-map field-name="workflowPackageId" rel-field-name="packageId"/>
+        <key-map field-name="workflowPackageVersion" rel-field-name="packageVersion"/>
+        <key-map field-name="workflowProcessId" rel-field-name="processId"/>
+        <key-map field-name="workflowProcessVersion" rel-field-name="processVersion"/>
+      </relation>
+      <relation type="one-nofk" rel-entity-name="WorkflowActivity">
+        <key-map field-name="workflowPackageId" rel-field-name="packageId"/>
+        <key-map field-name="workflowPackageVersion" rel-field-name="packageVersion"/>
+        <key-map field-name="workflowProcessId" rel-field-name="processId"/>
+        <key-map field-name="workflowProcessVersion" rel-field-name="processVersion"/>
+        <key-map field-name="workflowActivityId" rel-field-name="activityId"/>
+      </relation>
+      <relation type="many" rel-entity-name="QuoteItem">
+        <key-map field-name="workEffortId"/>
+      </relation>
+      <relation type="many" rel-entity-name="WorkRequirementFulfillment">
+        <key-map field-name="workEffortId"/>
+      </relation>
+      <relation type="many" rel-entity-name="TimeEntry">
+        <key-map field-name="workEffortId"/>
+      </relation>
+      <relation type="many" rel-entity-name="WorkEffortDeliverableProd">
+        <key-map field-name="workEffortId"/>
+      </relation>
+      <relation type="many" rel-entity-name="WorkEffortBilling">
+        <key-map field-name="workEffortId"/>
+      </relation>
+      <relation type="many" rel-entity-name="WorkEffortAssignmentRate">
+        <key-map field-name="workEffortId"/>
+      </relation>
+      <relation type="many" rel-entity-name="CommunicationEventWorkEff">
+        <key-map field-name="workEffortId"/>
+      </relation>
+      <relation type="many" rel-entity-name="WorkEffortGoodStandard">
+        <key-map field-name="workEffortId"/>
+      </relation>
+      <relation type="many" rel-entity-name="WorkEffortFixedAssetStd">
+        <key-map field-name="workEffortId"/>
+      </relation>
+      <relation type="many" rel-entity-name="WorkEffortFixedAssetAssign">
+        <key-map field-name="workEffortId"/>
+      </relation>
+      <relation type="many" rel-entity-name="WorkEffortInventoryProduced">
+        <key-map field-name="workEffortId"/>
+      </relation>
+      <relation type="many" rel-entity-name="WorkEffortInventoryAssign">
+        <key-map field-name="workEffortId"/>
+      </relation>
+      <relation type="many" rel-entity-name="WorkEffortSkillStandard">
+        <key-map field-name="workEffortId"/>
+      </relation>
+    </view-entity>
     <view-entity entity-name="WorkEffortAndPartyAssign"
             package-name="org.ofbiz.commonapp.workeffort.workeffort"
             title="Work Effort And Party Assignment Entity">
