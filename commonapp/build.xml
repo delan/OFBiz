@@ -47,14 +47,27 @@
         <property name="pkg-dist.name"  value="${name}-pkg"         />
 		
 	<!-- Classpath setting -->
-	<property name="ofbcore.jar"       value="../core/lib/ofbcore.jar"             />
+        <property name="ofbcore.jar"       value="../core/lib/ofbcore.jar"             />
+        
+        <!-- JBoss 2.4 Jar(s) -->
+        <property name="ejb1.jar"    value="${env.JBOSS_HOME}/lib/ext/jboss-j2ee.jar" />
+        <property name="jdbc1.jar"   value="${env.JBOSS_HOME}/lib/jboss-jdbc_ext.jar" />
+        <!-- JBoss 2.2 Jar(s) -->
+        <property name="ejb2.jar"    value="${env.JBOSS_HOME}/lib/ext/ejb.jar" />
+        <property name="jdbc2.jar"   value="${env.JBOSS_HOME}/lib/jdbc2_0-stdext.jar" />
+
+        <property name="ejb.jar"     value="${ejb1.jar}:${ejb2.jar}" />
+        <property name="jdbc.jar"    value="${jdbc1.jar}:${jdbc2.jar}" />
+	
 	<property name="servlet.jar"    value="${env.TOMCAT_HOME}/lib/servlet.jar" />
-	<property name="ejb.jar"        value="${env.JBOSS_HOME}/lib/ext/ejb.jar"  />
+        <property name="mail.jar"       value="${env.JBOSS_HOME}/lib/ext/mail.jar" />
 	<property name="jaxp.jar"       value="${env.JBOSS_HOME}/lib/jaxp.jar"     />
 	<property name="parser.jar"     value="${env.JBOSS_HOME}/lib/xml.jar"      />
-	<property name="api-jars"       value="${servlet.jar}:${ejb.jar}"          />
-	<property name="xml-jars"       value="${jaxp.jar}:${parser.jar}"          />
-	<property name="classpath"      value="${env.CLASSPATH}:${lib.dir}:${core.jar}:${api-jars}:${xml-jars}" />
+        
+        <property name="ofb-jars"    value="${ofbcore.jar}" />
+        <property name="api-jars"    value="${servlet.jar}:${ejb.jar}:${jdbc.jar}:${mail.jar}" />
+        <property name="xml-jars"    value="${jaxp.jar}:${parser.jar}" />
+        <property name="classpath"   value="${env.CLASSPATH}:${lib.dir}:${ofb-jars}:${api-jars}:${xml-jars}" />
 	<echo message="classpath: ${classpath}" />
     </target>
 
@@ -64,6 +77,7 @@
     <!-- ================================================================== -->
 
     <target name="clean" depends="clean-lib">
+      <delete dir="${doc.dir}" />
       <delete dir="${build.dir}" />
     </target>
 

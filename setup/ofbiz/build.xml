@@ -90,8 +90,17 @@
         <ant dir="core" target="clean" />        
         <echo message="[clean] ===== Cleaning commonapp =====" />
         <ant dir="commonapp" target="clean" />        
+        
         <echo message="[clean] ===== Cleaning ecommerce =====" />
         <ant dir="ecommerce" target="clean" />        
+        
+        <echo message="[clean] ===== Cleaning catalog =====" />
+        <ant dir="catalog" target="clean" />        
+        <echo message="[clean] ===== Cleaning partymgr =====" />
+        <ant dir="partymgr" target="clean" />        
+        <echo message="[clean] ===== Cleaning ordermgr =====" />
+        <ant dir="ordermgr" target="clean" />        
+        
         <echo message="[clean] ===== Done Cleaning =====" />
     </target>
 
@@ -121,9 +130,41 @@
         <ant dir="core" />
         <echo message="[build] ===== Building commonapp =====" />
         <ant dir="commonapp" />
+        
         <echo message="[build] ===== Building ecommerce =====" />
         <ant dir="ecommerce" />
+        
+        <echo message="[build] ===== Building catalog =====" />
+        <ant dir="catalog" />
+        <echo message="[build] ===== Building partymgr =====" />
+        <ant dir="partymgr" />
+        <echo message="[build] ===== Building ordermgr =====" />
+        <ant dir="ordermgr" />
+        
         <echo message="[build] ===== Done Building =====" />
+    </target>
+	
+    <!-- ================================================================== -->
+    <!-- Build JavaDocs                                                     -->
+    <!-- ================================================================== -->
+
+    <target name="javadoc" depends="">
+        <echo message="[javadoc] ===== Javadoc core =====" />
+        <ant dir="core" target="javadoc" />        
+        <echo message="[javadoc] ===== Javadoc commonapp =====" />
+        <ant dir="commonapp" target="javadoc" />        
+        
+        <echo message="[javadoc] ===== Javadoc ecommerce =====" />
+        <ant dir="ecommerce" target="javadoc" />        
+        
+        <echo message="[javadoc] ===== Javadoc catalog =====" />
+        <ant dir="catalog" target="javadoc" />        
+        <echo message="[javadoc] ===== Javadoc partymgr =====" />
+        <ant dir="partymgr" target="javadoc" />        
+        <echo message="[javadoc] ===== Javadoc ordermgr =====" />
+        <ant dir="ordermgr" target="javadoc" />        
+        
+        <echo message="[javadoc] ===== Done Cleaning =====" />
     </target>
 	
     <!-- ================================================================== -->
@@ -138,6 +179,8 @@
             toFile="${etc.dir}/debug.properties" />
         <copy file="commonapp/etc/cache.properties"
             toFile="${etc.dir}/cache.properties" />
+        <copy file="commonapp/lib/ofbcommonapp.jar"
+            toFile="${lib.dir}/ofbcommonapp.jar" />        
         
         <copy file="core/lib/ofbcore.jar"
             toFile="${lib.dir}/ofbcore.jar" />        
@@ -151,6 +194,13 @@
             toFile="${etc.dir}/ecommerce.properties" />
         <copy file="ecommerce/lib/ofbecom.jar"
             toFile="${lib.dir}/ofbecom.jar" />
+    
+        <copy file="catalog/lib/ofbcatalog.jar"
+            toFile="${lib.dir}/ofbcatalog.jar" />
+        <copy file="partymgr/lib/ofbpartymgr.jar"
+            toFile="${lib.dir}/ofbpartymgr.jar" />
+        <copy file="ordermgr/lib/ofbordermgr.jar"
+            toFile="${lib.dir}/ofbordermgr.jar" />
     </target>
 
     <!-- Copy all files necessary for EXTERNAL running -->
@@ -163,6 +213,16 @@
     
         <copy file="commonapp/lib/commonapp-ext.war"
             toFile="${j2eedeploy.dir}/commonapp-ext.war" />
+        
+        <copy file="ecommerce/lib/ecommerce-ext.war"
+            toFile="${j2eedeploy.dir}/ecommerce-ext.war" />
+    
+        <copy file="catalog/lib/catalog-ext.war"
+            toFile="${j2eedeploy.dir}/catalog-ext.war" />
+        <copy file="partymgr/lib/partymgr-ext.war"
+            toFile="${j2eedeploy.dir}/partymgr-ext.war" />
+        <copy file="ordermgr/lib/ordermgr-ext.war"
+            toFile="${j2eedeploy.dir}/ordermgr-ext.war" />
     </target>
 
 </project>
