@@ -16,6 +16,10 @@
         <config-dir>WEB-INF/pagedefs</config-dir>
         <root>.</root>
     </repository>
+    <repository name="common" classname="org.jpublish.repository.filesystem.ExtendedFileSystemRepository">
+        <config-dir>WEB-INF/pagedefs</config-dir>
+        <root>../../../common/webcommon</root>
+    </repository>
   		
     <!-- Define the character encoding map -->
     <character-encoding-map path="*">
