@@ -1,6 +1,6 @@
 
-<%@ page import="java.io.*, java.net.*, java.sql.*"%>
-<%@ page import="org.ofbiz.core.entity.model.*"%>
+<%@ page import="java.io.*, java.net.*, java.sql.*, org.w3c.dom.*"%>
+<%@ page import="org.ofbiz.core.entity.model.*, org.ofbiz.core.entity.config.*"%>
 
 <% pageContext.setAttribute("PageName", "Install"); %> 
 <%@ include file="/includes/envsetup.jsp" %>
@@ -11,13 +11,26 @@
   errorMessages = new LinkedList();
   String groupfile = request.getParameter("groupfile");
   String loadFile = request.getParameter("loadFile");
-  String paths = null;
+  String paths = "";
   String groupName = request.getParameter("groupName");
   String helperName = null;
 
   if(groupName != null && groupName.length() > 0) {
     helperName = delegator.getGroupHelperName(groupName);
-    paths = UtilProperties.getPropertyValue("entityengine", helperName + ".sql.load.paths");
+    Element rootElement = EntityConfigUtil.getXmlRootElement();
+    Element datasourceElement = UtilXml.firstChildElement(rootElement, "datasource", "name", helperName);
+    List sqlLoadPathElements = UtilXml.childElementList(datasourceElement, "sql-load-path");
+    Iterator slpIter = sqlLoadPathElements.iterator();
+    while (slpIter.hasNext()) {
+        Element sqlLoadPathElement = (Element) slpIter.next();
+        String prependEnv = sqlLoadPathElement.getAttribute("prepend-env");
+        paths += (paths.length() == 0 ? "" : ";");
+        if (prependEnv != null && prependEnv.length() > 0) {
+            paths += System.getProperty(prependEnv) + "/";
+        }
+        paths += sqlLoadPathElement.getAttribute("path");
+    }
+    //paths = UtilProperties.getPropertyValue("entityengine", helperName + ".sql.load.paths");
   }
 
   ArrayList fileList = new ArrayList();
@@ -126,8 +139,7 @@ OR Specify the filename of a ".sql" or ".xml" file to load:<br>
 <%!
   Collection errorMessages = new LinkedList();
 
-  int loadData(File dataFile, String helperName, GenericDelegator delegator)
-  {
+  int loadData(File dataFile, String helperName, GenericDelegator delegator) throws GenericEntityException {
     if(!dataFile.exists()) {
       errorMessages.add("[install.loadData] Could not find file: \"" + dataFile.getAbsolutePath() + "\"");
       return 0;
@@ -148,15 +160,13 @@ OR Specify the filename of a ".sql" or ".xml" file to load:<br>
         values = delegator.readXmlDocument(url);
         delegator.storeAll(values);
         rowsChanged += values.size();
-      }
-      catch(Exception e) {
+      } catch(Exception e) {
         String xmlError = "[install.loadData]: Error loading XML file \"" + dataFile.getAbsolutePath() + "\"; Error was: " + e.getMessage();
         errorMessages.add(xmlError);
         Debug.logWarning(xmlError);
         Debug.logWarning(e);
       }
-    }
-    else if(dataFile.getName().toLowerCase().endsWith(".sql")) {
+    } else if(dataFile.getName().toLowerCase().endsWith(".sql")) {
       Debug.logInfo("[install.loadData] Loading SQL File: \"" + dataFile.getAbsolutePath() + "\"");
       Connection connection = null; 
       Statement stmt = null;
@@ -186,8 +196,7 @@ OR Specify the filename of a ".sql" or ".xml" file to load:<br>
                 //Debug.logInfo("[install.loadData] Running found insert sql: \"" + sql + "\"");
                 try {
                   rowsChanged += stmt.executeUpdate(sql);
-                }
-                catch (SQLException sqle) {
+                } catch (SQLException sqle) {
                   String sqlError = "[install.loadData]: Error running sql:\"" + sql + "\"; Error was: " + sqle.getMessage();
                   errorMessages.add(sqlError);
                   Debug.logWarning(sqlError);
@@ -198,19 +207,16 @@ OR Specify the filename of a ".sql" or ".xml" file to load:<br>
               scind = line.indexOf(';', linePos);
               sql = "";
             }
-          }
-          else {
+          } else {
             sql += " ";
             sql += line;
           }
         }
-      } 
-      catch (Exception e) { 
+      } catch (Exception e) { 
         String errorMsg = "[install.loadData]: Load error:" +  e.getMessage();
         errorMessages.add(errorMsg);
         Debug.logWarning(errorMsg);
-      } 
-      finally {
+      } finally {
         try { if (stmt != null) stmt.close(); } catch (SQLException sqle) { }
         try { if (connection != null) connection.close(); } catch (SQLException sqle) { }
       }
@@ -219,8 +225,7 @@ OR Specify the filename of a ".sql" or ".xml" file to load:<br>
     return rowsChanged;
   }
 
-  int generateData(GenericDelegator delegator)
-  {
+  int generateData(GenericDelegator delegator) throws GenericEntityException {
     int rowsChanged = 0;
     ModelReader reader = delegator.getModelReader();
     Collection entityCol = reader.getEntityNames();
