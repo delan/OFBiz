@@ -24,7 +24,6 @@
  */
 package org.ofbiz.core.container;
 
-import org.ofbiz.core.start.*;
 
 /**
  * ComponentContainer - StartupContainer implementation for Components
@@ -33,14 +32,14 @@ import org.ofbiz.core.start.*;
   *@version    $Revision$
  * @since      2.2
  */
-public class ComponentContainer implements StartupContainer {
+public class ComponentContainer implements Container {
     
     public static final String module = ComponentContainer.class.getName();
 
     /**
      * @see org.ofbiz.core.start.StartupContainer#start(java.lang.String)
      */
-    public boolean start(String configFileLocation) throws StartupException {
+    public boolean start(String configFileLocation) throws ContainerException {
         // TODO Auto-generated method stub
         return false;
     }
@@ -48,7 +47,7 @@ public class ComponentContainer implements StartupContainer {
     /**
      * @see org.ofbiz.core.start.StartupContainer#stop()
      */
-    public void stop() throws StartupException {
+    public void stop() throws ContainerException {
         // TODO Auto-generated method stub
         
     }    

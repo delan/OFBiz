@@ -24,31 +24,28 @@
  */
 package org.ofbiz.core.container;
 
-import org.ofbiz.core.util.GeneralException;
-
 /**
- * ContainerException
+ * Container - Interface for containers
  *
- * @author     <a href="mailto:jaz@ofbiz.org">Andy Zeneski</a>
- * @version    $Revision$
+ * @author     <a href="mailto:jaz@ofbiz.org">Andy Zeneski</a> 
+  *@version    $Revision$
  * @since      2.2
  */
-public class ContainerException extends GeneralException {
+public interface Container {
     
-    public ContainerException() {
-        super();
-    }
+    /**
+     * Start the container
+     * 
+     * @param configFileLocation Location of master OFBiz configuration file
+     * @return true if server started
+     * @throws ContainerException
+     */
+    public boolean start(String configFileLocation) throws ContainerException;
 
-    public ContainerException(String str) {
-        super(str);
-    }
-    
-    public ContainerException(Throwable t) {
-        super(t);
-    }
-
-    public ContainerException(String str, Throwable nested) {
-        super(str, nested);
-    }    
-
+    /**
+     * Stop the container
+     *     
+     * @throws ContainerException
+     */
+    public void stop() throws ContainerException;
 }

@@ -42,29 +42,27 @@ import org.mortbay.util.MultiException;
 import org.ofbiz.core.util.*;
 import org.ofbiz.core.component.ComponentConfig;
 import org.ofbiz.core.component.ComponentException;
-import org.ofbiz.core.start.StartupException;
-import org.ofbiz.core.start.StartupContainer;
 
 /**
- * JettyContainer - StartupContainer implementation for Jetty
+ * JettyContainer - Container implementation for Jetty
  *
  * @author     <a href="mailto:jaz@ofbiz.org">Andy Zeneski</a> 
   *@version    $Revision$
  * @since      2.2
  */
-public class JettyContainer implements StartupContainer {
+public class JettyContainer implements Container {
     
     public static final String module = JettyContainer.class.getName();    
     private Map servers = new HashMap();
     
-    private void init(String configFile) throws StartupException {
+    private void init(String configFile) throws ContainerException {
         ContainerConfig.ComponentContainer componentContainer = null;
         ContainerConfig.WebContainer webContainer = null;
         try { 
             componentContainer = ContainerConfig.getComponentContainer(configFile);
             webContainer = ContainerConfig.getWebContainer(configFile);
         } catch (ContainerException e) {
-            throw new StartupException(e);
+            throw new ContainerException(e);
         }
         
         // create the servers
@@ -82,7 +80,7 @@ public class JettyContainer implements StartupContainer {
             try {
                 component = ComponentConfig.getComponentConfig(comp.name, comp.config);
             } catch (ComponentException e) {
-                throw new StartupException(e);                
+                throw new ContainerException(e);                
             }
             Iterator appInfos = component.getWebappInfos().iterator();
             while (appInfos.hasNext()) {
@@ -98,14 +96,14 @@ public class JettyContainer implements StartupContainer {
                         }
                         server.addWebApplication(appInfo.mountPoint, location);
                     } catch (IOException e) {                        
-                        throw new StartupException(e);
+                        throw new ContainerException(e);
                     }
                 }                    
             }                        
         }                
     }
     
-    private Server createServer(ContainerConfig.WebContainer.Server serverConfig) throws StartupException {
+    private Server createServer(ContainerConfig.WebContainer.Server serverConfig) throws ContainerException {
         Server server = new Server();
         
         // configure the listeners
@@ -120,7 +118,7 @@ public class JettyContainer implements StartupContainer {
                     try {
                         listener.setHost(listenerConf.host);
                     } catch (UnknownHostException e) {
-                        throw new StartupException(e);                       
+                        throw new ContainerException(e);                       
                     }
                 }
                 listener.setPort(listenerConf.port);
@@ -129,13 +127,13 @@ public class JettyContainer implements StartupContainer {
                 listener.setMaxIdleTimeMs(listenerConf.maxIdleTime);
                 server.addListener(listener);                                               
             } else if ("sun-jsse".equals(listenerConf.type)) {
-                throw new StartupException("Listener not supported yet [" + listenerConf.type + "]");
+                throw new ContainerException("Listener not supported yet [" + listenerConf.type + "]");
             } else if ("ibm-jsse".equals(listenerConf.type)) {
-                throw new StartupException("Listener not supported yet [" + listenerConf.type + "]");
+                throw new ContainerException("Listener not supported yet [" + listenerConf.type + "]");
             } else if ("nio".equals(listenerConf.type)) {
-                throw new StartupException("Listener not supported yet [" + listenerConf.type + "]");
+                throw new ContainerException("Listener not supported yet [" + listenerConf.type + "]");
             } else if ("ajp13".equals(listenerConf.type)) {
-                throw new StartupException("Listener not supported yet [" + listenerConf.type + "]");
+                throw new ContainerException("Listener not supported yet [" + listenerConf.type + "]");
             }                       
         }
         return server;
@@ -144,7 +142,7 @@ public class JettyContainer implements StartupContainer {
     /**
      * @see org.ofbiz.core.start.StartupContainer#start(java.lang.String)
      */
-    public boolean start(String configFile) throws StartupException {        
+    public boolean start(String configFile) throws ContainerException {        
         // start the server(s)
         this.init(configFile);
         if (servers != null) {
@@ -154,7 +152,7 @@ public class JettyContainer implements StartupContainer {
                 try {
                     server.start();
                 } catch (MultiException e) {                    
-                    throw new StartupException(e);
+                    throw new ContainerException(e);
                 }
             }
         }                                
@@ -164,7 +162,7 @@ public class JettyContainer implements StartupContainer {
     /**
      * @see org.ofbiz.core.start.StartupContainer#stop()
      */
-    public void stop() throws StartupException {
+    public void stop() throws ContainerException {
         if (servers != null) {
             Iterator i = servers.values().iterator();
             while(i.hasNext()) {
