@@ -66,6 +66,8 @@
         <copy file="lib/common/commons-beanutils.jar" toDir="${catalina.dir}/common/lib"/>
         <copy file="lib/common/commons-collections.jar" toDir="${catalina.dir}/common/lib"/>
         <copy file="lib/common/commons-digester.jar" toDir="${catalina.dir}/common/lib"/>
+        <copy file="lib/common/commons-logging.jar" toDir="${catalina.dir}/common/lib"/>
+        <copy file="lib/common/commons-httpclient.jar" toDir="${catalina.dir}/common/lib"/>
 
         <copy file="lib/share/axis.jar" toDir="${catalina.dir}/lib"/>
         <copy file="lib/share/bsh-1.2b6.jar" toDir="${catalina.dir}/lib"/>
@@ -118,6 +120,8 @@
         <copy file="lib/common/commons-collections.jar" toDir="${catalina.dir}/shared/lib"/>
         <copy file="lib/common/commons-digester.jar" toDir="${catalina.dir}/shared/lib"/>
         -->
+        <copy file="lib/common/commons-logging.jar" toDir="${catalina.dir}/shared/lib"/>
+        <copy file="lib/common/commons-httpclient.jar" toDir="${catalina.dir}/shared/lib"/>
 
         <copy file="lib/share/axis.jar" toDir="${catalina.dir}/shared/lib"/>
         <copy file="lib/share/bsh-1.2b6.jar" toDir="${catalina.dir}/shared/lib"/>
@@ -594,10 +598,15 @@
         <mkdir dir="${ext.dir}/webapps"/>
 
         <copy file="lib/common/castor-0.9.3.9.jar"           toDir="${ext.dir}/lib/ext"/>
+        <copy file="lib/common/commons-beanutils.jar"        toDir="${ext.dir}/lib/ext"/>
+        <copy file="lib/common/commons-collections.jar"      toDir="${ext.dir}/lib/ext"/>
+        <copy file="lib/common/commons-digester.jar"         toDir="${ext.dir}/lib/ext"/>
+        <copy file="lib/common/commons-logging.jar"          toDir="${ext.dir}/lib/ext"/>
+        <copy file="lib/common/commons-httpclient.jar"       toDir="${ext.dir}/lib/ext"/>
         <copy file="lib/common/hsqldb.jar"                   toDir="${ext.dir}/lib/ext"/>
         <copy file="lib/common/postgresql.jar"               toDir="${ext.dir}/lib/ext"/>
         <copy file="lib/common/log4j.jar"                    toDir="${ext.dir}/lib/ext"/>
-        <copy file="lib/common/mm.mysql-2.0.14-bin.jar"       toDir="${ext.dir}/lib/ext"/>
+        <copy file="lib/common/mm.mysql-2.0.14-bin.jar"      toDir="${ext.dir}/lib/ext"/>
         <copy file="lib/common/ots-jts_1.0.jar"              toDir="${ext.dir}/lib/ext"/>
         <copy file="lib/common/tyrex-1.0.jar"                toDir="${ext.dir}/lib/ext"/>
         <copy file="lib/share/axis.jar"                      toDir="${ext.dir}/lib/ext"/>

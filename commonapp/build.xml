@@ -80,6 +80,9 @@
         <property name="tyrex.jar" value="${extlib.dir}/common/tyrex-1.0.jar"/>
         <property name="log4j.jar" value="${extlib.dir}/common/log4j.jar"/>
 
+        <property name="commons-logging.jar" value="${extlib.dir}/common/commons-logging.jar"/>
+        <property name="commons-httpclient.jar" value="${extlib.dir}/common/commons-httpclient.jar"/>
+
 	    <property name="bsh.jar" value="${extlib.dir}/share/bsh-1.2b6.jar"/>
         <property name="axis.jar" value="${extlib.dir}/share/axis.jar"/>
         <property name="clutil.jar" value="${extlib.dir}/share/clutil.jar"/>
@@ -89,7 +92,7 @@
         <property name="junit.jar" value="${extlib.dir}/wsp_required/junit.jar"/>
         
         <property name="api-jars1" value="${j2ee.jar}:${jdbc.jar}:${mail.jar}:${servlet.jar}:${xerces.jar}"/>
-        <property name="api-jars2" value="${log4j.jar}:${tyrex.jar}:${castor.jar}"/>
+        <property name="api-jars2" value="${log4j.jar}:${tyrex.jar}:${castor.jar}:${commons-logging.jar}:${commons-httpclient.jar}"/>
         <property name="api-jars3" value="${bsh.jar}:${axis.jar}:${clutil.jar}:${wsdl4j.jar}:${cactus.jar}:${junit.jar}"/>
 	    <property name="api-jars" value="${api-jars1}:${api-jars2}:${api-jars3}"/>
 
