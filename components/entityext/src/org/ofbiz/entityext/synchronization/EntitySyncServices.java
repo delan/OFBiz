@@ -393,6 +393,8 @@ public class EntitySyncServices {
                 List keysToRemove = esc.assembleKeysToRemove();
                 
                 esc.setTotalRowCounts(valuesToCreate, valuesToStore, keysToRemove);
+
+                if (Debug.infoOn()) Debug.logInfo("Service pullAndReportEntitySyncData returning - [" + valuesToCreate.size() + "] to create; [" + valuesToStore.size() + "] to store; [" + keysToRemove.size() + "] to remove; [" + esc.totalRowsPerSplit + "] total rows per split.", module); 
                 if (esc.totalRowsPerSplit > 0) {
                     // stop if we found some data, otherwise look and try again
                     Map result = ServiceUtil.returnSuccess();
