@@ -40,7 +40,7 @@
 
 <html>
   <head>
-      <base href="<%=session.getAttribute(SiteDefs.SERVER_ROOT_URL)%>">
+      <base href="<%=serverRoot%>">
       <title>Confirmation Page</title>
       <meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1">
 
