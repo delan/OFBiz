@@ -26,6 +26,7 @@ package org.ofbiz.core.stats;
 
 import java.net.*;
 import java.util.*;
+import javax.servlet.http.*;
 
 import org.ofbiz.core.entity.*;
 import org.ofbiz.core.security.*;
@@ -53,32 +54,32 @@ public class ServerHitBin {
     public static final String[] typeNames = {"", "Request", "Event", "View", "Entity", "Service"};
     public static final String[] typeIds = {"", "REQUEST", "EVENT", "VIEW", "ENTITY", "SERVICE"};
     
-    public static void countRequest(String id, String visitId, long startTime, long runningTime, GenericValue userLogin, 
+    public static void countRequest(String id, HttpServletRequest request, long startTime, long runningTime, GenericValue userLogin, 
             GenericDelegator delegator) {
-        countHit(id, REQUEST, visitId, startTime, runningTime, userLogin, delegator);
+        countHit(id, REQUEST, request, startTime, runningTime, userLogin, delegator);
     }
-    public static void countEvent(String id, String visitId, long startTime, long runningTime, GenericValue userLogin, 
+    public static void countEvent(String id, HttpServletRequest request, long startTime, long runningTime, GenericValue userLogin, 
             GenericDelegator delegator) {
-        countHit(id, EVENT, visitId, startTime, runningTime, userLogin, delegator);
+        countHit(id, EVENT, request, startTime, runningTime, userLogin, delegator);
     }
-    public static void countView(String id, String visitId, long startTime, long runningTime, GenericValue userLogin, 
+    public static void countView(String id, HttpServletRequest request, long startTime, long runningTime, GenericValue userLogin, 
             GenericDelegator delegator) {
-        countHit(id, VIEW, visitId, startTime, runningTime, userLogin, delegator);
+        countHit(id, VIEW, request, startTime, runningTime, userLogin, delegator);
     }
-    public static void countEntity(String id, String visitId, long startTime, long runningTime, GenericValue userLogin, 
+    public static void countEntity(String id, HttpServletRequest request, long startTime, long runningTime, GenericValue userLogin, 
             GenericDelegator delegator) {
-        countHit(id, ENTITY, visitId, startTime, runningTime, userLogin, delegator);
+        countHit(id, ENTITY, request, startTime, runningTime, userLogin, delegator);
     }
-    public static void countService(String id, String visitId, long startTime, long runningTime, GenericValue userLogin, 
+    public static void countService(String id, HttpServletRequest request, long startTime, long runningTime, GenericValue userLogin, 
             GenericDelegator delegator) {
-        countHit(id, SERVICE, visitId, startTime, runningTime, userLogin, delegator);
+        countHit(id, SERVICE, request, startTime, runningTime, userLogin, delegator);
     }
     
-    public static void countHit(String id, int type, String visitId, long startTime, long runningTime, GenericValue userLogin, 
+    public static void countHit(String id, int type, HttpServletRequest request, long startTime, long runningTime, GenericValue userLogin, 
             GenericDelegator delegator) {
         //only count hits if enabled, if not specified defaults to false
         if (!"true".equals(UtilProperties.getPropertyValue("serverstats", "stats.enable." + typeIds[type]))) return;
-        countHit(id, type, visitId, startTime, runningTime, userLogin, delegator, true);
+        countHit(id, type, request, startTime, runningTime, userLogin, delegator, true);
     }
 
     public static void advanceAllBins(long toTime) {
@@ -100,7 +101,7 @@ public class ServerHitBin {
         }
     }
     
-    protected static void countHit(String id, int type, String visitId, long startTime, long runningTime, GenericValue userLogin, 
+    protected static void countHit(String id, int type, HttpServletRequest request, long startTime, long runningTime, GenericValue userLogin, 
             GenericDelegator delegator, boolean isOriginal) {
         if (delegator == null) {
             throw new IllegalArgumentException("The delgator passed to countHit cannot be null");
@@ -156,7 +157,7 @@ public class ServerHitBin {
         
         bin.addHit(startTime, runningTime);
         if (isOriginal && !"GLOBAL".equals(id)) {
-            bin.saveHit(visitId, startTime, runningTime, userLogin);
+            bin.saveHit(request, startTime, runningTime, userLogin);
         }
         
         //count since start global and per id hits
@@ -165,11 +166,11 @@ public class ServerHitBin {
         
         //also count hits up the hierarchy if the id contains a '.'
         if (id.indexOf('.') > 0) {
-            countHit(id.substring(0, id.lastIndexOf('.')), type, visitId, startTime, runningTime, userLogin, delegator, false);
+            countHit(id.substring(0, id.lastIndexOf('.')), type, request, startTime, runningTime, userLogin, delegator, false);
         }
         
         if (isOriginal && !"GLOBAL".equals(id))
-            countHit("GLOBAL", type, visitId, startTime, runningTime, userLogin, delegator, true);
+            countHit("GLOBAL", type, request, startTime, runningTime, userLogin, delegator, true);
     }
     
     static void countHitSinceStart(String id, int type, long startTime, long runningTime, boolean isOriginal, 
@@ -444,7 +445,7 @@ public class ServerHitBin {
         }
     }
     
-    void saveHit(String visitId, long startTime, long runningTime, GenericValue userLogin) {
+    void saveHit(HttpServletRequest request, long startTime, long runningTime, GenericValue userLogin) {
         //persist record of hit in ServerHit entity if option turned on
         if (UtilProperties.propertyValueEqualsIgnoreCase("serverstats", "stats.persist." + ServerHitBin.typeIds[type] + ".hit", "true")) {
             //if the hit type is ENTITY and the name contains "ServerHit" don't 
@@ -452,20 +453,25 @@ public class ServerHitBin {
             if (this.type == ENTITY && this.id.indexOf("ServerHit") > 0) {
                 return;
             }
-            
-            Map hitData = new HashMap();
-            hitData.put("visitId", visitId);
-            hitData.put("hitStartDateTime", new java.sql.Timestamp(startTime));
-            hitData.put("hitTypeId", ServerHitBin.typeIds[this.type]);
+
+            GenericValue serverHit = delegator.makeValue("ServerHit", null);
+            serverHit.set("visitId", VisitHandler.getVisitId(request.getSession()));
+            serverHit.set("hitStartDateTime", new java.sql.Timestamp(startTime));
+            serverHit.set("hitTypeId", ServerHitBin.typeIds[this.type]);
             if (userLogin != null) {
-                hitData.put("userLoginId", userLogin.get("userLoginId"));
-                hitData.put("partyId", userLogin.get("partyId"));
+                serverHit.set("userLoginId", userLogin.get("userLoginId"));
+                serverHit.set("partyId", userLogin.get("partyId"));
             }
-            hitData.put("contentId", this.id);
-            hitData.put("runningTimeMillis", new Long(runningTime));
+            serverHit.set("contentId", this.id);
+            serverHit.set("runningTimeMillis", new Long(runningTime));
+
+            String fullRequestUrl = UtilMisc.getFullRequestUrl(request).toString();
+            serverHit.set("requestUrl", fullRequestUrl.length() > 250 ? fullRequestUrl.substring(0, 250) : fullRequestUrl);
+            String referrerUrl = request.getHeader("Referer") != null ? request.getHeader("Referer") : "";
+            serverHit.set("referrerUrl", referrerUrl.length() > 250 ? referrerUrl.substring(0, 250) : referrerUrl);
             
             try {
-                getDelegator().create("ServerHit", hitData);
+                serverHit.create();
             } catch (GenericEntityException e) {
                 Debug.logError(e, "Could not save ServerHit:", module);
             }

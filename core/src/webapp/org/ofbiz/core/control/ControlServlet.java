@@ -175,21 +175,14 @@ public class ControlServlet extends HttpServlet {
         ServletContext servletContext = getServletContext();
         request.setAttribute("servletContext", servletContext);
 
-        StringBuffer request_url = new StringBuffer();
-        request_url.append(request.getScheme());
-        request_url.append("://" + request.getServerName());
-        if (request.getServerPort() != 80 && request.getServerPort() != 443)
-            request_url.append(":" + request.getServerPort());
-        request.setAttribute(SiteDefs.SERVER_ROOT_URL, request_url.toString());
+        StringBuffer serverRootUrl = UtilMisc.getServerRootUrl(request);
+        request.setAttribute(SiteDefs.SERVER_ROOT_URL, serverRootUrl.toString());
 
         // Store some first hit client info for later.
         if (session.getAttribute("visit") == null) {
-            request_url.append(request.getRequestURI());
-            if (request.getQueryString() != null) {
-                request_url.append("?" + request.getQueryString());
-            }
+            StringBuffer fullRequestUrl = UtilMisc.getFullRequestUrl(request);
             String initialLocale = request.getLocale() != null ? request.getLocale().toString() : "";
-            String initialRequest = request_url.toString();
+            String initialRequest = fullRequestUrl.toString();
             String initialReferrer = request.getHeader("Referer") != null ? request.getHeader("Referer") : "";
             String initialUserAgent = request.getHeader("User-Agent") != null ? request.getHeader("User-Agent") : "";
             session.setAttribute(SiteDefs.CLIENT_LOCALE, request.getLocale());
@@ -249,7 +242,7 @@ public class ControlServlet extends HttpServlet {
 
         if (Debug.timingOn()) timer.timerString("[" + rname + "] Done rendering page, Servlet Finished", module);
 
-        ServerHitBin.countRequest(webappName + "." + rname, VisitHandler.getVisitId(session), requestStartTime, System.currentTimeMillis() - requestStartTime, userLogin, delegator);
+        ServerHitBin.countRequest(webappName + "." + rname, request, requestStartTime, System.currentTimeMillis() - requestStartTime, userLogin, delegator);
     }
 
     private RequestHandler getRequestHandler() {

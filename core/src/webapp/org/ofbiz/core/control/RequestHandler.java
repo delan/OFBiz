@@ -169,7 +169,7 @@ public class RequestHandler implements Serializable {
                     EventHandler eh = EventFactory.getEventHandler(this, eventType);
                     eh.initialize(eventPath, eventMethod);
                     eventReturnString = eh.invoke(request, response);
-                    ServerHitBin.countEvent(cname + "." + eventMethod, VisitHandler.getVisitId(request.getSession()), eventStartTime,
+                    ServerHitBin.countEvent(cname + "." + eventMethod, request, eventStartTime,
                             System.currentTimeMillis() - eventStartTime, userLogin, delegator);
                 } catch (EventHandlerException e) {
                     //check to see if there is an "error" response, if so go there and make an request error message
@@ -338,7 +338,7 @@ public class RequestHandler implements Serializable {
 
         String vname = (String) req.getAttribute(SiteDefs.CURRENT_VIEW);
         if (vname != null) {
-            ServerHitBin.countView(cname + "." + vname, VisitHandler.getVisitId(req.getSession()), viewStartTime,
+            ServerHitBin.countView(cname + "." + vname, req, viewStartTime,
                     System.currentTimeMillis() - viewStartTime, userLogin, delegator);
         }
     }

@@ -222,8 +222,26 @@ public class UtilMisc {
             appName = request.getContextPath().substring(1);
         }		
         return appName;
-    }	
-	
+    }
+    
+    public static StringBuffer getServerRootUrl(HttpServletRequest request) {
+        StringBuffer requestUrl = new StringBuffer();
+        requestUrl.append(request.getScheme());
+        requestUrl.append("://" + request.getServerName());
+        if (request.getServerPort() != 80 && request.getServerPort() != 443)
+            requestUrl.append(":" + request.getServerPort());
+        return requestUrl;
+    }
+
+    public static StringBuffer getFullRequestUrl(HttpServletRequest request) {
+        StringBuffer requestUrl = getServerRootUrl(request);
+        requestUrl.append(request.getRequestURI());
+        if (request.getQueryString() != null) {
+            requestUrl.append("?" + request.getQueryString());
+        }
+        return requestUrl;
+    }
+
     /** This is meant to be very quick to create and use for small sized maps, perfect for how we usually use UtilMisc.toMap */
     protected static class SimpleMap implements Map, java.io.Serializable {
         protected Map realMapIfNeeded = null;

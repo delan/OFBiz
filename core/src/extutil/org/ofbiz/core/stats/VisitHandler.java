@@ -58,8 +58,6 @@ public class VisitHandler {
             } catch (GenericEntityException e) {
                 Debug.logError(e, "Could not update visit:", module);
             }
-        } else {
-            Debug.logWarning("Not setting initials, visit was null.");
         }
     }
     
@@ -74,8 +72,6 @@ public class VisitHandler {
             } catch (GenericEntityException e) {
                 Debug.logError(e, "Could not update visit:", module);
             }
-        } else {
-            Debug.logWarning("Not setting initials, visit was null.");
         }
     }
     
@@ -90,46 +86,50 @@ public class VisitHandler {
     
     /** Get the visit from the session, or create if missing */
     public static GenericValue getVisit(HttpSession session) {
-        GenericValue visit = (GenericValue) session.getAttribute("visit");
-        if (visit == null) {
-            GenericDelegator delegator = (GenericDelegator) session.getAttribute("delegator");
-            if (delegator == null) {
-                Debug.logError("Could not find delegator in session, not creating Visit entity", module);
-            } else {
-                visit = delegator.makeValue("Visit", null);
-                Long nextId = delegator.getNextSeqId("Visit");
-                if (nextId == null) {
-                    Debug.logError("Not persisting visit, could not get next seq id", module);
-                    visit = null;
+        if (UtilProperties.propertyValueEqualsIgnoreCase("serverstats", "stats.persist.visit", "true")) {
+            GenericValue visit = (GenericValue) session.getAttribute("visit");
+            if (visit == null) {
+                GenericDelegator delegator = (GenericDelegator) session.getAttribute("delegator");
+                if (delegator == null) {
+                    Debug.logError("Could not find delegator in session, not creating Visit entity", module);
                 } else {
-                    visit.set("visitId", nextId.toString());
-                    visit.set("sessionId", session.getId());
-                    visit.set("fromDate", new Timestamp(session.getCreationTime()));
-                    //get localhost ip address and hostname to store
-                    try {
-                        InetAddress address = InetAddress.getLocalHost();
-                        if (address != null) {
-                            visit.set("serverIpAddress", address.getHostAddress());
-                            visit.set("serverHostName", address.getHostName());
-                        } else {
-                            Debug.logError("Unable to get localhost internet address, was null", module);
-                        }
-                    } catch (java.net.UnknownHostException e) {
-                        Debug.logError("Unable to get localhost internet address: " + e.toString(), module);
-                    }
-                    try {
-                        visit.create();
-                        session.setAttribute("visit", visit);
-                    } catch (GenericEntityException e) {
-                        Debug.logError(e, "Could not create new visit:", module);
+                    visit = delegator.makeValue("Visit", null);
+                    Long nextId = delegator.getNextSeqId("Visit");
+                    if (nextId == null) {
+                        Debug.logError("Not persisting visit, could not get next seq id", module);
                         visit = null;
+                    } else {
+                        visit.set("visitId", nextId.toString());
+                        visit.set("sessionId", session.getId());
+                        visit.set("fromDate", new Timestamp(session.getCreationTime()));
+                        //get localhost ip address and hostname to store
+                        try {
+                            InetAddress address = InetAddress.getLocalHost();
+                            if (address != null) {
+                                visit.set("serverIpAddress", address.getHostAddress());
+                                visit.set("serverHostName", address.getHostName());
+                            } else {
+                                Debug.logError("Unable to get localhost internet address, was null", module);
+                            }
+                        } catch (java.net.UnknownHostException e) {
+                            Debug.logError("Unable to get localhost internet address: " + e.toString(), module);
+                        }
+                        try {
+                            visit.create();
+                            session.setAttribute("visit", visit);
+                        } catch (GenericEntityException e) {
+                            Debug.logError(e, "Could not create new visit:", module);
+                            visit = null;
+                        }
                     }
                 }
             }
+            if (visit == null) {
+                Debug.logWarning("Could not find or create the visit...");
+            }
+            return visit;
+        } else {
+            return null;
         }
-        if (visit == null) {
-            Debug.logWarning("Could not find or create the visit...");
-        }
-        return visit;
     }
 }
