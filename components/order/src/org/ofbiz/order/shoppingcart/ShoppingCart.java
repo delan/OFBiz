@@ -1,5 +1,5 @@
 /*
- * $Id: ShoppingCart.java,v 1.43 2004/06/17 06:11:34 ajzeneski Exp $
+ * $Id: ShoppingCart.java,v 1.44 2004/06/27 03:27:42 ajzeneski Exp $
  *
  *  Copyright (c) 2001, 2002 The Open For Business Project - www.ofbiz.org
  *
@@ -45,7 +45,7 @@ import org.ofbiz.product.store.ProductStoreWorker;
  * @author     <a href="mailto:jaz@ofbiz.org">Andy Zeneski</a>
  * @author     <a href="mailto:cnelson@einnovation.com">Chris Nelson</a>
  * @author     <a href="mailto:jonesde@ofbiz.org">David E. Jones</a>
- * @version    $Revision: 1.43 $
+ * @version    $Revision: 1.44 $
  * @since      2.0
  */
 public class ShoppingCart implements Serializable {
@@ -158,6 +158,10 @@ public class ShoppingCart implements Serializable {
         this.locale = locale;
         if (this.locale == null) {
             this.locale = Locale.getDefault();
+        }
+
+        if (productStoreId == null) {
+            throw new IllegalArgumentException("productStoreId cannot be null");
         }
 
         // set the default view cart on add for this store
