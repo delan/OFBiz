@@ -10,7 +10,9 @@
     <TD width='100%'>
       <table width='100%' border='0' cellspacing='0' cellpadding='0' class='headerboxtop'>
         <tr>
-          <%if (UtilValidate.isNotEmpty((String) layoutSettings.get("headerImageUrl"))) {%>
+		  <%if (session.getAttribute("overrideLogo") != null) {%>
+            <TD align=left width='1%'><IMG src='<%=session.getAttribute("overrideLogo")%>'></TD>         
+          <%} else if (UtilValidate.isNotEmpty((String) layoutSettings.get("headerImageUrl"))) {%>
             <TD align=left width='1%'><IMG src='<ofbiz:contenturl><%=(String) layoutSettings.get("headerImageUrl")%></ofbiz:contenturl>'></TD>
           <%}%>
           <TD align=center width='98%' <%if (UtilValidate.isNotEmpty((String) layoutSettings.get("headerMiddleBackgroundUrl"))) {%>background='<ofbiz:contenturl><%=(String) layoutSettings.get("headerMiddleBackgroundUrl")%></ofbiz:contenturl>'<%}%>>

@@ -9,6 +9,12 @@
     <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
     <title><%EntityField.run("layoutSettings", "companyName", pageContext);%>: <region:render section='title'/></title>
     <link rel='stylesheet' href='<ofbiz:contenturl>/images/maincss.css</ofbiz:contenturl>' type='text/css'>
+
+    <%-- Override CSS for tracking codes --%>
+	<%if (session.getAttribute("overrideCss") != null) {%>
+	<link rel='stylesheet' href="<%=session.getAttribute("overrideCss")%>" type="text/css">
+    <%}%>
+
 </head>
 <body>
 <region:render section='header'/>
