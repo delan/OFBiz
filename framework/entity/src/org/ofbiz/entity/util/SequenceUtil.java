@@ -153,152 +153,146 @@ public class SequenceUtil {
             long val2 = 0;
 
             // NOTE: the fancy ethernet type stuff is for the case where transactions not available
-            boolean manualTX = false;
             Transaction suspendedTransaction = null;
-
             try {
                 //if we can suspend the transaction, we'll try to do this in a local manual transaction
                 suspendedTransaction = TransactionUtil.suspend();
-                manualTX = true;
+                
+                boolean beganTransaction = false;
+                try {
+                    beganTransaction = TransactionUtil.begin();
+
+                    Connection connection = null;
+                    Statement stmt = null;
+                    ResultSet rs = null;
+
+                    try {
+                        connection = ConnectionFactory.getConnection(parentUtil.helperName);
+                    } catch (SQLException sqle) {
+                        Debug.logWarning("[SequenceUtil.SequenceBank.fillBank]: Unable to esablish a connection with the database... Error was:" + sqle.toString(), module);
+                        throw sqle;
+                    } catch (GenericEntityException e) {
+                        Debug.logWarning("[SequenceUtil.SequenceBank.fillBank]: Unable to esablish a connection with the database... Error was: " + e.toString(), module);
+                        throw e;
+                    }
+                    
+                    if (connection == null) {
+                        throw new GenericEntityException("[SequenceUtil.SequenceBank.fillBank]: Unable to esablish a connection with the database, connection was null...");
+                    }
+
+                    String sql = null;
+
+                    try {
+                        // do we even need to do this?
+                        connection.setAutoCommit(false);
+
+                        stmt = connection.createStatement();
+                        int numTries = 0;
+
+                        while (val1 + bankSize != val2) {
+                            if (Debug.verboseOn()) Debug.logVerbose("[SequenceUtil.SequenceBank.fillBank] Trying to get a bank of sequenced ids for " +
+                                    this.seqName + "; start of loop val1=" + val1 + ", val2=" + val2 + ", bankSize=" + bankSize, module);
+                            
+                            sql = "SELECT " + parentUtil.idColName + " FROM " + parentUtil.tableName + " WHERE " + parentUtil.nameColName + "='" + this.seqName + "'";
+                            rs = stmt.executeQuery(sql);
+                            boolean gotVal1 = false;
+                            if (rs.next()) {
+                                val1 = rs.getInt(parentUtil.idColName);
+                                gotVal1 = true;
+                            }
+                            rs.close();
+                            
+                            if (!gotVal1) {
+                                Debug.logWarning("[SequenceUtil.SequenceBank.fillBank] first select failed: will try to add new row, result set was empty for sequence [" + seqName + "] \nUsed SQL: " + sql + " \n Thread Name is: " + Thread.currentThread().getName() + ":" + Thread.currentThread().toString(), module);
+                                sql = "INSERT INTO " + parentUtil.tableName + " (" + parentUtil.nameColName + ", " + parentUtil.idColName + ") VALUES ('" + this.seqName + "', " + startSeqId + ")";
+                                if (stmt.executeUpdate(sql) <= 0) {
+                                    throw new GenericEntityException("No rows changed when trying insert new sequence row with this SQL: " + sql);
+                                }
+                                continue;
+                            }
+
+                            sql = "UPDATE " + parentUtil.tableName + " SET " + parentUtil.idColName + "=" + parentUtil.idColName + "+" + bankSize + " WHERE " + parentUtil.nameColName + "='" + this.seqName + "'";
+                            if (stmt.executeUpdate(sql) <= 0) {
+                                throw new GenericEntityException("[SequenceUtil.SequenceBank.fillBank] update failed, no rows changes for seqName: " + seqName);
+                            }
+
+                            sql = "SELECT " + parentUtil.idColName + " FROM " + parentUtil.tableName + " WHERE " + parentUtil.nameColName + "='" + this.seqName + "'";
+                            rs = stmt.executeQuery(sql);
+                            boolean gotVal2 = false;
+                            if (rs.next()) {
+                                val2 = rs.getInt(parentUtil.idColName);
+                                gotVal2 = true;
+                            }
+
+                            rs.close();
+                            
+                            if (!gotVal2) {
+                                throw new GenericEntityException("[SequenceUtil.SequenceBank.fillBank] second select failed: aborting, result " + "set was empty for sequence: " + seqName);
+                                
+                            }
+
+                            if (val1 + bankSize != val2) {
+                                if (numTries >= maxTries) {
+                                    throw new GenericEntityException("[SequenceUtil.SequenceBank.fillBank] maxTries (" + maxTries + ") reached, giving up.");
+                                }
+                                
+                                // collision happened, wait a bounded random amount of time then continue
+                                int waitTime = (new Double(Math.random() * (maxWaitMillis - minWaitMillis))).intValue() + minWaitMillis;
+
+                                Debug.logWarning("[SequenceUtil.SequenceBank.fillBank] Collision found for seqName [" + seqName + "], val1=" + val1 + ", val2=" + val2 + ", val1+bankSize=" + (val1 + bankSize) + ", bankSize=" + bankSize + ", waitTime=" + waitTime, module);
+
+                                try {
+                                    this.wait(waitTime);
+                                } catch (Exception e) {
+                                    Debug.logWarning(e, "Error waiting in sequence util", module);
+                                    throw e;
+                                }
+                            }
+
+                            numTries++;
+                        }
+
+                        curSeqId = val1;
+                        maxSeqId = val2;
+                        if (Debug.verboseOn()) Debug.logVerbose("[SequenceUtil.SequenceBank.fillBank] Successfully got a bank of sequenced ids for " + this.seqName + "; curSeqId=" + curSeqId + ", maxSeqId=" + maxSeqId + ", bankSize=" + bankSize, module);
+                    } catch (SQLException sqle) {
+                        Debug.logWarning(sqle, "[SequenceUtil.SequenceBank.fillBank] SQL Exception while executing the following:\n" + sql + "\nError was:" + sqle.getMessage(), module);
+                        throw sqle;
+                    } finally {
+                        try {
+                            if (stmt != null) stmt.close();
+                        } catch (SQLException sqle) {
+                            Debug.logWarning(sqle, "Error closing statement in sequence util", module);
+                        }
+                        try {
+                            if (connection != null) connection.close();
+                        } catch (SQLException sqle) {
+                            Debug.logWarning(sqle, "Error closing connection in sequence util", module);
+                        }
+                    }
+                } catch (Exception e) {
+                    Debug.logError(e, "General error in getting a sequenced ID", module);
+                    try {
+                        TransactionUtil.rollback(beganTransaction);
+                    } catch (GenericTransactionException gte2) {
+                        Debug.logError(gte2, "Unable to rollback transaction", module);
+                    }
+                } finally {
+                    try {
+                        TransactionUtil.commit(beganTransaction);
+                    } catch (GenericTransactionException gte) {
+                        Debug.logError(gte, "Unable to commit transaction", module);
+                    }
+                }
             } catch (GenericTransactionException e) {
                 Debug.logError(e, "System Error suspending transaction in sequence util", module);
-            }
-
-            Connection connection = null;
-            Statement stmt = null;
-            ResultSet rs = null;
-
-            try {
-                connection = ConnectionFactory.getConnection(parentUtil.helperName);
-            } catch (SQLException sqle) {
-                Debug.logWarning("[SequenceUtil.SequenceBank.fillBank]: Unable to esablish a connection with the database... Error was:" + sqle.toString(), module);
-                return;
-            } catch (GenericEntityException e) {
-                Debug.logWarning("[SequenceUtil.SequenceBank.fillBank]: Unable to esablish a connection with the database... Error was: " + e.toString(), module);
-                return;
-            }
-            
-            if (connection == null) {
-                Debug.logWarning("[SequenceUtil.SequenceBank.fillBank]: Unable to esablish a connection with the database, connection was null...", module);
-                return;
-            }
-
-            String sql = null;
-
-            try {
-                try {
-                    connection.setAutoCommit(false);
-                } catch (SQLException sqle) {
-                    manualTX = false;
-                }
-
-                stmt = connection.createStatement();
-                int numTries = 0;
-
-                while (val1 + bankSize != val2) {
-                    if (Debug.verboseOn()) Debug.logVerbose("[SequenceUtil.SequenceBank.fillBank] Trying to get a bank of sequenced ids for " +
-                            this.seqName + "; start of loop val1=" + val1 + ", val2=" + val2 + ", bankSize=" + bankSize, module);
-                    sql = "SELECT " + parentUtil.idColName + " FROM " + parentUtil.tableName + " WHERE " + parentUtil.nameColName + "='" + this.seqName + "'";
-                    rs = stmt.executeQuery(sql);
-                    if (rs.next()) {
-                        val1 = rs.getInt(parentUtil.idColName);
-                    } else {
-                        Debug.logWarning("[SequenceUtil.SequenceBank.fillBank] first select failed: will try to add new row, result set was empty for sequence [" + seqName + "] \nUsed SQL: " + sql, module);
-                        try {
-                            if (rs != null) rs.close();
-                        } catch (SQLException sqle) {
-                            Debug.logWarning(sqle, "Error closing result set in sequence util", module);
-                        }
-                        sql = "INSERT INTO " + parentUtil.tableName + " (" + parentUtil.nameColName + ", " + parentUtil.idColName + ") VALUES ('" + this.seqName + "', " + startSeqId + ")";
-                        if (stmt.executeUpdate(sql) <= 0) {
-                            Debug.logWarning("No rows changed when trying insert new sequence row with this SQL: " + sql, module);
-                            return;
-                        }
-                        continue;
-                    }
-                    try {
-                        if (rs != null) rs.close();
-                    } catch (SQLException sqle) {
-                        Debug.logWarning(sqle, "Error closing result set in sequence util", module);
-                    }
-
-                    sql = "UPDATE " + parentUtil.tableName + " SET " + parentUtil.idColName + "=" + parentUtil.idColName + "+" + bankSize + " WHERE " + parentUtil.nameColName + "='" + this.seqName + "'";
-                    if (stmt.executeUpdate(sql) <= 0) {
-                        Debug.logWarning("[SequenceUtil.SequenceBank.fillBank] update failed, no rows changes for seqName: " + seqName, module);
-                        return;
-                    }
-
-                    if (manualTX) {
-                        connection.commit();
-                    }
-
-                    sql = "SELECT " + parentUtil.idColName + " FROM " + parentUtil.tableName + " WHERE " + parentUtil.nameColName + "='" + this.seqName + "'";
-                    rs = stmt.executeQuery(sql);
-                    if (rs.next()) {
-                        val2 = rs.getInt(parentUtil.idColName);
-                    } else {
-                        Debug.logWarning("[SequenceUtil.SequenceBank.fillBank] second select failed: aborting, result " +
-                            "set was empty for sequence: " + seqName, module);
-                        try {
-                            if (rs != null) rs.close();
-                        } catch (SQLException sqle) {
-                            Debug.logWarning(sqle, "Error closing result set in sequence util", module);
-                        }
-                        return;
-                    }
-                    try {
-                        if (rs != null) rs.close();
-                    } catch (SQLException sqle) {
-                        Debug.logWarning(sqle, "Error closing result set in sequence util", module);
-                    }
-
-                    if (val1 + bankSize != val2) {
-                        if (numTries >= maxTries) {
-                            Debug.logError("[SequenceUtil.SequenceBank.fillBank] maxTries (" + maxTries + ") reached, giving up.", module);
-                            return;
-                        }
-                        
-                        // collision happened, wait a bounded random amount of time then continue
-                        int waitTime = (new Double(Math.random() * (maxWaitMillis - minWaitMillis))).intValue() + minWaitMillis;
-
-                        Debug.logWarning("[SequenceUtil.SequenceBank.fillBank] Collision found for seqName [" + seqName + "], val1=" + val1 + ", val2=" + val2 + ", val1+bankSize=" + (val1 + bankSize) + ", bankSize=" + bankSize + ", waitTime=" + waitTime, module);
-
-                        try {
-                            this.wait(waitTime);
-                        } catch (Exception e) {
-                            Debug.logWarning(e, "Error waiting in sequence util", module);
-                        }
-                    }
-
-                    numTries++;
-                }
-
-                curSeqId = val1;
-                maxSeqId = val2;
-                if (Debug.verboseOn()) Debug.logVerbose("[SequenceUtil.SequenceBank.fillBank] Successfully got a bank of sequenced ids for " +
-                        this.seqName + "; curSeqId=" + curSeqId + ", maxSeqId=" + maxSeqId + ", bankSize=" + bankSize, module);
-            } catch (SQLException sqle) {
-                Debug.logWarning(sqle, "[SequenceUtil.SequenceBank.fillBank] SQL Exception while executing the following:\n" +
-                    sql + "\nError was:" + sqle.getMessage(), module);
-                return;
             } finally {
-                try {
-                    if (stmt != null) stmt.close();
-                } catch (SQLException sqle) {
-                    Debug.logWarning(sqle, "Error closing statement in sequence util", module);
-                }
-                try {
-                    if (connection != null) connection.close();
-                } catch (SQLException sqle) {
-                    Debug.logWarning(sqle, "Error closing connection in sequence util", module);
-                }
-            }
-            
-            if (suspendedTransaction != null) {
-                try {
-                    TransactionUtil.resume(suspendedTransaction);
-                } catch (GenericTransactionException e) {
-                    Debug.logError(e, "Error resuming suspended transaction in sequence util", module);
+                if (suspendedTransaction != null) {
+                    try {
+                        TransactionUtil.resume(suspendedTransaction);
+                    } catch (GenericTransactionException e) {
+                        Debug.logError(e, "Error resuming suspended transaction in sequence util", module);
+                    }
                 }
             }
         }
