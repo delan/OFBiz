@@ -64,7 +64,8 @@
 <!ATTLIST field
     name CDATA #REQUIRED
     col-name CDATA #IMPLIED
-    type CDATA #REQUIRED >
+    type CDATA #REQUIRED
+    encrypt ( true | false ) "false" >
 <!ELEMENT validate EMPTY>
 <!ATTLIST validate
     name CDATA #REQUIRED >

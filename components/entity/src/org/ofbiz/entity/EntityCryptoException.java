@@ -1,7 +1,7 @@
 /*
  * $Id$
  *
- * Copyright (c) 2001, 2002 The Open For Business Project - www.ofbiz.org
+ * Copyright (c) 2004 The Open For Business Project - www.ofbiz.org
  *
  * Permission is hereby granted, free of charge, to any person obtaining a
  * copy of this software and associated documentation files (the "Software"),
@@ -24,30 +24,27 @@
  */
 package org.ofbiz.entity;
 
-import org.ofbiz.base.util.*;
-
 /**
- * GenericEntityException
- *
- * @author     <a href="mailto:jonesde@ofbiz.org">David E. Jones</a>
+ * 
+ * @author     <a href="mailto:jaz@ofbiz.org">Andy Zeneski</a>
  * @version    $Rev:$
- * @since      2.0
+ * @since      3.2
  */
-public class GenericEntityException extends GeneralException {
+public class EntityCryptoException extends GenericEntityException {
 
-    public GenericEntityException() {
+    public EntityCryptoException() {
         super();
     }
 
-    public GenericEntityException(Throwable nested) {
-        super(nested);    
+    public EntityCryptoException(Throwable nested) {
+        super(nested);
     }
 
-    public GenericEntityException(String str) {
+    public EntityCryptoException(String str) {
         super(str);
     }
 
-    public GenericEntityException(String str, Throwable nested) {
+    public EntityCryptoException(String str, Throwable nested) {
         super(str, nested);
     }
 }
