@@ -1,5 +1,5 @@
 /*
- * $Id: ProductSearch.java,v 1.29 2004/04/25 07:15:44 jonesde Exp $
+ * $Id: ProductSearch.java,v 1.30 2004/04/29 00:13:53 jonesde Exp $
  *
  *  Copyright (c) 2001 The Open For Business Project (www.ofbiz.org)
  *  Permission is hereby granted, free of charge, to any person obtaining a
@@ -59,7 +59,7 @@ import org.ofbiz.entity.util.EntityUtil;
  *  Utilities for product search based on various constraints including categories, features and keywords.
  *
  * @author <a href="mailto:jonesde@ofbiz.org">David E. Jones</a>
- * @version    $Revision: 1.29 $
+ * @version    $Revision: 1.30 $
  * @since      3.0
  */
 public class ProductSearch {
@@ -390,13 +390,17 @@ public class ProductSearch {
                     this.totalResults = new Integer(failTotal);
                     return productIds;
                 }
-                productIds.add(searchResult.getString("productId"));
 
+                
                 // init numRetreived to one since we have already grabbed the initial one
                 int numRetreived = 1;
                 int duplicatesFound = 0;
 
                 Set productIdSet = new HashSet();
+                
+                productIds.add(searchResult.getString("productId"));
+                productIdSet.add(searchResult.getString("productId"));
+
                 while (((searchResult = (GenericValue) eli.next()) != null) && (maxResults == null || numRetreived < maxResults.intValue())) {
                     String productId = searchResult.getString("productId");
                     if (!productIdSet.contains(productId)) {
