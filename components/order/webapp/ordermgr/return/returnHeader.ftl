@@ -138,6 +138,14 @@
     </tr>
     <tr>
       <td width='14%'>&nbsp;</td>
+      <td width='6%' align='right' nowrap><div class="tabletext">Created By</div></td>
+      <td width='6%'>&nbsp;</td>
+      <td width='74%'>
+        <b>${returnHeader.createdBy?default("Unknown")}</b>
+      </td>
+    </tr>
+    <tr>
+      <td width='14%'>&nbsp;</td>
       <td width='6%' align='right' valign='top' nowrap><div class="tabletext">${uiLabelMap.OrderReturnFromAddress}</div></td>
       <td width='6%'>&nbsp;</td>
       <td width='74%'>

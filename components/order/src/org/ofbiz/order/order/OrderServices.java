@@ -2127,7 +2127,7 @@ public class OrderServices {
         // get the order header -- the first item will determine which product store to use from the order
         String productStoreId = null;
         String emailAddress = null;
-        if (returnItems != null) {
+        if (returnItems != null && returnItems.size() > 0) {
             GenericValue firstItem = EntityUtil.getFirst(returnItems);
             GenericValue orderHeader = null;
             try {
@@ -2151,7 +2151,6 @@ public class OrderServices {
                 emailSetting = delegator.findByPrimaryKey("ProductStoreEmailSetting", UtilMisc.toMap("productStoreId", productStoreId, "emailType", emailType));
             } catch (GenericEntityException e) {
                 Debug.logError(e, module);
-                return ServiceUtil.returnError("ERROR: Unable to locate email setting : " + productStoreId + " / " + emailType);
             }
 
             if (emailSetting != null && emailAddress != null) {
@@ -2182,7 +2181,7 @@ public class OrderServices {
             }
         }
 
-        return ServiceUtil.returnError("ERROR: Problem with Product Store email setting : " + productStoreId + " / " + emailType);
+        return ServiceUtil.returnFailure("No valid email setting for store");
     }
 
     // return request notification

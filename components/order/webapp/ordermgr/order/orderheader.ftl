@@ -99,6 +99,22 @@
                         </div>
                       </td>
                     </tr>
+                    <tr><td colspan="7"><hr class="sepbar"></td></tr>
+                    <tr>
+                      <td align="right" valign="top" width="15%">
+                        <div class="tabletext">&nbsp;<b>Created By</b></div>
+                      </td>
+                      <td width="5">&nbsp;</td>
+                      <td align="left" valign="top" width="80%">
+                        <div class="tabletext">
+                          <#if orderHeader.createdBy?has_content>
+                            <a href="/partymgr/control/viewprofile?userlogin_id=${orderHeader.createdBy}${requestAttributes.externalKeyParam}" target="partymgr" class="buttontext">${orderHeader.createdBy}</a>
+                          <#else>
+                            ???
+                          </#if>
+                        </div>
+                      </td>
+                    </tr>
                     <#if distributorId?exists>
                     <tr><td colspan="7"><hr class="sepbar"></td></tr>
                     <tr>
@@ -522,43 +538,45 @@
 
                   <table width="100%" border="0" cellpadding="1" cellspacing="0">
                     <#if shipGroup.contactMechId?has_content>
-                    <tr>
-                      <td align="right" valign="top" width="15%">
-                        <div class="tabletext">&nbsp;<b>Address</b></div>
-                      </td>
-                      <td width="5">&nbsp;</td>
-                      <td align="left" valign="top" width="80%">
-                        <div class="tabletext">
-                          ${(shipGroupAddress.address1)?default("")}
-                        </div>
-                      </td>
-                    </tr>
+                      <tr>
+                        <td align="right" valign="top" width="15%">
+                          <div class="tabletext">&nbsp;<b>Address</b></div>
+                        </td>
+                        <td width="5">&nbsp;</td>
+                        <td align="left" valign="top" width="80%">
+                          <div class="tabletext">
+                            ${(shipGroupAddress.address1)?default("")}
+                          </div>
+                        </td>
+                      </tr>
                     </#if>
 
                     <#if shipGroup.shipmentMethodTypeId?has_content>
-                    <tr>
-                      <td align="right" valign="top" width="15%">
-                        <div class="tabletext">&nbsp;<b>${uiLabelMap.CommonMethod}</b></div>
-                      </td>
-                      <td width="5">&nbsp;</td>
-                      <td align="left" valign="top" width="80%">
-                        <#if shipGroup.carrierPartyId?has_content || shipmentMethodType?has_content>
-                          <div class="tabletext">
-                            <#if shipGroup.carrierPartyId != "_NA_">
-                              ${shipGroup.carrierPartyId?if_exists}
-                            </#if>
-                            ${shipmentMethodType.description?default("")}
-                          </div>
-                        </#if>
-                      </td>
-                    </tr>
+                      <tr>
+                        <td align="right" valign="top" width="15%">
+                          <div class="tabletext">&nbsp;<b>${uiLabelMap.CommonMethod}</b></div>
+                        </td>
+                        <td width="5">&nbsp;</td>
+                        <td align="left" valign="top" width="80%">
+                          <#if shipGroup.carrierPartyId?has_content || shipmentMethodType?has_content>
+                            <div class="tabletext">
+                              <#if shipGroup.carrierPartyId != "_NA_">
+                                ${shipGroup.carrierPartyId?if_exists}
+                              </#if>
+                              ${shipmentMethodType.description?default("")}
+                            </div>
+                          </#if>
+                        </td>
+                      </tr>
                     </#if>
 
                     <#if !shipGroup.contactMechId?has_content && !shipGroup.shipmentMethodTypeId?has_content>
-                    <#assign noShipment = "true">
-                    <tr>
-                      <td colspan="3" align="center"><div class="tableheadtext">Not Shipped</div></td>
-                    </tr>
+                      <#assign noShipment = "true">
+                      <tr>
+                        <td colspan="3" align="center">
+                          <div class="tableheadtext">Not Shipped</div>
+                        </td>
+                      </tr>
                     </#if>
 
                     <#-- tracking number -->
@@ -620,7 +638,7 @@
                         </td>
                       </tr>
                     </#if>
-                    <#if shipGroup.isGift?has_content && noShipment?default("false") != "true">>
+                    <#if shipGroup.isGift?has_content && noShipment?default("false") != "true">
                       <tr><td colspan="7"><hr class="sepbar"></td></tr>
                       <tr>
                         <td align="right" valign="top" width="15%">
@@ -693,7 +711,8 @@
                              <div class="tabletext"><a href="<@ofbizUrl>/OrderDeliveryScheduleInfo?orderId=${orderId}</@ofbizUrl>" class="buttontext">View/Edit Delivery Schedule Info</a></div>
                            </#if>
                            <#if security.hasEntityPermission("ORDERMGR", "_RETURN", session) && orderHeader.statusId == "ORDER_COMPLETED">
-                             <div class="tabletext"><a href="<@ofbizUrl>/quickreturn?order_id=${orderId}&party_id=${partyId?if_exists}</@ofbizUrl>" class="buttontext">Create Return</a></div>
+                             <div><a href="<@ofbizUrl>/quickRefundOrder?order_id=${orderId}&orderId=${orderId}&receiveReturn=true</@ofbizUrl>" class="buttontext">Quick-Refund Entire Order</a></div>
+                             <div><a href="<@ofbizUrl>/quickreturn?order_id=${orderId}&party_id=${partyId?if_exists}</@ofbizUrl>" class="buttontext">Create Return</a></div>
                            </#if>
                          </#if>
                        </td>

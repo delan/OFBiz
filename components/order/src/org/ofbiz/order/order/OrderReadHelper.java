@@ -1180,7 +1180,13 @@ public class OrderReadHelper {
     }
 
     public double getOrderReturnedQuantity() {
-        List returnedItems = getOrderReturnItems();
+        List returnedItemsBase = getOrderReturnItems();
+        List returnedItems = new ArrayList(returnedItemsBase.size());
+
+        // get only the RETURN_RECEIVED and RETURN_COMPLETED statusIds
+        returnedItems.addAll(EntityUtil.filterByAnd(returnedItemsBase, UtilMisc.toMap("statusId", "RETURN_RECEIVED")));
+        returnedItems.addAll(EntityUtil.filterByAnd(returnedItemsBase, UtilMisc.toMap("statusId", "RETURN_COMPLETED")));
+                
         double returnedQuantity = 0.00;
         if (returnedItems != null) {
             Iterator i = returnedItems.iterator();
@@ -1615,7 +1621,7 @@ public class OrderReadHelper {
                 adjTotal += OrderReadHelper.calcOrderAdjustment(orderAdjustment, subTotal);
             }
         }
-        return adjTotal;
+        return UtilFormatOut.formatPriceNumber(adjTotal).doubleValue();
     }
 
     public static double calcOrderAdjustment(GenericValue orderAdjustment, double orderSubTotal) {
@@ -1627,7 +1633,7 @@ public class OrderReadHelper {
         if (orderAdjustment.get("percentage") != null) {
             adjustment += (orderAdjustment.getDouble("percentage").doubleValue() * orderSubTotal);
         }
-        return adjustment;
+        return UtilFormatOut.formatPriceNumber(adjustment).doubleValue();
     }
 
     // ================= Order Item Adjustments =================
@@ -1642,7 +1648,7 @@ public class OrderReadHelper {
             //Debug.log("Item : " + orderItem.getString("orderId") + " / " + orderItem.getString("orderItemSeqId") + " = " + itemTotal, module);
             result += itemTotal;
         }
-        return result;
+        return UtilFormatOut.formatPriceNumber(result).doubleValue();
     }
 
     /** The passed adjustments can be all adjustments for the order, ie for all line items */
@@ -1666,7 +1672,7 @@ public class OrderReadHelper {
         // subtotal also includes non tax and shipping adjustments; tax and shipping will be calculated using this adjusted value
         result += getOrderItemAdjustmentsTotal(orderItem, adjustments, true, false, false, forTax, forShipping);
 
-        return result;
+        return UtilFormatOut.formatPriceNumber(result).doubleValue();
     }
 
     public static double getOrderItemsTotal(List orderItems, List adjustments) {
@@ -1676,12 +1682,12 @@ public class OrderReadHelper {
         while (itemIter != null && itemIter.hasNext()) {
             result += getOrderItemTotal((GenericValue) itemIter.next(), adjustments);
         }
-        return result;
+        return UtilFormatOut.formatPriceNumber(result).doubleValue();
     }
 
     public static double getOrderItemTotal(GenericValue orderItem, List adjustments) {
         // add tax and shipping to subtotal
-        return (getOrderItemSubTotal(orderItem, adjustments) + getOrderItemAdjustmentsTotal(orderItem, adjustments, false, true, true));
+        return UtilFormatOut.formatPriceNumber(getOrderItemSubTotal(orderItem, adjustments) + getOrderItemAdjustmentsTotal(orderItem, adjustments, false, true, true)).doubleValue();
     }
 
     public static double getAllOrderItemsAdjustmentsTotal(List orderItems, List adjustments, boolean includeOther, boolean includeTax, boolean includeShipping) {
@@ -1691,7 +1697,7 @@ public class OrderReadHelper {
         while (itemIter != null && itemIter.hasNext()) {
             result += getOrderItemAdjustmentsTotal((GenericValue) itemIter.next(), adjustments, includeOther, includeTax, includeShipping);
         }
-        return result;
+        return UtilFormatOut.formatPriceNumber(result).doubleValue();
     }
 
     /** The passed adjustments can be all adjustments for the order, ie for all line items */
