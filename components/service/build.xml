@@ -21,7 +21,7 @@
  *  THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  *
  *  This is the Open for Business Service Build Script.
- *  $Id: build.xml,v 1.9 2004/02/19 18:52:35 ajzeneski Exp $
+ *  $Id: build.xml,v 1.10 2004/03/18 19:11:52 ajzeneski Exp $
 -->
 
 <project name="OFBiz - Service" default="jar" basedir=".">
@@ -43,8 +43,7 @@
     <target name="classpath">
         <path id="local.class.path">
             <fileset dir="${lib.dir}" includes="*.jar"/>
-            <fileset dir="../../base/lib" includes="*.jar"/>
-            <fileset dir="../../base/lib/jetty" includes="*.jar"/>
+            <fileset dir="../../base/lib" includes="*.jar"/>            
             <fileset dir="../../base/lib/scripting" includes="*.jar"/>
             <fileset dir="../../base/build/lib" includes="*.jar"/>
             <fileset dir="../minerva/lib" includes="*.jar"/>
