@@ -69,7 +69,7 @@
 
 <ofbiz:iterator name="facilityRole" property="facilityRoles">  
   <tr valign="middle">
-    <td><a href='/partymgr/control/viewprofile?partyId=<ofbiz:inputvalue entityAttr="facilityRole" field="partyId"/>' class="buttontext"><ofbiz:inputvalue entityAttr="facilityRole" field="partyId"/></a></td>    
+    <td><a href='/partymgr/control/viewprofile?party_id=<ofbiz:inputvalue entityAttr="facilityRole" field="partyId"/>' class="buttontext"><ofbiz:inputvalue entityAttr="facilityRole" field="partyId"/></a></td>    
     <td><div class="tabletext"><ofbiz:inputvalue entityAttr="facilityRole" field="roleTypeId"/></div></td>    
     <td align="center">
       <a href='<ofbiz:url>/removePartyFromFacility?facilityId=<ofbiz:entityfield attribute="facilityRole" field="facilityId"/>&partyId=<ofbiz:entityfield attribute="facilityRole" field="partyId"/>&roleTypeId=<ofbiz:entityfield attribute="facilityRole" field="roleTypeId"/></ofbiz:url>' class="buttontext">
