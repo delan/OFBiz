@@ -43,7 +43,7 @@
         <ofbiz:param name='product' attribute='product'/>
         <ofbiz:param name='prodCatalogId' value='<%=CatalogWorker.getCurrentCatalogId(pageContext)%>'/>
         <%-- don't need to pass the partyId because it will use the one from the currently logged in user, if there user logged in --%>
-        <%-- returns: isSale, price, orderItemPriceInfos --%>
+        <%-- returns: isSale, price, orderItemPriceInfos and optionally: listPrice, defaultPrice, averageCost --%>
     </ofbiz:service>
 
     <%-- ====================================================== --%>
@@ -277,8 +277,8 @@
             <div class="tabletext">Regular price: <span class='basePrice'><ofbiz:field attribute="defaultPrice" type="currency"/></span></div>
         <%}%>
         <div class="tabletext"><b>
-            <ofbiz:if name="isSale" type="Boolean"><span class='salePrice'>On Sale!</span></ofbiz:if>
-            Your price: <span class='<ofbiz:if name="isSale" type="Boolean">salePrice</ofbiz:if><ofbiz:unless name="isSale" type="Boolean">normalPrice</ofbiz:unless>'><ofbiz:field attribute="price" type="currency"/></span>
+            <ofbiz:if name="isSale"><span class='salePrice'>On Sale!</span></ofbiz:if>
+            Your price: <span class='<ofbiz:if name="isSale">salePrice</ofbiz:if><ofbiz:unless name="isSale">normalPrice</ofbiz:unless>'><ofbiz:field attribute="price" type="currency"/></span>
         </b></div>
         <%if (product.get("quantityIncluded") != null && product.getDouble("quantityIncluded").doubleValue() != 0) {%>
             <div class="tabletext">Size:
@@ -459,7 +459,7 @@
               </div>
             </td></tr>
 
-              <%{%>
+              <%try {%>
                 <%GenericValue asscProduct = productAssoc.getRelatedOneCache("AssocProduct");%>
                 <%pageContext.setAttribute("product", asscProduct);%>
                 <tr>
@@ -468,7 +468,7 @@
                   </td>
                 </tr>
                 <%listIndex++;%>
-              <%}%>
+              <%} catch (Exception e) { Debug.logError(e); throw e; }%>
 
             <tr><td><hr class='sepbar'></td></tr>
         </ofbiz:iterator>

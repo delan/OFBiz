@@ -5,8 +5,9 @@
         <ofbiz:param name='product' attribute='product'/>
         <ofbiz:param name='prodCatalogId' value='<%=CatalogWorker.getCurrentCatalogId(pageContext)%>'/>
         <%-- don't need to pass the partyId because it will use the one from the currently logged in user, if there user logged in --%>
-        <%-- returns: isSale, price, orderItemPriceInfos --%>
+        <%-- returns: isSale, price, orderItemPriceInfos and optionally: listPrice, defaultPrice, averageCost --%>
     </ofbiz:service>
+    <%boolean isSale = pageContext.getAttribute("isSale") != null ? ((Boolean) pageContext.getAttribute("isSale")).booleanValue() : false;%>
   <table border="0" width='100%' cellpadding='0' cellspacing='0'>
     <tr>
       <td valign="top">
@@ -31,8 +32,8 @@
                     List price: <span class='basePrice'><ofbiz:field attribute="listPrice" type="currency"/></span>
                 <%}%>
                 <b>
-                    <ofbiz:if name="isSale" type="Boolean"><span class='salePrice'>On Sale!</span></ofbiz:if>
-                    Your price: <span class='<ofbiz:if name="isSale" type="Boolean">salePrice</ofbiz:if><ofbiz:unless name="isSale" type="Boolean">normalPrice</ofbiz:unless>'><ofbiz:field attribute="price" type="currency"/></span>
+                    <%if (isSale) {%><span class='salePrice'>On Sale!</span><%}%>
+                    Your price: <span class='<%if (isSale) {%>salePrice<%} else {%>normalPrice<%}%>'><ofbiz:field attribute="price" type="currency"/></span>
                 </b>
             </nobr>
           </div>
