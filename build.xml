@@ -70,7 +70,7 @@
 
     <target name="clean-data">
         <delete verbose="on">
-            <fileset dir="data" includes="*"/>
+            <fileset dir="data" includes="**/*"/>
         </delete>
     </target>
 
