@@ -452,14 +452,14 @@
 
     <request-map uri="createPostalAddressAndPurpose">
         <security https="true" auth="true"/>
-        <event type="simple" path="org/ofbiz/commonapp/party/contact/PartyContactMechServices.xml" invoke="createPartyPostalAddressAndPurpose"/>
+        <event type="service" invoke="createPartyPostalAddress"/>
         <response name="success" type="view" value="editcontactmech"/>
         <response name="error" type="view" value="editcontactmech"/>
     </request-map>
 
     <request-map uri="createPostalAddress">
         <security https="true" auth="true"/>
-        <event type="simple" path="org/ofbiz/commonapp/party/contact/PartyContactMechServices.xml" invoke="createPartyPostalAddress"/>
+        <event type="service" invoke="createPartyPostalAddress"/>
         <response name="success" type="view" value="editcontactmech"/>
         <response name="error" type="view" value="editcontactmech"/>
     </request-map>
