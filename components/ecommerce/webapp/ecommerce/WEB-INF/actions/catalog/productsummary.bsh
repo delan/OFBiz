@@ -21,7 +21,7 @@
  *
  *@author     Andy Zeneski
  *@author     David E. Jones
- *@version    $Rev:$
+ *@version    $Rev$
  *@since      2.1
  */
 
@@ -64,7 +64,7 @@ if (product == null && productId != null) {
     product = delegator.findByPrimaryKeyCache("Product", UtilMisc.toMap("productId", productId));
 }
 if (product != null) {
-    request.setAttribute("product", product);
+    context.put("product", product);
     
     productFacility = delegator.findByPrimaryKeyCache("ProductFacility", UtilMisc.toMap("productId", product.get("productId"), "facilityId", facilityId));
     if (productFacility != null && productFacility.get("daysToShip") != null) {
@@ -73,7 +73,7 @@ if (product != null) {
     
     // make the productContentWrapper
     ProductContentWrapper productContentWrapper = new ProductContentWrapper(product, request);
-    request.setAttribute("productContentWrapper", productContentWrapper);
+    context.put("productContentWrapper", productContentWrapper);
 }
 
 categoryId = null;
@@ -82,9 +82,7 @@ if (product != null) {
     if (categoryId == null) {
         categoryId = request.getAttribute("productCategoryId");
     }
-    if (categoryId != null) {
-        request.setAttribute("categoryId", categoryId);
-    }
+    context.put("categoryId", categoryId);
 
     // get the product price
     priceMap = dispatcher.runSync("calculateProductPrice", 
@@ -92,33 +90,33 @@ if (product != null) {
             "webSiteId", webSiteId, "currencyUomId", UtilHttp.getCurrencyUom(session), 
             "autoUserLogin", autoUserLogin, "userLogin", userLogin));
             
-    request.setAttribute("priceMap", priceMap);
+    context.put("price", priceMap);
 }
 
-    // get the product review(s)
-    reviews = product.getRelatedCache("ProductReview", null, UtilMisc.toList("-postedDateTime"));
-    context.put("productReviews", reviews);
-    // get the average rating
-    if (reviews != null && reviews.size() > 0) {
-        reviewIter = reviews.iterator();
-        double totalProductRating = 0;
-        long numRatings = 0;
-        while (reviewIter.hasNext()) {
-            productReview = reviewIter.next();
-            productRating = productReview.get("productRating");
-            if (productRating != null) {
-                totalProductRating += productRating;
-                numRatings++;
-            }
-        }
-        if (numRatings > 0) {
-            context.put("averageRating", totalProductRating/numRatings);
-            context.put("numRatings", numRatings);
+// get the product review(s)
+reviews = product.getRelatedCache("ProductReview", null, UtilMisc.toList("-postedDateTime"));
+context.put("productReviews", reviews);
+// get the average rating
+if (reviews != null && reviews.size() > 0) {
+    reviewIter = reviews.iterator();
+    double totalProductRating = 0;
+    long numRatings = 0;
+    while (reviewIter.hasNext()) {
+        productReview = reviewIter.next();
+        productRating = productReview.get("productRating");
+        if (productRating != null) {
+            totalProductRating += productRating;
+            numRatings++;
         }
     }
+    if (numRatings > 0) {
+        context.put("averageRating", totalProductRating/numRatings);
+        context.put("numRatings", numRatings);
+    }
+}
 
-    // an example of getting features of a certain type to show
-    sizeProductFeatureAndAppls = delegator.findByAnd("ProductFeatureAndAppl", UtilMisc.toMap("productId", productId, "productFeatureTypeId", "SIZE"), UtilMisc.toList("sequenceNum", "defaultSequenceNum"));
-    context.put("sizeProductFeatureAndAppls", sizeProductFeatureAndAppls);
+// an example of getting features of a certain type to show
+sizeProductFeatureAndAppls = delegator.findByAnd("ProductFeatureAndAppl", UtilMisc.toMap("productId", productId, "productFeatureTypeId", "SIZE"), UtilMisc.toList("sequenceNum", "defaultSequenceNum"));
+context.put("sizeProductFeatureAndAppls", sizeProductFeatureAndAppls);
 
     

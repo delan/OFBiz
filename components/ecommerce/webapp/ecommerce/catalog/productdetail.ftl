@@ -541,7 +541,7 @@ ${virtualJavaScript?if_exists}
       </#if>
       <tr>
         <td>
-          ${pages.get("/catalog/productsummary.ftl")}
+          ${screens.render("component://ecommerce/widget/CatalogScreens.xml#productsummary")}
         </td>
       </tr>
       <#local listIndex = listIndex + 1>
@@ -578,7 +578,7 @@ ${setRequestAttribute("productValue", productValue)}
       ${setRequestAttribute("listIndex", commonFeatureResultId_index)}
       ${setRequestAttribute("formNamePrefix", "cfeatcssl")}
       <#-- ${setRequestAttribute("targetRequestName", targetRequestName)} -->
-      ${pages.get("/catalog/productsummary.ftl")}
+      ${screens.render("component://ecommerce/widget/CatalogScreens.xml#productsummary")}
     </div>
     <#if commonFeatureResultId_has_next>
       <hr class="sepbar"/>

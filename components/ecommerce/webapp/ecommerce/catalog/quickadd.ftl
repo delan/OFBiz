@@ -1,5 +1,5 @@
 <#--
- *  Copyright (c) 2003 The Open For Business Project - www.ofbiz.org
+ *  Copyright (c) 2003-2004 The Open For Business Project - www.ofbiz.org
  *
  *  Permission is hereby granted, free of charge, to any person obtaining a 
  *  copy of this software and associated documentation files (the "Software"), 
@@ -19,13 +19,12 @@
  *  OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR 
  *  THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  *
+ *@author     David E. Jones (jonesde@ofbiz.org)
  *@author     Andy Zeneski (jaz@ofbiz.org)
  *@version    $Rev$
  *@since      2.1
 -->
 
-<#assign uiLabelMap = requestAttributes.uiLabelMap>
-<#assign delegator = requestAttributes.delegator>
 <#if productCategory?has_content>
   <table border='0'  cellpadding='3' cellspacing='0'>
     <tr>
@@ -77,7 +76,7 @@
         <#assign product = productCategoryMember.getRelatedOneCache("Product")>
         <tr>
             ${setRequestAttribute("optProductId", productCategoryMember.productId)} 
-            ${pages.get("/catalog/quickaddsummary.ftl")}
+            ${screens.render("component://ecommerce/widget/CatalogScreens.xml#quickaddsummary")}
         </tr>        
       </#list> 
     </table>
