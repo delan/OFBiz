@@ -26,7 +26,7 @@
  *
  * @author     David E. Jones (jonesde@ofbiz.org)
  * @author     Andy Zeneski (jaz@ofbiz.org)
- * @version    $Revision: 1.7 $
+ * @version    $Revision: 1.8 $
  */
 -->
 
@@ -61,6 +61,8 @@
       <field name="passwordHint" type="description"></field>
       <field name="enabled" type="indicator"></field>
       <field name="hasLoggedOut" type="indicator"></field>
+      <field name="lastCurrencyUom" type="id"></field>
+      <field name="lastLocale" type="very-short"></field>
       <field name="disabledDateTime" type="date-time"></field>
       <field name="successiveFailedLogins" type="numeric"></field>
       <prim-key field="userLoginId"/>

@@ -1,5 +1,5 @@
 /*
- * $Id: CommonEvents.java,v 1.2 2003/09/26 17:06:17 jonesde Exp $
+ * $Id: CommonEvents.java,v 1.3 2004/07/09 18:14:34 ajzeneski Exp $
  *
  * Copyright (c) 2001, 2002 The Open For Business Project - www.ofbiz.org
  *
@@ -38,6 +38,8 @@ import org.ofbiz.base.util.Debug;
 import org.ofbiz.base.util.StringUtil;
 import org.ofbiz.base.util.UtilCache;
 import org.ofbiz.base.util.UtilMisc;
+import org.ofbiz.base.util.UtilValidate;
+import org.ofbiz.base.util.UtilHttp;
 import org.ofbiz.entity.GenericDelegator;
 import org.ofbiz.entity.GenericEntityException;
 import org.ofbiz.entity.GenericValue;
@@ -48,7 +50,7 @@ import org.ofbiz.security.Security;
  *
  * @author     <a href="mailto:jaz@ofbiz.org">Andy Zeneski</a>
  * @author     <a href="mailto:jonesde@ofbiz.org">David E. Jones</a>
- * @version    $Revision: 1.2 $
+ * @version    $Revision: 1.3 $
  * @since      2.1
  */
 public class CommonEvents {
@@ -171,6 +173,47 @@ public class CommonEvents {
             appletSessions.put(followerSessionId, follow);
         }
         return "success";                
+    }
+
+    /** Simple event to set the users per-session locale setting */
+    public static String setSessionLocale(HttpServletRequest request, HttpServletResponse response) {
+        String localeString = request.getParameter("locale");
+        if (UtilValidate.isNotEmpty(localeString)) {
+            UtilHttp.setLocale(request, localeString);
+
+            // update the UserLogin object
+            GenericValue userLogin = (GenericValue) request.getSession().getAttribute("userLogin");
+            GenericValue ulUpdate = new GenericValue(userLogin);
+            ulUpdate.set("lastLocale", localeString);
+            try {
+                ulUpdate.store();
+                userLogin.refreshFromCache();
+            } catch (GenericEntityException e) {
+                Debug.logWarning(e, module);
+            }
+        }
+        return "success";
+    }
+
+    /** Simple event to set the users per-session currency uom value */
+    public static String setSessionCurrencyUom(HttpServletRequest request, HttpServletResponse response) {
+        String currencyUom = request.getParameter("currencyUom");
+        if (UtilValidate.isNotEmpty(currencyUom)) {
+            // update the session
+            UtilHttp.setCurrencyUom(request, currencyUom);
+
+            // update the UserLogin object
+            GenericValue userLogin = (GenericValue) request.getSession().getAttribute("userLogin");
+            GenericValue ulUpdate = new GenericValue(userLogin);
+            ulUpdate.set("lastCurrencyUom", currencyUom);
+            try {
+                ulUpdate.store();
+                userLogin.refreshFromCache();
+            } catch (GenericEntityException e) {
+                Debug.logWarning(e, module);
+            }
+        }
+        return "success";
     }
 }
 

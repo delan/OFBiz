@@ -73,7 +73,7 @@
 
     <request-map uri="setSessionLocale">
         <security https="true" auth="false"/>
-        <event type="java" path="org.ofbiz.base.util.UtilHttp" invoke="setSessionLocale"/>
+        <event type="java" path="org.ofbiz.common.CommonEvents" invoke="setSessionLocale"/>
         <response name="success" type="view" value="main"/>
         <response name="error" type="view" value="main"/>
     </request-map>

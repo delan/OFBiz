@@ -20,10 +20,11 @@
  *  THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  *
  *@author     Andy Zeneski (jaz@ofbiz.org)
- *@version    $Revision: 1.3 $
+ *@version    $Revision: 1.4 $
  *@since      3.0
 -->
 <#assign uiLabelMap = requestAttributes.uiLabelMap>
+<#assign locale = Static["org.ofbiz.base.util.UtilHttp"].getLocale(session)>
 
 <table border=0 width='100%' cellspacing='0' cellpadding='0' class='boxoutside'>
   <tr>
@@ -44,14 +45,14 @@
           <td align='center'>
             <form method="POST" name="chooseLanguage" action="<@ofbizUrl>/setSessionLocale</@ofbizUrl>" style="margin: 0;">
               <select name="locale" class="selectBox">
-                <#assign initialDisplayName = requestAttributes.locale.getDisplayName()>
+                <#assign initialDisplayName = locale.getDisplayName(locale)>
                 <#if 18 < initialDisplayName?length>
                   <assign initialDisplayName = initialDisplayName[0..15] + "...">
                 </#if>
                 <option value="${requestAttributes.locale.toString()}">${initialDisplayName}</option>
                 <option value="${requestAttributes.locale.toString()}">----</option>
                 <#list requestAttributes.availableLocales as availableLocale>
-                  <#assign displayName = availableLocale.getDisplayName()>
+                  <#assign displayName = availableLocale.getDisplayName(locale)>
                   <#if 18 < displayName?length>
                     <#assign displayName = displayName[0..15] + "...">
                   </#if>
