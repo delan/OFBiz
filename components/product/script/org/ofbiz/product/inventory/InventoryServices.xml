@@ -71,7 +71,21 @@
         <find-by-primary-key map-name="lookupPKMap" value-name="lookedUpValue"/>
         <remove-value value-name="lookedUpValue"/>
     </simple-method>
+    <simple-method method-name="checkProductInventoryDiscontinuation" short-description="Check Product Inventory Discontinuation" login-required="false">
+        <field-to-field field-name="productId" map-name="parameters" to-map-name="productIdMap"/>
+        <find-by-primary-key entity-name="Product" map-name="productIdMap" value-name="product"/>
+        <if-compare field-name="product.salesDiscWhenNotAvail" operator="equals" value="Y">
+            <!-- now for the real fun, get the inventory available if is less-equal to zero discontinue product -->
+            <call-service service-name="getProductInventoryAvailable" in-map-name="productIdMap">
+                <result-to-field result-name="availableToPromise"/>
+            </call-service>
+            <if-compare field-name="availableToPromise" operator="less-equals" value="0" type="Double">
+                <call-service service-name="discontinueProductSales" in-map-name="productIdMap"/>
+            </if-compare>
+        </if-compare>
+    </simple-method>
 
+    
     <simple-method method-name="createInventoryItemVariance" short-description="Create an InventoryItemVariance">
         <check-permission permission="CATALOG" action="_CREATE">
             <alt-permission permission="FACILITY" action="_CREATE"/>

@@ -258,7 +258,24 @@
             </then>
         </if>
     </simple-method>
-    
+
+    <simple-method method-name="discontinueProductSales" short-description="Discontinue Product Sales" login-required="false">
+        <!-- set sales discontinuation date to now -->
+        <now-timestamp-to-env env-name="nowTimestamp"/>
+        <field-to-field field-name="productId" map-name="parameters" to-map-name="productIdMap"/>
+        <find-by-primary-key entity-name="Product" map-name="productIdMap" value-name="product"/>
+        <env-to-env env-name="nowTimestamp" to-env-name="product.salesDiscontinuationDate"/>
+        <store-value value-name="product"/>
+        <!-- expire product from all categories -->
+        <get-related value-name="product" relation-name="ProductCategoryMember" list-name="productCategoryMembers"/>
+        <iterate entry-name="productCategoryMember" list-name="productCategoryMembers">
+            <if-empty field-name="productCategoryMember.thruDate">
+                <env-to-env env-name="nowTimestamp" to-env-name="productCategoryMember.thruDate"/>
+                <store-value value-name="productCategoryMember"/>
+            </if-empty>
+        </iterate>
+    </simple-method>
+        
     <!-- GoodIdentification methods -->
     <simple-method method-name="createGoodIdentification" short-description="Create an GoodIdentification">
         <string-to-field string="createGoodIdentification" field-name="callingMethodName"/>

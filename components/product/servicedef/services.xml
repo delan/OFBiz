@@ -49,6 +49,12 @@
         <attribute name="productInstance" type="GenericValue" mode="IN" optional="true"/>
     </service>
     
+    <service name="discontinueProductSales" engine="simple"
+                location="org/ofbiz/product/product/ProductServices.xml" invoke="discontinueProductSales" auth="false">
+        <description>Discontinue Product Sales</description>
+        <attribute name="productId" type="String" mode="IN" optional="false"/>
+    </service>
+    
     <service name="createProductReview" engine="simple"
             location="org/ofbiz/product/product/ProductServices.xml" invoke="createProductReview" auth="true">
         <description>Create a product review entity</description>     
@@ -536,10 +542,10 @@
         <auto-attributes include="pk" mode="IN" optional="false"/>
         <auto-attributes include="nonpk" mode="IN" optional="true"/>
     </service>
-    <service name="deleteInventoryItem" default-entity-name="InventoryItem" engine="simple"
-                location="org/ofbiz/product/inventory/InventoryServices.xml" invoke="deleteInventoryItem" auth="true">
-        <description>Delete an InventoryItem</description>
-        <auto-attributes include="pk" mode="IN" optional="false"/>
+    <service name="checkProductInventoryDiscontinuation" engine="simple"
+                location="org/ofbiz/product/inventory/InventoryServices.xml" invoke="checkProductInventoryDiscontinuation" auth="false">
+        <description>Check Product Inventory Discontinuation</description>
+        <attribute name="productId" mode="IN" optional="false" type="String"/>
     </service>
 
     <service name="createInventoryItemVariance" default-entity-name="InventoryItemVariance" engine="simple"

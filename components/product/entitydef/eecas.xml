@@ -2,7 +2,6 @@
 <!DOCTYPE entity-eca PUBLIC "-//OFBiz//DTD Entity ECA Config//EN" "http://www.ofbiz.org/dtds/entity-eca.dtd">
 
 <entity-eca>
-
     <!-- Product Keyword Indexing ECAs -->
     <eca entity="Product" operation="create-store" event="return">
         <condition field-name="autoCreateKeywords" operator="not-equals" value="N"/>
@@ -13,5 +12,10 @@
     </eca>
     <eca entity="ProductFeatureAppl" operation="create-store" event="return">
         <action service="indexProductKeywords" mode="sync"/>
+    </eca>
+    <eca entity="InventoryItem" operation="create-store" event="return">
+        <condition field-name="productId" operator="is-not-empty"/>
+        <condition field-name="availableToPromise" operator="less-equals" value="0" type="Double"/>
+        <action service="checkProductInventoryDiscontinuation" mode="async"/>
     </eca>
 </entity-eca>
