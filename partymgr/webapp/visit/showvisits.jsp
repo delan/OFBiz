@@ -105,7 +105,7 @@
           <a href="<ofbiz:url><%="/showvisits?VIEW_SIZE=" + viewSize + "&VIEW_INDEX=" + (viewIndex-1)%><%=UtilFormatOut.ifNotEmpty(sort, "&sort=","")%><%=UtilFormatOut.ifNotEmpty(partyId, "&party_id=","")%>&showAll=<%=new Boolean(showAll).toString()%></ofbiz:url>" class="buttontext">[Previous]</a> |
         <%}%>
         <%if (listSize > 0) {%>
-          <span class="tabletext"><%=lowIndex+1%> - <%=highIndex%> of <%=listSize%></span>
+          <span class="tabletext"><%=lowIndex+1%> - <%=highIndex%></span>
         <%}%>
         <%if (listSize > highIndex) {%>
           | <a href="<ofbiz:url><%="/showvisits?VIEW_SIZE=" + viewSize + "&VIEW_INDEX=" + (viewIndex+1)%><%=UtilFormatOut.ifNotEmpty(sort, "&sort=","")%><%=UtilFormatOut.ifNotEmpty(partyId, "&party_id=","")%>&showAll=<%=new Boolean(showAll).toString()%></ofbiz:url>" class="buttontext">[Next]</a>
@@ -161,7 +161,7 @@
           <a href="<ofbiz:url><%="/showvisits?VIEW_SIZE=" + viewSize + "&VIEW_INDEX=" + (viewIndex-1)%><%=UtilFormatOut.ifNotEmpty(sort, "&sort=","")%><%=UtilFormatOut.ifNotEmpty(partyId, "&party_id=","")%>&showAll=<%=new Boolean(showAll).toString()%></ofbiz:url>" class="buttontext">[Previous]</a> |
         <%}%>
         <%if (listSize > 0) {%>
-          <span class="tabletext"><%=lowIndex+1%> - <%=highIndex%> of <%=listSize%></span>
+          <span class="tabletext"><%=lowIndex+1%> - <%=highIndex%></span>
         <%}%>
         <%if (listSize > highIndex) {%>
           | <a href="<ofbiz:url><%="/showvisits?VIEW_SIZE=" + viewSize + "&VIEW_INDEX=" + (viewIndex+1)%><%=UtilFormatOut.ifNotEmpty(sort, "&sort=","")%><%=UtilFormatOut.ifNotEmpty(partyId, "&party_id=","")%>&showAll=<%=new Boolean(showAll).toString()%></ofbiz:url>" class="buttontext">[Next]</a>
