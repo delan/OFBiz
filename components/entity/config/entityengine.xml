@@ -168,7 +168,7 @@ access. For a detailed description see the core/docs/entityconfig.html file.
                 jdbc-uri="jdbc:oracle:thin:@127.0.0.1:1521:ofbiz"
                 jdbc-username="ofbiz"
                 jdbc-password="ofbiz"
-                isolation-level="ReadCommitted"
+                isolation-level=""
                 pool-xa-wrapper-class="org.enhydra.jdbc.oracle.OracleXADataSource"/>
         <!-- <jndi-jdbc jndi-server-name="localjndi" jndi-name="java:/OracleDataSource" isolation-level="Serializable"/> -->
         <!-- <tyrex-dataSource dataSource-name="localoracle" isolation-level="ReadCommitted"/> -->
