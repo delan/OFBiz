@@ -23,7 +23,7 @@
  *  THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
  *  OFBiz POS Containers
- *  $Id: pos-containers.xml,v 1.4 2004/07/19 02:43:02 ajzeneski Exp $
+ *  $Id: pos-containers.xml,v 1.5 2004/07/27 18:38:24 ajzeneski Exp $
 -->
 
 <ofbiz-containers>
@@ -42,7 +42,7 @@
         <property name="dispatcher-name" value="POSDispatcher"/>
         <property name="delegator-name" value="default"/>
         <property name="xui-session-id" value="pos-1"/>
-        <property name="product-store-id" value="9000"/>
+        <property name="facility-id" value="MyRetailStore"/>
         <property name="look-and-feel" value="org.gtk.java.swing.plaf.gtk.GtkLookAndFeel"/>
     </container>
 

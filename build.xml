@@ -22,7 +22,7 @@
  *  THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  *
  *  This is the Open for Business Main build script.
- *  $Id: build.xml,v 1.41 2004/06/25 22:04:06 ajzeneski Exp $
+ *  $Id: build.xml,v 1.42 2004/07/27 18:38:23 ajzeneski Exp $
 -->
 
 <project name="OFBiz Main Build" default="build" basedir=".">
@@ -38,7 +38,7 @@
                workeffort/build.xml,product/build.xml,marketing/build.xml,
                order/build.xml,manufacturing/build.xml,
                accounting/build.xml,ecommerce/build.xml,
-               securityext/build.xml,webtools/build.xml"/>
+               securityext/build.xml,pos/build.xml,webtools/build.xml"/>
 
     <filelist id="tests-subdirs" dir="."
         files="base/build.xml,components/entity/build.xml"/>
@@ -199,6 +199,11 @@
 
     <target name="run" depends="build">
         <java jar="ofbiz.jar" fork="true"/>
+    </target>
+    <target name="run-pos" depends="build">
+        <java jar="ofbiz.jar" fork="true">
+            <arg value="pos"/>
+        </java>
     </target>
     <target name="run-install" depends="build">
         <java jar="ofbiz.jar" fork="true">
