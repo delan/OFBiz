@@ -403,7 +403,7 @@
         service-name CDATA #REQUIRED
         result-map-name CDATA #IMPLIED
         auto-field-map ( true | false ) "true"
-        list-iterator-name CDATA #IMPLIED
+        result-map-list-iterator-name CDATA #IMPLIED
     >
     
     <!ELEMENT entity-one ( field-map*, select-field* )>
