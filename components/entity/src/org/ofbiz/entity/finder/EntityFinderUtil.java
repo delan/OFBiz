@@ -232,6 +232,8 @@ public class EntityFinderUtil {
                     conditionList.add(new ConditionExpr(subElement));
                 } else if ("condition-list".equals(subElement.getNodeName())) {
                     conditionList.add(new ConditionList(subElement));
+                } else if ("condition-object".equals(subElement.getNodeName())) {
+                    conditionList.add(new ConditionObject(subElement));
                 } else {
                     throw new IllegalArgumentException("Invalid element with name [" + subElement.getNodeName() + "] found under a condition-list element.");
                 }
@@ -264,6 +266,22 @@ public class EntityFinderUtil {
             }
             
             return new EntityConditionList(entityConditionList, (EntityJoinOperator) operator);
+        }
+    }
+    public static class ConditionObject implements Condition {
+        protected FlexibleMapAccessor fieldNameAcsr;
+        
+        public ConditionObject(Element conditionExprElement) {
+            this.fieldNameAcsr = new FlexibleMapAccessor(conditionExprElement.getAttribute("field-name"));
+            if (this.fieldNameAcsr.isEmpty()) {
+                // no "field-name"? try "name"
+                this.fieldNameAcsr = new FlexibleMapAccessor(conditionExprElement.getAttribute("name"));
+            }
+        }
+        
+        public EntityCondition createCondition(Map context, String entityName, GenericDelegator delegator) {
+            EntityCondition condition = (EntityCondition) fieldNameAcsr.get(context);
+            return condition;
         }
     }
     

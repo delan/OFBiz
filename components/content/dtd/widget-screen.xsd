@@ -453,6 +453,7 @@
                 <xs:choice minOccurs="0">
                     <xs:element ref="condition-expr"/>
                     <xs:element ref="condition-list"/>
+                    <xs:element ref="condition-object"/>
                 </xs:choice>
                 <xs:element minOccurs="0" ref="having-condition-list"/>
                 <xs:element minOccurs="0" maxOccurs="unbounded" ref="select-field"/>
@@ -538,6 +539,7 @@
             <xs:choice maxOccurs="unbounded">
                 <xs:element ref="condition-expr"/>
                 <xs:element ref="condition-list"/>
+                <xs:element ref="condition-object"/>
             </xs:choice>
             <xs:attributeGroup ref="attlist.condition-list"/>
         </xs:complexType>
@@ -557,6 +559,7 @@
             <xs:choice maxOccurs="unbounded">
                 <xs:element ref="condition-expr"/>
                 <xs:element ref="condition-list"/>
+                <xs:element ref="condition-object"/>
             </xs:choice>
             <xs:attributeGroup ref="attlist.having-condition-list"/>
         </xs:complexType>
@@ -611,6 +614,14 @@
                 </xs:restriction>
             </xs:simpleType>
         </xs:attribute>
+    </xs:attributeGroup>
+    <xs:element name="condition-object">
+        <xs:complexType>
+            <xs:attributeGroup ref="attlist.condition-object"/>
+        </xs:complexType>
+    </xs:element>
+    <xs:attributeGroup name="attlist.condition-object">
+        <xs:attribute type="xs:string" name="field-name" use="required"/>
     </xs:attributeGroup>
     <xs:element name="select-field">
         <xs:complexType>

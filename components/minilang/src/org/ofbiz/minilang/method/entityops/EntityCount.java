@@ -35,6 +35,7 @@ import org.ofbiz.entity.condition.EntityCondition;
 import org.ofbiz.entity.finder.EntityFinderUtil.Condition;
 import org.ofbiz.entity.finder.EntityFinderUtil.ConditionExpr;
 import org.ofbiz.entity.finder.EntityFinderUtil.ConditionList;
+import org.ofbiz.entity.finder.EntityFinderUtil.ConditionObject;
 import org.ofbiz.minilang.SimpleMethod;
 import org.ofbiz.minilang.method.MethodContext;
 import org.ofbiz.minilang.method.MethodOperation;
@@ -66,6 +67,7 @@ public class EntityCount extends MethodOperation {
         // process condition-expr | condition-list
         Element conditionExprElement = UtilXml.firstChildElement(element, "condition-expr");
         Element conditionListElement = UtilXml.firstChildElement(element, "condition-list");
+        Element conditionObjectElement = UtilXml.firstChildElement(element, "condition-object");
         if (conditionExprElement != null && conditionListElement != null) {
             throw new IllegalArgumentException("In entity find by condition element, cannot have condition-expr and condition-list sub-elements");
         }
@@ -73,6 +75,8 @@ public class EntityCount extends MethodOperation {
             this.whereCondition = new ConditionExpr(conditionExprElement);
         } else if (conditionListElement != null) {
             this.whereCondition = new ConditionList(conditionListElement);
+        } else if (conditionObjectElement != null) {
+            this.whereCondition = new ConditionObject(conditionObjectElement);
         }
         
         // process having-condition-list
