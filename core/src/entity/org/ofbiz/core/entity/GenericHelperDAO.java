@@ -60,7 +60,8 @@ public class GenericHelperDAO implements GenericHelper {
         if (value == null) {
             return null;
         }
-        genericDAO.insert(value);
+        int retVal = genericDAO.insert(value);
+        Debug.logInfo("Insert Return Value : " + retVal, module);
         return value;
     }
 

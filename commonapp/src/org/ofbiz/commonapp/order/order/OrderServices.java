@@ -239,12 +239,9 @@ public class OrderServices {
         }
         
         // first try to create the OrderHeader; if this does not fail, continue.
-        try {
-            Debug.logInfo("TS 1 : " + TransactionUtil.getStatus(), module);
-            delegator.create(order);
-            Debug.logInfo("TS 2 : " + TransactionUtil.getStatus(), module);
-            GenericValue o = delegator.findByPrimaryKey("OrderHeader", UtilMisc.toMap("orderId", orderId));
-            Debug.logInfo("TS 3 : " + TransactionUtil.getStatus(), module);
+        try {            
+            delegator.create(order);            
+            GenericValue o = delegator.findByPrimaryKey("OrderHeader", UtilMisc.toMap("orderId", orderId));            
             Debug.logInfo("OrderHeader after insert : " + o, module);  
         } catch (GenericEntityException e) {
             Debug.logError(e, "Cannot create OrderHeader entity; problems with insert", module);
