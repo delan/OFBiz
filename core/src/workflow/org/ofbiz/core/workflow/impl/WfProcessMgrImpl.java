@@ -257,9 +257,9 @@ public class WfProcessMgrImpl implements WfProcessMgr {
         
         while (i.hasNext()) {
             GenericValue dataField = (GenericValue) i.next();
-            final String name = dataField.getString("dataFieldId");
-            final String type = dataField.getString("dataTypeEnumId");
-            final String value = dataField.getString("initialValue");
+            String name = dataField.getString("dataFieldName");                    
+            String type = dataField.getString("dataTypeEnumId");
+            String value = dataField.getString("initialValue");
    
             try {                
                 initialContext.put(name, ObjectType.simpleTypeConvert(value, WfUtil.getJavaType(type), null, null));                          
