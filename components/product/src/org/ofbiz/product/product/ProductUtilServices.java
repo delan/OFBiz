@@ -1,5 +1,5 @@
 /*
- * $Id: ProductUtilServices.java,v 1.24 2004/01/28 05:08:39 jonesde Exp $
+ * $Id: ProductUtilServices.java,v 1.25 2004/01/28 05:37:18 jonesde Exp $
  *
  *  Copyright (c) 2002 The Open For Business Project (www.ofbiz.org)
  *  Permission is hereby granted, free of charge, to any person obtaining a
@@ -60,7 +60,7 @@ import org.ofbiz.service.ServiceUtil;
  *
  * @author     <a href="mailto:jaz@ofbiz.org">Andy Zeneski</a>
  * @author     <a href="mailto:jonesde@ofbiz.org">David E. Jones</a>
- * @version    $Revision: 1.24 $
+ * @version    $Revision: 1.25 $
  * @since      2.0
  */
 public class ProductUtilServices {
@@ -409,8 +409,10 @@ public class ProductUtilServices {
             ModelEntity modelEntity = relatedValue.getModelEntity();
             if (modelEntity.isField("fromDate")) {
                 GenericPK findValue = relatedValue.getPrimaryKey();
-                findValue.set("fromDate", null);
-                List existingValueList = EntityUtil.filterByDate(delegator.findByAnd(relatedEntityName, findValue));
+                // can't just set to null, need to remove the value so it isn't a constraint in the query
+                //findValue.set("fromDate", null);
+                findValue.remove("fromDate");
+                List existingValueList = EntityUtil.filterByDate(delegator.findByAnd(relatedEntityName, findValue), nowTimestamp);
                 if (existingValueList.size() > 0) {
                     continue;
                 }
