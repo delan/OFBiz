@@ -55,4 +55,17 @@
         </required-permissions>
         <auto-attributes entity-name="JobSandbox" include="pk" mode="IN" optional="false"/>        
     </service>
+
+    <!-- Service Engine Interfaces -->
+    <service name="serviceEcaConditionInterface" engine="interface" location="" invoke="">
+        <description>Interface to describe services which are used as ECA conditions</description>
+        <attribute name="serviceContext" type="Map" mode="IN"/>
+        <attribute name="serviceName" type="String" mode="IN"/>
+        <attribute name="conditionReply" type="Boolean" mode="OUT"/>
+    </service>
+
+    <service name="mailProcessInterface" engine="interface" location="" invoke="">
+        <description>Interface to describe services used to process incoming email</description>
+        <attribute name="message" type="javax.mail.Message" mode="IN"/>
+    </service>
 </services>

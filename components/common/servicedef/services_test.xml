@@ -155,4 +155,15 @@
         <attribute name="_uploadFile_contentType" type="String" mode="IN" optional="false"/>
         <attribute name="_uploadFile_fileName" type="String" mode="IN" optional="false"/>
     </service>
+    
+    <service name="conditionReturnTrue" engine="java" auth="true"
+            location="org.ofbiz.common.CommonServices" invoke="conditionTrueService">
+        <description>ECA Condition Service - Return TRUE</description>
+        <implements service="serviceEcaConditionInterface"/>
+    </service>
+    <service name="conditionReturnFalse" engine="java" auth="true"
+            location="org.ofbiz.common.CommonServices" invoke="conditionFalseService">
+        <description>ECA Condition Service - Return FALSE</description>
+        <implements service="serviceEcaConditionInterface"/>
+    </service>
 </services>

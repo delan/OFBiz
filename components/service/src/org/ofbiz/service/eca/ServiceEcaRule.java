@@ -66,16 +66,23 @@ public class ServiceEcaRule implements java.io.Serializable {
         Iterator ci = condList.iterator();
 
         while (ci.hasNext()) {
-            conditions.add(new ServiceEcaCondition((Element) ci.next(), true));
+            conditions.add(new ServiceEcaCondition((Element) ci.next(), true, false));
         }
 
         List condFList = UtilXml.childElementList(eca, "condition-field");
         Iterator cfi = condFList.iterator();
 
         while (cfi.hasNext()) {
-            conditions.add(new ServiceEcaCondition((Element) cfi.next(), false));
+            conditions.add(new ServiceEcaCondition((Element) cfi.next(), false, false));
         }
 
+        List condSList = UtilXml.childElementList(eca, "condition-service");
+        Iterator sfi = condSList.iterator();
+
+        while (sfi.hasNext()) {
+            conditions.add(new ServiceEcaCondition((Element) sfi.next(), false, true));
+        }
+        
         if (Debug.verboseOn()) Debug.logVerbose("Conditions: " + conditions, module);
 
         List actList = UtilXml.childElementList(eca, "action");
