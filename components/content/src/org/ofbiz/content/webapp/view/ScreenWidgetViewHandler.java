@@ -1,5 +1,5 @@
 /*
- * $Id: ScreenWidgetViewHandler.java,v 1.1 2004/07/18 10:09:34 jonesde Exp $
+ * $Id: ScreenWidgetViewHandler.java,v 1.2 2004/07/22 05:26:57 jonesde Exp $
  *
  * Copyright (c) 2003 The Open For Business Project - www.ofbiz.org
  *
@@ -60,7 +60,7 @@ import freemarker.ext.servlet.HttpSessionHashModel;
  * Handles view rendering for the Screen Widget
  *
  * @author     <a href="mailto:jonesde@ofbiz.org">David E. Jones</a>
- * @version    $Revision: 1.1 $
+ * @version    $Revision: 1.2 $
  * @since      3.1
  */
 public class ScreenWidgetViewHandler implements ViewHandler {
@@ -104,7 +104,7 @@ public class ScreenWidgetViewHandler implements ViewHandler {
             context.put("screens", screens);
 
             // make a reference for high level variables, a global context
-            context.put("global", context.standAloneStack());
+            context.put("globalContext", context.standAloneStack());
 
             Map parameterMap = UtilHttp.getParameterMap(request);
             context.put("parameters", parameterMap);
