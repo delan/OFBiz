@@ -1,5 +1,5 @@
 /*
- * $Id: GenericEntity.java,v 1.4 2003/09/20 18:37:04 jonesde Exp $
+ * $Id: GenericEntity.java,v 1.5 2003/09/21 05:58:51 jonesde Exp $
  *
  *  Copyright (c) 2002 The Open For Business Project - www.ofbiz.org
  *
@@ -37,6 +37,7 @@ import java.util.ResourceBundle;
 import java.util.TreeSet;
 
 import org.ofbiz.base.util.Debug;
+import org.ofbiz.base.util.LocalizedMap;
 import org.ofbiz.base.util.UtilFormatOut;
 import org.ofbiz.base.util.UtilProperties;
 import org.ofbiz.base.util.UtilValidate;
@@ -59,10 +60,10 @@ import org.w3c.dom.Element;
  *
  *@author     <a href="mailto:jonesde@ofbiz.org">David E. Jones</a>
  *@author     <a href="mailto:jaz@ofbiz.org">Andy Zeneski</a>
- *@version    $Revision: 1.4 $
+ *@version    $Revision: 1.5 $
  *@since      2.0
  */
-public class GenericEntity extends Observable implements Map, Serializable, Comparable, Cloneable {
+public class GenericEntity extends Observable implements Map, LocalizedMap, Serializable, Comparable, Cloneable {
     
     public static final String module = GenericEntity.class.getName();
 
@@ -415,8 +416,8 @@ public class GenericEntity extends Observable implements Map, Serializable, Comp
      * @return If the corresponding resource is found and contains a key as described above, then that 
      *    property value is returned; otherwise returns the field value
      */    
-    public Object getResource(String name, Locale locale) {
-        return getResource(name, null, locale);
+    public Object get(String name, Locale locale) {
+        return get(name, null, locale);
     }
     
     /** Same as the getResource method that does not take resource name, but instead allows manually 
@@ -430,7 +431,7 @@ public class GenericEntity extends Observable implements Map, Serializable, Comp
      * @return If the specified resource is found and contains a key as described above, then that 
      *    property value is returned; otherwise returns the field value
      */
-    public Object getResource(String name, String resource, Locale locale) {
+    public Object get(String name, String resource, Locale locale) {
         Object fieldValue = get(name);
         if (UtilValidate.isEmpty(resource)) {
             resource = this.getModelEntity().getDefaultResourceName();

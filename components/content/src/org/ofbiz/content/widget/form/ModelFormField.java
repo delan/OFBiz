@@ -1,5 +1,5 @@
 /*
- * $Id: ModelFormField.java,v 1.2 2003/08/19 17:45:20 jonesde Exp $
+ * $Id: ModelFormField.java,v 1.3 2003/09/21 05:58:51 jonesde Exp $
  *
  * Copyright (c) 2003 The Open For Business Project - www.ofbiz.org
  *
@@ -34,6 +34,7 @@ import org.ofbiz.base.util.Debug;
 import org.ofbiz.base.util.FlexibleMapAccessor;
 import org.ofbiz.base.util.FlexibleStringExpander;
 import org.ofbiz.base.util.UtilDateTime;
+import org.ofbiz.base.util.UtilMisc;
 import org.ofbiz.base.util.UtilValidate;
 import org.ofbiz.base.util.UtilXml;
 import org.ofbiz.entity.GenericDelegator;
@@ -56,7 +57,7 @@ import bsh.Interpreter;
  *
  * @author     <a href="mailto:jonesde@ofbiz.org">David E. Jones</a>
  * @author     <a href="mailto:byersa@automationgroups.com">Al Byers</a>
- * @version    $Revision: 1.2 $
+ * @version    $Revision: 1.3 $
  * @since      2.2
  */
 public class ModelFormField {
@@ -894,28 +895,14 @@ public class ModelFormField {
                     Boolean boolVal = (Boolean) retVal;
                     condTrue = boolVal.booleanValue();
                 } else {
-                    throw new IllegalArgumentException(
-                        "Return value from use-when condition eval was not a Boolean: "
-                            + retVal.getClass().getName()
-                            + " ["
-                            + retVal
-                            + "] on the field "
-                            + this.name
-                            + " of form "
-                            + this.modelForm.name);
+                    throw new IllegalArgumentException("Return value from use-when condition eval was not a Boolean: " 
+                            + retVal.getClass().getName() + " [" + retVal + "] on the field " + this.name + " of form " + this.modelForm.name);
                 }
 
                 return condTrue;
             } catch (EvalError e) {
-                String errMsg =
-                    "Error evaluating BeanShell use-when condition ["
-                        + this.useWhen
-                        + "] on the field "
-                        + this.name
-                        + " of form "
-                        + this.modelForm.name
-                        + ": "
-                        + e.toString();
+                String errMsg = "Error evaluating BeanShell use-when condition [" + this.useWhen + "] on the field "
+                        + this.name + " of form " + this.modelForm.name + ": " + e.toString();
                 Debug.logError(e, errMsg, module);
                 throw new IllegalArgumentException(errMsg);
             }
@@ -1408,8 +1395,8 @@ public class ModelFormField {
                 Iterator valueIter = values.iterator();
                 while (valueIter.hasNext()) {
                     GenericValue value = (GenericValue) valueIter.next();
-                    // add key and description with string expansion, ie expanding ${} stuff
-                    optionValues.add(new OptionValue(value.get(this.getKeyFieldName()).toString(), this.description.expandString(value)));
+                    // add key and description with string expansion, ie expanding ${} stuff, passing locale explicitly to expand value stirng because it won't be found in the Entity
+                    optionValues.add(new OptionValue(value.get(this.getKeyFieldName()).toString(), this.description.expandString(value, UtilMisc.ensureLocale(context.get("locale")))));
                 }
             } catch (GenericEntityException e) {
                 Debug.logError(e, "Error getting entity options in form", module);

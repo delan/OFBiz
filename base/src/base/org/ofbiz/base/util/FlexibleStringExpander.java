@@ -1,5 +1,5 @@
 /*
- * $Id: FlexibleStringExpander.java,v 1.1 2003/08/15 20:23:20 ajzeneski Exp $
+ * $Id: FlexibleStringExpander.java,v 1.2 2003/09/21 05:58:51 jonesde Exp $
  *
  *  Copyright (c) 2003 The Open For Business Project - www.ofbiz.org
  *
@@ -26,6 +26,7 @@ package org.ofbiz.base.util;
 import java.util.Iterator;
 import java.util.LinkedList;
 import java.util.List;
+import java.util.Locale;
 import java.util.Map;
 
 /**
@@ -34,7 +35,7 @@ import java.util.Map;
  * elements for accessing Map entries and List elements in the context.
  *
  * @author     <a href="mailto:jonesde@ofbiz.org">David E. Jones</a>
- * @version    $Revision: 1.1 $
+ * @version    $Revision: 1.2 $
  * @since      2.2
  */
 public class FlexibleStringExpander {
@@ -73,12 +74,25 @@ public class FlexibleStringExpander {
      * @return The original String expanded by replacing varaible place holders.
      */    
     public String expandString(Map context) {
+        return this.expandString(context, null);
+    }
+    
+    /** 
+     * This expands the pre-parsed String given the context passed in. Note that
+     * pre-parsing can only parse the top-level place-holders and if there are 
+     * nested expansions they will be done on the fly instead of pre-parsed because
+     * they are dependent on the context which isn't known until expansion time.
+     * 
+     * @param context A context Map containing the variable values
+     * @return The original String expanded by replacing varaible place holders.
+     */    
+    public String expandString(Map context, Locale locale) {
         StringBuffer expanded = new StringBuffer();
         
         Iterator stringElementIter = stringElements.iterator();
         while (stringElementIter.hasNext()) {
             StringElement element = (StringElement) stringElementIter.next();
-            element.appendElement(expanded, context);
+            element.appendElement(expanded, context, locale);
         }
         
         //call back into this method with new String to take care of any/all nested expands
@@ -97,6 +111,21 @@ public class FlexibleStringExpander {
      * @return The original String expanded by replacing varaible place holders.
      */
     public static String expandString(String original, Map context) {
+        return expandString(original, context, null);
+    }
+    
+    /**
+     * Does on-the-fly parsing and expansion of the original String using
+     * varaible values from the passed context. Variables are denoted with
+     * the "${}" syntax and the variable name inside the curly-braces can use
+     * the "." (dot) syntax to access sub-Map entries and the "[]" square-brace
+     * syntax to access List elements.
+     * 
+     * @param original The original String that will be expanded
+     * @param context A context Map containing the variable values
+     * @return The original String expanded by replacing varaible place holders.
+     */
+    public static String expandString(String original, Map context, Locale locale) {
         // if null or less than 3 return original; 3 chars because that is the minimum necessary for a ${}
         if (original == null || original.length() < 3) {
             return original;
@@ -116,7 +145,7 @@ public class FlexibleStringExpander {
         }
         
         StringBuffer expanded = new StringBuffer();
-        ParseElementHandler handler = new OnTheFlyHandler(expanded, context);
+        ParseElementHandler handler = new OnTheFlyHandler(expanded, context, locale);
         parseString(original, handler);
         
         //call back into this method with new String to take care of any/all nested expands
@@ -168,7 +197,7 @@ public class FlexibleStringExpander {
     }
 
     public static interface StringElement {
-        public void appendElement(StringBuffer buffer, Map context); 
+        public void appendElement(StringBuffer buffer, Map context, Locale locale);
     }
     
     public static class ConstantElement implements StringElement {
@@ -178,7 +207,7 @@ public class FlexibleStringExpander {
             this.value = value;
         }
         
-        public void appendElement(StringBuffer buffer, Map context) {
+        public void appendElement(StringBuffer buffer, Map context, Locale locale) {
             buffer.append(this.value); 
         }
     }
@@ -190,8 +219,8 @@ public class FlexibleStringExpander {
             this.fma = new FlexibleMapAccessor(valueName);
         }
         
-        public void appendElement(StringBuffer buffer, Map context) {
-            Object retVal = fma.get(context);
+        public void appendElement(StringBuffer buffer, Map context, Locale locale) {
+            Object retVal = fma.get(context, locale);
             if (retVal != null) {
                 buffer.append(retVal.toString()); 
             } else {
@@ -213,7 +242,7 @@ public class FlexibleStringExpander {
             this.stringElements = stringElements;
         }
         
-        public void handleConstant(String original, int start) { 
+        public void handleConstant(String original, int start) {
             stringElements.add(new ConstantElement(original.substring(start))); 
         }
         
@@ -229,10 +258,12 @@ public class FlexibleStringExpander {
     public static class OnTheFlyHandler implements ParseElementHandler {
         protected StringBuffer targetBuffer;
         protected Map context;
+        protected Locale locale;
         
-        public OnTheFlyHandler(StringBuffer targetBuffer, Map context) {
+        public OnTheFlyHandler(StringBuffer targetBuffer, Map context, Locale locale) {
             this.targetBuffer = targetBuffer;
             this.context = context;
+            this.locale = locale;
         }
         
         public void handleConstant(String original, int start) { 
@@ -247,7 +278,7 @@ public class FlexibleStringExpander {
             //get the environment value and append it
             String envName = original.substring(start, end);
             FlexibleMapAccessor fma = new FlexibleMapAccessor(envName);
-            Object envVal = fma.get(context);
+            Object envVal = fma.get(context, locale);
             if (envVal != null) {
                 targetBuffer.append(envVal.toString());
             } else {
