@@ -687,6 +687,14 @@ public class ProductEvents {
                 Debug.logWarning("[ProductEvents.updateAttribute] Could not update attribute (write error); message: " + e.getMessage());
                 return "error";
             }
+        } else if (updateMode.equals("DELETE")) {
+            try {
+                delegator.removeByAnd("ProductAttribute", UtilMisc.toMap("productId", productId, "attrName", attrName));
+            } catch (GenericEntityException e) {
+                request.setAttribute(SiteDefs.ERROR_MESSAGE, "Could not delete attribute (write error)");
+                Debug.logWarning("[ProductEvents.updateAttribute] Could not delete attribute (write error); message: " + e.getMessage());
+                return "error";
+            }
         } else {
             request.setAttribute(SiteDefs.ERROR_MESSAGE, "Specified update mode: \"" + updateMode + "\" is not supported.");
             return "error";
