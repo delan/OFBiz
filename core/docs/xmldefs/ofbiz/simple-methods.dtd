@@ -319,7 +319,7 @@ Error messages go on the error list and are handled with the check-errors tag.
     property CDATA #REQUIRED
     default CDATA #IMPLIED
     field-name CDATA #REQUIRED
-    session-name CDATA #IMPLIED
+    map-name CDATA #IMPLIED
 >
 
 <!-- Service specific operations -->
