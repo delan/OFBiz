@@ -778,7 +778,7 @@ public class XpdlReader {
             }
 
             //TransitionRefs
-            Element transitionRefsElement = UtilXml.firstChildElement(transitionRestrictionElement, "TransitionRefs");
+            Element transitionRefsElement = UtilXml.firstChildElement(splitElement, "TransitionRefs");
             List transitionRefs = UtilXml.childElementList(transitionRefsElement, "TransitionRef");
             readTransitionRefs(transitionRefs, packageId, processId, activityId);
         }
