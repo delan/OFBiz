@@ -368,7 +368,7 @@
       <field name="attrName" type="id-long-ne"></field>
       <prim-key field="termTypeId"/>
       <prim-key field="attrName"/>
-      <relation type="one" fk-name="TERM_TYPE_ATTR" rel-entity-name="TermType">
+      <relation type="one" fk-name="TERM_TYPATR_TTYP" rel-entity-name="TermType">
         <key-map field-name="termTypeId"/>
       </relation>
       <relation type="many" rel-entity-name="AgreementTermAttribute">
@@ -857,7 +857,7 @@
       <field name="partyId" type="id-ne"></field>
       <field name="partyTypeId" type="id-ne"></field>
       <prim-key field="partyId"/>
-      <relation type="one" fk-name="PARTY_TYPE" rel-entity-name="PartyType">
+      <relation type="one" fk-name="PARTY_PTY_TYP" rel-entity-name="PartyType">
         <key-map field-name="partyTypeId"/>
       </relation>
       <relation type="many" rel-entity-name="PartyTypeAttr">
@@ -969,8 +969,8 @@
     <view-entity entity-name="PartyAndContactMech"
             package-name="org.ofbiz.commonapp.party.party"
             title="Party and Contact Mech View Entity">
-      <member-entity entity-alias="PCM" entity-name="PartyContactMech"/>
       <member-entity entity-alias="CM" entity-name="ContactMech"/>
+      <member-entity entity-alias="PCM" entity-name="PartyContactMech"/>
       <member-entity entity-alias="PTY" entity-name="Party"/>
       <alias entity-alias="CM" name="contactMechId" prim-key="true"/>
       <alias entity-alias="PTY" name="partyId" prim-key="true"/>
@@ -1545,8 +1545,8 @@
     <view-entity entity-name="RoleTypeAndParty"
             package-name="org.ofbiz.commonapp.party.party"
             title="Party Role View Entity">
-      <member-entity entity-alias="RT" entity-name="RoleType"/>
       <member-entity entity-alias="PR" entity-name="PartyRole"/>
+      <member-entity entity-alias="RT" entity-name="RoleType"/>
       <alias entity-alias="PR" name="partyId" prim-key="true"/>
       <alias entity-alias="RT" name="roleTypeId" prim-key="true"/>
       <alias entity-alias="RT" name="description"/>
@@ -1561,7 +1561,7 @@
       <field name="attrName" type="id-long-ne"></field>
       <prim-key field="roleTypeId"/>
       <prim-key field="attrName"/>
-      <relation type="one" fk-name="ROLE_TYPE_ATTR" rel-entity-name="RoleType">
+      <relation type="one" fk-name="ROLE_TYPATR_RTYP" rel-entity-name="RoleType">
         <key-map field-name="roleTypeId"/>
       </relation>
       <relation type="many" rel-entity-name="PartyAttribute">

@@ -63,7 +63,7 @@
       <field name="standardTimePeriodId" type="id"></field>
       <field name="comments" type="comment"></field>
       <prim-key field="budgetId"/>
-      <relation type="one" fk-name="BUDGET_TYPE" rel-entity-name="BudgetType">
+      <relation type="one" fk-name="BUDGET_BGTTYP" rel-entity-name="BudgetType">
         <key-map field-name="budgetTypeId"/>
       </relation>
       <relation type="many" rel-entity-name="BudgetTypeAttr">
@@ -120,7 +120,7 @@
       <field name="justification" type="long-varchar"></field>
       <prim-key field="budgetId"/>
       <prim-key field="budgetItemSeqId"/>
-      <relation type="one" fk-name="BUDGET_ITEM_TYPE" rel-entity-name="BudgetItemType">
+      <relation type="one" fk-name="BUDGET_ITEM_BTYP" rel-entity-name="BudgetItemType">
         <key-map field-name="budgetItemTypeId"/>
       </relation>
       <relation type="many" rel-entity-name="BudgetItemTypeAttr">
@@ -393,7 +393,7 @@
       <field name="attrName" type="id-long-ne"></field>
       <prim-key field="budgetTypeId"/>
       <prim-key field="attrName"/>
-      <relation type="one" fk-name="BUDGET_TYPE_ATTR" rel-entity-name="BudgetType">
+      <relation type="one" fk-name="BUDGET_TPATR_BT" rel-entity-name="BudgetType">
         <key-map field-name="budgetTypeId"/>
       </relation>
       <relation type="many" rel-entity-name="BudgetAttribute">
@@ -580,7 +580,7 @@
       <field name="invoiceMessage" type="long-varchar"></field>
       <field name="description" type="description"></field>
       <prim-key field="invoiceId"/>
-      <relation type="one" fk-name="INVOICE_TYPE" rel-entity-name="InvoiceType">
+      <relation type="one" fk-name="INVOICE_INVTYP" rel-entity-name="InvoiceType">
         <key-map field-name="invoiceTypeId"/>
       </relation>
       <relation type="many" rel-entity-name="InvoiceTypeAttr">
@@ -599,7 +599,7 @@
         <key-map field-name="partyId"/>
         <key-map field-name="roleTypeId"/>
       </relation>
-      <relation type="one" fk-name="INVOICE_STATUS" rel-entity-name="StatusItem">
+      <relation type="one" fk-name="INVOICE_STTSITM" rel-entity-name="StatusItem">
         <key-map field-name="statusId"/>
       </relation>
       <relation type="one" fk-name="INVOICE_BILLACCT" rel-entity-name="BillingAccount">
@@ -661,7 +661,7 @@
       <field name="description" type="description"></field>
       <prim-key field="invoiceId"/>
       <prim-key field="invoiceItemSeqId"/>
-      <relation type="one" fk-name="INVOICE_ITEM_TYPE" rel-entity-name="InvoiceItemType">
+      <relation type="one" fk-name="INVOICE_ITMITYP" rel-entity-name="InvoiceItemType">
         <key-map field-name="invoiceItemTypeId"/>
       </relation>
       <relation type="many" rel-entity-name="InvoiceItemTypeAttr">
@@ -709,7 +709,7 @@
       <prim-key field="invoiceId"/>
       <prim-key field="invoiceItemSeqId"/>
       <prim-key field="attrName"/>
-      <relation type="one" fk-name="INVOICE_ITEM" rel-entity-name="InvoiceItem">
+      <relation type="one" fk-name="INVOICE_IMAT_ITM" rel-entity-name="InvoiceItem">
         <key-map field-name="invoiceId"/>
         <key-map field-name="invoiceItemSeqId"/>
       </relation>
@@ -859,7 +859,7 @@
       <field name="attrName" type="id-long-ne"></field>
       <prim-key field="invoiceTypeId"/>
       <prim-key field="attrName"/>
-      <relation type="one" fk-name="INVOICE_TYPE_ATTR" rel-entity-name="InvoiceType">
+      <relation type="one" fk-name="INVOICE_TPAT_TYP" rel-entity-name="InvoiceType">
         <key-map field-name="invoiceTypeId"/>
       </relation>
       <relation type="many" rel-entity-name="InvoiceAttribute">
@@ -1455,7 +1455,7 @@
       <field name="comments" type="comment"></field>
       <field name="finAccountTransId" type="id"></field>
       <prim-key field="paymentId"/>
-      <relation type="one" fk-name="PAYMENT_TYPE" rel-entity-name="PaymentType">
+      <relation type="one" fk-name="PAYMENT_PMTYP" rel-entity-name="PaymentType">
         <key-map field-name="paymentTypeId"/>
       </relation>
       <relation type="many" rel-entity-name="PaymentTypeAttr">

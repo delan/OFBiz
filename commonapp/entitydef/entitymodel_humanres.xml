@@ -85,7 +85,7 @@
       <prim-key field="partyId"/>
       <prim-key field="partyQualTypeId"/>
       <prim-key field="fromDate"/>
-      <relation type="one" fk-name="PARTY_QUAL_TYPE" rel-entity-name="PartyQualType">
+      <relation type="one" fk-name="PARTY_QUAL_PQTYP" rel-entity-name="PartyQualType">
         <key-map field-name="partyQualTypeId"/>
       </relation>
     </entity>

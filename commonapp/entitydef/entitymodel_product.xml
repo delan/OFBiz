@@ -1398,7 +1398,7 @@
       <field name="facilityId" type="id"></field>
       <field name="description" type="description"></field>
       <prim-key field="containerId"/>
-      <relation type="one" fk-name="CONTAINER_TYPE" rel-entity-name="ContainerType">
+      <relation type="one" fk-name="CONTAINER_CTTYP" rel-entity-name="ContainerType">
         <key-map field-name="containerTypeId"/>
       </relation>
       <relation type="many" rel-entity-name="InventoryItem">
@@ -1427,7 +1427,7 @@
       <field name="squareFootage" type="numeric"></field>
       <field name="description" type="description"></field>
       <prim-key field="facilityId"/>
-      <relation type="one" fk-name="FACILITY_TYPE" rel-entity-name="FacilityType">
+      <relation type="one" fk-name="FACILITY_FCTYP" rel-entity-name="FacilityType">
         <key-map field-name="facilityTypeId"/>
       </relation>
       <relation type="many" rel-entity-name="FacilityTypeAttr">
@@ -1523,7 +1523,7 @@
       <field name="attrName" type="id-long-ne"></field>
       <prim-key field="facilityTypeId"/>
       <prim-key field="attrName"/>
-      <relation type="one" fk-name="FACILITY_TYPE_ATTR" rel-entity-name="FacilityType">
+      <relation type="one" fk-name="FACILITY_TPAT_FT" rel-entity-name="FacilityType">
         <key-map field-name="facilityTypeId"/>
       </relation>
       <relation type="many" rel-entity-name="FacilityAttribute">

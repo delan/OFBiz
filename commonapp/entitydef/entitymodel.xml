@@ -610,7 +610,7 @@
       <field name="attrName" type="id-long-ne"></field>
       <prim-key field="contentTypeId"/>
       <prim-key field="attrName"/>
-      <relation type="one" fk-name="CONTENT_TYPE_ATTR" rel-entity-name="ContentType">
+      <relation type="one" fk-name="CONTENT_TPAT_TYP" rel-entity-name="ContentType">
         <key-map field-name="contentTypeId"/>
       </relation>
       <relation type="many" rel-entity-name="ContentAttribute">
@@ -1153,7 +1153,7 @@
       <prim-key field="contentId"/>
       <prim-key field="hitStartDateTime"/>
       <prim-key field="hitTypeId"/>
-      <relation type="one" fk-name="SERVER_HIT_TYPE" rel-entity-name="ServerHitType">
+      <relation type="one" fk-name="SERVER_HIT_SHTYP" rel-entity-name="ServerHitType">
         <key-map field-name="hitTypeId"/>
       </relation>
       <relation type="one" fk-name="SERVER_HIT_VISIT" rel-entity-name="Visit">
