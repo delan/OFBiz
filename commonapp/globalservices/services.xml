@@ -139,7 +139,7 @@
     </service>
 
     <service name="assignApprover" engine="java"
-            location="ServiceTest" invoke="testOne" validate="false"/>
+            location="org.ofbiz.commonapp.common.CommonServices" invoke="testService" validate="false"/>
 
     <!-- Order processing services -->
     <service name="processOrder" engine="workflow" location="TEST" invoke="ProcessOrder">
