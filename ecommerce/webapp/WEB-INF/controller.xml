@@ -104,6 +104,46 @@
         <response name="success" type="view" value="passwordemail"/>
     </request-map>
 
+    <request-map uri="editShoppingList">
+        <security auth="true"/>      
+        <response name="success" type="view" value="editShoppingList"/>        
+    </request-map>
+    
+    <request-map uri="createEmptyShoppingList">
+    	<security auth="true"/>
+    	<event type="service" path="" invoke="createShoppingList"/>
+    	<response name="success" type="view" value="editShoppingList"/>
+    	<response name="error" type="view" value="editShoppingList"/>    	
+    </request-map>
+    
+    <request-map uri="updateShoppingList">
+    	<security auth="true"/>
+    	<event type="service" path="" invoke="updateShoppingList"/>
+    	<response name="success" type="view" value="editShoppingList"/>
+    	<response name="error" type="view" value="editShoppingList"/>    	
+    </request-map>
+    
+    <request-map uri="addItemToShoppingList">
+        <security auth="true"/>
+        <event type="service" path="" invoke="createShoppingListItem"/>
+        <response name="success" type="view" value="editShoppingList"/>
+        <response name="error" type="view" value="editShoppingList"/>
+    </request-map>
+    
+    <request-map uri="updateShoppingListItem">
+        <security auth="true"/>
+        <event type="service" path="" invoke="updateShoppingListItem"/>
+        <response name="success" type="view" value="editShoppingList"/>
+        <response name="error" type="view" value="editShoppingList"/>
+    </request-map>    
+        
+    <request-map uri="removeFromShoppingList">
+        <security auth="true"/>
+        <event type="service" path="" invoke="removeShoppingListItem"/>
+        <response name="success" type="view" value="editShoppingList"/>
+        <response name="error" type="view" value="editShoppingList"/>
+    </request-map>    
+    
     <request-map uri="additem">
         <event type="java" path="org.ofbiz.commonapp.order.shoppingcart.ShoppingCartEvents" invoke="addToCart"/>
         <response name="success" type="view" value="showcart"/>
@@ -532,6 +572,7 @@
     <view-map name="login" type="jpublish" page="/login.ftl"/>
     <view-map name="passwordemail" page="/customer/passwordemail.jsp"/>
 
+    <view-map name="editShoppingList" type="jpublish" page="/shoppinglist/editShoppingList.ftl"/>
     <view-map name="showcart" type="jpublish" page="/cart/showcart.ftl"/>  
 
     <view-map name="quickadd" type="jpublish" page="/catalog/quickadd.ftl"/>

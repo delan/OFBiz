@@ -1,0 +1,51 @@
+/*
+ *  Copyright (c) 2003 The Open For Business Project - www.ofbiz.org
+ *
+ *  Permission is hereby granted, free of charge, to any person obtaining a 
+ *  copy of this software and associated documentation files (the "Software"), 
+ *  to deal in the Software without restriction, including without limitation 
+ *  the rights to use, copy, modify, merge, publish, distribute, sublicense, 
+ *  and/or sell copies of the Software, and to permit persons to whom the 
+ *  Software is furnished to do so, subject to the following conditions:
+ *
+ *  The above copyright notice and this permission notice shall be included 
+ *  in all copies or substantial portions of the Software.
+ *
+ *  THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS 
+ *  OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF 
+ *  MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. 
+ *  IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY 
+ *  CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT 
+ *  OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR 
+ *  THE USE OR OTHER DEALINGS IN THE SOFTWARE.
+ *
+ *@author     Andy Zeneski (jaz@ofbiz.org)
+ *@version    $Revision$
+ *@since      2.1.1
+ */
+ 
+ import java.util.*;
+ import org.ofbiz.core.entity.*;
+ import org.ofbiz.core.util.*;
+
+ delegator = request.getAttribute("delegator");
+ userLogin = session.getAttribute("userLogin");
+ 
+ parameterMap = UtilHttp.getParameterMap(request);
+ shoppingListId = parameterMap.get("shoppingListId");
+ if (shoppingListId == null)
+    shoppingListId = request.getAttribute("shoppingListId");
+ 
+ // get the shopping lists for the logged in user
+ shoppingLists = delegator.findByAnd("ShoppingList", UtilMisc.toMap("partyId", userLogin.getString("partyId")), UtilMisc.toList("listName"));
+ context.put("shoppingLists", shoppingLists);
+ 
+ // if we passed a shoppingListId get the shopping list info
+ if (shoppingListId != null) { 
+    shoppingList = delegator.findByPrimaryKey("ShoppingList", UtilMisc.toMap("shoppingListId", shoppingListId));
+    shoppingListItems = shoppingList.getRelated("ShoppingListItem");   
+     context.put("shoppingList", shoppingList);
+    context.put("shoppingListItems", shoppingListItems);
+ }
+ 
+ 

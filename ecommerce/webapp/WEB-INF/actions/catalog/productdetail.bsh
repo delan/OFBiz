@@ -66,7 +66,14 @@ String buildNext(Map map, List order, String current, String prefix, Map feature
 
 dispatcher = request.getAttribute("dispatcher");
 delegator = request.getAttribute("delegator");
+userLogin = session.getAttribute("userLogin");
 requestParams = UtilHttp.getParameterMap(request);
+
+// get the shopping lists for the user (if logged in)
+if (userLogin != null) {
+    shoppingLists = delegator.findByAnd("ShoppingList", UtilMisc.toMap("partyId", userLogin.getString("partyId")), UtilMisc.toList("listName"));
+    context.put("shoppingLists", shoppingLists);        
+}
 
 // set the content path prefix
 contentPathPrefix = CatalogWorker.getContentPathPrefix(request); 
