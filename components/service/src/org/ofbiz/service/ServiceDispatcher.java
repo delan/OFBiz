@@ -1,5 +1,5 @@
 /*
- * $Id: ServiceDispatcher.java,v 1.2 2003/08/28 18:48:32 ajzeneski Exp $
+ * $Id: ServiceDispatcher.java,v 1.3 2003/08/28 19:34:57 ajzeneski Exp $
  *
  * Copyright (c) 2001, 2002 The Open For Business Project - www.ofbiz.org
  *
@@ -55,7 +55,7 @@ import org.ofbiz.service.job.JobManager;
  * Global Service Dispatcher
  *
  * @author     <a href="mailto:jaz@ofbiz.org">Andy Zeneski</a>
- * @version    $Revision: 1.2 $
+ * @version    $Revision: 1.3 $
  * @since      2.0
  */
 public class ServiceDispatcher {
@@ -85,7 +85,7 @@ public class ServiceDispatcher {
                 Debug.logError(e, "[ServiceDispatcher.init] : No instance of security imeplemtation found.", module);
             }
         }
-        this.jm = new JobManager(this, this.delegator);
+        this.jm = new JobManager(this.delegator);
         this.jlf = new JmsListenerFactory(this);        
     }
 

@@ -1,5 +1,5 @@
 /*
- * $Id: GenericAbstractDispatcher.java,v 1.1 2003/08/17 05:12:41 ajzeneski Exp $
+ * $Id: GenericAbstractDispatcher.java,v 1.2 2003/08/28 19:34:57 ajzeneski Exp $
  *
  * Copyright (c) 2001, 2002 The Open For Business Project - www.ofbiz.org
  *
@@ -39,7 +39,7 @@ import org.ofbiz.base.util.Debug;
  * Generic Services Local Dispatcher
  *
  * @author     <a href="mailto:jaz@ofbiz.org">Andy Zeneski</a> 
- * @version    $Revision: 1.1 $
+ * @version    $Revision: 1.2 $
  * @since      2.0
  */
 public abstract class GenericAbstractDispatcher implements LocalDispatcher {
@@ -101,7 +101,7 @@ public abstract class GenericAbstractDispatcher implements LocalDispatcher {
      */
     public void schedule(String serviceName, Map context, long startTime, int frequency, int interval, int count, long endTime) throws GenericServiceException {            
         try {
-            getJobManager().schedule(getName(), serviceName, context, startTime, frequency, interval, count, endTime);
+            getJobManager().schedule(serviceName, context, startTime, frequency, interval, count, endTime);
                 
             if (Debug.verboseOn()) {
                 Debug.logVerbose("[LocalDispatcher.schedule] : Current time: " + (new Date()).getTime(), module);
