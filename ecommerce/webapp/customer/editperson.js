@@ -26,34 +26,30 @@
 importPackage(Packages.java.lang);
 importPackage(Packages.java.util);
 importPackage(Packages.org.ofbiz.core.util);
-importPackage(Packages.org.ofbiz.core.entity);
-importClass(Packages.org.ofbiz.commonapp.party.contact.ContactMechWorker);
-importClass(Packages.org.ofbiz.commonapp.accounting.payment.PaymentWorker);
 
 var dispatcher = request.getAttribute("dispatcher");
 var delegator = request.getAttribute("delegator");
 
 var userLogin = session.getAttribute("userLogin");
+var person = null;
 if (userLogin != null) {
-    var partyId = userLogin.getString("partyId");
-    var partyIdMap = UtilMisc.toMap("partyId", partyId);
-    
-    var party = delegator.findByPrimaryKey("Party", partyIdMap);
-    var person = delegator.findByPrimaryKey("Person", partyIdMap);
-    var partyGroup = delegator.findByPrimaryKey("PartyGroup", partyIdMap);
-    
-    var showOld = "true".equals(request.getParameter("SHOW_OLD"));
-     
-    var partyContactMechValueMaps = ContactMechWorker.getPartyContactMechValueMaps(delegator, userLogin.getString("partyId"), showOld);
-    var paymentMethodValueMaps = PaymentWorker.getPartyPaymentMethodValueMaps(delegator, userLogin.getString("partyId"), showOld);
-    
-    context.put("party", party);
-    context.put("person", person);
-    context.put("partyGroup", partyGroup);
-    
-    context.put("showOld", showOld);
-    
-    context.put("partyContactMechValueMaps", partyContactMechValueMaps);
-    context.put("paymentMethodValueMaps", paymentMethodValueMaps);
+    person = userLogin.getRelatedOne("Person");
 }
+
+var tryEntity = true;
+var errorMessage = request.getAttribute(SiteDefs.ERROR_MESSAGE);
+if (errorMessage != null && errorMessage.length() > 0) {
+    tryEntity = false;    
+}
+var personData = person;
+if (!tryEntity) {
+    personData = UtilHttp.getParameterMap(request);
+}
+
+var donePage = request.getParameter("DONE_PAGE");
+if (donePage == null || donePage.length() == 0) { donePage = "viewprofile" }
+
+context.put("person", person);
+context.put("personData", personData);
+context.put("donePage", donePage);
 

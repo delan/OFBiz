@@ -546,7 +546,7 @@
     <view-map name="editcreditcard" type="region"/>
     <view-map name="editeftaccount" type="region"/>
     <view-map name="changepassword" type="region"/>
-    <view-map name="editperson" type="region"/>
+    <view-map name="editperson" type="wsp" page="/customer/editperson.ftl"/>
 
     <view-map name="newAffiliate" type="region"/>  
     <!-- End of View Mappings -->

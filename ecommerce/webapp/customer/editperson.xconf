@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<page>
+    <template>/templates/main.ftl</template>
+    <generator name="ofbiz-freemarker"/>
+    <property name="title">Edit Person</property>
+    <page-action>customer/editperson.js</page-action>
+    <pageEditor>OfbizOrderEditor</pageEditor>
+</page>
+
