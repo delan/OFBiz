@@ -24,23 +24,22 @@
  *@version    $Revision$
  *@since      2.1
 -->
+<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN">
 
 <html>
 <head>
     <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
     <title>${layoutSettings.companyName?if_exists}: ${page.title?if_exists}</title>
     <link rel='stylesheet' href='<@ofbizContentUrl>/images/maincss.css</@ofbizContentUrl>' type='text/css'>
-    
+
     <#-- Append CSS for catalog -->
     <#if catalogStyleSheet?exists>
     <link rel='stylesheet' href='${catalogStyleSheet}' type="text/css">
     </#if>
-     
     <#-- Append CSS for tracking codes -->
     <#if sessionAttributes.overrideCss?exists>
 	<link rel='stylesheet' href='${sessionAttributes.overrideCss}' type="text/css">
     </#if>
-    
     <#-- Meta tags if defined by the page action -->
     <#if metaDescription?exists>
     <meta name="description" content="${metaDescription}">

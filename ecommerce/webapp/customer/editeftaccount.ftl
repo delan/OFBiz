@@ -104,7 +104,7 @@
         <#if curPostalAddress?exists>
           <tr>
             <td align="right" valign="top" width="1%">
-              <input type=radio name='contactMechId' value='${curContactMechId}' checked>
+              <input type="radio" name="contactMechId" value="${curContactMechId}" checked>
             </td>
             <td align="left" valign="top" width="80%">
               <div class="tabletext"><b>Use Current Address:</b></div>
@@ -150,7 +150,7 @@
             <#assign partyContactMech = postalAddressInfo.partyContactMech>
             <tr>
               <td align="right" valign="top" width="1%">
-                <input type=radio name='contactMechId' value='${contactMech.contactMechId}'>
+                <input type='radio' name='contactMechId' value='${contactMech.contactMechId}'>
               </td>
               <td align="left" valign="top" width="80%">
                 <#list partyContactMechPurposes as partyContactMechPurpose>
@@ -173,7 +173,7 @@
               </td>
             </tr>
           </#list>
-          <#if !postalAddressInfos.has_content && !curContactMech.exists>
+          <#if !postalAddressInfos?has_content && !curContactMech?exists>
               <tr><td colspan='2'><div class="tabletext">No contact information on file.</div></td></tr>
           </#if>
         </table>

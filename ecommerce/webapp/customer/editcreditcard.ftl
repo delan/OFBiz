@@ -142,7 +142,7 @@
         <#if curPostalAddress?exists>
           <tr>
             <td align="right" valign="top" width="1%">
-              <input type=radio name='contactMechId' value='${curContactMechId}' checked>
+              <input type="radio" name="contactMechId" value="${curContactMechId}" checked>
             </td>
             <td align="left" valign="top" width="80%">
               <div class="tabletext"><b>Use Current Address:</b></div>
@@ -170,7 +170,7 @@
         <#else>
            <#-- <tr>
             <td align="left" valign="top" colspan='2'>
-              <div class="tabletext">No Billing Address Selected</div>
+              <div class="tabletext">Billing Address Not Yet Selected</div>
             </td>
           </tr> -->
         </#if>
@@ -211,7 +211,7 @@
               </td>
             </tr>
           </#list>
-          <#if !postalAddressInfos.has_content && !curContactMech.exists>
+          <#if !postalAddressInfos?has_content && !curContactMech?exists>
               <tr><td colspan='2'><div class="tabletext">No contact information on file.</div></td></tr>
           </#if>
           <tr>

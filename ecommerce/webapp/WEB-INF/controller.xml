@@ -538,8 +538,8 @@
     <view-map name="viewprofile" type="jpublish" page="/customer/viewprofile.ftl"/>
     <view-map name="newcustomer" type="jpublish" page="/customer/newcustomer.ftl"/>
     <view-map name="editcontactmech" type="jpublish" page="/customer/editcontactmech.ftl"/>
-    <view-map name="editcreditcard" type="region"/>
-    <view-map name="editeftaccount" type="region"/>
+    <view-map name="editcreditcard" type="jpublish" page="/customer/editcreditcard.ftl"/>
+    <view-map name="editeftaccount" type="jpublish" page="/customer/editeftaccount.ftl"/>
     <view-map name="changepassword" type="jpublish" page="/customer/changepassword.ftl"/>
     <view-map name="editperson" type="jpublish" page="/customer/editperson.ftl"/>
 

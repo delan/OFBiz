@@ -30,10 +30,7 @@ importClass(Packages.org.ofbiz.commonapp.accounting.payment.PaymentWorker);
 importClass(Packages.org.ofbiz.commonapp.party.contact.ContactMechWorker);
 
 var userLogin = session.getAttribute("userLogin");
-var person = null;
-if (userLogin != null) {
-    person = userLogin.getRelatedOne("Person");
-}
+var security = request.getAttribute("security");
 
 var paymentResults = PaymentWorker.getPaymentMethodAndRelated(request, userLogin.getString("partyId")) 
 //returns the following: "paymentMethod", "creditCard", "eftAccount", "paymentMethodId", "curContactMechId", "donePage", "tryEntity"
@@ -45,27 +42,34 @@ context.put("curContactMechId", paymentResults.get("curContactMechId"));
 context.put("donePage", paymentResults.get("donePage"));
 context.put("tryEntity", paymentResults.get("tryEntity"));
 
-var curPostalAddressResults = ContactMechWorker.getCurrentPostalAddress(pageContext, userLogin.getString("partyId"), pageContext.getAttribute("curContactMechId")); 
+var curPostalAddressResults = ContactMechWorker.getCurrentPostalAddress(request, userLogin.getString("partyId"), paymentResults.get("curContactMechId")); 
 //returns the following: "curPartyContactMech", "curContactMech", "curPostalAddress", "curPartyContactMechPurposes"
-context.put("curPartyContactMech", paymentResults.get("curPartyContactMech"));
-context.put("curContactMech", paymentResults.get("curContactMech"));
-context.put("curPostalAddress", paymentResults.get("curPostalAddress"));
-context.put("curPartyContactMechPurposes", paymentResults.get("curPartyContactMechPurposes"));
+context.put("curPartyContactMech", curPostalAddressResults.get("curPartyContactMech"));
+context.put("curContactMech", curPostalAddressResults.get("curContactMech"));
+context.put("curPostalAddress", curPostalAddressResults.get("curPostalAddress"));
+context.put("curPartyContactMechPurposes", curPostalAddressResults.get("curPartyContactMechPurposes"));
 
-var postalAddressInfos = ContactMechWorker.getPartyPostalAddresses(pageContext, userLogin.getString("partyId"), pageContext.getAttribute("curContactMechId"));
+var postalAddressInfos = ContactMechWorker.getPartyPostalAddresses(request, userLogin.getString("partyId"), paymentResults.get("curContactMechId"));
 context.put("postalAddressInfos", postalAddressInfos);
 
-var personData = person;
-if (!tryEntity) personData = UtilHttp.getParameterMap(request);
-if (personData == null) personData = new HashMap();
+//prepare "Data" maps for filling form input boxes
+var parameterMap = UtilHttp.getParameterMap(request);
+var tryEntity = paymentResults.get("tryEntity");
 
-if (!security.hasEntityPermission("PARTYMGR", "_VIEW", session) && context.get("creditCard") != null && context.get("paymentMethod") != null && !userLogin.get("partyId").equals((context.get("paymentMethod")).get("partyId"))) {
+var creditCardData = paymentResults.get("creditCard");
+if (!tryEntity) creditCardData = parameterMap;
+if (creditCardData == null) creditCardData = new HashMap();
+context.put("creditCardData", creditCardData);
+
+var eftAccountData = paymentResults.get("eftAccount");
+if (!tryEntity) eftAccountData = parameterMap;
+if (eftAccountData == null) eftAccountData = new HashMap();
+context.put("eftAccountData", eftAccountData);
+
+//prepare security flag
+if (!security.hasEntityPermission("PARTYMGR", "_VIEW", session) && (context.get("creditCard") != null || context.get("eftAccount") != null) && context.get("paymentMethod") != null && !userLogin.get("partyId").equals((context.get("paymentMethod")).get("partyId"))) {
     context.put("canNotView", true);
 } else {
     context.put("canNotView", false);
 }
-
-context.put("person", person);
-context.put("personData", personData);
-context.put("donePage", donePage);
 
