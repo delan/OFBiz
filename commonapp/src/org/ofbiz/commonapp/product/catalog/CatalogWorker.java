@@ -57,8 +57,8 @@ public class CatalogWorker {
             return false;
         }
         
-        //if prodCatalog is set to not check inventory, break here
-        if ("N".equals(prodCatalog.getString("checkInventory"))) {
+        //if prodCatalog is set to not check inventory, or if inventory is not required for purchase, break here
+        if ("N".equals(prodCatalog.getString("checkInventory")) || !"Y".equals(prodCatalog.getString("requireInventory"))) {
             //note: if not set, defaults to yes, check inventory
             Debug.logInfo("Catalog with id " + prodCatalogId + ", is set to NOT check inventory, returning true for inventory available check");
             return true;
@@ -138,18 +138,33 @@ public class CatalogWorker {
             
             Double quantityNotReserved = null;
             try {
-                Map result = dispatcher.runSync("reserveProductInventoryByFacility", UtilMisc.toMap(
-                "productId", productId, "facilityId", inventoryFacilityId,
-                "orderId", orderId, "orderItemSeqId", orderItemSeqId, "quantity", quantity, "userLogin", userLogin));
+                Map serviceContext = new HashMap();
+                serviceContext.put("productId", productId);
+                serviceContext.put("facilityId", inventoryFacilityId);
+                serviceContext.put("orderId", orderId);
+                serviceContext.put("orderItemSeqId", orderItemSeqId);
+                serviceContext.put("quantity", quantity);
+                serviceContext.put("requireInventory", prodCatalog.get("requireInventory"));
+                serviceContext.put("userLogin", userLogin);
+                
+                Map result = dispatcher.runSync("reserveProductInventoryByFacility", serviceContext);
                 quantityNotReserved = (Double) result.get("quantityNotReserved");
                 
                 if (quantityNotReserved == null) {
                     Debug.logWarning("The getInventoryAvailableByFacility service returned a null availableToPromise, the error message was:\n" + result.get(ModelService.ERROR_MESSAGE));
-                    return new Double(0.0);
+                    if (!"Y".equals(prodCatalog.getString("requireInventory"))) {
+                        return null;
+                    } else {
+                        return new Double(0.0);
+                    }
                 }
             } catch (GenericServiceException e) {
                 Debug.logWarning(e, "Error invoking reserveProductInventoryByFacility service");
-                return new Double(0.0);
+                if (!"Y".equals(prodCatalog.getString("requireInventory"))) {
+                    return null;
+                } else {
+                    return new Double(0.0);
+                }
             }
             
             //whew, finally here: now check to see if we were able to reserve...
@@ -162,7 +177,7 @@ public class CatalogWorker {
             }
             
         } else {
-            Debug.logWarning("Catalog with id " + prodCatalogId + " uses multiple inventory facilities, which is not yet implemented, not reserving inventory");
+            Debug.logError("Catalog with id " + prodCatalogId + " uses multiple inventory facilities, which is not yet implemented, not reserving inventory");
             return new Double(0.0);
             
             //TODO: check multiple inventory locations

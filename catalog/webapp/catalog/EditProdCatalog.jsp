@@ -1,5 +1,4 @@
-<%
-/**
+<%--
  *  Copyright (c) 2001 The Open For Business Project - www.ofbiz.org
  *
  *  Permission is hereby granted, free of charge, to any person obtaining a 
@@ -23,8 +22,7 @@
  *@author     David E. Jones
  *@created    May 13 2002
  *@version    1.0
- */
-%>
+--%>
 <%try {%>
 <%@ page import="java.util.*, java.io.*" %>
 <%@ page import="org.ofbiz.core.util.*, org.ofbiz.core.entity.*" %>
@@ -159,6 +157,16 @@
         <td width="74%">
           <SELECT name='reserveInventory'>
             <OPTION><ofbiz:inputvalue entityAttr='prodCatalog' field='reserveInventory' default="Y"/></OPTION>
+            <OPTION>&nbsp;</OPTION><OPTION>Y</OPTION><OPTION>N</OPTION>
+          </SELECT>
+        </td>
+      </tr>
+      <tr>
+        <td width="26%" align=right><div class="tabletext">Require Inventory for Purchase?</div></td>
+        <td>&nbsp;</td>
+        <td width="74%">
+          <SELECT name='requireInventory'>
+            <OPTION><ofbiz:inputvalue entityAttr='prodCatalog' field='requireInventory' default="N"/></OPTION>
             <OPTION>&nbsp;</OPTION><OPTION>Y</OPTION><OPTION>N</OPTION>
           </SELECT>
         </td>

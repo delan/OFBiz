@@ -1,5 +1,4 @@
-<%
-/**
+<%--
  *  Copyright (c) 2001 The Open For Business Project - www.ofbiz.org
  *
  *  Permission is hereby granted, free of charge, to any person obtaining a
@@ -23,8 +22,7 @@
  *@author     David E. Jones
  *@created    May 13, 2002
  *@version    1.0
- */
-%>
+--%>
 
 <%@ page import="java.util.*, java.io.*" %>
 <%@ page import="org.ofbiz.core.util.*, org.ofbiz.core.entity.*" %>
@@ -55,6 +53,7 @@
     <td><div class="tabletext"><b>OneInv Facility?</b></div></td>
     <td><div class="tabletext"><b>Check Inv?</b></div></td>
     <td><div class="tabletext"><b>Reserve Inv?</b></div></td>
+    <td><div class="tabletext"><b>Require Inv?</b></div></td>
     <td><div class="tabletext"><b>Use QuickAdd?</b></div></td>
     <td><div class="tabletext">&nbsp;</div></td>
   </tr>
@@ -70,6 +69,7 @@
     <td><div class='tabletext'>&nbsp;<ofbiz:inputvalue entityAttr="prodCatalog" field="oneInventoryFacility"/></div></td>
     <td><div class='tabletext'>&nbsp;<ofbiz:inputvalue entityAttr="prodCatalog" field="checkInventory"/></div></td>
     <td><div class='tabletext'>&nbsp;<ofbiz:inputvalue entityAttr="prodCatalog" field="reserveInventory"/></div></td>
+    <td><div class='tabletext'>&nbsp;<ofbiz:inputvalue entityAttr="prodCatalog" field="requireInventory"/></div></td>
     <td><div class='tabletext'>&nbsp;<ofbiz:inputvalue entityAttr="prodCatalog" field="useQuickAdd"/></div></td>
     <td>
       <a href='<ofbiz:url>/EditProdCatalog?prodCatalogId=<ofbiz:inputvalue entityAttr="prodCatalog" field="prodCatalogId"/></ofbiz:url>' class="buttontext">
