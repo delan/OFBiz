@@ -707,8 +707,10 @@ public abstract class WfExecutionObjectImpl implements WfExecutionObject {
      * @throws WfException
      */
     protected boolean evalCondition(String expression, Map context) throws WfException {
-        if (expression == null || expression.length() == 0)
+        if (expression == null || expression.length() == 0) {
+            Debug.logVerbose("Null or empty expression, returning true.", module);
             return true;
+        }
         Object o = eval(expression, context);
         if (o == null)
             return false;
@@ -726,6 +728,7 @@ public abstract class WfExecutionObjectImpl implements WfExecutionObject {
             throw new WfException("Cannot evaluate empty or null expression");
 
         Debug.logVerbose("Evaluating -- " + expression, module);
+        Debug.logVerbose("Using Context -- " + context, module);
         try {
             // Set the context for the condition
             Set keySet = context.keySet();

@@ -379,8 +379,10 @@ public class WfProcessImpl extends WfExecutionObjectImpl implements WfProcess {
         }
 
         // we only use otherwise transitions for XOR splits
-        if (split.equals("WST_XOR") && transList.size() == 0 && otherwise != null)
+        if (split.equals("WST_XOR") && transList.size() == 0 && otherwise != null) {
             transList.add(otherwise);
+            Debug.logVerbose("Used OTHERWISE Transition.", module);
+        }
 
         Debug.logVerbose("[WfProcess.getTransFrom] : Transitions: " + transList.size(), module);
         return transList;
