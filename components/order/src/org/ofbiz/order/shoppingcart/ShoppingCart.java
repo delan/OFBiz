@@ -1,5 +1,5 @@
 /*
- * $Id: ShoppingCart.java,v 1.15 2003/11/12 20:35:14 jonesde Exp $
+ * $Id: ShoppingCart.java,v 1.16 2003/11/12 23:45:27 jonesde Exp $
  *
  *  Copyright (c) 2001, 2002 The Open For Business Project - www.ofbiz.org
  *
@@ -45,7 +45,7 @@ import org.ofbiz.service.LocalDispatcher;
  * @author     <a href="mailto:jaz@ofbiz.org">Andy Zeneski</a>
  * @author     <a href="mailto:cnelson@einnovation.com">Chris Nelson</a>
  * @author     <a href="mailto:jonesde@ofbiz.org">David E. Jones</a>
- * @version    $Revision: 1.15 $
+ * @version    $Revision: 1.16 $
  * @since      2.0
  */
 public class ShoppingCart implements java.io.Serializable {
@@ -73,6 +73,8 @@ public class ShoppingCart implements java.io.Serializable {
     private List cartLines = new ArrayList();
     private Map contactMechIdsMap = new HashMap();
     private List freeShippingProductPromoActions = new ArrayList();
+    private Map productPromoUses = new HashMap();
+    private Map productPromoCodeUses = new HashMap();
 
     private transient GenericDelegator delegator = null;
     private String delegatorName = null;
@@ -353,6 +355,8 @@ public class ShoppingCart implements java.io.Serializable {
 
         this.orderAdditionalEmails = null;
         this.freeShippingProductPromoActions.clear();
+        this.productPromoUses.clear();
+        this.productPromoCodeUses.clear();
 
         this.paymentMethodIds.clear();
         this.paymentMethodTypeIds.clear();
@@ -923,6 +927,52 @@ public class ShoppingCart implements java.io.Serializable {
 
     public List getFreeShippingProductPromoActions() {
         return this.freeShippingProductPromoActions;
+    }
+
+    public void addProductPromoUse(String productPromoId) {
+        Long uses = (Long) productPromoUses.get(productPromoId);
+        if (uses == null) {
+            productPromoUses.put(productPromoId, new Integer(1));
+        } else {
+            productPromoUses.put(productPromoId, new Integer(uses.intValue() + 1));
+        }
+    }
+
+    public void clearProductPromoUses() {
+        this.productPromoUses.clear();
+    }
+
+    public Map getProductPromoUses() {
+        return this.productPromoUses;
+    }
+
+    public void addProductPromoCode(String productPromoCodeId) {
+        if (!productPromoCodeUses.containsKey(productPromoCodeId)) {
+            productPromoCodeUses.put(productPromoCodeId, new Integer(0));
+        }
+    }
+
+    public void addProductPromoCodeUse(String productPromoCodeId) {
+        Long uses = (Long) productPromoCodeUses.get(productPromoCodeId);
+        if (uses == null) {
+            throw new IllegalStateException("Cannot add a use to a promo code use for a code that has not been entered.");
+        } else {
+            productPromoCodeUses.put(productPromoCodeId, new Integer(uses.intValue() + 1));
+        }
+    }
+
+    public void resetProductPromoCodeUses() {
+        // we don't want to clear the Map because it represents codes that are entered, just set all values to zero
+        Integer zeroValue = new Integer(0);
+        Iterator entryIter = this.productPromoCodeUses.entrySet().iterator();
+        while (entryIter.hasNext()) {
+            Map.Entry entry = (Map.Entry) entryIter.next();
+            entry.setValue(zeroValue);
+        }
+    }
+
+    public Map getProductPromoCodeUses() {
+        return this.productPromoCodeUses;
     }
 
     // =======================================================================
