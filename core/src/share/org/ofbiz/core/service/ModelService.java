@@ -49,12 +49,13 @@ public class ModelService {
   /** Result Information, a list of values returned by the service */
   public Map resultInfo;
   
-  public boolean validate(Map context) {
+  public static boolean validate(Map info, Map test) {
       // validate keys first
-      Set testSet = context.keySet();
-      Set keySet = contextInfo.keySet();
+      Set testSet = test.keySet();
+      Set keySet = info.keySet();
       if ( !testSet.containsAll(keySet) || !keySet.containsAll(testSet) )
           return false;
+      
       // validate types next
       
       return true;

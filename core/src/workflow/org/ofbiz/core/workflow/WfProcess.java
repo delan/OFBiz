@@ -39,12 +39,14 @@ import java.util.List;
 public interface WfProcess extends WfExecutionObject {
   
   /**
+   * Gets the requester of this process
    * @throws WfException
-   * @return
+   * @return requester of this process
    */
   public WfRequester requester() throws WfException;
   
   /**
+   * Sets the requester for this process
    * @param newValue
    * @throws WfException
    * @throws CannotChangeRequester
@@ -78,19 +80,22 @@ public interface WfProcess extends WfExecutionObject {
   public boolean isMemberOfStep(WfActivity member) throws WfException;
   
   /**
+   * Gets the manager associated with this process
    * @throws WfException
    * @return
    */
   public WfProcessMgr manager() throws WfException;
   
   /**
+   * Gets the results of this process
    * @throws WfException
    * @throws ResultNotAvailable
-   * @return
+   * @return result Map of results from this process
    */
   public Map result() throws WfException, ResultNotAvailable;
   
   /**
+   * Starts the Workflow process
    * @throws WfException
    * @throws CannotStart
    * @throws AlreadyRunning

@@ -52,8 +52,22 @@ public class WfRequesterImpl implements WfRequester {
      *@throws WfException
      */
     public void registerProcess(WfProcess process, Map context, GenericRequester requester) throws WfException {
-        performers.put(process,requester);                        
+        if ( process == null )
+            throw new WfException("Process cannot be null.");
+        if ( context == null )
+            throw new WfException("Context should not be null.");
+        
+        performers.put(process,requester);
+        WfProcessMgr mgr = process.manager();
+        
+        // Validate the process context w/ what was passed.
+        if ( !ModelService.validate(mgr.contextSignature(), context) )
+            throw new WfException("Context passed does not validate against defined signature.");
+        
+        // Set the context w/ the process
         process.setProcessContext(context);
+        
+        // Start the process
         try {
             process.start();
         }
@@ -131,5 +145,5 @@ public class WfRequesterImpl implements WfRequester {
         // Implement me
         // call back to GenericRequester when complete. (unless NULL)
     }
-    
+        
 }

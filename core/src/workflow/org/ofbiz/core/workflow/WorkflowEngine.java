@@ -82,7 +82,7 @@ public class WorkflowEngine implements GenericEngine {
      */
     public void runAsync(ModelService modelService, Map context, GenericRequester requester) throws GenericServiceException {
         // validate the context
-        if ( !modelService.validate(context) )
+        if ( !ModelService.validate(modelService.contextInfo,context) )
             throw new GenericServiceException("Context does not match expected requirements.");
         
         // Build the requester / process manager
