@@ -62,7 +62,7 @@
             if (UtilValidate.isNotEmpty(inventoryItem.getString("statusId"))) {
                 Collection statusChange = delegator.findByAnd("StatusValidChange",UtilMisc.toMap("statusId",inventoryItem.getString("statusId")));
                 if (statusChange != null) {
-                    Collection statusItems = null;
+                    Collection statusItems = new ArrayList();
                     Iterator statusChangeIter = statusChange.iterator();
                     while (statusChangeIter.hasNext()) {
                         GenericValue curStatusChange = (GenericValue) statusChangeIter.next();
@@ -155,7 +155,8 @@
         <td>&nbsp;</td>
         <td>
            <select name="statusId" style='font-size: x-small;'>
-             <option value='<ofbiz:inputvalue entityAttr="inventoryItem" field="statusId"/>'><ofbiz:inputvalue entityAttr="inventoryItem" field="statusId"/></option>
+             <%GenericValue curStatusItem = inventoryItem == null ? null : inventoryItem.getRelatedOneCache("StatusItem");%>
+             <option value='<ofbiz:inputvalue entityAttr="inventoryItem" field="statusId"/>'><%if (curStatusItem != null) {%><%=curStatusItem.getString("description")%><%} else {%><ofbiz:entityfield attribute="inventoryItem" field="statusId" prefix="[" suffix="]"/><%}%></option>
              <option value='<ofbiz:inputvalue entityAttr="inventoryItem" field="statusId"/>'>----</option>
              <ofbiz:iterator name="statusItem" property="statusItems">
                <option value='<ofbiz:inputvalue entityAttr="statusItem" field="statusId"/>'><ofbiz:inputvalue entityAttr="statusItem" field="description"/></option>
