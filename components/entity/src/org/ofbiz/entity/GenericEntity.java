@@ -1,5 +1,5 @@
 /*
- * $Id: GenericEntity.java,v 1.6 2003/10/14 22:41:14 ajzeneski Exp $
+ * $Id: GenericEntity.java,v 1.7 2003/10/27 22:47:50 jonesde Exp $
  *
  *  Copyright (c) 2002 The Open For Business Project - www.ofbiz.org
  *
@@ -60,7 +60,7 @@ import org.w3c.dom.Element;
  *
  *@author     <a href="mailto:jonesde@ofbiz.org">David E. Jones</a>
  *@author     <a href="mailto:jaz@ofbiz.org">Andy Zeneski</a>
- *@version    $Revision: 1.6 $
+ *@version    $Revision: 1.7 $
  *@since      2.0
  */
 public class GenericEntity extends Observable implements Map, LocalizedMap, Serializable, Comparable, Cloneable {
@@ -483,7 +483,9 @@ public class GenericEntity extends Observable implements Map, LocalizedMap, Seri
             ModelField curField = (ModelField) iter.next();
             pkNames.add(curField.getName());
         }
-        return new GenericPK(getModelEntity(), this.getFields(pkNames));
+        GenericPK newPK = new GenericPK(getModelEntity(), this.getFields(pkNames));
+        newPK.setDelegator(this.getDelegator());
+        return newPK;
     }
 
     /** go through the pks and for each one see if there is an entry in fields to set */
