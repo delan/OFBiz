@@ -737,16 +737,19 @@ public class CatalogWorker {
     }
 
     public static void getQuickReorderProducts(PageContext pageContext, String productsAttrName, String quantitiesAttrName) {
-            getQuickReorderProducts(pageContext.getRequest(), productsAttrName, quantitiesAttrName);
+        Map results = getQuickReorderProducts(pageContext.getRequest());
+        pageContext.setAttribute(productsAttrName, results.get("products"));
+        pageContext.setAttribute(quantitiesAttrName, results.get("quantitie"));
     }
                 
-    public static void getQuickReorderProducts(ServletRequest request, String productsAttrName, String quantitiesAttrName) {
+    public static Map getQuickReorderProducts(ServletRequest request) {
         GenericDelegator delegator = (GenericDelegator) request.getAttribute("delegator");
         HttpServletRequest httpRequest = (HttpServletRequest) request;
         GenericValue userLogin = (GenericValue) httpRequest.getSession().getAttribute(SiteDefs.USER_LOGIN);
+        Map results = new HashMap();
 
         if (userLogin == null) userLogin = (GenericValue) httpRequest.getSession().getAttribute("autoUserLogin");
-        if (userLogin == null) return;
+        if (userLogin == null) return results;
 
         try {
             Map products = (Map) httpRequest.getSession().getAttribute("_QUICK_REORDER_PRODUCTS_");
@@ -867,11 +870,13 @@ public class CatalogWorker {
                 reorderProds.remove(reorderProds.size() - 1);
             }
 
-            request.setAttribute(productsAttrName, reorderProds);
-            request.setAttribute(quantitiesAttrName, productQuantities);
+            results.put("products", reorderProds);
+            results.put("quantities", productQuantities);
         } catch (GenericEntityException e) {
             Debug.logWarning(e);
         }
+        
+        return results;
     }
 
     public static List productOrderByMap(Collection values, Map orderByMap, boolean descending) {
