@@ -9,7 +9,7 @@
     <%@page contentType='text/html; charset=UTF-8'%>
     <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
     <title><%EntityField.run("layoutSettings", "companyName", pageContext);%>: <region:render section='title'/></title>
-    <script type='text/javascript' src='<ofbiz:contenturl>/images/calendar1.js</ofbiz:contenturl>'></script>
+    <script language='javascript' type='text/javascript' src='<ofbiz:contenturl>/images/calendar1.js</ofbiz:contenturl>'></script>
     <link rel='stylesheet' href='<ofbiz:contenturl>/images/maincss.css</ofbiz:contenturl>' type='text/css'>
     <link rel='stylesheet' href='<ofbiz:contenturl>/images/tabstyles.css</ofbiz:contenturl>' type='text/css'>    
 </head>
