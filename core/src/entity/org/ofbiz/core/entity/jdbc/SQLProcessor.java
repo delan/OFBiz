@@ -213,6 +213,7 @@ public class SQLProcessor {
             throw new GenericDataSourceException("Unable to esablish a connection with the database.", sqle);
         }
         
+        /* causes problems w/ postgres ??
         if (Debug.verboseOn()) {
             int isoLevel = -999;
             try {
@@ -232,6 +233,7 @@ public class SQLProcessor {
                 Debug.logVerbose("Transaction isolation level set to 'Serializable'.", module);
             }
         }
+        */
                             
         // always try to set auto commit to false, but if we can't then later on we won't commit
         try {
