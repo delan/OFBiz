@@ -1,7 +1,7 @@
 /*
  * $Id$
  *
- * Copyright (c) 2001-2003 The Open For Business Project - www.ofbiz.org
+ * Copyright (c) 2001-2005 The Open For Business Project - www.ofbiz.org
  *
  * Permission is hereby granted, free of charge, to any person obtaining a
  * copy of this software and associated documentation files (the "Software"),
@@ -112,10 +112,10 @@ public class RequestManager implements Serializable {
     public String getRequestAttribute(String uriStr, String attribute) {
         Map uri = getRequestMapMap(uriStr);
 
-        if (uri != null)
+        if (uri != null && attribute != null) {
             return (String) uri.get(attribute);
-        else {
-            Debug.logWarning("[RequestManager.getRequestAttribute] Value for attribute \"" + attribute +
+        } else {
+            Debug.logInfo("[RequestManager.getRequestAttribute] Value for attribute \"" + attribute +
                 "\" of uri \"" + uriStr + "\" not found", module);
             return null;
         }
