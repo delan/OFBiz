@@ -22,7 +22,7 @@
  *@author     David E. Jones (jonesde@ofbiz.org)
  *@author     Brad Steiner (bsteiner@thehungersite.com)
  *@author     Catherine.Heintz@nereide.biz (migration to UiLabel)
- *@version    $Revision: 1.6 $
+ *@version    $Revision: 1.7 $
  *@since      2.2
 -->
 <#assign uiLabelMap = requestAttributes.uiLabelMap>
@@ -47,6 +47,7 @@
         <tr>
             <td><div class="tabletext"><b>${uiLabelMap.ProductPromoNameId}</b></div></td>
             <td><div class="tabletext"><b>${uiLabelMap.ProductPromoText}</b></div></td>
+            <td><div class="tabletext"><b>Req. Code?</b></div></td>
             <td><div class="tabletext"><b>Created</b></div></td>
             <td><div class="tabletext">&nbsp;</div></td>
         </tr>
@@ -54,6 +55,7 @@
             <tr valign="middle">
                 <td><div class='tabletext'>&nbsp;<a href="<@ofbizUrl>/EditProductPromo?productPromoId=${(productPromo.productPromoId)?if_exists}</@ofbizUrl>" class="buttontext">${(productPromo.promoName)?if_exists} [${(productPromo.productPromoId)?if_exists}]</a></div></td>
                 <td><div class='tabletext'>&nbsp;${(productPromo.promoText)?if_exists}</div></td>
+                <td><div class='tabletext'>&nbsp;${(productPromo.requireCode)?default("N")}</div></td>
                 <td><div class='tabletext'>&nbsp;${(productPromo.createdDate)?if_exists}</div></td>
                 <td>
                     <a href='<@ofbizUrl>/EditProductPromo?productPromoId=${(productPromo.productPromoId)?if_exists}</@ofbizUrl>' class="buttontext">[${uiLabelMap.CommonEdit}]</a>
