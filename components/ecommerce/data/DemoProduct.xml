@@ -28,6 +28,7 @@
   <ProductStorePaymentSetting productStoreId="9000" paymentMethodTypeId="CREDIT_CARD" paymentServiceTypeEnumId="PRDS_PAY_REFUND" paymentService="testCCRefund"/>
   <ProductStorePaymentSetting productStoreId="9000" paymentMethodTypeId="EFT_ACCOUNT" paymentServiceTypeEnumId="PRDS_PAY_AUTH" paymentService="alwaysApproveEFTProcessor"/>
   <ProductStorePaymentSetting productStoreId="9000" paymentMethodTypeId="GIFT_CARD" paymentServiceTypeEnumId="PRDS_PAY_AUTH" paymentService="alwaysApproveGCProcessor"/>
+  <ProductStorePaymentSetting productStoreId="9000" paymentMethodTypeId="GIFT_CARD" paymentServiceTypeEnumId="PRDS_PAY_RELEASE" paymentService="testGCRelease"/>
   <ProductStoreEmailSetting productStoreId="9000" emailType="PRDS_ODR_CONFIRM" templatePath="/components/order/email/default/emailconfirmation.ftl" subject="OFBiz Demo - Order Confirmation #${orderId}" bccAddress="ofbiztest@yahoo.com" fromAddress="ofbiztest@yahoo.com"/>
   <ProductStoreEmailSetting productStoreId="9000" emailType="PRDS_ODR_COMPLETE" templatePath="/components/order/email/default/emailcomplete.ftl" subject="OFBiz Demo - Your Order Is Complete #${orderId}" fromAddress="ofbiztest@yahoo.com"/>
   <ProductStoreEmailSetting productStoreId="9000" emailType="PRDS_ODR_BACKORDER" templatePath="/components/order/email/default/emailbackorder.ftl" subject="OFBiz Demo - Backorder Notification #${orderId}" fromAddress="ofbiztest@yahoo.com"/>
