@@ -88,7 +88,8 @@
 <ofbiz:if name="party">
 <table width="100%" border="0" cellpadding="1" cellspacing="0">
   <tr><td colspan="3"><a href="/partymgr/control/editcontactmech?preContactMechTypeId=POSTAL_ADDRESS&contactMechPurposeTypeId=SHIPPING_LOCATION&party_id=<%=partyId%>" target="_blank" class="buttontext">[Add New Address]</a></td></tr>
-  <form method="post" action="<ofbiz:url>/finalizeOrder</ofbiz:url>" name="shipsetupform">
+  <form method="post" action="<ofbiz:url>/finalizeOrder</ofbiz:url>" name="shipsetupform"> 
+  <input type="hidden" name="finalizeMode" value="ship">
   <ofbiz:if name="shippingContactMechList" size="0">
     <tr><td colspan="3"><hr class='sepbar'></td></tr>
     <ofbiz:iterator name="shippingContactMech" property="shippingContactMechList">
@@ -127,6 +128,7 @@
   <form method="post" action="<ofbiz:url>/createPostalAddress</ofbiz:url>" name="shipsetupform">
   <input type="hidden" name="contactMechTypeId" value="POSTAL_ADDRESS">
   <input type="hidden" name="partyId" value="_NA_">
+  <input type="hidden" name="finalizeMode" value="ship">
   <table width="100%" border="0" cellpadding="1" cellspacing="0">
     <tr>
       <td width="26%" align=right valign=top><div class="tabletext">To Name</div></td>

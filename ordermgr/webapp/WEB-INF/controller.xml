@@ -166,7 +166,7 @@
     	<response name="shipping" type="view" value="shipsetting"/>
     	<response name="options" type="view" value="optionsetting"/>
     	<response name="payment" type="view" value="billsetting"/>
-    	<response name="success" type="view" value="salesentry"/>
+    	<response name="success" type="view" value="confirm"/>
     	<response name="error" type="view" value="salesentry"/>    	
     </request-map>  
     <request-map uri="setShipping">
@@ -179,14 +179,57 @@
         <response name="success" type="request" value="finalizeOrder"/>
         <response name="error" type="view" value="shipsetting"/>
     </request-map>
-    <request-map uri="setBilling">
-    	<security https="true" auth="true"/>
-    	<response name="success" type="view" value="billsetting"/>
-    </request-map>  
     <request-map uri="setOptions">
     	<security https="true" auth="true"/>
     	<response name="success" type="view" value="optionsetting"/>
     </request-map>  
+    <request-map uri="setBilling">
+    	<security https="true" auth="true"/>
+    	<response name="success" type="view" value="billsetting"/>
+    </request-map>  
+    <request-map uri="createCreditCardAndPostalAddress">
+    	<security https="true" auth="true"/>
+    	<response name="success" type="request" value="finalizeOrder"/>
+    	<response name="error" type="view" value="billsetting"/>
+    </request-map>
+    <request-map uri="createEftAndPostalAddress">
+    	<security https="true" auth="true"/>
+    	<response name="success" type="request" value="finalizeOrder"/>
+    	<response name="error" type="view" value="billsetting"/>    	
+    </request-map>    
+    <request-map uri="processorder">
+        <security https="true" auth="true"/>
+        <event type="java" path="org.ofbiz.commonapp.order.shoppingcart.CheckOutEvents" invoke="createOrder"/>
+        <response name="success" type="request" value="checkBlacklist"/>
+        <response name="error" type="view" value="confirm"/>
+    </request-map>
+    <request-map uri="checkBlacklist">
+        <security direct-request="false"/>
+        <event type="java" path="org.ofbiz.commonapp.order.shoppingcart.CheckOutEvents" invoke="checkOrderBlacklist"/>
+        <response name="success" type="request" value="processpayment"/>
+        <response name="failed" type="view" value="confirm"/>
+        <response name="error" type="view" value="confirm"/>
+    </request-map>    
+    <request-map uri="processpayment">
+        <security direct-request="false"/>
+        <event type="java" path="org.ofbiz.commonapp.order.shoppingcart.CheckOutEvents" invoke="processPayment"/>
+        <response name="success" type="request" value="clearcart"/>
+        <response name="fail" type="view" value="confirm"/>
+        <response name="error" type="view" value="confirm"/>
+    </request-map>
+    <request-map uri="clearcart">
+        <security https="true" auth="true"/>
+        <event type="java" path="org.ofbiz.commonapp.order.shoppingcart.ShoppingCartEvents" invoke="destroyCart"/>
+        <response name="success" type="request" value="initiateOrderWorkflow"/>
+        <response name="error" type="view" value="confirm"/>
+    </request-map>
+    <request-map uri="initiateOrderWorkflow">
+        <security https="true" auth="true" direct-request="false"/>
+        <event type="java" path="org.ofbiz.commonapp.order.shoppingcart.CheckOutEvents" invoke="initiateOrderWorkflow"/>
+        <response name="success" type="view" value="confirm"/>
+        <response name="error" type="view" value="confirm"/>
+    </request-map>    
+    
 
 	<!-- Shipping Editor Requests -->
     <request-map uri="shipsetup">
@@ -243,6 +286,7 @@
     <view-map name="shipsetting" type="region"/>
     <view-map name="billsetting" type="region"/>
     <view-map name="optionsetting" type="region"/>
+    <view-map name="confirm" type="region"/>
     
     <view-map name="shipsetup" type="region"/>
     <view-map name="taxsetup" type="region"/>

@@ -84,9 +84,10 @@
       <table width='100%' border='0' cellspacing='0' cellpadding='0' class='boxbottom'>
         <tr>
           <td>
-
+<form method="post" action="<ofbiz:url>/finalizeOrder</ofbiz:url>" name="optsetupform">
+<input type="hidden" name="finalizeMode" value="options">
 <table width="100%" cellpadding="1" border="0" cellpadding="0" cellspacing="0">
-<ofbiz:iterator name="carrierShipmentMethod" property="carrierShipmentMethodList">
+  <ofbiz:iterator name="carrierShipmentMethod" property="carrierShipmentMethodList">
     <tr>
       <td width='1%' valign="top" >
         <%String shippingMethod = carrierShipmentMethod.getString("shipmentMethodTypeId") + "@" + carrierShipmentMethod.getString("partyId");%>
@@ -101,8 +102,8 @@
         <div class="tabletext"><%=UtilFormatOut.checkNull(shipParty) + " " + UtilFormatOut.checkNull(shipMethDescription)%></div>
       </td>
     </tr>
-</ofbiz:iterator>
-<ofbiz:unless name="carrierShipmentMethodList" size="0">
+  </ofbiz:iterator>
+  <ofbiz:unless name="carrierShipmentMethodList" size="0">
     <tr>
       <td width="1%" valign="top">
         <input CHECKED type="radio" name="shipping_method" value="Default">
@@ -111,7 +112,7 @@
         <div class="tabletext">Use Default: No other shipping methods available.</div>
       </td>
     </tr>
-</ofbiz:unless>
+  </ofbiz:unless>
     <tr><td colspan="2"><hr class='sepbar'></td></tr>
     <tr>
       <td colspan=2>
@@ -166,18 +167,8 @@
         <textarea cols="30" rows="3" name="gift_message"><ofbiz:if name="shoppingCart"><%=UtilFormatOut.checkNull(shoppingCart.getGiftMessage())%></ofbiz:if></textarea>
       </td>
     </tr>
-    <tr><td colspan="2"><hr class='sepbar'></td></tr>
-	<tr>
-      <td colspan="2">
-        <div class="head2"><b>Payment Information</b></div>
-      </td>
-    </tr>
-    <tr>
-      <td colspan="2">
-        <textarea cols="30" rows="3" name="gift_message"><ofbiz:if name="shoppingCart"><%=UtilFormatOut.checkNull(shoppingCart.getGiftMessage())%></ofbiz:if></textarea>
-      </td>
-    </tr>
 </table>
+</form>
           </td>
         </tr>
       </table>

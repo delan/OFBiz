@@ -93,6 +93,10 @@
         <put section='title'>Order Billing Settings</put>
         <put section='content' content='/entry/optionsettings.jsp'/>
     </define>    
+    <define id='confirm' region='LEFT_ONLY_REGION'>
+        <put section='title'>Order Confirmation</put>
+        <put section='content' content='/entry/confirmorder.jsp'/>
+    </define>      
         
     <!-- shipping/tax configuration screens -->
     <define id='shipsetup' region='MAIN_REGION'>
