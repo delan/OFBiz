@@ -596,9 +596,10 @@
   <StatusItem description="Rejected" sequenceId="98" statusCode="REJECTED" statusId="ITEM_REJECTED" statusTypeId="ORDER_ITEM_STATUS"/>
   <StatusItem description="Cancelled" sequenceId="99" statusCode="CANCELLED" statusId="ITEM_CANCELLED" statusTypeId="ORDER_ITEM_STATUS"/>
 
-  <StatusItem description="Authorized" sequenceId="01" statusCode="AUTHORIZED" statusId="PAYMENT_AUTHORIZED" statusTypeId="PAYMENT_PREF_STATUS"/>
-  <StatusItem description="Settled" sequenceId="02" statusCode="SETTLED" statusId="PAYMENT_SETTLED" statusTypeId="PAYMENT_PREF_STATUS"/>
-  <StatusItem description="Declined" sequenceId="03" statusCode="DECLINED" statusId="PAYMENT_DECLINED" statusTypeId="PAYMENT_PREF_STATUS"/>
+  <StatusItem description="Not-Authorized" sequenceId="01" statusCode="NOT_AUTHORIZED" statusId="PAYMENT_NOT_AUTH" statusTypeId="PAYMENT_PREF_STATUS"/>
+  <StatusItem description="Authorized" sequenceId="02" statusCode="AUTHORIZED" statusId="PAYMENT_AUTHORIZED" statusTypeId="PAYMENT_PREF_STATUS"/>
+  <StatusItem description="Settled" sequenceId="03" statusCode="SETTLED" statusId="PAYMENT_SETTLED" statusTypeId="PAYMENT_PREF_STATUS"/>
+  <StatusItem description="Declined" sequenceId="04" statusCode="DECLINED" statusId="PAYMENT_DECLINED" statusTypeId="PAYMENT_PREF_STATUS"/>
 
   <StatusItem description="Scheduled" sequenceId="01" statusCode="SCHEDULED" statusId="SHIPMENT_SCHEDULED" statusTypeId="SHIPMENT_STATUS"/>
   <StatusItem description="Shipped" sequenceId="02" statusCode="SHIPPED" statusId="SHIPMENT_SHIPPED" statusTypeId="SHIPMENT_STATUS"/>

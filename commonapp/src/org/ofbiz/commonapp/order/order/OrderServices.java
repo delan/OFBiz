@@ -268,7 +268,7 @@ public class OrderServices {
                         UtilMisc.toMap("orderPaymentPreferenceId", delegator.getNextSeqId("OrderPaymentPreference").toString(),
                                 "orderId", orderId, "paymentMethodTypeId", paymentMethod.get("paymentMethodTypeId"),
                                 "paymentMethodId", paymentMethod.get("paymentMethodId")));
-				paymentPreference.set("statusId", "PAYMENT_NOT_AUTHORIZED");
+				paymentPreference.set("statusId", "PAYMENT_NOT_AUTH");
                 toBeStored.add(paymentPreference);
             }
         }
