@@ -11,13 +11,21 @@ directly rather than running the startWeblogic.sh file. It referes to the
 3rd Party jars used by OFBiz inside the ofbiz/lib directory so you won't
 have to copy them.
 
-But, you will HAVE to have OFBIZ_HOME set to your main ofbiz directory, the
+But, you will HAVE to have $OFBIZ_HOME set to your main ofbiz directory, the
 one that contains core, commonapp, setup, etc.
 
 You will also have to update the config.xml file to point to the location of 
 the webapp directories. Because Weblogic may be installed in various locations 
 relative paths are not used. In the startOfbiz.sh file $OFBIZ_HOME is used to
 handle this, but that isn't available in the config.xml file.
+
+Note that the current weblogic transaction factory is included in OFBiz with
+the weblogic.transaction specific stuff commented out. To get that to work
+you must uncomment the weblogic.transaction parts and comment out the throw
+statements, and then compile with weblogic.jar on the classpath. The full
+class name is org.ofbiz.core.entity.transaction.WeblogicFactory, as
+referenced in the entityengine.properties file (which must replace the
+entityengine.properties file in commonapp/etc).
 
 Hope that helps.
 -David E. Jones
