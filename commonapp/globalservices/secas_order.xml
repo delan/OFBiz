@@ -9,4 +9,11 @@
     <eca service="createOrderAdjustment" event="commit">        
         <action service="resetGrandTotal" mode="sync"/>
     </eca>    
+    
+    <!-- Requirement / CustRequestItem assoication event -->
+    <eca service="createRequirement" event="commit">
+    	<condition field-name="custRequestId" operator="is-not-null"/>
+    	<condition field-name="custRequestItemSeqId" operator="is-not-null"/>
+    	<action service="associatedRequirementWithRequestItem" mode="sync"/>
+    </eca>
 </service-eca>

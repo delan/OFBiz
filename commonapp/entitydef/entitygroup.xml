@@ -447,6 +447,7 @@
     <entity-group group="org.ofbiz.commonapp" entity="RequirementAttribute" />
     <entity-group group="org.ofbiz.commonapp" entity="RequirementBudgetAllocation" />
     <entity-group group="org.ofbiz.commonapp" entity="RequirementCustRequest" />
+    <entity-group group="org.ofbiz.commonapp" entity="RequirementCustRequestView" />
     <entity-group group="org.ofbiz.commonapp" entity="RequirementRole" />
     <entity-group group="org.ofbiz.commonapp" entity="RequirementStatus" />
     <entity-group group="org.ofbiz.commonapp" entity="RequirementType" />

@@ -66,103 +66,141 @@
         <response name="error" type="view" value="error"/>
     </request-map>
 
-    <request-map uri="main"><security https="false" auth="false"/>
+    <request-map uri="main">
+    	<security https="false" auth="false"/>
     	<response name="success" type="view" value="main"/>
     </request-map>
 
-    <request-map uri="task"><security https="true" auth="true"/>
+    <request-map uri="task">
+    	<security https="true" auth="true"/>
     	<response name="success" type="view" value="task"/>
     </request-map>
-    <request-map uri="createtask"><security https="true" auth="true"/>
+    <request-map uri="createtask">
+    	<security https="true" auth="true"/>
         <event type="service" invoke="createWorkEffort"/>
     	<response name="success" type="view" value="task"/>
         <response name="error" type="view" value="task"/>
     </request-map>
-    <request-map uri="updatetask"><security https="true" auth="true"/>
+    <request-map uri="updatetask">
+    	<security https="true" auth="true"/>
         <event type="service" invoke="updateWorkEffort"/>
     	<response name="success" type="view" value="task"/>
         <response name="error" type="view" value="task"/>
     </request-map>
-    <request-map uri="deletetask"><security https="true" auth="true"/>
+    <request-map uri="deletetask">
+    	<security https="true" auth="true"/>
         <event type="service" invoke="deleteWorkEffort"/>
     	<response name="success" type="view" value="task"/>
         <response name="error" type="view" value="task"/>
     </request-map>
 
-    <request-map uri="requirementlist"><security https="true" auth="true"/>
+    <request-map uri="requirementlist">
+    	<security https="true" auth="true"/>
     	<response name="success" type="view" value="requirementlist"/>
     </request-map>
-    <request-map uri="requirement"><security https="true" auth="true"/>
+    <request-map uri="requirement">
+    	<security https="true" auth="true"/>
     	<response name="success" type="view" value="requirement"/>
     </request-map>
-    <request-map uri="createrequirement"><security https="true" auth="true"/>
+    <request-map uri="createrequirement">
+    	<security https="true" auth="true"/>
         <event type="service" invoke="createRequirement"/>
     	<response name="success" type="view" value="requirement"/>
         <response name="error" type="view" value="requirement"/>
     </request-map>
-    <request-map uri="updaterequirement"><security https="true" auth="true"/>
+    <request-map uri="updaterequirement">
+    	<security https="true" auth="true"/>
         <event type="service" invoke="updateRequirement"/>
     	<response name="success" type="view" value="requirement"/>
         <response name="error" type="view" value="requirement"/>
     </request-map>
-    <request-map uri="deleterequirement"><security https="true" auth="true"/>
+    <request-map uri="deleterequirement">
+    	<security https="true" auth="true"/>
         <event type="service" invoke="deleteRequirement"/>
     	<response name="success" type="view" value="requirement"/>
         <response name="error" type="view" value="requirement"/>
     </request-map>
 
-    <request-map uri="assoctask"><security https="true" auth="true"/>
+    <request-map uri="assoctask">
+    	<security https="true" auth="true"/>
         <event type="service" invoke="addRequirementTask"/>
     	<response name="success" type="view" value="workefforts"/>
         <response name="error" type="view" value="workefforts"/>
     </request-map>
 
-    <request-map uri="requestlist"><security https="true" auth="true"/>
+    <request-map uri="requestlist">
+    	<security https="true" auth="true"/>
     	<response name="success" type="view" value="requestlist"/>
     </request-map>
-    <request-map uri="request"><security https="true" auth="true"/>
+    <request-map uri="request">
+    	<security https="true" auth="true"/>
     	<response name="success" type="view" value="request"/>
     </request-map>
-    <request-map uri="createrequest"><security https="true" auth="true"/>
+    <request-map uri="createrequest">
+    	<security https="true" auth="true"/>
         <event type="service" invoke="createCustRequest"/>
     	<response name="success" type="view" value="request"/>
         <response name="error" type="view" value="request"/>
     </request-map>
-    <request-map uri="updaterequest"><security https="true" auth="true"/>
+    <request-map uri="updaterequest">
+    	<security https="true" auth="true"/>
         <event type="service" invoke="updateCustRequest"/>
     	<response name="success" type="view" value="request"/>
         <response name="error" type="view" value="request"/>
     </request-map>
 
-    <request-map uri="createrequestrole"><security https="true" auth="true"/>
+    <request-map uri="requestroles">
+    	<security https="true" auth="true"/>
+    	<response name="success" type="view" value="requestroles"/>
+    </request-map>
+    <request-map uri="createrequestrole">
+    	<security https="true" auth="true"/>
         <event type="service" invoke="createCustRequestRole"/>
-    	<response name="success" type="view" value="request"/>
-        <response name="error" type="view" value="request"/>
+    	<response name="success" type="view" value="requestroles"/>
+        <response name="error" type="view" value="requestroles"/>
     </request-map>
-
-    <request-map uri="removerequestrole"><security https="true" auth="true"/>
+    <request-map uri="removerequestrole">
+    	<security https="true" auth="true"/>
         <event type="service" invoke="removeCustRequestRole"/>
-    	<response name="success" type="view" value="request"/>
-        <response name="error" type="view" value="request"/>
+    	<response name="success" type="view" value="requestroles"/>
+        <response name="error" type="view" value="requestroles"/>
     </request-map>
 
-    <request-map uri="requestitem"><security https="true" auth="true"/>
-    	<response name="success" type="view" value="requestitem"/>
+    <request-map uri="requestitems">
+    	<security https="true" auth="true"/>
+    	<response name="success" type="view" value="requestitems"/>
     </request-map>
-    <request-map uri="createrequestitem"><security https="true" auth="true"/>
+    <request-map uri="requestitem">
+    	<security https="true" auth="true"/>
+    	<response name="success" type="view" value="requestitem"/>
+    </request-map>    
+    <request-map uri="createrequestitem">
+    	<security https="true" auth="true"/>
         <event type="service" invoke="createCustRequestItem"/>
-    	<response name="success" type="view" value="request"/>
-        <response name="error" type="view" value="request"/>
+    	<response name="success" type="view" value="requestitems"/>
+        <response name="error" type="view" value="requestitems"/>
     </request-map>
-    <request-map uri="updaterequestitem"><security https="true" auth="true"/>
+    <request-map uri="updaterequestitem">
+    	<security https="true" auth="true"/>
         <event type="service" invoke="updateCustRequestItem"/>
-    	<response name="success" type="view" value="requestitem"/>
-        <response name="error" type="view" value="requestitem"/>
+    	<response name="success" type="view" value="requestitems"/>
+        <response name="error" type="view" value="requestitems"/>
     </request-map>
-    <request-map uri="createrequestitemnote"><security https="true" auth="true"/>
+    
+    <request-map uri="requestitemnotes">
+    	<security https="true" auth="true"/>
+    	<response name="success" type="view" value="requestitemnotes"/>    	
+    </request-map>
+    <request-map uri="createrequestitemnote">
+    	<security https="true" auth="true"/>
         <event type="service" invoke="createCustRequestItemNote"/>
-    	<response name="success" type="view" value="requestitem"/>
-        <response name="error" type="view" value="requestitem"/>
+    	<response name="success" type="view" value="requestitemnotes"/>
+        <response name="error" type="view" value="requestitemnotes"/>
+    </request-map>
+    
+    <request-map uri="requestitemrequirements">
+    	<security https="true" auth="true"/>
+    	<response name="success" type="view" value="requestitemrequirements"/>
     </request-map>
 
     <request-map uri="openApplication">        
@@ -171,163 +209,196 @@
         <response name="error" type="view" value="error"/>
     </request-map>
     
-    <request-map uri="activity"><security https="true" auth="true"/>
+    <request-map uri="activity">
+    	<security https="true" auth="true"/>
     	<response name="success" type="view" value="activity"/>
     </request-map>
-    <request-map uri="createactivity"><security https="true" auth="true"/>
+    <request-map uri="createactivity">
+    	<security https="true" auth="true"/>
         <event type="service" invoke="createWorkEffort"/>
     	<response name="success" type="view" value="activity"/>
         <response name="error" type="view" value="activity"/>
     </request-map>
-    <request-map uri="updateactivity"><security https="true" auth="true"/>
+    <request-map uri="updateactivity">
+    	<security https="true" auth="true"/>
         <event type="service" invoke="updateWorkEffort"/>
     	<response name="success" type="view" value="activity"/>
         <response name="error" type="view" value="activity"/>
     </request-map>
-    <request-map uri="deleteactivity"><security https="true" auth="true"/>
+    <request-map uri="deleteactivity">
+    	<security https="true" auth="true"/>
         <event type="service" invoke="deleteWorkEffort"/>
     	<response name="success" type="view" value="activity"/>
         <response name="error" type="view" value="activity"/>
     </request-map>
 
-    <request-map uri="updateactivityassign"><security https="true" auth="true"/>
+    <request-map uri="updateactivityassign">
+    	<security https="true" auth="true"/>
         <event type="service" invoke="updatePartyToWorkEffortAssignment"/>
     	<response name="success" type="view" value="activity"/>
         <response name="error" type="view" value="activity"/>
     </request-map>
-    <request-map uri="acceptAssignment"><security https="true" auth="true"/>
+    <request-map uri="acceptAssignment">
+    	<security https="true" auth="true"/>
         <event type="simple" path="org/ofbiz/commonapp/workeffort/workeffort/WorkflowSimpleEvents.xml" invoke="acceptAssignment"/>
     	<response name="success" type="view" value="mytasks"/>
         <response name="error" type="view" value="mytasks"/>
     </request-map>
-    <request-map uri="acceptRoleAssignment"><security https="true" auth="true"/>
+    <request-map uri="acceptRoleAssignment">
+    	<security https="true" auth="true"/>
         <event type="simple" path="org/ofbiz/commonapp/workeffort/workeffort/WorkflowSimpleEvents.xml" invoke="acceptRoleAssignment"/>
     	<response name="success" type="view" value="mytasks"/>
         <response name="error" type="view" value="mytasks"/>
     </request-map>
 
-    <request-map uri="mytasks"><security https="true" auth="true"/>
+    <request-map uri="mytasks">
+    	<security https="true" auth="true"/>
     	<response name="success" type="view" value="mytasks"/>
     </request-map>
 
-    <request-map uri="workefforts"><security https="true" auth="true"/>
+    <request-map uri="workefforts">
+    	<security https="true" auth="true"/>
     	<response name="success" type="view" value="workefforts"/>
     </request-map>
 
-    <request-map uri="event"><security https="true" auth="true"/>
+    <request-map uri="event">
+    	<security https="true" auth="true"/>
     	<response name="success" type="view" value="event"/>
     </request-map>
 
-    <request-map uri="createevent"><security https="true" auth="true"/>
+    <request-map uri="createevent">
+    	<security https="true" auth="true"/>
         <event type="service" invoke="createWorkEffort"/>
     	<response name="success" type="view" value="event"/>
         <response name="error" type="view" value="event"/>
     </request-map>
 
-    <request-map uri="updateevent"><security https="true" auth="true"/>
+    <request-map uri="updateevent">
+    	<security https="true" auth="true"/>
         <event type="service" invoke="updateWorkEffort"/>
     	<response name="success" type="view" value="event"/>
         <response name="error" type="view" value="event"/>
     </request-map>
 
-    <request-map uri="deleteevent"><security https="true" auth="true"/>
+    <request-map uri="deleteevent">
+    	<security https="true" auth="true"/>
         <event type="service" invoke="deleteWorkEffort"/>
     	<response name="success" type="view" value="event"/>
         <response name="error" type="view" value="event"/>
     </request-map>
 
-    <request-map uri="day"><security https="true" auth="true"/>
+    <request-map uri="day">
+    	<security https="true" auth="true"/>
     	<response name="success" type="view" value="day"/>
     </request-map>
 
-    <request-map uri="week"><security https="true" auth="true"/>
+    <request-map uri="week">
+    	<security https="true" auth="true"/>
     	<response name="success" type="view" value="week"/>
     </request-map>
 
-    <request-map uri="month"><security https="true" auth="true"/>
+    <request-map uri="month">
+    	<security https="true" auth="true"/>
     	<response name="success" type="view" value="month"/>
     </request-map>
 
-    <request-map uri="upcoming"><security https="true" auth="true"/>
+    <request-map uri="upcoming">
+    	<security https="true" auth="true"/>
     	<response name="success" type="view" value="upcoming"/>
     </request-map>
     
     <!-- project management requests -->
-    <request-map uri="projectlist"><security https="true" auth="true"/>
+    <request-map uri="projectlist">
+    	<security https="true" auth="true"/>
     	<response name="success" type="view" value="projectlist"/>
     </request-map>
     
-    <request-map uri="editproject"><security https="true" auth="true"/>
+    <request-map uri="editproject">
+    	<security https="true" auth="true"/>
     	<response name="success" type="view" value="editproject"/>
     </request-map>
     
-    <request-map uri="createproject"><security https="true" auth="true"/>
+    <request-map uri="createproject">
+    	<security https="true" auth="true"/>
         <event type="service" invoke="createWorkEffort"/>
     	<response name="success" type="view" value="projectlist"/>
         <response name="error" type="view" value="editproject"/>
     </request-map>
 
-    <request-map uri="updateproject"><security https="true" auth="true"/>
+    <request-map uri="updateproject">
+    	<security https="true" auth="true"/>
         <event type="service" invoke="updateWorkEffort"/>
     	<response name="success" type="view" value="projectlist"/>
         <response name="error" type="view" value="editproject"/>
     </request-map>
 
-    <request-map uri="addprojectassignment"><security https="true" auth="true"/>
+    <request-map uri="addprojectassignment">
+    	<security https="true" auth="true"/>
         <event type="service" invoke="quickAssignPartyToWorkEffortWithRole"/>
     	<response name="success" type="view" value="editproject"/>
         <response name="error" type="view" value="editproject"/>
     </request-map>
 
-    <request-map uri="projecttasklist"><security https="true" auth="true"/>
+    <request-map uri="projecttasklist">
+    	<security https="true" auth="true"/>
     	<response name="success" type="view" value="projecttasklist"/>
     </request-map>
         
-    <request-map uri="phaselist"><security https="true" auth="true"/>
+    <request-map uri="phaselist">
+    	<security https="true" auth="true"/>
     	<response name="success" type="view" value="phaselist"/>
     </request-map>
     
-    <request-map uri="editphase"><security https="true" auth="true"/>
+    <request-map uri="editphase">
+    	<security https="true" auth="true"/>
     	<response name="success" type="view" value="editphase"/>
     </request-map>
     
-    <request-map uri="createphase"><security https="true" auth="true"/>
+    <request-map uri="createphase">
+    	<security https="true" auth="true"/>
         <event type="service" invoke="createPhase"/>
     	<response name="success" type="view" value="phaselist"/>
         <response name="error" type="view" value="editphase"/>
     </request-map>
 
-    <request-map uri="updatephase"><security https="true" auth="true"/>
+    <request-map uri="updatephase">
+    	<security https="true" auth="true"/>
         <event type="service" invoke="updateWorkEffort"/>
     	<response name="success" type="view" value="phaselist"/>
         <response name="error" type="view" value="editphase"/>
     </request-map>
     
-    <request-map uri="phasetasklist"><security https="true" auth="true"/>
+    <request-map uri="phasetasklist">
+    	<security https="true" auth="true"/>
     	<response name="success" type="view" value="phasetasklist"/>
     </request-map>
     
-    <request-map uri="editphasetask"><security https="true" auth="true"/>
+    <request-map uri="editphasetask">
+    	<security https="true" auth="true"/>
     	<response name="success" type="view" value="editphasetask"/>
     </request-map>
     
-    <request-map uri="createphasetask"><security https="true" auth="true"/>
+    <request-map uri="createphasetask">
+    	<security https="true" auth="true"/>
         <event type="service" invoke="createPhaseTask"/>
     	<response name="success" type="view" value="phasetasklist"/>
         <response name="error" type="view" value="editphasetask"/>
     </request-map>
 
-    <request-map uri="updatephasetask"><security https="true" auth="true"/>
+    <request-map uri="updatephasetask">
+    	<security https="true" auth="true"/>
         <event type="service" invoke="updateWorkEffort"/>
     	<response name="success" type="view" value="phasetasklist"/>
         <response name="error" type="view" value="editphasetask"/>
     </request-map>
     
-    <request-map uri="addtasknote"><security https="true" auth="true"/>
+    <request-map uri="addtasknote">
+    	<security https="true" auth="true"/>
     	<response name="success" type="view" value="edittasknote"/>
     </request-map>
     
-    <request-map uri="savetasknote"><security https="true" auth="true"/>
+    <request-map uri="savetasknote">
+    	<security https="true" auth="true"/>
         <event type="service" invoke="createWorkEffortNote"/>
     	<response name="success" type="view" value="editphasetask"/>
         <response name="error" type="view" value="edittasknote"/>
@@ -344,6 +415,11 @@
 
     <view-map name="requestlist" type="region"/>
     <view-map name="request" type="region"/>
+    <view-map name="requestitems" type="region"/>
+    <view-map name="requestitem" type="region"/>    
+    <view-map name="requestroles" type="region"/>
+    <view-map name="requestitemnotes" type="region"/>
+    <view-map name="requestitemrequirements" type="region"/>
     <view-map name="requirementlist" type="region"/>
     <view-map name="requirement" type="region"/>
 

@@ -68,18 +68,21 @@
                 <TR><TD colspan='8'><HR class='sepbar'></TD></TR>
                 <ofbiz:iterator name="custRequestAndRole" property="custRequestAndRoles">
                   <TR>
-                    <TD><DIV class='tabletext'><ofbiz:entityfield attribute="custRequestAndRole" field="priority"/></DIV></TD>
-                    <TD><DIV class='tabletext'><ofbiz:entityfield attribute="custRequestAndRole" field="custRequestDate"/></DIV></TD>
-                    <TD><DIV class='tabletext'><ofbiz:entityfield attribute="custRequestAndRole" field="responseRequiredDate"/></DIV></TD>
-                    <%GenericValue statusItem = delegator.findByPrimaryKeyCache("StatusItem", UtilMisc.toMap("statusId", custRequestAndRole.getString("statusId")));%>
-                    <%if (statusItem != null) pageContext.setAttribute("statusItem", statusItem);%>
-                    <TD><DIV class='tabletext'><ofbiz:entityfield attribute="statusItem" field="description"/></DIV></TD>
+                    <TD><DIV class='tabletext'><%=UtilFormatOut.checkNull(custRequestAndRole.getString("priority"))%></DIV></TD>
+                    <TD><DIV class='tabletext'><%=UtilFormatOut.checkNull(custRequestAndRole.getString("custRequestDate"))%></DIV></TD>
+                    <TD><DIV class='tabletext'><%=UtilFormatOut.checkNull(custRequestAndRole.getString("responseRequiredDate"))%></DIV></TD>
+                    <%GenericValue statusItem = delegator.findByPrimaryKeyCache("StatusItem", UtilMisc.toMap("statusId", custRequestAndRole.getString("statusId")));%>                   
+                    <% if (statusItem != null) { %>
+                    <TD><DIV class='tabletext'><%=UtilFormatOut.checkNull(statusItem.getString("description"))%></DIV></TD>
+                    <% } else { %>
+                    <TD><DIV class='tabletext'>&nbsp;</DIV></TD>
+                    <% } %>
                     <%-- <TD><DIV class='tabletext'><ofbiz:entityfield attribute="custRequestAndRole" field="partyId"/></DIV></TD> --%>
-                    <TD><DIV class='tabletext'><ofbiz:entityfield attribute="custRequestAndRole" field="roleTypeId"/></DIV></TD>
-                    <TD><A class='buttontext' href='<ofbiz:url>/request?custRequestId=<ofbiz:entityfield attribute="custRequestAndRole" field="custRequestId"/></ofbiz:url>'>
+                    <TD><DIV class='tabletext'><%=UtilFormatOut.checkNull(custRequestAndRole.getString("roleTypeId"))%></DIV></TD>
+                    <TD><A class='buttontext' href='<ofbiz:url>/request?custRequestId=<%=UtilFormatOut.checkNull(custRequestAndRole.getString("custRequestId"))%></ofbiz:url>'>
                         <ofbiz:entityfield attribute="custRequestAndRole" field="custRequestName"/></a></DIV></TD>
-                    <TD align=right><A class='buttontext' href='<ofbiz:url>/request?custRequestId=<ofbiz:entityfield attribute="custRequestAndRole" field="custRequestId"/></ofbiz:url>'>
-                        Edit&nbsp;[<ofbiz:entityfield attribute="custRequestAndRole" field="custRequestId"/>]</a></DIV></TD>
+                    <TD align=right><A class='buttontext' href='<ofbiz:url>/request?custRequestId=<%=UtilFormatOut.checkNull(custRequestAndRole.getString("custRequestId"))%></ofbiz:url>'>
+                        Edit&nbsp;[<%=UtilFormatOut.checkNull(custRequestAndRole.getString("custRequestId"))%>]</a></DIV></TD>
                   </TR>
                 </ofbiz:iterator>
               </TABLE>

@@ -187,7 +187,7 @@
             location="org/ofbiz/commonapp/order/request/CustRequestServices.xml" invoke="createCustRequest" auth="true">
         <description>Create a custRequest record</description>
         <implements service="interfaceCustRequest"/>
-        <attribute name="custRequestId" type="String" mode="INOUT" optional="true"/>
+        <attribute name="custRequestId" type="String" mode="OUT" optional="false"/>
     </service>
     <service name="updateCustRequest" engine="simple"
             location="org/ofbiz/commonapp/order/request/CustRequestServices.xml" invoke="updateCustRequest" auth="true">
@@ -217,11 +217,13 @@
         <description>CustRequestItem Interface</description>
         <attribute name="custRequestItemSeqId" type="String" mode="IN" optional="false"/>
         <attribute name="custRequestResolutionId" type="String" mode="IN" optional="true"/>
+        <attribute name="story" type="String" mode="IN" optional="true"/>
         <attribute name="statusId" type="String" mode="IN" optional="true"/>
         <attribute name="priority" type="Long" mode="IN" optional="true"/>
         <attribute name="requiredByDate" type="Timestamp" mode="IN" optional="false"/>
-        <attribute name="quantity" type="String" mode="IN" optional="true"/>
-        <attribute name="maximumAmount" type="String" mode="IN" optional="true"/>
+        <attribute name="productId" type="String" mode="IN" optional="true"/>
+        <attribute name="quantity" type="Double" mode="IN" optional="true"/>
+        <attribute name="maximumAmount" type="Double" mode="IN" optional="true"/>
         <attribute name="description" type="String" mode="IN" optional="true"/>
     </service>
     <service name="createCustRequestItem" engine="simple"
@@ -260,7 +262,7 @@
         <attribute name="custRequestItemSeqId" type="String" mode="IN" optional="false"/>
         <attribute name="note" type="String" mode="IN" optional="false"/>
     </service>
-
+    
     <!-- Services for finding Associated CustRequests -->
     <service name="getCustRequestsByRole" engine="simple"
             location="org/ofbiz/commonapp/order/request/CustRequestServices.xml" invoke="getCustRequestsByRole" auth="true">
@@ -283,14 +285,15 @@
         <attribute name="estimatedBudget" type="String" mode="IN" optional="true"/>
         <attribute name="quantity" type="String" mode="IN" optional="true"/>
         <attribute name="story" type="String" mode="IN" optional="true"/>
-        <attribute name="reason" type="String" mode="IN" optional="true"/>
-        <attribute name="requirementId" type="String" mode="OUT" optional="false"/>
+        <attribute name="reason" type="String" mode="IN" optional="true"/>   
     </service>
     <service name="createRequirement" engine="simple"
             location="org/ofbiz/commonapp/order/requirement/RequirementServices.xml" invoke="createRequirement">
         <description>Create a new requirement</description>
         <implements service="interfaceRequirement"/>
-        <attribute name="requirementId" type="String" mode="OUT" optional="false"/>
+        <attribute name="custRequestId" type="String" mode="IN" optional="true"/>
+        <attribute name="custRequestItemSeqId" type="String" mode="IN" optional="true"/>        
+        <attribute name="requirementId" type="String" mode="INOUT" optional="true"/>
     </service>
     <service name="updateRequirement" engine="simple"
             location="org/ofbiz/commonapp/order/requirement/RequirementServices.xml" invoke="updateRequirement">
@@ -303,6 +306,14 @@
             location="org/ofbiz/commonapp/order/requirement/RequirementServices.xml" invoke="deleteRequirement">
         <description>Delete a requirement</description>
         <attribute name="requirementId" type="String" mode="IN" optional="false"/>
+    </service>
+    
+    <service name="associatedRequirementWithRequestItem" engine="simple"
+    		location="org/ofbiz/commonapp/order/requirement/RequirementServices.xml" invoke="associateRequirementWithRequestItem">
+    	<description>Creates a CustRequestItem/Requirement association</description>
+    	<attribute name="requirementId" type="String" mode="IN" optional="false"/>
+    	<attribute name="custRequestId" type="String" mode="IN" optional="false"/>
+    	<attribute name="custRequestItemSeqId" type="String" mode="IN" optional="false"/>
     </service>
 
     <service name="addRequirementTask" engine="simple"

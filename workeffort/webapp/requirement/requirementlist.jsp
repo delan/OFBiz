@@ -1,30 +1,28 @@
-<%
-/**
- *  Title: Requirement List Page
+<%--
  *  Description: None
  *  Copyright (c) 2002 The Open For Business Project - www.ofbiz.org
  *
- *  Permission is hereby granted, free of charge, to any person obtaining a
- *  copy of this software and associated documentation files (the "Software"),
- *  to deal in the Software without restriction, including without limitation
- *  the rights to use, copy, modify, merge, publish, distribute, sublicense,
- *  and/or sell copies of the Software, and to permit persons to whom the
+ *  Permission is hereby granted, free of charge, to any person obtaining a 
+ *  copy of this software and associated documentation files (the "Software"), 
+ *  to deal in the Software without restriction, including without limitation 
+ *  the rights to use, copy, modify, merge, publish, distribute, sublicense, 
+ *  and/or sell copies of the Software, and to permit persons to whom the 
  *  Software is furnished to do so, subject to the following conditions:
  *
- *  The above copyright notice and this permission notice shall be included
+ *  The above copyright notice and this permission notice shall be included 
  *  in all copies or substantial portions of the Software.
  *
- *  THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS
- *  OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF
- *  MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT.
- *  IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY
- *  CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT
- *  OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR
+ *  THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS 
+ *  OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF 
+ *  MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. 
+ *  IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY 
+ *  CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT 
+ *  OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR 
  *  THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  *
- *@author     Andy Zeneski
- *@created    July 29, 2002
- *@version    1.0
+ *@author     Andy Zeneski 
+ *@version    $Revision$
+ *@since      2.0
 --%>
 
 <%@ page import="java.util.*" %>
@@ -75,13 +73,13 @@
                 <ofbiz:iterator name="requirement" property="requirements">
                   <% GenericValue requirementType = requirement.getRelatedOne("RequirementType"); %>
                   <TR>
-                    <TD><DIV class='tabletext'><%=requirementType.getString("description")%></DIV></TD>
-                    <TD><DIV class='tabletext'><ofbiz:entityfield attribute="requirement" field="description"/></DIV></TD>
-                    <TD><DIV class='tabletext'><ofbiz:entityfield attribute="requirement" field="requiredByDate"/></DIV></TD>
-                    <TD><DIV class='tabletext'><ofbiz:entityfield attribute="requirement" field="estimatedBudget"/></DIV></TD>
+                    <TD><DIV class='tabletext'><%=UtilFormatOut.checkNull(requirementType.getString("description"))%></DIV></TD>
+                    <TD><DIV class='tabletext'><%=UtilFormatOut.checkNull(requirement.getString("description"))%></DIV></TD>
+                    <TD><DIV class='tabletext'><%=UtilFormatOut.checkNull(requirement.getString("requiredByDate"))%></DIV></TD>
+                    <TD><DIV class='tabletext'><%=UtilFormatOut.formatPrice(requirement.getDouble("estimatedBudget"))%></DIV></TD>
 
                     <TD align=right NOWRAP><A class="buttontext" href="<ofbiz:url>/workefforts?requirementId=<%=requirement.getString("requirementId")%></ofbiz:url>">Tasks</a>&nbsp;/&nbsp;<A class='buttontext' href='<ofbiz:url>/requirement?requirementId=<ofbiz:entityfield attribute="requirement" field="requirementId"/></ofbiz:url>'>
-                        Edit&nbsp;[<ofbiz:entityfield attribute="requirement" field="requirementId"/>]</a></DIV></TD>
+                        Edit&nbsp;[<%=UtilFormatOut.checkNull(requirement.getString("requirementId"))%>]</a></DIV></TD>
                   </TR>
                 </ofbiz:iterator>
               </TABLE>

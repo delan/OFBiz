@@ -52,6 +52,7 @@
         </if-not-empty>
         <string-to-field string="REQ_REQUESTER" map-name="requesterMap" field-name="roleTypeId"/>
         <call-service service-name="createCustRequestRole" in-map-name="requesterMap"/>
+        <field-to-result field-name="custRequestId" result-name="custRequestId"/>
     </simple-method>
     <simple-method method-name="updateCustRequest" short-description="Update Customer Request">
         <field-to-field field-name="custRequestId" map-name="parameters" to-map-name="lookupPKMap"/>
