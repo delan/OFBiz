@@ -4,6 +4,9 @@
 
 package org.ofbiz.core.util;
 
+import java.io.PrintStream;
+import java.io.PrintWriter;
+
 /**
  * <p><b>Title:</b> General Exception
  * <p><b>Description:</b> Base OFBiz Exception
