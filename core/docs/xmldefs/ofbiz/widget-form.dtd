@@ -1,0 +1,150 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+  To refer to this DTD in your XML file, use the following declaration:
+<!DOCTYPE forms PUBLIC "-//OFBiz//DTD OFBiz Form Widget//EN" "http://www.ofbiz.org/dtds/widget-form.dtd">
+-->
+
+<!--
+ *  Copyright (c) 2003 The Open For Business Project - www.ofbiz.org
+ *
+ *  Permission is hereby granted, free of charge, to any person obtaining a
+ *  copy of this software and associated documentation files (the "Software"),
+ *  to deal in the Software without restriction, including without limitation
+ *  the rights to use, copy, modify, merge, publish, distribute, sublicense,
+ *  and/or sell copies of the Software, and to permit persons to whom the
+ *  Software is furnished to do so, subject to the following conditions:
+ *
+ *  The above copyright notice and this permission notice shall be included
+ *  in all copies or substantial portions of the Software.
+ *
+ *  THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS
+ *  OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF
+ *  MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT.
+ *  IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY
+ *  CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT
+ *  OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR
+ *  THE USE OR OTHER DEALINGS IN THE SOFTWARE.
+
+ *  $Id$
+-->
+
+<!ENTITY % AllFields "display | text | textarea | date-time | drop-down | check | radio | submit | reset | hidden | ignored">
+
+<!ELEMENT forms ( form+ )>
+<!ELEMENT form ( auto-fields-service*, auto-fields-entity*, field* )>
+<!ATTLIST form
+    name CDATA #REQUIRED
+    type ( single | list ) #REQUIRED
+    title CDATA #REQUIRED
+    tooltip CDATA #IMPLIED
+    container-list-name #IMPLIED
+    expand-container-list-entry ( true | false ) "false"
+>
+
+<!ELEMENT auto-fields-service EMPTY>
+<!ATTLIST auto-fields-service
+    service-name CDATA #REQUIRED
+    container-name CDATA #REQUIRED
+>
+
+<!ELEMENT auto-fields-entity EMPTY>
+<!ATTLIST auto-fields-entity
+    entity-name CDATA #REQUIRED
+    container-name CDATA #REQUIRED
+>
+
+<!--
+	name: a unique name for this field
+	map-name: the name (or location) of the map that contains the data for this 
+		field in the form context
+	entry-name: defaults to the value of the name attribute; is used to 
+		specify the name of the entry in the map that contains the value to populate
+	parameter-name: defaults to the value of the name attribute; is the name of the 
+		parameter to use for this field (the request parameter in a web application)
+	title: the name of this field that will be shown to the user; can use the ${} 
+		and foo.bar (dot) syntax to insert values from the context for parameterization
+		or internationalization
+	tooltip: the text to show on mouse over or help for more information; can use the ${} 
+		and foo.bar (dot) syntax to insert values from the context for parameterization
+		or internationalization
+	title-style: the name of a style (like a CSS class) to apply to the title of this field
+	widget-style: the name of a style (like a CSS class) to apply to the widget 
+		that the user will interact with for this field
+	position: for row oriented forms (single type) can specify that the field should be put 
+		a column other than the first; for column oriented forms (list type) specifies 
+		the row the field should be put in
+-->
+<!ELEMENT field ( %AllFields; )>
+<!ATTLIST field
+    name CDATA #REQUIRED
+    map-name CDATA #REQUIRED
+    entry-name CDATA #IMPLIED
+    parameter-name CDATA #IMPLIED
+    title CDATA #REQUIRED
+    tooltip CDATA #IMPLIED
+    title-style CDATA #IMPLIED
+    widget-style CDATA #IMPLIED
+    position CDATA "1"
+>
+
+<!ELEMENT display EMPTY>
+
+<!ELEMENT text EMPTY>
+<!ATTLIST text
+    size CDATA "25"
+    maxlength CDATA #IMPLIED
+>
+
+<!ELEMENT textarea EMPTY>
+<!ATTLIST textarea
+    cols CDATA "60"
+    rows CDATA "3"
+>
+
+<!ELEMENT date-time EMPTY>
+
+<!-- this will look up options for the field in the given entity and for each result
+    the value of the key-field-name will be the value passed to the server, and
+    the description-format string will be presented to the user with field values
+    substituted using the ${} syntax
+ -->
+<!ELEMENT entity-options ( entity-constraint* )>
+<!ATTLIST entity-options
+    entity-name CDATA #REQUIRED
+    key-field-name CDATA #REQUIRED
+    description-format CDATA #REQUIRED
+    cache ( true | false ) "true"
+>
+
+<!ELEMENT entity-constraint EMPTY>
+<!ATTLIST entity-constraint
+    name CDATA #REQUIRED
+    value CDATA #REQUIRED
+>
+
+<!ELEMENT option EMPTY>
+<!ATTLIST option
+    key CDATA #REQUIRED
+    description CDATA #REQUIRED
+>
+
+<!ELEMENT drop-down ( (entity-options | option)* )>
+<!ATTLIST drop-down
+    allow-empty ( true | false ) "false"
+    current ( first-in-list | selected ) "first-in-list"
+>
+
+<!ELEMENT check ( (entity-options | option)* )>
+<!ELEMENT radio ( (entity-options | option)* )>
+
+<!ELEMENT submit EMPTY>
+<!ATTLIST submit
+    button-type ( text-link | button | image ) "text-link"
+    image-location CDATA #IMPLIED
+>
+
+<!ELEMENT reset EMPTY>
+
+<!ELEMENT hidden EMPTY>
+<!ELEMENT ignored EMPTY>
+
