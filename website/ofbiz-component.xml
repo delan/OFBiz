@@ -30,7 +30,7 @@
         title="WebSite"
         server="default-server"
         location="."
-        mount-point="/"
+        mount-point="/ofb"
         app-bar-display="false"/>
 </ofbiz-component>
 
