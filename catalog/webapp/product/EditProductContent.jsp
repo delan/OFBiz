@@ -284,8 +284,8 @@ function insertImageName(size,ext) {
 </form>
 <hr class="sepbar">
 <SCRIPT language='JavaScript'>
-    function setUploadUrl(fileType) {
-      var toExec = 'document.imageUploadForm.action="<ofbiz:url>/UploadProductImage?productId=<%=productId%>&upload_file_type=</ofbiz:url>' + fileType + '";';
+    function setUploadUrl(newUrl) {
+      var toExec = 'document.imageUploadForm.action="' + newUrl + '";';
       eval(toExec);
     };
 </SCRIPT>
@@ -294,10 +294,10 @@ function insertImageName(size,ext) {
     <input type="file" size="50" name="fname" style='font-size: x-small;'>
     <br>
     <span class='tabletext'>
-        <input type=RADIO name='upload_file_type_bogus' value='small' checked onclick='setUploadUrl("small");'>Small
-        <input type=RADIO name='upload_file_type_bogus' value='medium' onclick='setUploadUrl("medium");'>Medium
-        <input type=RADIO name='upload_file_type_bogus' value='large' onclick='setUploadUrl("large");'>Large
-        <input type=RADIO name='upload_file_type_bogus' value='detail' onclick='setUploadUrl("detail");'>Detail
+        <input type=RADIO name='upload_file_type_bogus' value='small' checked onclick='setUploadUrl("<ofbiz:url>/UploadProductImage?productId=<%=productId%>&upload_file_type=small</ofbiz:url>");'>Small
+        <input type=RADIO name='upload_file_type_bogus' value='medium' onclick='setUploadUrl("<ofbiz:url>/UploadProductImage?productId=<%=productId%>&upload_file_type=medium</ofbiz:url>");'>Medium
+        <input type=RADIO name='upload_file_type_bogus' value='large' onclick='setUploadUrl("<ofbiz:url>/UploadProductImage?productId=<%=productId%>&upload_file_type=large</ofbiz:url>");'>Large
+        <input type=RADIO name='upload_file_type_bogus' value='detail' onclick='setUploadUrl("<ofbiz:url>/UploadProductImage?productId=<%=productId%>&upload_file_type=detail</ofbiz:url>");'>Detail
     </span>
     <input type="submit" value="Upload Image" style='font-size: x-small;'>
 </form>
