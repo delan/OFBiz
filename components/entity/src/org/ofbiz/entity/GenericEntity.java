@@ -1,7 +1,7 @@
 /*
  * $Id$
  *
- *  Copyright (c) 2002-2004 The Open For Business Project - www.ofbiz.org
+ *  Copyright (c) 2002-2005 The Open For Business Project - www.ofbiz.org
  *
  *  Permission is hereby granted, free of charge, to any person obtaining a
  *  copy of this software and associated documentation files (the "Software"),
@@ -1012,17 +1012,16 @@ public class GenericEntity extends Observable implements Map, LocalizedMap, Seri
         theString.append(getEntityName());
         theString.append(']');
 
-        Iterator entries = fields.entrySet().iterator();
-        Map.Entry anEntry = null;
-
-        while (entries.hasNext()) {
-            anEntry = (Map.Entry) entries.next();
+        Iterator keyNames = new TreeSet(fields.keySet()).iterator();
+        while (keyNames.hasNext()) {
+            String curKey = (String) keyNames.next();
+            Object curValue = fields.get(curKey);
             theString.append('[');
-            theString.append(anEntry.getKey());
+            theString.append(curKey);
             theString.append(',');
-            theString.append(anEntry.getValue());
+            theString.append(curValue);
             theString.append('(');
-            theString.append(anEntry.getValue() != null ? anEntry.getValue().getClass().getName() : "");
+            theString.append(curValue != null ? curValue.getClass().getName() : "");
             theString.append(')');
             theString.append(']');
         }
