@@ -7,51 +7,22 @@
     <version>1.0</version>
 
     <!-- Product Services -->
-    <service name="interfaceProduct" engine="interface" location="" invoke="">
-        <attribute name="productId" type="String" mode="IN" optional="false"/>
-        <attribute name="productTypeId" type="String" mode="IN" optional="false"/>
-        <attribute name="primaryProductCategoryId" type="String" mode="IN" optional="true"/>
-        <attribute name="manufacturerPartyId" type="String" mode="IN" optional="true"/>
-        <attribute name="introductionDate" type="Timestamp" mode="IN" optional="true"/>
-        <attribute name="salesDiscontinuationDate" type="Timestamp" mode="IN" optional="true"/>
-        <attribute name="supportDiscontinuationDate" type="Timestamp" mode="IN" optional="true"/>
-        <attribute name="productName" type="String" mode="IN" optional="false"/>
-        <attribute name="internalName" type="String" mode="IN" optional="true"/>
-        <attribute name="brandName" type="String" mode="IN" optional="true"/>
-        <attribute name="comments" type="String" mode="IN" optional="true"/>
-        <attribute name="description" type="String" mode="IN" optional="true"/>
-        <attribute name="longDescription" type="String" mode="IN" optional="true"/>
-        <attribute name="inventoryMessage" type="String" mode="IN" optional="true"/>
-        <attribute name="requireInventory" type="String" mode="IN" optional="true"/>
-        <attribute name="smallImageUrl" type="String" mode="IN" optional="true"/>
-        <attribute name="mediumImageUrl" type="String" mode="IN" optional="true"/>
-        <attribute name="largeImageUrl" type="String" mode="IN" optional="true"/>
-        <attribute name="detailImageUrl" type="String" mode="IN" optional="true"/>
-        <attribute name="detailTemplate" type="String" mode="IN" optional="true"/>
-        <attribute name="quantityIncluded" type="Double" mode="IN" optional="true"/>
-        <attribute name="quantityUomId" type="String" mode="IN" optional="true"/>
-        <attribute name="piecesIncluded" type="Long" mode="IN" optional="true"/>
-        <attribute name="weightUomId" type="String" mode="IN" optional="true"/>
-        <attribute name="weight" type="Double" mode="IN" optional="true"/>
-        <attribute name="taxable" type="String" mode="IN" optional="true"/>
-        <attribute name="taxCategory" type="String" mode="IN" optional="true"/>
-        <attribute name="taxVatCode" type="String" mode="IN" optional="true"/>
-        <attribute name="taxDutyCode" type="String" mode="IN" optional="true"/>
-        <attribute name="chargeShipping" type="String" mode="IN" optional="true"/>
-        <attribute name="autoCreateKeywords" type="String" mode="IN" optional="true"/>
-        <attribute name="isVirtual" type="String" mode="IN" optional="true"/>
-        <attribute name="isVariant" type="String" mode="IN" optional="true"/>
+    <service name="interfaceProduct" default-entity-name="Product" engine="interface" location="" invoke="">
+        <auto-attributes include="nonpk" mode="IN" optional="true"/>
+        <override name="productTypeId" optional="false"/>
+        <override name="productName" optional="false"/>
     </service>
-    <service name="createProduct" engine="simple"
+    <service name="createProduct" default-entity-name="Product" engine="simple"
                 location="org/ofbiz/commonapp/product/product/ProductServices.xml" invoke="createProduct" auth="true">
         <description>Create a Product</description>
         <implements service="interfaceProduct"/>
-        <attribute name="productId" type="String" mode="INOUT" optional="true"/>
+        <auto-attributes include="pk" mode="INOUT" optional="true"/>
     </service>
-    <service name="updateProduct" engine="simple"
+    <service name="updateProduct" default-entity-name="Product" engine="simple"
                 location="org/ofbiz/commonapp/product/product/ProductServices.xml" invoke="updateProduct" auth="true">
         <description>Update a Product</description>
         <implements service="interfaceProduct"/>
+        <auto-attributes include="pk" mode="IN" optional="false"/>
     </service>
     <service name="duplicateProduct" engine="simple"
                 location="org/ofbiz/commonapp/product/product/ProductServices.xml" invoke="duplicateProduct" auth="true">
@@ -89,295 +60,201 @@
     </service>
 
     <!-- Product Price Services -->
-    <service name="createProductPrice" engine="simple"
+    <service name="createProductPrice" default-entity-name="ProductPrice" engine="simple"
                 location="org/ofbiz/commonapp/product/price/PriceServices.xml" invoke="createProductPrice" auth="true">
         <description>Create an ProductPrice</description>
-        <attribute name="productId" type="String" mode="IN" optional="false"/>
-        <attribute name="productPriceTypeId" type="String" mode="IN" optional="false"/>
-        <attribute name="currencyUomId" type="String" mode="IN" optional="false"/>
-        <attribute name="facilityGroupId" type="String" mode="IN" optional="false"/>
-        <attribute name="fromDate" type="Timestamp" mode="IN" optional="true"/>
-        <attribute name="thruDate" type="Timestamp" mode="IN" optional="true"/>
-        <attribute name="price" type="Double" mode="IN" optional="false"/>
+        <auto-attributes include="pk" mode="IN" optional="false"/>
+        <auto-attributes include="nonpk" mode="IN" optional="true"/>
+        <override name="fromDate" optional="true"/>
+        <override name="price" optional="false"/>
     </service>
-    <service name="updateProductPrice" engine="simple"
+    <service name="updateProductPrice" default-entity-name="ProductPrice" engine="simple"
                 location="org/ofbiz/commonapp/product/price/PriceServices.xml" invoke="updateProductPrice" auth="true">
         <description>Update an ProductPrice</description>
-        <attribute name="productId" type="String" mode="IN" optional="false"/>
-        <attribute name="productPriceTypeId" type="String" mode="IN" optional="false"/>
-        <attribute name="currencyUomId" type="String" mode="IN" optional="false"/>
-        <attribute name="facilityGroupId" type="String" mode="IN" optional="false"/>
-        <attribute name="fromDate" type="Timestamp" mode="IN" optional="false"/>
-        <attribute name="thruDate" type="Timestamp" mode="IN" optional="true"/>
-        <attribute name="price" type="Double" mode="IN" optional="false"/>
+        <auto-attributes include="pk" mode="IN" optional="false"/>
+        <auto-attributes include="nonpk" mode="IN" optional="true"/>
         <attribute name="oldPrice" type="Double" mode="OUT" optional="false"/>
+        <override name="price" optional="false"/>
     </service>
-    <service name="deleteProductPrice" engine="simple"
+    <service name="deleteProductPrice" default-entity-name="ProductPrice" engine="simple"
                 location="org/ofbiz/commonapp/product/price/PriceServices.xml" invoke="deleteProductPrice" auth="true">
         <description>Delete an ProductPrice</description>
-        <attribute name="productId" type="String" mode="IN" optional="false"/>
-        <attribute name="productPriceTypeId" type="String" mode="IN" optional="false"/>
-        <attribute name="currencyUomId" type="String" mode="IN" optional="false"/>
-        <attribute name="facilityGroupId" type="String" mode="IN" optional="false"/>
-        <attribute name="fromDate" type="Timestamp" mode="IN" optional="false"/>
+        <auto-attributes include="pk" mode="IN" optional="false"/>
         <attribute name="oldPrice" type="Double" mode="OUT" optional="false"/>
     </service>
 
 	<!-- called by ECAs on ProductPrice service call events -->
-    <service name="saveProductPriceChange" engine="simple"
+    <service name="saveProductPriceChange" default-entity-name="ProductPrice" engine="simple"
                 location="org/ofbiz/commonapp/product/price/PriceServices.xml" invoke="saveProductPriceChange" auth="true">
         <description>Save History of a ProductPrice Change</description>
-        <attribute name="productId" type="String" mode="IN" optional="false"/>
-        <attribute name="productPriceTypeId" type="String" mode="IN" optional="false"/>
-        <attribute name="currencyUomId" type="String" mode="IN" optional="false"/>
-        <attribute name="facilityGroupId" type="String" mode="IN" optional="false"/>
-        <attribute name="fromDate" type="Timestamp" mode="IN" optional="false"/>
-        <attribute name="thruDate" type="Timestamp" mode="IN" optional="true"/>
-        <attribute name="price" type="Double" mode="IN" optional="true"/>
+        <auto-attributes include="pk" mode="IN" optional="false"/>
+        <auto-attributes include="nonpk" mode="IN" optional="true"/>
         <attribute name="oldPrice" type="Double" mode="IN" optional="true"/>
     </service>
 
 
     <!-- GoodIdentification Services -->
-    <service name="createGoodIdentification" engine="simple"
+    <service name="createGoodIdentification" default-entity-name="GoodIdentification" engine="simple"
                 location="org/ofbiz/commonapp/product/product/ProductServices.xml" invoke="createGoodIdentification" auth="true">
         <description>Create a GoodIdentification</description>
-        <attribute name="productId" type="String" mode="IN" optional="false"/>
-        <attribute name="goodIdentificationTypeId" type="String" mode="IN" optional="false"/>
-        <attribute name="idValue" type="String" mode="IN" optional="false"/>
+        <auto-attributes include="pk" mode="IN" optional="false"/>
+        <auto-attributes include="nonpk" mode="IN" optional="false"/>
     </service>
-    <service name="updateGoodIdentification" engine="simple"
+    <service name="updateGoodIdentification" default-entity-name="GoodIdentification" engine="simple"
                 location="org/ofbiz/commonapp/product/product/ProductServices.xml" invoke="updateGoodIdentification" auth="true">
         <description>Update a GoodIdentification</description>
-        <attribute name="productId" type="String" mode="IN" optional="false"/>
-        <attribute name="goodIdentificationTypeId" type="String" mode="IN" optional="false"/>
-        <attribute name="idValue" type="String" mode="IN" optional="false"/>
+        <auto-attributes include="pk" mode="IN" optional="false"/>
+        <auto-attributes include="nonpk" mode="IN" optional="false"/>
     </service>
-    <service name="deleteGoodIdentification" engine="simple"
+    <service name="deleteGoodIdentification" default-entity-name="GoodIdentification" engine="simple"
                 location="org/ofbiz/commonapp/product/product/ProductServices.xml" invoke="deleteGoodIdentification" auth="true">
         <description>Delete a GoodIdentification</description>
-        <attribute name="productId" type="String" mode="IN" optional="false"/>
-        <attribute name="goodIdentificationTypeId" type="String" mode="IN" optional="false"/>
+        <auto-attributes include="pk" mode="IN" optional="false"/>
     </service>    
 
     <!-- ProductGlAccount Services -->
-    <service name="createProductGlAccount" engine="simple"
+    <service name="createProductGlAccount" default-entity-name="ProductGlAccount" engine="simple"
                 location="org/ofbiz/commonapp/product/product/ProductServices.xml" invoke="createProductGlAccount" auth="true">
         <description>Create a ProductGlAccount</description>
-        <attribute name="productId" type="String" mode="IN" optional="false"/>
-        <attribute name="productGlAccountTypeId" type="String" mode="IN" optional="false"/>
-        <attribute name="glAccountId" type="String" mode="IN" optional="false"/>
+        <auto-attributes include="pk" mode="IN" optional="false"/>
+        <auto-attributes include="nonpk" mode="IN" optional="false"/>
     </service>
-    <service name="updateProductGlAccount" engine="simple"
+    <service name="updateProductGlAccount" default-entity-name="ProductGlAccount" engine="simple"
                 location="org/ofbiz/commonapp/product/product/ProductServices.xml" invoke="updateProductGlAccount" auth="true">
         <description>Update a ProductGlAccount</description>
-        <attribute name="productId" type="String" mode="IN" optional="false"/>
-        <attribute name="productGlAccountTypeId" type="String" mode="IN" optional="false"/>
-        <attribute name="glAccountId" type="String" mode="IN" optional="false"/>
+        <auto-attributes include="pk" mode="IN" optional="false"/>
+        <auto-attributes include="nonpk" mode="IN" optional="false"/>
     </service>
-    <service name="deleteProductGlAccount" engine="simple"
+    <service name="deleteProductGlAccount" default-entity-name="ProductGlAccount" engine="simple"
                 location="org/ofbiz/commonapp/product/product/ProductServices.xml" invoke="deleteProductGlAccount" auth="true">
         <description>Delete a ProductGlAccount</description>
+        <auto-attributes include="pk" mode="IN" optional="false"/>
         <attribute name="productId" type="String" mode="IN" optional="false"/>
         <attribute name="productGlAccountTypeId" type="String" mode="IN" optional="false"/>
     </service>    
 
     <!-- Product Catalog Services -->
-    <service name="createProdCatalog" engine="simple"
+    <service name="createProdCatalog" default-entity-name="ProdCatalog" engine="simple"
                 location="org/ofbiz/commonapp/product/catalog/CatalogServices.xml" invoke="createProdCatalog" auth="true">
         <description>Create a ProdCatalog</description>
-        <attribute name="prodCatalogId" type="String" mode="IN" optional="false"/>
-        <attribute name="catalogName" type="String" mode="IN" optional="false"/>
-        <attribute name="title" type="String" mode="IN" optional="false"/>
-        <attribute name="subtitle" type="String" mode="IN" optional="true"/>
-        <attribute name="inventoryFacilityId" type="String" mode="IN" optional="true"/>
-        <attribute name="oneInventoryFacility" type="String" mode="IN" optional="true"/>
-        <attribute name="checkInventory" type="String" mode="IN" optional="true"/>
-        <attribute name="reserveInventory" type="String" mode="IN" optional="true"/>
-        <attribute name="reserveOrderEnumId" type="String" mode="IN" optional="true"/>
-        <attribute name="requireInventory" type="String" mode="IN" optional="true"/>
-        <attribute name="useQuickAdd" type="String" mode="IN" optional="true"/>
-        <attribute name="styleSheet" type="String" mode="IN" optional="true"/>
-        <attribute name="headerLogo" type="String" mode="IN" optional="true"/>
-        <attribute name="contentPathPrefix" type="String" mode="IN" optional="true"/>
-        <attribute name="templatePathPrefix" type="String" mode="IN" optional="true"/>
+        <auto-attributes include="pk" mode="IN" optional="false"/>
+        <auto-attributes include="nonpk" mode="IN" optional="true"/>
+        <override name="catalogName" optional="false"/>
+        <override name="title" optional="false"/>
     </service>
-    <service name="updateProdCatalog" engine="simple"
+    <service name="updateProdCatalog" default-entity-name="ProdCatalog" engine="simple"
                 location="org/ofbiz/commonapp/product/catalog/CatalogServices.xml" invoke="updateProdCatalog" auth="true">
         <description>Update an ProdCatalog</description>
-        <attribute name="prodCatalogId" type="String" mode="IN" optional="false"/>
-        <attribute name="catalogName" type="String" mode="IN" optional="false"/>
-        <attribute name="title" type="String" mode="IN" optional="false"/>
-        <attribute name="subtitle" type="String" mode="IN" optional="true"/>
-        <attribute name="inventoryFacilityId" type="String" mode="IN" optional="true"/>
-        <attribute name="oneInventoryFacility" type="String" mode="IN" optional="true"/>
-        <attribute name="checkInventory" type="String" mode="IN" optional="true"/>
-        <attribute name="reserveInventory" type="String" mode="IN" optional="true"/>
-        <attribute name="reserveOrderEnumId" type="String" mode="IN" optional="true"/>
-        <attribute name="requireInventory" type="String" mode="IN" optional="true"/>
-        <attribute name="useQuickAdd" type="String" mode="IN" optional="true"/>
-        <attribute name="styleSheet" type="String" mode="IN" optional="true"/>        
-        <attribute name="headerLogo" type="String" mode="IN" optional="true"/>        
-        <attribute name="contentPathPrefix" type="String" mode="IN" optional="true"/>
-        <attribute name="templatePathPrefix" type="String" mode="IN" optional="true"/>
+        <auto-attributes include="pk" mode="IN" optional="false"/>
+        <auto-attributes include="nonpk" mode="IN" optional="true"/>
+        <override name="catalogName" optional="false"/>
+        <override name="title" optional="false"/>
     </service>
-    <service name="deleteProdCatalog" engine="simple"
+    <service name="deleteProdCatalog" default-entity-name="ProdCatalog" engine="simple"
                 location="org/ofbiz/commonapp/product/catalog/CatalogServices.xml" invoke="deleteProdCatalog" auth="true">
         <description>Delete an ProdCatalog</description>
-        <attribute name="prodCatalogId" type="String" mode="IN" optional="false"/>
+        <auto-attributes include="pk" mode="IN" optional="false"/>
     </service>
 
-    <service name="addProductCategoryToProdCatalog" engine="simple"
+    <service name="addProductCategoryToProdCatalog" default-entity-name="ProdCatalogCategory" engine="simple"
                 location="org/ofbiz/commonapp/product/catalog/CatalogServices.xml" invoke="addProductCategoryToProdCatalog" auth="true">
         <description>Add ProductCategory To ProdCatalog</description>
-        <attribute name="prodCatalogId" type="String" mode="IN" optional="false"/>
-        <attribute name="productCategoryId" type="String" mode="IN" optional="false"/>
-        <attribute name="fromDate" type="Timestamp" mode="IN" optional="true"/>
-        <attribute name="thruDate" type="Timestamp" mode="IN" optional="true"/>
-        <attribute name="sequenceNum" type="Long" mode="IN" optional="true"/>
-        <attribute name="prodCatalogCategoryTypeId" type="String" mode="IN" optional="false"/>
+        <auto-attributes include="pk" mode="IN" optional="false"/>
+        <auto-attributes include="nonpk" mode="IN" optional="true"/>
+        <override name="fromDate" optional="true"/>
+        <override name="prodCatalogCategoryTypeId" optional="false"/>
     </service>
-    <service name="updateProductCategoryToProdCatalog" engine="simple"
+    <service name="updateProductCategoryToProdCatalog" default-entity-name="ProdCatalogCategory" engine="simple"
                 location="org/ofbiz/commonapp/product/catalog/CatalogServices.xml" invoke="updateProductCategoryToProdCatalog" auth="true">
         <description>Add ProductCategory To ProdCatalog</description>
-        <attribute name="prodCatalogId" type="String" mode="IN" optional="false"/>
-        <attribute name="productCategoryId" type="String" mode="IN" optional="false"/>
-        <attribute name="fromDate" type="Timestamp" mode="IN" optional="false"/>
-        <attribute name="thruDate" type="Timestamp" mode="IN" optional="true"/>
-        <attribute name="sequenceNum" type="Long" mode="IN" optional="true"/>
-        <attribute name="prodCatalogCategoryTypeId" type="String" mode="IN" optional="false"/>
+        <auto-attributes include="pk" mode="IN" optional="false"/>
+        <auto-attributes include="nonpk" mode="IN" optional="true"/>
+        <override name="prodCatalogCategoryTypeId" optional="false"/>
     </service>
-    <service name="removeProductCategoryFromProdCatalog" engine="simple"
+    <service name="removeProductCategoryFromProdCatalog" default-entity-name="ProdCatalogCategory" engine="simple"
                 location="org/ofbiz/commonapp/product/catalog/CatalogServices.xml" invoke="removeProductCategoryFromProdCatalog" auth="true">
         <description>Remove ProductCategory From ProdCatalog</description>
-        <attribute name="prodCatalogId" type="String" mode="IN" optional="false"/>
-        <attribute name="productCategoryId" type="String" mode="IN" optional="false"/>
-        <attribute name="fromDate" type="Timestamp" mode="IN" optional="false"/>
+        <auto-attributes include="pk" mode="IN" optional="false"/>
     </service>
 
-    <service name="addProdCatalogToWebSite" engine="simple"
+    <service name="addProdCatalogToWebSite" default-entity-name="WebSiteCatalog" engine="simple"
                 location="org/ofbiz/commonapp/product/catalog/CatalogServices.xml" invoke="addProdCatalogToWebSite" auth="true">
         <description>Add ProdCatalog To WebSite</description>
-        <attribute name="webSiteId" type="String" mode="IN" optional="false"/>
-        <attribute name="prodCatalogId" type="String" mode="IN" optional="false"/>
-        <attribute name="fromDate" type="Timestamp" mode="IN" optional="true"/>
-        <attribute name="thruDate" type="Timestamp" mode="IN" optional="true"/>
-        <attribute name="sequenceNum" type="Long" mode="IN" optional="true"/>
+        <auto-attributes include="pk" mode="IN" optional="false"/>
+        <auto-attributes include="nonpk" mode="IN" optional="true"/>
+        <override name="fromDate" optional="true"/>
     </service>
-    <service name="updateProdCatalogToWebSite" engine="simple"
+    <service name="updateProdCatalogToWebSite" default-entity-name="WebSiteCatalog" engine="simple"
                 location="org/ofbiz/commonapp/product/catalog/CatalogServices.xml" invoke="updateProdCatalogToWebSite" auth="true">
         <description>Add ProdCatalog To WebSite</description>
-        <attribute name="webSiteId" type="String" mode="IN" optional="false"/>
-        <attribute name="prodCatalogId" type="String" mode="IN" optional="false"/>
-        <attribute name="fromDate" type="Timestamp" mode="IN" optional="false"/>
-        <attribute name="thruDate" type="Timestamp" mode="IN" optional="true"/>
-        <attribute name="sequenceNum" type="Long" mode="IN" optional="true"/>
+        <auto-attributes include="pk" mode="IN" optional="false"/>
+        <auto-attributes include="nonpk" mode="IN" optional="true"/>
     </service>
-    <service name="removeProdCatalogFromWebSite" engine="simple"
+    <service name="removeProdCatalogFromWebSite" default-entity-name="WebSiteCatalog" engine="simple"
                 location="org/ofbiz/commonapp/product/catalog/CatalogServices.xml" invoke="removeProdCatalogFromWebSite" auth="true">
         <description>Remove ProdCatalog From WebSite</description>
-        <attribute name="webSiteId" type="String" mode="IN" optional="false"/>
-        <attribute name="prodCatalogId" type="String" mode="IN" optional="false"/>
-        <attribute name="fromDate" type="Timestamp" mode="IN" optional="false"/>
+        <auto-attributes include="pk" mode="IN" optional="false"/>
     </service>
 
-    <service name="addProdCatalogToParty" engine="simple"
+    <service name="addProdCatalogToParty" default-entity-name="ProdCatalogRole" engine="simple"
                 location="org/ofbiz/commonapp/product/catalog/CatalogServices.xml" invoke="addProdCatalogToParty" auth="true">
         <description>Add ProdCatalog To Party</description>
-        <attribute name="partyId" type="String" mode="IN" optional="false"/>
-        <attribute name="roleTypeId" type="String" mode="IN" optional="false"/>
-        <attribute name="prodCatalogId" type="String" mode="IN" optional="false"/>
-        <attribute name="fromDate" type="Timestamp" mode="IN" optional="true"/>
-        <attribute name="thruDate" type="Timestamp" mode="IN" optional="true"/>
-        <attribute name="sequenceNum" type="Long" mode="IN" optional="true"/>
+        <auto-attributes include="pk" mode="IN" optional="false"/>
+        <auto-attributes include="nonpk" mode="IN" optional="true"/>
+        <override name="fromDate" optional="true"/>
     </service>
-    <service name="updateProdCatalogToParty" engine="simple"
+    <service name="updateProdCatalogToParty" default-entity-name="ProdCatalogRole" engine="simple"
                 location="org/ofbiz/commonapp/product/catalog/CatalogServices.xml" invoke="updateProdCatalogToParty" auth="true">
         <description>Add ProdCatalog To Party</description>
-        <attribute name="partyId" type="String" mode="IN" optional="false"/>
-        <attribute name="roleTypeId" type="String" mode="IN" optional="false"/>
-        <attribute name="prodCatalogId" type="String" mode="IN" optional="false"/>
-        <attribute name="fromDate" type="Timestamp" mode="IN" optional="false"/>
-        <attribute name="thruDate" type="Timestamp" mode="IN" optional="true"/>
-        <attribute name="sequenceNum" type="Long" mode="IN" optional="true"/>
+        <auto-attributes include="pk" mode="IN" optional="false"/>
+        <auto-attributes include="nonpk" mode="IN" optional="true"/>
     </service>
-    <service name="removeProdCatalogFromParty" engine="simple"
+    <service name="removeProdCatalogFromParty" default-entity-name="ProdCatalogRole" engine="simple"
                 location="org/ofbiz/commonapp/product/catalog/CatalogServices.xml" invoke="removeProdCatalogFromParty" auth="true">
         <description>Remove ProdCatalog From Party</description>
-        <attribute name="partyId" type="String" mode="IN" optional="false"/>
-        <attribute name="roleTypeId" type="String" mode="IN" optional="false"/>
-        <attribute name="prodCatalogId" type="String" mode="IN" optional="false"/>
-        <attribute name="fromDate" type="Timestamp" mode="IN" optional="false"/>
+        <auto-attributes include="pk" mode="IN" optional="false"/>
     </service>
 
     <!-- Product Category Services -->
-    <service name="createProductCategory" engine="simple"
+    <service name="createProductCategory" default-entity-name="ProductCategory" engine="simple"
                 location="org/ofbiz/commonapp/product/category/CategoryServices.xml" invoke="createProductCategory" auth="true">
         <description>Create an ProductCategory</description>
-        <attribute name="productCategoryId" type="String" mode="INOUT" optional="true"/>
-        <attribute name="productCategoryTypeId" type="String" mode="IN" optional="false"/>
-        <attribute name="primaryParentCategoryId" type="String" mode="IN" optional="true"/>
-        <attribute name="description" type="String" mode="IN" optional="true"/>
-        <attribute name="longDescription" type="String" mode="IN" optional="true"/>
-        <attribute name="categoryImageUrl" type="String" mode="IN" optional="true"/>
-        <attribute name="linkImageUrlOne" type="String" mode="IN" optional="true"/>
-        <attribute name="linkImageUrlTwo" type="String" mode="IN" optional="true"/>
-        <attribute name="detailTemplate" type="String" mode="IN" optional="true"/>
+        <auto-attributes include="pk" mode="INOUT" optional="true"/>
+        <auto-attributes include="nonpk" mode="IN" optional="true"/>
+        <override name="productCategoryTypeId" optional="false"/>
     </service>
-    <service name="updateProductCategory" engine="simple"
+    <service name="updateProductCategory" default-entity-name="ProductCategory" engine="simple"
                 location="org/ofbiz/commonapp/product/category/CategoryServices.xml" invoke="updateProductCategory" auth="true">
         <description>Update an ProductCategory</description>
-        <attribute name="productCategoryId" type="String" mode="IN" optional="false"/>
-        <attribute name="productCategoryTypeId" type="String" mode="IN" optional="false"/>
-        <attribute name="primaryParentCategoryId" type="String" mode="IN" optional="true"/>
-        <attribute name="description" type="String" mode="IN" optional="true"/>
-        <attribute name="longDescription" type="String" mode="IN" optional="true"/>
-        <attribute name="categoryImageUrl" type="String" mode="IN" optional="true"/>
-        <attribute name="linkImageUrlOne" type="String" mode="IN" optional="true"/>
-        <attribute name="linkImageUrlTwo" type="String" mode="IN" optional="true"/>
-        <attribute name="detailTemplate" type="String" mode="IN" optional="true"/>
+        <auto-attributes include="pk" mode="IN" optional="false"/>
+        <auto-attributes include="nonpk" mode="IN" optional="true"/>
+        <override name="productCategoryTypeId" optional="false"/>
     </service>
 
-    <service name="safeAddProductToCategory" engine="simple"
+    <service name="safeAddProductToCategory" default-entity-name="ProductCategoryMember" engine="simple"
                 location="org/ofbiz/commonapp/product/category/CategoryServices.xml" invoke="addProductToCategory" auth="true">
         <description>Add Product To Category</description>
-        <attribute name="productCategoryId" type="String" mode="IN" optional="false"/>
-        <attribute name="productId" type="String" mode="IN" optional="false"/>
-        <attribute name="fromDate" type="Timestamp" mode="IN" optional="false"/>
-        <attribute name="thruDate" type="Timestamp" mode="IN" optional="true"/>
-        <attribute name="comments" type="String" mode="IN" optional="true"/>
-        <attribute name="sequenceNum" type="Long" mode="IN" optional="true"/>
-        <attribute name="quantity" type="Double" mode="IN" optional="true"/>
+        <auto-attributes include="pk" mode="IN" optional="false"/>
+        <auto-attributes include="nonpk" mode="IN" optional="true"/>
     </service>
 
-    <service name="addProductToCategory" engine="simple"
+    <service name="addProductToCategory" default-entity-name="ProductCategoryMember" engine="simple"
                 location="org/ofbiz/commonapp/product/category/CategoryServices.xml" invoke="addProductToCategory" auth="true">
         <description>Add Product To Category</description>
-        <attribute name="productCategoryId" type="String" mode="IN" optional="false"/>
-        <attribute name="productId" type="String" mode="IN" optional="false"/>
-        <attribute name="fromDate" type="Timestamp" mode="IN" optional="true"/>
-        <attribute name="thruDate" type="Timestamp" mode="IN" optional="true"/>
-        <attribute name="comments" type="String" mode="IN" optional="true"/>
-        <attribute name="sequenceNum" type="Long" mode="IN" optional="true"/>
-        <attribute name="quantity" type="Double" mode="IN" optional="true"/>
+        <auto-attributes include="pk" mode="IN" optional="false"/>
+        <auto-attributes include="nonpk" mode="IN" optional="true"/>
+        <override name="fromDate" optional="true"/>
     </service>
-    <service name="updateProductToCategory" engine="simple"
+    <service name="updateProductToCategory" default-entity-name="ProductCategoryMember" engine="simple"
                 location="org/ofbiz/commonapp/product/category/CategoryServices.xml" invoke="updateProductToCategory" auth="true">
         <description>Add Product To Category</description>
-        <attribute name="productCategoryId" type="String" mode="IN" optional="false"/>
-        <attribute name="productId" type="String" mode="IN" optional="false"/>
-        <attribute name="fromDate" type="Timestamp" mode="IN" optional="false"/>
-        <attribute name="thruDate" type="Timestamp" mode="IN" optional="true"/>
-        <attribute name="comments" type="String" mode="IN" optional="true"/>
-        <attribute name="sequenceNum" type="Long" mode="IN" optional="true"/>
-        <attribute name="quantity" type="Double" mode="IN" optional="true"/>
+        <auto-attributes include="pk" mode="IN" optional="false"/>
+        <auto-attributes include="nonpk" mode="IN" optional="true"/>
     </service>
-    <service name="removeProductFromCategory" engine="simple"
+    <service name="removeProductFromCategory" default-entity-name="ProductCategoryMember" engine="simple"
                 location="org/ofbiz/commonapp/product/category/CategoryServices.xml" invoke="removeProductFromCategory" auth="true">
         <description>Remove Product From Category</description>
-        <attribute name="productCategoryId" type="String" mode="IN" optional="false"/>
-        <attribute name="productId" type="String" mode="IN" optional="false"/>
-        <attribute name="fromDate" type="Timestamp" mode="IN" optional="false"/>
+        <auto-attributes include="pk" mode="IN" optional="false"/>
     </service>
 
     <service name="copyCategoryProductMembers" engine="simple"
@@ -399,6 +276,12 @@
         <description>Remove All Expired Product Members in a Category, optionally uses the valid date instead of now to determine if the member has expired</description>
         <attribute name="productCategoryId" type="String" mode="IN" optional="false"/>
         <attribute name="validDate" type="Timestamp" mode="IN" optional="true"/>
+    </service>
+    <service name="createProductInCategory" engine="simple"
+                location="org/ofbiz/commonapp/product/category/CategoryServices.xml" invoke="createProductInCategory" auth="true">
+        <description></description>
+        <auto-attributes entity-name="ProductCategory" include="pk" mode="IN" optional="false"/>
+        <auto-attributes entity-name="Product" include="all" mode="IN" optional="true"/>
     </service>
 
     <service name="addPartyToCategory" engine="simple"

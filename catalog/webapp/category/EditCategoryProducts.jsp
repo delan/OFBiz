@@ -104,6 +104,7 @@
 <a href="<ofbiz:url>/EditCategory</ofbiz:url>" class="buttontext">[New Category]</a>
 <%if(productCategoryId != null && productCategoryId.length() > 0) {%>
   <a href="/ecommerce/control/category?category_id=<%=productCategoryId%>" class="buttontext" target='_blank'>[Category Page]</a>
+  <a href="<ofbiz:url>/createProductInCategoryStart?productCategoryId=<%=productCategoryId%></ofbiz:url>" class="buttontext">[Create Product In Category]</a>
 <%}%>
 <%if (activeOnly) {%>
   <a href="<ofbiz:url>/EditCategoryProducts?productCategoryId=<%=productCategoryId%>&activeOnly=false</ofbiz:url>" class="buttontext">[Active and Inactive]</a>

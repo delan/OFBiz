@@ -349,6 +349,19 @@
         </iterate>
     </simple-method>
 
+    <!-- ================================================================ -->
+    <!-- Special Category Related Create Services -->
+    <!-- ================================================================ -->
+    <simple-method method-name="createProductInCategory" short-description="Create a Product in a Category along with special information such as features">
+		<string-to-field string="createProductInCategory" field-name="callingMethodName"/>
+		<string-to-field string="CREATE" field-name="checkAction"/>
+    	<call-simple-method method-name="checkCategoryRelatedPermission"/>
+        <check-errors/>
+        
+        <!-- TODO: implement this... -->
+        
+    </simple-method>    
+    
 	<!-- a methods to centralize product security code, meant to be called in-line with 
 		call-simple-method, and the checkAction and callingMethodName attributes should be in the method context -->
     <simple-method method-name="checkCategoryRelatedPermission" short-description="Check Product Category Related Permission">

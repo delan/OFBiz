@@ -167,6 +167,17 @@
         <response name="success" type="view" value="EditCategoryProducts"/>
         <response name="error" type="view" value="EditCategoryProducts"/>
     </request-map>
+    <request-map uri="createProductInCategoryStart"><security https="true" auth="true"/>
+        <response name="success" type="view" value="createProductInCategoryStart"/>
+    </request-map>
+    <request-map uri="createProductInCategoryCheckExisting"><security https="true" auth="true"/>
+        <response name="success" type="view" value="createProductInCategoryCheckExisting"/>
+    </request-map>
+    <request-map uri="createProductInCategory"><security https="true" auth="true"/>
+        <event type="service" path="" invoke="createProductInCategory"/>
+        <response name="success" type="view" value="EditCategoryProducts"/>
+        <response name="error" type="view" value="EditCategoryProducts"/>
+    </request-map>
 
     <!-- ================ Category ProdCatalog Requests ================= -->
     <request-map uri="EditCategoryProdCatalogs"><security https="true" auth="true"/>
@@ -759,6 +770,9 @@
     <view-map name="EditCategoryFeatureCats" type="region"/>
     <view-map name="EditCategoryParties" type="region"/>
     <view-map name="UploadCategoryImage" type="region"/>
+
+    <view-map name="createProductInCategoryStart" type="jpublish" page="/category/createProductInCategoryStart.ftl"/>
+    <view-map name="createProductInCategoryCheckExisting" type="jpublish" page="/category/createProductInCategoryCheckExisting.ftl"/>
 
     <view-map name="EditProduct" type="region"/>
     <view-map name="EditProductPrices" type="region"/>
