@@ -1,8 +1,8 @@
 <!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN">
 <html>
 <head>
-  <meta content="text/html; charset=windows-1252"
- http-equiv="CONTENT-TYPE">
+  <meta http-equiv="CONTENT-TYPE"
+ content="text/html; charset=windows-1252">
   <title>Basic Framework &amp; Tools Overview</title>
   <style>
 		DIV,LI {
@@ -37,254 +37,141 @@ course) </li>
 </ol>
 Topics Covered<br>
 <ol>
-  <li>
-    <div>Architecture Overview</div>
+  <li> Architecture Overview
     <ol>
-      <li>
-        <div>Model-Controller-View Pattern (an old story with a new
-name)</div>
-      </li>
-      <li>
-        <div>Lots of Controllers</div>
+      <li> Model-Controller-View Pattern (an old story with a new
+name) </li>
+      <li> Lots of Controllers
         <ol>
-          <li>
-            <div>Applying the Controller Pattern</div>
-          </li>
-          <li>
-            <div>Data Level Controller (Entity Engine)</div>
-          </li>
-          <li>
-            <div>Logic Level Controller (Service Engine)</div>
-          </li>
-          <li>
-            <div>Web User Interface Level Controller (Control Servlet,
-JPublish, etc)</div>
-          </li>
+          <li> Applying the Controller Pattern </li>
+          <li> Data Level Controller (Entity Engine) </li>
+          <li> Logic Level Controller (Service Engine) </li>
+          <li> Web User Interface Level Controller (Control Servlet,
+JPublish, etc) </li>
         </ol>
       </li>
-      <li>
-        <div>The Model goes in the Database</div>
-      </li>
-      <li>
-        <div>The View is what the user interacts with</div>
-      </li>
-      <li>
-        <div>Everything else follows from those, and the only trick is
-to do it efficiently for initial implementation and maintenance.</div>
-      </li>
-      <li>
-        <div>Data Flow Between Components</div>
+      <li> The Model goes in the Database </li>
+      <li> The View is what the user interacts with </li>
+      <li> Everything else follows from those, and the only trick is
+to do it efficiently for initial implementation and maintenance. </li>
+      <li> Data Flow Between Components
         <ol>
-          <li>
-            <div>Request from Browser</div>
-          </li>
-          <li>
-            <div>Control Servlet Called</div>
-          </li>
-          <li>
-            <div>Request Looked Up</div>
-          </li>
-          <li>
-            <div>Security Checked (encryption, authentication)</div>
-          </li>
-          <li>
-            <div>Event Called (if defined)</div>
+          <li> Request from Browser </li>
+          <li> Control Servlet Called </li>
+          <li> Request Looked Up </li>
+          <li> Security Checked (encryption, authentication) </li>
+          <li> Event Called (if defined)
             <ol>
-              <li>
-                <div>Service Definition Looked Up</div>
-              </li>
-              <li>
-                <div>Simple Method Called As a Service</div>
+              <li> Service Definition Looked Up </li>
+              <li> Simple Method Called As a Service
                 <ol>
-                  <li>
-                    <div>Handle Data Coming In</div>
-                  </li>
-                  <li>
-                    <div>Look Up Information From Database</div>
-                  </li>
-                  <li>
-                    <div>Save Information to Database</div>
-                  </li>
+                  <li> Handle Data Coming In </li>
+                  <li> Look Up Information From Database </li>
+                  <li> Save Information to Database </li>
                 </ol>
               </li>
             </ol>
           </li>
-          <li>
-            <div>Response Chosen and Called</div>
+          <li> Response Chosen and Called
             <ol>
-              <li>
-                <div>View Looked Up</div>
-              </li>
-              <li>
-                <div>Region or JPublish page definition Looked Up</div>
-              </li>
-              <li>
-                <div>Template Called, Sections Filled In</div>
-              </li>
-              <li>
-                <div>Data Looked Up (directly through the Entity Engine
-or through a service)</div>
-              </li>
+              <li> View Looked Up </li>
+              <li> Region or JPublish page definition Looked Up </li>
+              <li> Template Called, Sections Filled In </li>
+              <li> Data Looked Up (directly through the Entity Engine
+or through a service) </li>
             </ol>
           </li>
         </ol>
       </li>
     </ol>
   </li>
-  <li>
-    <div>Configuration &amp; Deployment Overview</div>
+  <li> Configuration &amp; Deployment Overview
     <ol>
-      <li>
-        <div>Choosing and Setting Up a Database</div>
-      </li>
-      <li>
-        <div>Choosing and Setting Up an Application Server</div>
-      </li>
-      <li>
-        <div>OFBiz Configuration</div>
+      <li> Choosing and Setting Up a Database </li>
+      <li> Choosing and Setting Up an Application Server </li>
+      <li> OFBiz Configuration
         <ol>
-          <li>
-            <div>ofbiz/base/config/debug.properties</div>
-          </li>
-          <li>
-            <div>ofbiz/base/config/component-load.xml</div>
-          </li>
-          <li>
-            <div>ofbiz/components/*/ofbiz-component.xml</div>
-          </li>
-          <li>
-            <div>ofbiz/components/entity/config/entityengine.xml</div>
+          <li> ofbiz/base/config/debug.properties </li>
+          <li> ofbiz/base/config/component-load.xml </li>
+          <li> ofbiz/components/*/ofbiz-component.xml </li>
+          <li> ofbiz/components/entity/config/entityengine.xml
             <ol>
-              <li>
-                <div>Transaction Manager Setup</div>
-              </li>
-              <li>
-                <div>Database Setup</div>
-              </li>
+              <li> Transaction Manager Setup </li>
+              <li> Database Setup </li>
             </ol>
           </li>
-          <li>
-            <div>ofbiz/components/service/config/serviceengine.xml</div>
-          </li>
-          <li>
-            <div>Other Configuration Files</div>
+          <li> ofbiz/components/service/config/serviceengine.xml </li>
+          <li> Other Configuration Files
             <ol>
-              <li>
-                <div>ofbiz/base/config/*</div>
-              </li>
-              <li>
-                <div>ofbiz/components/*/config/*</div>
-              </li>
+              <li> ofbiz/base/config/* </li>
+              <li> ofbiz/components/*/config/* </li>
             </ol>
           </li>
         </ol>
       </li>
     </ol>
   </li>
-  <li>
-    <div>Beginning With the End in Mind</div>
+  <li> Beginning With the End in Mind
     <ol>
-      <li>
-        <div>What to build?</div>
-      </li>
+      <li> What to build? </li>
     </ol>
   </li>
-  <li>
-    <div>Data (Entity) Layer</div>
+  <li> Data (Entity) Layer
     <ol>
-      <li>
-        <div>Define Entities (configure data level controller)</div>
-      </li>
+      <li> Define Entities (configure data level controller) </li>
     </ol>
   </li>
-  <li>
-    <div>Logic (Service) Layer</div>
+  <li> Logic (Service) Layer
     <ol>
-      <li>
-        <div>Define Services (configure logic level controller)</div>
-      </li>
-      <li>
-        <div>Implement Services</div>
-      </li>
+      <li> Define Services (configure logic level controller) </li>
+      <li> Implement Services </li>
       <ol>
         <li>Java Services</li>
-        <li>simple-method Services<br>
-        </li>
+        <li>simple-method Services</li>
       </ol>
+      <li>Using Service ECAs<br>
+      </li>
     </ol>
   </li>
-  <li>
-    <div>User Interface Layer</div>
+  <li> User Interface Layer
     <ol>
-      <li>
-        <div>Configure Web User Interface Level Controllers</div>
-        <ol>
-          <li>
-            <div>Define Web Requests (controller.xml)</div>
-            <ol>
-              <li>
-                <div>Simple Request</div>
-              </li>
-              <li>
-                <div>Requests with an Event implemented as a Service</div>
-              </li>
-            </ol>
-          </li>
-          <li>
-            <div>Define Web Views (controller.xml)</div>
-          </li>
-        </ol>
-      </li>
-      <li>
-        <div>Create Web User Interfaces</div>
-        <ol>
-          <li>
-            <div>Create a Template FTL File</div>
-          </li>
-          <li>
-            <div>Create a Header FTL</div>
-          </li>
-          <li>
-            <div>Create a JPublish Page Definition
-(WEB-INF/pagedefs/**/*.xml)</div>
-          </li>
-          <li>
-            <div>Create a BeanShell Preparation Scripts
-(WEB-INF/actions/**/*.bsh)</div>
-          </li>
-          <li>
-            <div>Create an Editing FTL or XML Form Definition</div>
-          </li>
-          <li>
-            <div>Create a Listing FTL or XML Form Definition</div>
-          </li>
-        </ol>
+      <li> Configure Web User Interface Level Controllers</li>
+      <ol>
+        <li> Define Web Requests (controller.xml)
+          <ol>
+            <li> Simple Request </li>
+            <li> Requests with an Event implemented as a Service </li>
+          </ol>
+        </li>
+        <li> Define Web Views (controller.xml) </li>
+      </ol>
+      <li> Create Web User Interfaces</li>
+      <ol>
+        <li>Choose a Decoration Template<br>
+        </li>
+        <li>Create a JPublish Page Definition
+(WEB-INF/pagedefs/**/*.xml) </li>
+        <li> Create a BeanShell Preparation Scripts
+(WEB-INF/actions/**/*.bsh) </li>
+        <li> Create an XML Form Widget Definition for Editing<br>
+        </li>
+        <li> Create an XML Form Widget Definition for Listing</li>
+      </ol>
+      <li>Internationalization and Localization in the UI</li>
+      <li>Security &amp; Permissions Checking<br>
       </li>
     </ol>
   </li>
-  <li>
-    <div>Throwing a Wrench in the Works</div>
+  <li> Throwing a Wrench in the Works
     <ol>
-      <li>
-        <div>Adding a New Field</div>
-      </li>
-      <li>
-        <div>Change the Entity Definition</div>
-      </li>
-      <li>
-        <div>Change the Service Definition</div>
-      </li>
-      <li>
-        <div>Add to the Listing FTL (if needed)</div>
-      </li>
-      <li>
-        <div>Add to the Editing FTL</div>
-      </li>
+      <li> Adding a New Field </li>
+      <li> Change the Entity Definition </li>
+      <li> Change the Service Definition </li>
+      <li> Add to the Listing FTL (if needed) </li>
+      <li> Add to the Editing FTL </li>
     </ol>
   </li>
-  <li>
-    <div>Questions and Feedback</div>
-  </li>
+  <li> Questions and Feedback </li>
 </ol>
 <br>
 <br>

@@ -1,8 +1,8 @@
 <!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN">
 <html>
 <head>
-  <meta http-equiv="CONTENT-TYPE"
- content="text/html; charset=windows-1252">
+  <meta content="text/html; charset=windows-1252"
+ http-equiv="CONTENT-TYPE">
   <title>Business Applications Overview for Users</title>
   <style>
         DIV,LI {
@@ -32,27 +32,73 @@ Target Audience
 </ol>
 Topics Covered <br>
 <ol>
-  <li>Overview of Applications</li>
+  <li>Overview of Processes</li>
   <ol>
-    <li>TODO: Fill in all of the main areas and pages of each
-application; this will be pretty similar to the same section in the
-Business Level Technical Overview document<br>
+    <li>Order Component<br>
     </li>
-    <li>Accounting Manager<br>
-    </li>
-    <li>Catalog Manager</li>
-    <li>Content Manager</li>
-    <li>Facility Manager</li>
-    <li>Manufacturing Manager</li>
-    <li>Marketing Manager</li>
-    <li>Order Manager</li>
-    <li>Party Manager</li>
-    <li>WebTools</li>
     <ol>
-      <li>Intended for technical users; for detail on this application
-see the Business Level Technical Overview</li>
+      <li>Order Process</li>
     </ol>
-    <li>WorkEffort Manager</li>
+    <ol>
+      <ol>
+        <li>Created</li>
+        <ol>
+          <li>Triggers Authorization of Credit Card(s)</li>
+        </ol>
+        <li>All Payments Authorized or Received, or Assigned to Billing
+Accounts with sufficient credit or prepayment<br>
+        </li>
+        <ol>
+          <li>Order Accepted (or Approved if no approval workflow
+desired)<br>
+          </li>
+        </ol>
+        <li>Accepted</li>
+        <ol>
+          <li>Triggers Approval Workflow (if applicable)</li>
+        </ol>
+        <li>Approved</li>
+        <li>Completed</li>
+        <li>Cancelled<br>
+        </li>
+      </ol>
+    </ol>
+    <li>Product Component</li>
+    <ol>
+      <li>Facility &amp; Warehouse Management<br>
+      </li>
+      <ol>
+        <li>Shipment Process (incoming &amp; outgoing)<br>
+        </li>
+        <ol>
+          <li>Input</li>
+          <li>Scheduled</li>
+          <li>Picked</li>
+          <li>Packed</li>
+          <ol>
+            <li>Triggers Invoice Creation<br>
+            </li>
+          </ol>
+          <li>Shipped</li>
+          <li>Delivered<br>
+          </li>
+          <li>Cancelled</li>
+        </ol>
+      </ol>
+    </ol>
+    <li>Accounting Component<br>
+    </li>
+    <ol>
+      <li>Payment &amp; Invoice Process</li>
+      <ol>
+        <li>Invoice Creation</li>
+        <ol>
+          <li>Triggers Capture of Credit Card(s) (if associated with an
+order that has credit card payments associated with it)<br>
+          </li>
+        </ol>
+      </ol>
+    </ol>
   </ol>
   <li>Role Oriented Overview</li>
   <ol>
@@ -75,7 +121,8 @@ see the Business Level Technical Overview</li>
       <li>Finding Product Information &amp; Product Inventory
 Information</li>
       <li>Creating Orders</li>
-      <li>Future Items: Requests, Quotes, Call Center, Scheduling, etc.</li>
+      <li>Future Items: Requests, Quotes, Call Center, Scheduling,
+etc.</li>
     </ol>
     <li>Warehouse &amp; Order Management</li>
     <ol>
@@ -112,9 +159,40 @@ Information</li>
         </li>
       </ol>
       <li>Promotions</li>
-      <li>Price Rules<br>
+      <li>Price Rules</li>
+    </ol>
+    <li>Content Management</li>
+    <ol>
+      <li>Creating, Finding and Managing Data Resources</li>
+      <li>Adding Organization &amp; Structure with Content</li>
+      <li>Creating a Blog and Setting up Permissions for it</li>
+      <li>Linking to Content in a Webapp<br>
       </li>
     </ol>
+  </ol>
+  <li>Applications Reference<br>
+  </li>
+  <ol>
+    <li>TODO: Fill in all of the main areas and pages of each
+application; this will be pretty similar to the same section in the
+Business Level Technical Overview document<br>
+    </li>
+    <li>Accounting Manager<br>
+    </li>
+    <li>Catalog Manager</li>
+    <li>Content Manager</li>
+    <li>Facility Manager</li>
+    <li>Manufacturing Manager</li>
+    <li>Marketing Manager</li>
+    <li>Order Manager</li>
+    <li>Party Manager</li>
+    <li>WebTools</li>
+    <ol>
+      <li>Intended for technical users; for detail on this
+application
+see the Business Level Technical Overview</li>
+    </ol>
+    <li>WorkEffort Manager</li>
   </ol>
 </ol>
 <br>
