@@ -24,7 +24,7 @@
           <tr>
             <td align=center>
               <form name="choosecatalogform" method="POST" action="<ofbiz:url>/main</ofbiz:url>" style='margin: 0;'>
-                <SELECT name='CURRENT_CATALOG_ID'>
+                <SELECT name='CURRENT_CATALOG_ID' class='selectBox'>
                   <OPTION value='<%=CatalogWorker.getCurrentCatalogId(pageContext)%>'><%=CatalogWorker.getCatalogName(pageContext, CatalogWorker.getCurrentCatalogId(pageContext))%></OPTION>
                   <OPTION value='<%=CatalogWorker.getCurrentCatalogId(pageContext)%>'></OPTION>
                   <ofbiz:iterator name="catalogId" property="catalogCol" type="java.lang.String">

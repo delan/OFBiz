@@ -51,9 +51,9 @@
           <td align=center>
             <form name="keywordsearchform" method="POST" action="<ofbiz:url>/keywordsearch</ofbiz:url>" style='margin: 0;'>
               <input type='hidden' name="VIEW_SIZE" value="10">
-              <div class='tabletext'><input type='text' name="SEARCH_STRING" size="14" maxlength="50" value="<%=UtilFormatOut.checkNull(request.getParameter("SEARCH_STRING"))%>"></div>
+              <div class='tabletext'><input type='text' class='inputBox' name="SEARCH_STRING" size="14" maxlength="50" value="<%=UtilFormatOut.checkNull(request.getParameter("SEARCH_STRING"))%>"></div>
              <ofbiz:if name="otherSearchProdCatalogCategories" size="0">
-                <div class='tabletext'><select name='SEARCH_CATEGORY_ID' size='1'>
+                <div class='tabletext'><select name='SEARCH_CATEGORY_ID' size='1' class='selectBox'>
                   <option value="<%=UtilFormatOut.checkNull(CatalogWorker.getCatalogSearchCategoryId(pageContext, CatalogWorker.getCurrentCatalogId(pageContext)))%>">Entire Catalog</option>
                   <ofbiz:iterator name="otherSearchProdCatalogCategory" property="otherSearchProdCatalogCategories">
                     <%GenericValue searchProductCategory = otherSearchProdCatalogCategory.getRelatedOneCache("ProductCategory");%>

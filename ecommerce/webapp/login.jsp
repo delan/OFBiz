@@ -69,7 +69,7 @@
                     </ofbiz:if>
                     --%>
                       <td align=left>
-                        <input type="text" name="USERNAME" value='<%if (UtilValidate.isNotEmpty(request.getParameter("USERNAME"))) {%><%=request.getParameter("USERNAME")%><%} else {%><ofbiz:entityfield attribute="autoUserLogin" field="userLoginId"/><%}%>' size="20">
+                        <input type="text" class='inputBox' name="USERNAME" value='<%if (UtilValidate.isNotEmpty(request.getParameter("USERNAME"))) {%><%=request.getParameter("USERNAME")%><%} else {%><ofbiz:entityfield attribute="autoUserLogin" field="userLoginId"/><%}%>' size="20">
                       </td>
                   </tr>
                   <ofbiz:if name="autoUserLogin">
@@ -84,7 +84,7 @@
                   </ofbiz:if>
                   <tr align="center">
                     <td align=right><span class="tabletext">Password:&nbsp;</span></td>
-                    <td align=left><input type="password" name="PASSWORD" value="" size="20"></td>
+                    <td align=left><input type="password" class='inputBox' name="PASSWORD" value="" size="20"></td>
                   </tr>
                   <tr>
                     <td colspan="2" align="center"><input type="submit" value="Login"></td>
@@ -116,7 +116,7 @@
         <tr>
           <td valign=middle align=center>
       <form method="POST" action="<ofbiz:url>/forgotpassword<%=UtilFormatOut.ifNotEmpty(previousParams, "?", "")%></ofbiz:url>" name="forgotpassword" style='margin: 0;'>
-        <span class="tabletext">Username:&nbsp;</span><input type="text" name="USERNAME" value='<%if (UtilValidate.isNotEmpty(request.getParameter("USERNAME"))) {%><%=request.getParameter("USERNAME")%><%} else {%><ofbiz:entityfield attribute="autoUserLogin" field="userLoginId"/><%}%>' size="20">
+        <span class="tabletext">Username:&nbsp;</span><input type="text" class='inputBox' name="USERNAME" value='<%if (UtilValidate.isNotEmpty(request.getParameter("USERNAME"))) {%><%=request.getParameter("USERNAME")%><%} else {%><ofbiz:entityfield attribute="autoUserLogin" field="userLoginId"/><%}%>' size="20">
         <div><input type="submit" value="Get Password Hint" name="GET_PASSWORD_HINT">&nbsp;<input type="submit" value="Email Password" name="EMAIL_PASSWORD"></div>
       </form>
           </td>
