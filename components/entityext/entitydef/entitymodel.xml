@@ -26,7 +26,7 @@
  *
  * @author     David E. Jones (jonesde@ofbiz.org)
  * @author     Andy Zeneski (jaz@ofbiz.org)
- * @version    $Revision: 1.10 $
+ * @version    $Revision: 1.11 $
  */
 -->
 
@@ -74,11 +74,15 @@
       <field name="runStatusId" type="id-ne"></field>
       <field name="beginningSynchTime" type="date-time"></field>
       <field name="lastSuccessfulSynchTime" type="date-time"></field>
-      <field name="numInserted" type="numeric"></field>
-      <field name="numUpdated" type="numeric"></field>
-      <field name="numNotUpdated" type="numeric"></field>
-      <field name="numRemoved" type="numeric"></field>
-      <field name="numAlreadyRemoved" type="numeric"></field>
+      <field name="toCreateInserted" type="numeric"></field>
+      <field name="toCreateUpdated" type="numeric"></field>
+      <field name="toCreateNotUpdated" type="numeric"></field>
+      <field name="toStoreInserted" type="numeric"></field>
+      <field name="toStoreUpdated" type="numeric"></field>
+      <field name="toStoreNotUpdated" type="numeric"></field>
+      <field name="toRemoveDeleted" type="numeric"></field>
+      <field name="toRemoveAlreadyDeleted" type="numeric"></field>
+      <field name="totalRowsToCreate" type="numeric"></field>
       <field name="totalRowsToStore" type="numeric"></field>
       <field name="totalRowsToRemove" type="numeric"></field>
       <field name="totalSplits" type="numeric"></field>
