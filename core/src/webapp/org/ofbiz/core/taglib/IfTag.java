@@ -86,11 +86,14 @@ public class IfTag extends BodyTagSupport {
         Object object = null;
         try {
             object = pageContext.findAttribute(name);
-            if (object == null)
+            if (object == null) {
                 object = pageContext.getRequest().getParameter(name);
-            if (object == null)
+            }
+            if (object == null) {
                 return SKIP_BODY;
+            }
         } catch (RuntimeException e) {
+            Debug.logError(e);
             return SKIP_BODY;
         }
 
@@ -115,10 +118,12 @@ public class IfTag extends BodyTagSupport {
                         if (objectSize > localSize)
                             return EVAL_BODY_AGAIN;
                     } catch (Exception e) {
+                        Debug.logError(e);
                         return SKIP_BODY;
                     }
                 }
             } catch (RuntimeException e) {
+                Debug.logError(e);
                 return SKIP_BODY;
             }
         } else if (object instanceof Boolean || "Boolean".equalsIgnoreCase(type)) {
@@ -134,6 +139,7 @@ public class IfTag extends BodyTagSupport {
                         return EVAL_BODY_AGAIN;
                 }
             } catch (RuntimeException e) {
+                Debug.logError(e);
                 return SKIP_BODY;
             }
         } else if (value != null) {
@@ -144,10 +150,10 @@ public class IfTag extends BodyTagSupport {
                     if (s.equals(value))
                         return EVAL_BODY_AGAIN;
                 } catch (RuntimeException e) {
+                    Debug.logError(e);
                     return SKIP_BODY;
                 }
-            } else if (object instanceof Integer ||
-                    "Integer".equalsIgnoreCase(type)) {
+            } else if (object instanceof Integer || "Integer".equalsIgnoreCase(type)) {
                 // Assume the object is a Integer and compare to the Integer value of value.
                 try {
                     Integer i = (Integer) object;
@@ -155,6 +161,7 @@ public class IfTag extends BodyTagSupport {
                     if (i.equals(v))
                         return EVAL_BODY_AGAIN;
                 } catch (RuntimeException e) {
+                    Debug.logError(e);
                     return SKIP_BODY;
                 }
             } else if (object instanceof Long || "Long".equalsIgnoreCase(type)) {
@@ -165,6 +172,7 @@ public class IfTag extends BodyTagSupport {
                     if (i.equals(v))
                         return EVAL_BODY_AGAIN;
                 } catch (RuntimeException e) {
+                    Debug.logError(e);
                     return SKIP_BODY;
                 }
             } else if (object instanceof Float || "Float".equalsIgnoreCase(type)) {
@@ -175,6 +183,7 @@ public class IfTag extends BodyTagSupport {
                     if (d.equals(v))
                         return EVAL_BODY_AGAIN;
                 } catch (RuntimeException e) {
+                    Debug.logError(e);
                     return SKIP_BODY;
                 }
             } else if (object instanceof Double || "Double".equalsIgnoreCase(type)) {
@@ -185,6 +194,7 @@ public class IfTag extends BodyTagSupport {
                     if (d.equals(v))
                         return EVAL_BODY_AGAIN;
                 } catch (RuntimeException e) {
+                    Debug.logError(e);
                     return SKIP_BODY;
                 }
             } else {
@@ -195,6 +205,7 @@ public class IfTag extends BodyTagSupport {
                     if (valueObject != null && valueObject.equals(object))
                         return EVAL_BODY_AGAIN;
                 } catch (RuntimeException e) {
+                    Debug.logError(e);
                     return SKIP_BODY;
                 }
             }
