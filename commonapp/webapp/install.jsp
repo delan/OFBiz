@@ -5,7 +5,6 @@
 <%@ include file="/includes/header.jsp" %>
 <%@ include file="/includes/onecolumn.jsp" %> 
 
-<%if(security.hasPermission("ENTITY_MAINT", session)){%>
 <%
   String serverName = helper.getServerName();
   String paths = UtilProperties.getPropertyValue("servers", serverName + ".sql.load.paths");
@@ -65,10 +64,6 @@
   </UL>
   <DIV class='head2'>Finished loading all data; <%=totalRowsChanged%> total rows updated.</DIV>
 
-<%}%>
-
-<%}else{%>
-  <DIV class='head2'>Error: you do not have permission to use this page (ENTITY_MAINT needed)</DIV>
 <%}%>
 
 <%@ include file="/includes/onecolumnclose.jsp" %>

@@ -45,7 +45,7 @@
 
     <request-map><uri>main</uri><secure>false</secure><auth>false</auth><success>view:main</success></request-map>
     <request-map><uri>sitemap</uri><secure>false</secure><auth>false</auth><success>view:sitemap</success></request-map>
-    <request-map><uri>install</uri><secure>true</secure><auth>true</auth><success>view:install</success></request-map>
+    <request-map><uri>install</uri><secure>false</secure><auth>false</auth><success>view:install</success></request-map>
     <request-map><uri>entitymaint</uri><secure>true</secure><auth>true</auth><success>view:entitymaint</success></request-map>
 
     <request-map><uri>FindGeneric</uri><secure>true</secure><auth>true</auth><success>view:FindGeneric</success></request-map>
