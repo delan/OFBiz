@@ -164,4 +164,27 @@
     <attribute><name>attribute</name><required>false</required><rtexprvalue>true</rtexprvalue></attribute>
   </tag>
 
+  <tag>
+    <name>i18nBundle</name>
+    <tagclass>org.ofbiz.core.taglib.I18nBundleTag</tagclass>
+    <bodycontent>JSP</bodycontent>
+    <attribute><name>id</name><required>false</required><rtexprvalue>true</rtexprvalue></attribute>
+    <attribute><name>baseName</name><required>true</required><rtexprvalue>true</rtexprvalue></attribute>
+  </tag>
+
+  <tag>
+    <name>i18nMessage</name>
+    <tagclass>org.ofbiz.core.taglib.I18nMessageTag</tagclass>
+    <bodycontent>JSP</bodycontent>
+    <attribute><name>key</name><required>true</required><rtexprvalue>true</rtexprvalue></attribute>
+    <attribute><name>bundleId</name><required>false</required><rtexprvalue>true</rtexprvalue></attribute>
+  </tag>
+
+  <tag>
+    <name>i18nMessageArgument</name>
+    <tagclass>org.ofbiz.core.taglib.I18nMessageArgumentTag</tagclass>
+    <bodycontent>empty</bodycontent>
+    <attribute><name>value</name><required>true</required><rtexprvalue>true</rtexprvalue></attribute>
+  </tag>
+
 </taglib>
