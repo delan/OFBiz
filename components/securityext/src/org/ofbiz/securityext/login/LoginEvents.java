@@ -67,7 +67,7 @@ import org.ofbiz.service.ModelService;
  * @author     <a href="mailto:jonesde@ofbiz.org">David E. Jones</a>
  * @author     <a href="">Dustin Caldwell</a>
  * @author     <a href="mailto:therrick@yahoo.com">Tom Herrick</a>
- * @version    $Rev:$
+ * @version    $Rev$
  * @since      2.0
  */
 public class LoginEvents {
@@ -477,7 +477,7 @@ public class LoginEvents {
 
                 // multiply by 100,000 to usually make a 5 digit number
                 passwordToSend = "auto" + ((long) (randNum * 100000));
-                supposedUserLogin.set("currentPassword", HashEncrypt.getHash(passwordToSend));
+                supposedUserLogin.set("currentPassword", LoginServices.getPasswordHash(passwordToSend));
                 supposedUserLogin.set("passwordHint", "Auto-Generated Password");
             } else {
                 passwordToSend = supposedUserLogin.getString("currentPassword");
