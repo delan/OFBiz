@@ -27,6 +27,22 @@
   <display-name>Open For Business - demostore</display-name>
   <description>Demo Store for the Open For Business Project</description>
 
+  <context-param>
+    <param-name>siteConfigurationFile</param-name>
+    <param-value>/WEB-INF/demostore-config.xml</param-value>
+    <description>Request/View Mapping And Site Configuration File</description>
+  </context-param>
+  <context-param>
+    <param-name>schedulerConfigurationFile</param-name>
+    <param-value>/WEB-INF/scheduler-config.xml</param-value>
+    <description>Configuration File For The Job Scheduler</description>
+  </context-param>
+  <context-param>
+    <param-name>entityServerName</param-name>
+    <param-value>default</param-value>
+    <description>The Name of the Entity Server to use.</description>
+  </context-param>
+
   <servlet>
     <servlet-name>ControlServlet</servlet-name>
     <display-name>ControlServlet</display-name>
@@ -38,22 +54,6 @@
     <servlet-name>ControlServlet</servlet-name>
     <url-pattern>/control/*</url-pattern>
   </servlet-mapping>
-
-  <context-param>
-    <description>Request/View Mapping And Site Configuration File</description>
-    <param-name>siteConfigurationFile</param-name>
-    <param-value>/WEB-INF/demostore-config.xml</param-value>
-  </context-param>
-  <context-param>
-    <description>Configuration File For The Job Scheduler</description>
-    <param-name>schedulerConfigurationFile</param-name>
-    <param-value>/WEB-INF/scheduler-config.xml</param-value>
-  </context-param>
-  <context-param>
-    <description>The Name of the Entity Server to use.</description>
-    <param-name>entityServerName</param-name>
-    <param-value>default</param-value>
-  </context-param>
 
   <session-config>
     <session-timeout>60</session-timeout>    
