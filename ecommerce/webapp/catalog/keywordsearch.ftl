@@ -58,7 +58,7 @@
   <table width='100%' cellpadding='0' cellspacing='0'>
     <#assign listIndex = requestAttributes.lowIndex>
     <#list requestAttributes.searchProductList as product>
-    ${setRequestAttribute("product", product)}
+    ${setRequestAttribute("optProductId", product.productId)}
     ${setRequestAttribute("listIndex", listIndex)}
       <tr><td colspan="2"><hr class='sepbar'></td></tr>
       <tr>

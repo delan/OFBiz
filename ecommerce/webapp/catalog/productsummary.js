@@ -32,7 +32,6 @@ importPackage(Packages.org.ofbiz.commonapp.product.catalog);
 
 var dispatcher = request.getAttribute("dispatcher");
 var delegator = request.getAttribute("delegator");
-var product = request.getAttribute("product");
 var productId = request.getAttribute("productId");
 var optProductId = request.getAttribute("optProductId");
 var webSiteId = CatalogWorker.getWebSiteId(request);
@@ -45,7 +44,7 @@ if (optProductId != null) {
 }
 
 // get the product entity
-if (product == null && productId != null) {
+if (productId != null) {
     product = delegator.findByPrimaryKeyCache("Product", UtilMisc.toMap("productId", productId));
     request.setAttribute("product", product);   
 }

@@ -53,7 +53,7 @@ var dispatcher = request.getAttribute("dispatcher");
 var catResult = dispatcher.runSync("getProductCategoryAndLimitedMembers", UtilMisc.toMap("productCategoryId", 
         request.getAttribute("productCategoryId"), "viewIndexString", request.getParameter("VIEW_INDEX"),
         "viewSizeString", request.getParameter("VIEW_SIZE"), "defaultViewSize", defaultViewSize, "limitView", limitView));
-Debug.logInfo("" + catResult);        
+       
 if (catResult != null) {
     request.setAttribute("productCategoryMembers", catResult.get("productCategoryMembers"));
     request.setAttribute("productCategory", catResult.get("productCategory"));
