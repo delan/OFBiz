@@ -59,7 +59,7 @@ function mClk(src){
         }
       }
       
-      String loginUrl = headerControlPath + "/checkLogin/" + UtilFormatOut.checkNull((String)session.getAttribute(SiteDefs.CURRENT_VIEW));
+      String loginUrl = headerControlPath + "/checkLogin/" + UtilFormatOut.checkNull((String)request.getAttribute(SiteDefs.CURRENT_VIEW));
       if(queryString != null) loginUrl = loginUrl  + "?" + UtilFormatOut.checkNull(queryString);
     %>
     <td bgcolor="#cccc99" onmouseover='mOvr(this,"#eeeecc");' onmouseout='mOut(this,"#cccc99");' onclick="mClk(this);" style="border-right:solid white 2px;padding-right:10px;padding-left:10px;"><a href="<%=response.encodeURL(headerControlPath + "/main")%>" class="buttontext">Main</a></td>
