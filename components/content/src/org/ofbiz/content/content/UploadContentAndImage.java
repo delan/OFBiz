@@ -34,13 +34,14 @@ import org.ofbiz.service.GenericServiceException;
 import org.ofbiz.service.LocalDispatcher;
 import org.ofbiz.service.ModelService;
 import org.ofbiz.service.ServiceAuthException;
+import org.ofbiz.service.ServiceUtil;
 
 
 /**
  * UploadContentAndImage Class
  *
  * @author     <a href="mailto:byersa@automationgroups.com">Al Byers</a>
- * @version    $Rev:$
+ * @version    $Rev$
  * @since      2.2
  *
  * Services for granting operation permissions on Content entities in a data-driven manner.
@@ -362,6 +363,10 @@ public class UploadContentAndImage {
                     passedParams.put(fieldName, fieldStr);
                 } else if (fieldName.startsWith("imageData")) {
                     imageFi = fi;
+                    String fileName = fi.getName();
+                    passedParams.put("drObjectInfo", fileName);
+                    String contentType = fi.getContentType();
+                    passedParams.put("drMimeTypeId", contentType);
                     imageBytes = imageFi.get();
                     passedParams.put(fieldName, imageBytes);
             if (Debug.infoOn()) Debug.logInfo("[UploadContentAndImage]imageData: " + imageBytes.length, module);
@@ -384,7 +389,7 @@ public class UploadContentAndImage {
                     try {
                         TransactionUtil.rollback();
                     } catch(GenericTransactionException e2) {
-                        request.setAttribute("_ERROR_MESSAGE_", e2.getMessage());
+                        ServiceUtil.setMessages(request, e2.getMessage(), null, null);
                         return "error";
                     }
                     return "error";
@@ -428,6 +433,15 @@ public class UploadContentAndImage {
             ftlContext.put("targetOperationList",targetOperationList);
 
             ftlContext.put("userLogin", userLogin);
+            String caSequenceNum = (String)passedParams.get("caSequenceNum");
+            if (UtilValidate.isNotEmpty(caSequenceNum)) {
+            	Long sequenceNum = null;
+            	try {
+            	    sequenceNum = new Long(caSequenceNum);
+                } catch(NumberFormatException e) {
+                }
+                passedParams.put("caSequenceNum", sequenceNum);
+            }
 
             GenericValue contentAssocDataResourceViewFrom = delegator.makeValue("ContentAssocDataResourceViewFrom",null);
             ModelEntity modelEntity = delegator.getModelEntity("ContentAssocDataResourceViewFrom");
@@ -463,6 +477,7 @@ public class UploadContentAndImage {
             byte[] bytes = (byte[])passedParams.get("imageData" + suffix);
             ByteWrapper byteWrapper = new ByteWrapper(bytes);
             ftlContext.put("imageData", byteWrapper);
+            if (Debug.infoOn()) Debug.logInfo("[UploadContentStuff]byteWrapper:" + byteWrapper, module);
             //contentAssocDataResourceViewFrom.setAllFields(ftlContext2, true, null, null);
             //ftlContext.putAll(ftlContext2);             
             if (Debug.infoOn()) Debug.logInfo("[UploadContentStuff]ftlContext:" + ftlContext, module);
@@ -482,9 +497,8 @@ public class UploadContentAndImage {
                 errorMsgList.add(msg);
                 return "error";
             }
-            boolean isError = ModelService.RESPOND_ERROR.equals(ftlResults.get(ModelService.RESPONSE_MESSAGE));
-            if (isError) {
-                String msg = (String)ftlResults.get(ModelService.ERROR_MESSAGE);
+            String msg = ServiceUtil.getErrorMessage(ftlResults);
+            if (UtilValidate.isNotEmpty(msg)) {
                 request.setAttribute("_ERROR_MESSAGE_", msg);
                 List errorMsgList = (List)request.getAttribute("_EVENT_MESSAGE_LIST_");
                 if (errorMsgList == null) {
@@ -496,21 +510,21 @@ public class UploadContentAndImage {
             }
             String returnedContentId = (String)ftlResults.get("contentId");
             if (Debug.infoOn()) Debug.logInfo("returnedContentId:" + returnedContentId, module);
-            request.setAttribute("contentId", ftlResults.get("contentId"));
-            request.setAttribute("caContentIdTo", ftlResults.get("contentIdTo"));
-            request.setAttribute("caContentIdStart", ftlResults.get("contentIdTo"));
-            request.setAttribute("caContentAssocTypeId", ftlResults.get("contentAssocTypeId"));
-            request.setAttribute("caFromDate", ftlResults.get("fromDate"));
-            request.setAttribute("drDataResourceId", ftlResults.get("dataResourceId"));
-            request.setAttribute("caContentId", ftlResults.get("contentId"));
+            request.setAttribute("contentId" + suffix, ftlResults.get("contentId"));
+            request.setAttribute("caContentIdTo" + suffix, ftlResults.get("contentIdTo"));
+            request.setAttribute("caContentIdStart" + suffix, ftlResults.get("contentIdTo"));
+            request.setAttribute("caContentAssocTypeId" + suffix, ftlResults.get("contentAssocTypeId"));
+            request.setAttribute("caFromDate" + suffix, ftlResults.get("fromDate"));
+            request.setAttribute("drDataResourceId" + suffix, ftlResults.get("dataResourceId"));
+            request.setAttribute("caContentId" + suffix, ftlResults.get("contentId"));
             
             Map resequenceContext = new HashMap();
-            resequenceContext.put("contentIdTo", ftlResults.get("contentIdTo"));
+            resequenceContext.put("contentIdTo", passedParams.get("caContentIdTo"));
             resequenceContext.put("userLogin", userLogin);
             try {
                 ftlResults = dispatcher.runSync("resequence", resequenceContext);
             } catch(ServiceAuthException e) {
-                String msg = e.getMessage();
+                msg = e.getMessage();
                 request.setAttribute("_ERROR_MESSAGE_", msg);
                 List errorMsgList = (List)request.getAttribute("_EVENT_MESSAGE_LIST_");
                 if (Debug.infoOn()) Debug.logInfo("[UploadContentStuff]errorMsgList:" + errorMsgList, module);

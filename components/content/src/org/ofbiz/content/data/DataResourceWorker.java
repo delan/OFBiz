@@ -707,7 +707,11 @@ public class DataResourceWorker {
                 if (context != null)
                     rootDir = (String) context.get("rootDir");
             }
-            renderFile(dataResourceTypeId, dataResource.getString("objectInfo"), rootDir, outWriter);
+            if (mimeTypeId != null && mimeTypeId.startsWith("image")) {
+            	writeDataResourceText(dataResource, mimeTypeId, locale, context, delegator, outWriter);
+            } else {
+            	renderFile(dataResourceTypeId, dataResource.getString("objectInfo"), rootDir, outWriter);
+            }
         } else {
             throw new GeneralException("The dataResourceTypeId [" + dataResourceTypeId + "] is not supported in renderDataResourceAsText");
         }

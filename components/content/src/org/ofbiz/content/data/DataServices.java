@@ -591,8 +591,14 @@ public class DataServices {
                 byte[] imageBytes = byteWrapper.getBytes();
                 try {
                     GenericValue imageDataResource = delegator.findByPrimaryKey("ImageDataResource", UtilMisc.toMap("dataResourceId", dataResourceId));
-                    imageDataResource.set("imageData", imageBytes);
-                    imageDataResource.store();
+                    if (Debug.infoOn()) Debug.logInfo("imageDataResource(U):" + imageDataResource, module);
+                    if (Debug.infoOn()) Debug.logInfo("imageBytes(U):" + imageBytes, module);
+                    if (imageDataResource == null) {
+                    	return createImageMethod(dctx, context);
+                    } else {
+                        imageDataResource.set("imageData", imageBytes);
+                    	imageDataResource.store();
+                    }
                 } catch (GenericEntityException e) {
                     return ServiceUtil.returnError(e.getMessage());
                 }
@@ -632,6 +638,7 @@ public class DataServices {
                 try {
                     GenericValue imageDataResource = delegator.makeValue("ImageDataResource", UtilMisc.toMap("dataResourceId", dataResourceId));
                     imageDataResource.set("imageData", imageBytes);
+                    if (Debug.infoOn()) Debug.logInfo("imageDataResource(C):" + imageDataResource, module);
                     imageDataResource.create();
                 } catch (GenericEntityException e) {
                     return ServiceUtil.returnError(e.getMessage());
