@@ -36,6 +36,7 @@ import org.ofbiz.base.util.GeneralException;
 import org.ofbiz.base.util.UtilValidate;
 import org.ofbiz.base.util.UtilMisc;
 import org.ofbiz.base.util.Debug;
+import org.ofbiz.securityext.login.LoginEvents;
 
 /**
  * 
@@ -92,6 +93,13 @@ public class XuiSession {
             return null;
         } else {
             return this.userLogin.getString("userLoginId");
+        }
+    }
+
+    public void logout() {
+        if (this.userLogin != null) {
+            LoginEvents.setLoggedOut(this.userLogin);
+            this.userLogin = null;
         }
     }
 

@@ -21,7 +21,7 @@
  *  THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  *
  *  This is the Open for Business Service Build Script.
- *  $Id: build.xml,v 1.10 2004/07/28 03:40:37 jonesde Exp $
+ *  $Id$
 -->
 
 <project name="OFBiz - Content Component" default="jar" basedir=".">
@@ -50,6 +50,7 @@
             <fileset dir="../entity/lib" includes="*.jar"/>
             <fileset dir="../entity/build/lib" includes="*.jar"/>
             <fileset dir="../security/build/lib" includes="*.jar"/>
+            <fileset dir="../securityext/build/lib" includes="*.jar"/>
             <fileset dir="../service/lib" includes="*.jar"/>
             <fileset dir="../service/build/lib" includes="*.jar"/>
             <fileset dir="../minilang/build/lib" includes="*.jar"/>
