@@ -145,9 +145,9 @@ public class ContentPermissionServices {
         auxGetter.setList(passedPurposes);
         //Debug.logInfo("passedPurposes(b):" + passedPurposes, "");
         List targetOperations = (List) context.get("targetOperationList"); 
-        Debug.logInfo("targetOperations(b):" + targetOperations, "");
+        //Debug.logInfo("targetOperations(b):" + targetOperations, "");
         String targetOperationString = (String) context.get("targetOperationString"); 
-        Debug.logInfo("targetOperationString(b):" + targetOperationString, "");
+        //Debug.logInfo("targetOperationString(b):" + targetOperationString, "");
         if (UtilValidate.isNotEmpty(targetOperationString)) {
             List operationsFromString = StringUtil.split(targetOperationString, "|");
             if (targetOperations == null) {
@@ -155,7 +155,7 @@ public class ContentPermissionServices {
             }
             targetOperations.addAll(operationsFromString);
         }
-        Debug.logInfo("targetOperations(c):" + targetOperations, "");
+        //Debug.logInfo("targetOperations(c):" + targetOperations, "");
         StdPermissionConditionGetter permCondGetter = new StdPermissionConditionGetter ( "ContentPurposeOperation",  "contentOperationId", "roleTypeId", "statusId", "contentPurposeTypeId", "privilegeEnumId");
         permCondGetter.setOperationList(targetOperations);
         
@@ -573,7 +573,7 @@ public class ContentPermissionServices {
     public static boolean checkPermissionMethod(GenericDelegator delegator, String partyId,  String entityName, List entityIdList, AuxiliaryValueGetter auxiliaryValueGetter, RelatedRoleGetter relatedRoleGetter, PermissionConditionGetter permissionConditionGetter ) throws GenericEntityException {
 
         permissionConditionGetter.init(delegator);
-        if (Debug.infoOn()) Debug.logInfo(permissionConditionGetter.dumpAsText(), module);
+        if (Debug.verboseOn()) Debug.logVerbose(permissionConditionGetter.dumpAsText(), module);
         boolean passed = false;
 
         String lcEntityName = entityName.toLowerCase();
@@ -600,7 +600,7 @@ public class ContentPermissionServices {
                 entityIdString += obj + "  ";
             }
         }
-        if (Debug.infoOn()) Debug.logInfo(entityIdString, module);
+            //if (Debug.infoOn()) Debug.logInfo(entityIdString, module);
         }
         
         List alreadyCheckedIds = new ArrayList();
@@ -808,16 +808,16 @@ public class ContentPermissionServices {
         GenericDelegator delegator = entity.getDelegator();
         String pkFieldName = ContentWorker.getPkFieldName(entityName, modelEntity);
         String entityId = entity.getString(pkFieldName);
-        if (Debug.infoOn()) Debug.logInfo("\n\nIN hasMatch: entityId:" + entityId + " partyId:" + partyId + " checkAncestors:" + checkAncestors, module);
+        if (Debug.verboseOn()) Debug.logVerbose("\n\nIN hasMatch: entityId:" + entityId + " partyId:" + partyId + " checkAncestors:" + checkAncestors, module);
         boolean isMatch = false;
         permissionConditionGetter.restart();
         List auxiliaryValueList = null;
         if (auxiliaryValueGetter != null) {
            auxiliaryValueGetter.init(delegator, entityId);
            auxiliaryValueList =   auxiliaryValueGetter.getList();
-            if (Debug.infoOn()) Debug.logInfo(auxiliaryValueGetter.dumpAsText(), module);
+            if (Debug.verboseOn()) Debug.logVerbose(auxiliaryValueGetter.dumpAsText(), module);
         } else {
-            if (Debug.infoOn()) Debug.logInfo("NO AUX GETTER", module);
+            if (Debug.verboseOn()) Debug.logVerbose("NO AUX GETTER", module);
         }
         List roleValueList = null;
         if (relatedRoleGetter != null) {
@@ -827,16 +827,16 @@ public class ContentPermissionServices {
                 relatedRoleGetter.init(delegator, entityId, partyId);
             }
             roleValueList =   relatedRoleGetter.getList();
-            if (Debug.infoOn()) Debug.logInfo(relatedRoleGetter.dumpAsText(), module);
+            if (Debug.verboseOn()) Debug.logVerbose(relatedRoleGetter.dumpAsText(), module);
         } else {
-            if (Debug.infoOn()) Debug.logInfo("NO ROLE GETTER", module);
+            if (Debug.verboseOn()) Debug.logVerbose("NO ROLE GETTER", module);
         }
         
         String targStatusId = null;
         if (modelEntity.getField("statusId") != null) {
             targStatusId = entity.getString("statusId");   
         }
-            if (Debug.infoOn()) Debug.logInfo("STATUS:" + targStatusId, module);
+            if (Debug.verboseOn()) Debug.logVerbose("STATUS:" + targStatusId, module);
         
         while (permissionConditionGetter.getNext() ) {
             String roleConditionId = permissionConditionGetter.getRoleValue();
@@ -848,7 +848,7 @@ public class ContentPermissionServices {
             boolean roleCond = ( roleConditionId == null || roleConditionId.equals("_NA_") || (roleValueList != null && roleValueList.contains(roleConditionId) ) );
  
             if (auxiliaryCond && statusCond && roleCond) {
-                if (Debug.infoOn()) Debug.logInfo("MATCHED: role:" + roleConditionId + " status:" + statusConditionId + " aux:" + auxiliaryConditionId, module);
+                if (Debug.verboseOn()) Debug.logVerbose("MATCHED: role:" + roleConditionId + " status:" + statusConditionId + " aux:" + auxiliaryConditionId, module);
                     isMatch = true;
                     break;
             }
