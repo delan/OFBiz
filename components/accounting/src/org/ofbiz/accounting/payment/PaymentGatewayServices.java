@@ -1,5 +1,5 @@
 /*
- * $Id: PaymentGatewayServices.java,v 1.39 2004/07/22 00:01:52 ajzeneski Exp $
+ * $Id: PaymentGatewayServices.java,v 1.40 2004/07/30 21:57:29 ajzeneski Exp $
  *
  *  Copyright (c) 2002 The Open For Business Project - www.ofbiz.org
  *
@@ -65,7 +65,7 @@ import org.ofbiz.service.ServiceUtil;
  * PaymentGatewayServices
  *
  * @author     <a href="mailto:jaz@ofbiz.org">Andy Zeneski</a>
- * @version    $Revision: 1.39 $
+ * @version    $Revision: 1.40 $
  * @since      2.0
  */
 public class PaymentGatewayServices {
@@ -524,7 +524,7 @@ public class PaymentGatewayServices {
             Boolean releaseResponse = (Boolean) releaseResult.get("releaseResult");
 
             // create the PaymentGatewayResponse
-            String responseId = delegator.getNextSeqId("PaymentGatewayResponse").toString();
+            String responseId = delegator.getNextSeqId("PaymentGatewayResponse");
             GenericValue pgResponse = delegator.makeValue("PaymentGatewayResponse", null);
             pgResponse.set("paymentGatewayResponseId", responseId);
             pgResponse.set("paymentServiceTypeEnumId", RELEASE_SERVICE_TYPE);
@@ -552,7 +552,7 @@ public class PaymentGatewayServices {
                 Iterator i = messages.iterator();
                 while (i.hasNext()) {
                     GenericValue respMsg = delegator.makeValue("PaymentGatewayRespMsg", null);
-                    String respMsgId = delegator.getNextSeqId("PaymentGatewayRespMsg").toString();
+                    String respMsgId = delegator.getNextSeqId("PaymentGatewayRespMsg");
                     String message = (String) i.next();
                     respMsg.set("paymentGatewayRespMsgId", respMsgId);
                     respMsg.set("paymentGatewayResponseId", responseId);
@@ -863,7 +863,7 @@ public class PaymentGatewayServices {
                     // create a new payment preference and authorize it
                     Debug.logInfo("Creating payment preference split", module);
                     double newAmount = authAmount.doubleValue() - amountThisCapture;
-                    String newPrefId = delegator.getNextSeqId("OrderPaymentPreference").toString();
+                    String newPrefId = delegator.getNextSeqId("OrderPaymentPreference");
                     GenericValue newPref = delegator.makeValue("OrderPaymentPreference", UtilMisc.toMap("orderPaymentPreferenceId", newPrefId));
                     newPref.set("orderId", paymentPref.get("orderId"));
                     newPref.set("paymentMethodTypeId", paymentPref.get("paymentMethodTypeId"));
@@ -994,7 +994,7 @@ public class PaymentGatewayServices {
         String authType = paymentPreference.getString("statusId").equals("PAYMENT_NOT_AUTH") ? AUTH_SERVICE_TYPE : REAUTH_SERVICE_TYPE;
 
         // create the PaymentGatewayResponse
-        String responseId = delegator.getNextSeqId("PaymentGatewayResponse").toString();
+        String responseId = delegator.getNextSeqId("PaymentGatewayResponse");
         GenericValue response = delegator.makeValue("PaymentGatewayResponse", null);
         response.set("paymentGatewayResponseId", responseId);
         response.set("paymentServiceTypeEnumId", authType);
@@ -1021,7 +1021,7 @@ public class PaymentGatewayServices {
             Iterator i = messages.iterator();
             while (i.hasNext()) {
                 GenericValue respMsg = delegator.makeValue("PaymentGatewayRespMsg", null);
-                String respMsgId = delegator.getNextSeqId("PaymentGatewayRespMsg").toString();
+                String respMsgId = delegator.getNextSeqId("PaymentGatewayRespMsg");
                 String message = (String) i.next();
                 respMsg.set("paymentGatewayRespMsgId", respMsgId);
                 respMsg.set("paymentGatewayResponseId", responseId);
@@ -1079,7 +1079,7 @@ public class PaymentGatewayServices {
 
         if (result != null && captureResult.booleanValue()) {
             // create the PaymentGatewayResponse record
-            String responseId = delegator.getNextSeqId("PaymentGatewayResponse").toString();
+            String responseId = delegator.getNextSeqId("PaymentGatewayResponse");
             GenericValue response = delegator.makeValue("PaymentGatewayResponse", null);
             response.set("paymentGatewayResponseId", responseId);
             response.set("paymentServiceTypeEnumId", serviceType);
@@ -1105,7 +1105,7 @@ public class PaymentGatewayServices {
                 Iterator i = messages.iterator();
                 while (i.hasNext()) {
                     GenericValue respMsg = delegator.makeValue("PaymentGatewayRespMsg", null);
-                    String respMsgId = delegator.getNextSeqId("PaymentGatewayRespMsg").toString();
+                    String respMsgId = delegator.getNextSeqId("PaymentGatewayRespMsg");
                     String message = (String) i.next();
                     respMsg.set("paymentGatewayRespMsgId", respMsgId);
                     respMsg.set("paymentGatewayResponseId", responseId);
@@ -1273,7 +1273,7 @@ public class PaymentGatewayServices {
                 String payFromPartyId = getPayToPartyId(orderHeader);
 
                 // create the PaymentGatewayResponse record
-                String responseId = delegator.getNextSeqId("PaymentGatewayResponse").toString();
+                String responseId = delegator.getNextSeqId("PaymentGatewayResponse");
                 GenericValue response = delegator.makeValue("PaymentGatewayResponse", null);
                 response.set("paymentGatewayResponseId", responseId);
                 response.set("paymentServiceTypeEnumId", REFUND_SERVICE_TYPE);
@@ -1301,7 +1301,7 @@ public class PaymentGatewayServices {
                     Iterator i = messages.iterator();
                     while (i.hasNext()) {
                         GenericValue respMsg = delegator.makeValue("PaymentGatewayRespMsg", null);
-                        String respMsgId = delegator.getNextSeqId("PaymentGatewayRespMsg").toString();
+                        String respMsgId = delegator.getNextSeqId("PaymentGatewayRespMsg");
                         String message = (String) i.next();
                         respMsg.set("paymentGatewayRespMsgId", respMsgId);
                         respMsg.set("paymentGatewayResponseId", responseId);
