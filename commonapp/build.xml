@@ -25,7 +25,7 @@
  *  $Id$
 -->
 
-<project name="Open For Business CommonApp Component" default="jar" basedir=".">
+<project name="Open For Business CommonApp Component" default="jar-deploy" basedir=".">
 
 
     <!-- ================================================================== -->
@@ -128,6 +128,13 @@
     <target name="jar" depends="classes">
         <jar jarfile="${lib.dir}/${name}.jar"
              basedir="${build.dir}/jar" />
+    </target>
+    
+    <target name="jar-deploy" depends="jar">
+    	<copy file="${lib.dir}/${name}.jar"
+    		tofile="${walib.dir}/${name}.jar" />
+    	<copy file="${ofbcore-webapp.jar}"
+    		tofile="${walib.dir}/ofbcore-webapp.jar" />
     </target>
 
     <!-- ================================================================== -->
