@@ -24,7 +24,7 @@
  *
  *@author     Andy Zeneski
  *@author     David E. Jones
- *@version    $Revision: 1.1 $
+ *@version    $Revision: 1.2 $
  *@since      2.2
  */
 -->
@@ -78,7 +78,7 @@
     &nbsp;<a href='<@ofbizUrl>/authview/${donePage}?facilityId=${facilityId}</@ofbizUrl>' class='buttontext'>[Go&nbsp;Back]</a>
     &nbsp;<a href="javascript:document.editcontactmechform.submit()" class="buttontext">[Save]</a>
       <table width="90%" border="0" cellpadding="2" cellspacing="0">
-      
+        <#if mechMap.purposeTypes?has_content>
         <tr>
           <td width="26%" align=right valign=top><div class="tabletext">Contact Purposes</div></td>
           <td width="5">&nbsp;</td>
@@ -101,8 +101,8 @@
                   <td bgcolor='white'><div><a href='<@ofbizUrl>/deleteFacilityContactMechPurpose?facilityId=${facilityId}&contactMechId=${contactMechId}&contactMechPurposeTypeId=${facilityContactMechPurpose.contactMechPurposeTypeId}&fromDate=${facilityContactMechPurpose.fromDate.toString()}&DONE_PAGE=${donePage}&useValues=true</@ofbizUrl>' class='buttontext'>&nbsp;Delete&nbsp;</a></div></td>
                 </tr>
               </#list>
-				</#if>              
-              <#if mechMap.purposeTypes?has_content>
+              </#if>              
+           
               <tr>
                 <form method='get' action='<@ofbizUrl>/createFacilityContactMechPurpose?DONE_PAGE=${donePage}&useValues=true</@ofbizUrl>' name='newpurposeform'>
                 <input type=hidden name='facilityId' value='${facilityId}'>
@@ -118,10 +118,10 @@
                 </form>
                 <td bgcolor='white'><div><a href='javascript:document.newpurposeform.submit()' class='buttontext'>&nbsp;Add&nbsp;Purpose&nbsp;</a></div></td>
               </tr>
-              </#if>
             </table>
           </td>
         </tr>
+        </#if>
         <form method="post" action='<@ofbizUrl>/${mechMap.requestName}</@ofbizUrl>' name="editcontactmechform">
         <input type=hidden name="contactMechId" value='${contactMechId}'>
         <input type=hidden name="contactMechTypeId" value='${mechMap.contactMechTypeId}'>
