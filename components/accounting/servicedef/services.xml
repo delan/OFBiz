@@ -274,6 +274,7 @@
         <attribute name="paymentPreferenceId" type="String" mode="IN" optional="true"/>
         <attribute name="partyIdFrom" type="String" mode="IN" optional="false"/>
         <attribute name="partyIdTo" type="String" mode="IN" optional="false"/>
+        <attribute name="statusId" type="String" mode="IN" optional="false"/>
         <attribute name="effectiveDate" type="Timestamp" mode="IN" optional="true"/>
         <attribute name="paymentRefNum" type="String" mode="IN" optional="false"/>
         <attribute name="amount" type="Double" mode="IN" optional="true"/>

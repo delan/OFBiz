@@ -1,5 +1,5 @@
 /*
- * $Id: PaymentGatewayServices.java,v 1.8 2003/08/27 13:53:25 ajzeneski Exp $
+ * $Id: PaymentGatewayServices.java,v 1.9 2003/09/02 04:18:05 ajzeneski Exp $
  *
  *  Copyright (c) 2002 The Open For Business Project - www.ofbiz.org
  *
@@ -56,7 +56,7 @@ import org.ofbiz.service.ServiceUtil;
  * PaymentGatewayServices
  *
  * @author     <a href="mailto:jaz@ofbiz.org">Andy Zeneski</a>
- * @version    $Revision: 1.8 $
+ * @version    $Revision: 1.9 $
  * @since      2.0
  */
 public class PaymentGatewayServices {    
@@ -839,7 +839,8 @@ public class PaymentGatewayServices {
             paymentCtx.put("paymentMethodTypeId", paymentPreference.get("paymentMethodTypeId"));
             paymentCtx.put("paymentMethodId", paymentPreference.get("paymentMethodId"));
             paymentCtx.put("partyIdTo", payTo);
-            paymentCtx.put("partyIdFrom", orderRole.get("partyId"));                                                                            
+            paymentCtx.put("partyIdFrom", orderRole.get("partyId")); 
+            paymentCtx.put("statusId", "PAYMENT_PAID");                                                                           
             paymentCtx.put("paymentPreferenceId", paymentPreference.get("orderPaymentPreferenceId"));
             paymentCtx.put("amount", result.get("captureAmount"));
             paymentCtx.put("userLogin", userLogin);
@@ -1007,7 +1008,8 @@ public class PaymentGatewayServices {
                     payment.put("paymentMethodId", paymentPref.get("paymentMethodId"));
                     payment.put("partyIdFrom", payFromPartyId);
                     payment.put("partyIdTo", payToPartyId);   
-                    payment.put("userLogin", userLogin);                 
+                    payment.put("userLogin", userLogin);
+                    payment.put("statusId", "PAYMENT_PAID");                
                     payment.put("paymentRefNum", refundResponse.get("refundRefNum"));
                     payment.put("amount", refundResponse.get("refundAmount"));
                     payment.put("comments", "Refund : " + refundResponse.get("refundMessage"));

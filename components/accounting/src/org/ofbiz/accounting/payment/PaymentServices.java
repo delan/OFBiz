@@ -1,5 +1,5 @@
 /*
- * $Id: PaymentServices.java,v 1.1 2003/08/18 17:31:37 ajzeneski Exp $
+ * $Id: PaymentServices.java,v 1.2 2003/09/02 04:18:05 ajzeneski Exp $
  *
  *  Copyright (c) 2001, 2002 The Open For Business Project - www.ofbiz.org
  *
@@ -47,7 +47,7 @@ import org.ofbiz.service.ServiceUtil;
  * Services for Payment maintenance
  *
  * @author     <a href="mailto:jonesde@ofbiz.org">David E. Jones</a>
- * @version    $Revision: 1.1 $
+ * @version    $Revision: 1.2 $
  * @since      2.0
  */
 public class PaymentServices {
@@ -753,6 +753,7 @@ public class PaymentServices {
         payment.set("paymentPreferenceId", context.get("paymentPreferenceId"));
         payment.set("partyIdFrom", context.get("partyIdFrom"));
         payment.set("partyIdTo", context.get("partyIdTo"));
+        payment.set("statusId", context.get("statusId"));
         payment.set("effectiveDate", context.get("effectiveDate") != null ? context.get("effectiveDate") : now);
         payment.set("paymentRefNum", context.get("paymentRefNum"));
         payment.set("amount", context.get("amount"));
