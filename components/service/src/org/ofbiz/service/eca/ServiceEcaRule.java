@@ -113,7 +113,8 @@ public class ServiceEcaRule {
 
         if (allCondTrue) {
             Iterator a = actions.iterator();
-            while (a.hasNext()) {
+            boolean allOkay = true;
+            while (a.hasNext() && allOkay) {
                 ServiceEcaAction ea = (ServiceEcaAction) a.next();
                 // in order to enable OR logic without multiple calls to the given service, 
                 // only execute a given service name once per service call phase
@@ -122,7 +123,7 @@ public class ServiceEcaRule {
                     if (ea.runAction(serviceName, dctx, context, result)) {
                         actionsRun.add(ea.serviceName);
                     } else {
-                        break;
+                        allOkay = false;
                     }
                 }
             }
