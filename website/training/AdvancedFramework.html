@@ -1,0 +1,769 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN">
+<html>
+<head>
+  <meta content="text/html; charset=windows-1252"
+ http-equiv="CONTENT-TYPE">
+  <title>Advanced Framework Training Outline</title>
+  <style>
+		DIV,LI {
+		font-size: 11px;
+		font-family: Verdana, Arial, Helvetica, sans-serif;
+		}
+    </style>
+</head>
+<body lang="en-US">
+<center>
+<h2>Advanced Framework Training Outline</h2>
+</center>
+<div>Written By: David E. Jones</div>
+<div>Email: <a href="mailto:jonesde@ofbiz.org">jonesde@ofbiz.org</a></div>
+<div>Open For Business Site: <a href="http://www.ofbiz.org/">http://www.ofbiz.org</a></div>
+<div>Founders and Lead Architects: David E. Jones &amp; Andy Zeneski<br>
+</div>
+<div>Last Updated: 17 April 2004<br>
+</div>
+<hr>
+<br>
+Target Audience
+<ol>
+  <li>Senior Developers </li>
+  <li>Senior Architects<br>
+  </li>
+</ol>
+Topics Covered<br>
+<br>
+<div>Part 1: The Webapp Framework &amp; MiniLang</div>
+<ol>
+  <li>
+    <div>Basic Framework Review</div>
+  </li>
+  <li>
+    <div>The Webapp Framework</div>
+    <ol>
+      <li>
+        <div>Control Servlet</div>
+        <ol>
+          <li>
+            <div>ofbiz/components/control/dtd/site-conf.dtd</div>
+          </li>
+          <li>
+            <div>&lt;webapp&gt;/WEB-INF/controller.xml</div>
+          </li>
+          <li>
+            <div>Requests</div>
+          </li>
+          <li>
+            <div>Events</div>
+            <ol>
+              <li>
+                <div>Event Context (parameters and return values)</div>
+              </li>
+              <li>
+                <div>Event Handlers/Types</div>
+              </li>
+              <li>
+                <div>simple-method Events</div>
+              </li>
+              <li>
+                <div>Java Events</div>
+              </li>
+              <li>
+                <div>Designing a new Event Handler</div>
+              </li>
+            </ol>
+          </li>
+          <li>
+            <div>Responses</div>
+          </li>
+          <li>
+            <div>Views</div>
+            <ol>
+              <li>
+                <div>View Handlers/Types</div>
+              </li>
+              <li>
+                <div>Designing a new View Handler</div>
+              </li>
+            </ol>
+          </li>
+        </ol>
+      </li>
+      <li>
+        <div>JPublish</div>
+        <ol>
+          <li>
+            <div>Page Definitions</div>
+          </li>
+          <li>
+            <div>www.jpublish.org</div>
+          </li>
+          <li>
+            <div>&lt;webapp&gt;/WEB-INF/jpublish.xml</div>
+          </li>
+          <li>
+            <div>&lt;webapp&gt;/WEB-INF/pagedefs/**/*.xml</div>
+          </li>
+          <li>
+            <div>Page Variables</div>
+          </li>
+          <li>
+            <div>Templates</div>
+          </li>
+          <li>
+            <div>Content, Template, and Page Actions</div>
+          </li>
+        </ol>
+      </li>
+      <li>
+        <div>BeanShell</div>
+        <ol>
+          <li>
+            <div>Data Preparation Actions</div>
+          </li>
+          <li>
+            <div>www.beanshell.org</div>
+          </li>
+          <li>
+            <div>&lt;webapp&gt;/WEB-INF/actions/**/*.bsh</div>
+          </li>
+          <li>
+            <div>Java Syntax, with some scripting like features</div>
+          </li>
+          <li>
+            <div>Dynamic Types</div>
+          </li>
+        </ol>
+      </li>
+      <li>
+        <div>FreeMarker</div>
+        <ol>
+          <li>
+            <div>Content Templates</div>
+          </li>
+          <li>
+            <div>www.freemarker.org</div>
+          </li>
+          <li>
+            <div>&lt;webapp&gt;/**/*.ftl</div>
+          </li>
+          <li>
+            <div>PHP-like Syntax with Java Robustness and Flexibility</div>
+          </li>
+          <li>
+            <div>Control Constructs (#if/#else/#elseif, #list, #assign)</div>
+          </li>
+          <li>
+            <div>Built-ins</div>
+          </li>
+          <li>
+            <div>Existence Concept and Fail-Fast (?exists,
+?has_content, ?if_exists)</div>
+          </li>
+        </ol>
+      </li>
+      <li>
+        <div>Region Framework</div>
+        <ol>
+          <li>
+            <div>Defining Template Based Regions</div>
+          </li>
+          <li>
+            <div>Defining Inheritance or Region Based Regions</div>
+          </li>
+          <li>
+            <div>Using, or Not Using, Sections</div>
+          </li>
+        </ol>
+      </li>
+      <li>
+        <div>Taglib</div>
+        <ol>
+          <li>
+            <div>URL Tags</div>
+          </li>
+          <li>
+            <div>Conditional Tags</div>
+          </li>
+          <li>
+            <div>Flow Control Tags</div>
+          </li>
+          <li>
+            <div>Data Presentation Tags</div>
+          </li>
+          <li>
+            <div>Internationalization Tags</div>
+          </li>
+          <li>
+            <div>Service Engine Tags</div>
+          </li>
+          <li>
+            <div>Other Tags</div>
+          </li>
+        </ol>
+      </li>
+    </ol>
+  </li>
+  <li>
+    <div>MiniLang</div>
+    <ol>
+      <li>
+        <div>simple-map-processor</div>
+        <ol>
+          <li>
+            <div>General Concept</div>
+          </li>
+          <li>
+            <div>Make In String Operations</div>
+          </li>
+          <li>
+            <div>Process Field Operations</div>
+          </li>
+        </ol>
+      </li>
+      <li>
+        <div>simple-method</div>
+        <ol>
+          <li>
+            <div>General Concept</div>
+          </li>
+          <li>
+            <div>Call Operations</div>
+          </li>
+          <li>
+            <div>Java Call Operations</div>
+          </li>
+          <li>
+            <div>Control and Error Handling Operations</div>
+          </li>
+          <li>
+            <div>Event Specific Operations</div>
+          </li>
+          <li>
+            <div>Service Specific Operations</div>
+          </li>
+          <li>
+            <div>Method Environment Operations</div>
+          </li>
+          <li>
+            <div>Entity Engine Misc. Operations</div>
+          </li>
+          <li>
+            <div>Entity Engine Find Operations</div>
+          </li>
+          <li>
+            <div>Entity Engine Value Operations</div>
+          </li>
+          <li>
+            <div>Entity Engine List Operations</div>
+          </li>
+          <li>
+            <div>Entity Engine Transaction Operations</div>
+          </li>
+          <li>
+            <div>Conditional (If) Operations</div>
+          </li>
+          <li>
+            <div>Other Operations</div>
+          </li>
+        </ol>
+      </li>
+      <li>
+        <div>Some Examples</div>
+      </li>
+    </ol>
+  </li>
+</ol>
+<div><br>
+</div>
+<div>Part 2: The Entity and Service Engines</div>
+<ol>
+  <li>
+    <div>The Entity Engine</div>
+    <ol>
+      <li>
+        <div>ofbiz/website/docs/entity.html</div>
+      </li>
+      <li>
+        <div>ofbiz/website/docs/entityconfig.html</div>
+      </li>
+      <li>
+        <div>Architecture &amp; Design Goals</div>
+        <ol>
+          <li>
+            <div>Database (or datasource) Agnostic</div>
+          </li>
+          <li>
+            <div>Dynamic API Behaves According to Entity Definitions</div>
+          </li>
+          <li>
+            <div>Minimal Redundancy from Data Definitions</div>
+          </li>
+          <li>
+            <div>Uses JDBC and JTA J2EE Components</div>
+            <ol>
+              <li>
+                <div>Can operate in the same transaction with EJB and
+JDO code</div>
+              </li>
+            </ol>
+          </li>
+        </ol>
+      </li>
+      <li>
+        <div>Configuration</div>
+        <ol>
+          <li>
+            <div>ofbiz/components/entity/config/entityengine.xml</div>
+          </li>
+          <li>
+            <div>JTA Setup</div>
+          </li>
+          <li>
+            <div>Delegators</div>
+          </li>
+          <li>
+            <div>Datasources</div>
+          </li>
+        </ol>
+      </li>
+      <li>
+        <div>Advanced Entity Definitions</div>
+        <ol>
+          <li>
+            <div>Entities</div>
+          </li>
+          <li>
+            <div>Fields</div>
+          </li>
+          <li>
+            <div>Primary Keys</div>
+          </li>
+          <li>
+            <div>Relationships</div>
+          </li>
+        </ol>
+      </li>
+      <li>
+        <div>View Entity Definitions</div>
+        <ol>
+          <li>
+            <div>Member Entities</div>
+          </li>
+          <li>
+            <div>Field Aliases</div>
+          </li>
+          <li>
+            <div>View Links</div>
+          </li>
+          <li>
+            <div>Relationships</div>
+          </li>
+          <li>
+            <div>Joins: Inner &amp; Outer</div>
+          </li>
+          <li>
+            <div>Grouping and Summary Data</div>
+          </li>
+        </ol>
+      </li>
+      <li>
+        <div>The GenericDelegator API</div>
+        <ol>
+          <li>
+            <div>Factory Methods (GenericDelegator, GenericPK,
+GenericValue)</div>
+          </li>
+          <li>
+            <div>Creating, Storing &amp; Removing</div>
+          </li>
+          <li>
+            <div>Finding</div>
+            <ol>
+              <li>
+                <div>By Primary Key</div>
+              </li>
+              <li>
+                <div>By “And”</div>
+              </li>
+              <li>
+                <div>EntityConditions</div>
+                <ol>
+                  <li>
+                    <div>EntityFieldMap</div>
+                  </li>
+                  <li>
+                    <div>EntityExpr</div>
+                  </li>
+                  <li>
+                    <div>EntityConditionList</div>
+                  </li>
+                  <li>
+                    <div>EntityWhereString</div>
+                  </li>
+                </ol>
+              </li>
+              <li>
+                <div>The EntityListIterator (remember to close)</div>
+              </li>
+            </ol>
+          </li>
+          <li>
+            <div>Caching</div>
+            <ol>
+              <li>
+                <div>Theory of Operation</div>
+              </li>
+              <li>
+                <div>UtilCache &amp; The Webtools Cache Page</div>
+              </li>
+              <li>
+                <div>Automatic &amp; Manual Cache Clearing</div>
+              </li>
+            </ol>
+          </li>
+        </ol>
+      </li>
+      <li>
+        <div>The GenericEntity API</div>
+        <ol>
+          <li>
+            <div>GenericPK</div>
+          </li>
+          <li>
+            <div>GenericValue</div>
+          </li>
+        </ol>
+      </li>
+      <li>
+        <div>Overview of GenericHelper Interface</div>
+      </li>
+    </ol>
+  </li>
+  <li>
+    <div>The Service Engine</div>
+    <ol>
+      <li>
+        <div>Architecture &amp; Design Goals</div>
+        <ol>
+          <li>
+            <div>Agnostic Service Calls</div>
+            <ol>
+              <li>
+                <div>Implementation Agnostic</div>
+              </li>
+              <li>
+                <div>Location Agnostic</div>
+              </li>
+            </ol>
+          </li>
+          <li>
+            <div>Synchronicity Support</div>
+          </li>
+          <li>
+            <div>Parameter Validation</div>
+          </li>
+          <li>
+            <div>Service “Engines”</div>
+            <ol>
+              <li>
+                <div>The GenericEngine Interface</div>
+              </li>
+              <li>
+                <div>Overview of Existing Engines</div>
+              </li>
+              <li>
+                <div>Designing a New Engine</div>
+              </li>
+            </ol>
+          </li>
+        </ol>
+      </li>
+      <li>
+        <div>Service Engine Configuration</div>
+        <ol>
+          <li>
+            <div>website/docs/serviceconfig.html</div>
+          </li>
+          <li>
+            <div>ofbiz/components/service/dtd/service-config.dtd</div>
+          </li>
+          <li>
+            <div>commonapp/etc/serviceengine.xml</div>
+          </li>
+          <li>
+            <div>JNDI Servers &amp; Resource Loaders</div>
+          </li>
+          <li>
+            <div>Global Service Definition Files</div>
+          </li>
+          <li>
+            <div>Service Group and ECA Rule Files</div>
+          </li>
+          <li>
+            <div>JMS Servers</div>
+          </li>
+        </ol>
+      </li>
+      <li>
+        <div>Advanced Service Definitions</div>
+        <ol>
+          <li>
+            <div>Parameters and Validation</div>
+          </li>
+          <li>
+            <div>Interface Services</div>
+          </li>
+          <li>
+            <div>Service Authentication</div>
+          </li>
+          <li>
+            <div>Transaction Control</div>
+          </li>
+        </ol>
+      </li>
+      <li>
+        <div>Remote Services</div>
+        <ol>
+          <li>
+            <div>JMS Services</div>
+          </li>
+          <li>
+            <div>HTTP Services</div>
+          </li>
+        </ol>
+      </li>
+      <li>
+        <div>Implementing Services</div>
+        <ol>
+          <li>
+            <div>Service Context (parameters and return values)</div>
+          </li>
+          <li>
+            <div>Java Services</div>
+          </li>
+          <li>
+            <div>Bean Shell Services</div>
+          </li>
+          <li>
+            <div>simple-method Services</div>
+          </li>
+        </ol>
+      </li>
+      <li>
+        <div>Calling Services</div>
+        <ol>
+          <li>
+            <div>Synch &amp; Asynch</div>
+          </li>
+          <li>
+            <div>Scheduled Services</div>
+          </li>
+          <li>
+            <div>Calling From:</div>
+            <ol>
+              <li>
+                <div>Java</div>
+              </li>
+              <li>
+                <div>simple-method</div>
+              </li>
+              <li>
+                <div>Control Servlet</div>
+              </li>
+            </ol>
+          </li>
+        </ol>
+      </li>
+      <li>
+        <div>Service Groups</div>
+        <ol>
+          <li>
+            <div>ofbiz/components/service/dtd/service-group.dtd</div>
+          </li>
+          <li>
+            <div>Defining Groups</div>
+            <ol>
+              <li>
+                <div>Groups</div>
+              </li>
+              <li>
+                <div>Services Per Group</div>
+              </li>
+            </ol>
+          </li>
+        </ol>
+      </li>
+      <li>
+        <div>Event-Condition-Action (ECA) Rules</div>
+        <ol>
+          <li>
+            <div>ofbiz/components/service/dtd/service-eca.dtd</div>
+          </li>
+          <li>
+            <div>Defining ECA Rules</div>
+            <ol>
+              <li>
+                <div>Events</div>
+              </li>
+              <li>
+                <div>Conditions Per Event</div>
+              </li>
+              <li>
+                <div>Actions Per Event</div>
+              </li>
+            </ol>
+          </li>
+        </ol>
+      </li>
+    </ol>
+  </li>
+</ol>
+<div><br>
+</div>
+<div>Part 3: The Workflow &amp; Rule Engines, Data Files, Review,
+Q&amp;A</div>
+<ol>
+  <li>
+    <div>The Worklfow Engine</div>
+    <ol>
+      <li>
+        <div>Based on XPDL and Other Standards from WfMC and OMG</div>
+      </li>
+      <li>
+        <div>Workflow Concepts</div>
+        <ol>
+          <li>
+            <div>Processes</div>
+          </li>
+          <li>
+            <div>Activities</div>
+            <ol>
+              <li>
+                <div>Manual Start/End</div>
+              </li>
+              <li>
+                <div>Automatic Start/End</div>
+              </li>
+            </ol>
+          </li>
+          <li>
+            <div>Transitions</div>
+          </li>
+          <li>
+            <div>Splitting and Merging</div>
+          </li>
+          <li>
+            <div>Workflow Data Context</div>
+          </li>
+          <li>
+            <div>Asynchronous Execution</div>
+          </li>
+        </ol>
+      </li>
+      <li>
+        <div>For the future: Message Flow Style Business Process
+Management</div>
+      </li>
+      <li>
+        <div>Workflow Engine Architecture</div>
+        <ol>
+          <li>
+            <div>Service Engine Based</div>
+            <ol>
+              <li>
+                <div>Calling Workflows Through Service Engine</div>
+              </li>
+              <li>
+                <div>Calling Other Services in a Workflow</div>
+              </li>
+            </ol>
+          </li>
+          <li>
+            <div>Uses Entity Engine for Workflow Definition and
+Run-Time Data Persistence</div>
+          </li>
+        </ol>
+      </li>
+      <li>
+        <div>Defining Workflows</div>
+        <ol>
+          <li>
+            <div>Basic XPDL</div>
+          </li>
+          <li>
+            <div>Working With Parties, Groups, and Roles</div>
+          </li>
+          <li>
+            <div>OFBiz Extensions</div>
+          </li>
+        </ol>
+      </li>
+      <li>
+        <div>Importing and Managing Workflow Definitions</div>
+      </li>
+      <li>
+        <div>Running Workflows</div>
+      </li>
+      <li>
+        <div>Interacting With Running Workflows</div>
+      </li>
+      <li>
+        <div>Client API (UI development)</div>
+      </li>
+    </ol>
+  </li>
+  <li>
+    <div>The Rule Engine</div>
+    <ol>
+      <li>
+        <div>A Declarative Logic Language</div>
+      </li>
+      <li>
+        <div>Based on Building Parsers In Java by Steven Metsker</div>
+      </li>
+      <li>
+        <div>Constraint Based Problem Solving</div>
+      </li>
+      <li>
+        <div>Deductive Problem Solving</div>
+      </li>
+      <li>
+        <div>Interaction With a Database (ie as a fact-base)</div>
+      </li>
+      <li>
+        <div>Needs Some Work</div>
+      </li>
+      <li>
+        <div>Applying Concepts with Custom Rule Engines</div>
+      </li>
+    </ol>
+  </li>
+  <li>
+    <div>The Data File Tool</div>
+    <ol>
+      <li>
+        <div>The Wonderful World of Flat Files</div>
+      </li>
+      <li>
+        <div>Generic Data Structures for Flat File Data (very similar
+to the Entity Engine structures)</div>
+      </li>
+      <li>
+        <div>Defining Data Files</div>
+      </li>
+      <li>
+        <div>The Data File API</div>
+      </li>
+    </ol>
+  </li>
+  <li>
+    <div>Review</div>
+  </li>
+  <li>
+    <div>Q&amp;A</div>
+  </li>
+</ol>
+<br>
+<br>
+</body>
+</html>
