@@ -22,15 +22,15 @@
  * THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  *
  */
-
 package org.ofbiz.core.view;
-
 
 import java.io.*;
 import java.util.*;
 import java.net.*;
 import javax.servlet.*;
 import javax.servlet.http.*;
+
+import org.ofbiz.core.util.*;
 
 import org.apache.velocity.*;
 import org.apache.velocity.app.*;
@@ -40,15 +40,12 @@ import org.apache.velocity.io.*;
 import org.apache.velocity.runtime.*;
 import org.apache.velocity.util.*;
 
-import org.ofbiz.core.util.*;
-
-
 /**
  * VelocityViewHandler - Velocity Template Engine View Handler
  *
- *@author     <a href="mailto:jaz@zsolv.com">Andy Zeneski</a>
- *@created    Feb 16, 2002
- *@version    1.0
+ * @author     <a href="mailto:jaz@ofbiz.org">Andy Zeneski</a>
+ * @version    $Revision$
+ * @since      2.0
  */
 public class VelocityViewHandler implements ViewHandler {
 
@@ -101,7 +98,8 @@ public class VelocityViewHandler implements ViewHandler {
         }
     }
 
-    public void render(String name, String page, String info, String contentType, String encoding, HttpServletRequest request, HttpServletResponse response) throws ViewHandlerException {
+    public void render(String name, String page, String info, String contentType, String encoding, 
+            HttpServletRequest request, HttpServletResponse response) throws ViewHandlerException {
         if (ve == null) {
             throw new ViewHandlerException("Velocity Template Engine has not been initialized");
         }
