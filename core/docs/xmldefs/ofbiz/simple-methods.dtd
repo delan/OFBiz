@@ -356,6 +356,7 @@ engine and facilitate related operations.
     list-name CDATA #REQUIRED
     entity-name CDATA #REQUIRED
     map-name CDATA #REQUIRED
+    order-by-list-name CDATA #IMPLIED
     use-cache ( true | false ) "false"
 >
 <!ELEMENT filter-list-by-and EMPTY>

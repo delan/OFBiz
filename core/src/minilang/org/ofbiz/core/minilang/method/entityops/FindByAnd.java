@@ -45,6 +45,7 @@ public class FindByAnd extends MethodOperation {
     String listName;
     String entityName;
     String mapName;
+    String orderByListName;
     boolean useCache;
 
     public FindByAnd(Element element, SimpleMethod simpleMethod) {
@@ -52,16 +53,22 @@ public class FindByAnd extends MethodOperation {
         listName = element.getAttribute("list-name");
         entityName = element.getAttribute("entity-name");
         mapName = element.getAttribute("map-name");
+        orderByListName = element.getAttribute("order-by-list-name");
 
         useCache = "true".equals(element.getAttribute("use-cache"));
     }
 
     public boolean exec(MethodContext methodContext) {
+        List orderByNames = null;
+        if (orderByListName != null && orderByListName.length() > 0) {
+            orderByNames = (List) methodContext.getEnv(orderByListName);
+        }
+        
         try {
             if (this.useCache) {
-                methodContext.putEnv(listName, methodContext.getDelegator().findByAndCache(entityName, (Map) methodContext.getEnv(mapName)));
+                methodContext.putEnv(listName, methodContext.getDelegator().findByAndCache(entityName, (Map) methodContext.getEnv(mapName), orderByNames));
             } else {
-                methodContext.putEnv(listName, methodContext.getDelegator().findByAnd(entityName, (Map) methodContext.getEnv(mapName)));
+                methodContext.putEnv(listName, methodContext.getDelegator().findByAnd(entityName, (Map) methodContext.getEnv(mapName), orderByNames));
             }
         } catch (GenericEntityException e) {
             Debug.logError(e);
