@@ -17,9 +17,6 @@
     <userTimeout>12</userTimeout>
     <shrinkBy>2</shrinkBy>
     <debugging>true</debugging>
-    <cacheEnabled>true</cacheEnabled>
-    <cacheSize>20</cacheSize>
-    <cacheRefreshInterval>120</cacheRefreshInterval>
   </datasource>
 
   <datasource>
@@ -35,9 +32,6 @@
     <userTimeout>12</userTimeout>
     <shrinkBy>2</shrinkBy>
     <debugging>true</debugging>
-    <cacheEnabled>true</cacheEnabled>
-    <cacheSize>20</cacheSize>
-    <cacheRefreshInterval>120</cacheRefreshInterval>
   </datasource>
   
 </poolman>
