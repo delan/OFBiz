@@ -22,7 +22,7 @@
  *  OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR
  *  THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  *
- *  $Id: CommonScreens.xml,v 1.3 2004/07/30 02:11:21 jonesde Exp $
+ *  $Id: CommonScreens.xml,v 1.4 2004/08/02 14:09:15 jonesde Exp $
 -->
 
 <screens>
@@ -70,9 +70,11 @@
             <widgets>
                 <container style="columnleft">
                     <include-screen name="keywordsearchbox"/>
-                    <container style="spacer"/>
+                    <container style="verticalspacer"/>
                     <include-screen name="sidecatalogs"/>
+                    <container style="verticalspacer"/>
                     <include-screen name="sidedeepcategory"/>
+                    <container style="verticalspacer"/>
                     <include-screen name="miniproductlist"/>
                 </container>
             </widgets>

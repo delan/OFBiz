@@ -219,9 +219,9 @@
         <auto-fields-service service-name="updateProductPrice" map-name="productPrice"/>
         <field name="productId"><hidden/></field>
         <!-- TODO: get descriptions from IDs <display description="${roleType.description}"/> -->
-        <field name="productPriceTypeId" title="${uiLabelMap.ProductPriceType}" widget-style="tabletext"><display/></field>
-        <field name="currencyUomId" title="${uiLabelMap.ProductCurrency}" widget-style="tabletext"><display/></field>
-        <field name="productStoreGroupId" title="${uiLabelMap.ProductProductStoreGroup}" widget-style="tabletext"><display/></field>
+        <field name="productPriceTypeId" title="${uiLabelMap.ProductPriceType}" widget-style="tabletext"><display-entity entity-name="ProductPriceType"/></field>
+        <field name="currencyUomId" title="${uiLabelMap.ProductCurrency}" widget-style="tabletext"><display-entity entity-name="Uom" key-field-name="uomId" description="${description} [${uomId}]"/></field>
+        <field name="productStoreGroupId" title="${uiLabelMap.ProductProductStoreGroup}" widget-style="tabletext"><display-entity entity-name="ProductStoreGroup" description="${productStoreGroupName}"/></field>
         <field name="fromDate" title="${uiLabelMap.CommonFromDateTime}" widget-style="tabletext"><display/></field>
 
         <field name="lastUpdatedByText" title="${uiLabelMap.ProductLastModifiedBy}:" widget-style="tabletext">
