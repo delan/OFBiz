@@ -1,5 +1,5 @@
 /*
- * $Id: CompressionConstants.java,v 1.1 2003/12/02 06:39:32 ajzeneski Exp $
+ * $Id: CompressionServerSocketFactory.java 1583 2004-01-23 15:16:51Z ajzeneski $
  *
  * Copyright (c) 1998, 1999 Sun Microsystems, Inc. All Rights Reserved.
  *
@@ -28,25 +28,22 @@
  * redistribute the Software for such purposes.
  */
 
-package org.ofbiz.service.rmi.socket;
+package org.ofbiz.service.rmi.socket.zip;
 
-interface CompressionConstants {
+import java.io.IOException;
+import java.io.Serializable;
+import java.net.ServerSocket;
+import java.rmi.server.RMIServerSocketFactory;
 
-    /** Constants for 6-bit code values. */
+import org.ofbiz.service.rmi.socket.zip.CompressionServerSocket;
 
-    /** No operation: used to pad words on flush. */
-    static final int NOP = 0;
+public class CompressionServerSocketFactory implements RMIServerSocketFactory, Serializable {
 
-    /** Introduces raw byte format. */
-    static final int RAW = 1;
+    public static final String module = CompressionServerSocketFactory.class.getName();
 
-    /** Format indicator for characters found in lookup table. */
-    static final int BASE = 2;
+    public ServerSocket createServerSocket(int port) throws IOException {
+        ServerSocket socket = new CompressionServerSocket(port);
+        return socket;
+    }
 
-    /** A character's code is it's index in the lookup table. */
-    static final String codeTable = "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ ,.!?\"'()";
 }
-
-
-
-

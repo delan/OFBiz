@@ -43,7 +43,7 @@ import org.ofbiz.service.LocalDispatcher;
  * RMI Service Engine Container / Dispatcher
  *
  * @author     <a href="mailto:jaz@ofbiz.org">Andy Zeneski</a>
- * @version    $Rev:$
+ * @version    $Rev$
  * @since      3.0
  */
 public class RmiServiceContainer implements Container {
@@ -89,7 +89,7 @@ public class RmiServiceContainer implements Container {
         String useCtx = initialCtxProp == null || initialCtxProp.value == null ? "false" : initialCtxProp.value;
         String host = lookupHostProp == null || lookupHostProp.value == null ? "localhost" : lookupHostProp.value;
         String port = lookupPortProp == null || lookupPortProp.value == null ? "1099" : lookupPortProp.value;
-
+        boolean clientAuth = ContainerConfig.getPropertyValue(cfg, "ssl-client-auth", false);
 
         // setup the factories
         RMIClientSocketFactory csf = null;
@@ -114,6 +114,11 @@ public class RmiServiceContainer implements Container {
             } catch (Exception e) {
                 throw new ContainerException(e);
             }
+        }
+
+        // set the client auth flag on our custom SSL socket factory
+        if (ssf instanceof org.ofbiz.service.rmi.socket.ssl.SSLServerSocketFactory) {
+            ((org.ofbiz.service.rmi.socket.ssl.SSLServerSocketFactory) ssf).setNeedClientAuth(clientAuth);
         }
 
         // get the delegator for this container

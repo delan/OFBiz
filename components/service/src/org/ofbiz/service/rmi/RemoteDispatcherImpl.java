@@ -37,7 +37,7 @@ import java.util.Map;
  * Generic Services Remote Dispatcher Implementation
  *
  * @author     <a href="mailto:jaz@ofbiz.org">Andy Zeneski</a>
- * @version    $Rev:$
+ * @version    $Rev$
  * @since      3.0
  */
 public class RemoteDispatcherImpl extends UnicastRemoteObject implements RemoteDispatcher {
@@ -49,7 +49,7 @@ public class RemoteDispatcherImpl extends UnicastRemoteObject implements RemoteD
 
     RemoteDispatcherImpl(LocalDispatcher dispatcher, RMIClientSocketFactory csf, RMIServerSocketFactory ssf) throws RemoteException {
         super(0, csf, ssf);
-        this.dispatcher = dispatcher;
+        this.dispatcher = dispatcher;        
     }
 
     // RemoteDispatcher methods
