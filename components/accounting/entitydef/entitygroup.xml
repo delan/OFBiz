@@ -26,7 +26,7 @@
  *
  *@author     David E. Jones (jonesde@ofbiz.org)
  *@author     Andy Zeneski (jaz@ofbiz.org)
- *@version    $Revision: 1.3 $
+ *@version    $Revision: 1.4 $
  */
 -->
 
@@ -143,6 +143,7 @@
     <entity-group group="org.ofbiz" entity="PaymentType" />
     <entity-group group="org.ofbiz" entity="PaymentTypeAttr" />
     <entity-group group="org.ofbiz" entity="PaymentGatewayResponse" />
+    <entity-group group="org.ofbiz" entity="ValueLinkKey" />
 
 </entitygroup>
 

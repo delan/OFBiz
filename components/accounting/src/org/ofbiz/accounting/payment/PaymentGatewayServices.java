@@ -1,5 +1,5 @@
 /*
- * $Id: PaymentGatewayServices.java,v 1.18 2003/11/06 22:11:35 ajzeneski Exp $
+ * $Id: PaymentGatewayServices.java,v 1.19 2003/11/14 20:58:19 ajzeneski Exp $
  *
  *  Copyright (c) 2002 The Open For Business Project - www.ofbiz.org
  *
@@ -43,23 +43,20 @@ import org.ofbiz.base.util.UtilValidate;
 import org.ofbiz.entity.GenericDelegator;
 import org.ofbiz.entity.GenericEntityException;
 import org.ofbiz.entity.GenericValue;
-import org.ofbiz.entity.condition.EntityExpr;
-import org.ofbiz.entity.condition.EntityOperator;
+import org.ofbiz.entity.condition.*;
 import org.ofbiz.entity.util.EntityUtil;
 import org.ofbiz.order.order.OrderReadHelper;
 import org.ofbiz.party.contact.ContactHelper;
 import org.ofbiz.product.store.ProductStoreWorker;
-import org.ofbiz.service.DispatchContext;
-import org.ofbiz.service.GenericServiceException;
-import org.ofbiz.service.LocalDispatcher;
-import org.ofbiz.service.ModelService;
-import org.ofbiz.service.ServiceUtil;
+import org.ofbiz.service.*;
+
+import javax.transaction.xa.XAException;
 
 /**
  * PaymentGatewayServices
  *
  * @author     <a href="mailto:jaz@ofbiz.org">Andy Zeneski</a>
- * @version    $Revision: 1.18 $
+ * @version    $Revision: 1.19 $
  * @since      2.0
  */
 public class PaymentGatewayServices {
@@ -396,8 +393,6 @@ public class PaymentGatewayServices {
         LocalDispatcher dispatcher = dctx.getDispatcher();
         GenericValue userLogin = (GenericValue) context.get("userLogin");
         String orderId = (String) context.get("orderId");
-        String invoiceId = (String) context.get("invoiceId");
-        Double captureAmount = (Double) context.get("captureAmount");
 
         Map result = new HashMap();
 
@@ -406,11 +401,23 @@ public class PaymentGatewayServices {
         List paymentPrefs = null;
 
         try {
+            // first get the order header
             orderHeader = delegator.findByPrimaryKey("OrderHeader", UtilMisc.toMap("orderId", orderId));
+            // get the valid payment prefs
+            List othExpr = UtilMisc.toList(new EntityExpr("paymentMethodTypeId", EntityOperator.EQUALS, "EFT_ACCOUNT"));
+            othExpr.add(new EntityExpr("paymentMethodTypeId", EntityOperator.EQUALS, "GIFT_CARD"));
+            EntityCondition con1 = new EntityConditionList(othExpr, EntityJoinOperator.OR);
 
-            // get the payment prefs
-            Map lookupMap = UtilMisc.toMap("orderId", orderId, "statusId", "PAYMENT_AUTHORIZED");
-            paymentPrefs = delegator.findByAnd("OrderPaymentPreference", lookupMap);
+            EntityCondition statExpr = new EntityExpr("statusId", EntityOperator.EQUALS, "PAYMENT_SETTLED");
+            EntityCondition con2 = new EntityConditionList(UtilMisc.toList(con1, statExpr), EntityOperator.AND);
+
+            EntityCondition authExpr = new EntityExpr("statusId", EntityOperator.EQUALS, "PAYMENT_AUTHORIZED");
+            EntityCondition con3 = new EntityConditionList(UtilMisc.toList(con2, authExpr), EntityOperator.OR);
+
+            EntityExpr orderExpr = new EntityExpr("orderId", EntityOperator.EQUALS, orderId);
+            EntityCondition con4 = new EntityConditionList(UtilMisc.toList(con3, orderExpr), EntityOperator.AND);
+
+            paymentPrefs = delegator.findByCondition("OrderPaymentPreference", con4, null, null);
         } catch (GenericEntityException gee) {
             Debug.logError(gee, "Problems getting entity record(s), see stack trace", module);
             result.put(ModelService.RESPONSE_MESSAGE, ModelService.RESPOND_ERROR);
@@ -425,14 +432,13 @@ public class PaymentGatewayServices {
 
         // return complete if no payment prefs were found
         if (paymentPrefs == null || paymentPrefs.size() == 0) {
-            Debug.logWarning("No orderPaymentPreferences available to capture", module);
+            Debug.logWarning("No OrderPaymentPreference records available for release", module);
             result.put("processResult", "COMPLETE");
             result.put(ModelService.RESPONSE_MESSAGE, ModelService.RESPOND_SUCCESS);
             return result;
         }
 
         OrderReadHelper orh = new OrderReadHelper(orderHeader);
-        String productStoreId = orh.getProductStoreId();
         String currency = orh.getCurrency();
 
         // iterate over the prefs and release each one
@@ -454,17 +460,21 @@ public class PaymentGatewayServices {
                     Debug.logError("Service name is null for payment setting; cannot process for : " + paymentPref, module);
                 }
             } else {
-                Debug.logError("Invalid payment settings entity, no payment settings found for : " + paymentPref, module);
+                Debug.logError("Invalid payment settings entity, no payment release settings found for : " + paymentPref, module);
+                continue; // no release service available -- has been logged
             }
 
             if (paymentConfig == null || paymentConfig.length() == 0) {
                 paymentConfig = "payment.properties";
             }
 
+            GenericValue authTransaction = PaymentGatewayServices.getAuthTransaction(paymentPref);
             Map releaseContext = new HashMap();
             releaseContext.put("orderPaymentPreference", paymentPref);
+            releaseContext.put("releaseAmount", authTransaction.getDouble("amount"));
             releaseContext.put("currency", currency);
             releaseContext.put("paymentConfig", paymentConfig);
+            releaseContext.put("userLogin", userLogin);
 
             // run the defined service
             Map releaseResult = null;
@@ -479,25 +489,25 @@ public class PaymentGatewayServices {
 
             // create the PaymentGatewayResponse
             String responseId = delegator.getNextSeqId("PaymentGatewayResponse").toString();
-            GenericValue response = delegator.makeValue("PaymentGatewayResponse", null);
-            response.set("paymentGatewayResponseId", responseId);
-            response.set("paymentServiceTypeEnumId", RELEASE_SERVICE_TYPE);
-            response.set("orderPaymentPreferenceId", paymentPref.get("orderPaymentPreferenceId"));
-            response.set("paymentMethodTypeId", paymentPref.get("paymentMethodTypeId"));
-            response.set("paymentMethodTypeId", paymentPref.get("paymentMethodId"));
+            GenericValue pgResponse = delegator.makeValue("PaymentGatewayResponse", null);
+            pgResponse.set("paymentGatewayResponseId", responseId);
+            pgResponse.set("paymentServiceTypeEnumId", RELEASE_SERVICE_TYPE);
+            pgResponse.set("orderPaymentPreferenceId", paymentPref.get("orderPaymentPreferenceId"));
+            pgResponse.set("paymentMethodTypeId", paymentPref.get("paymentMethodTypeId"));
+            pgResponse.set("paymentMethodId", paymentPref.get("paymentMethodId"));
 
             // set the auth info
-            response.set("referenceNum", releaseResult.get("releaseRefNum"));
-            response.set("gatewayCode", releaseResult.get("releaseCode"));
-            response.set("gatewayFlag", releaseResult.get("releaseFlag"));
-            response.set("gatewayMessage", releaseResult.get("releaseMessage"));
-            response.set("transactionDate", UtilDateTime.nowTimestamp());
+            pgResponse.set("referenceNum", releaseResult.get("releaseRefNum"));
+            pgResponse.set("gatewayCode", releaseResult.get("releaseCode"));
+            pgResponse.set("gatewayFlag", releaseResult.get("releaseFlag"));
+            pgResponse.set("gatewayMessage", releaseResult.get("releaseMessage"));
+            pgResponse.set("transactionDate", UtilDateTime.nowTimestamp());
 
             // store the gateway response
             try {
-                delegator.create(response);
+                pgResponse.create();
             } catch (GenericEntityException e) {
-                Debug.logError(e, "Problem storing PaymentGatewayResponse entity; authorization was released! : " + response, module);
+                Debug.logError(e, "Problem storing PaymentGatewayResponse entity; authorization was released! : " + pgResponse, module);
             }
 
             if (releaseResponse != null && releaseResponse.booleanValue()) {
@@ -508,6 +518,27 @@ public class PaymentGatewayServices {
                     Debug.logError(e, "Problem storing updated payment preference; authorization was released!", module);
                 }
                 finished.add(paymentPref);
+
+                // cancel any payment records
+                List paymentList = null;
+                try {
+                    paymentList = paymentPref.getRelated("Payment");
+                } catch (GenericEntityException e) {
+                    Debug.logError(e, "Unable to get Payment records from OrderPaymentPreference : " + paymentPref, module);
+                }
+
+                if (paymentList != null) {
+                    Iterator pi = paymentList.iterator();
+                    while (pi.hasNext()) {
+                        GenericValue pay = (GenericValue) pi.next();
+                        pay.set("statusId", "PMNT_CANCELLED");
+                        try {
+                            pay.store();
+                        } catch (GenericEntityException e) {
+                            Debug.logError(e, "Unable to store Payment : " + pay, module);
+                        }
+                    }
+                }
             } else {
                 Debug.logError("Release failed for pref : " + paymentPref, module);
             }
@@ -1328,6 +1359,7 @@ public class PaymentGatewayServices {
         long nowTime = new Date().getTime();
 
         result.put("releaseResult", new Boolean(true));
+        result.put("releaseAmount", context.get("releaseAmount"));
         result.put("releaseRefNum", new Long(nowTime).toString());
         result.put("releaseFlag", "U");
         result.put("releaseMessage", "This is a test release; no authorizations exist");

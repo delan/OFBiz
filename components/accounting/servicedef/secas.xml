@@ -50,4 +50,8 @@
         <condition field-name="expYear" operator="is-not-empty"/>
         <action service="buildCcExpireDate" mode="sync"/>
     </eca>
+
+    <eca service="authOrderPayments" event="global-rollback">
+        <action service="releaseOrderPayments" mode="sync"/>
+    </eca>
 </service-eca>

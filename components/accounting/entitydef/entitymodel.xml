@@ -26,7 +26,7 @@
  *
  * @author     David E. Jones (jonesde@ofbiz.org)
  * @author     Andy Zeneski (jaz@ofbiz.org)
- * @version    $Revision: 1.12 $
+ * @version    $Revision: 1.13 $
  */
 -->
 
@@ -2166,6 +2166,21 @@
       <relation type="one" fk-name="PAYGATR_PMETH" rel-entity-name="PaymentMethod">
         <key-map field-name="paymentMethodId"/>
       </relation>
+    </entity>
+    <entity entity-name="ValueLinkKey"
+            package-name="org.ofbiz.accounting.payment"
+            title="Value Link Key Store">
+      <field name="merchantId" type="id-vlong-ne"></field>
+      <field name="publicKey" type="very-long"></field>
+      <field name="privateKey" type="very-long"></field>
+      <field name="exchangeKey" type="very-long"></field>
+      <field name="workingKey" type="very-long"></field>
+      <field name="workingKeyIndex" type="numeric"></field>
+      <field name="lastWorkingKey" type="very-long"></field>
+      <field name="lastModifiedDate" type="date-time"></field>
+      <field name="lastModifiedByTerminal" type="short-varchar"></field>
+      <field name="lastModifiedByUserLogin" type="id-vlong"></field>
+      <prim-key field="merchantId"/>
     </entity>
 </entitymodel>
 
