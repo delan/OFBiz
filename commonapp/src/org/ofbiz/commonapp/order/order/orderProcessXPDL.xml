@@ -166,7 +166,7 @@
                     </ExtendedAttributes>
                 </Activity>                
                
-                <Activity Id="approveOrder" Name="Approve Order">
+                <Activity Id="approveOrder" Name="Approve Order #${orderId}">
                     <Description>A clerk accepts and approves/declines the order</Description>
                     <Limit>12</Limit>
                     <Implementation>

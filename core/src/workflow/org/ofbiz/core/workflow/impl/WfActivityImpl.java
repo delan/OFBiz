@@ -47,11 +47,11 @@ public class WfActivityImpl extends WfExecutionObjectImpl implements WfActivity 
     private static final int CHECK_ASSIGN = 1;
     private static final int CHECK_COMPLETE = 2;
 
-    protected String process = null;
+    protected String processId = null;
 
-    public WfActivityImpl(GenericValue value, String process) throws WfException {
-        super(value, process);
-        this.process = process;
+    public WfActivityImpl(GenericValue value, String processId) throws WfException {
+        super(value, processId);
+        this.processId = processId;
         init();
     }
 
@@ -59,7 +59,7 @@ public class WfActivityImpl extends WfExecutionObjectImpl implements WfActivity 
         super(delegator, workEffortId);
         if (activityId == null || activityId.length() == 0)
             throw new WfException("Execution object is not of type WfActivity");
-        this.process = getRuntimeObject().getString("workEffortParentId");
+        this.processId = getRuntimeObject().getString("workEffortParentId");
     }
 
     private void init() throws WfException {
@@ -70,6 +70,9 @@ public class WfActivityImpl extends WfExecutionObjectImpl implements WfActivity 
 
         // set the activity context
         this.setProcessContext(container().contextKey());
+        
+        // parse the descriptions
+        this.parseDescriptions(this.processContext());
 
         // check for inheritPriority attribute
         boolean inheritPriority = valueObject.getBoolean("inheritPriority").booleanValue() || false;
@@ -396,7 +399,7 @@ public class WfActivityImpl extends WfExecutionObjectImpl implements WfActivity 
      * @see org.ofbiz.core.workflow.WfActivity#container()
      */    
     public WfProcess container() throws WfException {
-        return WfFactory.getWfProcess(delegator, process);
+        return WfFactory.getWfProcess(delegator, processId);
     }
    
     /**

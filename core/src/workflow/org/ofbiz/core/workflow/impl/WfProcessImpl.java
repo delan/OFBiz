@@ -45,13 +45,14 @@ public class WfProcessImpl extends WfExecutionObjectImpl implements WfProcess {
 
     public static final String module = WfProcessImpl.class.getName();
 
-    private WfRequester requester = null;
-    private WfProcessMgr manager = null;    
+    protected WfRequester requester = null;
+    protected WfProcessMgr manager = null;    
    
     public WfProcessImpl(GenericValue valueObject, WfProcessMgr manager) throws WfException {
         super(valueObject, null);
         this.manager = manager;           
         this.requester = null;
+        init();
     }
         
     /**
@@ -62,7 +63,14 @@ public class WfProcessImpl extends WfExecutionObjectImpl implements WfProcess {
         if (activityId != null && activityId.length() > 0)
             throw new WfException("Execution object is not of type WfProcess.");
         this.manager = WfFactory.getWfProcessMgr(delegator, packageId, packageVersion, processId, processVersion);
-        this.requester = null;
+        this.requester = null;        
+    }
+    
+    private void init() throws WfException {
+        // since we are a process we don't have a context yet
+        // get the context to use with parsing descriptions from the manager
+        Map context = manager.getInitialContext();
+        this.parseDescriptions(context);        
     }
 
     /**

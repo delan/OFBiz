@@ -125,6 +125,32 @@ public abstract class WfExecutionObjectImpl implements WfExecutionObject {
             throw new WfException(e.getMessage(), e);
         }
     }
+    
+    protected void parseDescriptions(Map parseContext) throws WfException {
+        GenericValue runtime = getRuntimeObject();
+        String name = runtime.getString("workEffortName");
+        String desc = runtime.getString("description");
+        String nameExp = FlexibleStringExpander.expandString(name, parseContext);
+        String descExp = FlexibleStringExpander.expandString(desc, parseContext);
+        
+        boolean changed = false;
+        if (nameExp != null && !nameExp.equals(name)) {
+            changed = true;
+            runtime.set("workEffortName", nameExp);
+        }
+        if (descExp != null && !descExp.equals(desc)) {
+            changed = true;
+            runtime.set("description", descExp);
+        }
+        
+        if (changed) {
+            try {
+                runtime.store();
+            } catch (GenericEntityException e) {
+                throw new WfException(e.getMessage(), e);
+            }
+        }
+    }
 
     /**
      * @see org.ofbiz.core.workflow.WfExecutionObject#name()
