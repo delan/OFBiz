@@ -36,9 +36,14 @@ import java.net.*;
  */
 public class UtilProperties {
 
-    /** An instance of the generic cache for storing the ResourceBundle corresponding to each properties file
+    /** An instance of the generic cache for storing the ResourceBundle 
+     *  corresponding to each properties file keyed by a String for the resource location
      */
     static public UtilCache resCache = new UtilCache("UtilPropertiesResourceCache");
+
+    /** An instance of the generic cache for storing the ResourceBundle 
+     *  corresponding to each properties file keyed by a URL object
+     */
     static public UtilCache urlCache = new UtilCache("UtilPropertiesUrlCache");
 
     /** Compares the specified property to the compareString, returns true if they are the same, false otherwise
