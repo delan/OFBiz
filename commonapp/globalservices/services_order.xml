@@ -127,11 +127,10 @@
         <description>Create a CustRequestItem record</description>
         <attribute name="custRequestId" type="String" mode="IN" optional="false"/>
         <attribute name="custRequestItemSeqId" type="String" mode="IN" optional="false"/>
-        <attribute name="requiredByDate" type="String" mode="IN" optional="false"/>
+        <attribute name="requiredByDate" type="Timestamp" mode="IN" optional="false"/>
         <attribute name="quantity" type="String" mode="IN" optional="true"/>
         <attribute name="maximumAmount" type="String" mode="IN" optional="true"/>
         <attribute name="description" type="String" mode="IN" optional="true"/>
-<<<<<<< services_order.xml
     </service>
 
     <service name="updateCustRequestItem" engine="simple"
@@ -139,23 +138,10 @@
         <description>Update a CustRequestItem record</description>
         <attribute name="custRequestId" type="String" mode="IN" optional="false"/>
         <attribute name="custRequestItemSeqId" type="String" mode="IN" optional="false"/>
-        <attribute name="requiredByDate" type="String" mode="IN" optional="true"/>
+        <attribute name="requiredByDate" type="Timestamp" mode="IN" optional="false"/>
         <attribute name="quantity" type="String" mode="IN" optional="true"/>
         <attribute name="maximumAmount" type="String" mode="IN" optional="true"/>
         <attribute name="description" type="String" mode="IN" optional="true"/>
-=======
-    </service>
-
-    <service name="updateCustRequestItem" engine="simple"
-            location="org/ofbiz/commonapp/order/request/CustRequestServices.xml" invoke="updateCustRequestItem" auth="true">
-        <description>Update a CustRequestItem record</description>
-        <attribute name="custRequestId" type="String" mode="IN" optional="false"/>
-        <attribute name="custRequestItemSeqId" type="String" mode="IN" optional="false"/>
-        <attribute name="requiredByDate" type="String" mode="IN" optional="false"/>
-        <attribute name="quantity" type="String" mode="IN" optional="true"/>
-        <attribute name="maximumAmount" type="String" mode="IN" optional="true"/>
-        <attribute name="description" type="String" mode="IN" optional="true"/>
->>>>>>> 1.21
     </service>
 
     <service name="createCustRequestRole" engine="simple"
