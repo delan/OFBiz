@@ -20,34 +20,50 @@
  *  THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  *
  *@author     Andy Zeneski (jaz@ofbiz.org)
- *@version    $Revision: 1.1 $
+ *@version    $Revision: 1.2 $
  *@since      3.0
 -->
 
 <div class="head1">Manual Credit Card Transaction</div>
 <br>
 
-<form name="manualCcForm" method="post" action="<@ofbizUrl>/view/manualCcPay</@ofbizUrl>">
+<#assign validTx = false>
+<form name="manualCcForm" method="get" action="<@ofbizUrl>/view/manualCcPay</@ofbizUrl>">
+  <#if requestParameters.paymentMethodId?exists>
+    <input type="hidden" name="paymentMethodId" value="${requestParameters.paymentMethodId}">
+  </#if>
   <table border='0' cellpadding='2' cellspacing='0'>
+    <tr>
+      <td width="26%" align=right valign=middle><div class="tableheadtext">Product Store</div></td>
+      <td width="5">&nbsp;</td>
+      <td width='74%'>
+        <#assign currentStore = requestParameters.productStoreId?default("")>
+        <select name="productStoreId" class="selectBox">
+          <#list productStores as productStore>
+            <option value="${productStore.productStoreId}" <#if (productStore.productStoreId == currentStore)>selected</#if>>${productStore.storeName}</option>
+          </#list>
+        </select>
+      </td>
+    </tr>
     <tr>
       <td width="26%" align=right valign=middle><div class="tableheadtext">Transaction Type</div></td>
       <td width="5">&nbsp;</td>
       <td width='74%'>
-        <#assign txType = requestParameters.transactionType?if_exists>
-        <#if txType?has_content>
-          <div class="tabletext">${txType}</div>
+        <#if currentTx?has_content>
+          <div class="tabletext">${currentTx.description}</div>
         <#else>
           <select name="transactionType" class="selectBox" onclick="javascript:document.manualCcForm.submit();">
-            <option>Authorization</option>
-            <option>Settlement</option>
-            <option>Credit</option>
+            <#list paymentSettings as setting>
+              <option value="${setting.enumId}">${setting.description}</option>
+            </#list>
           </select>
         </#if>
       </td>
     </tr>
 
     <#-- reference number -->
-    <#if txType?default("") == "Credit" || txType?default("") == "Settlement">
+    <#if txType?default("") == "PRDS_PAY_CREDIT" || txType?default("") == "PRDS_PAY_CAPTURE" || txType?default("") == "PRDS_PAY_RELEASE">
+      <#assign validTx = true>
       <tr><td colspan="3"><hr class="sepbar"></td></tr>
       <tr>
         <td width="26%" align=right valign=middle><div class="tableheadtext">Reference Number</div></td>
@@ -59,8 +75,9 @@
     </#if>
 
     <#-- manual credit card information -->
-    <#if txType?default("") == "Credit" || txType?default("") == "Authorization">
-      <#if txType?default("") == "Credit">
+    <#if txType?default("") == "PRDS_PAY_CREDIT" || txType?default("") == "PRDS_PAY_AUTH">
+      <#assign validTx = true>
+      <#if txType?default("") == "PRDS_PAY_CREDIT">
         <tr><td colspan="3"><hr class="sepbar"></td></tr>
       </#if>
       <tr>
@@ -143,6 +160,22 @@
       </tr>
       <tr><td colspan="3"><hr class="sepbar"></td></tr>
 
+      <#-- first / last name -->
+      <tr>
+        <td width="26%" align=right valign=middle><div class="tableheadtext">First Name</div></td>
+        <td width="5">&nbsp;</td>
+        <td width="74%">
+          <input type="text" class="inputBox" size="30" maxlength="30" name="firstName" value="${(person.firstName)?if_exists}" <#if requestParameters.useShipAddr?exists>disabled</#if>>
+        *</td>
+      </tr>
+      <tr>
+        <td width="26%" align=right valign=middle><div class="tableheadtext">Last Name</div></td>
+        <td width="5">&nbsp;</td>
+        <td width="74%">
+          <input type="text" class="inputBox" size="30" maxlength="30" name="lastName" value="${(person.lastName)?if_exists}" <#if requestParameters.useShipAddr?exists>disabled</#if>>
+        *</td>
+      </tr>
+
       <#-- credit card address -->
       <tr>
         <td width="26%" align=right valign=middle><div class="tableheadtext">Bill-To Address1</div></td>
@@ -202,24 +235,36 @@
       </tr>
 
     </#if>
-    <#if txType?has_content>
+    <#if validTx>
       <tr><td colspan="3"><hr class="sepbar"></td></tr>
+
+      <#-- amount field -->
+      <#if txType != "PRDS_PAY_RELEASE">
+        <tr>
+          <td width="26%" align=right valign=middle><div class="tableheadtext">Amount</div></td>
+          <td width="5">&nbsp;</td>
+          <td width="74%">
+            <input type="text" class="inputBox" size="20" maxlength="30" name="amount">
+          *</td>
+        </tr>
+      </#if>
+
+      <#-- submit button -->
       <tr>
-        <td width="26%" align=right valign=middle><div class="tableheadtext">Amount</div></td>
+        <td width="26%" align=right valign=middle>&nbsp;</td>
         <td width="5">&nbsp;</td>
         <td width="74%">
-          <input type="text" class="inputBox" size="20" maxlength="30" name="amount">
-        *</td>
+          <input type="submit" value="Submit">
+        </td>
+      </tr>
+    <#elseif txType?has_content>
+      <tr>
+        <td colspan="3" align="center">
+          <br>
+          <div class="head2">This transaction type is not yet supported</div>
+          <br>
+        </td>
       </tr>
     </#if>
-
-    <#-- submit button -->
-    <tr>
-      <td width="26%" align=right valign=middle>&nbsp;</td>
-      <td width="5">&nbsp;</td>
-      <td width="74%">
-        <input type="submit" value="Submit">
-      </td>
-    </tr>
   </table>
 </form>
