@@ -20,7 +20,7 @@
  *    THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  *
  *@author         David E. Jones (jonesde@ofbiz.org)
- *@version        $Revision: 1.2 $
+ *@version        $Revision: 1.3 $
  *@since          3.0
 -->
 
@@ -54,7 +54,7 @@ ${pages.get("/facility/FacilityTabBar.ftl")}
                                 <td><div class="tableheadtext">Confirm</div></td>
                                 <td align="right">
                                     <span class="tableheadtext">Select All</span>&nbsp;
-                                    <input type="checkbox" name="selectAll" value="N" onclick="javascript:toggleAll(this);">
+                                    <input type="checkbox" name="selectAll" value="Y" onclick="javascript:toggleAll(this);">
                                 </td>
                             </tr>
                             <#if moveByOiirInfoList?has_content || moveByPflInfoList?has_content>

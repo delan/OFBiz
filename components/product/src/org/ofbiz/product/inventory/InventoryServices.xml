@@ -31,8 +31,8 @@
     <!-- InventoryItem methods -->
     <simple-method method-name="createInventoryItem" short-description="Create an InventoryItem">
         <check-permission permission="CATALOG" action="_CREATE">
-        	<alt-permission permission="FACILITY" action="_CREATE"/>
-        	<fail-message message="Security Error: to run createInventoryItem you must have the CATALOG_CREATE, CATALOG_ADMIN, FACILITY_CREATE, or FACILITY_ADMIN permission"/>
+            <alt-permission permission="FACILITY" action="_CREATE"/>
+            <fail-message message="Security Error: to run createInventoryItem you must have the CATALOG_CREATE, CATALOG_ADMIN, FACILITY_CREATE, or FACILITY_ADMIN permission"/>
         </check-permission>
         <check-errors/>
 
@@ -48,8 +48,8 @@
     </simple-method>
     <simple-method method-name="updateInventoryItem" short-description="Update an InventoryItem">
         <check-permission permission="CATALOG" action="_UPDATE">
-        	<alt-permission permission="FACILITY" action="_UPDATE"/>
-        	<fail-message message="Security Error: to run updateInventoryItem you must have the CATALOG_UPDATE, CATALOG_ADMIN, FACILITY_UPDATE, or FACILITY_ADMIN permission"/>
+            <alt-permission permission="FACILITY" action="_UPDATE"/>
+            <fail-message message="Security Error: to run updateInventoryItem you must have the CATALOG_UPDATE, CATALOG_ADMIN, FACILITY_UPDATE, or FACILITY_ADMIN permission"/>
         </check-permission>
         <check-errors/>
 
@@ -61,8 +61,8 @@
     </simple-method>
     <simple-method method-name="deleteInventoryItem" short-description="Delete an InventoryItem">
         <check-permission permission="CATALOG" action="_DELETE">
-        	<alt-permission permission="FACILITY" action="_DELETE"/>
-        	<fail-message message="Security Error: to run deleteInventoryItem you must have the CATALOG_DELETE, CATALOG_ADMIN, FACILITY_DELETE, or FACILITY_ADMIN permission"/>
+            <alt-permission permission="FACILITY" action="_DELETE"/>
+            <fail-message message="Security Error: to run deleteInventoryItem you must have the CATALOG_DELETE, CATALOG_ADMIN, FACILITY_DELETE, or FACILITY_ADMIN permission"/>
         </check-permission>
         <check-errors/>
 
@@ -74,8 +74,8 @@
 
     <simple-method method-name="createInventoryItemVariance" short-description="Create an InventoryItemVariance">
         <check-permission permission="CATALOG" action="_CREATE">
-        	<alt-permission permission="FACILITY" action="_CREATE"/>
-        	<fail-message message="Security Error: to run createInventoryItemVariance you must have the CATALOG_CREATE, CATALOG_ADMIN, FACILITY_CREATE, or FACILITY_ADMIN permission"/>
+            <alt-permission permission="FACILITY" action="_CREATE"/>
+            <fail-message message="Security Error: to run createInventoryItemVariance you must have the CATALOG_CREATE, CATALOG_ADMIN, FACILITY_CREATE, or FACILITY_ADMIN permission"/>
         </check-permission>
         
         <!-- add changes to availableToPromise and quantityOnHand -->
@@ -83,20 +83,20 @@
         <set-pk-fields map-name="parameters" value-name="inventoryItemLookup"/>
         <find-by-primary-key map-name="inventoryItemLookup" value-name="inventoryItem"/>
 
-		<if-compare field-name="inventoryItemTypeId" map-name="inventoryItem" operator="not-equals" value="NON_SERIAL_INV_ITEM">
-			<string-to-list string="Can only create an InventoryItemVariance for a Non-Serialized Inventory Item" list-name="error_list"/>
-		</if-compare>
+        <if-compare field-name="inventoryItemTypeId" map-name="inventoryItem" operator="not-equals" value="NON_SERIAL_INV_ITEM">
+            <string-to-list string="Can only create an InventoryItemVariance for a Non-Serialized Inventory Item" list-name="error_list"/>
+        </if-compare>
         <check-errors/>
 
         <calculate field-name="availableToPromise" map-name="inventoryItem">
-        	<calcop field-name="availableToPromise" map-name="inventoryItem" operator="add">
-        		<calcop field-name="availableToPromise" map-name="parameters" operator="get"/>
-        	</calcop>
+            <calcop field-name="availableToPromise" map-name="inventoryItem" operator="add">
+                <calcop field-name="availableToPromise" map-name="parameters" operator="get"/>
+            </calcop>
         </calculate>
         <calculate field-name="quantityOnHand" map-name="inventoryItem">
-        	<calcop field-name="quantityOnHand" map-name="inventoryItem" operator="add">
-        		<calcop field-name="quantityOnHand" map-name="parameters" operator="get"/>
-        	</calcop>
+            <calcop field-name="quantityOnHand" map-name="inventoryItem" operator="add">
+                <calcop field-name="quantityOnHand" map-name="parameters" operator="get"/>
+            </calcop>
         </calculate>
         <store-value value-name="inventoryItem"/>
 
@@ -110,8 +110,8 @@
     </simple-method>
     <simple-method method-name="createPhysicalInventory" short-description="Create a PhysicalInventory">
         <check-permission permission="CATALOG" action="_CREATE">
-        	<alt-permission permission="FACILITY" action="_CREATE"/>
-        	<fail-message message="Security Error: to run createPhysicalInventory you must have the CATALOG_CREATE, CATALOG_ADMIN, FACILITY_CREATE, or FACILITY_ADMIN permission"/>
+            <alt-permission permission="FACILITY" action="_CREATE"/>
+            <fail-message message="Security Error: to run createPhysicalInventory you must have the CATALOG_CREATE, CATALOG_ADMIN, FACILITY_CREATE, or FACILITY_ADMIN permission"/>
         </check-permission>
         <check-errors/>
 
@@ -119,10 +119,10 @@
         <set-nonpk-fields map-name="parameters" value-name="newEntity"/>
         
         <if-empty field-name="newEntity.physicalInventoryDate">
-        	<now-timestamp-to-env env-name="newEntity.physicalInventoryDate"/>
+            <now-timestamp-to-env env-name="newEntity.physicalInventoryDate"/>
         </if-empty>
         <if-empty field-name="newEntity.partyId">
-        	<field-to-field field-name="partyId" map-name="userLogin" to-map-name="newEntity"/>
+            <field-to-field field-name="partyId" map-name="userLogin" to-map-name="newEntity"/>
         </if-empty>
 
         <sequenced-id-to-env sequence-name="PhysicalInventory" env-name="physicalInventoryId"/>
@@ -133,21 +133,21 @@
         <create-value value-name="newEntity"/>
     </simple-method>
     <simple-method method-name="createPhysicalInventoryAndVariance" short-description="Create a PhysicalInventory and an InventoryItemVariance">
-    	<set-service-fields service-name="createPhysicalInventory" map-name="parameters" to-map-name="createPhysicalInventoryMap"/>
-    	<call-service service-name="createPhysicalInventory" in-map-name="createPhysicalInventoryMap">
-    		<result-to-field result-name="physicalInventoryId" field-name="physicalInventoryId" map-name="parameters"/>
-    		<result-to-result result-name="physicalInventoryId" service-result-name="physicalInventoryId"/>
-    	</call-service>
-    	<set-service-fields service-name="createInventoryItemVariance" map-name="parameters" to-map-name="createInventoryItemVarianceMap"/>
-    	<call-service service-name="createInventoryItemVariance" in-map-name="createInventoryItemVarianceMap"/>
+        <set-service-fields service-name="createPhysicalInventory" map-name="parameters" to-map-name="createPhysicalInventoryMap"/>
+        <call-service service-name="createPhysicalInventory" in-map-name="createPhysicalInventoryMap">
+            <result-to-field result-name="physicalInventoryId" field-name="physicalInventoryId" map-name="parameters"/>
+            <result-to-result result-name="physicalInventoryId" service-result-name="physicalInventoryId"/>
+        </call-service>
+        <set-service-fields service-name="createInventoryItemVariance" map-name="parameters" to-map-name="createInventoryItemVarianceMap"/>
+        <call-service service-name="createInventoryItemVariance" in-map-name="createInventoryItemVarianceMap"/>
     </simple-method>
 
     <!-- ProductFacility methods -->
     <simple-method method-name="createProductFacility" short-description="Create a ProductFacility">
-		<string-to-field string="createProductFacility" field-name="callingMethodName"/>
-		<string-to-field string="CREATE" field-name="checkAction"/>
-		<string-to-field string="FACILITY" field-name="alternatePermissionRoot"/>
-    	<call-simple-method method-name="checkProductRelatedPermission" xml-resource="org/ofbiz/product/product/ProductServices.xml"/>
+        <string-to-field string="createProductFacility" field-name="callingMethodName"/>
+        <string-to-field string="CREATE" field-name="checkAction"/>
+        <string-to-field string="FACILITY" field-name="alternatePermissionRoot"/>
+        <call-simple-method method-name="checkProductRelatedPermission" xml-resource="org/ofbiz/product/product/ProductServices.xml"/>
         <check-errors/>
 
         <make-value value-name="newEntity" entity-name="ProductFacility"/>
@@ -156,10 +156,10 @@
         <create-value value-name="newEntity"/>
     </simple-method>
     <simple-method method-name="updateProductFacility" short-description="Update a ProductFacility">
-		<string-to-field string="updateProductFacility" field-name="callingMethodName"/>
-		<string-to-field string="UPDATE" field-name="checkAction"/>
-		<string-to-field string="FACILITY" field-name="alternatePermissionRoot"/>
-    	<call-simple-method method-name="checkProductRelatedPermission" xml-resource="org/ofbiz/product/product/ProductServices.xml"/>
+        <string-to-field string="updateProductFacility" field-name="callingMethodName"/>
+        <string-to-field string="UPDATE" field-name="checkAction"/>
+        <string-to-field string="FACILITY" field-name="alternatePermissionRoot"/>
+        <call-simple-method method-name="checkProductRelatedPermission" xml-resource="org/ofbiz/product/product/ProductServices.xml"/>
         <check-errors/>
 
         <make-value entity-name="ProductFacility" value-name="lookupPKMap"/>
@@ -169,10 +169,10 @@
         <store-value value-name="lookedUpValue"/>
     </simple-method>
     <simple-method method-name="deleteProductFacility" short-description="Delete a ProductFacility">
-		<string-to-field string="deleteProductFacility" field-name="callingMethodName"/>
-		<string-to-field string="DELETE" field-name="checkAction"/>
-		<string-to-field string="FACILITY" field-name="alternatePermissionRoot"/>
-    	<call-simple-method method-name="checkProductRelatedPermission" xml-resource="org/ofbiz/product/product/ProductServices.xml"/>
+        <string-to-field string="deleteProductFacility" field-name="callingMethodName"/>
+        <string-to-field string="DELETE" field-name="checkAction"/>
+        <string-to-field string="FACILITY" field-name="alternatePermissionRoot"/>
+        <call-simple-method method-name="checkProductRelatedPermission" xml-resource="org/ofbiz/product/product/ProductServices.xml"/>
         <check-errors/>
 
         <make-value entity-name="ProductFacility" value-name="lookupPKMap"/>
@@ -183,10 +183,10 @@
 
     <!-- ProductFacilityLocation methods -->
     <simple-method method-name="createProductFacilityLocation" short-description="Create a ProductFacilityLocation">
-		<string-to-field string="createProductFacilityLocation" field-name="callingMethodName"/>
-		<string-to-field string="CREATE" field-name="checkAction"/>
-		<string-to-field string="FACILITY" field-name="alternatePermissionRoot"/>
-    	<call-simple-method method-name="checkProductRelatedPermission" xml-resource="org/ofbiz/product/product/ProductServices.xml"/>
+        <string-to-field string="createProductFacilityLocation" field-name="callingMethodName"/>
+        <string-to-field string="CREATE" field-name="checkAction"/>
+        <string-to-field string="FACILITY" field-name="alternatePermissionRoot"/>
+        <call-simple-method method-name="checkProductRelatedPermission" xml-resource="org/ofbiz/product/product/ProductServices.xml"/>
         <check-errors/>
 
         <make-value value-name="newEntity" entity-name="ProductFacilityLocation"/>
@@ -195,10 +195,10 @@
         <create-value value-name="newEntity"/>
     </simple-method>
     <simple-method method-name="updateProductFacilityLocation" short-description="Update a ProductFacilityLocation">
-		<string-to-field string="updateProductFacilityLocation" field-name="callingMethodName"/>
-		<string-to-field string="UPDATE" field-name="checkAction"/>
-		<string-to-field string="FACILITY" field-name="alternatePermissionRoot"/>
-    	<call-simple-method method-name="checkProductRelatedPermission" xml-resource="org/ofbiz/product/product/ProductServices.xml"/>
+        <string-to-field string="updateProductFacilityLocation" field-name="callingMethodName"/>
+        <string-to-field string="UPDATE" field-name="checkAction"/>
+        <string-to-field string="FACILITY" field-name="alternatePermissionRoot"/>
+        <call-simple-method method-name="checkProductRelatedPermission" xml-resource="org/ofbiz/product/product/ProductServices.xml"/>
         <check-errors/>
 
         <make-value entity-name="ProductFacilityLocation" value-name="lookupPKMap"/>
@@ -208,10 +208,10 @@
         <store-value value-name="lookedUpValue"/>
     </simple-method>
     <simple-method method-name="deleteProductFacilityLocation" short-description="Delete a ProductFacilityLocation">
-		<string-to-field string="deleteProductFacilityLocation" field-name="callingMethodName"/>
-		<string-to-field string="DELETE" field-name="checkAction"/>
-		<string-to-field string="FACILITY" field-name="alternatePermissionRoot"/>
-    	<call-simple-method method-name="checkProductRelatedPermission" xml-resource="org/ofbiz/product/product/ProductServices.xml"/>
+        <string-to-field string="deleteProductFacilityLocation" field-name="callingMethodName"/>
+        <string-to-field string="DELETE" field-name="checkAction"/>
+        <string-to-field string="FACILITY" field-name="alternatePermissionRoot"/>
+        <call-simple-method method-name="checkProductRelatedPermission" xml-resource="org/ofbiz/product/product/ProductServices.xml"/>
         <check-errors/>
 
         <make-value entity-name="ProductFacilityLocation" value-name="lookupPKMap"/>
@@ -246,21 +246,20 @@
         <!-- we might get away with a cache here since real serious errors will occur during the reservation service... but only if we need the speed -->
         <find-by-and entity-name="InventoryItem" map-name="lookupFieldMap" list-name="inventoryItems"/> <!-- use-cache="true" -->
 
-        <calculate field-name="availableToPromise" map-name="parameters"><number value="0"/></calculate>
+        <calculate field-name="parameters.availableToPromise" type="Double"><number value="0"/></calculate>
         <iterate entry-name="inventoryItem" list-name="inventoryItems">
-            <if-compare value="SERIALIZED_INV_ITEM" operator="equals" field-name="inventoryItemTypeId" map-name="inventoryItem">
+            <if-compare field-name="inventoryItem.inventoryItemTypeId" operator="equals" value="SERIALIZED_INV_ITEM">
                 <if-compare value="INV_AVAILABLE" operator="equals" field-name="statusId" map-name="inventoryItem">
-                    <calculate field-name="availableToPromise" map-name="parameters">
-                        <calcop operator="get" field-name="availableToPromise" map-name="parameters"/>
-                        <number value="1.0"/>
+                    <calculate field-name="parameters.availableToPromise" type="Double">
+                        <calcop field-name="parameters.availableToPromise" operator="add"><number value="1.0"/></calcop>
                     </calculate>
                 </if-compare>
             </if-compare>
-            <if-compare value="NON_SERIAL_INV_ITEM" operator="equals" field-name="inventoryItemTypeId" map-name="inventoryItem">
-                <if-not-empty field-name="availableToPromise" map-name="inventoryItem">
-                    <calculate field-name="availableToPromise" map-name="parameters">
-                        <calcop operator="get" field-name="availableToPromise" map-name="parameters"/>
-                        <calcop operator="get" field-name="availableToPromise" map-name="inventoryItem"/>
+            <if-compare field-name="inventoryItem.inventoryItemTypeId" operator="equals" value="NON_SERIAL_INV_ITEM">
+                <if-not-empty field-name="inventoryItem.availableToPromise">
+                    <calculate field-name="parameters.availableToPromise" type="Double">
+                        <calcop operator="get" field-name="parameters.availableToPromise"/>
+                        <calcop operator="get" field-name="inventoryItem.availableToPromise"/>
                     </calculate>
                 </if-not-empty>
             </if-compare>
@@ -349,129 +348,69 @@
         </if-compare>
         <field-to-list field-name="orderByString" list-name="orderByList"/>
 
-        <find-by-and entity-name="InventoryItem" map-name="lookupFieldMap" list-name="inventoryItems" order-by-list-name="orderByList"/>
-
         <field-to-field field-name="quantity" map-name="parameters" to-field-name="quantityNotReserved"/>
-        <iterate entry-name="inventoryItem" list-name="inventoryItems">
-            <!-- only do something with this inventoryItem if there is more inventory to reserve -->
-            <if-compare field-name="quantityNotReserved" map-name="parameters" type="Double" operator="greater" value="0.0">
-            	<!-- get the promiseDatetime -->           	
-            	<get-related-one value-name="inventoryItem" relation-name="ProductFacility" to-value-name="productFacility"/>
-            	<field-to-env env-name="daysToShip" field-name="daysToShip" map-name="productFacility"/>
-            	<if-empty field-name="daysToShip">
-            		<calculate field-name="daysToShip" type="Long">
-            	    	<number value="30"/>
-            	    </calculate>           		
-            	</if-empty>
-            	<call-bsh><![CDATA[
-            	java.sql.Timestamp orderDate = orderHeader.getTimestamp("orderDate");
-            	java.util.Calendar cal = java.util.Calendar.getInstance();
-            	cal.setTimeInMillis(orderDate.getTime());
-            	cal.add(java.util.Calendar.DAY_OF_YEAR, daysToShip.intValue());
-            	return org.ofbiz.base.util.UtilMisc.toMap("promisedDatetime", new java.sql.Timestamp(cal.getTimeInMillis()));            	
-            	]]></call-bsh>
-            	
-                <if-compare value="SERIALIZED_INV_ITEM" operator="equals" field-name="inventoryItemTypeId" map-name="inventoryItem">
-                    <if-compare value="INV_AVAILABLE" operator="equals" field-name="statusId" map-name="inventoryItem">
-                        <!-- change status on inventoryItem -->
-                        <string-to-field string="INV_PROMISED" field-name="statusId" map-name="inventoryItem"/>
-                        <store-value value-name="inventoryItem"/>
-
-                        <!-- store OrderItemInventoryRes record -->
-                        <field-to-field field-name="orderId" map-name="parameters" to-map-name="reserveOiiMap"/>
-                        <field-to-field field-name="orderItemSeqId" map-name="parameters" to-map-name="reserveOiiMap"/>
-                        <field-to-field field-name="inventoryItemId" map-name="inventoryItem" to-map-name="reserveOiiMap"/>
-                        <field-to-field field-name="reserveOrderEnumId" map-name="parameters" to-map-name="reserveOiiMap"/>
-                        <field-to-field field-name="reservedDatetime" map-name="parameters" to-map-name="reserveOiiMap"/>
-                        <env-to-field env-name="promisedDatetime" field-name="promisedDatetime" map-name="reserveOiiMap"/>
-                        <calculate field-name="quantity" map-name="reserveOiiMap"><number value="1"/></calculate>
-                        <call-service service-name="reserveOrderItemInventory" in-map-name="reserveOiiMap"/>
-                        <clear-field field-name="reserveOiiMap"/>
-
-                        <calculate field-name="quantityNotReserved" map-name="parameters">
-                            <calcop operator="subtract" field-name="quantityNotReserved" map-name="parameters">
-                                <number value="1.0"/>
-                            </calcop>
-                        </calculate>
-                    </if-compare>
-                </if-compare>
-                <if-compare value="NON_SERIAL_INV_ITEM" operator="equals" field-name="inventoryItemTypeId" map-name="inventoryItem">
-                    <if-not-empty field-name="availableToPromise" map-name="inventoryItem">
-                        <!-- reduce atp on inventoryItem if availableToPromise greater than 0, if not the code at the end of this method will handle it -->
-                        <if-compare field-name="availableToPromise" map-name="inventoryItem" operator="greater" value="0.0" type="Double">
-                            <if-compare-field field-name="quantityNotReserved" map-name="parameters" operator="greater" type="Double"
-                                    to-field-name="availableToPromise" to-map-name="inventoryItem">
-                                <field-to-field field-name="availableToPromise" map-name="inventoryItem" to-field-name="deductAmount" to-map-name="parameters"/>
-                                <else>
-                                    <field-to-field field-name="quantityNotReserved" map-name="parameters" to-field-name="deductAmount" to-map-name="parameters"/>
-                                </else>
-                            </if-compare-field>
-                            <calculate field-name="availableToPromise" map-name="inventoryItem">
-                                <calcop operator="subtract" field-name="availableToPromise" map-name="inventoryItem">
-                                    <calcop operator="get" field-name="deductAmount" map-name="parameters"/>
-                                </calcop>
-                            </calculate>
-                            <store-value value-name="inventoryItem"/>
-
-                            <!-- create OrderItemInventoryRes record -->
-                            <field-to-field field-name="orderId" map-name="parameters" to-map-name="reserveOiiMap"/>
-                            <field-to-field field-name="orderItemSeqId" map-name="parameters" to-map-name="reserveOiiMap"/>
-                            <field-to-field field-name="inventoryItemId" map-name="inventoryItem" to-map-name="reserveOiiMap"/>
-                            <field-to-field field-name="reserveOrderEnumId" map-name="parameters" to-map-name="reserveOiiMap"/>
-                            <field-to-field field-name="reservedDatetime" map-name="parameters" to-map-name="reserveOiiMap"/>
-                            <field-to-field field-name="deductAmount" map-name="parameters" to-field-name="quantity" to-map-name="reserveOiiMap"/>
-                            <env-to-field env-name="promisedDatetime" field-name="promisedDatetime" map-name="reserveOiiMap"/>
-                            <call-service service-name="reserveOrderItemInventory" in-map-name="reserveOiiMap"/>
-                            <clear-field field-name="reserveOiiMap"/>
-
-                            <calculate field-name="quantityNotReserved" map-name="parameters">
-                                <calcop operator="subtract" field-name="quantityNotReserved" map-name="parameters">
-                                    <calcop operator="get" field-name="deductAmount" map-name="parameters"/>
-                                </calcop>
-                            </calculate>
-                        </if-compare>
-                    </if-not-empty>
-
-                    <!-- keep track of the last non-serialized inventory item for use if inventory is not required for purchase -->
-                    <!-- use env variable named lastNonSerInventoryItem -->
-                    <env-to-field env-name="inventoryItem" field-name="lastNonSerInventoryItem"/>
-                </if-compare>
+        
+        <!-- first reserve against InventoryItems in FLT_PICKLOC type locations, then FLT_BULK locations, then InventoryItems with no locations -->
+        <find-by-and entity-name="InventoryItemAndLocation" map-name="lookupFieldMap" list-name="inventoryItemAndLocations" order-by-list-name="orderByList"/>
+        <iterate entry-name="inventoryItemAndLocation" list-name="inventoryItemAndLocations">
+            <if-compare field-name="inventoryItemAndLocation.locationTypeEnumId" operator="equals" value="FLT_PICKLOC">
+                <!-- this is a little trick to get the InventoryItem value object without doing a query, possible since all fields on InventoryItem are also on InventoryItemAndLocation with the same names -->
+                <make-value entity-name="InventoryItem" map-name="inventoryItemAndLocation" value-name="inventoryItem"/>
+                <call-simple-method method-name="reserveForInventoryItemInline"/>
             </if-compare>
         </iterate>
+        <!-- still some left? try the FLT_BULK locations -->
+        <if-compare field-name="parameters.quantityNotReserved" operator="greater" value="0" type="Double">
+            <iterate entry-name="inventoryItemAndLocation" list-name="inventoryItemAndLocations">
+                <if-compare field-name="inventoryItemAndLocation.locationTypeEnumId" operator="equals" value="FLT_BULK">
+                    <!-- this is a little trick to get the InventoryItem value object without doing a query, possible since all fields on InventoryItem are also on InventoryItemAndLocation with the same names -->
+                    <make-value entity-name="InventoryItem" map-name="inventoryItemAndLocation" value-name="inventoryItem"/>
+                    <call-simple-method method-name="reserveForInventoryItemInline"/>
+                </if-compare>
+            </iterate>
+        </if-compare>
+
+        <!-- last of all try reserving in InventoryItems that have no locationSeqId, ie are not in any particular location -->
+        <if-compare field-name="parameters.quantityNotReserved" operator="greater" value="0" type="Double">
+            <find-by-and entity-name="InventoryItem" map-name="lookupFieldMap" list-name="inventoryItems" order-by-list-name="orderByList"/>
+            <iterate entry-name="inventoryItem" list-name="inventoryItems">
+                <if-empty field-name="inventoryItem.locationSeqId">
+                    <call-simple-method method-name="reserveForInventoryItemInline"/>
+                </if-empty>
+            </iterate>
+        </if-compare>
 
         <!--
             if inventory is not required for purchase and quantityNotReserved != 0:
                 - subtract the remaining quantityNotReserved from the availableToPromise of the last non-serialized inventory item
                 - or if none was found create a non-ser InventoryItem with availableToPromise = -quantityNotReserved
         -->
-        <if-compare value="0.0" operator="not-equals" field-name="quantityNotReserved" map-name="parameters" type="Double">
-            <if-compare value="Y" operator="equals" field-name="requireInventory" map-name="parameters">
+        <if-compare field-name="parameters.quantityNotReserved" operator="not-equals" value="0" type="Double">
+            <if-compare field-name="parameters.requireInventory" operator="equals" value="Y">
                 <!-- use this else pattern to accomplish the anything but Y logic, ie if not specified default to inventory NOT required -->
             <else>
                 <if-not-empty field-name="lastNonSerInventoryItem">
                     <!-- subtract from quantityNotReserved from the availableToPromise of existing inventory item -->
-                    <calculate field-name="availableToPromise" map-name="lastNonSerInventoryItem">
-                        <calcop operator="subtract" field-name="availableToPromise" map-name="lastNonSerInventoryItem">
-                            <calcop operator="get" field-name="quantityNotReserved" map-name="parameters"/>
+                    <calculate field-name="lastNonSerInventoryItem.availableToPromise">
+                        <calcop field-name="lastNonSerInventoryItem.availableToPromise" operator="subtract">
+                            <calcop field-name="parameters.quantityNotReserved" operator="get"/>
                         </calcop>
                     </calculate>
                     <store-value value-name="lastNonSerInventoryItem"/>
                     
-           	        <!-- get the promiseDatetime -->           	
-            		<get-related-one value-name="lastNonSerInventoryItem" relation-name="ProductFacility" to-value-name="productFacility"/>
-            		<field-to-env env-name="daysToShip" field-name="daysToShip" map-name="productFacility"/>
-            		<if-empty field-name="daysToShip">
-            			<calculate field-name="daysToShip" type="Long">
-            	    		<number value="30"/>
-            	    	</calculate>           		
-            		</if-empty>
-            		<call-bsh><![CDATA[
-            		java.sql.Timestamp orderDate = orderHeader.getTimestamp("orderDate");
-            		java.util.Calendar cal = java.util.Calendar.getInstance();
-            		cal.setTimeInMillis(orderDate.getTime());
-            		cal.add(java.util.Calendar.DAY_OF_YEAR, daysToShip.intValue());
-            		return org.ofbiz.base.util.UtilMisc.toMap("promisedDatetime", new java.sql.Timestamp(cal.getTimeInMillis()));            	
-            		]]></call-bsh>                                        
+                       <!-- get the promiseDatetime -->               
+                    <get-related-one value-name="lastNonSerInventoryItem" relation-name="ProductFacility" to-value-name="productFacility"/>
+                    <field-to-env env-name="daysToShip" field-name="daysToShip" map-name="productFacility"/>
+                    <if-empty field-name="daysToShip">
+                        <calculate field-name="daysToShip" type="Long"><number value="30"/></calculate>                   
+                    </if-empty>
+                    <call-bsh><![CDATA[
+                    java.sql.Timestamp orderDate = orderHeader.getTimestamp("orderDate");
+                    java.util.Calendar cal = java.util.Calendar.getInstance();
+                    cal.setTimeInMillis(orderDate.getTime());
+                    cal.add(java.util.Calendar.DAY_OF_YEAR, daysToShip.intValue());
+                    return org.ofbiz.base.util.UtilMisc.toMap("promisedDatetime", new java.sql.Timestamp(cal.getTimeInMillis()));                
+                    ]]></call-bsh>                                        
 
                     <!-- create or update OrderItemInventoryRes record -->
                     <field-to-field field-name="orderId" map-name="parameters" to-map-name="reserveOiiMap"/>
@@ -494,24 +433,24 @@
                     <field-to-field field-name="facilityId" map-name="parameters" to-map-name="newNonSerInventoryItem"/>
                     <field-to-field field-name="containerId" map-name="parameters" to-map-name="newNonSerInventoryItem"/>
                     <string-to-field string="NON_SERIAL_INV_ITEM" field-name="inventoryItemTypeId" map-name="newNonSerInventoryItem"/>
-                    <calculate field-name="availableToPromise" map-name="newNonSerInventoryItem">
-                        <calcop operator="negative" field-name="quantityNotReserved" map-name="parameters"/>
+                    <calculate field-name="newNonSerInventoryItem.availableToPromise">
+                        <calcop field-name="parameters.quantityNotReserved" operator="negative"/>
                     </calculate>
                     <create-value value-name="newNonSerInventoryItem"/>
                     
-           	        <!-- get the promiseDatetime -->           	
-            		<get-related-one value-name="newNonSerInventoryItem" relation-name="ProductFacility" to-value-name="productFacility"/>
-            		<field-to-env field-name="daysToShip" map-name="productFacility" env-name="daysToShip"/>
-            		<if-empty field-name="daysToShip">
-            			<calculate field-name="daysToShip" type="Long"><number value="30"/></calculate>           		
-            		</if-empty>
-            		<call-bsh><![CDATA[
-            		java.sql.Timestamp orderDate = orderHeader.getTimestamp("orderDate");
-            		java.util.Calendar cal = java.util.Calendar.getInstance();
-            		cal.setTimeInMillis(orderDate.getTime());
-            		cal.add(java.util.Calendar.DAY_OF_YEAR, daysToShip.intValue());
-            		return org.ofbiz.base.util.UtilMisc.toMap("promisedDatetime", new java.sql.Timestamp(cal.getTimeInMillis()));            	
-            		]]></call-bsh>                                        
+                       <!-- get the promiseDatetime -->               
+                    <get-related-one value-name="newNonSerInventoryItem" relation-name="ProductFacility" to-value-name="productFacility"/>
+                    <field-to-env field-name="daysToShip" map-name="productFacility" env-name="daysToShip"/>
+                    <if-empty field-name="daysToShip">
+                        <calculate field-name="daysToShip" type="Long"><number value="30"/></calculate>                   
+                    </if-empty>
+                    <call-bsh><![CDATA[
+                    java.sql.Timestamp orderDate = orderHeader.getTimestamp("orderDate");
+                    java.util.Calendar cal = java.util.Calendar.getInstance();
+                    cal.setTimeInMillis(orderDate.getTime());
+                    cal.add(java.util.Calendar.DAY_OF_YEAR, daysToShip.intValue());
+                    return org.ofbiz.base.util.UtilMisc.toMap("promisedDatetime", new java.sql.Timestamp(cal.getTimeInMillis()));                
+                    ]]></call-bsh>                                        
                                      
                     <!-- create OrderItemInventoryRes record -->
                     <field-to-field field-name="orderId" map-name="parameters" to-map-name="reserveOiiMap"/>
@@ -535,6 +474,88 @@
         <field-to-result field-name="quantityNotReserved" map-name="parameters"/>
     </simple-method>
 
+    <simple-method method-name="reserveForInventoryItemInline" short-description="Does a reservation for one InventoryItem, meant to be called in-line">
+        <!-- only do something with this inventoryItem if there is more inventory to reserve -->
+        <if-compare field-name="parameters.quantityNotReserved" operator="greater" value="0" type="Double">
+            <!-- get the promiseDatetime -->               
+            <get-related-one value-name="inventoryItem" relation-name="ProductFacility" to-value-name="productFacility"/>
+            <field-to-env env-name="daysToShip" field-name="daysToShip" map-name="productFacility"/>
+            <if-empty field-name="daysToShip">
+                <calculate field-name="daysToShip" type="Long"><number value="30"/></calculate>                   
+            </if-empty>
+            <call-bsh><![CDATA[
+            java.sql.Timestamp orderDate = orderHeader.getTimestamp("orderDate");
+            java.util.Calendar cal = java.util.Calendar.getInstance();
+            cal.setTimeInMillis(orderDate.getTime());
+            cal.add(java.util.Calendar.DAY_OF_YEAR, daysToShip.intValue());
+            return org.ofbiz.base.util.UtilMisc.toMap("promisedDatetime", new java.sql.Timestamp(cal.getTimeInMillis()));                
+            ]]></call-bsh>
+
+            <if-compare value="SERIALIZED_INV_ITEM" operator="equals" field-name="inventoryItemTypeId" map-name="inventoryItem">
+                <if-compare value="INV_AVAILABLE" operator="equals" field-name="statusId" map-name="inventoryItem">
+                    <!-- change status on inventoryItem -->
+                    <string-to-field string="INV_PROMISED" field-name="statusId" map-name="inventoryItem"/>
+                    <store-value value-name="inventoryItem"/>
+
+                    <!-- store OrderItemInventoryRes record -->
+                    <field-to-field field-name="orderId" map-name="parameters" to-map-name="reserveOiiMap"/>
+                    <field-to-field field-name="orderItemSeqId" map-name="parameters" to-map-name="reserveOiiMap"/>
+                    <field-to-field field-name="inventoryItemId" map-name="inventoryItem" to-map-name="reserveOiiMap"/>
+                    <field-to-field field-name="reserveOrderEnumId" map-name="parameters" to-map-name="reserveOiiMap"/>
+                    <field-to-field field-name="reservedDatetime" map-name="parameters" to-map-name="reserveOiiMap"/>
+                    <env-to-field env-name="promisedDatetime" field-name="promisedDatetime" map-name="reserveOiiMap"/>
+                    <calculate field-name="quantity" map-name="reserveOiiMap"><number value="1"/></calculate>
+                    <call-service service-name="reserveOrderItemInventory" in-map-name="reserveOiiMap"/>
+                    <clear-field field-name="reserveOiiMap"/>
+
+                    <calculate field-name="parameters.quantityNotReserved">
+                        <calcop field-name="parameters.quantityNotReserved" operator="subtract"><number value="1.0"/></calcop>
+                    </calculate>
+                </if-compare>
+            </if-compare>
+            <if-compare field-name="inventoryItem.inventoryItemTypeId" operator="equals" value="NON_SERIAL_INV_ITEM">
+                <if-not-empty field-name="inventoryItem.availableToPromise">
+                    <!-- reduce atp on inventoryItem if availableToPromise greater than 0, if not the code at the end of this method will handle it -->
+                    <if-compare field-name="inventoryItem.availableToPromise" operator="greater" value="0" type="Double">
+                        <if-compare-field field-name="parameters.quantityNotReserved" operator="greater" to-field-name="inventoryItem.availableToPromise" type="Double">
+                            <field-to-field field-name="availableToPromise" map-name="inventoryItem" to-field-name="deductAmount" to-map-name="parameters"/>
+                        <else>
+                            <field-to-field field-name="quantityNotReserved" map-name="parameters" to-field-name="deductAmount" to-map-name="parameters"/>
+                        </else>
+                        </if-compare-field>
+                        <calculate field-name="inventoryItem.availableToPromise" type="Double">
+                            <calcop field-name="inventoryItem.availableToPromise" operator="subtract">
+                                <calcop field-name="parameters.deductAmount" operator="get"/>
+                            </calcop>
+                        </calculate>
+                        <store-value value-name="inventoryItem"/>
+
+                        <!-- create OrderItemInventoryRes record -->
+                        <field-to-field field-name="orderId" map-name="parameters" to-map-name="reserveOiiMap"/>
+                        <field-to-field field-name="orderItemSeqId" map-name="parameters" to-map-name="reserveOiiMap"/>
+                        <field-to-field field-name="inventoryItemId" map-name="inventoryItem" to-map-name="reserveOiiMap"/>
+                        <field-to-field field-name="reserveOrderEnumId" map-name="parameters" to-map-name="reserveOiiMap"/>
+                        <field-to-field field-name="reservedDatetime" map-name="parameters" to-map-name="reserveOiiMap"/>
+                        <field-to-field field-name="deductAmount" map-name="parameters" to-field-name="quantity" to-map-name="reserveOiiMap"/>
+                        <env-to-field env-name="promisedDatetime" field-name="promisedDatetime" map-name="reserveOiiMap"/>
+                        <call-service service-name="reserveOrderItemInventory" in-map-name="reserveOiiMap"/>
+                        <clear-field field-name="reserveOiiMap"/>
+
+                        <calculate field-name="quantityNotReserved" map-name="parameters">
+                            <calcop operator="subtract" field-name="quantityNotReserved" map-name="parameters">
+                                <calcop operator="get" field-name="deductAmount" map-name="parameters"/>
+                            </calcop>
+                        </calculate>
+                    </if-compare>
+                </if-not-empty>
+
+                <!-- keep track of the last non-serialized inventory item for use if inventory is not required for purchase -->
+                <!-- use env variable named lastNonSerInventoryItem -->
+                <env-to-env env-name="inventoryItem" to-env-name="lastNonSerInventoryItem"/>
+            </if-compare>
+        </if-compare>
+    </simple-method>
+    
     <simple-method method-name="reserveOrderItemInventory" short-description="Reserve Order Item Inventory">
         <make-value entity-name="OrderItemInventoryRes" value-name="newOiirEntity"/>
         <set-pk-fields map-name="parameters" value-name="newOiirEntity"/>
@@ -573,15 +594,15 @@
             corresponding serialized inventoryItem to available.
         -->
         <field-to-field field-name="orderId" map-name="parameters" to-map-name="oiirListLookupMap"/>
-        <if-not-empty field-name="orderItemSeqId" map-name="parameters">        	
-        	<field-to-field field-name="orderItemSeqId" map-name="parameters" to-map-name="oiirListLookupMap"/>
-        	<log level="verbose" message="OIIR Cancel for single item : ${oiirListLookupMap}"/>
+        <if-not-empty field-name="orderItemSeqId" map-name="parameters">            
+            <field-to-field field-name="orderItemSeqId" map-name="parameters" to-map-name="oiirListLookupMap"/>
+            <log level="verbose" message="OIIR Cancel for single item : ${oiirListLookupMap}"/>
         </if-not-empty>
         <find-by-and entity-name="OrderItemInventoryRes" map-name="oiirListLookupMap" list-name="oiirList" use-cache="false"/>
         <iterate entry-name="oiir" list-name="oiirList">
-        	<field-to-field field-name="orderId" map-name="oiir" to-map-name="cancelOiirMap"/>
-   			<field-to-field field-name="orderItemSeqId" map-name="oiir" to-map-name="cancelOiirMap"/>
-   			<field-to-field field-name="inventoryItemId" map-name="oiir" to-map-name="cancelOiirMap"/>
+            <field-to-field field-name="orderId" map-name="oiir" to-map-name="cancelOiirMap"/>
+               <field-to-field field-name="orderItemSeqId" map-name="oiir" to-map-name="cancelOiirMap"/>
+               <field-to-field field-name="inventoryItemId" map-name="oiir" to-map-name="cancelOiirMap"/>
             <call-service service-name="cancelOrderItemInventoryRes" in-map-name="cancelOiirMap"/>
         </iterate>
     </simple-method>
@@ -608,48 +629,48 @@
     </simple-method>
     
     <simple-method method-name="balanceInventoryItems" short-description="Balances available-to-promise on inventory items">
-    	<make-value entity-name="InventoryItem" value-name="lookupPKMap"/>
-    	<set-pk-fields value-name="lookupPKMap" map-name="parameters"/>
-    	<find-by-primary-key entity-name="InventoryItem" map-name="lookupPKMap" value-name="inventoryItem"/>
-    	<if-compare field-name="inventoryItemTypeId" map-name="inventoryItem" operator="equals" value="NON_SERIAL_INV_ITEM">    	
-	    	<!-- now find all items related by product/facility -->
-   		 	<field-to-field field-name="facilityId" map-name="inventoryItem" to-map-name="lookupMap"/>
-    		<field-to-field field-name="productId" map-name="inventoryItem" to-map-name="lookupMap"/>
-    		<string-to-field field-name="inventoryItemTypeId" map-name="lookupMap" string="NON_SERIAL_INV_ITEM"/>
-    		<find-by-and entity-name="InventoryItem" map-name="lookupMap" list-name="inventoryItems"/>    	
-    	
-    		<!-- find all items which have a negative ATP; find their current reservations -->    	
-    		<iterate list-name="inventoryItems" entry-name="item">    		
-    			<if-compare field-name="availableToPromise" map-name="item" operator="less" value="0">
-    				<get-related value-name="item" relation-name="OrderItemInventoryRes" list-name="relatedRes"/>
-    				<list-to-list list-name="relatedRes" to-list-name="reservations"/>
-    			</if-compare>
-    		</iterate>
-    	
-   		 	<!-- sort the list by date -->    	
-    		<order-value-list list-name="reservations" order-by-list-name="reservedDatetime"/>
-    	    	
-    		<iterate list-name="reservations" entry-name="oiir">
-    			<!-- cancel the reservation -->
-   				<field-to-field field-name="orderId" map-name="oiir" to-map-name="cancelOiirMap"/>
-   				<field-to-field field-name="orderItemSeqId" map-name="oiir" to-map-name="cancelOiirMap"/>
-   				<field-to-field field-name="inventoryItemId" map-name="oiir" to-map-name="cancelOiirMap"/>   			
-           	 	<call-service service-name="cancelOrderItemInventoryRes" in-map-name="cancelOiirMap"/>
-            	<clear-field field-name="cancelOiirMap"/>
+        <make-value entity-name="InventoryItem" value-name="lookupPKMap"/>
+        <set-pk-fields value-name="lookupPKMap" map-name="parameters"/>
+        <find-by-primary-key entity-name="InventoryItem" map-name="lookupPKMap" value-name="inventoryItem"/>
+        <if-compare field-name="inventoryItemTypeId" map-name="inventoryItem" operator="equals" value="NON_SERIAL_INV_ITEM">        
+            <!-- now find all items related by product/facility -->
+            <field-to-field field-name="facilityId" map-name="inventoryItem" to-map-name="lookupMap"/>
+            <field-to-field field-name="productId" map-name="inventoryItem" to-map-name="lookupMap"/>
+            <string-to-field field-name="inventoryItemTypeId" map-name="lookupMap" string="NON_SERIAL_INV_ITEM"/>
+            <find-by-and entity-name="InventoryItem" map-name="lookupMap" list-name="inventoryItems"/>        
+        
+            <!-- find all items which have a negative ATP; find their current reservations -->        
+            <iterate list-name="inventoryItems" entry-name="item">            
+                <if-compare field-name="availableToPromise" map-name="item" operator="less" value="0">
+                    <get-related value-name="item" relation-name="OrderItemInventoryRes" list-name="relatedRes"/>
+                    <list-to-list list-name="relatedRes" to-list-name="reservations"/>
+                </if-compare>
+            </iterate>
+        
+                <!-- sort the list by date -->        
+            <order-value-list list-name="reservations" order-by-list-name="reservedDatetime"/>
+                
+            <iterate list-name="reservations" entry-name="oiir">
+                <!-- cancel the reservation -->
+                <field-to-field field-name="orderId" map-name="oiir" to-map-name="cancelOiirMap"/>
+                <field-to-field field-name="orderItemSeqId" map-name="oiir" to-map-name="cancelOiirMap"/>
+                <field-to-field field-name="inventoryItemId" map-name="oiir" to-map-name="cancelOiirMap"/>               
+                <call-service service-name="cancelOrderItemInventoryRes" in-map-name="cancelOiirMap"/>
+                <clear-field field-name="cancelOiirMap"/>
 
-   				<!-- re-reserve the cancelled item -->
-    			<!-- require inventory is N because it had to be N to begin with to have a negative ATP -->
-    			<field-to-field field-name="productId" map-name="inventoryItem" to-map-name="resMap"/>
-    			<field-to-field field-name="orderId" map-name="oiir" to-map-name="resMap"/>
-    			<field-to-field field-name="orderItemSeqId" map-name="oiir" to-map-name="resMap"/>
-    			<field-to-field field-name="quantity" map-name="oiir" to-map-name="resMap"/>
-    			<field-to-field field-name="reservedDatetime" map-name="oiir" to-map-name="resMap"/>
-    			<field-to-field field-name="reserveOrderEnumId" map-name="oiir" to-map-name="resMap"/>
-    			<string-to-field field-name="requireInventory" map-name="resMap" string="N"/>    		
-    			<call-service service-name="reserveProductInventory" in-map-name="resMap"/>
-    			<clear-field field-name="resMap"/>
-    		</iterate>
-    	</if-compare>
+                <!-- re-reserve the cancelled item -->
+                <!-- require inventory is N because it had to be N to begin with to have a negative ATP -->
+                <field-to-field field-name="productId" map-name="inventoryItem" to-map-name="resMap"/>
+                <field-to-field field-name="orderId" map-name="oiir" to-map-name="resMap"/>
+                <field-to-field field-name="orderItemSeqId" map-name="oiir" to-map-name="resMap"/>
+                <field-to-field field-name="quantity" map-name="oiir" to-map-name="resMap"/>
+                <field-to-field field-name="reservedDatetime" map-name="oiir" to-map-name="resMap"/>
+                <field-to-field field-name="reserveOrderEnumId" map-name="oiir" to-map-name="resMap"/>
+                <string-to-field field-name="requireInventory" map-name="resMap" string="N"/>            
+                <call-service service-name="reserveProductInventory" in-map-name="resMap"/>
+                <clear-field field-name="resMap"/>
+            </iterate>
+        </if-compare>
     </simple-method>
     
     <!-- Inventory Transfer Services -->
