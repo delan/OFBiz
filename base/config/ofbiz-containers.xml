@@ -23,7 +23,7 @@
  *  THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
  *  OFBiz Containers
- *  $Id: ofbiz-containers.xml,v 1.12 2004/03/18 08:48:29 ajzeneski Exp $
+ *  $Id: ofbiz-containers.xml,v 1.13 2004/03/19 21:48:31 ajzeneski Exp $
 -->
 
 <ofbiz-containers>
@@ -34,7 +34,7 @@
     <container name="classloader-container" class="org.ofbiz.base.container.ClassLoaderContainer"/>
 
     <!-- load JNDI/JOTM -->
-    <container name="jotm-container" class="org.ofbiz.entity.transaction.JotmContainer"/>
+    <container name="jotm-container" class="org.ofbiz.jotm.container.JotmContainer"/>
 
     <!-- RMI Service Dispatcher -->
     <container name="rmi-dispatcher" class="org.ofbiz.service.rmi.RmiServiceContainer">
