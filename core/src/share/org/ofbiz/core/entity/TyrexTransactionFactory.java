@@ -1,11 +1,13 @@
 package org.ofbiz.core.entity;
 
 import java.util.*;
+import java.security.*;
 import javax.naming.*;
 import javax.transaction.*;
 
 import org.ofbiz.core.util.*;
 import tyrex.tm.Tyrex;
+import tyrex.tm.TyrexPermission;
 import tyrex.server.Configure;
 
 /**
@@ -36,6 +38,23 @@ import tyrex.server.Configure;
  */
 public class TyrexTransactionFactory {
     static {
+        /* Any way to do this? doesn't look like it, must go in the java.policy file - pain in the rear
+        TyrexPermission perm = new TyrexPermission("server.start");
+        PermissionCollection permCol = perm.newPermissionCollection();
+        if (permCol == null) permCol = new Permissions();
+        permCol.add(perm);
+
+        perm = new TyrexPermission("server.shutdown");
+        permCol.add(perm);
+        perm = new TyrexPermission("server.meter");
+        permCol.add(perm);
+        perm = new TyrexPermission("transaction.terminate");
+        permCol.add(perm);
+        perm = new TyrexPermission("transaction.list");
+        permCol.add(perm);
+        perm = new TyrexPermission("transaction.manager");
+        permCol.add(perm);
+        */
         Configure conf = new Configure();
         
         conf.setLogWriter(Debug.getPrintWriter());

@@ -52,6 +52,9 @@ public class TransactionUtil implements javax.transaction.Status {
     /** Gets the status of the transaction in the current thread IF
      * transactions are available, otherwise returns STATUS_NO_TRANSACTION */
     public static int getStatus() throws GenericTransactionException {
+        if (true)
+            return STATUS_NO_TRANSACTION; //disabling for now...
+
         UserTransaction ut = TransactionFactory.getUserTransaction();
         if (ut != null) {
             try {
@@ -120,6 +123,9 @@ public class TransactionUtil implements javax.transaction.Status {
     
     /** Enlists the given Connection if it is an XAConnection and if a transaction is active in the current thread */
     public static void enlistConnection(Connection connection) throws GenericTransactionException {
+        if (true)
+            return; //disabling for now...
+        
         if (connection == null)
             return;
         
