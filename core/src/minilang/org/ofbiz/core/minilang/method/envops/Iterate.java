@@ -70,7 +70,7 @@ public class Iterate extends MethodOperation {
             return true;
         }
         if (theList.size() == 0) {
-            Debug.logInfo("List with name " + listName + " has zero entries, doing nothing");
+            Debug.logVerbose("List with name " + listName + " has zero entries, doing nothing");
             return true;
         }
 
