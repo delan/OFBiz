@@ -89,7 +89,7 @@
     Boolean maySplit = null;
     String giftMessage = null;
     Boolean isGift = null;
-
+    String trackingNumber = "";
     Iterator orderShipmentPreferences = UtilMisc.toIterator(orderHeader.getRelated("OrderShipmentPreference"));
     if(orderShipmentPreferences != null && orderShipmentPreferences.hasNext()) {
         shipmentPreference = (GenericValue)orderShipmentPreferences.next();
@@ -99,6 +99,7 @@
         maySplit = shipmentPreference.getBoolean("maySplit");
         giftMessage = shipmentPreference.getString("giftMessage");
         isGift = shipmentPreference.getBoolean("isGift");
+        trackingNumber = shipmentPreference.getString("trackingNumber");
     }
 
     String customerPoNumber = null;

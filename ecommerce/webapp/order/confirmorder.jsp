@@ -105,15 +105,17 @@
     Boolean maySplit = null;
     String giftMessage = null;
     Boolean isGift = null;
-
+    String trackingNumber = null;
     Iterator orderShipmentPreferences = UtilMisc.toIterator(orderHeader.getRelated("OrderShipmentPreference"));
     if(orderShipmentPreferences != null && orderShipmentPreferences.hasNext()) {
         shipmentPreference = (GenericValue)orderShipmentPreferences.next();
         carrierPartyId = shipmentPreference.getString("carrierPartyId");
         shipmentMethodTypeId = shipmentPreference.getString("shipmentMethodTypeId");
         shippingInstructions = shipmentPreference.getString("shippingInstructions");
+        trackingNumber = shipmentPreference.getString("trackingNumber");
         maySplit = shipmentPreference.getBoolean("maySplit");
         giftMessage = shipmentPreference.getString("giftMessage");
+        
         isGift = shipmentPreference.getBoolean("isGift");
     }
 

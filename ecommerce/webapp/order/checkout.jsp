@@ -77,6 +77,7 @@
     String carrierPartyId = cart.getCarrierPartyId();
     String shipmentMethodTypeId = cart.getShipmentMethodTypeId();
     String shippingInstructions = cart.getShippingInstructions();
+    String trackingNumber = null;
     Boolean maySplit = cart.getMaySplit();
     String giftMessage = cart.getGiftMessage();
     Boolean isGift = cart.getIsGift();
