@@ -19,14 +19,22 @@
 	
     <!-- Path to the libraries that are installed on this server.
 	These will accesible for the servlets, EJBs etc -->	
-	<library path="../../ofbiz/lib/common"/>
-	<library path="../../ofbiz/lib/share"/>
+	<library path="../lib"/>
 	<library path="../../ofbiz/core/lib"/>
 	<library path="../../ofbiz/commonapp/lib"/>
 	<library path="../../ofbiz/commonapp/etc"/>
-	<library path="../lib"/>
-	
-	<principals path="./principals.xml" />
+	<library path="../../ofbiz/lib/share"/>
+	<library path="../../ofbiz/lib/common/castor-0.9.3.9.jar"/>
+	<library path="../../ofbiz/lib/common/commons-beanutils.jar"/>
+	<library path="../../ofbiz/lib/common/commons-collections.jar"/>
+	<library path="../../ofbiz/lib/common/commons-digester.jar"/>
+	<library path="../../ofbiz/lib/common/hsqldb.jar"/>
+	<library path="../../ofbiz/lib/common/log4j.jar"/>
+	<library path="../../ofbiz/lib/common/mm.mysql-2.0.14-bin.jar"/>
+	<library path="../../ofbiz/lib/common/postgresql.jar"/>
+	<library path="../../ofbiz/lib/common/sapdbc.jar"/>
+
+        <principals path="./principals.xml" />
 
 	<log>
 		<file path="../log/global-application.log" />
