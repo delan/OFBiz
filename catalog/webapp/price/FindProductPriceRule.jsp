@@ -56,7 +56,7 @@
 <ofbiz:if name="productPriceRules">
   <table border="1" cellpadding='2' cellspacing='0'>
     <tr>
-      <td><div class="tabletext"><b>ProductPriceRuleo&nbsp;ID</b></div></td>
+      <td><div class="tabletext"><b>ProductPriceRule&nbsp;ID</b></div></td>
       <td><div class="tabletext"><b>Rule&nbsp;Name</b></div></td>
       <td><div class="tabletext"><b>Sale&nbsp;Rule?</b></div></td>
       <td><div class="tabletext"><b>From&nbsp;Date</b></div></td>
