@@ -1,0 +1,29 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<domain>
+    <name>default</name>
+   <!--
+    <dataSource>
+      <name>db</name>
+      <jar>classes12.zip</jar>
+      <class>org.gjt.mm.mysql.xa.XADataSourceImpl</class>
+      <config>
+        <URL>jdbc:mysql://127.0.0.1/ofbiz</URL>
+        <user>mysqldb</user>
+        <password>mysqldb</password>
+      </config>
+      <limits>
+        <maximum>50</maximum>
+        <minimum>5</minimum>
+        <initial>5</initial>
+        <maxRetain>300</maxRetain>
+        <timeout>10</timeout>
+        <trace>false</trace>
+     </limits>
+    </dataSource>
+   -->
+</domain>
+
+
+
+
