@@ -4,11 +4,12 @@
   <PartyRole partyId="UPS" roleTypeId="CARRIER"/>
   <Party partyId="Company"/>
   <PartyRole partyId="Company" roleTypeId="CARRIER"/>
-  <CarrierShipmentMethod partyId="UPS" roleTypeId="CARRIER" shipmentMethodTypeId="GROUND"/>
-  <CarrierShipmentMethod partyId="UPS" roleTypeId="CARRIER" shipmentMethodTypeId="GROUND"/>
-  <CarrierShipmentMethod partyId="UPS" roleTypeId="CARRIER" shipmentMethodTypeId="AIR"/>
-  <CarrierShipmentMethod partyId="UPS" roleTypeId="CARRIER" shipmentMethodTypeId="NEXT_DAY"/>
+  <PartyRole partyId="_NA_" roleTypeId="CARRIER"/>
+  <CarrierShipmentMethod partyId="UPS" roleTypeId="CARRIER" shipmentMethodTypeId="GROUND" display="Y" sequenceNumber="3"/>
+  <CarrierShipmentMethod partyId="UPS" roleTypeId="CARRIER" shipmentMethodTypeId="AIR" display="Y" sequenceNumber="2"/>
+  <CarrierShipmentMethod partyId="UPS" roleTypeId="CARRIER" shipmentMethodTypeId="NEXT_DAY" display="Y" sequenceNumber="1"/>
   <CarrierShipmentMethod partyId="Company" roleTypeId="CARRIER" shipmentMethodTypeId="LOCAL_DELIVERY"/>
+  <CarrierShipmentMethod partyId="_NA_" roleTypeId="CARRIER" shipmentMethodTypeId="standard" display="Y" sequenceNumber="4"/>
   <QuantityBreak fromQuantity="0.0" quantityBreakId="9000"
     quantityBreakTypeId="SHIP_WEIGHT" thruQuantity="0.0"/>
   <QuantityBreak fromQuantity="0.0" quantityBreakId="9003"
