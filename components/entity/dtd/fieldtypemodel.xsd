@@ -42,10 +42,10 @@
     </xs:element>
     <!-- ================= Children of field-type-def =================== -->
     <xs:attributeGroup name="attlist.field-type-def">
-        <xs:attribute name="type" use="required"/>
-        <xs:attribute name="sql-type" use="required"/>
-        <xs:attribute name="sql-type-alias"/>
-        <xs:attribute name="java-type" use="required"/>
+        <xs:attribute type="xs:string" name="type" use="required"/>
+        <xs:attribute type="xs:string" name="sql-type" use="required"/>
+        <xs:attribute type="xs:string" name="sql-type-alias"/>
+        <xs:attribute type="xs:string" name="java-type" use="required"/>
     </xs:attributeGroup>
     <xs:element name="validate">
         <xs:complexType>
@@ -53,7 +53,7 @@
         </xs:complexType>
     </xs:element>
     <xs:attributeGroup name="attlist.validate">
-        <xs:attribute name="method" use="required"/>
-        <xs:attribute name="class" default="org.ofbiz.base.util.UtilValidate"/>
+        <xs:attribute type="xs:string" name="method" use="required"/>
+        <xs:attribute type="xs:string" name="class" default="org.ofbiz.base.util.UtilValidate"/>
     </xs:attributeGroup>
 </xs:schema>

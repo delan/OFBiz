@@ -46,10 +46,10 @@
         </xs:complexType>
     </xs:element>
     <xs:attributeGroup name="attlist.resource-loader">
-        <xs:attribute name="name" use="required"/>
-        <xs:attribute name="class" use="required"/>
-        <xs:attribute name="prepend-env"/>
-        <xs:attribute name="prefix"/>
+        <xs:attribute type="xs:string" name="name" use="required"/>
+        <xs:attribute type="xs:string" name="class" use="required"/>
+        <xs:attribute type="xs:string" name="prepend-env"/>
+        <xs:attribute type="xs:string" name="prefix"/>
     </xs:attributeGroup>
     <xs:element name="transaction-factory">
         <xs:complexType>
@@ -61,7 +61,7 @@
         </xs:complexType>
     </xs:element>
     <xs:attributeGroup name="attlist.transaction-factory">
-        <xs:attribute name="class" use="required"/>
+        <xs:attribute type="xs:string" name="class" use="required"/>
     </xs:attributeGroup>
     <xs:element name="user-transaction-jndi">
         <xs:complexType>
@@ -69,8 +69,8 @@
         </xs:complexType>
     </xs:element>
     <xs:attributeGroup name="attlist.user-transaction-jndi">
-        <xs:attribute name="jndi-server-name" use="required"/>
-        <xs:attribute name="jndi-name" use="required"/>
+        <xs:attribute type="xs:string" name="jndi-server-name" use="required"/>
+        <xs:attribute type="xs:string" name="jndi-name" use="required"/>
     </xs:attributeGroup>
     <xs:element name="transaction-manager-jndi">
         <xs:complexType>
@@ -78,8 +78,8 @@
         </xs:complexType>
     </xs:element>
     <xs:attributeGroup name="attlist.transaction-manager-jndi">
-        <xs:attribute name="jndi-server-name" use="required"/>
-        <xs:attribute name="jndi-name" use="required"/>
+        <xs:attribute type="xs:string" name="jndi-server-name" use="required"/>
+        <xs:attribute type="xs:string" name="jndi-name" use="required"/>
     </xs:attributeGroup>
     <xs:element name="delegator">
         <xs:complexType>
@@ -90,10 +90,10 @@
         </xs:complexType>
     </xs:element>
     <xs:attributeGroup name="attlist.delegator">
-        <xs:attribute name="name" use="required"/>
-        <xs:attribute name="entity-model-reader" use="required"/>
-        <xs:attribute name="entity-group-reader" use="required"/>
-        <xs:attribute name="entity-eca-reader"/>
+        <xs:attribute type="xs:string" name="name" use="required"/>
+        <xs:attribute type="xs:string" name="entity-model-reader" use="required"/>
+        <xs:attribute type="xs:string" name="entity-group-reader" use="required"/>
+        <xs:attribute type="xs:string" name="entity-eca-reader"/>
         <xs:attribute name="distributed-cache-clear-enabled" default="false">
             <xs:simpleType>
                 <xs:restriction base="xs:token">
@@ -102,9 +102,9 @@
                 </xs:restriction>
             </xs:simpleType>
         </xs:attribute>
-        <xs:attribute name="distributed-cache-clear-class-name" default="org.ofbiz.entityext.cache.EntityCacheServices"/>
-        <xs:attribute name="distributed-cache-clear-user-login-id" default="admin"/>
-        <xs:attribute name="sequenced-id-prefix"/>
+        <xs:attribute type="xs:string" name="distributed-cache-clear-class-name" default="org.ofbiz.entityext.cache.EntityCacheServices"/>
+        <xs:attribute type="xs:string" name="distributed-cache-clear-user-login-id" default="admin"/>
+        <xs:attribute type="xs:string" name="sequenced-id-prefix"/>
     </xs:attributeGroup>
     <xs:element name="group-map">
         <xs:complexType>
@@ -112,8 +112,8 @@
         </xs:complexType>
     </xs:element>
     <xs:attributeGroup name="attlist.group-map">
-        <xs:attribute name="group-name" use="required"/>
-        <xs:attribute name="datasource-name" use="required"/>
+        <xs:attribute type="xs:string" name="group-name" use="required"/>
+        <xs:attribute type="xs:string" name="datasource-name" use="required"/>
     </xs:attributeGroup>
     <xs:element name="entity-model-reader">
         <xs:complexType>
@@ -124,7 +124,7 @@
         </xs:complexType>
     </xs:element>
     <xs:attributeGroup name="attlist.entity-model-reader">
-        <xs:attribute name="name" use="required"/>
+        <xs:attribute type="xs:string" name="name" use="required"/>
     </xs:attributeGroup>
     <xs:element name="resource">
         <xs:complexType>
@@ -132,8 +132,8 @@
         </xs:complexType>
     </xs:element>
     <xs:attributeGroup name="attlist.resource">
-        <xs:attribute name="loader" use="required"/>
-        <xs:attribute name="location" use="required"/>
+        <xs:attribute type="xs:string" name="loader" use="required"/>
+        <xs:attribute type="xs:string" name="location" use="required"/>
     </xs:attributeGroup>
     <xs:element name="entity-eca-reader">
         <xs:complexType>
@@ -144,7 +144,7 @@
         </xs:complexType>
     </xs:element>
     <xs:attributeGroup name="attlist.entity-eca-reader">
-        <xs:attribute name="name" use="required"/>
+        <xs:attribute type="xs:string" name="name" use="required"/>
     </xs:attributeGroup>
     <xs:element name="entity-group-reader">
         <xs:complexType>
@@ -155,9 +155,9 @@
         </xs:complexType>
     </xs:element>
     <xs:attributeGroup name="attlist.entity-group-reader">
-        <xs:attribute name="name" use="required"/>
-        <xs:attribute name="loader"/>
-        <xs:attribute name="location"/>
+        <xs:attribute type="xs:string" name="name" use="required"/>
+        <xs:attribute type="xs:string" name="loader"/>
+        <xs:attribute type="xs:string" name="location"/>
     </xs:attributeGroup>
     <xs:element name="entity-data-reader">
         <xs:complexType>
@@ -168,7 +168,7 @@
         </xs:complexType>
     </xs:element>
     <xs:attributeGroup name="attlist.entity-data-reader">
-        <xs:attribute name="name" use="required"/>
+        <xs:attribute type="xs:string" name="name" use="required"/>
     </xs:attributeGroup>
     <xs:element name="field-type">
         <xs:complexType>
@@ -176,9 +176,9 @@
         </xs:complexType>
     </xs:element>
     <xs:attributeGroup name="attlist.field-type">
-        <xs:attribute name="name" use="required"/>
-        <xs:attribute name="loader" use="required"/>
-        <xs:attribute name="location" use="required"/>
+        <xs:attribute type="xs:string" name="name" use="required"/>
+        <xs:attribute type="xs:string" name="loader" use="required"/>
+        <xs:attribute type="xs:string" name="location" use="required"/>
     </xs:attributeGroup>
     <xs:element name="datasource">
         <xs:complexType>
@@ -197,9 +197,9 @@
     </xs:element>
     <!-- main subelements of datasource are (sql-load-path*, (inline-jdbc | jndi-jdbc | tyrex-dataSource | ANY), but ANY must be used alone for certain XML parsers -->
     <xs:attributeGroup name="attlist.datasource">
-        <xs:attribute name="name" use="required"/>
-        <xs:attribute name="helper-class" use="required"/>
-        <xs:attribute name="field-type-name" use="required"/>
+        <xs:attribute type="xs:string" name="name" use="required"/>
+        <xs:attribute type="xs:string" name="helper-class" use="required"/>
+        <xs:attribute type="xs:string" name="field-type-name" use="required"/>
         <xs:attribute name="use-schemas" default="true">
             <xs:simpleType>
                 <xs:restriction base="xs:token">
@@ -208,7 +208,7 @@
                 </xs:restriction>
             </xs:simpleType>
         </xs:attribute>
-        <xs:attribute name="schema-name"/>
+        <xs:attribute type="xs:string" name="schema-name"/>
         <xs:attribute name="check-on-start" default="true">
             <xs:simpleType>
                 <xs:restriction base="xs:token">
@@ -233,7 +233,7 @@
                 </xs:restriction>
             </xs:simpleType>
         </xs:attribute>
-        <xs:attribute name="constraint-name-clip-length" default="30"/>
+        <xs:attribute type="xs:nonNegativeInteger" name="constraint-name-clip-length" default="30"/>
         <xs:attribute name="use-proxy-cursor" default="false">
             <xs:simpleType>
                 <xs:restriction base="xs:token">
@@ -242,8 +242,8 @@
                 </xs:restriction>
             </xs:simpleType>
         </xs:attribute>
-        <xs:attribute name="proxy-cursor-name" default="p_cursor"/>
-        <xs:attribute name="result-fetch-size" default="0"/>
+        <xs:attribute type="xs:string" name="proxy-cursor-name" default="p_cursor"/>
+        <xs:attribute type="xs:nonNegativeInteger" name="result-fetch-size" default="0"/>
         <xs:attribute name="use-foreign-keys" default="true">
             <xs:simpleType>
                 <xs:restriction base="xs:token">
@@ -341,8 +341,8 @@
         </xs:complexType>
     </xs:element>
     <xs:attributeGroup name="attlist.sql-load-path">
-        <xs:attribute name="path" use="required"/>
-        <xs:attribute name="prepend-env"/>
+        <xs:attribute type="xs:string" name="path" use="required"/>
+        <xs:attribute type="xs:string" name="prepend-env"/>
     </xs:attributeGroup>
     <xs:element name="read-data">
         <xs:complexType>
@@ -350,7 +350,7 @@
         </xs:complexType>
     </xs:element>
     <xs:attributeGroup name="attlist.read-data">
-        <xs:attribute name="reader-name" use="required"/>
+        <xs:attribute type="xs:string" name="reader-name" use="required"/>
     </xs:attributeGroup>
     <xs:element name="inline-jdbc">
         <xs:complexType>
@@ -358,10 +358,10 @@
         </xs:complexType>
     </xs:element>
     <xs:attributeGroup name="attlist.inline-jdbc">
-        <xs:attribute name="jdbc-driver" use="required"/>
-        <xs:attribute name="jdbc-uri" use="required"/>
-        <xs:attribute name="jdbc-username" use="required"/>
-        <xs:attribute name="jdbc-password" use="required"/>
+        <xs:attribute type="xs:string" name="jdbc-driver" use="required"/>
+        <xs:attribute type="xs:string" name="jdbc-uri" use="required"/>
+        <xs:attribute type="xs:string" name="jdbc-username" use="required"/>
+        <xs:attribute type="xs:string" name="jdbc-password" use="required"/>
         <xs:attribute name="isolation-level">
             <xs:simpleType>
                 <xs:restriction base="xs:token">
@@ -373,14 +373,14 @@
                 </xs:restriction>
             </xs:simpleType>
         </xs:attribute>
-        <xs:attribute name="pool-maxsize" default="50"/>
-        <xs:attribute name="pool-minsize" default="2"/>
-        <xs:attribute name="pool-sleeptime" default="300000"/>
-        <xs:attribute name="pool-lifetime" default="600000"/>
-        <xs:attribute name="pool-deadlock-maxwait" default="300000"/>
-        <xs:attribute name="pool-deadlock-retrywait" default="10000"/>
-        <xs:attribute name="pool-jdbc-test-stmt"/>
-        <xs:attribute name="pool-xa-wrapper-class" default="org.enhydra.jdbc.standard.StandardXADataSource"/>
+        <xs:attribute type="xs:nonNegativeInteger" name="pool-maxsize" default="50"/>
+        <xs:attribute type="xs:nonNegativeInteger" name="pool-minsize" default="2"/>
+        <xs:attribute type="xs:nonNegativeInteger" name="pool-sleeptime" default="300000"/>
+        <xs:attribute type="xs:nonNegativeInteger" name="pool-lifetime" default="600000"/>
+        <xs:attribute type="xs:nonNegativeInteger" name="pool-deadlock-maxwait" default="300000"/>
+        <xs:attribute type="xs:nonNegativeInteger" name="pool-deadlock-retrywait" default="10000"/>
+        <xs:attribute type="xs:string" name="pool-jdbc-test-stmt"/>
+        <xs:attribute type="xs:string" name="pool-xa-wrapper-class" default="org.enhydra.jdbc.standard.StandardXADataSource"/>
     </xs:attributeGroup>
     <xs:element name="jndi-jdbc">
         <xs:complexType>
@@ -388,8 +388,8 @@
         </xs:complexType>
     </xs:element>
     <xs:attributeGroup name="attlist.jndi-jdbc">
-        <xs:attribute name="jndi-server-name" use="required"/>
-        <xs:attribute name="jndi-name" use="required"/>
+        <xs:attribute type="xs:string" name="jndi-server-name" use="required"/>
+        <xs:attribute type="xs:string" name="jndi-name" use="required"/>
         <xs:attribute name="isolation-level">
             <xs:simpleType>
                 <xs:restriction base="xs:token">
@@ -408,7 +408,7 @@
         </xs:complexType>
     </xs:element>
     <xs:attributeGroup name="attlist.tyrex-dataSource">
-        <xs:attribute name="dataSource-name" use="required"/>
+        <xs:attribute type="xs:string" name="dataSource-name" use="required"/>
         <xs:attribute name="isolation-level">
             <xs:simpleType>
                 <xs:restriction base="xs:token">
