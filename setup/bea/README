@@ -1,0 +1,20 @@
+
+BEA Weblogic 6.1 SP2 J2EE 1.3 Version
+
+This directory contains files needed to get OFBiz running under BEA Weblogic, 
+including sample configurations files for the Entity Engine and Weblogic and
+a startup shell script for Weblogic that is a modifications of the 
+startWeblogic.sh that is included with the app server.
+
+The startOfbiz.sh file should be placed in your domain directory and run
+directly rather than running the startWeblogic.sh file. It referes to the
+3rd Party jars used by OFBiz inside the ofbiz/lib directory so you won't
+have to copy them.
+
+But, you will HAVE to have OFBIZ_HOME set to your main ofbiz directory, the
+one that contains core, commonapp, setup, etc.
+
+Hope that helps.
+-David E. Jones
+2 Feb 2002
+
