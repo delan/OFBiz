@@ -21,7 +21,7 @@
  *
  *@author     David E. Jones (jonesde@ofbiz.org)
  *@author     Catherine Heintz (catherine.heintz@nereide.biz)
- *@version    $Revision: 1.8 $
+ *@version    $Revision: 1.9 $
  *@since      2.1
 -->
 
@@ -41,8 +41,9 @@ ${pages.get("/category/CategoryTabBar.ftl")}
         <table border="1" width="100%" cellpadding="2" cellspacing="0">
         <tr>
             <td><div class="tabletext"><b>${uiLabelMap.ProductCatalogNameId}</b></div></td>
+            <td><div class="tabletext"><b>Type</b></div></td>
             <td><div class="tabletext"><b>${uiLabelMap.CommonFromDateTime}</b></div></td>
-            <td align="center"><div class="tabletext"><b>${uiLabelMap.ProductThruDateTimeSequenceType}</b></div></td>
+            <td align="center"><div class="tabletext"><b>${uiLabelMap.ProductThruDateTimeSequence}</b></div></td>
             <td><div class="tabletext"><b>&nbsp;</b></div></td>
         </tr>
         <#assign line = 0>
@@ -52,6 +53,9 @@ ${pages.get("/category/CategoryTabBar.ftl")}
         <#assign curProdCatalogCategoryType = prodCatalogCategory.getRelatedOneCache("ProdCatalogCategoryType")>
         <tr valign="middle">
             <td><a href="<@ofbizUrl>/EditProdCatalog?prodCatalogId=${(prodCatalogCategory.prodCatalogId)?if_exists}</@ofbizUrl>" class="buttontext"><#if prodCatalog?exists>${(prodCatalog.catalogName)?if_exists}</#if> [${(prodCatalogCategory.prodCatalogId)?if_exists}]</a></td>
+            <td>
+                <div class="buttontext">${(curProdCatalogCategoryType.description)?default(prodCatalogCategory.prodCatalogCategoryTypeId)}</div>
+            </td>
             <#assign hasntStarted = false>
             <#if (prodCatalogCategory.getTimestamp("fromDate"))?exists && nowTimestamp.before(prodCatalogCategory.getTimestamp("fromDate"))> <#assign hasntStarted = true></#if>
             <td><div class="tabletext"<#if hasntStarted> style="color: red;"</#if>>${(prodCatalogCategory.fromDate)?if_exists}</div></td>
@@ -59,12 +63,14 @@ ${pages.get("/category/CategoryTabBar.ftl")}
                 <FORM method=POST action="<@ofbizUrl>/category_updateProductCategoryToProdCatalog</@ofbizUrl>" name="lineForm${line}">
                     <#assign hasExpired = false>
                     <#if (prodCatalogCategory.getTimestamp("thruDate"))?exists && nowTimestamp.after(prodCatalogCategory.getTimestamp("thruDate"))> <#assign hasExpired = true></#if>
-                    <input type=hidden name="prodCatalogId" value="${(prodCatalogCategory.prodCatalogId)?if_exists}">
-                    <input type=hidden name="productCategoryId" value="${(prodCatalogCategory.productCategoryId)?if_exists}">
-                    <input type=hidden name="fromDate" value="${(prodCatalogCategory.fromDate)?if_exists}">
-                    <input type=text size="25" name="thruDate" value="${(prodCatalogCategory.thruDate)?if_exists}" class="inputBox" style="<#if (hasExpired) >color: red;</#if>">
+                    <input type="hidden" name="prodCatalogId" value="${(prodCatalogCategory.prodCatalogId)?if_exists}">
+                    <input type="hidden" name="productCategoryId" value="${(prodCatalogCategory.productCategoryId)?if_exists}">
+                    <input type="hidden" name="prodCatalogCategoryTypeId" value="${prodCatalogCategory.prodCatalogCategoryTypeId}">
+                    <input type="hidden" name="fromDate" value="${(prodCatalogCategory.fromDate)?if_exists}">
+                    <input type="text" size="25" name="thruDate" value="${(prodCatalogCategory.thruDate)?if_exists}" class="inputBox" style="<#if (hasExpired) >color: red;</#if>">
                     <a href="javascript:call_cal(document.lineForm${line}.thruDate, '${(prodCatalogCategory.thruDate)?default(nowTimestampString)}');"><img src="/images/cal.gif" width="16" height="16" border="0" alt="Calendar"></a>
                     <input type=text size="5" name="sequenceNum" value="${(prodCatalogCategory.sequenceNum)?if_exists}" class="inputBox">
+                    <#-- the prodCatalogCategoryTypeId field is now part of the PK, so it can't be changed, must be re-created
                     <select name="prodCatalogCategoryTypeId" size=1 class="selectBox">
                         <#if (prodCatalogCategory.prodCatalogCategoryTypeId)?exists>
                             <option value="${prodCatalogCategory.prodCatalogCategoryTypeId}"><#if curProdCatalogCategoryType?exists>${(curProdCatalogCategoryType.description)?if_exists}<#else> [${(prodCatalogCategory.prodCatalogCategoryTypeId)}]</#if></option>
@@ -75,7 +81,7 @@ ${pages.get("/category/CategoryTabBar.ftl")}
                         <#list prodCatalogCategoryTypes as prodCatalogCategoryType>
                         <option value="${(prodCatalogCategoryType.prodCatalogCategoryTypeId)?if_exists}">${(prodCatalogCategoryType.description)?if_exists}</option>
                         </#list>
-                    </select>
+                    </select> -->
                     <INPUT type=submit value="${uiLabelMap.CommonUpdate}" style="font-size: x-small;">
                 </FORM>
             </td>
