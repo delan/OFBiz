@@ -53,9 +53,10 @@
         <description>Update a UserLogin Password</description>
         <attribute name="userLoginId" type="String" mode="IN" optional="true"/>
         <attribute name="currentPassword" type="String" mode="IN" optional="true"/>
-        <attribute name="newPassword" type="String" mode="IN" optional="false"/>
-        <attribute name="newPasswordVerify" type="String" mode="IN" optional="false"/>
+        <attribute name="newPassword" type="String" mode="IN" optional="true"/>
+        <attribute name="newPasswordVerify" type="String" mode="IN" optional="true"/>
         <attribute name="passwordHint" type="String" mode="IN" optional="true"/>
+        <attribute name="enabled" type="Boolean" mode="IN" optional="true"/>
     </service>
 
     <!-- Common services -->
