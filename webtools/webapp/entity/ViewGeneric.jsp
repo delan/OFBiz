@@ -412,7 +412,7 @@ function ShowTab(lname)
 <%for (int relIndex = 0; relIndex < entity.getRelationsSize(); relIndex++) {%>
   <%ModelRelation relation = entity.getRelation(relIndex);%>
     <%ModelEntity relatedEntity = reader.getModelEntity(relation.getRelEntityName());%>
-    <%if(relation.getType().equalsIgnoreCase("one")){%>
+    <%if("one".equals(relation.getType()) || "one-nofk".equals(relation.getType())) {%>
 <%-- Start ModelRelation for <%=relation.relatedEjbName%>, type: one --%>
 <%if (value != null) {%>
   <%if (security.hasEntityPermission(relatedEntity.getTableName(), "_VIEW", session)) {%>

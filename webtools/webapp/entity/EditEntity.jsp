@@ -166,7 +166,7 @@ if (security.hasPermission("ENTITY_MAINT", session)) {
 
         newRel.setRelEntityName(entity.getEntityName());
         newRel.setTitle(relation.getTitle());
-        if ("one".equalsIgnoreCase(relation.getType()) || "one-nofk".equalsIgnoreCase(relation.getType())) newRel.setType("many");
+        if ("one".equals(relation.getType()) || "one-nofk".equals(relation.getType())) newRel.setType("many");
         else newRel.setType("one");
 
         for (int kmn = 0; kmn < relation.getKeyMapsSize(); kmn++) {
