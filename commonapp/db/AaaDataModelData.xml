@@ -469,6 +469,7 @@
 
   <ShoppingListType description="Public Wish List" shoppingListTypeId="SLT_PUB_WISH_LIST"/>
   <ShoppingListType description="Private Wish List" shoppingListTypeId="SLT_PRIV_WISH_LIST"/>
+  <ShoppingListType description="Gift Registry" shoppingListTypeId="SLT_GIFT_REG"/>
   <ShoppingListType description="Baby Registry" shoppingListTypeId="SLT_BABY_REG"/>
   <ShoppingListType description="Wedding Registry" shoppingListTypeId="SLT_WEDDING_REG"/>
   <ShoppingListType description="Frequent Purchases" shoppingListTypeId="SLT_FREQ_PURCHASES"/>
@@ -614,4 +615,3 @@
   <WorkEffortTypeAttr attrName="QUANTITY_REJECTED" workEffortTypeId="PRODUCTION_RUN"/>
   <WorkEffortTypeAttr attrName="QUANTITY_TO_PRODUCE" workEffortTypeId="PRODUCTION_RUN"/>
 </entity-engine-xml>
-
