@@ -26,7 +26,7 @@
 -->
 
 <html>
-  <head>
+<head>
     <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
     <title>${layoutSettings.companyName?if_exists}: ${content.title?if_exists}</title>
     <link rel='stylesheet' href='<@ofbizContentUrl>/images/maincss.css</@ofbizContentUrl>' type='text/css'>
@@ -48,7 +48,7 @@
     <#if metaKeywords?exists>
     <meta name="keywords" content="${metaKeywords}">
     </#if>    
-  </head>
+</head>
 <body>
 
 <table border='0' width='100%' cellspacing='0' cellpadding='0' class='headerboxoutside'>
