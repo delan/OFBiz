@@ -378,7 +378,36 @@ public class HtmlFormRenderer implements FormStringRenderer {
      * @see org.ofbiz.core.widget.form.FormStringRenderer#renderCheckField(java.lang.StringBuffer, java.util.Map, org.ofbiz.core.widget.form.ModelFormField.CheckField)
      */
     public void renderCheckField(StringBuffer buffer, Map context, CheckField checkField) {
-        this.renderOptionalInputs(buffer, context, checkField, "checkbox");
+        // well, I don't know if this will be very useful... but here it is
+        
+        ModelFormField modelFormField = checkField.getModelFormField();
+        ModelForm modelForm = modelFormField.getModelForm();
+        String currentValue = modelFormField.getEntry(context);
+        
+        buffer.append("<div");
+        String className = modelFormField.getWidgetStyle();
+        if (UtilValidate.isNotEmpty(className)) {
+            buffer.append(" class=\"");
+            buffer.append(className);
+            buffer.append('"');
+        }
+        buffer.append(">");
+
+        buffer.append("<input type=\"");
+        buffer.append("checkbox");
+        buffer.append('"');
+
+        // if current value should be selected in the list, select it
+        if ("Y".equals(currentValue) || "T".equals(currentValue)) {
+            buffer.append(" checked");
+        }
+        buffer.append(" name=\"");
+        buffer.append(modelFormField.getParameterName());
+        buffer.append('"');
+        buffer.append(" value=\"Y\"/>");
+        // any description by it?
+        buffer.append("</div>");
+        
         this.appendWhitespace(buffer);
     }
     
@@ -386,14 +415,9 @@ public class HtmlFormRenderer implements FormStringRenderer {
      * @see org.ofbiz.core.widget.form.FormStringRenderer#renderRadioField(java.lang.StringBuffer, java.util.Map, org.ofbiz.core.widget.form.ModelFormField.RadioField)
      */
     public void renderRadioField(StringBuffer buffer, Map context, RadioField radioField) {
-        this.renderOptionalInputs(buffer, context, radioField, "radio");
-        this.appendWhitespace(buffer);
-    }
-
-    protected void renderOptionalInputs(StringBuffer buffer, Map context, ModelFormField.FieldInfoWithOptions fieldInfoWithOptions, String inputType) {
-        ModelFormField modelFormField = fieldInfoWithOptions.getModelFormField();
+        ModelFormField modelFormField = radioField.getModelFormField();
         ModelForm modelForm = modelFormField.getModelForm();
-        List allOptionValues = fieldInfoWithOptions.getAllOptionValues(context, modelForm.getDelegator());
+        List allOptionValues = radioField.getAllOptionValues(context, modelForm.getDelegator());
         String currentValue = modelFormField.getEntry(context);
 
         // list out all options according to the option list
@@ -410,7 +434,7 @@ public class HtmlFormRenderer implements FormStringRenderer {
             buffer.append(">");
 
             buffer.append("<input type=\"");
-            buffer.append(inputType);
+            buffer.append("radio");
             buffer.append('"');
 
             // if current value should be selected in the list, select it
@@ -427,6 +451,8 @@ public class HtmlFormRenderer implements FormStringRenderer {
             buffer.append(optionValue.getDescription());
             buffer.append("</div>");
         }
+
+        this.appendWhitespace(buffer);
     }
 
     /* (non-Javadoc)

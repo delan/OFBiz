@@ -214,8 +214,8 @@
     current ( first-in-list | selected ) "first-in-list"
 >
 
-<!ELEMENT check ( (entity-options | option)* )>
 <!ELEMENT radio ( (entity-options | option)* )>
+<!ELEMENT check EMPTY>
 
 <!ELEMENT submit EMPTY>
 <!ATTLIST submit

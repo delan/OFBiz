@@ -1295,22 +1295,6 @@ public class ModelFormField {
         }
     }
 
-    public static class CheckField extends FieldInfoWithOptions {
-        protected CheckField() { super(); }
-
-        public CheckField(ModelFormField modelFormField) {
-            super(FieldInfo.CHECK, modelFormField);
-        }
-
-        public CheckField(Element element, ModelFormField modelFormField) {
-            super(element, modelFormField);
-        }
-
-        public void renderFieldString(StringBuffer buffer, Map context, FormStringRenderer formStringRenderer) {
-            formStringRenderer.renderCheckField(buffer, context, this);
-        }
-    }
-
     public static class RadioField extends FieldInfoWithOptions {
         protected RadioField() { super(); }
 
@@ -1324,6 +1308,22 @@ public class ModelFormField {
 
         public void renderFieldString(StringBuffer buffer, Map context, FormStringRenderer formStringRenderer) {
             formStringRenderer.renderRadioField(buffer, context, this);
+        }
+    }
+
+    public static class CheckField extends FieldInfo {
+        protected CheckField() { super(); }
+
+        public CheckField(ModelFormField modelFormField) {
+            super(FieldInfo.CHECK, modelFormField);
+        }
+
+        public CheckField(Element element, ModelFormField modelFormField) {
+            super(element, modelFormField);
+        }
+
+        public void renderFieldString(StringBuffer buffer, Map context, FormStringRenderer formStringRenderer) {
+            formStringRenderer.renderCheckField(buffer, context, this);
         }
     }
 
