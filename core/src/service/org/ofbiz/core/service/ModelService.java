@@ -545,14 +545,16 @@ public class ModelService {
         return target;
     }
 
-    /** Returns a list of ModelParam objects in the order they were defined when 
+    /** 
+     * Returns a list of ModelParam objects in the order they were defined when 
      * the service was created.
      */
     public List getModelParamList() {
         return new LinkedList(this.contextParamList);
     }
 
-    /** Returns a list of ModelParam objects in the order they were defined when 
+    /** 
+     * Returns a list of ModelParam objects in the order they were defined when 
      * the service was created.
      */
     public List getInModelParamList() {
