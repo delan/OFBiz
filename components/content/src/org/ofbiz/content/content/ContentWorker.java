@@ -1,18 +1,25 @@
 /*
- * $Id: ContentWorker.java,v 1.10 2003/12/21 11:53:05 jonesde Exp $
- * 
- * Copyright (c) 2001, 2002 The Open For Business Project - www.ofbiz.org
- * 
- * Permission is hereby granted, free of charge, to any person obtaining a copy of this software and associated documentation files (the "Software"), to deal
- * in the Software without restriction, including without limitation the rights to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
- * copies of the Software, and to permit persons to whom the Software is furnished to do so, subject to the following conditions:
- * 
- * The above copyright notice and this permission notice shall be included in all copies or substantial portions of the Software.
- * 
- * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY, FITNESS
- * FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY,
- * WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
- *  
+ * $Id: ContentWorker.java,v 1.11 2003/12/23 07:24:05 jonesde Exp $
+ *
+ *  Copyright (c) 2001, 2002 The Open For Business Project - www.ofbiz.org
+ *
+ *  Permission is hereby granted, free of charge, to any person obtaining a
+ *  copy of this software and associated documentation files (the "Software"),
+ *  to deal in the Software without restriction, including without limitation
+ *  the rights to use, copy, modify, merge, publish, distribute, sublicense,
+ *  and/or sell copies of the Software, and to permit persons to whom the
+ *  Software is furnished to do so, subject to the following conditions:
+ *
+ *  The above copyright notice and this permission notice shall be included
+ *  in all copies or substantial portions of the Software.
+ *
+ *  THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS
+ *  OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF
+ *  MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT.
+ *  IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY
+ *  CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT
+ *  OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR
+ *  THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  */
 package org.ofbiz.content.content;
 
@@ -47,13 +54,12 @@ import org.ofbiz.service.GenericServiceException;
 import org.ofbiz.service.LocalDispatcher;
 
 import bsh.EvalError;
-import freemarker.template.SimpleHash;
 
 /**
  * ContentWorker Class
  * 
  * @author <a href="mailto:byersa@automationgroups.com">Al Byers</a>
- * @version $Revision: 1.10 $
+ * @version $Revision: 1.11 $
  * @since 2.2
  * 
  *  
@@ -529,7 +535,7 @@ public class ContentWorker {
     }
 
     public static Map renderSubContentAsText(GenericDelegator delegator, String contentId, Writer out, String mapKey, String subContentId, GenericValue subContentDataResourceView, 
-            SimpleHash templateContext, Locale locale, String mimeTypeId, GenericValue userLogin, Timestamp fromDate) throws GeneralException, IOException {
+            Map templateContext, Locale locale, String mimeTypeId, GenericValue userLogin, Timestamp fromDate) throws GeneralException, IOException {
 
         //Map context = (Map) FreeMarkerWorker.get(templateContext, "context");
         //if (Debug.infoOn()) Debug.logInfo(" in renderSubContentAsText, mimeTypeId:" + mimeTypeId, module);
@@ -550,7 +556,7 @@ public class ContentWorker {
         //GenericValue dataResourceContentView = null;
 
         if (templateContext == null) {
-            templateContext = new SimpleHash();
+            templateContext = new HashMap();
         }
 
         renderContentAsText(delegator, subContentId, out, templateContext, subContentDataResourceView, locale, mimeTypeId);
@@ -558,7 +564,7 @@ public class ContentWorker {
         return results;
     }
 
-    public static Map renderContentAsText(GenericDelegator delegator, String contentId, Writer out, SimpleHash templateContext, GenericValue view, Locale locale, String mimeTypeId) throws GeneralException, IOException {
+    public static Map renderContentAsText(GenericDelegator delegator, String contentId, Writer out, Map templateContext, GenericValue view, Locale locale, String mimeTypeId) throws GeneralException, IOException {
         //Map context = (Map) FreeMarkerWorker.get(templateContext, "context");
         //if (Debug.infoOn()) Debug.logInfo(" in renderContentAsText, mimeTypeId:" + mimeTypeId, module);
         Map results = new HashMap();
@@ -605,12 +611,12 @@ public class ContentWorker {
         //String contentTypeId = (String) view.get("contentTypeId");
         String dataResourceId = (String) view.get("drDataResourceId");
         if (templateContext == null) {
-            templateContext = new SimpleHash();
+            templateContext = new HashMap();
         }
 
         // TODO: what should we REALLY do here? looks like there is no decision between Java and Service style error handling...
         //try {
-            DataResourceWorker.renderDataResourceAsHtml(delegator, dataResourceId, out, templateContext, view, locale, mimeTypeId);
+            DataResourceWorker.renderDataResourceAsText(delegator, dataResourceId, out, templateContext, view, locale, mimeTypeId);
         //} catch (IOException e) {
         //    return ServiceUtil.returnError(e.getMessage());
         //}

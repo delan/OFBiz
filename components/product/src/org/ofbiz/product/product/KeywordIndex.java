@@ -1,5 +1,5 @@
 /*
- * $Id: KeywordIndex.java,v 1.2 2003/12/21 10:33:44 jonesde Exp $
+ * $Id: KeywordIndex.java,v 1.3 2003/12/23 07:24:05 jonesde Exp $
  *
  * Copyright (c) 2001, 2002 The Open For Business Project - www.ofbiz.org
  *
@@ -46,7 +46,7 @@ import org.ofbiz.entity.util.EntityUtil;
  *  Does indexing in preparation for a keyword search.
  *
  * @author     <a href="mailto:jonesde@ofbiz.org">David E. Jones</a>
- * @version    $Revision: 1.2 $
+ * @version    $Revision: 1.3 $
  * @since      2.0
  */
 public class KeywordIndex {
@@ -126,7 +126,7 @@ public class KeywordIndex {
             while (productContentAndInfoIter.hasNext()) {
                 GenericValue productContentAndInfo = (GenericValue) productContentAndInfoIter.next();
 
-                
+                // TODO: refactor DataResourceWorker with some methods to getDataResourceText, split rendering text into getting text and then checking if there is a template type other than NONE
                 
                 List alternateViews = productContentAndInfo.getRelated("ContentAssocDataResourceViewTo", UtilMisc.toMap("caContentAssocTypeId", "ALTERNATE_LOCALE"), UtilMisc.toList("-caFromDate"));
                 alternateViews = EntityUtil.filterByDate(alternateViews, UtilDateTime.nowTimestamp(), "caFromDate", "caThruDate", true);

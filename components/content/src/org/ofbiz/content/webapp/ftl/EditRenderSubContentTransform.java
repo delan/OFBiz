@@ -1,18 +1,25 @@
 /*
- * $Id: EditRenderSubContentTransform.java,v 1.6 2003/12/21 11:53:05 jonesde Exp $
- * 
- * Copyright (c) 2001-2003 The Open For Business Project - www.ofbiz.org
- * 
- * Permission is hereby granted, free of charge, to any person obtaining a copy of this software and associated documentation files (the "Software"), to deal
- * in the Software without restriction, including without limitation the rights to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
- * copies of the Software, and to permit persons to whom the Software is furnished to do so, subject to the following conditions:
- * 
- * The above copyright notice and this permission notice shall be included in all copies or substantial portions of the Software.
- * 
- * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY, FITNESS
- * FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY,
- * WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
- *  
+ * $Id: EditRenderSubContentTransform.java,v 1.7 2003/12/23 07:24:05 jonesde Exp $
+ *
+ *  Copyright (c) 2001, 2002 The Open For Business Project - www.ofbiz.org
+ *
+ *  Permission is hereby granted, free of charge, to any person obtaining a
+ *  copy of this software and associated documentation files (the "Software"),
+ *  to deal in the Software without restriction, including without limitation
+ *  the rights to use, copy, modify, merge, publish, distribute, sublicense,
+ *  and/or sell copies of the Software, and to permit persons to whom the
+ *  Software is furnished to do so, subject to the following conditions:
+ *
+ *  The above copyright notice and this permission notice shall be included
+ *  in all copies or substantial portions of the Software.
+ *
+ *  THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS
+ *  OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF
+ *  MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT.
+ *  IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY
+ *  CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT
+ *  OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR
+ *  THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  */
 package org.ofbiz.content.webapp.ftl;
 
@@ -32,11 +39,8 @@ import org.ofbiz.content.content.ContentWorker;
 import org.ofbiz.entity.GenericDelegator;
 import org.ofbiz.entity.GenericEntityException;
 import org.ofbiz.entity.GenericValue;
-import org.ofbiz.service.LocalDispatcher;
 
 import freemarker.template.Environment;
-import freemarker.template.SimpleHash;
-import freemarker.template.TemplateHashModel;
 import freemarker.template.TemplateTransformModel;
 
 /**
@@ -45,7 +49,7 @@ import freemarker.template.TemplateTransformModel;
  * This is an interactive FreeMarker tranform that allows the user to modify the contents that are placed within it.
  * 
  * @author <a href="mailto:byersa@automationgroups.com">Al Byers</a>
- * @version $Revision: 1.6 $
+ * @version $Revision: 1.7 $
  * @since 3.0
  */
 public class EditRenderSubContentTransform implements TemplateTransformModel {
@@ -72,24 +76,26 @@ public class EditRenderSubContentTransform implements TemplateTransformModel {
         final Environment env = Environment.getCurrentEnvironment();
         Map ctx = (Map) FreeMarkerWorker.getWrappedObject("context", env);
         final String editTemplate = getArg(args, "editTemplate", ctx);
-        if (Debug.verboseOn()) Debug.logVerbose("in EditRenderSubContent, editTemplate:" + editTemplate, module);
         final String wrapTemplateId = getArg(args, "wrapTemplateId", ctx);
-        if (Debug.verboseOn()) Debug.logVerbose("in EditRenderSubContent, wrapTemplateId:" + wrapTemplateId, module);
         final String mapKey = getArg(args, "mapKey", ctx);
-        if (Debug.verboseOn()) Debug.logVerbose("in EditRenderSubContent, mapKey:" + mapKey, module);
         final String templateContentId = getArg(args, "templateContentId", ctx);
-        if (Debug.verboseOn()) Debug.logVerbose("in EditRenderSubContent, templateContentId:" + templateContentId, module);
         final String subContentId = getArg(args, "subContentId", ctx);
-        if (Debug.verboseOn()) Debug.logVerbose("in EditRenderSubContent, subContentId:" + subContentId, module);
         String subDataResourceTypeIdTemp = getArg(args, "subDataResourceTypeId", ctx);
         final String contentId = getArg(args, "contentId", ctx);
+
+        if (Debug.verboseOn()) Debug.logVerbose("in EditRenderSubContent, editTemplate:" + editTemplate, module);
+        if (Debug.verboseOn()) Debug.logVerbose("in EditRenderSubContent, wrapTemplateId:" + wrapTemplateId, module);
+        if (Debug.verboseOn()) Debug.logVerbose("in EditRenderSubContent, mapKey:" + mapKey, module);
+        if (Debug.verboseOn()) Debug.logVerbose("in EditRenderSubContent, templateContentId:" + templateContentId, module);
+        if (Debug.verboseOn()) Debug.logVerbose("in EditRenderSubContent, subContentId:" + subContentId, module);
         if (Debug.verboseOn()) Debug.logVerbose("in EditRenderSubContent, contentId:" + contentId, module);
+        
         final Locale locale = (Locale) FreeMarkerWorker.getWrappedObject("locale", env);
         String mimeTypeIdTemp = getArg(args, "mimeTypeId", ctx);
         final String rootDir = getArg(args, "rootDir", ctx);
         final String webSiteId = getArg(args, "webSiteId", ctx);
         final String https = getArg(args, "https", ctx);
-        final LocalDispatcher dispatcher = (LocalDispatcher) FreeMarkerWorker.getWrappedObject("dispatcher", env);
+        //final LocalDispatcher dispatcher = (LocalDispatcher) FreeMarkerWorker.getWrappedObject("dispatcher", env);
         final GenericDelegator delegator = (GenericDelegator) FreeMarkerWorker.getWrappedObject("delegator", env);
         final GenericValue userLogin = (GenericValue) FreeMarkerWorker.getWrappedObject("userLogin", env);
         GenericValue subContentDataResourceViewTemp = (GenericValue) FreeMarkerWorker.getWrappedObject("subContentDataResourceView", env);
@@ -114,6 +120,7 @@ public class EditRenderSubContentTransform implements TemplateTransformModel {
             try {
                 subContentDataResourceViewTemp = ContentWorker.getSubContent(delegator, contentId, mapKey, subContentId, userLogin, assocTypes, fromDate);
             } catch (IOException e) {
+                Debug.logError(e, "Error getting sub-content", module);
                 throw new RuntimeException(e.getMessage());
             }
         }
@@ -168,8 +175,8 @@ public class EditRenderSubContentTransform implements TemplateTransformModel {
 
         final String dataResourceId = dataResourceIdTemp;
         final String subContentIdSub = subContentIdSubTemp;
-        final GenericValue finalSubContentView = subContentDataResourceView;
-        final GenericValue content = parentContent;
+        //final GenericValue finalSubContentView = subContentDataResourceView;
+        //final GenericValue content = parentContent;
         final Map templateContext = ctx;
         //if (Debug.verboseOn()) Debug.logVerbose("in EditRenderSubContent, templateContext:"+templateContext,module);
         final String mimeTypeId = mimeTypeIdTemp;
@@ -187,7 +194,6 @@ public class EditRenderSubContentTransform implements TemplateTransformModel {
             }
 
             public void close() throws IOException {
-
                 String wrappedFTL = buf.toString();
                 if (Debug.verboseOn()) Debug.logVerbose("in EditRenderSubContent, wrappedFTL:" + wrappedFTL, module);
                 if (editTemplate != null && editTemplate.equalsIgnoreCase("true")) {
@@ -199,22 +205,24 @@ public class EditRenderSubContentTransform implements TemplateTransformModel {
                         templateContext.put("webSiteId", webSiteId);
                         templateContext.put("https", https);
                         templateContext.put("rootDir", rootDir);
-                        TemplateHashModel oldRoot = env.getDataModel();
-                        SimpleHash templateRoot = FreeMarkerWorker.buildNewRoot(oldRoot);
+                        
+                        Map templateRoot = FreeMarkerWorker.createEnvironmentMap(env);
+                        
                         templateRoot.put("wrapDataResourceId", dataResourceId);
-                        if (Debug.verboseOn()) Debug.logVerbose("in EditRenderSubContent, wrapDataResourceId:" + dataResourceId, module);
                         templateRoot.put("wrapDataResourceTypeId", subDataResourceTypeId);
-                        if (Debug.verboseOn()) Debug.logVerbose("in EditRenderSubContent, wrapDataResourceTypeId:" + subDataResourceTypeId, module);
                         templateRoot.put("wrapContentIdTo", contentId);
-                        if (Debug.verboseOn()) Debug.logVerbose("in EditRenderSubContent, wrapContentIdTo:" + contentId, module);
                         templateRoot.put("wrapSubContentId", subContentIdSub);
-                        if (Debug.verboseOn()) Debug.logVerbose("in EditRenderSubContent, wrapSubContentId:" + subContentIdSub, module);
                         templateRoot.put("wrapMimeTypeId", mimeTypeId);
-                        if (Debug.verboseOn()) Debug.logVerbose("in EditRenderSubContent, wrapMimeTypeId:" + mimeTypeId, module);
                         templateRoot.put("wrapMapKey", mapKey);
-                        //if (Debug.verboseOn()) Debug.logVerbose("in EditRenderSubContent, wrapMapKey:" + mapKey,module);
                         templateRoot.put("context", templateContext);
+                        if (Debug.verboseOn()) Debug.logVerbose("in EditRenderSubContent, wrapDataResourceId:" + dataResourceId, module);
+                        if (Debug.verboseOn()) Debug.logVerbose("in EditRenderSubContent, wrapDataResourceTypeId:" + subDataResourceTypeId, module);
+                        if (Debug.verboseOn()) Debug.logVerbose("in EditRenderSubContent, wrapContentIdTo:" + contentId, module);
+                        if (Debug.verboseOn()) Debug.logVerbose("in EditRenderSubContent, wrapSubContentId:" + subContentIdSub, module);
+                        if (Debug.verboseOn()) Debug.logVerbose("in EditRenderSubContent, wrapMimeTypeId:" + mimeTypeId, module);
+                        //if (Debug.verboseOn()) Debug.logVerbose("in EditRenderSubContent, wrapMapKey:" + mapKey,module);
                         if (Debug.verboseOn()) Debug.logVerbose("in EditRenderSubContent, calling renderContentAsText, wrapTemplateId:" + wrapTemplateId, module);
+                        
                         try {
                             ContentWorker.renderContentAsText(delegator, wrapTemplateId, out, templateRoot, null, locale, mimeTypeId);
                         } catch (GeneralException e) {
@@ -222,6 +230,7 @@ public class EditRenderSubContentTransform implements TemplateTransformModel {
                             throw new IOException("Error rendering content" + e.toString());
                         }
                         if (Debug.verboseOn()) Debug.logVerbose("in EditRenderSubContent, after renderContentAsText", module);
+                        
                         Map ctx = (Map) FreeMarkerWorker.getWrappedObject("context", env);
                         if (Debug.verboseOn()) Debug.logVerbose("in EditRenderSubContent, contentId:" + ctx.get("contentId"), module);
                         templateContext.put("contentId", contentId);
@@ -239,7 +248,6 @@ public class EditRenderSubContentTransform implements TemplateTransformModel {
                         if (Debug.verboseOn()) Debug.logVerbose("in EditRenderSubContent, mimeTypeId:" + mimeTypeId, module);
                         if (Debug.verboseOn()) Debug.logVerbose("in EditRenderSubContent, locale:" + locale, module);
                         if (Debug.verboseOn()) Debug.logVerbose("in EditRenderSubContent, contentId2." + ctx.get("contentId"), module);
-
                     }
                 } else {
                     out.write(wrappedFTL);

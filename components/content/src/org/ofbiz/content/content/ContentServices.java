@@ -1,18 +1,25 @@
 /*
- * $Id: ContentServices.java,v 1.12 2003/12/21 11:53:05 jonesde Exp $
- * 
- * Copyright (c) 2001, 2002 The Open For Business Project - www.ofbiz.org
- * 
- * Permission is hereby granted, free of charge, to any person obtaining a copy of this software and associated documentation files (the "Software"), to deal
- * in the Software without restriction, including without limitation the rights to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
- * copies of the Software, and to permit persons to whom the Software is furnished to do so, subject to the following conditions:
- * 
- * The above copyright notice and this permission notice shall be included in all copies or substantial portions of the Software.
- * 
- * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY, FITNESS
- * FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY,
- * WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
- *  
+ * $Id: ContentServices.java,v 1.13 2003/12/23 07:24:05 jonesde Exp $
+ *
+ *  Copyright (c) 2001, 2002 The Open For Business Project - www.ofbiz.org
+ *
+ *  Permission is hereby granted, free of charge, to any person obtaining a
+ *  copy of this software and associated documentation files (the "Software"),
+ *  to deal in the Software without restriction, including without limitation
+ *  the rights to use, copy, modify, merge, publish, distribute, sublicense,
+ *  and/or sell copies of the Software, and to permit persons to whom the
+ *  Software is furnished to do so, subject to the following conditions:
+ *
+ *  The above copyright notice and this permission notice shall be included
+ *  in all copies or substantial portions of the Software.
+ *
+ *  THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS
+ *  OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF
+ *  MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT.
+ *  IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY
+ *  CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT
+ *  OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR
+ *  THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  */
 package org.ofbiz.content.content;
 
@@ -43,13 +50,11 @@ import org.ofbiz.service.GenericServiceException;
 import org.ofbiz.service.LocalDispatcher;
 import org.ofbiz.service.ServiceUtil;
 
-import freemarker.template.SimpleHash;
-
 /**
  * ContentServices Class
  * 
  * @author <a href="mailto:byersa@automationgroups.com">Al Byers</a>
- * @version $Revision: 1.12 $
+ * @version $Revision: 1.13 $
  * @since 2.2
  * 
  *  
@@ -558,32 +563,32 @@ public class ContentServices {
         Map results = new HashMap();
         GenericDelegator delegator = dctx.getDelegator();
         //LocalDispatcher dispatcher = dctx.getDispatcher();
-        SimpleHash templateContext = (SimpleHash) context.get("templateContext");
+        Map templateContext = (Map) context.get("templateContext");
         String contentId = (String) context.get("contentId");
         Timestamp fromDate = (Timestamp) context.get("fromDate");
         GenericValue userLogin = (GenericValue) context.get("userLogin");
         if (templateContext != null && UtilValidate.isEmpty(contentId)) {
-            contentId = (String) FreeMarkerWorker.get(templateContext, "contentId");
+            contentId = (String) templateContext.get("contentId");
         }
         String mapKey = (String) context.get("mapKey");
         if (templateContext != null && UtilValidate.isEmpty(mapKey)) {
-            mapKey = (String) FreeMarkerWorker.get(templateContext, "mapKey");
+            mapKey = (String) templateContext.get("mapKey");
         }
         String subContentId = (String) context.get("subContentId");
         if (templateContext != null && UtilValidate.isEmpty(subContentId)) {
-            subContentId = (String) FreeMarkerWorker.get(templateContext, "subContentId");
+            subContentId = (String) templateContext.get("subContentId");
         }
         String mimeTypeId = (String) context.get("mimeTypeId");
         if (templateContext != null && UtilValidate.isEmpty(mimeTypeId)) {
-            mimeTypeId = (String) FreeMarkerWorker.get(templateContext, "mimeTypeId");
+            mimeTypeId = (String) templateContext.get("mimeTypeId");
         }
         Locale locale = (Locale) context.get("locale");
         if (templateContext != null && locale == null) {
-            locale = (Locale) FreeMarkerWorker.get(templateContext, "locale");
+            locale = (Locale) templateContext.get("locale");
         }
         GenericValue subContentDataResourceView = (GenericValue) context.get("subContentDataResourceView");
         if (subContentDataResourceView != null && subContentDataResourceView == null) {
-            subContentDataResourceView = (GenericValue) FreeMarkerWorker.get(templateContext, "subContentDataResourceView");
+            subContentDataResourceView = (GenericValue) templateContext.get("subContentDataResourceView");
         }
         Writer out = (Writer) context.get("outWriter");
 
@@ -591,7 +596,7 @@ public class ContentServices {
         //Debug.logInfo("in renderSubContent(svc), subContentId:" + subContentId, "");
         //Debug.logInfo("in renderSubContent(svc), mapKey:" + mapKey, "");
         if (templateContext == null) {
-            templateContext = new SimpleHash();
+            templateContext = new HashMap();
         }
 
         try {
@@ -615,23 +620,23 @@ public class ContentServices {
         Map results = new HashMap();
         GenericDelegator delegator = dctx.getDelegator();
         Writer out = (Writer) context.get("outWriter");
-        SimpleHash templateContext = (SimpleHash) context.get("templateContext");
+        Map templateContext = (Map) context.get("templateContext");
         //GenericValue userLogin = (GenericValue)context.get("userLogin");
         String contentId = (String) context.get("contentId");
         if (templateContext != null && UtilValidate.isEmpty(contentId)) {
-            contentId = (String) FreeMarkerWorker.get(templateContext, "contentId");
+            contentId = (String) templateContext.get("contentId");
         }
         String mimeTypeId = (String) context.get("mimeTypeId");
         if (templateContext != null && UtilValidate.isEmpty(mimeTypeId)) {
-            mimeTypeId = (String) FreeMarkerWorker.get(templateContext, "mimeTypeId");
+            mimeTypeId = (String) templateContext.get("mimeTypeId");
         }
         Locale locale = (Locale) context.get("locale");
         if (templateContext != null && locale == null) {
-            locale = (Locale) FreeMarkerWorker.get(templateContext, "locale");
+            locale = (Locale) templateContext.get("locale");
         }
 
         if (templateContext == null) {
-            templateContext = new SimpleHash();
+            templateContext = new HashMap();
         }
 
         GenericValue view = null;

@@ -1,5 +1,5 @@
 /*
- * $Id: FreeMarkerWorker.java,v 1.2 2003/12/15 11:52:07 byersa Exp $
+ * $Id: FreeMarkerWorker.java,v 1.3 2003/12/23 07:24:05 jonesde Exp $
  *
  * Copyright (c) 2001-2003 The Open For Business Project - www.ofbiz.org
  *
@@ -24,52 +24,33 @@
  */
 package org.ofbiz.content.webapp.ftl;
 
-import java.io.File;
 import java.io.IOException;
-import java.util.Map;
-import java.lang.ClassCastException;
-import java.util.List;
 import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.Iterator;
+import java.util.List;
+import java.util.Map;
+import java.util.Set;
 
-import javax.servlet.ServletContext;
-import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletResponse;
-import javax.servlet.http.HttpSession;
-
-import org.ofbiz.base.util.UtilHttp;
 import org.ofbiz.base.util.Debug;
-import org.ofbiz.base.util.UtilValidate;
 import org.ofbiz.base.util.UtilMisc;
-import org.ofbiz.content.webapp.view.ViewHandler;
-import org.ofbiz.content.webapp.view.ViewHandlerException;
-import org.ofbiz.entity.GenericValue;
+import org.ofbiz.base.util.UtilValidate;
 import org.ofbiz.entity.GenericDelegator;
 import org.ofbiz.entity.GenericEntityException;
-
-import freemarker.ext.beans.BeansWrapper;
-import freemarker.ext.beans.StringModel;
-import freemarker.ext.jsp.TaglibFactory;
-import freemarker.ext.servlet.HttpRequestHashModel;
-import freemarker.ext.servlet.HttpSessionHashModel;
-import freemarker.template.Configuration;
-import freemarker.template.SimpleHash;
-import freemarker.template.Template;
-import freemarker.template.TemplateException;
-import freemarker.template.WrappingTemplateModel;
-import freemarker.template.Environment;
+import org.ofbiz.entity.GenericValue;
 
 import freemarker.ext.beans.BeanModel;
+import freemarker.template.Environment;
+import freemarker.template.SimpleHash;
 import freemarker.template.SimpleScalar;
 import freemarker.template.TemplateModelException;
-import freemarker.template.TemplateScalarModel;
-import freemarker.template.TemplateHashModel;
 
 
 /**
  * FreemarkerViewHandler - Freemarker Template Engine Util
  *
  * @author     <a href="mailto:byersa@automationgroups.com">Al Byers</a>
- * @version    $Revision: 1.2 $
+ * @version    $Revision: 1.3 $
  * @since      3.0
  */
 public class FreeMarkerWorker {
@@ -77,27 +58,27 @@ public class FreeMarkerWorker {
     public static final String module = FreeMarkerWorker.class.getName();
     
 
-    public static String getArg(Map args, String key, Environment env ) {
-            Map templateContext = (Map)FreeMarkerWorker.getWrappedObject("context", env);
-            return getArg(args, key, templateContext);
+    public static String getArg(Map args, String key, Environment env) {
+        Map templateContext = (Map) FreeMarkerWorker.getWrappedObject("context", env);
+        return getArg(args, key, templateContext);
     }
 
-    public static String getArg(Map args, String key, Map templateContext ) {
-            SimpleScalar s = null;
-            Object o = null;
-            String returnVal = null;
-            o = args.get(key);
-            returnVal = (String)unwrap(o);
-            if (returnVal == null) {
-                try {
-                    if (templateContext != null) {
-                        returnVal = (String)templateContext.get(key);
-                    }
-                } catch(ClassCastException e2) {
-                    //return null;
+    public static String getArg(Map args, String key, Map templateContext) {
+        //SimpleScalar s = null;
+        Object o = null;
+        String returnVal = null;
+        o = args.get(key);
+        returnVal = (String) unwrap(o);
+        if (returnVal == null) {
+            try {
+                if (templateContext != null) {
+                    returnVal = (String) templateContext.get(key);
                 }
+            } catch (ClassCastException e2) {
+                //return null;
             }
-            return returnVal;
+        }
+        return returnVal;
     }
 
 
@@ -107,16 +88,16 @@ public class FreeMarkerWorker {
     * @param env the FreeMarker Environment
     */
     public static Object getWrappedObject(String varName, Environment env) {
-            Object obj = null;
-            try {
-                BeanModel bean = (BeanModel) env.getVariable(varName);
-                if (bean != null) {                    
-                    obj = bean.getWrappedObject();
-                } 
-            } catch(TemplateModelException e) {
-                Debug.logInfo(e.getMessage(), module);
-            }
-            return obj;
+        Object obj = null;
+        try {
+            BeanModel bean = (BeanModel) env.getVariable(varName);
+            if (bean != null) {                    
+                obj = bean.getWrappedObject();
+            } 
+        } catch (TemplateModelException e) {
+            Debug.logInfo(e.getMessage(), module);
+        }
+        return obj;
     }
 
    /**
@@ -125,13 +106,13 @@ public class FreeMarkerWorker {
     * @param env the FreeMarker Environment
     */
     public static BeanModel getBeanModel(String varName, Environment env) {
-            BeanModel bean = null;
-            try {
-                bean = (BeanModel) env.getVariable(varName);
-            } catch(TemplateModelException e) {
-                Debug.logInfo(e.getMessage(), module);
-            }
-            return bean;
+        BeanModel bean = null;
+        try {
+            bean = (BeanModel) env.getVariable(varName);
+        } catch (TemplateModelException e) {
+            Debug.logInfo(e.getMessage(), module);
+        }
+        return bean;
     }
 
    /*
@@ -195,95 +176,64 @@ public class FreeMarkerWorker {
         return mimeTypeId;
     }
 
-    public static SimpleHash buildNewRoot( TemplateHashModel oldRoot) throws IOException {
-        
-        BeansWrapper wrapper = BeansWrapper.getDefaultInstance();
-        WrappingTemplateModel.setDefaultObjectWrapper(wrapper);                    
-        SimpleHash root = new SimpleHash(wrapper);          
-        try {
-            //root.put("context", wrapper.wrap(context));                          
-            root.put("request", oldRoot.get("request"));                          
-            root.put("response", oldRoot.get("response"));                          
-            root.put("delegator", oldRoot.get("delegator"));                          
-            root.put("dispatcher", oldRoot.get("dispatcher"));                          
-            root.put("security", oldRoot.get("security"));                          
-            root.put("userLogin", oldRoot.get("userLogin"));                          
-            root.put("application", oldRoot.get("application"));                          
-            root.put("requestAttributes", oldRoot.get("requestAttributes"));                          
-            root.put("requestParameters", oldRoot.get("requestParameters"));                          
-            root.put("ofbizUrl", oldRoot.get("ofbizUrl"));
-            root.put("ofbizContentUrl", oldRoot.get("ofbizContentUrl"));
-            root.put("ofbizCurrency", oldRoot.get("ofbizCurrency"));
-            root.put("setRequestAttribute", oldRoot.get("setRequestAttribute"));
-            root.put("editRenderSubContent", oldRoot.get("editRenderSubContent"));
-            root.put("renderSubContent", oldRoot.get("renderSubContent"));
-            root.put("renderWrappedText", oldRoot.get("renderWrappedText"));
-            
-        } catch (Exception e) {
-            throw new IOException(e.getMessage());            
-        }          
-        return root;         
-    }
-
     public static Object get(SimpleHash args, String key) {
-            Object returnObj = null;
-            Object o = null;
+        Object returnObj = null;
+        Object o = null;
+        try {
+            o = args.get(key);
+            //Debug.logInfo("in FM.get, o:" + o + " key:" + key, module);
+            if (o != null) {
+                 //Debug.logInfo("in FM.get, o class:" + o.getClass(), module);
+            }
+        } catch(TemplateModelException e) {
+            Debug.logInfo(e.getMessage(), module);
+            return returnObj;
+        }
+
+        returnObj = unwrap(o);
+
+        if (returnObj == null) {
+            Object ctxObj = null;
             try {
-                o = args.get(key);
-                //Debug.logInfo("in FM.get, o:" + o + " key:" + key, module);
-                if (o != null) {
-                     //Debug.logInfo("in FM.get, o class:" + o.getClass(), module);
-                }
+                ctxObj = args.get("context");
+                //Debug.logInfo("in FM.get, ctxObj:" + ctxObj, module);
             } catch(TemplateModelException e) {
                 Debug.logInfo(e.getMessage(), module);
                 return returnObj;
             }
-
-            returnObj = unwrap(o);
-
-        
-            if (returnObj == null) {
-                Object ctxObj = null;
-                try {
-                    ctxObj = args.get("context");
-                    //Debug.logInfo("in FM.get, ctxObj:" + ctxObj, module);
-                } catch(TemplateModelException e) {
-                    Debug.logInfo(e.getMessage(), module);
-                    return returnObj;
-                }
-                Map ctx = null;
-                if (ctxObj instanceof BeanModel) {
-                    ctx = (Map)((BeanModel)ctxObj).getWrappedObject();
-                    //Debug.logInfo("in FM.get, ctx:" + ctx, module);
-                returnObj = ctx.get(key);
-                //Debug.logInfo("in FM.get..., returnObj:" + returnObj + " key:" + key, module);
-                }
-                /*
-                try {
-                    Map templateContext = (Map)FreeMarkerWorker.getWrappedObject("context", env);
-                    if (templateContext != null) {
-                        returnObj = (String)templateContext.get(key);
-                    }
-                } catch(ClassCastException e2) {
-                    //return null;
-                }
-                */
+            Map ctx = null;
+            if (ctxObj instanceof BeanModel) {
+                ctx = (Map)((BeanModel)ctxObj).getWrappedObject();
+                //Debug.logInfo("in FM.get, ctx:" + ctx, module);
+            returnObj = ctx.get(key);
+            //Debug.logInfo("in FM.get..., returnObj:" + returnObj + " key:" + key, module);
             }
-            return returnObj;
+            /*
+            try {
+                Map templateContext = (Map)FreeMarkerWorker.getWrappedObject("context", env);
+                if (templateContext != null) {
+                    returnObj = (String)templateContext.get(key);
+                }
+            } catch(ClassCastException e2) {
+                //return null;
+            }
+            */
+        }
+        return returnObj;
     }
 
     public static Object unwrap(Object o) {
-            Object returnObj = null;
+        Object returnObj = null;
 
-            if (o instanceof SimpleScalar) {
-                returnObj = o.toString();
-                //Debug.logInfo("in FM.get, SimpleScalar:" + returnObj, module);
-            } else if (o instanceof BeanModel) {
-                returnObj = ((BeanModel)o).getWrappedObject();
-                //Debug.logInfo("in FM.get, BeanModel:" + returnObj, module);
-            }
-        
-            return returnObj;
+        if (o instanceof SimpleScalar) {
+            returnObj = o.toString();
+            //Debug.logInfo("in FM.get, SimpleScalar:" + returnObj, module);
+        } else if (o instanceof BeanModel) {
+            returnObj = ((BeanModel)o).getWrappedObject();
+            //Debug.logInfo("in FM.get, BeanModel:" + returnObj, module);
+        }
+    
+        return returnObj;
     }
 
     public static void checkForLoop(String path, Map ctx) throws IOException {
@@ -303,4 +253,21 @@ public class FreeMarkerWorker {
         return;
     }
 
+    public static Map createEnvironmentMap(Environment env) {
+        Map templateRoot = new HashMap();
+        Set varNames = null;
+        try {
+            varNames = env.getKnownVariableNames();
+        } catch (TemplateModelException e1) {
+            Debug.logError(e1, "Error getting FreeMarker variable names, will not put pass current context on to sub-content", module);
+        }
+        if (varNames != null) {
+            Iterator varNameIter = varNames.iterator();
+            while (varNameIter.hasNext()) {
+                String varName = (String) varNameIter.next();
+                templateRoot.put(varName, FreeMarkerWorker.getWrappedObject(varName, env));
+            }
+        }
+        return templateRoot;
+    }
 }
