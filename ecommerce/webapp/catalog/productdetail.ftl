@@ -210,7 +210,7 @@ ${requestAttributes.virtualJavaScript?if_exists}
 
 <#-- Upgrades/Up-Sell/Cross-Sell -->
 <#macro associated assocProducts beforeName showName afterName formNamePrefix>
-  <#if assocProducts?exists && 0 < assocProducts?size>
+  <#if assocProducts?has_content>
     <tr><td>&nbsp;</td></tr> 
     <tr><td colspan="2"><div class="head2">${beforeName?if_exists}<#if showName == "Y">${productValue.productName}</#if>${afterName?if_exists}</div></td></tr>
     <tr><td><hr class='sepbar'></td></tr>    

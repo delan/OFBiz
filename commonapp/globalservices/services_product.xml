@@ -1177,6 +1177,8 @@
         <description>Finds associated products by the defined type.</description>
         <attribute name="productId" type="String" mode="IN" optional="true"/>
         <attribute name="productIdTo" type="String" mode="IN" optional="true"/>
+        <attribute name="checkViewAllow" type="Boolean" mode="IN" optional="true"/>
+        <attribute name="prodCatalogId" type="String" mode="IN" optional="true"/>
         <attribute name="type" type="String" mode="IN"/>
         <attribute name="assocProducts" type="java.util.Collection" mode="OUT"/>
     </service>

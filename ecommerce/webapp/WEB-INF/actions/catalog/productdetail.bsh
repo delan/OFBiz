@@ -98,6 +98,7 @@ if (product != null) {
     // get the product price
     catalogId = CatalogWorker.getCurrentCatalogId(request);
     webSiteId = CatalogWorker.getWebSiteId(request);
+    currentCatalogId = CatalogWorker.getCurrentCatalogId(request);
     autoUserLogin = request.getSession().getAttribute("autoUserLogin");
     fieldMap = UtilMisc.toMap("product", product, "prodCatalogId", catalogId, "webSiteId", webSiteId, "autoUserLogin", autoUserLogin);
     priceMap = dispatcher.runSync("calculateProductPrice", fieldMap);
@@ -192,15 +193,14 @@ if (product != null) {
             request.setAttribute("virtualJavaScript", jsBuf.toString());          
         }
     } 
-    
+
     // get product associations
-    obsoleteProducts = dispatcher.runSync("getAssociatedProducts", UtilMisc.toMap("productId", productId, "type", "PRODUCT_OBSOLESCENCE"));
+    obsoleteProducts = dispatcher.runSync("getAssociatedProducts", UtilMisc.toMap("productId", productId, "type", "PRODUCT_OBSOLESCENCE", "checkViewAllow", Boolean.TRUE, "prodCatalogId", currentCatalogId));
     request.setAttribute("obsoleteProducts", obsoleteProducts.get("assocProducts"));
-    crossSellProducts = dispatcher.runSync("getAssociatedProducts", UtilMisc.toMap("productId", productId, "type", "PRODUCT_COMPLEMENT"));
+    crossSellProducts = dispatcher.runSync("getAssociatedProducts", UtilMisc.toMap("productId", productId, "type", "PRODUCT_COMPLEMENT", "checkViewAllow", Boolean.TRUE, "prodCatalogId", currentCatalogId));
     request.setAttribute("crossSellProducts", crossSellProducts.get("assocProducts")); 
-    upSellProducts = dispatcher.runSync("getAssociatedProducts", UtilMisc.toMap("productId", productId, "type", "PRODUCT_UPGRADE"));
+    upSellProducts = dispatcher.runSync("getAssociatedProducts", UtilMisc.toMap("productId", productId, "type", "PRODUCT_UPGRADE", "checkViewAllow", Boolean.TRUE, "prodCatalogId", currentCatalogId));
     request.setAttribute("upSellProducts", upSellProducts.get("assocProducts"));
-    obsolenscenseProducts = dispatcher.runSync("getAssociatedProducts", UtilMisc.toMap("productIdTo", productId, "type", "PRODUCT_OBSOLESCENCE"));
+    obsolenscenseProducts = dispatcher.runSync("getAssociatedProducts", UtilMisc.toMap("productIdTo", productId, "type", "PRODUCT_OBSOLESCENCE", "checkViewAllow", Boolean.TRUE, "prodCatalogId", currentCatalogId));
     request.setAttribute("obsolenscenseProducts", obsolenscenseProducts.get("assocProducts"));                 
 }
- 

@@ -30,6 +30,8 @@ import org.ofbiz.core.entity.*;
 import org.ofbiz.core.service.*;
 import org.ofbiz.core.util.*;
 
+import org.ofbiz.commonapp.product.catalog.*;
+import org.ofbiz.commonapp.product.category.*;
 
 /**
  * Product Services
@@ -357,6 +359,10 @@ public class ProductServices {
         String productIdTo = (String) context.get("productIdTo");
         String type = (String) context.get("type");
 
+        Boolean cvaBool = (Boolean) context.get("checkViewAllow");
+        boolean checkViewAllow = (cvaBool == null ? false : cvaBool.booleanValue());
+        String prodCatalogId = (String) context.get("prodCatalogId");
+        
         if (productId == null && productIdTo == null) {
             result.put(ModelService.RESPONSE_MESSAGE, ModelService.RESPOND_ERROR);
             result.put(ModelService.ERROR_MESSAGE, "Both productId and productIdTo cannot be null");
@@ -387,15 +393,29 @@ public class ProductServices {
         }
 
         try {
-            List c = null;
+            List productAssocs = null;
 
             if (productIdTo == null) {
-                c = product.getRelatedCache("MainProductAssoc", UtilMisc.toMap("productAssocTypeId", type), UtilMisc.toList("sequenceNum"));
+                productAssocs = product.getRelatedCache("MainProductAssoc", UtilMisc.toMap("productAssocTypeId", type), UtilMisc.toList("sequenceNum"));
             } else {
-                c = product.getRelatedCache("AssocProductAssoc", UtilMisc.toMap("productAssocTypeId", type), UtilMisc.toList("sequenceNum"));
+                productAssocs = product.getRelatedCache("AssocProductAssoc", UtilMisc.toMap("productAssocTypeId", type), UtilMisc.toList("sequenceNum"));
             }
-            c = EntityUtil.filterByDate(c, true);
-            result.put("assocProducts", c);
+            // filter the list by date
+            productAssocs = EntityUtil.filterByDate(productAssocs, true);
+            // first check to see if there is a view allow category and if these producta are in it...
+            if (checkViewAllow && prodCatalogId != null && productAssocs != null && productAssocs.size() > 0) {
+                String viewProductCategoryId = CatalogWorker.getCatalogViewAllowCategoryId(delegator, prodCatalogId);
+                if (viewProductCategoryId != null) {
+                    if (productIdTo == null) {
+                        productAssocs = CategoryWorker.filterProductsInCategory(delegator, productAssocs, viewProductCategoryId, "productIdTo");
+                    } else {
+                        productAssocs = CategoryWorker.filterProductsInCategory(delegator, productAssocs, viewProductCategoryId, "productId");
+                    }
+                }
+            }
+            
+            
+            result.put("assocProducts", productAssocs);
             result.put(ModelService.RESPONSE_MESSAGE, ModelService.RESPOND_SUCCESS);
         } catch (GenericEntityException e) {
             result.put(ModelService.RESPONSE_MESSAGE, ModelService.RESPOND_ERROR);

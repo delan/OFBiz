@@ -300,6 +300,23 @@ public class CategoryWorker {
         List productCategoryMembers = EntityUtil.filterByDate(delegator.findByAndCache("ProductCategoryMember", 
                 UtilMisc.toMap("productCategoryId", productCategoryId, "productId", productId)), true);
         if (productCategoryMembers == null || productCategoryMembers.size() == 0) {
+            //before giving up see if this is a variant product, and if so look up the virtual product and check it...
+            GenericValue product = delegator.findByPrimaryKey("Product", UtilMisc.toMap("productId", productId));
+            if ("Y".equals(product.getString("isVariant"))) {
+                List productAssocs = EntityUtil.filterByDate(delegator.findByAndCache("ProductAssoc",
+                            UtilMisc.toMap("productIdTo", productId, "productAssocTypeId", "PRODUCT_VARIANT")), true);
+                //this does take into account that a product could be a variant of multiple products, but this shouldn't ever really happen...
+                if (productAssocs != null && productAssocs.size() > 0) {
+                    Iterator pasIter = productAssocs.iterator();
+                    while (pasIter.hasNext()) {
+                        GenericValue productAssoc = (GenericValue) pasIter.next();
+                        if (isProductInCategory(delegator, productAssoc.getString("productId"), productCategoryId)) {
+                            return true;
+                        }
+                    }
+                }
+            }
+            
             return false;
         } else {
             return true;
@@ -307,6 +324,10 @@ public class CategoryWorker {
     }
     
     public static List filterProductsInCategory(GenericDelegator delegator, List valueObjects, String productCategoryId) throws GenericEntityException {
+        return filterProductsInCategory(delegator, valueObjects, productCategoryId, "productId");
+    }
+    
+    public static List filterProductsInCategory(GenericDelegator delegator, List valueObjects, String productCategoryId, String productIdFieldName) throws GenericEntityException {
         if (productCategoryId == null) return new LinkedList();
         if (valueObjects == null) return null;
         
@@ -314,7 +335,7 @@ public class CategoryWorker {
         Iterator valIter = valueObjects.iterator();
         while (valIter.hasNext()) {
             GenericValue curValue = (GenericValue) valIter.next();
-            String productId = curValue.getString("productId");
+            String productId = curValue.getString(productIdFieldName);
             if (isProductInCategory(delegator, productId, productCategoryId)) {
                 newList.add(curValue);
             }
