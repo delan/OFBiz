@@ -26,7 +26,7 @@
  *
  * @author     David E. Jones (jonesde@ofbiz.org)
  * @author     Andy Zeneski (jaz@ofbiz.org)
- * @version    $Revision: 1.2 $
+ * @version    $Revision: 1.3 $
  */
 -->
 
@@ -64,6 +64,7 @@
       <field name="recurrenceInfoId" type="id"></field>
       <field name="startDateTime" type="date-time"></field>
       <field name="finishDateTime" type="date-time"></field>
+      <field name="cancelDateTime" type="date-time"></field>
       <prim-key field="jobName"/>
       <prim-key field="runTime"/>
       <relation type="one" fk-name="JOB_SNDBX_RECINFO" rel-entity-name="RecurrenceInfo">

@@ -263,11 +263,17 @@
     <request-map uri="jobList">
     	<security https="true" auth="true"/>
     	<response name="success" type="view" value="jobList"/>
-    </request-map>       
+    </request-map>
+    <request-map uri="cancelJob">
+    	<security https="true" auth="true"/>
+        <event type="service" invoke="cancelScheduledJob"/>
+    	<response name="success" type="view" value="jobList"/>
+        <response name="error" type="view" value="jobList"/>
+    </request-map>
     <request-map uri="scheduleJob">
     	<security https="true" auth="true"/>
     	<response name="success" type="view" value="scheduleJob"/>
-    </request-map>        
+    </request-map>
     <request-map uri="scheduleService">
     	<security https="true" auth="true"/>
         <event type="java" path="org.ofbiz.content.webapp.event.CoreEvents" invoke="scheduleService"/>

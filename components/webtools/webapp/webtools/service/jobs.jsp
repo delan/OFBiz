@@ -21,7 +21,7 @@
  *  THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  *
  *@author     Andy Zeneski
- *@version    $Revision: 1.5 $
+ *@version    $Revision: 1.6 $
  *@since      2.0
 --%>
 
@@ -54,14 +54,41 @@
     <td>&nbsp;</td>
   </tr>
   <ofbiz:iterator name="job" property="jobs">
+  <%
+      String finishTime = job.getString("finishDateTime");
+      String cancelTime = job.getString("cancelDateTime");
+      String endTime = finishTime;
+      if (endTime == null) {
+          endTime = cancelTime;
+      }
+  %>
   <tr>
     <td><a href="#" class="buttontext"><%=UtilFormatOut.checkNull(job.getString("jobName"),"&nbsp;")%></a></td>
     <td><div class="tabletext"><%=UtilFormatOut.checkNull(job.getString("poolId"), "&nbsp;")%></div></td>
     <td><div class="tabletext"><%=UtilFormatOut.checkNull(job.getString("runTime"),"&nbsp;")%></div></td>
     <td><div class="tabletext"><%=UtilFormatOut.checkNull(job.getString("startDateTime"),"&nbsp;")%></div></td>
     <td><div class="tabletext"><%=UtilFormatOut.checkNull(job.getString("serviceName"),"&nbsp;")%></div></td>
-    <td><div class="tabletext"><%=UtilFormatOut.checkNull(job.getString("finishDateTime"),"&nbsp;")%></div></td>
-    <td align='center'><a href="#" class="buttontext">[View Data]</a></td>
+    <td>
+      <div class="tabletext">
+        <%if (endTime != null && cancelTime != null && endTime.equals(cancelTime)) {%>
+        <font color="red">
+        <%}%>
+
+        <%=UtilFormatOut.checkNull(endTime,"&nbsp;")%>
+
+        <%if (endTime != null && cancelTime != null && endTime.equals(cancelTime)) {%>
+        </font>
+        <%}%>
+      </div>
+    </td>
+    <%--<td align='center'><a href="#" class="buttontext">[View Data]</a></td>--%>
+    <td align="center">
+      <%if (endTime != null) {%>
+      &nbsp;
+      <%}else{%>
+      <a href="<ofbiz:url>/cancelJob?jobName=<%=job.getString("jobName")%>&runTime=<%=job.getString("runTime")%></ofbiz:url>" class="buttontext">[Cancel Job]</a>
+      <%}%>
+    </td>
   </tr>
   </ofbiz:iterator>
 </table>

@@ -1,5 +1,5 @@
 /*
- * $Id: PersistedServiceJob.java,v 1.4 2003/11/05 22:41:55 ajzeneski Exp $
+ * $Id: PersistedServiceJob.java,v 1.5 2003/11/25 23:56:08 ajzeneski Exp $
  *
  * Copyright (c) 2001, 2002 The Open For Business Project - www.ofbiz.org
  *
@@ -52,7 +52,7 @@ import org.xml.sax.SAXException;
  * Entity Service Job - Store => Schedule => Run
  *
  * @author     <a href="mailto:jaz@ofbiz.org">Andy Zeneski</a> 
- * @version    $Revision: 1.4 $
+ * @version    $Revision: 1.5 $
  * @since      2.0
  */
 public class PersistedServiceJob extends GenericServiceJob {
@@ -138,10 +138,10 @@ public class PersistedServiceJob extends GenericServiceJob {
     }
 
     /**
-     * @see org.ofbiz.service.job.GenericServiceJob#failed(Exception)
+     * @see org.ofbiz.service.job.GenericServiceJob#failed(Throwable)
      */
-    protected void failed(Exception e) {
-        super.failed(e);
+    protected void failed(Throwable t) {
+        super.failed(t);
 
         // if the job has not been re-scheduled; we need to re-schedule and run again
         if (nextRecurrence == -1) {
@@ -156,6 +156,7 @@ public class PersistedServiceJob extends GenericServiceJob {
             } catch (GenericEntityException gee) {
                 Debug.logError(gee, "ERROR: Unable to re-schedule job to re-run : " + job, module);
             }
+            Debug.log("Persisted Job Failed Re-Scheduling : " + next, module);
         }
     }
 

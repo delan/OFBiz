@@ -1,5 +1,5 @@
 /*
- * $Id: GenericResultWaiter.java,v 1.1 2003/08/17 05:12:41 ajzeneski Exp $
+ * $Id: GenericResultWaiter.java,v 1.2 2003/11/25 23:56:07 ajzeneski Exp $
  *
  * Copyright (c) 2001, 2002 The Open For Business Project - www.ofbiz.org
  *
@@ -33,7 +33,7 @@ import org.ofbiz.base.util.Debug;
  *
  * @author     <a href="mailto:jonesde@ofbiz.org">David E. Jones</a>
  * @author     <a href="mailto:jaz@ofbiz.org">Andy Zeneski</a>
- * @version    $Revision: 1.1 $
+ * @version    $Revision: 1.2 $
  * @since      2.0 
  */
 public class GenericResultWaiter implements GenericRequester {
@@ -50,7 +50,7 @@ public class GenericResultWaiter implements GenericRequester {
     private boolean completed = false;
     private int status = -1;
     private Map result = null;
-    private Exception exception = null;
+    private Throwable t = null;
 
     /**
      * @see org.ofbiz.service.GenericRequester#receiveResult(java.util.Map)
@@ -65,10 +65,10 @@ public class GenericResultWaiter implements GenericRequester {
     }
     
     /**
-     * @see org.ofbiz.service.GenericRequester#receiveException(java.lang.Exception)
+     * @see org.ofbiz.service.GenericRequester#receiveThrowable(java.lang.Throwable)
      */
-    public synchronized void receiveException(Exception exception) {
-        this.exception = exception;
+    public synchronized void receiveThrowable(Throwable t) {
+        this.t = t;
         completed = true;
         status = SERVICE_FAILED;
         notify();              
@@ -83,7 +83,9 @@ public class GenericResultWaiter implements GenericRequester {
     }
     
     /**
-     * If the service has completed return true     * @return boolean     */
+     * If the service has completed return true
+     * @return boolean
+     */
     public synchronized boolean isCompleted() {
         return completed;
     }
@@ -92,14 +94,16 @@ public class GenericResultWaiter implements GenericRequester {
      * Returns the exception which was thrown or null if none
      * @return Exception
      */
-    public synchronized Exception getException() {
+    public synchronized Throwable getThrowable() {
         if (!isCompleted())
             throw new java.lang.IllegalStateException("Cannot return exception, synchronous call has not completed.");
-        return this.exception;
+        return this.t;
     }    
 
     /**
-     * Gets the results of the service or null if none     * @return Map     */
+     * Gets the results of the service or null if none
+     * @return Map
+     */
     public synchronized Map getResult() {
         if (!isCompleted())
             throw new java.lang.IllegalStateException("Cannot return result, asynchronous call has not completed.");
@@ -107,13 +111,18 @@ public class GenericResultWaiter implements GenericRequester {
     }
 
     /**
-     * Waits for the service to complete     * @return Map     */
+     * Waits for the service to complete
+     * @return Map
+     */
     public synchronized Map waitForResult() {
         return this.waitForResult(10);
     }
 
     /**
-     * Waits for the service to complete, check the status ever n milliseconds     * @param milliseconds     * @return Map     */
+     * Waits for the service to complete, check the status ever n milliseconds
+     * @param milliseconds
+     * @return Map
+     */
     public synchronized Map waitForResult(long milliseconds) {
         if (Debug.verboseOn()) Debug.logVerbose("Waiting for results...", module);
         while (!isCompleted()) {

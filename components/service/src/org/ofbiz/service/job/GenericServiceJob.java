@@ -1,5 +1,5 @@
 /*
- * $Id: GenericServiceJob.java,v 1.2 2003/11/05 22:41:55 ajzeneski Exp $
+ * $Id: GenericServiceJob.java,v 1.3 2003/11/25 23:56:07 ajzeneski Exp $
  *
  * Copyright (c) 2001, 2002 The Open For Business Project - www.ofbiz.org
  *
@@ -28,8 +28,6 @@ import java.util.Date;
 import java.util.Map;
 
 import org.ofbiz.base.util.Debug;
-import org.ofbiz.entity.transaction.GenericTransactionException;
-import org.ofbiz.entity.transaction.TransactionUtil;
 import org.ofbiz.service.DispatchContext;
 import org.ofbiz.service.GenericRequester;
 import org.ofbiz.service.LocalDispatcher;
@@ -39,7 +37,7 @@ import org.ofbiz.service.ModelService;
  * Generic Service Job - A generic async-service Job.
  *
  * @author     <a href="mailto:jaz@ofbiz.org">Andy Zeneski</a> *
- * @version    $Revision: 1.2 $
+ * @version    $Revision: 1.3 $
  * @since      2.0
  */
 public class GenericServiceJob extends AbstractJob {
@@ -48,22 +46,16 @@ public class GenericServiceJob extends AbstractJob {
 
     protected transient GenericRequester requester = null;
     protected transient DispatchContext dctx = null;
-    
-    private boolean trans = false;
+
     private String service = null;
     private Map context = null;
 
     public GenericServiceJob(DispatchContext dctx, String jobName, String service, Map context, GenericRequester req) {
-        this(dctx, jobName, service, context, req, true);
-    }
-
-    public GenericServiceJob(DispatchContext dctx, String jobName, String service, Map context, GenericRequester req, boolean trans) {
         super(jobName);
         this.dctx = dctx;
         this.service = service;
         this.context = context;
         this.requester = req;
-        this.trans = trans;
         runtime = new Date().getTime();
     }
 
@@ -80,65 +72,36 @@ public class GenericServiceJob extends AbstractJob {
      */
     public void exec() {
         init();
-        boolean begunTransaction = false;
 
-        if (trans) {
-            try {
-                begunTransaction = TransactionUtil.begin();
-            } catch (GenericTransactionException te) {
-                Debug.logError(te, module);
-            }
-        }
-
+        // no transaction is necessary since runSync handles this
         try {
             // get the dispatcher and invoke the service via runSync -- will run all ECAs
             LocalDispatcher dispatcher = dctx.getDispatcher();
             Map result = dispatcher.runSync(getServiceName(), getContext());
 
+            // check for a failure
+            boolean isError = ModelService.RESPOND_ERROR.equals(result.get(ModelService.RESPONSE_MESSAGE));
+            if (isError) {
+                 String errorMessage = (String) result.get(ModelService.ERROR_MESSAGE);
+                 this.failed(new Exception(errorMessage));
+            }
+
             if (requester != null) {
                 requester.receiveResult(result);
             }
 
-            // call the finish method
-            finish();
-            
-            boolean isError = ModelService.RESPOND_ERROR.equals(result.get(ModelService.RESPONSE_MESSAGE));
-
-            // commit the transaction if we started it.
-            if (trans && begunTransaction) {
-                if (!isError) {
-                    try {
-                        TransactionUtil.commit(begunTransaction);
-                    } catch (GenericTransactionException te) {
-                        Debug.logError(te, "Cannot commit transaction", module);
-                    }
-                } else {
-                    try {
-                        TransactionUtil.rollback(begunTransaction);
-                    } catch (GenericTransactionException te) {
-                        Debug.logError(te, "Cannot rollback transaction", module);
-                    }
-                    String errorMessage = (String) result.get(ModelService.ERROR_MESSAGE);
-                    failed(new Exception(errorMessage));
-                }
-            }
-        } catch (Exception e) {            
-            if (trans && begunTransaction) {
-                try {
-                    TransactionUtil.rollback(begunTransaction);
-                } catch (GenericTransactionException te) {
-                    Debug.logError(te, "Cannot rollback transaction", module);
-                }
-            } 
-            
+        } catch (Throwable t) {
             // pass the exception back to the requester.
             if (requester != null) {
-                requester.receiveException(e);
+                requester.receiveThrowable(t);
             }
 
             // call the failed method
-            failed(e);         
+            this.failed(t);
         }
+
+        // call the finish method
+        this.finish();
     }
 
     /**
@@ -158,10 +121,10 @@ public class GenericServiceJob extends AbstractJob {
     
     /**
      * Method is called when the service fails.
-     * @param e Exception
+     * @param t Throwable
      */
-    protected void failed(Exception e) {
-        Debug.logError(e, "Async-Service failed.", module);
+    protected void failed(Throwable t) {
+        Debug.logError(t, "Async-Service failed.", module);
         runtime = 0;
     }
 

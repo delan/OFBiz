@@ -1,5 +1,5 @@
 /*
- * $Id: JobInvoker.java,v 1.1 2003/08/17 05:12:38 ajzeneski Exp $ 
+ * $Id: JobInvoker.java,v 1.2 2003/11/25 23:56:08 ajzeneski Exp $ 
  *
  * Copyright (c) 2001, 2002 The Open For Business Project - www.ofbiz.org
  *
@@ -34,7 +34,7 @@ import org.ofbiz.base.util.UtilDateTime;
  * JobInvoker
  *
  * @author     <a href="mailto:jaz@ofbiz.org">Andy Zeneski</a>
- * @version    $Revision: 1.1 $
+ * @version    $Revision: 1.2 $
  * @since      2.0
  */
 public class JobInvoker implements Runnable {
@@ -94,7 +94,7 @@ public class JobInvoker implements Runnable {
 
     /**
      * Gets the time when this thread was created.
-     * @returns Time in milliseconds when this was created.
+     * @return Time in milliseconds when this was created.
      */
     public long getTime() {
         return created.getTime();
