@@ -32,8 +32,9 @@
 <!ELEMENT service-eca ( eca+ )>
 <!ELEMENT eca ( (condition | condition-field)*, action+ )>
 <!ATTLIST eca
-	service CDATA #REQUIRED
-	event ( auth | in-validate | out-validate | invoke | commit | return ) #REQUIRED
+    service CDATA #REQUIRED
+    event ( auth | in-validate | out-validate | invoke | commit | return ) #REQUIRED
+    run-on-error ( true | false ) "false"
 >
 
 <!ELEMENT condition EMPTY>
@@ -59,8 +60,8 @@
 
 <!ELEMENT action EMPTY>
 <!ATTLIST action
-	service CDATA #REQUIRED
-	mode ( sync | async ) #REQUIRED
+    service CDATA #REQUIRED
+    mode ( sync | async ) #REQUIRED
     update-context ( true | false ) "true"
 >
 

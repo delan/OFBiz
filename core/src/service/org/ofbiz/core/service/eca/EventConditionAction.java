@@ -43,46 +43,58 @@ import org.ofbiz.core.util.*;
  */
 public class EventConditionAction {
 
-    String serviceName, eventName;
+    String serviceName;
+    String eventName;
+    boolean runOnError;
     List conditions = new LinkedList();
     List actions = new LinkedList();
 
-    protected EventConditionAction() {
-    }
+    protected EventConditionAction() { }
 
     public EventConditionAction(Element eca) {
         this.serviceName = eca.getAttribute("service");
         this.eventName = eca.getAttribute("event");
+        this.runOnError = "true".equals(eca.getAttribute("run-on-error"));
+        
         List condList = UtilXml.childElementList(eca, "condition");
         Iterator ci = condList.iterator();
-        while (ci.hasNext())
+        while (ci.hasNext()) {
             conditions.add(new EventCondition((Element) ci.next(), true));
+        }
 
         List condFList = UtilXml.childElementList(eca, "condition-field");
         Iterator cfi = condFList.iterator();
-        while (cfi.hasNext())
+        while (cfi.hasNext()) {
             conditions.add(new EventCondition((Element) cfi.next(), false));
+        }
 
         if (Debug.verboseOn()) Debug.logVerbose("Conditions: " + conditions);
 
         List actList = UtilXml.childElementList(eca, "action");
         Iterator ai = actList.iterator();
-        while (ai.hasNext())
+        while (ai.hasNext()) {
             actions.add(new EventAction((Element) ai.next()));
+        }
 
         if (Debug.verboseOn()) Debug.logVerbose("Actions: " + actions);
     }
 
-    public void eval(String serviceName, DispatchContext dctx, Map context) throws GenericServiceException {
-        boolean evalCond = true;
+    public void eval(String serviceName, DispatchContext dctx, Map context, boolean isError) throws GenericServiceException {
+        if (isError && !this.runOnError) {
+            return;
+        }
+        
+        boolean allCondTrue = true;
         Iterator c = conditions.iterator();
-        while (c.hasNext() && evalCond) {
+        while (c.hasNext()) {
             EventCondition ec = (EventCondition) c.next();
-            if (!ec.eval(serviceName, dctx, context))
-                evalCond = false;
+            if (!ec.eval(serviceName, dctx, context)) {
+                allCondTrue = false;
+                break;
+            }
         }
 
-        if (evalCond) {
+        if (allCondTrue) {
             Iterator a = actions.iterator();
             while (a.hasNext()) {
                 EventAction ea = (EventAction) a.next();
