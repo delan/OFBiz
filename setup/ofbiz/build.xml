@@ -681,7 +681,7 @@
         <copy file="core/lib/ofbcore-rules${ofbiz.version}.jar"    toDir="${ext.dir}/lib"/>
         <copy file="core/lib/ofbcore-datafile${ofbiz.version}.jar" toDir="${ext.dir}/lib"/>
         <copy file="core/lib/ofbcore-minilang${ofbiz.version}.jar" toDir="${ext.dir}/lib"/>
-        <copy file="core/lib/ofbcore-webapp${ofbiz.version}.jar" toDir="${ext.dir}/lib"/>
+        <copy file="core/lib/ofbcore-webapp${ofbiz.version}.jar"   toDir="${ext.dir}/lib"/>
         <copy file="commonapp/lib/commonapp${ofbiz.version}.jar"   toDir="${ext.dir}/lib"/>
 
         <copy file="webtools/lib/webtools.war"      toDir="${ext.dir}/webapps"/>
