@@ -33,7 +33,7 @@ ${pages.get("/facility/FacilityTabBar.ftl")}
     <a href="<@ofbizUrl>/EditFacility</@ofbizUrl>" class="buttontext">[New Facility]</a>
     <a href="<@ofbizUrl>/EditFacilityLocation?facilityId=${facilityId?if_exists}</@ofbizUrl>" class="buttontext">[New Facility Location]</a>
         
-    <form action="<@ofbizUrl>/FindFacilityLocations</@ofbizUrl>" method="GET" style="margin: 0;">
+    <form action="<@ofbizUrl>/FindFacilityLocation</@ofbizUrl>" method="GET" style="margin: 0;">
         <table border="0" cellpadding="2" cellspacing="0">
         <#if !(facilityId?exists)>
             <tr>

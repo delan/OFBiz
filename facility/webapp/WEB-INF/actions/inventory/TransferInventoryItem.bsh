@@ -1,3 +1,30 @@
+/*
+ *  Copyright (c) 2003 The Open For Business Project - www.ofbiz.org
+ *
+ *  Permission is hereby granted, free of charge, to any person obtaining a 
+ *  copy of this software and associated documentation files (the "Software"), 
+ *  to deal in the Software without restriction, including without limitation 
+ *  the rights to use, copy, modify, merge, publish, distribute, sublicense, 
+ *  and/or sell copies of the Software, and to permit persons to whom the 
+ *  Software is furnished to do so, subject to the following conditions:
+ *
+ *  The above copyright notice and this permission notice shall be included 
+ *  in all copies or substantial portions of the Software.
+ *
+ *  THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS 
+ *  OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF 
+ *  MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. 
+ *  IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY 
+ *  CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT 
+ *  OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR 
+ *  THE USE OR OTHER DEALINGS IN THE SOFTWARE.
+ *
+ *@author     Andy Zeneski (jaz@ofbiz.org)
+ *@author     Brad Steiner
+ *@version    $Revision$
+ *@since      2.2
+ */
+ 
 import java.util.*;
 import java.io.*;
 import org.ofbiz.core.entity.*;
@@ -13,16 +40,16 @@ if(security.hasEntityPermission("FACILITY", "_VIEW", session)) {
     context.put("hasPermission", Boolean.FALSE);
 }
 String facilityId = request.getParameter("facilityId");
-if (facilityId != null) context.put("facilityId", facilityId);
+context.put("facilityId", facilityId);
 
 GenericValue facility = delegator.findByPrimaryKey("Facility", UtilMisc.toMap("facilityId", facilityId));
-if (facility != null) context.put("facility", facility);
+context.put("facility", facility);
 
 String inventoryTransferId = request.getParameter("inventoryTransferId");
-if (inventoryTransferId != null) context.put("inventoryTransferId", inventoryTransferId);
+context.put("inventoryTransferId", inventoryTransferId);
 
 String inventoryItemId = request.getParameter("inventoryItemId");
-if (inventoryItemId != null) context.put("inventoryItemId", inventoryItemId);
+context.put("inventoryItemId", inventoryItemId);
 
 GenericValue inventoryTransfer = null;
 GenericValue facility = null;
@@ -34,15 +61,18 @@ if (inventoryTransferId != null) {
     inventoryTransfer = delegator.findByPrimaryKey("InventoryTransfer", UtilMisc.toMap("inventoryTransferId", inventoryTransferId));
     if (inventoryTransfer != null) {
         context.put("inventoryTransfer", inventoryTransfer);
-        if (facilityId == null)
+        if (facilityId == null) {
             facilityId = inventoryTransfer.getString("facilityId");
-        if (inventoryItemId == null)
+        }
+        if (inventoryItemId == null) {
             inventoryItemId = inventoryTransfer.getString("inventoryItemId");
+        }
     }
 }
 
-if (facilityId != null)
+if (facilityId != null) {
     facility = delegator.findByPrimaryKey("Facility", UtilMisc.toMap("facilityId", facilityId));
+}
 
 String illegalInventoryItem = null;
 if (inventoryItemId != null) {
@@ -65,7 +95,7 @@ if (inventoryItemId != null) {
 
 // facilities
 List facilities = delegator.findAll("Facility");
-if (facilities != null) context.put("facilities", facilities);
+context.put("facilities", facilities);
 
 // status items
 if (inventoryTransfer != null && UtilValidate.isNotEmpty(inventoryTransfer.getString("statusId"))) {
