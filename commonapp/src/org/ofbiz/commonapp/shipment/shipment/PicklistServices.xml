@@ -45,9 +45,15 @@
         
 		<env-to-field env-name="parameters.orderHeaderList" field-name="orderHeaderList"/>
         <if-empty field-name="orderHeaderList">
+        	<string-to-field string="SALES_ORDER" field-name="orderTypeId" map-name="orderHeaderLkpMp"/>
         	<string-to-field string="ORDER_APPROVED" field-name="statusId" map-name="orderHeaderLkpMp"/>
         	<string-to-list string="+fromDate" list-name="orderHeaderOrdLst"/>
         	<find-by-and list-name="orderHeaderList" entity-name="OrderHeader" map-name="orderHeaderLkpMp" order-by-list-name="orderHeaderOrdLst"/>
+        <else>
+            <!-- make sure that the prepared list only includes sales orders -->
+        	<string-to-field string="SALES_ORDER" field-name="orderTypeId" map-name="orderHeaderFltrMp"/>
+            <filter-list-by-and list-name="orderHeaderList" map-name="orderHeaderFltrMp"/>
+        </else>
         </if-empty>
 
 		<iterate entry-name="orderHeader" list-name="orderHeaderList">

@@ -90,7 +90,8 @@
                 <td width='25%' align='right'><div class='tableheadtext'>UserLogin ID:</div></td>
                 <td width='5%'>&nbsp;</td>
                 <td><input type='text' class='inputBox' name='userLoginId' value='${requestParameters.userLoginId?if_exists}'></td>
-              </tr> 
+              </tr>
+              <#--
               <tr>
                 <td width='25%' align='right'><div class='tableheadtext'>Order Type:</div></td>
                 <td width='5%'>&nbsp;</td>
@@ -106,7 +107,8 @@
                     </#list>
                   </select>
                 </td>
-              </tr>                                           
+              </tr>
+              -->
               <tr>
                 <td width='25%' align='right'><div class='tableheadtext'>Billing Acct:</div>
                 <td width='5%'>&nbsp;</td>
