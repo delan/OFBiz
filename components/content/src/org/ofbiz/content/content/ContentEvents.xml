@@ -6,8 +6,23 @@
       <make-value entity-name="Content" value-name="currentContent"/>
       <set-pk-fields map-name="parameters" value-name="currentContent"/>
       <set-nonpk-fields map-name="parameters" value-name="currentContent"/>
+      <call-map-processor in-map-name="currentContent" out-map-name="currentContent">
+        <simple-map-processor>
+        <process field="createdDate">
+          <convert type="Timestamp">
+            <fail-message message="Created Date is not a valid Timestamp input format."/>
+          </convert>
+        </process>
+        <process field="lastModifiedDate">
+          <convert type="Timestamp">
+            <fail-message message="LastModified Date is not a valid Timestamp input format."/>
+          </convert>
+        </process>
+        </simple-map-processor>
+      </call-map-processor>
       <map-to-map map-name="currentContent" to-map-name="context" />
       <log level="always" message="currentContent: ${currentContent}"/>
+      <log level="always" message="context: ${context}"/>
       <field-to-field map-name="parameters" field-name="contentPurposeTypeId"
           to-map-name="context" />
       <string-to-list list-name="targetOperationList" string="CREATE_CONTENT"/>
@@ -56,8 +71,22 @@
       <make-value entity-name="Content" value-name="currentContent"/>
       <set-pk-fields map-name="parameters" value-name="currentContent"/>
       <set-nonpk-fields map-name="parameters" value-name="currentContent"/>
+      <call-map-processor in-map-name="currentContent" out-map-name="currentContent">
+        <simple-map-processor>
+        <process field="createdDate">
+          <convert type="Timestamp">
+            <fail-message message="Created Date is not a valid Timestamp input format."/>
+          </convert>
+        </process>
+        <process field="lastModifiedDate">
+          <convert type="Timestamp">
+            <fail-message message="LastModified Date is not a valid Timestamp input format."/>
+          </convert>
+        </process>
+        </simple-map-processor>
+      </call-map-processor>
+      <log level="always" message="datesConverted: ${datesConverted}"/>
       <map-to-map map-name="currentContent" to-map-name="context" />
-      <log level="always" message="currentContent: ${currentContent}"/>
       <get-related value-name="currentContent" relation-name="ContentPurpose"
                   list-name="contentPurposeList" />
       <env-to-field env-name="contentPurposeList" to-map-name="context" 
