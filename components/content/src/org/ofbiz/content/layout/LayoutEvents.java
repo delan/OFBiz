@@ -42,7 +42,7 @@ import javax.servlet.http.HttpSession;
  * LayoutEvents Class
  *
  * @author     <a href="mailto:byersa@automationgroups.com">Al Byers</a>
- * @version    $Revision: 1.1 $
+ * @version    $Revision: 1.2 $
  * @since      3.0
  *
  * 
@@ -103,21 +103,24 @@ public class LayoutEvents {
         //Debug.logInfo("in createLayoutImage, result:" + result, module);
     
             String dataResourceId = (String)result.get("dataResourceId");
-            Map context2 = new HashMap();
-            context2.put("activeContentId", result.get("contentId"));
-            //context2.put("dataResourceId", dataResourceId);
-            context2.put("contentAssocTypeId", result.get("contentAssocTypeId"));
-            context2.put("fromDate", result.get("fromDate"));
-    
-            request.setAttribute("contentId", result.get("contentId"));
-            request.setAttribute("drDataResourceId", dataResourceId);
-            request.setAttribute("currentEntityName", "SubContentDataResourceId");
-    
-            context2.put("contentIdTo", formInput.get("contentIdTo"));
-            context2.put("mapKey", formInput.get("mapKey"));
-    
-        //Debug.logInfo("in createLayoutImage, context2:" + context2, module);
-            Map result2 = dispatcher.runSync("deactivateAssocs", context2);
+            String activeContentId = (String)result.get("contentId");
+            if (UtilValidate.isNotEmpty(activeContentId) {
+                Map context2 = new HashMap();
+                context2.put("activeContentId", activeContentId);
+                //context2.put("dataResourceId", dataResourceId);
+                context2.put("contentAssocTypeId", result.get("contentAssocTypeId"));
+                context2.put("fromDate", result.get("fromDate"));
+        
+                request.setAttribute("contentId", result.get("contentId"));
+                request.setAttribute("drDataResourceId", dataResourceId);
+                request.setAttribute("currentEntityName", "SubContentDataResourceId");
+        
+                context2.put("contentIdTo", formInput.get("contentIdTo"));
+                context2.put("mapKey", formInput.get("mapKey"));
+        
+            //Debug.logInfo("in createLayoutImage, context2:" + context2, module);
+                Map result2 = dispatcher.runSync("deactivateAssocs", context2);
+            }
 
             GenericValue dataResource = delegator.findByPrimaryKey("DataResource",
                           UtilMisc.toMap("dataResourceId", dataResourceId));
