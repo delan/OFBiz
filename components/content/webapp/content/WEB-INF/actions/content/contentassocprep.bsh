@@ -1,5 +1,5 @@
 /*
- * $Id: contentassocprep.bsh,v 1.5 2003/11/04 23:58:06 byersa Exp $
+ * $Id: contentassocprep.bsh,v 1.6 2003/12/05 21:55:34 byersa Exp $
  *
  * Copyright (c) 2003 The Open For Business Project - www.ofbiz.org
  *
@@ -48,7 +48,7 @@ import javax.servlet.http.*;
 /**
  *
  * @author     <a href="mailto:byersa@automationgroups.com">Al Byers</a>
- * @version    $Revision: 1.5 $
+ * @version    $Revision: 1.6 $
  * @since      3.0
 
  * A special "formprep"-like script for ContentAssoc which has two (from/to)
@@ -63,6 +63,16 @@ entityName		= page.getProperty("entityName");
 
 GenericDelegator delegator = (GenericDelegator) request.getAttribute("delegator");
 
+currentEntityMap = session.getAttribute("currentEntityMap");
+if(currentEntityMap == null){
+    currentEntityMap     = new HashMap();
+    session.setAttribute("currentEntityMap", currentEntityMap);
+}
+
+cachedPK = currentEntityMap.get("ContentAssoc");
+if (cachedPK != null)
+    contentAssocValue = delegator.findByPrimaryKey(cachedPK.getPrimaryKey()); 
+
 contentValue = (GenericValue)request.getAttribute("currentValue");
 
 	context.put("contentValue", contentValue);
@@ -71,10 +81,22 @@ contentValue = (GenericValue)request.getAttribute("currentValue");
 	fromList = contentValue.getRelatedCache("ToContentAssoc");
 	context.put("fromList", fromList);
 
+        contentId = request.getParameter("contentId");
+        contentIdTo = request.getParameter("contentIdTo");
+        contentAssocTypeId = request.getParameter("contentAssocTypeId");
+        fromDate = request.getParameter("fromDate");
+        try {
+            contentAssocValue = delegator.findByPrimaryKey("ContentAssoc",
+                     UtilMisc.toMap("contentId", contentId, "contentIdTo", contentIdTo,
+                        "contentAssocTypeId", contentAssocTypeId, "fromDate", fromDate)); 
+            if (contentAssocValue != null) 
+                currentEntityMap.put("ContentAssoc", contentAssocValue);
+        } catch(GenericEntityException e) {
+               request.setAttribute("_ERROR_MESSAGE_", e.getMessage());
+        }
 	HtmlFormWrapper editWrapper = new HtmlFormWrapper(formDefFile, 
 					"EditContentAssoc", request, response);
         // Don't this this is ever set
-        contentAssocValue = session.getAttribute("ContentAssoc");
 	context.put("contentAssocValue", contentAssocValue);
 	editWrapper.putInContext("contentAssocValue", contentAssocValue);
 

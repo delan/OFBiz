@@ -1,5 +1,5 @@
 /*
- * $Id: formprep.bsh,v 1.1 2003/11/04 23:58:06 byersa Exp $
+ * $Id: formprep.bsh,v 1.2 2003/12/05 21:55:34 byersa Exp $
  *
  * Copyright (c) 2003 The Open For Business Project - www.ofbiz.org
  *
@@ -25,7 +25,7 @@
 /**
  *
  * @author     <a href="mailto:byersa@automationgroups.com">Al Byers</a>
- * @version    $Revision: 1.1 $
+ * @version    $Revision: 1.2 $
  * @since      3.0
  *
  * Builds an edit or add single form wrapper and puts the "currentValue"
@@ -76,7 +76,7 @@ HtmlFormWrapper singleWrapper = new HtmlFormWrapper(formDefFile,
 ModelForm modelForm	= singleWrapper.getModelForm();
 //modelForm.setDefaultMapName(defaultMapName);
 currentValue = (GenericValue)request.getAttribute("currentValue");
-    org.ofbiz.base.util.Debug.logInfo("in formprep, currentValue:" + currentValue, null);
+    //org.ofbiz.base.util.Debug.logInfo("in formprep, currentValue:" + currentValue, null);
 singleWrapper.putInContext(defaultMapName, currentValue);
 context.put("singleWrapper", singleWrapper);
 request.setAttribute("singleWrapper", singleWrapper);
