@@ -37,7 +37,7 @@ import org.ofbiz.security.Security;
  * ContentManagementWorker Class
  *
  * @author     <a href="mailto:byersa@automationgroups.com">Al Byers</a>
- * @version    $Revision: 1.14 $
+ * @version    $Revision: 1.15 $
  * @since      3.0
  *
  * 
@@ -132,6 +132,7 @@ public class ContentManagementWorker {
         String idSig = buildPKSig(pk, null);
         GenericPK p = pk.getPrimaryKey();
         lkupCache.put(idSig,p);
+        //if (Debug.infoOn()) Debug.logInfo("in mruAddByEntityName, p:" + p, module);
         return;
     }
 

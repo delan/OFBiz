@@ -120,6 +120,7 @@ Map featureIdByType = ParametricSearch.makeFeatureIdByTypeMap(paramMap);
                 combQuery.add(featureQuery, featuresRequired, false);
             }
 
+            Debug.logInfo("in search searchFeature3, combQuery:" + combQuery.toString(), "");
             Hits hits = searcher.search(combQuery);
             Debug.logInfo("in search, hits:" + hits.length(), "");
             List contentList = new ArrayList();

@@ -1,5 +1,5 @@
 /*
- * $Id: LimitedSubContentCacheTransform.java,v 1.1 2004/07/02 15:53:33 byersa Exp $
+ * $Id: LimitedSubContentCacheTransform.java,v 1.2 2004/07/06 16:45:00 byersa Exp $
  * 
  * Copyright (c) 2001-2003 The Open For Business Project - www.ofbiz.org
  * 
@@ -22,6 +22,7 @@ import java.sql.Timestamp;
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
+import java.util.ArrayList;
 import java.util.Locale;
 import java.util.Map;
 import java.lang.Math;
@@ -50,7 +51,7 @@ import freemarker.template.TransformControl;
  * LimitedSubContentCacheTransform - Freemarker Transform for URLs (links)
  * 
  * @author <a href="mailto:byersa@automationgroups.com">Al Byers</a>
- * @version $Revision: 1.1 $
+ * @version $Revision: 1.2 $
  * @since 3.0
  */
 public class LimitedSubContentCacheTransform implements TemplateTransformModel {
@@ -149,6 +150,8 @@ public class LimitedSubContentCacheTransform implements TemplateTransformModel {
                 throw new RuntimeException(e.getMessage());
             }
             List longList = (List) results.get("entityList");
+            templateRoot.put("entityList", longList);
+            //if (Debug.infoOn()) Debug.logInfo("in limited, longList:" + longList , "");
 
         return new LoopWriter(out) {
 
@@ -167,6 +170,8 @@ public class LimitedSubContentCacheTransform implements TemplateTransformModel {
                 List globalNodeTrail = (List)templateRoot.get("globalNodeTrail");
                 String trailCsv = FreeMarkerWorker.nodeTrailToCsv(globalNodeTrail);
                 boolean inProgress = false;
+                if (Debug.infoOn()) Debug.logInfo("in limited, returnLimit:" + returnLimit , "");
+                //if (Debug.infoOn()) Debug.logInfo("in limited, pickedEntityIds:" + pickedEntityIds , "");
                 if (pickedEntityIds.size() < returnLimit) {
                     inProgress = getNextMatchingEntity(templateRoot, delegator, env);
                 }
@@ -186,6 +191,8 @@ public class LimitedSubContentCacheTransform implements TemplateTransformModel {
                 env.setVariable("globalNodeTrail", FreeMarkerWorker.autoWrap(subList, env));
                 
                 //if (Debug.infoOn()) Debug.logInfo("highIndex(2):" + highIndexInteger , "");
+                if (Debug.infoOn()) Debug.logInfo("in limited, returnLimit(2):" + returnLimit , "");
+                if (Debug.infoOn()) Debug.logInfo("in limited, pickedEntityIds(2):" + pickedEntityIds , "");
                 boolean inProgress = false;
                 if (pickedEntityIds.size() < returnLimit) {
                     inProgress = getNextMatchingEntity(templateRoot, delegator, env);
@@ -246,6 +253,8 @@ public class LimitedSubContentCacheTransform implements TemplateTransformModel {
         ) {
      
             List globalNodeTrail = (List)ctx.get("globalNodeTrail");
+            if (globalNodeTrail == null)
+                globalNodeTrail = new ArrayList();
             globalNodeTrail.add(trailNode);
             ctx.put("globalNodeTrail", globalNodeTrail);
             String csvTrail = FreeMarkerWorker.nodeTrailToCsv(globalNodeTrail);
@@ -276,10 +285,13 @@ public class LimitedSubContentCacheTransform implements TemplateTransformModel {
 
         GenericValue pickEntity = null;
         List lst = (List)templateRoot.get("entityList");
+        if (Debug.infoOn()) Debug.logInfo("in limited, lst:" + lst , "");
 
         while (pickEntity == null && lst.size() > 0) {
             double randomValue = Math.random();
+            if (Debug.infoOn()) Debug.logInfo("in limited, randomValue:" + randomValue , "");
             int idx = (int)(lst.size() * randomValue);
+            if (Debug.infoOn()) Debug.logInfo("in limited, idx:" + idx , "");
             pickEntity = (GenericValue)lst.get(idx);
             String pickEntityId = pickEntity.getString("contentId");
             if (pickedEntityIds.get(pickEntityId) == null) {
@@ -294,13 +306,10 @@ public class LimitedSubContentCacheTransform implements TemplateTransformModel {
 
     public boolean getNextMatchingEntity(Map templateRoot, GenericDelegator delegator, Environment env) throws IOException {
 
-                int lowIndex = ((Integer)templateRoot.get("lowIndex")).intValue(); 
-                int outputIndex = ((Integer)templateRoot.get("outputIndex")).intValue(); 
-                int listSize = ((Integer)templateRoot.get("listSize")).intValue(); 
                 boolean matchFound = false;
                 GenericValue pickEntity = getRandomEntity();
  
-                while (pickEntity == null && !matchFound ) {
+                while (pickEntity != null && !matchFound ) {
                     try {
                         matchFound = prepCtx(delegator, templateRoot, env, pickEntity);
                     } catch(GeneralException e) {

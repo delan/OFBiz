@@ -1,5 +1,5 @@
 /*
- * $Id: FreeMarkerWorker.java,v 1.30 2004/06/18 16:37:23 byersa Exp $
+ * $Id: FreeMarkerWorker.java,v 1.31 2004/07/06 16:44:59 byersa Exp $
  *
  * Copyright (c) 2002-2004 The Open For Business Project - www.ofbiz.org
  *
@@ -71,7 +71,7 @@ import freemarker.template.TemplateModelException;
  * FreemarkerViewHandler - Freemarker Template Engine Util
  *
  * @author     <a href="mailto:byersa@automationgroups.com">Al Byers</a>
- * @version    $Revision: 1.30 $
+ * @version    $Revision: 1.31 $
  * @since      3.0
  */
 public class FreeMarkerWorker {
@@ -99,6 +99,7 @@ public class FreeMarkerWorker {
     public static InjectNodeTrailCsvTransform  injectNodeTrailCsv = new InjectNodeTrailCsvTransform();
     public static WrapSubContentCacheTransform  wrapSubContentCache = new WrapSubContentCacheTransform();
     public static MenuWrapTransform  menuWrap = new MenuWrapTransform();
+    public static LimitedSubContentCacheTransform  limitedSubContent = new LimitedSubContentCacheTransform();
 
     public static Map cachedTemplates = new HashMap();
     
@@ -126,6 +127,7 @@ public class FreeMarkerWorker {
         context.put("checkPermission", checkPermission);
         context.put("injectNodeTrailCsv", injectNodeTrailCsv);
         context.put("menuWrap", menuWrap);
+        context.put("limitedSubContent", limitedSubContent);
     }
     
     public static Configuration makeDefaultOfbizConfig() throws TemplateException {
