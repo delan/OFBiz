@@ -39,6 +39,7 @@
   <SecurityGroupPermission groupId="FLEXADMIN" permissionId="CATALOG_DELETE"/>
   <SecurityGroupPermission groupId="FLEXADMIN" permissionId="CATALOG_UPDATE"/>
   <SecurityGroupPermission groupId="FLEXADMIN" permissionId="CATALOG_VIEW"/>
+  <SecurityGroupPermission groupId="FLEXADMIN" permissionId="DATAFILE_MAINT"/>
   <SecurityGroupPermission groupId="FLEXADMIN" permissionId="ENTITY_MAINT"/>
   <SecurityGroupPermission groupId="FLEXADMIN" permissionId="ORDERMGR_CREATE"/>
   <SecurityGroupPermission groupId="FLEXADMIN" permissionId="ORDERMGR_DELETE"/>
@@ -52,6 +53,7 @@
   <SecurityGroupPermission groupId="FLEXADMIN" permissionId="UTIL_CACHE_EDIT"/>
   <SecurityGroupPermission groupId="FLEXADMIN" permissionId="UTIL_CACHE_VIEW"/>
   <SecurityGroupPermission groupId="FULLADMIN" permissionId="CATALOG_ADMIN"/>
+  <SecurityGroupPermission groupId="FULLADMIN" permissionId="DATAFILE_MAINT"/>
   <SecurityGroupPermission groupId="FULLADMIN" permissionId="ENTITY_MAINT"/>
   <SecurityGroupPermission groupId="FULLADMIN" permissionId="ORDERMGR_ADMIN"/>
   <SecurityGroupPermission groupId="FULLADMIN" permissionId="UTIL_CACHE_EDIT"/>
@@ -62,7 +64,9 @@
   <SecurityGroupPermission groupId="FLEXADMIN" permissionId="WORKEFFORTMGR_VIEW"/>
   <SecurityGroupPermission groupId="FULLADMIN" permissionId="WORKEFFORTMGR_ADMIN"/>
   <SecurityPermission
-    description="Permission to View the Entity Maintenance page." permissionId="ENTITY_MAINT"/>
+    description="Permission to View the Data File Maintenance pages." permissionId="DATAFILE_MAINT"/>
+  <SecurityPermission
+    description="Permission to View the Entity Maintenance pages." permissionId="ENTITY_MAINT"/>
   <SecurityPermission
     description="Permission to View a UtilCache instance." permissionId="UTIL_CACHE_VIEW"/>
   <SecurityPermission
