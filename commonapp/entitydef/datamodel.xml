@@ -3026,6 +3026,131 @@
   <!-- ========================================================= -->    
   <!-- ========================================================= -->    
     <entity>
+      <title>Cost Component Entity</title>
+      <package-name>org.ofbiz.commonapp.product.cost</package-name>
+      <table-name>COST_COMPONENT</table-name>
+      <cmp-field><column-name>COST_COMPONENT_ID</column-name><field-type>id-ne</field-type></cmp-field>
+      <cmp-field><column-name>COST_COMPONENT_TYPE_ID</column-name><field-type>id</field-type></cmp-field>
+      <cmp-field><column-name>PRODUCT_ID</column-name><field-type>id</field-type></cmp-field>
+      <cmp-field><column-name>PRODUCT_FEATURE_ID</column-name><field-type>id</field-type></cmp-field>
+      <cmp-field><column-name>PARTY_ID</column-name><field-type>id</field-type></cmp-field>
+      <cmp-field><column-name>GEO_ID</column-name><field-type>id</field-type></cmp-field>
+      <cmp-field><column-name>FROM_DATE</column-name><field-type>date-time</field-type></cmp-field>
+      <cmp-field><column-name>THRU_DATE</column-name><field-type>date-time</field-type></cmp-field>
+      <cmp-field><column-name>COST</column-name><field-type>currency-amount</field-type></cmp-field>
+      <prim-key-column>COST_COMPONENT_ID</prim-key-column>
+      <finder><column-name>COST_COMPONENT_TYPE_ID</column-name></finder>
+      <finder><column-name>PRODUCT_ID</column-name></finder>
+      <finder><column-name>PRODUCT_FEATURE_ID</column-name></finder>
+      <finder><column-name>PRODUCT_ID</column-name><column-name>PRODUCT_FEATURE_ID</column-name></finder>
+      <finder><column-name>PARTY_ID</column-name></finder>
+      <finder><column-name>GEO_ID</column-name></finder>
+      <relation>
+        <relation-type>one</relation-type>
+        <related-table-name>COST_COMPONENT_TYPE</related-table-name>
+        <key-map><column-name>COST_COMPONENT_TYPE_ID</column-name></key-map>
+      </relation>
+      <relation>
+        <relation-type>many</relation-type>
+        <related-table-name>COST_COMPONENT_TYPE_ATTR</related-table-name>
+        <key-map><column-name>COST_COMPONENT_TYPE_ID</column-name></key-map>
+      </relation>
+      <relation>
+        <relation-type>many</relation-type>
+        <related-table-name>COST_COMPONENT_ATTRIBUTE</related-table-name>
+        <key-map><column-name>COST_COMPONENT_ID</column-name></key-map>
+      </relation>
+    </entity>
+    <!-- ========================================================= -->    
+    <entity>
+      <title>Cost Component Type Entity</title>
+      <package-name>org.ofbiz.commonapp.product.cost</package-name>
+      <table-name>COST_COMPONENT_TYPE</table-name>
+      <cmp-field><column-name>COST_COMPONENT_TYPE_ID</column-name><field-type>id-ne</field-type></cmp-field>
+      <cmp-field><column-name>PARENT_TYPE_ID</column-name><field-type>id-ne</field-type></cmp-field>
+      <cmp-field><column-name>HAS_TABLE</column-name><field-type>indicator</field-type></cmp-field>
+      <cmp-field><column-name>DESCRIPTION</column-name><field-type>description</field-type></cmp-field>
+      <prim-key-column>COST_COMPONENT_TYPE_ID</prim-key-column>
+      <finder><column-name>PARENT_TYPE_ID</column-name></finder>
+      <finder><column-name>HAS_TABLE</column-name></finder>
+      <relation>
+        <relation-title>Parent</relation-title>
+        <relation-type>one</relation-type>
+        <related-table-name>COST_COMPONENT_TYPE</related-table-name>
+        <key-map><column-name>PARENT_TYPE_ID</column-name><related-column-name>COST_COMPONENT_TYPE_ID</related-column-name></key-map>
+      </relation>
+      <relation>
+        <relation-title>Child</relation-title>
+        <relation-type>many</relation-type>
+        <related-table-name>COST_COMPONENT_TYPE</related-table-name>
+        <key-map><column-name>COST_COMPONENT_TYPE_ID</column-name><related-column-name>PARENT_TYPE_ID</related-column-name></key-map>
+      </relation>
+      <relation>
+        <relation-type>many</relation-type>
+        <related-table-name>COST_COMPONENT_TYPE_ATTR</related-table-name>
+        <key-map><column-name>COST_COMPONENT_TYPE_ID</column-name></key-map>
+      </relation>
+      <relation>
+        <relation-type>many</relation-type>
+        <related-table-name>COST_COMPONENT</related-table-name>
+        <key-map><column-name>COST_COMPONENT_TYPE_ID</column-name></key-map>
+      </relation>
+    </entity>
+    <!-- ========================================================= -->    
+    <entity>
+      <title>Cost Component Attribute Entity</title>
+      <package-name>org.ofbiz.commonapp.product.cost</package-name>
+      <table-name>COST_COMPONENT_ATTRIBUTE</table-name>
+      <use-cache>false</use-cache>
+      <cmp-field><column-name>COST_COMPONENT_ID</column-name><field-type>id-ne</field-type></cmp-field>
+      <cmp-field><column-name>NAME</column-name><field-type>id-long-ne</field-type></cmp-field>
+      <cmp-field><column-name>VALUE</column-name><field-type>value</field-type></cmp-field>
+      <prim-key-column>COST_COMPONENT_ID</prim-key-column>
+      <prim-key-column>NAME</prim-key-column>
+      <finder><column-name>COST_COMPONENT_ID</column-name></finder>
+      <finder><column-name>NAME</column-name></finder>
+      <relation>
+        <relation-type>one</relation-type>
+        <related-table-name>COST_COMPONENT</related-table-name>
+        <key-map><column-name>COST_COMPONENT_ID</column-name></key-map>
+      </relation>
+      <relation>
+        <relation-type>many</relation-type>
+        <related-table-name>COST_COMPONENT_TYPE_ATTR</related-table-name>
+        <key-map><column-name>NAME</column-name></key-map>
+      </relation>
+    </entity>
+    <!-- ========================================================= -->    
+    <entity>
+      <title>Cost Component Type Attribute Entity</title>
+      <package-name>org.ofbiz.commonapp.product.cost</package-name>
+      <table-name>COST_COMPONENT_TYPE_ATTR</table-name>
+      <use-cache>false</use-cache>
+      <cmp-field><column-name>COST_COMPONENT_TYPE_ID</column-name><field-type>id-ne</field-type></cmp-field>
+      <cmp-field><column-name>NAME</column-name><field-type>id-long-ne</field-type></cmp-field>
+      <prim-key-column>COST_COMPONENT_TYPE_ID</prim-key-column>
+      <prim-key-column>NAME</prim-key-column>
+      <finder><column-name>COST_COMPONENT_TYPE_ID</column-name></finder>
+      <finder><column-name>NAME</column-name></finder>
+      <relation>
+        <relation-type>one</relation-type>
+        <related-table-name>COST_COMPONENT_TYPE</related-table-name>
+        <key-map><column-name>COST_COMPONENT_TYPE_ID</column-name></key-map>
+      </relation>
+      <relation>
+        <relation-type>many</relation-type>
+        <related-table-name>COST_COMPONENT_ATTRIBUTE</related-table-name>
+        <key-map><column-name>NAME</column-name></key-map>
+      </relation>
+      <relation>
+        <relation-type>many</relation-type>
+        <related-table-name>COST_COMPONENT</related-table-name>
+        <key-map><column-name>COST_COMPONENT_TYPE_ID</column-name></key-map>
+      </relation>
+    </entity>
+  <!-- ========================================================= -->    
+  <!-- ========================================================= -->    
+    <entity>
       <title>Product Feature Entity</title>
       <package-name>org.ofbiz.commonapp.product.feature</package-name>
       <table-name>PRODUCT_FEATURE</table-name>
@@ -3217,6 +3342,181 @@
   <!-- ========================================================= -->    
   <!-- ========================================================= -->    
     <entity>
+      <title>Inventory Item Entity</title>
+      <package-name>org.ofbiz.commonapp.product.inventory</package-name>
+      <table-name>INVENTORY_ITEM</table-name>
+      <cmp-field><column-name>INVENTORY_ITEM_ID</column-name><field-type>id-ne</field-type></cmp-field>
+      <cmp-field><column-name>INVENTORY_ITEM_TYPE_ID</column-name><field-type>id</field-type></cmp-field>
+      <cmp-field><column-name>PRODUCT_ID</column-name><field-type>id</field-type></cmp-field>
+      <cmp-field><column-name>PARTY_ID</column-name><field-type>id</field-type></cmp-field>
+      <cmp-field><column-name>STATUS_TYPE_ID</column-name><field-type>id</field-type></cmp-field>
+      <cmp-field><column-name>FACILITY_ID</column-name><field-type>id</field-type></cmp-field>
+      <cmp-field><column-name>CONTAINER_ID</column-name><field-type>id</field-type></cmp-field>
+      <cmp-field><column-name>LOT_ID</column-name><field-type>id</field-type></cmp-field>
+      <cmp-field><column-name>UOM_ID</column-name><field-type>id</field-type></cmp-field>
+      <cmp-field><column-name>QUANTITY_ON_HAND</column-name><field-type>floating-point</field-type></cmp-field>
+      <cmp-field><column-name>SERIAL_NUMBER</column-name><field-type>value</field-type></cmp-field>
+      <prim-key-column>INVENTORY_ITEM_ID</prim-key-column>
+      <finder><column-name>INVENTORY_ITEM_TYPE_ID</column-name></finder>
+      <finder><column-name>PRODUCT_ID</column-name></finder>
+      <finder><column-name>PARTY_ID</column-name></finder>
+      <finder><column-name>STATUS_TYPE_ID</column-name></finder>
+      <finder><column-name>FACILITY_ID</column-name><column-name>ROLE_TYPE_ID</column-name></finder>
+      <finder><column-name>CONTAINER_ID</column-name><column-name>ROLE_TYPE_ID</column-name></finder>
+      <finder><column-name>LOT_ID</column-name><column-name>ROLE_TYPE_ID</column-name></finder>
+      <finder><column-name>UOM_ID</column-name></finder>
+      <relation>
+        <relation-type>one</relation-type>
+        <related-table-name>INVENTORY_ITEM_TYPE</related-table-name>
+        <key-map><column-name>INVENTORY_ITEM_TYPE_ID</column-name></key-map>
+      </relation>
+      <relation>
+        <relation-type>many</relation-type>
+        <related-table-name>INVENTORY_ITEM_TYPE_ATTR</related-table-name>
+        <key-map><column-name>INVENTORY_ITEM_TYPE_ID</column-name></key-map>
+      </relation>
+      <relation>
+        <relation-type>many</relation-type>
+        <related-table-name>INVENTORY_ITEM_ATTRIBUTE</related-table-name>
+        <key-map><column-name>INVENTORY_ITEM_ID</column-name></key-map>
+      </relation>
+    </entity>
+    <!-- ========================================================= -->    
+    <entity>
+      <title>Inventory Item Type Entity</title>
+      <package-name>org.ofbiz.commonapp.product.inventory</package-name>
+      <table-name>INVENTORY_ITEM_TYPE</table-name>
+      <cmp-field><column-name>INVENTORY_ITEM_TYPE_ID</column-name><field-type>id-ne</field-type></cmp-field>
+      <cmp-field><column-name>PARENT_TYPE_ID</column-name><field-type>id-ne</field-type></cmp-field>
+      <cmp-field><column-name>HAS_TABLE</column-name><field-type>indicator</field-type></cmp-field>
+      <cmp-field><column-name>DESCRIPTION</column-name><field-type>description</field-type></cmp-field>
+      <prim-key-column>INVENTORY_ITEM_TYPE_ID</prim-key-column>
+      <finder><column-name>PARENT_TYPE_ID</column-name></finder>
+      <finder><column-name>HAS_TABLE</column-name></finder>
+      <relation>
+        <relation-title>Parent</relation-title>
+        <relation-type>one</relation-type>
+        <related-table-name>INVENTORY_ITEM_TYPE</related-table-name>
+        <key-map><column-name>PARENT_TYPE_ID</column-name><related-column-name>INVENTORY_ITEM_TYPE_ID</related-column-name></key-map>
+      </relation>
+      <relation>
+        <relation-title>Child</relation-title>
+        <relation-type>many</relation-type>
+        <related-table-name>INVENTORY_ITEM_TYPE</related-table-name>
+        <key-map><column-name>INVENTORY_ITEM_TYPE_ID</column-name><related-column-name>PARENT_TYPE_ID</related-column-name></key-map>
+      </relation>
+      <relation>
+        <relation-type>many</relation-type>
+        <related-table-name>INVENTORY_ITEM_TYPE_ATTR</related-table-name>
+        <key-map><column-name>INVENTORY_ITEM_TYPE_ID</column-name></key-map>
+      </relation>
+      <relation>
+        <relation-type>many</relation-type>
+        <related-table-name>INVENTORY_ITEM</related-table-name>
+        <key-map><column-name>INVENTORY_ITEM_TYPE_ID</column-name></key-map>
+      </relation>
+    </entity>
+    <!-- ========================================================= -->    
+    <entity>
+      <title>Inventory Item Attribute Entity</title>
+      <package-name>org.ofbiz.commonapp.product.inventory</package-name>
+      <table-name>INVENTORY_ITEM_ATTRIBUTE</table-name>
+      <cmp-field><column-name>INVENTORY_ITEM_ID</column-name><field-type>id-ne</field-type></cmp-field>
+      <cmp-field><column-name>NAME</column-name><field-type>id-long-ne</field-type></cmp-field>
+      <cmp-field><column-name>VALUE</column-name><field-type>value</field-type></cmp-field>
+      <prim-key-column>INVENTORY_ITEM_ID</prim-key-column>
+      <prim-key-column>NAME</prim-key-column>
+      <finder><column-name>INVENTORY_ITEM_ID</column-name></finder>
+      <finder><column-name>NAME</column-name></finder>
+      <relation>
+        <relation-type>one</relation-type>
+        <related-table-name>INVENTORY_ITEM</related-table-name>
+        <key-map><column-name>INVENTORY_ITEM_ID</column-name></key-map>
+      </relation>
+      <relation>
+        <relation-type>many</relation-type>
+        <related-table-name>INVENTORY_ITEM_TYPE_ATTR</related-table-name>
+        <key-map><column-name>NAME</column-name></key-map>
+      </relation>
+    </entity>
+    <!-- ========================================================= -->    
+    <entity>
+      <title>Inventory Item Type Attribute Entity</title>
+      <package-name>org.ofbiz.commonapp.product.inventory</package-name>
+      <table-name>INVENTORY_ITEM_TYPE_ATTR</table-name>
+      <cmp-field><column-name>INVENTORY_ITEM_TYPE_ID</column-name><field-type>id-ne</field-type></cmp-field>
+      <cmp-field><column-name>NAME</column-name><field-type>id-long-ne</field-type></cmp-field>
+      <prim-key-column>INVENTORY_ITEM_TYPE_ID</prim-key-column>
+      <prim-key-column>NAME</prim-key-column>
+      <finder><column-name>INVENTORY_ITEM_TYPE_ID</column-name></finder>
+      <finder><column-name>NAME</column-name></finder>
+      <relation>
+        <relation-type>one</relation-type>
+        <related-table-name>INVENTORY_ITEM_TYPE</related-table-name>
+        <key-map><column-name>INVENTORY_ITEM_TYPE_ID</column-name></key-map>
+      </relation>
+      <relation>
+        <relation-type>many</relation-type>
+        <related-table-name>INVENTORY_ITEM_ATTRIBUTE</related-table-name>
+        <key-map><column-name>NAME</column-name></key-map>
+      </relation>
+      <relation>
+        <relation-type>many</relation-type>
+        <related-table-name>INVENTORY_ITEM</related-table-name>
+        <key-map><column-name>INVENTORY_ITEM_TYPE_ID</column-name></key-map>
+      </relation>
+    </entity>
+    <!-- ========================================================= -->    
+    <entity>
+      <title>Inventory Item Variance Entity</title>
+      <package-name>org.ofbiz.commonapp.product.inventory</package-name>
+      <table-name>INVENTORY_ITEM_VARIANCE</table-name>
+      <cmp-field><column-name>INVENTORY_ITEM_ID</column-name><field-type>id-ne</field-type></cmp-field>
+      <cmp-field><column-name>PHYSICAL_INVENTORY_DATE</column-name><field-type>date-time</field-type></cmp-field>
+      <cmp-field><column-name>REASON_ID</column-name><field-type>id</field-type></cmp-field>
+      <cmp-field><column-name>QUANTITY</column-name><field-type>floating-point</field-type></cmp-field>
+      <cmp-field><column-name>COMMENT</column-name><field-type>comment</field-type></cmp-field>
+      <prim-key-column>INVENTORY_ITEM_ID</prim-key-column>
+      <prim-key-column>PHYSICAL_INVENTORY_DATE</prim-key-column>
+      <finder><column-name>INVENTORY_ITEM_ID</column-name></finder>
+      <finder><column-name>PHYSICAL_INVENTORY_DATE</column-name></finder>
+      <finder><column-name>REASON_ID</column-name></finder>
+    </entity>
+    <!-- ========================================================= -->    
+    <entity>
+      <title>Reason Entity</title>
+      <package-name>org.ofbiz.commonapp.product.inventory</package-name>
+      <table-name>REASON</table-name>
+      <cmp-field><column-name>REASON_ID</column-name><field-type>id-ne</field-type></cmp-field>
+      <cmp-field><column-name>DESCRIPTION</column-name><field-type>description</field-type></cmp-field>
+      <prim-key-column>REASON_ID</prim-key-column>
+    </entity>
+    <!-- ========================================================= -->    
+    <entity>
+      <title>Item Variance Accounting Transaction Entity</title>
+      <package-name>org.ofbiz.commonapp.product.inventory</package-name>
+      <table-name>ITEM_VARIANCE_ACCTG_TRANS</table-name>
+      <cmp-field><column-name>TRANSACTION_ID</column-name><field-type>id-ne</field-type></cmp-field>
+      <cmp-field><column-name>INVENTORY_ITEM_ID</column-name><field-type>id</field-type></cmp-field>
+      <cmp-field><column-name>PHYSICAL_INVENTORY_DATE</column-name><field-type>date-time</field-type></cmp-field>
+      <prim-key-column>TRANSACTION_ID</prim-key-column>
+      <finder><column-name>INVENTORY_ITEM_ID</column-name></finder>
+      <finder><column-name>INVENTORY_ITEM_ID</column-name><column-name>PHYSICAL_INVENTORY_DATE</column-name></finder>
+    </entity>
+    <!-- ========================================================= -->    
+    <entity>
+      <title>Lot Entity</title>
+      <package-name>org.ofbiz.commonapp.product.inventory</package-name>
+      <table-name>LOT</table-name>
+      <cmp-field><column-name>LOT_ID</column-name><field-type>id-ne</field-type></cmp-field>
+      <cmp-field><column-name>CREATION_DATE</column-name><field-type>date-time</field-type></cmp-field>
+      <cmp-field><column-name>QUANTITY</column-name><field-type>floating-point</field-type></cmp-field>
+      <cmp-field><column-name>EXPIRATION_DATE</column-name><field-type>date-time</field-type></cmp-field>
+      <prim-key-column>LOT_ID</prim-key-column>
+    </entity>
+  <!-- ========================================================= -->    
+  <!-- ========================================================= -->    
+    <entity>
       <title>Price Component Entity</title>
       <package-name>org.ofbiz.commonapp.product.price</package-name>
       <table-name>PRICE_COMPONENT</table-name>
@@ -3398,548 +3698,6 @@
       <cmp-field><column-name>SALE_TYPE_ID</column-name><field-type>id-ne</field-type></cmp-field>
       <cmp-field><column-name>DESCRIPTION</column-name><field-type>description</field-type></cmp-field>
       <prim-key-column>SALE_TYPE_ID</prim-key-column>
-    </entity>
-  <!-- ========================================================= -->    
-  <!-- ========================================================= -->    
-    <entity>
-      <title>Cost Component Entity</title>
-      <package-name>org.ofbiz.commonapp.product.cost</package-name>
-      <table-name>COST_COMPONENT</table-name>
-      <cmp-field><column-name>COST_COMPONENT_ID</column-name><field-type>id-ne</field-type></cmp-field>
-      <cmp-field><column-name>COST_COMPONENT_TYPE_ID</column-name><field-type>id</field-type></cmp-field>
-      <cmp-field><column-name>PRODUCT_ID</column-name><field-type>id</field-type></cmp-field>
-      <cmp-field><column-name>PRODUCT_FEATURE_ID</column-name><field-type>id</field-type></cmp-field>
-      <cmp-field><column-name>PARTY_ID</column-name><field-type>id</field-type></cmp-field>
-      <cmp-field><column-name>GEO_ID</column-name><field-type>id</field-type></cmp-field>
-      <cmp-field><column-name>FROM_DATE</column-name><field-type>date-time</field-type></cmp-field>
-      <cmp-field><column-name>THRU_DATE</column-name><field-type>date-time</field-type></cmp-field>
-      <cmp-field><column-name>COST</column-name><field-type>currency-amount</field-type></cmp-field>
-      <prim-key-column>COST_COMPONENT_ID</prim-key-column>
-      <finder><column-name>COST_COMPONENT_TYPE_ID</column-name></finder>
-      <finder><column-name>PRODUCT_ID</column-name></finder>
-      <finder><column-name>PRODUCT_FEATURE_ID</column-name></finder>
-      <finder><column-name>PRODUCT_ID</column-name><column-name>PRODUCT_FEATURE_ID</column-name></finder>
-      <finder><column-name>PARTY_ID</column-name></finder>
-      <finder><column-name>GEO_ID</column-name></finder>
-      <relation>
-        <relation-type>one</relation-type>
-        <related-table-name>COST_COMPONENT_TYPE</related-table-name>
-        <key-map><column-name>COST_COMPONENT_TYPE_ID</column-name></key-map>
-      </relation>
-      <relation>
-        <relation-type>many</relation-type>
-        <related-table-name>COST_COMPONENT_TYPE_ATTR</related-table-name>
-        <key-map><column-name>COST_COMPONENT_TYPE_ID</column-name></key-map>
-      </relation>
-      <relation>
-        <relation-type>many</relation-type>
-        <related-table-name>COST_COMPONENT_ATTRIBUTE</related-table-name>
-        <key-map><column-name>COST_COMPONENT_ID</column-name></key-map>
-      </relation>
-    </entity>
-    <!-- ========================================================= -->    
-    <entity>
-      <title>Cost Component Type Entity</title>
-      <package-name>org.ofbiz.commonapp.product.cost</package-name>
-      <table-name>COST_COMPONENT_TYPE</table-name>
-      <cmp-field><column-name>COST_COMPONENT_TYPE_ID</column-name><field-type>id-ne</field-type></cmp-field>
-      <cmp-field><column-name>PARENT_TYPE_ID</column-name><field-type>id-ne</field-type></cmp-field>
-      <cmp-field><column-name>HAS_TABLE</column-name><field-type>indicator</field-type></cmp-field>
-      <cmp-field><column-name>DESCRIPTION</column-name><field-type>description</field-type></cmp-field>
-      <prim-key-column>COST_COMPONENT_TYPE_ID</prim-key-column>
-      <finder><column-name>PARENT_TYPE_ID</column-name></finder>
-      <finder><column-name>HAS_TABLE</column-name></finder>
-      <relation>
-        <relation-title>Parent</relation-title>
-        <relation-type>one</relation-type>
-        <related-table-name>COST_COMPONENT_TYPE</related-table-name>
-        <key-map><column-name>PARENT_TYPE_ID</column-name><related-column-name>COST_COMPONENT_TYPE_ID</related-column-name></key-map>
-      </relation>
-      <relation>
-        <relation-title>Child</relation-title>
-        <relation-type>many</relation-type>
-        <related-table-name>COST_COMPONENT_TYPE</related-table-name>
-        <key-map><column-name>COST_COMPONENT_TYPE_ID</column-name><related-column-name>PARENT_TYPE_ID</related-column-name></key-map>
-      </relation>
-      <relation>
-        <relation-type>many</relation-type>
-        <related-table-name>COST_COMPONENT_TYPE_ATTR</related-table-name>
-        <key-map><column-name>COST_COMPONENT_TYPE_ID</column-name></key-map>
-      </relation>
-      <relation>
-        <relation-type>many</relation-type>
-        <related-table-name>COST_COMPONENT</related-table-name>
-        <key-map><column-name>COST_COMPONENT_TYPE_ID</column-name></key-map>
-      </relation>
-    </entity>
-    <!-- ========================================================= -->    
-    <entity>
-      <title>Cost Component Attribute Entity</title>
-      <package-name>org.ofbiz.commonapp.product.cost</package-name>
-      <table-name>COST_COMPONENT_ATTRIBUTE</table-name>
-      <use-cache>false</use-cache>
-      <cmp-field><column-name>COST_COMPONENT_ID</column-name><field-type>id-ne</field-type></cmp-field>
-      <cmp-field><column-name>NAME</column-name><field-type>id-long-ne</field-type></cmp-field>
-      <cmp-field><column-name>VALUE</column-name><field-type>value</field-type></cmp-field>
-      <prim-key-column>COST_COMPONENT_ID</prim-key-column>
-      <prim-key-column>NAME</prim-key-column>
-      <finder><column-name>COST_COMPONENT_ID</column-name></finder>
-      <finder><column-name>NAME</column-name></finder>
-      <relation>
-        <relation-type>one</relation-type>
-        <related-table-name>COST_COMPONENT</related-table-name>
-        <key-map><column-name>COST_COMPONENT_ID</column-name></key-map>
-      </relation>
-      <relation>
-        <relation-type>many</relation-type>
-        <related-table-name>COST_COMPONENT_TYPE_ATTR</related-table-name>
-        <key-map><column-name>NAME</column-name></key-map>
-      </relation>
-    </entity>
-    <!-- ========================================================= -->    
-    <entity>
-      <title>Cost Component Type Attribute Entity</title>
-      <package-name>org.ofbiz.commonapp.product.cost</package-name>
-      <table-name>COST_COMPONENT_TYPE_ATTR</table-name>
-      <use-cache>false</use-cache>
-      <cmp-field><column-name>COST_COMPONENT_TYPE_ID</column-name><field-type>id-ne</field-type></cmp-field>
-      <cmp-field><column-name>NAME</column-name><field-type>id-long-ne</field-type></cmp-field>
-      <prim-key-column>COST_COMPONENT_TYPE_ID</prim-key-column>
-      <prim-key-column>NAME</prim-key-column>
-      <finder><column-name>COST_COMPONENT_TYPE_ID</column-name></finder>
-      <finder><column-name>NAME</column-name></finder>
-      <relation>
-        <relation-type>one</relation-type>
-        <related-table-name>COST_COMPONENT_TYPE</related-table-name>
-        <key-map><column-name>COST_COMPONENT_TYPE_ID</column-name></key-map>
-      </relation>
-      <relation>
-        <relation-type>many</relation-type>
-        <related-table-name>COST_COMPONENT_ATTRIBUTE</related-table-name>
-        <key-map><column-name>NAME</column-name></key-map>
-      </relation>
-      <relation>
-        <relation-type>many</relation-type>
-        <related-table-name>COST_COMPONENT</related-table-name>
-        <key-map><column-name>COST_COMPONENT_TYPE_ID</column-name></key-map>
-      </relation>
-    </entity>
-  <!-- ========================================================= -->    
-  <!-- ========================================================= -->    
-    <entity>
-      <title>Container Entity</title>
-      <package-name>org.ofbiz.commonapp.product.inventory</package-name>
-      <table-name>CONTAINER</table-name>
-      <cmp-field><column-name>CONTAINER_ID</column-name><field-type>id-ne</field-type></cmp-field>
-      <cmp-field><column-name>CONTAINER_TYPE_ID</column-name><field-type>id</field-type></cmp-field>
-      <cmp-field><column-name>FACILITY_ID</column-name><field-type>id</field-type></cmp-field>
-      <prim-key-column>CONTAINER_ID</prim-key-column>
-      <finder><column-name>CONTAINER_TYPE_ID</column-name></finder>
-      <finder><column-name>FACILITY_ID</column-name></finder>
-    </entity>
-    <!-- ========================================================= -->    
-    <entity>
-      <title>Container Type Entity</title>
-      <package-name>org.ofbiz.commonapp.product.inventory</package-name>
-      <table-name>CONTAINER_TYPE</table-name>
-      <cmp-field><column-name>CONTAINER_TYPE_ID</column-name><field-type>id-ne</field-type></cmp-field>
-      <cmp-field><column-name>DESCRIPTION</column-name><field-type>description</field-type></cmp-field>
-      <prim-key-column>CONTAINER_TYPE_ID</prim-key-column>
-    </entity>
-    <!-- ========================================================= -->    
-    <entity>
-      <title>Facility Entity</title>
-      <package-name>org.ofbiz.commonapp.product.inventory</package-name>
-      <table-name>FACILITY</table-name>
-      <cmp-field><column-name>FACILITY_ID</column-name><field-type>id-ne</field-type></cmp-field>
-      <cmp-field><column-name>FACILITY_TYPE_ID</column-name><field-type>id</field-type></cmp-field>
-      <cmp-field><column-name>FACILITY_NAME</column-name><field-type>name</field-type></cmp-field>
-      <cmp-field><column-name>SQUARE_FOOTAGE</column-name><field-type>numeric</field-type></cmp-field>
-      <cmp-field><column-name>DESCRIPTION</column-name><field-type>description</field-type></cmp-field>
-      <prim-key-column>FACILITY_ID</prim-key-column>
-      <finder><column-name>FACILITY_TYPE_ID</column-name></finder>
-      <finder><column-name>FACILITY_NAME</column-name></finder>
-      <relation>
-        <relation-type>one</relation-type>
-        <related-table-name>FACILITY_TYPE</related-table-name>
-        <key-map><column-name>FACILITY_TYPE_ID</column-name></key-map>
-      </relation>
-      <relation>
-        <relation-type>many</relation-type>
-        <related-table-name>FACILITY_TYPE_ATTR</related-table-name>
-        <key-map><column-name>FACILITY_TYPE_ID</column-name></key-map>
-      </relation>
-      <relation>
-        <relation-type>many</relation-type>
-        <related-table-name>FACILITY_ATTRIBUTE</related-table-name>
-        <key-map><column-name>FACILITY_ID</column-name></key-map>
-      </relation>
-    </entity>
-    <!-- ========================================================= -->    
-    <entity>
-      <title>Facility Type Entity</title>
-      <package-name>org.ofbiz.commonapp.product.inventory</package-name>
-      <table-name>FACILITY_TYPE</table-name>
-      <cmp-field><column-name>FACILITY_TYPE_ID</column-name><field-type>id-ne</field-type></cmp-field>
-      <cmp-field><column-name>PARENT_TYPE_ID</column-name><field-type>id-ne</field-type></cmp-field>
-      <cmp-field><column-name>HAS_TABLE</column-name><field-type>indicator</field-type></cmp-field>
-      <cmp-field><column-name>DESCRIPTION</column-name><field-type>description</field-type></cmp-field>
-      <prim-key-column>FACILITY_TYPE_ID</prim-key-column>
-      <finder><column-name>PARENT_TYPE_ID</column-name></finder>
-      <finder><column-name>HAS_TABLE</column-name></finder>
-      <relation>
-        <relation-title>Parent</relation-title>
-        <relation-type>one</relation-type>
-        <related-table-name>FACILITY_TYPE</related-table-name>
-        <key-map><column-name>PARENT_TYPE_ID</column-name><related-column-name>FACILITY_TYPE_ID</related-column-name></key-map>
-      </relation>
-      <relation>
-        <relation-title>Child</relation-title>
-        <relation-type>many</relation-type>
-        <related-table-name>FACILITY_TYPE</related-table-name>
-        <key-map><column-name>FACILITY_TYPE_ID</column-name><related-column-name>PARENT_TYPE_ID</related-column-name></key-map>
-      </relation>
-      <relation>
-        <relation-type>many</relation-type>
-        <related-table-name>FACILITY_TYPE_ATTR</related-table-name>
-        <key-map><column-name>FACILITY_TYPE_ID</column-name></key-map>
-      </relation>
-      <relation>
-        <relation-type>many</relation-type>
-        <related-table-name>FACILITY</related-table-name>
-        <key-map><column-name>FACILITY_TYPE_ID</column-name></key-map>
-      </relation>
-    </entity>
-    <!-- ========================================================= -->    
-    <entity>
-      <title>Facility Attribute Entity</title>
-      <package-name>org.ofbiz.commonapp.product.inventory</package-name>
-      <table-name>FACILITY_ATTRIBUTE</table-name>
-      <cmp-field><column-name>FACILITY_ID</column-name><field-type>id-ne</field-type></cmp-field>
-      <cmp-field><column-name>NAME</column-name><field-type>id-long-ne</field-type></cmp-field>
-      <cmp-field><column-name>VALUE</column-name><field-type>value</field-type></cmp-field>
-      <prim-key-column>FACILITY_ID</prim-key-column>
-      <prim-key-column>NAME</prim-key-column>
-      <finder><column-name>FACILITY_ID</column-name></finder>
-      <finder><column-name>NAME</column-name></finder>
-      <relation>
-        <relation-type>one</relation-type>
-        <related-table-name>FACILITY</related-table-name>
-        <key-map><column-name>FACILITY_ID</column-name></key-map>
-      </relation>
-      <relation>
-        <relation-type>many</relation-type>
-        <related-table-name>FACILITY_TYPE_ATTR</related-table-name>
-        <key-map><column-name>NAME</column-name></key-map>
-      </relation>
-    </entity>
-    <!-- ========================================================= -->    
-    <entity>
-      <title>Facility Type Attribute Entity</title>
-      <package-name>org.ofbiz.commonapp.product.inventory</package-name>
-      <table-name>FACILITY_TYPE_ATTR</table-name>
-      <cmp-field><column-name>FACILITY_TYPE_ID</column-name><field-type>id-ne</field-type></cmp-field>
-      <cmp-field><column-name>NAME</column-name><field-type>id-long-ne</field-type></cmp-field>
-      <prim-key-column>FACILITY_TYPE_ID</prim-key-column>
-      <prim-key-column>NAME</prim-key-column>
-      <finder><column-name>FACILITY_TYPE_ID</column-name></finder>
-      <finder><column-name>NAME</column-name></finder>
-      <relation>
-        <relation-type>one</relation-type>
-        <related-table-name>FACILITY_TYPE</related-table-name>
-        <key-map><column-name>FACILITY_TYPE_ID</column-name></key-map>
-      </relation>
-      <relation>
-        <relation-type>many</relation-type>
-        <related-table-name>FACILITY_ATTRIBUTE</related-table-name>
-        <key-map><column-name>NAME</column-name></key-map>
-      </relation>
-      <relation>
-        <relation-type>many</relation-type>
-        <related-table-name>FACILITY</related-table-name>
-        <key-map><column-name>FACILITY_TYPE_ID</column-name></key-map>
-      </relation>
-    </entity>
-    <!-- ========================================================= -->    
-    <entity>
-      <title>Facility Role Type Entity</title>
-      <package-name>org.ofbiz.commonapp.product.inventory</package-name>
-      <table-name>FACILITY_ROLE_TYPE</table-name>
-      <cmp-field><column-name>FACILITY_ROLE_TYPE_ID</column-name><field-type>id-ne</field-type></cmp-field>
-      <cmp-field><column-name>DESCRIPTION</column-name><field-type>description</field-type></cmp-field>
-      <prim-key-column>FACILITY_ROLE_TYPE_ID</prim-key-column>
-    </entity>
-    <!-- ========================================================= -->    
-    <entity>
-      <title>Facility Contact Mechanism Entity</title>
-      <description>Data Type Of: Contact Mechanism</description>
-      <package-name>org.ofbiz.commonapp.product.inventory</package-name>
-      <table-name>FACILITY_CONTACT_MECHANISM</table-name>
-      <cmp-field><column-name>FACILITY_ID</column-name><field-type>id-ne</field-type></cmp-field>
-      <cmp-field><column-name>CONTACT_MECHANISM_ID</column-name><field-type>id-ne</field-type></cmp-field>
-      <prim-key-column>FACILITY_ID</prim-key-column>
-      <prim-key-column>CONTACT_MECHANISM_ID</prim-key-column>
-      <finder><column-name>FACILITY_ID</column-name></finder>
-      <finder><column-name>CONTACT_MECHANISM_ID</column-name></finder>
-    </entity>
-    <!-- ========================================================= -->    
-    <entity>
-      <title>Inventory Item Entity</title>
-      <package-name>org.ofbiz.commonapp.product.inventory</package-name>
-      <table-name>INVENTORY_ITEM</table-name>
-      <cmp-field><column-name>INVENTORY_ITEM_ID</column-name><field-type>id-ne</field-type></cmp-field>
-      <cmp-field><column-name>INVENTORY_ITEM_TYPE_ID</column-name><field-type>id</field-type></cmp-field>
-      <cmp-field><column-name>PRODUCT_ID</column-name><field-type>id</field-type></cmp-field>
-      <cmp-field><column-name>PARTY_ID</column-name><field-type>id</field-type></cmp-field>
-      <cmp-field><column-name>STATUS_TYPE_ID</column-name><field-type>id</field-type></cmp-field>
-      <cmp-field><column-name>FACILITY_ID</column-name><field-type>id</field-type></cmp-field>
-      <cmp-field><column-name>CONTAINER_ID</column-name><field-type>id</field-type></cmp-field>
-      <cmp-field><column-name>LOT_ID</column-name><field-type>id</field-type></cmp-field>
-      <cmp-field><column-name>UOM_ID</column-name><field-type>id</field-type></cmp-field>
-      <cmp-field><column-name>QUANTITY_ON_HAND</column-name><field-type>floating-point</field-type></cmp-field>
-      <cmp-field><column-name>SERIAL_NUMBER</column-name><field-type>value</field-type></cmp-field>
-      <prim-key-column>INVENTORY_ITEM_ID</prim-key-column>
-      <finder><column-name>INVENTORY_ITEM_TYPE_ID</column-name></finder>
-      <finder><column-name>PRODUCT_ID</column-name></finder>
-      <finder><column-name>PARTY_ID</column-name></finder>
-      <finder><column-name>STATUS_TYPE_ID</column-name></finder>
-      <finder><column-name>FACILITY_ID</column-name><column-name>ROLE_TYPE_ID</column-name></finder>
-      <finder><column-name>CONTAINER_ID</column-name><column-name>ROLE_TYPE_ID</column-name></finder>
-      <finder><column-name>LOT_ID</column-name><column-name>ROLE_TYPE_ID</column-name></finder>
-      <finder><column-name>UOM_ID</column-name></finder>
-      <relation>
-        <relation-type>one</relation-type>
-        <related-table-name>INVENTORY_ITEM_TYPE</related-table-name>
-        <key-map><column-name>INVENTORY_ITEM_TYPE_ID</column-name></key-map>
-      </relation>
-      <relation>
-        <relation-type>many</relation-type>
-        <related-table-name>INVENTORY_ITEM_TYPE_ATTR</related-table-name>
-        <key-map><column-name>INVENTORY_ITEM_TYPE_ID</column-name></key-map>
-      </relation>
-      <relation>
-        <relation-type>many</relation-type>
-        <related-table-name>INVENTORY_ITEM_ATTRIBUTE</related-table-name>
-        <key-map><column-name>INVENTORY_ITEM_ID</column-name></key-map>
-      </relation>
-    </entity>
-    <!-- ========================================================= -->    
-    <entity>
-      <title>Inventory Item Type Entity</title>
-      <package-name>org.ofbiz.commonapp.product.inventory</package-name>
-      <table-name>INVENTORY_ITEM_TYPE</table-name>
-      <cmp-field><column-name>INVENTORY_ITEM_TYPE_ID</column-name><field-type>id-ne</field-type></cmp-field>
-      <cmp-field><column-name>PARENT_TYPE_ID</column-name><field-type>id-ne</field-type></cmp-field>
-      <cmp-field><column-name>HAS_TABLE</column-name><field-type>indicator</field-type></cmp-field>
-      <cmp-field><column-name>DESCRIPTION</column-name><field-type>description</field-type></cmp-field>
-      <prim-key-column>INVENTORY_ITEM_TYPE_ID</prim-key-column>
-      <finder><column-name>PARENT_TYPE_ID</column-name></finder>
-      <finder><column-name>HAS_TABLE</column-name></finder>
-      <relation>
-        <relation-title>Parent</relation-title>
-        <relation-type>one</relation-type>
-        <related-table-name>INVENTORY_ITEM_TYPE</related-table-name>
-        <key-map><column-name>PARENT_TYPE_ID</column-name><related-column-name>INVENTORY_ITEM_TYPE_ID</related-column-name></key-map>
-      </relation>
-      <relation>
-        <relation-title>Child</relation-title>
-        <relation-type>many</relation-type>
-        <related-table-name>INVENTORY_ITEM_TYPE</related-table-name>
-        <key-map><column-name>INVENTORY_ITEM_TYPE_ID</column-name><related-column-name>PARENT_TYPE_ID</related-column-name></key-map>
-      </relation>
-      <relation>
-        <relation-type>many</relation-type>
-        <related-table-name>INVENTORY_ITEM_TYPE_ATTR</related-table-name>
-        <key-map><column-name>INVENTORY_ITEM_TYPE_ID</column-name></key-map>
-      </relation>
-      <relation>
-        <relation-type>many</relation-type>
-        <related-table-name>INVENTORY_ITEM</related-table-name>
-        <key-map><column-name>INVENTORY_ITEM_TYPE_ID</column-name></key-map>
-      </relation>
-    </entity>
-    <!-- ========================================================= -->    
-    <entity>
-      <title>Inventory Item Attribute Entity</title>
-      <package-name>org.ofbiz.commonapp.product.inventory</package-name>
-      <table-name>INVENTORY_ITEM_ATTRIBUTE</table-name>
-      <cmp-field><column-name>INVENTORY_ITEM_ID</column-name><field-type>id-ne</field-type></cmp-field>
-      <cmp-field><column-name>NAME</column-name><field-type>id-long-ne</field-type></cmp-field>
-      <cmp-field><column-name>VALUE</column-name><field-type>value</field-type></cmp-field>
-      <prim-key-column>INVENTORY_ITEM_ID</prim-key-column>
-      <prim-key-column>NAME</prim-key-column>
-      <finder><column-name>INVENTORY_ITEM_ID</column-name></finder>
-      <finder><column-name>NAME</column-name></finder>
-      <relation>
-        <relation-type>one</relation-type>
-        <related-table-name>INVENTORY_ITEM</related-table-name>
-        <key-map><column-name>INVENTORY_ITEM_ID</column-name></key-map>
-      </relation>
-      <relation>
-        <relation-type>many</relation-type>
-        <related-table-name>INVENTORY_ITEM_TYPE_ATTR</related-table-name>
-        <key-map><column-name>NAME</column-name></key-map>
-      </relation>
-    </entity>
-    <!-- ========================================================= -->    
-    <entity>
-      <title>Inventory Item Type Attribute Entity</title>
-      <package-name>org.ofbiz.commonapp.product.inventory</package-name>
-      <table-name>INVENTORY_ITEM_TYPE_ATTR</table-name>
-      <cmp-field><column-name>INVENTORY_ITEM_TYPE_ID</column-name><field-type>id-ne</field-type></cmp-field>
-      <cmp-field><column-name>NAME</column-name><field-type>id-long-ne</field-type></cmp-field>
-      <prim-key-column>INVENTORY_ITEM_TYPE_ID</prim-key-column>
-      <prim-key-column>NAME</prim-key-column>
-      <finder><column-name>INVENTORY_ITEM_TYPE_ID</column-name></finder>
-      <finder><column-name>NAME</column-name></finder>
-      <relation>
-        <relation-type>one</relation-type>
-        <related-table-name>INVENTORY_ITEM_TYPE</related-table-name>
-        <key-map><column-name>INVENTORY_ITEM_TYPE_ID</column-name></key-map>
-      </relation>
-      <relation>
-        <relation-type>many</relation-type>
-        <related-table-name>INVENTORY_ITEM_ATTRIBUTE</related-table-name>
-        <key-map><column-name>NAME</column-name></key-map>
-      </relation>
-      <relation>
-        <relation-type>many</relation-type>
-        <related-table-name>INVENTORY_ITEM</related-table-name>
-        <key-map><column-name>INVENTORY_ITEM_TYPE_ID</column-name></key-map>
-      </relation>
-    </entity>
-    <!-- ========================================================= -->    
-    <entity>
-      <title>Inventory Item Variance Entity</title>
-      <package-name>org.ofbiz.commonapp.product.inventory</package-name>
-      <table-name>INVENTORY_ITEM_VARIANCE</table-name>
-      <cmp-field><column-name>INVENTORY_ITEM_ID</column-name><field-type>id-ne</field-type></cmp-field>
-      <cmp-field><column-name>PHYSICAL_INVENTORY_DATE</column-name><field-type>date-time</field-type></cmp-field>
-      <cmp-field><column-name>REASON_ID</column-name><field-type>id</field-type></cmp-field>
-      <cmp-field><column-name>QUANTITY</column-name><field-type>floating-point</field-type></cmp-field>
-      <cmp-field><column-name>COMMENT</column-name><field-type>comment</field-type></cmp-field>
-      <prim-key-column>INVENTORY_ITEM_ID</prim-key-column>
-      <prim-key-column>PHYSICAL_INVENTORY_DATE</prim-key-column>
-      <finder><column-name>INVENTORY_ITEM_ID</column-name></finder>
-      <finder><column-name>PHYSICAL_INVENTORY_DATE</column-name></finder>
-      <finder><column-name>REASON_ID</column-name></finder>
-    </entity>
-    <!-- ========================================================= -->    
-    <entity>
-      <title>Reason Entity</title>
-      <package-name>org.ofbiz.commonapp.product.inventory</package-name>
-      <table-name>REASON</table-name>
-      <cmp-field><column-name>REASON_ID</column-name><field-type>id-ne</field-type></cmp-field>
-      <cmp-field><column-name>DESCRIPTION</column-name><field-type>description</field-type></cmp-field>
-      <prim-key-column>REASON_ID</prim-key-column>
-    </entity>
-    <!-- ========================================================= -->    
-    <entity>
-      <title>Item Variance Accounting Transaction Entity</title>
-      <package-name>org.ofbiz.commonapp.product.inventory</package-name>
-      <table-name>ITEM_VARIANCE_ACCTG_TRANS</table-name>
-      <cmp-field><column-name>TRANSACTION_ID</column-name><field-type>id-ne</field-type></cmp-field>
-      <cmp-field><column-name>INVENTORY_ITEM_ID</column-name><field-type>id</field-type></cmp-field>
-      <cmp-field><column-name>PHYSICAL_INVENTORY_DATE</column-name><field-type>date-time</field-type></cmp-field>
-      <prim-key-column>TRANSACTION_ID</prim-key-column>
-      <finder><column-name>INVENTORY_ITEM_ID</column-name></finder>
-      <finder><column-name>INVENTORY_ITEM_ID</column-name><column-name>PHYSICAL_INVENTORY_DATE</column-name></finder>
-    </entity>
-    <!-- ========================================================= -->    
-    <entity>
-      <title>Lot Entity</title>
-      <package-name>org.ofbiz.commonapp.product.inventory</package-name>
-      <table-name>LOT</table-name>
-      <cmp-field><column-name>LOT_ID</column-name><field-type>id-ne</field-type></cmp-field>
-      <cmp-field><column-name>CREATION_DATE</column-name><field-type>date-time</field-type></cmp-field>
-      <cmp-field><column-name>QUANTITY</column-name><field-type>floating-point</field-type></cmp-field>
-      <cmp-field><column-name>EXPIRATION_DATE</column-name><field-type>date-time</field-type></cmp-field>
-      <prim-key-column>LOT_ID</prim-key-column>
-    </entity>
-    <!-- ========================================================= -->    
-    <entity>
-      <title>Party Facility Entity</title>
-      <package-name>org.ofbiz.commonapp.product.inventory</package-name>
-      <table-name>PARTY_FACILITY</table-name>
-      <cmp-field><column-name>PARTY_ID</column-name><field-type>id-ne</field-type></cmp-field>
-      <cmp-field><column-name>FACILITY_ID</column-name><field-type>id-ne</field-type></cmp-field>
-      <cmp-field><column-name>FACILITY_ROLE_TYPE_ID</column-name><field-type>id</field-type></cmp-field>
-      <prim-key-column>PARTY_ID</prim-key-column>
-      <prim-key-column>FACILITY_ID</prim-key-column>
-      <finder><column-name>PARTY_ID</column-name></finder>
-      <finder><column-name>FACILITY_ID</column-name></finder>
-      <finder><column-name>FACILITY_ROLE_TYPE_ID</column-name></finder>
-      <finder><column-name>FACILITY_ID</column-name><column-name>FACILITY_ROLE_TYPE_ID</column-name></finder>
-    </entity>
-    <!-- ========================================================= -->    
-    <entity>
-      <title>Reorder Guideline Entity</title>
-      <package-name>org.ofbiz.commonapp.product.inventory</package-name>
-      <table-name>REORDER_GUIDELINE</table-name>
-      <cmp-field><column-name>REORDER_GUIDELINE_ID</column-name><field-type>id-ne</field-type></cmp-field>
-      <cmp-field><column-name>PRODUCT_ID</column-name><field-type>id-ne</field-type></cmp-field>
-      <cmp-field><column-name>PARTY_ID</column-name><field-type>id</field-type></cmp-field>
-      <cmp-field><column-name>ROLE_TYPE_ID</column-name><field-type>id</field-type></cmp-field>
-      <cmp-field><column-name>FACILITY_ID</column-name><field-type>id</field-type></cmp-field>
-      <cmp-field><column-name>INTERNAL_ORGANIZATION_ID</column-name><field-type>id</field-type></cmp-field>
-      <cmp-field><column-name>GEOGRAPHIC_LOCATION_ID</column-name><field-type>id</field-type></cmp-field>
-      <cmp-field><column-name>FROM_DATE</column-name><field-type>date-time</field-type></cmp-field>
-      <cmp-field><column-name>THRU_DATE</column-name><field-type>date-time</field-type></cmp-field>
-      <cmp-field><column-name>REORDER_QUANTITY</column-name><field-type>floating-point</field-type></cmp-field>
-      <cmp-field><column-name>REORDER_LEVEL</column-name><field-type>floating-point</field-type></cmp-field>
-      <prim-key-column>REORDER_GUIDELINE_ID</prim-key-column>
-      <prim-key-column>PRODUCT_ID</prim-key-column>
-      <finder><column-name>REORDER_GUIDELINE_ID</column-name></finder>
-      <finder><column-name>PRODUCT_ID</column-name></finder>
-      <finder><column-name>PARTY_ID</column-name></finder>
-      <finder><column-name>ROLE_TYPE_ID</column-name></finder>
-      <finder><column-name>PARTY_ID</column-name><column-name>ROLE_TYPE_ID</column-name></finder>
-      <finder><column-name>FACILITY_ID</column-name></finder>
-      <finder><column-name>INTERNAL_ORGANIZATION_ID</column-name></finder>
-      <finder><column-name>GEOGRAPHIC_LOCATION_ID</column-name></finder>
-    </entity>
-    <!-- ========================================================= -->    
-    <entity>
-      <title>Supplier Product Entity</title>
-      <package-name>org.ofbiz.commonapp.product.inventory</package-name>
-      <table-name>SUPPLIER_PRODUCT</table-name>
-      <cmp-field><column-name>PRODUCT_ID</column-name><field-type>id-ne</field-type></cmp-field>
-      <cmp-field><column-name>PARTY_ID</column-name><field-type>id-ne</field-type></cmp-field>
-      <cmp-field><column-name>AVAILABLE_FROM_DATE</column-name><field-type>date-time</field-type></cmp-field>
-      <cmp-field><column-name>AVAILABLE_THRU_DATE</column-name><field-type>date-time</field-type></cmp-field>
-      <cmp-field><column-name>PREFERENCE_TYPE_ID</column-name><field-type>id</field-type></cmp-field>
-      <cmp-field><column-name>RATING_TYPE_ID</column-name><field-type>id</field-type></cmp-field>
-      <cmp-field><column-name>STANDARD_LEAD_TIME</column-name><field-type>date-time</field-type></cmp-field>
-      <cmp-field><column-name>COMMENT</column-name><field-type>comment</field-type></cmp-field>
-      <prim-key-column>PRODUCT_ID</prim-key-column>
-      <prim-key-column>PARTY_ID</prim-key-column>
-      <finder><column-name>PRODUCT_ID</column-name></finder>
-      <finder><column-name>PARTY_ID</column-name></finder>
-      <finder><column-name>PREFERENCE_TYPE_ID</column-name></finder>
-      <finder><column-name>RATING_TYPE_ID</column-name></finder>
-    </entity>
-    <!-- ========================================================= -->    
-    <entity>
-      <title>Preference Type Entity</title>
-      <package-name>org.ofbiz.commonapp.product.inventory</package-name>
-      <table-name>PREFERENCE_TYPE</table-name>
-      <cmp-field><column-name>PREFERENCE_TYPE_ID</column-name><field-type>id-ne</field-type></cmp-field>
-      <cmp-field><column-name>DESCRIPTION</column-name><field-type>description</field-type></cmp-field>
-      <prim-key-column>PREFERENCE_TYPE_ID</prim-key-column>
-    </entity>
-    <!-- ========================================================= -->    
-    <entity>
-      <title>Market Interest Entity</title>
-      <package-name>org.ofbiz.commonapp.product.inventory</package-name>
-      <table-name>MARKET_INTEREST</table-name>
-      <cmp-field><column-name>PRODUCT_CATEGORY_ID</column-name><field-type>id-ne</field-type></cmp-field>
-      <cmp-field><column-name>PARTY_TYPE_ID</column-name><field-type>id-ne</field-type></cmp-field>
-      <cmp-field><column-name>FROM_DATE</column-name><field-type>date-time</field-type></cmp-field>
-      <cmp-field><column-name>THRU_DATE</column-name><field-type>date-time</field-type></cmp-field>
-      <prim-key-column>PRODUCT_CATEGORY_ID</prim-key-column>
-      <prim-key-column>PARTY_TYPE_ID</prim-key-column>
-      <finder><column-name>PRODUCT_CATEGORY_ID</column-name></finder>
-      <finder><column-name>PARTY_TYPE_ID</column-name></finder>
     </entity>
   <!-- ========================================================= -->    
   <!-- ========================================================= -->    
@@ -4233,6 +3991,259 @@
         <related-table-name>PRODUCT_ASSOC</related-table-name>
         <key-map><column-name>PRODUCT_ASSOC_TYPE_ID</column-name></key-map>
       </relation>
+    </entity>
+  <!-- ========================================================= -->    
+  <!-- ========================================================= -->    
+    <entity>
+      <title>Container Entity</title>
+      <package-name>org.ofbiz.commonapp.product.storage</package-name>
+      <table-name>CONTAINER</table-name>
+      <cmp-field><column-name>CONTAINER_ID</column-name><field-type>id-ne</field-type></cmp-field>
+      <cmp-field><column-name>CONTAINER_TYPE_ID</column-name><field-type>id</field-type></cmp-field>
+      <cmp-field><column-name>FACILITY_ID</column-name><field-type>id</field-type></cmp-field>
+      <prim-key-column>CONTAINER_ID</prim-key-column>
+      <finder><column-name>CONTAINER_TYPE_ID</column-name></finder>
+      <finder><column-name>FACILITY_ID</column-name></finder>
+    </entity>
+    <!-- ========================================================= -->    
+    <entity>
+      <title>Container Type Entity</title>
+      <package-name>org.ofbiz.commonapp.product.storage</package-name>
+      <table-name>CONTAINER_TYPE</table-name>
+      <cmp-field><column-name>CONTAINER_TYPE_ID</column-name><field-type>id-ne</field-type></cmp-field>
+      <cmp-field><column-name>DESCRIPTION</column-name><field-type>description</field-type></cmp-field>
+      <prim-key-column>CONTAINER_TYPE_ID</prim-key-column>
+    </entity>
+    <!-- ========================================================= -->    
+    <entity>
+      <title>Facility Entity</title>
+      <package-name>org.ofbiz.commonapp.product.storage</package-name>
+      <table-name>FACILITY</table-name>
+      <cmp-field><column-name>FACILITY_ID</column-name><field-type>id-ne</field-type></cmp-field>
+      <cmp-field><column-name>FACILITY_TYPE_ID</column-name><field-type>id</field-type></cmp-field>
+      <cmp-field><column-name>FACILITY_NAME</column-name><field-type>name</field-type></cmp-field>
+      <cmp-field><column-name>SQUARE_FOOTAGE</column-name><field-type>numeric</field-type></cmp-field>
+      <cmp-field><column-name>DESCRIPTION</column-name><field-type>description</field-type></cmp-field>
+      <prim-key-column>FACILITY_ID</prim-key-column>
+      <finder><column-name>FACILITY_TYPE_ID</column-name></finder>
+      <finder><column-name>FACILITY_NAME</column-name></finder>
+      <relation>
+        <relation-type>one</relation-type>
+        <related-table-name>FACILITY_TYPE</related-table-name>
+        <key-map><column-name>FACILITY_TYPE_ID</column-name></key-map>
+      </relation>
+      <relation>
+        <relation-type>many</relation-type>
+        <related-table-name>FACILITY_TYPE_ATTR</related-table-name>
+        <key-map><column-name>FACILITY_TYPE_ID</column-name></key-map>
+      </relation>
+      <relation>
+        <relation-type>many</relation-type>
+        <related-table-name>FACILITY_ATTRIBUTE</related-table-name>
+        <key-map><column-name>FACILITY_ID</column-name></key-map>
+      </relation>
+    </entity>
+    <!-- ========================================================= -->    
+    <entity>
+      <title>Facility Type Entity</title>
+      <package-name>org.ofbiz.commonapp.product.storage</package-name>
+      <table-name>FACILITY_TYPE</table-name>
+      <cmp-field><column-name>FACILITY_TYPE_ID</column-name><field-type>id-ne</field-type></cmp-field>
+      <cmp-field><column-name>PARENT_TYPE_ID</column-name><field-type>id-ne</field-type></cmp-field>
+      <cmp-field><column-name>HAS_TABLE</column-name><field-type>indicator</field-type></cmp-field>
+      <cmp-field><column-name>DESCRIPTION</column-name><field-type>description</field-type></cmp-field>
+      <prim-key-column>FACILITY_TYPE_ID</prim-key-column>
+      <finder><column-name>PARENT_TYPE_ID</column-name></finder>
+      <finder><column-name>HAS_TABLE</column-name></finder>
+      <relation>
+        <relation-title>Parent</relation-title>
+        <relation-type>one</relation-type>
+        <related-table-name>FACILITY_TYPE</related-table-name>
+        <key-map><column-name>PARENT_TYPE_ID</column-name><related-column-name>FACILITY_TYPE_ID</related-column-name></key-map>
+      </relation>
+      <relation>
+        <relation-title>Child</relation-title>
+        <relation-type>many</relation-type>
+        <related-table-name>FACILITY_TYPE</related-table-name>
+        <key-map><column-name>FACILITY_TYPE_ID</column-name><related-column-name>PARENT_TYPE_ID</related-column-name></key-map>
+      </relation>
+      <relation>
+        <relation-type>many</relation-type>
+        <related-table-name>FACILITY_TYPE_ATTR</related-table-name>
+        <key-map><column-name>FACILITY_TYPE_ID</column-name></key-map>
+      </relation>
+      <relation>
+        <relation-type>many</relation-type>
+        <related-table-name>FACILITY</related-table-name>
+        <key-map><column-name>FACILITY_TYPE_ID</column-name></key-map>
+      </relation>
+    </entity>
+    <!-- ========================================================= -->    
+    <entity>
+      <title>Facility Attribute Entity</title>
+      <package-name>org.ofbiz.commonapp.product.storage</package-name>
+      <table-name>FACILITY_ATTRIBUTE</table-name>
+      <cmp-field><column-name>FACILITY_ID</column-name><field-type>id-ne</field-type></cmp-field>
+      <cmp-field><column-name>NAME</column-name><field-type>id-long-ne</field-type></cmp-field>
+      <cmp-field><column-name>VALUE</column-name><field-type>value</field-type></cmp-field>
+      <prim-key-column>FACILITY_ID</prim-key-column>
+      <prim-key-column>NAME</prim-key-column>
+      <finder><column-name>FACILITY_ID</column-name></finder>
+      <finder><column-name>NAME</column-name></finder>
+      <relation>
+        <relation-type>one</relation-type>
+        <related-table-name>FACILITY</related-table-name>
+        <key-map><column-name>FACILITY_ID</column-name></key-map>
+      </relation>
+      <relation>
+        <relation-type>many</relation-type>
+        <related-table-name>FACILITY_TYPE_ATTR</related-table-name>
+        <key-map><column-name>NAME</column-name></key-map>
+      </relation>
+    </entity>
+    <!-- ========================================================= -->    
+    <entity>
+      <title>Facility Type Attribute Entity</title>
+      <package-name>org.ofbiz.commonapp.product.storage</package-name>
+      <table-name>FACILITY_TYPE_ATTR</table-name>
+      <cmp-field><column-name>FACILITY_TYPE_ID</column-name><field-type>id-ne</field-type></cmp-field>
+      <cmp-field><column-name>NAME</column-name><field-type>id-long-ne</field-type></cmp-field>
+      <prim-key-column>FACILITY_TYPE_ID</prim-key-column>
+      <prim-key-column>NAME</prim-key-column>
+      <finder><column-name>FACILITY_TYPE_ID</column-name></finder>
+      <finder><column-name>NAME</column-name></finder>
+      <relation>
+        <relation-type>one</relation-type>
+        <related-table-name>FACILITY_TYPE</related-table-name>
+        <key-map><column-name>FACILITY_TYPE_ID</column-name></key-map>
+      </relation>
+      <relation>
+        <relation-type>many</relation-type>
+        <related-table-name>FACILITY_ATTRIBUTE</related-table-name>
+        <key-map><column-name>NAME</column-name></key-map>
+      </relation>
+      <relation>
+        <relation-type>many</relation-type>
+        <related-table-name>FACILITY</related-table-name>
+        <key-map><column-name>FACILITY_TYPE_ID</column-name></key-map>
+      </relation>
+    </entity>
+    <!-- ========================================================= -->    
+    <entity>
+      <title>Facility Role Type Entity</title>
+      <package-name>org.ofbiz.commonapp.product.storage</package-name>
+      <table-name>FACILITY_ROLE_TYPE</table-name>
+      <cmp-field><column-name>FACILITY_ROLE_TYPE_ID</column-name><field-type>id-ne</field-type></cmp-field>
+      <cmp-field><column-name>DESCRIPTION</column-name><field-type>description</field-type></cmp-field>
+      <prim-key-column>FACILITY_ROLE_TYPE_ID</prim-key-column>
+    </entity>
+    <!-- ========================================================= -->    
+    <entity>
+      <title>Facility Contact Mechanism Entity</title>
+      <description>Data Type Of: Contact Mechanism</description>
+      <package-name>org.ofbiz.commonapp.product.storage</package-name>
+      <table-name>FACILITY_CONTACT_MECHANISM</table-name>
+      <cmp-field><column-name>FACILITY_ID</column-name><field-type>id-ne</field-type></cmp-field>
+      <cmp-field><column-name>CONTACT_MECHANISM_ID</column-name><field-type>id-ne</field-type></cmp-field>
+      <prim-key-column>FACILITY_ID</prim-key-column>
+      <prim-key-column>CONTACT_MECHANISM_ID</prim-key-column>
+      <finder><column-name>FACILITY_ID</column-name></finder>
+      <finder><column-name>CONTACT_MECHANISM_ID</column-name></finder>
+    </entity>
+    <!-- ========================================================= -->    
+    <entity>
+      <title>Party Facility Entity</title>
+      <package-name>org.ofbiz.commonapp.product.storage</package-name>
+      <table-name>PARTY_FACILITY</table-name>
+      <cmp-field><column-name>PARTY_ID</column-name><field-type>id-ne</field-type></cmp-field>
+      <cmp-field><column-name>FACILITY_ID</column-name><field-type>id-ne</field-type></cmp-field>
+      <cmp-field><column-name>FACILITY_ROLE_TYPE_ID</column-name><field-type>id</field-type></cmp-field>
+      <prim-key-column>PARTY_ID</prim-key-column>
+      <prim-key-column>FACILITY_ID</prim-key-column>
+      <finder><column-name>PARTY_ID</column-name></finder>
+      <finder><column-name>FACILITY_ID</column-name></finder>
+      <finder><column-name>FACILITY_ROLE_TYPE_ID</column-name></finder>
+      <finder><column-name>FACILITY_ID</column-name><column-name>FACILITY_ROLE_TYPE_ID</column-name></finder>
+    </entity>
+  <!-- ========================================================= -->    
+  <!-- ========================================================= -->    
+    <entity>
+      <title>Reorder Guideline Entity</title>
+      <package-name>org.ofbiz.commonapp.product.supplier</package-name>
+      <table-name>REORDER_GUIDELINE</table-name>
+      <cmp-field><column-name>REORDER_GUIDELINE_ID</column-name><field-type>id-ne</field-type></cmp-field>
+      <cmp-field><column-name>PRODUCT_ID</column-name><field-type>id-ne</field-type></cmp-field>
+      <cmp-field><column-name>PARTY_ID</column-name><field-type>id</field-type></cmp-field>
+      <cmp-field><column-name>ROLE_TYPE_ID</column-name><field-type>id</field-type></cmp-field>
+      <cmp-field><column-name>FACILITY_ID</column-name><field-type>id</field-type></cmp-field>
+      <cmp-field><column-name>INTERNAL_ORGANIZATION_ID</column-name><field-type>id</field-type></cmp-field>
+      <cmp-field><column-name>GEOGRAPHIC_LOCATION_ID</column-name><field-type>id</field-type></cmp-field>
+      <cmp-field><column-name>FROM_DATE</column-name><field-type>date-time</field-type></cmp-field>
+      <cmp-field><column-name>THRU_DATE</column-name><field-type>date-time</field-type></cmp-field>
+      <cmp-field><column-name>REORDER_QUANTITY</column-name><field-type>floating-point</field-type></cmp-field>
+      <cmp-field><column-name>REORDER_LEVEL</column-name><field-type>floating-point</field-type></cmp-field>
+      <prim-key-column>REORDER_GUIDELINE_ID</prim-key-column>
+      <prim-key-column>PRODUCT_ID</prim-key-column>
+      <finder><column-name>REORDER_GUIDELINE_ID</column-name></finder>
+      <finder><column-name>PRODUCT_ID</column-name></finder>
+      <finder><column-name>PARTY_ID</column-name></finder>
+      <finder><column-name>ROLE_TYPE_ID</column-name></finder>
+      <finder><column-name>PARTY_ID</column-name><column-name>ROLE_TYPE_ID</column-name></finder>
+      <finder><column-name>FACILITY_ID</column-name></finder>
+      <finder><column-name>INTERNAL_ORGANIZATION_ID</column-name></finder>
+      <finder><column-name>GEOGRAPHIC_LOCATION_ID</column-name></finder>
+    </entity>
+    <!-- ========================================================= -->    
+    <entity>
+      <title>Supplier Product Entity</title>
+      <package-name>org.ofbiz.commonapp.product.supplier</package-name>
+      <table-name>SUPPLIER_PRODUCT</table-name>
+      <cmp-field><column-name>PRODUCT_ID</column-name><field-type>id-ne</field-type></cmp-field>
+      <cmp-field><column-name>PARTY_ID</column-name><field-type>id-ne</field-type></cmp-field>
+      <cmp-field><column-name>AVAILABLE_FROM_DATE</column-name><field-type>date-time</field-type></cmp-field>
+      <cmp-field><column-name>AVAILABLE_THRU_DATE</column-name><field-type>date-time</field-type></cmp-field>
+      <cmp-field><column-name>PREFERENCE_TYPE_ID</column-name><field-type>id</field-type></cmp-field>
+      <cmp-field><column-name>SUPPLIER_RATING_TYPE_ID</column-name><field-type>id</field-type></cmp-field>
+      <cmp-field><column-name>STANDARD_LEAD_TIME</column-name><field-type>date-time</field-type></cmp-field>
+      <cmp-field><column-name>COMMENT</column-name><field-type>comment</field-type></cmp-field>
+      <prim-key-column>PRODUCT_ID</prim-key-column>
+      <prim-key-column>PARTY_ID</prim-key-column>
+      <finder><column-name>PRODUCT_ID</column-name></finder>
+      <finder><column-name>PARTY_ID</column-name></finder>
+      <finder><column-name>PREFERENCE_TYPE_ID</column-name></finder>
+      <finder><column-name>SUPPLIER_RATING_TYPE_ID</column-name></finder>
+    </entity>
+    <!-- ========================================================= -->    
+    <entity>
+      <title>Supplier Rating Type Entity</title>
+      <package-name>org.ofbiz.commonapp.product.supplier</package-name>
+      <table-name>SUPPLIER_RATING_TYPE</table-name>
+      <cmp-field><column-name>SUPPLIER_RATING_TYPE_ID</column-name><field-type>id-ne</field-type></cmp-field>
+      <cmp-field><column-name>DESCRIPTION</column-name><field-type>description</field-type></cmp-field>
+      <prim-key-column>SUPPLIER_RATING_TYPE_ID</prim-key-column>
+    </entity>
+    <!-- ========================================================= -->    
+    <entity>
+      <title>Preference Type Entity</title>
+      <package-name>org.ofbiz.commonapp.product.supplier</package-name>
+      <table-name>PREFERENCE_TYPE</table-name>
+      <cmp-field><column-name>PREFERENCE_TYPE_ID</column-name><field-type>id-ne</field-type></cmp-field>
+      <cmp-field><column-name>DESCRIPTION</column-name><field-type>description</field-type></cmp-field>
+      <prim-key-column>PREFERENCE_TYPE_ID</prim-key-column>
+    </entity>
+    <!-- ========================================================= -->    
+    <entity>
+      <title>Market Interest Entity</title>
+      <package-name>org.ofbiz.commonapp.product.supplier</package-name>
+      <table-name>MARKET_INTEREST</table-name>
+      <cmp-field><column-name>PRODUCT_CATEGORY_ID</column-name><field-type>id-ne</field-type></cmp-field>
+      <cmp-field><column-name>PARTY_TYPE_ID</column-name><field-type>id-ne</field-type></cmp-field>
+      <cmp-field><column-name>FROM_DATE</column-name><field-type>date-time</field-type></cmp-field>
+      <cmp-field><column-name>THRU_DATE</column-name><field-type>date-time</field-type></cmp-field>
+      <prim-key-column>PRODUCT_CATEGORY_ID</prim-key-column>
+      <prim-key-column>PARTY_TYPE_ID</prim-key-column>
+      <finder><column-name>PRODUCT_CATEGORY_ID</column-name></finder>
+      <finder><column-name>PARTY_TYPE_ID</column-name></finder>
     </entity>
 
   <!-- ========================================================= -->
@@ -8428,7 +8439,7 @@
       <cmp-field><column-name>EMPLOYEE_ROLE_TYPE_ID</column-name><field-type>id-ne</field-type></cmp-field>
       <cmp-field><column-name>PERF_REVIEW_ID</column-name><field-type>id-ne</field-type></cmp-field>
       <cmp-field><column-name>PERF_REVIEW_SEQ_ID</column-name><field-type>id-ne</field-type></cmp-field>
-      <cmp-field><column-name>RATING_TYPE_ID</column-name><field-type>id</field-type></cmp-field>
+      <cmp-field><column-name>PERF_RATING_TYPE_ID</column-name><field-type>id</field-type></cmp-field>
       <cmp-field><column-name>PERF_REVIEW_ITEM_TYPE_ID</column-name><field-type>id</field-type></cmp-field>
       <cmp-field><column-name>COMMENT</column-name><field-type>comment</field-type></cmp-field>
       <prim-key-column>EMPLOYEE_PARTY_ID</prim-key-column>
@@ -8440,17 +8451,17 @@
       <finder><column-name>EMPLOYEE_PARTY_ID</column-name><column-name>EMPLOYEE_ROLE_TYPE_ID</column-name></finder>
       <finder><column-name>PERF_REVIEW_ID</column-name></finder>
       <finder><column-name>PERF_REVIEW_ID</column-name><column-name>PERF_REVIEW_SEQ_ID</column-name></finder>
-      <finder><column-name>RATING_TYPE_ID</column-name></finder>
+      <finder><column-name>PERF_RATING_TYPE_ID</column-name></finder>
       <finder><column-name>PERF_REVIEW_ITEM_TYPE_ID</column-name></finder>
     </entity>
     <!-- ========================================================= -->    
     <entity>
-      <title>Rating Type Entity</title>
+      <title>Performance Rating Type Entity</title>
       <package-name>org.ofbiz.commonapp.humanres.ability</package-name>
-      <table-name>RATING_TYPE</table-name>
-      <cmp-field><column-name>RATING_TYPE_ID</column-name><field-type>id-ne</field-type></cmp-field>
+      <table-name>PERF_RATING_TYPE</table-name>
+      <cmp-field><column-name>PERF_RATING_TYPE_ID</column-name><field-type>id-ne</field-type></cmp-field>
       <cmp-field><column-name>DESCRIPTION</column-name><field-type>description</field-type></cmp-field>
-      <prim-key-column>RATING_TYPE_ID</prim-key-column>
+      <prim-key-column>PERF_RATING_TYPE_ID</prim-key-column>
     </entity>
     <!-- ========================================================= -->    
     <entity>
