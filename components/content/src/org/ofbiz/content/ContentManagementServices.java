@@ -41,7 +41,7 @@ import org.ofbiz.content.content.ContentWorker;
  * ContentManagementServices Class
  *
  * @author     <a href="mailto:byersa@automationgroups.com">Al Byers</a>
- * @version    $Revision: 1.4 $
+ * @version    $Revision: 1.5 $
  * @since      3.0
  *
  * 
@@ -121,7 +121,7 @@ public class ContentManagementServices {
      * The keys for determining if each entity is created is the presence
      * of the contentTypeId, contentAssocTypeId and dataResourceTypeId.
      */
-    public static Map persistContentAndAssoc(DispatchContext dctx, Map context) {
+    public static Map persistContentAndAssoc(DispatchContext dctx, Map context) throws GenericServiceException{
 
         //Debug.logInfo("CREATING CONTENTANDASSOC:" + context, null);
         HashMap result = new HashMap();
@@ -301,15 +301,24 @@ public class ContentManagementServices {
             Debug.logInfo("CREATING contentASSOC contentAssocTypeId:" +  contentAssocTypeId, null);
         if (contentAssocTypeId != null && contentAssocTypeId.length() > 0 ) {
             Debug.logInfo("CREATING contentASSOC context:" +  context, null);
-            Map thisResult = ContentServices.createContentAssocMethod(dctx, context);
+            Map thisResult = null;
+            try {
+                thisResult = ContentServices.createContentAssocMethod(dctx, context);
+            } catch (GenericEntityException e) {
+                throw new GenericServiceException(e.getMessage());
+            } catch (Exception e2) {
+                throw new GenericServiceException(e2.getMessage());
+            }
             result.put("contentIdTo", thisResult.get("contentIdTo"));
             result.put("contentIdFrom", thisResult.get("contentIdFrom"));
             result.put("contentAssocTypeId", thisResult.get("contentAssocTypeId"));
             result.put("fromDate", thisResult.get("fromDate"));
        }
             //Debug.logInfo("return from CREATING CONTENTASSOC result:" +  result, null);
+       context.remove("skipPermissionCheck");
+       context.remove("contentId");
+       context.remove("dataResourceId");
+       context.remove("dataResource");
        return result;
     }
-
-
 }
