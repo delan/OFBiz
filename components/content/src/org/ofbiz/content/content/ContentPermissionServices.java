@@ -1,5 +1,5 @@
 /*
- * $Id: ContentPermissionServices.java,v 1.18 2004/05/11 14:42:47 byersa Exp $
+ * $Id: ContentPermissionServices.java,v 1.19 2004/06/07 16:03:15 byersa Exp $
  *
  * Copyright (c) 2001-2003 The Open For Business Project - www.ofbiz.org
  *
@@ -52,7 +52,7 @@ import org.ofbiz.service.ServiceUtil;
  * ContentPermissionServices Class
  *
  * @author     <a href="mailto:byersa@automationgroups.com">Al Byers</a>
- * @version    $Revision: 1.18 $
+ * @version    $Revision: 1.19 $
  * @since      2.2
  * 
  * Services for granting operation permissions on Content entities in a data-driven manner.
@@ -226,6 +226,22 @@ public class ContentPermissionServices {
         PermissionRecorder recorder = new PermissionRecorder();
                 //Debug.logInfo("recorder(a):" + recorder, "");
         result.put("permissionRecorder", recorder);
+
+        List allowedHasRoleOperationList = null;
+        boolean hasRoleOperation = false;
+        String userLoginId = null; 
+        if (userLogin != null) {
+            userLoginId = userLogin.getString("userLoginId");
+        }
+        if (!(targetOperations == null) && userLoginId != null) {
+            hasRoleOperation = checkHasRoleOperations(userLoginId, targetOperations, delegator);
+        }
+        if (Debug.infoOn()) Debug.logInfo("hasRoleOperation:" + hasRoleOperation, module);
+        if( hasRoleOperation ) {
+            result.put("permissionStatus", "granted");
+            return result;
+        }
+
 
         if (content != null) {
             String statusId = (String)content.get("statusId");
@@ -700,4 +716,63 @@ public class ContentPermissionServices {
         return results;
     }
 
+    public static boolean checkHasRoleOperations(String userLoginId,  List targetOperations, GenericDelegator delegator) {
+
+        if (Debug.infoOn()) Debug.logInfo("targetOperations:" + targetOperations, module);
+        if (Debug.infoOn()) Debug.logInfo("userLoginId:" + userLoginId, module);
+        if (targetOperations == null)
+            return false;
+
+        if (userLoginId != null && targetOperations.contains("HAS_USER_ROLE"))
+            return true;
+
+        boolean hasRoleOperation = false;
+        Iterator targOpIter = targetOperations.iterator();
+        boolean hasNeed = false;
+        List newHasRoleList = new ArrayList();
+        while (targOpIter.hasNext()) {
+            String roleOp = (String)targOpIter.next();
+            int idx1 = roleOp.indexOf("HAS_");
+            if (idx1 == 0) {
+                String roleOp1 = roleOp.substring(4); // lop off "HAS_"
+                int idx2 = roleOp1.indexOf("_ROLE");
+                if (idx2 == (roleOp1.length() - 5)) {
+                    String roleOp2 = roleOp1.substring(0, roleOp1.indexOf("_ROLE") - 1); // lop off "_ROLE"
+                    if (Debug.infoOn()) Debug.logInfo("roleOp2:" + roleOp2, module);
+                    newHasRoleList.add(roleOp2);
+                    hasNeed = true;
+                }
+            }
+        }
+
+        if (hasNeed) {
+            GenericValue uLogin = null;
+            try {
+                uLogin = delegator.findByPrimaryKeyCache("UserLogin", UtilMisc.toMap("userLoginId", userLoginId));
+                String partyId = uLogin.getString("partyId");
+                if (UtilValidate.isNotEmpty(partyId)) {
+                    List partyRoleList = delegator.findByAndCache("PartyRole", UtilMisc.toMap("partyId", partyId));
+                    Iterator partyRoleIter = partyRoleList.iterator();
+                    while (partyRoleIter.hasNext()) {
+                        GenericValue partyRole = (GenericValue)partyRoleIter.next();
+                        String roleTypeId = partyRole.getString("roleTypeId");
+                        targOpIter = newHasRoleList.iterator();
+                        while (targOpIter.hasNext()) {
+                            String thisRole = (String)targOpIter.next();
+                            if (roleTypeId.indexOf(thisRole) >= 0) {
+                                hasRoleOperation = true;
+                                break;
+                            }
+                        }
+                        if (hasRoleOperation)
+                            break;
+                    }
+                }
+            } catch (GenericEntityException e) {
+                Debug.logError(e, module);
+                return hasRoleOperation;
+            }
+        }
+        return hasRoleOperation;
+    }
 }
