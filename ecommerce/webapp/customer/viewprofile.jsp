@@ -1,7 +1,4 @@
-<%
-/**
- *  Title: Login Page
- *  Description: None
+<%--
  *  Copyright (c) 2001 The Open For Business Project - www.ofbiz.org
  *
  *  Permission is hereby granted, free of charge, to any person obtaining a 
@@ -25,8 +22,7 @@
  *@author     David E. Jones
  *@created    May 22 2001
  *@version    1.0
- */
-%>
+--%>
 
 <%@ taglib uri="ofbizTags" prefix="ofbiz" %>
 
@@ -334,7 +330,7 @@
                       </table>
                     </ofbiz:if>
                     <ofbiz:unless name="paymentMethodValueMaps" size="0">
-                      <p>No payment method information on file.</p>
+                      <div class='tabletext'>No payment method information on file.</div>
                     </ofbiz:unless>
                   </td>
                 </tr>
@@ -382,5 +378,5 @@
 </TABLE>
 </ofbiz:if>
 <ofbiz:unless name="party">
-    No party found for current user with user name: <%entityField.run("userLogin", "userLoginId");%>
+    <div class='head3'>No party found for current user with user name: <%entityField.run("userLogin", "userLoginId");%></div>
 </ofbiz:unless>
