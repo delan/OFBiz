@@ -4674,6 +4674,9 @@
       <relation type="many" rel-entity-name="PartyContactMech">
         <key-map field-name="partyId" />
       </relation>
+      <relation type="many" rel-entity-name="PartyContactMechPurpose">
+        <key-map field-name="partyId" />
+      </relation>
       <relation type="many" rel-entity-name="CostComponent">
         <key-map field-name="partyId" />
       </relation>
