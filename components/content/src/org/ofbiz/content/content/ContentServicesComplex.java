@@ -346,6 +346,9 @@ public class ContentServicesComplex {
         }
         HashMap results = new HashMap();
         results.put("entityList", contentAssocDataResourceList);
+        if (contentAssocDataResourceList != null && contentAssocDataResourceList.size() > 0 ) {
+            results.put("view", contentAssocDataResourceList.get(0));
+        }
         return results;
     }
 

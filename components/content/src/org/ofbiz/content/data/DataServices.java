@@ -27,6 +27,7 @@ import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.FileWriter;
+import java.io.StringWriter;
 import java.io.IOException;
 import java.io.RandomAccessFile;
 import java.io.Writer;
@@ -455,8 +456,8 @@ public class DataServices {
         return result;
     }
 
-    public static void renderDataResourceAsText(DispatchContext dctx, Map context) throws GeneralException, IOException {
-        //Map results = new HashMap();
+    public static Map renderDataResourceAsText(DispatchContext dctx, Map context) throws GeneralException, IOException {
+        Map results = new HashMap();
         GenericDelegator delegator = dctx.getDelegator();
         //LocalDispatcher dispatcher = dctx.getDispatcher();
         Writer out = (Writer) context.get("outWriter");
@@ -478,8 +479,16 @@ public class DataServices {
         }
 
         GenericValue view = (GenericValue) context.get("subContentDataResourceView");
-        DataResourceWorker.renderDataResourceAsText(delegator, dataResourceId, out, templateContext, view, locale, mimeTypeId);
-        return;
+        Writer outWriter = new StringWriter();
+        DataResourceWorker.renderDataResourceAsTextCache(delegator, dataResourceId, outWriter, templateContext, view, locale, mimeTypeId);
+        try {
+            out.write(outWriter.toString());
+            results.put("textData", outWriter.toString());
+        } catch (IOException e) {
+            Debug.logError(e, "Error rendering sub-content text", module);
+            return ServiceUtil.returnError(e.toString());
+        }
+        return results;
     }
 
     /**

@@ -869,6 +869,8 @@ public class ContentWorker {
             } catch (GenericServiceException e) {
                 Debug.logError(e, "Problem checking permissions", "ContentServices");
             }
+        } else {
+            permResults.put("permissionStatus", "granted");   
         }
         return permResults;
     }
@@ -1338,6 +1340,12 @@ public class ContentWorker {
         return targetOperationList;
     }
 
+    /**
+     * Checks to see if there is a purpose string (delimited by pipes) and 
+     * turns it into a list and concants to any existing purpose list.
+     * @param context
+     * @return
+     */
     public static List prepContentPurposeList(Map context) {
 
         List contentPurposeList = (List)context.get("contentPurposeList");

@@ -130,6 +130,22 @@
                 </xs:restriction>
             </xs:simpleType>
         </xs:attribute>
+        <xs:attribute name="skip-start" default="false">
+            <xs:simpleType>
+                <xs:restriction base="xs:token">
+                    <xs:enumeration value="true"/>
+                    <xs:enumeration value="false"/>
+                </xs:restriction>
+            </xs:simpleType>
+        </xs:attribute>
+        <xs:attribute name="skip-end" default="false">
+            <xs:simpleType>
+                <xs:restriction base="xs:token">
+                    <xs:enumeration value="true"/>
+                    <xs:enumeration value="false"/>
+                </xs:restriction>
+            </xs:simpleType>
+        </xs:attribute>
     </xs:attributeGroup>
     <xs:element name="alt-target">
         <xs:complexType>
@@ -183,6 +199,7 @@
             <xs:choice minOccurs="0" maxOccurs="unbounded">
                 <xs:element ref="sort-field"/>
                 <xs:element ref="field-group"/>
+                <xs:element ref="banner"/>
             </xs:choice>
             <xs:attributeGroup ref="attlist.sort-order"/>
         </xs:complexType>
@@ -205,20 +222,22 @@
         </xs:complexType>
     </xs:element>
     <xs:attributeGroup name="attlist.field-group">
-        <xs:attribute name="id" default="explicit">
-            <xs:simpleType>
-                <xs:restriction base="xs:token">
-                    <xs:enumeration value="explicit"/>
-                </xs:restriction>
-            </xs:simpleType>
-        </xs:attribute>
-        <xs:attribute name="style" default="explicit">
-            <xs:simpleType>
-                <xs:restriction base="xs:token">
-                    <xs:enumeration value="explicit"/>
-                </xs:restriction>
-            </xs:simpleType>
-        </xs:attribute>
+        <xs:attribute type="xs:string" name="id"/>
+        <xs:attribute type="xs:string" name="style"/>
+    </xs:attributeGroup>
+    <xs:element name="banner">
+        <xs:complexType>
+            <xs:attributeGroup ref="attlist.banner"/>
+        </xs:complexType>
+    </xs:element>
+    <xs:attributeGroup name="attlist.banner">
+        <xs:attribute type="xs:string" name="style"/>
+        <xs:attribute type="xs:string" name="text"/>
+        <xs:attribute type="xs:string" name="text-style"/>
+        <xs:attribute type="xs:string" name="left-text"/>
+        <xs:attribute type="xs:string" name="left-text-style"/>
+        <xs:attribute type="xs:string" name="right-text"/>
+        <xs:attribute type="xs:string" name="right-text-style"/>
     </xs:attributeGroup>
     <xs:element name="sort-field">
         <xs:complexType>

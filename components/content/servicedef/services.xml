@@ -129,6 +129,9 @@
         <description>Create a Content</description>
         <auto-attributes include="nonpk" mode="IN" optional="true"/>
         <attribute mode="IN" name="targetOperationList" optional="true" type="List"/>
+        <attribute mode="IN" name="targetOperationString" optional="true" type="String"/>
+        <attribute mode="IN" name="contentPurposeList" optional="true" type="List"/>
+        <attribute mode="IN" name="contentPurposeString" optional="true" type="String"/>
         <attribute mode="IN" name="contentPurposeTypeId" optional="true" type="String"/>
         <attribute mode="IN" name="userLogin" optional="true" type="GenericValue"/>
         <attribute mode="IN" name="skipPermissionCheck" optional="true" type="String"/>
@@ -1162,7 +1165,7 @@
         <attribute mode="IN" name="contentTypeId" optional="true" type="String"/>
         <attribute mode="IN" name="targetOperationList" optional="true" type="List"/>
         <attribute mode="IN" name="contentPurposeList" optional="true" type="List"/>
-        <attribute mode="IN" name="userLogin" optional="true" type="GenericValue"/>
+        <attribute mode="IN" name="userLogin" optional="true" type="org.ofbiz.entity.GenericValue"/>
         <attribute mode="INOUT" name="roleTypeList" optional="true" type="List"/>
     </service>
 
@@ -1187,6 +1190,7 @@
         <attribute name="nullThruDatesOnly" type="Boolean" mode="IN" optional="true"/>
         <attribute mode="IN" name="contentAssocPredicateId" optional="true" type="String"/>
         <attribute mode="OUT" name="entityList" optional="true" type="List"/>
+        <attribute mode="OUT" name="view" optional="true" type="org.ofbiz.entity.GenericValue"/>
     </service>
 
     <service name="getAssocAndContentAndDataResource" default-entity-name="ContentAssocDataResourceViewFrom"
@@ -1341,9 +1345,9 @@
         <attribute mode="IN" name="locale" optional="true" type="String"/>
         <attribute mode="IN" name="mimeTypeId" optional="true" type="String"/>
         <attribute mode="IN" name="fromDate" optional="true" type="Timestamp"/>
-        <attribute mode="IN" name="subContentDataResourceView" optional="true"
-                             type="GenericValue"/>
+        <attribute mode="IN" name="subContentDataResourceView" optional="true" type="org.ofbiz.entity.GenericValue"/>
         <attribute mode="OUT" name="view" optional="true" type="GenericValue"/>
+        <attribute mode="OUT" name="textData" optional="true" type="String"/>
     </service>
     <service name="renderContentAsText" engine="java"
             location="org.ofbiz.content.content.ContentServices" invoke="renderContentAsText" auth="false">
@@ -1353,7 +1357,8 @@
         <attribute mode="IN" name="templateContext" optional="true" type="Map"/>
         <attribute mode="IN" name="locale" optional="true" type="String"/>
         <attribute mode="IN" name="mimeTypeId" optional="true" type="String"/>
-        <attribute mode="IN" name="subContentDataResourceView" optional="true" type="GenericValue"/>
+        <attribute mode="IN" name="subContentDataResourceView" optional="true" type="org.ofbiz.entity.GenericValue"/>
+        <attribute mode="OUT" name="textData" optional="true" type="String"/>
     </service>
     <service name="renderDataResourceAsText" engine="java"
             location="org.ofbiz.content.data.DataServices" invoke="renderDataResourceAsText" auth="false">
@@ -1363,7 +1368,8 @@
         <attribute mode="IN" name="templateContext" optional="false" type="Map"/>
         <attribute mode="IN" name="locale" optional="true" type="String"/>
         <attribute mode="IN" name="mimeTypeId" optional="true" type="String"/>
-        <attribute mode="IN" name="subContentDataResourceView" optional="true" type="GenericValue"/>
+        <attribute mode="IN" name="subContentDataResourceView" optional="true" type="org.ofbiz.entity.GenericValue"/>
+        <attribute mode="OUT" name="textData" optional="true" type="String"/>
     </service>
     <service name="createTopic"
         auth="true" engine="simple" invoke="createTopic"
