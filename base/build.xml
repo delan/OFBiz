@@ -21,7 +21,7 @@
  *  THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  *
  *  This is the Open for Business Base Build Script.
- *  $Id: build.xml,v 1.8 2003/08/22 18:21:07 ajzeneski Exp $
+ *  $Id: build.xml,v 1.9 2003/10/29 21:21:58 ajzeneski Exp $
 -->
 
 <project name="OFBiz - Base" default="jar" basedir=".">
@@ -35,7 +35,7 @@
         <property name="name" value="ofbiz-base"/>
         <property name="src.dir" value="src"/>
         <property name="dtd.dir" value="dtd"/>
-        <property name="lib.dir" value="lib"/>        
+        <property name="lib.dir" value="lib"/>
         <property name="build.dir" value="build"/>        
     </target>
     
