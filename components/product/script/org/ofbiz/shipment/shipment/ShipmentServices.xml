@@ -24,7 +24,7 @@
  *
  * @author     David E. Jones (jonesde@ofbiz.org)
  * @author     Andy Zeneski (jaz@ofbiz.org)
- * @version    $Revision: 1.6 $
+ * @version    $Revision: 1.7 $
  * @since      2.2
 -->
 <simple-methods>
@@ -1191,9 +1191,10 @@
 
         <!-- place all issued items into a unique package per tracking num -->
         <iterate list-name="itemMapList" entry-name="itemMap">
+            <log level="info" message="QuickShipOrderByItem grouping by tracking number : ${itemMap.trackingNum}"/>
             <field-to-field field-name="itemIssuanceId" map-name="itemMap" to-map-name="issuanceLookup"/>
             <find-by-primary-key entity-name="ItemIssuance" map-name="issuanceLookup" value-name="itemIssuance"/>
-            <field-to-field field-name="${itemMap.trackNum}" map-name="packageMap" to-field-name="shipmentPackageSeqId" to-map-name="shipItemContext"/>
+            <field-to-field field-name="${itemMap.trackingNum}" map-name="packageMap" to-field-name="shipmentPackageSeqId" to-map-name="shipItemContext"/>
             <if-empty field-name="shipmentPackageSeqId" map-name="shipItemContext">
                 <string-to-field field-name="shipmentPackageSeqId" map-name="shipItemContext" string="New"/>
             </if-empty>
@@ -1202,7 +1203,7 @@
             <field-to-field field-name="shipmentItemSeqId" map-name="itemIssuance" to-map-name="shipItemContext"/>
             <field-to-field field-name="quantity" map-name="itemIssuance" to-map-name="shipItemContext"/>
             <call-service service-name="createShipmentPackageContent" in-map-name="shipItemContext">
-                <result-to-field result-name="shipmentPackageSeqId" field-name="${itemMap.trackNum}" map-name="packageMap"/>
+                <result-to-field result-name="shipmentPackageSeqId" field-name="${itemMap.trackingNum}" map-name="packageMap"/>
             </call-service>
         </iterate>
 
