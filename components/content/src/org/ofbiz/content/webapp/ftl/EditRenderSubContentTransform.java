@@ -1,5 +1,5 @@
 /*
- * $Id: EditRenderSubContentTransform.java,v 1.1 2003/12/05 21:37:16 byersa Exp $
+ * $Id: EditRenderSubContentTransform.java,v 1.2 2003/12/06 08:38:47 byersa Exp $
  *
  * Copyright (c) 2001-2003 The Open For Business Project - www.ofbiz.org
  *
@@ -85,7 +85,7 @@ import org.ofbiz.content.content.ContentWorker;
  * the contents that are placed within it.
  *
  * @author     <a href="mailto:byersa@automationgroups.com">Al Byers</a>
- * @version    $Revision: 1.1 $
+ * @version    $Revision: 1.2 $
  * @since      3.0
  */
 public class EditRenderSubContentTransform implements TemplateTransformModel {
@@ -225,6 +225,16 @@ public class EditRenderSubContentTransform implements TemplateTransformModel {
             ctx.put("subContentDataResourceView", subContentDataResourceView);
             ctx.put("mimeTypeId", mimeTypeIdTemp);
             request.setAttribute("drDataResourceId", subContentDataResourceView.get("drDataResourceId"));
+        } else {
+            jpub.put("subContentId", null);
+            jpub.put("drDataResourceId", null);
+            jpub.put("subContentDataResourceView", null);
+            jpub.put("mimeTypeId", null);
+            ctx.put("subContentId", null);
+            ctx.put("drDataResourceId", null);
+            ctx.put("subContentDataResourceView", null);
+            ctx.put("mimeTypeId", null);
+            request.setAttribute("drDataResourceId", null);
         }
  
         final JPublishContext jpubContext = jpub;
