@@ -136,6 +136,7 @@
             <!-- exclude the payment processor packages; comment if you have libs -->
             <exclude name="org/ofbiz/commonapp/thirdparty/cybersource/**" />
             <exclude name="org/ofbiz/commonapp/thirdparty/verisign/**" />
+            <exclude name="org/ofbiz/commonapp/thirdparty/taxware/**" />
         </javac>
         <!-- also copy all .xml, .bsh & .logic files to classpath directory -->
         <copy todir="${build.dir}/jar">
