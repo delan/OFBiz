@@ -51,12 +51,12 @@ import freemarker.template.WrappingTemplateModel;
  *
  * @author     <a href="mailto:jaz@ofbiz.org">Andy Zeneski</a>
  * @author     <a href="mailto:jonesde@ofbiz.org">David E. Jones</a>
- * @version    $Rev:$
+ * @version    $Rev$
  * @since      2.1
  */
 public class FreeMarkerViewRenderer extends org.jpublish.view.freemarker.FreeMarkerViewRenderer {
-        
-    public static final String module = FreeMarkerViewRenderer.class.getName();        
+
+    public static final String module = FreeMarkerViewRenderer.class.getName();
 
     public void init() throws Exception {
         super.init();
@@ -65,39 +65,40 @@ public class FreeMarkerViewRenderer extends org.jpublish.view.freemarker.FreeMar
         fmConfig.setCacheStorage(new OfbizCacheStorage(id));
         fmConfig.setSetting("datetime_format", "yyyy-MM-dd HH:mm:ss.SSS");
     }
-    
+
     protected Object createViewContext(JPublishContext context, String path) throws ViewRenderException {
         HttpServletRequest request = context.getRequest();
         HttpServletResponse response = context.getResponse();
-        
+
         BeansWrapper wrapper = BeansWrapper.getDefaultInstance();
-        WrappingTemplateModel.setDefaultObjectWrapper(wrapper);                    
+        WrappingTemplateModel.setDefaultObjectWrapper(wrapper);
         Map contextMap = new HashMap();
-        SimpleHash root = new SimpleHash(wrapper);          
-        try {              
-             Object[] keys = context.getKeys(); 
-             for (int i = 0; i < keys.length; i++) {
-                 String key = (String) keys[i];
-                 Object value = context.get(key);
-                 if (value != null) {
-                     contextMap.put(key, value);
-                     //no longer wrapping; let FM do it if needed, more efficient
-                     //root.put(key, wrapper.wrap(value));
-                     root.put(key, value);
-                 }
-             }
-             root.put("context", wrapper.wrap(contextMap));                          
-             //root.put("jpublishContext", wrapper.wrap(context));
-             FreeMarkerViewHandler.prepOfbizRoot(root, request, response);
-         } catch (Exception e) {
-             throw new ViewRenderException(e);            
-         }          
-         return root;         
+        SimpleHash root = new SimpleHash(wrapper);
+        try {
+            Object[] keys = context.getKeys();
+            for (int i = 0; i < keys.length; i++) {
+                String key = (String) keys[i];
+                Object value = context.get(key);
+                if (value != null) {
+                    contextMap.put(key, value);
+                    //no longer wrapping; let FM do it if needed, more efficient
+                    //root.put(key, wrapper.wrap(value));
+                    root.put(key, value);
+                }
+            }
+            root.put("context", wrapper.wrap(contextMap));
+            root.put("cachedInclude", new JpCacheIncludeTransform()); // only adding this in for JP! 
+            //root.put("jpublishContext", wrapper.wrap(context));
+            FreeMarkerViewHandler.prepOfbizRoot(root, request, response);
+        } catch (Exception e) {
+            throw new ViewRenderException(e);
+        }
+        return root;
     }
 
     public void render(JPublishContext context, String path, Reader in, Writer out) throws IOException, ViewRenderException {
         try {
-            Page page = (Page)context.get(JPublishContext.JPUBLISH_PAGE);
+            Page page = (Page) context.get(JPublishContext.JPUBLISH_PAGE);
             Object viewContext = createViewContext(context, path);
 
             Template template = fmConfig.getTemplate(path, UtilHttp.getLocale(context.getRequest()));
@@ -119,9 +120,9 @@ public class FreeMarkerViewRenderer extends org.jpublish.view.freemarker.FreeMar
                 out.write("\n<!-- " + templateIdPrefix + " end: " + template.getName() + " -->\n");
             }
             */
-        } catch(IOException e) {
+        } catch (IOException e) {
             throw e;
-        } catch(Exception e) {
+        } catch (Exception e) {
             Debug.logError(e, "Exception from FreeMarker", module);
             throw new ViewRenderException(e);
         }
@@ -130,11 +131,12 @@ public class FreeMarkerViewRenderer extends org.jpublish.view.freemarker.FreeMar
     private Page getPage(String path, JPublishContext context) {
         Page page = null;
         try {
-            SiteContext siteContext = (SiteContext)context.get("site");
-            PageInstance pi = siteContext.getPageManager().getPage(path.substring(path.lastIndexOf(":")+1));
+            SiteContext siteContext = (SiteContext) context.get("site");
+            PageInstance pi = siteContext.getPageManager().getPage(path.substring(path.lastIndexOf(":") + 1));
             if (pi != null)
                 page = new Page(pi);
-        } catch (Exception e) {}
+        } catch (Exception e) {
+        }
         return page;
     }
 
