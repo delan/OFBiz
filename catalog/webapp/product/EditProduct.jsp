@@ -182,18 +182,18 @@
     <td>&nbsp;</td>
     <td width="74%"><input type="text" name="<%=paramName%>" value="<%=UtilFormatOut.checkNull(useValues?UtilDateTime.toDateString(product.getDate(fieldName)):request.getParameter(paramName))%>" size="10" maxlength="20">(MM/DD/YYYY)</td>
   </tr>
+  <tr>
+    <%fieldName = "comments";%><%paramName = "COMMENT";%>    
+    <td width="26%" align=right><div class="tabletext">Comment</div></td>
+    <td>&nbsp;</td>
+    <td width="74%"><input type="text" name="<%=paramName%>" value="<%=UtilFormatOut.checkNull(useValues?product.getString(fieldName):request.getParameter(paramName))%>" size="80" maxlength="255"></td>
+  </tr>
 
   <tr>
     <%fieldName = "productName";%><%paramName = "NAME";%>    
     <td width="26%" align=right><div class="tabletext">Name</div></td>
     <td>&nbsp;</td>
     <td width="74%"><input type="text" name="<%=paramName%>" value="<%=UtilFormatOut.checkNull(useValues?product.getString(fieldName):request.getParameter(paramName))%>" size="30" maxlength="60"></td>
-  </tr>
-  <tr>
-    <%fieldName = "comments";%><%paramName = "COMMENT";%>    
-    <td width="26%" align=right><div class="tabletext">Comment</div></td>
-    <td>&nbsp;</td>
-    <td width="74%"><input type="text" name="<%=paramName%>" value="<%=UtilFormatOut.checkNull(useValues?product.getString(fieldName):request.getParameter(paramName))%>" size="80" maxlength="255"></td>
   </tr>
   <tr>
     <%fieldName = "description";%><%paramName = "DESCRIPTION";%>    
@@ -299,14 +299,41 @@
   </tr>
 </table>
 </form>
-    <%if(productId != null){%>
+    <%if (productId != null) {%>
         <br>
         <div class="head2">Duplicate Product</div>
-        <form action="<ofbiz:url>/DuplicateProduct</ofbiz:url>" method=POST style='margin: 0;'>
+        <%-- <form action="<ofbiz:url>/DuplicateProduct</ofbiz:url>" method=POST style='margin: 0;'>
             <INPUT type=hidden name='productId' value='<%=productId%>'>
-            <SPAN class='tabletext'>New ID:</SPAN>&nbsp;<INPUT type=text size='20' maxlength='20' name='PRODUCT_ID'>
-            <INPUT type=submit value='Duplicate'>
-        </form>
+            <SPAN class='tabletext'>With New ID:</SPAN>&nbsp;<INPUT type=text size='20' maxlength='20' name='PRODUCT_ID'>&nbsp;
+            <INPUT type=submit value='AutoDuplicate'>
+        </form> --%>
+        <%if (product != null) {%>
+            <form action="<ofbiz:url>/EditProduct</ofbiz:url>" method=POST style='margin: 0;'>
+                <%-- <INPUT type=hidden name='PRODUCT_ID' value='<%=productId%>'> --%>
+                <INPUT type=hidden name='productTypeId' value='<%=UtilFormatOut.checkNull(product.getString("productTypeId"))%>'>
+                <INPUT type=hidden name='PRIMARY_PRODUCT_CATEGORY_ID' value='<%=UtilFormatOut.checkNull(product.getString("primaryProductCategoryId"))%>'>
+                <INPUT type=hidden name='MANUFACTURER_PARTY_ID' value='<%=UtilFormatOut.checkNull(product.getString("manufacturerPartyId"))%>'>
+                <INPUT type=hidden name='INTRODUCTION_DATE' value='<%=UtilFormatOut.checkNull(UtilDateTime.toDateString(product.getDate("introductionDate")))%>'>
+                <INPUT type=hidden name='SALES_DISCONTINUATION_DATE' value='<%=UtilFormatOut.checkNull(UtilDateTime.toDateString(product.getDate("salesDiscontinuationDate")))%>'>
+                <INPUT type=hidden name='SUPPORT_DISCONTINUATION_DATE' value='<%=UtilFormatOut.checkNull(UtilDateTime.toDateString(product.getDate("supportDiscontinuationDate")))%>'>
+                <INPUT type=hidden name='COMMENT' value='<%=UtilFormatOut.checkNull(product.getString("comments"))%>'>
+                <INPUT type=hidden name='NAME' value='<%=UtilFormatOut.checkNull(product.getString("productName"))%>'>
+                <INPUT type=hidden name='DESCRIPTION' value='<%=UtilFormatOut.checkNull(product.getString("description"))%>'>
+                <INPUT type=hidden name='LONG_DESCRIPTION' value='<%=UtilFormatOut.checkNull(product.getString("longDescription"))%>'>
+                <INPUT type=hidden name='SMALL_IMAGE_URL' value='<%=UtilFormatOut.checkNull(product.getString("smallImageUrl"))%>'>
+                <INPUT type=hidden name='LARGE_IMAGE_URL' value='<%=UtilFormatOut.checkNull(product.getString("largeImageUrl"))%>'>
+                <INPUT type=hidden name='LIST_PRICE' value='<%=UtilFormatOut.checkNull(UtilFormatOut.formatQuantity(product.getDouble("listPrice")))%>'>
+                <INPUT type=hidden name='DEFAULT_PRICE' value='<%=UtilFormatOut.checkNull(UtilFormatOut.formatQuantity(product.getDouble("defaultPrice")))%>'>
+                <INPUT type=hidden name='QUANTITY_UOM_ID' value='<%=UtilFormatOut.checkNull(product.getString("quantityUomId"))%>'>
+                <INPUT type=hidden name='QUANTITY_INCLUDED' value='<%=UtilFormatOut.checkNull(UtilFormatOut.formatQuantity(product.getDouble("quantityIncluded")))%>'>
+                <INPUT type=hidden name='WEIGHT_UOM_ID' value='<%=UtilFormatOut.checkNull(product.getString("weightUomId"))%>'>
+                <INPUT type=hidden name='WEIGHT' value='<%=UtilFormatOut.checkNull(UtilFormatOut.formatQuantity(product.getDouble("weight")))%>'>
+                <INPUT type=hidden name='TAXABLE' value='<%=UtilFormatOut.checkNull(product.getString("taxable"))%>'>
+                <INPUT type=hidden name='AUTO_CREATE_KEYWORDS' value='<%=UtilFormatOut.checkNull(product.getString("autoCreateKeywords"))%>'>
+                <SPAN class='tabletext'>In New Create Form:</SPAN>&nbsp;
+                <INPUT type=submit value='FormDuplicate'>
+            </form>
+        <%}%>
     <%}%>
 
 <%}else{%>
