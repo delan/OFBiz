@@ -1,7 +1,4 @@
-<%
-/**
- *  Title: Order Information
- *  Description: None
+<%--
  *  Copyright (c) 2001 The Open For Business Project - www.ofbiz.org
  *
  *  Permission is hereby granted, free of charge, to any person obtaining a 
@@ -24,10 +21,10 @@
  *
  *@author     Eric Pabst
  *@author     Andy Zeneski
+ *@author     David E. Jones
  *@created    May 22 2001
  *@version    1.0
- */
-%>
+--%>
 
 <%EntityField entityField = new EntityField(pageContext);%>
 
@@ -84,10 +81,11 @@
                             <form name="statusUpdate" method="get" action="<ofbiz:url>/changeOrderStatus</ofbiz:url>">
                                <input type="hidden" name="orderId" value="<%=orderHeader.getString("orderId")%>">        
                                <select name="statusId" style="font-size: x-small;">
-                                 <option value="<%=orderHeader.getString("statusId")%>"><%=orderHeader.getString("statusId")%></option>
+                                 <option value="<%=orderHeader.getString("statusId")%>"><%=currentStatus == null ? orderHeader.getString("statusId") : currentStatus.getString("description")%></option>
                                  <option value="<%=orderHeader.getString("statusId")%>">----</option>
                                  <ofbiz:iterator name="status" property="statusChange">
-                                   <option value="<%=status.getString("statusIdTo")%>"><%=status.getString("statusIdTo")%></option>               
+                                   <%GenericValue changeStatusItem = status.getRelatedOneCache("ToStatusItem");%>
+                                   <option value="<%=status.getString("statusIdTo")%>"><%=changeStatusItem == null ? status.getString("statusIdTo") : changeStatusItem.getString("description")%></option>               
                                  </ofbiz:iterator>
                                </select>
                                <a href="javascript:document.statusUpdate.submit();" class="buttontext">[Save]</a>
@@ -107,7 +105,7 @@
                   </td>
                   <td width="5">&nbsp;</td>
                   <td align="left" valign="top" width="80%">
-                    <div class='tabletext'>Current Status: <ofbiz:entityfield attribute="currentStatus" field="description"/> [<ofbiz:entityfield attribute="orderHeader" field="statusId"/>]</div>
+                    <div class='tabletext'>Current Status: <ofbiz:entityfield attribute="currentStatus" field="description"/><%-- [<ofbiz:entityfield attribute="orderHeader" field="statusId"/>]--%></div>
                     <ofbiz:if name="orderHeaderStatuses">
                       <hr class="sepbar">
                     </ofbiz:if>
@@ -116,7 +114,7 @@
                         <%if (loopStatusItem != null) pageContext.setAttribute("loopStatusItem", loopStatusItem);%>
                         <div class='tabletext'>
                             <ofbiz:entityfield attribute="loopStatusItem" field="description"/>
-                            [<ofbiz:entityfield attribute="orderHeaderStatus" field="statusId"/>] -
+                            <%--[<ofbiz:entityfield attribute="orderHeaderStatus" field="statusId"/>]--%> -
                             <ofbiz:entityfield attribute="orderHeaderStatus" field="statusDatetime"/>
                         </div>
                     </ofbiz:iterator>

@@ -309,7 +309,8 @@
           <ofbiz:iterator name="orderHeader" property="orderHeaderList" offset="<%=lowIndex%>" limit="<%=viewSize%>">
             <%
                 OrderReadHelper order = new OrderReadHelper(orderHeader);
-                String orderStatus = order.getStatusString();
+                GenericValue headerStatusItem = orderHeader.getRelatedOneCache("StatusItem");
+                String orderStatus = headerStatusItem == null ? orderHeader.getString("statusId") : headerStatusItem.getString("description");
                 GenericValue placingParty = order.getPlacingParty();
                 if (placingParty != null) pageContext.setAttribute("placingParty", placingParty);
                 rowClass = rowClass.equals("viewManyTR2") ? "viewManyTR1" : "viewManyTR2";
@@ -331,7 +332,7 @@
                 <td align="right"><div class="tabletext"><%=UtilFormatOut.formatQuantity(new Double(order.getTotalItems()))%></div></td></div></td>
                 <td align="right"><div class="tabletext"><%=UtilFormatOut.formatPrice(new Double(order.getTotalPrice()))%></div></td>
                 <td>&nbsp;</td>
-                <td><div class="tabletext"><%=UtilFormatOut.checkNull(order.getStatusString())%></div></td>
+                <td><div class="tabletext"><%=UtilFormatOut.checkNull(orderStatus)%></div></td>
                 <td><div class="tabletext"><nobr><%=orderHeader.getTimestamp("orderDate")%></nobr></div></td>
                 <td><a href="/partymgr/control/viewprofile?party_id=<%EntityField.run("placingParty", "partyId", pageContext);%>" class="buttontext"><%EntityField.run("placingParty", "partyId", pageContext);%></a></td>
                 <td align=right>
