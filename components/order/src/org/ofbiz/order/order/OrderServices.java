@@ -1,5 +1,5 @@
 /*
- * $Id: OrderServices.java,v 1.26 2003/12/06 23:57:46 ajzeneski Exp $
+ * $Id: OrderServices.java,v 1.27 2003/12/30 19:58:48 ajzeneski Exp $
  *
  *  Copyright (c) 2001, 2002 The Open For Business Project - www.ofbiz.org
  *
@@ -52,7 +52,7 @@ import org.ofbiz.workflow.WfUtil;
  * @author     <a href="mailto:jaz@ofbiz.org">Andy Zeneski</a>
  * @author     <a href="mailto:cnelson@einnovation.com">Chris Nelson</a>
  * @author     <a href="mailto:jonesde@ofbiz.org">David E. Jones</a>
- * @version    $Revision: 1.26 $
+ * @version    $Revision: 1.27 $
  * @since      2.0
  */
 
@@ -744,6 +744,97 @@ public class OrderServices {
             }
         } else {
             Debug.logWarning("Received NULL for OrderItem records orderId : " + orderId, module);
+        }
+
+        return ServiceUtil.returnSuccess();
+    }
+
+    /** Service to cancel an order item quantity */
+    public static Map cancelOrderItem(DispatchContext ctx, Map context) {
+        LocalDispatcher dispatcher = ctx.getDispatcher();
+        GenericDelegator delegator = ctx.getDelegator();
+
+        GenericValue userLogin = (GenericValue) context.get("userLogin");
+        Double cancelQuantity = (Double) context.get("cancelQuantity");
+        String orderId = (String) context.get("orderId");
+        String orderItemSeqId = (String) context.get("orderItemSeqId");
+
+        // debugging message info
+        String itemMsgInfo = orderId + " / " + orderItemSeqId;
+
+        // check and make sure we have permission to change the order
+        Security security = ctx.getSecurity();
+        if (!security.hasEntityPermission("ORDERMGR", "_UPDATE", userLogin)) {
+            GenericValue placingCustomer = null;
+            try {
+                Map placingCustomerFields = UtilMisc.toMap("orderId", orderId, "partyId", userLogin.getString("partyId"), "roleTypeId", "PLACING_CUSTOMER");
+                placingCustomer = delegator.findByPrimaryKey("OrderRole", placingCustomerFields);
+            } catch (GenericEntityException e) {
+                Debug.logError(e, module);
+                return ServiceUtil.returnError("ERROR: Cannot get OrderRole entity: " + itemMsgInfo);
+            }
+            if (placingCustomer == null)
+                return ServiceUtil.returnError("You do not have permission to change this order's status.");
+        }
+
+        Map fields = UtilMisc.toMap("orderId", orderId);
+        if (orderItemSeqId != null) {
+            fields.put("orderItemSeqId", orderItemSeqId);
+        }
+
+        List orderItems = null;
+        try {
+            orderItems = delegator.findByAnd("OrderItem", fields);
+        } catch (GenericEntityException e) {
+            Debug.logError(e, module);
+            return ServiceUtil.returnError("ERROR: Cannot get OrderItem entity: " + itemMsgInfo);
+        }
+
+        if (orderItems != null && orderItems.size() > 0) {
+            Iterator itemsIterator = orderItems.iterator();
+            while (itemsIterator.hasNext()) {
+                GenericValue orderItem = (GenericValue) itemsIterator.next();
+                if (orderItem == null) {
+                    ServiceUtil.returnError("ERROR: Cannot cancel item; item not found : " + itemMsgInfo);
+                }
+
+                Double quantity = orderItem.getDouble("quantity");
+                Double cancelQty = orderItem.getDouble("cancelQuantity");
+                if (quantity == null) quantity = new Double(0.0);
+                if (cancelQty == null) cancelQty = new Double(0.0);
+                Double thisCancelQty = null;
+                if (cancelQuantity != null) {
+                    thisCancelQty = new Double(cancelQuantity.doubleValue());
+                } else {
+                    thisCancelQty = new Double(quantity.doubleValue());
+                }
+                orderItem.set("cancelQuantity", thisCancelQty);
+                try {
+                    orderItem.store();
+                } catch (GenericEntityException e) {
+                    Debug.logError(e, module);
+                    return ServiceUtil.returnError("Unable to set cancel quantity : " + itemMsgInfo);
+                }
+                if (thisCancelQty.doubleValue() >= quantity.doubleValue()) {
+                    // all items are cancelled -- mark the item as cancelled
+                    Map statusCtx = UtilMisc.toMap("orderId", orderId, "orderItemSeqId", orderItemSeqId, "statusId", "ITEM_CANCELLED", "userLogin", userLogin);
+                    try {
+                        dispatcher.runSyncIgnore("changeOrderItemStatus", statusCtx);
+                    } catch (GenericServiceException e) {
+                        Debug.logError(e, module);
+                        return ServiceUtil.returnError("Unable to cancel order line : " + itemMsgInfo);
+                    }
+                } else {
+                    // reverse the inventory reservation
+                    Map invCtx = UtilMisc.toMap("orderId", orderId, "orderItemSeqId", orderItemSeqId, "cancelQuantity", thisCancelQty, "userLogin", userLogin);
+                    try {
+                        dispatcher.runSyncIgnore("cancelOrderItemInvResQty", invCtx);
+                    } catch (GenericServiceException e) {
+                        Debug.logError(e, module);
+                        return ServiceUtil.returnError("Unable to update inventory reservations : " + itemMsgInfo);
+                    }
+                }
+            }
         }
 
         return ServiceUtil.returnSuccess();

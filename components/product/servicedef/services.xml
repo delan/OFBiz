@@ -787,10 +787,18 @@
         <attribute name="orderId" type="String" mode="IN" optional="false"/>
         <attribute name="orderItemSeqId" type="String" mode="IN" optional="true"/>
     </service>
+    <service name="cancelOrderItemInvResQty" engine="simple"
+            location="org/ofbiz/product/inventory/InventoryServices.xml" invoke="cancelOrderItemInvResQty" auth="true">
+        <description>Cancel a specific quantity for an order item</description>
+        <attribute name="orderId" type="String" mode="IN" optional="false"/>
+        <attribute name="orderItemSeqId" type="String" mode="IN" optional="false"/>
+        <attribute name="cancelQuantity" type="Double" mode="IN" optional="true"/>
+    </service>
     <service name="cancelOrderItemInventoryRes" engine="simple"
                 location="org/ofbiz/product/inventory/InventoryServices.xml" invoke="cancelOrderItemInventoryRes" auth="true">
         <description>Cancels an inventory reservation</description>
         <auto-attributes entity-name="OrderItemInventoryRes" include="pk" mode="IN" optional="false"/>
+        <attribute name="cancelQuantity" type="Double" mode="IN" optional="true"/>
     </service>
 
     <service name="interfaceInventoryTransfer" engine="interface" location="" invoke="">

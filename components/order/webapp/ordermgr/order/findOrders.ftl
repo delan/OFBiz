@@ -20,7 +20,7 @@
  *  THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  *
  *@author     Andy Zeneski (jaz@ofbiz.org)
- *@version    $Revision: 1.4 $
+ *@version    $Revision: 1.5 $
  *@since      2.2
 -->
 
@@ -47,7 +47,7 @@ function lookupOrders() {
     <td width='100%'>
       <table width='100%' border='0' cellspacing='0' cellpadding='0' class='boxtop'>
         <tr>
-          <td><div class='boxhead'>Find Orders</div></td>
+          <td><div class='boxhead'>Find Order(s)</div></td>
           <td align='right'>
             <div class="tabletext">
               <#if requestParameters.hideFields?default("N") == "Y">
@@ -189,14 +189,14 @@ function lookupOrders() {
                 <td>
                   <table border='0' cellspacing='0' cellpadding='0'>
                     <tr>
-                      <td>
+                      <td nowrap>
                         <input type='text' size='25' class='inputBox' name='minDate' value='${requestParameters.minDate?if_exists}'>
                         <a href="javascript:call_cal(document.lookuporder.minDate, '${fromDateStr}');"><img src='/images/cal.gif' width='16' height='16' border='0' alt='Calendar'></a>
                         <span class='tabletext'>From</span>
                       </td>
                     </tr>
                     <tr>
-                      <td>
+                      <td nowrap>
                         <input type='text' size='25' class='inputBox' name='maxDate' value='${requestParameters.maxDate?if_exists}'>
                         <a href="javascript:call_cal(document.lookuporder.maxDate, '${thruDateStr}');"><img src='/images/cal.gif' width='16' height='16' border='0' alt='Calendar'></a>
                         <span class='tabletext'>Thru</span>
@@ -229,7 +229,7 @@ document.lookuporder.order_id.focus();
     <td width='100%'>
       <table width='100%' border='0' cellspacing='0' cellpadding='0' class='boxtop'>
         <tr>
-          <td width="50%"><div class="boxhead">Orders Found</div></td>
+          <td width="50%"><div class="boxhead">Order(s) Found</div></td>
           <td width="50%">
             <div class="boxhead" align=right>
               <#if 0 < orderHeaderList?size>
@@ -328,7 +328,7 @@ document.lookuporder.order_id.focus();
           </#list>
         <#else>
           <tr>
-            <td colspan='4'><div class='head3'>No orders found.</div></td>
+            <td colspan='4'><div class='head3'>No order(s) found.</div></td>
           </tr>
         </#if>
         <#if lookupErrorMessage?exists>

@@ -20,7 +20,7 @@
  *  THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  *
  *@author     Andy Zeneski (jaz@ofbiz.org)
- *@version    $Revision: 1.6 $
+ *@version    $Revision: 1.7 $
  *@since      2.2
 -->
 
@@ -108,7 +108,14 @@
                         </#if>
                       </td>
                       <td align="center" valign="top" nowrap>
-                        <div class="tabletext" nowrap>${orderItem.quantity?string.number}&nbsp;</div>
+                        <div class="tabletext" nowrap>
+                          <#if orderItem.cancelQuantity?has_content>
+                            (${orderItem.quantity?string.number})&nbsp;
+                          </#if>
+                          <#assign displayQuantity = (orderItem.quantity?default(0) - orderItem.cancelQuantity?default(0))>
+                          ${displayQuantity?string.number}
+
+                        &nbsp;</div>
                       </td>
                       <td align="right" valign="top" nowrap>
                         <div class="tabletext" nowrap><@ofbizCurrency amount=orderItem.unitPrice isoCode=currencyUomId/> / <@ofbizCurrency amount=orderItem.unitListPrice isoCode=currencyUomId/></div>
