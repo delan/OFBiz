@@ -1352,6 +1352,12 @@
     </request-map>
 
 
+   <request-map uri="TestPermission">
+        <security https="true" auth="true"/>
+        <event type="service" invoke="checkContentPermission"/>
+        <response name="success" type="view" value="TestPermission"/>
+        <response name="error" type="view" value="TestPermission"/>
+    </request-map>
 
     <!-- View Mappings -->
     <view-map name="error" page="/error/error.jsp"/>
@@ -1451,6 +1457,7 @@
     <view-map name="AdminIndex" page="component://content/widget/cms/CMSScreens.xml#AdminIndex" type="screen"/>
     <view-map name="CMSMenu" page="/cms/CMSMenu.ftl" type="jpublish"/>
     <view-map name="EditAddSubContent" page="component://content/widget/cms/CMSScreens.xml#EditAddSubContent" type="screen"/>
+    <view-map name="TestPermission" page="component://content/widget/cms/CMSScreens.xml#TestPermission" type="screen"/>
 
     <!-- end of view mappings -->
 </site-conf>
