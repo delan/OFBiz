@@ -35,18 +35,18 @@ package org.ofbiz.core.entity;
  */
 public class EntityOperator {
 
-    public static EntityOperator EQUALS = new EntityOperator("EQUALS", " = ");
-    public static EntityOperator NOT_EQUAL = new EntityOperator("NOT_EQUAL", " <> ");
-    public static EntityOperator LESS_THAN = new EntityOperator("LESS_THAN", " < ");
-    public static EntityOperator GREATER_THAN = new EntityOperator("GREATER_THAN", " > ");
-    public static EntityOperator LESS_THAN_EQUAL_TO = new EntityOperator("LESS_THAN_EQUAL_TO", " <= ");
-    public static EntityOperator GREATER_THAN_EQUAL_TO = new EntityOperator("GREATER_THAN_EQUAL_TO", " >= ");
-    public static EntityOperator IN = new EntityOperator("GREATER_THAN_EQUAL_TO", " IN ");
-    public static EntityOperator BETWEEN = new EntityOperator("IN", " BETWEEN ");
-    public static EntityOperator NOT = new EntityOperator("NOT", " NOT ");
-    public static EntityOperator AND = new EntityOperator("AND", " AND ");
-    public static EntityOperator OR = new EntityOperator("OR", " OR ");
-    public static EntityOperator LIKE = new EntityOperator("LIKE", " LIKE ");
+    public static final EntityOperator EQUALS = new EntityOperator("EQUALS", " = ");
+    public static final EntityOperator NOT_EQUAL = new EntityOperator("NOT_EQUAL", " <> ");
+    public static final EntityOperator LESS_THAN = new EntityOperator("LESS_THAN", " < ");
+    public static final EntityOperator GREATER_THAN = new EntityOperator("GREATER_THAN", " > ");
+    public static final EntityOperator LESS_THAN_EQUAL_TO = new EntityOperator("LESS_THAN_EQUAL_TO", " <= ");
+    public static final EntityOperator GREATER_THAN_EQUAL_TO = new EntityOperator("GREATER_THAN_EQUAL_TO", " >= ");
+    public static final EntityOperator IN = new EntityOperator("GREATER_THAN_EQUAL_TO", " IN ");
+    public static final EntityOperator BETWEEN = new EntityOperator("IN", " BETWEEN ");
+    public static final EntityOperator NOT = new EntityOperator("NOT", " NOT ");
+    public static final EntityOperator AND = new EntityOperator("AND", " AND ");
+    public static final EntityOperator OR = new EntityOperator("OR", " OR ");
+    public static final EntityOperator LIKE = new EntityOperator("LIKE", " LIKE ");
 
     private String nameString;
     private String codeString;
