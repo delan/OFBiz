@@ -20,7 +20,7 @@
  *  THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  *
  *@author     David E. Jones (jonesde@ofbiz.org)
- *@version    $Revision: 1.1 $
+ *@version    $Revision: 1.2 $
  *@since      2.2
 -->
 
@@ -46,11 +46,10 @@ function lookupShipments() {
     <td width="100%">
       <table width="100%" border="0" cellspacing="0" cellpadding="0" class="boxtop">
         <tr>
-          <td><div class="boxhead">Find Orders</div></td>
+          <td><div class="boxhead">Find Shipment(s)</div></td>
           <td align="right">
             <div class="tabletext">
-              <a href="<@ofbizUrl>/EditShipment</@ofbizUrl>" class="submenutext">New Shipment</a>
-              <a href="javascript:lookupShipments();" class="submenutext">Lookup Shipment(s)</a>
+              <#if requestParameters.facilityId?has_content><a href="<@ofbizUrl>/quickShipOrder?facilityId=${requestParameters.facilityId}</@ofbizUrl>" class="submenutext">Quick Ship Order</a></#if><a href="<@ofbizUrl>/EditShipment</@ofbizUrl>" class="submenutext">New Shipment</a><a href="javascript:lookupShipments();" class="submenutextright">Lookup Shipment(s)</a>
             </div>
           </td>
         </tr>
