@@ -507,4 +507,16 @@
         <description>Update an existing delivery schedule for a specified purchase order</description>
         <implements service="scheduleInterface"/>
     </service>
+    
+	<!-- Picklist Data Services -->    
+    <service name="getPicklistData" engine="simple"
+            location="org/ofbiz/commonapp/order/order/PicklistServices.xml" invoke="getPicklistData">
+        <description>Gets Picklist Data</description>
+        <attribute name="orderHeaderList" type="List" mode="IN" optional="true"/>
+        <attribute name="inventoryItemInfoList" type="List" mode="OUT" optional="false"/>
+        <attribute name="wrongQuantityReservedList" type="List" mode="OUT" optional="false"/>
+        <attribute name="insufficientQohList" type="List" mode="OUT" optional="false"/>
+        <attribute name="orderHeaderInfoList" type="List" mode="OUT" optional="false"/>
+    </service>
 </services>
+
