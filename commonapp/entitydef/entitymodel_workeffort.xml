@@ -31,37 +31,58 @@
 
 <!DOCTYPE entitymodel [
     <!-- ====================== Root Element ======================= -->
-    <!ELEMENT entitymodel ( title?, description?, copyright?, author?, version?, entity* )>
+    <!ELEMENT entitymodel ( title?, description?, copyright?, author?, version?, entity*, view-entity* )>
     <!-- ================= Children of entitymodel =================== -->
-    <!ELEMENT entity ( description?, field*, prim-key*, relation* )>
     <!ELEMENT title ( #PCDATA  )>
     <!ELEMENT description ( #PCDATA  )>
     <!ELEMENT copyright ( #PCDATA  )>
     <!ELEMENT author ( #PCDATA  )>
     <!ELEMENT version ( #PCDATA  )>
+    <!ELEMENT entity ( description?, field+, prim-key+, relation* )>
+    <!ELEMENT view-entity ( description?, member-entity+, alias+, alias-prim-key+, view-link+, relation* )>
     <!-- ================== Children of entity ===================== -->
     <!-- see the children of entitymodel section for description, etc. -->
     <!ATTLIST entity
-	entity-name CDATA #REQUIRED >
-    <!ATTLIST entity
-	table-name CDATA #IMPLIED >
-    <!ATTLIST entity
-	package-name CDATA #REQUIRED >
-    <!ATTLIST entity
-	dependent-on CDATA #IMPLIED >
-    <!ATTLIST entity
-	title CDATA #IMPLIED >
-    <!ATTLIST entity
-	copyright CDATA #IMPLIED >
-    <!ATTLIST entity
-	author CDATA #IMPLIED >
-    <!ATTLIST entity
+	entity-name CDATA #REQUIRED
+	table-name CDATA #IMPLIED
+	package-name CDATA #REQUIRED
+	dependent-on CDATA #IMPLIED
+	title CDATA #IMPLIED
+	copyright CDATA #IMPLIED
+	author CDATA #IMPLIED
 	version CDATA #IMPLIED >
     <!ELEMENT field ( validate* )>
     <!ELEMENT prim-key EMPTY>
     <!ATTLIST prim-key
 	field CDATA #REQUIRED >
-    <!ELEMENT relation ( key-map* )>
+    <!ELEMENT relation ( key-map+ )>
+    <!-- ================== Children of view-entity ===================== -->
+    <!-- see the children of entitymodel section for description, etc. -->
+    <!ATTLIST view-entity
+	entity-name CDATA #REQUIRED
+	table-name CDATA #IMPLIED
+	package-name CDATA #REQUIRED
+	dependent-on CDATA #IMPLIED
+	title CDATA #IMPLIED
+	copyright CDATA #IMPLIED
+	author CDATA #IMPLIED
+	version CDATA #IMPLIED >
+    <!ELEMENT member-entity EMPTY>
+    <!ATTLIST member-entity
+	entity-name CDATA #REQUIRED
+	alias CDATA #REQUIRED >
+    <!ELEMENT alias EMPTY>
+    <!ATTLIST alias
+	name CDATA #REQUIRED
+	field CDATA #IMPLIED
+	entity CDATA #REQUIRED >
+    <!ELEMENT alias-prim-key EMPTY>
+    <!ATTLIST alias-prim-key
+	alias CDATA #REQUIRED >
+    <!ELEMENT view-link ( key-map+ )>
+    <!ATTLIST view-link
+	entity-name CDATA #REQUIRED
+	rel-entity-name CDATA #REQUIRED >
     <!-- ==================== Children of field ===================== -->
     <!ATTLIST field
 	name CDATA #REQUIRED >
@@ -75,13 +96,9 @@
     <!-- ==================== Children of relation ====================== -->
     <!-- specifies whether or not the relation is a dependent one; ie if the related entity can exist without the main entity -->
     <!ATTLIST relation
-	type ( one | many ) #REQUIRED >
-    <!ATTLIST relation
-	title CDATA #IMPLIED >
-    <!ATTLIST relation
+	type ( one | many ) #REQUIRED
+	title CDATA #IMPLIED
 	rel-entity-name CDATA #REQUIRED >
-    <!ATTLIST relation
-	rel-table-name CDATA #IMPLIED >
     <!ELEMENT key-map EMPTY>
     <!-- see definition of relation in entity section above -->
     <!-- ===================== Children of key-map ====================== -->
@@ -1044,5 +1061,69 @@
         <key-map field-name="workEffortTypeId" />
       </relation>
     </entity>  
+    <view-entity entity-name="WorkEffortAndPartyAssign" 
+            package-name="org.ofbiz.commonapp.workeffort.workeffort"
+            title="Work Effort And Party Assignment Entity">
+      <member-entity entity-name="WorkEffort" alias="WE"/>
+      <member-entity entity-name="WorkEffortPartyAssignment" alias="WEPA"/>
+      <alias name="workEffortId" entity="WorkEffort"/>
+      <alias name="workEffortTypeId" entity="WorkEffort"/>
+      <alias name="currentStatusId" entity="WorkEffort"/>
+      <alias name="lastStatusUpdate" entity="WorkEffort"/>
+      <alias name="universalId" entity="WorkEffort"/>
+      <alias name="scopeEnumId" entity="WorkEffort"/>
+      <alias name="priority" entity="WorkEffort"/>
+      <alias name="workEffortName" entity="WorkEffort"/>
+      <alias name="description" entity="WorkEffort"/>
+      <alias name="locationDesc" entity="WorkEffort"/>
+      <alias name="revisionNumber" entity="WorkEffort"/>
+      <alias name="assetId" entity="WorkEffort"/>
+      <alias name="fixedAssetId" entity="WorkEffort"/>
+      <alias name="facilityId" entity="WorkEffort"/>
+      <alias name="createdDate" entity="WorkEffort"/>
+      <alias name="createdByPartyId" entity="WorkEffort"/>
+      <alias name="lastModifiedDate" entity="WorkEffort"/>
+      <alias name="lastModifiedByPartyId" entity="WorkEffort"/>
+      <alias name="estimatedStartDate" entity="WorkEffort"/>
+      <alias name="estimatedCompletionDate" entity="WorkEffort"/>
+      <alias name="estimatedMilliSeconds" entity="WorkEffort"/>
+      <alias name="totalMilliSecondsAllowed" entity="WorkEffort"/>
+      <alias name="totalMoneyAllowed" entity="WorkEffort"/>
+      <alias name="moneyUomId" entity="WorkEffort"/>
+      <alias name="actualStartDate" entity="WorkEffort"/>
+      <alias name="actualCompletionDate" entity="WorkEffort"/>
+      <alias name="actualMilliSeconds" entity="WorkEffort"/>
+      <alias name="specialTerms" entity="WorkEffort"/>
+      <alias name="timeTransparency" entity="WorkEffort"/>
+      <alias name="infoUrl" entity="WorkEffort"/>
+      <alias name="recurrenceInfoId" entity="WorkEffort"/>
+      <alias name="contextDataId" entity="WorkEffort"/>
+      <alias name="resultDataId" entity="WorkEffort"/>
+      <alias name="noteId" entity="WorkEffort"/>	
+      <alias name="partyId" entity="WorkEffortPartyAssignment"/>
+      <alias name="roleTypeId" entity="WorkEffortPartyAssignment"/>
+      <alias name="fromDate" entity="WorkEffortPartyAssignment"/>
+      <alias name="thruDate" entity="WorkEffortPartyAssignment"/>
+      <alias name="partyAssignFacilityId" field="facilityId" entity="WorkEffortPartyAssignment"/>
+      <alias name="statusId" entity="WorkEffortPartyAssignment"/>
+      <alias name="comments" entity="WorkEffortPartyAssignment"/>
+      <alias name="mustRsvp" entity="WorkEffortPartyAssignment"/>
+      <alias name="expectationEnumId" entity="WorkEffortPartyAssignment"/>
+      <alias-prim-key alias="workEffortId" />	
+      <alias-prim-key alias="partyId" />	
+      <alias-prim-key alias="roleTypeId" />	
+      <alias-prim-key alias="fromDate" />
+      <view-link entity-name="WorkEffort" rel-entity-name="WorkEffortPartyAssignment">
+        <key-map field-name="workEffortId"/>
+      </view-link>
+      <relation type="one" rel-entity-name="WorkEffort">
+        <key-map field-name="workEffortId"/>
+      </relation>
+      <relation type="one" rel-entity-name="WorkEffortPartyAssignment">
+        <key-map field-name="workEffortId"/>
+        <key-map field-name="partyId"/>
+        <key-map field-name="roleTypeId"/>
+        <key-map field-name="fromDate"/>
+      </relation>
+    </view-entity>  
 </entitymodel>
-
