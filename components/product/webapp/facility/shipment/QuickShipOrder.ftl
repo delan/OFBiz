@@ -20,7 +20,7 @@
  *  THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  *
  *@author     Andy Zeneski (jaz@ofbiz.org)
- *@version    $Revision: 1.4 $
+ *@version    $Revision: 1.5 $
  *@since      3.0
 -->
 
@@ -48,8 +48,8 @@ function setWeight(weight) {
       <#-- single package -->            
       <#assign shipmentPackage = (Static["org.ofbiz.entity.util.EntityUtil"].getFirst(shipmentPackages))?if_exists>
       <#if shipmentPackage?has_content>
-        <#assign weight = (shipmentPackage.weight)?if_exists>
-        <#if weight?exists && !requestParameters.reweigh?exists>
+        <#assign weight = (shipmentPackage.weight)?default(0.00)>
+        <#if (0 < weight?double) && !requestParameters.reweigh?exists>
           <#if 1 < shipmentRoutes.size()>
             <#-- multiple routes -->
             <div class="tabletext"><font color="red">More then one route segment found. You must ship this manually.</font></div>
@@ -141,7 +141,7 @@ function setWeight(weight) {
                       <option value="${weightUom.uomId}">${weightUom.description}</option>
                       <option value="${weightUom.uomId}">---</option>
                     </#if>                              
-                    <#list weightUoms as weightUomOption>
+                    <#list weightUomList as weightUomOption>
                       <option value="${weightUomOption.uomId}">${weightUomOption.description} [${weightUomOption.abbreviation}]</option>
                     </#list>
                   </select>    
@@ -198,5 +198,10 @@ function setWeight(weight) {
         </tr>        
       </table>
     </form>
+    <script language="javascript">
+    <!-- //
+        document.selectOrderForm.orderId.focus();
+    // -->
+    </script>
   </#if>  
 </#if>
