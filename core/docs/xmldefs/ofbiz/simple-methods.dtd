@@ -470,6 +470,12 @@ engine and facilitate related operations.
     use-cache ( true | false ) "false"
     list-name CDATA #REQUIRED
 >
+<!ELEMENT order-value-list EMPTY>
+<!ATTLIST order-value-list
+    list-name CDATA #REQUIRED
+    to-list-name CDATA #IMPLIED
+    order-by-list-name CDATA #REQUIRED
+>
 <!ELEMENT filter-list-by-and EMPTY>
 <!ATTLIST filter-list-by-and
     list-name CDATA #REQUIRED

@@ -700,6 +700,8 @@ public class SimpleMethod {
                     methodOperations.add(new org.ofbiz.core.minilang.method.entityops.FilterListByAnd(curOperElem, simpleMethod));
                 } else if ("filter-list-by-date".equals(nodeName)) {
                     methodOperations.add(new org.ofbiz.core.minilang.method.entityops.FilterListByDate(curOperElem, simpleMethod));
+                } else if ("order-value-list".equals(nodeName)) {
+                    methodOperations.add(new org.ofbiz.core.minilang.method.entityops.OrderValueList(curOperElem, simpleMethod));
 
                 } else if ("make-value".equals(nodeName)) {
                     methodOperations.add(new org.ofbiz.core.minilang.method.entityops.MakeValue(curOperElem, simpleMethod));
