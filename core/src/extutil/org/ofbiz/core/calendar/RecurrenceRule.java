@@ -175,18 +175,22 @@ public class RecurrenceRule {
      *@return long The timestamp of the end time for this rule or 0 for none.
      */
     public long getEndTime() {
-        if (rule == null)
+        if (rule == null) {
+            Debug.logVerbose("Rule is null.", module);
             return -1;
+        }
         long time = 0;
         java.sql.Timestamp stamp = null;
 
         stamp = rule.getTimestamp("untilDateTime");
+        Debug.logVerbose("Stamp value: " + stamp, module);
+        
         if (stamp != null) {
             long nanos = (long) stamp.getNanos();
-
             time = stamp.getTime();
             time += (nanos / 1000000);
         }
+        Debug.logVerbose("Returning time: " + time, module);
         return time;
     }
 
@@ -266,6 +270,7 @@ public class RecurrenceRule {
             startTime = RecurrenceUtil.now();
         if (fromTime == 0)
             fromTime = startTime;
+                      
         // Test the end time of the recurrence.
         if (getEndTime() <= RecurrenceUtil.now())
             return 0;
