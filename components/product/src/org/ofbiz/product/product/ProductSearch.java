@@ -1,5 +1,5 @@
 /*
- * $Id: ProductSearch.java,v 1.33 2004/05/11 08:26:28 jonesde Exp $
+ * $Id: ProductSearch.java,v 1.34 2004/05/11 13:13:59 jonesde Exp $
  *
  *  Copyright (c) 2001 The Open For Business Project (www.ofbiz.org)
  *  Permission is hereby granted, free of charge, to any person obtaining a
@@ -60,7 +60,7 @@ import org.ofbiz.entity.util.EntityUtil;
  *  Utilities for product search based on various constraints including categories, features and keywords.
  *
  * @author <a href="mailto:jonesde@ofbiz.org">David E. Jones</a>
- * @version    $Revision: 1.33 $
+ * @version    $Revision: 1.34 $
  * @since      3.0
  */
 public class ProductSearch {
@@ -1076,11 +1076,17 @@ public class ProductSearch {
             productSearchContext.dynamicViewEntity.addAlias("SPPRC", "sortProductPriceTypeId", "productPriceTypeId", null, null, null, null);
             productSearchContext.dynamicViewEntity.addAlias("SPPRC", "sortCurrencyUomId", "currencyUomId", null, null, null, null);
             productSearchContext.dynamicViewEntity.addAlias("SPPRC", "sortProductStoreGroupId", "productStoreGroupId", null, null, null, null);
+            productSearchContext.dynamicViewEntity.addAlias("SPPRC", "sortFromDate", "fromDate", null, null, null, null);
+            productSearchContext.dynamicViewEntity.addAlias("SPPRC", "sortThruDate", "thruDate", null, null, null, null);
             productSearchContext.dynamicViewEntity.addAlias("SPPRC", "sortPrice", "price", null, null, null, null);
             
             productSearchContext.entityConditionList.add(new EntityExpr("sortProductPriceTypeId", EntityOperator.EQUALS, this.productPriceTypeId));
             productSearchContext.entityConditionList.add(new EntityExpr("sortCurrencyUomId", EntityOperator.EQUALS, this.currencyUomId));
             productSearchContext.entityConditionList.add(new EntityExpr("sortProductStoreGroupId", EntityOperator.EQUALS, this.productStoreGroupId));
+            productSearchContext.entityConditionList.add(new EntityExpr("sortFromDate", EntityOperator.LESS_THAN_EQUAL_TO, productSearchContext.nowTimestamp));
+            productSearchContext.entityConditionList.add(new EntityExpr(
+                    new EntityExpr("sortThruDate", EntityOperator.EQUALS, null), EntityOperator.OR, 
+                    new EntityExpr("sortThruDate", EntityOperator.GREATER_THAN_EQUAL_TO, productSearchContext.nowTimestamp)));
 
             if (ascending) {
                 productSearchContext.orderByList.add("+sortPrice");
