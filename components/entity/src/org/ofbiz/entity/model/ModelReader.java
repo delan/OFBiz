@@ -1,5 +1,5 @@
 /*
- * $Id: ModelReader.java,v 1.12 2004/07/07 09:10:58 doogie Exp $
+ * $Id: ModelReader.java,v 1.13 2004/07/17 07:05:09 doogie Exp $
  *
  *  Copyright (c) 2001-2004 The Open For Business Project - www.ofbiz.org
  *
@@ -45,7 +45,9 @@ import org.ofbiz.base.util.UtilXml;
 import org.ofbiz.entity.GenericEntityConfException;
 import org.ofbiz.entity.GenericEntityException;
 import org.ofbiz.entity.GenericModelException;
+import org.ofbiz.entity.config.DelegatorInfo;
 import org.ofbiz.entity.config.EntityConfigUtil;
+import org.ofbiz.entity.config.EntityModelReaderInfo;
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
 import org.w3c.dom.Node;
@@ -55,7 +57,7 @@ import org.w3c.dom.Node;
  *
  * @author     <a href="mailto:jonesde@ofbiz.org">David E. Jones</a>
  * @author     <a href="mailto:jaz@ofbiz.org">Andy Zeneski</a>
- * @version    $Revision: 1.12 $
+ * @version    $Revision: 1.13 $
  * @since      2.0
  */
 public class ModelReader {
@@ -83,7 +85,7 @@ public class ModelReader {
     protected Map entityResourceHandlerMap;
 
     public static ModelReader getModelReader(String delegatorName) throws GenericEntityException {
-        EntityConfigUtil.DelegatorInfo delegatorInfo = EntityConfigUtil.getDelegatorInfo(delegatorName);
+        DelegatorInfo delegatorInfo = EntityConfigUtil.getDelegatorInfo(delegatorName);
 
         if (delegatorInfo == null) {
             throw new GenericEntityConfException("Could not find a delegator with the name " + delegatorName);
@@ -113,7 +115,7 @@ public class ModelReader {
         resourceHandlerEntities = new HashMap();
         entityResourceHandlerMap = new HashMap();
 
-        EntityConfigUtil.EntityModelReaderInfo entityModelReaderInfo = EntityConfigUtil.getEntityModelReaderInfo(modelName);
+        EntityModelReaderInfo entityModelReaderInfo = EntityConfigUtil.getEntityModelReaderInfo(modelName);
 
         if (entityModelReaderInfo == null) {
             throw new GenericEntityConfException("Cound not find an entity-model-reader with the name " + modelName);

@@ -1,5 +1,5 @@
 /*
- * $Id: SQLProcessor.java,v 1.12 2004/06/11 16:40:25 ajzeneski Exp $
+ * $Id: SQLProcessor.java,v 1.13 2004/07/17 07:05:07 doogie Exp $
  *
  * Copyright (c) 2001, 2002 The Open For Business Project - www.ofbiz.org
  *
@@ -35,6 +35,7 @@ import java.util.Map;
 import org.ofbiz.base.util.Debug;
 import org.ofbiz.entity.GenericDataSourceException;
 import org.ofbiz.entity.GenericEntityException;
+import org.ofbiz.entity.config.DatasourceInfo;
 import org.ofbiz.entity.config.EntityConfigUtil;
 import org.ofbiz.entity.transaction.GenericTransactionException;
 import org.ofbiz.entity.transaction.TransactionUtil;
@@ -44,7 +45,7 @@ import org.ofbiz.entity.transaction.TransactionUtil;
  * 
  * @author     <a href="mailto:jonesde@ofbiz.org">David E. Jones</a>
  * @author     <a href="mailto:jaz@ofbiz.org">Andy Zeneski</a>
- * @version    $Revision: 1.12 $
+ * @version    $Revision: 1.13 $
  * @since      2.0
  */
 public class SQLProcessor {
@@ -785,7 +786,7 @@ public class SQLProcessor {
 
         // check if the statement was called with a specific fetchsize, if not grab the default from the datasource
         if (fetchSize < 0) {
-            EntityConfigUtil.DatasourceInfo ds = EntityConfigUtil.getDatasourceInfo(helperName);
+            DatasourceInfo ds = EntityConfigUtil.getDatasourceInfo(helperName);
             if (ds != null) {
                 fetchSize = ds.resultFetchSize;
             } else {

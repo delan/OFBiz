@@ -1,5 +1,5 @@
 /*
- * $Id: EntityFunction.java,v 1.8 2004/07/14 04:18:52 doogie Exp $
+ * $Id: EntityFunction.java,v 1.9 2004/07/17 07:05:03 doogie Exp $
  *
  *  Copyright (c) 2002 The Open For Business Project - www.ofbiz.org
  *
@@ -28,7 +28,7 @@ import java.util.List;
 import java.util.Map;
 
 import org.ofbiz.entity.GenericModelException;
-import org.ofbiz.entity.config.EntityConfigUtil;
+import org.ofbiz.entity.config.DatasourceInfo;
 import org.ofbiz.entity.model.ModelEntity;
 import org.ofbiz.entity.model.ModelField;
 
@@ -39,7 +39,7 @@ import org.ofbiz.entity.model.ModelField;
  *@author     <a href="mailto:jonesde@ofbiz.org">David E. Jones</a>
  *@author     <a href="mailto:jaz@ofbiz.org">Andy Zeneski</a>
  *@since      1.0
- *@version    $Revision: 1.8 $
+ *@version    $Revision: 1.9 $
  */
 public abstract class EntityFunction extends EntityConditionValue {
 
@@ -140,7 +140,7 @@ public abstract class EntityFunction extends EntityConditionValue {
             && ( this.value != null ? value.equals( otherFunc.value ) : otherFunc.value != null );
     }
 
-    public void addSqlValue(StringBuffer sql, Map tableAliases, ModelEntity modelEntity, List entityConditionParams, boolean includeTableNamePrefix, EntityConfigUtil.DatasourceInfo datasourceinfo) {
+    public void addSqlValue(StringBuffer sql, Map tableAliases, ModelEntity modelEntity, List entityConditionParams, boolean includeTableNamePrefix, DatasourceInfo datasourceinfo) {
         sql.append(codeString).append('(');
         if (nested != null) {
             nested.addSqlValue(sql, tableAliases, modelEntity, entityConditionParams, includeTableNamePrefix, datasourceinfo);

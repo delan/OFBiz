@@ -1,5 +1,5 @@
 /*
- * $Id: EntityDataLoader.java,v 1.4 2004/06/26 23:16:22 ajzeneski Exp $
+ * $Id: EntityDataLoader.java,v 1.5 2004/07/17 07:05:11 doogie Exp $
  *
  * Copyright (c) 2001-2004 The Open For Business Project - www.ofbiz.org
  *
@@ -41,7 +41,9 @@ import org.ofbiz.base.util.Debug;
 import org.ofbiz.base.util.UtilMisc;
 import org.ofbiz.entity.GenericDelegator;
 import org.ofbiz.entity.GenericEntityException;
+import org.ofbiz.entity.config.DatasourceInfo;
 import org.ofbiz.entity.config.EntityConfigUtil;
+import org.ofbiz.entity.config.EntityDataReaderInfo;
 import org.ofbiz.entity.model.ModelEntity;
 import org.ofbiz.entity.model.ModelReader;
 import org.ofbiz.entity.model.ModelUtil;
@@ -53,7 +55,7 @@ import org.w3c.dom.Element;
  *
  * @author     <a href="mailto:jonesde@ofbiz.org">David E. Jones</a>
  * @author     <a href="mailto:jaz@ofbiz.org">Andy Zeneski</a>
- * @version    $Revision: 1.4 $
+ * @version    $Revision: 1.5 $
  * @since      3.0
  */
 public class EntityDataLoader {
@@ -63,7 +65,7 @@ public class EntityDataLoader {
     public static String getPathsString(String helperName) {
         StringBuffer pathBuffer = new StringBuffer();
         if (helperName != null && helperName.length() > 0) {
-            EntityConfigUtil.DatasourceInfo datasourceInfo = EntityConfigUtil.getDatasourceInfo(helperName);
+            DatasourceInfo datasourceInfo = EntityConfigUtil.getDatasourceInfo(helperName);
             List sqlLoadPathElements = datasourceInfo.sqlLoadPaths;
             Iterator slpIter = sqlLoadPathElements.iterator();
             while (slpIter.hasNext()) {
@@ -86,7 +88,7 @@ public class EntityDataLoader {
         
         // first get files from resources
 
-        EntityConfigUtil.DatasourceInfo datasourceInfo = EntityConfigUtil.getDatasourceInfo(helperName);
+        DatasourceInfo datasourceInfo = EntityConfigUtil.getDatasourceInfo(helperName);
         if (datasourceInfo != null) {
             Iterator readDataIter = datasourceInfo.readDatas.iterator();
             while (readDataIter.hasNext()) {
@@ -94,7 +96,7 @@ public class EntityDataLoader {
                 String readerName = readDataElement.getAttribute("reader-name");
                 
                 // get all of the main resource model stuff, ie specified in the entityengine.xml file
-                EntityConfigUtil.EntityDataReaderInfo entityDataReaderInfo = EntityConfigUtil.getEntityDataReaderInfo(readerName);
+                EntityDataReaderInfo entityDataReaderInfo = EntityConfigUtil.getEntityDataReaderInfo(readerName);
                 
                 if (entityDataReaderInfo != null) {
                     List resourceElements = entityDataReaderInfo.resourceElements;

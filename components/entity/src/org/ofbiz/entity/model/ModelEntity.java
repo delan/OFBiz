@@ -1,5 +1,5 @@
 /*
- * $Id: ModelEntity.java,v 1.18 2004/07/10 13:54:11 jonesde Exp $
+ * $Id: ModelEntity.java,v 1.19 2004/07/17 07:05:08 doogie Exp $
  *
  * Copyright (c) 2001, 2002 The Open For Business Project - www.ofbiz.org
  *
@@ -41,6 +41,7 @@ import org.ofbiz.entity.GenericDelegator;
 import org.ofbiz.entity.GenericEntity;
 import org.ofbiz.entity.GenericEntityException;
 import org.ofbiz.entity.GenericValue;
+import org.ofbiz.entity.config.DatasourceInfo;
 import org.ofbiz.entity.config.EntityConfigUtil;
 import org.ofbiz.entity.jdbc.DatabaseUtil;
 import org.w3c.dom.Element;
@@ -51,7 +52,7 @@ import org.w3c.dom.NodeList;
  *
  * @author     <a href="mailto:jonesde@ofbiz.org">David E. Jones</a>
  * @author     <a href="mailto:jaz@ofbiz.org">Andy Zeneski</a>
- * @version    $Revision: 1.18 $
+ * @version    $Revision: 1.19 $
  * @since      2.0
  */
 public class ModelEntity extends ModelInfo implements Comparable {
@@ -303,7 +304,7 @@ public class ModelEntity extends ModelInfo implements Comparable {
     }
 
     /** The table-name of the Entity including a Schema name if specified in the datasource config */
-    public String getTableName(EntityConfigUtil.DatasourceInfo datasourceInfo) {
+    public String getTableName(DatasourceInfo datasourceInfo) {
         if (datasourceInfo != null && datasourceInfo.schemaName != null && datasourceInfo.schemaName.length() > 0) {
             return datasourceInfo.schemaName + "." + this.tableName;
         } else {

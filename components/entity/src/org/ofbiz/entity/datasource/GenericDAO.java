@@ -1,5 +1,5 @@
 /*
- * $Id: GenericDAO.java,v 1.17 2004/07/07 07:37:06 doogie Exp $
+ * $Id: GenericDAO.java,v 1.18 2004/07/17 07:05:06 doogie Exp $
  *
  * Copyright (c) 2001, 2002 The Open For Business Project - www.ofbiz.org
  *
@@ -36,6 +36,7 @@ import org.ofbiz.entity.condition.EntityCondition;
 import org.ofbiz.entity.condition.EntityConditionParam;
 import org.ofbiz.entity.condition.EntityFieldMap;
 import org.ofbiz.entity.condition.EntityOperator;
+import org.ofbiz.entity.config.DatasourceInfo;
 import org.ofbiz.entity.config.EntityConfigUtil;
 import org.ofbiz.entity.jdbc.DatabaseUtil;
 import org.ofbiz.entity.jdbc.SQLProcessor;
@@ -59,7 +60,7 @@ import org.ofbiz.entity.util.EntityListIterator;
  * @author     <a href="mailto:jdonnerstag@eds.de">Juergen Donnerstag</a>
  * @author     <a href="mailto:gielen@aixcept.de">Rene Gielen</a>
  * @author     <a href="mailto:john_nutting@telluridetechnologies.com">John Nutting</a>
- * @version    $Revision: 1.17 $
+ * @version    $Revision: 1.18 $
  * @since      1.0
  */
 public class GenericDAO {
@@ -69,7 +70,7 @@ public class GenericDAO {
     protected static Map genericDAOs = new Hashtable();
     protected String helperName;
     protected ModelFieldTypeReader modelFieldTypeReader = null;
-    protected EntityConfigUtil.DatasourceInfo datasourceInfo;
+    protected DatasourceInfo datasourceInfo;
 
     public static GenericDAO getGenericDAO(String helperName) {
         GenericDAO newGenericDAO = (GenericDAO) genericDAOs.get(helperName);

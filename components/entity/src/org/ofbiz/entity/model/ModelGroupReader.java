@@ -1,5 +1,5 @@
 /*
- * $Id: ModelGroupReader.java,v 1.4 2003/11/25 07:48:14 jonesde Exp $
+ * $Id: ModelGroupReader.java,v 1.5 2004/07/17 07:05:08 doogie Exp $
  *
  *  Copyright (c) 2001, 2002 The Open For Business Project - www.ofbiz.org
  *
@@ -38,7 +38,9 @@ import org.ofbiz.base.config.GenericConfigException;
 import org.ofbiz.base.config.MainResourceHandler;
 import org.ofbiz.base.config.ResourceHandler;
 import org.ofbiz.entity.GenericEntityConfException;
+import org.ofbiz.entity.config.DelegatorInfo;
 import org.ofbiz.entity.config.EntityConfigUtil;
+import org.ofbiz.entity.config.EntityGroupReaderInfo;
 import org.ofbiz.base.util.Debug;
 import org.ofbiz.base.util.UtilCache;
 import org.ofbiz.base.util.UtilTimer;
@@ -51,7 +53,7 @@ import org.w3c.dom.Node;
  * Generic Entity - Entity Group Definition Reader
  *
  * @author     <a href="mailto:jonesde@ofbiz.org">David E. Jones</a> 
- * @version    $Revision: 1.4 $
+ * @version    $Revision: 1.5 $
  * @since      2.0
  */
 public class ModelGroupReader {
@@ -66,7 +68,7 @@ public class ModelGroupReader {
     public List entityGroupResourceHandlers = new LinkedList();
 
     public static ModelGroupReader getModelGroupReader(String delegatorName) throws GenericEntityConfException {
-        EntityConfigUtil.DelegatorInfo delegatorInfo = EntityConfigUtil.getDelegatorInfo(delegatorName);
+        DelegatorInfo delegatorInfo = EntityConfigUtil.getDelegatorInfo(delegatorName);
 
         if (delegatorInfo == null) {
             throw new GenericEntityConfException("Could not find a delegator with the name " + delegatorName);
@@ -90,7 +92,7 @@ public class ModelGroupReader {
 
     public ModelGroupReader(String modelName) throws GenericEntityConfException {
         this.modelName = modelName;
-        EntityConfigUtil.EntityGroupReaderInfo entityGroupReaderInfo = EntityConfigUtil.getEntityGroupReaderInfo(modelName);
+        EntityGroupReaderInfo entityGroupReaderInfo = EntityConfigUtil.getEntityGroupReaderInfo(modelName);
 
         if (entityGroupReaderInfo == null) {
             throw new GenericEntityConfException("Cound not find an entity-group-reader with the name " + modelName);

@@ -1,5 +1,5 @@
 /*
- * $Id: JNDIFactory.java,v 1.4 2004/04/22 22:42:15 doogie Exp $
+ * $Id: JNDIFactory.java,v 1.5 2004/07/17 07:05:10 doogie Exp $
  *
  *  Copyright (c) 2001, 2002 The Open For Business Project - www.ofbiz.org
  *
@@ -42,6 +42,7 @@ import org.ofbiz.base.util.Debug;
 import org.ofbiz.base.util.GeneralException;
 import org.ofbiz.base.util.JNDIContextFactory;
 import org.ofbiz.entity.GenericEntityException;
+import org.ofbiz.entity.config.DatasourceInfo;
 import org.ofbiz.entity.config.EntityConfigUtil;
 import org.ofbiz.entity.jdbc.ConnectionFactory;
 import org.w3c.dom.Element;
@@ -50,7 +51,7 @@ import org.w3c.dom.Element;
  * Central source for Tyrex JTA objects from JNDI
  *
  * @author     <a href="mailto:jonesde@ofbiz.org">David E. Jones</a>
- * @version    $Revision: 1.4 $
+ * @version    $Revision: 1.5 $
  * @since      2.0
  */
 public class JNDIFactory implements TransactionFactoryInterface {
@@ -141,7 +142,7 @@ public class JNDIFactory implements TransactionFactoryInterface {
     }
     
     public Connection getConnection(String helperName) throws SQLException, GenericEntityException {
-        EntityConfigUtil.DatasourceInfo datasourceInfo = EntityConfigUtil.getDatasourceInfo(helperName);
+        DatasourceInfo datasourceInfo = EntityConfigUtil.getDatasourceInfo(helperName);
 
         if (datasourceInfo.jndiJdbcElement != null) {
             Element jndiJdbcElement = datasourceInfo.jndiJdbcElement;

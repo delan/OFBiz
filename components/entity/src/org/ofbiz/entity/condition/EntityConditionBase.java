@@ -1,5 +1,5 @@
 /*
- * $Id: EntityConditionBase.java,v 1.2 2004/07/07 17:37:40 ajzeneski Exp $
+ * $Id: EntityConditionBase.java,v 1.3 2004/07/17 07:05:03 doogie Exp $
  *
  *  Copyright (c) 2002 The Open For Business Project - www.ofbiz.org
  *
@@ -30,7 +30,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-import org.ofbiz.entity.config.EntityConfigUtil;
+import org.ofbiz.entity.config.DatasourceInfo;
 import org.ofbiz.entity.jdbc.SqlJdbcUtil;
 import org.ofbiz.entity.model.ModelEntity;
 import org.ofbiz.entity.model.ModelField;
@@ -46,7 +46,7 @@ import org.ofbiz.entity.model.ModelField;
  * These can be used in various combinations using the EntityConditionList and EntityExpr objects.
  *
  * @author     <a href="mailto:jonesde@ofbiz.org">David E. Jones</a>
- * @version    $Revision: 1.2 $
+ * @version    $Revision: 1.3 $
  * @since      2.0
  */
 public abstract class EntityConditionBase implements Serializable {
@@ -62,7 +62,7 @@ public abstract class EntityConditionBase implements Serializable {
         return modelField;
     }
 
-    protected String getColName(Map tableAliases, ModelEntity modelEntity, String fieldName, boolean includeTableNamePrefix, EntityConfigUtil.DatasourceInfo datasourceInfo) {
+    protected String getColName(Map tableAliases, ModelEntity modelEntity, String fieldName, boolean includeTableNamePrefix, DatasourceInfo datasourceInfo) {
         if (modelEntity == null) return fieldName;
         return getColName(tableAliases, modelEntity, getField(modelEntity, fieldName), fieldName, includeTableNamePrefix, datasourceInfo);
     }
@@ -77,7 +77,7 @@ public abstract class EntityConditionBase implements Serializable {
         return colName;
     }
 
-    protected String getColName(Map tableAliases, ModelEntity modelEntity, ModelField modelField, String fieldName, boolean includeTableNamePrefix, EntityConfigUtil.DatasourceInfo datasourceInfo) {
+    protected String getColName(Map tableAliases, ModelEntity modelEntity, ModelField modelField, String fieldName, boolean includeTableNamePrefix, DatasourceInfo datasourceInfo) {
         if (modelEntity == null || modelField == null) return fieldName;
         String colName = getColName(modelField, fieldName);
         if (includeTableNamePrefix && datasourceInfo != null) {
