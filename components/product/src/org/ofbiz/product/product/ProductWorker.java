@@ -1,5 +1,5 @@
 /*
- * $Id: ProductWorker.java,v 1.10 2003/12/05 18:55:18 ajzeneski Exp $
+ * $Id: ProductWorker.java,v 1.11 2003/12/19 06:45:54 jonesde Exp $
  *
  *  Copyright (c) 2001, 2002 The Open For Business Project - www.ofbiz.org
  *
@@ -45,7 +45,7 @@ import org.ofbiz.entity.util.EntityUtil;
  *
  * @author     <a href="mailto:jaz@ofbiz.org">Andy Zeneski</a>
  * @author     <a href="mailto:jonesde@ofbiz.org">David E. Jones</a>
- * @version    $Revision: 1.10 $
+ * @version    $Revision: 1.11 $
  * @since      2.0
  */
 public class ProductWorker {
@@ -129,137 +129,6 @@ public class ProductWorker {
         }
         return null;
     }
-
-    /*
-     * Puts the following into the pageContext attribute list with a prefix if specified:
-     *  searchProductList, keywordString, viewIndex, viewSize, lowIndex, highIndex, listSize
-     * Puts the following into the session attribute list:
-     *  CACHE_SEARCH_RESULTS, CACHE_SEARCH_RESULTS_NAME
-     *@param pageContext The pageContext of the calling JSP
-     *@param attributePrefix A prefix to put on each attribute name in the pageContext
-     */
-    /* TODO: DEJ 20031025 delete this if not used in the near future
-    public static void getKeywordSearchProducts(PageContext pageContext, String attributePrefix) {
-        getKeywordSearchProducts(pageContext, attributePrefix, null);
-    }
-     */
-
-    /*
-     * Puts the following into the pageContext attribute list with a prefix if specified:
-     *  searchProductList, keywordString, viewIndex, viewSize, lowIndex, highIndex, listSize
-     * Puts the following into the session attribute list:
-     *  CACHE_SEARCH_RESULTS, CACHE_SEARCH_RESULTS_NAME
-     *@param pageContext The pageContext of the calling JSP
-     *@param attributePrefix A prefix to put on each attribute name in the pageContext
-     *@param categoryId The keyword search group name for this search
-     */
-    /* TODO: DEJ 20031025 delete this if not used in the near future
-    public static void getKeywordSearchProducts(PageContext pageContext, String attributePrefix, String categoryId) {
-        getKeywordSearchProducts(pageContext, attributePrefix, categoryId, false, false, false);
-    }
-     */
-                
-    /*
-     * Puts the following into the pageContext attribute list with a prefix if specified:
-     *  searchProductList, keywordString, viewIndex, viewSize, lowIndex, highIndex, listSize
-     * Puts the following into the session attribute list:
-     *  CACHE_SEARCH_RESULTS, CACHE_SEARCH_RESULTS_NAME
-     *@param pageContext The pageContext of the calling JSP
-     *@param attributePrefix A prefix to put on each attribute name in the pageContext
-     *@param categoryId The keyword search group name for this search
-     */    
-    /* TODO: DEJ 20031025 delete this if not used in the near future
-    public static void getKeywordSearchProducts(PageContext pageContext, String attributePrefix, String categoryId, boolean anyPrefix, boolean anySuffix, boolean isAnd) {
-        getKeywordSearchProducts(pageContext.getRequest(), attributePrefix, categoryId, anyPrefix, anySuffix, isAnd);
-    } 
-       
-    public static void getKeywordSearchProducts(ServletRequest request, String attributePrefix, String categoryId, boolean anyPrefix, boolean anySuffix, boolean isAnd) {
-        HttpServletRequest httpRequest = (HttpServletRequest) request;
-        Map requestParameters = UtilHttp.getParameterMap(httpRequest);
-        GenericDelegator delegator = (GenericDelegator) request.getAttribute("delegator");
-
-        int viewIndex = 0;
-
-        try {
-            viewIndex = Integer.valueOf((String) requestParameters.get("VIEW_INDEX")).intValue();
-        } catch (Exception e) {
-            viewIndex = 0;
-        }
-
-        int viewSize = 10;
-
-        try {
-            viewSize = Integer.valueOf((String) requestParameters.get("VIEW_SIZE")).intValue();
-        } catch (Exception e) {
-            viewSize = 10;
-        }
-
-        if (categoryId == null) categoryId = "";
-        String keywordString = (String) requestParameters.get("SEARCH_STRING");
-
-        Map featureIdByType = ParametricSearch.makeFeatureIdByTypeMap(request);
-        String featureIdByTypeString = ParametricSearch.makeFeatureIdByTypeString(featureIdByType);
-
-        String curFindString = "KeywordSearch:" + keywordString + "::" + categoryId + "::" + anyPrefix + "::" + anySuffix + "::" + isAnd + "::" + featureIdByTypeString;
-
-        ArrayList productIds = (ArrayList) httpRequest.getSession().getAttribute("CACHE_SEARCH_RESULTS");
-        String resultArrayName = (String) httpRequest.getSession().getAttribute("CACHE_SEARCH_RESULTS_NAME");
-
-        if (productIds == null || resultArrayName == null || !curFindString.equals(resultArrayName)) { // || viewIndex == 0
-            if (Debug.infoOn()) Debug.logInfo("KeywordSearch productId Array not found in session, getting new one...", module);
-            if (Debug.infoOn()) Debug.logInfo("curFindString:" + curFindString + " resultArrayName:" + resultArrayName, module);
-
-            // productIds will be pre-sorted
-            //if (featureIdByType.size() > 0) {
-            //    productIds = ParametricSearch.parametricKeywordSearch(featureIdByType, keywordString, delegator, categoryId, VisitHandler.getVisitId(httpRequest.getSession()), anyPrefix, anySuffix, isAnd);
-            //} else {
-            //    productIds = KeywordSearch.productsByKeywords(keywordString, delegator, categoryId, VisitHandler.getVisitId(httpRequest.getSession()), anyPrefix, anySuffix, isAnd);
-            //}
-            productIds = ProductSearch.parametricKeywordSearch(featureIdByType, keywordString, delegator, categoryId, VisitHandler.getVisitId(httpRequest.getSession()), anyPrefix, anySuffix, isAnd);
-            
-
-            if (productIds != null) {
-                httpRequest.getSession().setAttribute("CACHE_SEARCH_RESULTS", productIds);
-                httpRequest.getSession().setAttribute("CACHE_SEARCH_RESULTS_NAME", curFindString);
-            } else {
-                httpRequest.getSession().removeAttribute("CACHE_SEARCH_RESULTS");
-                httpRequest.getSession().removeAttribute("CACHE_SEARCH_RESULTS_NAME");
-            }
-        }
-
-        int lowIndex = viewIndex * viewSize + 1;
-        int highIndex = (viewIndex + 1) * viewSize;
-        int listSize = 0;
-
-        if (productIds != null)
-            listSize = productIds.size();
-        if (listSize < highIndex)
-            highIndex = listSize;
-
-        ArrayList products = new ArrayList();
-
-        for (int ind = lowIndex; ind <= highIndex; ind++) {
-            GenericValue prod = null;
-
-            try {
-                prod = delegator.findByPrimaryKeyCache("Product", UtilMisc.toMap("productId", productIds.get(ind - 1)));
-            } catch (GenericEntityException e) {
-                Debug.logWarning(e.getMessage(), module);
-                prod = null;
-            }
-            if (prod != null) products.add(prod);
-        }
-
-        request.setAttribute(attributePrefix + "viewIndex", new Integer(viewIndex));
-        request.setAttribute(attributePrefix + "viewSize", new Integer(viewSize));
-        request.setAttribute(attributePrefix + "lowIndex", new Integer(lowIndex));
-        request.setAttribute(attributePrefix + "highIndex", new Integer(highIndex));
-        request.setAttribute(attributePrefix + "listSize", new Integer(listSize));
-        request.setAttribute(attributePrefix + "keywordString", keywordString);
-        request.setAttribute(attributePrefix + "featureIdByType", featureIdByType);
-        if (products.size() > 0) request.setAttribute(attributePrefix + "searchProductList", products);
-    }
-     */
 
     public static void getAssociatedProducts(PageContext pageContext, String productAttributeName, String assocPrefix) {
         GenericDelegator delegator = (GenericDelegator) pageContext.getRequest().getAttribute("delegator");

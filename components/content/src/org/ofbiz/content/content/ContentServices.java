@@ -1,5 +1,5 @@
 /*
- * $Id: ContentServices.java,v 1.7 2003/12/15 11:55:58 byersa Exp $
+ * $Id: ContentServices.java,v 1.8 2003/12/19 06:45:54 jonesde Exp $
  *
  * Copyright (c) 2001, 2002 The Open For Business Project - www.ofbiz.org
  *
@@ -24,6 +24,8 @@
  */
 package org.ofbiz.content.content;
 
+import java.io.IOException;
+import java.io.Writer;
 import java.sql.Timestamp;
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -31,37 +33,26 @@ import java.util.Iterator;
 import java.util.List;
 import java.util.Locale;
 import java.util.Map;
-import java.io.IOException;
-import java.io.Writer;
+
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
-import javax.servlet.http.HttpSession;
 
 import org.ofbiz.base.util.Debug;
 import org.ofbiz.base.util.UtilDateTime;
 import org.ofbiz.base.util.UtilMisc;
-import org.ofbiz.base.util.UtilProperties;
 import org.ofbiz.base.util.UtilValidate;
-import org.ofbiz.base.util.UtilCache;
+import org.ofbiz.content.webapp.ftl.FreeMarkerWorker;
 import org.ofbiz.entity.GenericDelegator;
 import org.ofbiz.entity.GenericEntityException;
 import org.ofbiz.entity.GenericValue;
-import org.ofbiz.entity.GenericEntity;
-import org.ofbiz.entity.GenericPK;
-import org.ofbiz.entity.condition.EntityCondition;
 import org.ofbiz.entity.condition.EntityConditionList;
 import org.ofbiz.entity.condition.EntityExpr;
 import org.ofbiz.entity.condition.EntityOperator;
-import org.ofbiz.entity.util.ByteWrapper;
 import org.ofbiz.security.Security;
 import org.ofbiz.service.DispatchContext;
-import org.ofbiz.service.ServiceUtil;
 import org.ofbiz.service.GenericServiceException;
 import org.ofbiz.service.LocalDispatcher;
-import org.ofbiz.service.ModelService;
-import org.ofbiz.content.data.DataServices;
-import org.ofbiz.content.content.ContentWorker;
-import org.ofbiz.content.webapp.ftl.FreeMarkerWorker;
+import org.ofbiz.service.ServiceUtil;
 
 import freemarker.template.SimpleHash;
 
@@ -70,7 +61,7 @@ import freemarker.template.SimpleHash;
  * ContentServices Class
  *
  * @author     <a href="mailto:byersa@automationgroups.com">Al Byers</a>
- * @version    $Revision: 1.7 $
+ * @version    $Revision: 1.8 $
  * @since      2.2
  *
  *
@@ -84,29 +75,25 @@ public class ContentServices {
      * Finds the related
      */
     public static Map findRelatedContent(DispatchContext dctx, Map context) {
-
         Map results = new HashMap();
-        Security security = dctx.getSecurity();
-        GenericDelegator delegator = dctx.getDelegator();
         LocalDispatcher dispatcher = dctx.getDispatcher();
         GenericValue currentContent = (GenericValue) context.get("currentContent");
         String fromDate = (String) context.get("fromDate");
         String thruDate = (String) context.get("thruDate");
         String toFrom = (String) context.get("toFrom");
-        if (toFrom == null)
+        if (toFrom == null) {
             toFrom = "TO";
-        else
+        } else {
             toFrom = toFrom.toUpperCase();
+        }
         List assocTypes = (List) context.get("contentAssocTypeList");
         List targetOperations = (List) context.get("targetOperationList");
         List contentList = null;
         List contentTypes= (List) context.get("contentTypeList"); 
         try {
-            contentList = ContentWorker.getAssociatedContent(currentContent, toFrom, assocTypes, 
-                                           contentTypes, fromDate, thruDate );
+            contentList = ContentWorker.getAssociatedContent(currentContent, toFrom, assocTypes, contentTypes, fromDate, thruDate );
         } catch(GenericEntityException e) {
             return ServiceUtil.returnError("Error getting associated content: " + e.toString());
-
         }
 
         if (targetOperations == null || targetOperations.isEmpty()) {
@@ -151,7 +138,6 @@ public class ContentServices {
     public static Map traverseContent(DispatchContext dctx, Map context) {
         HashMap results = new HashMap();
 
-        Security security = dctx.getSecurity();
         GenericDelegator delegator = dctx.getDelegator();
 
         String contentId = (String) context.get("contentId");
@@ -165,8 +151,7 @@ public class ContentServices {
         if (contentId == null) contentId = "PUBLISH_ROOT";
         GenericValue content = null;
         try {
-            content = delegator.findByPrimaryKey("Content",
-                    UtilMisc.toMap("contentId", contentId));
+            content = delegator.findByPrimaryKey("Content", UtilMisc.toMap("contentId", contentId));
         } catch (GenericEntityException e) {
             System.out.println("Entity Error:" + e.getMessage());
             return ServiceUtil.returnError("Error in retrieving Content. " + e.getMessage());
@@ -226,7 +211,7 @@ public class ContentServices {
         GenericDelegator delegator = dctx.getDelegator();
         LocalDispatcher dispatcher = dctx.getDispatcher();
         String contentId = (String) context.get("contentId");
-        String contentTypeId = (String) context.get("contentTypeId");
+        //String contentTypeId = (String) context.get("contentTypeId");
 
         if (contentId == null) contentId = delegator.getNextSeqId("Content").toString();
         GenericValue content = delegator.makeValue("Content", UtilMisc.toMap("contentId", contentId));
@@ -412,7 +397,7 @@ public class ContentServices {
         GenericDelegator delegator = dctx.getDelegator();
         LocalDispatcher dispatcher = dctx.getDispatcher();
         GenericValue dataResource = null;
-        Locale locale = (Locale) context.get("locale");
+        //Locale locale = (Locale) context.get("locale");
         String permissionStatus = ContentWorker.callContentPermissionCheck(delegator, dispatcher, context);
         if (permissionStatus != null && permissionStatus.equalsIgnoreCase("granted")) {
             GenericValue userLogin = (GenericValue) context.get("userLogin");
@@ -476,9 +461,7 @@ public class ContentServices {
 
         GenericValue contentAssoc = null;
         try {
-            contentAssoc = delegator.findByPrimaryKey("ContentAssoc",
-                    UtilMisc.toMap("contentId", contentId, "contentIdTo", contentIdTo,
-                       "contentAssocTypeId", contentAssocTypeId, "fromDate", fromDate));
+            contentAssoc = delegator.findByPrimaryKey("ContentAssoc", UtilMisc.toMap("contentId", contentId, "contentIdTo", contentIdTo, "contentAssocTypeId", contentAssocTypeId, "fromDate", fromDate));
         } catch (GenericEntityException e) {
             System.out.println("Entity Error:" + e.getMessage());
             return ServiceUtil.returnError("Error in retrieving Content. " + e.getMessage());
@@ -603,14 +586,9 @@ public class ContentServices {
      * searching for other matching content.
      */
     public static Map renderSubContentAsText(DispatchContext dctx, Map context) {
-
         Map results = new HashMap();
-        HttpServletRequest request = (HttpServletRequest)dctx.getAttribute("request");
-        HttpServletResponse response = (HttpServletResponse)dctx.getAttribute("response");
-        
-        Security security = dctx.getSecurity();
         GenericDelegator delegator = dctx.getDelegator();
-        LocalDispatcher dispatcher = dctx.getDispatcher();
+        //LocalDispatcher dispatcher = dctx.getDispatcher();
         SimpleHash templateContext = (SimpleHash) context.get("templateContext"); 
         String contentId = (String) context.get("contentId"); 
         Timestamp fromDate = (Timestamp) context.get("fromDate"); 
@@ -643,15 +621,16 @@ public class ContentServices {
         //Debug.logInfo("in renderSubContent(svc), contentId:" + contentId, "");
         //Debug.logInfo("in renderSubContent(svc), subContentId:" + subContentId, "");
         //Debug.logInfo("in renderSubContent(svc), mapKey:" + mapKey, "");
-        if (templateContext == null)
+        if (templateContext == null) {
             templateContext = new SimpleHash();
+        }
 
         try {
-            results = ContentWorker.renderSubContentAsText( delegator, 
-                                  contentId, out, mapKey, subContentId, subContentDataResourceView,
-                                  templateContext, locale, mimeTypeId, userLogin, fromDate);
+            results = ContentWorker.renderSubContentAsText(delegator, 
+                    contentId, out, mapKey, subContentId, subContentDataResourceView, 
+                    templateContext, locale, mimeTypeId, userLogin, fromDate);
         } catch(IOException e) {
-            return ServiceUtil.returnError(e.getMessage());
+            return ServiceUtil.returnError(e.toString());
         }
         return results;
 
@@ -663,14 +642,11 @@ public class ContentServices {
      * searching for other matching content.
      */
     public static Map renderContentAsText(DispatchContext dctx, Map context) {
-
         Map results = new HashMap();
-        Security security = dctx.getSecurity();
         GenericDelegator delegator = dctx.getDelegator();
-        LocalDispatcher dispatcher = dctx.getDispatcher();
         Writer out = (Writer) context.get("outWriter"); 
         SimpleHash templateContext = (SimpleHash) context.get("templateContext"); 
-        GenericValue userLogin = (GenericValue)context.get("userLogin");
+        //GenericValue userLogin = (GenericValue)context.get("userLogin");
         String contentId = (String) context.get("contentId"); 
         if (templateContext != null && UtilValidate.isEmpty(contentId)) {
             contentId = (String)FreeMarkerWorker.get(templateContext, "contentId");
@@ -684,20 +660,18 @@ public class ContentServices {
             locale = (Locale)FreeMarkerWorker.get(templateContext, "locale");
         }
 
-        if (templateContext == null)
+        if (templateContext == null) {
             templateContext = new SimpleHash();
+        }
 
         GenericValue view = null;
         try {
-            results = ContentWorker.renderContentAsText(delegator, contentId, out, 
-                          templateContext, view, locale, mimeTypeId);
+            results = ContentWorker.renderContentAsText(delegator, contentId, out, templateContext, view, locale, mimeTypeId);
         } catch(IOException e) {
             return ServiceUtil.returnError(e.getMessage());
         }
         return results;
-
     }
-
 }
 
 
