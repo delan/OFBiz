@@ -53,6 +53,7 @@ import org.ofbiz.entity.GenericValue;
 import org.ofbiz.order.order.OrderReadHelper;
 import org.ofbiz.order.shoppingcart.product.ProductPromoWorker;
 import org.ofbiz.product.store.ProductStoreWorker;
+import org.ofbiz.product.config.ProductConfigWrapper;
 import org.ofbiz.service.LocalDispatcher;
 
 /**
@@ -243,14 +244,14 @@ public class ShoppingCart implements Serializable {
      * @return the new/increased item index
      * @throws CartItemModifyException
      */
-    public int addOrIncreaseItem(String productId, double selectedAmount, double quantity, Map features, Map attributes, String prodCatalogId, LocalDispatcher dispatcher) throws CartItemModifyException, ItemNotFoundException {
+    public int addOrIncreaseItem(String productId, double selectedAmount, double quantity, Map features, Map attributes, String prodCatalogId, ProductConfigWrapper configWrapper, LocalDispatcher dispatcher) throws CartItemModifyException, ItemNotFoundException {
         // public int addOrIncreaseItem(GenericValue product, double quantity, HashMap features) {
 
         // Check for existing cart item.
         for (int i = 0; i < this.cartLines.size(); i++) {
             ShoppingCartItem sci = (ShoppingCartItem) cartLines.get(i);
 
-            if (sci.equals(productId, features, attributes, prodCatalogId, selectedAmount)) {
+            if (sci.equals(productId, features, attributes, prodCatalogId, configWrapper, selectedAmount)) {
                 double newQuantity = sci.getQuantity() + quantity;
 
                 if (Debug.verboseOn()) Debug.logVerbose("Found a match for id " + productId + " on line " + i + ", updating quantity to " + newQuantity, module);
@@ -258,12 +259,14 @@ public class ShoppingCart implements Serializable {
                 return i;
             }
         }
-
         // Add the new item to the shopping cart if it wasn't found.
-        return this.addItem(0, ShoppingCartItem.makeItem(new Integer(0), productId, selectedAmount, quantity, features, attributes, prodCatalogId, dispatcher, this));
+        return this.addItem(0, ShoppingCartItem.makeItem(new Integer(0), productId, selectedAmount, quantity, features, attributes, prodCatalogId, configWrapper, dispatcher, this));
+    }
+    public int addOrIncreaseItem(String productId, double selectedAmount, double quantity, Map features, Map attributes, String prodCatalogId, LocalDispatcher dispatcher) throws CartItemModifyException, ItemNotFoundException {
+        return addOrIncreaseItem(productId, 0.00, quantity, features, attributes, prodCatalogId, null, dispatcher);
     }
     public int addOrIncreaseItem(String productId, double quantity, Map features, Map attributes, String prodCatalogId, LocalDispatcher dispatcher) throws CartItemModifyException, ItemNotFoundException {
-        return addOrIncreaseItem(productId, 0.00, quantity, features, attributes, prodCatalogId, dispatcher);
+        return addOrIncreaseItem(productId, 0.00, quantity, features, attributes, prodCatalogId, null, dispatcher);
     }
     public int addOrIncreaseItem(String productId, double quantity, LocalDispatcher dispatcher) throws CartItemModifyException, ItemNotFoundException {
         return addOrIncreaseItem(productId, quantity, null, null, null, dispatcher);

@@ -48,6 +48,8 @@ import org.ofbiz.entity.util.EntityUtil;
 import org.ofbiz.product.catalog.CatalogWorker;
 import org.ofbiz.product.store.ProductStoreSurveyWrapper;
 import org.ofbiz.product.store.ProductStoreWorker;
+import org.ofbiz.product.config.ProductConfigWorker;
+import org.ofbiz.product.config.ProductConfigWrapper;
 import org.ofbiz.security.Security;
 import org.ofbiz.service.LocalDispatcher;
 import org.ofbiz.service.ModelService;
@@ -110,7 +112,6 @@ public class ShoppingCartEvents {
         // Get shoppingList info if passed
         String shoppingListId = request.getParameter("shoppingListId");
         String shoppingListItemSeqId = request.getParameter("shoppingListItemSeqId");
-
         if (paramMap.containsKey("ADD_PRODUCT_ID")) {
             productId = (String) paramMap.remove("ADD_PRODUCT_ID");
         } else if (paramMap.containsKey("add_product_id")) {
@@ -146,6 +147,20 @@ public class ShoppingCartEvents {
         }
         if (itemDescription != null && itemDescription.length() == 0) {
             itemDescription = null;
+        }
+
+        // Get the ProductConfigWrapper (it's not null only for configurable items)
+        ProductConfigWrapper configWrapper = null;
+        configWrapper = ProductConfigWorker.getProductConfigWrapper(productId, cart.getCurrency(), request);
+        
+        if (configWrapper != null) {
+            // The choices selected by the user are taken from request and set in the wrapper
+            ProductConfigWorker.fillProductConfigWrapper(configWrapper, request);
+            if (!configWrapper.isCompleted()) {
+                // The configuration is not valid
+                request.setAttribute("_ERROR_MESSAGE_", UtilProperties.getMessage(resource, "cart.addToCart.productConfigurationIsNotValid", locale));
+                return "error";
+            }
         }
 
         // get the override price
@@ -239,7 +254,7 @@ public class ShoppingCartEvents {
 
         // Translate the parameters and add to the cart
         result = cartHelper.addToCart(catalogId, shoppingListId, shoppingListItemSeqId, productId, productCategoryId,
-            itemType, itemDescription, price, amount, quantity, paramMap);
+            itemType, itemDescription, price, amount, quantity, configWrapper, paramMap);
         controlDirective = processResult(result, request);
 
         // Determine where to send the browser

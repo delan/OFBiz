@@ -51,7 +51,6 @@ public class ProductConfigWrapper {
     protected GenericValue product = null; // the aggregated product
     protected double basePrice = 0.0;
     protected List questions = null; // ProductConfigs
-    //protected List options = null; // lists of ProductConfigOptions
     
     /** Creates a new instance of ProductConfigWrapper */
     public ProductConfigWrapper() {
@@ -63,6 +62,9 @@ public class ProductConfigWrapper {
     
     private void init(GenericDelegator delegator, LocalDispatcher dispatcher, String productId, String catalogId, String webSiteId, String currencyUomId, Locale locale, GenericValue autoUserLogin) throws Exception {
         product = delegator.findByPrimaryKey("Product", UtilMisc.toMap("productId", productId));
+        if (product == null || !product.getString("productTypeId").equals("AGGREGATED")) {
+            throw new ProductConfigWrapperException("Product " + productId + " is not an AGGREGATED product.");
+        }
         // get the base price
         Map fieldMap = UtilMisc.toMap("product", product, "prodCatalogId", catalogId, "webSiteId", webSiteId,
                                       "currencyUomId", currencyUomId, "autoUserLogin", autoUserLogin);
@@ -70,9 +72,8 @@ public class ProductConfigWrapper {
         Double price = (Double)priceMap.get("price");
         if (price != null) {
             basePrice = price.doubleValue();
-        }        
+        }
         questions = new ArrayList();
-        //options = new ArrayList();
         List questionsValues = new ArrayList();
         if (product.getString("productTypeId") != null && product.getString("productTypeId").equals("AGGREGATED")) {
             questionsValues = delegator.findByAnd("ProductConfig", UtilMisc.toMap("productId", productId), UtilMisc.toList("sequenceNum"));
@@ -95,6 +96,31 @@ public class ProductConfigWrapper {
         }
     }
     
+    public boolean equals(Object obj) {
+        if (obj == null || !(obj instanceof ProductConfigWrapper)) {
+            return false;
+        }
+        ProductConfigWrapper cw = (ProductConfigWrapper)obj;
+        if (!product.getString("productId").equals(cw.getProduct().getString("productId"))) {
+            return false;
+        }
+        List cwq = cw.getQuestions();
+        if (questions.size() != cwq.size()) {
+            return false;
+        }
+        for (int i = 0; i < questions.size(); i++) {
+            ConfigItem ci = (ConfigItem)questions.get(i);
+            if (ci.equals(cwq.get(i))) {
+                return false;
+            }
+        }
+        return true;
+    }
+
+    public String toString() {
+        return "" + questions;
+    }
+
     public List getQuestions() {
         return questions;
     }
@@ -245,6 +271,31 @@ public class ProductConfigWrapper {
             }
             return false;
         }
+        
+        public boolean equals(Object obj) {
+            if (obj == null || !(obj instanceof ConfigItem)) {
+                return false;
+            }
+            ConfigItem ci = (ConfigItem)obj;
+            if (!configItem.getString("configItemId").equals(ci.getConfigItem().getString("configItemId"))) {
+                return false;
+            }
+            List opts = ci.getOptions();
+            if (options.size() != opts.size()) {
+                return false;
+            }
+            for (int i = 0; i < options.size(); i++) {
+                ConfigOption co = (ConfigOption)options.get(i);
+                if (co.equals(opts.get(i))) {
+                    return false;
+                }
+            }
+            return true;
+        }
+
+        public String toString() {
+            return configItem.getString("configItemId");
+        }
     }
     
     public class ConfigOption {
@@ -311,6 +362,21 @@ public class ProductConfigWrapper {
         public List getComponents() {
             return components;
         }
+        
+        public boolean equals(Object obj) {
+            if (obj == null || !(obj instanceof ConfigOption)) {
+                return false;
+            }
+            ConfigOption co = (ConfigOption)obj;
+            // TODO: we should compare also the GenericValues
+            
+            return isSelected() == co.isSelected();
+        }
+        
+        public String toString() {
+            return configOption.getString("configItemId") + "/" + configOption.getString("configOptionId") + (isSelected()? "*": "");
+        }
+
     }
     
 }

@@ -56,18 +56,27 @@ ${requestAttributes.virtualJavaScript?if_exists}
         </#if>
         return isVirtual;
      }
+//    function addItem() {
+//       if (document.addform.add_product_id.value == 'NULL') {
+//           alert("Please enter all the required information.");
+//           return;
+//       } else {
+//             if (isVirtual(document.addform.add_product_id.value)) {
+//                document.location = '<@ofbizUrl>/product?category_id=${requestAttributes.categoryId?if_exists}&product_id=</@ofbizUrl>' + document.addform.add_product_id.value;
+//                return;
+//             } else {
+//                 document.addform.submit();
+//             }
+//       }
+//    }
+
     function addItem() {
-       if (document.addform.add_product_id.value == 'NULL') {
-           alert("Please enter all the required information.");
-           return;
-       } else {
-             if (isVirtual(document.addform.add_product_id.value)) {
-                document.location = '<@ofbizUrl>/product?category_id=${requestAttributes.categoryId?if_exists}&product_id=</@ofbizUrl>' + document.addform.add_product_id.value;
-                return;
-             } else {
-                 document.addform.submit();
-             }
-       }
+        document.configform.action = document.addform.action;
+        document.configform.quantity.value = document.addform.quantity.value;
+        document.configform.submit();
+    }
+    function verifyConfig() {
+        document.configform.submit();
     }
 
     function popupDetail() {
@@ -146,7 +155,6 @@ ${requestAttributes.virtualJavaScript?if_exists}
  //-->
  </script>
 
-${jsscript}
 <script language="JavaScript">
 <!--
      function resetTotalPrice(name) {
@@ -324,7 +332,7 @@ ${jsscript}
               <nobr><b>Amount:</b></nobr>&nbsp;
               <input type="text" class="inputBox" size="5" name="add_amount" value="">
             </div>
-            <#if orderQuantityDisabled?exists>
+            <#if !configwrapper.isCompleted()>
               <div class="tabletext">[${uiLabelMap.EcommerceProductNotConfigured}]&nbsp;
               <input type="text" class="inputBox" size="5" name="quantity" value="0" disabled></div>
             <#else>
@@ -417,12 +425,21 @@ ${jsscript}
   <#-- Product Configurator -->
   <tr>
     <td colspan="2">
-      <form method="post" action="<@ofbizUrl>/product<#if requestAttributes._CURRENT_VIEW_?exists>/${requestAttributes._CURRENT_VIEW_}</#if></@ofbizUrl>">
+      <form name="configform" method="post" action="<@ofbizUrl>/product<#if requestAttributes._CURRENT_VIEW_?exists>/${requestAttributes._CURRENT_VIEW_}</#if></@ofbizUrl>">
+        <input type='hidden' name='add_product_id' value='${product.productId}'>
+        <input type='hidden' name='add_category_id' value=''>
+        <input type='hidden' name='quantity' value='1'>
+
         <input type='hidden' name='product_id' value='${product.productId}'>
         <table width='100%'>
           <tr>
-            <th><input type='submit' value='Validate'></th>
+            <td>
+                <div class="tabletext">
+                    <a href="javascript:verifyConfig();" class="buttontext">Verify Configuration</a>
+                </div>
+            </td>
           </tr>
+          <tr><td><hr></td></tr>
           <#assign counter = 0>
           <#assign questions = configwrapper.questions>
           <#list questions as question>
