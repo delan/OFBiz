@@ -62,7 +62,7 @@ import freemarker.ext.servlet.HttpSessionHashModel;
  * Handles view rendering for the Screen Widget
  *
  * @author     <a href="mailto:jonesde@ofbiz.org">David E. Jones</a>
- * @version    $Rev:$
+ * @version    $Rev$
  * @since      3.1
  */
 public class ScreenWidgetViewHandler implements ViewHandler {
@@ -151,7 +151,7 @@ public class ScreenWidgetViewHandler implements ViewHandler {
             context.put("requestAttributes", new HttpRequestHashModel(request, wrapper));
             TaglibFactory JspTaglibs = new TaglibFactory(servletContext);
             context.put("JspTaglibs", JspTaglibs);
-            context.put("requestParameters", parameterMap);
+            context.put("requestParameters",  UtilHttp.getParameterMap(request));
             
             // this is a dummy object to stand-in for the JPublish page object for backward compatibility
             context.put("page", new HashMap());
