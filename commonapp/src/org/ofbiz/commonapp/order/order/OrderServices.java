@@ -326,28 +326,28 @@ public class OrderServices {
             }
         }
 
-        // set the roles for a sales order
-        if ("SALES_ORDER".equals(orderTypeId)) {        
-            final String[] USER_ORDER_ROLE_TYPES = {"END_USER_CUSTOMER", "SHIP_TO_CUSTOMER",
-                    "BILL_TO_CUSTOMER", "PLACING_CUSTOMER"};
-    
-            for (int i = 0; i < USER_ORDER_ROLE_TYPES.length; i++) {
-                // make sure the party is in the role before adding it...
-                toBeStored.add(delegator.makeValue("PartyRole", 
-                		UtilMisc.toMap("partyId", partyId, "roleTypeId", USER_ORDER_ROLE_TYPES[i])));
-                                                    
-                toBeStored.add(delegator.makeValue("OrderRole", 
-                		UtilMisc.toMap("orderId", orderId, "partyId", partyId, "roleTypeId", USER_ORDER_ROLE_TYPES[i])));                                                                        
-            }
-            
-            // TODO: set some BILL_FROM roles
+        // define the roles for the order
+        List userOrderRoleTypes = null;
+        if ("SALES_ORDER".equals(orderTypeId)) {  
+            userOrderRoleTypes = UtilMisc.toList("END_USER_CUSTOMER", "SHIP_TO_CUSTOMER", "BILL_TO_CUSTOMER", "PLACING_CUSTOMER");    
         } else if ("PURCHASE_ORDER".equals(orderTypeId)) {
-            // TODO: set the purchase order roles
+            userOrderRoleTypes = UtilMisc.toList("SHIP_FROM_VENDOR", "BILL_FROM_VENDOR");
         } else if ("WORK_ORDER".equals(orderTypeId)) {
             // TODO: set the work order roles
         } else {
             // TODO: some default behavior
-        }
+        } 
+                                           
+        // now add the roles
+        if (userOrderRoleTypes != null && partyId != null && !"_NA_".equals(partyId)) {
+            Iterator i = userOrderRoleTypes.iterator();
+            while (i.hasNext()) {
+                String roleType = (String) i.next();
+                // make sure the party is in the role before adding
+                toBeStored.add(delegator.makeValue("PartyRole", UtilMisc.toMap("partyId", partyId, "roleTypeId", roleType)));
+                toBeStored.add(delegator.makeValue("OrderRole", UtilMisc.toMap("orderId", orderId, "partyId", partyId, "roleTypeId", roleType)));
+            }
+        }                                        
 
         // set the affiliate -- This is going to be removed...
         String affiliateId = (String) context.get("affiliateId");
