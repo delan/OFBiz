@@ -41,7 +41,7 @@
 <!ELEMENT condition EMPTY>
 <!ATTLIST condition
     field-name CDATA #REQUIRED
-    operator ( less | greater | less-equals | greater-equals | equals | not-equals | is-null | is-not-null | contains ) #REQUIRED
+    operator ( less | greater | less-equals | greater-equals | equals | not-equals | is-empty | is-not-empty | contains ) #REQUIRED
     value CDATA #IMPLIED
     type ( PlainString | String | Double | Float | Long | Integer | Date | Time | Timestamp | Boolean | Object ) "String"
     format CDATA #IMPLIED

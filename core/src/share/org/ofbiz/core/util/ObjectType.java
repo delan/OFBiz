@@ -663,11 +663,11 @@ public class ObjectType {
             }
         }
 
-        if (convertedValue1 == null) {
+        if (convertedValue1 == null && !"is-not-empty".equals(operator) && !"is-empty".equals(operator)) {
             if (verboseOn) Debug.logVerbose("Value1 was null, cannot complete comparison");
             return null;
         }
-        if (convertedValue2 == null && !"is-not-null".equals(operator) && !"is-null".equals(operator)) {
+        if (convertedValue2 == null && !"is-not-empty".equals(operator) && !"is-empty".equals(operator)) {
             if (verboseOn) Debug.logVerbose("Value2 was null, cannot complete comparison");
             return null;
         }
@@ -686,14 +686,30 @@ public class ObjectType {
             }
         }
 
-        if ("is-null".equals(operator) || "is-not-null".equals(operator)) {
-            if (value1 == null && "is-null".equals(operator))
+        if ("is-empty".equals(operator)) {
+            if (value1 == null)
                 return Boolean.TRUE;
-            if (value1 != null && "is-not-null".equals(operator))
+            if (value1 instanceof String && ((String) value1).length() == 0)
                 return Boolean.TRUE;
-            return Boolean.FALSE;
+            if (value1 instanceof List && ((List) value1).size() == 0)
+                return Boolean.TRUE;
+            if (value1 instanceof Map && ((Map) value1).size() == 0)
+                return Boolean.TRUE;
+            return Boolean.FALSE;    
         }
-
+        
+        if ("is-not-empty".equals(operator)) {
+            if (value1 == null)
+                return Boolean.FALSE;
+            if (value1 instanceof String && ((String) value1).length() == 0)
+                return Boolean.FALSE;
+            if (value1 instanceof List && ((List) value1).size() == 0)
+                return Boolean.FALSE;
+            if (value1 instanceof Map && ((Map) value1).size() == 0)
+                return Boolean.FALSE;
+            return Boolean.TRUE;    
+        }
+        
         if ("String".equals(type) || "PlainString".equals(type)) {
             String str1 = (String) convertedValue1;
             String str2 = (String) convertedValue2;
