@@ -1,7 +1,7 @@
 /*
  * $Id$
  *
- *  Copyright (c) 2001 The Open For Business Project - www.ofbiz.org
+ *  Copyright (c) 2001, 2002 The Open For Business Project - www.ofbiz.org
  *
  *  Permission is hereby granted, free of charge, to any person obtaining a
  *  copy of this software and associated documentation files (the "Software"),
@@ -24,28 +24,20 @@
 
 package org.ofbiz.core.minilang.method.callops;
 
-import java.lang.reflect.*;
-
-import java.net.*;
-import java.text.*;
 import java.util.*;
-import javax.servlet.http.*;
 
 import org.w3c.dom.*;
 import org.ofbiz.core.util.*;
-import org.ofbiz.core.entity.*;
-import org.ofbiz.core.service.*;
 
 import org.ofbiz.core.minilang.*;
 import org.ofbiz.core.minilang.method.*;
 
-
 /**
  * Calls a Java class method using the given fields as parameters
  *
- *@author     <a href="mailto:jonesde@ofbiz.org">David E. Jones</a>
- *@created    October 9th, 2002
- *@version    1.0
+ * @author     <a href="mailto:jonesde@ofbiz.org">David E. Jones</a>
+ * @version    $Revision$
+ * @since      2.0
  */
 public class CallClassMethod extends MethodOperation {
     

@@ -1,8 +1,6 @@
 package org.ofbiz.core.rules.engine;
 
 
-import java.util.*;
-
 
 /**
  * <p><b>Title:</b> Query

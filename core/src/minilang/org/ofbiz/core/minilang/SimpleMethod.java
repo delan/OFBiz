@@ -24,7 +24,6 @@
 package org.ofbiz.core.minilang;
 
 import java.net.*;
-import java.text.*;
 import java.util.*;
 import javax.servlet.http.*;
 
@@ -34,7 +33,6 @@ import org.ofbiz.core.entity.*;
 import org.ofbiz.core.service.*;
 
 import org.ofbiz.core.minilang.method.*;
-import org.ofbiz.core.minilang.operation.*;
 
 /**
  * SimpleMethod Mini Language Core Object

@@ -1,7 +1,6 @@
 package org.ofbiz.core.rules.logikus;
 
 
-import org.ofbiz.core.rules.engine.*;
 import org.ofbiz.core.rules.parse.*;
 
 

@@ -27,7 +27,6 @@ package org.ofbiz.core.rules.parse;
 
 
 import java.util.*;
-import org.ofbiz.core.util.*;
 
 
 /**

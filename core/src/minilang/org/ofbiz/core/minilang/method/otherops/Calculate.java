@@ -1,7 +1,7 @@
 /*
  * $Id$
  *
- *  Copyright (c) 2001 The Open For Business Project - www.ofbiz.org
+ *  Copyright (c) 2001, 2002 The Open For Business Project - www.ofbiz.org
  *
  *  Permission is hereby granted, free of charge, to any person obtaining a
  *  copy of this software and associated documentation files (the "Software"),
@@ -21,12 +21,8 @@
  *  OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR
  *  THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  */
-
 package org.ofbiz.core.minilang.method.otherops;
 
-
-import java.net.*;
-import java.text.*;
 import java.util.*;
 
 import org.w3c.dom.*;
@@ -34,13 +30,12 @@ import org.ofbiz.core.util.*;
 import org.ofbiz.core.minilang.*;
 import org.ofbiz.core.minilang.method.*;
 
-
 /**
  * Calculates a result based on nested calcops.
  *
- *@author     <a href="mailto:jonesde@ofbiz.org">David E. Jones</a>
- *@created    February 19, 2002
- *@version    1.0
+ * @author     <a href="mailto:jonesde@ofbiz.org">David E. Jones</a>
+ * @version    $Revision$
+ * @since      2.0
  */
 public class Calculate extends MethodOperation {
     
@@ -64,15 +59,15 @@ public class Calculate extends MethodOperation {
         String typeString = element.getAttribute("type");
 
         if ("Double".equals(typeString)) {
-            type = this.TYPE_DOUBLE;
+            type = Calculate.TYPE_DOUBLE;
         } else if ("Float".equals(typeString)) {
-            type = this.TYPE_FLOAT;
+            type = Calculate.TYPE_FLOAT;
         } else if ("Long".equals(typeString)) {
-            type = this.TYPE_LONG;
+            type = Calculate.TYPE_LONG;
         } else if ("Integer".equals(typeString)) {
-            type = this.TYPE_INTEGER;
+            type = Calculate.TYPE_INTEGER;
         } else {
-            type = this.TYPE_DOUBLE;
+            type = Calculate.TYPE_DOUBLE;
         }
 
         List calcopElements = UtilXml.childElementList(element, null);
@@ -187,17 +182,17 @@ public class Calculate extends MethodOperation {
             String operatorStr = element.getAttribute("operator");
 
             if ("get".equals(operatorStr)) {
-                operator = this.OPERATOR_ADD;
+                operator = CalcOp.OPERATOR_ADD;
             } else if ("add".equals(operatorStr)) {
-                operator = this.OPERATOR_ADD;
+                operator = CalcOp.OPERATOR_ADD;
             } else if ("subtract".equals(operatorStr)) {
-                operator = this.OPERATOR_SUBTRACT;
+                operator = CalcOp.OPERATOR_SUBTRACT;
             } else if ("multiply".equals(operatorStr)) {
-                operator = this.OPERATOR_MULTIPLY;
+                operator = CalcOp.OPERATOR_MULTIPLY;
             } else if ("divide".equals(operatorStr)) {
-                operator = this.OPERATOR_DIVIDE;
+                operator = CalcOp.OPERATOR_DIVIDE;
             } else if ("negative".equals(operatorStr)) {
-                operator = this.OPERATOR_NEGATIVE;
+                operator = CalcOp.OPERATOR_NEGATIVE;
             }
 
             List calcopElements = UtilXml.childElementList(element, null);

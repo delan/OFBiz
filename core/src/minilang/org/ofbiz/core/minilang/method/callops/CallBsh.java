@@ -24,10 +24,7 @@
 package org.ofbiz.core.minilang.method.callops;
 
 import java.io.*;
-import java.net.*;
-import java.text.*;
 import java.util.*;
-import javax.servlet.http.*;
 
 import org.w3c.dom.*;
 import org.ofbiz.core.util.*;

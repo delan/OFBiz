@@ -25,18 +25,16 @@
 package org.ofbiz.core.minilang;
 
 import java.util.*;
-import java.lang.reflect.*;
 
-import org.ofbiz.core.util.*;
 import org.ofbiz.core.service.*;
 import org.ofbiz.core.service.engine.*;
 
 /**
  * Standard Java Static Method Service Engine
  *
- *@author     <a href="mailto:jonesde@ofbiz.org">David E. Jones</a>
- *@created    February 16, 2002
- *@version    1.0
+ * @author     <a href="mailto:jonesde@ofbiz.org">David E. Jones</a>
+ * @version    $Revision$
+ * @since      2.0
  */
 public final class SimpleServiceEngine extends GenericAsyncEngine {
 

@@ -2,7 +2,6 @@ package org.ofbiz.core.rules.parse.tokens;
 
 
 import java.util.*;
-import org.ofbiz.core.rules.parse.*;
 
 
 /**

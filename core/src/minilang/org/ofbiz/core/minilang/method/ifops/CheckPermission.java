@@ -1,7 +1,7 @@
 /*
  * $Id$
  *
- *  Copyright (c) 2001 The Open For Business Project - www.ofbiz.org
+ *  Copyright (c) 2001, 2002 The Open For Business Project - www.ofbiz.org
  *
  *  Permission is hereby granted, free of charge, to any person obtaining a
  *  copy of this software and associated documentation files (the "Software"),
@@ -21,14 +21,9 @@
  *  OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR
  *  THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  */
-
 package org.ofbiz.core.minilang.method.ifops;
 
-
-import java.net.*;
-import java.text.*;
 import java.util.*;
-import javax.servlet.http.*;
 
 import org.w3c.dom.*;
 import org.ofbiz.core.util.*;
@@ -37,16 +32,16 @@ import org.ofbiz.core.minilang.method.*;
 import org.ofbiz.core.entity.*;
 import org.ofbiz.core.security.*;
 
-
 /**
  * Iff the user does not have the specified permission the fail-message 
  * or fail-property sub-elements are used to add a message to the error-list.
  *
- *@author     <a href="mailto:jonesde@ofbiz.org">David E. Jones</a>
- *@created    February 19, 2002
- *@version    1.0
+ * @author     <a href="mailto:jonesde@ofbiz.org">David E. Jones</a>
+ * @version    $Revision$
+ * @since      2.0
  */
 public class CheckPermission extends MethodOperation {
+    
     String message = null;
     String propertyResource = null;
     boolean isProperty = false;

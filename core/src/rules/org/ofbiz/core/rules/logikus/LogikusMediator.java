@@ -22,17 +22,11 @@
  *  OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR
  *  THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  */
-
 package org.ofbiz.core.rules.logikus;
 
-
 import javax.swing.*;
-import javax.swing.border.*;
-import java.awt.*;
 import java.awt.event.*;
 import org.ofbiz.core.rules.engine.*;
-import org.ofbiz.core.rules.utensil.*;
-
 
 /**
  * This class supports a <code>LogikusIde</code> object, handling the interaction of the IDE's components.
@@ -58,6 +52,7 @@ import org.ofbiz.core.rules.utensil.*;
  * @version 1.0
  */
 public class LogikusMediator implements ActionListener, Runnable {
+    
     protected JButton proveNextButton;
     protected JButton proveRestButton;
     protected JButton haltButton;

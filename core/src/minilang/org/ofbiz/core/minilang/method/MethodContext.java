@@ -23,12 +23,9 @@
  */
 package org.ofbiz.core.minilang.method;
 
-import java.net.*;
-import java.text.*;
 import java.util.*;
 import javax.servlet.http.*;
 
-import org.w3c.dom.*;
 import org.ofbiz.core.minilang.*;
 import org.ofbiz.core.entity.*;
 import org.ofbiz.core.service.*;
