@@ -20,7 +20,7 @@
  *  THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  *
  *@author     Andy Zeneski (jaz@ofbiz.org)
- *@version    $Revision: 1.2 $
+ *@version    $Revision: 1.3 $
  *@since      2.1
 -->
 
@@ -42,7 +42,7 @@
   <#if security.hasEntityPermission("ORDERMGR", "_CREATE", session)>
   <div class="col"><a href="<@ofbizUrl>/orderentry</@ofbizUrl>" class="${selectedLeftClassMap.orderentry?default(unselectedLeftClassName)}">Order&nbsp;Entry</a></div>  
   </#if>
-  <#if security.hasEntityPermission("ORDERMGR", "_VIEW", session)>
+  <#if security.hasEntityPermission("ORDERMGR", "_RETURN", session)>
   <div class="col"><a href="<@ofbizUrl>/findreturn</@ofbizUrl>" class="${selectedLeftClassMap.return?default(unselectedLeftClassName)}">Returns</a></div>
   </#if>
                    
