@@ -341,55 +341,496 @@ them in the DTD):</p>
 <p>Okay, enough of the general stuff, here is a catalog and description of the 
 available operations.</p>
 
+<!-- ======================================================================= -->
+<!-- ======================================================================= -->
 <hr>
 <h4><a name='Call'>Call Operations</a></h4>
 
 <p><b><u>call-map-processor</u></b></p>
+
+<table cellpadding='2' cellspacing='0' border='1'>
+<tr>
+    <td><b>Attribute&nbsp;Name</b></td>
+    <td><b>Required?</b></td>
+    <td><b>Description</b></td>
+</tr>
+<tr>
+    <td>xml-resource</td><td>N</td>
+    <td>The full path and filename on the classpath of the XML file which
+    contains an external map processor to execute. This is only required if
+    an external map processor is desired.</td>
+</tr>
+<tr>
+    <td>processor-name</td><td>N</td>
+    <td>The name of the external map processor to execute in the specified 
+    xml-resource. This is only required if an external map processor is desired.</td>
+</tr>
+<tr>
+    <td>in-map-name</td><td>Y</td>
+    <td>The name of a map in the method environment to use as the input map.</td>
+</tr>
+<tr>
+    <td>out-map-name</td><td>Y</td>
+    <td>The name of a map in the method environment to use as the output map.
+    Will be created if it does not exist already. If already exists will be added
+    to in place.</td>
+</tr>
+<tr>
+    <td>error-list-name</td><td>N</td>
+    <td>The name of a list in the method environment that the error messages will
+    be added to. Will be created if does not exist. Defaults to "error_list".</td>
+</tr>
+</table>
+<br>
+<table cellpadding='2' cellspacing='0' border='1'>
+<tr>
+    <td><b>Sub-Element&nbsp;Name</b></td>
+    <td><b>How&nbsp;Many</b></td>
+    <td><b>Description</b></td>
+</tr>
+<tr>
+    <td>simple-map-processor</td><td>0 or 1</td>
+    <td>Uses the same definition as the simple-map-processor in the context of
+    a simple-map-processors XML file. Allows for an inlined simple-map-processor.</td>
+</tr>
+</table>
+
 <p>The call-map-processor tag invokes a simple map processor from an existing 
 map, creating a new map or adding to an existing one if the named out-map already
 exists. Resulting messages are added to the named list, and a new list is
 created if a list with the given name does not yet exist. Note that all lists 
 and maps exist in the same context and must have unique names.</p>
 
+<p>An inline simple-map-processor can be used by putting a <b>simple-map-processor</b>
+tag under the <b>call-map-processor</b> tag. If both an external and an inline 
+map-processor are specified, the external one will be called first, allowing the 
+inline one to override its behavior</p>
+
 <p><b><u>call-service</u></b></p>
+
+<table cellpadding='2' cellspacing='0' border='1'>
+<tr>
+    <td><b>Attribute&nbsp;Name</b></td>
+    <td><b>Required?</b></td>
+    <td><b>Description</b></td>
+</tr>
+<tr>
+    <td>service-name</td><td>Y</td>
+    <td></td>
+</tr>
+<tr>
+    <td>in-map-name</td><td>Y</td>
+    <td></td>
+</tr>
+<tr>
+    <td>include-user-login</td><td>N</td>
+    <td>Defaults to "true".</td>
+</tr>
+<tr>
+    <td>error-code</td><td>N</td>
+    <td>Defaults to "error".</td>
+</tr>
+<tr>
+    <td>success-code</td><td>N</td>
+    <td>Defaults to "success".</td>
+</tr>
+</table>
+<br>
+<table cellpadding='2' cellspacing='0' border='1'>
+<tr>
+    <td><b>Sub-Element&nbsp;Name</b></td>
+    <td><b>How&nbsp;Many</b></td>
+    <td><b>Description</b></td>
+</tr>
+<tr>
+    <td>error-prefix</td><td>0 or 1</td>
+    <td></td>
+</tr>
+<tr>
+    <td>error-suffix</td><td>0 or 1</td>
+    <td></td>
+</tr>
+<tr>
+    <td>success-prefix</td><td>0 or 1</td>
+    <td></td>
+</tr>
+<tr>
+    <td>success-suffix</td><td>0 or 1</td>
+    <td></td>
+</tr>
+<tr>
+    <td>message-prefix</td><td>0 or 1</td>
+    <td></td>
+</tr>
+<tr>
+    <td>message-suffix</td><td>0 or 1</td>
+    <td></td>
+</tr>
+<tr>
+    <td>default-message</td><td>0 or 1</td>
+    <td></td>
+</tr>
+<tr>
+    <td>results-to-map</td><td>0 to many</td>
+    <td></td>
+</tr>
+<tr>
+    <td>result-to-field</td><td>0 to many</td>
+    <td></td>
+</tr>
+<tr>
+    <td>result-to-request</td><td>0 to many</td>
+    <td></td>
+</tr>
+<tr>
+    <td>result-to-session</td><td>0 to many</td>
+    <td></td>
+</tr>
+<tr>
+    <td>result-to-result</td><td>0 to many</td>
+    <td></td>
+</tr>
+</table>
+
 <p>The call-service tag invokes a service through the Service Engine. If the
 specified error code is returned from the service, the event is aborted
 and the transaction in the current thread is rolled back. Otherwise, the
 remaining operations are invoked.</p>
 
+<p>The result-to-request and result-to-session elements will be IGNORED when 
+called in a service context. So, they are ONLY used when called in an event context.</p>
+
 <p><b><u>call-service-asynch</u></b></p>
+<table cellpadding='2' cellspacing='0' border='1'>
+<tr>
+    <td><b>Attribute&nbsp;Name</b></td>
+    <td><b>Required?</b></td>
+    <td><b>Description</b></td>
+</tr>
+<tr>
+    <td>service-name</td><td>Y</td>
+    <td></td>
+</tr>
+<tr>
+    <td>in-map-name</td><td>Y</td>
+    <td></td>
+</tr>
+<tr>
+    <td>include-user-login</td><td>N</td>
+    <td>Defaults to "true".</td>
+</tr>
+</table>
+
+<p>Calls a service asynchronously and ignores the result, so no return messages 
+are used; that doesn't mean no errors will result, but they would just be
+system errors like database failures, etc which all have system error messages.</p>
 
 <p><b><u>call-bsh</u></b></p>
+<table cellpadding='2' cellspacing='0' border='1'>
+<tr>
+    <td><b>Attribute&nbsp;Name</b></td>
+    <td><b>Required?</b></td>
+    <td><b>Description</b></td>
+</tr>
+<tr>
+    <td>resource</td><td>N</td>
+    <td></td>
+</tr>
+<tr>
+    <td>error-list-name</td><td>N</td>
+    <td>Defaults to "error_list".</td>
+</tr>
+</table>
+<p>Runs an external bsh script from the classpath if resource is specified and 
+then runs the inlined bsh script if any is specified.</p>
+
+<p>The bsh context is the current simple-method environment including maps, lists
+and special objects whose names are defined in the simple-method attributes.</p>
+
+<p>The current env cannot be modified, but if a Map is returned by the bsh block
+the entries in the map will be put into the current env.</p>
+
+<p>Error messages go on the error list and are handled with the check-errors tag.</p>
 
 <p><b><u>check-errors</u></b></p>
+<table cellpadding='2' cellspacing='0' border='1'>
+<tr>
+    <td><b>Attribute&nbsp;Name</b></td>
+    <td><b>Required?</b></td>
+    <td><b>Description</b></td>
+</tr>
+<tr>
+    <td>error-code</td><td>N</td>
+    <td>Defaults to "error".</td>
+</tr>
+<tr>
+    <td>error-list-name</td><td>N</td>
+    <td>Defaults to "error_list".</td>
+</tr>
+</table>
+
 <p>The message lists from invoking are not checked until the check-errors tag
 is used. The named list is checked and if it contains any messages they are 
 put in the servlet request object and the specified error code is returned to
 the control servlet.</p>
 
+<!-- ======================================================================= -->
+<!-- ======================================================================= -->
 <hr>
 <h4><a name='Event'>Event Specific Operations</a></h4>
 
 <p><b><u>field-to-request</u></b></p>
-<p>The field-to-request tag copies a field from a map to the specified request
+<table cellpadding='2' cellspacing='0' border='1'>
+<tr>
+    <td><b>Attribute&nbsp;Name</b></td>
+    <td><b>Required?</b></td>
+    <td><b>Description</b></td>
+</tr>
+<tr>
+    <td>map-name</td><td>Y</td>
+    <td>The name of the map in the method environment.</td>
+</tr>
+<tr>
+    <td>field-name</td><td>Y</td>
+    <td>The name (key) of the map field to use.</td>
+</tr>
+<tr>
+    <td>request-name</td><td>N</td>
+    <td>The name of the request attribute to use. Defaults to the field-name.</td>
+</tr>
+</table>
+<p>The field-to-request tag copies a field from a map to the specified servlet request
 attribute.</p>
+
+<p>The tag is only used when the simple-method is called as an event, it is ignored otherwise.</p>
 
 <p><b><u>field-to-session</u></b></p>
-<p>The field-to-request tag copies a field from a map to the specified session
+<table cellpadding='2' cellspacing='0' border='1'>
+<tr>
+    <td><b>Attribute&nbsp;Name</b></td>
+    <td><b>Required?</b></td>
+    <td><b>Description</b></td>
+</tr>
+<tr>
+    <td>map-name</td><td>Y</td>
+    <td>The name of the map in the method environment.</td>
+</tr>
+<tr>
+    <td>field-name</td><td>Y</td>
+    <td>The name (key) of the map field to use.</td>
+</tr>
+<tr>
+    <td>session-name</td><td>N</td>
+    <td>The name of the session attribute to use. Defaults to the field-name.</td>
+</tr>
+</table>
+<p>The field-to-session tag copies a field from a map to the specified servlet session
 attribute.</p>
 
+<p>The tag is only used when the simple-method is called as an event, it is ignored otherwise.</p>
+
+<p><b><u>request-to-field</u></b></p>
+<table cellpadding='2' cellspacing='0' border='1'>
+<tr>
+    <td><b>Attribute&nbsp;Name</b></td>
+    <td><b>Required?</b></td>
+    <td><b>Description</b></td>
+</tr>
+<tr>
+    <td>map-name</td><td>Y</td>
+    <td>The name of the map in the method environment.</td>
+</tr>
+<tr>
+    <td>field-name</td><td>Y</td>
+    <td>The name (key) of the map field to use.</td>
+</tr>
+<tr>
+    <td>request-name</td><td>N</td>
+    <td>The name of the request attribute to use. Defaults to the field-name.</td>
+</tr>
+</table>
+<p>The request-to-field tag copies an attribute from the servlet request to a field of a 
+map in the method environment.</p>
+
+<p>The tag is only used when the simple-method is called as an event, it is ignored otherwise.</p>
+
+<p><b><u>session-to-field</u></b></p>
+<table cellpadding='2' cellspacing='0' border='1'>
+<tr>
+    <td><b>Attribute&nbsp;Name</b></td>
+    <td><b>Required?</b></td>
+    <td><b>Description</b></td>
+</tr>
+<tr>
+    <td>map-name</td><td>Y</td>
+    <td>The name of the map in the method environment.</td>
+</tr>
+<tr>
+    <td>field-name</td><td>Y</td>
+    <td>The name (key) of the map field to use.</td>
+</tr>
+<tr>
+    <td>session-name</td><td>N</td>
+    <td>The name of the session attribute to use. Defaults to the field-name.</td>
+</tr>
+</table>
+<p>The session-to-field tag copies an attribute from the servlet session to a field of a 
+map in the method environment.</p>
+
+<p>The tag is only used when the simple-method is called as an event, it is ignored otherwise.</p>
+
+<p><b><u>env-to-request</u></b></p>
+<table cellpadding='2' cellspacing='0' border='1'>
+<tr>
+    <td><b>Attribute&nbsp;Name</b></td>
+    <td><b>Required?</b></td>
+    <td><b>Description</b></td>
+</tr>
+<tr>
+    <td>env-name</td><td>Y</td>
+    <td>The name of the field in the method environment.</td>
+</tr>
+<tr>
+    <td>request-name</td><td>N</td>
+    <td>The name of the request attribute to use. Defaults to the env-name.</td>
+</tr>
+</table>
+<p>The env-to-request tag copies a field from the method environment to the specified servlet request
+attribute.</p>
+
+<p>The tag is only used when the simple-method is called as an event, it is ignored otherwise.</p>
+
+<p><b><u>env-to-session</u></b></p>
+<table cellpadding='2' cellspacing='0' border='1'>
+<tr>
+    <td><b>Attribute&nbsp;Name</b></td>
+    <td><b>Required?</b></td>
+    <td><b>Description</b></td>
+</tr>
+<tr>
+    <td>env-name</td><td>Y</td>
+    <td>The name of the field in the method environment.</td>
+</tr>
+<tr>
+    <td>session-name</td><td>N</td>
+    <td>The name of the session attribute to use. Defaults to the env-name.</td>
+</tr>
+</table>
+<p>The env-to-session tag copies a field in the method environment to the specified servlet session
+attribute.</p>
+
+<p>The tag is only used when the simple-method is called as an event, it is ignored otherwise.</p>
+
+<p><b><u>request-to-env</u></b></p>
+<table cellpadding='2' cellspacing='0' border='1'>
+<tr>
+    <td><b>Attribute&nbsp;Name</b></td>
+    <td><b>Required?</b></td>
+    <td><b>Description</b></td>
+</tr>
+<tr>
+    <td>env-name</td><td>Y</td>
+    <td>The name of the field in the method environment.</td>
+</tr>
+<tr>
+    <td>request-name</td><td>N</td>
+    <td>The name of the request attribute to use. Defaults to the env-name.</td>
+</tr>
+</table>
+<p>The request-to-env tag copies an attribute from the servlet request to a field of
+the method environment.</p>
+
+<p>The tag is only used when the simple-method is called as an event, it is ignored otherwise.</p>
+
+<p><b><u>session-to-env</u></b></p>
+<table cellpadding='2' cellspacing='0' border='1'>
+<tr>
+    <td><b>Attribute&nbsp;Name</b></td>
+    <td><b>Required?</b></td>
+    <td><b>Description</b></td>
+</tr>
+<tr>
+    <td>env-name</td><td>Y</td>
+    <td>The name of the field in the method environment.</td>
+</tr>
+<tr>
+    <td>session-name</td><td>N</td>
+    <td>The name of the session attribute to use. Defaults to the env-name.</td>
+</tr>
+</table>
+<p>The session-to-env tag copies an attribute from the servlet session to a field of  
+the method environment.</p>
+
+<p>The tag is only used when the simple-method is called as an event, it is ignored otherwise.</p>
+
+<!-- ======================================================================= -->
+<!-- ======================================================================= -->
 <hr>
 <h4><a name='Service'>Service Specific Operations</a></h4>
 
+<p><b><u>field-to-result</u></b></p>
+<table cellpadding='2' cellspacing='0' border='1'>
+<tr>
+    <td><b>Attribute&nbsp;Name</b></td>
+    <td><b>Required?</b></td>
+    <td><b>Description</b></td>
+</tr>
+<tr>
+    <td>map-name</td><td>Y</td>
+    <td>The name of the map in the method environment.</td>
+</tr>
+<tr>
+    <td>field-name</td><td>Y</td>
+    <td>The name (key) of the map field to use.</td>
+</tr>
+<tr>
+    <td>result-name</td><td>N</td>
+    <td>The name of the request attribute to use. Defaults to the field-name.</td>
+</tr>
+</table>
+<p>The field-to-result tag copies a field from a map to the specified service 
+result field.</p>
+
+<p>The tag is only used when the simple-method is called as a service, it is ignored otherwise.</p>
+
+<p><b><u>env-to-result</u></b></p>
+<table cellpadding='2' cellspacing='0' border='1'>
+<tr>
+    <td><b>Attribute&nbsp;Name</b></td>
+    <td><b>Required?</b></td>
+    <td><b>Description</b></td>
+</tr>
+<tr>
+    <td>env-name</td><td>Y</td>
+    <td>The name of the field in the method environment.</td>
+</tr>
+<tr>
+    <td>result-name</td><td>N</td>
+    <td>The name of the result field to use. Defaults to the env-name.</td>
+</tr>
+</table>
+<p>The env-to-result tag copies a field from the method environment to the 
+specified service result field.</p>
+
+<p>The tag is only used when the simple-method is called as a service, it is ignored otherwise.</p>
+
+<!-- ======================================================================= -->
+<!-- ======================================================================= -->
 <hr>
 <h4><a name='Environment'>Method Environment Operations</a></h4>
 
+<!-- ======================================================================= -->
+<!-- ======================================================================= -->
 <hr>
 <h4><a name='Entity'>Entity Engine Operations</a></h4>
 
+<!-- ======================================================================= -->
+<!-- ======================================================================= -->
 <hr>
 <h4><a name='Conditional'>Conditional (If) Operations</a></h4>
 
+<!-- ======================================================================= -->
+<!-- ======================================================================= -->
 <hr>
 <h4><a name='MethodExample'>Simple Methods Example</a></h4>
 <pre>
