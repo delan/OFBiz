@@ -57,8 +57,8 @@
   <GlAccount parentGlAccountId="121000" glAccountId="121200" accountCode="121200" 
     glAccountClassId="ASSET" glAccountTypeId="CURRENT_ASSET" glResourceTypeId="MONEY"
     accountName="ACCOUNTS RECEIVABLE - NON-SUFFICIENT FUNDS RETURNED CHECKS" description="" postedBalance="0.0"/>
-  <GlAccount parentGlAccountId="121000" glAccountId="-121900-" accountCode="-121900-" 
-    glAccountClassId="ASSET" glAccountTypeId="CURRENT_ASSET" glResourceTypeId="MONEY"
+  <GlAccount parentGlAccountId="121000" glAccountId="121900" accountCode="121900" 
+    glAccountClassId="LIABILITY" glAccountTypeId="CURRENT_ASSET" glResourceTypeId="MONEY"
     accountName="ACCOUNTS RECEIVABLE TRADE - ALLOWANCE FOR BAD DEBT" description="" postedBalance="0.0"/>
 
   <GlAccount parentGlAccountId="120000" glAccountId="122000" accountCode="122000" 
@@ -76,8 +76,8 @@
   <GlAccount parentGlAccountId="122000" glAccountId="122400" accountCode="122400" 
     glAccountClassId="ASSET" glAccountTypeId="CURRENT_ASSET" glResourceTypeId="MONEY"
     accountName="ACCOUNTS RECEIVABLE - DEBIT / ATM CARDS" description="" postedBalance="0.0"/>
-  <GlAccount parentGlAccountId="122000" glAccountId="-122900-" accountCode="-122900-" 
-    glAccountClassId="ASSET" glAccountTypeId="CURRENT_ASSET" glResourceTypeId="MONEY"
+  <GlAccount parentGlAccountId="122000" glAccountId="122900" accountCode="122900" 
+    glAccountClassId="LIABILITY" glAccountTypeId="CURRENT_ASSET" glResourceTypeId="MONEY"
     accountName="ACCOUNTS RECEIVABLE CREDIT CARDS - ALLOWANCE FOR BAD DEBT" description="" postedBalance="0.0"/>
 
   <GlAccount parentGlAccountId="120000" glAccountId="123000" accountCode="123000" 
@@ -182,32 +182,32 @@
     glAccountClassId="ASSET" glAccountTypeId="FIXED_ASSET" glResourceTypeId="FINISHED_GOODS"
     accountName="VEHICLES" description="" postedBalance="0.0"/>
 
-  <GlAccount parentGlAccountId="100000" glAccountId="-180000-" accountCode="-180000-" 
-    glAccountClassId="ASSET" glAccountTypeId="FIXED_ASSET" glResourceTypeId="MONEY"
+  <GlAccount parentGlAccountId="100000" glAccountId="180000" accountCode="180000" 
+    glAccountClassId="LIABILITY" glAccountTypeId="FIXED_ASSET" glResourceTypeId="MONEY"
     accountName="ACCUMULATED DEPRECIATION" description="" postedBalance="0.0"/>
-  <GlAccount parentGlAccountId="-180000-" glAccountId="-181000-" accountCode="-181000-" 
-    glAccountClassId="ASSET" glAccountTypeId="FIXED_ASSET" glResourceTypeId="MONEY"
+  <GlAccount parentGlAccountId="180000" glAccountId="181000" accountCode="181000" 
+    glAccountClassId="LIABILITY" glAccountTypeId="FIXED_ASSET" glResourceTypeId="MONEY"
     accountName="ACCUMULATED DEPRECIATION - BUILDING" description="" postedBalance="0.0"/>
-  <GlAccount parentGlAccountId="-180000-" glAccountId="-182000-" accountCode="-182000-" 
-    glAccountClassId="ASSET" glAccountTypeId="FIXED_ASSET" glResourceTypeId="MONEY"
+  <GlAccount parentGlAccountId="180000" glAccountId="182000" accountCode="182000" 
+    glAccountClassId="LIABILITY" glAccountTypeId="FIXED_ASSET" glResourceTypeId="MONEY"
     accountName="ACCUMULATED DEPRECIATION - LAND IMPROVEMENTS" description="" postedBalance="0.0"/>
-  <GlAccount parentGlAccountId="-180000-" glAccountId="-183000-" accountCode="-183000-" 
-    glAccountClassId="ASSET" glAccountTypeId="FIXED_ASSET" glResourceTypeId="MONEY"
+  <GlAccount parentGlAccountId="180000" glAccountId="183000" accountCode="183000" 
+    glAccountClassId="LIABILITY" glAccountTypeId="FIXED_ASSET" glResourceTypeId="MONEY"
     accountName="ACCUMULATED DEPRECIATION - BUILDING IMPROVEMENTS" description="" postedBalance="0.0"/>
-  <GlAccount parentGlAccountId="-180000-" glAccountId="-184000-" accountCode="-184000-" 
-    glAccountClassId="ASSET" glAccountTypeId="FIXED_ASSET" glResourceTypeId="MONEY"
+  <GlAccount parentGlAccountId="180000" glAccountId="184000" accountCode="184000" 
+    glAccountClassId="LIABILITY" glAccountTypeId="FIXED_ASSET" glResourceTypeId="MONEY"
     accountName="ACCUMULATED DEPRECIATION - LEASEHOLD IMPROVEMENTS" description="" postedBalance="0.0"/>
-  <GlAccount parentGlAccountId="-180000-" glAccountId="-185000-" accountCode="-185000-" 
-    glAccountClassId="ASSET" glAccountTypeId="FIXED_ASSET" glResourceTypeId="MONEY"
+  <GlAccount parentGlAccountId="180000" glAccountId="185000" accountCode="185000" 
+    glAccountClassId="LIABILITY" glAccountTypeId="FIXED_ASSET" glResourceTypeId="MONEY"
     accountName="ACCUMULATED DEPRECIATION - FURNITURE FIXTURES EQUIPMENT" description="" postedBalance="0.0"/>
-  <GlAccount parentGlAccountId="-180000-" glAccountId="-186000-" accountCode="-186000-" 
-    glAccountClassId="ASSET" glAccountTypeId="FIXED_ASSET" glResourceTypeId="MONEY"
+  <GlAccount parentGlAccountId="180000" glAccountId="186000" accountCode="186000" 
+    glAccountClassId="LIABILITY" glAccountTypeId="FIXED_ASSET" glResourceTypeId="MONEY"
     accountName="ACCUMULATED DEPRECIATION - DATA PROCESSING EQUIP" description="" postedBalance="0.0"/>
-  <GlAccount parentGlAccountId="-180000-" glAccountId="-187000-" accountCode="-187000-" 
-    glAccountClassId="ASSET" glAccountTypeId="FIXED_ASSET" glResourceTypeId="MONEY"
+  <GlAccount parentGlAccountId="180000" glAccountId="187000" accountCode="187000" 
+    glAccountClassId="LIABILITY" glAccountTypeId="FIXED_ASSET" glResourceTypeId="MONEY"
     accountName="ACCUMULATED DEPRECIATION - DATA PROCESSING SOFTWARE" description="" postedBalance="0.0"/>
-  <GlAccount parentGlAccountId="-180000-" glAccountId="-188000-" accountCode="-188000-" 
-    glAccountClassId="ASSET" glAccountTypeId="FIXED_ASSET" glResourceTypeId="MONEY"
+  <GlAccount parentGlAccountId="180000" glAccountId="188000" accountCode="188000" 
+    glAccountClassId="LIABILITY" glAccountTypeId="FIXED_ASSET" glResourceTypeId="MONEY"
     accountName="ACCUMULATED DEPRECIATION - VEHICLES" description="" postedBalance="0.0"/>
     
   <GlAccount parentGlAccountId="100000" glAccountId="190000" accountCode="190000" 
@@ -229,8 +229,8 @@
   <GlAccount parentGlAccountId="191000" glAccountId="191800" accountCode="191800" 
     glAccountClassId="ASSET" glAccountTypeId="FIXED_ASSET" glResourceTypeId="MONEY"
     accountName="OTHER INTANGIBLE ASSETS" description="" postedBalance="0.0"/>
-  <GlAccount parentGlAccountId="191000" glAccountId="-191900-" accountCode="-191900-" 
-    glAccountClassId="ASSET" glAccountTypeId="FIXED_ASSET" glResourceTypeId="MONEY"
+  <GlAccount parentGlAccountId="191000" glAccountId="191900" accountCode="191900" 
+    glAccountClassId="LIABILITY" glAccountTypeId="FIXED_ASSET" glResourceTypeId="MONEY"
     accountName="ACCUMULATED AMORTIZATION" description="" postedBalance="0.0"/>
     
   <GlAccount parentGlAccountId="190000" glAccountId="192000" accountCode="192000" 
@@ -245,127 +245,127 @@
 
 <!-- LIABILITIES -->
   <GlAccount parentGlAccountId="" glAccountId="200000" accountCode="200000" 
-    glAccountClassId="LIABILITIES" glAccountTypeId="" glResourceTypeId="MONEY"  
+    glAccountClassId="LIABILITY" glAccountTypeId="" glResourceTypeId="MONEY"  
     accountName="LIABILITIES" description="" postedBalance="0.0"/>
     
   <GlAccount parentGlAccountId="200000" glAccountId="210000" accountCode="210000" 
-    glAccountClassId="LIABILITIES" glAccountTypeId="CURRENT LIABILITIES" glResourceTypeId="MONEY"  
+    glAccountClassId="LIABILITY" glAccountTypeId="CURRENT_LIABILITY" glResourceTypeId="MONEY"  
     accountName="ACCOUNTS PAYABLE" description="" postedBalance="0.0"/>
   <GlAccount parentGlAccountId="210000" glAccountId="211000" accountCode="211000" 
-    glAccountClassId="LIABILITIES" glAccountTypeId="CURRENT LIABILITIES" glResourceTypeId="MONEY"  
+    glAccountClassId="LIABILITY" glAccountTypeId="CURRENT_LIABILITY" glResourceTypeId="MONEY"  
     accountName="ACCOUNTS PAYABLE - MERCHANDISE" description="" postedBalance="0.0"/>
   <GlAccount parentGlAccountId="210000" glAccountId="212000" accountCode="212000" 
-    glAccountClassId="LIABILITIES" glAccountTypeId="CURRENT LIABILITIES" glResourceTypeId="MONEY"  
+    glAccountClassId="LIABILITY" glAccountTypeId="CURRENT_LIABILITY" glResourceTypeId="MONEY"  
     accountName="ACCOUNTS PAYABLE - OPERATING" description="" postedBalance="0.0"/>
   
   <GlAccount parentGlAccountId="210000" glAccountId="213000" accountCode="213000" 
-    glAccountClassId="LIABILITIES" glAccountTypeId="CURRENT LIABILITIES" glResourceTypeId="MONEY"  
+    glAccountClassId="LIABILITY" glAccountTypeId="CURRENT_LIABILITY" glResourceTypeId="MONEY"  
     accountName="CUSTOMER CREDITS" description="" postedBalance="0.0"/>
   <GlAccount parentGlAccountId="213000" glAccountId="213100" accountCode="213100" 
-    glAccountClassId="LIABILITIES" glAccountTypeId="CURRENT LIABILITIES" glResourceTypeId="MONEY"  
+    glAccountClassId="LIABILITY" glAccountTypeId="CURRENT_LIABILITY" glResourceTypeId="MONEY"  
     accountName="MERCHANDISE CREDITS UNREDEEMED" description="" postedBalance="0.0"/>
   <GlAccount parentGlAccountId="213000" glAccountId="213200" accountCode="213200" 
-    glAccountClassId="LIABILITIES" glAccountTypeId="CURRENT LIABILITIES" glResourceTypeId="MONEY"  
+    glAccountClassId="LIABILITY" glAccountTypeId="CURRENT_LIABILITY" glResourceTypeId="MONEY"  
     accountName="GIFT CERTIFICATES UNREDEEMED" description="" postedBalance="0.0"/>
   <GlAccount parentGlAccountId="213000" glAccountId="213300" accountCode="213300" 
-    glAccountClassId="LIABILITIES" glAccountTypeId="CURRENT LIABILITIES" glResourceTypeId="MONEY"  
+    glAccountClassId="LIABILITY" glAccountTypeId="CURRENT_LIABILITY" glResourceTypeId="MONEY"  
     accountName="SPECIAL ORDER DEPOSITS" description="" postedBalance="0.0"/>
   <GlAccount parentGlAccountId="213000" glAccountId="213400" accountCode="213400" 
-    glAccountClassId="LIABILITIES" glAccountTypeId="CURRENT LIABILITIES" glResourceTypeId="MONEY"  
+    glAccountClassId="LIABILITY" glAccountTypeId="CURRENT_LIABILITY" glResourceTypeId="MONEY"  
     accountName="MAIL ORDER DEPOSITS" description="" postedBalance="0.0"/>
   
   <GlAccount parentGlAccountId="200000" glAccountId="220000" accountCode="220000" 
-    glAccountClassId="LIABILITIES" glAccountTypeId="CURRENT LIABILITIES" glResourceTypeId="MONEY"  
+    glAccountClassId="LIABILITY" glAccountTypeId="CURRENT_LIABILITY" glResourceTypeId="MONEY"  
     accountName="ACCRUED EXPENSES" description="" postedBalance="0.0"/>    
   <GlAccount parentGlAccountId="220000" glAccountId="221000" accountCode="221000" 
-    glAccountClassId="LIABILITIES" glAccountTypeId="CURRENT LIABILITIES" glResourceTypeId="MONEY"  
+    glAccountClassId="LIABILITY" glAccountTypeId="CURRENT_LIABILITY" glResourceTypeId="MONEY"  
     accountName="ACCRUED PAYROLL" description="" postedBalance="0.0"/>
   
   <GlAccount parentGlAccountId="220000" glAccountId="222000" accountCode="222000" 
-    glAccountClassId="LIABILITIES" glAccountTypeId="CURRENT LIABILITIES" glResourceTypeId="MONEY"  
+    glAccountClassId="LIABILITY" glAccountTypeId="CURRENT_LIABILITY" glResourceTypeId="MONEY"  
     accountName="PAYROLL WITHHOLDINGS" description="" postedBalance="0.0"/>
   <GlAccount parentGlAccountId="222000" glAccountId="222100" accountCode="222100" 
-    glAccountClassId="LIABILITIES" glAccountTypeId="CURRENT LIABILITIES" glResourceTypeId="MONEY"  
+    glAccountClassId="LIABILITY" glAccountTypeId="CURRENT_LIABILITY" glResourceTypeId="MONEY"  
     accountName="FEDERAL WITHHOLDING" description="" postedBalance="0.0"/>
   <GlAccount parentGlAccountId="222000" glAccountId="222200" accountCode="222200" 
-    glAccountClassId="LIABILITIES" glAccountTypeId="CURRENT LIABILITIES" glResourceTypeId="MONEY"  
+    glAccountClassId="LIABILITY" glAccountTypeId="CURRENT_LIABILITY" glResourceTypeId="MONEY"  
     accountName="FICA WITHHOLDING" description="" postedBalance="0.0"/>
   <GlAccount parentGlAccountId="222000" glAccountId="222300" accountCode="222300" 
-    glAccountClassId="LIABILITIES" glAccountTypeId="CURRENT LIABILITIES" glResourceTypeId="MONEY"  
+    glAccountClassId="LIABILITY" glAccountTypeId="CURRENT_LIABILITY" glResourceTypeId="MONEY"  
     accountName="MEDICARE WITHHOLDING" description="" postedBalance="0.0"/>
   <GlAccount parentGlAccountId="222000" glAccountId="222400" accountCode="222400" 
-    glAccountClassId="LIABILITIES" glAccountTypeId="CURRENT LIABILITIES" glResourceTypeId="MONEY"  
+    glAccountClassId="LIABILITY" glAccountTypeId="CURRENT_LIABILITY" glResourceTypeId="MONEY"  
     accountName="STATE WITHHOLDING" description="" postedBalance="0.0"/>
   <GlAccount parentGlAccountId="222000" glAccountId="222500" accountCode="222500" 
-    glAccountClassId="LIABILITIES" glAccountTypeId="CURRENT LIABILITIES" glResourceTypeId="MONEY"  
+    glAccountClassId="LIABILITY" glAccountTypeId="CURRENT_LIABILITY" glResourceTypeId="MONEY"  
     accountName="LOCAL WITHHOLDING" description="" postedBalance="0.0"/>
   <GlAccount parentGlAccountId="222000" glAccountId="222600" accountCode="222600" 
-    glAccountClassId="LIABILITIES" glAccountTypeId="CURRENT LIABILITIES" glResourceTypeId="MONEY"  
+    glAccountClassId="LIABILITY" glAccountTypeId="CURRENT_LIABILITY" glResourceTypeId="MONEY"  
     accountName="401k - PENSION WITHHOLDING" description="" postedBalance="0.0"/>
   <GlAccount parentGlAccountId="222000" glAccountId="222700" accountCode="222700" 
-    glAccountClassId="LIABILITIES" glAccountTypeId="CURRENT LIABILITIES" glResourceTypeId="MONEY"  
+    glAccountClassId="LIABILITY" glAccountTypeId="CURRENT_LIABILITY" glResourceTypeId="MONEY"  
     accountName="GARNISHMENT WITHHOLDING" description="" postedBalance="0.0"/>
   <GlAccount parentGlAccountId="222000" glAccountId="222900" accountCode="222900" 
-    glAccountClassId="LIABILITIES" glAccountTypeId="CURRENT LIABILITIES" glResourceTypeId="MONEY"  
+    glAccountClassId="LIABILITY" glAccountTypeId="CURRENT_LIABILITY" glResourceTypeId="MONEY"  
     accountName="MISCELLANEOUS WITHHOLDING" description="" postedBalance="0.0"/>
   
   <GlAccount parentGlAccountId="220000" glAccountId="223000" accountCode="223000" 
-    glAccountClassId="LIABILITIES" glAccountTypeId="CURRENT LIABILITIES" glResourceTypeId="MONEY"  
+    glAccountClassId="LIABILITY" glAccountTypeId="CURRENT_LIABILITY" glResourceTypeId="MONEY"  
     accountName="ACCRUED PAYROLL TAXES" description="" postedBalance="0.0"/>
   <GlAccount parentGlAccountId="223000" glAccountId="223100" accountCode="223100" 
-    glAccountClassId="LIABILITIES" glAccountTypeId="CURRENT LIABILITIES" glResourceTypeId="MONEY"  
+    glAccountClassId="LIABILITY" glAccountTypeId="CURRENT_LIABILITY" glResourceTypeId="MONEY"  
     accountName="ACCRUED PAYROLL TAXES - FICA EMPLOYER'S SHARE" description="" postedBalance="0.0"/>
   <GlAccount parentGlAccountId="223000" glAccountId="223200" accountCode="223200" 
-    glAccountClassId="LIABILITIES" glAccountTypeId="CURRENT LIABILITIES" glResourceTypeId="MONEY"  
+    glAccountClassId="LIABILITY" glAccountTypeId="CURRENT_LIABILITY" glResourceTypeId="MONEY"  
     accountName="ACCRUED PAYROLL TAXES - MEDICARE EMPLOYER'S SHARE" description="" postedBalance="0.0"/>
   <GlAccount parentGlAccountId="223000" glAccountId="223300" accountCode="223300" 
-    glAccountClassId="LIABILITIES" glAccountTypeId="CURRENT LIABILITIES" glResourceTypeId="MONEY"  
+    glAccountClassId="LIABILITY" glAccountTypeId="CURRENT_LIABILITY" glResourceTypeId="MONEY"  
     accountName="ACCRUED PAYROLL TAXES - FEDERAL UNEMPLOYMENT TAX" description="" postedBalance="0.0"/>
   <GlAccount parentGlAccountId="223000" glAccountId="223400" accountCode="223400" 
-    glAccountClassId="LIABILITIES" glAccountTypeId="CURRENT LIABILITIES" glResourceTypeId="MONEY"  
+    glAccountClassId="LIABILITY" glAccountTypeId="CURRENT_LIABILITY" glResourceTypeId="MONEY"  
     accountName="ACCRUED PAYROLL TAXES - STATE UNEMPLOYMENT TAX" description="" postedBalance="0.0"/>
 
   <GlAccount parentGlAccountId="220000" glAccountId="224000" accountCode="224000" 
-    glAccountClassId="LIABILITIES" glAccountTypeId="CURRENT LIABILITIES" glResourceTypeId="MONEY"  
+    glAccountClassId="LIABILITY" glAccountTypeId="CURRENT_LIABILITY" glResourceTypeId="MONEY"  
     accountName="SALES TAX COLLECTED" description="" postedBalance="0.0"/>
   <GlAccount parentGlAccountId="220000" glAccountId="225000" accountCode="225000" 
-    glAccountClassId="LIABILITIES" glAccountTypeId="CURRENT LIABILITIES" glResourceTypeId="MONEY"  
+    glAccountClassId="LIABILITY" glAccountTypeId="CURRENT_LIABILITY" glResourceTypeId="MONEY"  
     accountName="ACCRUED USE TAX" description="" postedBalance="0.0"/>
   <GlAccount parentGlAccountId="220000" glAccountId="226000" accountCode="226000" 
-    glAccountClassId="LIABILITIES" glAccountTypeId="CURRENT LIABILITIES" glResourceTypeId="MONEY"  
+    glAccountClassId="LIABILITY" glAccountTypeId="CURRENT_LIABILITY" glResourceTypeId="MONEY"  
     accountName="ACCRUED RETIREMENT PLAN EXPENSE" description="" postedBalance="0.0"/>
   <GlAccount parentGlAccountId="220000" glAccountId="229000" accountCode="229000" 
-    glAccountClassId="LIABILITIES" glAccountTypeId="CURRENT LIABILITIES" glResourceTypeId="MONEY"  
+    glAccountClassId="LIABILITY" glAccountTypeId="CURRENT_LIABILITY" glResourceTypeId="MONEY"  
     accountName="OTHER ACCRUED EXPENSES" description="" postedBalance="0.0"/>
     
   <GlAccount parentGlAccountId="200000" glAccountId="230000" accountCode="230000" 
-    glAccountClassId="LIABILITIES" glAccountTypeId="CURRENT LIABILITIES" glResourceTypeId="MONEY"  
+    glAccountClassId="LIABILITY" glAccountTypeId="CURRENT_LIABILITY" glResourceTypeId="MONEY"  
     accountName="CURRENT NOTES PAYABLE" description="" postedBalance="0.0"/>
   <GlAccount parentGlAccountId="230000" glAccountId="231000" accountCode="231000" 
-    glAccountClassId="LIABILITIES" glAccountTypeId="CURRENT LIABILITIES" glResourceTypeId="MONEY"  
+    glAccountClassId="LIABILITY" glAccountTypeId="CURRENT_LIABILITY" glResourceTypeId="MONEY"  
     accountName="SHORT TERM OBLIGATION" description="" postedBalance="0.0"/>
   <GlAccount parentGlAccountId="230000" glAccountId="239000" accountCode="239000" 
-    glAccountClassId="LIABILITIES" glAccountTypeId="CURRENT LIABILITIES" glResourceTypeId="MONEY"  
+    glAccountClassId="LIABILITY" glAccountTypeId="CURRENT_LIABILITY" glResourceTypeId="MONEY"  
     accountName="CURRENT PORTION OF LONG-TERM DEBT" description="" postedBalance="0.0"/>
     
     
   <GlAccount parentGlAccountId="200000" glAccountId="240000" accountCode="240000" 
-    glAccountClassId="LIABILITIES" glAccountTypeId="LONG-TERM LIABILITIES" glResourceTypeId="MONEY"  
+    glAccountClassId="LIABILITY" glAccountTypeId="LONG_TERM_LIABILITY" glResourceTypeId="MONEY"  
     accountName="LONG-TERM NOTES PAYABLE" description="" postedBalance="0.0"/>
   <GlAccount parentGlAccountId="240000" glAccountId="241000" accountCode="241000" 
-    glAccountClassId="LIABILITIES" glAccountTypeId="LONG-TERM LIABILITIES" glResourceTypeId="MONEY"  
+    glAccountClassId="LIABILITY" glAccountTypeId="LONG_TERM_LIABILITY" glResourceTypeId="MONEY"  
     accountName="LONG-TERM OBLIGATION" description="" postedBalance="0.0"/>
   <GlAccount parentGlAccountId="240000" glAccountId="242000" accountCode="242000" 
-    glAccountClassId="LIABILITIES" glAccountTypeId="LONG-TERM LIABILITIES" glResourceTypeId="MONEY"  
+    glAccountClassId="LIABILITY" glAccountTypeId="LONG_TERM_LIABILITY" glResourceTypeId="MONEY"  
     accountName="MORTGAGE NOTE PAYABLE" description="" postedBalance="0.0"/>
   <GlAccount parentGlAccountId="240000" glAccountId="243000" accountCode="243000" 
-    glAccountClassId="LIABILITIES" glAccountTypeId="LONG-TERM LIABILITIES" glResourceTypeId="MONEY"  
+    glAccountClassId="LIABILITY" glAccountTypeId="LONG_TERM_LIABILITY" glResourceTypeId="MONEY"  
     accountName="LOAN FROM OWNER OR STOCKHOLDER" description="" postedBalance="0.0"/>
   <GlAccount parentGlAccountId="240000" glAccountId="248000" accountCode="248000" 
-    glAccountClassId="LIABILITIES" glAccountTypeId="LONG-TERM LIABILITIES" glResourceTypeId="MONEY"  
+    glAccountClassId="LIABILITY" glAccountTypeId="LONG_TERM_LIABILITY" glResourceTypeId="MONEY"  
     accountName="OTHER LONG TERM OBLIGATION" description="" postedBalance="0.0"/>
-  <GlAccount parentGlAccountId="240000" glAccountId="-249000-" accountCode="-249000-" 
-    glAccountClassId="LIABILITIES" glAccountTypeId="LONG-TERM LIABILITIES" glResourceTypeId="MONEY"  
+  <GlAccount parentGlAccountId="240000" glAccountId="249000" accountCode="249000" 
+    glAccountClassId="ASSET" glAccountTypeId="LONG_TERM_LIABILITY" glResourceTypeId="MONEY"  
     accountName="CURRENT PORTION OF LONG-TERM DEBT" description="" postedBalance="0.0"/>
 
 <!-- NOTE:
@@ -379,98 +379,98 @@ according to which type of entity.
   
 <!-- SOLE PROPRIETORSHIP -->
   <GlAccount parentGlAccountId="300000" glAccountId="310000" accountCode="310000" 
-    glAccountClassId="EQUITY" glAccountTypeId="OWNERS' EQUITY AND NET WORTH" glResourceTypeId="MONEY"  
+    glAccountClassId="EQUITY" glAccountTypeId="OWNERS_EQUITY" glResourceTypeId="MONEY"  
     accountName="CAPITAL" description="" postedBalance="0.0"/>
-  <GlAccount parentGlAccountId="310000" glAccountId="-311000-" accountCode="-311000-" 
-    glAccountClassId="EQUITY" glAccountTypeId="OWNERS' EQUITY AND NET WORTH" glResourceTypeId="MONEY"  
+  <GlAccount parentGlAccountId="310000" glAccountId="311000" accountCode="311000" 
+    glAccountClassId="DISTRIBUTION" glAccountTypeId="OWNERS_EQUITY" glResourceTypeId="MONEY"  
     accountName="DRAWINGS" description="" postedBalance="0.0"/>
     
 <!-- PARTNERSHIP -->
   <GlAccount parentGlAccountId="300000" glAccountId="320000" accountCode="320000" 
-    glAccountClassId="EQUITY" glAccountTypeId="OWNERS' EQUITY AND NET WORTH" glResourceTypeId="MONEY"  
+    glAccountClassId="EQUITY" glAccountTypeId="OWNERS_EQUITY" glResourceTypeId="MONEY"  
     accountName="CAPITAL" description="" postedBalance="0.0"/>
   <GlAccount parentGlAccountId="320000" glAccountId="320100" accountCode="320100" 
-    glAccountClassId="EQUITY" glAccountTypeId="OWNERS' EQUITY AND NET WORTH" glResourceTypeId="MONEY"  
+    glAccountClassId="EQUITY" glAccountTypeId="OWNERS_EQUITY" glResourceTypeId="MONEY"  
     accountName="CAPITAL - PARTNER 1" description="" postedBalance="0.0"/>
   <GlAccount parentGlAccountId="320000" glAccountId="320200" accountCode="320200" 
-    glAccountClassId="EQUITY" glAccountTypeId="OWNERS' EQUITY AND NET WORTH" glResourceTypeId="MONEY"  
+    glAccountClassId="EQUITY" glAccountTypeId="OWNERS_EQUITY" glResourceTypeId="MONEY"  
     accountName="CAPITAL - PARTNER 2" description="" postedBalance="0.0"/>
   <GlAccount parentGlAccountId="320000" glAccountId="320300" accountCode="320300" 
-    glAccountClassId="EQUITY" glAccountTypeId="OWNERS' EQUITY AND NET WORTH" glResourceTypeId="MONEY"  
+    glAccountClassId="EQUITY" glAccountTypeId="OWNERS_EQUITY" glResourceTypeId="MONEY"  
     accountName="CAPITAL - PARTNER 3" description="" postedBalance="0.0"/>
   
-  <GlAccount parentGlAccountId="320000" glAccountId="-321000-" accountCode="-321000-" 
-    glAccountClassId="EQUITY" glAccountTypeId="OWNERS' EQUITY AND NET WORTH" glResourceTypeId="MONEY"  
+  <GlAccount parentGlAccountId="320000" glAccountId="321000" accountCode="321000" 
+    glAccountClassId="DISTRIBUTION" glAccountTypeId="OWNERS_EQUITY" glResourceTypeId="MONEY"  
     accountName="DRAWINGS" description="" postedBalance="0.0"/>
-  <GlAccount parentGlAccountId="-321000-" glAccountId="-321100-" accountCode="-321100-" 
-    glAccountClassId="EQUITY" glAccountTypeId="OWNERS' EQUITY AND NET WORTH" glResourceTypeId="MONEY"  
+  <GlAccount parentGlAccountId="321000" glAccountId="321100" accountCode="321100" 
+    glAccountClassId="DISTRIBUTION" glAccountTypeId="OWNERS_EQUITY" glResourceTypeId="MONEY"  
     accountName="DRAWINGS - PARTNER 1" description="" postedBalance="0.0"/>
-  <GlAccount parentGlAccountId="-321000-" glAccountId="-321200-" accountCode="-321200-" 
-    glAccountClassId="EQUITY" glAccountTypeId="OWNERS' EQUITY AND NET WORTH" glResourceTypeId="MONEY"  
+  <GlAccount parentGlAccountId="321000" glAccountId="321200" accountCode="321200" 
+    glAccountClassId="DISTRIBUTION" glAccountTypeId="OWNERS_EQUITY" glResourceTypeId="MONEY"  
     accountName="DRAWINGS - PARTNER 2" description="" postedBalance="0.0"/>
-  <GlAccount parentGlAccountId="-321000-" glAccountId="-321300-" accountCode="-321300-" 
-    glAccountClassId="EQUITY" glAccountTypeId="OWNERS' EQUITY AND NET WORTH" glResourceTypeId="MONEY"  
+  <GlAccount parentGlAccountId="321000" glAccountId="321300" accountCode="321300" 
+    glAccountClassId="DISTRIBUTION" glAccountTypeId="OWNERS_EQUITY" glResourceTypeId="MONEY"  
     accountName="DRAWINGS - PARTNER 3" description="" postedBalance="0.0"/>
     
 <!-- CORPORATION -->
   <GlAccount parentGlAccountId="300000" glAccountId="330000" accountCode="330000" 
-    glAccountClassId="EQUITY" glAccountTypeId="OWNERS' EQUITY AND NET WORTH" glResourceTypeId="MONEY"  
+    glAccountClassId="EQUITY" glAccountTypeId="OWNERS_EQUITY" glResourceTypeId="MONEY"  
     accountName="COMMON STOCK" description="" postedBalance="0.0"/>  
   <GlAccount parentGlAccountId="330000" glAccountId="331000" accountCode="331000" 
-    glAccountClassId="EQUITY" glAccountTypeId="OWNERS' EQUITY AND NET WORTH" glResourceTypeId="MONEY"  
+    glAccountClassId="EQUITY" glAccountTypeId="OWNERS_EQUITY" glResourceTypeId="MONEY"  
     accountName="PAID-IN CAPITAL IN EXCESS OF PAR ON COMMON STOCK" description="" postedBalance="0.0"/>
   <GlAccount parentGlAccountId="330000" glAccountId="332000" accountCode="332000" 
-    glAccountClassId="EQUITY" glAccountTypeId="OWNERS' EQUITY AND NET WORTH" glResourceTypeId="MONEY"  
+    glAccountClassId="EQUITY" glAccountTypeId="OWNERS_EQUITY" glResourceTypeId="MONEY"  
     accountName="PREFERRED STOCK" description="" postedBalance="0.0"/>
   <GlAccount parentGlAccountId="330000" glAccountId="333000" accountCode="333000" 
-    glAccountClassId="EQUITY" glAccountTypeId="OWNERS' EQUITY AND NET WORTH" glResourceTypeId="MONEY"  
+    glAccountClassId="EQUITY" glAccountTypeId="OWNERS_EQUITY" glResourceTypeId="MONEY"  
     accountName="PAID-IN CAPITAL IN EXCESS OF PAR ON PREFERRED STOCK" description="" postedBalance="0.0"/>
-  <GlAccount parentGlAccountId="330000" glAccountId="-334000-" accountCode="-334000-" 
-    glAccountClassId="EQUITY" glAccountTypeId="OWNERS' EQUITY AND NET WORTH" glResourceTypeId="MONEY"  
+  <GlAccount parentGlAccountId="330000" glAccountId="334000" accountCode="334000" 
+    glAccountClassId="DISTRIBUTION" glAccountTypeId="OWNERS_EQUITY" glResourceTypeId="MONEY"  
     accountName="DIVIDENDS, COMMON STOCK" description="" postedBalance="0.0"/>
-  <GlAccount parentGlAccountId="330000" glAccountId="-335000-" accountCode="-335000-" 
-    glAccountClassId="EQUITY" glAccountTypeId="OWNERS' EQUITY AND NET WORTH" glResourceTypeId="MONEY"  
+  <GlAccount parentGlAccountId="330000" glAccountId="335000" accountCode="335000" 
+    glAccountClassId="DISTRIBUTION" glAccountTypeId="OWNERS_EQUITY" glResourceTypeId="MONEY"  
     accountName="DIVIDENDS, PREFERRED STOCK" description="" postedBalance="0.0"/>
   <GlAccount parentGlAccountId="330000" glAccountId="336000" accountCode="336000" 
-    glAccountClassId="EQUITY" glAccountTypeId="OWNERS' EQUITY AND NET WORTH" glResourceTypeId="MONEY"  
+    glAccountClassId="EQUITY" glAccountTypeId="OWNERS_EQUITY" glResourceTypeId="MONEY"  
     accountName="RETAINED EARNINGS" description="" postedBalance="0.0"/>
     
 <!-- SUBCHAPTER S CORPORATION -->
   <GlAccount parentGlAccountId="300000" glAccountId="340000" accountCode="340000" 
-    glAccountClassId="EQUITY" glAccountTypeId="OWNERS' EQUITY AND NET WORTH" glResourceTypeId="MONEY"  
+    glAccountClassId="EQUITY" glAccountTypeId="OWNERS_EQUITY" glResourceTypeId="MONEY"  
     accountName="COMMON STOCK" description="" postedBalance="0.0"/>
   <GlAccount parentGlAccountId="340000" glAccountId="341000" accountCode="341000" 
-    glAccountClassId="EQUITY" glAccountTypeId="OWNERS' EQUITY AND NET WORTH" glResourceTypeId="MONEY"  
+    glAccountClassId="EQUITY" glAccountTypeId="OWNERS_EQUITY" glResourceTypeId="MONEY"  
     accountName="PAID-IN CAPITAL IN EXCESS OF PAR ON COMMON STOCK" description="" postedBalance="0.0"/>
 
-  <GlAccount parentGlAccountId="340000" glAccountId="-342000-" accountCode="-342000-" 
-    glAccountClassId="EQUITY" glAccountTypeId="OWNERS' EQUITY AND NET WORTH" glResourceTypeId="MONEY"  
+  <GlAccount parentGlAccountId="340000" glAccountId="342000" accountCode="342000" 
+    glAccountClassId="DISTRIBUTION" glAccountTypeId="OWNERS_EQUITY" glResourceTypeId="MONEY"  
     accountName="DIVIDENDS" description="" postedBalance="0.0"/>
-  <GlAccount parentGlAccountId="-342000-" glAccountId="-342100-" accountCode="-342100-" 
-    glAccountClassId="EQUITY" glAccountTypeId="OWNERS' EQUITY AND NET WORTH" glResourceTypeId="MONEY"  
+  <GlAccount parentGlAccountId="342000" glAccountId="342100" accountCode="342100" 
+    glAccountClassId="DISTRIBUTION" glAccountTypeId="OWNERS_EQUITY" glResourceTypeId="MONEY"  
     accountName="DIVIDENDS - SHAREHOLDER 1" description="" postedBalance="0.0"/>
-  <GlAccount parentGlAccountId="-342000-" glAccountId="-342200-" accountCode="-342200-" 
-    glAccountClassId="EQUITY" glAccountTypeId="OWNERS' EQUITY AND NET WORTH" glResourceTypeId="MONEY"  
+  <GlAccount parentGlAccountId="342000" glAccountId="342200" accountCode="342200" 
+    glAccountClassId="DISTRIBUTION" glAccountTypeId="OWNERS_EQUITY" glResourceTypeId="MONEY"  
     accountName="DIVIDENDS - SHAREHOLDER 2" description="" postedBalance="0.0"/>
-  <GlAccount parentGlAccountId="-342000-" glAccountId="-342300-" accountCode="-342300-" 
-    glAccountClassId="EQUITY" glAccountTypeId="OWNERS' EQUITY AND NET WORTH" glResourceTypeId="MONEY"  
+  <GlAccount parentGlAccountId="342000" glAccountId="342300" accountCode="342300" 
+    glAccountClassId="DISTRIBUTION" glAccountTypeId="OWNERS_EQUITY" glResourceTypeId="MONEY"  
     accountName="DIVIDENDS - SHAREHOLDER 3" description="" postedBalance="0.0"/>
   
-  <GlAccount parentGlAccountId="300000" glAccountId="-343000-" accountCode="-343000-" 
-    glAccountClassId="EQUITY" glAccountTypeId="OWNERS' EQUITY AND NET WORTH" glResourceTypeId="MONEY"  
+  <GlAccount parentGlAccountId="300000" glAccountId="343000" accountCode="343000" 
+    glAccountClassId="DISTRIBUTION" glAccountTypeId="OWNERS_EQUITY" glResourceTypeId="MONEY"  
     accountName="DRAWINGS" description="" postedBalance="0.0"/>
-  <GlAccount parentGlAccountId="-343000-" glAccountId="-343100-" accountCode="-343100-" 
-    glAccountClassId="EQUITY" glAccountTypeId="OWNERS' EQUITY AND NET WORTH" glResourceTypeId="MONEY"  
+  <GlAccount parentGlAccountId="343000" glAccountId="343100" accountCode="343100" 
+    glAccountClassId="DISTRIBUTION" glAccountTypeId="OWNERS_EQUITY" glResourceTypeId="MONEY"  
     accountName="DRAWINGS - SHAREHOLDER 1" description="" postedBalance="0.0"/>
-  <GlAccount parentGlAccountId="-343000-" glAccountId="-343200-" accountCode="-343200-" 
-    glAccountClassId="EQUITY" glAccountTypeId="OWNERS' EQUITY AND NET WORTH" glResourceTypeId="MONEY"  
+  <GlAccount parentGlAccountId="343000" glAccountId="343200" accountCode="343200" 
+    glAccountClassId="DISTRIBUTION" glAccountTypeId="OWNERS_EQUITY" glResourceTypeId="MONEY"  
     accountName="DRAWINGS - SHAREHOLDER 2" description="" postedBalance="0.0"/>
-  <GlAccount parentGlAccountId="-343000-" glAccountId="-343300-" accountCode="-343300-" 
-    glAccountClassId="EQUITY" glAccountTypeId="OWNERS' EQUITY AND NET WORTH" glResourceTypeId="MONEY"  
+  <GlAccount parentGlAccountId="343000" glAccountId="343300" accountCode="343300" 
+    glAccountClassId="DISTRIBUTION" glAccountTypeId="OWNERS_EQUITY" glResourceTypeId="MONEY"  
     accountName="DRAWINGS - SHAREHOLDER 3" description="" postedBalance="0.0"/>
   
   <GlAccount parentGlAccountId="340000" glAccountId="344000" accountCode="344000" 
-    glAccountClassId="EQUITY" glAccountTypeId="OWNERS' EQUITY AND NET WORTH" glResourceTypeId="MONEY"  
+    glAccountClassId="EQUITY" glAccountTypeId="OWNERS_EQUITY" glResourceTypeId="MONEY"  
     accountName="RETAINED EARNINGS" description="" postedBalance="0.0"/>    
       
 <!-- SALES -->
@@ -485,8 +485,8 @@ according to which type of entity.
     accountName="MISCELLANEOUS SALES" description="" postedBalance="0.0"/>
   
   
-  <GlAccount parentGlAccountId="400000" glAccountId="-410000-" accountCode="-410000-" 
-    glAccountClassId="INCOME" glAccountTypeId="" glResourceTypeId="MONEY"  
+  <GlAccount parentGlAccountId="400000" glAccountId="410000" accountCode="410000" 
+    glAccountClassId="EXPENSE" glAccountTypeId="" glResourceTypeId="MONEY"  
     accountName="DISCOUNTS ON SALES" description="" postedBalance="0.0"/>
 
 <!-- COST OF GOODS SOLD -->
@@ -507,37 +507,37 @@ according to which type of entity.
     glAccountClassId="INCOME" glAccountTypeId="" glResourceTypeId="MONEY"  
     accountName="FREIGHT IN - CATEGORY 2" description="" postedBalance="0.0"/>
     
-  <GlAccount parentGlAccountId="510000" glAccountId="-511000-" accountCode="-511000-" 
-    glAccountClassId="INCOME" glAccountTypeId="" glResourceTypeId="MONEY"  
+  <GlAccount parentGlAccountId="510000" glAccountId="511000" accountCode="511000" 
+    glAccountClassId="EXPENSE" glAccountTypeId="" glResourceTypeId="MONEY"  
     accountName="PROMPT PAYMENT DISCOUNTS" description="" postedBalance="0.0"/>
-  <GlAccount parentGlAccountId="-511000-" glAccountId="-511100-" accountCode="-511100-" 
-    glAccountClassId="INCOME" glAccountTypeId="" glResourceTypeId="MONEY"  
+  <GlAccount parentGlAccountId="511000" glAccountId="511100" accountCode="511100" 
+    glAccountClassId="EXPENSE" glAccountTypeId="" glResourceTypeId="MONEY"  
     accountName="PROMPT PMT DISC - CAT 1" description="" postedBalance="0.0"/>
-  <GlAccount parentGlAccountId="-511000-" glAccountId="-511200-" accountCode="-511200-" 
-    glAccountClassId="INCOME" glAccountTypeId="" glResourceTypeId="MONEY"  
+  <GlAccount parentGlAccountId="511000" glAccountId="511200" accountCode="511200" 
+    glAccountClassId="EXPENSE" glAccountTypeId="" glResourceTypeId="MONEY"  
     accountName="PROMPT PMT DISC - CAT 2" description="" postedBalance="0.0"/>
     
   <GlAccount parentGlAccountId="510000" glAccountId="512000" accountCode="512000" 
-    glAccountClassId="INCOME" glAccountTypeId="" glResourceTypeId="MONEY"  
+    glAccountClassId="EXPENSE" glAccountTypeId="" glResourceTypeId="MONEY"  
     accountName="RETURNS EXPENSE" description="" postedBalance="0.0"/>  
   <GlAccount parentGlAccountId="512000" glAccountId="512050" accountCode="512050" 
     glAccountClassId="INCOME" glAccountTypeId="" glResourceTypeId="MONEY"  
     accountName="RETURNS PENALTIES" description="" postedBalance="0.0"/>
   <GlAccount parentGlAccountId="512000" glAccountId="512100" accountCode="512100" 
-    glAccountClassId="INCOME" glAccountTypeId="" glResourceTypeId="MONEY"  
+    glAccountClassId="EXPENSE" glAccountTypeId="" glResourceTypeId="MONEY"  
     accountName="RETURNS FREIGHT - CATEGORY 1" description="" postedBalance="0.0"/>
   <GlAccount parentGlAccountId="512000" glAccountId="512200" accountCode="512200" 
-    glAccountClassId="INCOME" glAccountTypeId="" glResourceTypeId="MONEY"  
+    glAccountClassId="EXPENSE" glAccountTypeId="" glResourceTypeId="MONEY"  
     accountName="RETURNS FREIGHT - CATEGORY 2" description="" postedBalance="0.0"/>
     
-  <GlAccount parentGlAccountId="500000" glAccountId="-513000-" accountCode="-513000-" 
-    glAccountClassId="INCOME" glAccountTypeId="" glResourceTypeId="MONEY"  
+  <GlAccount parentGlAccountId="500000" glAccountId="513000" accountCode="513000" 
+    glAccountClassId="EXPENSE" glAccountTypeId="" glResourceTypeId="MONEY"  
     accountName="RETURNS TO VENDORS" description="" postedBalance="0.0"/>
-  <GlAccount parentGlAccountId="-513000-" glAccountId="-513100-" accountCode="-513100-" 
-    glAccountClassId="INCOME" glAccountTypeId="" glResourceTypeId="MONEY"  
+  <GlAccount parentGlAccountId="513000" glAccountId="513100" accountCode="513100" 
+    glAccountClassId="EXPENSE" glAccountTypeId="" glResourceTypeId="MONEY"  
     accountName="RETURNS TO VENDORS - CATEGORY 1" description="" postedBalance="0.0"/>
-  <GlAccount parentGlAccountId="-513000-" glAccountId="-513200-" accountCode="-513200-" 
-    glAccountClassId="INCOME" glAccountTypeId="" glResourceTypeId="MONEY"  
+  <GlAccount parentGlAccountId="513000" glAccountId="513200" accountCode="513200" 
+    glAccountClassId="EXPENSE" glAccountTypeId="" glResourceTypeId="MONEY"  
     accountName="RETURNS TO VENDORS - CATEGORY 2" description="" postedBalance="0.0"/>
     
   <GlAccount parentGlAccountId="510000" glAccountId="514000" accountCode="514000" 
@@ -627,11 +627,11 @@ according to which type of entity.
   <GlAccount parentGlAccountId="605000" glAccountId="605200" accountCode="605200" 
     glAccountClassId="EXPENSE" glAccountTypeId="" glResourceTypeId="MONEY"  
     accountName="GROUP HEALTH INSURANCE - PREMIUMS OWNER or STOCKHOLDER" description="" postedBalance="0.0"/>
-  <GlAccount parentGlAccountId="605000" glAccountId="-605800-" accountCode="-605800-" 
-    glAccountClassId="EXPENSE" glAccountTypeId="" glResourceTypeId="MONEY"  
+  <GlAccount parentGlAccountId="605000" glAccountId="605800" accountCode="605800" 
+    glAccountClassId="INCOME" glAccountTypeId="" glResourceTypeId="MONEY"  
     accountName="EMPLOYEE HEALTH INSURANCE PREMIUM CONTRIBUTIONS" description="" postedBalance="0.0"/>
-  <GlAccount parentGlAccountId="605000" glAccountId="-605900-" accountCode="-605900-" 
-    glAccountClassId="EXPENSE" glAccountTypeId="" glResourceTypeId="MONEY"  
+  <GlAccount parentGlAccountId="605000" glAccountId="605900" accountCode="605900" 
+    glAccountClassId="INCOME" glAccountTypeId="" glResourceTypeId="MONEY"  
     accountName="FORMER EMPLOYEE'S COBRA PAYMENTS" description="" postedBalance="0.0"/>
   
   <GlAccount parentGlAccountId="600000" glAccountId="606000" accountCode="606000" 
@@ -647,8 +647,8 @@ according to which type of entity.
   <GlAccount parentGlAccountId="607000" glAccountId="607200" accountCode="607200" 
     glAccountClassId="EXPENSE" glAccountTypeId="" glResourceTypeId="MONEY"  
     accountName="DISABILITY INCOME INSURANCE PREMIUMS OWNER or STOCKHOLDER" description="" postedBalance="0.0"/>
-  <GlAccount parentGlAccountId="607000" glAccountId="-607400-" accountCode="-607400-" 
-    glAccountClassId="EXPENSE" glAccountTypeId="" glResourceTypeId="MONEY"  
+  <GlAccount parentGlAccountId="607000" glAccountId="607400" accountCode="607400" 
+    glAccountClassId="INCOME" glAccountTypeId="" glResourceTypeId="MONEY"  
     accountName="EMPLOYEE DISABILITY INSURANCE CO-PAYMENTS" description="" postedBalance="0.0"/>
     
   <GlAccount parentGlAccountId="607000" glAccountId="607500" accountCode="607500" 
@@ -660,8 +660,8 @@ according to which type of entity.
   <GlAccount parentGlAccountId="607000" glAccountId="607700" accountCode="607700" 
     glAccountClassId="EXPENSE" glAccountTypeId="" glResourceTypeId="MONEY"  
     accountName="GROUP LIFE INSURANCE PREMIUMS OWNER or STOCKHOLDER" description="" postedBalance="0.0"/>
-  <GlAccount parentGlAccountId="607000" glAccountId="-607900-" accountCode="-607900-" 
-    glAccountClassId="EXPENSE" glAccountTypeId="" glResourceTypeId="MONEY"  
+  <GlAccount parentGlAccountId="607000" glAccountId="607900" accountCode="607900" 
+    glAccountClassId="INCOME" glAccountTypeId="" glResourceTypeId="MONEY"  
     accountName="EMPLOYEE LIFE INSURANCE CO-PAYMENTS" description="" postedBalance="0.0"/>
     
   <GlAccount parentGlAccountId="600000" glAccountId="608000" accountCode="608000" 
@@ -789,20 +789,20 @@ according to which type of entity.
     glAccountClassId="EXPENSE" glAccountTypeId="" glResourceTypeId="MONEY"  
     accountName="OTHER ADVERTISING / PROMOTION" description="" postedBalance="0.0"/>
     
-  <GlAccount parentGlAccountId="620000" glAccountId="-626000-" accountCode="-626000-" 
-    glAccountClassId="EXPENSE" glAccountTypeId="" glResourceTypeId="MONEY"  
+  <GlAccount parentGlAccountId="620000" glAccountId="626000" accountCode="626000" 
+    glAccountClassId="INCOME" glAccountTypeId="" glResourceTypeId="MONEY"  
     accountName="PUBLISHER / VENDOR ADVERTISING ALLOWANCES" description="" postedBalance="0.0"/>
-  <GlAccount parentGlAccountId="-626000-" glAccountId="-626100-" accountCode="-626100-" 
-    glAccountClassId="EXPENSE" glAccountTypeId="" glResourceTypeId="MONEY"  
+  <GlAccount parentGlAccountId="626000" glAccountId="626100" accountCode="626100" 
+    glAccountClassId="INCOME" glAccountTypeId="" glResourceTypeId="MONEY"  
     accountName="CO-OPERATIVE ADVERTISING ALLOWANCES" description="" postedBalance="0.0"/>
-  <GlAccount parentGlAccountId="-626000-" glAccountId="-626200-" accountCode="-626200-" 
-    glAccountClassId="EXPENSE" glAccountTypeId="" glResourceTypeId="MONEY"  
+  <GlAccount parentGlAccountId="626000" glAccountId="626200" accountCode="626200" 
+    glAccountClassId="INCOME" glAccountTypeId="" glResourceTypeId="MONEY"  
     accountName="RETAIL DISPLAY AND SHELF ALLOWANCES" description="" postedBalance="0.0"/>
-  <GlAccount parentGlAccountId="-626000-" glAccountId="-626300-" accountCode="-626300-" 
-    glAccountClassId="EXPENSE" glAccountTypeId="" glResourceTypeId="MONEY"  
+  <GlAccount parentGlAccountId="626000" glAccountId="626300" accountCode="626300" 
+    glAccountClassId="INCOME" glAccountTypeId="" glResourceTypeId="MONEY"  
     accountName="CATALOG SPACE SALES REVENUES ALLOWANCES" description="" postedBalance="0.0"/>
-  <GlAccount parentGlAccountId="-626000-" glAccountId="-626400-" accountCode="-626400-" 
-    glAccountClassId="EXPENSE" glAccountTypeId="" glResourceTypeId="MONEY"  
+  <GlAccount parentGlAccountId="626000" glAccountId="626400" accountCode="626400" 
+    glAccountClassId="INCOME" glAccountTypeId="" glResourceTypeId="MONEY"  
     accountName="OTHER ADVERTISING ALLOWANCES" description="" postedBalance="0.0"/>
     
   <GlAccount parentGlAccountId="600000" glAccountId="630000" accountCode="630000" 
@@ -947,7 +947,7 @@ according to which type of entity.
   <GlAccount parentGlAccountId="700000" glAccountId="701000" accountCode="701000" 
     glAccountClassId="EXPENSE" glAccountTypeId="" glResourceTypeId="MONEY"  
     accountName="CREDIT CARD SERVICE CHARGES" description="" postedBalance="0.0"/>
-  <GlAccount parentGlAccountId="701000" glAccountId="701100" accountCode="701000" 
+  <GlAccount parentGlAccountId="701000" glAccountId="701100" accountCode="701100" 
     glAccountClassId="EXPENSE" glAccountTypeId="" glResourceTypeId="MONEY"  
     accountName="CREDIT CARD SERVICE CHARGE MASTER CARD / VISA" description="" postedBalance="0.0"/>
   <GlAccount parentGlAccountId="701000" glAccountId="701200" accountCode="701200" 
@@ -1003,8 +1003,8 @@ according to which type of entity.
   <GlAccount parentGlAccountId="731000" glAccountId="731100" accountCode="731100" 
     glAccountClassId="EXPENSE" glAccountTypeId="" glResourceTypeId="MONEY"  
     accountName="CUSTOMER PACKAGE CHARGES" description="" postedBalance="0.0"/>
-  <GlAccount parentGlAccountId="731000" glAccountId="-731200-" accountCode="-731200-" 
-    glAccountClassId="EXPENSE" glAccountTypeId="" glResourceTypeId="MONEY"  
+  <GlAccount parentGlAccountId="731000" glAccountId="731200" accountCode="731200" 
+    glAccountClassId="INCOME" glAccountTypeId="" glResourceTypeId="MONEY"  
     accountName="POSTAGE AND HANDLING FEES RECEIVED" description="" postedBalance="0.0"/>
     
   <GlAccount parentGlAccountId="730000" glAccountId="739000" accountCode="739000" 
@@ -1033,13 +1033,13 @@ according to which type of entity.
   <GlAccount parentGlAccountId="750000" glAccountId="751000" accountCode="751000" 
     glAccountClassId="EXPENSE" glAccountTypeId="" glResourceTypeId="MONEY"  
     accountName="EDUCATION - COURSE FEES" description="" postedBalance="0.0"/>
-  <GlAccount parentGlAccountId="751000" glAccountId="752000" accountCode="752000" 
+  <GlAccount parentGlAccountId="750000" glAccountId="752000" accountCode="752000" 
     glAccountClassId="EXPENSE" glAccountTypeId="" glResourceTypeId="MONEY"  
     accountName="EDUCATION - TRAVEL" description="" postedBalance="0.0"/>
   <GlAccount parentGlAccountId="750000" glAccountId="753000" accountCode="753000" 
     glAccountClassId="EXPENSE" glAccountTypeId="" glResourceTypeId="MONEY"  
     accountName="EDUCATION - MEALS AND ENTERTAINMENT ( 50% DEDUCTIBLE)" description="" postedBalance="0.0"/>
-  <GlAccount parentGlAccountId="754000" glAccountId="750000" accountCode="754000" 
+  <GlAccount parentGlAccountId="750000" glAccountId="754000" accountCode="754000" 
     glAccountClassId="EXPENSE" glAccountTypeId="" glResourceTypeId="MONEY"  
     accountName="EDUCATION - OTHER" description="" postedBalance="0.0"/>
     
@@ -1174,16 +1174,16 @@ according to which type of entity.
     accountName="OTHER EXPENSES" description="" postedBalance="0.0"/>
     
   <GlAccount parentGlAccountId="" glAccountId="900000" accountCode="900000" 
-    glAccountClassId="NON-POSTING" glAccountTypeId="" glResourceTypeId="MONEY"  
+    glAccountClassId="NON_POSTING" glAccountTypeId="" glResourceTypeId="MONEY"  
     accountName="INCOME TAX" description="" postedBalance="0.0"/>
     
   <GlAccount parentGlAccountId="900000" glAccountId="901000" accountCode="901000" 
-    glAccountClassId="NON-POSTING" glAccountTypeId="" glResourceTypeId="MONEY"  
+    glAccountClassId="NON_POSTING" glAccountTypeId="" glResourceTypeId="MONEY"  
     accountName="FEDERAL INCOME TAX" description="" postedBalance="0.0"/>
   <GlAccount parentGlAccountId="900000" glAccountId="902000" accountCode="902000" 
-    glAccountClassId="NON-POSTING" glAccountTypeId="" glResourceTypeId="MONEY"  
+    glAccountClassId="NON_POSTING" glAccountTypeId="" glResourceTypeId="MONEY"  
     accountName="STATE INCOME TAX" description="" postedBalance="0.0"/>
   <GlAccount parentGlAccountId="900000" glAccountId="903000" accountCode="903000" 
-    glAccountClassId="NON-POSTING" glAccountTypeId="" glResourceTypeId="MONEY"  
+    glAccountClassId="NON_POSTING" glAccountTypeId="" glResourceTypeId="MONEY"  
     accountName="LOCAL INCOME TAX" description="" postedBalance="0.0"/>
 </entity-engine-xml>
