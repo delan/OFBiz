@@ -1,7 +1,7 @@
 /*
  * $Id$
  *
- * Copyright (c) 2001-2004 The Open For Business Project - www.ofbiz.org
+ * Copyright (c) 2001-2005 The Open For Business Project - www.ofbiz.org
  *
  * Permission is hereby granted, free of charge, to any person obtaining a
  * copy of this software and associated documentation files (the "Software"),
@@ -42,6 +42,7 @@ import org.ofbiz.base.util.Base64;
 import org.ofbiz.base.util.Debug;
 import org.ofbiz.base.util.UtilURL;
 import org.ofbiz.base.util.UtilXml;
+import org.ofbiz.content.webapp.ftl.FreeMarkerWorker;
 import org.ofbiz.entity.GenericDelegator;
 import org.ofbiz.entity.GenericEntityException;
 import org.ofbiz.entity.GenericValue;
@@ -281,12 +282,9 @@ public class EntitySaxReader implements org.xml.sax.ContentHandler, ErrorHandler
                     Reader templateReader = new InputStreamReader(templateUrl.openStream());
                     
                     StringWriter outWriter = new StringWriter();
-                    Configuration config = Configuration.getDefaultConfiguration();            
-                    config.setObjectWrapper(BeansWrapper.getDefaultInstance());
-                    config.setSetting("datetime_format", "yyyy-MM-dd HH:mm:ss.SSS");
+                    Configuration config = FreeMarkerWorker.makeDefaultOfbizConfig();
                     
                     Template template = new Template("FMImportFilter", templateReader, config);
-   
                     NodeModel nodeModel = NodeModel.wrap(this.rootNodeForTemplate);
                         
                     Map context = new HashMap();
