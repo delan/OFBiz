@@ -1,6 +1,9 @@
 /*
  * $Id$
  * $Log$
+ * Revision 1.5  2002/01/23 11:28:12  jonesde
+ * Slimmed down a little with some useful new functions in ServiceUtil
+ *
  * Revision 1.4  2002/01/23 01:20:00  jonesde
  * Added postal address, telecom number and email address specific service implementations
  *
@@ -882,7 +885,7 @@ public class ContactMechServices {
             return ServiceUtil.returnError("ERROR: Could not update credit card info (id generation failure)");
         }
         
-        newCc.set("partyId", context.get("partyId"));
+        newCc.set("partyId", partyId);
         newCc.set("nameOnCard", context.get("nameOnCard"));
         newCc.set("companyNameOnCard", context.get("companyNameOnCard"));
         newCc.set("cardType", context.get("cardType"));
