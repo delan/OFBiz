@@ -1,5 +1,5 @@
 /*
- * $Id: GenericDispatcher.java,v 1.2 2003/08/28 18:48:32 ajzeneski Exp $
+ * $Id: GenericDispatcher.java,v 1.3 2003/12/02 16:13:39 ajzeneski Exp $
  *
  * Copyright (c) 2001, 2002 The Open For Business Project - www.ofbiz.org
  *
@@ -33,7 +33,7 @@ import org.ofbiz.base.util.Debug;
  * Generic Services Local Dispatcher
  *
  * @author     <a href="mailto:jaz@ofbiz.org">Andy Zeneski</a> 
- * @version    $Revision: 1.2 $
+ * @version    $Revision: 1.3 $
  * @since      2.0
  */
 public class GenericDispatcher extends GenericAbstractDispatcher {
@@ -73,7 +73,7 @@ public class GenericDispatcher extends GenericAbstractDispatcher {
     }
     
     protected void init(String name, GenericDelegator delegator, DispatchContext ctx) {
-        if (name == null && name.length() == 0)
+        if (name == null || name.length() == 0)
             throw new IllegalArgumentException("The name of a LocalDispatcher cannot be a null or empty String");
             
         this.name = name;
