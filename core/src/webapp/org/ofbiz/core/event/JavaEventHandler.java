@@ -7,6 +7,7 @@ package org.ofbiz.core.event;
 import java.util.*;
 import java.lang.reflect.*;
 import javax.servlet.http.*;
+
 import org.ofbiz.core.util.*;
 
 /**
@@ -36,10 +37,10 @@ import org.ofbiz.core.util.*;
  *@version    1.0
  */
 public class JavaEventHandler implements EventHandler {
-                
+
     private String eventPath = null;
     private String eventMethod = null;
-    
+
     /** Initialize the required parameters
      *@param eventPath The path or location of this event
      *@param eventMethod The method to invoke
@@ -48,7 +49,7 @@ public class JavaEventHandler implements EventHandler {
         this.eventPath = eventPath;
         this.eventMethod = eventMethod;
     }
-    
+
     /** Invoke the web event
      *@param request The servlet request object
      *@param response The servlet response object
@@ -56,28 +57,27 @@ public class JavaEventHandler implements EventHandler {
      *@throws EventHandlerException
      */
     public String invoke(HttpServletRequest request, HttpServletResponse response) throws EventHandlerException {
-        Class[] paramTypes = new Class[] {HttpServletRequest.class, HttpServletResponse.class};
-        Object[] params = new Object[] {request,response};
+        Class[] paramTypes = new Class[]{HttpServletRequest.class, HttpServletResponse.class};
+        Object[] params = new Object[]{request, response};
         return invoke(paramTypes, params);
     }
-    
+
     private String invoke(Class[] paramTypes, Object[] params) throws EventHandlerException {
         String eventReturnString = null;
-        if ( eventPath == null || eventMethod == null )
+        if (eventPath == null || eventMethod == null)
             throw new EventHandlerException("Invalid event method or path; call initialize()");
-        
+
         Debug.logInfo("[EventHandler] : Processing JAVA event");
         try {
             Class c = Class.forName(eventPath);
-            Method m = c.getMethod(eventMethod,paramTypes);
-            eventReturnString = (String) m.invoke(null,params);
+            Method m = c.getMethod(eventMethod, paramTypes);
+            eventReturnString = (String) m.invoke(null, params);
             Debug.logInfo("[EventHandler] : Returned -  " + eventReturnString);
-        }
-        catch ( Exception e ) {
-            Debug.logError(e,"[EventHandler] : Problems Processing Event");
+        } catch (Exception e) {
+            Debug.logError(e, "[EventHandler] : Problems Processing Event");
             throw new EventHandlerException("Problems processing event: " + e.getMessage());
         }
-        
+
         return eventReturnString;
     }
 }

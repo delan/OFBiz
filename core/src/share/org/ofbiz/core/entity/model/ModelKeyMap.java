@@ -1,3 +1,4 @@
+
 package org.ofbiz.core.entity.model;
 
 /**
@@ -28,11 +29,13 @@ package org.ofbiz.core.entity.model;
  *@version    1.0
  */
 public class ModelKeyMap {
-  /** name of the field in this entity */
-  public String fieldName = "";
-  /** name of the field in related entity */
-  public String relFieldName = "";
-  
-  /** Default Constructor */
-  public ModelKeyMap() {}
+
+    /** name of the field in this entity */
+    public String fieldName = "";
+    /** name of the field in related entity */
+    public String relFieldName = "";
+
+    /** Default Constructor */
+    public ModelKeyMap() {
+    }
 }

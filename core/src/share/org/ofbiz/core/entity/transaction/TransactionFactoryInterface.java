@@ -1,3 +1,4 @@
+
 package org.ofbiz.core.entity.transaction;
 
 import javax.transaction.*;
@@ -29,6 +30,8 @@ import javax.transaction.*;
  * Created on July 1, 2001, 5:03 PM
  */
 public interface TransactionFactoryInterface {
+
     public TransactionManager getTransactionManager();
+
     public UserTransaction getUserTransaction();
 }

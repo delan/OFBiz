@@ -33,29 +33,29 @@ package org.ofbiz.core.workflow;
  */
 
 public interface WfAssignmentEventAudit extends WfEventAudit {
-  
-  /**
-   * @throws WfException
-   * @return
-   */
-  public String oldResourceKey() throws WfException;
-  
-  /**
-   * @throws WfException
-   * @return
-   */
-  public String oldResourceName() throws WfException;
-  
-  /**
-   * @throws WfException
-   * @return
-   */
-  public String newResourceKey() throws WfException;
-  
-  /**
-   * @throws WfException
-   * @return
-   */
-  public String newResourceName() throws WfException;
-  
+
+    /**
+     * @throws WfException
+     * @return
+     */
+    public String oldResourceKey() throws WfException;
+
+    /**
+     * @throws WfException
+     * @return
+     */
+    public String oldResourceName() throws WfException;
+
+    /**
+     * @throws WfException
+     * @return
+     */
+    public String newResourceKey() throws WfException;
+
+    /**
+     * @throws WfException
+     * @return
+     */
+    public String newResourceName() throws WfException;
+
 } // interface WfAssignmentEventAuditOperations

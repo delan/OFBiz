@@ -1,9 +1,10 @@
+
 package org.ofbiz.core.datafile;
 
 import java.util.*;
 
 /**
- * <p><b>Title:</b> 
+ * <p><b>Title:</b>
  * <p><b>Description:</b> None
  * <p>Copyright (c) 2001 The Open For Business Project - www.ofbiz.org
  *
@@ -31,37 +32,38 @@ import java.util.*;
  */
 
 public class ModelDataFile {
-  public static final String SEP_FIXED_LENGTH = "fixed-length";
-  public static final String SEP_FIXED_RECORD = "fixed-record";
-  public static final String SEP_DELIMITED = "delimited";
-  
-  /** The name of the File */
-  public String name = "";
-  /** The type code of the File, ususally contained somewhere in the file and can be used to identify it */
-  public String typeCode = "";
-  /** The party that generally sends the file */
-  public String sender = "";
-  /** The party that generally receives the file */
-  public String receiver = "";
-  /** The length in bytes of a single record, ONLY if it uses fixed length records */
-  public int recordLength = -1;
-  /** The delimiter used in the file, if delimiter separated fields are used */
-  public char delimiter = '|';
-  /** The field serparator style, either fixed-length, or delimited */
-  public String separatorStyle = "";
-  /** A free form description of the file */
-  public String description = "";
 
-  /** List of record definitions for the file */
-  public List records = new Vector();
-  
-  ModelRecord getModelRecord(String recordName) {
-    for(int i=0; i<records.size(); i++) {
-      ModelRecord curRecord = (ModelRecord)records.get(i);
-      if(curRecord.name.equals(recordName)) {
-        return curRecord;
-      }
+    public static final String SEP_FIXED_LENGTH = "fixed-length";
+    public static final String SEP_FIXED_RECORD = "fixed-record";
+    public static final String SEP_DELIMITED = "delimited";
+
+    /** The name of the File */
+    public String name = "";
+    /** The type code of the File, ususally contained somewhere in the file and can be used to identify it */
+    public String typeCode = "";
+    /** The party that generally sends the file */
+    public String sender = "";
+    /** The party that generally receives the file */
+    public String receiver = "";
+    /** The length in bytes of a single record, ONLY if it uses fixed length records */
+    public int recordLength = -1;
+    /** The delimiter used in the file, if delimiter separated fields are used */
+    public char delimiter = '|';
+    /** The field serparator style, either fixed-length, or delimited */
+    public String separatorStyle = "";
+    /** A free form description of the file */
+    public String description = "";
+
+    /** List of record definitions for the file */
+    public List records = new Vector();
+
+    ModelRecord getModelRecord(String recordName) {
+        for (int i = 0; i < records.size(); i++) {
+            ModelRecord curRecord = (ModelRecord) records.get(i);
+            if (curRecord.name.equals(recordName)) {
+                return curRecord;
+            }
+        }
+        return null;
     }
-    return null;
-  }
 }

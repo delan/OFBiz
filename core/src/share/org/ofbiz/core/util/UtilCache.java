@@ -1,35 +1,5 @@
 /*
  * $Id$
- * $Log$
- * Revision 1.4  2002/01/02 04:21:47  jonesde
- * Small cleanups, mostly message related
- *
- * Revision 1.3  2001/12/03 23:58:48  jonesde
- * Element remove without LRU list now works
- *
- * Revision 1.2  2001/12/03 18:09:55  jonesde
- * Some changes to make caches faster, LRU and expiration stuff only done when enabled; added some error messages
- *
- * Revision 1.1  2001/09/28 22:56:44  jonesde
- * Big update for fromDate PK use, organization stuff
- *
- * Revision 1.4  2001/08/14 08:20:26  jonesde
- * Added constructor for name and params.
- *
- * Revision 1.3  2001/07/18 22:22:53  jonesde
- * A few small changes to use the Debug class for logging instead of straight
- * System.out. Also added conditional logging for info, warning, and error messages
- * which are controlled through the debug.properties file.
- *
- * Revision 1.2  2001/07/16 21:33:27  jonesde
- * Updated events in UtilCache for new sevlet controller.
- *
- * Revision 1.1  2001/07/16 14:45:48  azeneski
- * Added the missing 'core' directory into the module.
- *
- * Revision 1.1  2001/07/15 16:36:18  azeneski
- * Initial Import
- *
  */
 
 package org.ofbiz.core.util;
@@ -70,11 +40,12 @@ import javax.servlet.http.*;
  *  OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR
  *  THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  *
- *@author     David Jones
+ *@author     <a href="mailto:jonesde@ofbiz.org">David E. Jones</a>
  *@created    May 16, 2001
  *@version    1.0
  */
 public class UtilCache {
+
     /** A static Hashtable to keep track of all of the UtilCache instances. */
     public static Map utilCacheTable = new HashMap();
     /** An index number appended to utilCacheTable names when there are conflicts. */
@@ -126,7 +97,7 @@ public class UtilCache {
     public UtilCache(long maxSize, long expireTime) {
         this.maxSize = maxSize;
         this.expireTime = expireTime;
-        name = "specified"+(defaultIndex++);
+        name = "specified" + (defaultIndex++);
         utilCacheTable.put(name, this);
     }
 
@@ -148,7 +119,7 @@ public class UtilCache {
     public UtilCache() {
         setPropertiesParams("default");
 
-        name = "default"+(defaultIndex++);
+        name = "default" + (defaultIndex++);
         utilCacheTable.put(name, this);
     }
 
@@ -160,13 +131,15 @@ public class UtilCache {
             try {
                 value = res.getString(cacheName + ".maxSize");
                 longValue = new Long(value);
-            } catch (Exception e) {}
+            } catch (Exception e) {
+            }
             if (longValue != null)
                 maxSize = longValue.longValue();
             try {
                 value = res.getString(cacheName + ".expireTime");
                 longValue = new Long(value);
-            } catch (Exception e) {}
+            } catch (Exception e) {
+            }
             if (longValue != null)
                 expireTime = longValue.longValue();
         }
@@ -435,12 +408,13 @@ public class UtilCache {
             if (utilCache.getMaxSize() > 0) {
                 try {
                     key = utilCache.keyLRUList.get(number);
-                } catch(Exception e) { }
+                } catch (Exception e) {
+                }
             } else {
                 //no LRU, try looping through the keySet to see if we find the specified index...
                 Iterator ksIter = utilCache.valueTable.keySet().iterator();
                 int curNum = 0;
-                while(ksIter.hasNext()) {
+                while (ksIter.hasNext()) {
                     if (number == curNum) {
                         key = ksIter.next();
                         break;
@@ -450,7 +424,7 @@ public class UtilCache {
                     curNum++;
                 }
             }
-            
+
             if (key != null) {
                 utilCache.remove(key);
                 request.setAttribute(SiteDefs.EVENT_MESSAGE, "Removed element from cache with key: " + key.toString());
@@ -502,10 +476,12 @@ public class UtilCache {
         Long maxSize = null, expireTime = null;
         try {
             maxSize = Long.valueOf(maxSizeStr);
-        } catch (Exception e) {}
+        } catch (Exception e) {
+        }
         try {
             expireTime = Long.valueOf(expireTimeStr);
-        } catch (Exception e) {}
+        } catch (Exception e) {
+        }
 
         UtilCache utilCache = (UtilCache) utilCacheTable.get(name);
         if (utilCache != null) {

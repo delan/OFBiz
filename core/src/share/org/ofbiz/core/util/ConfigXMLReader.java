@@ -7,6 +7,7 @@ package org.ofbiz.core.util;
 import java.net.*;
 import java.util.*;
 import javax.xml.parsers.*;
+
 import org.xml.sax.*;
 import org.w3c.dom.*;
 
@@ -37,134 +38,134 @@ import org.w3c.dom.*;
  * Created on June 29, 2001, 6:18 PM
  */
 public class ConfigXMLReader {
+
     public static UtilCache requestCache = new UtilCache("ConfigXMLReader-Request");
     public static UtilCache viewCache = new UtilCache("ConfigXMLReader-View");
     public static UtilCache headCache = new UtilCache("ConfigXMLReader-Config");
     public static UtilCache handlerCache = new UtilCache("ConfigXMLReader-Handler");
-    
-    
+
+
     /** Site Config Variables */
     public static final String DEFAULT_ERROR_PAGE = "errorpage";
     public static final String SITE_OWNER = "owner";
     public static final String SECURITY_CLASS = "security-class";
     public static final String PREPROCESSOR = "preprocessor";
     public static final String POSTPROCESSOR = "postprocessor";
-    
+
     /** URI Config Variables */
     public static final String REQUEST_MAPPING = "request-map";
     public static final String REQUEST_URI = "uri";
     public static final String REQUEST_EDIT = "edit";
-    
+
     public static final String REQUEST_DESCRIPTION = "description";
     public static final String ERROR_PAGE = "error";
     public static final String NEXT_PAGE = "success";
-    
+
     public static final String SECURITY = "security";
     public static final String SECURITY_HTTPS = "https";
     public static final String SECURITY_AUTH = "auth";
-    
+
     public static final String EVENT = "event";
     public static final String EVENT_PATH = "path";
     public static final String EVENT_TYPE = "type";
     public static final String EVENT_METHOD = "invoke";
-    
+
     public static final String RESPONSE = "response";
     public static final String RESPONSE_NAME = "name";
     public static final String RESPONSE_TYPE = "type";
     public static final String RESPONSE_VALUE = "value";
-    
+
     /** View Config Variables */
     public static final String VIEW_MAPPING = "view-map";
     public static final String VIEW_NAME = "name";
     public static final String VIEW_PAGE = "page";
     public static final String VIEW_DESCRIPTION = "description";
-    
+
     /** Handler Config Variables */
     public static final String HANDLER = "handler";
     public static final String HANDLER_NAME = "name";
     public static final String HANDLER_CLASS = "class";
-    
+
     /** Loads the XML file and returns the root element */
     public static Element loadDocument(URL location) {
         Document document = null;
         try {
             document = UtilXml.readXmlDocument(location, true);
-            
+
             Element rootElement = document.getDocumentElement();
             //rootElement.normalize();
             //Debug.logInfo("Loaded XML Config - " + location);
             return rootElement;
-        }
-        catch (Exception e) {
+        } catch (Exception e) {
             e.printStackTrace();
             //Debug.logError(e,"ConfigXMLReader Error");
         }
-        
+
         return null;
     }
-    
+
     /** Gets a HashMap of request mappings. */
     public static HashMap getRequestMap(URL xml) {
-        HashMap requestMap = (HashMap)requestCache.get(xml);
-        if(requestMap == null) //don't want to block here
+        HashMap requestMap = (HashMap) requestCache.get(xml);
+        if (requestMap == null) //don't want to block here
         {
-            synchronized(ConfigXMLReader.class) {
+            synchronized (ConfigXMLReader.class) {
                 //must check if null again as one of the blocked threads can still enter
-                requestMap = (HashMap)requestCache.get(xml);
-                if(requestMap == null) {
+                requestMap = (HashMap) requestCache.get(xml);
+                if (requestMap == null) {
                     requestMap = loadRequestMap(xml);
-                    requestCache.put(xml,requestMap);
+                    requestCache.put(xml, requestMap);
                 }
             }
         }
         //never return null, just an empty map...
-        if(requestMap == null) requestMap = new HashMap();
+        if (requestMap == null) requestMap = new HashMap();
         return requestMap;
     }
-    
+
     /** Gets a HashMap of request mappings. */
     public static HashMap loadRequestMap(URL xml) {
         HashMap map = new HashMap();
         Element root = loadDocument(xml);
-        if(root == null) return map;
-        
+        if (root == null) return map;
+
         NodeList list = root.getElementsByTagName(REQUEST_MAPPING);
-        for(int rootCount = 0; rootCount < list.getLength(); rootCount++) {
+        for (int rootCount = 0; rootCount < list.getLength(); rootCount++) {
             // Create a URI-MAP for each element found.
             HashMap uriMap = new HashMap();
             // Get the node.
             Node node = list.item(rootCount);
             // Make sure we are an element.
-            if(node instanceof Element) {
+            if (node instanceof Element) {
                 // Get the URI info.
                 Element mapping = (Element) node;
                 String uri = mapping.getAttribute(REQUEST_URI);
                 String edit = mapping.getAttribute(REQUEST_EDIT);
-                if ( edit == null || edit.equals(""))
+                if (edit == null || edit.equals(""))
                     edit = "true";
-                if ( uri != null ) {
+                if (uri != null) {
                     uriMap.put(REQUEST_URI, uri);
                     uriMap.put(REQUEST_EDIT, edit);
                 }
-                
+
                 // Check for security.
                 NodeList securityList = mapping.getElementsByTagName(SECURITY);
-                if ( securityList.getLength() > 0 ) {
+                if (securityList.getLength() > 0) {
                     Node securityNode = securityList.item(0);  // There should be only one.
-                    if ( securityNode instanceof Element ) {       // We must be an element.
+                    if (securityNode instanceof Element) {       // We must be an element.
                         Element security = (Element) securityNode;
                         String securityHttps = security.getAttribute(SECURITY_HTTPS);
-                        String securityAuth =  security.getAttribute(SECURITY_AUTH);
+                        String securityAuth = security.getAttribute(SECURITY_AUTH);
                         uriMap.put(SECURITY_HTTPS, securityHttps);
                         uriMap.put(SECURITY_AUTH, securityAuth);
                     }
                 }
-                
+
                 // Check for an event.
                 NodeList eventList = mapping.getElementsByTagName(EVENT);
-                if ( eventList.getLength() > 0 ) {
+                if (eventList.getLength() > 0) {
                     Node eventNode = eventList.item(0);  // There should be only one.
-                    if ( eventNode instanceof Element ) {   // We must be an element.
+                    if (eventNode instanceof Element) {   // We must be an element.
                         Element event = (Element) eventNode;
                         String type = event.getAttribute(EVENT_TYPE);
                         String path = event.getAttribute(EVENT_PATH);
@@ -174,33 +175,32 @@ public class ConfigXMLReader {
                         uriMap.put(EVENT_METHOD, invoke);
                     }
                 }
-                
+
                 // Check for a description.
                 NodeList descList = mapping.getElementsByTagName(REQUEST_DESCRIPTION);
-                if ( descList.getLength() > 0 ) {
+                if (descList.getLength() > 0) {
                     Node descNode = descList.item(0);   // There should be only one.
-                    if ( descNode instanceof Element ) {   // We must be an element.
+                    if (descNode instanceof Element) {   // We must be an element.
                         NodeList children = descNode.getChildNodes();
-                        if ( children.getLength() > 0 ) {
+                        if (children.getLength() > 0) {
                             Node cdata = children.item(0);  // Just get the first one.
                             String description = cdata.getNodeValue();
-                            if ( description != null )
+                            if (description != null)
                                 description = description.trim();
                             else
                                 description = "";
                             uriMap.put(REQUEST_DESCRIPTION, description);
                         }
                     }
+                } else {
+                    uriMap.put(REQUEST_DESCRIPTION, "");
                 }
-                else {
-                    uriMap.put(REQUEST_DESCRIPTION,"");
-                }
-                
+
                 // Get the response(s).
                 NodeList respList = mapping.getElementsByTagName(RESPONSE);
-                for ( int respCount = 0; respCount < respList.getLength(); respCount++ ) {
+                for (int respCount = 0; respCount < respList.getLength(); respCount++) {
                     Node responseNode = respList.item(respCount);
-                    if ( responseNode instanceof Element ) {
+                    if (responseNode instanceof Element) {
                         Element response = (Element) responseNode;
                         String name = response.getAttribute(RESPONSE_NAME);
                         String type = response.getAttribute(RESPONSE_TYPE);
@@ -208,16 +208,16 @@ public class ConfigXMLReader {
                         uriMap.put(name, type + ":" + value);
                     }
                 }
-                
-                if ( uri != null )
+
+                if (uri != null)
                     map.put(uri, uriMap);
             }
-            
+
         }
-        
-    /* Debugging */
+
+        /* Debugging */
         Debug.logInfo("-------- Request Mappings --------");
-        HashMap debugMap =  map;
+        HashMap debugMap = map;
         Set debugSet = debugMap.keySet();
         Iterator i = debugSet.iterator();
         while (i.hasNext()) {
@@ -234,81 +234,80 @@ public class ConfigXMLReader {
             }
         }
         Debug.logInfo("------ End Request Mappings ------");
-    /* End Debugging */
-        
+        /* End Debugging */
+
         Debug.logInfo("RequestMap Created: (" + map.size() + ") records.");
         return map;
     }
-    
+
     /** Gets a HashMap of view mappings. */
     public static HashMap getViewMap(URL xml) {
-        HashMap viewMap = (HashMap)viewCache.get(xml);
-        if(viewMap == null) //don't want to block here
+        HashMap viewMap = (HashMap) viewCache.get(xml);
+        if (viewMap == null) //don't want to block here
         {
-            synchronized(ConfigXMLReader.class) {
+            synchronized (ConfigXMLReader.class) {
                 //must check if null again as one of the blocked threads can still enter
-                viewMap = (HashMap)viewCache.get(xml);
-                if(viewMap == null) {
+                viewMap = (HashMap) viewCache.get(xml);
+                if (viewMap == null) {
                     viewMap = loadViewMap(xml);
-                    viewCache.put(xml,viewMap);
+                    viewCache.put(xml, viewMap);
                 }
             }
         }
         //never return null, just an empty map...
-        if(viewMap == null) viewMap = new HashMap();
+        if (viewMap == null) viewMap = new HashMap();
         return viewMap;
     }
-    
+
     /** Gets a HashMap of view mappings. */
     public static HashMap loadViewMap(URL xml) {
         HashMap map = new HashMap();
         Element root = loadDocument(xml);
-        if ( root == null )
+        if (root == null)
             return map;
-        
+
         NodeList list = root.getElementsByTagName(VIEW_MAPPING);
-        for ( int rootCount = 0; rootCount < list.getLength(); rootCount++ ) {
+        for (int rootCount = 0; rootCount < list.getLength(); rootCount++) {
             // Create a URI-MAP for each element found.
             HashMap uriMap = new HashMap();
             // Get the node.
             Node node = list.item(rootCount);
             // Make sure we are an element.
-            if ( node instanceof Element ) {
+            if (node instanceof Element) {
                 // Get the view info.
                 Element mapping = (Element) node;
                 String name = mapping.getAttribute(VIEW_NAME);
                 String page = mapping.getAttribute(VIEW_PAGE);
                 uriMap.put(VIEW_NAME, name);
                 uriMap.put(VIEW_PAGE, page);
-                
+
                 // Check for a description.
                 NodeList descList = mapping.getElementsByTagName(VIEW_DESCRIPTION);
-                if ( descList.getLength() > 0 ) {
+                if (descList.getLength() > 0) {
                     Node descNode = descList.item(0);   // There should be only one.
-                    if ( descNode instanceof Element ) {   // We must be an element.
+                    if (descNode instanceof Element) {   // We must be an element.
                         NodeList children = descNode.getChildNodes();
-                        if ( children.getLength() > 0 ) {
+                        if (children.getLength() > 0) {
                             Node cdata = children.item(0);  // Just get the first one.
                             String description = cdata.getNodeValue();
-                            if ( description != null )
+                            if (description != null)
                                 description = description.trim();
                             else
                                 description = "";
                             uriMap.put(VIEW_DESCRIPTION, description);
                         }
                     }
+                } else {
+                    uriMap.put(VIEW_DESCRIPTION, "");
                 }
-                else {
-                    uriMap.put(VIEW_DESCRIPTION,"");
-                }
-                
-                if ( name != null )
+
+                if (name != null)
                     map.put(name, uriMap);
             }
         }
-    /* Debugging */
+        /* Debugging */
         Debug.logInfo("-------- View Mappings --------");
-        HashMap debugMap =  map;
+        HashMap debugMap = map;
         Set debugSet = debugMap.keySet();
         Iterator i = debugSet.iterator();
         while (i.hasNext()) {
@@ -325,84 +324,84 @@ public class ConfigXMLReader {
             }
         }
         Debug.logInfo("------ End View Mappings ------");
-    /* End Debugging */
-        
+        /* End Debugging */
+
         Debug.logInfo("ViewMap Created: (" + map.size() + ") records.");
         return map;
     }
-    
+
     /** Gets a HashMap of site configuration variables. */
     public static HashMap getConfigMap(URL xml) {
-        HashMap configMap = (HashMap)headCache.get(xml);
-        if(configMap == null) //don't want to block here
+        HashMap configMap = (HashMap) headCache.get(xml);
+        if (configMap == null) //don't want to block here
         {
-            synchronized(ConfigXMLReader.class) {
+            synchronized (ConfigXMLReader.class) {
                 //must check if null again as one of the blocked threads can still enter
-                configMap = (HashMap)headCache.get(xml);
-                if(configMap == null) {
+                configMap = (HashMap) headCache.get(xml);
+                if (configMap == null) {
                     configMap = loadConfigMap(xml);
-                    headCache.put(xml,configMap);
+                    headCache.put(xml, configMap);
                 }
             }
         }
         //never return null, just an empty map...
-        if(configMap == null) configMap = new HashMap();
+        if (configMap == null) configMap = new HashMap();
         return configMap;
     }
-    
+
     /** Gets a HashMap of site configuration variables. */
     public static HashMap loadConfigMap(URL xml) {
         HashMap map = new HashMap();
         Element root = loadDocument(xml);
         NodeList list = null;
-        
-        if ( root != null ) {
+
+        if (root != null) {
             // default error page
             list = root.getElementsByTagName(DEFAULT_ERROR_PAGE);
-            if ( list.getLength() > 0 ) {
+            if (list.getLength() > 0) {
                 Node node = list.item(0);
                 NodeList children = node.getChildNodes();
                 Node child = children.item(0);
-                if ( child.getNodeName() != null )
-                    map.put(DEFAULT_ERROR_PAGE,child.getNodeValue());
+                if (child.getNodeName() != null)
+                    map.put(DEFAULT_ERROR_PAGE, child.getNodeValue());
             }
             list = null;
             // site owner
             list = root.getElementsByTagName(SITE_OWNER);
-            if ( list.getLength() > 0 ) {
+            if (list.getLength() > 0) {
                 Node node = list.item(0);
                 NodeList children = node.getChildNodes();
                 Node child = children.item(0);
-                if ( child.getNodeName() != null )
-                    map.put(SITE_OWNER,child.getNodeValue());
+                if (child.getNodeName() != null)
+                    map.put(SITE_OWNER, child.getNodeValue());
             }
             list = null;
             // security class
             list = root.getElementsByTagName(SECURITY_CLASS);
-            if ( list.getLength() > 0 ) {
+            if (list.getLength() > 0) {
                 Node node = list.item(0);
                 NodeList children = node.getChildNodes();
                 Node child = children.item(0);
-                if ( child.getNodeName() != null )
-                    map.put(SECURITY_CLASS,child.getNodeValue());
+                if (child.getNodeName() != null)
+                    map.put(SECURITY_CLASS, child.getNodeValue());
             }
             list = null;
             // preprocessor events
             list = root.getElementsByTagName(PREPROCESSOR);
-            if ( list.getLength() > 0 ) {
+            if (list.getLength() > 0) {
                 ArrayList eventList = new ArrayList();
                 Node node = list.item(0);
-                if ( node instanceof Element ) {
+                if (node instanceof Element) {
                     Element nodeElement = (Element) node;
                     NodeList procEvents = nodeElement.getElementsByTagName(EVENT);
-                    for ( int procCount = 0; procCount < procEvents.getLength(); procCount++ ) {
+                    for (int procCount = 0; procCount < procEvents.getLength(); procCount++) {
                         Node eventNode = procEvents.item(procCount);
-                        if ( eventNode instanceof Element ) {
+                        if (eventNode instanceof Element) {
                             Element event = (Element) eventNode;
                             String type = event.getAttribute(EVENT_TYPE);
                             String path = event.getAttribute(EVENT_PATH);
                             String invoke = event.getAttribute(EVENT_METHOD);
-                            
+
                             HashMap eventMap = new HashMap();
                             eventMap.put(EVENT_TYPE, type);
                             eventMap.put(EVENT_PATH, path);
@@ -411,25 +410,25 @@ public class ConfigXMLReader {
                         }
                     }
                 }
-                map.put(PREPROCESSOR,eventList);
+                map.put(PREPROCESSOR, eventList);
             }
             list = null;
             // postprocessor events
             list = root.getElementsByTagName(POSTPROCESSOR);
-            if ( list.getLength() > 0 ) {
+            if (list.getLength() > 0) {
                 ArrayList eventList = new ArrayList();
                 Node node = list.item(0);
-                if ( node instanceof Element ) {
+                if (node instanceof Element) {
                     Element nodeElement = (Element) node;
                     NodeList procEvents = nodeElement.getElementsByTagName(EVENT);
-                    for ( int procCount = 0; procCount < procEvents.getLength(); procCount++ ) {
+                    for (int procCount = 0; procCount < procEvents.getLength(); procCount++) {
                         Node eventNode = procEvents.item(procCount);
-                        if ( eventNode instanceof Element ) {
+                        if (eventNode instanceof Element) {
                             Element event = (Element) eventNode;
                             String type = event.getAttribute(EVENT_TYPE);
                             String path = event.getAttribute(EVENT_PATH);
                             String invoke = event.getAttribute(EVENT_METHOD);
-                            
+
                             HashMap eventMap = new HashMap();
                             eventMap.put(EVENT_TYPE, type);
                             eventMap.put(EVENT_PATH, path);
@@ -438,11 +437,11 @@ public class ConfigXMLReader {
                         }
                     }
                 }
-                map.put(POSTPROCESSOR,eventList);
+                map.put(POSTPROCESSOR, eventList);
             }
             list = null;
         }
-    /* Debugging */
+        /* Debugging */
 /*
     Debug.logInfo("-------- Config Mappings --------");
     HashMap debugMap =  map;
@@ -463,89 +462,91 @@ public class ConfigXMLReader {
     }
     Debug.logInfo("------ End Config Mappings ------");
  */
-    /* End Debugging */
-        
-        Debug.logInfo("ConfigMap Created: (" + map.size() +") records.");
+        /* End Debugging */
+
+        Debug.logInfo("ConfigMap Created: (" + map.size() + ") records.");
         return map;
     }
-    
+
     /** Gets a HashMap of handler mappings. */
     public static HashMap getHandlerMap(URL xml) {
-        HashMap handlerMap = (HashMap)handlerCache.get(xml);
-        if(handlerMap == null) //don't want to block here
+        HashMap handlerMap = (HashMap) handlerCache.get(xml);
+        if (handlerMap == null) //don't want to block here
         {
-            synchronized(ConfigXMLReader.class) {
+            synchronized (ConfigXMLReader.class) {
                 //must check if null again as one of the blocked threads can still enter
-                handlerMap = (HashMap)handlerCache.get(xml);
-                if(handlerMap == null) {
+                handlerMap = (HashMap) handlerCache.get(xml);
+                if (handlerMap == null) {
                     handlerMap = loadHandlerMap(xml);
-                    handlerCache.put(xml,handlerMap);
+                    handlerCache.put(xml, handlerMap);
                 }
             }
         }
         //never return null, just an empty map...
-        if(handlerMap == null) handlerMap = new HashMap();
+        if (handlerMap == null) handlerMap = new HashMap();
         return handlerMap;
     }
-    
+
     public static HashMap loadHandlerMap(URL xml) {
         HashMap map = new HashMap();
         Element root = loadDocument(xml);
         NodeList list = null;
-        
-        if ( root != null ) {
+
+        if (root != null) {
             list = root.getElementsByTagName(HANDLER);
-            for ( int i = 0; i < list.getLength(); i++ ) {
+            for (int i = 0; i < list.getLength(); i++) {
                 Element handler = (Element) list.item(i);
                 String hName = checkEmpty(handler.getAttribute(HANDLER_NAME));
                 String hClass = checkEmpty(handler.getAttribute(HANDLER_CLASS));
-                map.put(hName,hClass);
+                map.put(hName, hClass);
             }
         }
         return map;
     }
-    
+
     private static String checkEmpty(String string) {
-        if(string != null && string.length() > 0) return string;
-        else return "";
+        if (string != null && string.length() > 0)
+            return string;
+        else
+            return "";
     }
-    
+
     /** Not used right now */
     public static String getSubTagValue(Node node, String subTagName) {
         String returnString = "";
-        if ( node != null ) {
-            NodeList  children = node.getChildNodes();
-            for ( int innerLoop = 0; innerLoop < children.getLength(); innerLoop++ ) {
-                Node  child = children.item(innerLoop);
-                if ( (child != null ) && ( child.getNodeName() != null ) && child.getNodeName().equals(subTagName ) ) {
+        if (node != null) {
+            NodeList children = node.getChildNodes();
+            for (int innerLoop = 0; innerLoop < children.getLength(); innerLoop++) {
+                Node child = children.item(innerLoop);
+                if ((child != null) && (child.getNodeName() != null) && child.getNodeName().equals(subTagName)) {
                     Node grandChild = child.getFirstChild();
-                    if ( grandChild.getNodeValue() != null )
+                    if (grandChild.getNodeValue() != null)
                         return grandChild.getNodeValue();
                 }
             }
         }
         return returnString;
     }
-    
+
     public static void main(String args[]) throws Exception {
         /** Debugging */
-        if ( args[0] == null ) {
+        if (args[0] == null) {
             System.out.println("Please give a path to the config file you wish to test.");
             return;
         }
         System.out.println("----------------------------------");
         System.out.println("Request Mappings:");
         System.out.println("----------------------------------");
-        java.util.HashMap debugMap =  getRequestMap(new URL(args[0]));
+        java.util.HashMap debugMap = getRequestMap(new URL(args[0]));
         java.util.Set debugSet = debugMap.keySet();
         java.util.Iterator i = debugSet.iterator();
-        while ( i.hasNext() ) {
+        while (i.hasNext()) {
             Object o = i.next();
             String request = (String) o;
             HashMap thisURI = (java.util.HashMap) debugMap.get(o);
             System.out.println(request);
             java.util.Iterator list = ((java.util.Set) thisURI.keySet()).iterator();
-            while ( list.hasNext() ) {
+            while (list.hasNext()) {
                 Object lo = list.next();
                 String name = (String) lo;
                 String value = (String) thisURI.get(lo);
@@ -557,5 +558,5 @@ public class ConfigXMLReader {
         System.out.println("----------------------------------");
         /** End Debugging */
     }
-    
+
 }

@@ -37,21 +37,21 @@ import java.util.Map;
  */
 
 public interface WfActivity extends WfExecutionObject {
-    
+
     /**
      * Retrieve amount of Assignment objects.
      * @throws WfException General workflow exception.
      * @return Amount of current assignments.
      */
     public int howManyAssignment() throws WfException;
-    
+
     /**
      * Retrieve the Iterator of Assignments objects.
      * @throws WfException General workflow exception.
      * @return Assignment Iterator.
      */
     public Iterator getIteratorAssignment() throws WfException;
-    
+
     /**
      * Retrieve all assignments of this activity.
      * @param maxNumber the high limit of number of assignment in result set (0 for all).
@@ -59,7 +59,7 @@ public interface WfActivity extends WfExecutionObject {
      * @return  List of WfAssignment objects.
      */
     public List getSequenceAssignment(int maxNumber) throws WfException;
-    
+
     /**
      * Check if a specific assignment is a member of this activity.
      * @param member Assignment object.
@@ -67,14 +67,14 @@ public interface WfActivity extends WfExecutionObject {
      * @return true if the assignment is a member of this activity.
      */
     public boolean isMemberOfAssignment(WfAssignment member) throws WfException;
-    
+
     /**
      * Getter for the process of this activity.
      * @throws WfException General workflow exception.
      * @return WfProcess Process to which this activity belong.
      */
     public WfProcess container() throws WfException;
-    
+
     /**
      * Retrieve the Result map of this activity.
      * @throws WfException General workflow exception.
@@ -82,7 +82,7 @@ public interface WfActivity extends WfExecutionObject {
      * @return Map of results from this activity
      */
     public Map result() throws WfException, ResultNotAvailable;
-    
+
     /**
      * Assign Result for this activity.
      * @param newResult New result.
@@ -90,28 +90,28 @@ public interface WfActivity extends WfExecutionObject {
      * @throws InvalidData Data is invalid
      */
     public void setResult(Map result) throws WfException, InvalidData;
-    
+
     /**
      * Complete this activity.
      * @throws WfException General workflow exception.
      * @throws CannotComplete Cannot complete the activity
      */
     public void complete() throws WfException, CannotComplete;
-        
+
     /**
-     * Activates this activity.   
+     * Activates this activity.
      * @throws WfException
      * @throws CannotStart
      * @throws AlreadyRunning
      */
     public void activate() throws WfException, CannotStart, AlreadyRunning;
-    
-    /** 
+
+    /**
      * Assign this activity to a resource
      * @param WfResource to assign this activity to
      * @param append Append to end if existing list (true) or replace existing (false)
      * @throws WfException
      */
-    public void assign(WfResource resource, boolean append) throws WfException;    
-    
+    public void assign(WfResource resource, boolean append) throws WfException;
+
 } // interface WfActivity

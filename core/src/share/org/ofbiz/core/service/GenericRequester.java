@@ -34,6 +34,7 @@ import java.util.*;
  *@version    1.0
  */
 public interface GenericRequester {
+
     /** Receive the result of an asynchronous service call
      *@param result Map of name, value pairs composing the result
      */

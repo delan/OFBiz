@@ -1,3 +1,4 @@
+
 package org.ofbiz.core.datafile;
 
 import java.util.*;
@@ -35,6 +36,7 @@ import org.ofbiz.core.util.*;
  */
 
 public class DataFile {
+
     /** List of record in the file, contains Record objects */
     protected List records = null;
     /** Contains the definition for the file */
@@ -76,7 +78,7 @@ public class DataFile {
     public DataFile(ModelDataFile modelDataFile) {
         this.modelDataFile = modelDataFile;
     }
-    
+
     public ModelDataFile getModelDataFile() {
         return modelDataFile;
     }
@@ -88,12 +90,12 @@ public class DataFile {
     public void addRecord(Record record) {
         records.add(record);
     }
-    
+
     public Record makeRecord(String recordName) {
         ModelRecord modelRecord = getModelDataFile().getModelRecord(recordName);
         return new Record(modelRecord);
     }
-    
+
     /** Loads (or reloads) the data file at the pre-specified location.
      * @param fileUrl The URL that the file will be loaded from
      * @throws DataFileException Exception thown for various errors, generally has a nested exception
@@ -110,13 +112,14 @@ public class DataFile {
         }
         try {
             readDataFile(urlStream, fileUrl.toString());
+        } finally {
+            try {
+                urlStream.close();
+            } catch (IOException e) {
+                Debug.logWarning(e);
+            }
         }
-        finally { try {
-                      urlStream.close();
-              } catch (IOException e) {
-                      Debug.logWarning(e);
-                  }
-                } }
+    }
 
     /** Populates (or reloads) the data file with the text of the given content
      * @param content The text data to populate the DataFile with
@@ -167,7 +170,7 @@ public class DataFile {
                     }
                 } catch (IOException e) {
                     throw new DataFileException("Error reading line #" + lineNum + " (index " + (lineNum - 1) * modelDataFile.recordLength + " length " +
-                            modelDataFile.recordLength + ") from location: " + locationInfo, e);
+                                                modelDataFile.recordLength + ") from location: " + locationInfo, e);
                 }
             } else {
                 try {
@@ -181,7 +184,7 @@ public class DataFile {
                 //first check to see if the file type has a line size, and if so if this line complies
                 if (!isFixedRecord && modelDataFile.recordLength > 0 && line.length() != modelDataFile.recordLength) {
                     throw new DataFileException("Line number " + lineNum + " was not the expected length; expected: " + modelDataFile.recordLength + ", got: " +
-                            line.length());
+                                                line.length());
                 }
 
                 //find out which type of record it is - will throw an exception if not found
@@ -209,7 +212,7 @@ public class DataFile {
 
                     if (parentRecord == null) {
                         throw new DataFileException("Expected Parent Record not found for line " + lineNum + "; record name of expected parent is " +
-                                modelRecord.parentName);
+                                                    modelRecord.parentName);
                     }
 
                     parentRecord.addChildRecord(record);
@@ -234,7 +237,7 @@ public class DataFile {
                         }
                     } catch (IOException e) {
                         throw new DataFileException("Error reading line #" + lineNum + " (index " + (lineNum - 1) * modelDataFile.recordLength + " length " +
-                                modelDataFile.recordLength + ") from location: " + locationInfo, e);
+                                                    modelDataFile.recordLength + ") from location: " + locationInfo, e);
                     }
                 } else {
                     try {
@@ -266,13 +269,12 @@ public class DataFile {
 
         try {
             writeDataFile(fos);
-        }
-        finally { 
+        } finally {
             try {
                 if (fos != null)
                     fos.close();
-              } catch (IOException e) {
-                    throw new DataFileException("Could not close file " + filename + ", may not have written correctly;", e);
+            } catch (IOException e) {
+                throw new DataFileException("Could not close file " + filename + ", may not have written correctly;", e);
             }
         }
     }
@@ -350,14 +352,14 @@ public class DataFile {
                     //Debug.logInfo("[DataFile.findModelForLine] Doing ranged number typecode match - minNum=" + curModelRecord.tcMinNum + ", maxNum=" + curModelRecord.tcMaxNum + ", filelinecode=" + typeCode);
                     long typeCodeNum = Long.parseLong(typeCode);
                     if ((curModelRecord.tcMinNum < 0 || typeCodeNum >= curModelRecord.tcMinNum) &&
-                        (curModelRecord.tcMaxNum < 0 || typeCodeNum <= curModelRecord.tcMaxNum)) {
+                            (curModelRecord.tcMaxNum < 0 || typeCodeNum <= curModelRecord.tcMaxNum)) {
                         modelRecord = curModelRecord;
                         break;
                     }
                 } else {
                     //Debug.logInfo("[DataFile.findModelForLine] Doing ranged String typecode match - min=" + curModelRecord.tcMin + ", max=" + curModelRecord.tcMax + ", filelinecode=" + typeCode);
                     if ((typeCode.compareTo(curModelRecord.tcMin) >= 0) &&
-                        (typeCode.compareTo(curModelRecord.tcMax) <= 0)) {
+                            (typeCode.compareTo(curModelRecord.tcMax) <= 0)) {
                         modelRecord = curModelRecord;
                         break;
                     }
@@ -366,7 +368,7 @@ public class DataFile {
         }
         if (modelRecord == null)
             throw new DataFileException("Could not find record definition for line " + lineNum + "; first bytes: " +
-                    line.substring(0, (line.length() > 5) ? 5 : line.length()));
+                                        line.substring(0, (line.length() > 5) ? 5 : line.length()));
         //Debug.logInfo("[DataFile.findModelForLine] Got record model named " + modelRecord.name);
         return modelRecord;
     }

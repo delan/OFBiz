@@ -1,3 +1,4 @@
+
 package org.ofbiz.core.entity;
 
 import java.util.*;
@@ -7,6 +8,7 @@ import org.ofbiz.core.util.*;
 import org.ofbiz.core.entity.model.*;
 
 import javax.xml.parsers.ParserConfigurationException;
+
 import org.xml.sax.SAXException;
 import org.xml.sax.SAXParseException;
 
@@ -45,7 +47,8 @@ import org.w3c.dom.NodeList;
  *@version    1.0
  */
 public class GenericDelegator {
-    /** the delegatorCache will now be a HashMap, allowing reload of definitions, 
+
+    /** the delegatorCache will now be a HashMap, allowing reload of definitions,
      * but the delegator will always be the same object for the given name */
     static Map delegatorCache = new HashMap();
     String delegatorName;
@@ -96,7 +99,7 @@ public class GenericDelegator {
             String groupName = (String) groups.next();
             String helperName = this.getGroupHelperName(groupName);
             Debug.logInfo("[GenericDelegator.GenericDelegator] Delegator \"" + delegatorName + "\" initializing helper \"" + helperName +
-                    "\" for entity group \"" + groupName + "\".");
+                          "\" for entity group \"" + groupName + "\".");
             TreeSet helpersDone = new TreeSet();
             if (helperName != null && helperName.length() > 0) {
                 //make sure each helper is only loaded once
@@ -745,7 +748,7 @@ public class GenericDelegator {
             ModelKeyMap keyMap = (ModelKeyMap) relation.keyMaps.get(i);
             fields.put(keyMap.relFieldName, value.get(keyMap.fieldName));
         }
-        
+
         GenericPK dummyPK = new GenericPK(relatedEntity, fields);
         dummyPK.setDelegator(this);
         return dummyPK;
@@ -909,7 +912,7 @@ public class GenericDelegator {
             try {
                 //only rollback the transaction if we started one...
                 TransactionUtil.rollback(beganTransaction);
-            } catch(GenericEntityException e2) {
+            } catch (GenericEntityException e2) {
                 Debug.logError("[GenericDelegator.removeAll] Could not rollback transaction: ");
                 Debug.logError(e2);
             }
@@ -971,7 +974,7 @@ public class GenericDelegator {
                 //only rollback the transaction if we started one...
                 if (beganTransaction)
                     TransactionUtil.rollback();
-            } catch(GenericEntityException e2) {
+            } catch (GenericEntityException e2) {
                 Debug.logError("[GenericDelegator.removeAll] Could not rollback transaction: ");
                 Debug.logError(e2);
             }
@@ -1130,7 +1133,7 @@ public class GenericDelegator {
                         values.add(value);
                 }
             } while ((curChild = curChild.getNextSibling()) != null)
-                ;
+                    ;
         } else
             Debug.logWarning("[GenericDelegator.makeValues] No child nodes found in document.");
 

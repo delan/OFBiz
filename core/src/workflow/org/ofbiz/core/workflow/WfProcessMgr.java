@@ -36,92 +36,93 @@ import java.util.List;
  *@version    1.0
  */
 
-public interface WfProcessMgr  {
-  
-  /**
-   * @throws WfException
-   * @return
-   */
-  public int howManyProcess() throws WfException;
-  
-  /**
-   * @throws WfException
-   * @return
-   */
-  public Iterator getIteratorProcess() throws WfException;
-  
-  /**
-   * @param maxNumber
-   * @throws WfException
-   * @return List of WfProcess objects.
-   */
-  public List getSequenceProcess(int maxNumber) throws WfException;
-  
-  /**
-   * @param member
-   * @throws WfException
-   * @return
-   */
-  public boolean isMemberOfProcess(WfProcess member) throws WfException;
-  
-  /**
-   * @throws WfException
-   * @return
-   */
-  public List processMgrStateType() throws WfException;
-  
-  /**
-   * @param newState
-   * @throws WfException
-   * @throws TransitionNotAllowed
-   */
-  public void setProcessMgrState(String newState) throws WfException, TransitionNotAllowed;
-  
-  /**
-   * @throws WfException
-   * @return
-   */
-  public String name() throws WfException;
-  
-  /**
-   * @throws WfException
-   * @return
-   */
-  public String description() throws WfException;
-  
-  /**
-   * @throws WfException
-   * @return
-   */
-  public String category() throws WfException;
-  
-  /**
-   * @throws WfException
-   * @return
-   */
-  public String version() throws WfException;
-  
-  /**
-   * @throws WfException
-   * @return
-   */
-  public Map contextSignature() throws WfException;
-  
-  /**
-   * @throws WfException
-   * @return
-   */
-  public Map resultSignature() throws WfException;
-  
-  /**
-   * Create a WfProcess object
-   * @param requester
-   * @throws WfException
-   * @throws NotEnabled
-   * @throws InvalidRequester
-   * @throws RequesterRequired
-   * @return WfProcess created
-   */
-  public WfProcess createProcess(WfRequester requester) throws WfException, NotEnabled, InvalidRequester, RequesterRequired;
-  
+public interface WfProcessMgr {
+
+    /**
+     * @throws WfException
+     * @return
+     */
+    public int howManyProcess() throws WfException;
+
+    /**
+     * @throws WfException
+     * @return
+     */
+    public Iterator getIteratorProcess() throws WfException;
+
+    /**
+     * @param maxNumber
+     * @throws WfException
+     * @return List of WfProcess objects.
+     */
+    public List getSequenceProcess(int maxNumber) throws WfException;
+
+    /**
+     * @param member
+     * @throws WfException
+     * @return
+     */
+    public boolean isMemberOfProcess(WfProcess member) throws WfException;
+
+    /**
+     * @throws WfException
+     * @return
+     */
+    public List processMgrStateType() throws WfException;
+
+    /**
+     * @param newState
+     * @throws WfException
+     * @throws TransitionNotAllowed
+     */
+    public void setProcessMgrState(String newState) throws WfException, TransitionNotAllowed;
+
+    /**
+     * @throws WfException
+     * @return
+     */
+    public String name() throws WfException;
+
+    /**
+     * @throws WfException
+     * @return
+     */
+    public String description() throws WfException;
+
+    /**
+     * @throws WfException
+     * @return
+     */
+    public String category() throws WfException;
+
+    /**
+     * @throws WfException
+     * @return
+     */
+    public String version() throws WfException;
+
+    /**
+     * @throws WfException
+     * @return
+     */
+    public Map contextSignature() throws WfException;
+
+    /**
+     * @throws WfException
+     * @return
+     */
+    public Map resultSignature() throws WfException;
+
+    /**
+     * Create a WfProcess object
+     * @param requester
+     * @throws WfException
+     * @throws NotEnabled
+     * @throws InvalidRequester
+     * @throws RequesterRequired
+     * @return WfProcess created
+     */
+    public WfProcess createProcess(WfRequester requester) throws WfException, NotEnabled, InvalidRequester,
+            RequesterRequired;
+
 } // interface WfProcessMgr

@@ -6,6 +6,7 @@ package org.ofbiz.core.service;
 
 import java.util.*;
 import java.lang.reflect.*;
+
 import org.ofbiz.core.util.*;
 
 /**
@@ -46,7 +47,7 @@ public final class StandardJavaEngine extends GenericAsyncEngine {
      * @param context Map of name, value pairs composing the context
      */
     public void runSyncIgnore(ModelService modelService,
-            Map context) throws GenericServiceException {
+                              Map context) throws GenericServiceException {
         Map result = runSync(modelService, context);
     }
 
@@ -55,7 +56,7 @@ public final class StandardJavaEngine extends GenericAsyncEngine {
      * @return Map of name, value pairs composing the result
      */
     public Map runSync(ModelService modelService,
-            Map context) throws GenericServiceException {
+                       Map context) throws GenericServiceException {
         Object result = serviceInvoker(modelService, context);
         if (result == null || !(result instanceof Map))
             throw new GenericServiceException("Service did not return expected result");
@@ -64,11 +65,11 @@ public final class StandardJavaEngine extends GenericAsyncEngine {
 
     // Invoke the static java method service.
     private Object serviceInvoker(ModelService modelService,
-            Map context) throws GenericServiceException {
+                                  Map context) throws GenericServiceException {
         // static java service methods should be: public Map methodName(DispatchContext dctx, Map context)
         DispatchContext dctx = dispatcher.getLocalContext(loader);
-        Class[] paramTypes = new Class[]{ DispatchContext.class, Map.class };
-        Object[] params = new Object[]{ dctx, context };
+        Class[] paramTypes = new Class[]{DispatchContext.class, Map.class};
+        Object[] params = new Object[]{dctx, context};
         Object result = null;
 
         // check the package and method names
@@ -87,29 +88,22 @@ public final class StandardJavaEngine extends GenericAsyncEngine {
             Method m = c.getMethod(modelService.invoke, paramTypes);
             result = m.invoke(null, params);
         } catch (ClassNotFoundException cnfe) {
-            throw new GenericServiceException("Cannot find service location",cnfe);
-        }
-        catch (NoSuchMethodException nsme) {
-            throw new GenericServiceException("Service method does not exist",nsme);
-        }
-        catch (SecurityException se) {
-            throw new GenericServiceException("Access denied",se);
-        }
-        catch (IllegalAccessException iae) {
-            throw new GenericServiceException("Method not accessible",iae);
-        }
-        catch (IllegalArgumentException iarge) {
-            throw new GenericServiceException("Invalid parameter match",iarge);
-        }
-        catch (InvocationTargetException ite) {
+            throw new GenericServiceException("Cannot find service location", cnfe);
+        } catch (NoSuchMethodException nsme) {
+            throw new GenericServiceException("Service method does not exist", nsme);
+        } catch (SecurityException se) {
+            throw new GenericServiceException("Access denied", se);
+        } catch (IllegalAccessException iae) {
+            throw new GenericServiceException("Method not accessible", iae);
+        } catch (IllegalArgumentException iarge) {
+            throw new GenericServiceException("Invalid parameter match", iarge);
+        } catch (InvocationTargetException ite) {
             throw new GenericServiceException("Service threw an unexpected exception",
-                    ite);
-        }
-        catch (NullPointerException npe) {
-            throw new GenericServiceException("Specified object is null",npe);
-        }
-        catch (ExceptionInInitializerError eie) {
-            throw new GenericServiceException("Initialization failed",eie);
+                                              ite);
+        } catch (NullPointerException npe) {
+            throw new GenericServiceException("Specified object is null", npe);
+        } catch (ExceptionInInitializerError eie) {
+            throw new GenericServiceException("Initialization failed", eie);
         }
 
         return result;

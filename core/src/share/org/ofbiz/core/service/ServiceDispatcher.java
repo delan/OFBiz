@@ -5,6 +5,7 @@
 package org.ofbiz.core.service;
 
 import java.util.*;
+
 import org.ofbiz.core.util.*;
 import org.ofbiz.core.entity.*;
 import org.ofbiz.core.service.scheduler.*;
@@ -58,8 +59,7 @@ public class ServiceDispatcher {
      *@param delegator the local delegator
      *@return A reference to this global ServiceDispatcher
      */
-    public static ServiceDispatcher getInstance(String name,
-            GenericDelegator delegator) {
+    public static ServiceDispatcher getInstance(String name, GenericDelegator delegator) {
         ServiceDispatcher sd = getInstance(null, null, delegator);
         if (!sd.containsContext(name))
             return null;
@@ -72,8 +72,7 @@ public class ServiceDispatcher {
      *@param delegator the local delegator
      *@return A reference to this global ServiceDispatcher
      */
-    public static ServiceDispatcher getInstance(String name,
-            DispatchContext context, GenericDelegator delegator) {
+    public static ServiceDispatcher getInstance(String name, DispatchContext context, GenericDelegator delegator) {
         ServiceDispatcher sd = null;
         sd = (ServiceDispatcher) dispatchers.get(delegator);
         if (sd == null) {
@@ -96,7 +95,7 @@ public class ServiceDispatcher {
      */
     public void register(String name, DispatchContext context) {
         Debug.logInfo("[ServiceDispatcher.register] : Registered dispatcher: " +
-                context.getName());
+                      context.getName());
         this.localContext.put(name, context);
     }
 
@@ -104,8 +103,8 @@ public class ServiceDispatcher {
      *@param context Map of name, value pairs composing the context
      *@return Map of name, value pairs composing the result
      */
-    public Map runSync(String localName, ModelService service,
-            Map context) throws ServiceAuthException, GenericServiceException {
+    public Map runSync(String localName, ModelService service, Map context)
+            throws ServiceAuthException, GenericServiceException {
         context = checkAuth(localName, context);
         Object userLogin = context.get("userLogin");
         if (service.auth && userLogin == null)
@@ -137,8 +136,8 @@ public class ServiceDispatcher {
     /** Run the service synchronously and IGNORE the result
      *@param context Map of name, value pairs composing the context
      */
-    public void runSyncIgnore(String localName, ModelService service,
-            Map context) throws ServiceAuthException, GenericServiceException {
+    public void runSyncIgnore(String localName, ModelService service, Map context)
+            throws ServiceAuthException, GenericServiceException {
         context = checkAuth(localName, context);
         Object userLogin = context.get("userLogin");
         if (service.auth && userLogin == null)
@@ -161,9 +160,9 @@ public class ServiceDispatcher {
      *@param context Map of name, value pairs composing the context
      *@param requester Object implementing GenericRequester interface which will receive the result
      */
-    public void runAsync(String localName, ModelService service, Map context,
-            GenericRequester requester) throws ServiceAuthException,
-    GenericServiceException {
+    public void runAsync(String localName, ModelService service, Map context, GenericRequester requester)
+            throws ServiceAuthException,
+            GenericServiceException {
         context = checkAuth(localName, context);
         Object userLogin = context.get("userLogin");
         if (service.auth && userLogin == null)
@@ -185,8 +184,8 @@ public class ServiceDispatcher {
     /** Run the service asynchronously and IGNORE the result
      *@param context Map of name, value pairs composing the context
      */
-    public void runAsync(String localName, ModelService service,
-            Map context) throws ServiceAuthException, GenericServiceException {
+    public void runAsync(String localName, ModelService service, Map context)
+            throws ServiceAuthException, GenericServiceException {
         context = checkAuth(localName, context);
         Object userLogin = context.get("userLogin");
         if (service.auth && userLogin == null)
@@ -209,8 +208,7 @@ public class ServiceDispatcher {
      *@param engineName Name of the engine
      *@return GenericEngine instance that corresponds to the engineName
      */
-    public GenericEngine getGenericEngine(String engineName)
-            throws GenericServiceException {
+    public GenericEngine getGenericEngine(String engineName) throws GenericServiceException {
         GenericEngine engine =
                 GenericEngineFactory.getGenericEngine(engineName, this);
         return engine;
@@ -255,34 +253,33 @@ public class ServiceDispatcher {
     }
 
     // checks if parameters were passed for authentication
-    private Map checkAuth(String localName,
-            Map context) throws GenericServiceException {
+    private Map checkAuth(String localName, Map context) throws GenericServiceException {
         // check for a username/password
         if (context.containsKey("login.username")) {
             String username = (String) context.get("login.username");
             if (context.containsKey("login.password")) {
                 String password = (String) context.get("login.password");
                 context.put("userLogin",
-                        getLoginObject(localName, username, password));
+                            getLoginObject(localName, username, password));
                 context.remove("login.password");
             } else
-                context.put("userLogin",getLoginObject(localName, username, null));
+                context.put("userLogin", getLoginObject(localName, username, null));
             context.remove("login.username");
         }
         return context;
     }
 
     // gets a value object from name/password pair
-    private GenericValue getLoginObject(String localName, String username,
-            String password) throws GenericServiceException {
-        String service = UtilProperties.getPropertyValue("servicesengine","auth.service");
-        Map context = UtilMisc.toMap("login.username",username, "login.password",
-                password);
+    private GenericValue getLoginObject(String localName, String username, String password)
+            throws GenericServiceException {
+        String service = UtilProperties.getPropertyValue("servicesengine", "auth.service");
+        Map context = UtilMisc.toMap("login.username", username, "login.password",
+                                     password);
 
         if (service == null)
             throw new GenericServiceException("No Authentication Service Defined");
 
-        Debug.logInfo("[ServiceDispathcer.authenticate] : Invoking UserLogin Service");
+        Debug.logVerbose("[ServiceDispathcer.authenticate] : Invoking UserLogin Service");
 
         // Manually invoke the service
         DispatchContext dctx = getLocalContext(localName);

@@ -1,3 +1,4 @@
+
 package org.ofbiz.core.entity;
 
 import java.util.*;
@@ -9,6 +10,7 @@ import org.ofbiz.core.util.*;
 
 // For Tyrex 0.9.8.5
 import tyrex.resource.jdbc.xa.*;
+
 // For Tyrex 0.9.7.0
 //import tyrex.jdbc.xa.*;
 
@@ -39,6 +41,7 @@ import tyrex.resource.jdbc.xa.*;
  * Created on Dec 18, 2001, 5:03 PM
  */
 public class TyrexConnectionFactory {
+
     static UtilCache dsCache = new UtilCache("TyrexDataSources", 0, 0);
 
     public static Connection getConnection(String helperName) throws SQLException, GenericEntityException {
@@ -79,7 +82,7 @@ public class TyrexConnectionFactory {
                 String transIso = UtilProperties.getPropertyValue("entityengine", helperName + ".isolation.level");
                 if (transIso != null && transIso.length() > 0)
                     ds.setIsolationLevel(transIso);
-                    
+
                 ds.setLogWriter(Debug.getPrintWriter());
 
                 dsCache.put(helperName, ds);

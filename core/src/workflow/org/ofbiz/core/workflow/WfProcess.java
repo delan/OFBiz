@@ -37,92 +37,92 @@ import java.util.List;
  */
 
 public interface WfProcess extends WfExecutionObject {
-  
-  /**
-   * Gets the requester of this process
-   * @throws WfException
-   * @return requester of this process
-   */
-  public WfRequester requester() throws WfException;
-  
-  /**
-   * Sets the requester for this process
-   * @param newValue
-   * @throws WfException
-   * @throws CannotChangeRequester
-   */
-  public void setRequester(WfRequester newValue) throws WfException, CannotChangeRequester;
-  
-  /**
-   * @throws WfException
-   * @return
-   */
-  public int howManyStep() throws WfException;
-  
-  /**
-   * @throws WfException
-   * @return
-   */
-  public Iterator getIteratorStep() throws WfException;
-  
-  /**
-   * @param maxNumber
-   * @throws WfException
-   * @return List of WfActivity objects.
-   */
-  public List getSequenceStep(int maxNumber) throws WfException;
-  
-  /**
-   * @param member
-   * @throws WfException
-   * @return
-   */
-  public boolean isMemberOfStep(WfActivity member) throws WfException;
-  
-  /**
-   * Gets the manager associated with this process
-   * @throws WfException
-   * @return
-   */
-  public WfProcessMgr manager() throws WfException;
-  
-  /**
-   * Gets the results of this process
-   * @throws WfException
-   * @throws ResultNotAvailable
-   * @return result Map of results from this process
-   */
-  public Map result() throws WfException, ResultNotAvailable;
-  
-  /**
-   * Receives activity results.
-   * @param activity WfActivity sending the results.
-   * @param results Map of the results.
-   * @throws WfException
-   */
-  public void receiveResults(WfActivity activity, Map results) throws WfException;
-  
-  /**
-   * Receives notification when an activity has completed.
-   * @param activity WfActivity which has completed.
-   * @throws WfException
-   */
-  public void activityComplete(WfActivity activity) throws WfException;
-  
-  /**
-   * Starts the Workflow process
-   * @throws WfException
-   * @throws CannotStart
-   * @throws AlreadyRunning
-   */
-  public void start() throws WfException, CannotStart, AlreadyRunning;
-  
-  /**
-   * @param state
-   * @throws WfException
-   * @throws InvalidState
-   * @return
-   */
-  public Iterator getActivitiesInState(String state) throws WfException, InvalidState;
-  
+
+    /**
+     * Gets the requester of this process
+     * @throws WfException
+     * @return requester of this process
+     */
+    public WfRequester requester() throws WfException;
+
+    /**
+     * Sets the requester for this process
+     * @param newValue
+     * @throws WfException
+     * @throws CannotChangeRequester
+     */
+    public void setRequester(WfRequester newValue) throws WfException, CannotChangeRequester;
+
+    /**
+     * @throws WfException
+     * @return
+     */
+    public int howManyStep() throws WfException;
+
+    /**
+     * @throws WfException
+     * @return
+     */
+    public Iterator getIteratorStep() throws WfException;
+
+    /**
+     * @param maxNumber
+     * @throws WfException
+     * @return List of WfActivity objects.
+     */
+    public List getSequenceStep(int maxNumber) throws WfException;
+
+    /**
+     * @param member
+     * @throws WfException
+     * @return
+     */
+    public boolean isMemberOfStep(WfActivity member) throws WfException;
+
+    /**
+     * Gets the manager associated with this process
+     * @throws WfException
+     * @return
+     */
+    public WfProcessMgr manager() throws WfException;
+
+    /**
+     * Gets the results of this process
+     * @throws WfException
+     * @throws ResultNotAvailable
+     * @return result Map of results from this process
+     */
+    public Map result() throws WfException, ResultNotAvailable;
+
+    /**
+     * Receives activity results.
+     * @param activity WfActivity sending the results.
+     * @param results Map of the results.
+     * @throws WfException
+     */
+    public void receiveResults(WfActivity activity, Map results) throws WfException;
+
+    /**
+     * Receives notification when an activity has completed.
+     * @param activity WfActivity which has completed.
+     * @throws WfException
+     */
+    public void activityComplete(WfActivity activity) throws WfException;
+
+    /**
+     * Starts the Workflow process
+     * @throws WfException
+     * @throws CannotStart
+     * @throws AlreadyRunning
+     */
+    public void start() throws WfException, CannotStart, AlreadyRunning;
+
+    /**
+     * @param state
+     * @throws WfException
+     * @throws InvalidState
+     * @return
+     */
+    public Iterator getActivitiesInState(String state) throws WfException, InvalidState;
+
 } // interface WfProcessOperations

@@ -1,3 +1,4 @@
+
 package org.ofbiz.core.entity;
 
 import java.lang.reflect.*;
@@ -35,6 +36,7 @@ import org.ofbiz.core.util.*;
  * Created on July 1, 2001, 5:03 PM
  */
 public class ConnectionFactory {
+
     static UtilCache dsCache = new UtilCache("JNDIDataSources", 0, 0);
 
     public static Connection getConnection(String helperName) throws SQLException, GenericEntityException {
@@ -125,8 +127,8 @@ public class ConnectionFactory {
                 return null;
             }
             return DriverManager.getConnection(UtilProperties.getPropertyValue("entityengine", helperName + ".jdbc.uri"),
-                    UtilProperties.getPropertyValue("entityengine", helperName + ".jdbc.username"),
-                    UtilProperties.getPropertyValue("entityengine", helperName + ".jdbc.password"));
+                                               UtilProperties.getPropertyValue("entityengine", helperName + ".jdbc.username"),
+                                               UtilProperties.getPropertyValue("entityengine", helperName + ".jdbc.password"));
         }
 
         Debug.log("******* ERROR: No database connection found for helperName \"" + helperName + "\"");

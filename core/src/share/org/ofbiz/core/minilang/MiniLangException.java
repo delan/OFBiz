@@ -32,16 +32,16 @@ import java.io.*;
  *@version    1.0
  */
 public class MiniLangException extends org.ofbiz.core.util.GeneralException {
-    
+
     public MiniLangException() {
         super();
     }
-    
+
     public MiniLangException(String str) {
         super(str);
     }
-    
+
     public MiniLangException(String str, Throwable nested) {
-        super(str,nested);        
-    }        
+        super(str, nested);
+    }
 }

@@ -1,3 +1,4 @@
+
 package org.ofbiz.core.datafile;
 
 import java.util.*;
@@ -36,6 +37,7 @@ import org.ofbiz.core.util.*;
  */
 
 public class Record implements Serializable {
+
     /** Contains a map with field data by name */
     protected Map fields;
     /** Contains the name of the record definition */
@@ -54,6 +56,7 @@ public class Record implements Serializable {
         this.modelRecord = modelRecord;
         this.fields = new HashMap();
     }
+
     /** Creates new Record from existing Map */
     protected Record(ModelRecord modelRecord, Map fields) {
         if (modelRecord == null)
@@ -66,6 +69,7 @@ public class Record implements Serializable {
     public String getRecordName() {
         return recordName;
     }
+
     public ModelRecord getModelRecord() {
         if (modelRecord == null) {
             throw new IllegalStateException("[Record.getModelRecord] could not find modelRecord for recordName " + recordName);
@@ -90,24 +94,31 @@ public class Record implements Serializable {
         else
             return object.toString();
     }
+
     public java.sql.Timestamp getTimestamp(String name) {
         return (java.sql.Timestamp) get(name);
     }
+
     public java.sql.Time getTime(String name) {
         return (java.sql.Time) get(name);
     }
+
     public java.sql.Date getDate(String name) {
         return (java.sql.Date) get(name);
     }
+
     public Integer getInteger(String name) {
         return (Integer) get(name);
     }
+
     public Long getLong(String name) {
         return (Long) get(name);
     }
+
     public Float getFloat(String name) {
         return (Float) get(name);
     }
+
     public Double getDouble(String name) {
         return (Double) get(name);
     }
@@ -119,6 +130,7 @@ public class Record implements Serializable {
     public void set(String name, Object value) {
         set(name, value, true);
     }
+
     /** Sets the named field to the passed value. If value is null, it is only
      *  set if the setIfNull parameter is true.
      * @param name The field name to set
@@ -207,7 +219,7 @@ public class Record implements Serializable {
     public String getFixedString(String name) {
         if (name == null)
             return null;
-        if (getModelRecord() == null) 
+        if (getModelRecord() == null)
             throw new IllegalArgumentException("Could not find modelrecord for field named \"" + name + "\"");
         ModelField field = getModelRecord().getModelField(name);
         if (field == null)
@@ -215,7 +227,7 @@ public class Record implements Serializable {
 
         Object value = get(name);
         if (value == null) {
-          return null;
+            return null;
         }
         String fieldType = field.type;
         String str = null;
@@ -293,16 +305,16 @@ public class Record implements Serializable {
             // if field is null (not set) then assume we want to pad the field
             char PAD_CHAR = ' ';
             if (data == null) {
-              StringBuffer sb = new StringBuffer("");
-              for(int i = 0; i < modelField.length; i++)
-                sb.append(PAD_CHAR);
-              data = new String(sb);
+                StringBuffer sb = new StringBuffer("");
+                for (int i = 0; i < modelField.length; i++)
+                    sb.append(PAD_CHAR);
+                data = new String(sb);
             }
-            
+
             //Debug.logInfo("Got data \"" + data + "\" for field " + modelField.name + " in record " + modelRecord.name);
             if (modelField.length > 0 && data.length() != modelField.length)
                 throw new DataFileException("Got field length " + data.length() + " but expected field length is " + modelField.length + " for field \"" +
-                        modelField.name + "\" of record \"" + modelRecord.name + "\" data is: \"" + data + "\"");
+                                            modelField.name + "\" of record \"" + modelRecord.name + "\" data is: \"" + data + "\"");
 
             lineBuf.append(data);
             if (isDelimited)
@@ -310,7 +322,7 @@ public class Record implements Serializable {
         }
         if ((isFixedRecord || isFixedLength) && modelDataFile.recordLength > 0 && lineBuf.length() != modelDataFile.recordLength)
             throw new DataFileException("Got record length " + lineBuf.length() + " but expected record length is " + modelDataFile.recordLength +
-                    " for record \"" + modelRecord.name + "\" data line is: \"" + lineBuf + "\"");
+                                        " for record \"" + modelRecord.name + "\" data line is: \"" + lineBuf + "\"");
 
         //for convenience, insert the type-code in where it is looked for, if exists
         if (modelRecord.tcPosition > 0 && modelRecord.typeCode.length() > 0) {
@@ -339,9 +351,11 @@ public class Record implements Serializable {
     public Record getParentRecord() {
         return parentRecord;
     }
+
     public List getChildRecords() {
         return childRecords;
     }
+
     public void addChildRecord(Record record) {
         childRecords.add(record);
     }
@@ -380,21 +394,20 @@ public class Record implements Serializable {
             ModelField modelField = (ModelField) modelRecord.fields.get(i);
             String strVal = null;
             try {
-              strVal = line.substring(modelField.position, modelField.position + modelField.length);
+                strVal = line.substring(modelField.position, modelField.position + modelField.length);
             } catch (IndexOutOfBoundsException ioobe) {
                 throw new DataFileException("Field " + modelField.name + " from " + modelField.position +
-                  " for " + modelField.length + " chars could not be read from a line (" + lineNum + ") with only " +
-                  line.length() + " chars.", ioobe);
+                                            " for " + modelField.length + " chars could not be read from a line (" + lineNum + ") with only " +
+                                            line.length() + " chars.", ioobe);
             }
             try {
                 record.setString(modelField.name, strVal);
             } catch (java.text.ParseException e) {
                 throw new DataFileException("Could not parse field " + modelField.name + ", format string \"" + modelField.format + "\" with value " + strVal +
-                        " on line " + lineNum, e);
-            }
-            catch (java.lang.NumberFormatException e) {
+                                            " on line " + lineNum, e);
+            } catch (java.lang.NumberFormatException e) {
                 throw new DataFileException("Number not valid for field " + modelField.name + ", format string \"" + modelField.format + "\" with value " +
-                        strVal + " on line " + lineNum, e);
+                                            strVal + " on line " + lineNum, e);
             }
         }
         return record;

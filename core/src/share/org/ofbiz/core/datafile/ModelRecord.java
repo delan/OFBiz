@@ -1,3 +1,4 @@
+
 package org.ofbiz.core.datafile;
 
 import java.util.*;
@@ -31,6 +32,7 @@ import java.util.*;
  */
 
 public class ModelRecord {
+
     public static final String LIMIT_ONE = "one";
     public static final String LIMIT_MANY = "many";
 

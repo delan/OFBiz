@@ -1,3 +1,4 @@
+
 package org.ofbiz.core.minilang;
 
 import java.net.*;
@@ -38,8 +39,9 @@ import org.ofbiz.core.service.*;
  *@version    1.0
  */
 public class SimpleEvent {
+
     protected static UtilCache simpleEventsCache = new UtilCache("SimpleEvents", 0, 0);
-    
+
     public static String runSimpleEvent(String xmlResource, String eventName, HttpServletRequest request) throws MiniLangException {
         return runSimpleEvent(xmlResource, eventName, request, null);
     }
@@ -49,14 +51,14 @@ public class SimpleEvent {
         if (xmlURL == null) {
             throw new MiniLangException("Could not find SimpleEvent XML document in resource: " + xmlResource);
         }
-                    
+
         return runSimpleEvent(xmlURL, eventName, request, loader);
     }
 
     public static String runSimpleEvent(URL xmlURL, String eventName, HttpServletRequest request, ClassLoader loader) throws MiniLangException {
         if (loader == null)
             loader = Thread.currentThread().getContextClassLoader();
-        
+
         SimpleEvent simpleEvent = getSimpleEvent(xmlURL, eventName);
         if (simpleEvent == null) {
             throw new MiniLangException("Could not find SimpleEvent " + eventName + " in XML document in resource: " + xmlURL.toString());
@@ -71,7 +73,7 @@ public class SimpleEvent {
                 simpleEvents = (Map) simpleEventsCache.get(xmlURL);
                 if (simpleEvents == null) {
                     simpleEvents = new HashMap();
-                    
+
                     //read in the file
                     Document document = null;
                     try {
@@ -83,27 +85,27 @@ public class SimpleEvent {
                     } catch (javax.xml.parsers.ParserConfigurationException e) {
                         throw new MiniLangException("XML parser not setup correctly", e);
                     }
-                    
+
                     if (document == null) {
                         throw new MiniLangException("Could not find SimpleEvent XML document: " + xmlURL.toString());
                     }
-                    
+
                     Element rootElement = document.getDocumentElement();
                     List simpleEventElements = UtilXml.childElementList(rootElement, "simple-event");
-                    
+
                     Iterator simpleEventIter = simpleEventElements.iterator();
                     while (simpleEventIter.hasNext()) {
                         Element simpleEventElement = (Element) simpleEventIter.next();
                         SimpleEvent simpleEvent = new SimpleEvent(simpleEventElement);
                         simpleEvents.put(simpleEvent.getEventName(), simpleEvent);
                     }
-                    
+
                     //put it in the cache
                     simpleEventsCache.put(xmlURL, simpleEvents);
                 }
             }
         }
-        
+
         return (SimpleEvent) simpleEvents.get(eventName);
     }
 
@@ -119,7 +121,7 @@ public class SimpleEvent {
     String responseCodeName;
     String errorMessageName;
     String eventMessageName;
-    
+
     boolean loginRequired = true;
     boolean useTransaction = true;
 
@@ -128,35 +130,35 @@ public class SimpleEvent {
         shortDescription = simpleEventElement.getAttribute("short-description");
 
         defaultErrorCode = simpleEventElement.getAttribute("default-error-code");
-        if(defaultErrorCode == null || defaultErrorCode.length() == 0)
+        if (defaultErrorCode == null || defaultErrorCode.length() == 0)
             defaultErrorCode = "error";
         defaultSuccessCode = simpleEventElement.getAttribute("default-success-code");
-        if(defaultSuccessCode == null || defaultSuccessCode.length() == 0)
+        if (defaultSuccessCode == null || defaultSuccessCode.length() == 0)
             defaultSuccessCode = "success";
 
         parameterMapName = simpleEventElement.getAttribute("parameter-map-name");
-        if(parameterMapName == null || parameterMapName.length() == 0)
+        if (parameterMapName == null || parameterMapName.length() == 0)
             parameterMapName = "parameters";
 
         requestName = simpleEventElement.getAttribute("request-name");
-        if(requestName == null || requestName.length() == 0)
+        if (requestName == null || requestName.length() == 0)
             requestName = "_request_";
 
         responseCodeName = simpleEventElement.getAttribute("response-code-name");
-        if(responseCodeName == null || responseCodeName.length() == 0)
+        if (responseCodeName == null || responseCodeName.length() == 0)
             responseCodeName = "_response_code_";
-        
+
         errorMessageName = simpleEventElement.getAttribute("error-message-name");
-        if(errorMessageName == null || errorMessageName.length() == 0)
+        if (errorMessageName == null || errorMessageName.length() == 0)
             errorMessageName = "_error_message_";
-        
+
         eventMessageName = simpleEventElement.getAttribute("event-message-name");
-        if(eventMessageName == null || eventMessageName.length() == 0)
+        if (eventMessageName == null || eventMessageName.length() == 0)
             eventMessageName = "_event_message_";
-        
+
         loginRequired = !"false".equals(simpleEventElement.getAttribute("login-required"));
         useTransaction = !"false".equals(simpleEventElement.getAttribute("use-transaction"));
-        
+
         readOperations(simpleEventElement);
     }
 
@@ -190,7 +192,7 @@ public class SimpleEvent {
                 return defaultErrorCode;
             }
         }
-        
+
         boolean finished = true;
         Iterator eventOpsIter = eventOperations.iterator();
         while (eventOpsIter.hasNext()) {
@@ -200,10 +202,10 @@ public class SimpleEvent {
                 break;
             }
         }
-        
+
         //declare errorMsg here just in case transaction ops fail
         String errorMsg = "";
-        
+
         //if beganTransaction and finished commit here
         if (beganTransaction && finished) {
             try {
@@ -227,13 +229,13 @@ public class SimpleEvent {
                 Debug.logWarning(e);
             }
         }
-        
+
         String tempErrorMsg = (String) env.get(errorMessageName);
         if (tempErrorMsg != null && tempErrorMsg.length() > 0) {
             errorMsg += tempErrorMsg;
             request.setAttribute(SiteDefs.ERROR_MESSAGE, errorMsg);
         }
-        
+
         String eventMsg = (String) env.get(eventMessageName);
         if (eventMsg != null && eventMsg.length() > 0) {
             request.setAttribute(SiteDefs.EVENT_MESSAGE, eventMsg);
@@ -272,31 +274,33 @@ public class SimpleEvent {
         }
 
     }
-    
+
     /** A single string operation, does the specified operation on the given field */
     public static abstract class EventOperation {
+
         SimpleEvent simpleEvent;
-        
+
         public EventOperation(Element element, SimpleEvent simpleEvent) {
             this.simpleEvent = simpleEvent;
         }
-        
+
         /** Execute the operation; if false is returned then no further operations will be executed */
         public abstract boolean exec(Map env, HttpServletRequest request, ClassLoader loader);
     }
-    
+
     /* ==================================================================== */
     /* All of the EventOperations...
     /* ==================================================================== */
 
     /** An event operation that calls a simple map processor minilang file */
     public static class SimpleMapProcessor extends EventOperation {
+
         String xmlResource;
         String processorName;
         String inMapName;
         String outMapName;
         String errorListName;
-        
+
         public SimpleMapProcessor(Element element, SimpleEvent simpleEvent) {
             super(element, simpleEvent);
             xmlResource = element.getAttribute("xml-resource");
@@ -307,46 +311,47 @@ public class SimpleEvent {
             if (errorListName == null || errorListName.length() == 0)
                 errorListName = "_error_list_";
         }
-        
+
         public boolean exec(Map env, HttpServletRequest request, ClassLoader loader) {
             List messages = (List) env.get(errorListName);
             if (messages == null) {
                 messages = new LinkedList();
                 env.put(errorListName, messages);
             }
-            
+
             Map inMap = (Map) env.get(inMapName);
             if (inMap == null) {
                 inMap = new HashMap();
                 env.put(inMapName, inMap);
             }
-            
+
             Map outMap = (Map) env.get(outMapName);
             if (outMap == null) {
                 outMap = new HashMap();
                 env.put(outMapName, outMap);
             }
-            
+
             try {
                 org.ofbiz.core.minilang.SimpleMapProcessor.runSimpleMapProcessor(xmlResource, processorName, inMap, outMap, messages, request.getLocale());
             } catch (MiniLangException e) {
                 messages.add("Error running SimpleMapProcessor in XML file \"" + xmlResource + "\": " + e.toString());
             }
-            
+
             return true;
         }
     }
 
     /** An event operation that checks a message list and may introduce a return code and stop the event */
     public static class CheckErrors extends EventOperation {
+
         String errorListName;
         String errorCode;
-        
+
         FlexibleMessage errorPrefix;
         FlexibleMessage errorSuffix;
         FlexibleMessage messagePrefix;
         FlexibleMessage messageSuffix;
-        
+
         public CheckErrors(Element element, SimpleEvent simpleEvent) {
             super(element, simpleEvent);
             errorCode = element.getAttribute("error-code");
@@ -361,31 +366,32 @@ public class SimpleEvent {
             messagePrefix = new FlexibleMessage(UtilXml.firstChildElement(element, "message-prefix"), "check.message.prefix");
             messageSuffix = new FlexibleMessage(UtilXml.firstChildElement(element, "message-suffix"), "check.message.suffix");
         }
-        
+
         public boolean exec(Map env, HttpServletRequest request, ClassLoader loader) {
             List messages = (List) env.get(errorListName);
             if (messages != null && messages.size() > 0) {
-                String errMsg = errorPrefix.getMessage(loader) + 
-                        ServiceUtil.makeMessageList(messages, messagePrefix.getMessage(loader), messageSuffix.getMessage(loader)) + 
+                String errMsg = errorPrefix.getMessage(loader) +
+                        ServiceUtil.makeMessageList(messages, messagePrefix.getMessage(loader), messageSuffix.getMessage(loader)) +
                         errorSuffix.getMessage(loader);
                 env.put(simpleEvent.errorMessageName, errMsg);
-                
+
                 env.put(simpleEvent.responseCodeName, errorCode);
                 return false;
             }
-            
+
             return true;
         }
     }
 
     /** An event operation that creates a local map from the request parameters */
     public static class Service extends EventOperation {
+
         String serviceName;
         String inMapName;
         boolean includeUserLogin = true;
         String errorCode;
         String successCode;
-        
+
         FlexibleMessage errorPrefix;
         FlexibleMessage errorSuffix;
         FlexibleMessage successPrefix;
@@ -393,7 +399,7 @@ public class SimpleEvent {
         FlexibleMessage messagePrefix;
         FlexibleMessage messageSuffix;
         FlexibleMessage defaultMessage;
-        
+
         /** A list of strings with names of new maps to create */
         List resultsToMap = new LinkedList();
         /** A list of ResultToFieldDef objects */
@@ -402,7 +408,7 @@ public class SimpleEvent {
         Map resultToRequest = new HashMap();
         /** the key is the session attribute name, the value is the result name to get */
         Map resultToSession = new HashMap();
-        
+
         public Service(Element element, SimpleEvent simpleEvent) {
             super(element, simpleEvent);
             serviceName = element.getAttribute("service-name");
@@ -411,7 +417,7 @@ public class SimpleEvent {
             errorCode = element.getAttribute("error-code");
             if (errorCode == null || errorCode.length() == 0)
                 errorCode = "error";
-            
+
             successCode = element.getAttribute("success-code");
             if (successCode == null || successCode.length() == 0)
                 successCode = "success";
@@ -423,7 +429,7 @@ public class SimpleEvent {
             messagePrefix = new FlexibleMessage(UtilXml.firstChildElement(element, "message-prefix"), "service.message.prefix");
             messageSuffix = new FlexibleMessage(UtilXml.firstChildElement(element, "message-suffix"), "service.message.suffix");
             defaultMessage = new FlexibleMessage(UtilXml.firstChildElement(element, "default-message"), "service.default.message");
-            
+
             List resultsToMapElements = UtilXml.childElementList(element, "results-to-map");
             if (resultsToMapElements != null && resultsToMapElements.size() > 0) {
                 Iterator iter = resultsToMapElements.iterator();
@@ -432,7 +438,7 @@ public class SimpleEvent {
                     resultsToMap.add(resultsToMapElement.getAttribute("map-name"));
                 }
             }
-            
+
             List resultToFieldElements = UtilXml.childElementList(element, "result-to-field");
             if (resultToFieldElements != null && resultToFieldElements.size() > 0) {
                 Iterator iter = resultToFieldElements.iterator();
@@ -442,10 +448,10 @@ public class SimpleEvent {
                     rtfDef.resultName = resultToFieldElement.getAttribute("result-name");
                     rtfDef.mapName = resultToFieldElement.getAttribute("map-name");
                     rtfDef.fieldName = resultToFieldElement.getAttribute("field-name");
-                    
-                    if (rtfDef.fieldName == null || rtfDef.fieldName.length() == 0) 
+
+                    if (rtfDef.fieldName == null || rtfDef.fieldName.length() == 0)
                         rtfDef.fieldName = rtfDef.resultName;
-                    
+
                     resultToField.add(rtfDef);
                 }
             }
@@ -457,34 +463,34 @@ public class SimpleEvent {
                 while (iter.hasNext()) {
                     Element resultToRequestElement = (Element) iter.next();
                     String reqName = resultToRequestElement.getAttribute("request-name");
-                    if (reqName == null || reqName.length() == 0) 
+                    if (reqName == null || reqName.length() == 0)
                         reqName = resultToRequestElement.getAttribute("result-name");
                     resultToRequest.put(reqName, resultToRequestElement.getAttribute("result-name"));
                 }
             }
-            
+
             List resultToSessionElements = UtilXml.childElementList(element, "result-to-session");
             if (resultToSessionElements != null && resultToSessionElements.size() > 0) {
                 Iterator iter = resultToSessionElements.iterator();
                 while (iter.hasNext()) {
                     Element resultToSessionElement = (Element) iter.next();
                     String sesName = resultToSessionElement.getAttribute("session-name");
-                    if (sesName == null || sesName.length() == 0) 
+                    if (sesName == null || sesName.length() == 0)
                         sesName = resultToSessionElement.getAttribute("result-name");
                     resultToSession.put(sesName, resultToSessionElement.getAttribute("result-name"));
                 }
             }
         }
-        
+
         public boolean exec(Map env, HttpServletRequest request, ClassLoader loader) {
             LocalDispatcher dispatcher = (LocalDispatcher) request.getAttribute("dispatcher");
-            
+
             Map inMap = (Map) env.get(inMapName);
             if (inMap == null) {
                 inMap = new HashMap();
                 env.put(inMapName, inMap);
             }
-            
+
             // invoke the service
             Map result = null;
             if (includeUserLogin) {
@@ -508,7 +514,7 @@ public class SimpleEvent {
                     env.put(mapName, new HashMap(result));
                 }
             }
-            
+
             if (resultToField.size() > 0) {
                 Iterator iter = resultToField.iterator();
                 while (iter.hasNext()) {
@@ -521,7 +527,7 @@ public class SimpleEvent {
                     tempMap.put(rtfDef.fieldName, result.get(rtfDef.resultName));
                 }
             }
-            
+
             if (resultToRequest.size() > 0) {
                 Iterator iter = resultToRequest.entrySet().iterator();
                 while (iter.hasNext()) {
@@ -529,7 +535,7 @@ public class SimpleEvent {
                     request.setAttribute((String) entry.getKey(), result.get(entry.getValue()));
                 }
             }
-            
+
             if (resultToSession.size() > 0) {
                 Iterator iter = resultToSession.entrySet().iterator();
                 while (iter.hasNext()) {
@@ -537,7 +543,7 @@ public class SimpleEvent {
                     request.getSession().setAttribute((String) entry.getKey(), result.get(entry.getValue()));
                 }
             }
-            
+
             String errorPrefixStr = errorPrefix.getMessage(loader);
             String errorSuffixStr = errorSuffix.getMessage(loader);
             String successPrefixStr = successPrefix.getMessage(loader);
@@ -561,7 +567,7 @@ public class SimpleEvent {
             //request.setAttribute("workEffortId", result.get("workEffortId"));
 
             // handle the result
-            String responseCode = result.containsKey(ModelService.RESPONSE_MESSAGE) ? (String)result.get(ModelService.RESPONSE_MESSAGE) : successCode;
+            String responseCode = result.containsKey(ModelService.RESPONSE_MESSAGE) ? (String) result.get(ModelService.RESPONSE_MESSAGE) : successCode;
             env.put(simpleEvent.responseCodeName, responseCode);
 
             if (successCode.equals(responseCode))
@@ -569,8 +575,9 @@ public class SimpleEvent {
             else
                 return false;
         }
-        
+
         public static class ResultToFieldDef {
+
             public String resultName;
             public String mapName;
             public String fieldName;
@@ -579,6 +586,7 @@ public class SimpleEvent {
 
     /** Simple class to wrap messages that come either a straight string or a properties file */
     public static class FlexibleMessage {
+
         String message = null;
         String propertyResource = null;
         boolean isProperty = false;
@@ -592,7 +600,7 @@ public class SimpleEvent {
                 propAttr = element.getAttribute("property");
                 elVal = UtilXml.elementValue(element);
             }
-            
+
             if (resAttr != null && resAttr.length() > 0) {
                 propertyResource = resAttr;
                 message = propAttr;
@@ -629,28 +637,29 @@ public class SimpleEvent {
     }
 
     public static class FieldToRequest extends EventOperation {
+
         String mapName;
         String fieldName;
         String requestName;
-        
+
         public FieldToRequest(Element element, SimpleEvent simpleEvent) {
             super(element, simpleEvent);
             mapName = element.getAttribute("map-name");
             fieldName = element.getAttribute("field-name");
             requestName = element.getAttribute("request-name");
-            
+
             if (requestName == null || requestName.length() == 0) {
                 requestName = fieldName;
             }
         }
-        
+
         public boolean exec(Map env, HttpServletRequest request, ClassLoader loader) {
             Map fromMap = (Map) env.get(mapName);
             if (fromMap == null) {
                 Debug.logWarning("[SimpleEvent.FieldToRequest.exec] Map not found with name " + mapName);
                 return true;
             }
-            
+
             Object fieldVal = fromMap.get(fieldName);
             if (fieldVal == null) {
                 Debug.logWarning("[SimpleEvent.FieldToRequest.exec] Field value not found with name " + fieldName + " in Map with name " + mapName);
@@ -663,28 +672,29 @@ public class SimpleEvent {
     }
 
     public static class FieldToSession extends EventOperation {
+
         String mapName;
         String fieldName;
         String sessionName;
-        
+
         public FieldToSession(Element element, SimpleEvent simpleEvent) {
             super(element, simpleEvent);
             mapName = element.getAttribute("map-name");
             fieldName = element.getAttribute("field-name");
             sessionName = element.getAttribute("session-name");
-            
+
             if (sessionName == null || sessionName.length() == 0) {
                 sessionName = fieldName;
             }
         }
-        
+
         public boolean exec(Map env, HttpServletRequest request, ClassLoader loader) {
             Map fromMap = (Map) env.get(mapName);
             if (fromMap == null) {
                 Debug.logWarning("[SimpleEvent.FieldToSession.exec] Map not found with name " + mapName);
                 return true;
             }
-            
+
             Object fieldVal = fromMap.get(fieldName);
             if (fieldVal == null) {
                 Debug.logWarning("[SimpleEvent.FieldToSession.exec] Field value not found with name " + fieldName + " in Map with name " + mapName);

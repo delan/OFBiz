@@ -1,3 +1,4 @@
+
 package org.ofbiz.core.entity;
 
 import java.io.*;
@@ -30,6 +31,7 @@ import java.io.*;
  *@version    1.0
  */
 public class EntityExpr implements Serializable {
+
     private Object lhs;
     private EntityOperator operator;
     private Object rhs;
@@ -50,9 +52,11 @@ public class EntityExpr implements Serializable {
     public Object getLhs() {
         return lhs;
     }
+
     public EntityOperator getOperator() {
         return operator;
     }
+
     public Object getRhs() {
         return rhs;
     }

@@ -1,6 +1,9 @@
 /*
  * $Id$
  * $Log$
+ * Revision 1.1  2001/09/28 22:56:44  jonesde
+ * Big update for fromDate PK use, organization stuff
+ *
  * Revision 1.2  2001/07/18 22:22:53  jonesde
  * A few small changes to use the Debug class for logging instead of straight
  * System.out. Also added conditional logging for info, warning, and error messages
@@ -30,52 +33,51 @@ package org.ofbiz.core.util;
 //
 // There is no need for Portable RemoteObject for jBoss
 //import javax.rmi.PortableRemoteObject;
+
 import javax.naming.*;
 
-public final class MyNarrow 
-{
-  /**
-   * Using ejboss
-   */
-  public static final boolean jBoss = true;
+public final class MyNarrow {
 
-  /**
-   * instance
-   */
-  private static final MyNarrow instance = new MyNarrow();
+    /**
+     * Using ejboss
+     */
+    public static final boolean jBoss = true;
 
-  /**
-   * Private constructor
-   */
-  private MyNarrow() {
-  }
+    /**
+     * instance
+     */
+    private static final MyNarrow instance = new MyNarrow();
 
-  /**
-   * Return the instance
-   * @return instance
-   */
-  public static MyNarrow getInstance() {
-    return instance;
-  }
+    /**
+     * Private constructor
+     */
+    private MyNarrow() {
+    }
 
-  /**
-   * Get back the lookup object
-   * @param ic InitialContext
-   * @param jndiname
-   * @return the Object
-   */
-  public static Object lookup(InitialContext ic, String jndiName) throws Exception
-  {
-    Debug.logInfo("Looking up initial context "+ ic +" with JNDI name " + jndiName);
-    return ic.lookup(jndiName);
-  }
+    /**
+     * Return the instance
+     * @return instance
+     */
+    public static MyNarrow getInstance() {
+        return instance;
+    }
 
-  /**
-   * narrow stuff
-   */
-  public static Object narrow(Object obj, Class c) throws Exception
-  {
-    //Debug.logInfo("Narrowing object "+ obj +" of class " + c);
-    return obj;
-  }
+    /**
+     * Get back the lookup object
+     * @param ic InitialContext
+     * @param jndiname
+     * @return the Object
+     */
+    public static Object lookup(InitialContext ic, String jndiName) throws Exception {
+        Debug.logInfo("Looking up initial context " + ic + " with JNDI name " + jndiName);
+        return ic.lookup(jndiName);
+    }
+
+    /**
+     * narrow stuff
+     */
+    public static Object narrow(Object obj, Class c) throws Exception {
+        //Debug.logInfo("Narrowing object "+ obj +" of class " + c);
+        return obj;
+    }
 }

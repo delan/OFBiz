@@ -5,6 +5,7 @@
 package org.ofbiz.core.service;
 
 import java.util.*;
+
 import org.ofbiz.core.util.*;
 
 /**
@@ -132,9 +133,9 @@ public class ModelService {
         }
 
         Debug.logVerbose("[ModelService.validate] : (" + mode + ") Required - " +
-                requiredTest.size() + " / " + requiredInfo.size());
+                         requiredTest.size() + " / " + requiredInfo.size());
         Debug.logVerbose("[ModelService.validate] : (" + mode + ") Optional - " +
-                optionalTest.size() + " / " + optionalInfo.size());
+                         optionalTest.size() + " / " + optionalInfo.size());
 
 
         try {
@@ -142,7 +143,7 @@ public class ModelService {
             validate(optionalInfo, optionalTest, false);
         } catch (ServiceValidationException e) {
             Debug.logError("[ModelService.validate] : (" + mode +
-                    ") Required test error: " + e.toString());
+                           ") Required test error: " + e.toString());
             throw e;
         }
     }
@@ -153,8 +154,7 @@ public class ModelService {
      * @param reverse Test the maps in reverse.
      * @returns true if validation is successful
      */
-    public static void validate(Map info, Map test,
-            boolean reverse) throws ServiceValidationException {
+    public static void validate(Map info, Map test, boolean reverse) throws ServiceValidationException {
         if (info == null || test == null)
             throw new ServiceValidationException("Cannot validate NULL maps");
 
@@ -195,7 +195,7 @@ public class ModelService {
             }
 
             throw new ServiceValidationException("Unknown paramters found: " +
-                    extraStr);
+                                                 extraStr);
         }
 
         // * Validate types next
@@ -214,24 +214,21 @@ public class ModelService {
                 throw new ServiceValidationException(
                         "Problems with classloader: sercurity exception (" +
                         se1.getMessage() + ")");
-            }
-            catch (ClassNotFoundException e1) {
+            } catch (ClassNotFoundException e1) {
                 try {
                     infoClass = ObjectType.loadClass(LANG_PACKAGE + infoType);
                 } catch (SecurityException se2) {
                     throw new ServiceValidationException(
                             "Problems with classloader: sercurity exception (" +
                             se2.getMessage() + ")");
-                }
-                catch (ClassNotFoundException e2) {
+                } catch (ClassNotFoundException e2) {
                     try {
                         infoClass = ObjectType.loadClass(SQL_PACKAGE + infoType);
                     } catch (SecurityException se3) {
                         throw new ServiceValidationException(
                                 "Problems with classloader: sercurity exception (" +
                                 se3.getMessage() + ")");
-                    }
-                    catch (ClassNotFoundException e3) {
+                    } catch (ClassNotFoundException e3) {
                         throw new ServiceValidationException(
                                 "Cannot find and load the class of type: " +
                                 infoType + " or of type: " + LANG_PACKAGE +

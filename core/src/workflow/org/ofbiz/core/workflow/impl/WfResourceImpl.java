@@ -5,6 +5,7 @@
 package org.ofbiz.core.workflow.impl;
 
 import java.util.*;
+
 import org.ofbiz.core.entity.*;
 import org.ofbiz.core.util.*;
 import org.ofbiz.core.workflow.*;
@@ -56,7 +57,7 @@ public class WfResourceImpl implements WfResource {
      * @param fromDate The fromDate of this resource
      */
     public WfResourceImpl(GenericDelegator delegator, String resourceKey,
-            String resourceName, String partyId, String roleTypeId) {
+                          String resourceName, String partyId, String roleTypeId) {
         this.delegator = delegator;
         this.resourceKey = resourceKey;
         this.resourceName = resourceName;
@@ -158,7 +159,7 @@ public class WfResourceImpl implements WfResource {
      * @throws NotAssigned
      */
     public void release(WfAssignment fromAssignment,
-            String releaseInfo) throws WfException, NotAssigned {
+                        String releaseInfo) throws WfException, NotAssigned {
         if (!workItems().contains(fromAssignment))
             throw new NotAssigned();
         //workItems.remove(fromAssignment);
@@ -169,8 +170,8 @@ public class WfResourceImpl implements WfResource {
         List workList = new ArrayList();
         Collection c = null;
         try {
-            Map fields = UtilMisc.toMap("partyId",partyId, "roleTypeId",roleTypeId);
-            c = delegator.findByAnd("WorkEffortPartyAssignment",fields);
+            Map fields = UtilMisc.toMap("partyId", partyId, "roleTypeId", roleTypeId);
+            c = delegator.findByAnd("WorkEffortPartyAssignment", fields);
         } catch (GenericEntityException e) {
             throw new WfException(e.getMessage(), e);
         }

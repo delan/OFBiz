@@ -7,6 +7,7 @@ package org.ofbiz.core.event;
 import java.util.*;
 import javax.servlet.*;
 import javax.servlet.http.*;
+
 import org.ofbiz.core.minilang.*;
 import org.ofbiz.core.util.*;
 
@@ -38,10 +39,10 @@ import org.ofbiz.core.util.*;
  *@version    1.0
  */
 public class SimpleEventHandler implements EventHandler {
-    
+
     private String xmlResource = null;
     private String eventName = null;
-    
+
     /** Initialize the required parameters
      *@param eventPath The path or location of this event
      *@param eventMethod The method to invoke
@@ -50,7 +51,7 @@ public class SimpleEventHandler implements EventHandler {
         this.xmlResource = eventPath;
         this.eventName = eventMethod;
     }
-    
+
     /** Invoke the web event
      *@param request The servlet request object
      *@param response The servlet response object
@@ -62,7 +63,7 @@ public class SimpleEventHandler implements EventHandler {
             throw new EventHandlerException("XML Resource (eventPath) cannot be null");
         if (eventName == null)
             throw new EventHandlerException("Event Name (eventMethod) cannot be null");
-        
+
         try {
             return SimpleEvent.runSimpleEvent(xmlResource, eventName, request);
         } catch (MiniLangException e) {

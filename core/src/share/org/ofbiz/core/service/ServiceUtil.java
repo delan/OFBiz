@@ -6,6 +6,7 @@ package org.ofbiz.core.service;
 
 import java.util.*;
 import javax.servlet.http.*;
+
 import org.ofbiz.core.util.*;
 import org.ofbiz.core.entity.*;
 import org.ofbiz.core.security.*;
@@ -38,6 +39,7 @@ import org.ofbiz.core.security.*;
  *@version    1.0
  */
 public class ServiceUtil {
+
     /** A small routine used all over to improve code efficiency, make a result map with the message and the error response code */
     public static Map returnError(String errorMessage) {
         Map result = new HashMap();
@@ -45,7 +47,7 @@ public class ServiceUtil {
         if (errorMessage != null) result.put(ModelService.ERROR_MESSAGE, errorMessage);
         return result;
     }
-    
+
     /** A small routine used all over to improve code efficiency, make a result map with the message and the error response code */
     public static Map returnError(List errorMessageList) {
         Map result = new HashMap();
@@ -53,12 +55,12 @@ public class ServiceUtil {
         if (errorMessageList != null) result.put(ModelService.ERROR_MESSAGE_LIST, errorMessageList);
         return result;
     }
-    
+
     /** A small routine used all over to improve code efficiency, make a result map with the message and the success response code */
     public static Map returnSuccess(String successMessage) {
         return returnMessage(ModelService.RESPOND_SUCCESS, successMessage);
     }
-    
+
     /** A small routine to make a result map with the message and the response code
      * NOTE: This brings out some bad points to our message convention: we should be using a single message or message list
      *  and what type of message that is should be determined by the RESPONSE_MESSAGE (and there's another annoyance, it should be RESPONSE_CODE)
@@ -69,7 +71,7 @@ public class ServiceUtil {
         if (message != null) result.put(ModelService.SUCCESS_MESSAGE, message);
         return result;
     }
-    
+
     /** A small routine used all over to improve code efficiency, get the partyId and does a security check
      *<b>security check</b>: userLogin partyId must equal partyId, or must have <secEntity><secOperation> permission
      */
@@ -78,14 +80,14 @@ public class ServiceUtil {
         if (partyId == null || partyId.length() == 0) {
             partyId = userLogin.getString("partyId");
         }
-        
+
         //partyId might be null, so check it
         if (partyId == null || partyId.length() == 0) {
             result.put(ModelService.RESPONSE_MESSAGE, ModelService.RESPOND_ERROR);
             result.put(ModelService.ERROR_MESSAGE, "Party ID missing");
             return partyId;
         }
-        
+
         //<b>security check</b>: userLogin partyId must equal partyId, or must have PARTYMGR_CREATE permission
         if (!partyId.equals(userLogin.getString("partyId"))) {
             if (!security.hasEntityPermission(secEntity, secOperation, userLogin)) {
@@ -96,13 +98,13 @@ public class ServiceUtil {
         }
         return partyId;
     }
-    
-    public static void getMessages(HttpServletRequest request, Map result, String defaultMessage, 
-            String msgPrefix, String msgSuffix, String errorPrefix, String errorSuffix, String successPrefix, String successSuffix) {
+
+    public static void getMessages(HttpServletRequest request, Map result, String defaultMessage,
+                                   String msgPrefix, String msgSuffix, String errorPrefix, String errorSuffix, String successPrefix, String successSuffix) {
         String errorMessage = ServiceUtil.makeErrorMessage(result, msgPrefix, msgSuffix, errorPrefix, errorSuffix);
         if (UtilValidate.isNotEmpty(errorMessage))
             request.setAttribute(SiteDefs.ERROR_MESSAGE, errorMessage);
-            
+
         String successMessage = ServiceUtil.makeSuccessMessage(result, msgPrefix, msgSuffix, successPrefix, successSuffix);
         if (UtilValidate.isNotEmpty(successMessage))
             request.setAttribute(SiteDefs.EVENT_MESSAGE, successMessage);
@@ -110,20 +112,20 @@ public class ServiceUtil {
         if (UtilValidate.isEmpty(errorMessage) && UtilValidate.isEmpty(successMessage) && UtilValidate.isNotEmpty(defaultMessage))
             request.setAttribute(SiteDefs.EVENT_MESSAGE, defaultMessage);
     }
-    
+
     public static String makeErrorMessage(Map result, String msgPrefix, String msgSuffix, String errorPrefix, String errorSuffix) {
         String errorMsg = (String) result.get(ModelService.ERROR_MESSAGE);
         List errorMsgList = (List) result.get(ModelService.ERROR_MESSAGE_LIST);
         StringBuffer outMsg = new StringBuffer();
-        
+
         outMsg.append(makeMessageList(errorMsgList, msgPrefix, msgSuffix));
-        
+
         if (errorMsg != null) {
             if (msgPrefix != null) outMsg.append(msgPrefix);
             outMsg.append(errorMsg);
             if (msgSuffix != null) outMsg.append(msgSuffix);
         }
-        
+
         if (outMsg.length() > 0) {
             StringBuffer strBuf = new StringBuffer();
             if (errorPrefix != null) strBuf.append(errorPrefix);
@@ -139,15 +141,15 @@ public class ServiceUtil {
         String successMsg = (String) result.get(ModelService.SUCCESS_MESSAGE);
         List successMsgList = (List) result.get(ModelService.SUCCESS_MESSAGE_LIST);
         StringBuffer outMsg = new StringBuffer();
-        
+
         outMsg.append(makeMessageList(successMsgList, msgPrefix, msgSuffix));
-        
+
         if (successMsg != null) {
             if (msgPrefix != null) outMsg.append(msgPrefix);
             outMsg.append(successMsg);
             if (msgSuffix != null) outMsg.append(msgSuffix);
         }
-        
+
         if (outMsg.length() > 0) {
             StringBuffer strBuf = new StringBuffer();
             if (successPrefix != null) strBuf.append(successPrefix);

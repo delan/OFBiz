@@ -1,6 +1,8 @@
+
 package org.ofbiz.core.entity.model;
 
 import java.util.*;
+
 import org.ofbiz.core.util.*;
 
 /**
@@ -31,6 +33,7 @@ import org.ofbiz.core.util.*;
  *@version    1.0
  */
 public class ModelViewEntity extends ModelEntity {
+
     /** Contains member-entity definitions: key is alias, value is entity-name */
     public Map memberEntities = new HashMap();
     /** Contains member-entity ModelEntities: key is alias, value is ModelEntity; populated with fields */
@@ -88,11 +91,13 @@ public class ModelViewEntity extends ModelEntity {
     public ModelAlias makeModelAlias() {
         return new ModelAlias();
     }
+
     public ModelViewLink makeModelViewLink() {
         return new ModelViewLink();
     }
 
     public class ModelAlias {
+
         public String entityAlias = "";
         public String name = "";
         public String field = "";
@@ -100,6 +105,7 @@ public class ModelViewEntity extends ModelEntity {
     }
 
     public class ModelViewLink {
+
         public String entityAlias = "";
         public String relEntityAlias = "";
         public Vector keyMaps = new Vector();

@@ -35,17 +35,17 @@ import java.util.Map;
  */
 
 public interface WfDataEventAudit {
-  
-  /**
-   * @throws WfException
-   * @return
-   */
-  public Map oldData() throws WfException;
-  
-  /**
-   * @throws WfException
-   * @return
-   */
-  public Map newData() throws WfException;
-  
+
+    /**
+     * @throws WfException
+     * @return
+     */
+    public Map oldData() throws WfException;
+
+    /**
+     * @throws WfException
+     * @return
+     */
+    public Map newData() throws WfException;
+
 } // interface WfDataEventAuditOperations

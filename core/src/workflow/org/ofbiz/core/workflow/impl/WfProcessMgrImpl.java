@@ -5,6 +5,7 @@
 package org.ofbiz.core.workflow.impl;
 
 import java.util.*;
+
 import org.ofbiz.core.entity.*;
 import org.ofbiz.core.util.*;
 import org.ofbiz.core.workflow.*;
@@ -52,10 +53,10 @@ public class WfProcessMgrImpl implements WfProcessMgr {
      * @throws WfException
      */
     public WfProcessMgrImpl(GenericDelegator delegator, String packageId,
-            String processId) throws WfException {
+                            String processId) throws WfException {
         try {
-            Map finder = UtilMisc.toMap("packageId",packageId, "processId",processId);
-            Collection processes = delegator.findByAnd("WorkflowProcess",finder);
+            Map finder = UtilMisc.toMap("packageId", packageId, "processId", processId);
+            Collection processes = delegator.findByAnd("WorkflowProcess", finder);
             if (processes.size() > 1)
                 throw new WfException("Unique processId does not exist. Entity value error");
             if (processes.size() == 0)
@@ -76,7 +77,7 @@ public class WfProcessMgrImpl implements WfProcessMgr {
      * @throws TransitionNotAllowed
      */
     public void setProcessMgrState(String newState) throws WfException,
-    TransitionNotAllowed {
+            TransitionNotAllowed {
         if (!newState.equals("enabled") || !newState.equals("disabled"))
             throw new TransitionNotAllowed();
         this.state = newState;
@@ -103,7 +104,7 @@ public class WfProcessMgrImpl implements WfProcessMgr {
      * @return WfProcess created
      */
     public WfProcess createProcess(WfRequester requester) throws WfException,
-    NotEnabled, InvalidRequester, RequesterRequired {
+            NotEnabled, InvalidRequester, RequesterRequired {
         if (state.equals("disabled"))
             throw new NotEnabled();
 
@@ -143,7 +144,7 @@ public class WfProcessMgrImpl implements WfProcessMgr {
      * @return
      */
     public List processMgrStateType() throws WfException {
-        String[] list = { "enabled", "disabled" };
+        String[] list = {"enabled", "disabled"};
         return Arrays.asList(list);
     }
 
@@ -211,11 +212,11 @@ public class WfProcessMgrImpl implements WfProcessMgr {
         Collection params = null;
         try {
             Map fields = new HashMap();
-            fields.put("packageId",processDef.getString("packageId"));
-            fields.put("processId",processDef.getString("processId"));
-            fields.put("applicationId","_NA_");
+            fields.put("packageId", processDef.getString("packageId"));
+            fields.put("processId", processDef.getString("processId"));
+            fields.put("applicationId", "_NA_");
             params = processDef.getDelegator().findByAnd("WorkflowFormalParam",
-                    fields);
+                                                         fields);
         } catch (GenericEntityException e) {
             throw new WfException(e.getMessage(), e);
         }
@@ -238,11 +239,11 @@ public class WfProcessMgrImpl implements WfProcessMgr {
     // Gets the Java type from a XPDL datatype
     private String getJavaType(String xpdlType) {
         Map typeMap = new HashMap();
-        typeMap.put("WDT_BOOLEAN","java.lang.Boolean");
-        typeMap.put("WDT_STRING","java.lang.String");
-        typeMap.put("WDT_INTEGER","java.lang.Long");
-        typeMap.put("WDT_FLOAT","java.lang.Double");
-        typeMap.put("WDT_DATETIME","java.sql.Timestamp");
+        typeMap.put("WDT_BOOLEAN", "java.lang.Boolean");
+        typeMap.put("WDT_STRING", "java.lang.String");
+        typeMap.put("WDT_INTEGER", "java.lang.Long");
+        typeMap.put("WDT_FLOAT", "java.lang.Double");
+        typeMap.put("WDT_DATETIME", "java.sql.Timestamp");
         if (typeMap.containsKey(xpdlType))
             return (String) typeMap.get(xpdlType);
         else

@@ -7,6 +7,7 @@ package org.ofbiz.core.service;
 import java.io.*;
 import java.util.*;
 import java.lang.reflect.*;
+
 import bsh.*;
 import org.ofbiz.core.util.*;
 
@@ -47,8 +48,7 @@ public final class BeanShellEngine extends GenericAsyncEngine {
     /** Run the service synchronously and IGNORE the result
      * @param context Map of name, value pairs composing the context
      */
-    public void runSyncIgnore(ModelService modelService,
-            Map context) throws GenericServiceException {
+    public void runSyncIgnore(ModelService modelService, Map context) throws GenericServiceException {
         Map result = runSync(modelService, context);
     }
 
@@ -56,8 +56,7 @@ public final class BeanShellEngine extends GenericAsyncEngine {
      * @param context Map of name, value pairs composing the context
      * @return Map of name, value pairs composing the result
      */
-    public Map runSync(ModelService modelService,
-            Map context) throws GenericServiceException {
+    public Map runSync(ModelService modelService, Map context) throws GenericServiceException {
         Object result = serviceInvoker(modelService, context);
         if (result == null || !(result instanceof Map))
             throw new GenericServiceException("Service did not return expected result");
@@ -65,8 +64,7 @@ public final class BeanShellEngine extends GenericAsyncEngine {
     }
 
     // Invoke the BeanShell script service.
-    private Object serviceInvoker(ModelService modelService,
-            Map context) throws GenericServiceException {
+    private Object serviceInvoker(ModelService modelService, Map context) throws GenericServiceException {
         if (modelService.location == null || modelService.invoke == null)
             throw new GenericServiceException("Cannot locate service to invoke");
 
@@ -92,15 +90,15 @@ public final class BeanShellEngine extends GenericAsyncEngine {
             java.io.File file = new java.io.File(modelService.location);
             if (!file.exists()) {
                 Debug.logInfo("[BeanShellEngine.invoke] : File not found: " +
-                        modelService.location);
+                              modelService.location);
                 file = new java.io.File(scriptPath + modelService.location);
                 if (!file.exists()) {
                     Debug.logInfo("[BeanShellEngine.invoke] : File not found: " +
-                            scriptPath + modelService.location);
+                                  scriptPath + modelService.location);
                     file = new java.io.File(globalScriptPath + modelService.location);
                     if (!file.exists()) {
-                        Debug.logInfo( "[BeanShellEngine.invoke] : File not found: " +
-                                globalScriptPath + modelService.location);
+                        Debug.logInfo("[BeanShellEngine.invoke] : File not found: " +
+                                      globalScriptPath + modelService.location);
                         throw new GenericServiceException("Script location not valid or file not found");
                     } else {
                         path = globalScriptPath + modelService.location;
@@ -122,18 +120,16 @@ public final class BeanShellEngine extends GenericAsyncEngine {
             bsh = (Interpreter) c.newInstance();
         } catch (ClassNotFoundException e) {
             throw new GenericServiceException("Cannot load the BeanShell Interpreter");
-        }
-        catch (IllegalAccessException e) {
+        } catch (IllegalAccessException e) {
             throw new GenericServiceException("BeanShell Interpreter class not accessible");
-        }
-        catch (InstantiationException e) {
+        } catch (InstantiationException e) {
             throw new GenericServiceException("Cannot instantiate the BeanShell Interpreter");
         }
 
         Map result = null;
         try {
-            bsh.set("dctx",dispatcher.getLocalContext(loader)); // set the dispatch context
-            bsh.set("context",context); // set the parameter context used for both IN and OUT
+            bsh.set("dctx", dispatcher.getLocalContext(loader)); // set the dispatch context
+            bsh.set("context", context); // set the parameter context used for both IN and OUT
             bsh.source(path);
             Map bshResult = (Map) bsh.get("result");
             if (bshResult != null)
@@ -142,14 +138,11 @@ public final class BeanShellEngine extends GenericAsyncEngine {
 
         } catch (FileNotFoundException e) {
             throw new GenericServiceException("Cannot locate the BeanShell script");
-        }
-        catch (IOException e) {
+        } catch (IOException e) {
             throw new GenericServiceException(e.getMessage(), e);
-        }
-        catch (EvalError e) {
-            throw new GenericServiceException("BeanShell script threw an exception",e);
-        }
-        catch (ClassCastException e) {
+        } catch (EvalError e) {
+            throw new GenericServiceException("BeanShell script threw an exception", e);
+        } catch (ClassCastException e) {
             throw new GenericServiceException("BeanShell script did not return a proper response");
         }
 

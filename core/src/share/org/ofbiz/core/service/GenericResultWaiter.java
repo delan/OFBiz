@@ -6,6 +6,8 @@ package org.ofbiz.core.service;
 
 import java.util.*;
 
+import org.ofbiz.core.util.*;
+
 /**
  * <p><b>Title:</b> Generic Result Waiter Class
  * <p><b>Description:</b> A generic class the can be used to wait for the result of an asynchronous invokation
@@ -49,6 +51,7 @@ public class GenericResultWaiter implements GenericRequester {
     public synchronized boolean isCompleted() {
         return completed;
     }
+
     public synchronized Map getResult() {
         if (!isCompleted())
             throw new java.lang.IllegalStateException("Cannot return result, asynchronous call has not completed.");
@@ -58,11 +61,14 @@ public class GenericResultWaiter implements GenericRequester {
     public synchronized Map waitForResult() {
         return this.waitForResult(10);
     }
+
     public synchronized Map waitForResult(long milliseconds) {
         while (!isCompleted()) {
             try {
                 this.wait(milliseconds);
-            } catch (java.lang.InterruptedException e) { }
+            } catch (java.lang.InterruptedException e) {
+                Debug.logError(e);
+            }
         }
         return this.getResult();
     }

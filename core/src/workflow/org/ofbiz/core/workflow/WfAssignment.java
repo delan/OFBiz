@@ -33,37 +33,37 @@ package org.ofbiz.core.workflow;
  */
 
 public interface WfAssignment {
-    
+
     /** Gets the activity object of this assignment.
      * @return WfActivity The activity object of this assignment
      * @throws WfException
      */
     public WfActivity activity() throws WfException;
-    
+
     /** Gets the assignee (resource) of this assignment
      * @return WfResource The assignee of this assignment
      * @throws WfException
      */
     public WfResource assignee() throws WfException;
-    
+
     /** Sets the assignee of this assignment
      * @param newValue
      * @throws WfException
      * @throws InvalidResource
      */
     public void setAssignee(WfResource newValue) throws WfException, InvalidResource;
-    
+
     /** Mark this assignment as accepted
      *@throws WfException
      */
     public void accept() throws WfException;
-    
+
     /** Set the results of this assignment
      * @param Map The results of the assignement
      * @throws WfException
      */
     public void setResult(java.util.Map results) throws WfException;
-    
+
     /** Mark this assignment as complete
      * @throws WfException
      */
@@ -74,16 +74,16 @@ public interface WfAssignment {
      * @throws WfException
      */
     public void changeStatus(String status) throws WfException;
-    
+
     /** Gets the status of this assignment
      * @return String status code for this assignment
      * @throws WfException
      */
     public String status() throws WfException;
-    
+
     /** Removes the stored data for this object
-     * @throws WfException 
+     * @throws WfException
      */
-    public void remove() throws WfException;  
-    
+    public void remove() throws WfException;
+
 } // interface WfAssignmentOperations

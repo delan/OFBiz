@@ -31,16 +31,16 @@ package org.ofbiz.core.service;
  *@version    1.0
  */
 public class GenericServiceException extends org.ofbiz.core.util.GeneralException {
-    
+
     public GenericServiceException() {
         super();
     }
-    
+
     public GenericServiceException(String str) {
         super(str);
     }
-    
+
     public GenericServiceException(String str, Throwable nested) {
-        super(str,nested);        
-    }        
+        super(str, nested);
+    }
 }

@@ -36,7 +36,8 @@ import java.util.Locale;
  *@version    1.0
  */
 public class ObjectType {
-    /** Loads a class with the current thread's context classloader 
+
+    /** Loads a class with the current thread's context classloader
      * @param className The name of the class to load
      */
     public static Class loadClass(String className) throws ClassNotFoundException {
@@ -45,50 +46,50 @@ public class ObjectType {
         try {
             loader = Thread.currentThread().getContextClassLoader();
             c = loader.loadClass(className);
-        } catch ( Exception e ) {
+        } catch (Exception e) {
             c = Class.forName(className);
-        }            
+        }
         return c;
     }
-    
+
     /** Returns an instance of the specified class
      * @param className Name of the class to instantiate
      */
     public static Object getInstance(String className) throws ClassNotFoundException,
-    InstantiationException, IllegalAccessException {
+            InstantiationException, IllegalAccessException {
         Class c = loadClass(className);
         Object o = c.newInstance();
         return o;
     }
-    
+
     /** Tests if an object properly implements the specified interface
      * @param obj Object to test
      * @param interfaceName Name of the interface to test against
      */
     public static boolean interfaceOf(Object obj, String interfaceName) throws ClassNotFoundException {
         Class interfaceClass = loadClass(interfaceName);
-        return interfaceOf(obj,interfaceClass);
+        return interfaceOf(obj, interfaceClass);
     }
 
-        /** Tests if an object properly implements the specified interface
+    /** Tests if an object properly implements the specified interface
      * @param obj Object to test
      * @param interfaceObject to test against
      */
     public static boolean interfaceOf(Object obj, Object interfaceObject) {
         Class interfaceClass = interfaceObject.getClass();
-        return interfaceOf(obj,interfaceClass);
+        return interfaceOf(obj, interfaceClass);
     }
-    
+
     /** Tests if an object properly implements the specified interface
      * @param obj Object to test
      * @param interfaceClass Class to test against
-     */   
+     */
     public static boolean interfaceOf(Object obj, Class interfaceClass) {
         Class objectClass = obj.getClass();
-        while ( objectClass != null ) {
+        while (objectClass != null) {
             Class[] ifaces = objectClass.getInterfaces();
-            for ( int i = 0; i < ifaces.length; i++ ) {
-                if ( ifaces[i] == interfaceClass ) return true;
+            for (int i = 0; i < ifaces.length; i++) {
+                if (ifaces[i] == interfaceClass) return true;
             }
             objectClass = objectClass.getSuperclass();
         }
@@ -98,50 +99,50 @@ public class ObjectType {
     /** Tests if an object is an instance of or a sub-class of the parent
      * @param obj Object to test
      * @param parentName Name of the parent class to test against
-     */    
+     */
     public static boolean isOrSubOf(Object obj, String parentName) throws ClassNotFoundException {
         Class parentClass = loadClass(parentName);
-        return isOrSubOf(obj,parentClass);
+        return isOrSubOf(obj, parentClass);
     }
 
     /** Tests if an object is an instance of or a sub-class of the parent
      * @param obj Object to test
      * @param parentObject Object to test against
-     */       
+     */
     public static boolean isOrSubOf(Object obj, Object parentObject) {
         Class parentClass = parentObject.getClass();
-        return isOrSubOf(obj,parentClass);
+        return isOrSubOf(obj, parentClass);
     }
 
     /** Tests if an object is an instance of or a sub-class of the parent
      * @param obj Object to test
      * @param parentClass Class to test against
-     */        
+     */
     public static boolean isOrSubOf(Object obj, Class parentClass) {
         Class objectClass = obj.getClass();
-        while ( objectClass != null ) {
-            if ( objectClass == parentClass ) return true;
+        while (objectClass != null) {
+            if (objectClass == parentClass) return true;
             objectClass = objectClass.getSuperclass();
         }
         return false;
     }
-        
+
     /** Tests if an object is an instance of a sub-class of or properly implements an interface
      * @param obj Object to test
      * @param typeName Name of the class to test against
      */
     public static boolean instanceOf(Object obj, String typeName) throws ClassNotFoundException {
         Class typeClass = loadClass(typeName);
-        return instanceOf(obj,typeClass);
+        return instanceOf(obj, typeClass);
     }
 
     /** Tests if an object is an instance of a sub-class of or properly implements an interface
      * @param obj Object to test
      * @param typeObject Object to test against
-     */    
+     */
     public static boolean instanceOf(Object obj, Object typeObject) {
         Class typeClass = typeObject.getClass();
-        return instanceOf(obj,typeClass);
+        return instanceOf(obj, typeClass);
     }
 
     /** Tests if an object is an instance of a sub-class of or properly implements an interface
@@ -151,15 +152,15 @@ public class ObjectType {
     public static boolean instanceOf(Object obj, Class typeClass) {
         if (obj == null) return true;
         Class objectClass = obj.getClass();
-        if ( typeClass.isInterface() )
-            return interfaceOf(obj,typeClass);
+        if (typeClass.isInterface())
+            return interfaceOf(obj, typeClass);
         else
-            return isOrSubOf(obj,typeClass);
+            return isOrSubOf(obj, typeClass);
     }
-    
+
     /** Converts the passed object to the named simple type; supported types
-     * include: String, Double, Float, Long, Integer, Date (java.sql.Date), 
-     * Time, Timestamp; 
+     * include: String, Double, Float, Long, Integer, Date (java.sql.Date),
+     * Time, Timestamp;
      * @param obj Object to convert
      * @param type Name of type to convert to
      * @param format Optional (can be null) format string for Date, Time, Timestamp
@@ -168,21 +169,23 @@ public class ObjectType {
     public static Object simpleTypeConvert(Object obj, String type, String format, Locale locale) throws GeneralException {
         if (obj == null)
             return null;
-        
+
         String fromType = null;
         if (obj instanceof java.lang.String) {
             fromType = "String";
             String str = (String) obj;
             if ("String".equals(type))
                 return obj;
-            
+
             if (str.length() == 0)
                 return null;
             if ("Double".equals(type)) {
                 try {
                     NumberFormat nf = null;
-                    if (locale == null) nf = NumberFormat.getNumberInstance();
-                    else nf = NumberFormat.getNumberInstance(locale);
+                    if (locale == null)
+                        nf = NumberFormat.getNumberInstance();
+                    else
+                        nf = NumberFormat.getNumberInstance(locale);
                     Number tempNum = nf.parse(str);
                     return new Double(tempNum.doubleValue());
                 } catch (ParseException e) {
@@ -191,8 +194,10 @@ public class ObjectType {
             } else if ("Float".equals(type)) {
                 try {
                     NumberFormat nf = null;
-                    if (locale == null) nf = NumberFormat.getNumberInstance();
-                    else nf = NumberFormat.getNumberInstance(locale);
+                    if (locale == null)
+                        nf = NumberFormat.getNumberInstance();
+                    else
+                        nf = NumberFormat.getNumberInstance(locale);
                     Number tempNum = nf.parse(str);
                     return new Float(tempNum.floatValue());
                 } catch (ParseException e) {
@@ -201,8 +206,10 @@ public class ObjectType {
             } else if ("Long".equals(type)) {
                 try {
                     NumberFormat nf = null;
-                    if (locale == null) nf = NumberFormat.getNumberInstance();
-                    else nf = NumberFormat.getNumberInstance(locale);
+                    if (locale == null)
+                        nf = NumberFormat.getNumberInstance();
+                    else
+                        nf = NumberFormat.getNumberInstance(locale);
                     nf.setMaximumFractionDigits(0);
                     Number tempNum = nf.parse(str);
                     return new Long(tempNum.longValue());
@@ -212,8 +219,10 @@ public class ObjectType {
             } else if ("Integer".equals(type)) {
                 try {
                     NumberFormat nf = null;
-                    if (locale == null) nf = NumberFormat.getNumberInstance();
-                    else nf = NumberFormat.getNumberInstance(locale);
+                    if (locale == null)
+                        nf = NumberFormat.getNumberInstance();
+                    else
+                        nf = NumberFormat.getNumberInstance(locale);
                     nf.setMaximumFractionDigits(0);
                     Number tempNum = nf.parse(str);
                     return new Integer(tempNum.intValue());
@@ -276,8 +285,10 @@ public class ObjectType {
             Double dbl = (Double) obj;
             if ("String".equals(type)) {
                 NumberFormat nf = null;
-                if (locale == null) nf = NumberFormat.getNumberInstance();
-                else nf = NumberFormat.getNumberInstance(locale);
+                if (locale == null)
+                    nf = NumberFormat.getNumberInstance();
+                else
+                    nf = NumberFormat.getNumberInstance(locale);
                 return nf.format(dbl.doubleValue());
             } else if ("Double".equals(type)) {
                 return obj;
@@ -286,7 +297,7 @@ public class ObjectType {
             } else if ("Long".equals(type)) {
                 return new Long(Math.round(dbl.doubleValue()));
             } else if ("Integer".equals(type)) {
-                return new Integer((int)Math.round(dbl.doubleValue()));
+                return new Integer((int) Math.round(dbl.doubleValue()));
             } else {
                 throw new GeneralException("Conversion from " + fromType + " to " + type + " not currently supported");
             }
@@ -295,8 +306,10 @@ public class ObjectType {
             Float flt = (Float) obj;
             if ("String".equals(type)) {
                 NumberFormat nf = null;
-                if (locale == null) nf = NumberFormat.getNumberInstance();
-                else nf = NumberFormat.getNumberInstance(locale);
+                if (locale == null)
+                    nf = NumberFormat.getNumberInstance();
+                else
+                    nf = NumberFormat.getNumberInstance(locale);
                 return nf.format(flt.doubleValue());
             } else if ("Double".equals(type)) {
                 return new Double(flt.doubleValue());
@@ -305,7 +318,7 @@ public class ObjectType {
             } else if ("Long".equals(type)) {
                 return new Long(Math.round(flt.doubleValue()));
             } else if ("Integer".equals(type)) {
-                return new Integer((int)Math.round(flt.doubleValue()));
+                return new Integer((int) Math.round(flt.doubleValue()));
             } else {
                 throw new GeneralException("Conversion from " + fromType + " to " + type + " not currently supported");
             }
@@ -314,8 +327,10 @@ public class ObjectType {
             Long lng = (Long) obj;
             if ("String".equals(type)) {
                 NumberFormat nf = null;
-                if (locale == null) nf = NumberFormat.getNumberInstance();
-                else nf = NumberFormat.getNumberInstance(locale);
+                if (locale == null)
+                    nf = NumberFormat.getNumberInstance();
+                else
+                    nf = NumberFormat.getNumberInstance(locale);
                 return nf.format(lng.longValue());
             } else if ("Double".equals(type)) {
                 return new Double(lng.doubleValue());
@@ -333,8 +348,10 @@ public class ObjectType {
             Integer intgr = (Integer) obj;
             if ("String".equals(type)) {
                 NumberFormat nf = null;
-                if (locale == null) nf = NumberFormat.getNumberInstance();
-                else nf = NumberFormat.getNumberInstance(locale);
+                if (locale == null)
+                    nf = NumberFormat.getNumberInstance();
+                else
+                    nf = NumberFormat.getNumberInstance(locale);
                 return nf.format(intgr.longValue());
             } else if ("Double".equals(type)) {
                 return new Double(intgr.doubleValue());

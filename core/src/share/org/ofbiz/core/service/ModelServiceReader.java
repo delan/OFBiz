@@ -8,6 +8,7 @@ import java.io.*;
 import java.util.*;
 import java.net.*;
 import javax.xml.parsers.*;
+
 import org.xml.sax.*;
 import org.w3c.dom.*;
 import org.ofbiz.core.util.*;
@@ -42,6 +43,7 @@ import org.ofbiz.core.util.*;
  */
 
 public class ModelServiceReader {
+
     public static Map readers = new HashMap();
 
     public URL readerURL = null;
@@ -113,7 +115,7 @@ public class ModelServiceReader {
                                 //check to see if service with same name has already been read
                                 if (modelServices.containsKey(serviceName)) {
                                     Debug.logWarning("WARNING: Service " +
-                                            serviceName + " is defined more than once, most recent will over-write previous definition(s)");
+                                                     serviceName + " is defined more than once, most recent will over-write previous definition(s)");
                                 }
 
                                 //utilTimer.timerString("  After serviceName -- " + i + " --");
@@ -123,21 +125,19 @@ public class ModelServiceReader {
                                     modelServices.put(serviceName, service);
                                     //utilTimer.timerString("  After modelServices.put -- " + i + " --");
                                     Debug.logInfo("-- getModelService: #" + i +
-                                            " Loaded service: " + serviceName);
+                                                  " Loaded service: " + serviceName);
                                 } else
                                     Debug.logWarning(
                                             "-- -- SERVICE ERROR:getModelService: Could not create service for serviceName: " +
                                             serviceName);
 
                             }
-                        }
-                        while ((curChild = curChild.getNextSibling()) != null)
-                            ;
-                    }
-                    else
+                        } while ((curChild = curChild.getNextSibling()) != null)
+                                ;
+                    } else
                         Debug.logWarning("No child nodes found.");
                     utilTimer.timerString("Finished file " + readerURL +
-                            " - Total Services: " + i + " FINISHED");
+                                          " - Total Services: " + i + " FINISHED");
                 }
             }
         }
@@ -209,7 +209,7 @@ public class ModelServiceReader {
     }
 
     protected void createAttrDefs(Element baseElement, String parentNodeName,
-            Map contextMap) {
+                                  Map contextMap) {
         // Add the default optional parameters
         ModelParam def = null;
         // responseMessage
@@ -298,12 +298,10 @@ public class ModelServiceReader {
             if (sxe.getException() != null)
                 x = sxe.getException();
             x.printStackTrace();
-        }
-        catch (ParserConfigurationException pce) {
+        } catch (ParserConfigurationException pce) {
             // Parser with specified options can't be built
             pce.printStackTrace();
-        }
-        catch (IOException ioe) {
+        } catch (IOException ioe) {
             ioe.printStackTrace();
         }
 

@@ -1,3 +1,4 @@
+
 package org.ofbiz.core.entity.transaction;
 
 import java.net.*;
@@ -36,10 +37,11 @@ import tyrex.tm.TransactionDomain;
  * Created on July 1, 2001, 5:03 PM
  */
 public class TyrexFactory implements TransactionFactoryInterface {
+
     protected TransactionDomain td = null;
-    
+
     public TyrexFactory() {
-      /* For Tyrex version 0.9.8.5 */
+        /* For Tyrex version 0.9.8.5 */
         try {
             String resourceName = "tyrexdomain.xml";
             URL url = UtilURL.fromResource(resourceName);
@@ -57,10 +59,10 @@ public class TyrexFactory implements TransactionFactoryInterface {
             Debug.logError(e);
         }
 
-      /* For Tyrex version 0.9.7.0 * /
-        tyrex.resource.ResourceLimits rls = new tyrex.resource.ResourceLimits();
-        td = new TransactionDomain("ofbiztx", rls);
-       */
+        /* For Tyrex version 0.9.7.0 * /
+          tyrex.resource.ResourceLimits rls = new tyrex.resource.ResourceLimits();
+          td = new TransactionDomain("ofbiztx", rls);
+         */
     }
 
     public TransactionManager getTransactionManager() {
@@ -69,7 +71,7 @@ public class TyrexFactory implements TransactionFactoryInterface {
         else
             return null;
     }
-    
+
     public UserTransaction getUserTransaction() {
         if (td != null)
             return td.getUserTransaction();

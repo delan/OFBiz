@@ -1,3 +1,4 @@
+
 package org.ofbiz.core.entity.model;
 
 import java.util.*;
@@ -31,79 +32,86 @@ import java.util.*;
  */
 
 public class ModelRelation {
-  /** the title, gives a name/description to the relation */
-  public String title = "";
-  /** the type: either "one" or "many" */
-  public String type = "";
-  /** the name of the related EJB/entity */
-  public String relEntityName = "";
-  /** keyMaps defining how to lookup the relatedTable using columns from this table */
-  public Vector keyMaps = new Vector();
-  /** the main entity of this relation */
-  public ModelEntity mainEntity = null;
-  
-  /** Default Constructor */
-  public ModelRelation() {
-  }
-  
-  /** Find a KeyMap with the specified fieldName */
-  public ModelKeyMap findKeyMap(String fieldName) {
-    for(int i=0; i<keyMaps.size(); i++) {
-      ModelKeyMap keyMap = (ModelKeyMap)keyMaps.elementAt(i);
-      if(keyMap.fieldName.equals(fieldName)) return keyMap;
+
+    /** the title, gives a name/description to the relation */
+    public String title = "";
+    /** the type: either "one" or "many" */
+    public String type = "";
+    /** the name of the related EJB/entity */
+    public String relEntityName = "";
+    /** keyMaps defining how to lookup the relatedTable using columns from this table */
+    public Vector keyMaps = new Vector();
+    /** the main entity of this relation */
+    public ModelEntity mainEntity = null;
+
+    /** Default Constructor */
+    public ModelRelation() {
     }
-    return null;
-  }
-  
-  /** Find a KeyMap with the specified relFieldName */
-  public ModelKeyMap findKeyMapByRelated(String relFieldName) {
-    for(int i=0; i<keyMaps.size(); i++) {
-      ModelKeyMap keyMap = (ModelKeyMap)keyMaps.elementAt(i);
-      if(keyMap.relFieldName.equals(relFieldName)) return keyMap;
+
+    /** Find a KeyMap with the specified fieldName */
+    public ModelKeyMap findKeyMap(String fieldName) {
+        for (int i = 0; i < keyMaps.size(); i++) {
+            ModelKeyMap keyMap = (ModelKeyMap) keyMaps.elementAt(i);
+            if (keyMap.fieldName.equals(fieldName)) return keyMap;
+        }
+        return null;
     }
-    return null;
-  }
-  
-  public String keyMapString(String separator, String afterLast) {
-    String returnString = "";
-    if(keyMaps.size() < 1) { return ""; }
-    
-    int i = 0;
-    for(; i < keyMaps.size() - 1; i++) {
-      returnString = returnString + ((ModelKeyMap)keyMaps.elementAt(i)).fieldName + separator;
+
+    /** Find a KeyMap with the specified relFieldName */
+    public ModelKeyMap findKeyMapByRelated(String relFieldName) {
+        for (int i = 0; i < keyMaps.size(); i++) {
+            ModelKeyMap keyMap = (ModelKeyMap) keyMaps.elementAt(i);
+            if (keyMap.relFieldName.equals(relFieldName)) return keyMap;
+        }
+        return null;
     }
-    returnString = returnString + ((ModelKeyMap)keyMaps.elementAt(i)).fieldName + afterLast;
-    return returnString;
-  }
-  
-  public String keyMapUpperString(String separator, String afterLast) {
-    String returnString = "";
-    if(keyMaps.size() < 1) { return ""; }
-    
-    int i = 0;
-    for(; i < keyMaps.size() - 1; i++) {
-      returnString = returnString + ModelUtil.upperFirstChar(((ModelKeyMap)keyMaps.elementAt(i)).fieldName) + separator;
+
+    public String keyMapString(String separator, String afterLast) {
+        String returnString = "";
+        if (keyMaps.size() < 1) {
+            return "";
+        }
+
+        int i = 0;
+        for (; i < keyMaps.size() - 1; i++) {
+            returnString = returnString + ((ModelKeyMap) keyMaps.elementAt(i)).fieldName + separator;
+        }
+        returnString = returnString + ((ModelKeyMap) keyMaps.elementAt(i)).fieldName + afterLast;
+        return returnString;
     }
-    returnString = returnString + ModelUtil.upperFirstChar(((ModelKeyMap)keyMaps.elementAt(i)).fieldName) + afterLast;
-    return returnString;
-  }
-  
-  public String keyMapRelatedUpperString(String separator, String afterLast) {
-    String returnString = "";
-    if(keyMaps.size() < 1) { return ""; }
-    
-    int i = 0;
-    for(; i < keyMaps.size() - 1; i++) {
-      returnString = returnString + ModelUtil.upperFirstChar(((ModelKeyMap)keyMaps.elementAt(i)).relFieldName) + separator;
+
+    public String keyMapUpperString(String separator, String afterLast) {
+        String returnString = "";
+        if (keyMaps.size() < 1) {
+            return "";
+        }
+
+        int i = 0;
+        for (; i < keyMaps.size() - 1; i++) {
+            returnString = returnString + ModelUtil.upperFirstChar(((ModelKeyMap) keyMaps.elementAt(i)).fieldName) + separator;
+        }
+        returnString = returnString + ModelUtil.upperFirstChar(((ModelKeyMap) keyMaps.elementAt(i)).fieldName) + afterLast;
+        return returnString;
     }
-    returnString = returnString + ModelUtil.upperFirstChar(((ModelKeyMap)keyMaps.elementAt(i)).relFieldName) + afterLast;
-    return returnString;
-  }
-/*  
+
+    public String keyMapRelatedUpperString(String separator, String afterLast) {
+        String returnString = "";
+        if (keyMaps.size() < 1) {
+            return "";
+        }
+
+        int i = 0;
+        for (; i < keyMaps.size() - 1; i++) {
+            returnString = returnString + ModelUtil.upperFirstChar(((ModelKeyMap) keyMaps.elementAt(i)).relFieldName) + separator;
+        }
+        returnString = returnString + ModelUtil.upperFirstChar(((ModelKeyMap) keyMaps.elementAt(i)).relFieldName) + afterLast;
+        return returnString;
+    }
+/*
   public String keyMapColumnString(String separator, String afterLast) {
     String returnString = "";
     if(keyMaps.size() < 1) { return ""; }
-    
+
     int i = 0;
     for(; i < keyMaps.size() - 1; i++) {
       returnString = returnString + ((ModelKeyMap)keyMaps.elementAt(i)).colName + separator;
@@ -111,12 +119,12 @@ public class ModelRelation {
     returnString = returnString + ((ModelKeyMap)keyMaps.elementAt(i)).colName + afterLast;
     return returnString;
   }
-*/  
+*/
 /*
   public String keyMapRelatedColumnString(String separator, String afterLast) {
     String returnString = "";
     if(keyMaps.size() < 1) { return ""; }
-    
+
     int i = 0;
     for(; i < keyMaps.size() - 1; i++) {
       returnString = returnString + ((ModelKeyMap)keyMaps.elementAt(i)).relColName + separator;

@@ -5,6 +5,7 @@
 package org.ofbiz.core.workflow.impl;
 
 import java.util.*;
+
 import org.ofbiz.core.service.*;
 import org.ofbiz.core.util.*;
 import org.ofbiz.core.workflow.*;
@@ -37,6 +38,7 @@ import org.ofbiz.core.workflow.*;
  *@version    1.0
  */
 public class WfRequesterImpl implements WfRequester {
+
     protected Map performers;
 
     /** Create a new WfRequester */
@@ -51,8 +53,7 @@ public class WfRequesterImpl implements WfRequester {
      *@param requester associated with the service
      *@throws WfException
      */
-    public void registerProcess(WfProcess process, Map context,
-            GenericRequester requester) throws WfException {
+    public void registerProcess(WfProcess process, Map context, GenericRequester requester) throws WfException {
         if (process == null)
             throw new WfException("Process cannot be null");
         if (context == null)
@@ -75,10 +76,9 @@ public class WfRequesterImpl implements WfRequester {
         try {
             process.start();
         } catch (CannotStart cs) {
-            throw new WfException("Cannot start process",cs);
-        }
-        catch (AlreadyRunning ar) {
-            throw new WfException("Process already running",ar);
+            throw new WfException("Cannot start process", cs);
+        } catch (AlreadyRunning ar) {
+            throw new WfException("Process already running", ar);
         }
     }
 
@@ -127,17 +127,15 @@ public class WfRequesterImpl implements WfRequester {
      * @throws WfException
      * @throws InvalidPerformer
      */
-    public synchronized void receiveEvent(WfEventAudit event)
-        throws WfException, InvalidPerformer {
+    public synchronized void receiveEvent(WfEventAudit event) throws WfException, InvalidPerformer {
         // Should the source of the audit come from the process? if so use this.
         WfProcess process = null;
         try {
             process = (WfProcess) event.source();
         } catch (SourceNotAvailable sna) {
-            throw new InvalidPerformer("Could not get the performer",sna);
-        }
-        catch (ClassCastException cce) {
-            throw new InvalidPerformer("Not a valid process object",cce);
+            throw new InvalidPerformer("Could not get the performer", sna);
+        } catch (ClassCastException cce) {
+            throw new InvalidPerformer("Not a valid process object", cce);
         }
         if (process == null)
             throw new InvalidPerformer("No performer specified");

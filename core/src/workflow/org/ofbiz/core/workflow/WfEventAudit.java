@@ -34,61 +34,61 @@ import java.sql.Timestamp;
  *@version    1.0
  */
 
-public interface WfEventAudit  {
-  
-  /**
-   * @throws WfException
-   * @throws SourceNotAvailable
-   * @return
-   */
-  public WfExecutionObject source() throws WfException, SourceNotAvailable;
-  
-  /**
-   * @throws WfException
-   * @return
-   */
-  public Timestamp timeStamp() throws WfException;
-  
-  /**
-   * @throws WfException
-   * @return
-   */
-  public String eventType() throws WfException;
-  
-  /**
-   * @throws WfException
-   * @return
-   */
-  public String activityKey() throws WfException;
-  
-  /**
-   * @throws WfException
-   * @return
-   */
-  public String activityName() throws WfException;
-  
-  /**
-   * @throws WfException
-   * @return
-   */
-  public String processKey() throws WfException;
-  
-  /**
-   * @throws WfException
-   * @return
-   */
-  public String processName() throws WfException;
-  
-  /**
-   * @throws WfException
-   * @return
-   */
-  public String processMgrName() throws WfException;
-  
-  /**
-   * @throws WfException
-   * @return
-   */
-  public String processMgrVersion() throws WfException;
-  
+public interface WfEventAudit {
+
+    /**
+     * @throws WfException
+     * @throws SourceNotAvailable
+     * @return
+     */
+    public WfExecutionObject source() throws WfException, SourceNotAvailable;
+
+    /**
+     * @throws WfException
+     * @return
+     */
+    public Timestamp timeStamp() throws WfException;
+
+    /**
+     * @throws WfException
+     * @return
+     */
+    public String eventType() throws WfException;
+
+    /**
+     * @throws WfException
+     * @return
+     */
+    public String activityKey() throws WfException;
+
+    /**
+     * @throws WfException
+     * @return
+     */
+    public String activityName() throws WfException;
+
+    /**
+     * @throws WfException
+     * @return
+     */
+    public String processKey() throws WfException;
+
+    /**
+     * @throws WfException
+     * @return
+     */
+    public String processName() throws WfException;
+
+    /**
+     * @throws WfException
+     * @return
+     */
+    public String processMgrName() throws WfException;
+
+    /**
+     * @throws WfException
+     * @return
+     */
+    public String processMgrVersion() throws WfException;
+
 } // interface WfEventAuditOperations

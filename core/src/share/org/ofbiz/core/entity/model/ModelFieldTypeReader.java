@@ -1,3 +1,4 @@
+
 package org.ofbiz.core.entity.model;
 
 import javax.xml.parsers.DocumentBuilder;
@@ -49,153 +50,164 @@ import org.ofbiz.core.util.*;
  */
 
 public class ModelFieldTypeReader {
-  public static UtilCache readers = new UtilCache("ModelFieldTypeReader", 0, 0);
-  
-  public Map fieldTypeCache = null;
-  
-  public int numEntities = 0;
-  public int numFields = 0;
-  public int numRelations = 0;
-  
-  public String modelName;
-  public String fieldTypeFileName;
-  public String entityFileName;
-  
-  public static ModelFieldTypeReader getModelFieldTypeReader(String helperName) {
-    String tempModelName = UtilProperties.getPropertyValue("entityengine", helperName + ".field.type.reader");
-    ModelFieldTypeReader reader = (ModelFieldTypeReader)readers.get(tempModelName);
-    if(reader == null) //don't want to block here
-    {
-      synchronized(ModelFieldTypeReader.class) {
-        //must check if null again as one of the blocked threads can still enter
-        reader = (ModelFieldTypeReader)readers.get(tempModelName);
-        if(reader == null) {
-          reader = new ModelFieldTypeReader(tempModelName);
-          readers.put(tempModelName, reader);
-        }
-      }
-    }
-    return reader;
-  }
-  
-  public ModelFieldTypeReader(String modelName) {
-    this.modelName = modelName;
-    fieldTypeFileName = UtilProperties.getPropertyValue("entityengine", modelName + ".xml.field.type");
-    
-    //preload caches...
-    getFieldTypeCache();
-  }
-  
-  public Map getFieldTypeCache() {
-    if(fieldTypeCache == null) //don't want to block here
-    {
-      synchronized(ModelFieldTypeReader.class) {
-        //must check if null again as one of the blocked threads can still enter
-        if(fieldTypeCache == null) //now it's safe
+
+    public static UtilCache readers = new UtilCache("ModelFieldTypeReader", 0, 0);
+
+    public Map fieldTypeCache = null;
+
+    public int numEntities = 0;
+    public int numFields = 0;
+    public int numRelations = 0;
+
+    public String modelName;
+    public String fieldTypeFileName;
+    public String entityFileName;
+
+    public static ModelFieldTypeReader getModelFieldTypeReader(String helperName) {
+        String tempModelName = UtilProperties.getPropertyValue("entityengine", helperName + ".field.type.reader");
+        ModelFieldTypeReader reader = (ModelFieldTypeReader) readers.get(tempModelName);
+        if (reader == null) //don't want to block here
         {
-          fieldTypeCache = new HashMap();
-          
-          UtilTimer utilTimer = new UtilTimer();
-          //utilTimer.timerString("Before getDocument");
-          Document document = getDocument(fieldTypeFileName);
-          if(document == null) { fieldTypeCache = null; return null; }
-          
-          //utilTimer.timerString("Before getDocumentElement");
-          Element docElement = document.getDocumentElement();
-          if(docElement == null) { fieldTypeCache = null; return null; }
-          docElement.normalize();
-          
-          Node curChild = docElement.getFirstChild();
-          
-          int i=0;
-          if(curChild != null) {
-            utilTimer.timerString("Before start of field type loop");
-            do {
-              if(curChild.getNodeType() == Node.ELEMENT_NODE && "field-type-def".equals(curChild.getNodeName())) {
-                i++;
-                //utilTimer.timerString("Start loop -- " + i + " --");
-                Element curFieldType = (Element)curChild;
-                String fieldTypeName = UtilXml.checkEmpty(curFieldType.getAttribute("type"), "[No type name]");
-                //utilTimer.timerString("  After fieldTypeName -- " + i + " --");
-                ModelFieldType fieldType = createModelFieldType(curFieldType, docElement, null);
-                //utilTimer.timerString("  After createModelFieldType -- " + i + " --");
-                if(fieldType != null) {
-                  fieldTypeCache.put(fieldTypeName, fieldType);
-                  //utilTimer.timerString("  After fieldTypeCache.put -- " + i + " --");
-                  Debug.logInfo("-- getModelFieldType: #" + i + " Created fieldType: " + fieldTypeName);
+            synchronized (ModelFieldTypeReader.class) {
+                //must check if null again as one of the blocked threads can still enter
+                reader = (ModelFieldTypeReader) readers.get(tempModelName);
+                if (reader == null) {
+                    reader = new ModelFieldTypeReader(tempModelName);
+                    readers.put(tempModelName, reader);
                 }
-                else { Debug.logWarning("-- -- ENTITYGEN ERROR:getModelFieldType: Could not create fieldType for fieldTypeName: " + fieldTypeName); }
-                
-              }
-            } while((curChild = curChild.getNextSibling()) != null);
-          }
-          else Debug.logWarning("No child nodes found.");
-          utilTimer.timerString("FINISHED - Total Field Types: " + i + " FINISHED");
+            }
         }
-      }
+        return reader;
     }
-    return fieldTypeCache;
-  }
-  
-  /** Creates a Collection with all of the ModelFieldType names
-   * @return A Collection of ModelFieldType names
-   */
-  public Collection getFieldTypeNames() {
-    Map ftc = getFieldTypeCache();
-    return ftc.keySet();
-  }
-  
-  /** Creates a Collection with all of the ModelFieldTypes
-   * @return A Collection of ModelFieldTypes
-   */
-  public Collection getFieldTypes() {
-    Map ftc = getFieldTypeCache();
-    return ftc.values();
-  }
-  
-  /** Gets an FieldType object based on a definition from the specified XML FieldType descriptor file.
-   * @param fieldTypeName The fieldTypeName of the FieldType definition to use.
-   * @return An FieldType object describing the specified fieldType of the specified descriptor file.
-   */
-  public ModelFieldType getModelFieldType(String fieldTypeName) {
-    Map ftc = getFieldTypeCache();
-    if(ftc != null) return (ModelFieldType)ftc.get(fieldTypeName);
-    else return null;
-  }
-  
-  ModelFieldType createModelFieldType(Element fieldTypeElement, Element docElement, UtilTimer utilTimer) {
-    if(fieldTypeElement == null) return null;
-    
-    ModelFieldType field = new ModelFieldType();
-    field.type = UtilXml.checkEmpty(fieldTypeElement.getAttribute("type"));
-    field.javaType = UtilXml.checkEmpty(fieldTypeElement.getAttribute("java-type"));
-    field.sqlType = UtilXml.checkEmpty(fieldTypeElement.getAttribute("sql-type"));
-    
-    NodeList validateList = fieldTypeElement.getElementsByTagName("validate");
-    for(int i=0; i<validateList.getLength(); i++) {
-      Element element = (Element)validateList.item(i);
-      field.validators.add(UtilXml.checkEmpty(element.getAttribute("name")));
+
+    public ModelFieldTypeReader(String modelName) {
+        this.modelName = modelName;
+        fieldTypeFileName = UtilProperties.getPropertyValue("entityengine", modelName + ".xml.field.type");
+
+        //preload caches...
+        getFieldTypeCache();
     }
-    
-    return field;
-  }
-  
-  protected Document getDocument(String filename) {
-    if(filename == null) return null;
-    Document document = null;
-    try { document = UtilXml.readXmlDocument(UtilURL.fromFilename(filename)); }
-    catch (SAXException sxe) {
-      // Error generated during parsing)
-      Exception  x = sxe;
-      if(sxe.getException() != null) x = sxe.getException();
-      x.printStackTrace();
+
+    public Map getFieldTypeCache() {
+        if (fieldTypeCache == null) //don't want to block here
+        {
+            synchronized (ModelFieldTypeReader.class) {
+                //must check if null again as one of the blocked threads can still enter
+                if (fieldTypeCache == null) //now it's safe
+                {
+                    fieldTypeCache = new HashMap();
+
+                    UtilTimer utilTimer = new UtilTimer();
+                    //utilTimer.timerString("Before getDocument");
+                    Document document = getDocument(fieldTypeFileName);
+                    if (document == null) {
+                        fieldTypeCache = null;
+                        return null;
+                    }
+
+                    //utilTimer.timerString("Before getDocumentElement");
+                    Element docElement = document.getDocumentElement();
+                    if (docElement == null) {
+                        fieldTypeCache = null;
+                        return null;
+                    }
+                    docElement.normalize();
+
+                    Node curChild = docElement.getFirstChild();
+
+                    int i = 0;
+                    if (curChild != null) {
+                        utilTimer.timerString("Before start of field type loop");
+                        do {
+                            if (curChild.getNodeType() == Node.ELEMENT_NODE && "field-type-def".equals(curChild.getNodeName())) {
+                                i++;
+                                //utilTimer.timerString("Start loop -- " + i + " --");
+                                Element curFieldType = (Element) curChild;
+                                String fieldTypeName = UtilXml.checkEmpty(curFieldType.getAttribute("type"), "[No type name]");
+                                //utilTimer.timerString("  After fieldTypeName -- " + i + " --");
+                                ModelFieldType fieldType = createModelFieldType(curFieldType, docElement, null);
+                                //utilTimer.timerString("  After createModelFieldType -- " + i + " --");
+                                if (fieldType != null) {
+                                    fieldTypeCache.put(fieldTypeName, fieldType);
+                                    //utilTimer.timerString("  After fieldTypeCache.put -- " + i + " --");
+                                    Debug.logInfo("-- getModelFieldType: #" + i + " Created fieldType: " + fieldTypeName);
+                                } else {
+                                    Debug.logWarning("-- -- ENTITYGEN ERROR:getModelFieldType: Could not create fieldType for fieldTypeName: " + fieldTypeName);
+                                }
+
+                            }
+                        } while ((curChild = curChild.getNextSibling()) != null);
+                    } else
+                        Debug.logWarning("No child nodes found.");
+                    utilTimer.timerString("FINISHED - Total Field Types: " + i + " FINISHED");
+                }
+            }
+        }
+        return fieldTypeCache;
     }
-    catch(ParserConfigurationException pce) {
-      // Parser with specified options can't be built
-      pce.printStackTrace();
+
+    /** Creates a Collection with all of the ModelFieldType names
+     * @return A Collection of ModelFieldType names
+     */
+    public Collection getFieldTypeNames() {
+        Map ftc = getFieldTypeCache();
+        return ftc.keySet();
     }
-    catch(IOException ioe) { ioe.printStackTrace(); }
-    
-    return document;
-  }
+
+    /** Creates a Collection with all of the ModelFieldTypes
+     * @return A Collection of ModelFieldTypes
+     */
+    public Collection getFieldTypes() {
+        Map ftc = getFieldTypeCache();
+        return ftc.values();
+    }
+
+    /** Gets an FieldType object based on a definition from the specified XML FieldType descriptor file.
+     * @param fieldTypeName The fieldTypeName of the FieldType definition to use.
+     * @return An FieldType object describing the specified fieldType of the specified descriptor file.
+     */
+    public ModelFieldType getModelFieldType(String fieldTypeName) {
+        Map ftc = getFieldTypeCache();
+        if (ftc != null)
+            return (ModelFieldType) ftc.get(fieldTypeName);
+        else
+            return null;
+    }
+
+    ModelFieldType createModelFieldType(Element fieldTypeElement, Element docElement, UtilTimer utilTimer) {
+        if (fieldTypeElement == null) return null;
+
+        ModelFieldType field = new ModelFieldType();
+        field.type = UtilXml.checkEmpty(fieldTypeElement.getAttribute("type"));
+        field.javaType = UtilXml.checkEmpty(fieldTypeElement.getAttribute("java-type"));
+        field.sqlType = UtilXml.checkEmpty(fieldTypeElement.getAttribute("sql-type"));
+
+        NodeList validateList = fieldTypeElement.getElementsByTagName("validate");
+        for (int i = 0; i < validateList.getLength(); i++) {
+            Element element = (Element) validateList.item(i);
+            field.validators.add(UtilXml.checkEmpty(element.getAttribute("name")));
+        }
+
+        return field;
+    }
+
+    protected Document getDocument(String filename) {
+        if (filename == null) return null;
+        Document document = null;
+        try {
+            document = UtilXml.readXmlDocument(UtilURL.fromFilename(filename));
+        } catch (SAXException sxe) {
+            // Error generated during parsing)
+            Exception x = sxe;
+            if (sxe.getException() != null) x = sxe.getException();
+            x.printStackTrace();
+        } catch (ParserConfigurationException pce) {
+            // Parser with specified options can't be built
+            pce.printStackTrace();
+        } catch (IOException ioe) {
+            ioe.printStackTrace();
+        }
+
+        return document;
+    }
 }

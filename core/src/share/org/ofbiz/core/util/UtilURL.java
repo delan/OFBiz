@@ -1,16 +1,5 @@
 /*
  * $Id$
- * $Log$
- * Revision 1.3  2002/01/03 20:31:25  jonesde
- * Now uses ClassLoader instead of context class, get Thread classloader if none is specified
- *
- * Revision 1.2  2001/11/20 04:18:39  jonesde
- * Added return on null to url from filename/path method
- *
- * Revision 1.1  2001/10/13 22:37:37  jonesde
- * Added UtilURL and changed FlexibleProperties and UtilProperties to be URL-centric
- *
- *
  */
 
 package org.ofbiz.core.util;
@@ -42,66 +31,65 @@ import java.io.*;
  *  OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR
  *  THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  *
- *@author <a href="mailto:jonesde@ofbiz.org">David E. Jones</a>
+ *@author     <a href="mailto:jonesde@ofbiz.org">David E. Jones</a>
  *@created    Sep 22, 2001
  *@version    1.0
  */
 public class UtilURL {
+
     public static URL fromClass(Class contextClass) {
-        String resourceName=contextClass.getName();
+        String resourceName = contextClass.getName();
         int dotIndex = resourceName.lastIndexOf('.');
-        if(dotIndex!=-1) resourceName = resourceName.substring(0,dotIndex);
+        if (dotIndex != -1) resourceName = resourceName.substring(0, dotIndex);
         resourceName += ".properties";
-        
+
         return fromResource(contextClass, resourceName);
     }
-    
+
     public static URL fromResource(String resourceName) {
         return fromResource(null, resourceName);
     }
-    
+
     public static URL fromResource(Class contextClass, String resourceName) {
         if (contextClass == null)
             return fromResource(resourceName, null);
         else
             return fromResource(resourceName, contextClass.getClassLoader());
     }
-    
+
     public static URL fromResource(String resourceName, ClassLoader loader) {
         URL url = null;
-        if ( loader != null && url == null ) url = loader.getResource(resourceName);
-        if ( loader != null && url == null ) url = loader.getResource(resourceName + ".properties");
-        
-        if ( loader == null && url == null ) {
+        if (loader != null && url == null) url = loader.getResource(resourceName);
+        if (loader != null && url == null) url = loader.getResource(resourceName + ".properties");
+
+        if (loader == null && url == null) {
             try {
                 loader = Thread.currentThread().getContextClassLoader();
-            }
-            catch ( SecurityException e ) {
+            } catch (SecurityException e) {
                 UtilURL utilURL = new UtilURL();
                 loader = utilURL.getClass().getClassLoader();
             }
         }
-        
-        if ( url == null ) url = loader.getResource(resourceName);
-        if ( url == null ) url = loader.getResource(resourceName + ".properties");
-        
-        if ( url == null ) url = ClassLoader.getSystemResource(resourceName);
-        if ( url == null ) url = ClassLoader.getSystemResource(resourceName + ".properties");
-        
-        if ( url == null ) url = fromFilename(resourceName);
-        
+
+        if (url == null) url = loader.getResource(resourceName);
+        if (url == null) url = loader.getResource(resourceName + ".properties");
+
+        if (url == null) url = ClassLoader.getSystemResource(resourceName);
+        if (url == null) url = ClassLoader.getSystemResource(resourceName + ".properties");
+
+        if (url == null) url = fromFilename(resourceName);
+
         //Debug.log("[fromResource] got URL " + url + " from resourceName " + resourceName);
         return url;
     }
-    
+
     public static URL fromFilename(String filename) {
-        if(filename == null) return null;
+        if (filename == null) return null;
         File file = new File(filename);
         URL url = null;
         try {
-            if ( file.exists() ) url = file.toURL();
-        }
-        catch ( java.net.MalformedURLException e ) {
+            if (file.exists()) url = file.toURL();
+        } catch (java.net.MalformedURLException e) {
             Debug.log(e);
             url = null;
         }

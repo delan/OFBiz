@@ -1,6 +1,9 @@
 /*
  * $Id$
  * $Log$
+ * Revision 1.3  2001/12/07 07:16:38  jonesde
+ * Small improvement to make some parameters optional, and add username/password options
+ *
  * Revision 1.2  2001/10/19 22:17:32  jonesde
  * Changed servers.properties to entityengine.properties
  *
@@ -49,6 +52,7 @@ import org.ofbiz.core.util.*;
  * Created on Sep 21, 2001
  */
 public final class JNDIContextFactory {
+
     static Map contexts = new Hashtable();
 
     /** Return the initial context according to the entityengine.properties parameters that correspond to the given helper name

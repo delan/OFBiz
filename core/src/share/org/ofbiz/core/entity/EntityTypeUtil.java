@@ -1,6 +1,8 @@
+
 package org.ofbiz.core.entity;
 
 import java.util.*;
+
 import org.ofbiz.core.util.*;
 import org.ofbiz.core.entity.model.*;
 
@@ -33,29 +35,33 @@ import org.ofbiz.core.entity.model.*;
  *@version    1.0
  */
 public class EntityTypeUtil {
-  public static boolean isType(Collection thisCollection, String typeRelation, GenericValue targetType) {
-    Iterator iter = thisCollection.iterator();
-    while (iter.hasNext()) {
-      try {
-        GenericValue related = ((GenericValue) iter.next()).getRelatedOne(typeRelation);
-        if(isType(related, targetType)) { return true; }//else keep looking
-      }
-      catch(GenericEntityException e) { continue; }
+
+    public static boolean isType(Collection thisCollection, String typeRelation, GenericValue targetType) {
+        Iterator iter = thisCollection.iterator();
+        while (iter.hasNext()) {
+            try {
+                GenericValue related = ((GenericValue) iter.next()).getRelatedOne(typeRelation);
+                if (isType(related, targetType)) {
+                    return true;
+                }//else keep looking
+            } catch (GenericEntityException e) {
+                continue;
+            }
+        }
+        return false;
     }
-    return false;
-  }
-  
-  /*public static boolean isType(Collection thisTypeCollection, GenericValue targetType) {
-      Iterator iter = thisTypeCollection.iterator();
-      while (iter.hasNext()) {
-          if (isType((GenericValue) iter.next(), targetType)) {
-              return true;
-          }//else keep looking
-      }
-      return false;
-  }*/
-  
-  
+
+    /*public static boolean isType(Collection thisTypeCollection, GenericValue targetType) {
+        Iterator iter = thisTypeCollection.iterator();
+        while (iter.hasNext()) {
+            if (isType((GenericValue) iter.next(), targetType)) {
+                return true;
+            }//else keep looking
+        }
+        return false;
+    }*/
+
+
 /*  private static Object getTypeID(GenericValue typeValue) {
       Collection keys = typeValue.getAllKeys();
       if (keys.size() == 1) {
@@ -64,30 +70,30 @@ public class EntityTypeUtil {
           throw new IllegalArgumentException("getTypeID expecting value with single key");
       }
   }*/
-  
-  private static GenericValue getParentType(GenericValue typeValue) {
-    //assumes Parent relation is "Parent<entityName>"
-    try {
-      return typeValue.getRelatedOneCache("Parent" + typeValue.getEntityName());
+
+    private static GenericValue getParentType(GenericValue typeValue) {
+        //assumes Parent relation is "Parent<entityName>"
+        try {
+            return typeValue.getRelatedOneCache("Parent" + typeValue.getEntityName());
+        } catch (GenericEntityException e) {
+            Debug.logWarning(e);
+            return null;
+        }
     }
-    catch(GenericEntityException e) { Debug.logWarning(e); return null; }
-  }
-  
-  /**
-   *  Description of the Method
-   *
-   *@param  catName                       Description of Parameter
-   *@exception  java.rmi.RemoteException  Description of Exception
-   */
-  public static boolean isType(GenericValue thisType, GenericValue targetType) {
-    if (thisType == null) {
-      return false;
-    } 
-    else if (targetType.equals(thisType)) {
-      return true;
-    } 
-    else {
-      return isType(getParentType(thisType), targetType);
+
+    /**
+     *  Description of the Method
+     *
+     *@param  catName                       Description of Parameter
+     *@exception  java.rmi.RemoteException  Description of Exception
+     */
+    public static boolean isType(GenericValue thisType, GenericValue targetType) {
+        if (thisType == null) {
+            return false;
+        } else if (targetType.equals(thisType)) {
+            return true;
+        } else {
+            return isType(getParentType(thisType), targetType);
+        }
     }
-  }
 }

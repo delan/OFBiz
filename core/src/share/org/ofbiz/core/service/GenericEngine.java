@@ -5,6 +5,7 @@
 package org.ofbiz.core.service;
 
 import java.util.*;
+
 import org.ofbiz.core.util.*;
 
 /**
@@ -42,31 +43,31 @@ public interface GenericEngine {
      *@return Map of name, value pairs composing the result
      */
     public Map runSync(ModelService modelService,
-            Map context) throws GenericServiceException;
+                       Map context) throws GenericServiceException;
 
     /** Run the service synchronously and IGNORE the result
      *@param context Map of name, value pairs composing the context
      */
     public void runSyncIgnore(ModelService modelService,
-            Map context) throws GenericServiceException;
+                              Map context) throws GenericServiceException;
 
     /** Run the service asynchronously, passing an instance of GenericRequester that will receive the result
      *@param context Map of name, value pairs composing the context
      *@param requester Object implementing GenericRequester interface which will receive the result
      */
     public void runAsync(ModelService modelService, Map context,
-            GenericRequester requester) throws GenericServiceException;
-            
+                         GenericRequester requester) throws GenericServiceException;
+
     /** Run the service asynchronously and IGNORE the result
      *@param context Map of name, value pairs composing the context
      */
     public void runAsync(ModelService modelService,
-            Map context) throws GenericServiceException;
+                         Map context) throws GenericServiceException;
 
     /** Set the name of the local dispatcher
      *@param loader name of the local dispatcher
      */
     public void setLoader(String loader);
-    
+
 }
 

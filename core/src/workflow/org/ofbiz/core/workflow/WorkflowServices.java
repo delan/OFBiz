@@ -6,6 +6,7 @@ package org.ofbiz.core.workflow;
 
 import java.util.*;
 import java.sql.Timestamp;
+
 import org.ofbiz.core.entity.*;
 import org.ofbiz.core.security.*;
 import org.ofbiz.core.service.*;
@@ -39,11 +40,11 @@ import org.ofbiz.core.util.*;
  *@version    1.0
  */
 public class WorkflowServices {
-    
+
     // -------------------------------------------------------------------
     // Client 'Service' Methods
     // -------------------------------------------------------------------
-    
+
     /** Cancel Workflow */
     public static Map cancelWorkflow(DispatchContext ctx, Map context) {
         Map result = new HashMap();
@@ -51,22 +52,22 @@ public class WorkflowServices {
         Security security = ctx.getSecurity();
         String workEffortId = (String) context.get("workEffortId");
 
-        GenericValue userLogin = (GenericValue) context.get("userLogin"); 
+        GenericValue userLogin = (GenericValue) context.get("userLogin");
         if (!hasPermission(security, workEffortId, userLogin)) {
             result.put(ModelService.RESPONSE_MESSAGE, ModelService.RESPOND_ERROR);
-            result.put(ModelService.ERROR_MESSAGE,"You do not have permission to access this workdlow");
+            result.put(ModelService.ERROR_MESSAGE, "You do not have permission to access this workdlow");
             return result;
-        }                
+        }
         try {
             WfProcess process = WfFactory.getWfProcess(delegator, workEffortId);
             process.abort();
         } catch (WfException e) {
             result.put(ModelService.RESPONSE_MESSAGE, ModelService.RESPOND_ERROR);
-            result.put(ModelService.ERROR_MESSAGE,e.getMessage());
+            result.put(ModelService.ERROR_MESSAGE, e.getMessage());
         }
-        return result;        
+        return result;
     }
-        
+
     /** Marks an activity as complete */
     public static Map completeActivity(DispatchContext ctx, Map context) {
         Map result = new HashMap();
@@ -74,13 +75,13 @@ public class WorkflowServices {
         Security security = ctx.getSecurity();
         String workEffortId = (String) context.get("workEffortId");
         Map actResults = (Map) context.get("results");
-        
-        GenericValue userLogin = (GenericValue) context.get("userLogin"); 
+
+        GenericValue userLogin = (GenericValue) context.get("userLogin");
         if (!hasPermission(security, workEffortId, userLogin)) {
             result.put(ModelService.RESPONSE_MESSAGE, ModelService.RESPOND_ERROR);
-            result.put(ModelService.ERROR_MESSAGE,"You do not have permission to access this activity");
+            result.put(ModelService.ERROR_MESSAGE, "You do not have permission to access this activity");
             return result;
-        }                
+        }
         try {
             WfActivity activity = WfFactory.getWfActivity(delegator, workEffortId);
             if (actResults != null && actResults.size() > 0)
@@ -89,11 +90,11 @@ public class WorkflowServices {
             result.put(ModelService.RESPONSE_MESSAGE, ModelService.RESPOND_SUCCESS);
         } catch (WfException e) {
             result.put(ModelService.RESPONSE_MESSAGE, ModelService.RESPOND_ERROR);
-            result.put(ModelService.ERROR_MESSAGE,e.getMessage());
+            result.put(ModelService.ERROR_MESSAGE, e.getMessage());
         }
         return result;
     }
-    
+
     /** Change the state of an activity */
     public static Map changeActivityState(DispatchContext ctx, Map context) {
         Map result = new HashMap();
@@ -101,103 +102,103 @@ public class WorkflowServices {
         Security security = ctx.getSecurity();
         String workEffortId = (String) context.get("workEffortId");
         String newState = (String) context.get("newState");
-        
-        GenericValue userLogin = (GenericValue) context.get("userLogin"); 
+
+        GenericValue userLogin = (GenericValue) context.get("userLogin");
         if (!hasPermission(security, workEffortId, userLogin)) {
             result.put(ModelService.RESPONSE_MESSAGE, ModelService.RESPOND_ERROR);
-            result.put(ModelService.ERROR_MESSAGE,"You do not have permission to access this activity");
+            result.put(ModelService.ERROR_MESSAGE, "You do not have permission to access this activity");
             return result;
-        }                
+        }
         try {
-            WfActivity activity = WfFactory.getWfActivity(delegator,workEffortId);
+            WfActivity activity = WfFactory.getWfActivity(delegator, workEffortId);
             activity.changeState(newState);
             result.put(ModelService.RESPONSE_MESSAGE, ModelService.RESPOND_SUCCESS);
         } catch (WfException e) {
             result.put(ModelService.RESPONSE_MESSAGE, ModelService.RESPOND_ERROR);
-            result.put(ModelService.ERROR_MESSAGE,e.getMessage());
+            result.put(ModelService.ERROR_MESSAGE, e.getMessage());
         }
         return result;
     }
-    
+
     /** Check the state of an activity */
     public static Map checkActivityState(DispatchContext ctx, Map context) {
         Map result = new HashMap();
         GenericDelegator delegator = ctx.getDelegator();
         Security security = ctx.getSecurity();
         String workEffortId = (String) context.get("workEffortId");
-        
-        GenericValue userLogin = (GenericValue) context.get("userLogin"); 
+
+        GenericValue userLogin = (GenericValue) context.get("userLogin");
         if (!hasPermission(security, workEffortId, userLogin)) {
             result.put(ModelService.RESPONSE_MESSAGE, ModelService.RESPOND_ERROR);
-            result.put(ModelService.ERROR_MESSAGE,"You do not have permission to access this activity");
+            result.put(ModelService.ERROR_MESSAGE, "You do not have permission to access this activity");
             return result;
-        }                
+        }
         try {
-            WfActivity activity = WfFactory.getWfActivity(delegator,workEffortId);
-            result.put("activityState",activity.state());
+            WfActivity activity = WfFactory.getWfActivity(delegator, workEffortId);
+            result.put("activityState", activity.state());
             result.put(ModelService.RESPONSE_MESSAGE, ModelService.RESPOND_SUCCESS);
         } catch (WfException e) {
             result.put(ModelService.RESPONSE_MESSAGE, ModelService.RESPOND_ERROR);
-            result.put(ModelService.ERROR_MESSAGE,e.getMessage());
+            result.put(ModelService.ERROR_MESSAGE, e.getMessage());
         }
         return result;
     }
-    
+
     /** Manually activate an activity */
     public static Map activateActivity(DispatchContext ctx, Map context) {
         Map result = new HashMap();
         GenericDelegator delegator = ctx.getDelegator();
-        Security security = ctx.getSecurity();        
+        Security security = ctx.getSecurity();
         String workEffortId = (String) context.get("workEffortId");
-        
-        GenericValue userLogin = (GenericValue) context.get("userLogin"); 
+
+        GenericValue userLogin = (GenericValue) context.get("userLogin");
         if (!hasPermission(security, workEffortId, userLogin)) {
             result.put(ModelService.RESPONSE_MESSAGE, ModelService.RESPOND_ERROR);
-            result.put(ModelService.ERROR_MESSAGE,"You do not have permission to access this activity");
+            result.put(ModelService.ERROR_MESSAGE, "You do not have permission to access this activity");
             return result;
-        }                
+        }
         try {
-            WfActivity activity = WfFactory.getWfActivity(delegator,workEffortId);
+            WfActivity activity = WfFactory.getWfActivity(delegator, workEffortId);
             activity.activate();
             result.put(ModelService.RESPONSE_MESSAGE, ModelService.RESPOND_SUCCESS);
         } catch (WfException e) {
             result.put(ModelService.RESPONSE_MESSAGE, ModelService.RESPOND_ERROR);
-            result.put(ModelService.ERROR_MESSAGE,e.getMessage());
+            result.put(ModelService.ERROR_MESSAGE, e.getMessage());
         }
         return result;
     }
-    
+
     /** Assign activity to a new or additional party */
     public static Map assignActivity(DispatchContext ctx, Map context) {
         Map result = new HashMap();
         GenericDelegator delegator = ctx.getDelegator();
-        Security security = ctx.getSecurity();        
+        Security security = ctx.getSecurity();
         String workEffortId = (String) context.get("workEffortId");
         String partyId = (String) context.get("partyId");
         String roleType = (String) context.get("roleTypeId");
         boolean removeOldAssign = false;
         if (context.containsKey("removeOldAssignments")) {
-            removeOldAssign = ((String)context.get("removeOldAssignments")).equals("true") ? true : false;
+            removeOldAssign = ((String) context.get("removeOldAssignments")).equals("true") ? true : false;
         }
-        
-        GenericValue userLogin = (GenericValue) context.get("userLogin"); 
+
+        GenericValue userLogin = (GenericValue) context.get("userLogin");
         if (!hasPermission(security, workEffortId, userLogin)) {
             result.put(ModelService.RESPONSE_MESSAGE, ModelService.RESPOND_ERROR);
-            result.put(ModelService.ERROR_MESSAGE,"You do not have permission to access this activity");
+            result.put(ModelService.ERROR_MESSAGE, "You do not have permission to access this activity");
             return result;
-        }                
+        }
         try {
-            WfActivity activity = WfFactory.getWfActivity(delegator,workEffortId);
-            WfResource resource = WfFactory.getWfResource(delegator,null,null,partyId,roleType);
-            activity.assign(resource,removeOldAssign ? false : true);
+            WfActivity activity = WfFactory.getWfActivity(delegator, workEffortId);
+            WfResource resource = WfFactory.getWfResource(delegator, null, null, partyId, roleType);
+            activity.assign(resource, removeOldAssign ? false : true);
             result.put(ModelService.RESPONSE_MESSAGE, ModelService.RESPOND_SUCCESS);
         } catch (WfException e) {
             result.put(ModelService.RESPONSE_MESSAGE, ModelService.RESPOND_ERROR);
-            result.put(ModelService.ERROR_MESSAGE,e.getMessage());
+            result.put(ModelService.ERROR_MESSAGE, e.getMessage());
         }
         return result;
     }
-    
+
     /** Accept an assignment and attempt to start the activity */
     public static Map acceptAssignment(DispatchContext ctx, Map context) {
         Map result = new HashMap();
@@ -207,39 +208,39 @@ public class WorkflowServices {
         String partyId = (String) context.get("partyId");
         String roleType = (String) context.get("roleTypeId");
         Timestamp fromDate = (Timestamp) context.get("fromDate");
-         
+
         try {
-            WfAssignment assign = WfFactory.getWfAssignment(delegator,workEffortId,partyId,roleType,fromDate);
+            WfAssignment assign = WfFactory.getWfAssignment(delegator, workEffortId, partyId, roleType, fromDate);
             assign.accept();
             result.put(ModelService.RESPONSE_MESSAGE, ModelService.RESPOND_SUCCESS);
         } catch (WfException we) {
             result.put(ModelService.RESPONSE_MESSAGE, ModelService.RESPOND_ERROR);
-            result.put(ModelService.ERROR_MESSAGE,we.getMessage());
+            result.put(ModelService.ERROR_MESSAGE, we.getMessage());
         }
         return result;
-        
+
     }
-    
+
     /** Complete an assignment */
     public static Map completeAssignment(DispatchContext ctx, Map context) {
         Map result = new HashMap();
-        GenericDelegator delegator = ctx.getDelegator();        
-        Security security = ctx.getSecurity();                              
+        GenericDelegator delegator = ctx.getDelegator();
+        Security security = ctx.getSecurity();
         String workEffortId = (String) context.get("workEffortId");
         String partyId = (String) context.get("partyId");
         String roleType = (String) context.get("roleTypeId");
         Timestamp fromDate = (Timestamp) context.get("fromDate");
         Map actResults = (Map) context.get("results");
-        
-        GenericValue userLogin = (GenericValue) context.get("userLogin"); 
+
+        GenericValue userLogin = (GenericValue) context.get("userLogin");
         if (!hasPermission(security, workEffortId, userLogin)) {
             result.put(ModelService.RESPONSE_MESSAGE, ModelService.RESPOND_ERROR);
-            result.put(ModelService.ERROR_MESSAGE,"You do not have permission to access this assignment");
+            result.put(ModelService.ERROR_MESSAGE, "You do not have permission to access this assignment");
             return result;
-        }        
-        
+        }
+
         try {
-            WfAssignment assign = WfFactory.getWfAssignment(delegator,workEffortId,partyId,roleType,fromDate);
+            WfAssignment assign = WfFactory.getWfAssignment(delegator, workEffortId, partyId, roleType, fromDate);
             if (actResults != null && actResults.size() > 0) {
                 assign.setResult(actResults);
             }
@@ -247,40 +248,40 @@ public class WorkflowServices {
             result.put(ModelService.RESPONSE_MESSAGE, ModelService.RESPOND_SUCCESS);
         } catch (WfException we) {
             result.put(ModelService.RESPONSE_MESSAGE, ModelService.RESPOND_ERROR);
-            result.put(ModelService.ERROR_MESSAGE,we.getMessage());
+            result.put(ModelService.ERROR_MESSAGE, we.getMessage());
         }
         return result;
     }
-    
+
     public static Map limitInvoker(DispatchContext ctx, Map context) {
         Map result = new HashMap();
         GenericDelegator delegator = ctx.getDelegator();
-        LocalDispatcher dispatcher = ctx.getDispatcher();                
+        LocalDispatcher dispatcher = ctx.getDispatcher();
         String workEffortId = (String) context.get("workEffortId");
         String limitService = (String) context.get("limitService");
         Map limitContext = (Map) context.get("limitContext");
-                
+
         try {
-            WfActivity activity = WfFactory.getWfActivity(delegator,workEffortId);
+            WfActivity activity = WfFactory.getWfActivity(delegator, workEffortId);
             if (activity.state().startsWith("open")) {
-                dispatcher.runSync(limitService,limitContext);
+                dispatcher.runSync(limitService, limitContext);
             }
             result.put(ModelService.RESPONSE_MESSAGE, ModelService.RESPOND_SUCCESS);
         } catch (WfException we) {
             result.put(ModelService.RESPONSE_MESSAGE, ModelService.RESPOND_ERROR);
-            result.put(ModelService.ERROR_MESSAGE,we.getMessage());
+            result.put(ModelService.ERROR_MESSAGE, we.getMessage());
         } catch (GenericServiceException se) {
             result.put(ModelService.RESPONSE_MESSAGE, ModelService.RESPOND_ERROR);
-            result.put(ModelService.ERROR_MESSAGE,se.getMessage());
-        }                               
+            result.put(ModelService.ERROR_MESSAGE, se.getMessage());
+        }
         return result;
     }
-    
-     
+
+
     // -------------------------------------------------------------------
     // Service 'Worker' Methods
     // -------------------------------------------------------------------
-    
+
     private static boolean hasPermission(Security security, String workEffortId, GenericValue userLogin) {
         if (userLogin == null || workEffortId == null) {
             return false;
@@ -288,25 +289,26 @@ public class WorkflowServices {
         if (security.hasPermission("WORKFLOW_MAINT", userLogin)) {
             return true;
         } else {
-            String partyId = userLogin.getString("partyId");            
-            List expr = UtilMisc.toList(new EntityExpr("partyId", EntityOperator.EQUALS, partyId),                    
-                    new EntityExpr("workEffortId", EntityOperator.EQUALS, workEffortId),
-                    new EntityExpr("fromDate", EntityOperator.GREATER_THAN_EQUAL_TO, UtilDateTime.nowTimestamp()));
+            String partyId = userLogin.getString("partyId");
+            List expr = UtilMisc.toList(new EntityExpr("partyId", EntityOperator.EQUALS, partyId),
+                                        new EntityExpr("workEffortId", EntityOperator.EQUALS, workEffortId),
+                                        new EntityExpr("fromDate", EntityOperator.GREATER_THAN_EQUAL_TO,
+                                                       UtilDateTime.nowTimestamp()));
             Collection c = null;
-            
+
             try {
                 c = userLogin.getDelegator().findByAnd("WorkEffortPartyAssignment", expr);
             } catch (GenericEntityException e) {
                 Debug.logWarning(e);
                 return false;
             }
-            if ( c.size() > 0 ) {
+            if (c.size() > 0) {
                 return true;
             }
         }
         return false;
     }
-                                                        
+
 }
 
 

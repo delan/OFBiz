@@ -1,6 +1,9 @@
 /*
  * $Id$
  * $Log$
+ * Revision 1.1  2001/12/20 10:05:22  jonesde
+ * Improved error handling and transaction support in DAO
+ *
  *
  */
 
@@ -34,14 +37,15 @@ import java.io.*;
  *@version 1.0
  */
 public class GenericTransactionException extends GenericEntityException {
+
     public GenericTransactionException() {
         super();
     }
-    
+
     public GenericTransactionException(String str) {
         super(str);
     }
-    
+
     public GenericTransactionException(String str, Throwable nested) {
         super(str, nested);
     }

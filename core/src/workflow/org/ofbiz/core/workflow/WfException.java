@@ -36,60 +36,60 @@ import java.io.PrintStream;
  */
 
 public class WfException extends Exception {
-  
-  Throwable nested = null;
-  
-  /**
-   * Creates new <code>WfException</code> without detail message.
-   */
-  public WfException() {
-    super();
-  }
-  
-  /**
-   * Constructs an <code>WfException</code> with the specified detail message.
-   * @param msg the detail message.
-   */
-  public WfException(String msg) {
-    super(msg);
-  }
-  
-  /**
-   * Constructs an <code>WfException</code> with the specified detail message and nested exception.
-   * @param msg the detail message.
-   */
-  public WfException(String msg, Throwable nested) {
-    super(msg);
-    this.nested = nested;
-  }
-  
-  /** Returns the detail message, including the message from the nested exception if there is one. */
-  public String getMessage() {
-    if(nested != null)
-      return super.getMessage() + " (" + nested.getMessage() + ")";
-    else
-      return super.getMessage();
-  }
-  
-  /** Prints the composite message to System.err. */
-  public void printStackTrace() {
-    super.printStackTrace();
-    if(nested != null)
-      nested.printStackTrace();
-  }
-  
-  /** Prints the composite message and the embedded stack trace to the specified stream ps. */
-  public void printStackTrace(PrintStream ps) {
-    super.printStackTrace(ps);
-    if(nested != null)
-      nested.printStackTrace(ps);
-  }
-  
-  /** Prints the composite message and the embedded stack trace to the specified print writer pw. */
-  public void printStackTrace(PrintWriter pw) {
-    super.printStackTrace(pw);
-    if(nested != null)
-      nested.printStackTrace(pw);
-  }
+
+    Throwable nested = null;
+
+    /**
+     * Creates new <code>WfException</code> without detail message.
+     */
+    public WfException() {
+        super();
+    }
+
+    /**
+     * Constructs an <code>WfException</code> with the specified detail message.
+     * @param msg the detail message.
+     */
+    public WfException(String msg) {
+        super(msg);
+    }
+
+    /**
+     * Constructs an <code>WfException</code> with the specified detail message and nested exception.
+     * @param msg the detail message.
+     */
+    public WfException(String msg, Throwable nested) {
+        super(msg);
+        this.nested = nested;
+    }
+
+    /** Returns the detail message, including the message from the nested exception if there is one. */
+    public String getMessage() {
+        if (nested != null)
+            return super.getMessage() + " (" + nested.getMessage() + ")";
+        else
+            return super.getMessage();
+    }
+
+    /** Prints the composite message to System.err. */
+    public void printStackTrace() {
+        super.printStackTrace();
+        if (nested != null)
+            nested.printStackTrace();
+    }
+
+    /** Prints the composite message and the embedded stack trace to the specified stream ps. */
+    public void printStackTrace(PrintStream ps) {
+        super.printStackTrace(ps);
+        if (nested != null)
+            nested.printStackTrace(ps);
+    }
+
+    /** Prints the composite message and the embedded stack trace to the specified print writer pw. */
+    public void printStackTrace(PrintWriter pw) {
+        super.printStackTrace(pw);
+        if (nested != null)
+            nested.printStackTrace(pw);
+    }
 }
 

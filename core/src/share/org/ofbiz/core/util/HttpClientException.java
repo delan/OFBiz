@@ -1,13 +1,5 @@
 /*
  * $Id$
- * $Log$
- * Revision 1.2  2001/09/20 18:59:03  jonesde
- * Improved exception error reporting.
- *
- * Revision 1.1  2001/07/23 18:38:14  azeneski
- * Added in new HttpClient. Makes behind the scenes HTTP request (GET/POST)
- * and returns the output as a string.
- *
  */
 
 package org.ofbiz.core.util;
@@ -36,49 +28,25 @@ import java.io.*;
  *  OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR
  *  THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  *
- * @author Andy Zeneski (jaz@zsolv.com)
- * @version 1.0
- * Created on July 21, 2001, 1:08 PM
+ * @author     <a href="mailto:jaz@zsolv.com">Andy Zeneski</a>
+ * @version    1.0
+ * @created    June 29, 2001
  */
-public class HttpClientException extends java.lang.Exception {
-  Throwable nested = null;
-  
-  public HttpClientException() {
-    super();
-  }
+public class HttpClientException extends GeneralException {
 
-  public HttpClientException(String str) {
-    super(str);
-  }
+    Throwable nested = null;
 
-  public HttpClientException(String str, Throwable nested) {
-    super(str);
-    this.nested = nested;
-  }
-  
-  /** Returns the detail message, including the message from the nested exception if there is one. */
-  public String getMessage() {
-    if(nested != null) return super.getMessage() + " (" + nested.getMessage() + ")";
-    else return super.getMessage();
-  }
-  
-  /** Prints the composite message to System.err. */
-  public void printStackTrace() {
-    super.printStackTrace();
-    if(nested != null) nested.printStackTrace();
-  }
+    public HttpClientException() {
+        super();
+    }
 
-  /** Prints the composite message and the embedded stack trace to the specified stream ps. */
-  public void printStackTrace(PrintStream ps) {
-    super.printStackTrace(ps);
-    if(nested != null) nested.printStackTrace(ps);
-  }
+    public HttpClientException(String str) {
+        super(str);
+    }
 
-  /** Prints the composite message and the embedded stack trace to the specified print writer pw. */
-  public void printStackTrace(PrintWriter pw) {
-    super.printStackTrace(pw);
-    if(nested != null) nested.printStackTrace(pw);
-  }
+    public HttpClientException(String str, Throwable nested) {
+        super(str, nested);
+    }
 }
 
 

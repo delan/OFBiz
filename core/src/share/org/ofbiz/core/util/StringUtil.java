@@ -31,30 +31,30 @@ import java.util.*;
  *  OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR
  *  THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  *
- * @author  Andy Zeneski (jaz@zsolv.com)
- * @version 1.0
- * Created on November 8, 2001
+ * @author     <a href="mailto:jaz@zsolv.com">Andy Zeneski</a>
+ * @version    1.0
+ * @created    November 8, 2001
  */
 public class StringUtil {
-    
+
     /** Creates a string seperated by delimimiter from a List of strings
      *@param list a list of strings to join
      *@param delim the delimiter character(s) to use. (null value will join with no delimiter)
      *@return a String of all values in the list seperated by the delimiter
      */
     public static String join(List list, String delim) {
-        if ( list == null || list.size() < 1 )
+        if (list == null || list.size() < 1)
             return null;
         StringBuffer buf = new StringBuffer();
         Iterator i = list.iterator();
-        while ( i.hasNext() ) {
-            buf.append((String)i.next());
-            if ( i.hasNext() )
+        while (i.hasNext()) {
+            buf.append((String) i.next());
+            if (i.hasNext())
                 buf.append(delim);
         }
         return buf.toString();
     }
-    
+
     /** Splits a String on a delimiter into a List of Strings.
      *@param str the String to split
      *@param delim the delimiter character(s) to join on (null will split on whitespace)
@@ -63,73 +63,73 @@ public class StringUtil {
     public static List split(String str, String delim) {
         List splitList = null;
         StringTokenizer st = null;
-                
-        if ( str == null )
+
+        if (str == null)
             return splitList;
-        
-        if ( delim != null )
-            st = new StringTokenizer(str,delim);
+
+        if (delim != null)
+            st = new StringTokenizer(str, delim);
         else
             st = new StringTokenizer(str);
-        
-        if ( st != null && st.hasMoreTokens() ) {
+
+        if (st != null && st.hasMoreTokens()) {
             splitList = new ArrayList();
-            
-            while ( st.hasMoreTokens() )
+
+            while (st.hasMoreTokens())
                 splitList.add(st.nextToken());
         }
         return splitList;
     }
-    
+
     /** Creates a Map from an encoded name/value pair string
      *@param str The string to decode and format
      *@return a Map of name/value pairs
      */
     public static Map strToMap(String str) {
-        if ( str == null ) return null;
+        if (str == null) return null;
         Map decodedMap = new HashMap();
-        List elements = split(str,"|");
+        List elements = split(str, "|");
         Iterator i = elements.iterator();
-        while ( i.hasNext() ) {
+        while (i.hasNext()) {
             String s = (String) i.next();
-            List e = split(s,"=");
-            if ( e.size() != 2 )
+            List e = split(s, "=");
+            if (e.size() != 2)
                 continue;
             String name = (String) e.get(0);
             String value = (String) e.get(1);
             decodedMap.put(URLDecoder.decode(name), URLDecoder.decode(value));
         }
-        return decodedMap;        
+        return decodedMap;
     }
-    
+
     /** Creates an encoded String from a Map of name/value pairs (MUST BE STRINGS!)
      *@param map The Map of name/value pairs
      *@return String The encoded String
      */
     public static String mapToStr(Map map) {
-        if ( map == null ) return null;
+        if (map == null) return null;
         StringBuffer buf = new StringBuffer();
         Set keySet = map.keySet();
         Iterator i = keySet.iterator();
         boolean first = true;
-        while ( i.hasNext() ) {
+        while (i.hasNext()) {
             Object key = i.next();
             Object value = map.get(key);
-            if ( !(key instanceof String) || !(value instanceof String) )
+            if (!(key instanceof String) || !(value instanceof String))
                 continue;
-            String encodedName = URLEncoder.encode((String)key);
-            String encodedValue = URLEncoder.encode((String)value);
-            
-            if ( first )
+            String encodedName = URLEncoder.encode((String) key);
+            String encodedValue = URLEncoder.encode((String) value);
+
+            if (first)
                 first = false;
             else
                 buf.append("|");
-            
+
             buf.append(encodedName);
             buf.append("=");
             buf.append(encodedValue);
         }
         return buf.toString();
     }
-    
+
 }

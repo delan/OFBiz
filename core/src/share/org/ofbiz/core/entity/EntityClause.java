@@ -1,3 +1,4 @@
+
 package org.ofbiz.core.entity;
 
 import org.ofbiz.core.entity.model.ModelEntity;
@@ -32,87 +33,88 @@ import org.ofbiz.core.entity.model.ModelReader;
  *@version    1.0
  */
 public class EntityClause {
-  private String firstEntity = "";
-  private String secondEntity = "";
-  private String firstField = "";
-  private String secondField = "";
-  private ModelEntity firstModelEntity = null;
-  private ModelEntity secondModelEntity = null;
-  private EntityOperator interFieldOperation = null;
-  private EntityOperator intraFieldOperation = null;
-  
-  public EntityClause(){
-  }
-  
-  public EntityClause(String firstEntity, String secondEntity, String firstField, String secondField, EntityOperator interFieldOperation, EntityOperator intraFieldOperation) {
-    this.firstEntity = firstEntity;
-    this.secondEntity = secondEntity;
-    this.firstField = firstField;
-    this.secondField = secondField;
-    this.interFieldOperation = interFieldOperation;
-    this.intraFieldOperation = intraFieldOperation;
-  }
-  
-  public String getFirstEntity(){
-    return firstEntity;
-  }
-  
-  public String getSecondEntity(){
-    return secondEntity;
-  }
-  
-  public String getFirstField(){
-    return firstField;
-  }
-  
-  public String getSecondField(){
-    return secondField;
-  }
-  
-  public EntityOperator getInterFieldOperation(){
-    return interFieldOperation;
-  }
-  
-  public EntityOperator getIntraFieldOperation(){
-    return intraFieldOperation;
-  }
-  
-  public void setFirstEntity(String firstEntity){
-    this.firstEntity = firstEntity;
-  }
-  
-  public void setSecondEntity(String secondEntity){
-    this.secondEntity = secondEntity;
-  }
-  
-  public void setFirstField(String firstField){
-    this.firstField = firstField;
-  }
-  
-  public void setSecondField(String secondField){
-    this.secondField = secondField;
-  }
-  
-  public void setInterFieldOperation(EntityOperator interFieldOperation){
-    this.interFieldOperation = interFieldOperation;
-  }
-  
-  public void setIntraFieldOperation(EntityOperator intraFieldOperation){
-    this.intraFieldOperation = intraFieldOperation;
-  }
-  
-  //--  Protected Methods  - for internal use only --//
-  protected void setModelEntities(ModelReader modelReader){
-    firstModelEntity = (ModelEntity)modelReader.getModelEntity(firstEntity);
-    secondModelEntity = (ModelEntity)modelReader.getModelEntity(secondEntity);
-  }
-  
-  protected ModelEntity getFirstModelEntity(){
-    return firstModelEntity;
-  }
-  
-  protected ModelEntity getSecondModelEntity(){
-    return secondModelEntity;
-  }
-  
+
+    private String firstEntity = "";
+    private String secondEntity = "";
+    private String firstField = "";
+    private String secondField = "";
+    private ModelEntity firstModelEntity = null;
+    private ModelEntity secondModelEntity = null;
+    private EntityOperator interFieldOperation = null;
+    private EntityOperator intraFieldOperation = null;
+
+    public EntityClause() {
+    }
+
+    public EntityClause(String firstEntity, String secondEntity, String firstField, String secondField, EntityOperator interFieldOperation, EntityOperator intraFieldOperation) {
+        this.firstEntity = firstEntity;
+        this.secondEntity = secondEntity;
+        this.firstField = firstField;
+        this.secondField = secondField;
+        this.interFieldOperation = interFieldOperation;
+        this.intraFieldOperation = intraFieldOperation;
+    }
+
+    public String getFirstEntity() {
+        return firstEntity;
+    }
+
+    public String getSecondEntity() {
+        return secondEntity;
+    }
+
+    public String getFirstField() {
+        return firstField;
+    }
+
+    public String getSecondField() {
+        return secondField;
+    }
+
+    public EntityOperator getInterFieldOperation() {
+        return interFieldOperation;
+    }
+
+    public EntityOperator getIntraFieldOperation() {
+        return intraFieldOperation;
+    }
+
+    public void setFirstEntity(String firstEntity) {
+        this.firstEntity = firstEntity;
+    }
+
+    public void setSecondEntity(String secondEntity) {
+        this.secondEntity = secondEntity;
+    }
+
+    public void setFirstField(String firstField) {
+        this.firstField = firstField;
+    }
+
+    public void setSecondField(String secondField) {
+        this.secondField = secondField;
+    }
+
+    public void setInterFieldOperation(EntityOperator interFieldOperation) {
+        this.interFieldOperation = interFieldOperation;
+    }
+
+    public void setIntraFieldOperation(EntityOperator intraFieldOperation) {
+        this.intraFieldOperation = intraFieldOperation;
+    }
+
+    //--  Protected Methods  - for internal use only --//
+    protected void setModelEntities(ModelReader modelReader) {
+        firstModelEntity = (ModelEntity) modelReader.getModelEntity(firstEntity);
+        secondModelEntity = (ModelEntity) modelReader.getModelEntity(secondEntity);
+    }
+
+    protected ModelEntity getFirstModelEntity() {
+        return firstModelEntity;
+    }
+
+    protected ModelEntity getSecondModelEntity() {
+        return secondModelEntity;
+    }
+
 }

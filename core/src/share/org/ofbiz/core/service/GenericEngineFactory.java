@@ -6,6 +6,7 @@ package org.ofbiz.core.service;
 
 import java.util.*;
 import java.lang.reflect.*;
+
 import org.ofbiz.core.entity.*;
 import org.ofbiz.core.util.*;
 
@@ -43,13 +44,13 @@ public class GenericEngineFactory {
      *@param engineName Name of the engine
      *@return GenericEngine that corresponds to the engineName
      */
-    public static GenericEngine getGenericEngine(String engineName,
-            ServiceDispatcher dispatcher) throws GenericServiceException {
+    public static GenericEngine getGenericEngine(String engineName, ServiceDispatcher dispatcher)
+            throws GenericServiceException {
         String className =
-                UtilProperties.getPropertyValue("servicesengine",engineName + ".engine",
-                "org.ofbiz.core.service.StandardJavaEngine");
-        Class[] paramTypes = new Class[]{ ServiceDispatcher.class };
-        Object[] params = new Object[]{ dispatcher };
+                UtilProperties.getPropertyValue("servicesengine", engineName + ".engine",
+                                                "org.ofbiz.core.service.StandardJavaEngine");
+        Class[] paramTypes = new Class[]{ServiceDispatcher.class};
+        Object[] params = new Object[]{dispatcher};
         GenericEngine engine = null;
         try {
             Class c = Class.forName(className);

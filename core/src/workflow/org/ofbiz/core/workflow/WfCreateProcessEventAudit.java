@@ -33,35 +33,35 @@ package org.ofbiz.core.workflow;
  */
 
 public interface WfCreateProcessEventAudit extends WfEventAudit {
-  
-  /**
-   * @throws WfException
-   * @return
-   */
-  public String pActivityKey() throws WfException;
-  
-  /**
-   * @throws WfException
-   * @return
-   */
-  public String pProcessKey() throws WfException;
-  
-  /**
-   * @throws WfException
-   * @return
-   */
-  public String pProcessName() throws WfException;
-  
-  /**
-   * @throws WfException
-   * @return
-   */
-  public String pProcessMgrName() throws WfException;
-  
-  /**
-   * @throws WfException
-   * @return
-   */
-  public String pProcessMgrVersion() throws WfException;
-  
+
+    /**
+     * @throws WfException
+     * @return
+     */
+    public String pActivityKey() throws WfException;
+
+    /**
+     * @throws WfException
+     * @return
+     */
+    public String pProcessKey() throws WfException;
+
+    /**
+     * @throws WfException
+     * @return
+     */
+    public String pProcessName() throws WfException;
+
+    /**
+     * @throws WfException
+     * @return
+     */
+    public String pProcessMgrName() throws WfException;
+
+    /**
+     * @throws WfException
+     * @return
+     */
+    public String pProcessMgrVersion() throws WfException;
+
 } // interface WfCreateProcessEventAudit

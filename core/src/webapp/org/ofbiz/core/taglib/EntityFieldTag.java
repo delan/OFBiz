@@ -9,11 +9,11 @@ import java.text.*;
 import java.util.*;
 import javax.servlet.jsp.*;
 import javax.servlet.jsp.tagext.*;
+
 import org.ofbiz.core.entity.*;
 import org.ofbiz.core.entity.model.*;
-import org.ofbiz.core.util.*;
-
 import org.ofbiz.core.pseudotag.*;
+import org.ofbiz.core.util.*;
 
 /**
  * <p><b>Title:</b> Tag to Print Localized Entity Fields
@@ -55,10 +55,11 @@ public class EntityFieldTag extends TagSupport {
     //    super();
     //    Debug.logInfo("Creating new EntityFieldTag");
     //}
-    
+
     public String getAttribute() {
         return attribute;
     }
+
     public void setAttribute(String attribute) {
         this.attribute = attribute;
     }
@@ -66,6 +67,7 @@ public class EntityFieldTag extends TagSupport {
     public String getField() {
         return field;
     }
+
     public void setField(String field) {
         this.field = field;
     }
@@ -73,6 +75,7 @@ public class EntityFieldTag extends TagSupport {
     public String getType() {
         return type;
     }
+
     public void setType(String type) {
         this.type = type;
     }
@@ -80,6 +83,7 @@ public class EntityFieldTag extends TagSupport {
     public String getPrefix() {
         return prefix;
     }
+
     public void setPrefix(String prefix) {
         this.prefix = prefix;
     }
@@ -87,6 +91,7 @@ public class EntityFieldTag extends TagSupport {
     public String getSuffix() {
         return suffix;
     }
+
     public void setSuffix(String suffix) {
         this.suffix = suffix;
     }
@@ -94,6 +99,7 @@ public class EntityFieldTag extends TagSupport {
     public String getDefault() {
         return defaultStr;
     }
+
     public void setDefault(String defaultStr) {
         this.defaultStr = defaultStr;
     }

@@ -1,6 +1,8 @@
+
 package org.ofbiz.core.entity;
 
 import java.util.*;
+
 import org.ofbiz.core.util.*;
 
 /**
@@ -31,30 +33,30 @@ import org.ofbiz.core.util.*;
  *@version    1.0
  */
 public class EntityUtil {
+
     public static GenericValue getFirst(Collection values) {
         if ((values != null) && (values.size() > 0)) {
             return (GenericValue) values.iterator().next();
-        }
-        else {
+        } else {
             return null;
         }
     }
-    
+
     public static GenericValue getOnly(Collection values) {
         if (values != null) {
-            if(values.size() <= 0) { return null; }
-            if(values.size() == 1) {
-                return (GenericValue) values.iterator().next();
+            if (values.size() <= 0) {
+                return null;
             }
-            else {
+            if (values.size() == 1) {
+                return (GenericValue) values.iterator().next();
+            } else {
                 throw new IllegalArgumentException("Passed collection had more than one value.");
             }
-        }
-        else {
+        } else {
             return null;
         }
     }
-    
+
     /**
      *returns the values that are currently active.
      *
@@ -64,7 +66,7 @@ public class EntityUtil {
     public static Collection filterByDate(Collection datedValues) {
         return filterByDate(datedValues, UtilDateTime.nowDate());
     }
-    
+
     /**
      *returns the values that are active at the moment.
      *
@@ -73,20 +75,20 @@ public class EntityUtil {
      *@return Collection of GenericValue's that are active at the moment
      */
     public static Collection filterByDate(Collection datedValues, java.util.Date moment) {
-        if (datedValues == null)  return null;
-        
+        if (datedValues == null) return null;
+
         Collection result = new ArrayList();
         Iterator iter = datedValues.iterator();
-        while(iter.hasNext()) {
+        while (iter.hasNext()) {
             GenericValue datedValue = (GenericValue) iter.next();
-            if((datedValue.get("thruDate") == null || datedValue.getTimestamp("thruDate").after(moment))
-            && (datedValue.get("fromDate") == null || datedValue.getTimestamp("fromDate").before(moment))) {
+            if ((datedValue.get("thruDate") == null || datedValue.getTimestamp("thruDate").after(moment))
+                    && (datedValue.get("fromDate") == null || datedValue.getTimestamp("fromDate").before(moment))) {
                 result.add(datedValue);
             }//else not active at moment
         }
         return result;
     }
-    
+
     /**
      *returns the values that match the values in fields
      *
@@ -95,11 +97,11 @@ public class EntityUtil {
      *@return Collection of GenericValue's that match the values in fields
      */
     public static Collection filterByAnd(Collection values, Map fields) {
-        if (values == null)  return null;
-        
+        if (values == null) return null;
+
         Collection result = new ArrayList();
         Iterator iter = values.iterator();
-        while(iter.hasNext()) {
+        while (iter.hasNext()) {
             GenericValue value = (GenericValue) iter.next();
             if (value.matchesFields(fields)) {
                 result.add(value);
@@ -107,7 +109,7 @@ public class EntityUtil {
         }
         return result;
     }
-    
+
     /**
      *returns the values in the order specified
      *
@@ -117,17 +119,17 @@ public class EntityUtil {
      *@return Collection of GenericValue's in the proper order
      */
     public static List orderBy(Collection values, List orderBy) {
-        if (values == null)  return null;
+        if (values == null) return null;
         if (values.size() == 0) return UtilMisc.toList(values);
-        
+
         List result = new ArrayList(values);
         Collections.sort(result, new OrderByComparator(orderBy));
         return result;
     }
-    
+
     public static Collection getRelated(String relationName, Collection values) throws GenericEntityException {
         if (values == null) return null;
-        
+
         Collection result = new ArrayList();
         Iterator iter = values.iterator();
         while (iter.hasNext()) {
@@ -135,10 +137,10 @@ public class EntityUtil {
         }
         return result;
     }
-    
+
     public static Collection getRelatedCache(String relationName, Collection values) throws GenericEntityException {
         if (values == null) return null;
-        
+
         Collection result = new ArrayList();
         Iterator iter = values.iterator();
         while (iter.hasNext()) {
@@ -146,10 +148,10 @@ public class EntityUtil {
         }
         return result;
     }
-    
+
     public static Collection getRelatedByAnd(String relationName, Map fields, Collection values) throws GenericEntityException {
         if (values == null) return null;
-        
+
         Collection result = new ArrayList();
         Iterator iter = values.iterator();
         while (iter.hasNext()) {
@@ -157,16 +159,17 @@ public class EntityUtil {
         }
         return result;
     }
-    
+
     static class OrderByComparator implements Comparator {
+
         private String field;
         private boolean descending;
         private Comparator next = null;
-        
+
         OrderByComparator(List orderBy) {
             this(orderBy, 0);
         }
-        
+
         private OrderByComparator(List orderBy, int startIndex) {
             if (orderBy == null) throw new IllegalArgumentException("orderBy may not be empty");
             if (startIndex >= orderBy.size()) throw new IllegalArgumentException("startIndex may not be greater than or equal to orderBy size");
@@ -174,19 +177,19 @@ public class EntityUtil {
             String upper = fieldAndDirection.trim().toUpperCase();
             if (upper.endsWith(" DESC")) {
                 this.descending = true;
-                this.field = fieldAndDirection.substring(0, fieldAndDirection.length()-5);
+                this.field = fieldAndDirection.substring(0, fieldAndDirection.length() - 5);
             } else if (upper.endsWith(" ASC")) {
                 this.descending = false;
-                this.field = fieldAndDirection.substring(0, fieldAndDirection.length()-4);
+                this.field = fieldAndDirection.substring(0, fieldAndDirection.length() - 4);
             } else {
                 this.descending = false;
                 this.field = fieldAndDirection;
             }
-            if (startIndex+1 < orderBy.size()) {
-                this.next = new OrderByComparator(orderBy, startIndex+1);
+            if (startIndex + 1 < orderBy.size()) {
+                this.next = new OrderByComparator(orderBy, startIndex + 1);
             }//else keep null
         }
-        
+
         public int compare(java.lang.Object obj, java.lang.Object obj1) {
             int result = compareAsc((GenericEntity) obj, (GenericEntity) obj1);
             if (descending && result != 0) {
@@ -198,23 +201,23 @@ public class EntityUtil {
                 return result;
             }
         }
-        
+
         private int compareAsc(GenericEntity obj, GenericEntity obj2) {
             Object value = obj.get(field);
             Object value2 = obj2.get(field);
             //null is defined as the largest possible value
             if (value == null) return value2 == null ? 0 : 1;
             if (value2 == null) return value == null ? 0 : -1;
-            int result = ((Comparable)value).compareTo(value2);
+            int result = ((Comparable) value).compareTo(value2);
             //Debug.logInfo("[OrderByComparator.compareAsc] Result is " + result + " for [" + value + "] and [" + value2 + "]");
             return result;
         }
-        
+
         public boolean equals(java.lang.Object obj) {
             if ((obj != null) && (obj instanceof OrderByComparator)) {
                 OrderByComparator that = (OrderByComparator) obj;
                 return this.field.equals(that.field) && (this.descending == that.descending)
-                && UtilValidate.areEqual(this.next, that.next);
+                        && UtilValidate.areEqual(this.next, that.next);
             } else {
                 return false;
             }

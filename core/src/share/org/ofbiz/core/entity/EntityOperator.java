@@ -1,3 +1,4 @@
+
 package org.ofbiz.core.entity;
 
 /**
@@ -29,23 +30,26 @@ package org.ofbiz.core.entity;
  *@version    1.0
  */
 public class EntityOperator {
-  public static EntityOperator EQUALS = new EntityOperator(" = ");
-  public static EntityOperator NOT_EQUAL = new EntityOperator(" <> ");
-  public static EntityOperator LESS_THAN = new EntityOperator(" < ");
-  public static EntityOperator GREATER_THAN = new EntityOperator(" > ");
-  public static EntityOperator LESS_THAN_EQUAL_TO = new EntityOperator(" <= ");
-  public static EntityOperator GREATER_THAN_EQUAL_TO = new EntityOperator(" >= ");
-  public static EntityOperator IN = new EntityOperator(" IN ");
-  public static EntityOperator BETWEEN = new EntityOperator(" BETWEEN ");
-  public static EntityOperator NOT = new EntityOperator(" NOT ");
-  public static EntityOperator AND = new EntityOperator(" AND ");
-  public static EntityOperator OR = new EntityOperator(" OR ");
-  
-  private String codeString;
-  
-  private EntityOperator(String code) {
-    codeString = code;
-  }
-  
-  public String getCode() { return codeString; }
+
+    public static EntityOperator EQUALS = new EntityOperator(" = ");
+    public static EntityOperator NOT_EQUAL = new EntityOperator(" <> ");
+    public static EntityOperator LESS_THAN = new EntityOperator(" < ");
+    public static EntityOperator GREATER_THAN = new EntityOperator(" > ");
+    public static EntityOperator LESS_THAN_EQUAL_TO = new EntityOperator(" <= ");
+    public static EntityOperator GREATER_THAN_EQUAL_TO = new EntityOperator(" >= ");
+    public static EntityOperator IN = new EntityOperator(" IN ");
+    public static EntityOperator BETWEEN = new EntityOperator(" BETWEEN ");
+    public static EntityOperator NOT = new EntityOperator(" NOT ");
+    public static EntityOperator AND = new EntityOperator(" AND ");
+    public static EntityOperator OR = new EntityOperator(" OR ");
+
+    private String codeString;
+
+    private EntityOperator(String code) {
+        codeString = code;
+    }
+
+    public String getCode() {
+        return codeString;
+    }
 }

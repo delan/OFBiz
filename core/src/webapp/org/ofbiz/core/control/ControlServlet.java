@@ -10,6 +10,7 @@ import java.util.*;
 import java.lang.reflect.*;
 import javax.servlet.*;
 import javax.servlet.http.*;
+
 import org.ofbiz.core.entity.*;
 import org.ofbiz.core.service.*;
 import org.ofbiz.core.security.*;
@@ -38,41 +39,43 @@ import org.ofbiz.core.util.*;
  *  OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR
  *  THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  *
- *@author     <a href="mailto:jaz@zsolv.com">Andy Zeneski</a> 
+ *@author     <a href="mailto:jaz@zsolv.com">Andy Zeneski</a>
  *@author     <a href="mailto:jonesde@ofbiz.org">David E. Jones</a>
  *@created    June 28, 2001
  *@version    1.0
  */
 public class ControlServlet extends HttpServlet {
+
     //Debug module name
     public static final String module = ControlServlet.class.getName();
-    
+
     /** Creates new ControlServlet  */
     public ControlServlet() {
         super();
     }
-    
+
     public void init(ServletConfig config) throws ServletException {
         super.init(config);
-        Debug.logInfo("[ControlServlet.init] Loading Control Servlet mounted on path " + config.getServletContext().getRealPath("/"), module);
-                        
+        Debug.logInfo("[ControlServlet.init] Loading Control Servlet mounted on path " +
+                      config.getServletContext().getRealPath("/"), module);
+
         // initialize the delegator
         getDelegator();
         // initialize security
         getSecurity();
         // initialize the services dispatcher
-        getDispatcher();  
+        getDispatcher();
         // initialize the request handler
         getRequestHandler();
-        
+
         // this will speed up the initial sessionId generation
         new java.security.SecureRandom().nextLong();
     }
-    
+
     public void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-        doGet(request,response);
+        doGet(request, response);
     }
-    
+
     public void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
         String rname = request.getPathInfo();
         UtilTimer timer = null;
@@ -85,145 +88,150 @@ public class ControlServlet extends HttpServlet {
         HttpSession session = request.getSession(true);
         if (request.getCharacterEncoding() == null)
             request.setCharacterEncoding("UTF-8");
-        
-        String nextPage  = null;
-        
+
+        String nextPage = null;
+
         // Setup the CONTROL_PATH for JSP dispatching.
         request.setAttribute(SiteDefs.CONTROL_PATH, request.getContextPath() + request.getServletPath());
         // Debug.logInfo("Control Path: " + request.getAttribute(SiteDefs.CONTROL_PATH), module);
-        
+
         StringBuffer request_url = new StringBuffer();
         request_url.append(request.getScheme());
         request_url.append("://" + request.getServerName());
         if (request.getServerPort() != 80 && request.getServerPort() != 443)
             request_url.append(":" + request.getServerPort());
-        request.setAttribute(SiteDefs.SERVER_ROOT_URL,request_url.toString());
-        
+        request.setAttribute(SiteDefs.SERVER_ROOT_URL, request_url.toString());
+
         // Store some first hit client info for later.
         if (session.isNew()) {
             request_url.append(request.getRequestURI());
             if (request.getQueryString() != null)
                 request_url.append("?" + request.getQueryString());
-            session.setAttribute(SiteDefs.CLIENT_LOCALE,request.getLocale());
-            session.setAttribute(SiteDefs.CLIENT_REQUEST,request_url.toString());
-            session.setAttribute(SiteDefs.CLIENT_USER_AGENT,request.getHeader("User-Agent"));
-            session.setAttribute(SiteDefs.CLIENT_REFERER,(request.getHeader("Referer") != null ? request.getHeader("Referer") : "" ));
+            session.setAttribute(SiteDefs.CLIENT_LOCALE, request.getLocale());
+            session.setAttribute(SiteDefs.CLIENT_REQUEST, request_url.toString());
+            session.setAttribute(SiteDefs.CLIENT_USER_AGENT, request.getHeader("User-Agent"));
+            session.setAttribute(SiteDefs.CLIENT_REFERER, (request.getHeader("Referer") != null ?
+                                                           request.getHeader("Referer") : ""));
         }
-        
+
         // for convenience, and necessity with event handlers, make security and delegator available in the request:
         GenericDelegator delegator = (GenericDelegator) getServletContext().getAttribute("delegator");
         if (delegator == null) Debug.logError("[ControlServlet] ERROR: delegator not found in ServletContext", module);
         request.setAttribute("delegator", delegator);
-        
+
         LocalDispatcher dispatcher = (LocalDispatcher) getServletContext().getAttribute("dispatcher");
-        if (dispatcher == null) Debug.logError("[ControlServlet] ERROR: dispatcher not found in ServletContext", module);
+        if (dispatcher == null)
+            Debug.logError("[ControlServlet] ERROR: dispatcher not found in ServletContext", module);
         request.setAttribute("dispatcher", dispatcher);
-        
+
         Security security = (Security) getServletContext().getAttribute("security");
         if (security == null) Debug.logError("[ControlServlet] ERROR: security not found in ServletContext", module);
         request.setAttribute("security", security);
-        
+
         // for use in Events the filesystem path of context root.
         request.setAttribute(SiteDefs.CONTEXT_ROOT, getServletContext().getRealPath("/"));
-        //Because certain app servers are lame and don't support the HttpSession.getServletContext method, put it in the request here
+
+        // Because certain app servers are lame and don't support the HttpSession.getServletContext method,
+        // we put it in the request here
         ServletContext servletContext = getServletContext();
         request.setAttribute("servletContext", servletContext);
-        
+
         if (Debug.timingOn()) timer.timerString("[" + rname + "] Setup done, doing Event(s)", module);
-        
+
         try {
-            nextPage = getRequestHandler().doRequest(request,response, null);
-        } catch ( Exception e ) {
+            nextPage = getRequestHandler().doRequest(request, response, null);
+        } catch (Exception e) {
             e.printStackTrace();
-            request.setAttribute(SiteDefs.ERROR_MESSAGE,e.getMessage());
+            request.setAttribute(SiteDefs.ERROR_MESSAGE, e.getMessage());
             nextPage = getRequestHandler().getDefaultErrorPage(request);
         }
-        
+
         // Forward to the JSP
         Debug.logInfo("[" + rname + "] Event done, rendering page: " + nextPage, module);
         if (Debug.timingOn()) timer.timerString("[" + rname + "] Event done, rendering page: " + nextPage, module);
 
-        if(nextPage != null) {
+        if (nextPage != null) {
             RequestDispatcher rd = request.getRequestDispatcher(nextPage);
-            if(rd != null) rd.forward(request,response);
+            if (rd != null) rd.forward(request, response);
         }
 
         if (Debug.timingOn()) timer.timerString("[" + rname + "] Done rendering page, Servlet Finished", module);
     }
-    
+
     private RequestHandler getRequestHandler() {
         RequestHandler rh = (RequestHandler) getServletContext().getAttribute(SiteDefs.REQUEST_HANDLER);
-        if ( rh == null ) {
+        if (rh == null) {
             rh = new RequestHandler();
             rh.init(getServletContext());
-            getServletContext().setAttribute(SiteDefs.REQUEST_HANDLER,rh);
+            getServletContext().setAttribute(SiteDefs.REQUEST_HANDLER, rh);
         }
         return rh;
     }
-    
+
     private LocalDispatcher getDispatcher() {
         LocalDispatcher dispatcher = (LocalDispatcher) getServletContext().getAttribute("dispatcher");
-        if ( dispatcher == null ) {
+        if (dispatcher == null) {
             GenericDelegator delegator = getDelegator();
-            if ( delegator == null ) {
+            if (delegator == null) {
                 Debug.logError("[ControlServlet.init] ERROR: delegator not defined.", module);
                 return null;
             }
-            Collection readers = null; 
-            String readerFiles = getServletContext().getInitParameter("serviceReaderUrls");            
-            if ( readerFiles != null ) {                
+            Collection readers = null;
+            String readerFiles = getServletContext().getInitParameter("serviceReaderUrls");
+            if (readerFiles != null) {
                 readers = new ArrayList();
-                List readerList = StringUtil.split(readerFiles,";");                
+                List readerList = StringUtil.split(readerFiles, ";");
                 Iterator i = readerList.iterator();
-                while ( i.hasNext() ) {                    
+                while (i.hasNext()) {
                     try {
-                        String name = (String) i.next();                        
+                        String name = (String) i.next();
                         URL readerURL = getServletContext().getResource(name);
-                        if ( readerURL != null )
-                            readers.add(readerURL);                
-                    }
-                    catch ( NullPointerException npe ) {
+                        if (readerURL != null)
+                            readers.add(readerURL);
+                    } catch (NullPointerException npe) {
                         Debug.logInfo("[ControlServlet.init] ERROR: Null pointer exception thrown.", module);
+                    } catch (MalformedURLException e) {
+                        Debug.logError(e, "[ControlServlet.init] ERROR: cannot get URL from String.", module);
                     }
-                    catch ( MalformedURLException e ) {
-                        Debug.logError(e,"[ControlServlet.init] ERROR: cannot get URL from String.", module);
-                    }                    
                 }
-            }     
+            }
             // get the root path (sub-path) from init parameter
             String scriptPath = getServletContext().getInitParameter("scriptLocationPath");
-            if ( scriptPath == null ) scriptPath = "/";
+            if (scriptPath == null) scriptPath = "/";
             String rootPath = getServletContext().getRealPath("/");
-            dispatcher = new LocalDispatcher(getServletContext().getServletContextName(),rootPath,scriptPath,delegator,readers);                  
-            getServletContext().setAttribute("dispatcher",dispatcher);
-            if ( dispatcher == null )
-                Debug.logError("[ControlServlet.init] ERROR: dispatcher could not be initialized.", module);                  
+            dispatcher = new LocalDispatcher(getServletContext().getServletContextName(), rootPath,
+                                             scriptPath, delegator, readers);
+            getServletContext().setAttribute("dispatcher", dispatcher);
+            if (dispatcher == null)
+                Debug.logError("[ControlServlet.init] ERROR: dispatcher could not be initialized.", module);
         }
         return dispatcher;
     }
-                
+
     private GenericDelegator getDelegator() {
         GenericDelegator delegator = (GenericDelegator) getServletContext().getAttribute("delegator");
-        if ( delegator == null ) {
+        if (delegator == null) {
             String delegatorName = getServletContext().getInitParameter(SiteDefs.ENTITY_DELEGATOR_NAME);
-            if(delegatorName == null || delegatorName.length() <= 0)
+            if (delegatorName == null || delegatorName.length() <= 0)
                 delegatorName = "default";
-            Debug.logInfo("[ControlServlet.init] Getting Entity Engine Delegator with delegator name " + delegatorName, module);
+            Debug.logInfo("[ControlServlet.init] Getting Entity Engine Delegator with delegator name " +
+                          delegatorName, module);
             delegator = GenericDelegator.getGenericDelegator(delegatorName);
-            getServletContext().setAttribute("delegator",delegator);
-            if(delegator == null)
-                Debug.logError("[ControlServlet.init] ERROR: delegator factory returned null for delegatorName \"" + delegatorName + "\"", module);
+            getServletContext().setAttribute("delegator", delegator);
+            if (delegator == null)
+                Debug.logError("[ControlServlet.init] ERROR: delegator factory returned null for delegatorName \"" +
+                               delegatorName + "\"", module);
         }
         return delegator;
     }
-    
+
     private Security getSecurity() {
         Security security = (Security) getServletContext().getAttribute("security");
         if (security == null) {
             GenericDelegator delegator = (GenericDelegator) getServletContext().getAttribute("delegator");
             if (delegator != null)
                 security = new Security(delegator);
-            getServletContext().setAttribute("security",security);
+            getServletContext().setAttribute("security", security);
             if (security == null)
                 Debug.logError("[ControlServlet.init] ERROR: security create failed.", module);
         }

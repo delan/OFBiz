@@ -35,59 +35,59 @@ import java.text.*;
  * Created on November 6, 2001
  */
 public class RecurrenceUtil {
-    
+
     /** Returns a Date object from a String. */
     public static Date parseDate(String dateStr) {
         String formatString = new String();
-        if ( dateStr.length() == 16 )
-            dateStr = dateStr.substring(0,14);
-        if ( dateStr.length() == 15 )
+        if (dateStr.length() == 16)
+            dateStr = dateStr.substring(0, 14);
+        if (dateStr.length() == 15)
             formatString = "yyyyMMdd'T'hhmmss";
-        if ( dateStr.length() == 8 )
+        if (dateStr.length() == 8)
             formatString = "yyyyMMdd";
-        
+
         SimpleDateFormat formatter = new SimpleDateFormat(formatString);
         ParsePosition pos = new ParsePosition(0);
-        return formatter.parse(dateStr,pos);
+        return formatter.parse(dateStr, pos);
     }
-    
+
     /** Returns a List of parsed date strings. */
     public static List parseDateList(List dateList) {
         List newList = new ArrayList();
-        if ( dateList == null )
+        if (dateList == null)
             return newList;
         Iterator i = dateList.iterator();
-        while ( i.hasNext() )
-            newList.add(parseDate((String)i.next()));
+        while (i.hasNext())
+            newList.add(parseDate((String) i.next()));
         return newList;
     }
-    
+
     /** Returns a String from a Date object */
     public static String formatDate(Date date) {
         String formatString = new String();
         Calendar cal = Calendar.getInstance();
         cal.setTime(date);
-        if ( cal.isSet(Calendar.MINUTE) )
+        if (cal.isSet(Calendar.MINUTE))
             formatString = "yyyyMMdd'T'hhmmss";
         else
             formatString = "yyyyMMdd";
         SimpleDateFormat formatter = new SimpleDateFormat(formatString);
         return formatter.format(date);
     }
-    
+
     /** Returns a Llist of date strings from a List of Date objects */
     public static List formatDateList(List dateList) {
         List newList = new ArrayList();
         Iterator i = dateList.iterator();
-        while ( i.hasNext() )
-            newList.add(formatDate((Date)i.next()));
+        while (i.hasNext())
+            newList.add(formatDate((Date) i.next()));
         return newList;
     }
-         
+
     /** Returns the time as of now. */
     public static long now() {
         return (new Date()).getTime();
     }
-    
+
 }
 

@@ -8,6 +8,7 @@ import java.io.*;
 import java.util.*;
 import java.net.*;
 import javax.xml.parsers.*;
+
 import org.xml.sax.*;
 import org.w3c.dom.*;
 import org.ofbiz.core.util.*;
@@ -41,6 +42,7 @@ import org.ofbiz.core.util.*;
  */
 
 public class ModelDataFileReader {
+
     public static UtilCache readers = new UtilCache("ModelDataFile", 0, 0);
 
     public URL readerURL = null;
@@ -111,7 +113,8 @@ public class ModelDataFileReader {
 
                                 //check to see if dataFile with same name has already been read
                                 if (modelDataFiles.containsKey(dataFileName)) {
-                                    Debug.logWarning("WARNING: DataFile " + dataFileName + " is defined more than once, most recent will over-write previous definition(s)");
+                                    Debug.logWarning("WARNING: DataFile " + dataFileName +
+                                                     " is defined more than once, most recent will over-write previous definition(s)");
                                 }
 
                                 //utilTimer.timerString("  After dataFileName -- " + i + " --");
@@ -125,11 +128,9 @@ public class ModelDataFileReader {
                                     Debug.logWarning("-- -- SERVICE ERROR:getModelDataFile: Could not create dataFile for dataFileName: " + dataFileName);
 
                             }
-                        }
-                        while ((curChild = curChild.getNextSibling()) != null)
-                            ;
-                    }
-                    else
+                        } while ((curChild = curChild.getNextSibling()) != null)
+                                ;
+                    } else
                         Debug.logWarning("No child nodes found.");
                     utilTimer.timerString("Finished file " + readerURL + " - Total Flat File Defs: " + i + " FINISHED");
                 }
@@ -222,10 +223,10 @@ public class ModelDataFileReader {
         record.typeCode = UtilXml.checkEmpty(recordElement.getAttribute("type-code"));
 
         record.tcMin = UtilXml.checkEmpty(recordElement.getAttribute("tc-min"));
-        if(record.tcMin.length() > 0) record.tcMinNum = Long.parseLong(record.tcMin);
+        if (record.tcMin.length() > 0) record.tcMinNum = Long.parseLong(record.tcMin);
         record.tcMax = UtilXml.checkEmpty(recordElement.getAttribute("tc-max"));
-        if(record.tcMax.length() > 0) record.tcMaxNum = Long.parseLong(record.tcMax);
-        
+        if (record.tcMax.length() > 0) record.tcMaxNum = Long.parseLong(record.tcMax);
+
         tempStr = UtilXml.checkEmpty(recordElement.getAttribute("tc-isnum"));
         if (tempStr != null && tempStr.length() > 0)
             record.tcIsNum = Boolean.valueOf(tempStr).booleanValue();
@@ -246,10 +247,10 @@ public class ModelDataFileReader {
         for (int i = 0; i < fList.getLength(); i++) {
             Element fieldElement = (Element) fList.item(i);
             ModelField modelField = createModelField(fieldElement);
-            
+
             // if the position is not specified, assume the start position based on last entry
-            if ((i>0) && (modelField.position == -1)) {
-              modelField.position = priorEnd;
+            if ((i > 0) && (modelField.position == -1)) {
+                modelField.position = priorEnd;
             }
             priorEnd = modelField.position + modelField.length;
 
@@ -299,12 +300,10 @@ public class ModelDataFileReader {
             if (sxe.getException() != null)
                 x = sxe.getException();
             x.printStackTrace();
-        }
-        catch (ParserConfigurationException pce) {
+        } catch (ParserConfigurationException pce) {
             // Parser with specified options can't be built
             pce.printStackTrace();
-        }
-        catch (IOException ioe) {
+        } catch (IOException ioe) {
             ioe.printStackTrace();
         }
 

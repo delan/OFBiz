@@ -5,7 +5,9 @@
 package org.ofbiz.core.workflow.impl;
 
 import bsh.*;
+
 import java.util.*;
+
 import org.ofbiz.core.entity.*;
 import org.ofbiz.core.util.*;
 import org.ofbiz.core.workflow.*;
@@ -49,8 +51,7 @@ public class WfProcessImpl extends WfExecutionObjectImpl implements WfProcess {
      * @param valueObject The GenericValue object of this WfProcess.
      * @param manager The WfProcessMgr invoking this process.
      */
-    public WfProcessImpl(GenericValue valueObject,
-            WfProcessMgr manager) throws WfException {
+    public WfProcessImpl(GenericValue valueObject, WfProcessMgr manager) throws WfException {
         super(valueObject, null);
         this.manager = manager;
         this.requester = null;
@@ -62,8 +63,7 @@ public class WfProcessImpl extends WfExecutionObjectImpl implements WfProcess {
      * @param workEffortId The WorkEffort ID of this process
      * @throws WfException
      */
-    public WfProcessImpl(GenericDelegator delegator,
-            String workEffortId) throws WfException {
+    public WfProcessImpl(GenericDelegator delegator, String workEffortId) throws WfException {
         super(delegator, workEffortId);
         this.manager = WfFactory.getWfProcessMgr(delegator, packageId, processId);
         this.requester = null;
@@ -75,8 +75,8 @@ public class WfProcessImpl extends WfExecutionObjectImpl implements WfProcess {
      * @throws WfException General workflow exception.
      * @throws CannotChangeRequester Requestor cannot be changed.
      */
-    public void setRequester(WfRequester newValue) throws WfException,
-    CannotChangeRequester {
+    public void setRequester(WfRequester newValue) throws WfException, CannotChangeRequester {
+
         requester = newValue;
     }
 
@@ -165,8 +165,7 @@ public class WfProcessImpl extends WfExecutionObjectImpl implements WfProcess {
      * @throws InvalidState State is invalid.
      * @return Iterator of activities in specific state
      */
-    public Iterator getActivitiesInState(String state) throws WfException,
-    InvalidState {
+    public Iterator getActivitiesInState(String state) throws WfException, InvalidState {
         ArrayList res = new ArrayList();
         Iterator i = getIteratorStep();
         while (i.hasNext()) {
@@ -214,8 +213,7 @@ public class WfProcessImpl extends WfExecutionObjectImpl implements WfProcess {
      * @param results Map of the results.
      * @throws WfException
      */
-    public synchronized void receiveResults(WfActivity activity, Map results)
-        throws WfException, InvalidData {
+    public synchronized void receiveResults(WfActivity activity, Map results) throws WfException, InvalidData {
         Map context = processContext();
         context.putAll(results);
         setSerializedData(context);
@@ -226,8 +224,7 @@ public class WfProcessImpl extends WfExecutionObjectImpl implements WfProcess {
      * @param activity WfActivity which has completed.
      * @throws WfException
      */
-    public synchronized void activityComplete(WfActivity activity)
-        throws WfException {
+    public synchronized void activityComplete(WfActivity activity) throws WfException {
         if (!activity.state().equals("closed.completed"))
             throw new WfException("Activity state is not completed");
         Debug.logInfo("Activity: " + activity.name() + " is complete");
@@ -265,15 +262,14 @@ public class WfProcessImpl extends WfExecutionObjectImpl implements WfProcess {
                 else
                     joinTransition(toActivity, trans);
             }
-        }
-        else {
+        } else {
             this.finishProcess();
         }
     }
 
     // Follows the and-join transition
     private void joinTransition(GenericValue toActivity,
-            GenericValue transition) throws WfException {
+                                GenericValue transition) throws WfException {
         // get all TO transitions to this activity
         GenericValue dataObject = getRuntimeObject();
         Collection toTrans = null;
@@ -289,7 +285,7 @@ public class WfProcessImpl extends WfExecutionObjectImpl implements WfProcess {
             Map fields = new HashMap();
             fields.put("processWorkEffortId", dataObject.getString("workEffortId"));
             fields.put("toActivityId", toActivity.getString("activityId"));
-            followed = getDelegator().findByAnd("WorkEffortTransBox",fields);
+            followed = getDelegator().findByAnd("WorkEffortTransBox", fields);
         } catch (GenericEntityException e) {
             throw new WfException(e.getMessage(), e);
         }
@@ -308,9 +304,9 @@ public class WfProcessImpl extends WfExecutionObjectImpl implements WfProcess {
         } else {
             try {
                 Map fields = new HashMap();
-                fields.put("processWorkEffortId",dataObject.getString("workEffortId"));
-                fields.put("toActivityId",toActivity.getString("activityId"));
-                fields.put("transitionId",transition.getString("transitionId"));
+                fields.put("processWorkEffortId", dataObject.getString("workEffortId"));
+                fields.put("toActivityId", toActivity.getString("activityId"));
+                fields.put("transitionId", transition.getString("transitionId"));
                 GenericValue obj =
                         getDelegator().makeValue("WorkEffortTransBox", fields);
                 getDelegator().create(obj);
@@ -329,8 +325,7 @@ public class WfProcessImpl extends WfExecutionObjectImpl implements WfProcess {
             activity.activate();
         } catch (AlreadyRunning e) {
             throw new WfException(e.getMessage(), e);
-        }
-        catch (CannotStart e) {
+        } catch (CannotStart e) {
             throw new WfException(e.getMessage(), e);
         }
     }
@@ -398,8 +393,7 @@ public class WfProcessImpl extends WfExecutionObjectImpl implements WfProcess {
             }
             // evaluate the condition
             o = bsh.eval(condition);
-        }
-        catch (EvalError e) {
+        } catch (EvalError e) {
             return false;
         }
         if (o instanceof Number)
@@ -427,7 +421,7 @@ public class WfProcessImpl extends WfExecutionObjectImpl implements WfProcess {
         Collection c = null;
         try {
             c = getDelegator().findByAnd("WorkEffort",
-                    UtilMisc.toMap("workEffortParentId",runtimeKey()));
+                                         UtilMisc.toMap("workEffortParentId", runtimeKey()));
         } catch (GenericEntityException e) {
             throw new WfException(e.getMessage(), e);
         }

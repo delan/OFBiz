@@ -1,3 +1,4 @@
+
 package org.ofbiz.core.entity;
 
 import java.sql.*;
@@ -5,6 +6,7 @@ import javax.sql.*;
 import java.util.*;
 import javax.transaction.*;
 import javax.transaction.xa.*;
+
 import org.ofbiz.core.util.*;
 
 /**
@@ -35,12 +37,13 @@ import org.ofbiz.core.util.*;
  * @version    1.0
  */
 public class TransactionUtil implements javax.transaction.Status {
+
     /** Begins a transaction in the current thread IF transactions are available; only
      * tries if the current transaction status is ACTIVE, if not active it returns false.
      * If and on only if it begins a transaction it will return true. In other words, if
      * a transaction is already in place it will return false and do nothing.
      */
-    public static boolean begin() throws GenericTransactionException  {
+    public static boolean begin() throws GenericTransactionException {
         UserTransaction ut = TransactionFactory.getUserTransaction();
         if (ut != null) {
             try {
@@ -61,7 +64,7 @@ public class TransactionUtil implements javax.transaction.Status {
             return false;
         }
     }
-    
+
     /** Gets the status of the transaction in the current thread IF
      * transactions are available, otherwise returns STATUS_NO_TRANSACTION */
     public static int getStatus() throws GenericTransactionException {
@@ -72,19 +75,19 @@ public class TransactionUtil implements javax.transaction.Status {
             } catch (SystemException e) {
                 throw new GenericTransactionException("System error, could not get status", e);
             }
-        }  else {
+        } else {
             return STATUS_NO_TRANSACTION;
         }
     }
-    
-    /** Commits the transaction in the current thread IF transactions are available 
+
+    /** Commits the transaction in the current thread IF transactions are available
      *  AND if beganTransaction is true
      */
     public static void commit(boolean beganTransaction) throws GenericTransactionException {
         if (beganTransaction)
             TransactionUtil.commit();
     }
-    
+
     /** Commits the transaction in the current thread IF transactions are available */
     public static void commit() throws GenericTransactionException {
         UserTransaction ut = TransactionFactory.getUserTransaction();
@@ -110,9 +113,9 @@ public class TransactionUtil implements javax.transaction.Status {
             Debug.logInfo("[TransactionUtil.commit] UserTransaction is null, not commiting");
         }
     }
-    
-    /** Rolls back transaction in the current thread IF transactions are available 
-     *  AND if beganTransaction is true; if beganTransaction is not true, 
+
+    /** Rolls back transaction in the current thread IF transactions are available
+     *  AND if beganTransaction is true; if beganTransaction is not true,
      *  setRollbackOnly is called to insure that the transaction will be rolled back
      */
     public static void rollback(boolean beganTransaction) throws GenericTransactionException {
@@ -122,7 +125,7 @@ public class TransactionUtil implements javax.transaction.Status {
             TransactionUtil.setRollbackOnly();
         }
     }
-    
+
     /** Rolls back transaction in the current thread IF transactions are available */
     public static void rollback() throws GenericTransactionException {
         UserTransaction ut = TransactionFactory.getUserTransaction();
@@ -142,7 +145,7 @@ public class TransactionUtil implements javax.transaction.Status {
             Debug.logInfo("[TransactionUtil.rollback] No UserTransaction, transaction not rolled back");
         }
     }
-    
+
     /** Makes a roll back the only possible outcome of the transaction in the current thread IF transactions are available */
     public static void setRollbackOnly() throws GenericTransactionException {
         UserTransaction ut = TransactionFactory.getUserTransaction();
@@ -157,7 +160,7 @@ public class TransactionUtil implements javax.transaction.Status {
             Debug.logInfo("[TransactionUtil.setRollbackOnly] No UserTransaction, transaction roll back only not set");
         }
     }
-    
+
     /** Sets the timeout of the transaction in the current thread IF transactions are available */
     public static void setTransactionTimeout(int seconds) throws GenericTransactionException {
         UserTransaction ut = TransactionFactory.getUserTransaction();
@@ -169,12 +172,12 @@ public class TransactionUtil implements javax.transaction.Status {
             }
         }
     }
-    
+
     /** Enlists the given XAConnection and if a transaction is active in the current thread, returns a plain JDBC Connection */
     public static Connection enlistConnection(XAConnection xacon) throws GenericTransactionException {
         if (xacon == null)
             return null;
-        
+
         try {
             TransactionManager tm = TransactionFactory.getTransactionManager();
             if (tm != null && tm.getStatus() == STATUS_ACTIVE) {

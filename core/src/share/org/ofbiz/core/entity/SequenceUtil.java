@@ -1,7 +1,9 @@
+
 package org.ofbiz.core.entity;
 
 import java.sql.*;
 import java.util.*;
+
 import org.ofbiz.core.util.*;
 
 /**
@@ -32,34 +34,36 @@ import org.ofbiz.core.util.*;
  *@version    1.0
  */
 public class SequenceUtil {
+
     Map sequences = new Hashtable();
     String helperName;
-    
+
     public SequenceUtil(String helperName) {
         this.helperName = helperName;
     }
-    
+
     public Long getNextSeqId(String seqName) {
-        SequenceBank bank = (SequenceBank)sequences.get(seqName);
-        if(bank == null) {
+        SequenceBank bank = (SequenceBank) sequences.get(seqName);
+        if (bank == null) {
             bank = new SequenceBank(seqName, helperName);
             sequences.put(seqName, bank);
         }
         return bank.getNextSeqId();
     }
-    
+
     class SequenceBank {
+
         public static final long bankSize = 10;
         public static final long startSeqId = 10000;
         public static final int minWaitNanos = 500000;   // 1/2 ms
         public static final int maxWaitNanos = 1000000;  // 1 ms
         public static final int maxTries = 5;
-        
+
         long curSeqId;
         long maxSeqId;
         String seqName;
         String helperName;
-        
+
         public SequenceBank(String seqName, String helperName) {
             this.seqName = seqName;
             this.helperName = helperName;
@@ -67,54 +71,55 @@ public class SequenceUtil {
             maxSeqId = 0;
             fillBank();
         }
-        
+
         public synchronized Long getNextSeqId() {
-            if(curSeqId < maxSeqId) {
+            if (curSeqId < maxSeqId) {
                 Long retSeqId = new Long(curSeqId);
                 curSeqId++;
                 return retSeqId;
-            }
-            else {
+            } else {
                 fillBank();
-                if(curSeqId < maxSeqId) {
+                if (curSeqId < maxSeqId) {
                     Long retSeqId = new Long(curSeqId);
                     curSeqId++;
                     return retSeqId;
-                }
-                else {
+                } else {
                     Debug.logError("[SequenceUtil.SequenceBank.getNextSeqId] Fill bank failed, returning null");
                     return null;
                 }
             }
         }
-        
+
         protected synchronized void fillBank() {
             //no need to get a new bank, SeqIds available
-            if(curSeqId<maxSeqId) return;
-            
+            if (curSeqId < maxSeqId) return;
+
             long val1 = 0;
             long val2 = 0;
-            
+
             Connection connection = null;
             Statement stmt = null;
             ResultSet rs = null;
             try {
                 connection = ConnectionFactory.getConnection(helperName);
-            } catch (SQLException sqle) { 
-                Debug.logWarning("[SequenceUtil.SequenceBank.fillBank]: Unable to esablish a connection with the database... Error was:"); 
+            } catch (SQLException sqle) {
+                Debug.logWarning("[SequenceUtil.SequenceBank.fillBank]: Unable to esablish a connection with the database... Error was:");
                 Debug.logWarning(sqle.getMessage());
-            } catch (GenericEntityException e) { 
-                Debug.logWarning("[SequenceUtil.SequenceBank.fillBank]: Unable to esablish a connection with the database... Error was:"); 
+            } catch (GenericEntityException e) {
+                Debug.logWarning("[SequenceUtil.SequenceBank.fillBank]: Unable to esablish a connection with the database... Error was:");
                 Debug.logWarning(e.getMessage());
             }
-            
+
             String sql = null;
             try {
                 //NOTE: the fancy ethernet type stuff is for the case where transactions not available
                 boolean manualTX = true;
-                try { connection.setAutoCommit(false); }
-                catch(SQLException sqle) { manualTX = false; }
-                
+                try {
+                    connection.setAutoCommit(false);
+                } catch (SQLException sqle) {
+                    manualTX = false;
+                }
+
                 try {
                     if (TransactionUtil.getStatus() == TransactionUtil.STATUS_ACTIVE) {
                         manualTX = false;
@@ -123,59 +128,73 @@ public class SequenceUtil {
                     //nevermind, don't worry about it, but print the exc anyway
                     Debug.logWarning("[SequenceUtil.SequenceBank.fillBank] Exception was thrown trying to check transaction status: " + e.toString());
                 }
-                
+
                 stmt = connection.createStatement();
                 int numTries = 0;
-                while(val1+bankSize != val2) {
+                while (val1 + bankSize != val2) {
                     Debug.logInfo("[SequenceUtil.SequenceBank.fillBank] Trying to get a bank of sequenced ids for " + this.seqName + "; start of loop val1=" + val1 + ", val2=" + val2 + ", bankSize=" + bankSize);
                     sql = "SELECT SEQ_ID FROM SEQUENCE_VALUE_ITEM WHERE SEQ_NAME='" + this.seqName + "'";
                     rs = stmt.executeQuery(sql);
-                    if (rs.next()) { 
+                    if (rs.next()) {
                         val1 = rs.getInt("SEQ_ID");
                     } else {
                         Debug.logWarning("[SequenceUtil.SequenceBank.fillBank] first select failed: trying to add row, result set was empty for sequence: " + seqName);
-                        try { if (rs != null) rs.close(); } catch (SQLException sqle) { }
+                        try {
+                            if (rs != null) rs.close();
+                        } catch (SQLException sqle) {
+                        }
                         sql = "INSERT INTO SEQUENCE_VALUE_ITEM (SEQ_NAME, SEQ_ID) VALUES ('" + this.seqName + "', " + startSeqId + ")";
-                        if(stmt.executeUpdate(sql) <= 0) return;
+                        if (stmt.executeUpdate(sql) <= 0) return;
                         continue;
                     }
-                    try { if (rs != null) rs.close(); }
-                    catch (SQLException sqle) { }
-                    
+                    try {
+                        if (rs != null) rs.close();
+                    } catch (SQLException sqle) {
+                    }
+
                     sql = "UPDATE SEQUENCE_VALUE_ITEM SET SEQ_ID=SEQ_ID+" + this.bankSize + " WHERE SEQ_NAME='" + this.seqName + "'";
-                    if(stmt.executeUpdate(sql) <= 0) {
+                    if (stmt.executeUpdate(sql) <= 0) {
                         Debug.logWarning("[SequenceUtil.SequenceBank.fillBank] update failed, no rows changes for seqName: " + seqName);
                         return;
                     }
-                    
+
                     if (manualTX) {
                         connection.commit();
                     }
-                    
+
                     sql = "SELECT SEQ_ID FROM SEQUENCE_VALUE_ITEM WHERE SEQ_NAME='" + this.seqName + "'";
                     rs = stmt.executeQuery(sql);
-                    if(rs.next()) { val2 = rs.getInt("SEQ_ID"); }
-                    else {
+                    if (rs.next()) {
+                        val2 = rs.getInt("SEQ_ID");
+                    } else {
                         Debug.logWarning("[SequenceUtil.SequenceBank.fillBank] second select failed: aborting, result set was empty for sequence: " + seqName);
-                        try { if (rs != null) rs.close(); } catch (SQLException sqle) { }
+                        try {
+                            if (rs != null) rs.close();
+                        } catch (SQLException sqle) {
+                        }
                         return;
                     }
-                    try { if (rs != null) rs.close(); } catch (SQLException sqle) { }
-                    
-                    if(val1+bankSize != val2) {
-                        if(numTries >= maxTries) {
+                    try {
+                        if (rs != null) rs.close();
+                    } catch (SQLException sqle) {
+                    }
+
+                    if (val1 + bankSize != val2) {
+                        if (numTries >= maxTries) {
                             Debug.logError("[SequenceUtil.SequenceBank.fillBank] maxTries (" + maxTries + ") reached, giving up.");
                             return;
                         }
                         //collision happened, wait a bounded random amount of time then continue
-                        int waitTime = (new Double(Math.random()*(maxWaitNanos - minWaitNanos))).intValue() + minWaitNanos;
-                        try { this.wait(0, waitTime); }
-                        catch(Exception e) { }
+                        int waitTime = (new Double(Math.random() * (maxWaitNanos - minWaitNanos))).intValue() + minWaitNanos;
+                        try {
+                            this.wait(0, waitTime);
+                        } catch (Exception e) {
+                        }
                     }
-                    
+
                     numTries++;
                 }
-                
+
                 curSeqId = val1;
                 maxSeqId = val2;
                 Debug.logInfo("[SequenceUtil.SequenceBank.fillBank] Successfully got a bank of sequenced ids for " + this.seqName + "; curSeqId=" + curSeqId + ", maxSeqId=" + maxSeqId + ", bankSize=" + bankSize);
@@ -184,8 +203,14 @@ public class SequenceUtil {
                 Debug.logWarning(sqle.getMessage());
                 return;
             } finally {
-                try { if (stmt != null) stmt.close(); } catch (SQLException sqle) { }
-                try { if (connection != null) connection.close(); } catch (SQLException sqle) { }
+                try {
+                    if (stmt != null) stmt.close();
+                } catch (SQLException sqle) {
+                }
+                try {
+                    if (connection != null) connection.close();
+                } catch (SQLException sqle) {
+                }
             }
         }
     }

@@ -6,6 +6,7 @@ package org.ofbiz.core.service;
 
 import java.net.*;
 import java.util.*;
+
 import org.ofbiz.core.entity.*;
 import org.ofbiz.core.util.*;
 import org.ofbiz.core.security.*;
@@ -40,9 +41,9 @@ import org.ofbiz.core.security.*;
 public class DispatchContext {
 
     protected static final String GLOBAL_KEY = "global";
-    protected static UtilCache modelService = new UtilCache("ModelServices",0, 0);
+    protected static UtilCache modelService = new UtilCache("ModelServices", 0, 0);
     protected static String globalRoot =
-            UtilProperties.getPropertyValue("servicesengine","global.rootPath");
+            UtilProperties.getPropertyValue("servicesengine", "global.rootPath");
 
     protected String name;
     protected String root;
@@ -56,8 +57,7 @@ public class DispatchContext {
      *@param readers a collection of reader URLs
      *@param loader the classloader to use for dispatched services
      */
-    public DispatchContext(String name, String root, String rootExt,
-            Collection readers, ClassLoader loader, LocalDispatcher dispatcher) {
+    public DispatchContext(String name, String root, String rootExt,                           Collection readers, ClassLoader loader, LocalDispatcher dispatcher) {
         this.name = name;
         this.root = root;
         this.rootExt = rootExt;
@@ -245,8 +245,8 @@ public class DispatchContext {
 
     private Map addGlobal() {
         Map globalMap = new HashMap();
-        String path = UtilProperties.getPropertyValue("servicesengine","global.paths");
-        Debug.logInfo("[addGlobal] paths: " + path);
+        String path = UtilProperties.getPropertyValue("servicesengine", "global.paths");
+        Debug.logVerbose("[addGlobal] paths: " + path);
         if (path == null)
             return null;
         List paths = StringUtil.split(path, ";");

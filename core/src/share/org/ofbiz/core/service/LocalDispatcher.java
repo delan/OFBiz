@@ -5,6 +5,7 @@
 package org.ofbiz.core.service;
 
 import java.util.*;
+
 import org.ofbiz.core.calendar.*;
 import org.ofbiz.core.entity.*;
 import org.ofbiz.core.service.scheduler.*;
@@ -44,13 +45,13 @@ public class LocalDispatcher {
     protected ServiceDispatcher dispatcher;
     protected String name;
 
-    public LocalDispatcher(String name, String root, String rootExt,
-            GenericDelegator delegator, Collection readerURLs) {
+    public LocalDispatcher(String name, String root, String rootExt, GenericDelegator delegator,
+                           Collection readerURLs) {
         this(name, root, rootExt, delegator, readerURLs, null);
     }
 
-    public LocalDispatcher(String name, String root, String rootExt,
-            GenericDelegator delegator, Collection readerURLs, ClassLoader loader) {
+    public LocalDispatcher(String name, String root, String rootExt, GenericDelegator delegator,
+                           Collection readerURLs, ClassLoader loader) {
         if (loader == null) {
             try {
                 loader = Thread.currentThread().getContextClassLoader();
@@ -64,7 +65,7 @@ public class LocalDispatcher {
     }
 
     public LocalDispatcher(String name, GenericDelegator delegator,
-            DispatchContext ctx) {
+                           DispatchContext ctx) {
         init(name, delegator, ctx);
     }
 
@@ -80,8 +81,7 @@ public class LocalDispatcher {
      *@param context Map of name, value pairs composing the context
      *@return Map of name, value pairs composing the result
      */
-    public Map runSync(String serviceName,
-            Map context) throws GenericServiceException {
+    public Map runSync(String serviceName, Map context) throws GenericServiceException {
         ModelService service = ctx.getModelService(serviceName);
         return dispatcher.runSync(this.name, service, context);
     }
@@ -89,8 +89,7 @@ public class LocalDispatcher {
     /** Run the service synchronously and IGNORE the result
      *@param context Map of name, value pairs composing the context
      */
-    public void runSyncIgnore(String serviceName,
-            Map context) throws GenericServiceException {
+    public void runSyncIgnore(String serviceName, Map context) throws GenericServiceException {
         ModelService service = ctx.getModelService(serviceName);
         dispatcher.runSyncIgnore(this.name, service, context);
     }
@@ -99,8 +98,7 @@ public class LocalDispatcher {
      *@param context Map of name, value pairs composing the context
      *@param requester Object implementing GenericRequester interface which will receive the result
      */
-    public void runAsync(String serviceName, Map context,
-            GenericRequester requester) throws GenericServiceException {
+    public void runAsync(String serviceName, Map context, GenericRequester requester) throws GenericServiceException {
         ModelService service = ctx.getModelService(serviceName);
         dispatcher.runAsync(this.name, service, context, requester);
     }
@@ -108,8 +106,7 @@ public class LocalDispatcher {
     /** Run the service asynchronously and IGNORE the result
      *@param context Map of name, value pairs composing the context
      */
-    public void runAsync(String serviceName,
-            Map context) throws GenericServiceException {
+    public void runAsync(String serviceName, Map context) throws GenericServiceException {
         ModelService service = ctx.getModelService(serviceName);
         dispatcher.runAsync(this.name, service, context);
     }
@@ -117,8 +114,7 @@ public class LocalDispatcher {
     /** Run the service asynchronously and IGNORE the result
      *@param context Map of name, value pairs composing the context
      */
-    public GenericResultWaiter runAsyncWait(String serviceName,
-            Map context) throws GenericServiceException {
+    public GenericResultWaiter runAsyncWait(String serviceName, Map context) throws GenericServiceException {
         GenericResultWaiter waiter = new GenericResultWaiter();
         this.runAsync(serviceName, context, waiter);
         return waiter;
@@ -132,13 +128,13 @@ public class LocalDispatcher {
      *@param interval The interval of the frequency recurrence
      *@param count The number of times to repeat
      */
-    public void schedule(String serviceName, Map context, long startTime,
-            int frequency, int interval, int count) throws GenericServiceException {             
+    public void schedule(String serviceName, Map context, long startTime, int frequency, int interval, int count)
+            throws GenericServiceException {
         try {
             getJobManager().schedule(getName(), serviceName, context, startTime,
-                    frequency, interval, count);
+                                     frequency, interval, count);
             Debug.logVerbose("[LocalDispatcher.schedule] : Current time: " +
-                    (new Date()).getTime());
+                             (new Date()).getTime());
             Debug.logVerbose("[LocalDispatcher.schedule] : Runtime: " + startTime);
             Debug.logVerbose("[LocalDispatcher.schedule] : Frequency: " + frequency);
             Debug.logVerbose("[LocalDispatcher.schedule] : Interval: " + interval);
@@ -153,9 +149,8 @@ public class LocalDispatcher {
      *@param context The name/value pairs composing the context
      *@param startTime The time to run this service
      */
-    public void schedule(String serviceName, Map context,
-            long startTime) throws GenericServiceException {
-        schedule(serviceName, context, startTime, RecurrenceRule.DAILY, 1, 1);        
+    public void schedule(String serviceName, Map context, long startTime) throws GenericServiceException {
+        schedule(serviceName, context, startTime, RecurrenceRule.DAILY, 1, 1);
     }
 
     /** Gets the JobManager associated with this dispatcher

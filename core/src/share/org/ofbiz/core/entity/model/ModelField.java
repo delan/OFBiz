@@ -1,3 +1,4 @@
+
 package org.ofbiz.core.entity.model;
 
 import java.util.*;
@@ -31,18 +32,19 @@ import java.util.*;
  */
 
 public class ModelField {
-  /** The name of the Field */
-  public String name = "";
-  /** The type of the Field */
-  public String type = "";
-  /** The col-name of the Field */
-  public String colName = "";
-  /** boolean which specifies whether or not the Field is a Primary Key */
-  public boolean isPk = false;
-  /** validators to be called when an update is done */
-  public Vector validators = new Vector();
-  
-  /** Default Constructor */
-  public ModelField() {
-  }
+
+    /** The name of the Field */
+    public String name = "";
+    /** The type of the Field */
+    public String type = "";
+    /** The col-name of the Field */
+    public String colName = "";
+    /** boolean which specifies whether or not the Field is a Primary Key */
+    public boolean isPk = false;
+    /** validators to be called when an update is done */
+    public Vector validators = new Vector();
+
+    /** Default Constructor */
+    public ModelField() {
+    }
 }

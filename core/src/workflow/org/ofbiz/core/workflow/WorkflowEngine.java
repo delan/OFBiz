@@ -5,6 +5,7 @@
 package org.ofbiz.core.workflow;
 
 import java.util.*;
+
 import org.ofbiz.core.entity.*;
 import org.ofbiz.core.service.*;
 import org.ofbiz.core.util.*;
@@ -38,113 +39,113 @@ import org.ofbiz.core.workflow.impl.*;
  *@version    1.0
  */
 public class WorkflowEngine implements GenericEngine {
-    
+
     protected ServiceDispatcher dispatcher;
     protected String loader;
-    
+
     /** Creates new WorkflowEngine */
     public WorkflowEngine(ServiceDispatcher dispatcher) {
         this.dispatcher = dispatcher;
         this.loader = null;
     }
-    
+
     /** Set the name of the local dispatcher
      * @param loader name of the local dispatcher
      */
     public void setLoader(String loader) {
         this.loader = loader;
     }
-    
+
     /** Run the service synchronously and return the result
      * @param context Map of name, value pairs composing the context
      * @return Map of name, value pairs composing the result
      */
     public Map runSync(ModelService modelService, Map context) throws GenericServiceException {
         GenericResultWaiter waiter = new GenericResultWaiter();
-        runAsync(modelService,context,waiter);
-        return waiter.waitForResult();       
+        runAsync(modelService, context, waiter);
+        return waiter.waitForResult();
     }
-    
+
     /** Run the service synchronously and IGNORE the result
      * @param context Map of name, value pairs composing the context
      */
     public void runSyncIgnore(ModelService modelService, Map context) throws GenericServiceException {
-        runAsync(modelService,context,null);
+        runAsync(modelService, context, null);
     }
-    
+
     /** Run the service asynchronously and IGNORE the result
      * @param context Map of name, value pairs composing the context
      */
     public void runAsync(ModelService modelService, Map context) throws GenericServiceException {
-        runAsync(modelService,context,null);
+        runAsync(modelService, context, null);
     }
-    
+
     /** Run the service asynchronously, passing an instance of GenericRequester that will receive the result
      * @param context Map of name, value pairs composing the context
      * @param requester Object implementing GenericRequester interface which will receive the result
      */
-    public void runAsync(ModelService modelService, Map context, GenericRequester requester) throws GenericServiceException {
+    public void runAsync(ModelService modelService, Map context, GenericRequester requester)
+            throws GenericServiceException {
         // Build the requester
         WfRequester req = null;
         try {
-            req = WfFactory.getWfRequester();        
+            req = WfFactory.getWfRequester();
         } catch (WfException e) {
-            throw new GenericServiceException(e.getMessage(),e);
+            throw new GenericServiceException(e.getMessage(), e);
         }
-        
+
         // Build the process manager
         WfProcessMgr mgr = null;
         try {
-            mgr = WfFactory.getWfProcessMgr(dispatcher.getDelegator(),modelService.location,modelService.invoke);
+            mgr = WfFactory.getWfProcessMgr(dispatcher.getDelegator(), modelService.location, modelService.invoke);
         } catch (WfException e) {
-            throw new GenericServiceException(e.getMessage(),e);
+            throw new GenericServiceException(e.getMessage(), e);
         }
-        
+
         // Create the process
         WfProcess process = null;
         try {
             process = mgr.createProcess(req);
-        }        
-        catch ( NotEnabled ne ) {
-            throw new GenericServiceException(ne.getMessage(),ne);
-        } catch ( InvalidRequester ir ) {
-            throw new GenericServiceException(ir.getMessage(),ir);
-        } catch ( RequesterRequired rr ) {
-            throw new GenericServiceException(rr.getMessage(),rr);
-        } catch ( WfException wfe ) {
-            throw new GenericServiceException(wfe.getMessage(),wfe);
+        } catch (NotEnabled ne) {
+            throw new GenericServiceException(ne.getMessage(), ne);
+        } catch (InvalidRequester ir) {
+            throw new GenericServiceException(ir.getMessage(), ir);
+        } catch (RequesterRequired rr) {
+            throw new GenericServiceException(rr.getMessage(), rr);
+        } catch (WfException wfe) {
+            throw new GenericServiceException(wfe.getMessage(), wfe);
         }
-        
+
         // Set the service dispatcher for the workflow
         try {
             process.setServiceLoader(loader);
         } catch (WfException e) {
-            throw new GenericServiceException(e.getMessage(),e);
+            throw new GenericServiceException(e.getMessage(), e);
         }
-    
+
         // Assign the owner of the process
         if (context.containsKey("userLogin")) {
             GenericValue userLogin = (GenericValue) context.remove("userLogin");
             try {
                 Map fields = UtilMisc.toMap("partyId", userLogin.getString("partyId"),
-                        "roleTypeId", "WF_OWNER", "workEffortId", process.runtimeKey(),
-                        "fromDate", UtilDateTime.nowTimestamp());
+                                            "roleTypeId", "WF_OWNER", "workEffortId", process.runtimeKey(),
+                                            "fromDate", UtilDateTime.nowTimestamp());
                 try {
                     GenericValue wepa = dispatcher.getDelegator().makeValue("WorkEffortPartyAssignment", fields);
                     dispatcher.getDelegator().create(wepa);
-                } catch ( GenericEntityException e ) {
+                } catch (GenericEntityException e) {
                     throw new GenericServiceException("Cannot set ownership of workflow");
                 }
             } catch (WfException we) {
                 throw new GenericServiceException("Cannot get the workflow process runtime key");
             }
         }
-                                        
+
         // Register the process
         try {
-            req.registerProcess(process,context,requester);
+            req.registerProcess(process, context, requester);
         } catch (WfException wfe) {
-            throw new GenericServiceException(wfe.getMessage(),wfe);
+            throw new GenericServiceException(wfe.getMessage(), wfe);
         }
     }
 }

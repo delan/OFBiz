@@ -33,17 +33,17 @@ package org.ofbiz.core.workflow;
  */
 
 public interface WfStateEventAudit extends WfEventAudit {
-  
-  /**
-   * @throws WfException
-   * @return
-   */
-  public String oldState() throws WfException;
-  
-  /**
-   * @throws WfException
-   * @return
-   */
-  public String newState() throws WfException;
-  
+
+    /**
+     * @throws WfException
+     * @return
+     */
+    public String oldState() throws WfException;
+
+    /**
+     * @throws WfException
+     * @return
+     */
+    public String newState() throws WfException;
+
 } // interface WfStateEventAuditOperations

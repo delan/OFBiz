@@ -7,6 +7,7 @@ package org.ofbiz.core.workflow;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
+
 import org.ofbiz.core.service.GenericRequester;
 
 /**
@@ -37,21 +38,21 @@ import org.ofbiz.core.service.GenericRequester;
  *@version    1.0
  */
 
-public interface WfRequester  {
-    
+public interface WfRequester {
+
     /**
      * Gets the number of processes.
      * @throws WfException
      * @return Count of the number of workflow processes
      */
     public int howManyPerformer() throws WfException;
-    
+
     /** Gets an iterator of processes.
      * @throws WfException
      * @return Iterator of workflow processes.
      */
     public Iterator getIteratorPerformer() throws WfException;
-    
+
     /**
      * A list of processes
      * @param maxNumber
@@ -59,7 +60,7 @@ public interface WfRequester  {
      * @return List of WfProcess objects.
      */
     public List getSequencePerformer(int maxNumber) throws WfException;
-    
+
     /**
      * Checks if a WfProcess is associated with this requester object
      * @param member
@@ -67,7 +68,7 @@ public interface WfRequester  {
      * @return true if the process is found.
      */
     public boolean isMemberOfPerformer(WfProcess member) throws WfException;
-        
+
     /**
      * Registers a process with this requester; starts the process.
      *@param process to register
@@ -76,7 +77,7 @@ public interface WfRequester  {
      *@throws WfException
      */
     public void registerProcess(WfProcess process, Map context, GenericRequester requester) throws WfException;
-    
+
     /**
      * Receives notice of event status changes
      * @param event
@@ -84,5 +85,5 @@ public interface WfRequester  {
      * @throws InvalidPerformer
      */
     public void receiveEvent(WfEventAudit event) throws WfException, InvalidPerformer;
-    
+
 } // interface WfRequesterOperations

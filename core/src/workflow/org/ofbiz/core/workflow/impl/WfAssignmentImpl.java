@@ -6,6 +6,7 @@ package org.ofbiz.core.workflow.impl;
 
 import java.util.*;
 import java.sql.Timestamp;
+
 import org.ofbiz.core.entity.*;
 import org.ofbiz.core.util.*;
 import org.ofbiz.core.workflow.*;
@@ -49,7 +50,7 @@ public class WfAssignmentImpl implements WfAssignment {
      *@throws WfException
      */
     public WfAssignmentImpl(WfActivity activity, WfResource resource,
-            Timestamp fromDate) throws WfException {
+                            Timestamp fromDate) throws WfException {
         this.activity = activity;
         this.resource = resource;
         this.fromDate = fromDate;
@@ -71,11 +72,11 @@ public class WfAssignmentImpl implements WfAssignment {
 
         GenericValue value = null;
         Map fields = new HashMap();
-        fields.put("workEffortId",workEffortId);
-        fields.put("partyId",partyId);
-        fields.put("roleTypeId",roleTypeId);
-        fields.put("fromDate",fromDate);
-        fields.put("statusId","CAL_SENT");
+        fields.put("workEffortId", workEffortId);
+        fields.put("partyId", partyId);
+        fields.put("roleTypeId", roleTypeId);
+        fields.put("fromDate", fromDate);
+        fields.put("statusId", "CAL_SENT");
 
         // check if one exists
         if (valueObject() != null)
@@ -89,7 +90,7 @@ public class WfAssignmentImpl implements WfAssignment {
         try {
             GenericValue v =
                     activity.getDelegator().makeValue("WorkEffortPartyAssignment",
-                    fields);
+                                                      fields);
             value = activity.getDelegator().create(v);
         } catch (GenericEntityException e) {
             throw new WfException(e.getMessage(), e);
@@ -137,7 +138,7 @@ public class WfAssignmentImpl implements WfAssignment {
     public void changeStatus(String status) throws WfException {
         GenericValue valueObject = valueObject();
         try {
-            valueObject.set("statusId",status);
+            valueObject.set("statusId", status);
             valueObject.store();
         } catch (GenericEntityException e) {
             throw new WfException(e.getMessage(), e);
@@ -194,13 +195,13 @@ public class WfAssignmentImpl implements WfAssignment {
     private GenericValue valueObject() throws WfException {
         GenericValue value = null;
         Map fields = new HashMap();
-        fields.put("workEffortId",activity.runtimeKey());
-        fields.put("partyId",resource.resourcePartyId());
-        fields.put("roleTypeId",resource.resourceRoleId());
-        fields.put("fromDate",fromDate);
+        fields.put("workEffortId", activity.runtimeKey());
+        fields.put("partyId", resource.resourcePartyId());
+        fields.put("roleTypeId", resource.resourceRoleId());
+        fields.put("fromDate", fromDate);
         try {
             value = activity.getDelegator().findByPrimaryKey("WorkEffortPartyAssignment",
-                    fields);
+                                                             fields);
         } catch (GenericEntityException e) {
             throw new WfException(e.getMessage(), e);
         }

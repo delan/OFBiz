@@ -1,3 +1,4 @@
+
 package org.ofbiz.core.entity.model;
 
 import javax.xml.parsers.DocumentBuilder;
@@ -49,139 +50,149 @@ import org.ofbiz.core.util.*;
  */
 
 public class ModelGroupReader {
-  public static UtilCache readers = new UtilCache("ModelGroupReader", 0, 0);
-  
-  private Map groupCache = null;
-  private Set groupNames = null;
-  
-  public String modelName;
-  public String entityGroupFileName;
-  
-  public static ModelGroupReader getModelGroupReader(String delegatorName) {
-    String tempModelName = UtilProperties.getPropertyValue("entityengine", delegatorName + ".model.group.reader");
-    ModelGroupReader reader = (ModelGroupReader)readers.get(tempModelName);
-    if(reader == null) //don't want to block here
-    {
-      synchronized(ModelGroupReader.class) {
-        //must check if null again as one of the blocked threads can still enter
-        reader = (ModelGroupReader)readers.get(tempModelName);
-        if(reader == null) {
-          reader = new ModelGroupReader(tempModelName);
-          readers.put(tempModelName, reader);
-        }
-      }
-    }
-    return reader;
-  }
-  
-  public ModelGroupReader(String modelName) {
-    this.modelName = modelName;
-    entityGroupFileName = UtilProperties.getPropertyValue("entityengine", modelName + ".xml.group");
-    
-    //preload caches...
-    getGroupCache();
-  }
-  
-  public Map getGroupCache() {
-    if(groupCache == null) //don't want to block here
-    {
-      synchronized(ModelReader.class) {
-        //must check if null again as one of the blocked threads can still enter
-        if(groupCache == null) //now it's safe
+
+    public static UtilCache readers = new UtilCache("ModelGroupReader", 0, 0);
+
+    private Map groupCache = null;
+    private Set groupNames = null;
+
+    public String modelName;
+    public String entityGroupFileName;
+
+    public static ModelGroupReader getModelGroupReader(String delegatorName) {
+        String tempModelName = UtilProperties.getPropertyValue("entityengine", delegatorName + ".model.group.reader");
+        ModelGroupReader reader = (ModelGroupReader) readers.get(tempModelName);
+        if (reader == null) //don't want to block here
         {
-          groupCache = new HashMap();
-          groupNames = new TreeSet();
-          
-          UtilTimer utilTimer = new UtilTimer();
-          //utilTimer.timerString("[ModelGroupReader.getGroupCache] Before getDocument");
-          Document document = getDocument(entityGroupFileName);
-          if(document == null) { groupCache = null; return null; }
-          
-          Hashtable docElementValues = null;
-          docElementValues = new Hashtable();
-          
-          //utilTimer.timerString("[ModelGroupReader.getGroupCache] Before getDocumentElement");
-          Element docElement = document.getDocumentElement();
-          if(docElement == null) { groupCache = null; return null; }
-          docElement.normalize();
-          Node curChild = docElement.getFirstChild();
-          
-          int i=0;
-          if(curChild != null) {
-            utilTimer.timerString("[ModelGroupReader.getGroupCache] Before start of entity loop");
-            do {
-              if(curChild.getNodeType() == Node.ELEMENT_NODE && "entity-group".equals(curChild.getNodeName())) {
-                Element curEntity = (Element)curChild;
-                String entityName = UtilXml.checkEmpty(curEntity.getAttribute("entity"));
-                String groupName = UtilXml.checkEmpty(curEntity.getAttribute("group"));
-                if(groupName == null || entityName == null) continue;
-                groupNames.add(groupName);
-                groupCache.put(entityName, groupName);
-                //utilTimer.timerString("  After entityEntityName -- " + i + " --");
-                i++;
-              }
-            } while((curChild = curChild.getNextSibling()) != null);
-          }
-          else Debug.logWarning("[ModelGroupReader.getGroupCache] No child nodes found.");
-          utilTimer.timerString("[ModelGroupReader.getGroupCache] FINISHED - Total Entity-Groups: " + i + " FINISHED");
+            synchronized (ModelGroupReader.class) {
+                //must check if null again as one of the blocked threads can still enter
+                reader = (ModelGroupReader) readers.get(tempModelName);
+                if (reader == null) {
+                    reader = new ModelGroupReader(tempModelName);
+                    readers.put(tempModelName, reader);
+                }
+            }
         }
-      }
+        return reader;
     }
-    return groupCache;
-  }
-  
-  /** Gets a group name based on a definition from the specified XML Entity Group descriptor file.
-   * @param entityName The entityName of the Entity Group definition to use.
-   * @return A group name
-   */
-  public String getEntityGroupName(String entityName) {
-    Map gc = getGroupCache();
-    if(gc != null) return (String)gc.get(entityName);
-    else return null;
-  }
-  
-  /** Creates a Collection with all of the groupNames defined in the specified XML Entity Group Descriptor file.
-   * @return A Collection of groupNames Strings
-   */
-  public Collection getGroupNames() {
-    getGroupCache();
-    if(groupNames == null) return null;
-    return new ArrayList(groupNames);
-  }
-  
-  /** Creates a Collection with names of all of the entities for a given group
-   * @return A Collection of entityName Strings
-   */
-  public Collection getEntityNamesByGroup(String groupName) {
-    Map gc = getGroupCache();
-    Collection enames = new LinkedList();
-    if(groupName == null || groupName.length() <= 0) return enames;
-    if(gc == null || gc.size() < 0) return enames;
-    Set gcEntries = gc.entrySet();
-    Iterator gcIter = gcEntries.iterator();
-    while(gcIter.hasNext()) {
-      Map.Entry entry = (Map.Entry)gcIter.next();
-      if(groupName.equals(entry.getValue())) enames.add(entry.getKey());
+
+    public ModelGroupReader(String modelName) {
+        this.modelName = modelName;
+        entityGroupFileName = UtilProperties.getPropertyValue("entityengine", modelName + ".xml.group");
+
+        //preload caches...
+        getGroupCache();
     }
-    return enames;
-  }
-  
-  protected Document getDocument(String filename) {
-    if(filename == null) return null;
-    Document document = null;
-    try { document = UtilXml.readXmlDocument(UtilURL.fromFilename(filename)); }
-    catch (SAXException sxe) {
-      // Error generated during parsing)
-      Exception  x = sxe;
-      if(sxe.getException() != null) x = sxe.getException();
-      x.printStackTrace();
+
+    public Map getGroupCache() {
+        if (groupCache == null) //don't want to block here
+        {
+            synchronized (ModelReader.class) {
+                //must check if null again as one of the blocked threads can still enter
+                if (groupCache == null) //now it's safe
+                {
+                    groupCache = new HashMap();
+                    groupNames = new TreeSet();
+
+                    UtilTimer utilTimer = new UtilTimer();
+                    //utilTimer.timerString("[ModelGroupReader.getGroupCache] Before getDocument");
+                    Document document = getDocument(entityGroupFileName);
+                    if (document == null) {
+                        groupCache = null;
+                        return null;
+                    }
+
+                    Hashtable docElementValues = null;
+                    docElementValues = new Hashtable();
+
+                    //utilTimer.timerString("[ModelGroupReader.getGroupCache] Before getDocumentElement");
+                    Element docElement = document.getDocumentElement();
+                    if (docElement == null) {
+                        groupCache = null;
+                        return null;
+                    }
+                    docElement.normalize();
+                    Node curChild = docElement.getFirstChild();
+
+                    int i = 0;
+                    if (curChild != null) {
+                        utilTimer.timerString("[ModelGroupReader.getGroupCache] Before start of entity loop");
+                        do {
+                            if (curChild.getNodeType() == Node.ELEMENT_NODE && "entity-group".equals(curChild.getNodeName())) {
+                                Element curEntity = (Element) curChild;
+                                String entityName = UtilXml.checkEmpty(curEntity.getAttribute("entity"));
+                                String groupName = UtilXml.checkEmpty(curEntity.getAttribute("group"));
+                                if (groupName == null || entityName == null) continue;
+                                groupNames.add(groupName);
+                                groupCache.put(entityName, groupName);
+                                //utilTimer.timerString("  After entityEntityName -- " + i + " --");
+                                i++;
+                            }
+                        } while ((curChild = curChild.getNextSibling()) != null);
+                    } else
+                        Debug.logWarning("[ModelGroupReader.getGroupCache] No child nodes found.");
+                    utilTimer.timerString("[ModelGroupReader.getGroupCache] FINISHED - Total Entity-Groups: " + i + " FINISHED");
+                }
+            }
+        }
+        return groupCache;
     }
-    catch(ParserConfigurationException pce) {
-      // Parser with specified options can't be built
-      pce.printStackTrace();
+
+    /** Gets a group name based on a definition from the specified XML Entity Group descriptor file.
+     * @param entityName The entityName of the Entity Group definition to use.
+     * @return A group name
+     */
+    public String getEntityGroupName(String entityName) {
+        Map gc = getGroupCache();
+        if (gc != null)
+            return (String) gc.get(entityName);
+        else
+            return null;
     }
-    catch(IOException ioe) { ioe.printStackTrace(); }
-    
-    return document;
-  }
+
+    /** Creates a Collection with all of the groupNames defined in the specified XML Entity Group Descriptor file.
+     * @return A Collection of groupNames Strings
+     */
+    public Collection getGroupNames() {
+        getGroupCache();
+        if (groupNames == null) return null;
+        return new ArrayList(groupNames);
+    }
+
+    /** Creates a Collection with names of all of the entities for a given group
+     * @return A Collection of entityName Strings
+     */
+    public Collection getEntityNamesByGroup(String groupName) {
+        Map gc = getGroupCache();
+        Collection enames = new LinkedList();
+        if (groupName == null || groupName.length() <= 0) return enames;
+        if (gc == null || gc.size() < 0) return enames;
+        Set gcEntries = gc.entrySet();
+        Iterator gcIter = gcEntries.iterator();
+        while (gcIter.hasNext()) {
+            Map.Entry entry = (Map.Entry) gcIter.next();
+            if (groupName.equals(entry.getValue())) enames.add(entry.getKey());
+        }
+        return enames;
+    }
+
+    protected Document getDocument(String filename) {
+        if (filename == null) return null;
+        Document document = null;
+        try {
+            document = UtilXml.readXmlDocument(UtilURL.fromFilename(filename));
+        } catch (SAXException sxe) {
+            // Error generated during parsing)
+            Exception x = sxe;
+            if (sxe.getException() != null) x = sxe.getException();
+            x.printStackTrace();
+        } catch (ParserConfigurationException pce) {
+            // Parser with specified options can't be built
+            pce.printStackTrace();
+        } catch (IOException ioe) {
+            ioe.printStackTrace();
+        }
+
+        return document;
+    }
 }

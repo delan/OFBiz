@@ -1,9 +1,10 @@
+
 package org.ofbiz.core.datafile;
 
 import java.util.*;
 
 /**
- * <p><b>Title:</b> 
+ * <p><b>Title:</b>
  * <p><b>Description:</b> None
  * <p>Copyright (c) 2001 The Open For Business Project - www.ofbiz.org
  *
@@ -31,20 +32,21 @@ import java.util.*;
  */
 
 public class ModelField {
-  /** The name of the Field */
-  public String name = "";
-  /** The position of the field in the record - byte number for fixed-length, or field number for delimited */
-  public int position = -1;
-  /** The length of the Field in bytes, if applicable (mostly for fixed-length) */
-  public int length = -1;
-  /** The type of the Field */
-  public String type = "";
-  /** The format of the Field */
-  public String format = "";
-  /** The valid-exp of the Field */
-  public String validExp = "";
-  /** Free form description of the Field */
-  public String description = "";
-  /** boolean which specifies whether or not the Field is a Primary Key */
-  public boolean isPk = false;
+
+    /** The name of the Field */
+    public String name = "";
+    /** The position of the field in the record - byte number for fixed-length, or field number for delimited */
+    public int position = -1;
+    /** The length of the Field in bytes, if applicable (mostly for fixed-length) */
+    public int length = -1;
+    /** The type of the Field */
+    public String type = "";
+    /** The format of the Field */
+    public String format = "";
+    /** The valid-exp of the Field */
+    public String validExp = "";
+    /** Free form description of the Field */
+    public String description = "";
+    /** boolean which specifies whether or not the Field is a Primary Key */
+    public boolean isPk = false;
 }
