@@ -1,5 +1,5 @@
 /*
- * $Id: CoreEvents.java,v 1.1 2003/08/17 08:40:12 ajzeneski Exp $
+ * $Id: CoreEvents.java,v 1.2 2003/09/07 16:12:47 ajzeneski Exp $
  *
  * Copyright (c) 2001, 2002 The Open For Business Project - www.ofbiz.org
  *
@@ -57,7 +57,7 @@ import org.ofbiz.service.calendar.RecurrenceRule;
  * CoreEvents - WebApp Events Related To CORE components
  *
  * @author     <a href="mailto:jaz@ofbiz.org">Andy Zeneski</a>
- * @version    $Revision: 1.1 $
+ * @version    $Revision: 1.2 $
  * @since      2.0
  */
 public class CoreEvents {
@@ -467,7 +467,7 @@ public class CoreEvents {
             int length = longLen.intValue();
             try {
                 FileInputStream fis = new FileInputStream(file);                                
-                UtilHttp.streamContentToBrowser(response, fis, length, fileName);
+                UtilHttp.streamContentToBrowser(response, fis, length, null);
                 fis.close();                
             } catch (FileNotFoundException e) {
                 Debug.logError(e, module);
