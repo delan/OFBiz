@@ -746,7 +746,7 @@
       </relation>
     </entity>
     <entity entity-name="DataMetaData"
-            package-name="org.ofbiz.commonapp.content.content"
+            package-name="org.ofbiz.commonapp.content.data"
             title="Data Meta-Data Predicate Entity">
       <field name="dataResourceId" type="id-ne"></field>
       <field name="metaDataPredicateId" type="id-ne"></field>
@@ -937,7 +937,7 @@
       </relation>
     </entity>
     <entity entity-name="MetaDataPredicate"
-            package-name="org.ofbiz.commonapp.content.content"
+            package-name="org.ofbiz.commonapp.content.data"
             title="Data Meta-Data Predicate Entity">
       <field name="metaDataPredicateId" type="id-ne"></field>
       <field name="description" type="description"></field>
