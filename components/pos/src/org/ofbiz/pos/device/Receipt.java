@@ -280,6 +280,8 @@ public class Receipt extends GenericDevice implements DialogCallback {
     private synchronized SimpleDateFormat getDateFormat(int type) {
         if (dateFormat == null) {
             dateFormat = new SimpleDateFormat[2];
+        }
+        if (dateFormat[type] == null) {
             dateFormat[type] = new SimpleDateFormat(this.dateFmtStr[type]);
         }
         return dateFormat[type];
@@ -372,6 +374,9 @@ public class Receipt extends GenericDevice implements DialogCallback {
     private String padString(String str, int setLen, boolean padEnd) {
         if (str == null) {
             return null;
+        }
+        if (setLen == 0) {
+            return str;
         }
         int stringLen = str.length();
         int diff = setLen - stringLen;
