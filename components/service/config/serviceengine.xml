@@ -40,7 +40,8 @@
 
     <service-location name="entity-sync-rmi" location="rmi://localhost:1099/RMIDispatcher"/>
     <service-location name="entity-sync-http" location="http://localhost:8080/webtools/control/httpService"/>
-    
+
+    <service-location name="rita-rmi" location="rmi://localhost:1099/RMIDispatcher"/>
     <service-location name="eedcc-test" location="http://localhost:8080/webtools/control/httpService"/>
 
     <!-- Start-Up Services -->
