@@ -21,7 +21,7 @@
  *
  *@author     David E. Jones (jonesde@ofbiz.org)
  *@author     Brad Steiner (bsteiner@thehungersite.com)
- *@version    $Revision: 1.1 $
+ *@version    $Revision: 1.2 $
  *@since      2.2
 -->
 
@@ -61,7 +61,7 @@ ${pages.get("/product/ProductTabBar.ftl")}
             <td>
                 <select class="selectBox" name="PRODUCT_ASSOC_TYPE_ID" size=1>
                 <#if productAssocTypeId?has_content>
-                    <#assign curAssocType = delegator.findByPrimaryKey("ProductAssocType", Static["org.ofbiz.core.util.UtilMisc"].toMap("productAssocTypeId", productAssocTypeId))>
+                    <#assign curAssocType = delegator.findByPrimaryKey("ProductAssocType", Static["org.ofbiz.base.util.UtilMisc"].toMap("productAssocTypeId", productAssocTypeId))>
                     <#if curAssocType?exists>
                         <option selected value="${(curAssocType.productAssocTypeId)?if_exists}">${(curAssocType.description)?if_exists}</option>
                         <option value="${(curAssocType.productAssocTypeId)?if_exists}"></option>
@@ -216,11 +216,11 @@ ${pages.get("/product/ProductTabBar.ftl")}
                 <td><div class="tabletext">&nbsp;${(assocFromProduct.sequenceNum)?if_exists}</div></td>
                 <td><div class="tabletext"><#if curProductAssocType?exists> ${(curProductAssocType.description)?if_exists}<#else>${(assocFromProduct.productAssocTypeId)?if_exists}</#if></div></td>
                 <td>
-                <a href="<@ofbizUrl>/UpdateProductAssoc?UPDATE_MODE=DELETE&PRODUCT_ID=${productId}&PRODUCT_ID_TO=${(assocFromProduct.productIdTo)?if_exists}&PRODUCT_ASSOC_TYPE_ID=${(assocFromProduct.productAssocTypeId)?if_exists}&FROM_DATE=${Static["org.ofbiz.core.util.UtilFormatOut"].encodeQueryValue(assocFromProduct.getTimestamp("fromDate").toString())}&useValues=true</@ofbizUrl>" class="buttontext">
+                <a href="<@ofbizUrl>/UpdateProductAssoc?UPDATE_MODE=DELETE&PRODUCT_ID=${productId}&PRODUCT_ID_TO=${(assocFromProduct.productIdTo)?if_exists}&PRODUCT_ASSOC_TYPE_ID=${(assocFromProduct.productAssocTypeId)?if_exists}&FROM_DATE=${Static["org.ofbiz.base.util.UtilFormatOut"].encodeQueryValue(assocFromProduct.getTimestamp("fromDate").toString())}&useValues=true</@ofbizUrl>" class="buttontext">
                 [Delete]</a>
                 </td>
                 <td>
-                <a href="<@ofbizUrl>/EditProductAssoc?PRODUCT_ID=${productId}&PRODUCT_ID_TO=${(assocFromProduct.productIdTo)?if_exists}&PRODUCT_ASSOC_TYPE_ID=${(assocFromProduct.productAssocTypeId)?if_exists}&FROM_DATE=${Static["org.ofbiz.core.util.UtilFormatOut"].encodeQueryValue(assocFromProduct.getTimestamp("fromDate").toString())}&useValues=true</@ofbizUrl>" class="buttontext">
+                <a href="<@ofbizUrl>/EditProductAssoc?PRODUCT_ID=${productId}&PRODUCT_ID_TO=${(assocFromProduct.productIdTo)?if_exists}&PRODUCT_ASSOC_TYPE_ID=${(assocFromProduct.productAssocTypeId)?if_exists}&FROM_DATE=${Static["org.ofbiz.base.util.UtilFormatOut"].encodeQueryValue(assocFromProduct.getTimestamp("fromDate").toString())}&useValues=true</@ofbizUrl>" class="buttontext">
                 [Edit]</a>
                 </td>
             </tr>
@@ -248,7 +248,7 @@ ${pages.get("/product/ProductTabBar.ftl")}
                 <td><div class="tabletext">${(assocToProduct.getTimestamp("thruDate"))?if_exists}&nbsp;</div></td>
                 <td><div class="tabletext"><#if curProductAssocType?exists> ${(curProductAssocType.description)?if_exists}<#else> ${(assocToProduct.productAssocTypeId)?if_exists}</#if></div></td>
                 <td>
-                <a href="<@ofbizUrl>/UpdateProductAssoc?UPDATE_MODE=DELETE&PRODUCT_ID=${(assocToProduct.productId)?if_exists}&PRODUCT_ID_TO=${(assocToProduct.productIdTo)?if_exists}&PRODUCT_ASSOC_TYPE_ID=${(assocToProduct.productAssocTypeId)?if_exists}&FROM_DATE=${Static["org.ofbiz.core.util.UtilFormatOut"].encodeQueryValue(assocToProduct.getTimestamp("fromDate").toString())}&useValues=true</@ofbizUrl>" class="buttontext">
+                <a href="<@ofbizUrl>/UpdateProductAssoc?UPDATE_MODE=DELETE&PRODUCT_ID=${(assocToProduct.productId)?if_exists}&PRODUCT_ID_TO=${(assocToProduct.productIdTo)?if_exists}&PRODUCT_ASSOC_TYPE_ID=${(assocToProduct.productAssocTypeId)?if_exists}&FROM_DATE=${Static["org.ofbiz.base.util.UtilFormatOut"].encodeQueryValue(assocToProduct.getTimestamp("fromDate").toString())}&useValues=true</@ofbizUrl>" class="buttontext">
                 [Delete]</a>
                 </td>
             </tr>

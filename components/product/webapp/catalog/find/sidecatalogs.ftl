@@ -20,7 +20,7 @@
  *  THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  *
  *@author     David E. Jones (jonesde@ofbiz.org)
- *@version    $Revision: 1.1 $
+ *@version    $Revision: 1.2 $
  *@since      2.1
 -->
 
@@ -51,7 +51,7 @@
           <td>
             <div><a href='<@ofbizUrl>/FindProdCatalog</@ofbizUrl>' class='buttontext'>Catalog Detail List</a></div>
             <div style='margin-left: 10px;'>
-              <#assign sortList = Static["org.ofbiz.core.util.UtilMisc"].toList("prodCatalogCategoryTypeId", "sequenceNum", "productCategoryId")>
+              <#assign sortList = Static["org.ofbiz.base.util.UtilMisc"].toList("prodCatalogCategoryTypeId", "sequenceNum", "productCategoryId")>
               <#list prodCatalogs as prodCatalog>
               <#if curProdCatalogId?exists && curProdCatalogId == prodCatalog.prodCatalogId>
                 <#assign prodCatalogCategories = prodCatalog.getRelatedOrderByCache("ProdCatalogCategory", sortList)>

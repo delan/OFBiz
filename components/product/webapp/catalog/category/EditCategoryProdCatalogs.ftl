@@ -61,7 +61,7 @@
                 </FORM>
             </td>
             <td align="center">
-            <a href="<@ofbizUrl>/category_removeProductCategoryFromProdCatalog?prodCatalogId=${(prodCatalogCategory.prodCatalogId)?if_exists}&productCategoryId=${(prodCatalogCategory.productCategoryId)?if_exists}&fromDate=${Static["org.ofbiz.core.util.UtilFormatOut"].encodeQueryValue(prodCatalogCategory.getTimestamp("fromDate").toString())}</@ofbizUrl>" class="buttontext">
+            <a href="<@ofbizUrl>/category_removeProductCategoryFromProdCatalog?prodCatalogId=${(prodCatalogCategory.prodCatalogId)?if_exists}&productCategoryId=${(prodCatalogCategory.productCategoryId)?if_exists}&fromDate=${Static["org.ofbiz.base.util.UtilFormatOut"].encodeQueryValue(prodCatalogCategory.getTimestamp("fromDate").toString())}</@ofbizUrl>" class="buttontext">
             [Delete]</a>
             </td>
         </tr>

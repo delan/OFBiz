@@ -1,5 +1,5 @@
 /*
- * $Id: WfAssignmentImpl.java,v 1.1 2003/08/17 09:29:34 ajzeneski Exp $
+ * $Id: WfAssignmentImpl.java,v 1.2 2003/08/19 17:45:18 jonesde Exp $
  *
  * Copyright (c) 2001, 2002 The Open For Business Project - www.ofbiz.org
  *
@@ -45,7 +45,7 @@ import org.ofbiz.workflow.WfResource;
  * WfAssignmentImpl - Workflow Assignment Object implementation
  *
  * @author     <a href="mailto:jaz@ofbiz.org">Andy Zeneski</a> 
- * @version    $Revision: 1.1 $
+ * @version    $Revision: 1.2 $
  * @since      2.0
  */
 public class WfAssignmentImpl implements WfAssignment {
@@ -121,7 +121,7 @@ public class WfAssignmentImpl implements WfAssignment {
     }
    
     /**
-     * @see org.ofbiz.core.workflow.WfAssignment#accept()
+     * @see org.ofbiz.workflow.WfAssignment#accept()
      */
     public void accept() throws WfException {
         boolean allDelegated = true;
@@ -160,14 +160,14 @@ public class WfAssignmentImpl implements WfAssignment {
     }
  
     /**
-     * @see org.ofbiz.core.workflow.WfAssignment#setResult(java.util.Map)
+     * @see org.ofbiz.workflow.WfAssignment#setResult(java.util.Map)
      */
     public void setResult(Map results) throws WfException {
         activity.setResult(results);
     }
 
     /**
-     * @see org.ofbiz.core.workflow.WfAssignment#complete()
+     * @see org.ofbiz.workflow.WfAssignment#complete()
      */
     public void complete() throws WfException {
         changeStatus("CAL_COMPLETED");
@@ -179,7 +179,7 @@ public class WfAssignmentImpl implements WfAssignment {
     }
 
     /**
-     * @see org.ofbiz.core.workflow.WfAssignment#delegate()
+     * @see org.ofbiz.workflow.WfAssignment#delegate()
      */
     public void delegate() throws WfException {
         // check and make sure we are not already delegated
@@ -202,7 +202,7 @@ public class WfAssignmentImpl implements WfAssignment {
     }
 
     /**
-     * @see org.ofbiz.core.workflow.WfAssignment#changeStatus(java.lang.String)
+     * @see org.ofbiz.workflow.WfAssignment#changeStatus(java.lang.String)
      */
     public void changeStatus(String status) throws WfException {    
         // change the status
@@ -218,21 +218,21 @@ public class WfAssignmentImpl implements WfAssignment {
     }
 
     /**
-     * @see org.ofbiz.core.workflow.WfAssignment#activity()
+     * @see org.ofbiz.workflow.WfAssignment#activity()
      */
     public WfActivity activity() throws WfException {
         return activity;
     }
 
     /**
-     * @see org.ofbiz.core.workflow.WfAssignment#assignee()
+     * @see org.ofbiz.workflow.WfAssignment#assignee()
      */
     public WfResource assignee() throws WfException {
         return resource;
     }
 
     /**
-     * @see org.ofbiz.core.workflow.WfAssignment#setAssignee(org.ofbiz.core.workflow.WfResource)
+     * @see org.ofbiz.workflow.WfAssignment#setAssignee(org.ofbiz.workflow.WfResource)
      */
     public void setAssignee(WfResource newValue) throws WfException, InvalidResource {
         remove();
@@ -242,7 +242,7 @@ public class WfAssignmentImpl implements WfAssignment {
     }
 
     /**
-     * @see org.ofbiz.core.workflow.WfAssignment#remove()
+     * @see org.ofbiz.workflow.WfAssignment#remove()
      */
     public void remove() throws WfException {
         try {
@@ -253,14 +253,14 @@ public class WfAssignmentImpl implements WfAssignment {
     }
 
     /**
-     * @see org.ofbiz.core.workflow.WfAssignment#status()
+     * @see org.ofbiz.workflow.WfAssignment#status()
      */
     public String status() throws WfException {
         return valueObject().getString("statusId");
     }
 
     /**
-     * @see org.ofbiz.core.workflow.WfAssignment#fromDate()
+     * @see org.ofbiz.workflow.WfAssignment#fromDate()
      */
     public Timestamp fromDate() throws WfException {
         return fromDate;

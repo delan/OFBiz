@@ -26,10 +26,10 @@
 
 <%@ taglib uri="ofbizTags" prefix="ofbiz" %>
 <%@ page import="java.util.*, java.net.*" %>
-<%@ page import="org.ofbiz.core.util.*, org.ofbiz.core.entity.*" %>
+<%@ page import="org.ofbiz.base.util.*, org.ofbiz.entity.*" %>
 <%@ page import="org.ofbiz.commonapp.product.product.*"%>
-<jsp:useBean id="delegator" type="org.ofbiz.core.entity.GenericDelegator" scope="request" />
-<jsp:useBean id="security" type="org.ofbiz.core.security.Security" scope="request" />
+<jsp:useBean id="delegator" type="org.ofbiz.entity.GenericDelegator" scope="request" />
+<jsp:useBean id="security" type="org.ofbiz.security.Security" scope="request" />
 
 <%if (security.hasEntityPermission("CATALOG", "_VIEW", session)) {%>
 

@@ -1,5 +1,5 @@
 /*
- * $Id: BsfEventHandler.java,v 1.1 2003/08/17 08:40:12 ajzeneski Exp $
+ * $Id: BsfEventHandler.java,v 1.2 2003/08/19 17:45:22 jonesde Exp $
  *
  * Copyright (c) 2003 The Open For Business Project - www.ofbiz.org
  *
@@ -42,7 +42,7 @@ import com.ibm.bsf.util.IOUtils;
  * BsfEventHandler - BSF Event Handler
  *
  * @author     <a href="mailto:jaz@ofbiz.org">Andy Zeneski</a>
- * @version    $Revision: 1.1 $
+ * @version    $Revision: 1.2 $
  * @since      2.2
  */
 public class BsfEventHandler implements EventHandler {
@@ -51,7 +51,7 @@ public class BsfEventHandler implements EventHandler {
     public static UtilCache eventCache = new UtilCache("webapp.BsfEvents");
 
     /**
-     * @see org.ofbiz.core.event.EventHandler#invoke(java.lang.String, java.lang.String, javax.servlet.http.HttpServletRequest, javax.servlet.http.HttpServletResponse)
+     * @see org.ofbiz.content.webapp.event.EventHandler#invoke(java.lang.String, java.lang.String, javax.servlet.http.HttpServletRequest, javax.servlet.http.HttpServletResponse)
      */
     public String invoke(String eventPath, String eventMethod, HttpServletRequest request, HttpServletResponse response) throws EventHandlerException {
         ServletContext context = (ServletContext) request.getAttribute("servletContext");

@@ -1,5 +1,5 @@
 /*
- * $Id: WfProcessMgrImpl.java,v 1.1 2003/08/17 09:29:35 ajzeneski Exp $
+ * $Id: WfProcessMgrImpl.java,v 1.2 2003/08/19 17:45:18 jonesde Exp $
  *
  * Copyright (c) 2001, 2002 The Open For Business Project - www.ofbiz.org
  *
@@ -57,7 +57,7 @@ import org.ofbiz.workflow.WfUtil;
  *
  * @author     <a href="mailto:jaz@ofbiz.org">Andy Zeneski</a>
  * @author     David Ostrovsky (d.ostrovsky@gmx.de)
- * @version    $Revision: 1.1 $
+ * @version    $Revision: 1.2 $
  * @since      2.0
  */
 public class WfProcessMgrImpl implements WfProcessMgr {
@@ -108,7 +108,7 @@ public class WfProcessMgrImpl implements WfProcessMgr {
     }
 
     /**
-     * @see org.ofbiz.core.workflow.WfProcessMgr#setProcessMgrState(java.lang.String)
+     * @see org.ofbiz.workflow.WfProcessMgr#setProcessMgrState(java.lang.String)
      */
     public void setProcessMgrState(String newState) throws WfException, TransitionNotAllowed {            
         if (!newState.equals("enabled") || !newState.equals("disabled"))
@@ -117,7 +117,7 @@ public class WfProcessMgrImpl implements WfProcessMgr {
     }
 
     /**
-     * @see org.ofbiz.core.workflow.WfProcessMgr#getSequenceProcess(int)
+     * @see org.ofbiz.workflow.WfProcessMgr#getSequenceProcess(int)
      */
     public List getSequenceProcess(int maxNumber) throws WfException {
         if (maxNumber > 0)
@@ -126,7 +126,7 @@ public class WfProcessMgrImpl implements WfProcessMgr {
     }
 
     /**
-     * @see org.ofbiz.core.workflow.WfProcessMgr#createProcess(org.ofbiz.core.workflow.WfRequester)
+     * @see org.ofbiz.workflow.WfProcessMgr#createProcess(org.ofbiz.workflow.WfRequester)
      */
     public WfProcess createProcess(WfRequester requester) throws WfException, NotEnabled, 
             InvalidRequester, RequesterRequired {            
@@ -150,21 +150,21 @@ public class WfProcessMgrImpl implements WfProcessMgr {
     }
 
     /**
-     * @see org.ofbiz.core.workflow.WfProcessMgr#contextSignature()
+     * @see org.ofbiz.workflow.WfProcessMgr#contextSignature()
      */   
     public Map contextSignature() throws WfException {
         return this.contextSignature;
     }
     
     /**
-     * @see org.ofbiz.core.workflow.WfProcessMgr#howManyProcess()
+     * @see org.ofbiz.workflow.WfProcessMgr#howManyProcess()
      */
     public int howManyProcess() throws WfException {
         return processList.size();
     }
 
     /**
-     * @see org.ofbiz.core.workflow.WfProcessMgr#processMgrStateType()
+     * @see org.ofbiz.workflow.WfProcessMgr#processMgrStateType()
      */
     public List processMgrStateType() throws WfException {
         String[] list = {"enabled", "disabled"};
@@ -172,35 +172,35 @@ public class WfProcessMgrImpl implements WfProcessMgr {
     }
 
     /**
-     * @see org.ofbiz.core.workflow.WfProcessMgr#category()
+     * @see org.ofbiz.workflow.WfProcessMgr#category()
      */
     public String category() throws WfException {
         return processDef.getString("category");
     }
 
     /**
-     * @see org.ofbiz.core.workflow.WfProcessMgr#version()
+     * @see org.ofbiz.workflow.WfProcessMgr#version()
      */
     public String version() throws WfException {
         return processDef.getString("version");
     }
 
     /**
-     * @see org.ofbiz.core.workflow.WfProcessMgr#description()
+     * @see org.ofbiz.workflow.WfProcessMgr#description()
      */
     public String description() throws WfException {
         return processDef.getString("description");
     }
 
     /**
-     * @see org.ofbiz.core.workflow.WfProcessMgr#name()
+     * @see org.ofbiz.workflow.WfProcessMgr#name()
      */
     public String name() throws WfException {
         return processDef.getString("name");
     }
 
     /**
-     * @see org.ofbiz.core.workflow.WfProcessMgr#resultSignature()
+     * @see org.ofbiz.workflow.WfProcessMgr#resultSignature()
      */
     public Map resultSignature() throws WfException {
         return this.resultSignature;
@@ -215,14 +215,14 @@ public class WfProcessMgrImpl implements WfProcessMgr {
     }
 
     /**
-     * @see org.ofbiz.core.workflow.WfProcessMgr#isMemberOfProcess(org.ofbiz.core.workflow.WfProcess)
+     * @see org.ofbiz.workflow.WfProcessMgr#isMemberOfProcess(org.ofbiz.workflow.WfProcess)
      */
     public boolean isMemberOfProcess(WfProcess member) throws WfException {
         return processList.contains(member);
     }
 
     /**
-     * @see org.ofbiz.core.workflow.WfProcessMgr#getIteratorProcess()
+     * @see org.ofbiz.workflow.WfProcessMgr#getIteratorProcess()
      */
     public Iterator getIteratorProcess() throws WfException {
         return processList.iterator();

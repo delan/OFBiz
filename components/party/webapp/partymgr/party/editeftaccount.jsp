@@ -31,11 +31,11 @@
 <%@ taglib uri="ofbizTags" prefix="ofbiz" %>
 
 <%@ page import="java.util.*" %>
-<%@ page import="org.ofbiz.core.util.*, org.ofbiz.core.pseudotag.*" %>
-<%@ page import="org.ofbiz.core.entity.*, org.ofbiz.commonapp.party.contact.*" %>
+<%@ page import="org.ofbiz.base.util.*, org.ofbiz.content.webapp.pseudotag.*" %>
+<%@ page import="org.ofbiz.entity.*, org.ofbiz.commonapp.party.contact.*" %>
 <%@ page import="org.ofbiz.commonapp.accounting.payment.*" %>
-<jsp:useBean id="security" type="org.ofbiz.core.security.Security" scope="request" />
-<ofbiz:object name="userLogin" property="userLogin" type="org.ofbiz.core.entity.GenericValue" />  
+<jsp:useBean id="security" type="org.ofbiz.security.Security" scope="request" />
+<ofbiz:object name="userLogin" property="userLogin" type="org.ofbiz.entity.GenericValue" />  
 
 <%
     String partyId = request.getParameter("party_id");

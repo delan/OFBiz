@@ -1,5 +1,5 @@
 /*
- * $Id: WfExecutionObjectImpl.java,v 1.2 2003/08/18 18:32:07 ajzeneski Exp $
+ * $Id: WfExecutionObjectImpl.java,v 1.3 2003/08/19 17:45:18 jonesde Exp $
  *
  * Copyright (c) 2001, 2002 The Open For Business Project - www.ofbiz.org
  *
@@ -69,7 +69,7 @@ import org.ofbiz.workflow.WfUtil;
  *
  * @author     <a href="mailto:jaz@ofbiz.org">Andy Zeneski</a>
  * @author     David Ostrovsky (d.ostrovsky@gmx.de) 
- * @version    $Revision: 1.2 $
+ * @version    $Revision: 1.3 $
  * @since      2.0
  */
 public abstract class WfExecutionObjectImpl implements WfExecutionObject {
@@ -181,14 +181,14 @@ public abstract class WfExecutionObjectImpl implements WfExecutionObject {
     }
 
     /**
-     * @see org.ofbiz.core.workflow.WfExecutionObject#name()
+     * @see org.ofbiz.workflow.WfExecutionObject#name()
      */   
     public String name() throws WfException {
         return getRuntimeObject().getString("workEffortName");
     }
    
     /**
-     * @see org.ofbiz.core.workflow.WfExecutionObject#setName(java.lang.String)
+     * @see org.ofbiz.workflow.WfExecutionObject#setName(java.lang.String)
      */
     public void setName(String newValue) throws WfException {
         GenericValue dataObject = getRuntimeObject();
@@ -202,7 +202,7 @@ public abstract class WfExecutionObjectImpl implements WfExecutionObject {
     }
    
     /**
-     * @see org.ofbiz.core.workflow.WfExecutionObject#setPriority(long)
+     * @see org.ofbiz.workflow.WfExecutionObject#setPriority(long)
      */
     public void setPriority(long newValue) throws WfException {
         GenericValue dataObject = getRuntimeObject();
@@ -216,7 +216,7 @@ public abstract class WfExecutionObjectImpl implements WfExecutionObject {
     }
 
     /**
-     * @see org.ofbiz.core.workflow.WfExecutionObject#priority()
+     * @see org.ofbiz.workflow.WfExecutionObject#priority()
      */
     public long priority() throws WfException {
         if (getRuntimeObject().get("priority") != null)
@@ -225,7 +225,7 @@ public abstract class WfExecutionObjectImpl implements WfExecutionObject {
     }
 
     /**
-     * @see org.ofbiz.core.workflow.WfExecutionObject#state()
+     * @see org.ofbiz.workflow.WfExecutionObject#state()
      */
     public String state() throws WfException {
         GenericValue statusObj = null;
@@ -247,7 +247,7 @@ public abstract class WfExecutionObjectImpl implements WfExecutionObject {
     }
 
     /**
-     * @see org.ofbiz.core.workflow.WfExecutionObject#validStates()
+     * @see org.ofbiz.workflow.WfExecutionObject#validStates()
      */
     public List validStates() throws WfException {
         String statesArr[] = {"open.running", "open.not_running.not_started", "open.not_running.suspended",
@@ -284,7 +284,7 @@ public abstract class WfExecutionObjectImpl implements WfExecutionObject {
     }
 
     /**
-     * @see org.ofbiz.core.workflow.WfExecutionObject#howManyHistory()
+     * @see org.ofbiz.workflow.WfExecutionObject#howManyHistory()
      */
     public int howManyHistory() throws WfException, HistoryNotAvailable {
         if (history.size() < 1)
@@ -293,7 +293,7 @@ public abstract class WfExecutionObjectImpl implements WfExecutionObject {
     }
 
     /**
-     * @see org.ofbiz.core.workflow.WfExecutionObject#abort()
+     * @see org.ofbiz.workflow.WfExecutionObject#abort()
      */
     public void abort() throws WfException, CannotStop, NotRunning {
         String stateStr = "closed.aborted";
@@ -310,7 +310,7 @@ public abstract class WfExecutionObjectImpl implements WfExecutionObject {
     }
 
     /**
-     * @see org.ofbiz.core.workflow.WfExecutionObject#whileOpenType()
+     * @see org.ofbiz.workflow.WfExecutionObject#whileOpenType()
      */
     public List whileOpenType() throws WfException {
         String[] list = {"running", "not_running"};
@@ -319,7 +319,7 @@ public abstract class WfExecutionObjectImpl implements WfExecutionObject {
     }
 
     /**
-     * @see org.ofbiz.core.workflow.WfExecutionObject#whyNotRunningType()
+     * @see org.ofbiz.workflow.WfExecutionObject#whyNotRunningType()
      */
     public List whyNotRunningType() throws WfException {
         String[] list = {"not_started", "suspended"};
@@ -328,14 +328,14 @@ public abstract class WfExecutionObjectImpl implements WfExecutionObject {
     }
 
     /**
-     * @see org.ofbiz.core.workflow.WfExecutionObject#runtimeKey()
+     * @see org.ofbiz.workflow.WfExecutionObject#runtimeKey()
      */
     public String runtimeKey() throws WfException {
         return getRuntimeObject().getString("workEffortId");
     }
 
     /**
-     * @see org.ofbiz.core.workflow.WfExecutionObject#key()
+     * @see org.ofbiz.workflow.WfExecutionObject#key()
      */
     public String key() throws WfException {
         if (activityId != null)
@@ -345,21 +345,21 @@ public abstract class WfExecutionObjectImpl implements WfExecutionObject {
     }
 
     /**
-     * @see org.ofbiz.core.workflow.WfExecutionObject#isMemberOfHistory(org.ofbiz.core.workflow.WfExecutionObject)
+     * @see org.ofbiz.workflow.WfExecutionObject#isMemberOfHistory(org.ofbiz.workflow.WfExecutionObject)
      */
     public boolean isMemberOfHistory(WfExecutionObject member) throws WfException {
         return false;
     }
 
     /**
-     * @see org.ofbiz.core.workflow.WfExecutionObject#setProcessContext(java.util.Map)
+     * @see org.ofbiz.workflow.WfExecutionObject#setProcessContext(java.util.Map)
      */
     public void setProcessContext(Map newValue) throws WfException, InvalidData, UpdateNotAllowed {            
         setSerializedData(newValue);
     }
 
     /**
-     * @see org.ofbiz.core.workflow.WfExecutionObject#setProcessContext(java.lang.String)
+     * @see org.ofbiz.workflow.WfExecutionObject#setProcessContext(java.lang.String)
      */
     public void setProcessContext(String contextKey) throws WfException, InvalidData, UpdateNotAllowed {            
         GenericValue dataObject = getRuntimeObject();
@@ -373,7 +373,7 @@ public abstract class WfExecutionObjectImpl implements WfExecutionObject {
     }
 
     /**
-     * @see org.ofbiz.core.workflow.WfExecutionObject#contextKey()
+     * @see org.ofbiz.workflow.WfExecutionObject#contextKey()
      */
     public String contextKey() throws WfException {
         if (getRuntimeObject().get("runtimeDataId") == null)
@@ -383,14 +383,14 @@ public abstract class WfExecutionObjectImpl implements WfExecutionObject {
     }
  
     /**
-     * @see org.ofbiz.core.workflow.WfExecutionObject#processContext()
+     * @see org.ofbiz.workflow.WfExecutionObject#processContext()
      */
     public Map processContext() throws WfException {
         return getContext();
     }
 
     /**
-     * @see org.ofbiz.core.workflow.WfExecutionObject#workflowStateType()
+     * @see org.ofbiz.workflow.WfExecutionObject#workflowStateType()
      */
     public List workflowStateType() throws WfException {
         String[] list = {"open", "closed"};
@@ -398,7 +398,7 @@ public abstract class WfExecutionObjectImpl implements WfExecutionObject {
     }
 
     /**
-     * @see org.ofbiz.core.workflow.WfExecutionObject#terminate()
+     * @see org.ofbiz.workflow.WfExecutionObject#terminate()
      */
     public void terminate() throws WfException, CannotStop, NotRunning {
         String stateStr = "closed.terminated";
@@ -411,7 +411,7 @@ public abstract class WfExecutionObjectImpl implements WfExecutionObject {
     }
 
     /**
-     * @see org.ofbiz.core.workflow.WfExecutionObject#setDescription(java.lang.String)
+     * @see org.ofbiz.workflow.WfExecutionObject#setDescription(java.lang.String)
      */
     public void setDescription(String newValue) throws WfException {
         GenericValue valueObject = getDefinitionObject();
@@ -425,14 +425,14 @@ public abstract class WfExecutionObjectImpl implements WfExecutionObject {
     }
 
     /**
-     * @see org.ofbiz.core.workflow.WfExecutionObject#description()
+     * @see org.ofbiz.workflow.WfExecutionObject#description()
      */
     public String description() throws WfException {
         return getDefinitionObject().getString("description");
     }
 
     /**
-     * @see org.ofbiz.core.workflow.WfExecutionObject#lastStateTime()
+     * @see org.ofbiz.workflow.WfExecutionObject#lastStateTime()
      */
     public Timestamp lastStateTime() throws WfException {
         GenericValue dataObject = getRuntimeObject();
@@ -443,7 +443,7 @@ public abstract class WfExecutionObjectImpl implements WfExecutionObject {
     }
 
     /**
-     * @see org.ofbiz.core.workflow.WfExecutionObject#getSequenceHistory(int)
+     * @see org.ofbiz.workflow.WfExecutionObject#getSequenceHistory(int)
      */
     public List getSequenceHistory(int maxNumber) throws WfException,
             HistoryNotAvailable {
@@ -451,7 +451,7 @@ public abstract class WfExecutionObjectImpl implements WfExecutionObject {
     }
 
     /**
-     * @see org.ofbiz.core.workflow.WfExecutionObject#getIteratorHistory(java.lang.String, java.util.Map)
+     * @see org.ofbiz.workflow.WfExecutionObject#getIteratorHistory(java.lang.String, java.util.Map)
      */
     public Iterator getIteratorHistory(String query,
         Map namesInQuery) throws WfException, HistoryNotAvailable {
@@ -459,7 +459,7 @@ public abstract class WfExecutionObjectImpl implements WfExecutionObject {
     }
 
     /**
-     * @see org.ofbiz.core.workflow.WfExecutionObject#resume()
+     * @see org.ofbiz.workflow.WfExecutionObject#resume()
      */
     public void resume() throws WfException, CannotResume, NotRunning, NotSuspended {
         if (!state().equals("open.not_running.suspended")) {
@@ -476,7 +476,7 @@ public abstract class WfExecutionObjectImpl implements WfExecutionObject {
     }
 
     /**
-     * @see org.ofbiz.core.workflow.WfExecutionObject#howClosedType()
+     * @see org.ofbiz.workflow.WfExecutionObject#howClosedType()
      */
     public List howClosedType() throws WfException {
         String[] list = {"completed", "terminated", "aborted"};
@@ -485,7 +485,7 @@ public abstract class WfExecutionObjectImpl implements WfExecutionObject {
     }
 
     /**
-     * @see org.ofbiz.core.workflow.WfExecutionObject#changeState(java.lang.String)
+     * @see org.ofbiz.workflow.WfExecutionObject#changeState(java.lang.String)
      */
     public void changeState(String newState) throws WfException, InvalidState, TransitionNotAllowed {            
         // Test is transaction is allowed???
@@ -507,21 +507,21 @@ public abstract class WfExecutionObjectImpl implements WfExecutionObject {
     }
 
     /**
-     * @see org.ofbiz.core.workflow.WfExecutionObject#suspend()
+     * @see org.ofbiz.workflow.WfExecutionObject#suspend()
      */
     public void suspend() throws WfException, CannotSuspend, NotRunning, AlreadySuspended {            
         changeState("open.not_running.suspended");
     }
 
     /**
-     * @see org.ofbiz.core.workflow.WfExecutionObject#getDelegator()
+     * @see org.ofbiz.workflow.WfExecutionObject#getDelegator()
      */
     public GenericDelegator getDelegator() throws WfException {
         return delegator;
     }
 
     /**
-     * @see org.ofbiz.core.workflow.WfExecutionObject#getDefinitionObject()
+     * @see org.ofbiz.workflow.WfExecutionObject#getDefinitionObject()
      */
     public GenericValue getDefinitionObject() throws WfException {
         String entityName = activityId != null ? "WorkflowActivity" : "WorkflowProcess";
@@ -628,7 +628,7 @@ public abstract class WfExecutionObjectImpl implements WfExecutionObject {
     }
 
     /**
-     * @see org.ofbiz.core.workflow.WfExecutionObject#setServiceLoader(java.lang.String)
+     * @see org.ofbiz.workflow.WfExecutionObject#setServiceLoader(java.lang.String)
      */
     public void setServiceLoader(String loader) throws WfException {
         GenericValue dataObject = getRuntimeObject();

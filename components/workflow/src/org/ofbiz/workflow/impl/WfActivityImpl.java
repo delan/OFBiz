@@ -1,5 +1,5 @@
 /*
- * $Id: WfActivityImpl.java,v 1.1 2003/08/17 09:29:34 ajzeneski Exp $
+ * $Id: WfActivityImpl.java,v 1.2 2003/08/19 17:45:18 jonesde Exp $
  *
  * Copyright (c) 2001, 2002 The Open For Business Project - www.ofbiz.org
  *
@@ -72,7 +72,7 @@ import org.ofbiz.workflow.WfResource;
  * @author     <a href="mailto:jaz@ofbiz.org">Andy Zeneski</a>
  * @author     David Ostrovsky (d.ostrovsky@gmx.de)
  * @author     Oswin Ondarza and Manuel Soto 
- * @version    $Revision: 1.1 $
+ * @version    $Revision: 1.2 $
  * @since      2.0
  */
 public class WfActivityImpl extends WfExecutionObjectImpl implements WfActivity {
@@ -356,7 +356,7 @@ public class WfActivityImpl extends WfExecutionObjectImpl implements WfActivity 
     }
 
     /**
-     * @see org.ofbiz.core.workflow.WfActivity#activate()
+     * @see org.ofbiz.workflow.WfActivity#activate()
      */
     public void activate() throws WfException, CannotStart, AlreadyRunning {
         // make sure we aren't already running
@@ -384,7 +384,7 @@ public class WfActivityImpl extends WfExecutionObjectImpl implements WfActivity 
     }
 
     /**
-     * @see org.ofbiz.core.workflow.WfActivity#complete()
+     * @see org.ofbiz.workflow.WfActivity#complete()
      */
     public void complete() throws WfException, CannotComplete {
         // check to make sure all assignements are complete
@@ -412,7 +412,7 @@ public class WfActivityImpl extends WfExecutionObjectImpl implements WfActivity 
     }
     
     /**
-     * @see org.ofbiz.core.workflow.WfExecutionObject#resume()
+     * @see org.ofbiz.workflow.WfExecutionObject#resume()
      */
     public void resume() throws WfException, CannotResume, NotRunning, NotSuspended {
         super.resume();
@@ -425,7 +425,7 @@ public class WfActivityImpl extends WfExecutionObjectImpl implements WfActivity 
     }
     
     /**
-     * @see org.ofbiz.core.workflow.WfExecutionObject#abort()
+     * @see org.ofbiz.workflow.WfExecutionObject#abort()
      */
     public void abort() throws WfException, CannotStop, NotRunning {
         super.abort();
@@ -439,21 +439,21 @@ public class WfActivityImpl extends WfExecutionObjectImpl implements WfActivity 
     }    
 
     /**
-     * @see org.ofbiz.core.workflow.WfActivity#isMemberOfAssignment(org.ofbiz.core.workflow.WfAssignment)
+     * @see org.ofbiz.workflow.WfActivity#isMemberOfAssignment(org.ofbiz.workflow.WfAssignment)
      */
     public boolean isMemberOfAssignment(WfAssignment member) throws WfException {
         return getAssignments().contains(member);
     }
 
     /**
-     * @see org.ofbiz.core.workflow.WfActivity#container()
+     * @see org.ofbiz.workflow.WfActivity#container()
      */    
     public WfProcess container() throws WfException {
         return WfFactory.getWfProcess(delegator, processId);
     }
    
     /**
-     * @see org.ofbiz.core.workflow.WfActivity#setResult(java.util.Map)
+     * @see org.ofbiz.workflow.WfActivity#setResult(java.util.Map)
      */
     public void setResult(Map newResult) throws WfException, InvalidData {
         if (newResult != null && newResult.size() > 0) {
@@ -468,14 +468,14 @@ public class WfActivityImpl extends WfExecutionObjectImpl implements WfActivity 
     }
 
     /**
-     * @see org.ofbiz.core.workflow.WfActivity#howManyAssignment()
+     * @see org.ofbiz.workflow.WfActivity#howManyAssignment()
      */
     public int howManyAssignment() throws WfException {
         return getAssignments().size();
     }
 
     /**
-     * @see org.ofbiz.core.workflow.WfActivity#result()
+     * @see org.ofbiz.workflow.WfActivity#result()
      */
     public Map result() throws WfException, ResultNotAvailable {
         // Get the results from the signature.
@@ -497,7 +497,7 @@ public class WfActivityImpl extends WfExecutionObjectImpl implements WfActivity 
     }
 
     /**
-     * @see org.ofbiz.core.workflow.WfActivity#getSequenceAssignment(int)
+     * @see org.ofbiz.workflow.WfActivity#getSequenceAssignment(int)
      */
     public List getSequenceAssignment(int maxNumber) throws WfException {
         if (maxNumber > 0)
@@ -506,14 +506,14 @@ public class WfActivityImpl extends WfExecutionObjectImpl implements WfActivity 
     }
 
     /**
-     * @see org.ofbiz.core.workflow.WfActivity#getIteratorAssignment()
+     * @see org.ofbiz.workflow.WfActivity#getIteratorAssignment()
      */
     public Iterator getIteratorAssignment() throws WfException {
         return getAssignments().iterator();
     }
 
     /**
-     * @see org.ofbiz.core.workflow.impl.WfExecutionObjectImpl#executionObjectType()
+     * @see org.ofbiz.workflow.impl.WfExecutionObjectImpl#executionObjectType()
      */
     public String executionObjectType() {
         return "WfActivity";

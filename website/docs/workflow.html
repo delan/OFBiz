@@ -24,7 +24,7 @@
  
 <div class='contenttext'>Written By: Andy Zeneski, <a href="mailto:jaz@ofbiz.org">jaz@ofbiz.org</a></div>
 <div class='contenttext'>Last Updated: January 17, 2003</div>
-<!-- $Id: workflow.html,v 1.1 2003/08/18 23:45:31 jonesde Exp $ -->
+<!-- $Id: workflow.html,v 1.2 2003/08/19 17:45:21 jonesde Exp $ -->
 
 <hr class='sepbar'>
 <h3>Table of Contents</h3>
@@ -131,10 +131,10 @@ initiate a workflow.</p></ul>
 <hr class='sepbar'>
 
 <p class='contenttext'>The client API for the OFBiz Workflow engine consists of a set of global services and a factory class. The
-factory class named <a href="api/org/ofbiz/core/workflow/WfFactory.html">org.ofbiz.core.workflow.WfFactory</a>,
+factory class named <a href="api/org/ofbiz/core/workflow/WfFactory.html">org.ofbiz.workflow.WfFactory</a>,
 can either create a new instance of a workflow component (process/activity/assignment) or it can locate an existing
 instance. Instances are stored in the <i>WorkEffort</i> entity and are loaded as necessary. The set of global services
-found in <a href="api/org/ofbiz/core/workflow/WorkflowServices.html">org.ofbiz.core.workflow.WorkflowServices</a>
+found in <a href="api/org/ofbiz/core/workflow/WorkflowServices.html">org.ofbiz.workflow.WorkflowServices</a>
 are setup to make assigning, accepting and completing assignments/activities easier. It is not required to use these
 services, but it is highly recommended. You will want to review the JavaDocs for these classes.</p>
 <p class='contenttext'>The <i>workeffort</i> web application shows an example of a workflow web client. From this interface you can accept

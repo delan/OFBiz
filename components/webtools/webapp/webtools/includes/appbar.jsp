@@ -1,11 +1,11 @@
 <%@ page import="java.util.*, java.net.*" %>
-<%@ page import="org.ofbiz.core.security.*, org.ofbiz.core.entity.*" %>
-<%@ page import="org.ofbiz.core.util.*, org.ofbiz.core.pseudotag.*" %>
+<%@ page import="org.ofbiz.security.*, org.ofbiz.entity.*" %>
+<%@ page import="org.ofbiz.base.util.*, org.ofbiz.content.webapp.pseudotag.*" %>
 <%@ page import="org.ofbiz.commonapp.security.login.*" %>
 
 <%@ taglib uri="ofbizTags" prefix="ofbiz" %>
 
-<jsp:useBean id="security" type="org.ofbiz.core.security.Security" scope="request" />
+<jsp:useBean id="security" type="org.ofbiz.security.Security" scope="request" />
 <%String externalLoginKey = LoginEvents.getExternalLoginKey(request);%>
 <%String externalKeyParam = externalLoginKey == null ? "" : "?externalLoginKey=" + externalLoginKey;%>
 

@@ -58,9 +58,9 @@
             <TD><DIV class='tabletext'>${custRequestAndRole.priority?if_exists}</DIV></TD>
             <TD><DIV class='tabletext'>${custRequestAndRole.custRequestDate?if_exists}</DIV></TD>
             <TD><DIV class='tabletext'>${custRequestAndRole.responseRequiredDate?if_exists}</DIV></TD>
-            <TD><DIV class='tabletext'>${delegator.findByPrimaryKeyCache("StatusItem", Static["org.ofbiz.core.util.UtilMisc"].toMap("statusId", custRequestAndRole.getString("statusId"))).getString("description")?if_exists}</DIV></TD>
+            <TD><DIV class='tabletext'>${delegator.findByPrimaryKeyCache("StatusItem", Static["org.ofbiz.base.util.UtilMisc"].toMap("statusId", custRequestAndRole.getString("statusId"))).getString("description")?if_exists}</DIV></TD>
             <#-- <TD><DIV class='tabletext'>${custRequestAndRole.partyId}</DIV></TD> -->
-            <TD><DIV class='tabletext'>${delegator.findByPrimaryKeyCache("RoleType", Static["org.ofbiz.core.util.UtilMisc"].toMap("roleTypeId", custRequestAndRole.getString("roleTypeId"))).getString("description")?if_exists}</DIV></TD>
+            <TD><DIV class='tabletext'>${delegator.findByPrimaryKeyCache("RoleType", Static["org.ofbiz.base.util.UtilMisc"].toMap("roleTypeId", custRequestAndRole.getString("roleTypeId"))).getString("description")?if_exists}</DIV></TD>
             <TD><A class='buttontext' href='<@ofbizUrl>/request?custRequestId=${custRequestAndRole.custRequestId?if_exists}</@ofbizUrl>'>
             ${custRequestAndRole.custRequestName}</a></DIV></TD>
             <TD align=right><A class='buttontext' href='<@ofbizUrl>/request?custRequestId=${custRequestAndRole.custRequestId?if_exists}</@ofbizUrl>'>

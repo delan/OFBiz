@@ -24,15 +24,15 @@
 --%>
 
 <%@ page import="java.util.*, java.net.*" %>
-<%@ page import="org.ofbiz.core.security.*, org.ofbiz.core.entity.*, org.ofbiz.core.util.*, org.ofbiz.core.pseudotag.*" %>
-<%@ page import="org.ofbiz.core.rules.logikus.*" %>
-<%@ page import="org.ofbiz.core.rules.parse.*" %>
-<%@ page import="org.ofbiz.core.rules.parse.tokens.*" %>
-<%@ page import="org.ofbiz.core.rules.engine.*" %>
+<%@ page import="org.ofbiz.security.*, org.ofbiz.entity.*, org.ofbiz.base.util.*, org.ofbiz.content.webapp.pseudotag.*" %>
+<%@ page import="org.ofbiz.rules.logikus.*" %>
+<%@ page import="org.ofbiz.rules.parse.*" %>
+<%@ page import="org.ofbiz.rules.parse.tokens.*" %>
+<%@ page import="org.ofbiz.rules.engine.*" %>
 
 <%@ taglib uri="ofbizTags" prefix="ofbiz" %>
 
-<jsp:useBean id="security" type="org.ofbiz.core.security.Security" scope="request" />
+<jsp:useBean id="security" type="org.ofbiz.security.Security" scope="request" />
 
 <%
     List messages = new LinkedList();

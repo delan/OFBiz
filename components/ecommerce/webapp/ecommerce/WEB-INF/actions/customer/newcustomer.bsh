@@ -23,9 +23,9 @@
  *@version    1.0
  */
 
-import org.ofbiz.core.util.SiteDefs;
-import org.ofbiz.core.util.UtilProperties;
-import org.ofbiz.core.util.UtilMisc;
+import org.ofbiz.base.util.SiteDefs;
+import org.ofbiz.base.util.UtilProperties;
+import org.ofbiz.base.util.UtilMisc;
 import org.ofbiz.commonapp.product.store.ProductStoreWorker;
 
 delegator = request.getAttribute("delegator");

@@ -1,5 +1,5 @@
 /*
- * $Id: WfActivityLoopImplementation.java,v 1.1 2003/08/17 09:29:34 ajzeneski Exp $
+ * $Id: WfActivityLoopImplementation.java,v 1.2 2003/08/19 17:45:18 jonesde Exp $
  *
  * Copyright (c) 2001, 2002 The Open For Business Project - www.ofbiz.org
  *
@@ -29,7 +29,7 @@ package org.ofbiz.workflow.impl;
  *
  * @author     <a href="mailto:jaz@ofbiz.org">Andy Zeneski</a> 
  * @author     Oswin Ondarza and Manuel Soto
- * @version    $Revision: 1.1 $
+ * @version    $Revision: 1.2 $
  * @since      2.0
  */
 public class WfActivityLoopImplementation extends WfActivityAbstractImplementation {
@@ -37,7 +37,7 @@ public class WfActivityLoopImplementation extends WfActivityAbstractImplementati
     public static final String module = WfActivityLoopImplementation.class.getName();
 
     /**     
-     * @see org.ofbiz.core.workflow.impl.WfActivityAbstractImplementation#WfActivityAbstractImplementation(WfActivityImpl)
+     * @see org.ofbiz.workflow.impl.WfActivityAbstractImplementation#WfActivityAbstractImplementation(WfActivityImpl)
      */
     public WfActivityLoopImplementation(WfActivityImpl wfActivity) {
         super(wfActivity);
@@ -45,7 +45,7 @@ public class WfActivityLoopImplementation extends WfActivityAbstractImplementati
 
     /**
      * To be implemented.
-     * @see org.ofbiz.core.workflow.impl.WfActivityAbstractImplementation#run()
+     * @see org.ofbiz.workflow.impl.WfActivityAbstractImplementation#run()
      */
     public void run() {}
 }

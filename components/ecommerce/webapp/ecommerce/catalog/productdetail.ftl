@@ -20,7 +20,7 @@
  *  THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  *
  *@author     Andy Zeneski (jaz@ofbiz.org)
- *@version    $Revision: 1.1 $
+ *@version    $Revision: 1.2 $
  *@since      2.1
 -->
 
@@ -149,10 +149,10 @@ ${requestAttributes.virtualJavaScript?if_exists}
         <p>&nbsp;</p>
         
         <#-- check to see if introductionDate hasn't passed yet -->
-        <#if product.introductionDate?exists && Static["org.ofbiz.core.util.UtilDateTime"].nowTimestamp().before(product.introductionDate)>
+        <#if product.introductionDate?exists && Static["org.ofbiz.base.util.UtilDateTime"].nowTimestamp().before(product.introductionDate)>
           <div class='tabletext' style='color: red;'>This product has not yet been made available for sale.</div>
         <#-- check to see if salesDiscontinuationDate has passed -->
-        <#elseif product.salesDiscontinuationDate?exists && Static["org.ofbiz.core.util.UtilDateTime"].nowTimestamp().before(product.salesDiscontinuationDate)>
+        <#elseif product.salesDiscontinuationDate?exists && Static["org.ofbiz.base.util.UtilDateTime"].nowTimestamp().before(product.salesDiscontinuationDate)>
           <div class='tabletext' style='color: red;'>This product is no longer available for sale.</div>
         <#-- check to see if the product requires inventory check and has inventory -->
         <#else>        

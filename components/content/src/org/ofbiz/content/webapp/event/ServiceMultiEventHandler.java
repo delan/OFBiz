@@ -1,5 +1,5 @@
 /*
- * $Id: ServiceMultiEventHandler.java,v 1.1 2003/08/17 08:40:12 ajzeneski Exp $
+ * $Id: ServiceMultiEventHandler.java,v 1.2 2003/08/19 17:45:22 jonesde Exp $
  *
  * Copyright (c) 2003 The Open For Business Project - www.ofbiz.org
  *
@@ -53,7 +53,7 @@ import org.ofbiz.service.ServiceUtil;
  * ServiceMultiEventHandler - Event handler for running a service multiple times; for bulk forms
  *
  * @author     <a href="mailto:jaz@ofbiz.org">Andy Zeneski</a>
- * @version    $Revision: 1.1 $
+ * @version    $Revision: 1.2 $
  * @since      2.2
  */
 public class ServiceMultiEventHandler implements EventHandler {
@@ -65,7 +65,7 @@ public class ServiceMultiEventHandler implements EventHandler {
     public static final String ASYNC = "async";
 
     /**
-     * @see org.ofbiz.core.event.EventHandler#invoke(java.lang.String, java.lang.String, javax.servlet.http.HttpServletRequest, javax.servlet.http.HttpServletResponse)
+     * @see org.ofbiz.content.webapp.event.EventHandler#invoke(java.lang.String, java.lang.String, javax.servlet.http.HttpServletRequest, javax.servlet.http.HttpServletResponse)
      */
     public String invoke(String eventPath, String eventMethod, HttpServletRequest request, HttpServletResponse response) throws EventHandlerException {
         // make sure we have a valid reference to the Service Engine

@@ -1,5 +1,5 @@
 /*
- * $Id: WfRequesterImpl.java,v 1.1 2003/08/17 09:29:35 ajzeneski Exp $
+ * $Id: WfRequesterImpl.java,v 1.2 2003/08/19 17:45:18 jonesde Exp $
  *
  * Copyright (c) 2001, 2002 The Open For Business Project - www.ofbiz.org
  *
@@ -48,7 +48,7 @@ import org.ofbiz.workflow.WfRequester;
  * WfRequesterImpl - Workflow Requester implementation
  *
  * @author     <a href="mailto:jaz@ofbiz.org">Andy Zeneski</a>
- * @version    $Revision: 1.1 $
+ * @version    $Revision: 1.2 $
  * @since      2.0
  */
 public class WfRequesterImpl implements WfRequester {
@@ -65,7 +65,7 @@ public class WfRequesterImpl implements WfRequester {
     }
 
     /**
-     * @see org.ofbiz.core.workflow.WfRequester#registerProcess(org.ofbiz.core.workflow.WfProcess, java.util.Map, org.ofbiz.core.service.GenericRequester)
+     * @see org.ofbiz.workflow.WfRequester#registerProcess(org.ofbiz.workflow.WfProcess, java.util.Map, org.ofbiz.service.GenericRequester)
      */  
     public void registerProcess(WfProcess process, Map context, GenericRequester requester) throws WfException {
         if (process == null)
@@ -107,21 +107,21 @@ public class WfRequesterImpl implements WfRequester {
     }
 
     /**
-     * @see org.ofbiz.core.workflow.WfRequester#howManyPerformer()
+     * @see org.ofbiz.workflow.WfRequester#howManyPerformer()
      */    
     public int howManyPerformer() throws WfException {
         return performers.size();
     }
   
     /**
-     * @see org.ofbiz.core.workflow.WfRequester#getIteratorPerformer()
+     * @see org.ofbiz.workflow.WfRequester#getIteratorPerformer()
      */
     public Iterator getIteratorPerformer() throws WfException {
         return performers.keySet().iterator();
     }
    
     /**
-     * @see org.ofbiz.core.workflow.WfRequester#getSequencePerformer(int)
+     * @see org.ofbiz.workflow.WfRequester#getSequencePerformer(int)
      */
     public List getSequencePerformer(int maxNumber) throws WfException {
         if (maxNumber > 0)
@@ -130,14 +130,14 @@ public class WfRequesterImpl implements WfRequester {
     }
   
     /**
-     * @see org.ofbiz.core.workflow.WfRequester#isMemberOfPerformer(org.ofbiz.core.workflow.WfProcess)
+     * @see org.ofbiz.workflow.WfRequester#isMemberOfPerformer(org.ofbiz.workflow.WfProcess)
      */
     public boolean isMemberOfPerformer(WfProcess member) throws WfException {
         return performers.containsKey(member);
     }
    
     /**
-     * @see org.ofbiz.core.workflow.WfRequester#receiveEvent(org.ofbiz.core.workflow.WfEventAudit)
+     * @see org.ofbiz.workflow.WfRequester#receiveEvent(org.ofbiz.workflow.WfEventAudit)
      */
     public synchronized void receiveEvent(WfEventAudit event) throws WfException, InvalidPerformer {
         // Should the source of the audit come from the process? if so use this.

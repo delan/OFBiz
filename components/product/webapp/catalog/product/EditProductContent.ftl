@@ -21,7 +21,7 @@
  *
  *@author     David E. Jones (jonesde@ofbiz.org)
  *@author     Brad Steiner (bsteiner@thehungersite.com)
- *@version    $Revision: 1.1 $
+ *@version    $Revision: 1.2 $
  *@since      2.2
 -->
 
@@ -30,7 +30,7 @@ function insertNowTimestamp(field) {
   eval('document.productForm.' + field + '.value="${nowTimestampString}";');
 };
 function insertImageName(size,ext) {
-  eval('document.productForm.' + size + 'ImageUrl.value="${Static["org.ofbiz.core.util.UtilProperties"].getPropertyValue(catalogPropertiesURL, "image.url.prefix")}/product.${productId}.' + size + '.' + ext + '";');
+  eval('document.productForm.' + size + 'ImageUrl.value="${Static["org.ofbiz.base.util.UtilProperties"].getPropertyValue(catalogPropertiesURL, "image.url.prefix")}/product.${productId}.' + size + '.' + ext + '";');
 };
 </SCRIPT>
 

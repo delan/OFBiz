@@ -25,7 +25,7 @@
 <div class='contenttext'>Written By: David E. Jones, <a href="mailto:jonesde@ofbiz.org">jonesde@ofbiz.org</a></div>
 <div class='contenttext'>Minor corrections by: <a href="mailto:PDebski@a4.pl">Pawel H. Debski</a></div>
 <div class='contenttext'>Last Updated: January 28, 2003</div>
-<!-- $Id: entity.html,v 1.1 2003/08/18 23:45:31 jonesde Exp $ -->
+<!-- $Id: entity.html,v 1.2 2003/08/19 17:45:21 jonesde Exp $ -->
 
 <hr class='sepbar'>
 <h3>Table of Contents</h3>
@@ -238,7 +238,7 @@ separation different fieldtypemodel XML files can be specified for different
 databases allowing an entitymodel XML file to work with the various databases.
 In addition, validators can be specified for a field type or for any field. This
 denotes that the named validator should be called when data is input. These
-validators are defined in the class <B>org.ofbiz.core.util.UtilValidate</B> and
+validators are defined in the class <B>org.ofbiz.base.util.UtilValidate</B> and
 follow the definition pattern: [<code>boolean isValid(String in);</code>].</P>
 
 <P><B>Entity Relationships (relations)</B></P>
@@ -874,7 +874,7 @@ how the link tree is kept clean).</P>
 <h3><a name="The_Entity_Engine_API">The Entity Engine API</a></h3>
 <hr class='sepbar'>
 
-<P>The Entity Engine classes in the package <B>org.ofbiz.core.entity</B> define the
+<P>The Entity Engine classes in the package <B>org.ofbiz.entity</B> define the
 API used to interact with Entity Engine entity data. From a users point of view
 only three classes really need to be understood. They are <B>GenericDelegator</B>,
 <B>GenericValue</B> and <B>GenericPK</B>. The <B>GenericDelegator</B> class, usually used with the
@@ -888,7 +888,7 @@ itself.</P>
 but short of writing a number of documents about the specific usage of each
 piece there is not much that is useful that I could write here. I recommend
 reading through the JavaDocs for the core module, specifically the <B>
-org.ofbiz.core.entity</B> package, and browsing through the eCommerce and other 
+org.ofbiz.entity</B> package, and browsing through the eCommerce and other 
 applications. These heavily use the Entity Engine API.</P>
 
 <P>A few quick notes to help you get started might be in order.</P>

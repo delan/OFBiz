@@ -23,7 +23,7 @@
  * @version 1.0
 -->
 
-<%@ page import="org.ofbiz.core.util.*" %>
+<%@ page import="org.ofbiz.base.util.*" %>
 
 <HTML>
 <HEAD>

@@ -1,5 +1,5 @@
 /*
- * $Id: WfProcessImpl.java,v 1.1 2003/08/17 09:29:35 ajzeneski Exp $
+ * $Id: WfProcessImpl.java,v 1.2 2003/08/19 17:45:18 jonesde Exp $
  *
  * Copyright (c) 2001 The Open For Business Project - www.ofbiz.org
  *
@@ -68,7 +68,7 @@ import org.ofbiz.workflow.client.StartActivityJob;
  *
  * @author     <a href="mailto:jaz@ofbiz.org">Andy Zeneski</a>
  * @author     David Ostrovsky (d.ostrovsky@gmx.de) 
- * @version    $Revision: 1.1 $
+ * @version    $Revision: 1.2 $
  * @since      2.0
  */
 public class WfProcessImpl extends WfExecutionObjectImpl implements WfProcess {
@@ -86,7 +86,7 @@ public class WfProcessImpl extends WfExecutionObjectImpl implements WfProcess {
     }
         
     /**
-     * @see org.ofbiz.core.workflow.impl.WfExecutionObjectImpl#WfExecutionObjectImpl(org.ofbiz.core.entity.GenericDelegator, java.lang.String)
+     * @see org.ofbiz.workflow.impl.WfExecutionObjectImpl#WfExecutionObjectImpl(org.ofbiz.entity.GenericDelegator, java.lang.String)
      */
     public WfProcessImpl(GenericDelegator delegator, String workEffortId) throws WfException {
         super(delegator, workEffortId);
@@ -104,7 +104,7 @@ public class WfProcessImpl extends WfExecutionObjectImpl implements WfProcess {
     }
 
     /**
-     * @see org.ofbiz.core.workflow.WfProcess#setRequester(org.ofbiz.core.workflow.WfRequester)
+     * @see org.ofbiz.workflow.WfProcess#setRequester(org.ofbiz.workflow.WfRequester)
      */
     public void setRequester(WfRequester newValue) throws WfException, CannotChangeRequester {
         if (requester != null)
@@ -113,7 +113,7 @@ public class WfProcessImpl extends WfExecutionObjectImpl implements WfProcess {
     }
 
     /**
-     * @see org.ofbiz.core.workflow.WfProcess#getSequenceStep(int)
+     * @see org.ofbiz.workflow.WfProcess#getSequenceStep(int)
      */
     public List getSequenceStep(int maxNumber) throws WfException {
         if (maxNumber > 0)
@@ -122,7 +122,7 @@ public class WfProcessImpl extends WfExecutionObjectImpl implements WfProcess {
     }
     
     /**
-     * @see org.ofbiz.core.workflow.WfExecutionObject#abort()
+     * @see org.ofbiz.workflow.WfExecutionObject#abort()
      */
     public void abort() throws WfException, CannotStop, NotRunning {
         super.abort();
@@ -136,14 +136,14 @@ public class WfProcessImpl extends WfExecutionObjectImpl implements WfProcess {
     }
   
     /**
-     * @see org.ofbiz.core.workflow.WfProcess#start()
+     * @see org.ofbiz.workflow.WfProcess#start()
      */
     public void start() throws WfException, CannotStart, AlreadyRunning {
         start(null);
     }
      
     /**
-     * @see org.ofbiz.core.workflow.WfProcess#start()
+     * @see org.ofbiz.workflow.WfProcess#start()
      */
     public void start(String activityId) throws WfException, CannotStart, AlreadyRunning {
         if (state().equals("open.running"))
@@ -195,35 +195,35 @@ public class WfProcessImpl extends WfExecutionObjectImpl implements WfProcess {
     }
   
     /**
-     * @see org.ofbiz.core.workflow.WfProcess#manager()
+     * @see org.ofbiz.workflow.WfProcess#manager()
      */
     public WfProcessMgr manager() throws WfException {
         return manager;
     }
     
     /**
-     * @see org.ofbiz.core.workflow.WfProcess#requester()
+     * @see org.ofbiz.workflow.WfProcess#requester()
      */
     public WfRequester requester() throws WfException {
         return requester;
     }
    
     /**
-     * @see org.ofbiz.core.workflow.WfProcess#getIteratorStep()
+     * @see org.ofbiz.workflow.WfProcess#getIteratorStep()
      */
     public Iterator getIteratorStep() throws WfException {
         return activeSteps().iterator();
     }
    
     /**
-     * @see org.ofbiz.core.workflow.WfProcess#isMemberOfStep(org.ofbiz.core.workflow.WfActivity)
+     * @see org.ofbiz.workflow.WfProcess#isMemberOfStep(org.ofbiz.workflow.WfActivity)
      */
     public boolean isMemberOfStep(WfActivity member) throws WfException {
         return activeSteps().contains(member);
     }
     
     /**
-     * @see org.ofbiz.core.workflow.WfProcess#getActivitiesInState(java.lang.String)
+     * @see org.ofbiz.workflow.WfProcess#getActivitiesInState(java.lang.String)
      */
     public Iterator getActivitiesInState(String state) throws WfException, InvalidState {
         ArrayList res = new ArrayList();
@@ -239,7 +239,7 @@ public class WfProcessImpl extends WfExecutionObjectImpl implements WfProcess {
     }
   
     /**
-     * @see org.ofbiz.core.workflow.WfProcess#result()
+     * @see org.ofbiz.workflow.WfProcess#result()
      */
     public Map result() throws WfException, ResultNotAvailable {
         Map resultSig = manager().resultSignature();
@@ -261,14 +261,14 @@ public class WfProcessImpl extends WfExecutionObjectImpl implements WfProcess {
     }
    
     /**
-     * @see org.ofbiz.core.workflow.WfProcess#howManyStep()
+     * @see org.ofbiz.workflow.WfProcess#howManyStep()
      */
     public int howManyStep() throws WfException {
         return activeSteps().size();
     }
   
     /**
-     * @see org.ofbiz.core.workflow.WfProcess#receiveResults(org.ofbiz.core.workflow.WfActivity, java.util.Map)
+     * @see org.ofbiz.workflow.WfProcess#receiveResults(org.ofbiz.workflow.WfActivity, java.util.Map)
      */
     public synchronized void receiveResults(WfActivity activity, Map results) throws WfException, InvalidData {
         Map context = processContext();
@@ -277,7 +277,7 @@ public class WfProcessImpl extends WfExecutionObjectImpl implements WfProcess {
     }
     
     /**
-     * @see org.ofbiz.core.workflow.WfProcess#activityComplete(org.ofbiz.core.workflow.WfActivity)
+     * @see org.ofbiz.workflow.WfProcess#activityComplete(org.ofbiz.workflow.WfActivity)
      */
     public synchronized void activityComplete(WfActivity activity) throws WfException {
         if (!activity.state().equals("closed.completed"))
@@ -287,7 +287,7 @@ public class WfProcessImpl extends WfExecutionObjectImpl implements WfProcess {
     }
 
     /**
-     * @see org.ofbiz.core.workflow.impl.WfExecutionObjectImpl#executionObjectType()
+     * @see org.ofbiz.workflow.impl.WfExecutionObjectImpl#executionObjectType()
      */
     public String executionObjectType() {
         return "WfProcess";

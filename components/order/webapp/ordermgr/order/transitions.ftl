@@ -20,7 +20,7 @@
  *  THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  *
  *@author     Andy Zeneski (jaz@ofbiz.org)
- *@version    $Revision: 1.1 $
+ *@version    $Revision: 1.2 $
  *@since      2.2
 -->
 
@@ -112,7 +112,7 @@
                       <select name="approvalCode" class="selectBox">
                         <#list wfTransitions as trans>
                           <#if trans.extendedAttributes?has_content>
-                            <#assign attrs = Static["org.ofbiz.core.util.StringUtil"].strToMap(trans.extendedAttributes)>
+                            <#assign attrs = Static["org.ofbiz.base.util.StringUtil"].strToMap(trans.extendedAttributes)>
                             <#if attrs.approvalCode?exists>
                               <option value="${attrs.approvalCode}">${trans.transitionName}</option>
                             </#if>

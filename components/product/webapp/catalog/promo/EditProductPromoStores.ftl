@@ -21,7 +21,7 @@
  *
  *@author     David E. Jones (jonesde@ofbiz.org)
  *@author     Brad Steiner (bsteiner@thehungersite.com)
- *@version    $Revision: 1.1 $
+ *@version    $Revision: 1.2 $
  *@since      2.2
 -->
 
@@ -70,7 +70,7 @@
                 </FORM>
             </td>
             <td align="center">
-            <a href="<@ofbizUrl>/promo_deleteProductStorePromoAppl?productStoreId=${(productStorePromoAppl.productStoreId)?if_exists}&productPromoId=${(productStorePromoAppl.productPromoId)?if_exists}&fromDate=${Static["org.ofbiz.core.util.UtilFormatOut"].encodeQueryValue(productStorePromoAppl.getTimestamp("fromDate").toString())}</@ofbizUrl>" class="buttontext">
+            <a href="<@ofbizUrl>/promo_deleteProductStorePromoAppl?productStoreId=${(productStorePromoAppl.productStoreId)?if_exists}&productPromoId=${(productStorePromoAppl.productPromoId)?if_exists}&fromDate=${Static["org.ofbiz.base.util.UtilFormatOut"].encodeQueryValue(productStorePromoAppl.getTimestamp("fromDate").toString())}</@ofbizUrl>" class="buttontext">
             [Delete]</a>
             </td>
         </tr>

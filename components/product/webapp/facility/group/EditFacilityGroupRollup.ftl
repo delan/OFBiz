@@ -21,7 +21,7 @@
  *
  *@author     David E. Jones
  *@author     Brad Steiner
- *@version    $Revision: 1.1 $
+ *@version    $Revision: 1.2 $
  *@since      2.2
 -->
 
@@ -49,14 +49,14 @@ ${pages.get("/group/FacilityGroupTabBar.ftl")}
     <#assign curGroup = facilityGroupRollup.getRelatedOne("ParentFacilityGroup")?if_exists>
     <tr valign="middle">
       <td><a href="<@ofbizUrl>/EditFacilityGroup?facilityGroupId=${(curGroup.facilityGroupId)?if_exists}</@ofbizUrl>" class="buttontext">${(curGroup.facilityGroupName)?if_exists}</a></td>
-      <td><div class="tabletext" <#if facilityGroupRollup.fromDate?exists && Static["org.ofbiz.core.util.UtilDateTime"].nowTimestamp().before(facilityGroupRollup.fromDate)>style="color: red;"</#if>>${facilityGroupRollup.fromDate}</div></td>
+      <td><div class="tabletext" <#if facilityGroupRollup.fromDate?exists && Static["org.ofbiz.base.util.UtilDateTime"].nowTimestamp().before(facilityGroupRollup.fromDate)>style="color: red;"</#if>>${facilityGroupRollup.fromDate}</div></td>
       <td align="center">
         <FORM method=POST action="<@ofbizUrl>/updateFacilityGroupToGroup</@ofbizUrl>" name="lineParentForm${facilityGroupRollup_index}">
             <input type=hidden name="showFacilityGroupId" value="${facilityGroupId}">
             <input type=hidden name="facilityGroupId" value="${facilityGroupRollup.facilityGroupId}">
             <input type=hidden name="parentFacilityGroupId" value="${facilityGroupRollup.parentFacilityGroupId}">
             <input type=hidden name="fromDate" value="${facilityGroupRollup.fromDate.toString()}">
-            <input type=text size="25" name="thruDate" value="${(facilityGroupRollup.thruDate.toString())?if_exists}" class="inputBox" <#if facilityGroupRollup.thruDate?exists && Static["org.ofbiz.core.util.UtilDateTime"].nowTimestamp().after(facilityGroupRollup.thruDate)>style="color: red;"</#if>>
+            <input type=text size="25" name="thruDate" value="${(facilityGroupRollup.thruDate.toString())?if_exists}" class="inputBox" <#if facilityGroupRollup.thruDate?exists && Static["org.ofbiz.base.util.UtilDateTime"].nowTimestamp().after(facilityGroupRollup.thruDate)>style="color: red;"</#if>>
             <a href="javascript:call_cal(document.lineParentForm${facilityGroupRollup_index}.thruDate, '${(facilityGroupRollup.thruDate.toString())?default(nowTimestampString)}');"><img src="/images/cal.gif" width="16" height="16" border="0" alt="Calendar"></a>
             <input type=text size="5" name="sequenceNum" value="${facilityGroupRollup.sequenceNum?if_exists}" class="inputBox">
             <INPUT type=submit value="Update" style="font-size: x-small;">
@@ -107,14 +107,14 @@ ${pages.get("/group/FacilityGroupTabBar.ftl")}
     <#assign curGroup = facilityGroupRollup.getRelatedOne("CurrentFacilityGroup")>
     <tr valign="middle">
       <td><a href="<@ofbizUrl>/EditFacilityGroup?facilityGroupId=${(curGroup.facilityGroupId)?if_exists}</@ofbizUrl>" class="buttontext">${(curGroup.facilityGroupName)?if_exists}</a></td>
-      <td><div class="tabletext" <#if facilityGroupRollup.fromDate?exists && Static["org.ofbiz.core.util.UtilDateTime"].nowTimestamp().before(facilityGroupRollup.fromDate)>style="color: red;"</#if>>${facilityGroupRollup.fromDate}</div></td>
+      <td><div class="tabletext" <#if facilityGroupRollup.fromDate?exists && Static["org.ofbiz.base.util.UtilDateTime"].nowTimestamp().before(facilityGroupRollup.fromDate)>style="color: red;"</#if>>${facilityGroupRollup.fromDate}</div></td>
       <td align="center">
         <FORM method=POST action="<@ofbizUrl>/updateFacilityGroupToGroup</@ofbizUrl>" name="lineChildForm${facilityGroupRollup_index}">
             <input type=hidden name="showFacilityGroupId" value="${facilityGroupId}">
             <input type=hidden name="facilityGroupId" value="${facilityGroupRollup.facilityGroupId}">
             <input type=hidden name="parentFacilityGroupId" value="${facilityGroupRollup.parentFacilityGroupId}">
             <input type=hidden name="fromDate" value="${facilityGroupRollup.fromDate.toString()}">
-            <input type=text size="25" name="thruDate" value="${(facilityGroupRollup.thruDate.toString())?if_exists}" class="inputBox" <#if facilityGroupRollup.thruDate?exists && Static["org.ofbiz.core.util.UtilDateTime"].nowTimestamp().after(facilityGroupRollup.thruDate)>style="color: red;"</#if>>
+            <input type=text size="25" name="thruDate" value="${(facilityGroupRollup.thruDate.toString())?if_exists}" class="inputBox" <#if facilityGroupRollup.thruDate?exists && Static["org.ofbiz.base.util.UtilDateTime"].nowTimestamp().after(facilityGroupRollup.thruDate)>style="color: red;"</#if>>
             <a href="javascript:call_cal(document.lineChildForm${facilityGroupRollup_index}.thruDate, '${(facilityGroupRollup.thruDate.toString())?default(nowTimestampString)}');"><img src="/images/cal.gif" width="16" height="16" border="0" alt="Calendar"></a>
             <input type=text size="5" name="sequenceNum" value="${facilityGroupRollup.sequenceNum?if_exists}" class="inputBox">
             <INPUT type=submit value="Update" style="font-size: x-small;">

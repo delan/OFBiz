@@ -21,7 +21,7 @@
  *
  *@author     David E. Jones
  *@author     Brad Steiner
- *@version    $Revision: 1.1 $
+ *@version    $Revision: 1.2 $
  *@since      2.2
  */
 
@@ -29,9 +29,9 @@ import java.util.*;
 import java.io.*;
 import java.sql.Timestamp;
 import java.lang.Integer;
-import org.ofbiz.core.entity.*;
-import org.ofbiz.core.util.*;
-import org.ofbiz.core.widgetimpl.*;
+import org.ofbiz.entity.*;
+import org.ofbiz.base.util.*;
+import org.ofbiz.content.widget.html.*;
 
 security = request.getAttribute("security");
 delegator = request.getAttribute("delegator");

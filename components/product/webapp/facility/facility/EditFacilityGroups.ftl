@@ -21,7 +21,7 @@
  *
  *@author     David E. Jones
  *@author     Brad Steiner
- *@version    $Revision: 1.1 $
+ *@version    $Revision: 1.2 $
  *@since      2.2
 -->
 
@@ -78,14 +78,14 @@ ${pages.get("/facility/FacilityTabBar.ftl")}
                 <td><a href="<@ofbizUrl>/EditFacilityGroup?facilityGroupId=${(facilityGroupMember.facilityGroupId)?if_exists}</@ofbizUrl>" class="buttontext"><#if facilityGroup?exists>${(facilityGroup.facilityGroupName)?if_exists}</#if> [${(facilityGroupMember.facilityGroupId)?if_exists}]</a></td>
                 <td>
                     <#assign hasntStarted = false>
-                    <#if (facilityGroupMember.getTimestamp("fromDate"))?exists && Static["org.ofbiz.core.util.UtilDateTime"].nowTimestamp().before(facilityGroupMember.getTimestamp("fromDate"))> <#assign hasntStarted = true></#if>
+                    <#if (facilityGroupMember.getTimestamp("fromDate"))?exists && Static["org.ofbiz.base.util.UtilDateTime"].nowTimestamp().before(facilityGroupMember.getTimestamp("fromDate"))> <#assign hasntStarted = true></#if>
                     <div class="tabletext"<#if hasntStarted> style="color: red;"</#if>>
                         ${(facilityGroupMember.fromDate)?if_exists}
                     </div>
                 </td>
                 <td align="center">
                     <#assign hasExpired = false>
-                    <#if (facilityGroupMember.getTimestamp("thruDate"))?exists && Static["org.ofbiz.core.util.UtilDateTime"].nowTimestamp().after(facilityGroupMember.getTimestamp("thruDate"))> <#assign hasExpired = true></#if>
+                    <#if (facilityGroupMember.getTimestamp("thruDate"))?exists && Static["org.ofbiz.base.util.UtilDateTime"].nowTimestamp().after(facilityGroupMember.getTimestamp("thruDate"))> <#assign hasExpired = true></#if>
                     <FORM method=POST action="<@ofbizUrl>/updateGroupToFacility?VIEW_SIZE=${viewSize}&VIEW_INDEX=${viewIndex}</@ofbizUrl>" name="lineForm${line}">
                         <input type=hidden name="activeOnly" value="${activeOnly.toString()}">
                         <input type=hidden name="facilityId" value="${(facilityGroupMember.facilityId)?if_exists}">
@@ -98,7 +98,7 @@ ${pages.get("/facility/FacilityTabBar.ftl")}
                     </FORM>
                 </td>
                 <td align="center">
-                <a href="<@ofbizUrl>/removeGroupFromFacility?VIEW_SIZE=${viewSize}&VIEW_INDEX=${viewIndex}&facilityId=${(facilityGroupMember.facilityId)?if_exists}&facilityGroupId=${(facilityGroupMember.facilityGroupId)?if_exists}&fromDate=${Static["org.ofbiz.core.util.UtilFormatOut"].encodeQueryValue(facilityGroupMember.getTimestamp("fromDate").toString())}&activeOnly=${activeOnly.toString()}</@ofbizUrl>" class="buttontext">
+                <a href="<@ofbizUrl>/removeGroupFromFacility?VIEW_SIZE=${viewSize}&VIEW_INDEX=${viewIndex}&facilityId=${(facilityGroupMember.facilityId)?if_exists}&facilityGroupId=${(facilityGroupMember.facilityGroupId)?if_exists}&fromDate=${Static["org.ofbiz.base.util.UtilFormatOut"].encodeQueryValue(facilityGroupMember.getTimestamp("fromDate").toString())}&activeOnly=${activeOnly.toString()}</@ofbizUrl>" class="buttontext">
                 [Delete]</a>
                 </td>
             </tr>

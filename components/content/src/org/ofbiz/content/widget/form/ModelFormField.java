@@ -1,5 +1,5 @@
 /*
- * $Id: ModelFormField.java,v 1.1 2003/08/17 08:40:13 ajzeneski Exp $
+ * $Id: ModelFormField.java,v 1.2 2003/08/19 17:45:20 jonesde Exp $
  *
  * Copyright (c) 2003 The Open For Business Project - www.ofbiz.org
  *
@@ -56,7 +56,7 @@ import bsh.Interpreter;
  *
  * @author     <a href="mailto:jonesde@ofbiz.org">David E. Jones</a>
  * @author     <a href="mailto:byersa@automationgroups.com">Al Byers</a>
- * @version    $Revision: 1.1 $
+ * @version    $Revision: 1.2 $
  * @since      2.2
  */
 public class ModelFormField {
@@ -532,7 +532,7 @@ public class ModelFormField {
     }
 
     /**
-     * @see org.ofbiz.core.widget.form.ModelFormField.getMapName()
+     * @see org.ofbiz.content.widget.form.ModelFormField.getMapName()
      * @return
      */
     public String getEntryName() {

@@ -61,14 +61,14 @@
                 <td><a href="<@ofbizUrl>/EditProduct?productId=${(productCategoryMember.productId)?if_exists}</@ofbizUrl>" class="buttontext"><#if product?exists>${(product.productName)?if_exists}</#if> [${(productCategoryMember.productId)?if_exists}]</a></td>
                 <td>
                     <#assign hasntStarted = false>
-                    <#if (productCategoryMember.getTimestamp("fromDate"))?exists && Static["org.ofbiz.core.util.UtilDateTime"].nowTimestamp().before(productCategoryMember.getTimestamp("fromDate"))> <#assign hasntStarted = true> </#if>
+                    <#if (productCategoryMember.getTimestamp("fromDate"))?exists && Static["org.ofbiz.base.util.UtilDateTime"].nowTimestamp().before(productCategoryMember.getTimestamp("fromDate"))> <#assign hasntStarted = true> </#if>
                     <div class="tabletext"<#if hasntStarted> style="color: red;"</#if>>
                     ${(productCategoryMember.fromDate)?if_exists}
                     </div>
                 </td>
                 <td align="center">
                     <#assign hasExpired = false>
-                    <#if (productCategoryMember.getTimestamp("thruDate"))?exists && Static["org.ofbiz.core.util.UtilDateTime"].nowTimestamp().after(productCategoryMember.getTimestamp("thruDate"))> <#assign hasExpired = true></#if>
+                    <#if (productCategoryMember.getTimestamp("thruDate"))?exists && Static["org.ofbiz.base.util.UtilDateTime"].nowTimestamp().after(productCategoryMember.getTimestamp("thruDate"))> <#assign hasExpired = true></#if>
                     <FORM method=POST action="<@ofbizUrl>/updateCategoryProductMember?VIEW_SIZE=${viewSize}&VIEW_INDEX=${viewIndex}</@ofbizUrl>" name="lineForm${line}">
                         <input type=hidden name="activeOnly" value="${activeOnly.toString()}">
                         <input type=hidden name="productId" value="${(productCategoryMember.productId)?if_exists}">
@@ -82,7 +82,7 @@
                     </FORM>
                 </td>
                 <td align="center">
-                <a href="<@ofbizUrl>/removeCategoryProductMember?VIEW_SIZE=${viewSize}&VIEW_INDEX=${viewIndex}&productId=${(productCategoryMember.productId)?if_exists}&productCategoryId=${(productCategoryMember.productCategoryId)?if_exists}&fromDate=${Static["org.ofbiz.core.util.UtilFormatOut"].encodeQueryValue((productCategoryMember.getTimestamp("fromDate").toString()))}&activeOnly=${activeOnly.toString()}</@ofbizUrl>" class="buttontext">
+                <a href="<@ofbizUrl>/removeCategoryProductMember?VIEW_SIZE=${viewSize}&VIEW_INDEX=${viewIndex}&productId=${(productCategoryMember.productId)?if_exists}&productCategoryId=${(productCategoryMember.productCategoryId)?if_exists}&fromDate=${Static["org.ofbiz.base.util.UtilFormatOut"].encodeQueryValue((productCategoryMember.getTimestamp("fromDate").toString()))}&activeOnly=${activeOnly.toString()}</@ofbizUrl>" class="buttontext">
                 [Delete]</a>
                 </td>
             </tr>

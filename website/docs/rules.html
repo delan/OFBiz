@@ -21,7 +21,7 @@
  
 <div class='contenttext'>Written By: David E. Jones, <a href="mailto:jonesde@ofbiz.org">jonesde@ofbiz.org</a></div>
 <div class='contenttext'>Last Updated: 15 March 2002</div>
-<!-- $Id: rules.html,v 1.1 2003/08/18 23:45:31 jonesde Exp $ -->
+<!-- $Id: rules.html,v 1.2 2003/08/19 17:45:21 jonesde Exp $ -->
 
 <hr class='sepbar'>
 <h3>Table of Contents</h3>
@@ -124,7 +124,7 @@ webapp that has a textarea for the ruleset and an input box for the query. There
 this page from the main page of the WebTools app.</p>
 
 <p class='contenttext'>The other user interface is a Java Swing application. This looks very similar to the JSP and
-can be run with the following command: <code>java -cp $CLASSPATH:ofbcore-rules.jar org.ofbiz.core.rules.LogikusIde</code></p>
+can be run with the following command: <code>java -cp $CLASSPATH:ofbcore-rules.jar org.ofbiz.rules.LogikusIde</code></p>
 
 <hr class='sepbar'>
 <h3><a name="Logikus">Logikus Language</a></h3>
@@ -162,7 +162,7 @@ RuleML interpreter and a Swing app for editing rules.</p>
 <hr class='sepbar'>
 <p class='contenttext'>To use Logikus rulesets and queries from your Java applications you can use the LogikusFacade
 class which provides some useful methods for parsing and executing rulesets, and then retrieving
-and evaluating the results. The full path of the class is org.ofbiz.core.rules.logikus.LogikusFacade.</p>
+and evaluating the results. The full path of the class is org.ofbiz.rules.logikus.LogikusFacade.</p>
 
 <p class='contenttext'>I will go through an example in here of parsing a Logikus file to create a Program class, and
 parsing a query to make a Query class, and then optionally adding rules or facts to the Program,
@@ -171,13 +171,13 @@ chaining example.</p>
 
 <p class='contenttext'>First, the main packages you will deal with are:</p>
 <ul>
-  <li>org.ofbiz.core.rules.logikus.*
-  <li>org.ofbiz.core.rules.parse.*
-  <li>org.ofbiz.core.rules.parse.tokens.*
-  <li>org.ofbiz.core.rules.engine.*
+  <li>org.ofbiz.rules.logikus.*
+  <li>org.ofbiz.rules.parse.*
+  <li>org.ofbiz.rules.parse.tokens.*
+  <li>org.ofbiz.rules.engine.*
 </ul>
 
-<p class='contenttext'>Next, create a <code>org.ofbiz.core.rules.engine.Program</code> object from a logikus ruleset
+<p class='contenttext'>Next, create a <code>org.ofbiz.rules.engine.Program</code> object from a logikus ruleset
 by parsing the text of the ruleset with the following instruction:</p>
 <p class='contenttext'><code>Program program = LogikusFacade.program(programText);</code></p>
 <p class='contenttext'>Before parsing the query text and creating a Query object you can add other
@@ -186,7 +186,7 @@ facts and rules to the program with the following method:</p>
 
 <p class='contenttext'>Both the Fact object and Rule object implement the Axiom interface and can
 be added to a program as an axiom. For instructions on how to construct these
-objects see the JavaDocs for them. They are both in the <code>org.ofbiz.core.rules.engine</code> package.</p>
+objects see the JavaDocs for them. They are both in the <code>org.ofbiz.rules.engine</code> package.</p>
 
 <p class='contenttext'>Now you can parse the query text and create a Query object with the following:</p>
 <p class='contenttext'><code>Query query = LogikusFacade.query(queryText, program);</code></p>

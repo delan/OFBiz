@@ -24,7 +24,7 @@
  
 <div class='contenttext'>Written By: Andy Zeneski, <a href="mailto:jaz@ofbiz.org">jaz@ofbiz.org</a></div>
 <div class='contenttext'>Last Updated: March 27, 2003</div>
-<!-- $Id: services.html,v 1.1 2003/08/18 23:45:31 jonesde Exp $ -->
+<!-- $Id: services.html,v 1.2 2003/08/19 17:45:21 jonesde Exp $ -->
 
 <hr class='sepbar'><br>
 <h3>Table of Contents</h3>
@@ -178,7 +178,7 @@
     &lt;description&gt;Authenticate a username/password; create a UserLogin object&lt;/description&gt;
     &lt;attribute name=&quot;login.username&quot; type=&quot;String&quot; mode=&quot;IN&quot;/&gt;
     &lt;attribute name=&quot;login.password&quot; type=&quot;String&quot; mode=&quot;IN&quot;/&gt;
-    &lt;attribute name=&quot;userLogin&quot; type=&quot;org.ofbiz.core.entity.GenericValue&quot; mode=&quot;OUT&quot; optional=&quot;true&quot;/&gt;
+    &lt;attribute name=&quot;userLogin&quot; type=&quot;org.ofbiz.entity.GenericValue&quot; mode=&quot;OUT&quot; optional=&quot;true&quot;/&gt;
 &lt;/service&gt;
 </pre>
 <p class='contenttext'><b>SERVICE ELEMENT:</b></p>
@@ -288,7 +288,7 @@ using the <code>interface</code> engine for example:</p>
     &lt;description&gt;A test interface service&lt;/description&gt;
     &lt;attribute name=&quot;partyId&quot; type=&quot;String&quot; mode=&quot;IN&quot;/&gt;
     &lt;attribute name=&quot;partyTypeId&quot; type=&quot;String&quot; mode=&quot;IN&quot;/&gt;
-    &lt;attribute name=&quot;userLoginId&quot; type=&quot;org.ofbiz.core.entity.GenericValue&quot; mode=&quot;OUT&quot; optional=&quot;true&quot;/&gt;
+    &lt;attribute name=&quot;userLoginId&quot; type=&quot;org.ofbiz.entity.GenericValue&quot; mode=&quot;OUT&quot; optional=&quot;true&quot;/&gt;
 &lt;/service&gt;
 </pre>
 <p class='contenttext'> **Note that the <code>location</code> and the <code>invoke</code> fields are required in the DTD, so we
