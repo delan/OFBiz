@@ -659,6 +659,8 @@
     <entity-group group="org.ofbiz.commonapp" entity="PackagingContent" />	
     <entity-group group="org.ofbiz.commonapp" entity="Shipment" />	
     <entity-group group="org.ofbiz.commonapp" entity="ShipmentAttribute" />	
+    <entity-group group="org.ofbiz.commonapp" entity="ShipmentContactMech" />
+    <entity-group group="org.ofbiz.commonapp" entity="ShipmentContactMechType" />
     <entity-group group="org.ofbiz.commonapp" entity="ShipmentCostEstimate" />	
     <entity-group group="org.ofbiz.commonapp" entity="ShipmentItem" />	
     <entity-group group="org.ofbiz.commonapp" entity="ShipmentItemBilling" />	

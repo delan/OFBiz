@@ -6,25 +6,25 @@
  *  Description: None
  *  Copyright (c) 2002 The Open For Business Project - www.ofbiz.org
  *
- *  Permission is hereby granted, free of charge, to any person obtaining a 
- *  copy of this software and associated documentation files (the "Software"), 
- *  to deal in the Software without restriction, including without limitation 
- *  the rights to use, copy, modify, merge, publish, distribute, sublicense, 
- *  and/or sell copies of the Software, and to permit persons to whom the 
+ *  Permission is hereby granted, free of charge, to any person obtaining a
+ *  copy of this software and associated documentation files (the "Software"),
+ *  to deal in the Software without restriction, including without limitation
+ *  the rights to use, copy, modify, merge, publish, distribute, sublicense,
+ *  and/or sell copies of the Software, and to permit persons to whom the
  *  Software is furnished to do so, subject to the following conditions:
  *
- *  The above copyright notice and this permission notice shall be included 
+ *  The above copyright notice and this permission notice shall be included
  *  in all copies or substantial portions of the Software.
  *
- *  THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS 
- *  OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF 
- *  MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. 
- *  IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY 
- *  CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT 
- *  OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR 
+ *  THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS
+ *  OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF
+ *  MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT.
+ *  IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY
+ *  CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT
+ *  OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR
  *  THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  *
- *@author David E. Jones (jonesde@ofbiz.org) 
+ *@author David E. Jones (jonesde@ofbiz.org)
  *@author Andy Zeneski (jaz@zsolv.com)
  *@version    1.0
  */
@@ -281,8 +281,8 @@
             title="Shipment Entity">
       <field name="shipmentId" type="id-ne"></field>
       <field name="shipmentTypeId" type="id"></field>
-      <field name="contactMechId" type="id"></field>
-      <field name="partyId" type="id"></field>
+      <field name="partyIdTo" type="id"></field>
+      <field name="partyIdFrom" type="id"></field>
       <field name="estimatedShipDate" type="date-time"></field>
       <field name="estimatedReadyDate" type="date-time"></field>
       <field name="estimatedArrivalDate" type="date-time"></field>
@@ -304,11 +304,11 @@
       <relation type="many" rel-entity-name="OrderShipment">
         <key-map field-name="shipmentId"/>
       </relation>
-      <relation type="one" fk-name="SHPMNT_CMECH" rel-entity-name="ContactMech">
-        <key-map field-name="contactMechId"/>
+      <relation type="one" fk-name="SHPMNT_PRTYTO" rel-entity-name="Party">
+        <key-map field-name="partyIdTo" rel-field-name="partyId"/>
       </relation>
-      <relation type="one" fk-name="SHPMNT_PRTY" rel-entity-name="Party">
-        <key-map field-name="partyId"/>
+      <relation type="one" fk-name="SHPMNT_PRTYFM" rel-entity-name="Party">
+        <key-map field-name="partyIdFrom" rel-field-name="partyId"/>
       </relation>
       <relation type="many" rel-entity-name="PackagingContent">
         <key-map field-name="shipmentId"/>
@@ -342,6 +342,34 @@
       </relation>
       <relation type="many" rel-entity-name="ShipmentTypeAttr">
         <key-map field-name="attrName"/>
+      </relation>
+    </entity>
+    <entity entity-name="ShipmentContactMech"
+            package-name="org.ofbiz.commonapp.shipment.shipment"
+            title="Shipment Contact Mechanism Entity">
+      <field name="shipmentId" type="id-ne"></field>
+      <field name="shipmentContactMechTypeId" type="id-ne"></field>
+      <field name="contactMechId" type="id-ne"></field>
+      <prim-key field="shipmentId"/>
+      <prim-key field="shipmentContactMechTypeId"/>
+      <relation type="one" fk-name="SHPMT_CMECH" rel-entity-name="Shipment">
+        <key-map field-name="shipmentId"/>
+      </relation>
+      <relation type="one" fk-name="SHPMT_CMECH_CM" rel-entity-name="ContactMech">
+        <key-map field-name="contactMechId"/>
+      </relation>
+      <relation type="one" fk-name="SHPMT_CMECH_TYPE" rel-entity-name="ShipmentContactMechType">
+        <key-map field-name="shipmentContactMechTypeId"/>
+      </relation>
+    </entity>
+    <entity entity-name="ShipmentContactMechType"
+            package-name="org.ofbiz.commonapp.shipment.shipment"
+            title="Shipment Contact Mechanism Type Entity">
+      <field name="shipmentContactMechTypeId" type="id-ne"></field>
+      <field name="description" type="description"></field>
+      <prim-key field="shipmentContactMechTypeId"/>
+      <relation type="many" rel-entity-name="ShipmentContactMech">
+        <key-map field-name="shipmentContactMechTypeId"/>
       </relation>
     </entity>
     <entity entity-name="ShipmentCostEstimate"
