@@ -295,37 +295,43 @@ public class PayPalEvents {
 
         // attempt to start a transaction
         boolean beganTransaction = false;
+        boolean okay = false;
         try {
             beganTransaction = TransactionUtil.begin();
-        } catch (GenericTransactionException gte) {
-            Debug.logError(gte, "Unable to begin transaction", module);
-        }
 
-        boolean okay = false;
-        if (paymentStatus.equals("Completed")) {
-            okay = OrderChangeHelper.approveOrder(dispatcher, userLogin, orderId);
-        } else if (paymentStatus.equals("Failed") || paymentStatus.equals("Denied")) {
-            okay = OrderChangeHelper.cancelOrder(dispatcher, userLogin, orderId);
-        }
+            if (paymentStatus.equals("Completed")) {
+                okay = OrderChangeHelper.approveOrder(dispatcher, userLogin, orderId);
+            } else if (paymentStatus.equals("Failed") || paymentStatus.equals("Denied")) {
+                okay = OrderChangeHelper.cancelOrder(dispatcher, userLogin, orderId);
+            }
 
-        if (okay) {
-            // set the payment preference
-            okay = setPaymentPreferences(delegator, orderId, request);
-        }
+            if (okay) {
+                // set the payment preference
+                okay = setPaymentPreferences(delegator, orderId, request);
+            }
 
-        if (okay) {
+            if (!okay) {
+                try {
+                    TransactionUtil.rollback(beganTransaction);
+                } catch (GenericTransactionException gte) {
+                    Debug.logError(gte, "Unable to rollback transaction", module);
+                }
+            }
+        } catch (Exception e) {
+            Debug.logError(e, "Error handling PayPal notification", module);
+            try {
+                TransactionUtil.rollback(beganTransaction);
+            } catch (GenericTransactionException gte2) {
+                Debug.logError(gte2, "Unable to rollback transaction", module);
+            }
+        } finally {
             try {
                 TransactionUtil.commit(beganTransaction);
             } catch (GenericTransactionException gte) {
                 Debug.logError(gte, "Unable to commit transaction", module);
             }
-        } else {
-            try {
-                TransactionUtil.rollback(beganTransaction);
-            } catch (GenericTransactionException gte) {
-                Debug.logError(gte, "Unable to rollback transaction", module);
-            }
         }
+
 
         if (okay) {
             // attempt to release the offline hold on the order (workflow)
