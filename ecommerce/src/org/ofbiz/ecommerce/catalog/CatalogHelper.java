@@ -1,6 +1,9 @@
 /*
  * $Id$
  * $Log$
+ * Revision 1.12  2001/09/05 20:45:54  jonesde
+ * Major speedup by adding cache calls.
+ *
  * Revision 1.11  2001/09/05 18:49:12  azeneski
  * Updates (not finished)
  *
@@ -333,5 +336,13 @@ public class CatalogHelper {
             return null;
         
         return crumb;
+    }
+    
+    public static boolean checkTrailItem(PageContext pageContext,String category) {
+        Collection crumb = getTrail(pageContext);
+        if ( crumb.contains(category) )
+            return true;
+        else
+            return false;
     }
 }
