@@ -1366,10 +1366,8 @@ public class GenericDelegator {
             ModelField modelField = (ModelField) modelFields.next();
             String name = modelField.getName();
             String attr = element.getAttribute(name);
-            if (attr != null) {
-                if (attr.length() > 0) {
-                    value.setString(name, attr);
-                }
+            if (attr != null && attr.length() > 0) {
+                value.setString(name, attr);
             } else {
                 //if no attribute try a subelement
                 Element subElement = UtilXml.firstChildElement(element, name);
