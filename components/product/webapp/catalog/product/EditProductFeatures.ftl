@@ -113,8 +113,20 @@ ${pages.get("/product/ProductTabBar.ftl")}
         <div class='head2'>${uiLabelMap.ProductAddProductFeatureFromCategory}:</div>
         <br>
         <select class='selectBox' name='productFeatureCategoryId' size=1>
+            <option value='' selected>${uiLabelMap.ProductChooseFeatureCategory}</option>
             <#list productFeatureCategories as productFeatureCategory>
                 <option value='${(productFeatureCategory.productFeatureCategoryId)?if_exists}'>${(productFeatureCategory.description)?if_exists} [${(productFeatureCategory.productFeatureCategoryId)?if_exists}]</option>
+            </#list>
+        </select>
+        <select class='selectBox' name='productFeatureGroupId' size=1>
+            <option value='' selected>${uiLabelMap.ProductChooseFeatureGroup}</option>
+            <#list productFeatureGroups as productFeatureGroup>
+                <option value='${(productFeatureGroup.productFeatureGroupId)?if_exists}'>${(productFeatureGroup.description)?if_exists} [${(productFeatureGroup.productFeatureGroupId)?if_exists}]</option>
+            </#list>
+        </select>
+        <span class='tabletext'>${uiLabelMap.ProductFeatureApplicationType}: </span><select class='selectBox' name='productFeatureApplTypeId' size=1>
+            <#list productFeatureApplTypes as productFeatureApplType>
+            <option value='${(productFeatureApplType.productFeatureApplTypeId)?if_exists}'>${(productFeatureApplType.description)?if_exists} </option>
             </#list>
         </select>
         <input type="submit" value="Add" style='font-size: x-small;'>

@@ -21,7 +21,7 @@
  *
  *@author     David E. Jones
  *@author     Brad Steiner
- *@version    $Rev:$
+ *@version    $Rev$
  *@since      2.2
  */
 
@@ -58,6 +58,9 @@ Collection productFeatureCategories = delegator.findAll("ProductFeatureCategory"
 if (productFeatureCategories != null) context.put("productFeatureCategories", productFeatureCategories);
 Collection productFeatureApplTypes = delegator.findAll("ProductFeatureApplType", UtilMisc.toList("description"));
 if (productFeatureApplTypes != null) context.put("productFeatureApplTypes", productFeatureApplTypes);
+
+productFeatureGroups = delegator.findAll("ProductFeatureGroup", UtilMisc.toList("description"));
+if (productFeatureGroups != null) context.put("productFeatureGroups", productFeatureGroups);
 
 Collection productFeatureTypes = delegator.findAll("ProductFeatureType", UtilMisc.toList("description"));
 if (productFeatureTypes != null) context.put("productFeatureTypes", productFeatureTypes);
