@@ -168,6 +168,7 @@
         <auto-attributes entity-name="WorkEffortAssoc" include="pk" mode="IN"/>
         <attribute name="sequenceNum" type="Long" mode="IN" optional="true"/>
         <attribute name="thruDate" type="java.sql.Timestamp" mode="IN" optional="true"/> 
+		<attribute type="String" mode="IN" name="create" optional="true"></attribute>
         <attribute name="sequenceNumNotOk" type="String" mode="OUT" optional="false"/> 
     </service>
 
@@ -186,10 +187,38 @@
 
     <!-- MRP services -->
     <service name="runningMrp" engine="java"
-            location="org.ofbiz.manufacturing.mrp.MrpServices" invoke="runningMrp" auth="true">
+            location="org.ofbiz.manufacturing.mrp.MrpServices" invoke="runningMrp" auth="true" use-transaction="false">
         <description>Performs a run of Mrp</description>
         <attribute name="timePeriod" type="String" form-display="true" form-label="Time Period" mode="IN" optional="true"/>
         <attribute name="msgResult" type="List" mode="OUT" optional="false"/>
+    </service>
+    
+    <service name="initInventoryEventPlanned" engine="java"
+            location="org.ofbiz.manufacturing.mrp.MrpServices" invoke="initInventoryEventPlanned" auth="true" use-transaction="false">
+        <description>Initialize the table "InventoryEventPlanned"</description>
+        <attribute name="reInitialize" type="Boolean" mode="IN" optional="false"/>
+    </service>
+    
+    <service name="listProductForMrp" engine="java"
+            location="org.ofbiz.manufacturing.mrp.MrpServices" invoke="listProductForMrp" auth="true">
+        <description>List the products for the MRP"</description>
+        <attribute name="billOfMaterialLevel" type="Long" mode="IN" optional="false"/>
+        <attribute name="listInventoryEventForMrp" type="List" mode="OUT" optional="false"/>
+    </service>
+    
+    <service name="findProductMrpQoh" engine="java"
+            location="org.ofbiz.manufacturing.mrp.MrpServices" invoke="findProductMrpQoh" auth="true">
+        <description>Find the quantity on hand of products for the MRP</description>
+        <attribute name="productId" type="String" mode="IN" optional="false"/>
+        <attribute name="quantityOnHand" type="Double" mode="OUT" optional="false"/>
+    </service>
+    
+    <service name="processBomComponent" engine="java"
+            location="org.ofbiz.manufacturing.mrp.MrpServices" invoke="processBomComponent" auth="true">
+        <description>Process the bill of materials to insert the components in the InventoryEventPlanned table</description>
+		<attribute name="listComponentDateAssoc" type="List" mode="IN" optional="false"/>
+		<attribute name="eventQuantity" type="Double" mode="IN" optional="false"/>
+		<attribute name="itemInventoryEventPlanned" type="Map" mode="IN" optional="false"/>
     </service>
 
     <!-- Bill of Materials services -->
@@ -201,32 +230,32 @@
         <attribute name="productIdIn" form-label="${uiLabelMap.ProductProductIdIn}" type="String" mode="IN" optional="false"/>
         <attribute name="productIdFor" form-label="${uiLabelMap.ProductProductIdFor}" type="String" mode="IN" optional="true"/>
         <attribute name="productIdInSubst" form-label="${uiLabelMap.ProductProductIdInSubst}" type="String" mode="IN" optional="true"/>
-        <attribute name="productFeature" type="String" mode="IN" optional="true"/>
-        <attribute name="quantity" type="Double" mode="IN" optional="true"/>
-        <attribute name="ruleOperator" type="String" mode="IN" optional="true"/>
-        <attribute name="fromDate" type="java.sql.Timestamp" mode="IN" optional="true"/>
-        <attribute name="thruDate" type="java.sql.Timestamp" mode="IN" optional="true"/>
+        <attribute name="productFeature" form-label="${uiLabelMap.ProductProductFeature}" type="String" mode="IN" optional="true"/>
+        <attribute name="quantity" form-label="${uiLabelMap.ManufacturingQuantity}" type="Double" mode="IN" optional="true"/>
+        <attribute name="ruleOperator" form-label="${uiLabelMap.ManufacturingRuleOperator}" type="String" mode="IN" optional="true"/>
+        <attribute name="fromDate" form-label="${uiLabelMap.CommonFromDate}" type="Timestamp" mode="IN" optional="true"/>
+        <attribute name="thruDate" form-label="${uiLabelMap.CommonThruDate}" type="Timestamp" mode="IN" optional="true"/>
     </service>
 
     <service name="addProductManufacturingRule" engine="simple"
             location="org/ofbiz/manufacturing/bom/BomSimpleMethods.xml" invoke="addProductManufacturingRule">
         <description>Create a Product Manufacturing Rule</description>
-        <attribute name="ruleId" type="String" mode="IN" optional="true"/>
-        <attribute name="productId" type="String" mode="IN" optional="true"/>
-        <attribute name="productIdIn" type="String" mode="IN" optional="false"/>
-        <attribute name="productIdFor" type="String" mode="IN" optional="true"/>
-        <attribute name="productIdInSubst" type="String" mode="IN" optional="true"/>
-        <attribute name="productFeature" type="String" mode="IN" optional="true"/>
-        <attribute name="quantity" type="Double" mode="IN" optional="true"/>
-        <attribute name="ruleOperator" type="String" mode="IN" optional="true"/>
-        <attribute name="fromDate" type="java.sql.Timestamp" mode="IN" optional="true"/>
-        <attribute name="thruDate" type="java.sql.Timestamp" mode="IN" optional="true"/>
+        <attribute name="ruleId" form-label="${uiLabelMap.ManufacturingRuleId}" type="String" mode="IN" optional="true"/>
+        <attribute name="productId" form-label="${uiLabelMap.ProductProductId}" type="String" mode="IN" optional="true"/>
+        <attribute name="productIdIn" form-label="${uiLabelMap.ProductProductIdIn}" type="String" mode="IN" optional="false"/>
+        <attribute name="productIdFor" form-label="${uiLabelMap.ProductProductIdFor}" type="String" mode="IN" optional="true"/>
+        <attribute name="productIdInSubst" form-label="${uiLabelMap.ProductProductIdInSubst}" type="String" mode="IN" optional="true"/>
+        <attribute name="productFeature" form-label="${uiLabelMap.ProductProductFeature}" type="String" mode="IN" optional="true"/>
+        <attribute name="quantity" form-label="${uiLabelMap.ManufacturingQuantity}" type="Double" mode="IN" optional="true"/>
+        <attribute name="ruleOperbator" form-label="${uiLabelMap.ManufacturingRuleOperator}" type="String" mode="IN" optional="true"/>
+        <attribute name="fromDate" form-label="${uiLabelMap.CommonFromDate}" type="Timestamp" mode="IN" optional="true"/>
+        <attribute name="thruDate" form-label="${uiLabelMap.CommonThruDate}" type="Timestamp" mode="IN" optional="true"/>
     </service>
 
     <service name="deleteProductManufacturingRule" engine="simple"
             location="org/ofbiz/manufacturing/bom/BomSimpleMethods.xml" invoke="deleteProductManufacturingRule">
         <description>Remove a Product Manufacturing Rule</description>
-        <attribute name="ruleId" type="String" mode="IN" optional="false"/>
+        <attribute name="ruleId" form-label="${uiLabelMap.ManufacturingRuleId}" type="String" mode="IN" optional="false"/>
     </service>
 
     <service name="getMaxDepth" default-entity-name="ProductAssoc" engine="java"
