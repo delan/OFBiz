@@ -1,7 +1,8 @@
 
 <%@ taglib uri="ofbizTags" prefix="ofbiz" %>
 
-<%@ page import="java.util.*" %>
+<%@ page import="java.util.*,
+                 org.ofbiz.core.service.ModelService" %>
 <%@ page import="org.ofbiz.core.util.*, org.ofbiz.core.pseudotag.*" %>
 <%@ page import="org.ofbiz.core.entity.*" %>
 <jsp:useBean id="security" type="org.ofbiz.core.security.Security" scope="request" />
@@ -12,6 +13,10 @@
     String searchString = "";
     if (request.getParameter("first_name") != null || request.getParameter("last_name") != null) {
         searchString += "first_name=" + request.getParameter("first_name") + "&last_name=" + request.getParameter("last_name");
+    }
+    if (request.getParameter("group_name") != null) {
+        if (searchString.length() > 0) searchString += "&";
+        searchString += "group_name=" + request.getParameter("group_name");
     }
     if (request.getParameter("email") != null) {
         if (searchString.length() > 0) searchString += "&";
@@ -286,6 +291,11 @@
               <%pageContext.removeAttribute("lookupPerson");%>
               <%pageContext.removeAttribute("lookupGroup");%>
             </ofbiz:iterator>
+        </ofbiz:if>
+        <ofbiz:if name="<%=ModelService.ERROR_MESSAGE%>">
+          <tr>
+            <td colspan='4'><div class="head3"><ofbiz:print attribute="<%=ModelService.ERROR_MESSAGE%>"/></div></td>
+          </tr>
         </ofbiz:if>
         <ofbiz:unless name="parties">
           <tr>

@@ -35,7 +35,7 @@
 
 <%if(security.hasEntityPermission("ORDERMGR", "_VIEW", session)) {%>
 
-<%  Debug.logError("Getting Headers");
+<%
     Collection orderHeaderList = null;
     // search by status info
     String listStatusId = request.getParameter("listStatusId");
@@ -45,44 +45,54 @@
     String minDate = request.getParameter("minDate");
     String maxDate = request.getParameter("maxDate");
 
+    String lookupErrorMessage = null;
+
     String pageParamString = "";
-    if (partyId != null && partyId.length() > 0) {
-        pageParamString = "partyId=" + partyId;
-        pageContext.setAttribute("PARTY_MODE", "YES");
-        Collection orderRoles = delegator.findByAnd("OrderRole", UtilMisc.toMap("partyId", partyId, "roleTypeId", "PLACING_CUSTOMER"));
-        List exprs = new ArrayList();
-        if (orderRoles != null && orderRoles.size() > 0) {
-            Iterator i = orderRoles.iterator();
-            while (i.hasNext() ) {
-                GenericValue v = (GenericValue) i.next();
-                exprs.add(new EntityExpr("orderId", EntityOperator.EQUALS, v.getString("orderId")));
+    if (partyId != null) {
+        if (partyId.length() != 0) {
+            pageParamString = "partyId=" + partyId;
+            pageContext.setAttribute("PARTY_MODE", "YES");
+            Collection orderRoles = delegator.findByAnd("OrderRole", UtilMisc.toMap("partyId", partyId, "roleTypeId", "PLACING_CUSTOMER"));
+            List exprs = new ArrayList();
+            if (orderRoles != null && orderRoles.size() > 0) {
+                Iterator i = orderRoles.iterator();
+                while (i.hasNext() ) {
+                    GenericValue v = (GenericValue) i.next();
+                    exprs.add(new EntityExpr("orderId", EntityOperator.EQUALS, v.getString("orderId")));
+                }
+                if (exprs.size() > 0) {
+                    try {
+                    orderHeaderList = delegator.findByOr("OrderHeader", exprs, UtilMisc.toList("-orderDate"));
+                    } catch (Throwable t) { Debug.logError(t); }
+                }
             }
-            if (exprs.size() > 0) {
-                try {
-                orderHeaderList = delegator.findByOr("OrderHeader", exprs, UtilMisc.toList("-orderDate"));
-                } catch (Throwable t) { Debug.logError(t); }
-            }
+        } else {
+            lookupErrorMessage = "Required parameter 'partyId' cannot be empty.";
         }
     } else if (minDate != null || maxDate != null) {
         // lookup by date
-        pageParamString = "minDate=" + minDate + "&maxDate=" + maxDate;
-        pageContext.setAttribute("DATE_MODE", "YES");
-        List exprs = new ArrayList();
-        try {
-            if (minDate != null && minDate.length() > 8) {
-                minDate = minDate.trim();
-                if (minDate.length() < 14)
-                    minDate = minDate + " " + "00:00:00.000";
-                exprs.add(new EntityExpr("orderDate", EntityOperator.GREATER_THAN_EQUAL_TO, ObjectType.simpleTypeConvert(minDate, "Timestamp", null, null)));
-            }
-            if (maxDate != null && maxDate.length() > 8) {
-                maxDate = maxDate.trim();
-                if (maxDate.length() < 14)
-                    maxDate = maxDate + " " + "23:59:59.999";
-                exprs.add(new EntityExpr("orderDate", EntityOperator.LESS_THAN_EQUAL_TO, ObjectType.simpleTypeConvert(maxDate, "Timestamp", null, null)));
-            }
-            orderHeaderList = delegator.findByAnd("OrderHeader", exprs, UtilMisc.toList("-orderDate"));
-        } catch (Exception e) { Debug.logError(e); }
+        if (minDate.length() != 0 || maxDate.length() != 0) {
+            pageParamString = "minDate=" + minDate + "&maxDate=" + maxDate;
+            pageContext.setAttribute("DATE_MODE", "YES");
+            List exprs = new ArrayList();
+            try {
+                if (minDate != null && minDate.length() > 8) {
+                    minDate = minDate.trim();
+                    if (minDate.length() < 14)
+                        minDate = minDate + " " + "00:00:00.000";
+                    exprs.add(new EntityExpr("orderDate", EntityOperator.GREATER_THAN_EQUAL_TO, ObjectType.simpleTypeConvert(minDate, "Timestamp", null, null)));
+                }
+                if (maxDate != null && maxDate.length() > 8) {
+                    maxDate = maxDate.trim();
+                    if (maxDate.length() < 14)
+                        maxDate = maxDate + " " + "23:59:59.999";
+                    exprs.add(new EntityExpr("orderDate", EntityOperator.LESS_THAN_EQUAL_TO, ObjectType.simpleTypeConvert(maxDate, "Timestamp", null, null)));
+                }
+                orderHeaderList = delegator.findByAnd("OrderHeader", exprs, UtilMisc.toList("-orderDate"));
+            } catch (Exception e) { Debug.logError(e); }
+        } else {
+            lookupErrorMessage = "Both 'minDate' and 'maxDate' cannot be empty.";
+        }
     } else if (listStatusId != null) {
         // lookup by status
         pageParamString = "listStatusId=" + listStatusId;
@@ -124,6 +134,7 @@
     if (listSize < highIndex) {
         highIndex = listSize;
     }
+    if (lookupErrorMessage != null) pageContext.setAttribute("lookupErrorMessage", lookupErrorMessage);
 %>
 
 <br>
@@ -340,6 +351,11 @@
                 </td>
               </tr>
           </ofbiz:iterator>
+        </ofbiz:if>
+        <ofbiz:if name="lookupErrorMessage">
+          <tr>
+            <td colspan='4'><div class="head3"><ofbiz:print attribute="lookupErrorMessage"/></div></td>
+          </tr>
         </ofbiz:if>
         <ofbiz:unless name="orderHeaderList">
           <tr>
