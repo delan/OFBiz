@@ -216,6 +216,46 @@
         <key-map field-name="contactMechPurposeTypeId"/>
       </relation>
     </entity>
+    <entity entity-name="OrderDeliverySchedule"
+            package-name="org.ofbiz.commonapp.order.order"
+            never-cache="true"
+            title="The Order Delivery Schedule Entity">
+      <field name="orderId" type="id-ne"></field>
+      <field name="orderItemSeqId" type="id-ne"></field>
+      <field name="shipmentMethodTypeId" type="id"></field>
+      <field name="trackingNumber" type="short-varchar"></field>
+      <field name="deliveryDate" type="date-time"></field>
+      <field name="pickupDate" type="date-time"></field>
+      <field name="cartons" type="numeric"></field>
+      <field name="skidsPallets" type="numeric"></field>
+      <field name="unitsPieces" type="floating-point"></field>
+      <field name="totalCubicSize" type="floating-point"></field>
+      <field name="totalCubicUomId" type="id"></field>
+      <field name="totalWeight" type="floating-point"></field>
+      <field name="totalWeightUomId" type="id"></field>
+      <field name="statusId" type="id"></field>
+      <prim-key field="orderId"/>
+      <prim-key field="orderItemSeqId"/>
+      <relation type="one" fk-name="ORDER_DELSCH_OHDR" rel-entity-name="OrderHeader">
+        <key-map field-name="orderId"/>
+      </relation>
+      <relation type="one-nofk" rel-entity-name="OrderItem">
+        <key-map field-name="orderId"/>
+        <key-map field-name="orderItemSeqId"/>
+      </relation>
+      <relation type="one" fk-name="ORDER_DELSCH_SHMTP" rel-entity-name="ShipmentMethodType">
+        <key-map field-name="shipmentMethodTypeId"/>
+      </relation>
+      <relation type="one" fk-name="ORDER_DELSCH_TCUOM" title="TotalCubic" rel-entity-name="Uom">
+        <key-map field-name="totalCubicUomId" rel-field-name="uomId"/>
+      </relation>
+      <relation type="one" fk-name="ORDER_DELSCH_TWUOM" title="TotalWeight" rel-entity-name="Uom">
+        <key-map field-name="totalWeightUomId" rel-field-name="uomId"/>
+      </relation>
+      <relation type="one" fk-name="ORDER_DELSCH_STTS" rel-entity-name="StatusItem">
+        <key-map field-name="statusId"/>
+      </relation>
+    </entity>
     <entity entity-name="OrderHeader"
             package-name="org.ofbiz.commonapp.order.order"
             never-cache="true"
@@ -860,46 +900,6 @@
       </relation>
       <relation type="one" fk-name="ORDER_SHPREF_SHMTP" rel-entity-name="ShipmentMethodType">
         <key-map field-name="shipmentMethodTypeId"/>
-      </relation>
-    </entity>
-    <entity entity-name="OrderDeliverySchedule"
-            package-name="org.ofbiz.commonapp.order.order"
-            never-cache="true"
-            title="The Order Shipment Preference Entity">
-      <field name="orderId" type="id-ne"></field>
-      <field name="orderItemSeqId" type="id-ne"></field>
-      <field name="shipmentMethodTypeId" type="id"></field>
-      <field name="trackingNumber" type="short-varchar"></field>
-      <field name="deliveryDate" type="date-time"></field>
-      <field name="pickupDate" type="date-time"></field>
-      <field name="cartons" type="numeric"></field>
-      <field name="skidsPallets" type="numeric"></field>
-      <field name="unitsPieces" type="floating-point"></field>
-      <field name="totalCubicSize" type="floating-point"></field>
-      <field name="totalCubicUomId" type="id"></field>
-      <field name="totalWeight" type="floating-point"></field>
-      <field name="totalWeightUomId" type="id"></field>
-      <field name="statusId" type="id"></field>
-      <prim-key field="orderId"/>
-      <prim-key field="orderItemSeqId"/>
-      <relation type="one" fk-name="ORDER_DELSCH_OHDR" rel-entity-name="OrderHeader">
-        <key-map field-name="orderId"/>
-      </relation>
-      <relation type="one-nofk" rel-entity-name="OrderItem">
-        <key-map field-name="orderId"/>
-        <key-map field-name="orderItemSeqId"/>
-      </relation>
-      <relation type="one" fk-name="ORDER_DELSCH_SHMTP" rel-entity-name="ShipmentMethodType">
-        <key-map field-name="shipmentMethodTypeId"/>
-      </relation>
-      <relation type="one" fk-name="ORDER_DELSCH_TCUOM" title="TotalCubic" rel-entity-name="Uom">
-        <key-map field-name="totalCubicUomId" rel-field-name="uomId"/>
-      </relation>
-      <relation type="one" fk-name="ORDER_DELSCH_TWUOM" title="TotalWeight" rel-entity-name="Uom">
-        <key-map field-name="totalWeightUomId" rel-field-name="uomId"/>
-      </relation>
-      <relation type="one" fk-name="ORDER_DELSCH_STTS" rel-entity-name="StatusItem">
-        <key-map field-name="statusId"/>
       </relation>
     </entity>
     <entity entity-name="OrderStatus"
