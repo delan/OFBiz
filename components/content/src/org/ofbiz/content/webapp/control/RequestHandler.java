@@ -1,5 +1,5 @@
 /*
- * $Id: RequestHandler.java,v 1.8 2003/11/20 08:13:18 ajzeneski Exp $
+ * $Id: RequestHandler.java,v 1.9 2003/12/07 04:33:13 ajzeneski Exp $
  *
  * Copyright (c) 2001-2003 The Open For Business Project - www.ofbiz.org
  *
@@ -62,7 +62,7 @@ import org.ofbiz.entity.GenericValue;
  * @author     <a href="mailto:jaz@ofbiz.org">Andy Zeneski</a>
  * @author     <a href="mailto:jonesde@ofbiz.org">David E. Jones</a>
  * @author     Dustin Caldwell
- * @version    $Revision: 1.8 $
+ * @version    $Revision: 1.9 $
  * @since      2.0
  */
 public class RequestHandler implements Serializable {
@@ -131,7 +131,7 @@ public class RequestHandler implements Serializable {
                         newUrl.append("?" + request.getQueryString());
 
                     // if we are supposed to be secure, redirect secure.
-                    callRedirect(newUrl.toString(), request, response);
+                    callRedirect(newUrl.toString(), response);
                 }
             }
 
@@ -274,6 +274,7 @@ public class RequestHandler implements Serializable {
             request.getSession().removeAttribute("_PREVIOUS_REQUEST_");
             if (Debug.infoOn()) Debug.logInfo("[Doing Previous Request]: " + previousRequest, module);
             doRequest(request, response, previousRequest, userLogin, delegator);
+            return; // this is needed or else we will run the view twice
         }
 
         String successView = requestManager.getViewName(requestUri);
@@ -290,15 +291,16 @@ public class RequestHandler implements Serializable {
         if (Debug.verboseOn()) Debug.logVerbose("[Current View]: " + nextView, module);
 
         // Handle the responses - chains/views
-        else if (nextView != null && nextView.startsWith("request:")) {
-            // chained requests
-            if (Debug.verboseOn())
-                Debug.logVerbose("[RequestHandler.doRequest]: Response is a chained request.", module);
+        if (nextView != null && nextView.startsWith("request:")) {
+            // chained request
+            Debug.log("[RequestHandler.doRequest]: Response is a chained request.", module);
             nextView = nextView.substring(8);
             doRequest(request, response, nextView, userLogin, delegator);
+            return; // this just to be safe; not really needed
+
         }
 
-        // the rest are view types
+        // handle views
         else {
             // first invoke the post-processor events.
             Collection postProcEvents = requestManager.getPostProcessor();
@@ -324,26 +326,26 @@ public class RequestHandler implements Serializable {
 
             // check for a url for redirection
             if (nextView != null && nextView.startsWith("url:")) {
-                if (Debug.verboseOn()) Debug.logVerbose("[RequestHandler.doRequest]: Response is a URL redirect.", module);
+                Debug.log("[RequestHandler.doRequest]: Response is a URL redirect.", module);
                 nextView = nextView.substring(4);
-                callRedirect(nextView, request, response);
+                callRedirect(nextView, response);
             }
 
             // check for a View
             else if (nextView != null && nextView.startsWith("view:")) {
-                Debug.logVerbose("[RequestHandler.doRequest]: Response is a view.", module);
+                Debug.log("[RequestHandler.doRequest]: Response is a view.", module);
                 nextView = nextView.substring(5);
                 renderView(nextView, requestManager.allowExtView(requestUri), request, response);
             }
 
             // check for a no dispatch return (meaning the return was processed by the event
             else if (nextView != null && nextView.startsWith("none:")) {
-                Debug.logVerbose("[RequestHandler.doRequest]: Response is handled by the event.", module);
+                Debug.log("[RequestHandler.doRequest]: Response is handled by the event.", module);
             }
 
             // a page request
             else if (nextView != null) {
-                Debug.logVerbose("[RequestHandler.doRequest]: Response is a page.", module);
+                Debug.log("[RequestHandler.doRequest]: Response is a page.", module);
                 renderView(nextView, requestManager.allowExtView(requestUri), request, response);
             }
 
@@ -416,7 +418,7 @@ public class RequestHandler implements Serializable {
         return nextPage;
     }
 
-    private void callRedirect(String url, HttpServletRequest req, HttpServletResponse resp) throws RequestHandlerException {
+    private void callRedirect(String url, HttpServletResponse resp) throws RequestHandlerException {
         if (Debug.infoOn()) Debug.logInfo("[Sending redirect]: " + url, module);
         try {
             resp.sendRedirect(url);
@@ -506,7 +508,9 @@ public class RequestHandler implements Serializable {
         try {
             if (Debug.verboseOn()) Debug.logVerbose("Rendering view [" + nextPage + "] of type [" + viewType + "]", module);
             ViewHandler vh = viewFactory.getViewHandler(viewType);
-            vh.render(view, nextPage, requestManager.getViewInfo(view), contentType, charset, req, resp);           
+            Debug.log("Obtained View Handler : " + vh, module);
+            vh.render(view, nextPage, requestManager.getViewInfo(view), contentType, charset, req, resp);
+            Debug.log("Rendered View : " + view + " : " + vh, module);
         } catch (ViewHandlerException e) {
             Throwable throwable = e.getNested() != null ? e.getNested() : e;
 

@@ -48,7 +48,7 @@
     <request-map uri="login">
       <security https="true" auth="false"/>
       <event type="java" path="org.ofbiz.securityext.login.LoginEvents" invoke="login"/>
-      <response name="success" type="request" value="checkLogin"/>
+      <response name="success" type="view" value="main"/>
       <response name="error" type="view" value="login"/>
     </request-map>
 
