@@ -1,5 +1,5 @@
 /*
- * $Id: ShippingEvents.java,v 1.11 2004/07/28 22:04:45 ajzeneski Exp $
+ * $Id: ShippingEvents.java,v 1.12 2004/08/12 02:18:13 ajzeneski Exp $
  *
  *  Copyright (c) 2001, 2002 The Open For Business Project - www.ofbiz.org
  *
@@ -23,8 +23,10 @@
  */
 package org.ofbiz.order.shoppingcart.shipping;
 
-import java.util.*;
-
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
@@ -34,18 +36,18 @@ import org.ofbiz.base.util.UtilValidate;
 import org.ofbiz.entity.GenericDelegator;
 import org.ofbiz.entity.GenericEntityException;
 import org.ofbiz.entity.GenericValue;
-import org.ofbiz.entity.util.EntityUtil;
 import org.ofbiz.order.order.OrderReadHelper;
 import org.ofbiz.order.shoppingcart.ShoppingCart;
+import org.ofbiz.service.GenericServiceException;
+import org.ofbiz.service.LocalDispatcher;
 import org.ofbiz.service.ModelService;
 import org.ofbiz.service.ServiceUtil;
-import org.ofbiz.common.geo.GeoWorker;
 
 /**
  * ShippingEvents - Events used for processing shipping fees
  *
  * @author     <a href="mailto:jaz@ofbiz.org">Andy Zeneski</a>
- * @version    $Revision: 1.11 $
+ * @version    $Revision: 1.12 $
  * @since      2.0
  */
 public class ShippingEvents {
@@ -54,8 +56,10 @@ public class ShippingEvents {
 
     public static String getShipEstimate(HttpServletRequest request, HttpServletResponse response) {
         ShoppingCart cart = (ShoppingCart) request.getSession().getAttribute("shoppingCart");
+        LocalDispatcher dispatcher = (LocalDispatcher) request.getAttribute("dispatcher");
         GenericDelegator delegator = (GenericDelegator) request.getAttribute("delegator");
-        Map result = getShipEstimate(delegator, cart, null);
+
+        Map result = getShipEstimate(dispatcher, delegator, cart, null);
         ServiceUtil.getMessages(request, result, null, "", "", "", "", null, null);
         if (result.get(ModelService.RESPONSE_MESSAGE).equals(ModelService.RESPOND_ERROR)) {
             return "error";
@@ -76,7 +80,7 @@ public class ShippingEvents {
         return "success";
     }
 
-    public static Map getShipEstimate(GenericDelegator delegator, ShoppingCart cart, String shippingMethod) {
+    public static Map getShipEstimate(LocalDispatcher dispatcher, GenericDelegator delegator, ShoppingCart cart, String shippingMethod) {
         String shipmentMethodTypeId = null;
         String carrierPartyId = null;
         if (UtilValidate.isNotEmpty(shippingMethod)) {
@@ -89,10 +93,13 @@ public class ShippingEvents {
             shipmentMethodTypeId = cart.getShipmentMethodTypeId();
             carrierPartyId = cart.getCarrierPartyId();
         }
-        return getShipEstimate(delegator, cart.getOrderType(), shipmentMethodTypeId, carrierPartyId, cart.getShippingContactMechId(), cart.getProductStoreId(), cart.getShippableSizes(), cart.getFeatureIdQtyMap(), cart.getShippableWeight(), cart.getShippableQuantity(), cart.getShippableTotal());
+        return getShipEstimate(dispatcher, delegator, cart.getOrderType(), shipmentMethodTypeId, carrierPartyId, null,
+                cart.getShippingContactMechId(), cart.getProductStoreId(), cart.getShippableSizes(),
+                cart.getFeatureIdQtyMap(), cart.getShippableWeight(), cart.getShippableQuantity(),
+                cart.getShippableTotal());
     }
 
-    public static Map getShipEstimate(GenericDelegator delegator, OrderReadHelper orh) {
+    public static Map getShipEstimate(LocalDispatcher dispatcher, GenericDelegator delegator, OrderReadHelper orh) {
         String shippingMethod = orh.getShippingMethodCode();
         String shipmentMethodTypeId = null;
         String carrierPartyId = null;
@@ -105,13 +112,16 @@ public class ShippingEvents {
         }
         GenericValue shipAddr = orh.getShippingAddress();
         String contactMechId = shipAddr.getString("contactMechId");
-        return getShipEstimate(delegator, orh.getOrderTypeId(), shipmentMethodTypeId, carrierPartyId, contactMechId, orh.getProductStoreId(), orh.getShippableSizes(), orh.getFeatureIdQtyMap(), orh.getShippableWeight(), orh.getShippableQuantity(), orh.getShippableTotal());
+        return getShipEstimate(dispatcher, delegator, orh.getOrderTypeId(), shipmentMethodTypeId, carrierPartyId, null,
+                contactMechId, orh.getProductStoreId(), orh.getShippableSizes(), orh.getFeatureIdQtyMap(),
+                orh.getShippableWeight(), orh.getShippableQuantity(), orh.getShippableTotal());
     }
 
-    public static Map getShipEstimate(GenericDelegator delegator, String orderTypeId, String shipmentMethodTypeId, String carrierPartyId, String shippingContactMechId, String productStoreId, List itemSizes, Map featureMap, double shippableWeight, double shippableQuantity, double shippableTotal) {
-        String standardMessage = "A problem occurred calculating shipping. Fees will be calculated offline.";
+    public static Map getShipEstimate(LocalDispatcher dispatcher, GenericDelegator delegator, String orderTypeId,
+            String shipmentMethodTypeId, String carrierPartyId, String carrierRoleTypeId, String shippingContactMechId,
+            String productStoreId, List itemSizes, Map featureMap, double shippableWeight, double shippableQuantity,
+            double shippableTotal) {
         List errorMessageList = new ArrayList();
-        StringBuffer errorMessage = new StringBuffer();
 
         if (shipmentMethodTypeId == null || carrierPartyId == null) {
             if ("SALES_ORDER".equals(orderTypeId)) {
@@ -120,6 +130,10 @@ public class ShippingEvents {
             } else {
                 return ServiceUtil.returnSuccess();
             }
+        }
+
+        if (carrierRoleTypeId == null) {
+            carrierRoleTypeId = "CARRIER";
         }
 
         if (shippingContactMechId == null) {
@@ -140,272 +154,87 @@ public class ShippingEvents {
             return result;
         }
 
-        // Get the ShipmentCostEstimate(s)
-        Collection estimates = null;
+        // check for an external service call
+        Map storeFields = UtilMisc.toMap("productStoreId", productStoreId, "shipmentMethodTypeId", shipmentMethodTypeId,
+                "partyId", carrierPartyId, "roleTypeId", carrierRoleTypeId);
 
+        GenericValue storeShipMeth = null;
         try {
-            Map fields = UtilMisc.toMap("productStoreId", productStoreId, "shipmentMethodTypeId", shipmentMethodTypeId, "carrierPartyId", carrierPartyId, "carrierRoleTypeId", "CARRIER");
-
-            estimates = delegator.findByAnd("ShipmentCostEstimate", fields);
-            if (Debug.verboseOn()) Debug.logVerbose("Estimate fields: " + fields, module);
-            if (Debug.verboseOn()) Debug.logVerbose("Estimate(s): " + estimates, module);
+            storeShipMeth = delegator.findByPrimaryKeyCache("ProductStoreShipmentMeth", storeFields);
         } catch (GenericEntityException e) {
-            Debug.logError("[ShippingEvents.getShipEstimate] Cannot get shipping estimates.", module);
-            return ServiceUtil.returnSuccess(standardMessage);
-        }
-        if (estimates == null || estimates.size() < 1) {
-            Debug.logInfo("[ShippingEvents.getShipEstimate] No shipping estimate found.", module);
-            return ServiceUtil.returnSuccess(standardMessage);
+            Debug.logError(e, module);
         }
 
-        if (Debug.verboseOn()) Debug.logVerbose("[ShippingEvents.getShipEstimate] Estimates begin size: " + estimates.size(), module);
+        if (storeShipMeth == null) {
+            Debug.logError("No ProductStoreShipmentMeth found - " + storeFields, module);
+            errorMessageList.add("System error.");
+            return ServiceUtil.returnError(errorMessageList);
+        }
 
-        // Get the PostalAddress
-        GenericValue shipAddress = null;
+        // the initial amount before manual estimates
+        double shippingTotal = 0.00;
 
+        // prepare the service invocation fields
+        Map serviceFields = new HashMap();
+        serviceFields.put("initialEstimateAmt", new Double(shippingTotal));
+        serviceFields.put("shippableTotal", new Double(shippableTotal));
+        serviceFields.put("shippableQuantity", new Double(shippableQuantity));
+        serviceFields.put("shippableWeight", new Double(shippableWeight));
+        serviceFields.put("shippableFeatureMap", featureMap);
+        serviceFields.put("shippableItemSizes", itemSizes);
+        serviceFields.put("productStoreId", productStoreId);
+        serviceFields.put("carrierRoleTypeId", "CARRIER");
+        serviceFields.put("carrierPartyId", carrierPartyId);
+        serviceFields.put("shipmentMethodTypeId", shipmentMethodTypeId);
+        serviceFields.put("shippingContactMechId", shippingContactMechId);
+
+        // invoke the generic estimate service first
+        Map initalEstimate = null;
         try {
-            shipAddress = delegator.findByPrimaryKey("PostalAddress", UtilMisc.toMap("contactMechId", shippingContactMechId));
-        } catch (GenericEntityException e) {
-            Debug.logError("[ShippingEvents.getShipEstimate] Cannot get shipping address entity.", module);
-            return ServiceUtil.returnSuccess(standardMessage);
+            initalEstimate = dispatcher.runSync("calcShipmentCostEstimate", serviceFields);
+        } catch (GenericServiceException e) {
+            Debug.logError(e, module);
+            return ServiceUtil.returnError("System Service Error");
+        }
+        if (ServiceUtil.isError(initalEstimate)) {
+            return initalEstimate;
+        } else {
+            Double initialShipAmt = (Double) initalEstimate.get("shippingEstimateAmount");
+            if (initialShipAmt != null) {
+                shippingTotal += initialShipAmt.doubleValue();
+            }
         }
 
-        // Get the possible estimates.
-        ArrayList estimateList = new ArrayList();
-        Iterator i = estimates.iterator();
+        // invoke the external shipping estimate service - amount gets added to the inital total
+        if (storeShipMeth.get("serviceName") != null) {
+            String serviceName = storeShipMeth.getString("serviceName");
+            String configProps = storeShipMeth.getString("configProps");
+            if (UtilValidate.isNotEmpty(serviceName)) {
+                // prepare the external service context
+                serviceFields.put("serviceConfigProps", configProps);
+                serviceFields.put("initialEstimateAmt", new Double(shippingTotal));
 
-        while (i.hasNext()) {
-            GenericValue thisEstimate = (GenericValue) i.next();
-            String toGeo = thisEstimate.getString("geoIdTo");
-            List toGeoList = GeoWorker.expandGeoGroup(toGeo, delegator);
-
-            // Make sure we have a valid GEOID.
-            if (toGeoList == null || toGeoList.size() == 0 ||
-                    GeoWorker.containsGeo(toGeoList, shipAddress.getString("countryGeoId"), delegator) ||
-                    GeoWorker.containsGeo(toGeoList, shipAddress.getString("stateProvinceGeoId"), delegator) ||
-                    GeoWorker.containsGeo(toGeoList, shipAddress.getString("postalCodeGeoId"), delegator)) {
-
-                /*
-                if (toGeo == null || toGeo.equals("") || toGeo.equals(shipAddress.getString("countryGeoId")) ||
-                toGeo.equals(shipAddress.getString("stateProvinceGeoId")) ||
-                toGeo.equals(shipAddress.getString("postalCodeGeoId"))) {
-                 */
-
-                GenericValue wv = null;
-                GenericValue qv = null;
-                GenericValue pv = null;
-
+                // invoke the service
+                Map serviceResp = null;
                 try {
-                    wv = thisEstimate.getRelatedOne("WeightQuantityBreak");
-                } catch (GenericEntityException e) {}
-                try {
-                    qv = thisEstimate.getRelatedOne("QuantityQuantityBreak");
-                } catch (GenericEntityException e) {}
-                try {
-                    pv = thisEstimate.getRelatedOne("PriceQuantityBreak");
-                } catch (GenericEntityException e) {}
-                if (wv == null && qv == null && pv == null) {
-                    estimateList.add(thisEstimate);
+                    Debug.log("Service : " + serviceName + " / " + configProps + " -- " + serviceFields, module);
+                    serviceResp = dispatcher.runSync(serviceName, serviceFields);
+                } catch (GenericServiceException e) {
+                    Debug.logError(e, module);
+                    return ServiceUtil.returnError("System Service Error");
+                }
+                if (!ServiceUtil.isError(serviceResp)) {
+                    Double externalShipAmt = (Double) serviceResp.get("shippingEstimateAmount");
+                    if (externalShipAmt != null) {
+                        shippingTotal += externalShipAmt.doubleValue();
+                    }
                 } else {
-                    // Do some testing.
-                    boolean useWeight = false;
-                    boolean weightValid = false;
-                    boolean useQty = false;
-                    boolean qtyValid = false;
-                    boolean usePrice = false;
-                    boolean priceValid = false;
-
-                    if (wv != null) {
-                        useWeight = true;
-                        double min = 0.0001;
-                        double max = 0.0001;
-
-                        try {
-                            min = wv.getDouble("fromQuantity").doubleValue();
-                            max = wv.getDouble("thruQuantity").doubleValue();
-                        } catch (Exception e) {}
-                        if (shippableWeight >= min && (max == 0 || shippableWeight <= max))
-                            weightValid = true;
-                    }
-                    if (qv != null) {
-                        useQty = true;
-                        double min = 0.0001;
-                        double max = 0.0001;
-
-                        try {
-                            min = qv.getDouble("fromQuantity").doubleValue();
-                            max = qv.getDouble("thruQuantity").doubleValue();
-                        } catch (Exception e) {}
-                        if (shippableQuantity >= min && (max == 0 || shippableQuantity <= max))
-                            qtyValid = true;
-                    }
-                    if (pv != null) {
-                        usePrice = true;
-                        double min = 0.0001;
-                        double max = 0.0001;
-
-                        try {
-                            min = pv.getDouble("fromQuantity").doubleValue();
-                            max = pv.getDouble("thruQuantity").doubleValue();
-                        } catch (Exception e) {}
-                        if (shippableTotal >= min && (max == 0 || shippableTotal <= max))
-                            priceValid = true;
-                    }
-                    // Now check the tests.
-                    if ((useWeight && weightValid) || (useQty && qtyValid) || (usePrice && priceValid))
-                        estimateList.add(thisEstimate);
+                    return serviceResp;
                 }
             }
         }
 
-        if (Debug.verboseOn()) Debug.logVerbose("[ShippingEvents.getShipEstimate] Estimates left after GEO filter: " + estimateList.size(), module);
-
-        if (estimateList.size() < 1) {
-            Debug.logInfo("[ShippingEvents.getShipEstimate] No shipping estimate found.", module);
-            return ServiceUtil.returnSuccess(standardMessage);
-        }
-
-        // Calculate priority based on available data.
-        double PRIORITY_PARTY = 9;
-        double PRIORITY_ROLE = 8;
-        double PRIORITY_GEO = 4;
-        double PRIORITY_WEIGHT = 1;
-        double PRIORITY_QTY = 1;
-        double PRIORITY_PRICE = 1;
-
-        int estimateIndex = 0;
-
-        if (estimateList.size() > 1) {
-            TreeMap estimatePriority = new TreeMap();
-            //int estimatePriority[] = new int[estimateList.size()];
-
-            for (int x = 0; x < estimateList.size(); x++) {
-                GenericValue currentEstimate = (GenericValue) estimateList.get(x);
-
-                int prioritySum = 0;
-                if (UtilValidate.isNotEmpty(currentEstimate.getString("partyId")))
-                    prioritySum += PRIORITY_PARTY;
-                if (UtilValidate.isNotEmpty(currentEstimate.getString("roleTypeId")))
-                    prioritySum += PRIORITY_ROLE;
-                if (UtilValidate.isNotEmpty(currentEstimate.getString("geoIdTo")))
-                    prioritySum += PRIORITY_GEO;
-                if (UtilValidate.isNotEmpty(currentEstimate.getString("weightBreakId")))
-                    prioritySum += PRIORITY_WEIGHT;
-                if (UtilValidate.isNotEmpty(currentEstimate.getString("quantityBreakId")))
-                    prioritySum += PRIORITY_QTY;
-                if (UtilValidate.isNotEmpty(currentEstimate.getString("priceBreakId")))
-                    prioritySum += PRIORITY_PRICE;
-
-                // there will be only one of each priority; latest will replace
-                estimatePriority.put(new Integer(prioritySum), currentEstimate);
-            }
-
-            // locate the highest priority estimate; or the latest entered
-            Object[] estimateArray = estimatePriority.values().toArray();
-            estimateIndex = estimateList.indexOf(estimateArray[estimateArray.length - 1]);
-        }
-
-        // Grab the estimate and work with it.
-        GenericValue estimate = (GenericValue) estimateList.get(estimateIndex);
-
-        //Debug.log("[ShippingEvents.getShipEstimate] Working with estimate [" + estimateIndex + "]: " + estimate, module);
-
-        // flat fees
-        double orderFlat = 0.00;
-        if (estimate.getDouble("orderFlatPrice") != null)
-            orderFlat = estimate.getDouble("orderFlatPrice").doubleValue();
-
-        double orderItemFlat = 0.00;
-        if (estimate.getDouble("orderItemFlatPrice") != null)
-            orderItemFlat = estimate.getDouble("orderItemFlatPrice").doubleValue();
-
-        double orderPercent = 0.00;
-        if (estimate.getDouble("orderPricePercent") != null)
-            orderPercent = estimate.getDouble("orderPricePercent").doubleValue();
-
-        double itemFlatAmount = shippableQuantity * orderItemFlat;
-        double orderPercentage = shippableTotal * (orderPercent / 100);
-
-        // flat total
-        double flatTotal = orderFlat + itemFlatAmount + orderPercentage;
-
-        // spans
-        double weightUnit = 0.00;
-        if (estimate.getDouble("weightUnitPrice") != null)
-            weightUnit = estimate.getDouble("weightUnitPrice").doubleValue();
-
-        double qtyUnit = 0.00;
-        if (estimate.getDouble("quantityUnitPrice") != null)
-            qtyUnit = estimate.getDouble("quantityUnitPrice").doubleValue();
-
-        double priceUnit = 0.00;
-        if (estimate.getDouble("priceUnitPrice") != null)
-            priceUnit = estimate.getDouble("priceUnitPrice").doubleValue();
-
-        double weightAmount = shippableWeight * weightUnit;
-        double quantityAmount = shippableQuantity * qtyUnit;
-        double priceAmount = shippableTotal * priceUnit;
-
-        // span total
-        double spanTotal = weightAmount + quantityAmount + priceAmount;
-
-        // feature surcharges
-        double featureSurcharge = 0.00;
-        String featureGroupId = estimate.getString("productFeatureGroupId");
-        Double featurePercent = estimate.getDouble("featurePercent");
-        Double featurePrice = estimate.getDouble("featurePrice");
-        if (featurePercent == null) {
-            featurePercent = new Double(0);
-        }
-        if (featurePrice == null) {
-            featurePrice = new Double(0.00);
-        }
-
-        if (featureGroupId != null && featureGroupId.length() > 0 && featureMap != null ) {
-            Iterator fii = featureMap.keySet().iterator();
-            while (fii.hasNext()) {
-                String featureId = (String) fii.next();
-                Double quantity = (Double) featureMap.get(featureId);
-                GenericValue appl = null;
-                Map fields = UtilMisc.toMap("productFeatureGroupId", featureGroupId, "productFeatureId", featureId);
-                try {
-                    List appls = delegator.findByAndCache("ProductFeatureGroupAppl", fields);
-                    appls = EntityUtil.filterByDate(appls);
-                    appl = EntityUtil.getFirst(appls);
-                } catch (GenericEntityException e) {
-                    Debug.logError(e, "Unable to lookup feature/group" + fields, module);
-                }
-                if (appl != null) {
-                    featureSurcharge += (shippableTotal * (featurePercent.doubleValue() / 100) * quantity.doubleValue());
-                    featureSurcharge += featurePrice.doubleValue() * quantity.doubleValue();
-                }
-            }
-        }
-
-        // size surcharges
-        double sizeSurcharge = 0.00;
-        Double sizeUnit = estimate.getDouble("oversizeUnit");
-        Double sizePrice = estimate.getDouble("oversizePrice");
-        if (sizeUnit != null && sizeUnit.doubleValue() > 0) {
-            if (itemSizes != null) {
-                Iterator isi = itemSizes.iterator();
-                while (isi.hasNext()) {
-                    Double size = (Double) isi.next();
-                    if (size != null && size.doubleValue() >= sizeUnit.doubleValue()) {
-                        sizeSurcharge += sizePrice.doubleValue();
-                    }
-                }
-            }
-        }
-
-        // surcharges total
-        double surchargeTotal = featureSurcharge + sizeSurcharge;
-
-        // shipping total
-        double shippingTotal = spanTotal + flatTotal + surchargeTotal;
-
-        if (Debug.verboseOn()) Debug.logVerbose("[ShippingEvents.getShipEstimate] Setting shipping amount : " + shippingTotal, module);
-
+        // return the totals
         Map responseResult = ServiceUtil.returnSuccess();
         responseResult.put("shippingTotal", new Double(shippingTotal));
         return responseResult;

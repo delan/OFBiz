@@ -21,7 +21,7 @@
  *
  *@author     Andy Zeneski (jaz@ofbiz.org)
  *@author     Catherine.Heintz@nereide.biz (migration to UiLabel)
- *@version    $Revision: 1.15 $
+ *@version    $Revision: 1.16 $
  *@since      2.2
 -->
 <#assign uiLabelMap = requestAttributes.uiLabelMap>
@@ -703,6 +703,20 @@ function setAssocFields(select) {
           <td>
             <input type="text" class="inputBox" name="excludeFeatureGroup" size="20">
             <span class="tabletext">Displays only if all items have no features in this group</span>
+          </td>
+        </tr>
+        <tr>
+          <td align="right"><span class="tableheadtext">Service Name</span></td>
+          <td>
+            <input type="text" class="inputBox" name="serviceName" size="25">
+            <span class="tabletext"></span>
+          </td>
+        </tr>
+        <tr>
+          <td align="right"><span class="tableheadtext">Service Config</span></td>
+          <td>
+            <input type="text" class="inputBox" name="configProps" size="25">
+            <span class="tabletext"></span>
           </td>
         </tr>
         <tr>

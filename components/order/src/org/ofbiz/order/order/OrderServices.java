@@ -1,5 +1,5 @@
 /*
- * $Id: OrderServices.java,v 1.45 2004/07/29 20:56:35 ajzeneski Exp $
+ * $Id: OrderServices.java,v 1.46 2004/08/12 02:18:12 ajzeneski Exp $
  *
  *  Copyright (c) 2001-2004 The Open For Business Project - www.ofbiz.org
  *
@@ -76,7 +76,7 @@ import org.ofbiz.workflow.WfUtil;
  * @author     <a href="mailto:jaz@ofbiz.org">Andy Zeneski</a>
  * @author     <a href="mailto:cnelson@einnovation.com">Chris Nelson</a>
  * @author     <a href="mailto:jonesde@ofbiz.org">David E. Jones</a>
- * @version    $Revision: 1.45 $
+ * @version    $Revision: 1.46 $
  * @since      2.0
  */
 
@@ -811,6 +811,7 @@ public class OrderServices {
 
     /** Service for checking and re-calc the shipping amount */
     public static Map recalcOrderShipping(DispatchContext ctx, Map context) {
+        LocalDispatcher dispatcher = ctx.getDispatcher();
         GenericDelegator delegator = ctx.getDelegator();
         String orderId = (String) context.get("orderId");
         GenericValue userLogin = (GenericValue) context.get("userLogin");
@@ -846,7 +847,7 @@ public class OrderServices {
             Debug.logVerbose("Shippable Total : " + orh.getShippableTotal(), module);
         }
 
-        Map shippingEstMap = ShippingEvents.getShipEstimate(delegator, orh);
+        Map shippingEstMap = ShippingEvents.getShipEstimate(dispatcher, delegator, orh);
 
         Double shippingTotal = null;
         if (orh.getValidOrderItems() == null || orh.getValidOrderItems().size() == 0) {

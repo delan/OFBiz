@@ -20,7 +20,7 @@
  *  THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  *
  *@author     Andy Zeneski (jaz@ofbiz.org)
- *@version    $Revision: 1.19 $
+ *@version    $Revision: 1.20 $
  *@since      2.1
 -->
 
@@ -185,10 +185,10 @@ function toggleBillingAccount(box) {
                           <td valign="top">
                             <div class='tabletext'>
                               <#if cart.getShippingContactMechId()?exists>
-                                <#assign shippingEstMap = Static["org.ofbiz.order.shoppingcart.shipping.ShippingEvents"].getShipEstimate(delegator, cart, shippingMethod)>
+                                <#assign shippingEst = shippingEstWpr.getShippingEstimate(carrierShipmentMethod)?default(-1)>
                               </#if>
                               <#if carrierShipmentMethod.partyId != "_NA_">${carrierShipmentMethod.partyId?if_exists}&nbsp;</#if>${carrierShipmentMethod.description?if_exists}
-                              <#if shippingEstMap?has_content> - <#if (shippingEstMap.shippingTotal)?exists><@ofbizCurrency amount=shippingEstMap.shippingTotal isoCode=cart.getCurrency()/><#else>Calculated Offline</#if></#if>
+                              <#if shippingEst?has_content> - <#if (shippingEst > -1)?exists><@ofbizCurrency amount=shippingEst isoCode=cart.getCurrency()/><#else>Calculated Offline</#if></#if>
                             </div>
                           </td>
                         </tr>
