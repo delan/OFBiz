@@ -26,7 +26,7 @@
  *
  * @author     David E. Jones (jonesde@ofbiz.org)
  * @author     Andy Zeneski (jaz@ofbiz.org)
- * @version    $Revision: 1.22 $
+ * @version    $Revision: 1.23 $
  */
 -->
 
@@ -1689,14 +1689,18 @@
     <entity entity-name="ProductContent"
             package-name="org.ofbiz.product.product"
             title="Product Data Object Entity">
-      <field name="contentId" type="id-ne"></field>
       <field name="productId" type="id-ne"></field>
-      <field name="purposeEnumId" type="id-ne"></field>
+      <field name="contentId" type="id-ne"></field>
+      <field name="productContentTypeId" type="id-ne"></field>
       <field name="fromDate" type="date-time"></field>
       <field name="thruDate" type="date-time"></field>
+      <field name="purchaseFromDate" type="date-time"></field>
+      <field name="purchaseThruDate" type="date-time"></field>
+      <field name="useCountLimit" type="numeric"></field>
+      <field name="useDaysLimit" type="floating-point"></field>
       <prim-key field="contentId"/>
       <prim-key field="productId"/>
-      <prim-key field="purposeEnumId"/>
+      <prim-key field="productContentTypeId"/>
       <prim-key field="fromDate"/>
       <relation type="one" fk-name="PROD_CNT_PROD" rel-entity-name="Product">
         <key-map field-name="productId"/>
@@ -1704,8 +1708,26 @@
       <relation type="one" fk-name="PROD_CNT_CNT" rel-entity-name="Content">
         <key-map field-name="contentId"/>
       </relation>
-      <relation type="one" fk-name="PROD_CNT_ENUM" rel-entity-name="Enumeration">
-        <key-map field-name="purposeEnumId" rel-field-name="enumId"/>
+      <relation type="one" fk-name="PROD_CNT_TYPE" rel-entity-name="ProductContentType">
+        <key-map field-name="productContentTypeId"/>
+      </relation>
+    </entity>
+    <entity entity-name="ProductContentType"
+            package-name="org.ofbiz.product.product"
+            title="Product Content Type Entity">
+      <field name="productContentTypeId" type="id-ne"></field>
+      <field name="parentTypeId" type="id"></field>
+      <field name="hasTable" type="indicator"></field>
+      <field name="description" type="description"></field>
+      <prim-key field="productContentTypeId"/>
+      <relation type="one" fk-name="PRDCT_TYP_PARENT" title="Parent" rel-entity-name="ProductContentType">
+        <key-map field-name="parentTypeId" rel-field-name="productContentTypeId"/>
+      </relation>
+      <relation type="many" title="Child" rel-entity-name="ProductContentType">
+        <key-map field-name="productContentTypeId" rel-field-name="parentTypeId"/>
+      </relation>
+      <relation type="many" rel-entity-name="ProductContent">
+        <key-map field-name="productContentTypeId"/>
       </relation>
     </entity>
     <entity entity-name="ProductGlAccount"
