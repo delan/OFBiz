@@ -49,7 +49,7 @@ public class CommonWorkers {
 
     public static List getCountryList(GenericDelegator delegator) {
         List geoList = new ArrayList();
-        String defaultCountry = UtilProperties.getPropertyValue("general.properties", "country.uom.id.default");
+        String defaultCountry = UtilProperties.getPropertyValue("general.properties", "country.geo.id.default");
         GenericValue defaultGeo = null;
         if (defaultCountry != null && defaultCountry.length() > 0) { 
             try {
@@ -89,7 +89,7 @@ public class CommonWorkers {
     public static List getAssociatedStateList(GenericDelegator delegator, String country) {
       if ( country == null || country.length() == 0 ) {
         // Load the system default country
-        country = UtilProperties.getPropertyValue("general.properties", "country.uom.id.default");
+        country = UtilProperties.getPropertyValue("general.properties", "country.geo.id.default");
       }
       List geoList = new ArrayList();
       Map geoAssocFindMap = UtilMisc.toMap("geoId", country, "geoAssocTypeId","REGIONS");
