@@ -4,5 +4,5 @@
     <property name="title">Survey Responses</property>
     <property name="headerItem">Survey</property>
     <property name="tabButtonItem">ViewSurveyResponses</property>
-    <content-action name="/survey/SurveyResponse.bsh"/>
+    <page-action name="/survey/SurveyResponse.bsh"/>
 </page>

@@ -4,5 +4,5 @@
     <property name="title">Edit Survey</property>
     <property name="headerItem">Survey</property>
     <property name="tabButtonItem">EditSurvey</property>
-    <content-action name="/survey/EditSurvey.bsh"/>
+    <page-action name="/survey/EditSurvey.bsh"/>
 </page>
