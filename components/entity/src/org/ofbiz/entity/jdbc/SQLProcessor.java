@@ -1,5 +1,5 @@
 /*
- * $Id: SQLProcessor.java,v 1.5 2003/12/04 02:49:59 ajzeneski Exp $
+ * $Id: SQLProcessor.java,v 1.6 2004/02/02 12:37:08 jonesde Exp $
  *
  * Copyright (c) 2001, 2002 The Open For Business Project - www.ofbiz.org
  *
@@ -48,7 +48,7 @@ import org.ofbiz.entity.transaction.TransactionUtil;
  * SQLProcessor - provides utitlity functions to ease database access
  * 
  * @author     <a href="mailto:jonesde@ofbiz.org">David E. Jones</a> 
- * @version    $Revision: 1.5 $
+ * @version    $Revision: 1.6 $
  * @since      2.0
  */
 public class SQLProcessor {
@@ -386,7 +386,7 @@ public class SQLProcessor {
             // if (Debug.verboseOn()) Debug.logVerbose("[SQLProcessor.executeUpdate] ps=" + _ps.toString(), module);
             return _ps.executeUpdate();
         } catch (SQLException sqle) {
-            Debug.logError(sqle, "SQLProcessor.executeUpdate() : ERROR : ", module);
+            // don't display this here, may not be critical, allow handling further up... Debug.logError(sqle, "SQLProcessor.executeUpdate() : ERROR : ", module);
             throw new GenericDataSourceException("SQL Exception while executing the following:" + _sql, sqle);
         }
     }
