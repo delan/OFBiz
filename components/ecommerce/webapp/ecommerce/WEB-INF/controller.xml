@@ -867,6 +867,12 @@
         <response name="success" type="view" value="profilesurvey"/>
         <response name="error" type="view" value="profilesurvey"/>
     </request-map>
+    <request-map uri="minipoll">
+        <security https="false" auth="false"/>
+        <event type="service" invoke="createSurveyResponse"/>
+        <response name="success" type="view" value="main"/>
+        <response name="error" type="view" value="main"/>
+    </request-map>
 
     <request-map uri="messagelist">
         <security https="true" auth="true"/>

@@ -20,7 +20,7 @@
  *  THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  *
  *@author     Andy Zeneski (jaz@ofbiz.org)
- *@version    $Revision: 1.6 $
+ *@version    $Revision: 1.7 $
  *@since      3.0
 -->
 <#assign uiLabelMap = requestAttributes.uiLabelMap>
@@ -33,6 +33,7 @@
   <table border="1" cellpadding="2" cellspacing="0" width="100%">
     <tr>
       <td><span class="tableheadtext">Type</span></td>
+      <td><span class="tableheadtext">Name</span></td>
       <td><span class="tableheadtext">Survey</span></td>
       <td><span class="tableheadtext">Product</span></td>
       <td><span class="tableheadtext">Category</span></td>
@@ -46,6 +47,7 @@
       <#assign survey = storeSurvey.getRelatedOne("Survey")>
       <tr>
         <td><span class="tabletext">${surveyType.description}</span></td>
+        <td><span class="tabletext">${storeSurvey.groupName?if_exists}</span></td>
         <td><a href="/content/control/EditSurvey?surveyId=${storeSurvey.surveyId}" class="buttontext">${survey.description?default("[" + survey.surveyId + "]")}</a>
         <td><span class="tabletext">${storeSurvey.productId?default("N/A")}</span></td>
         <td><span class="tabletext">${storeSurvey.productCategoryId?default("N/A")}</span></td>
@@ -68,6 +70,12 @@
               <option value="${type.surveyApplTypeId}">${type.description}</option>
             </#list>
           </select>
+        </td>
+      </tr>
+      <tr>
+        <td><span class="tableheadtext">Group Name</span></td>
+        <td>
+          <input type="text" class="inputBox" size="20" name="groupName">          
         </td>
       </tr>
       <tr>

@@ -1,5 +1,5 @@
 /*
- * $Id: SurveyWrapper.java,v 1.11 2004/05/25 16:22:20 ajzeneski Exp $
+ * $Id: SurveyWrapper.java,v 1.12 2004/07/06 21:17:22 ajzeneski Exp $
  *
  *  Copyright (c) 2003 The Open For Business Project - www.ofbiz.org
  *
@@ -58,7 +58,7 @@ import freemarker.ext.beans.BeansWrapper;
  * Survey Wrapper - Class to render survey forms
  *
  * @author     <a href="mailto:jaz@ofbiz.org">Andy Zeneski</a>
- * @version    $Revision: 1.11 $
+ * @version    $Revision: 1.12 $
  * @since      3.0
  */
 public class SurveyWrapper {
@@ -167,6 +167,14 @@ public class SurveyWrapper {
             Debug.logError(e, "Unable to get Survey : " + surveyId, module);
         }
         return survey;
+    }
+
+    public String getSurveyName() {
+        GenericValue survey = this.getSurvey();
+        if (survey != null) {
+            return survey.getString("surveyName");
+        }
+        return "";
     }
 
     // true if we can update this survey
