@@ -684,8 +684,8 @@ public class ContentWorker {
         ModelEntity modelEntity = delegator.getModelEntity(entityName);
         String pkFieldName = getPkFieldName(entityName, modelEntity);
         GenericValue ownerContent = delegator.findByPrimaryKeyCache(entityName, UtilMisc.toMap(pkFieldName, entityId));
-        String ownerContentId = ownerContent.getString(ownerIdFieldName);
-        if (UtilValidate.isNotEmpty(ownerContentId)) {
+        if (ownerContent != null) {
+            String ownerContentId = ownerContent.getString(ownerIdFieldName);
             contentOwnerList.add(ownerContentId);
             getEntityOwners(delegator, ownerContentId, contentOwnerList, entityName, ownerIdFieldName );   
         }

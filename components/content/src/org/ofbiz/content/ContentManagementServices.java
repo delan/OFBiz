@@ -1513,11 +1513,24 @@ Debug.logInfo("updateSiteRoles, serviceContext(2):" + serviceContext, module);
         Map result = null;
         GenericDelegator delegator = dctx.getDelegator();
         LocalDispatcher dispatcher = dctx.getDispatcher();
+        Security security = dctx.getSecurity();
+        GenericValue userLogin = (GenericValue)context.get("userLogin");
+        if (!security.hasEntityPermission("CONTENTMGR", "_ADMIN", userLogin)) {
+            return ServiceUtil.returnError("Permission denied.");
+        }
         String contentId = (String)context.get("contentId");
         String serviceName = (String)context.get("serviceName");
-        GenericValue userLogin = (GenericValue)context.get("userLogin");
+        String contentAssocTypeId = (String)context.get("contentAssocTypeId");
+        List contentAssocTypeIdList = new ArrayList();
+        if (UtilValidate.isNotEmpty(contentAssocTypeId)) {
+             contentAssocTypeIdList = StringUtil.split(contentAssocTypeId, "|");   
+        }
+        if (contentAssocTypeIdList.size() == 0) {
+            contentAssocTypeIdList.add("SUB_CONTENT");   
+        }
         Map ctx = new HashMap();
-        ctx.put("userLogin", serviceName);
+        ctx.put("userLogin", userLogin);
+        ctx.put("contentAssocTypeIdList", contentAssocTypeIdList);
         try {
             
             GenericValue content = delegator.findByPrimaryKey("Content", UtilMisc.toMap("contentId", contentId));
@@ -1533,6 +1546,7 @@ Debug.logInfo("updateSiteRoles, serviceContext(2):" + serviceContext, module);
         
         Map result = null;
     	String contentId = content.getString("contentId");
+    	List contentAssocTypeIdList = (List)context.get("contentAssocTypeIdList" );
     	Set visitedSet = (Set)context.get("visitedSet");
     	if (visitedSet == null) {
             visitedSet = new HashSet();
@@ -1546,10 +1560,10 @@ Debug.logInfo("updateSiteRoles, serviceContext(2):" + serviceContext, module);
             }
         }
 
-        context.put("content", content);
-        result = dispatcher.runSync(serviceName, context);
+        GenericValue userLogin = (GenericValue)context.get("userLogin");
+        result = dispatcher.runSync(serviceName, UtilMisc.toMap("content", content, "userLogin", userLogin));
         
-        List kids = ContentWorker.getAssociatedContent(content, "from", UtilMisc.toList("SUB_CONTENT"), null, null, null);
+        List kids = ContentWorker.getAssociatedContent(content, "from", contentAssocTypeIdList, null, null, null);
         Iterator iter = kids.iterator();
         while (iter.hasNext()) {
         	GenericValue kidContent = (GenericValue)iter.next();

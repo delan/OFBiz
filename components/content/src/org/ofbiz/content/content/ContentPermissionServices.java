@@ -275,7 +275,7 @@ public class ContentPermissionServices {
         }
         boolean hasRoleOperation = false;
         if (!(targetOperationList == null) && userLoginId != null) {
-            hasRoleOperation = checkHasRoleOperations(userLoginId, targetOperationList, delegator);
+            hasRoleOperation = checkHasRoleOperations(partyId, targetOperationList, delegator);
         }
         if( hasRoleOperation ) {
             return true;
@@ -555,19 +555,14 @@ public class ContentPermissionServices {
         
         return passed;
     }
-    public static boolean checkPermissionMethod(GenericDelegator delegator, GenericValue userLogin,  String entityName, List entityIdList, AuxiliaryValueGetter auxiliaryValueGetter, RelatedRoleGetter relatedRoleGetter, PermissionConditionGetter permissionConditionGetter ) throws GenericEntityException {
+    public static boolean checkPermissionMethod(GenericDelegator delegator, String partyId,  String entityName, List entityIdList, AuxiliaryValueGetter auxiliaryValueGetter, RelatedRoleGetter relatedRoleGetter, PermissionConditionGetter permissionConditionGetter ) throws GenericEntityException {
 
         boolean passed = false;
 
         String lcEntityName = entityName.toLowerCase();
         String userLoginId = null;
-        String partyId = null;
         boolean checkAncestors = false;
-        if (userLogin != null) {
-            userLoginId = userLogin.getString("userLoginId");
-            partyId = userLogin.getString("partyId");
-        }
-        boolean hasRoleOperation =  checkHasRoleOperations(userLoginId, permissionConditionGetter, delegator);
+        boolean hasRoleOperation =  checkHasRoleOperations(partyId, permissionConditionGetter, delegator);
         if( hasRoleOperation ) {
             return true;
         }
@@ -614,7 +609,7 @@ public class ContentPermissionServices {
         if (passed) return true;
         
         // TODO: need to return some information here about why it failed
-        if (userLogin == null) return false;
+        if (partyId == null) return false;
 
         // Check with roles.
         if (relatedRoleGetter != null) {
@@ -672,20 +667,20 @@ public class ContentPermissionServices {
         return entity;
     }
  
-    public static boolean checkHasRoleOperations(String userLoginId,  ContentPermissionServices.PermissionConditionGetter permissionConditionGetter , GenericDelegator delegator) {
+    public static boolean checkHasRoleOperations(String partyId,  ContentPermissionServices.PermissionConditionGetter permissionConditionGetter , GenericDelegator delegator) {
     
         List targetOperations = permissionConditionGetter.getOperationList();
-        return checkHasRoleOperations(userLoginId, targetOperations, delegator);
+        return checkHasRoleOperations(partyId, targetOperations, delegator);
     }
     
-    public static boolean checkHasRoleOperations(String userLoginId,  List targetOperations, GenericDelegator delegator) {
+    public static boolean checkHasRoleOperations(String partyId,  List targetOperations, GenericDelegator delegator) {
 
         //if (Debug.infoOn()) Debug.logInfo("targetOperations:" + targetOperations, module);
         //if (Debug.infoOn()) Debug.logInfo("userLoginId:" + userLoginId, module);
         if (targetOperations == null)
             return false;
 
-        if (userLoginId != null && targetOperations.contains("HAS_USER_ROLE"))
+        if (partyId != null && targetOperations.contains("HAS_USER_ROLE"))
             return true;
 
         boolean hasRoleOperation = false;
@@ -710,8 +705,6 @@ public class ContentPermissionServices {
         if (hasNeed) {
             GenericValue uLogin = null;
             try {
-                uLogin = delegator.findByPrimaryKeyCache("UserLogin", UtilMisc.toMap("userLoginId", userLoginId));
-                String partyId = uLogin.getString("partyId");
                 if (UtilValidate.isNotEmpty(partyId)) {
                     List partyRoleList = delegator.findByAndCache("PartyRole", UtilMisc.toMap("partyId", partyId));
                     Iterator partyRoleIter = partyRoleList.iterator();
