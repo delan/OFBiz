@@ -30,7 +30,7 @@ import java.io.PrintWriter;
  * Base OFBiz Exception, provides nested exceptions, etc
  *
  *@author     <a href="mailto:jaz@ofbiz.org">Andy Zeneski</a>
- *@version    $Rev:$
+ *@version    $Rev$
  *@since      1.0
  */
 public class GeneralException extends Exception {
@@ -72,10 +72,15 @@ public class GeneralException extends Exception {
 
     /** Returns the detail message, including the message from the nested exception if there is one. */
     public String getMessage() {
-        if (nested != null)
-            return super.getMessage() + " (" + nested.getMessage() + ")";
-        else
+        if (nested != null) {
+            if (super.getMessage() == null) {
+                return nested.getMessage();
+            } else {
+                return super.getMessage() + " (" + nested.getMessage() + ")";
+            }
+        } else {
             return super.getMessage();
+        }
     }
 
     /** Returns the detail message, NOT including the message from the nested exception. */
@@ -85,8 +90,9 @@ public class GeneralException extends Exception {
 
     /** Returns the nested exception if there is one, null if there is not. */
     public Throwable getNested() {
-        if (nested == null)
+        if (nested == null) {
             return this;
+        }
         return nested;
     }
 
