@@ -247,7 +247,7 @@ public class ModelFieldTypeReader
   {
     Document document = null;
     DocumentBuilderFactory factory = DocumentBuilderFactory.newInstance();
-    //factory.setValidating(true);   
+    factory.setValidating(true);   
     //factory.setNamespaceAware(true);
     try 
     {

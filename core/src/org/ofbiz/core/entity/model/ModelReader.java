@@ -343,7 +343,7 @@ public class ModelReader {
   Document getDocument(String filename) {
     Document document = null;
     DocumentBuilderFactory factory = DocumentBuilderFactory.newInstance();
-    //factory.setValidating(true);
+    factory.setValidating(true);
     //factory.setNamespaceAware(true);
     try {
       //if(documentCache.containsKey(filename + ":document")) document = (Document)documentCache.get(filename + ":document");

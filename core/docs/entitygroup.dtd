@@ -23,16 +23,13 @@
 -->
 
 <!-- ====================== Root Element ======================= -->
-<!ELEMENT fieldtypemodel (field-type-def*)>
+<!ELEMENT entitygroup (entity-group*)>
 
-<!-- ================= Children of fieldtypemodel =================== -->
-<!ELEMENT field-type-def (validate*)>
+<!-- ================= Children of entitygroup =================== -->
+<!ELEMENT entity-group EMPTY>
 
-<!-- ================= Children of field-type-def =================== -->
-<!ATTLIST field-type-def type CDATA #REQUIRED>
-<!ATTLIST field-type-def sql-type CDATA #REQUIRED>
-<!ATTLIST field-type-def java-type CDATA #REQUIRED>
+<!-- ================= Children of entity-group =================== -->
+<!ATTLIST entity-group group CDATA #REQUIRED>
+<!ATTLIST entity-group entity CDATA #REQUIRED>
 
-<!ELEMENT validate EMPTY>
-<!ATTLIST validate name CDATA #REQUIRED>
 
