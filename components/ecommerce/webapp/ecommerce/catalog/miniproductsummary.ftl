@@ -20,12 +20,12 @@
  *  THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  *
  *@author     David E. Jones (jonesde@ofbiz.org)
- *@version    $Revision: 1.10 $
+ *@version    $Revision: 1.11 $
  *@since      2.1
 -->
 <#assign uiLabelMap = requestAttributes.uiLabelMap>
 <#if miniProduct?exists>
-    <a href="<@ofbizUrl>/product/~product_id=${miniProduct.productId}</@ofbizUrl>" class="buttontext">${miniProductContentWrapper.get("PRODUCT_NAME")}</a>
+    <a href="<@ofbizUrl>/product/~product_id=${miniProduct.productId}</@ofbizUrl>" class="buttontext">${miniProductContentWrapper.get("PRODUCT_NAME")?default("No Name Available")}</a>
     <div class="tabletext"><b>${miniProduct.productId}</b>
       <#if (priceResult.price?default(0) > 0 && miniProduct.requireAmount?default("N") == "N")>
         <b><span class="<#if priceResult.isSale>salePrice<#else>normalPrice</#if>"><@ofbizCurrency amount=priceResult.price isoCode=priceResult.currencyUsed/></span></b>
