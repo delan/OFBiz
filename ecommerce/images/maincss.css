@@ -580,16 +580,34 @@ font-family: Verdana, Arial, Helvetica, sans-serif;
 
 .editInputBox {
 background-color: white;
-font-size: x-small;
+font-size: small;
 font-family: Verdana, Arial, Helvetica, sans-serif;
 }
 
-.standardSubmit {
+.inputBox {
+font-family: Verdana, Arial, Helvetica, sans-serif;
+background-color: white;
+font-size: small;
+}
+
+.selectBox {
+font-family: Verdana, Arial, Helvetica, sans-serif;
+background-color: white;
+font-size: small;
+}
+
+.textAreaBox {
+font-family: Verdana, Arial, Helvetica, sans-serif;
+background-color: white;
+font-size: small;
+}
+
+.smallSubmit,.mediumSubmit,.largeSubmit {
 font-family: Verdana, Arial, Helvetica, sans-serif;
 font-size: small;
 }
 
-.specialSubmit {
+.smallAltSubmit,.mediumAltSubmit,.largeAltSubmit {
 font-family: Verdana, Arial, Helvetica, sans-serif;
 font-size: small;
 }
