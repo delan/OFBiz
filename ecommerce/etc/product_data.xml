@@ -125,6 +125,7 @@
   <ProductPrice productId="WG-9943" productPriceTypeId="LIST_PRICE" currencyUomId="USD" facilityGroupId="_NA_" fromDate="2001-01-01 12:00:00.0" price="550.0"/>
             
   <ProductFeatureCategory productFeatureCategoryId="9000" description="Widget Features"/>
+  <ProductFeatureCategoryAppl productFeatureCategoryId="9000" productCategoryId="CATALOG1_SEARCH" fromDate="2001-01-01 12:00:00.0"/>
   
   <ProductFeature productFeatureId="9000" productFeatureCategoryId="9000" productFeatureTypeId="COLOR" description="Black"/>
   <ProductFeature productFeatureId="9001" productFeatureCategoryId="9000" productFeatureTypeId="COLOR" description="Silver"/>

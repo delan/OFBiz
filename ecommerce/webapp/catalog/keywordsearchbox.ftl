@@ -20,12 +20,10 @@
  *  THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  *
  *@author     Andy Zeneski (jaz@ofbiz.org)
+ *@author     David E. Jones (jonesde@ofbiz.org)
  *@version    $Revision$
  *@since      2.1
 -->
-
-<#assign currentCatalogId = Static["org.ofbiz.commonapp.product.catalog.CatalogWorker"].getCurrentCatalogId(request)?if_exists>
-<#assign otherSearchProdCatalogCategories = Static["org.ofbiz.commonapp.product.catalog.CatalogWorker"].getProdCatalogCategories(request, currentCatalogId, "PCCT_OTHER_SEARCH")?if_exists>
 
 <TABLE border=0 width='100%' cellspacing='0' cellpadding='0' class='boxoutside'>
   <TR>
@@ -50,10 +48,9 @@
                 <input type='text' class='inputBox' name="SEARCH_STRING" size="14" maxlength="50" value="${requestParameters.SEARCH_STRING?if_exists}">
               </div>
               <#if 0 < otherSearchProdCatalogCategories?size>
-                <#assign searchCategory = Static["org.ofbiz.commonapp.product.catalog.CatalogWorker"].getCatalogSearchCategoryId(request, currentCatalogId)>
                 <div class='tabletext'>
                   <select name='SEARCH_CATEGORY_ID' size='1' class='selectBox'>
-                    <option value="${searchCategory?if_exists}">Entire Catalog</option>
+                    <option value="${searchCategoryId?if_exists}">Entire Catalog</option>
                     <#list otherSearchProdCatalogCategory as searchCat>
                       <#assign searchProductCategory = otherSearchProdCatalogCategory.getRelatedOneCache("ProductCategory")>
                       <#if searchProductCategory?exists>
@@ -63,17 +60,43 @@
                   </select>
                 </div>
               <#else>
-                <#assign searchCategory = Static["org.ofbiz.commonapp.product.catalog.CatalogWorker"].getCatalogSearchCategoryId(request, currentCatalogId)?if_exists>
-                <input type='hidden' name="SEARCH_CATEGORY_ID" value="${searchCategory}">
+                <input type='hidden' name="SEARCH_CATEGORY_ID" value="${searchCategoryId}">
               </#if>
               <div class='tabletext'>
-                <#assign searchOperator = requestParameters.SEARCH_OPERATOR?if_exists>
-                <#if searchOperator?upper_case != "AND" && searchOperator?upper_case != "OR">
-                  <assign searchOperator = "OR">
-                </#if>
-                Any<input type='RADIO' name='SEARCH_OPERATOR' value='OR' <#if searchOperator?upper_case == "OR">checked</#if>>
-                All<input type='RADIO' name='SEARCH_OPERATOR' value='AND' <#if searchOperator?upper_case == "AND">checked</#if>>
+                Any<input type='RADIO' name='SEARCH_OPERATOR' value='OR' <#if searchOperator == "OR">checked</#if>>
+                All<input type='RADIO' name='SEARCH_OPERATOR' value='AND' <#if searchOperator == "AND">checked</#if>>
                 &nbsp;<a href="javascript:document.keywordsearchform.submit()" class="buttontext">Find</a>
+              </div>
+            </form>
+          </td>
+        </tr>
+      </table>
+    </TD>
+  </TR>
+  <TR>
+    <TD width='100%'>
+      <table width='100%' border='0' cellspacing='0' cellpadding='0' class='boxbottom'>
+        <tr>
+          <td align=center>
+            <form name="advancedsearchform" method="POST" action="<@ofbizUrl>/advancedsearch</@ofbizUrl>" style='margin: 0;'>
+              <#if 0 < otherSearchProdCatalogCategories?size>
+                <div class='tabletext'>Advanced Search in: </div>
+                <div class='tabletext'>
+                  <select name='SEARCH_CATEGORY_ID' size='1' class='selectBox'>
+                    <option value="${searchCategoryId?if_exists}">Entire Catalog</option>
+                    <#list otherSearchProdCatalogCategory as searchCat>
+                      <#assign searchProductCategory = otherSearchProdCatalogCategory.getRelatedOneCache("ProductCategory")>
+                      <#if searchProductCategory?exists>
+                        <option value="${searchProductCategory.productCategoryId}">${searchProductCategory.description?exists}</option>
+                      </#if>
+                    </#list>
+                  </select>
+                </div>
+              <#else>
+                <input type='hidden' name="SEARCH_CATEGORY_ID" value="${searchCategoryId}">
+              </#if>
+              <div class='tabletext'>
+                <a href="javascript:document.advancedsearchform.submit()" class="buttontext">Advanced Search</a>
               </div>
             </form>
           </td>

@@ -37,7 +37,9 @@ if (searchOperator == null) searchOperator = "OR";
 if (!"AND".equalsIgnoreCase(searchOperator) && !"OR".equalsIgnoreCase(searchOperator)) { 
     searchOperator = "OR"; 
 }
+
 ProductWorker.getKeywordSearchProducts(request, "", searchCategoryId, true, true, searchOperator);
+
 keywordString = request.getAttribute("keywordString");
 viewIndex = request.getAttribute("viewIndex");
 viewSize = request.getAttribute("viewSize");

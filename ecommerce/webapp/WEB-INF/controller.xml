@@ -303,6 +303,9 @@
         <response name="success" type="view" value="product"/>
     </request-map>
 
+    <request-map uri="advancedsearch">
+        <response name="success" type="view" value="advancedsearch"/>
+    </request-map>
     <request-map uri="keywordsearch">
         <response name="success" type="view" value="keywordsearch"/>
     </request-map>
@@ -522,7 +525,9 @@
     <view-map name="quickadd" type="jpublish" page="/catalog/quickadd.ftl"/>
     <view-map name="category" type="jpublish" page="/catalog/category.ftl"/>  
     <view-map name="product" type="jpublish" page="/catalog/product.ftl"/>
+
     <view-map name="keywordsearch" type="jpublish" page="/catalog/keywordsearch.ftl"/>
+    <view-map name="advancedsearch" type="jpublish" page="/catalog/advancedsearch.ftl"/>
 
     <view-map name="checkoutoptions" type="jpublish" page="/order/checkoutoptions.ftl"/>
     <view-map name="checkout" type="jpublish" page="/order/checkoutreview.ftl"/>
