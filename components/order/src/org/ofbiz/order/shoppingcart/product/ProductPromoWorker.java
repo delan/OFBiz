@@ -1,5 +1,5 @@
 /*
- * $Id: ProductPromoWorker.java,v 1.15 2003/11/23 00:00:08 jonesde Exp $
+ * $Id: ProductPromoWorker.java,v 1.16 2003/11/23 01:17:04 jonesde Exp $
  *
  *  Copyright (c) 2001, 2002 The Open For Business Project - www.ofbiz.org
  *
@@ -53,7 +53,7 @@ import org.ofbiz.service.LocalDispatcher;
  *
  * @author     <a href="mailto:jonesde@ofbiz.org">David E. Jones</a>
  * @author     <a href="mailto:jaz@ofbiz.org">Andy Zeneski</a>
- * @version    $Revision: 1.15 $
+ * @version    $Revision: 1.16 $
  * @since      2.0
  */
 public class ProductPromoWorker {
@@ -719,8 +719,8 @@ public class ProductPromoWorker {
         // remove all free shipping promo actions
         cart.removeAllFreeShippingProductPromoActions();
 
-        // clear promo uses & reset promo code uses
-        cart.clearProductPromoUses();
+        // clear promo uses & reset promo code uses, and reset info about cart items used for promos (ie qualifiers and benefiters)
+        cart.clearProductPromoUseInfo();
     }
 
     public static void doOrderItemPromoAction(GenericValue productPromoAction, ShoppingCartItem cartItem, double amount, String amountField, GenericDelegator delegator) {

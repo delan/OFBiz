@@ -21,7 +21,7 @@
  *
  *@author     David E. Jones (jonesde@ofbiz.org)
  *@author     Andy Zeneski (jaz@ofbiz.org)
- *@version    $Revision: 1.13 $
+ *@version    $Revision: 1.14 $
  *@since      2.1
 -->
 <#assign uiLabelMap = requestAttributes.uiLabelMap>
@@ -424,14 +424,14 @@ function addToList() {
                         <#assign productPromoFailedPK = quantityUsedPerPromoFailedEntry.getKey()>
                         <#assign failedQuantityUsed = quantityUsedPerPromoFailedEntry.getValue()>
                         <#assign isQualifier = "ProductPromoCond" == productPromoActualPK.getEntityName()>
-                        <div class="tabletext">&nbsp;&nbsp;-&nbsp;${failedQuantityUsed} Could be Used as <#if isQualifier>Qualifier<#else>Benefit</#if> of Promotion [${productPromoFailedPK.productPromoId}]</div>
-                        <!-- productPromoFailedPK ${productPromoFailedPK.toString()} -->
+                        <div class="tabletext">&nbsp;&nbsp;-&nbsp;Could be Used as <#if isQualifier>Qualifier<#else>Benefit</#if> of Promotion [${productPromoFailedPK.productPromoId}]</div>
+                        <!-- Total times checked but failed: ${failedQuantityUsed}, productPromoFailedPK ${productPromoFailedPK.toString()} -->
                     </#list>
                     <#list cartLine.getQuantityUsedPerPromoCandidateIter() as quantityUsedPerPromoCandidateEntry>
                         <#assign productPromoCandidatePK = quantityUsedPerPromoCandidateEntry.getKey()>
                         <#assign candidateQuantityUsed = quantityUsedPerPromoCandidateEntry.getValue()>
                         <#assign isQualifier = "ProductPromoCond" == productPromoActualPK.getEntityName()>
-                        <div class="tabletext">&nbsp;&nbsp;-&nbsp;${candidateQuantityUsed} Might be Used (Candidate) as <#if isQualifier>Qualifier<#else>Benefit</#if> of Promotion [${productPromoCandidatePK.productPromoId}]</div>
+                        <!-- Left over not reset or confirmed, shouldn't happen: ${candidateQuantityUsed} Might be Used (Candidate) as <#if isQualifier>Qualifier<#else>Benefit</#if> of Promotion [${productPromoCandidatePK.productPromoId}] -->
                         <!-- productPromoCandidatePK ${productPromoCandidatePK.toString()} -->
                     </#list>
                 </#list>

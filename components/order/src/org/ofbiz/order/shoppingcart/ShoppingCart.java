@@ -1,5 +1,5 @@
 /*
- * $Id: ShoppingCart.java,v 1.26 2003/11/22 12:57:35 jonesde Exp $
+ * $Id: ShoppingCart.java,v 1.27 2003/11/23 01:17:04 jonesde Exp $
  *
  *  Copyright (c) 2001, 2002 The Open For Business Project - www.ofbiz.org
  *
@@ -42,7 +42,7 @@ import org.ofbiz.service.LocalDispatcher;
  * @author     <a href="mailto:jaz@ofbiz.org">Andy Zeneski</a>
  * @author     <a href="mailto:cnelson@einnovation.com">Chris Nelson</a>
  * @author     <a href="mailto:jonesde@ofbiz.org">David E. Jones</a>
- * @version    $Revision: 1.26 $
+ * @version    $Revision: 1.27 $
  * @since      2.0
  */
 public class ShoppingCart implements java.io.Serializable {
@@ -1000,8 +1000,15 @@ public class ShoppingCart implements java.io.Serializable {
         this.productPromoUseInfoList.add(new ProductPromoUseInfo(productPromoId, productPromoCodeId));
     }
 
-    public void clearProductPromoUses() {
+    public void clearProductPromoUseInfo() {
+        // clear out info for general promo use
         this.productPromoUseInfoList.clear();
+        // clear out info about which cart items have been used in promos
+        Iterator cartLineIter = this.iterator();
+        while (cartLineIter.hasNext()) {
+            ShoppingCartItem cartLine = (ShoppingCartItem) cartLineIter.next();
+            cartLine.clearPromoRuleUseInfo();
+        }
     }
 
     public Iterator getProductPromoUseInfoIter() {
