@@ -25,6 +25,50 @@
  *@since      2.1
 -->
 
+<script language="JavaScript">
+<!--
+function toggle(e) {
+    e.checked = !e.checked;    
+}
+function checkToggle(e) {
+    var cform = document.cartform;
+    if (e.checked) {      
+        var len = cform.elements.length;
+        var allchecked = true;
+        for (var i = 0; i < len; i++) {
+            var element = cform.elements[i];
+            if (element.name == "selectedItem" && !element.checked) {              
+                allchecked = false;
+            }
+            cform.selectAll.checked = allchecked;            
+        }
+    } else {
+        cform.selectAll.checked = false;
+    }
+}
+function toggleAll() {
+    var cform = document.cartform;
+    var len = cform.elements.length;
+    for (var i = 0; i < len; i++) {
+        var e = cform.elements[i];   
+        if (e.name == "selectedItem") {
+            toggle(e);
+        }
+    }   
+}
+function removeSelected() {
+    var cform = document.cartform;
+    cform.removeSelected.value = true;
+    cform.submit();
+}
+function addToList() {
+    var cform = document.cartform;
+    cform.action = "<@ofbizUrl>/addBulkToShoppingList</@ofbizUrl>";
+    cform.submit();
+}
+//-->
+</script>
+            
 <TABLE border=0 width='100%' cellspacing='0' cellpadding='0' class='boxoutside'>
   <TR>
     <TD width='100%'>
@@ -82,13 +126,13 @@
           </td>
           <td valign="middle" align="right">
             <div class='lightbuttontextdisabled'>
-              <a href="<@ofbizUrl>/main</@ofbizUrl>" class="lightbuttontext">[Continue&nbsp;Shopping]</a>
+              <#--<a href="<@ofbizUrl>/main</@ofbizUrl>" class="lightbuttontext">[Continue&nbsp;Shopping]</a>-->
               <#if (shoppingCartSize > 0)>
                 <a href="javascript:document.cartform.submit()" class="lightbuttontext">[Recalculate&nbsp;Cart]</a>
                 <a href="<@ofbizUrl>/emptycart</@ofbizUrl>" class="lightbuttontext">[Empty&nbsp;Cart]</a>
-                <a href="<@ofbizUrl>/checkoutoptions</@ofbizUrl>" class="lightbuttontext">[Checkout]</a>
+                <a href="javascript:removeSelected();" class="lightbuttontext">[Remove Selected]</a>
               <#else>
-                [Recalculate&nbsp;Cart] [Empty&nbsp;Cart] [Checkout]
+                [Recalculate&nbsp;Cart] [Empty&nbsp;Cart] [Remove Selected]
               </#if>
             </div>
           </td>
@@ -103,14 +147,15 @@
           <td>
   <#if (shoppingCartSize > 0)>
     <FORM METHOD="POST" ACTION="<@ofbizUrl>/modifycart</@ofbizUrl>" name='cartform' style='margin: 0;'>
+      <input type="hidden" name="removeSelected" value="false">
       <table width='100%' cellspacing="0" cellpadding="1" border="0">
         <TR> 
           <TD NOWRAP><div class='tabletext'><b>Product</b></div></TD>
-          <TD NOWRAP align=center><div class='tabletext'><b>Quantity</b></div></TD>
-          <TD NOWRAP align=right><div class='tabletext'><b>Unit Price</b></div></TD>
-          <TD NOWRAP align=right><div class='tabletext'><b>Adjustments</b></div></TD>
-          <TD NOWRAP align=right><div class='tabletext'><b>Item Total</b></div></TD>
-          <TD NOWRAP align=center><div class='tabletext'><b>Remove</b></div></TD>
+          <TD NOWRAP align='center'><div class='tabletext'><b>Quantity</b></div></TD>
+          <TD NOWRAP align='right'><div class='tabletext'><b>Unit Price</b></div></TD>
+          <TD NOWRAP align='right'><div class='tabletext'><b>Adjustments</b></div></TD>
+          <TD NOWRAP align='right'><div class='tabletext'><b>Item Total</b></div></TD>
+          <TD NOWRAP align='center'><input type='checkbox' name='selectAll' value='0' onclick="javascript:toggleAll();"></TD>
         </TR>
 
         <#list shoppingCart.items() as cartLine>
@@ -144,7 +189,7 @@
             <td nowrap align="right"><div class='tabletext'>${cartLine.getBasePrice()?string.currency}</div></TD>
             <td nowrap align="right"><div class='tabletext'>${cartLine.getOtherAdjustments()?string.currency}</div></TD>
             <td nowrap align="right"><div class='tabletext'>${cartLine.getItemSubTotal()?string.currency}</div></TD>
-            <td nowrap align="center"><div class='tabletext'><#if !cartLine.getIsPromo()><input type="checkbox" name="delete_${cartLineIndex}" value="0"><#else>&nbsp;</#if></div></TD>
+            <td nowrap align="center"><div class='tabletext'><#if !cartLine.getIsPromo()><input type="checkbox" name="selectedItem" value="${cartLineIndex}" onclick="javascript:checkToggle(this);"><#else>&nbsp;</#if></div></TD>
           </TR>
         </#list>
 
@@ -164,16 +209,9 @@
               </tr>
             </#list>
         </#if>
-<#--
-        <TR>
-          <TD COLSPAN="3" ALIGN="right"><div class='tabletext'>Sales tax:</div></TD>
-          <TD ALIGN="right"><div class='tabletext'>$0.00</div></TD>
-        </TR> 
--->
-
+        
         <tr> 
-          <td colspan="4" align="right" valign=bottom> 
-             <#-- <hr size=1> -->
+          <td colspan="4" align="right" valign=bottom>             
             <div class='tabletext'><b>Cart&nbsp;Total:</b></div>
           </td>
           <td align="right" valign=bottom>
@@ -181,15 +219,44 @@
             <div class='tabletext'><b>${shoppingCart.getGrandTotal()?string.currency}</b></div>
           </td>
         </tr>
-      </table>
+        <tr>
+          <td colspan="6">&nbsp;</td>
+        </tr>
+        <tr>
+          <td colspan="6"><hr class="sepbar"></td>
+        </tr>
+        <tr>          
+          <td colspan="6" align="right" valign="bottom">
+            <div class="tabletext">
+              <#if sessionAttributes.userLogin?has_content>
+              <select name="shoppingListId" class="selectBox">
+                <#if shoppingLists?has_content>
+                  <#list shoppingLists as shoppingList>
+                    <option value="${shoppingList.shoppingListId}">${shoppingList.listName}</option>
+                  </#list>
+                </#if>
+                <option value="">---</option>
+                <option value="">New Shopping List</option>
+              </select>
+              &nbsp;&nbsp;
+              <a href="javascript:addToList();" class="buttontext">[Add Selected To List]</a>&nbsp;&nbsp;   
+              <#else>
+                You must <a href="<@ofbizUrl>/checkLogin/showcart</@ofbizUrl>" class="buttontext">Login</a>
+                to add selected items to a shopping list.&nbsp;
+              </#if>           
+            </div>
+          </td>
+        </tr>       
+        <tr>
+          <td colspan="6"><hr class="sepbar"></td>
+        </tr>        
+        <tr>
+          <td colspan="6" align="center" valign="bottom">
+            <div class="tabletext"><input type="checkbox" onChange="javascript:document.cartform.submit()" name="always_showcart" <#if shoppingCart.viewCartOnAdd()>checked</#if>>&nbsp;Always view cart after adding an item.</div>
+          </td>
+        </tr>        
+      </table>    
     </FORM>
-<#--
-      <CENTER>
-        <input type="checkbox" name="always_showcart" <#if shoppingCart.viewCartOnAdd()>checked</#if>>&nbsp;Always view cart after adding an item.
-    	<br><br>
-        <input type="submit" value="Update Cart">
-      </CENTER>
--->
   <#else>
     <div class='head2'>Your shopping cart is empty.</div>
   </#if>
