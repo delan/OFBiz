@@ -1,7 +1,7 @@
 /*
  * $Id$
  *
- * Copyright (c) 2001-2003 The Open For Business Project - www.ofbiz.org
+ * Copyright (c) 2001-2005 The Open For Business Project - www.ofbiz.org
  *
  * Permission is hereby granted, free of charge, to any person obtaining a
  * copy of this software and associated documentation files (the "Software"),
@@ -37,7 +37,7 @@ import java.util.Stack;
  *  Record Iterator for reading large files
  *
  * @author     <a href="mailto:jonesde@ofbiz.org">David E. Jones</a>
- * @version    $Rev:$
+ * @version    $Rev$
  * @since      3.0
  */
 
@@ -185,7 +185,7 @@ public class RecordIterator {
                     
                     // if the child record we just added is also a parent, push it onto the stack
                     if (this.nextRecord.getModelRecord().childRecords.size() > 0) {
-                        parentStack.push(curRecord);
+                        parentStack.push(this.nextRecord);
                     }
                         
                     // if it can't find a next line it will nextRecord will be null and the loop will break out
