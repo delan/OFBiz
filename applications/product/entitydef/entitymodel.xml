@@ -192,21 +192,8 @@
             title="ProductCategory And ProductCategoryMember View Entity">
       <member-entity entity-alias="PC" entity-name="ProductCategory"/>
       <member-entity entity-alias="PCM" entity-name="ProductCategoryMember"/>
-      <alias entity-alias="PC" name="productCategoryId"/>
-      <alias entity-alias="PC" name="productCategoryTypeId"/>
-      <alias entity-alias="PC" name="primaryParentCategoryId"/>
-      <alias entity-alias="PC" name="description"/>
-      <alias entity-alias="PC" name="longDescription"/>
-      <alias entity-alias="PC" name="categoryImageUrl"/>
-      <alias entity-alias="PC" name="linkOneImageUrl"/>
-      <alias entity-alias="PC" name="linkTwoImageUrl"/>
-      <alias entity-alias="PC" name="detailScreen"/>
-      <alias entity-alias="PCM" name="productId"/>
-      <alias entity-alias="PCM" name="fromDate"/>
-      <alias entity-alias="PCM" name="thruDate"/>
-      <alias entity-alias="PCM" name="comments"/>
-      <alias entity-alias="PCM" name="sequenceNum"/>
-      <alias entity-alias="PCM" name="quantity"/>
+      <alias-all entity-alias="PC"/>
+      <alias-all entity-alias="PCM"/>
       <view-link entity-alias="PC" rel-entity-alias="PCM">
         <key-map field-name="productCategoryId"/>
       </view-link>
