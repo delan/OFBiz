@@ -71,7 +71,64 @@ function addToList() {
 }
 //-->
 </script>
-            
+
+<#if !sessionAttributes.orderMode?exists>
+<table border=0 width='100%' cellspacing='0' cellpadding='0' class='boxoutside'>
+  <tr>
+    <td width='100%'>
+      <table width='100%' border='0' cellspacing='0' cellpadding='0' class='boxtop'>
+        <tr>
+          <td valign="middle" align="left">
+            <div class="boxhead">&nbsp;Order Entry</div>
+          </td>
+          <td valign="middle" align="right"> 
+            <a href="/partymgr/findparty?externalLoginKey=${requestAttributes.externalLoginKey}" class="submenutext">Find Party</a><a href="javascript:document.entryform.submit();" class="submenutextright">Continue</a>
+          </td>
+        </tr>
+      </table>
+    </td>
+  </tr>
+  <tr>
+    <td width='100%'>
+      <form method="post" name="entryform" action="<@ofbizUrl>/orderentry</@ofbizUrl>">
+      <table width='100%' border='0' cellspacing='0' cellpadding='0' class='boxbottom'>
+        <tr>
+          <td width='14%'>&nbsp;</td>
+          <td wdith='6%' align='right' valign='middle' nowrap><div class='tableheadtext'>Order Type:</div></td>
+          <td width='6%'>&nbsp;</td>
+          <td width='74%' valign='middle'>
+            <div class='tabletext' valign='top'>
+              <input type='radio' name='orderMode' value='SALES_ORDER'>&nbsp;Sales Order&nbsp;<input type='radio' name='orderMode' value='PURCHASE_ORDER'>&nbsp;Purchase Order&nbsp;
+            </div>
+          </td>
+        </tr>
+        <tr><td colspan="4">&nbsp;</td></tr>
+        <tr>
+          <td width='14%'>&nbsp;</td>
+          <td wdith='6%' align='right' valign='middle' nowrap><div class='tableheadtext'>UserLogin ID:</div></td>
+          <td width='6%'>&nbsp;</td>
+          <td width='74%' valign='middle'>
+            <div class='tabletext' valign='top'>
+              <input type='text' class='inputBox' name='userLoginId' value='${requestParameters.userLoginId?if_exists}'>
+            </div>
+          </td>
+        </tr>                 
+        <tr>
+          <td width='14%'>&nbsp;</td>
+          <td wdith='6%' align='right' valign='middle' nowrap><div class='tableheadtext'>Party ID:</div></td>
+          <td width='6%'>&nbsp;</td>
+          <td width='74%' valign='middle'>
+            <div class='tabletext' valign='top'>
+              <input type='text' class='inputBox' name='partyId' value='${requestParameters.partyId?if_exists}'>
+            </div>
+          </td>
+        </tr>         
+      </table>
+      </form>
+    </td>
+  </tr>
+</table>
+<#else>           
 <TABLE border=0 width='100%' cellspacing='0' cellpadding='0' class='boxoutside'>
   <TR>
     <TD width='100%'>
@@ -80,20 +137,10 @@ function addToList() {
           <td valign="middle" align="left">
             <div class="boxhead">&nbsp;<#if modeStr?exists>${modeStr?cap_first}&nbsp;</#if>Order Entry</div>
           </td>
-          <td valign="middle" align="right">
-            <div class='lightbuttontextdisabled'>              
-              <#if (shoppingCartSize > 0)>
-                <a href="javascript:document.cartform.submit()" class="lightbuttontext">[Recalculate&nbsp;Order]</a>
-                <a href="<@ofbizUrl>/emptycart</@ofbizUrl>" class="lightbuttontext">[Clear&nbsp;Order]</a>
-                <#if shoppingCart.getOrderType() == "PURCHASE_ORDER">
-                <a href="<@ofbizUrl>/finalizeOrder?finalizeReqShipInfo=false&finalizeReqOptions=false&finalizeReqPayInfo=false</@ofbizUrl>" class="lightbuttontext">[Finalize Order]</a>
-                <#else>
-                <a href="<@ofbizUrl>/finalizeOrder</@ofbizUrl>" class="lightbuttontext">[Finalize Order]</a>
-                </#if>
-              <#else>
-                [Recalculate&nbsp;Order] [Clear&nbsp;Order] [Finalize Order]
-              </#if>
-            </div>
+          <td valign="middle" align="right">                     
+            <#if (shoppingCartSize > 0)><a href="javascript:document.cartform.submit()" class="submenutext">Recalculate Order</a><a href="<@ofbizUrl>/emptycart</@ofbizUrl>" class="submenutext">Clear Order</a><#if shoppingCart.getOrderType() == "PURCHASE_ORDER"><a href="<@ofbizUrl>/finalizeOrder?finalizeReqShipInfo=false&finalizeReqOptions=false&finalizeReqPayInfo=false</@ofbizUrl>" class="submenutextright">Finalize Order</a><#else><a href="<@ofbizUrl>/finalizeOrder</@ofbizUrl>" class="submenutextright">Finalize Order</a></#if>
+            <#else><span class="submenutextdisabled">Recalculate Order</span><a href="<@ofbizUrl>/emptycart</@ofbizUrl>" class="submenutext">Clear Order</a><span class="submenutextrightdisabled">Finalize Order</span>
+            </#if>
           </td>
         </tr>
       </table>
@@ -108,6 +155,16 @@ function addToList() {
               <#if security.hasEntityPermission("CATALOG", "_CREATE", session)>
               <table width="100%" border="0" cellspacing='0' cellpadding='2'>
                 <tr>
+                  <td valign='middle'>
+                    <span class='tabletext'>Order for: </span>
+                    <#if person?has_content>
+                      <a href="/partymgr/control/viewprofile?party_id=${partyId}${requestAttributes.externalKeyParam}" target="partymgr" class="buttontext">${person.firstName?if_exists}&nbsp;${person.lastName?if_exists}&nbsp;[${person.partyId}]</a>
+                    <#elseif partyGroup?has_content>
+                      <a href="/partymgr/control/viewprofile?party_id=${partyId}${requestAttributes.externalKeyParam}" target="partymgr" class="buttontext">${partyGroup.groupName?if_exists}&nbsp;[${partyGroup.partyId}]</a>
+                    <#else>
+                      <span class='tabletext'>[Party not defined]</span>
+                    </#if>
+                  </td>
                   <td align="right" valign="middle">
                     <a href="${response.encodeURL("/catalog/control/EditProduct" + externalKeyParam)}" target="catalog" class="buttontext">[Create New Product]</a>
                   </td>
@@ -251,7 +308,7 @@ function addToList() {
                 <#if cartLine.getIsPromo()>
                   ${cartLine.getBasePrice()?string.currency}
                 <#else>
-                  <input size="6" class='inputBox' type="text" name="price_${cartLineIndex}" value="${cartLine.getBasePrice()?string}">
+                  <input size="6" class='inputBox' type="text" name="price_${cartLineIndex}" value="${cartLine.getBasePrice()?string("##0.00")}">
                 </#if>
               </div>
             </td>
@@ -299,37 +356,6 @@ function addToList() {
       </table>
     </TD>
   </TR>
-<#-- Un-comment this to include a link bar at the bottom too 
-  <TR>
-    <TD width='100%'>
-      <table width='100%' border='0' cellpadding='<%=boxTopPadding%>' cellspacing='0' bgcolor='<%=boxTopColor%>'>
-        <tr>
-          <td>
-      <table width="100%" border="0" cellpadding="0" cellspacing="0">
-        <tr>
-          <td valign="middle" align="left">
-            &nbsp;
-          </td>
-          <td valign="middle" align="right">
-            <div class='lightbuttontextdisabled'>
-              <a href="<@ofbizUrl>/main</@ofbizUrl>" class="lightbuttontext">[Continue&nbsp;Shopping]</a>
-              <#if (shoppingCartSize > 0)>
-                <a href="javascript:document.cartform.submit()" class="lightbuttontext">[Recalculate&nbsp;Cart]</a>
-                <a href="<@ofbizUrl>/emptycart</@ofbizUrl>" class="lightbuttontext">[Empty&nbsp;Cart]</a>
-                <a href="<@ofbizUrl>/checkoutoptions</@ofbizUrl>" class="lightbuttontext">[Checkout]</a>
-              <#else>
-                [Recalculate&nbsp;Cart] [Empty&nbsp;Cart] [Checkout]
-              </#if>
-            </div>
-          </td>
-        </tr>
-      </table>
-          </td>
-        </tr>
-      </table>
-    </TD>
-  </TR>
--->
 </TABLE>
 
 <#if showPromoText>
@@ -416,4 +442,5 @@ function addToList() {
       </TD>
     </TR>
   </TABLE>
+</#if>
 </#if>

@@ -23,8 +23,10 @@
  *@version    1.0
  */
 
-import org.ofbiz.core.util.UtilMisc;
+import org.ofbiz.core.entity.*;
+import org.ofbiz.core.util.*;
 import org.ofbiz.commonapp.order.shoppingcart.*;
+import org.ofbiz.commonapp.party.party.PartyWorker;
 import org.ofbiz.commonapp.product.catalog.CatalogWorker;
 import org.ofbiz.commonapp.product.promo.ProductPromoWorker;
 
@@ -37,8 +39,9 @@ context.put("shoppingCartSize", shoppingCart.size());
 context.put("shoppingCart", shoppingCart);
 
 // Get the order mode
-mode = request.getParameter("mode");
+mode = request.getParameter("orderMode");
 if (mode != null) {
+    session.setAttribute("orderMode", mode);
     shoppingCart.setOrderType(mode);
 }
 mode = shoppingCart.getOrderType();
@@ -66,6 +69,42 @@ if (mode != null && mode.equals("SALES_ORDER")) {
 } else {
     context.put("showPromoText", false);
 }
-
 context.put("contentPathPrefix", CatalogWorker.getContentPathPrefix(request));
+
+// set party info
+partyId = request.getParameter("partyId");
+userLoginId = request.getParameter("userLoginId");
+if (userLoginId != null) {
+    thisUserLogin = delegator.findByPrimaryKey("UserLogin", UtilMisc.toMap("userLoginId", userLoginId));
+    if (thisUserLogin != null)
+        partyId = thisUserLogin.getString("partyId");
+}
+
+thisParty = null;
+if (partyId != null && !partyId.equals("_NA_")) {
+    thisParty = delegator.findByPrimaryKey("Party", UtilMisc.toMap("partyId", partyId));
+    if (thisParty != null)
+        session.setAttribute("orderPartyId", partyId);  
+} else {
+    partyId = (String) session.getAttribute("orderPartyId");
+}
+if (partyId == null) session.setAttribute("orderPartyId", "_NA_");
+if (partyId != null && partyId.equals("_NA_")) partyId = null;
+if (partyId != null && thisParty == null) {
+    request.setAttribute(SiteDefs.ERROR_MESSAGE, "<li>The party was not found.");
+    session.removeAttribute("orderMode");
+}
+context.put("partyId", partyId);  
+
+if (partyId != null) {
+    partyMap = PartyWorker.getPartyOtherValues(request, partyId, "party", "person", "partyGroup");
+    if (partyMap != null) {
+        iter = partyMap.entrySet().iterator();
+        while (iter.hasNext()) {
+            entry = iter.next();
+            context.put(entry.getKey(), entry.getValue());
+        }
+    }
+}
+
 

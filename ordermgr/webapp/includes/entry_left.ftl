@@ -25,8 +25,10 @@
 -->
 
 <td width='950' valign=top align=left>
+  <#--
   ${pages.get("/entry/orderparty.ftl")}
   <br>
+  -->
   ${pages.get("/entry/catalog/choosecatalog.ftl")}
   <br>
   ${pages.get("/entry/catalog/keywordsearchbox.ftl")}
