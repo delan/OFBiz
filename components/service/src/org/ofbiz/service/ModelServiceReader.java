@@ -1,5 +1,5 @@
 /* 
- * $Id: ModelServiceReader.java,v 1.5 2003/12/04 20:16:22 ajzeneski Exp $
+ * $Id: ModelServiceReader.java,v 1.6 2003/12/13 16:39:55 ajzeneski Exp $
  *
  * Copyright (c) 2001, 2002 The Open For Business Project - www.ofbiz.org
  *
@@ -56,7 +56,7 @@ import org.xml.sax.SAXException;
  *
  * @author     <a href="mailto:jaz@ofbiz.org">Andy Zeneski</a>
  * @author     <a href="mailto:jonesde@ofbiz.org">David E. Jones</a>
- * @version    $Revision: 1.5 $
+ * @version    $Revision: 1.6 $
  * @since      2.0
  */
 
@@ -458,7 +458,8 @@ public class ModelServiceReader {
             param.entityName = UtilXml.checkEmpty(attribute.getAttribute("entity-name"));
             param.fieldName = UtilXml.checkEmpty(attribute.getAttribute("field-name"));
             param.stringMapPrefix = UtilXml.checkEmpty(attribute.getAttribute("string-map-prefix"));
-            param.formLabel = UtilXml.checkEmpty(attribute.getAttribute("form-label"));            
+            param.stringListSuffix = UtilXml.checkEmpty(attribute.getAttribute("string-list-suffix"));
+            param.formLabel = UtilXml.checkEmpty(attribute.getAttribute("form-label"));
             param.optional = "true".equalsIgnoreCase(attribute.getAttribute("optional")); // default to true
             param.formDisplay = !"false".equalsIgnoreCase(attribute.getAttribute("form-display")); // default to false
             
