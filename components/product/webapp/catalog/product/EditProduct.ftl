@@ -22,7 +22,7 @@
  *@author     David E. Jones (jonesde@ofbiz.org)
  *@author     Brad Steiner (bsteiner@thehungersite.com)
  *@author     Catherine.Heintz@nereide.biz (migration to UiLabel)
- *@version    $Revision: 1.9 $
+ *@version    $Revision: 1.10 $
  *@since      2.2
 -->
 <#assign uiLabelMap = requestAttributes.uiLabelMap>
@@ -30,10 +30,10 @@
 
 ${pages.get("/product/ProductTabBar.ftl")}
 
-    <div class="head1">${uiLabelMap.ProductProduct} <span class='head2'><#if product?exists && product.internalName?has_content>${product.internalName}</#if> <#if productId?exists && productId?has_content>[${uiLabelMap.CommonId}:${productId}]</#if></span></div>
+    <div class="head1">${uiLabelMap.ProductProduct} <span class='head2'><#if product?exists && product.internalName?has_content>${product.internalName}</#if> <#if productId?has_content>[${uiLabelMap.CommonId}:${productId}]</#if></span></div>
 
     <a href="<@ofbizUrl>/EditProduct</@ofbizUrl>" class="buttontext">[${uiLabelMap.ProductNewProduct}]</a>
-    <#if productId?exists && productId?has_content>
+    <#if productId?has_content>
         <a href="/ecommerce/control/product?product_id=${productId}" class='buttontext' target='_blank'>[${uiLabelMap.ProductProductPage}]</a>
     </#if>
     <br>
