@@ -538,13 +538,14 @@ public class CheckOutEvents {
                     // order was NOT approved
                     if (Debug.verboseOn()) Debug.logVerbose("Payment auth was NOT a success!", module);
                     request.setAttribute(SiteDefs.ERROR_MESSAGE, "<li>" + DECLINE_MESSAGE);
-                    Map statusRes = null;
+                    Map statusResult = null;
                     try {
                         // set the status on the order header
-                        statusRes = dispatcher.runSync("changeOrderStatus",
+                        statusResult = dispatcher.runSync("changeOrderStatus",
                                 UtilMisc.toMap("orderId", orderId, "statusId", HEADER_DECLINE_STATUS));
-                        if (statusRes.containsKey("errorMessage"))
-                            throw new GenericServiceException((String) statusRes.get("errorMessage"));
+                        if (statusResult.containsKey("errorMessage")) {
+                            throw new GenericServiceException((String) statusResult.get("errorMessage"));
+                        }
 
                         // set the status on the order item(s)
                         GenericValue orderHeader = delegator.findByPrimaryKey("OrderHeader", UtilMisc.toMap("orderId", orderId));
@@ -559,44 +560,52 @@ public class CheckOutEvents {
                                 }
                             }
                         }
-                        // roll back inventory reservations.
-                        // -- TODO
+                        
+                        // cancel inventory reservations
+                        try {
+                            Map cancelResult = dispatcher.runSync("cancelOrderInventoryReservation", UtilMisc.toMap("orderId", orderId));
+                            if (ModelService.RESPOND_ERROR.equals((String) cancelResult.get(ModelService.RESPONSE_MESSAGE))) {
+                                Debug.logError("cancelOrderInventoryReservation service failed for Order with ID [" + orderId + "] - " + ServiceUtil.makeErrorMessage(cancelResult, "", "\n", "", ""), module);
+                            }
+                        } catch (GenericServiceException e) {
+                            throw new GeneralException("Error in cancelOrderInventoryReservation for Order with ID [" + orderId + "]", e);
+                        }
 
                         // null out the orderId for next pass.
                         cart.setOrderId(null);
                         return false;
-                    } catch (GenericEntityException ee) {
-                        throw new GeneralException("Problems adjusting item status (" + orderId + ")", ee);
+                    } catch (GenericEntityException e) {
+                        throw new GeneralException("Problems adjusting item status (" + orderId + ")", e);
                     } catch (GenericServiceException e) {
                         throw new GeneralException("Problems adjusting order status (" + orderId + ")", e);
                     }
                 } else {
                     // order WAS approved
                     if (Debug.verboseOn()) Debug.logVerbose("Payment auth was a success!", module);
-                    Map statusRes = null;
                     try {
                         // set the status on the order header
-                        statusRes = dispatcher.runSync("changeOrderStatus",
+                        Map statusResult = dispatcher.runSync("changeOrderStatus",
                                 UtilMisc.toMap("orderId", orderId, "statusId", HEADER_APPROVE_STATUS));
-                        if (statusRes.containsKey("errorMessage"))
-                            Debug.logError("Order status service failed: (" + orderId + ") " + statusRes.get("errorMessage"), module);
+                        if (statusResult.containsKey("errorMessage") || ModelService.RESPOND_ERROR.equals((String) statusResult.get(ModelService.RESPONSE_MESSAGE))) {
+                            Debug.logError("Order status service failed: [" + orderId + "] " + ServiceUtil.makeErrorMessage(statusResult, "", "\n", "", ""), module);
+                        }
 
                         // set the status on the order item(s)
                         GenericValue orderHeader = delegator.findByPrimaryKey("OrderHeader", UtilMisc.toMap("orderId", orderId));
                         if (orderHeader != null) {
                             Collection orderItems = orderHeader.getRelated("OrderItem");
                             if (orderItems != null && orderItems.size() > 0) {
-                                Iterator i = orderItems.iterator();
-                                while (i.hasNext()) {
-                                    GenericValue v = (GenericValue) i.next();
-                                    v.set("statusId", ITEM_APPROVE_STATUS);
-                                    v.store();
+                                Iterator orderItemsIter = orderItems.iterator();
+                                while (orderItemsIter.hasNext()) {
+                                    GenericValue orderItem = (GenericValue) orderItemsIter.next();
+                                    orderItem.set("statusId", ITEM_APPROVE_STATUS);
+                                    orderItem.store();
                                 }
                             }
                         }
                         return true;
-                    } catch (GenericEntityException ee) {
-                        throw new GeneralException("Problems adjusting item status (" + orderId + ")", ee);
+                    } catch (GenericEntityException e) {
+                        throw new GeneralException("Problems adjusting item status (" + orderId + ")", e);
                     } catch (GenericServiceException e) {
                         throw new GeneralException("Problems adjusting order status (" + orderId + ")", e);
                     }
