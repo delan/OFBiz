@@ -102,6 +102,9 @@
     if(relEntity == null) errorMsg = errorMsg + "<li> Related Entity \"" + relEntityName + "\" not found, not adding.";
     else
     {
+      if("dependent".equals(request.getParameter("dependent"))) relation.dependent = true;
+      else relation.dependent = false;
+
       relation.relEntityName = relEntityName;
       relation.relTableName = relEntity.tableName;
       relation.type = type;
@@ -132,6 +135,8 @@
     ModelRelation relation = (ModelRelation)entity.relations.get(relNum);
     relation.type = type;
     relation.title = title;
+    if("dependent".equals(request.getParameter("dependent"))) relation.dependent = true;
+    else relation.dependent = false;
   }
   else if("removeRelation".equals(event))
   {
@@ -337,6 +342,12 @@ Column Name: <%=entity.tableName%><br>
             <OPTION>one</OPTION>
             <OPTION>many</OPTION>
           </SELECT>
+          <SELECT name='dependent'>
+            <OPTION selected><%=relation.dependent?"dependent":"independent"%></OPTION>
+            <OPTION>&nbsp;</OPTION>
+            <OPTION>dependent</OPTION>
+            <OPTION>independent</OPTION>
+          </SELECT>
         </td>
         <td>
           <INPUT type=SUBMIT value='Set'>
@@ -392,6 +403,10 @@ Column Name: <%=entity.tableName%><br>
   <SELECT name='type'>
     <OPTION>one</OPTION>
     <OPTION>many</OPTION>
+  </SELECT>
+  <SELECT name='dependent'>
+    <OPTION>dependent</OPTION>
+    <OPTION>independent</OPTION>
   </SELECT>
   <INPUT type=submit value='Create'>
 </FORM>

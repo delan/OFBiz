@@ -35,6 +35,8 @@ public class ModelRelation {
   public String title = "";
   /** the type: either "one" or "many" */
   public String type = "";
+  /** specifies whether or not the relation is a dependent one; ie if the related entity can exist without the main entity */
+  public boolean dependent = false;
   /** the name of the related table */
   public String relTableName = "";
   /** the name of the related EJB/entity */

@@ -244,8 +244,9 @@ public class ModelReader {
     ModelRelation relation = new ModelRelation();
     relation.mainEntity = entity;
     
-    relation.title = checkEmpty(relationElement.getAttribute("title"));
+    relation.dependent = ("true".equals(relationElement.getAttribute("dependent"))?true:false);
     relation.type = checkEmpty(relationElement.getAttribute("type"));
+    relation.title = checkEmpty(relationElement.getAttribute("title"));
     relation.relEntityName = checkEmpty(relationElement.getAttribute("rel-entity-name"));
     relation.relTableName = checkEmpty(relationElement.getAttribute("rel-table-name"),ModelUtil.javaNameToDbName(checkEmpty(relation.relEntityName)));
     
