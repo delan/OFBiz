@@ -1,5 +1,5 @@
 /*
- * $Id: PaymentGatewayServices.java,v 1.26 2004/01/22 17:47:24 ajzeneski Exp $
+ * $Id: PaymentGatewayServices.java,v 1.27 2004/04/04 16:33:12 ajzeneski Exp $
  *
  *  Copyright (c) 2002 The Open For Business Project - www.ofbiz.org
  *
@@ -63,7 +63,7 @@ import org.ofbiz.security.Security;
  * PaymentGatewayServices
  *
  * @author     <a href="mailto:jaz@ofbiz.org">Andy Zeneski</a>
- * @version    $Revision: 1.26 $
+ * @version    $Revision: 1.27 $
  * @since      2.0
  */
 public class PaymentGatewayServices {
@@ -162,7 +162,8 @@ public class PaymentGatewayServices {
                     } catch (GeneralException e) {
                         Debug.logError(e, "Trouble processing the result; processorResult: " + processorResult, module);
                         hadError.add(paymentPref);
-                        ServiceUtil.returnError("Trouble processing the auth results");
+                        continue;
+                        //return ServiceUtil.returnError("Trouble processing the auth results"); -- HANDLED BELOW
                     }
                 } else {
                     // error with payment processor; will try later
@@ -807,7 +808,7 @@ public class PaymentGatewayServices {
                     processResult = processResult(dctx, captureResult, userLogin, paymentPref, paymentSettings);
                 } catch (GeneralException e) {
                     Debug.logError(e, "Trouble processing the result; captureResult: " + captureResult, module);
-                    ServiceUtil.returnError("Trouble processing the capture results");
+                    return ServiceUtil.returnError("Trouble processing the capture results");
                 }
 
                 // create any splits which are needed
