@@ -15,6 +15,7 @@
                  poll-db-millis="20000"/>
 
     <!-- Service Engine Configuration -->
+    <engine name="interface" class="org.ofbiz.core.service.engine.InterfaceEngine"/>
     <engine name="java" class="org.ofbiz.core.service.engine.StandardJavaEngine"/>
     <engine name="workflow" class="org.ofbiz.core.workflow.WorkflowEngine"/>
     <engine name="bsh" class="org.ofbiz.core.service.engine.BeanShellEngine"/>
