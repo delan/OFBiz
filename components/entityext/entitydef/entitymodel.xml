@@ -26,7 +26,7 @@
  *
  * @author     David E. Jones (jonesde@ofbiz.org)
  * @author     Andy Zeneski (jaz@ofbiz.org)
- * @version    $Revision: 1.6 $
+ * @version    $Revision: 1.7 $
  */
 -->
 
@@ -79,6 +79,7 @@
       <field name="numAlreadyRemoved" type="numeric"></field>
       <field name="totalRowsToStore" type="numeric"></field>
       <field name="totalRowsToRemove" type="numeric"></field>
+      <field name="runningTimeMillis" type="numeric"></field>
       <prim-key field="entitySyncId"/>
       <prim-key field="startDate"/>
       <relation type="one" fk-name="ENTSYNC_HSTSNC" rel-entity-name="EntitySync">

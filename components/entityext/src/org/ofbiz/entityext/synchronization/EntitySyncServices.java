@@ -1,5 +1,5 @@
 /*
- * $Id: EntitySyncServices.java,v 1.8 2003/12/12 03:42:55 jonesde Exp $
+ * $Id: EntitySyncServices.java,v 1.9 2003/12/12 03:58:34 jonesde Exp $
  *
  * Copyright (c) 2001, 2002 The Open For Business Project - www.ofbiz.org
  *
@@ -63,7 +63,7 @@ import org.xml.sax.SAXException;
  * Entity Engine Sync Services
  *
  * @author     <a href="mailto:jonesde@ofbiz.org">David E. Jones</a> 
- * @version    $Revision: 1.8 $
+ * @version    $Revision: 1.9 $
  * @since      3.0
  */
 public class EntitySyncServices {
@@ -161,6 +161,8 @@ public class EntitySyncServices {
             long totalRowsToStore = 0;
             long totalRowsToRemove = 0;
             
+            long startingTimeMillis = System.currentTimeMillis();
+            
             // increment starting time to run until now
             while (currentRunStartTime.before(nowTimestamp)) {
                 Timestamp currentRunEndTime = new Timestamp(currentRunStartTime.getTime() + splitMillis);
@@ -247,6 +249,7 @@ public class EntitySyncServices {
                 updateHistoryMap.put("numNotUpdated", new Long(numNotUpdated));
                 updateHistoryMap.put("numRemoved", new Long(numRemoved));
                 updateHistoryMap.put("numAlreadyRemoved", new Long(numAlreadyRemoved));
+                updateHistoryMap.put("runningTimeMillis", new Long(System.currentTimeMillis() - startingTimeMillis));
                 Map updateEsHistRunResult = dispatcher.runSync("updateEntitySyncHistory", updateHistoryMap);
                 
                 // now we have updated EntitySync and EntitySyncHistory, check both ops for errors...
