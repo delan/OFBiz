@@ -1,5 +1,5 @@
 /*
- * $Id: OrderServices.java,v 1.5 2003/08/25 20:19:32 ajzeneski Exp $
+ * $Id: OrderServices.java,v 1.6 2003/08/25 20:34:53 ajzeneski Exp $
  *
  *  Copyright (c) 2001, 2002 The Open For Business Project - www.ofbiz.org
  *
@@ -71,7 +71,7 @@ import org.ofbiz.workflow.WfUtil;
  * @author     <a href="mailto:jaz@ofbiz.org">Andy Zeneski</a>
  * @author     <a href="mailto:cnelson@einnovation.com">Chris Nelson</a>
  * @author     <a href="mailto:jonesde@ofbiz.org">David E. Jones</a> 
- * @version    $Revision: 1.5 $
+ * @version    $Revision: 1.6 $
  * @since      2.0
  */
 
@@ -2056,7 +2056,7 @@ public class OrderServices {
                     Date nowDate = new Date();
                     Debug.log("Cancel Date : " + cancelDate, module);
                     Debug.log("Current Date : " + nowDate, module);
-                    if (cancelDate.equals(nowDate) || cancelDate.after(nowDate)) {
+                    if (cancelDate.equals(nowDate) || nowDate.after(cancelDate)) {
                         // cancel the order item(s)
                         Map svcCtx = UtilMisc.toMap("orderId", orderId, "statusId", "ITEM_CANCELLED", "userLogin", userLogin);
                         try {                        
