@@ -131,6 +131,7 @@
   
   <!-- third level role types -->
   <RoleType description="Affiliate" hasTable="N" parentTypeId="SALES_REP" roleTypeId="AFFILIATE"/>
+  <RoleType description="Buyer" hasTable="N" parentTypeId="EMPLOYEE" roleTypeId="BUYER"/>
   <RoleType description="Cashier" hasTable="N" parentTypeId="EMPLOYEE" roleTypeId="CASHIER"/>
   <RoleType description="Department" hasTable="N" parentTypeId="ORGANIZATION_UNIT" roleTypeId="DEPARTMENT"/>
   <RoleType description="Division" hasTable="N" parentTypeId="ORGANIZATION_UNIT" roleTypeId="DIVISION"/>

@@ -4,7 +4,9 @@
   <Person partyId="_NA_"/>
   
   <Party partyId="admin" partyTypeId="PERSON"/>
-  <Person firstName="THE" lastName="ADMINISTRATOR" middleName="PRIVILEGED" partyId="admin" personalTitle="Mr."/>    
+  <Person firstName="THE" lastName="ADMINISTRATOR" middleName="PRIVILEGED" partyId="admin" personalTitle="Mr."/>
+  <PartyRole partyId="admin" roleTypeId="BUYER"/>
+  <PartyRole partyId="admin" roleTypeId="MANAGER"/>   
   <PartyRole partyId="admin" roleTypeId="ORDER_CLERK"/>
   <PartyRole partyId="admin" roleTypeId="SHIPMENT_CLERK"/>
   <ContactMech contactMechId="5000" contactMechTypeId="EMAIL_ADDRESS" infoString="ofbiztest@yahoo.com"/>
