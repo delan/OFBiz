@@ -276,6 +276,8 @@
 
     <entity-group group="org.ofbiz" entity="ProductConfig" />
     <entity-group group="org.ofbiz" entity="ProductConfigItem" />
+    <entity-group group="org.ofbiz" entity="ProdConfItemContent" />
+    <entity-group group="org.ofbiz" entity="ProdConfItemContentType" />
     <entity-group group="org.ofbiz" entity="ProductConfigOption" />
     <entity-group group="org.ofbiz" entity="ProductConfigOptionIactn" />
     <entity-group group="org.ofbiz" entity="ProductConfigProduct" />

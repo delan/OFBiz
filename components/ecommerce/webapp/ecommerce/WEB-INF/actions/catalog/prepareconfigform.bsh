@@ -56,7 +56,7 @@ import org.ofbiz.order.shoppingcart.*;
 import org.ofbiz.product.config.ProductConfigWrapper;
 import org.ofbiz.product.config.ProductConfigWrapper.ConfigOption;
 import org.ofbiz.product.config.ProductConfigWrapper.ConfigItem;
-
+import org.ofbiz.product.config.ProductConfigItemContentWrapper;
 
 catalogId = CatalogWorker.getCurrentCatalogId(request);
 webSiteId = CatalogWorker.getWebSiteId(request);
@@ -68,15 +68,15 @@ product = request.getAttribute("product");
 if (product != null) {
     configWrapper = new ProductConfigWrapper(request.getAttribute("delegator"),
                                              request.getAttribute("dispatcher"),
-                                             product.getString("productId"), catalogId, webSiteId, currencyUomId, autoUserLogin);
+                                             product.getString("productId"), catalogId, webSiteId, currencyUomId, UtilHttp.getLocale(request), autoUserLogin);
 
     //context.put("configform", configWrapper.renderWebForm());
     //configWrapper.setChoosenOptions(request);
     List questions = configWrapper.getQuestions();
-    List options = configWrapper.getOptions();
 
     //---------- JavaScript --------------------
     jsBuf = new StringBuffer();
+    /*
     jsBuf.append("<script language=\"JavaScript\">");
     jsBuf.append("var QUESTIONS = new Array(" + questions.size() + ");");
     for (int s = 0; s < questions.size(); s++) {
@@ -89,18 +89,17 @@ if (product != null) {
         jsBuf.append("QUESTIONS[" + s + "] = PRICES;");
     }
     jsBuf.append("</script>");
+    */
     context.put("jsscript", jsBuf.toString());
     //------------------------------------------
 
     
     //---------- setChoosenOptions() --------------------
     for (int k = 0; k < questions.size(); k++) {
-        List avalOptions = (List)options.get(k);
         String[] opts = request.getParameterValues("" + k);
         if (opts == null) {
             continue;
         }
-        System.out.println("OPTIONS (" + k + "): " + opts);
         for (int h = 0; h < opts.length; h++) {
             int cnt = -1;
             try {
@@ -114,67 +113,9 @@ if (product != null) {
     if (!ProductStoreWorker.isStoreInventoryAvailable(request, configWrapper, 1.0)) {
         context.put("productNotAvailable", "Y");
     }
-    //---------- renderWebForm() ------------------------
-    StringBuffer sb = new StringBuffer();
-    sb.append("<form target'control/product'>");
-    sb.append("<input type='submit' value='send'>");
-    sb.append("<input type='hidden' name='product_id' value='" + product.getString("productId") + "'>");
-    sb.append("<table>");
-    for (int i = 0; i < questions.size(); i++) {
-        ConfigItem ci = (ConfigItem)questions.get(i);
-        List avalOptions = (List)options.get(i);
-        sb.append("<tr><th>");
-        sb.append(ci.getConfigItem().getString("description"));
-        sb.append("</th></tr>");
-        sb.append("<tr><td>");
-        if (ci.isStandard()) {
-            for (int j = 0; j < avalOptions.size(); j++) {
-            if (j > 0) {
-                    sb.append(", ");
-                }
-                ConfigOption oneOption = (ConfigOption)avalOptions.get(j);
-                sb.append(oneOption.getDescription() + " (" + oneOption.getPrice() + ")" + (oneOption.isAvailable()? "": " *"));
-            }
-        } else if (ci.isSingleChoice()) {
-            sb.append("<tr><td>");
-            sb.append("<select name='" + i + "' class='selectBox'>");
-            if (!ci.isMandatory()) {
-                sb.append("<option value=''>");
-                sb.append("---");
-                sb.append("</option>");
-            }
-            for (int j = 0; j < avalOptions.size(); j++) {
-                ConfigOption oneOption = (ConfigOption)avalOptions.get(j);
-                String selected = (oneOption.isSelected()? "selected": "");
-                sb.append("<option value='" + j + "' " + selected + ">");
-                sb.append(oneOption.getDescription() + " (" + oneOption.getPrice() + ")" + (oneOption.isAvailable()? "": " *"));
-                sb.append("</option>");
-            }
-            sb.append("</select>");
-            sb.append("</td></tr>");
-        } else {
-            // MULTI-CHOICE  question
-            for (int j = 0; j < avalOptions.size(); j++) {
-                sb.append("<tr><td>");
-                ConfigOption oneOption = (ConfigOption)avalOptions.get(j);
-                String selected = (oneOption.isSelected()? "checked": "");
-                sb.append("<input type='CHECKBOX' name='" + i + "' value='" + j + "' " + selected + ">");
-                sb.append(oneOption.getDescription() + " (" + oneOption.getPrice() + ")" + (oneOption.isAvailable()? "": " *"));
-                sb.append("</td></tr>");
-            }
-        }
-        sb.append("</td></tr>");
-    }
-    sb.append("</table>");
-    sb.append("</form>");
-    //---------------------------------------------------
     context.put("configwrapper", configWrapper);
-    context.put("configform", sb.toString());
     context.put("totalPrice", configWrapper.getTotalPrice());
     if (!configWrapper.isCompleted()) {
         context.put("orderQuantityDisabled", "Y");
     }
-} else {
-    context.put("configform", "Product not available");
 }
-

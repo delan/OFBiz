@@ -415,8 +415,99 @@ ${jsscript}
 
   <#-- Any attributes/etc may go here -->
   <#-- Product Configurator -->
-  <tr><td colspan="2">CONFIGURATOR FORM</td></tr>
-  <tr><td colspan="2">${configform}</td></tr>
+  <tr>
+    <td colspan="2">
+      <form method="post" action="<@ofbizUrl>/product<#if requestAttributes._CURRENT_VIEW_?exists>/${requestAttributes._CURRENT_VIEW_}</#if></@ofbizUrl>">
+        <input type='hidden' name='product_id' value='${product.productId}'>
+        <table width='100%'>
+          <tr>
+            <th><input type='submit' value='Validate'></th>
+          </tr>
+          <#assign counter = 0>
+          <#assign questions = configwrapper.questions>
+          <#list questions as question>
+          <tr>
+            <td>
+              <div class="tableheadtext">${question.question}</div>
+              <div class="tabletext">${question.content.get("LONG_DESCRIPTION")?if_exists}</div>
+              <#assign instructions = question.content.get("INSTRUCTIONS")?if_exists>
+              <#if instructions?has_content>
+                <a href="javascript:alert('${instructions}');" class="buttontext">Instructions</a>
+              </#if>
+              <#assign image = question.content.get("IMAGE_URL")?if_exists>
+              <#if image?has_content>
+                <img src='<@ofbizContentUrl>${requestAttributes.contentPathPrefix?if_exists}${image?if_exists}</@ofbizContentUrl>' vspace='5' hspace='5' border='0' width='200' align='left'>
+              </#if>
+            </td>
+          </tr>
+          <tr>
+            <td>
+            <#if question.isStandard()>
+              <#-- Standard item: all the options are always included -->
+              <#assign options = question.options>
+              <#list options as option>
+                <div class="tabletext">${option.description} - <@ofbizCurrency amount=option.price isoCode=price.currencyUsed/> <#if !option.isAvailable()> (*)</#if></div>
+              </#list>
+            <#else>
+              <#if question.isSingleChoice()>
+                <#-- Single choice question -->
+                <#-- The single choice input can be implemented with radio buttons or a select field -->
+                <#-- This is the radio button implementation -->
+                <#-- After this one, the select box implementation is also included (commented out) -->
+                <#assign options = question.options>
+                <#if !question.isMandatory()>
+                  <div class="tabletext"><input type='RADIO' name='${counter}' value='<#if !question.isSelected()>checked</#if>'> No option</div>
+                </#if>
+                <#assign optionCounter = 0>
+                <#list options as option>
+                  <div class="tabletext">
+                    <input type='RADIO' name='${counter}' value='${optionCounter}' <#if option.isSelected() || (!question.isSelected() && optionCounter == 0 && question.isMandatory())>checked</#if>>
+                    ${option.description} - <@ofbizCurrency amount=option.price isoCode=price.currencyUsed/><#if !option.isAvailable()> (*)</#if>
+                  </div>
+                  <#assign optionCounter = optionCounter + 1>
+                </#list>
+                <#-- And this is the select box implementation -->
+                <#-- Uncomment the lines below if you want to see it -->
+<#--
+                <select name='${counter}' class='selectBox'>
+                <#if !question.isMandatory()>
+                  <option value=''>---</option>
+                </#if>
+                <#assign options = question.options>
+                <#assign optionCounter = 0>
+                <#list options as option>
+                  <#if option.isSelected()>
+                    <#assign optionCounter = optionCounter + 1>
+                  </#if>
+                  <option value='${optionCounter}' <#if option.isSelected()>selected</#if>>
+                    ${option.description} - <@ofbizCurrency amount=option.price isoCode=price.currencyUsed/> <#if !option.isAvailable()> (*)</#if>
+                  </option>
+                  <#assign optionCounter = optionCounter + 1>
+                </#list>
+                </select>
+-->
+              <#else>
+                <#-- Multi choice question -->
+                <#assign options = question.options>
+                <#assign optionCounter = 0>
+                <#list options as option>
+                  <div class="tabletext">
+                    <input type='CHECKBOX' name='${counter}' value='${optionCounter}' <#if option.isSelected()>checked</#if>>
+                    ${option.description} - <@ofbizCurrency amount=option.price isoCode=price.currencyUsed/><#if !option.isAvailable()> (*)</#if>
+                  </div>
+                  <#assign optionCounter = optionCounter + 1>
+                </#list>
+              </#if>
+            </#if>
+            </td>
+          </tr>
+          <tr><td><hr></td></tr>
+          <#assign counter = counter + 1>
+        </#list>
+        </table>
+      </form>
+    </td>
+  </tr>
   <tr><td colspan="2"><hr class='sepbar'></td></tr>
 
   <#-- Product Reviews -->
