@@ -1,5 +1,5 @@
 /*
- * $Id: ComponentContainer.java,v 1.14 2003/12/01 20:43:39 ajzeneski Exp $
+ * $Id: ComponentContainer.java,v 1.15 2003/12/06 17:24:48 ajzeneski Exp $
  *
  * Copyright (c) 2003 The Open For Business Project - www.ofbiz.org
  *
@@ -33,6 +33,7 @@ import java.util.List;
 import org.ofbiz.base.component.ComponentConfig;
 import org.ofbiz.base.component.ComponentException;
 import org.ofbiz.base.component.ComponentLoaderConfig;
+import org.ofbiz.base.component.AlreadyLoadedException;
 import org.ofbiz.base.start.Classpath;
 import org.ofbiz.base.util.Debug;
 import org.ofbiz.base.util.UtilValidate;
@@ -46,14 +47,14 @@ import org.ofbiz.base.util.UtilValidate;
  * </pre>
  *
  * @author     <a href="mailto:jaz@ofbiz.org">Andy Zeneski</a> 
-  *@version    $Revision: 1.14 $
+  *@version    $Revision: 1.15 $
  * @since      3.0
  */
 public class ComponentContainer implements Container {
     
     public static final String module = ComponentContainer.class.getName();   
     
-    protected List loadedComponents = null;
+    protected static List loadedComponents = null;
     protected Classpath classPath = null;   
 
     /**
@@ -63,13 +64,7 @@ public class ComponentContainer implements Container {
         if (classPath == null) {
             classPath = new Classpath(System.getProperty("java.class.path"));    
         } 
-        if (loadedComponents == null) {
-            loadedComponents = new LinkedList();
-        } else {
-            throw new ContainerException("Components already loaded, cannot start");
-        }
-        
-                                      
+
         // get the config for this container
         ContainerConfig.Container cc = ContainerConfig.getContainer("component-container", configFileLocation);
         
@@ -78,14 +73,29 @@ public class ComponentContainer implements Container {
         if (cc.getProperty("loader-config") != null) {
             loaderConfig = cc.getProperty("loader-config").value;
         }
-                
-        // get the components to load
-        List components = null;
-        try {            
-            components = ComponentLoaderConfig.getComponentsToLoad(loaderConfig);
+
+        // load the components
+        try {
+            loadComponents(loaderConfig, true);
+        } catch (AlreadyLoadedException e) {
+            throw new ContainerException(e);
         } catch (ComponentException e) {
-            throw new ContainerException(e);            
+            throw new ContainerException(e);
         }
+
+        return true;
+    }
+
+    public synchronized void loadComponents(String loaderConfig, boolean updateClasspath) throws AlreadyLoadedException, ComponentException {
+        // set the loaded list; and fail if already loaded
+        if (loadedComponents == null) {
+            loadedComponents = new LinkedList();
+        } else {
+            throw new AlreadyLoadedException("Components already loaded, cannot start");
+        }
+
+        // get the components to load
+        List components = ComponentLoaderConfig.getComponentsToLoad(loaderConfig);
                        
         // load each component
         if (components != null) {
@@ -113,16 +123,18 @@ public class ComponentContainer implements Container {
             }
         }
 
-        // set the new classloader on the current thread
-        System.setProperty("java.class.path", classPath.toString());
-        ClassLoader cl = classPath.getClassLoader();
-        Thread.currentThread().setContextClassLoader(cl);        
-        
-        return true;
+        // set the new classloader/classpath on the current thread
+        if (updateClasspath) {
+            System.setProperty("java.class.path", classPath.toString());
+            ClassLoader cl = classPath.getClassLoader();
+            Thread.currentThread().setContextClassLoader(cl);
+        }
+
+        Debug.logInfo("All components loaded.", module);
     }
     
     private void loadComponentDirectory(String directoryName) {
-        Debug.logInfo("Loading component directory [" + directoryName + "]", module);
+        Debug.logInfo("Auto-Loading component directory [" + directoryName + "]...", module);
         File parentPath = new File(directoryName);
         if (!parentPath.exists() || !parentPath.isDirectory()) {
             Debug.logError("Auto-Load Component directory not found : " + directoryName, module);
@@ -158,6 +170,7 @@ public class ComponentContainer implements Container {
     }
     
     private void loadComponent(ComponentConfig config) {
+        Debug.logInfo("Loading component [" + config.getComponentName() + "]...", module);
         List classpathInfos = config.getClasspathInfos();
         String configRoot = config.getRootLocation();
         configRoot = configRoot.replace('\\', '/');
@@ -211,5 +224,17 @@ public class ComponentContainer implements Container {
      * @see org.ofbiz.base.container.Container#stop()
      */
     public void stop() throws ContainerException {        
-    }    
+    }
+
+    /**
+     * Static method for easy loading of components for use when the container system is not.
+     * @param updateClasspath Tells the component loader to update the classpath, and thread classloader
+     * @throws AlreadyLoadedException
+     * @throws ComponentException
+     */
+    public static synchronized void loadComponents(boolean updateClasspath) throws AlreadyLoadedException, ComponentException {
+        ComponentContainer cc = new ComponentContainer();
+        cc.loadComponents(null, updateClasspath);
+        cc = null;
+    }
 }
