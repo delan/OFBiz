@@ -120,14 +120,14 @@ public class ShoppingCart implements java.io.Serializable {
     /** Add an item to the shopping cart, or if already there, increase the quantity.
      *  @return the new/increased item index
      */
-    public int addOrIncreaseItem(String productId, double quantity, HashMap features, HashMap attributes, String prodCatalogId, LocalDispatcher dispatcher) throws CartItemModifyException {
+    public int addOrIncreaseItem(String productId, double quantity, Map features, Map attributes, String prodCatalogId, LocalDispatcher dispatcher) throws CartItemModifyException {
         // public int addOrIncreaseItem(GenericValue product, double quantity, HashMap features) {
 
         // Check for existing cart item.
         for (int i = 0; i < this.cartLines.size(); i++) {
             ShoppingCartItem sci = (ShoppingCartItem) cartLines.get(i);
 
-            if (sci.equals(productId, features, prodCatalogId)) {
+            if (sci.equals(productId, features, attributes, prodCatalogId)) {
                 double newQuantity = sci.getQuantity() + quantity;
 
                 if (Debug.verboseOn()) Debug.logVerbose("Found a match for id " + productId + " on line " + i + ", updating quantity to " + newQuantity);
@@ -171,7 +171,7 @@ public class ShoppingCart implements java.io.Serializable {
         for (int i = 0; i < this.cartLines.size(); i++) {
             ShoppingCartItem cartItem = (ShoppingCartItem) cartLines.get(i);
 
-            if (cartItem.equals(productId, features, prodCatalogId)) {
+            if (cartItem.equals(productId, features, attributes, prodCatalogId)) {
                 return cartItem;
             }
         }

@@ -150,6 +150,7 @@ function addToList() {
       <input type="hidden" name="removeSelected" value="false">
       <table width='100%' cellspacing="0" cellpadding="1" border="0">
         <TR> 
+          <TD NOWRAP>&nbsp;</TD>
           <TD NOWRAP><div class='tabletext'><b>Product</b></div></TD>
           <TD NOWRAP align='center'><div class='tabletext'><b>Quantity</b></div></TD>
           <TD NOWRAP align='right'><div class='tabletext'><b>Unit Price</b></div></TD>
@@ -158,10 +159,19 @@ function addToList() {
           <TD NOWRAP align='center'><input type='checkbox' name='selectAll' value='0' onclick="javascript:toggleAll();"></TD>
         </TR>
 
+        <#assign itemsFromList = false>
         <#list shoppingCart.items() as cartLine>
           <#assign cartLineIndex = shoppingCart.getItemIndex(cartLine)>
           <tr><td colspan="7"><hr class='sepbar'></td></tr>
           <tr>
+            <td>
+                <#if cartLine.getShoppingListId()?exists>
+                  <#assign itemsFromList = true>
+                  <a href="<@ofbizUrl>/editShoppingList?shoppingListId=${cartLine.getShoppingListId()}</@ofbizUrl>" class="buttontext">L</a>&nbsp;&nbsp;
+                <#else>
+                  &nbsp;
+                </#if>
+            </td> 
             <td>
                 <div class='tabletext'>
                     <#-- <b>${cartLineIndex}</b> - -->
@@ -179,7 +189,7 @@ function addToList() {
             </td>
             <td nowrap align="center">
               <div class='tabletext'>
-                <#if cartLine.getIsPromo()>
+                <#if cartLine.getIsPromo() || cartLine.getShoppingListId()?exists>
                     ${cartLine.getQuantity()?string.number}
                 <#else>
                     <input size="6" class='inputBox' type="text" name="update_${cartLineIndex}" value="${cartLine.getQuantity()?string.number}">
@@ -219,9 +229,15 @@ function addToList() {
             <div class='tabletext'><b>${shoppingCart.getGrandTotal()?string.currency}</b></div>
           </td>
         </tr>
+        <#if itemsFromList>
+        <tr>
+          <td valign="bottom" colspan="6"><div class="tabletext">L - Items from a shopping list; update quantities from list page.</td>
+        </tr>
+        <#else>
         <tr>
           <td colspan="6">&nbsp;</td>
         </tr>
+        </#if>
         <tr>
           <td colspan="6"><hr class="sepbar"></td>
         </tr>

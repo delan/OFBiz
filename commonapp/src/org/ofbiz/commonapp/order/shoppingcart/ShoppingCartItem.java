@@ -44,6 +44,8 @@ import org.ofbiz.commonapp.product.category.*;
  */
 public class ShoppingCartItem implements java.io.Serializable {
 
+    public static String[] attributeNames = { "shoppingListId", "shoppingListItemSeqId" };
+    
     private transient GenericDelegator delegator = null;
     private transient GenericValue _product = null;
     /** this is a virtual product that the current product may inherit information from */
@@ -59,8 +61,6 @@ public class ShoppingCartItem implements java.io.Serializable {
     private double listPrice = 0.0;
     private Map additionalProductFeatureAndAppls = null;
     private Map attributes = null;
-    private String shoppingListId = null;
-    private String shoppingListItemSeqId = null;
     private String orderItemSeqId = null;
     private GenericValue orderShipmentPreference = null;
 
@@ -302,16 +302,20 @@ public class ShoppingCartItem implements java.io.Serializable {
     }
     
     public void setShoppingList(String shoppingListId, String itemSeqId) {
-        this.shoppingListId = shoppingListId;
-        this.shoppingListItemSeqId = itemSeqId;
+        attributes.put("shoppingListId", shoppingListId);
+        attributes.put("shoppingListItemSeqId", itemSeqId);                
     }
     
     public String getShoppingListId() {
-        return this.shoppingListId;
+        if (attributes != null && attributes.containsKey("shoppingListId"))
+            return (String) attributes.get("shoppingListId");
+        return null;
     }
     
     public String getShoppingListItemSeqId() {
-        return this.shoppingListItemSeqId;
+        if (attributes != null && attributes.containsKey("shoppingListItemSeqId"))
+            return (String) attributes.get("shoppingListItemSeqId");
+        return null;
     }
 
     /** Returns true if shipping charges apply to this item. */
@@ -624,16 +628,16 @@ public class ShoppingCartItem implements java.io.Serializable {
     /** Compares the specified object with this cart item. */
     public boolean equals(ShoppingCartItem item) {
         if (item == null) return false;
-        return this.equals(item.getProductId(), item.additionalProductFeatureAndAppls, item.prodCatalogId, item.getIsPromo());
+        return this.equals(item.getProductId(), item.additionalProductFeatureAndAppls, item.attributes, item.prodCatalogId, item.getIsPromo());
     }
-
+        
     /** Compares the specified object with this cart item. Defaults isPromo to false. */
-    public boolean equals(String productId, Map additionalProductFeatureAndAppls, String prodCatalogId) {
-        return equals(productId, additionalProductFeatureAndAppls, prodCatalogId, false);
+    public boolean equals(String productId, Map additionalProductFeatureAndAppls, Map attributes, String prodCatalogId) {
+        return equals(productId, additionalProductFeatureAndAppls, attributes, prodCatalogId, false);
     }
 
     /** Compares the specified object with this cart item. */
-    public boolean equals(String productId, Map additionalProductFeatureAndAppls, String prodCatalogId, boolean isPromo) {
+    public boolean equals(String productId, Map additionalProductFeatureAndAppls, Map attributes, String prodCatalogId, boolean isPromo) {
         if (!this.productId.equals(productId)) {
             return false;
         }
@@ -651,7 +655,10 @@ public class ShoppingCartItem implements java.io.Serializable {
             this.additionalProductFeatureAndAppls.equals(additionalProductFeatureAndAppls);
 
         if (!featuresEqual) return false;
+                    
+        boolean attributesEqual = this.attributes == null ? attributes == null : this.attributes.equals(attributes);
         
+        if (!attributesEqual) return false;
         return true;
     }
 

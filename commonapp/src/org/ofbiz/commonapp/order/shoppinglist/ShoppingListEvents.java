@@ -158,9 +158,8 @@ public class ShoppingListEvents {
             String productId = shoppingListItem.getString("productId");
             Double quantity = shoppingListItem.getDouble("quantity");
             try {
-                int itemId = cart.addOrIncreaseItem(productId, quantity.doubleValue(), null, null, prodCatalogId, dispatcher);
-                ShoppingCartItem item = cart.findCartItem(itemId);
-                item.setShoppingList(shoppingListItem.getString("shoppingListId"), shoppingListItem.getString("shoppingListItemSeqId"));
+                Map attributes = UtilMisc.toMap("shoppingListId", shoppingListItem.getString("shoppingListId"), "shoppingListItemSeqId", shoppingListItem.getString("shoppingListItemSeqId"));
+                int itemId = cart.addOrIncreaseItem(productId, quantity.doubleValue(), null, attributes, prodCatalogId, dispatcher);                               
                 eventMessage.append("<li>Added product (" + productId + ") to cart.\n");
             } catch (CartItemModifyException e) {
                 Debug.logWarning(e, "Problems adding item from list to cart", module);

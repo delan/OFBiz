@@ -55,7 +55,7 @@ public class ShoppingCartEvents {
         String productId = null;
         String quantityStr = null;
         double quantity = 0;
-        HashMap attributes = null;
+        Map attributes = null;
 
         // Get the parameters as a MAP, remove the productId and quantity params.        
         Map paramMap = UtilHttp.getParameterMap(request);
@@ -94,14 +94,14 @@ public class ShoppingCartEvents {
         	return "error";
         }
 
-        // Create a HashMap of product attributes.
-        /*
-         * commenting this out because this pulls in parameters that we don't want; we need some way to specify which parameters to put into attributes...
-         if (paramMap.size() > 0) {
-         attributes = new HashMap(paramMap);
-         }
-         */
-
+        // Create a HashMap of product attributes - From ShoppingCartItem.attributeNames[]
+        for (int namesIdx = 0; namesIdx < ShoppingCartItem.attributeNames.length; namesIdx++) {
+            if (attributes == null) attributes = new HashMap();
+            if (paramMap.containsKey(ShoppingCartItem.attributeNames[namesIdx])) {
+                attributes.put(ShoppingCartItem.attributeNames[namesIdx], paramMap.get(ShoppingCartItem.attributeNames[namesIdx]));
+            }
+        }
+        
         try {
             int itemId = cart.addOrIncreaseItem(productId, quantity, null, attributes, CatalogWorker.getCurrentCatalogId(request), dispatcher);
             if (shoppingListId != null && shoppingListItemSeqId != null) {
