@@ -42,7 +42,7 @@ import javax.servlet.http.HttpSession;
  * LayoutEvents Class
  *
  * @author     <a href="mailto:byersa@automationgroups.com">Al Byers</a>
- * @version    $Revision: 1.5 $
+ * @version    $Revision: 1.6 $
  * @since      3.0
  *
  * 
@@ -316,7 +316,15 @@ public class LayoutEvents {
             newDataResourceId = (String)newContent.get("dataResourceId");
             newContent.set("contentName", "Copy - " + oldName);
             newContent.create();
-            //Debug.logInfo("in cloneLayout, newContent:" + newContent, "");
+            Debug.logInfo("in cloneLayout, newContent:" + newContent, "");
+
+            GenericValue newContentAssoc = delegator.makeValue("ContentAssoc", null);
+            newContentAssoc.set("contentId", newId);
+            newContentAssoc.set("contentIdTo", "TEMPLATE_MASTER");
+            newContentAssoc.set("contentAssocTypeId", "SUB_CONTENT");
+            newContentAssoc.set("fromDate", UtilDateTime.nowTimestamp());
+            newContentAssoc.create();
+            Debug.logInfo("in cloneLayout, newContentAssoc:" + newContentAssoc, "");
         } catch(GenericEntityException e) {
                 request.setAttribute("_ERROR_MESSAGE_", e.getMessage());
                 return "error";
@@ -356,6 +364,9 @@ public class LayoutEvents {
                 SimpleMapProcessor.runSimpleMapProcessor(
                       "org/ofbiz/content/ContentManagementMapProcessors.xml", "contentAssocIn",
                       view, serviceIn, errorMessages, loc);
+            } catch(IllegalArgumentException e) {
+                request.setAttribute("_ERROR_MESSAGE_", e.getMessage());
+                return "error";
             } catch(MiniLangException e) {
                 request.setAttribute("_ERROR_MESSAGE_", e.getMessage());
                 return "error";
@@ -390,6 +401,8 @@ public class LayoutEvents {
         view.set("drDataResourceId", newDataResourceId);
             //Debug.logInfo("in cloneLayout, view:" + view, "");
         ContentManagementWorker.setCurrentEntityMap(request, view); 
+        request.setAttribute("contentId", view.get("contentId"));
+        request.setAttribute("drDataResourceId", view.get("drDataResourceId"));
         return "success";
     }
 
