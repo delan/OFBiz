@@ -114,7 +114,7 @@ public class CategoryServices {
             result.put("previousProductId", previous);
         } else {
             previous = ((GenericValue) memberList.get(memberList.size() - 1)).getString("productId");
-            result.put("previousProductid", previous);
+            result.put("previousProductId", previous);
         }
 
         if (index.intValue() + 1 < memberList.size()) {
