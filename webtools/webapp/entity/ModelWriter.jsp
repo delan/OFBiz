@@ -1,42 +1,47 @@
-<%@ page contentType="text/plain" %><%@ page import="java.util.*, java.io.*, java.net.*, org.ofbiz.core.util.*, org.ofbiz.core.entity.*, org.ofbiz.core.entity.model.*" %><jsp:useBean id="delegator" type="org.ofbiz.core.entity.GenericDelegator" scope="application" /><jsp:useBean id="security" type="org.ofbiz.core.security.Security" scope="application" /><%
+<%@ page contentType="text/plain" %><%@ page import="java.util.*, java.io.*, java.net.*, org.ofbiz.core.util.*, org.ofbiz.core.entity.*, org.ofbiz.core.entity.config.*, org.ofbiz.core.entity.model.*" %><jsp:useBean id="delegator" type="org.ofbiz.core.entity.GenericDelegator" scope="application" /><jsp:useBean id="security" type="org.ofbiz.core.security.Security" scope="application" /><%
 
-if (security.hasPermission("ENTITY_MAINT", session) || request.getParameter("originalFileName") != null) {
+if (security.hasPermission("ENTITY_MAINT", session) || request.getParameter("originalLoaderName") != null) {
   if ("true".equals(request.getParameter("savetofile"))) {
     //save to the file specified in the ModelReader config
     String controlPath = (String) request.getAttribute(SiteDefs.CONTROL_PATH);
     String serverRootUrl = (String) request.getAttribute(SiteDefs.SERVER_ROOT_URL);
     ModelReader modelReader = delegator.getModelReader();
 
-    Iterator filenameIter = modelReader.getFileNameEntitiesKeyIterator();
-    while (filenameIter.hasNext()) {
-      String filename = (String) filenameIter.next();
+    Iterator handlerIter = modelReader.getResourceHandlerEntitiesKeyIterator();
+    while (handlerIter.hasNext()) {
+      ResourceHandler resourceHandler = (ResourceHandler) handlerIter.next();
+      if (resourceHandler.isFileResource()) {
+          String filename = resourceHandler.getFullLocation();
 
-      java.net.URL url = new java.net.URL(serverRootUrl + controlPath + "/view/ModelWriter");
-      HashMap params = new HashMap();
-      params.put("originalFileName", filename);
-      HttpClient httpClient = new HttpClient(url, params);
-      InputStream in = httpClient.getStream();
+          java.net.URL url = new java.net.URL(serverRootUrl + controlPath + "/view/ModelWriter");
+          HashMap params = new HashMap();
+          params.put("originalLoaderName", resourceHandler.getLoaderName());
+          params.put("originalLocation", resourceHandler.getLocation());
+          HttpClient httpClient = new HttpClient(url, params);
+          InputStream in = httpClient.getStream();
 
-      File newFile = new File(filename);
-      FileWriter newFileWriter = new FileWriter(newFile);
+          File newFile = new File(filename);
+          FileWriter newFileWriter = new FileWriter(newFile);
 
-      BufferedReader post = new BufferedReader(new InputStreamReader(in));
-      String line = null;
-      while ((line = post.readLine()) != null) {
-        newFileWriter.write(line);
-        newFileWriter.write("\n");
+          BufferedReader post = new BufferedReader(new InputStreamReader(in));
+          String line = null;
+          while ((line = post.readLine()) != null) {
+            newFileWriter.write(line);
+            newFileWriter.write("\n");
+          }
+          newFileWriter.close();
+          %>
+              If you aren't seeing any exceptions, XML was written successfully to:
+              <%=filename%>
+              from the URL:
+              <%=url.toString()%>?originalLoaderName=<%=resourceHandler.getLoaderName()%>&originalLocation=<%=resourceHandler.getLocation()%>
+          <%
+      } else {
+          %>Cannot write to location <%=resourceHandler.getLocation()%> from 
+          loader <%=resourceHandler.getLoaderName()%>, it is not a file.<%
       }
-      newFileWriter.close();
-      %>
-      If you aren't seeing any exceptions, XML was written successfully to:
-      <%=filename%>
-      from the URL:
-      <%=url.toString()%>
-      <%
     }
-  }
-  else
-  {
+  } else {
     String title = "Entity of an Open For Business Project Component";
     String description = "None";
     String copyright = "Copyright (c) 2002 The Open For Business Project - www.ofbiz.org";
@@ -82,9 +87,10 @@ if (security.hasPermission("ENTITY_MAINT", session) || request.getParameter("ori
   //put the entityNames TreeSets in a HashMap by packageName
   Collection ec = null;
 
-  String originalFileName = request.getParameter("originalFileName");
-  if (originalFileName != null) {
-    ec = reader.getFileNameEntities(originalFileName);
+  String originalLoaderName = request.getParameter("originalLoaderName");
+  String originalLocation = request.getParameter("originalLocation");
+  if (originalLoaderName != null && originalLocation != null) {
+    ec = reader.getResourceHandlerEntities(new ResourceHandler(originalLoaderName, originalLocation));
   } else {
     ec = reader.getEntityNames();
   }
