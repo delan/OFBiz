@@ -25,6 +25,7 @@
 package org.ofbiz.service;
 
 import java.util.Map;
+import java.io.Serializable;
 
 /**
  * Generic Requester Interface
@@ -34,7 +35,7 @@ import java.util.Map;
  * @version    $Rev$
  * @since      2.0
  */
-public interface GenericRequester {
+public interface GenericRequester extends Serializable {
 
     /** 
      * Receive the result of an asynchronous service call
