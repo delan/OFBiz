@@ -21,7 +21,7 @@
  *
  *@author     David E. Jones (jonesde@ofbiz.org)
  *@author     Andy Zeneski (jaz@ofbiz.org)
- *@version    $Revision: 1.22 $
+ *@version    $Revision: 1.23 $
  *@since      2.1
 -->
 <#assign uiLabelMap = requestAttributes.uiLabelMap>
@@ -346,7 +346,7 @@ function addToList() {
 	            <form method="POST" action="<@ofbizUrl>/addpromocode<#if requestAttributes._CURRENT_VIEW_?has_content>/${requestAttributes._CURRENT_VIEW_}</#if></@ofbizUrl>" name="addpromocodeform" style="margin: 0;">
 	              <input type="text" class="inputBox" size="15" name="productPromoCodeId" value="">
 	              <input type="submit" class="smallSubmit" value="Add Code">
-	              <#assign productPromoCodeIds = shoppingCart.getProductPromoCodesEntered()>
+	              <#assign productPromoCodeIds = (shoppingCart.getProductPromoCodesEntered())?if_exists>
 	              <#if productPromoCodeIds?has_content>
 	                Entered Codes:
 	                <#list productPromoCodeIds as productPromoCodeId>
@@ -362,7 +362,7 @@ function addToList() {
     </tr>
   </table>
   
-<#if showPromoText>
+<#if showPromoText?exists && showPromoText>
   <br/>
   <table border="0" width="100%" cellspacing="0" cellpadding="0" class="boxoutside">
     <tr>
@@ -452,7 +452,7 @@ function addToList() {
   </table>
 </#if>
 
-<#if (shoppingCartSize > 0)>
+<#if (shoppingCartSize?default(0) > 0)>
   <br/>
   <#include "/cart/promoUseDetailsInline.ftl"/>
 </#if>
