@@ -1,5 +1,5 @@
 /*
- * $Id: DatabaseUtil.java,v 1.21 2004/07/17 07:05:07 doogie Exp $
+ * $Id: DatabaseUtil.java,v 1.22 2004/08/17 17:54:06 jonesde Exp $
  *
  * Copyright (c) 2001, 2002 The Open For Business Project - www.ofbiz.org
  *
@@ -35,7 +35,7 @@ import org.ofbiz.entity.model.*;
  * Utilities for Entity Database Maintenance
  *
  * @author     <a href="mailto:jonesde@ofbiz.org">David E. Jones</a>
- * @version    $Revision: 1.21 $
+ * @version    $Revision: 1.22 $
  * @since      2.0
  */
 public class DatabaseUtil {
@@ -315,15 +315,17 @@ public class DatabaseUtil {
             Iterator eaIter = entitiesAdded.iterator();
             while (eaIter.hasNext()) {
                 ModelEntity curEntity = (ModelEntity) eaIter.next();
-                String indErrMsg = this.createForeignKeyIndices(curEntity, datasourceInfo.constraintNameClipLength);
-                if (indErrMsg != null && indErrMsg.length() > 0) {
-                    String message = "Could not create foreign key indices for entity \"" + curEntity.getEntityName() + "\": " + indErrMsg;
-                    Debug.logError(message, module);
-                    if (messages != null) messages.add(message);
-                } else {
-                    String message = "Created foreign key indices for entity \"" + curEntity.getEntityName() + "\"";
-                    Debug.logImportant(message, module);
-                    if (messages != null) messages.add(message);
+                if (curEntity.getRelationsOneSize() > 0) {
+                    String indErrMsg = this.createForeignKeyIndices(curEntity, datasourceInfo.constraintNameClipLength);
+                    if (indErrMsg != null && indErrMsg.length() > 0) {
+                        String message = "Could not create foreign key indices for entity \"" + curEntity.getEntityName() + "\": " + indErrMsg;
+                        Debug.logError(message, module);
+                        if (messages != null) messages.add(message);
+                    } else {
+                        String message = "Created foreign key indices for entity \"" + curEntity.getEntityName() + "\"";
+                        Debug.logImportant(message, module);
+                        if (messages != null) messages.add(message);
+                    }
                 }
             }
         }
@@ -342,15 +344,17 @@ public class DatabaseUtil {
             Iterator eaIter = entitiesAdded.iterator();
             while (eaIter.hasNext()) {
                 ModelEntity curEntity = (ModelEntity) eaIter.next();
-                String indErrMsg = this.createDeclaredIndices(curEntity);
-                if (indErrMsg != null && indErrMsg.length() > 0) {
-                    String message = "Could not create declared indices for entity \"" + curEntity.getEntityName() + "\": " + indErrMsg;
-                    Debug.logError(message, module);
-                    if (messages != null) messages.add(message);
-                } else {
-                    String message = "Created declared indices for entity \"" + curEntity.getEntityName() + "\"";
-                    Debug.logImportant(message, module);
-                    if (messages != null) messages.add(message);
+                if (curEntity.getIndexesSize() > 0) {
+                    String indErrMsg = this.createDeclaredIndices(curEntity);
+                    if (indErrMsg != null && indErrMsg.length() > 0) {
+                        String message = "Could not create declared indices for entity \"" + curEntity.getEntityName() + "\": " + indErrMsg;
+                        Debug.logError(message, module);
+                        if (messages != null) messages.add(message);
+                    } else {
+                        String message = "Created declared indices for entity \"" + curEntity.getEntityName() + "\"";
+                        Debug.logImportant(message, module);
+                        if (messages != null) messages.add(message);
+                    }
                 }
             }
         }
@@ -2378,7 +2382,6 @@ public class DatabaseUtil {
 
         // go through the relationships to see if any foreign keys need to be added
         Iterator relationsIter = entity.getRelationsIterator();
-
         while (relationsIter.hasNext()) {
             ModelRelation modelRelation = (ModelRelation) relationsIter.next();
 

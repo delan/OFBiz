@@ -1,5 +1,5 @@
 /*
- * $Id: ModelEntity.java,v 1.20 2004/08/14 00:58:53 jonesde Exp $
+ * $Id: ModelEntity.java,v 1.21 2004/08/17 17:54:06 jonesde Exp $
  *
  * Copyright (c) 2001, 2002 The Open For Business Project - www.ofbiz.org
  *
@@ -52,7 +52,7 @@ import org.w3c.dom.NodeList;
  *
  * @author     <a href="mailto:jonesde@ofbiz.org">David E. Jones</a>
  * @author     <a href="mailto:jaz@ofbiz.org">Andy Zeneski</a>
- * @version    $Revision: 1.20 $
+ * @version    $Revision: 1.21 $
  * @since      2.0
  */
 public class ModelEntity extends ModelInfo implements Comparable {
@@ -566,6 +566,18 @@ public class ModelEntity extends ModelInfo implements Comparable {
 
     public int getRelationsSize() {
         return this.relations.size();
+    }
+    
+    public int getRelationsOneSize() {
+        int numRels = 0;
+        Iterator relationsIter = this.getRelationsIterator();
+        while (relationsIter.hasNext()) {
+            ModelRelation modelRelation = (ModelRelation) relationsIter.next();
+            if ("one".equals(modelRelation.getType())) {
+                numRels++;
+            }
+        }
+        return numRels;
     }
 
     public ModelRelation getRelation(int index) {
