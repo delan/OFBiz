@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<page>
+    <template>main</template> 
+    <property name="title">View Inventory By Product</property>
+    <property name="titleProperty">PageTitleEditFacilityInventoryItems</property>
+    <property name="headerItem">facility</property>
+    <property name="tabButtonItem">EditFacilityInventoryItems</property>
+    <content-action name="/facility/ViewFacilityInventoryByProduct.bsh"/>
+</page>
