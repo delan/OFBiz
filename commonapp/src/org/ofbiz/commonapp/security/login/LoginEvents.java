@@ -1,6 +1,15 @@
 /*
  * $Id$
  * $Log$
+ * Revision 1.2  2002/03/21 19:14:49  dustinc
+ * added auto-login capability
+ *
+ * Revision 1.1.1.1  2002/03/14 23:36:26  dustinc
+ * no message
+ *
+ * Revision 1.7  2002/02/28 01:52:17  azeneski
+ * added attribute to the request when login has passed; this is necessary because a chain may take place with the login event and it may no longer be in the URI
+ *
  * Revision 1.6  2002/02/02 12:01:47  jonesde
  * Changed method of getting dispatcher to get from request instead of ServletContext, more control to control servlet and works with Weblogic
  *
@@ -60,6 +69,38 @@ import org.ofbiz.commonapp.party.contact.ContactHelper;
  */
 public class LoginEvents {
     
+    /**
+     *save USERNAME and PASSWORD for use by auth pages even if we start in non-auth pages
+     *@param request The HTTP request object for the current JSP or Servlet request.
+     *@param response The HTTP response object for the current JSP or Servlet request.
+     *@throws RemoteException
+     *@throws IOException
+     *@throws ServletException
+     *@return
+     */
+    public static String saveEntryParams(HttpServletRequest request, HttpServletResponse response) throws java.rmi.RemoteException, java.io.IOException, javax.servlet.ServletException {
+        GenericValue userLogin = (GenericValue)request.getSession().getAttribute(SiteDefs.USER_LOGIN);
+        
+        // save entry login parameters if we don't have a valid login object
+        if (userLogin == null) {
+            
+            String username = request.getParameter("USERNAME");
+            String password = request.getParameter("PASSWORD");
+            
+            // save parameters into the session - so they can be used later, if needed
+            if (username != null) request.getSession().setAttribute("USERNAME", username);
+            if (password != null) request.getSession().setAttribute("PASSWORD", password);
+            
+        } else {
+            // if the login object is valid, remove attributes
+            request.getSession().removeAttribute("USERNAME");
+            request.getSession().removeAttribute("PASSWORD");
+        }
+        
+        return "SUCCESS";
+    }
+    
+    
     /** An HTTP WebEvent handler that checks to see is a userLogin is logged in. If not, the user is forwarded to the /login.jsp page.
      *@param request The HTTP request object for the current JSP or Servlet request.
      *@param response The HTTP response object for the current JSP or Servlet request.
@@ -70,32 +111,44 @@ public class LoginEvents {
      */
     public static String checkLogin(HttpServletRequest request, HttpServletResponse response) throws java.rmi.RemoteException, java.io.IOException, javax.servlet.ServletException {
         GenericValue userLogin = (GenericValue)request.getSession().getAttribute(SiteDefs.USER_LOGIN);
+
+        String username = null;
+        String password = null;
         
         if (userLogin == null) {
-            String queryString = null;
-            Enumeration params = request.getParameterNames();
-            while (params != null && params.hasMoreElements()) {
-                String paramName = (String) params.nextElement();
-                if (paramName != null) {
-                    if (queryString == null) {
-                        queryString = paramName + "=" + request.getParameter(paramName);
-                    } else {
-                        queryString = queryString + "&" + paramName + "=" + request.getParameter(paramName);
+            // check parameters
+            if (username == null) username = request.getParameter("USERNAME");
+            if (password == null) password = request.getParameter("PASSWORD");
+            // check session attributes
+            if (username == null) username = (String)request.getSession().getAttribute("USERNAME");
+            if (password == null) password = (String)request.getSession().getAttribute("PASSWORD");
+
+            if ((username == null) || (password == null) || ("error".equals(login(request, response)))) {
+                String queryString = null;
+                Enumeration params = request.getParameterNames();
+                while (params != null && params.hasMoreElements()) {
+                    String paramName = (String) params.nextElement();
+                    if (paramName != null) {
+                        if (queryString == null) {
+                            queryString = paramName + "=" + request.getParameter(paramName);
+                        } else {
+                            queryString = queryString + "&" + paramName + "=" + request.getParameter(paramName);
+                        }
                     }
                 }
-            }
 
-            request.getSession().setAttribute(SiteDefs.PREVIOUS_REQUEST, request.getPathInfo());
-            if (queryString != null)
-                request.getSession().setAttribute(SiteDefs.PREVIOUS_PARAMS, queryString);
-            
-            Debug.logInfo("SecurityEvents.checkLogin: queryString=" + queryString);
-            Debug.logInfo("SecurityEvents.checkLogin: PathInfo=" + request.getPathInfo());
-            
-            return "error";
-        } else {
-            return "success";
-        }
+                request.getSession().setAttribute(SiteDefs.PREVIOUS_REQUEST, request.getPathInfo());
+                if (queryString != null)
+                    request.getSession().setAttribute(SiteDefs.PREVIOUS_PARAMS, queryString);
+
+                Debug.logInfo("SecurityEvents.checkLogin: queryString=" + queryString);
+                Debug.logInfo("SecurityEvents.checkLogin: PathInfo=" + request.getPathInfo());
+
+                return "error";
+            }
+        } 
+        
+        return "success";
     }
     
     /** An HTTP WebEvent handler that logs in a userLogin. This should run before the security check.
@@ -111,6 +164,9 @@ public class LoginEvents {
         String username = request.getParameter("USERNAME");
         String password = request.getParameter("PASSWORD");
         
+        if (username == null) username = (String)request.getSession().getAttribute("USERNAME");
+        if (password == null) password = (String)request.getSession().getAttribute("PASSWORD");
+
         GenericDelegator delegator = (GenericDelegator)request.getAttribute("delegator");
         
         if(username == null || username.length() <= 0) {
