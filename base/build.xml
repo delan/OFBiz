@@ -21,7 +21,7 @@
  *  THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  *
  *  This is the Open for Business Base Build Script.
- *  $Id: build.xml,v 1.10 2004/03/18 18:57:51 ajzeneski Exp $
+ *  $Id: build.xml,v 1.11 2004/03/31 16:41:53 ajzeneski Exp $
 -->
 
 <project name="OFBiz - Base" default="jar" basedir=".">
@@ -45,7 +45,6 @@
             <fileset dir="${lib.dir}/logging" includes="*.jar"/>
             <fileset dir="${lib.dir}/scripting" includes="*.jar"/>
         </path>
-        <available classname="javax.crypto.Cipher" classpathref="local.class.path" property="crypto.avail"/>   
     </target>
     
     <!-- ================================================================== -->
@@ -53,8 +52,7 @@
     <!-- ================================================================== -->
 
     <target name="clean" depends="clean-lib">
-        <delete dir="${build.dir}"/>        
-        <delete dir="${doc.dir}/api"/>
+        <delete dir="${build.dir}"/>
     </target>
 
     <target name="clean-lib" depends="init">
@@ -80,17 +78,23 @@
     <!-- Compilation of the source files                                                                                                                         -->
     <!-- ================================================================== -->               
 
-    <target name="classes" depends="prepare,classpath">        
-    	<javac debug="on" deprecation="on" destdir="${build.dir}/classes/start">            
+    <target name="classes" depends="prepare,classpath">
+        <!-- compile start -->
+    	<javac debug="on" deprecation="on" destdir="${build.dir}/classes/start">
             <src path="${src.dir}/start"/>
         </javac>
         <copy todir="${build.dir}/classes/start">
           <fileset dir="${src.dir}/start" includes="**/*.properties,**/*.xml,**/*.bsh,**/*.logic,**/*.js,**/*.jacl,**/*.py"/>
         </copy>
-                
+
+        <!-- make sure we have crypto packages available -->
         <condition property="exclude.crypto" value="org/ofbiz/base/crypto/**">
-            <isfalse value="${crypto.avail}"/>
+            <not>
+                <available classname="javax.crypto.Cipher" classpathref="local.class.path"/>
+            </not>
         </condition>
+
+        <!-- compile base -->
     	<javac debug="on" deprecation="on" destdir="${build.dir}/classes/base">
             <classpath>
                 <path refid="local.class.path"/>
