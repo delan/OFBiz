@@ -174,13 +174,13 @@
   <ProductCategoryMember fromDate="2001-01-01 12:00:00.0" productCategoryId="CATALOG1_QUICKADD2" productId="WG-5569"/>
   <ProductCategoryMember fromDate="2001-01-01 12:00:00.0" productCategoryId="CATALOG1_QUICKADD2" productId="WG-1111"/>
 
-  <ProductCategoryRollup parentProductCategoryId="CATALOG1" productCategoryId="100"/>
-  <ProductCategoryRollup parentProductCategoryId="100" productCategoryId="101"/>
-  <ProductCategoryRollup parentProductCategoryId="100" productCategoryId="102"/>
-  <ProductCategoryRollup parentProductCategoryId="CATALOG1" productCategoryId="200"/>
-  <ProductCategoryRollup parentProductCategoryId="200" productCategoryId="201"/>
-  <ProductCategoryRollup parentProductCategoryId="200" productCategoryId="202"/>
-  <ProductCategoryRollup parentProductCategoryId="201" productCategoryId="2011"/>
-  <ProductCategoryRollup parentProductCategoryId="201" productCategoryId="2012"/>
-  <ProductCategoryRollup parentProductCategoryId="2011" productCategoryId="20111"/>
+  <ProductCategoryRollup fromDate="2001-01-01 12:00:00.0" parentProductCategoryId="CATALOG1" productCategoryId="100"/>
+  <ProductCategoryRollup fromDate="2001-01-01 12:00:00.0" parentProductCategoryId="100" productCategoryId="101"/>
+  <ProductCategoryRollup fromDate="2001-01-01 12:00:00.0" parentProductCategoryId="100" productCategoryId="102"/>
+  <ProductCategoryRollup fromDate="2001-01-01 12:00:00.0" parentProductCategoryId="CATALOG1" productCategoryId="200"/>
+  <ProductCategoryRollup fromDate="2001-01-01 12:00:00.0" parentProductCategoryId="200" productCategoryId="201"/>
+  <ProductCategoryRollup fromDate="2001-01-01 12:00:00.0" parentProductCategoryId="200" productCategoryId="202"/>
+  <ProductCategoryRollup fromDate="2001-01-01 12:00:00.0" parentProductCategoryId="201" productCategoryId="2011"/>
+  <ProductCategoryRollup fromDate="2001-01-01 12:00:00.0" parentProductCategoryId="201" productCategoryId="2012"/>
+  <ProductCategoryRollup fromDate="2001-01-01 12:00:00.0" parentProductCategoryId="2011" productCategoryId="20111"/>
 </entity-engine-xml>
