@@ -19,7 +19,7 @@
     </repository>
     <repository name="common" classname="org.jpublish.repository.filesystem.ExtendedFileSystemRepository">
         <config-dir>WEB-INF/pagedefs</config-dir>
-        <root>../../../common/webcommon</root>
+        <root>../../../../framework/common/webcommon</root>
     </repository>
 
     <!-- Define the global ENV setup action -->
