@@ -53,7 +53,12 @@
       <td width='26%' align='right' valign='top'><div class="tabletext">Description</div></td>
       <td width='5'>&nbsp;</td>
       <td width='74%'><input type="text" class="inputBox" size="40" name="description" value="${billingAccountData.description?if_exists}"></td>
-    </tr>    
+    </tr>
+    <tr>
+      <td width='26%' align='right' valign='top'><div class="tabletext">Billing Contact Mech</div></td>
+      <td width='5'>&nbsp;</td>
+      <td width='74%'><input type="text" class="inputBox" size="20" name="contactMechId" value="${billingAccountData.contactMechId?if_exists}"></td>
+    </tr>         
     <tr>
       <td width='26%' align='right' valign='top'><div class="tabletext">Account Limit</div></td>
       <td width='5'>&nbsp;</td>
