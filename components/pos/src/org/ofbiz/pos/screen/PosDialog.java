@@ -1,5 +1,5 @@
 /*
- * $Id: PosDialog.java,v 1.1 2004/08/10 18:58:57 ajzeneski Exp $
+ * $Id: PosDialog.java,v 1.2 2004/08/15 23:14:40 ajzeneski Exp $
  *
  * Copyright (c) 2004 The Open For Business Project - www.ofbiz.org
  *
@@ -50,7 +50,7 @@ import org.ofbiz.base.util.Debug;
 /**
  * 
  * @author     <a href="mailto:jaz@ofbiz.org">Andy Zeneski</a>
- * @version    $Revision: 1.1 $
+ * @version    $Revision: 1.2 $
  * @since      3.2
  */
 public class PosDialog {
@@ -216,6 +216,8 @@ public class PosDialog {
                 }
             } else if (coms[i] instanceof Container) {
                 setCloseBtn((Container) coms[i]);
+            } else {
+                coms[i].requestFocus();
             }
         }
     }
