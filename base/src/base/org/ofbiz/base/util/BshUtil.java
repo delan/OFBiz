@@ -1,5 +1,5 @@
 /*
- * $Id: BshUtil.java,v 1.1 2003/08/17 03:43:24 ajzeneski Exp $
+ * $Id: BshUtil.java,v 1.2 2004/07/11 09:30:01 jonesde Exp $
  *
  * Copyright (c) 2001, 2002 The Open For Business Project - www.ofbiz.org
  *
@@ -24,8 +24,24 @@
  */
 package org.ofbiz.base.util;
 
-import java.util.*;
-import bsh.*;
+import java.io.IOException;
+import java.io.InputStreamReader;
+import java.io.Reader;
+import java.io.StringReader;
+import java.net.MalformedURLException;
+import java.net.URL;
+import java.util.HashMap;
+import java.util.Iterator;
+import java.util.Map;
+import java.util.Set;
+
+import org.ofbiz.base.location.FlexibleLocation;
+
+import bsh.BshClassManager;
+import bsh.EvalError;
+import bsh.Interpreter;
+import bsh.NameSpace;
+import bsh.ParseException;
 
 /**
  * BshUtil - BeanShell Utilities
@@ -33,12 +49,15 @@ import bsh.*;
  *@author     <a href="mailto:jaz@ofbiz.org">Andy Zeneski</a>
  *@author     Oswin Ondarza and Manuel Soto
  *@created    Oct 22, 2002
- *@version    $Revision: 1.1 $
+ *@version    $Revision: 1.2 $
  */
 public final class BshUtil {
 
     public static final String module = BshUtil.class.getName();
 
+    protected static Map masterClassManagers = new HashMap();
+    public static UtilCache parsedScripts = new UtilCache("script.BshLocationParsedCache", 0, 0, false);
+    
     /**
      * Evaluate a BSH condition or expression
      * @param expression The expression to evaluate
@@ -92,5 +111,73 @@ public final class BshUtil {
         }
         
         return bsh;
+    }
+
+    public static Interpreter getMasterInterpreter(ClassLoader classLoader) {
+        if (classLoader == null) {
+            classLoader = Thread.currentThread().getContextClassLoader();
+        }
+
+        //find the "master" BshClassManager for this classpath
+        BshClassManager master = (BshClassManager) BshUtil.masterClassManagers.get(classLoader);
+        if (master == null) {
+            synchronized (OfbizBshBsfEngine.class) {
+                master = (BshClassManager) BshUtil.masterClassManagers.get(classLoader);
+                if (master == null) {
+                    master = BshClassManager.createClassManager();
+                    master.setClassLoader(classLoader);
+                    BshUtil.masterClassManagers.put(classLoader, master);
+                }
+            }
+        }
+        
+        if (master != null) {
+            Interpreter interpreter = new Interpreter(new StringReader(""), System.out, System.err, 
+                    false, new NameSpace(master, "global"), null, null);
+            return interpreter;
+        } else {
+            Interpreter interpreter = new Interpreter();
+            interpreter.setClassLoader(classLoader);
+            return interpreter;
+        }
+    }
+    
+    public static Object runBshAtLocation(String location, Map context) throws GeneralException {
+        Interpreter interpreter = getMasterInterpreter(null);
+        
+        try {
+            Interpreter.ParsedScript script = null;
+            script = (Interpreter.ParsedScript) parsedScripts.get(location);
+            if (script == null) {
+                synchronized (OfbizBshBsfEngine.class) {
+                    script = (Interpreter.ParsedScript) parsedScripts.get(location);
+                    if (script == null) {
+                        URL scriptUrl = FlexibleLocation.resolveLocation(location);
+                        Reader scriptReader = new InputStreamReader(scriptUrl.openStream());
+                        script = interpreter.parseScript(location, scriptReader);
+                        if (Debug.verboseOn()) Debug.logVerbose("Caching BSH script at: " + location, module);
+                        parsedScripts.put(location, script);
+                    }
+                }
+            }
+            
+            return interpreter.evalParsedScript(script);
+        } catch (MalformedURLException e) {
+            String errMsg = "Error loading BSH script at [" + location + "]: " + e.toString();
+            Debug.logError(e, errMsg, module);
+            throw new GeneralException(errMsg, e);
+        } catch (ParseException e) {
+            String errMsg = "Error parsing BSH script at [" + location + "]: " + e.toString();
+            Debug.logError(e, errMsg, module);
+            throw new GeneralException(errMsg, e);
+        } catch (IOException e) {
+            String errMsg = "Error loading BSH script at [" + location + "]: " + e.toString();
+            Debug.logError(e, errMsg, module);
+            throw new GeneralException(errMsg, e);
+        } catch (EvalError e) {
+            String errMsg = "Error running BSH script at [" + location + "]: " + e.toString();
+            Debug.logError(e, errMsg, module);
+            throw new GeneralException(errMsg, e);
+        }
     }
 }

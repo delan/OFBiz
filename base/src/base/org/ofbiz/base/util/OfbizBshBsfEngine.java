@@ -1,5 +1,5 @@
 /*
- * $Id: OfbizBshBsfEngine.java,v 1.4 2003/09/18 16:01:21 jonesde Exp $
+ * $Id: OfbizBshBsfEngine.java,v 1.5 2004/07/11 09:30:01 jonesde Exp $
  *
  * Copyright (c) 2001, 2002 The Open For Business Project - www.ofbiz.org
  *
@@ -66,7 +66,6 @@ public class OfbizBshBsfEngine extends BSFEngineImpl {
     
     public static final String module = OfbizBshBsfEngine.class.getName();
     
-    protected static Map masterClassManagers = new HashMap();
     protected Interpreter interpreter;
     protected boolean installedApplyMethod;
     
@@ -75,28 +74,7 @@ public class OfbizBshBsfEngine extends BSFEngineImpl {
     public void initialize(BSFManager mgr, String lang, Vector declaredBeans) throws BSFException {
         super.initialize(mgr, lang, declaredBeans);
         
-        ClassLoader classLoader = Thread.currentThread().getContextClassLoader();
-        
-        //find the "master" BshClassManager for this classpath
-        BshClassManager master = (BshClassManager) masterClassManagers.get(classLoader);
-        if (master == null) {
-            synchronized (OfbizBshBsfEngine.class) {
-                master = (BshClassManager) masterClassManagers.get(classLoader);
-                if (master == null) {
-                    master = BshClassManager.createClassManager();
-                    master.setClassLoader(classLoader);
-                    masterClassManagers.put(classLoader, master);
-                }
-            }
-        }
-        
-        if (master != null) {
-            interpreter = new Interpreter(new StringReader(""), System.out, System.err, 
-                    false, new NameSpace(master, "global"), null, null);
-        } else {
-            interpreter = new Interpreter();
-            interpreter.setClassLoader(classLoader);
-        }
+        interpreter = BshUtil.getMasterInterpreter(null);
         
         // declare the bsf manager for callbacks, etc.
         try {

@@ -1,5 +1,5 @@
 /*
- * $Id: ModelScreenAction.java,v 1.1 2004/07/11 07:24:52 jonesde Exp $
+ * $Id: ModelScreenAction.java,v 1.2 2004/07/11 09:30:01 jonesde Exp $
  *
  * Copyright (c) 2004 The Open For Business Project - www.ofbiz.org
  *
@@ -28,6 +28,9 @@ import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
 
+import org.ofbiz.base.util.BshUtil;
+import org.ofbiz.base.util.Debug;
+import org.ofbiz.base.util.GeneralException;
 import org.ofbiz.base.util.UtilXml;
 import org.w3c.dom.Element;
 
@@ -35,10 +38,12 @@ import org.w3c.dom.Element;
  * Widget Library - Screen model class
  *
  * @author     <a href="mailto:jonesde@ofbiz.org">David E. Jones</a>
- * @version    $Revision: 1.1 $
+ * @version    $Revision: 1.2 $
  * @since      3.1
  */
 public abstract class ModelScreenAction {
+    public static final String module = ModelScreenAction.class.getName();
+
     protected ModelScreen modelScreen;
 
     public ModelScreenAction(ModelScreen modelScreen, Element actionElement) {
@@ -56,8 +61,7 @@ public abstract class ModelScreenAction {
             Element actionElement = (Element) actionElementIter.next();
             // script | service | entity-one | entity-and | entity-condition
             if ("script".equals(actionElement.getNodeName())) {
-                // TODO: implement this
-                // actions.add(new Script(modelScreen, actionElement));
+                actions.add(new Script(modelScreen, actionElement));
             } else if ("service".equals(actionElement.getNodeName())) {
                 // TODO: implement this
             } else if ("entity-one".equals(actionElement.getNodeName())) {
@@ -77,6 +81,29 @@ public abstract class ModelScreenAction {
         while (actionIter.hasNext()) {
             ModelScreenAction action = (ModelScreenAction) actionIter.next();
             action.runAction(context);
+        }
+    }
+    
+    public static class Script extends ModelScreenAction {
+        protected String location;
+        
+        public Script (ModelScreen modelScreen, Element scriptElement) {
+            super (modelScreen, scriptElement);
+            this.location = scriptElement.getAttribute("location");
+        }
+        
+        public void runAction(Map context) {
+            if (location.endsWith(".bsh")) {
+                try {
+                    BshUtil.runBshAtLocation(location, context);
+                } catch (GeneralException e) {
+                    String errMsg = "Error running BSH script at location [" + location + "]: " + e.toString();
+                    Debug.logError(e, errMsg, module);
+                    throw new IllegalArgumentException(errMsg);
+                }
+            } else {
+                throw new IllegalArgumentException("For screen script actions the script type is not yet support for location:" + location);
+            }
         }
     }
 }
