@@ -76,16 +76,13 @@
     <ofbiz:iterator name="product" property="searchProductList">
       <%-- <tr><td colspan="2"><hr class='sepbar'></td></tr> --%>
       <tr>
+        <td width='20%'>
+          <div class='tabletext'><b>[<ofbiz:entityfield attribute="product" field="productId"/>]</b></div>
+        </td>
         <td>
-          <div class='tabletext'>
             <a href='<ofbiz:url>/EditProduct?productId=<ofbiz:entityfield attribute="product" field="productId"/></ofbiz:url>' class='buttontext'>
               <ofbiz:entityfield attribute="product" field="productName"/>
             </a>
-            <b>
-              [<ofbiz:entityfield attribute="product" field="productId"/>]
-              <font color="#006633"><ofbiz:entityfield attribute="product" field="defaultPrice"/></font>
-            </b>
-          </div>
         </td>
       </tr>
       <%listIndex++;%>
