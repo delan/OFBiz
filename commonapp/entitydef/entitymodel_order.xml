@@ -257,9 +257,9 @@
     <view-entity entity-name="OrderHeaderNoteView" 
             package-name="org.ofbiz.commonapp.order.order"
             title="Order Header Note View Entity">	
-      <member-entity entity-alias="PR" entity-name="Person" />	
+      <member-entity entity-alias="ND" entity-name="NoteData" />	
       <member-entity entity-alias="OD" entity-name="OrderHeaderNote" />	
-      <member-entity entity-alias="ND" entity-name="NoteData" />
+      <member-entity entity-alias="PR" entity-name="Person" />
       <alias entity-alias="OD" name="orderId" prim-key="true" />
       <alias entity-alias="ND" name="noteId" prim-key="true" />
       <alias entity-alias="ND" name="noteName" />

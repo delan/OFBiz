@@ -6,25 +6,25 @@
  *  Description: None
  *  Copyright (c) 2002 The Open For Business Project - www.ofbiz.org
  *
- *  Permission is hereby granted, free of charge, to any person obtaining a
- *  copy of this software and associated documentation files (the "Software"),
- *  to deal in the Software without restriction, including without limitation
- *  the rights to use, copy, modify, merge, publish, distribute, sublicense,
- *  and/or sell copies of the Software, and to permit persons to whom the
+ *  Permission is hereby granted, free of charge, to any person obtaining a 
+ *  copy of this software and associated documentation files (the "Software"), 
+ *  to deal in the Software without restriction, including without limitation 
+ *  the rights to use, copy, modify, merge, publish, distribute, sublicense, 
+ *  and/or sell copies of the Software, and to permit persons to whom the 
  *  Software is furnished to do so, subject to the following conditions:
  *
- *  The above copyright notice and this permission notice shall be included
+ *  The above copyright notice and this permission notice shall be included 
  *  in all copies or substantial portions of the Software.
  *
- *  THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS
- *  OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF
- *  MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT.
- *  IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY
- *  CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT
- *  OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR
+ *  THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS 
+ *  OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF 
+ *  MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. 
+ *  IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY 
+ *  CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT 
+ *  OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR 
  *  THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  *
- *@author David E. Jones (jonesde@ofbiz.org)
+ *@author David E. Jones (jonesde@ofbiz.org) 
  *@author Andy Zeneski (jaz@zsolv.com)
  *@version    1.0
  */
@@ -51,7 +51,7 @@
   <!-- org.ofbiz.commonapp.workeffort.definition -->
   <!-- ========================================================= -->
 
-    <entity entity-name="WorkflowActivity"
+    <entity entity-name="WorkflowActivity" 
             package-name="org.ofbiz.commonapp.workeffort.definition"
             title="Workflow Activity Entity">
       <field name="packageId" type="id-long-ne"></field>
@@ -86,9 +86,9 @@
       <field name="completeAllAssignments" type="indicator"></field>
       <field name="limitService" type="name"></field>
       <field name="limitAfterStart" type="indicator"></field>
-      <field name="inheritPriority" type="indicator"></field>
-      <prim-key field="packageId" />
-      <prim-key field="processId" />
+      <field name="inheritPriority" type="indicator"></field>	
+      <prim-key field="packageId" />	
+      <prim-key field="processId" />	
       <prim-key field="activityId" />
       <relation type="one" title="StartMode" rel-entity-name="Enumeration">
         <key-map field-name="startModeEnumId" rel-field-name="enumId" />
@@ -163,16 +163,16 @@
         <key-map field-name="activityId" />
       </relation>
     </entity>
-    <entity entity-name="WorkflowActivityLoop"
+    <entity entity-name="WorkflowActivityLoop" 
             package-name="org.ofbiz.commonapp.workeffort.definition"
             title="Workflow Activity Loop Entity">
       <field name="packageId" type="id-long-ne"></field>
       <field name="processId" type="id-long-ne"></field>
       <field name="activityId" type="id-long-ne"></field>
       <field name="conditionExpr" type="very-long"></field>
-      <field name="loopKindEnumId" type="id"></field>
-      <prim-key field="packageId" />
-      <prim-key field="processId" />
+      <field name="loopKindEnumId" type="id"></field>	
+      <prim-key field="packageId" />	
+      <prim-key field="processId" />	
       <prim-key field="activityId" />
       <relation type="one" rel-entity-name="WorkflowActivity">
         <key-map field-name="packageId" />
@@ -180,7 +180,7 @@
         <key-map field-name="activityId" />
       </relation>
     </entity>
-    <entity entity-name="WorkflowActivitySubFlow"
+    <entity entity-name="WorkflowActivitySubFlow" 
             package-name="org.ofbiz.commonapp.workeffort.definition"
             title="Workflow Activity SubFlow Entity">
       <field name="packageId" type="id-long-ne"></field>
@@ -188,9 +188,9 @@
       <field name="activityId" type="id-long-ne"></field>
       <field name="actualParameters" type="very-long"></field>
       <field name="subFlowProcessId" type="id-long"></field>
-      <field name="executionEnumId" type="id"></field>
-      <prim-key field="packageId" />
-      <prim-key field="processId" />
+      <field name="executionEnumId" type="id"></field>	
+      <prim-key field="packageId" />	
+      <prim-key field="processId" />	
       <prim-key field="activityId" />
       <relation type="one" rel-entity-name="WorkflowActivity">
         <key-map field-name="packageId" />
@@ -202,7 +202,7 @@
         <key-map field-name="subFlowProcessId" rel-field-name="processId" />
       </relation>
     </entity>
-    <entity entity-name="WorkflowActivityTool"
+    <entity entity-name="WorkflowActivityTool" 
             package-name="org.ofbiz.commonapp.workeffort.definition"
             title="Workflow Activity Tool Entity">
       <field name="packageId" type="id-long-ne"></field>
@@ -212,10 +212,10 @@
       <field name="toolTypeEnumId" type="id"></field>
       <field name="actualParameters" type="very-long"></field>
       <field name="extendedAttributes" type="very-long"></field>
-      <field name="description" type="description"></field>
-      <prim-key field="packageId" />
-      <prim-key field="processId" />
-      <prim-key field="activityId" />
+      <field name="description" type="description"></field>	
+      <prim-key field="packageId" />	
+      <prim-key field="processId" />	
+      <prim-key field="activityId" />	
       <prim-key field="toolId" />
       <relation type="one" rel-entity-name="WorkflowActivity">
         <key-map field-name="packageId" />
@@ -223,7 +223,7 @@
         <key-map field-name="activityId" />
       </relation>
     </entity>
-    <entity entity-name="WorkflowApplication"
+    <entity entity-name="WorkflowApplication" 
             package-name="org.ofbiz.commonapp.workeffort.definition"
             title="Workflow Application Entity">
       <description>The primary key of a WorkflowApplication is funny because it can be associated with either a WorkflowPackage or a WorkflowProcess. If it is associated with a WorkflowPackage, then the processId will be set to the constant "_NA_".</description>
@@ -231,9 +231,9 @@
       <field name="processId" type="id-long-ne"></field>
       <field name="applicationId" type="id-long-ne"></field>
       <field name="applicationName" type="name"></field>
-      <field name="description" type="description"></field>
-      <prim-key field="packageId" />
-      <prim-key field="processId" />
+      <field name="description" type="description"></field>	
+      <prim-key field="packageId" />	
+      <prim-key field="processId" />	
       <prim-key field="applicationId" />
       <relation type="one" rel-entity-name="WorkflowPackage">
         <key-map field-name="packageId" />
@@ -248,7 +248,7 @@
         <key-map field-name="applicationId" />
       </relation>
     </entity>
-    <entity entity-name="WorkflowComplexTypeInfo"
+    <entity entity-name="WorkflowComplexTypeInfo" 
             package-name="org.ofbiz.commonapp.workeffort.definition"
             title="Workflow Complex Type Information Entity">
       <field name="complexTypeInfoId" type="id-ne"></field>
@@ -256,7 +256,7 @@
       <field name="dataTypeEnumId" type="id"></field>
       <field name="subTypeEnumId" type="id"></field>
       <field name="arrayLowerIndex" type="numeric"></field>
-      <field name="arrayUpperIndex" type="numeric"></field>
+      <field name="arrayUpperIndex" type="numeric"></field>	
       <prim-key field="complexTypeInfoId" />
       <relation type="many" rel-entity-name="WorkflowDataField">
         <key-map field-name="complexTypeInfoId" />
@@ -271,7 +271,7 @@
         <key-map field-name="dataTypeEnumId" rel-field-name="enumId" />
       </relation>
     </entity>
-    <entity entity-name="WorkflowDataField"
+    <entity entity-name="WorkflowDataField" 
             package-name="org.ofbiz.commonapp.workeffort.definition"
             title="Workflow Data Field Entity">
       <description>The primary key of a WorkflowDataField is funny because it can be associated with either a WorkflowPackage or a WorkflowProcess. If it is associated with a WorkflowPackage, then the processId will be set to the constant "_NA_".</description>
@@ -284,9 +284,9 @@
       <field name="lengthBytes" type="numeric"></field>
       <field name="dataTypeEnumId" type="id"></field>
       <field name="complexTypeInfoId" type="id"></field>
-      <field name="isArray" type="indicator"></field>
-      <prim-key field="packageId" />
-      <prim-key field="processId" />
+      <field name="isArray" type="indicator"></field>	
+      <prim-key field="packageId" />	
+      <prim-key field="processId" />	
       <prim-key field="dataFieldId" />
       <relation type="one" title="DataType" rel-entity-name="Enumeration">
         <key-map field-name="dataTypeEnumId" rel-field-name="enumId" />
@@ -302,7 +302,7 @@
         <key-map field-name="processId" />
       </relation>
     </entity>
-    <entity entity-name="WorkflowFormalParam"
+    <entity entity-name="WorkflowFormalParam" 
             package-name="org.ofbiz.commonapp.workeffort.definition"
             title="Workflow Formal Parameter Entity">
       <description>The primary key of a WorkflowFormalParam is funny because it can be associated with either a WorkflowProcess or a WorkflowApplication. If it is associated with a WorkflowProcess, then the applicationId will be set to the constant "_NA_". Note that if it is associated with a WorkflowApplication, that entity may be associated with either a package or a process, so see the description on the WorkflowApplication entity.</description>
@@ -314,10 +314,10 @@
       <field name="modeEnumId" type="id"></field>
       <field name="description" type="description"></field>
       <field name="dataTypeEnumId" type="id"></field>
-      <field name="complexTypeInfoId" type="id"></field>
-      <prim-key field="packageId" />
-      <prim-key field="processId" />
-      <prim-key field="applicationId" />
+      <field name="complexTypeInfoId" type="id"></field>	
+      <prim-key field="packageId" />	
+      <prim-key field="processId" />	
+      <prim-key field="applicationId" />	
       <prim-key field="formalParamId" />
       <relation type="one" title="Mode" rel-entity-name="Enumeration">
         <key-map field-name="modeEnumId" rel-field-name="enumId" />
@@ -338,7 +338,7 @@
         <key-map field-name="applicationId" />
       </relation>
     </entity>
-    <entity entity-name="WorkflowPackage"
+    <entity entity-name="WorkflowPackage" 
             package-name="org.ofbiz.commonapp.workeffort.definition"
             title="Workflow Package Entity">
       <field name="packageId" type="id-long-ne"></field>
@@ -359,7 +359,7 @@
       <field name="responsibleListId" type="id"></field>
       <field name="documentationUrl" type="url"></field>
       <field name="importedFromUrl" type="url"></field>
-      <field name="participantListId" type="id"></field>
+      <field name="participantListId" type="id"></field>	
       <prim-key field="packageId" />
       <relation type="many" title="Main" rel-entity-name="WorkflowPackageExternal">
         <key-map field-name="packageId" />
@@ -407,12 +407,12 @@
         <key-map field-name="packageId" />
       </relation>
     </entity>
-    <entity entity-name="WorkflowPackageExternal"
+    <entity entity-name="WorkflowPackageExternal" 
             package-name="org.ofbiz.commonapp.workeffort.definition"
             title="Workflow Package External Entity">
       <field name="packageId" type="id-long-ne"></field>
-      <field name="externalPackageId" type="id-long-ne"></field>
-      <prim-key field="packageId" />
+      <field name="externalPackageId" type="id-long-ne"></field>	
+      <prim-key field="packageId" />	
       <prim-key field="externalPackageId" />
       <relation type="one" title="Main" rel-entity-name="WorkflowPackage">
         <key-map field-name="packageId" />
@@ -421,7 +421,7 @@
         <key-map field-name="externalPackageId" rel-field-name="packageId" />
       </relation>
     </entity>
-    <entity entity-name="WorkflowParticipant"
+    <entity entity-name="WorkflowParticipant" 
             package-name="org.ofbiz.commonapp.workeffort.definition"
             title="Workflow Participant Entity">
       <field name="participantId" type="id-ne"></field>
@@ -429,7 +429,7 @@
       <field name="partyId" type="id"></field>
       <field name="roleTypeId" type="id"></field>
       <field name="description" type="description"></field>
-      <field name="participantTypeId" type="id"></field>
+      <field name="participantTypeId" type="id"></field>	
       <prim-key field="participantId" />
       <relation type="many" title="Performer" rel-entity-name="WorkflowActivity">
         <key-map field-name="participantId" rel-field-name="performerParticipantId" />
@@ -454,13 +454,13 @@
         <key-map field-name="roleTypeId" />
       </relation>
     </entity>
-    <entity entity-name="WorkflowParticipantList"
+    <entity entity-name="WorkflowParticipantList" 
             package-name="org.ofbiz.commonapp.workeffort.definition"
             title="Workflow Participant List Entity">
       <field name="participantListId" type="id-ne"></field>
       <field name="participantId" type="id"></field>
-      <field name="participantIndex" type="numeric"></field>
-      <prim-key field="participantListId" />
+      <field name="participantIndex" type="numeric"></field>	
+      <prim-key field="participantListId" />	
       <prim-key field="participantId" />
       <relation type="one" rel-entity-name="WorkflowParticipant">
         <key-map field-name="participantId" />
@@ -478,14 +478,14 @@
         <key-map field-name="participantListId" rel-field-name="responsibleListId" />
       </relation>
     </entity>
-    <entity entity-name="WorkflowParticipantType"
+    <entity entity-name="WorkflowParticipantType" 
             package-name="org.ofbiz.commonapp.workeffort.definition"
             title="Workflow Participant Type Entity">
       <field name="participantTypeId" type="id-ne"></field>
       <field name="description" type="description"></field>
       <field name="typeCode" type="short-varchar"></field>
       <field name="parentTypeId" type="id"></field>
-      <field name="hasTable" type="indicator"></field>
+      <field name="hasTable" type="indicator"></field>	
       <prim-key field="participantTypeId" />
       <relation type="many" rel-entity-name="WorkflowParticipant">
         <key-map field-name="participantTypeId" />
@@ -493,11 +493,11 @@
       <relation type="many" rel-entity-name="WorkflowParticipantsView">
         <key-map field-name="participantTypeId" />
       </relation>
-    </entity>
-    <view-entity entity-name="WorkflowParticipantsView"
+    </entity>	
+    <view-entity entity-name="WorkflowParticipantsView" 
             package-name="org.ofbiz.commonapp.workeffort.definition"
-            title="Workflow Participants View Entity">
-      <member-entity entity-alias="WP" entity-name="WorkflowParticipant" />
+            title="Workflow Participants View Entity">	
+      <member-entity entity-alias="WP" entity-name="WorkflowParticipant" />	
       <member-entity entity-alias="WPL" entity-name="WorkflowParticipantList" />
       <alias entity-alias="WP" name="participantId" prim-key="true" />
       <alias entity-alias="WP" name="partyId" />
@@ -541,7 +541,7 @@
         <key-map field-name="partyId" />
       </relation>
     </view-entity>
-    <entity entity-name="WorkflowProcess"
+    <entity entity-name="WorkflowProcess" 
             package-name="org.ofbiz.commonapp.workeffort.definition"
             title="Workflow Process Entity">
       <field name="packageId" type="id-long-ne"></field>
@@ -565,8 +565,8 @@
       <field name="duration" type="floating-point"></field>
       <field name="workingTime" type="floating-point"></field>
       <field name="waitingTime" type="floating-point"></field>
-      <field name="defaultStartActivityId" type="id-long"></field>
-      <prim-key field="packageId" />
+      <field name="defaultStartActivityId" type="id-long"></field>	
+      <prim-key field="packageId" />	
       <prim-key field="processId" />
       <relation type="one" rel-entity-name="WorkflowPackage">
         <key-map field-name="packageId" />
@@ -618,19 +618,19 @@
         <key-map field-name="processId" />
       </relation>
     </entity>
-    <entity entity-name="WorkflowSpecification"
+    <entity entity-name="WorkflowSpecification" 
             package-name="org.ofbiz.commonapp.workeffort.definition"
             title="Workflow Specification Entity">
       <field name="specificationId" type="id-ne"></field>
       <field name="specificationName" type="name"></field>
       <field name="description" type="description"></field>
-      <field name="currentVersion" type="very-short"></field>
+      <field name="currentVersion" type="very-short"></field>	
       <prim-key field="specificationId" />
       <relation type="many" rel-entity-name="WorkflowPackage">
         <key-map field-name="specificationId" />
       </relation>
     </entity>
-    <entity entity-name="WorkflowTransition"
+    <entity entity-name="WorkflowTransition" 
             package-name="org.ofbiz.commonapp.workeffort.definition"
             title="Workflow Transition Entity">
       <field name="packageId" type="id-long-ne"></field>
@@ -642,9 +642,9 @@
       <field name="conditionTypeEnumId" type="id"></field>
       <field name="fromActivityId" type="id-long"></field>
       <field name="toActivityId" type="id-long"></field>
-      <field name="loopTypeEnumId" type="id"></field>
-      <prim-key field="packageId" />
-      <prim-key field="processId" />
+      <field name="loopTypeEnumId" type="id"></field>	
+      <prim-key field="packageId" />	
+      <prim-key field="processId" />	
       <prim-key field="transitionId" />
       <relation type="one" rel-entity-name="WorkflowProcess">
         <key-map field-name="packageId" />
@@ -672,16 +672,16 @@
         <key-map field-name="transitionId" />
       </relation>
     </entity>
-    <entity entity-name="WorkflowTransitionRef"
+    <entity entity-name="WorkflowTransitionRef" 
             package-name="org.ofbiz.commonapp.workeffort.definition"
             title="Workflow Transition Reference Entity">
       <field name="packageId" type="id-long-ne"></field>
       <field name="processId" type="id-long-ne"></field>
       <field name="activityId" type="id-long-ne"></field>
-      <field name="transitionId" type="id-long-ne"></field>
-      <prim-key field="packageId" />
-      <prim-key field="processId" />
-      <prim-key field="activityId" />
+      <field name="transitionId" type="id-long-ne"></field>	
+      <prim-key field="packageId" />	
+      <prim-key field="processId" />	
+      <prim-key field="activityId" />	
       <prim-key field="transitionId" />
       <relation type="one" rel-entity-name="WorkflowActivity">
         <key-map field-name="packageId" />
@@ -694,7 +694,7 @@
         <key-map field-name="transitionId" />
       </relation>
     </entity>
-    <entity entity-name="WorkflowTypeDeclaration"
+    <entity entity-name="WorkflowTypeDeclaration" 
             package-name="org.ofbiz.commonapp.workeffort.definition"
             title="Workflow Type Declaration Entity">
       <field name="packageId" type="id-long-ne"></field>
@@ -702,8 +702,8 @@
       <field name="typeName" type="name"></field>
       <field name="description" type="description"></field>
       <field name="dataTypeEnumId" type="id"></field>
-      <field name="complexTypeInfoId" type="id"></field>
-      <prim-key field="packageId" />
+      <field name="complexTypeInfoId" type="id"></field>	
+      <prim-key field="packageId" />	
       <prim-key field="typeId" />
       <relation type="one" title="DataType" rel-entity-name="Enumeration">
         <key-map field-name="dataTypeEnumId" rel-field-name="enumId" />
@@ -714,6 +714,6 @@
       <relation type="one" rel-entity-name="WorkflowPackage">
         <key-map field-name="packageId" />
       </relation>
-    </entity>
+    </entity>  
 </entitymodel>
 
