@@ -34,7 +34,7 @@ import org.ofbiz.core.workflow.*;
 /**
  * WfRequesterImpl - Workflow Requester implementation
  *
- *@author     <a href="mailto:jaz@zsolv.com">Andy Zeneski</a>
+ *@author     <a href="mailto:jaz@jflow.net">Andy Zeneski</a>
  *@created    November 15, 2001
  *@version    1.0
  */

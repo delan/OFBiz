@@ -35,7 +35,7 @@ import org.ofbiz.core.workflow.impl.*;
 /**
  * WfFactory - Workflow Factory Class
  *
- *@author     <a href="mailto:jaz@zsolv.com">Andy Zeneski</a>
+ *@author     <a href="mailto:jaz@jflow.net">Andy Zeneski</a>
  *@created    October 31, 2001
  *@version    1.0
  */
@@ -137,11 +137,13 @@ public class WfFactory {
     /** Creates a new {@link WfProcessMgr} instance.
      * @param del The GenericDelegator to use for this manager.
      * @param pkg The Workflow Package ID.
+     * @param pkver The Workflow Package Version.
      * @param pid The Workflow Process ID.
+     * @param pver The Workflow Process Version.
      * @return An instance of the WfProcessMgr Interface.
      * @throws WfException
      */
-    public static WfProcessMgr getWfProcessMgr(GenericDelegator del, String pkg, String pid) throws WfException {
+    public static WfProcessMgr getWfProcessMgr(GenericDelegator del, String pkg, String pkver, String pid, String pver) throws WfException {
         if (del == null) throw new WfException("Delegator cannot be null");
         if (pkg == null) throw new WfException("Workflow package id cannot be null.");
         if (pid == null) throw new WfException("Workflow process id cannot be null");
@@ -151,7 +153,7 @@ public class WfFactory {
         if (!manager.containsKey(mapKey)) {
             synchronized (WfFactory.class) {
                 if (!manager.containsKey(mapKey))
-                    manager.put(mapKey, new WfProcessMgrImpl(del, pkg, pid));
+                    manager.put(mapKey, new WfProcessMgrImpl(del, pkg, pkver, pid, pver));
             }
         }
         return (WfProcessMgr) manager.get(mapKey);

@@ -39,7 +39,7 @@ import org.ofbiz.core.workflow.client.*;
 /**
  * Workflow Client - Client API to the Workflow Engine.
  *
- *@author     <a href="mailto:jaz@zsolv.com">Andy Zeneski</a>
+ *@author     <a href="mailto:jaz@jflow.net">Andy Zeneski</a>
  *@created    March 5, 2001
  *@version    1.0
  */

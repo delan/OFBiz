@@ -34,7 +34,7 @@ import org.ofbiz.core.workflow.*;
 /**
  * WfProcessImpl - Workflow Process Object implementation
  *
- *@author     <a href="mailto:jaz@zsolv.com">Andy Zeneski</a>
+ *@author     <a href="mailto:jaz@jflow.net">Andy Zeneski</a>
  *@author     David Ostrovsky (d.ostrovsky@gmx.de)
  *@created    December 18, 2001
  *@version    1.2
@@ -67,8 +67,8 @@ public class WfProcessImpl extends WfExecutionObjectImpl implements WfProcess {
     public WfProcessImpl(GenericDelegator delegator, String workEffortId) throws WfException {
         super(delegator, workEffortId);
         if (activityId != null && activityId.length() > 0)
-            throw new WfException("Execution object is not of type WfProcess");
-        this.manager = WfFactory.getWfProcessMgr(delegator, packageId, processId);
+            throw new WfException("Execution object is not of type WfProcess.");
+        this.manager = WfFactory.getWfProcessMgr(delegator, packageId, packageVersion, processId, processVersion);
         this.requester = null;
     }
 
@@ -107,7 +107,7 @@ public class WfProcessImpl extends WfExecutionObjectImpl implements WfProcess {
             throw new AlreadyRunning("Process is already running");
 
         if (getDefinitionObject().get("defaultStartActivityId") == null)
-            throw new CannotStart("Initial activity is not defined");
+            throw new CannotStart("Initial activity is not defined.");
 
         changeState("open.running");
 
@@ -116,12 +116,12 @@ public class WfProcessImpl extends WfExecutionObjectImpl implements WfProcess {
         try {
             start = getDefinitionObject().getRelatedOne("DefaultStartWorkflowActivity");
         } catch (GenericEntityException e) {
-            throw new WfException(e.getMessage(), e);
+            throw new WfException(e.getMessage(), e.getNested());
         }
         if (start == null)
             throw new CannotStart("No initial activity set");
 
-        Debug.logVerbose("[WfProcess.start] : Started the workflow process.", module);
+        if (Debug.verboseOn()) Debug.logVerbose("[WfProcess.start] : Started the workflow process.", module);
         startActivity(start);
     }
 
@@ -270,7 +270,7 @@ public class WfProcessImpl extends WfExecutionObjectImpl implements WfProcess {
                     joinTransition(toActivity, trans);
             }
         } else {
-            Debug.logVerbose("[WfProcess.queueNext] : No transitions left to follow.", module);
+            if (Debug.verboseOn()) Debug.logVerbose("[WfProcess.queueNext] : No transitions left to follow.", module);
             this.finishProcess();
         }
     }

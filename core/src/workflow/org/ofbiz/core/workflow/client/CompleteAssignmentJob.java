@@ -35,7 +35,7 @@ import org.ofbiz.core.workflow.*;
 /**
  * Workflow Client API - Complete Assignment Async-Job
  *
- *@author     <a href="mailto:jaz@zsolv.com">Andy Zeneski</a>
+ *@author     <a href="mailto:jaz@jflow.net">Andy Zeneski</a>
  *@created    March 5, 2001
  *@version    1.0
  */

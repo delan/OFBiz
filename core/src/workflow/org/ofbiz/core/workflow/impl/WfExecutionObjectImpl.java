@@ -42,7 +42,7 @@ import bsh.*;
 /**
  * WfExecutionObjectImpl - Workflow Execution Object implementation
  *
- *@author     <a href="mailto:jaz@zsolv.com">Andy Zeneski</a>
+ *@author     <a href="mailto:jaz@jflow.net">Andy Zeneski</a>
  *@author     David Ostrovsky (d.ostrovsky@gmx.de)
  *@created    December 18, 2001
  *@version    1.2
@@ -52,7 +52,9 @@ public abstract class WfExecutionObjectImpl implements WfExecutionObject {
     public static final String module = WfExecutionObjectImpl.class.getName();
 
     protected String packageId;
+    protected String packageVersion;
     protected String processId;
+    protected String processVersion;
     protected String activityId;
     protected String workEffortId;
     protected GenericDelegator delegator;
@@ -65,7 +67,9 @@ public abstract class WfExecutionObjectImpl implements WfExecutionObject {
      */
     public WfExecutionObjectImpl(GenericValue valueObject, String parentId) throws WfException {
         this.packageId = valueObject.getString("packageId");
+        this.packageVersion = valueObject.getString("packageVersion");
         this.processId = valueObject.getString("processId");
+        this.processVersion = valueObject.getString("processVersion");
         if (valueObject.getEntityName().equals("WorkflowActivity"))
             this.activityId = valueObject.getString("activityId");
         else
@@ -78,10 +82,13 @@ public abstract class WfExecutionObjectImpl implements WfExecutionObject {
         this.delegator = delegator;
         this.workEffortId = workEffortId;
         this.packageId = getRuntimeObject().getString("workflowPackageId");
+        this.packageVersion = getRuntimeObject().getString("workflowPackageVersion");
         this.processId = getRuntimeObject().getString("workflowProcessId");
+        this.processVersion = getRuntimeObject().getString("workflowProcessVersion");
         this.activityId = getRuntimeObject().getString("workflowActivityId");
         this.history = null;
-        if (Debug.verboseOn()) Debug.logVerbose("Process ID: " + processId, module);
+        if (Debug.verboseOn()) Debug.logVerbose(" Package ID: " + packageId + " V: " + packageVersion, module);
+        if (Debug.verboseOn()) Debug.logVerbose(" Process ID: " + processId + " V: " + processVersion, module);
         if (Debug.verboseOn()) Debug.logVerbose("Activity ID: " + activityId, module);
     }
 
@@ -97,7 +104,9 @@ public abstract class WfExecutionObjectImpl implements WfExecutionObject {
         dataMap.put("workEffortTypeId", weType);
         dataMap.put("workEffortParentId", parentId);
         dataMap.put("workflowPackageId", packageId);
+        dataMap.put("workflowPackageVersion", packageVersion);
         dataMap.put("workflowProcessId", processId);
+        dataMap.put("workflowProcessVersion", processVersion);
         dataMap.put("workEffortName", valueObject.getString("objectName"));
         dataMap.put("description", valueObject.getString("description"));
         dataMap.put("createdDate", new Timestamp((new Date()).getTime()));
@@ -519,7 +528,8 @@ public abstract class WfExecutionObjectImpl implements WfExecutionObject {
     public GenericValue getDefinitionObject() throws WfException {
         String entityName = activityId != null ? "WorkflowActivity" : "WorkflowProcess";
         GenericValue value = null;
-        Map fields = UtilMisc.toMap("packageId", packageId, "processId", processId);
+        Map fields = UtilMisc.toMap("packageId", packageId, "packageVersion", packageVersion, "processId", processId,
+                "processVersion", processVersion);
         if (activityId != null)
             fields.put("activityId", activityId);
         try {

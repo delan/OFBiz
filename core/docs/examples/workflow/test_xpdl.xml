@@ -13,7 +13,7 @@
   </PackageHeader>
   <RedefinableHeader PublicationStatus="UNDER_REVISION">
     <Author>OFBiz</Author>
-    <Version>0.9</Version>
+    <Version>0.01</Version>
     <Responsibles>
       <Responsible>admin</Responsible>
     </Responsibles>
@@ -87,7 +87,7 @@
 
       <RedefinableHeader PublicationStatus="UNDER_REVISION">
         <Author>OFBiz</Author>
-        <Version>0.9</Version>
+        <Version>0.01</Version>
         <Responsibles>
           <Responsible>admin</Responsible>
         </Responsibles>
@@ -147,16 +147,27 @@
       -->
 
       <Activities>
+
         <Activity Id="receive_order" Name="Receive Order">
           <Description>The first activity to run when an order is received.</Description>
           <Limit>1</Limit>
           <Route/>
           <Performer>admin</Performer>
-          <StartMode><Automatic/></StartMode>
-          <FinishMode><Automatic/></FinishMode>
+		  <StartMode>
+		    <Automatic/>
+		  </StartMode>
+		  <FinishMode>
+		    <Automatic/>
+		  </FinishMode>
           <Priority>1</Priority>
+          <TransitionRestrictions>
+            <TransitionRestriction>
+              <Join Type="AND"/>
+              <Split Type="AND"/>
+            </TransitionRestriction>
+          </TransitionRestrictions>
 
-          <!--
+          <!--  Ingore this ... here for reference only.
           <SimulationInformation Instantiation="ONCE">
             <Cost>5</Cost>
             <TimeEstimation>
@@ -189,6 +200,7 @@
             <ExtendedAttribute Name="canStart" Value="Y"/> <!-- must always be Y or N -->
           </ExtendedAttributes>
         </Activity>
+
         <Activity Id="assign_approver" Name="Assign Approver">
           <Description>Assigns a participant to approve the order.</Description>
           <Limit>30</Limit>
@@ -219,13 +231,41 @@
             </TransitionRestriction>
           </TransitionRestrictions>
         </Activity>
+
+        <Activity Id="send_notification" Name="Send Notification">
+          <Description>Sends the admins a notification the order has arrived.</Description>
+          <Limit>30</Limit>
+		  <Implementation>
+		    <Tool Id="testScv" Type="PROCEDURE">
+              <ActualParameters>
+                <ActualParameter>expr: message="Message to Admin 0.01."</ActualParameter>
+                <ActualParameter>message</ActualParameter>
+              </ActualParameters>
+            </Tool>
+		  </Implementation>
+          <Performer>admin</Performer>
+		  <StartMode>
+		    <Automatic/>
+		  </StartMode>
+		  <FinishMode>
+		    <Automatic/>
+		  </FinishMode>
+          <Priority>1</Priority>
+          <TransitionRestrictions>
+            <TransitionRestriction>
+              <Join Type="AND"/>
+              <Split Type="AND"/>
+            </TransitionRestriction>
+          </TransitionRestrictions>
+        </Activity>
+
         <Activity Id="approve_order" Name="Approve Order">
           <Description>The assigned participant approves the order.</Description>
           <Limit>1</Limit>
 		  <Implementation>
 		    <No/>
 		  </Implementation>
-          <Performer>admins</Performer>
+          <Performer>user</Performer>
           <!-- <Performer>??? - assigned at run time</Performer> -->
 
 		  <StartMode>
@@ -257,7 +297,15 @@
           <Condition Type="CONDITION">true</Condition>
           <Description>None</Description>
         </Transition>
-        <Transition Id="trans2" From="assign_approver" To="approve_order" Loop="NOLOOP" Name="Go to Approve Order">
+        <Transition Id="trans2" From="receive_order" To="send_notification" Loop="NOLOOP" Name="Go to Send Notify">
+          <Condition Type="CONDITION">true</Condition>
+          <Description>None</Description>
+        </Transition>
+        <Transition Id="trans3" From="assign_approver" To="approve_order" Loop="NOLOOP" Name="Go to Approve Order">
+          <Condition Type="CONDITION">true</Condition>
+          <Description>None</Description>
+        </Transition>
+        <Transition Id="trans4" From="send_notification" To="approve_order" Loop="NOLOOP" Name="Go to Approve Order">
           <Condition Type="CONDITION">true</Condition>
           <Description>None</Description>
         </Transition>

@@ -34,7 +34,7 @@ import org.ofbiz.core.workflow.*;
 /**
  * WfEventAuditImpl - Workflow Event Audit implementation
  *
- *@author     <a href="mailto:jaz@zsolv.com">Andy Zeneski</a>
+ *@author     <a href="mailto:jaz@jflow.net">Andy Zeneski</a>
  *@created    December 3, 2001
  *@version    1.0
  */

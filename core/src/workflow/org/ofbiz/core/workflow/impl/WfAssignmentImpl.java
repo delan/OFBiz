@@ -35,7 +35,7 @@ import org.ofbiz.core.workflow.*;
 /**
  * WfAssignmentImpl - Workflow Assignment Object implementation
  *
- *@author     <a href="mailto:jaz@zsolv.com">Andy Zeneski</a>
+ *@author     <a href="mailto:jaz@jflow.net">Andy Zeneski</a>
  *@created    December 19, 2001
  *@version    1.2
  */

@@ -39,7 +39,7 @@ import org.ofbiz.core.workflow.impl.*;
 /**
  * WorkflowEngine - Workflow Service Engine
  *
- *@author     <a href="mailto:jaz@zsolv.com">Andy Zeneski</a>
+ *@author     <a href="mailto:jaz@jflow.net">Andy Zeneski</a>
  *@created    November 16, 2001
  *@version    1.0
  */
@@ -127,10 +127,16 @@ public class WorkflowEngine implements GenericEngine {
             throw new GenericServiceException(e.getMessage(), e);
         }
 
+        // Get the package and process ID::VERSION
+        String packageId = this.getSplitPosition(modelService.location, 0);
+        String packageVersion = this.getSplitPosition(modelService.location, 1);
+        String processId = this.getSplitPosition(modelService.invoke, 0);
+        String processVersion = this.getSplitPosition(modelService.invoke, 1);
+
         // Build the process manager
         WfProcessMgr mgr = null;
         try {
-            mgr = WfFactory.getWfProcessMgr(dispatcher.getDelegator(), modelService.location, modelService.invoke);
+            mgr = WfFactory.getWfProcessMgr(dispatcher.getDelegator(), packageId, packageVersion, processId, processVersion);
         } catch (WfException e) {
             throw new GenericServiceException(e.getMessage(), e);
         }
@@ -206,6 +212,17 @@ public class WorkflowEngine implements GenericEngine {
                 throw new GenericServiceException("Unexpected transaction error", se);
             }
         }
+    }
+
+    private String getSplitPosition(String splitString, int position) {
+        if (splitString.indexOf("::") == -1) {
+            if (position == 0)
+                return splitString;
+            if (position == 1)
+                return null;
+        }
+        List splitList = StringUtil.split(splitString, "::");
+        return (String) splitList.get(position);
     }
 }
 

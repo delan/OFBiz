@@ -294,7 +294,7 @@ public class UtilXml {
         return null;
     }
 
-    /** Return the text (node value) contained by the named child node */
+    /** Return the text (node value) contained by the named child node. */
     public static String childElementValue(Element element, String childElementName) {
         if (element == null) return null;
         //get the value of the first element with the given name
@@ -302,7 +302,19 @@ public class UtilXml {
         return elementValue(childElement);
     }
 
-    /** Return the text (node value) of the first node under this, works best if normalized */
+    /** Return the text (node value) contained by the named child node or a default value if null. */
+    public static String childElementValue(Element element, String childElementName, String defaultValue) {
+        if (element == null) return defaultValue;
+        //get the value of the first element with the given name
+        Element childElement = firstChildElement(element, childElementName);
+        String elementValue = elementValue(childElement);
+        if (elementValue == null || elementValue.length() == 0)
+            return defaultValue;
+        else
+            return elementValue;
+    }
+
+    /** Return the text (node value) of the first node under this, works best if normalized. */
     public static String elementValue(Element element) {
         if (element == null) return null;
         //make sure we get all the text there...

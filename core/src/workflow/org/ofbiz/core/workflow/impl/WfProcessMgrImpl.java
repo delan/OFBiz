@@ -34,7 +34,7 @@ import org.ofbiz.core.workflow.*;
 /**
  * WfProcessMgrImpl - Workflow Process Manager implementation
  *
- *@author     <a href="mailto:jaz@zsolv.com">Andy Zeneski</a>
+ *@author     <a href="mailto:jaz@jflow.net">Andy Zeneski</a>
  *@author     David Ostrovsky (d.ostrovsky@gmx.de)
  *@created    November 19, 2001
  *@version    1.0
@@ -55,16 +55,18 @@ public class WfProcessMgrImpl implements WfProcessMgr {
      * @param processId The unique key of the process definition.
      * @throws WfException
      */
-    public WfProcessMgrImpl(GenericDelegator delegator, String packageId,
-                            String processId) throws WfException {
+    public WfProcessMgrImpl(GenericDelegator delegator, String packageId, String packageVersion,
+                            String processId, String processVersion) throws WfException {
+        Map finder = UtilMisc.toMap("packageId", packageId, "processId", processId);
+        List order = UtilMisc.toList("-packageVersion", "-processVersion");
+        if (packageVersion != null) finder.put("packageVersion", packageVersion);
+        if (processVersion != null) finder.put("processVersion", processVersion);
         try {
-            Map finder = UtilMisc.toMap("packageId", packageId, "processId", processId);
-            Collection processes = delegator.findByAnd("WorkflowProcess", finder);
-            if (processes.size() > 1)
-                throw new WfException("Unique processId does not exist. Entity value error");
+            Collection processes = delegator.findByAnd("WorkflowProcess", finder, order);
             if (processes.size() == 0)
                 throw new WfException("No process definition found for the specified processId");
-            processDef = (GenericValue) processes.iterator().next();
+            else
+                processDef = EntityUtil.getFirst(processes);
         } catch (GenericEntityException e) {
             throw new WfException("Problems getting the process definition from the WorkflowProcess entity");
         }
@@ -72,7 +74,8 @@ public class WfProcessMgrImpl implements WfProcessMgr {
         buildSignatures();
         processList = new ArrayList();
         state = "enabled";
-        if (Debug.verboseOn()) Debug.logVerbose("[WfProcessMgr.init] : Create process manager (" + packageId + "/" + processId + ")", module);
+        if (Debug.infoOn()) Debug.logInfo("[WfProcessMgr.init] : Create process manager (" +
+                packageId + "[" + packageVersion + "]" + " / " + processId + "[" + processVersion + "]" + ")", module);
     }
 
     /**
