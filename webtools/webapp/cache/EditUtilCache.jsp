@@ -28,16 +28,14 @@
  */
 %> 
 
-<%@ page import="org.ofbiz.core.util.*" %>
-<%@ page import="java.util.*" %>
+<%@ page import="java.util.*, java.net.*" %>
+<%@ page import="org.ofbiz.core.security.*, org.ofbiz.core.entity.*, org.ofbiz.core.util.*, org.ofbiz.core.pseudotag.*" %>
 
-<% pageContext.setAttribute("PageName", "EditUtilCache"); %> 
-<%@ include file="/includes/envsetup.jsp" %>
-<%@ include file="/includes/header.jsp" %>
-<%@ include file="/includes/onecolumn.jsp" %> 
+<%@ taglib uri="ofbizTags" prefix="ofbiz" %>
+
+<jsp:useBean id="security" type="org.ofbiz.core.security.Security" scope="request" />
 
 <%String cacheName=request.getParameter("UTIL_CACHE_NAME");%>
-
 <br>
 <h2 style='margin:0;'>Cache Maintenance Edit Page</h2>
 
@@ -46,9 +44,9 @@
    <%UtilCache utilCache = (UtilCache)UtilCache.utilCacheTable.get(cacheName);%>
    <%if(utilCache!=null){%>
     <H3>&nbsp;<%=cacheName%></H3>
-    <a href="<%=response.encodeURL(controlPath + "/EditUtilCacheClear?UTIL_CACHE_NAME=" + cacheName)%>" class="buttontext">Clear this Cache</a>
-    <br><a href="<%=response.encodeURL(controlPath + "/FindUtilCache")%>" class='buttontext'>Back to Cache Maintenance</A>
-    <form method="POST" action="<%=response.encodeURL(controlPath + "/EditUtilCacheUpdate?UTIL_CACHE_NAME=" + cacheName)%>">
+    <a href='<ofbiz:url>/EditUtilCacheClear?UTIL_CACHE_NAME=<%=cacheName%></ofbiz:url>' class="buttontext">Clear this Cache</a>
+    <br><a href='<ofbiz:url>/FindUtilCache</ofbiz:url>' class='buttontext'>Back to Cache Maintenance</A>
+    <form method="POST" action='<ofbiz:url>/EditUtilCacheUpdate?UTIL_CACHE_NAME=<%=cacheName%></ofbiz:url>'>
     <TABLE border='0' cellpadding='2' cellspacing='2'>
     <%
       String rowColor1 = "99CCFF";
@@ -96,15 +94,12 @@
    <%}else{%>
     <H3>&nbsp;<%=cacheName%> Not Found</H3>
    <%}%>
-   <a href="<%=response.encodeURL(controlPath + "/EditUtilCacheClear?UTIL_CACHE_NAME=" + cacheName)%>" class="buttontext">Clear this Cache</a>
+   <a href='<ofbiz:url>/EditUtilCacheClear?UTIL_CACHE_NAME=<%=cacheName%></ofbiz:url>' class="buttontext">Clear this Cache</a>
   <%}else{%>
     <H3>&nbsp;No Cache Name Specified</H3>
   <%}%>
-  <br><a href="<%=response.encodeURL(controlPath + "/FindUtilCache")%>" class='buttontext'>Back to Cache Maintenance</A>
+  <br><a href='<ofbiz:url>/FindUtilCache"</ofbiz:url>' class='buttontext'>Back to Cache Maintenance</A>
 
 <%}else{%>
   <h3>You do not have permission to view this page (UTIL_CACHE_EDIT needed).</h3>
 <%}%>
-
-<%@ include file="/includes/onecolumnclose.jsp" %>
-<%@ include file="/includes/footer.jsp" %>

@@ -1,13 +1,16 @@
 
-<%@ page import="java.io.*, java.net.*, java.sql.*, org.w3c.dom.*"%>
+<%@ page import="java.util.*, java.io.*, java.net.*, java.sql.*, org.w3c.dom.*"%>
+<%@ page import="org.ofbiz.core.security.*, org.ofbiz.core.entity.*, org.ofbiz.core.util.*, org.ofbiz.core.pseudotag.*" %>
 <%@ page import="org.ofbiz.core.entity.model.*, org.ofbiz.core.entity.config.*"%>
 
-<% pageContext.setAttribute("PageName", "Install"); %> 
-<%@ include file="/includes/envsetup.jsp" %>
-<%@ include file="/includes/header.jsp" %>
-<%@ include file="/includes/onecolumn.jsp" %> 
+<%@ taglib uri="ofbizTags" prefix="ofbiz" %>
+
+<jsp:useBean id="security" type="org.ofbiz.core.security.Security" scope="request" />
+<jsp:useBean id="delegator" type="org.ofbiz.core.entity.GenericDelegator" scope="request" />
 
 <%
+  String controlPath = (String) request.getAttribute(SiteDefs.CONTROL_PATH);
+
   errorMessages = new LinkedList();
   String groupfile = request.getParameter("groupfile");
   String loadFile = request.getParameter("loadFile");
@@ -132,9 +135,6 @@ OR Specify the filename of a ".sql" or ".xml" file to load:<br>
     </UL>
   <%}%>
 <%}%>
-
-<%@ include file="/includes/onecolumnclose.jsp" %>
-<%@ include file="/includes/footer.jsp" %>
 
 <%!
   Collection errorMessages = new LinkedList();

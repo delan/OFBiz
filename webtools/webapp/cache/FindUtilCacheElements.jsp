@@ -28,13 +28,12 @@
  */
 %> 
 
-<%@ page import="org.ofbiz.core.util.*" %>
-<%@ page import="java.util.*" %>
+<%@ page import="java.util.*, java.net.*" %>
+<%@ page import="org.ofbiz.core.security.*, org.ofbiz.core.entity.*, org.ofbiz.core.util.*, org.ofbiz.core.pseudotag.*" %>
 
-<% pageContext.setAttribute("PageName", "FindUtilCacheElements"); %> 
-<%@ include file="/includes/envsetup.jsp" %>
-<%@ include file="/includes/header.jsp" %>
-<%@ include file="/includes/onecolumn.jsp" %> 
+<%@ taglib uri="ofbizTags" prefix="ofbiz" %>
+
+<jsp:useBean id="security" type="org.ofbiz.core.security.Security" scope="request" />
 
 <%boolean hasUtilCacheEdit=security.hasPermission("UTIL_CACHE_EDIT", session);%>
 <%String cacheName=request.getParameter("UTIL_CACHE_NAME");%>
@@ -117,7 +116,7 @@
                 </TD>
                 <TD>
                   <%if(hasUtilCacheEdit){%>
-                    <a href='<%=response.encodeURL(controlPath + "/FindUtilCacheElementsRemoveElement?UTIL_CACHE_NAME=" + cacheName + "&UTIL_CACHE_ELEMENT_NUMBER=" + keyNum)%>' class="buttontext">Remove</a>
+                    <a href='<ofbiz:url>/FindUtilCacheElementsRemoveElement?UTIL_CACHE_NAME=<%=cacheName%>&UTIL_CACHE_ELEMENT_NUMBER=<%=keyNum%></ofbiz:url>' class="buttontext">Remove</a>
                   <%}%>
                 </TD>
               </TR>
@@ -140,6 +139,3 @@
 <%}else{%>
   <h3>You do not have permission to view this page (UTIL_CACHE_VIEW needed).</h3>
 <%}%>
-
-<%@ include file="/includes/onecolumnclose.jsp" %>
-<%@ include file="/includes/footer.jsp" %>

@@ -28,15 +28,14 @@
  */
 %> 
 
-<%@ page import="org.ofbiz.core.util.*" %>
-<%@ page import="java.util.*" %>
+<%@ page import="java.util.*, java.net.*" %>
+<%@ page import="org.ofbiz.core.security.*, org.ofbiz.core.entity.*, org.ofbiz.core.util.*, org.ofbiz.core.pseudotag.*" %>
 
-<% pageContext.setAttribute("PageName", "FindUtilCache"); %> 
-<%@ include file="/includes/envsetup.jsp" %>
-<%@ include file="/includes/header.jsp" %>
-<%@ include file="/includes/onecolumn.jsp" %> 
+<%@ taglib uri="ofbizTags" prefix="ofbiz" %>
 
-<%boolean hasUtilCacheEdit=security.hasPermission("UTIL_CACHE_EDIT", session);%>
+<jsp:useBean id="security" type="org.ofbiz.core.security.Security" scope="request" />
+
+<%boolean hasUtilCacheEdit = security.hasPermission("UTIL_CACHE_EDIT", session);%>
 <br>
 <h2 style='margin:0;'>Cache Maintenance Page</h2>
 
@@ -73,16 +72,16 @@
         <TD><%=UtilFormatOut.formatQuantity(utilCache.getMaxSize())%></TD>
         <TD><%=UtilFormatOut.formatQuantity(utilCache.getExpireTime())%></TD>
         <TD align=center valign=middle>
-          <a href="<%=response.encodeURL(controlPath + "/FindUtilCacheElements?UTIL_CACHE_NAME=" + UtilFormatOut.checkNull(utilCache.getName()))%>" class="buttontext">Elements</a>
+          <a href='<ofbiz:url>/FindUtilCacheElements?UTIL_CACHE_NAME=<%=UtilFormatOut.checkNull(utilCache.getName())%></ofbiz:url>' class="buttontext">Elements</a>
         </TD>
         <TD align=center valign=middle>
           <%if(hasUtilCacheEdit){%>
-            <a href="<%=response.encodeURL(controlPath + "/EditUtilCache?UTIL_CACHE_NAME=" + UtilFormatOut.checkNull(utilCache.getName()))%>" class="buttontext">Edit</a>
+            <a href='<ofbiz:url>/EditUtilCache?UTIL_CACHE_NAME=<%=UtilFormatOut.checkNull(utilCache.getName())%></ofbiz:url>' class="buttontext">Edit</a>
           <%}%>
         </TD>
         <TD align=center valign=middle>
           <%if(hasUtilCacheEdit){%>
-            <a href="<%=response.encodeURL(controlPath + "/FindUtilCacheClear?UTIL_CACHE_NAME=" + UtilFormatOut.checkNull(utilCache.getName()))%>" class="buttontext">Clear</a>
+            <a href='<ofbiz:url>/FindUtilCacheClear?UTIL_CACHE_NAME=<%=UtilFormatOut.checkNull(utilCache.getName())%></ofbiz:url>' class="buttontext">Clear</a>
           <%}%>
         </TD>
       </TR>
@@ -97,6 +96,3 @@
 <%}else{%>
   <h3>You do not have permission to view this page (UTIL_CACHE_VIEW needed).</h3>
 <%}%>
-
-<%@ include file="/includes/onecolumnclose.jsp" %>
-<%@ include file="/includes/footer.jsp" %>

@@ -201,15 +201,17 @@
     <view-map name="main" type="region"/>
     <view-map name="login" type="region"/>
 
-    <view-map name="install" page="/install.jsp"/>
+    <view-map name="install" type="region"/>
 
-    <view-map name="entitymaint" page="/entity/entitymaint.jsp"/>
-    <view-map name="entityref" page="/entity/entityref.jsp"/>
-    <view-map name="entityref_list" page="/entity/entityref_list.jsp"/>
-    <view-map name="entityref_main" page="/entity/entityref_main.jsp"/>
-    <view-map name="FindGeneric" page="/entity/FindGeneric.jsp"/>
-    <view-map name="ViewGeneric" page="/entity/ViewGeneric.jsp"/>
+    <view-map name="entityref" type="region"/>
+    <view-map name="entityref_list" type="region"/>
+    <view-map name="entityref_main" type="region"/>
+    
+    <view-map name="entitymaint" type="region"/>
+    <view-map name="FindGeneric" type="region"/>
+    <view-map name="ViewGeneric" type="region"/>
 
+    <!-- these are NOT regions because they generate text output that should never be decorated -->
     <view-map name="tablesMySql" page="/entity/tablesMySql.jsp"/>
     <view-map name="droptablesMySql" page="/entity/droptablesMySql.jsp"/>
     <view-map name="droptablesplain" page="/entity/droptablesplain.jsp"/>
@@ -217,21 +219,22 @@
     <view-map name="ModelWriter" page="/entity/ModelWriter.jsp"/>
     <view-map name="ModelGroupWriter" page="/entity/ModelGroupWriter.jsp"/>
     <view-map name="ModelInduceFromDb" page="/entity/ModelInduceFromDb.jsp"/>
-    <view-map name="EditEntity" page="/entity/EditEntity.jsp"/>
-    <view-map name="checkdb" page="/entity/checkdb.jsp"/>
-    <view-map name="xmldsdump" page="/entity/xmldsdump.jsp"/>
-    <view-map name="xmldsimport" page="/entity/xmldsimport.jsp"/>
 
-    <view-map name="EditUtilCache" page="/cache/EditUtilCache.jsp"/>
-    <view-map name="FindUtilCache" page="/cache/FindUtilCache.jsp"/>
-    <view-map name="FindUtilCacheElements" page="/cache/FindUtilCacheElements.jsp"/>
+    <view-map name="EditEntity" type="region"/>
+    <view-map name="checkdb" type="region"/>
+    <view-map name="xmldsdump" type="region"/>
+    <view-map name="xmldsimport" type="region"/>
 
-    <view-map name="viewdatafile" page="/datafile/viewdatafile.jsp"/>
-    <view-map name="logikus" page="/rules/logikus.jsp"/>
-    <view-map name="readxpdl" page="/workflow/readxpdl.jsp"/>
+    <view-map name="EditUtilCache" type="region"/>
+    <view-map name="FindUtilCache" type="region"/>
+    <view-map name="FindUtilCacheElements" type="region"/>
 
-    <view-map name="StatsSinceStart" page="/stats/StatsSinceStart.jsp"/>
-    <view-map name="StatBinsHistory" page="/stats/StatBinsHistory.jsp"/>
+    <view-map name="viewdatafile" type="region"/>
+    <view-map name="logikus" type="region"/>
+    <view-map name="readxpdl" type="region"/>
+
+    <view-map name="StatsSinceStart" type="region"/>
+    <view-map name="StatBinsHistory" type="region"/>
     <!-- end of view mappings -->
     
 </site-conf>
