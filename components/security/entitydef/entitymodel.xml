@@ -26,7 +26,7 @@
  *
  * @author     David E. Jones (jonesde@ofbiz.org)
  * @author     Andy Zeneski (jaz@ofbiz.org)
- * @version    $Revision: 1.5 $
+ * @version    $Revision: 1.6 $
  */
 -->
 
@@ -51,15 +51,7 @@
   <!-- ========================================================= -->
   <!-- org.ofbiz.security.login -->
   <!-- ========================================================= -->
-
-    <entity entity-name="PersistedLogin"
-            package-name="org.ofbiz.security.login"
-            title="Login Info Entity">
-      <field name="persistedLoginId" type="id-ne"></field>
-      <field name="sessionLoginInfo" type="blob"></field>
-      <field name="externalKeyInfo" type="blob"></field>
-      <prim-key field="persistedLoginId"/>
-    </entity>
+    
     <entity entity-name="UserLogin"
             package-name="org.ofbiz.security.login"
             title="User Login Entity">

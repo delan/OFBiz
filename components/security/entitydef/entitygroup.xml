@@ -26,7 +26,7 @@
  *
  *@author     David E. Jones (jonesde@ofbiz.org)
  *@author     Andy Zeneski (jaz@ofbiz.org)
- *@version    $Revision: 1.4 $
+ *@version    $Revision: 1.5 $
  */
 -->
 
@@ -35,8 +35,7 @@
   <!-- ========================================================= -->
   <!-- org.ofbiz.security.login -->
   <!-- ========================================================= -->
-
-    <entity-group group="org.ofbiz" entity="PersistedLogin" />
+    
     <entity-group group="org.ofbiz" entity="UserLogin" />
     <entity-group group="org.ofbiz" entity="UserLoginHistory" />
     <entity-group group="org.ofbiz" entity="UserLoginSession" />
