@@ -26,7 +26,7 @@
 --%>
 
 <%@ page import="java.util.*" %>
-<%@ page import="org.ofbiz.core.util.*" %>
+<%@ page import="org.ofbiz.core.util.*, org.ofbiz.core.config.*" %>
 <%@ page import="org.ofbiz.core.entity.*" %>
 <%@ page import="org.ofbiz.core.entity.model.*" %>
 
@@ -39,14 +39,15 @@
 if (security.hasPermission("ENTITY_MAINT", session)) {
   String entityName = request.getParameter("entityName");
   ModelReader reader = delegator.getModelReader();
+  String event = request.getParameter("event");
   ModelEntity entity = null;
-  if (UtilValidate.isNotEmpty(entityName)) entity = reader.getModelEntity(entityName);
+  if (UtilValidate.isNotEmpty(entityName) && !"addEntity".equals(event)) entity = reader.getModelEntity(entityName);
   ModelViewEntity modelViewEntity = null;
   if (entity instanceof ModelViewEntity) modelViewEntity = (ModelViewEntity)entity;
   TreeSet entSet = new TreeSet(reader.getEntityNames());
   String errorMsg = "";
+  ResourceHandler entityResourceHandler = delegator.getModelReader().getEntityResourceHandler(entityName);
 
-  String event = request.getParameter("event");
   Debug.logInfo("running EditEntity event [" + event + "]");
   if ("addEntity".equals(event)) {
     if (entity == null) {
@@ -321,14 +322,14 @@ A.listtext:hover {color:red;}
       <BR>(This group is for the "<%=delegator.getDelegatorName()%>" delegator)
     </TD>
   </TR>
-  <%boolean isFile = delegator.getModelReader().getEntityResourceHandler(entityName).isFileResource();%>
+  <%boolean isFile = entityResourceHandler == null ? true : entityResourceHandler.isFileResource();%>
   <TR>
     <TD>Resource Loader</TD>
-    <TD><INPUT type=text size='20' name='loaderName' value='<%=UtilFormatOut.checkNull((String) delegator.getModelReader().getEntityResourceHandler(entityName).getLoaderName())%>'<%if(!isFile){%> disabled<%}%>></TD>
+    <TD><INPUT type=text size='20' name='loaderName' value='<%=entityResourceHandler == null ? "" : UtilFormatOut.checkNull((String) entityResourceHandler.getLoaderName())%>'<%if(!isFile){%> disabled<%}%>></TD>
   </TR>
   <TR>
     <TD>Location</TD>
-    <TD><INPUT type=text size='60' name='location' value='<%=UtilFormatOut.checkNull((String) delegator.getModelReader().getEntityResourceHandler(entityName).getLocation())%>'<%if(!isFile){%> disabled<%}%>></TD>
+    <TD><INPUT type=text size='60' name='location' value='<%=entityResourceHandler == null ? "" : UtilFormatOut.checkNull((String) entityResourceHandler.getLocation())%>'<%if(!isFile){%> disabled<%}%>></TD>
   </TR>
   </TABLE>
   <INPUT type=submit value='Update Entity'>
