@@ -154,4 +154,35 @@
         <attribute name="fixedAssetId" type="String" mode="IN" optional="false"/>
     </service>
 
+    <!-- Bill of Materials services -->
+    <service name="updateProductManufacturingRule" engine="simple"
+            location="org/ofbiz/manufacturing/bom/BomSimpleMethods.xml" invoke="updateProductManufacturingRule">
+        <description>Update a Product Manufacturing Rule</description>
+        <attribute name="ruleId" type="String" mode="IN" optional="false"/>
+        <attribute name="productId" type="String" mode="IN" optional="true"/>
+        <attribute name="productIdIn" type="String" mode="IN" optional="false"/>
+        <attribute name="productIdFor" type="String" mode="IN" optional="true"/>
+        <attribute name="productIdInSubst" type="String" mode="IN" optional="true"/>
+        <attribute name="productFeature" type="String" mode="IN" optional="true"/>
+        <attribute name="ruleOperator" type="String" mode="IN" optional="true"/>
+    </service>
+
+    <service name="addProductManufacturingRule" engine="simple"
+            location="org/ofbiz/manufacturing/bom/BomSimpleMethods.xml" invoke="addProductManufacturingRule">
+        <description>Create a Product Manufacturing Rule</description>
+        <attribute name="ruleId" type="String" mode="IN" optional="true"/>
+        <attribute name="productId" type="String" mode="IN" optional="true"/>
+        <attribute name="productIdIn" type="String" mode="IN" optional="false"/>
+        <attribute name="productIdFor" type="String" mode="IN" optional="true"/>
+        <attribute name="productIdInSubst" type="String" mode="IN" optional="true"/>
+        <attribute name="productFeature" type="String" mode="IN" optional="true"/>
+        <attribute name="ruleOperator" type="String" mode="IN" optional="true"/>
+    </service>
+
+    <service name="deleteProductManufacturingRule" engine="simple"
+            location="org/ofbiz/manufacturing/bom/BomSimpleMethods.xml" invoke="deleteProductManufacturingRule">
+        <description>Remove a Product Manufacturing Rule</description>
+        <attribute name="ruleId" type="String" mode="IN" optional="false"/>
+    </service>
+
 </services>
