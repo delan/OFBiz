@@ -68,7 +68,7 @@
       <table width="100%" cellspacing="0" cellpadding="0" border="0">			
         <tr>
           <td nowrap class="monthdaynumber"><a href='<@ofbizUrl>/day?start=${period.start.time?string("#")}</@ofbizUrl>' class="monthdaynumber">${period.start?date?string("d")?cap_first}</a></td>
-          <td align="right"><a href="<@ofbizUrl>/event?estimatedStartDate=${period.start?datetime?string.short}:00&estimatedCompletionDate=${period.end?datetime?string.short}:00</@ofbizUrl>" class="add">Add New</a>&nbsp;&nbsp;</td>
+          <td align="right"><a href='<@ofbizUrl>/event?estimatedStartDate=${period.start?string("yyyy-MM-dd HH:mm:ss")}&estimatedCompletionDate=${period.end?string("yyyy-MM-dd HH:mm:ss")}</@ofbizUrl>' class="add">Add New</a>&nbsp;&nbsp;</td>
         </tr>			
       </table>
       <#list period.calendarEntries as calEntry>

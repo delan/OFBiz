@@ -66,7 +66,7 @@
   <#list periods as period>               
   <tr>
     <td valign=top nowrap width="1%" class="monthweekheader" height="36"><a href='<@ofbizUrl>/day?start=${period.start.time?string("#")}</@ofbizUrl>' class="monthweeknumber">${period.start?date?string("EEEE")?cap_first} ${period.start?date?string("d/M")?cap_first}</a><br>
-	  <a href="<@ofbizUrl>/event?estimatedStartDate=${period.start?datetime?string.short}:00&estimatedCompletionDate=${period.end?datetime?string.short}:00</@ofbizUrl>">Add New</a>
+	  <a href='<@ofbizUrl>/event?estimatedStartDate=${period.start?string("yyyy-MM-dd HH:mm:ss")}&estimatedCompletionDate=${period.end?string("yyyy-MM-dd HH:mm:ss")}</@ofbizUrl>'>Add New</a>
 	  </td>
     <#list period.calendarEntries as calEntry>
     <#if calEntry.startOfPeriod>			  
