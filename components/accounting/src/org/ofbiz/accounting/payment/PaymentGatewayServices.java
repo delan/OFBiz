@@ -330,6 +330,24 @@ public class PaymentGatewayServices {
     private static Map makeAuthContext(OrderReadHelper orh, GenericValue userLogin, GenericValue paymentPreference, String paymentConfig, double totalRemaining) throws GeneralException {
         Map processContext = new HashMap();
 
+        // get the visit record to obtain the client's IP address
+        GenericValue orderHeader = orh.getOrderHeader();
+        if (orderHeader != null) {
+            String visitId = orderHeader.getString("visitId");
+            GenericValue visit = null;
+            if (visitId != null) {
+                try {
+                    visit = orderHeader.getDelegator().findByPrimaryKey("Visit", UtilMisc.toMap("visitId", visitId));
+                } catch (GenericEntityException e) {
+                    Debug.logError(e, module);
+                }
+            }
+
+            if (visit != null && visit.get("clientIpAddress") != null) {
+                processContext.put("customerIpAddress", visit.getString("clientIpAddress"));
+            }
+        }
+
         processContext.put("userLogin", userLogin);
         processContext.put("orderId", orh.getOrderId());
         processContext.put("orderItems", orh.getOrderItems());
@@ -837,7 +855,7 @@ public class PaymentGatewayServices {
                 amountThisCapture = authAmount.doubleValue();
             }
 
-            Map captureResult = capturePayment(dispatcher, userLogin, orh, paymentPref, amountThisCapture);
+            Map captureResult = capturePayment(dctx, userLogin, orh, paymentPref, amountThisCapture);
             if (captureResult != null) {
                 Double amountCaptured = (Double) captureResult.get("captureAmount");
                 if (amountCaptured != null) amountToCapture -= amountCaptured.doubleValue();
@@ -910,11 +928,12 @@ public class PaymentGatewayServices {
         }
     }
 
-    private static Map capturePayment(LocalDispatcher dispatcher, GenericValue userLogin, OrderReadHelper orh, GenericValue paymentPref, double amount) {
-    	return capturePayment(dispatcher,userLogin, orh, paymentPref, amount, null);
+    private static Map capturePayment(DispatchContext dctx, GenericValue userLogin, OrderReadHelper orh, GenericValue paymentPref, double amount) {
+    	return capturePayment(dctx, userLogin, orh, paymentPref, amount, null);
     }
     
-    private static Map capturePayment(LocalDispatcher dispatcher, GenericValue userLogin, OrderReadHelper orh, GenericValue paymentPref, double amount, GenericValue authTrans) {
+    private static Map capturePayment(DispatchContext dctx, GenericValue userLogin, OrderReadHelper orh, GenericValue paymentPref, double amount, GenericValue authTrans) {
+        LocalDispatcher dispatcher = dctx.getDispatcher();
         // look up the payment configuration settings
         String serviceName = null;
         String paymentConfig = null;
@@ -935,6 +954,32 @@ public class PaymentGatewayServices {
 
         if (paymentConfig == null || paymentConfig.length() == 0) {
             paymentConfig = "payment.properties";
+        }
+
+        // check the validity of the authorization; re-auth if necessary
+        if (!PaymentGatewayServices.checkAuthValidity(paymentPref, paymentConfig)) {
+            // re-auth required before capture
+            Map processorResult = PaymentGatewayServices.authPayment(dispatcher, userLogin, orh, paymentPref, amount, true);
+
+            boolean authResult = false;
+            if (processorResult != null) {
+                // process the auth results
+                try {
+                    authResult = processResult(dctx, processorResult, userLogin, paymentPref);
+                    if (!authResult) {
+                        Debug.logError("Re-Authorization failed : " + paymentPref + " : " + processorResult, module);
+                    }
+                } catch (GeneralException e) {
+                    Debug.logError(e, "Trouble processing the re-auth result : " + paymentPref + " : " + processorResult, module);
+                }
+            } else {
+                Debug.logError("Payment not re-authorized : " + paymentPref + " : " + processorResult, module);
+            }
+
+            if (!authResult) {
+                // returning null to cancel the capture process.
+                return null;
+            }
         }
 
         // prepare the context for the capture service (must follow the ccCaptureInterface
@@ -1165,7 +1210,7 @@ public class PaymentGatewayServices {
                                 processCaptureResult(dctx, result, userLogin, paymentPreference);
                             } else {
                                 // lets try to capture the funds now
-                                Map capPayRes = capturePayment(dispatcher, userLogin, orh, paymentPreference, amount.doubleValue(), authTrans);
+                                Map capPayRes = capturePayment(dctx, userLogin, orh, paymentPreference, amount.doubleValue(), authTrans);
                                 if (capPayRes != null) {
                                     Boolean capPayResp = (Boolean) capPayRes.get("captureResult");
                                     if (capPayResp != null && capPayResp.booleanValue()) {
@@ -1619,6 +1664,76 @@ public class PaymentGatewayServices {
         return authTrans;
     }
 
+    public static Timestamp getAuthTime(GenericValue orderPaymentPreference) {
+        GenericValue authTrans = PaymentGatewayServices.getAuthTransaction(orderPaymentPreference);
+        Timestamp authTime = null;
+
+        if (authTrans != null) {
+            authTime = authTrans.getTimestamp("transactionDate");
+        }
+
+        return authTime;
+    }
+
+    public static boolean checkAuthValidity(GenericValue orderPaymentPreference, String paymentConfig) {
+        Timestamp authTime = PaymentGatewayServices.getAuthTime(orderPaymentPreference);
+        if (authTime == null) {
+            return false;
+        }
+
+        GenericValue paymentMethod = null;
+        try {
+            paymentMethod = orderPaymentPreference.getRelatedOne("PaymentMethod");
+        } catch (GenericEntityException e) {
+            Debug.logError(e, module);
+        }
+
+        if (paymentMethod != null && paymentMethod.getString("paymentMethodTypeId").equals("CREDIT_CARD")) {
+            GenericValue creditCard = null;
+            try {
+                creditCard = paymentMethod.getRelatedOne("CreditCard");
+            } catch (GenericEntityException e) {
+                Debug.logError(e, module);
+            }
+            if (creditCard != null) {
+                String cardType = creditCard.getString("cardType");
+                String reauthDays = null;
+                // add more types as necessary -- maybe we should create seed data for credit card types??
+                if ("Discover".equals(cardType)) {
+                    reauthDays = UtilProperties.getPropertyValue(paymentConfig, "payment.general.reauth.disc.days", "90");
+                } else if ("AmericanExpress".equals(cardType)) {
+                    reauthDays = UtilProperties.getPropertyValue(paymentConfig, "payment.general.reauth.amex.days", "30");
+                } else if ("MasterCard".equals(cardType)) {
+                    reauthDays = UtilProperties.getPropertyValue(paymentConfig, "payment.general.reauth.mc.days", "30");
+                } else if ("Visa".equals(cardType)) {
+                    reauthDays = UtilProperties.getPropertyValue(paymentConfig, "payment.general.reauth.visa.days", "7");
+                } else {
+                    reauthDays = UtilProperties.getPropertyValue(paymentConfig, "payment.general.reauth.other.days", "7");
+                }
+
+                int days = 0;
+                try {
+                    days = Integer.parseInt(reauthDays);
+                } catch (Exception e) {
+                    Debug.logError(e, module);
+                }
+
+                if (days > 0) {
+                    Calendar cal = Calendar.getInstance();
+                    cal.setTimeInMillis(authTime.getTime());
+                    cal.add(Calendar.DAY_OF_YEAR, days);
+                    Timestamp validTime = new Timestamp(cal.getTimeInMillis());
+                    Timestamp nowTime = UtilDateTime.nowTimestamp();
+                    if (nowTime.after(validTime)) {
+                        return false;
+                    }
+                }
+            }
+        }
+
+        return true;
+    }
+
     // manual processing service
     public static Map processManualCcTx(DispatchContext dctx, Map context) {
         GenericValue userLogin = (GenericValue) context.get("userLogin");
@@ -1896,7 +2011,6 @@ public class PaymentGatewayServices {
         long nowTime = new Date().getTime();
         result.put("captureAmount", context.get("captureAmount"));
         result.put("captureRefNum", new Long(nowTime).toString());
-
 
         Calendar cal = Calendar.getInstance();
         cal.setTimeInMillis(txStamp.getTime());
