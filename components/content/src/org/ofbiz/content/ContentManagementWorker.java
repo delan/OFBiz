@@ -162,7 +162,28 @@ public class ContentManagementWorker {
     }
 
     //public static String getFromSomewhere(String name, org.ofbiz.base.util.collections.OrderedMap paramMap, HttpServletRequest request, org.jpublish.JPublishContext context) {
-        public static String getFromSomewhere(String name, org.ofbiz.base.util.collections.OrderedMap paramMap, HttpServletRequest request, Map context) {
+    public static String getFromSomewhere(String name, org.ofbiz.base.util.collections.OrderedMap paramMap, HttpServletRequest request, Map context) {
+
+        String ret = null;
+        if (paramMap != null)
+            ret = (String)paramMap.get(name);
+
+        if (UtilValidate.isEmpty(ret)) {
+            Object obj = request.getAttribute(name);
+            if (obj != null) {
+                ret = obj.toString();
+            } else {
+                obj = context.get(name);
+                if (obj != null) {
+                    ret = obj.toString();
+                }
+            }
+        }
+        return ret;
+    }
+
+    //public static String getFromSomewhere(String name, org.ofbiz.base.util.collections.OrderedMap paramMap, HttpServletRequest request, org.jpublish.JPublishContext context) {
+    public static String getFromSomewhere(String name, org.ofbiz.base.util.collections.OrderedMap paramMap, HttpServletRequest request, org.jpublish.JPublishContext context) {
 
         String ret = null;
         if (paramMap != null)
