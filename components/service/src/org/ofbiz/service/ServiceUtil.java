@@ -66,16 +66,24 @@ public class ServiceUtil {
 
     /** A small routine used all over to improve code efficiency, make a result map with the message and the error response code */
     public static Map returnError(String errorMessage) {
-        return returnError(errorMessage, null, null, null);
+        return returnProblem(ModelService.RESPOND_ERROR, errorMessage, null, null, null);
     }
 
     /** A small routine used all over to improve code efficiency, make a result map with the message and the error response code */
     public static Map returnError(List errorMessageList) {
-        return returnError(null, errorMessageList, null, null);
+        return returnProblem(ModelService.RESPOND_ERROR, null, errorMessageList, null, null);
+    }
+
+    public static Map returnFailure(String errorMessage) {
+        return returnProblem(ModelService.RESPOND_FAIL, errorMessage, null, null, null);
+    }
+
+     public static Map returnFailure(List errorMessageList) {
+        return returnProblem(ModelService.RESPOND_FAIL, null, errorMessageList, null, null);
     }
 
     /** A small routine used all over to improve code efficiency, make a result map with the message and the error response code, also forwards any error messages from the nestedResult */
-    public static Map returnError(String errorMessage, List errorMessageList, Map errorMessageMap, Map nestedResult) {
+    public static Map returnProblem(String returnType, String errorMessage, List errorMessageList, Map errorMessageMap, Map nestedResult) {
         Map result = new HashMap();
         result.put(ModelService.RESPONSE_MESSAGE, ModelService.RESPOND_ERROR);
         if (errorMessage != null) {

@@ -39,18 +39,20 @@ import javax.transaction.xa.XAException;
  * ServiceEcaAction
  *
  * @author     <a href="mailto:jaz@ofbiz.org">Andy Zeneski</a>
- * @version    $Rev:$
+ * @version    $Rev$
  * @since      2.0
  */
 public class ServiceEcaAction {
 
-    protected String eventName;
-    protected String serviceName;
-    protected String serviceMode;
-    protected String resultMapName;
-    protected boolean resultToContext;
-    protected boolean ignoreError;
-    protected boolean persist;
+    protected String eventName = null;
+    protected String serviceName = null;
+    protected String serviceMode = null;
+    protected String resultMapName = null;
+
+    protected boolean resultToContext = true;
+    protected boolean ignoreFailure = false;
+    protected boolean ignoreError = false;
+    protected boolean persist = false;
 
     protected ServiceEcaAction() {}
 
@@ -61,11 +63,12 @@ public class ServiceEcaAction {
         this.resultMapName = action.getAttribute("result-map-name");
         // default is true, so anything but false is true
         this.resultToContext = !"false".equals(action.getAttribute("result-to-context"));
+        this.ignoreFailure = !"false".equals(action.getAttribute("ignore-failure"));
         this.ignoreError = !"false".equals(action.getAttribute("ignore-error"));
         this.persist = "true".equals(action.getAttribute("persist"));
     }
 
-    public void runAction(String selfService, DispatchContext dctx, Map context, Map result) throws GenericServiceException {
+    public boolean runAction(String selfService, DispatchContext dctx, Map context, Map result) throws GenericServiceException {
         if (serviceName.equals(selfService)) {
             throw new GenericServiceException("Cannot invoke self on ECA.");
         }
@@ -113,41 +116,56 @@ public class ServiceEcaAction {
         }
 
         // if we aren't ignoring errors check it here...
-        if (!ignoreError && result != null) {
-            if (ModelService.RESPOND_ERROR.equals(actionResult.get(ModelService.RESPONSE_MESSAGE))) {
-                result.put(ModelService.RESPONSE_MESSAGE, ModelService.RESPOND_ERROR);
-                String errorMessage = (String) actionResult.get(ModelService.ERROR_MESSAGE);
-                List errorMessageList = (List) actionResult.get(ModelService.ERROR_MESSAGE_LIST);
-                Map errorMessageMap = (Map) actionResult.get(ModelService.ERROR_MESSAGE_MAP);
-
-                // do something with the errorMessage
-                if (UtilValidate.isNotEmpty(errorMessage)) {
-                    if (UtilValidate.isEmpty((String) result.get(ModelService.ERROR_MESSAGE))) {
-                        result.put(ModelService.ERROR_MESSAGE, errorMessage);
-                    } else {
-                        if (errorMessageList == null) errorMessageList = new LinkedList();
-                        errorMessageList.add(0, errorMessage);
-                    }
+        boolean success = true;
+        if (result != null) {
+            if (!ignoreFailure) {
+                if (ModelService.RESPOND_FAIL.equals(actionResult.get(ModelService.RESPONSE_MESSAGE))) {
+                    result.put(ModelService.RESPONSE_MESSAGE, ModelService.RESPOND_FAIL);
+                    success = false;
                 }
-                // do something with the errorMessageList
-                if (errorMessageList != null && errorMessageList.size() > 0) {
-                    List origErrorMessageList = (List) result.get(ModelService.ERROR_MESSAGE_LIST);
-                    if (origErrorMessageList == null) {
-                        result.put(ModelService.ERROR_MESSAGE_LIST, errorMessageList);
-                    } else {
-                        origErrorMessageList.addAll(errorMessageList);
-                    }
-                }
-                // do something with the errorMessageMap
-                if (errorMessageMap != null && errorMessageMap.size() > 0) {
-                    Map origErrorMessageMap = (Map) result.get(ModelService.ERROR_MESSAGE_MAP);
-                    if (origErrorMessageMap == null) {
-                        result.put(ModelService.ERROR_MESSAGE_MAP, errorMessageMap);
-                    } else {
-                        origErrorMessageMap.putAll(errorMessageMap);
-                    }
+            }
+            if (!ignoreError) {
+                if (ModelService.RESPOND_ERROR.equals(actionResult.get(ModelService.RESPONSE_MESSAGE))) {
+                    result.put(ModelService.RESPONSE_MESSAGE, ModelService.RESPOND_ERROR);
+                    success = false;
                 }
             }
         }
+
+        if (!success) {
+            String errorMessage = (String) actionResult.get(ModelService.ERROR_MESSAGE);
+            List errorMessageList = (List) actionResult.get(ModelService.ERROR_MESSAGE_LIST);
+            Map errorMessageMap = (Map) actionResult.get(ModelService.ERROR_MESSAGE_MAP);
+
+            // do something with the errorMessage
+            if (UtilValidate.isNotEmpty(errorMessage)) {
+                if (UtilValidate.isEmpty((String) result.get(ModelService.ERROR_MESSAGE))) {
+                    result.put(ModelService.ERROR_MESSAGE, errorMessage);
+                } else {
+                    if (errorMessageList == null) errorMessageList = new LinkedList();
+                    errorMessageList.add(0, errorMessage);
+                }
+            }
+            // do something with the errorMessageList
+            if (errorMessageList != null && errorMessageList.size() > 0) {
+                List origErrorMessageList = (List) result.get(ModelService.ERROR_MESSAGE_LIST);
+                if (origErrorMessageList == null) {
+                    result.put(ModelService.ERROR_MESSAGE_LIST, errorMessageList);
+                } else {
+                    origErrorMessageList.addAll(errorMessageList);
+                }
+            }
+            // do something with the errorMessageMap
+            if (errorMessageMap != null && errorMessageMap.size() > 0) {
+                Map origErrorMessageMap = (Map) result.get(ModelService.ERROR_MESSAGE_MAP);
+                if (origErrorMessageMap == null) {
+                    result.put(ModelService.ERROR_MESSAGE_MAP, errorMessageMap);
+                } else {
+                    origErrorMessageMap.putAll(errorMessageMap);
+                }
+            }
+        }
+
+        return success;
     }
 }

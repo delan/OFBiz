@@ -49,7 +49,7 @@ import org.ofbiz.service.group.ServiceGroupReader;
  *
  * @author     <a href="mailto:jaz@ofbiz.org">Andy Zeneski</a>
  * @author     <a href="mailto:jonesde@ofbiz.org">David E. Jones</a>
- * @version    $Rev:$
+ * @version    $Rev$
  * @since      2.0
  */
 public class ModelService {
@@ -62,6 +62,7 @@ public class ModelService {
     public static final String RESPONSE_MESSAGE = "responseMessage";
     public static final String RESPOND_SUCCESS = "success";
     public static final String RESPOND_ERROR = "error";
+    public static final String RESPOND_FAIL = "fail";
     public static final String ERROR_MESSAGE = "errorMessage";
     public static final String ERROR_MESSAGE_LIST = "errorMessageList";
     public static final String ERROR_MESSAGE_MAP = "errorMessageMap";
@@ -296,12 +297,13 @@ public class ModelService {
         if (verboseOn) Debug.logVerbose("[ModelService.validate] : {" + name + "} : Validating context - " + test, module);
 
         // do not validate results with errors
-        if (mode.equals(OUT_PARAM) && test != null && test.containsKey(RESPONSE_MESSAGE) &&
-            test.get(RESPONSE_MESSAGE).equals(RESPOND_ERROR)) {
-            if (verboseOn) Debug.logVerbose("[ModelService.validate] : {" + name + "} : response was an error, not validating.", module);
-            return;
+        if (mode.equals(OUT_PARAM) && test != null && test.containsKey(RESPONSE_MESSAGE)) {
+            if (RESPOND_ERROR.equals(test.get(RESPONSE_MESSAGE)) || RESPOND_FAIL.equals(test.get(RESPONSE_MESSAGE))) {
+                if (verboseOn) Debug.logVerbose("[ModelService.validate] : {" + name + "} : response was an error, not validating.", module);
+                return;
+            }
         }
-
+                               
         // get the info values
         Collection values = contextInfo.values();
         Iterator i = values.iterator();
@@ -518,7 +520,7 @@ public class ModelService {
 
         while (i.hasNext()) {
             ModelParam param = (ModelParam) i.next();
-            boolean internalParam = param.internal;
+            //boolean internalParam = param.internal;
 
             if (param.mode.equals("INOUT") || param.mode.equals(mode)) {
                 Object key = param.name;
