@@ -62,6 +62,7 @@
             title="Content Entity">
       <field name="contentId" type="id-ne"></field>
       <field name="contentTypeId" type="id"></field>
+      <field name="ownerContentId" type="id"></field>
       <field name="dataResourceId" type="id"></field>
       <field name="dataSourceId" type="id"></field>
       <field name="statusId" type="id"></field>
@@ -126,6 +127,9 @@
       </relation>
       <relation type="one" fk-name="CONTENT_DTSRC" rel-entity-name="DataSource">
         <key-map field-name="dataSourceId"/>
+      </relation>
+      <relation type="one" fk-name="CONTENT_PCNTNT" title="Owner" rel-entity-name="Content">
+        <key-map field-name="ownerContentId" rel-field-name="contentId"/>
       </relation>
     </entity>
     <entity entity-name="ContentAssoc"
@@ -226,6 +230,16 @@
         <key-map field-name="dataSourceId"/>
       </relation>
     </entity>
+    <entity entity-name="ContentOperation"
+            package-name="org.ofbiz.commonapp.content.content"
+            title="Content Operation Entity">
+      <field name="contentOperationId" type="id-ne"></field>
+      <field name="description" type="description"></field>
+      <prim-key field="contentOperationId"/>
+      <relation type="many" rel-entity-name="ContentPurposeOperation">
+        <key-map field-name="contentOperationId"/>
+      </relation>
+    </entity>
     <entity entity-name="ContentPurpose"
             package-name="org.ofbiz.commonapp.content.content"
             title="Content Purpose Entity">
@@ -238,6 +252,25 @@
       </relation>
       <relation type="one" fk-name="CONTENT_PRP_TYPE" rel-entity-name="ContentPurposeType">
         <key-map field-name="contentPurposeTypeId"/>
+      </relation>
+    </entity>
+    <entity entity-name="ContentPurposeOperation"
+            package-name="org.ofbiz.commonapp.content.content"
+            title="Content Purpose Entity">
+      <field name="contentPurposeTypeId" type="id-ne"></field>
+      <field name="contentOperationId" type="id-ne"></field>
+      <field name="roleTypeId" type="id-ne"></field>
+      <prim-key field="contentPurposeTypeId"/>
+      <prim-key field="contentOperationId"/>
+      <prim-key field="roleTypeId"/>
+      <relation type="one" fk-name="CONTENT_PRO_TYPE" rel-entity-name="ContentPurposeType">
+        <key-map field-name="contentPurposeTypeId"/>
+      </relation>
+      <relation type="one" fk-name="CONTENT_PRO_OPER" rel-entity-name="ContentOperation">
+        <key-map field-name="contentOperationId"/>
+      </relation>
+      <relation type="one" fk-name="CONTENT_PRO_RLT" rel-entity-name="RoleType">
+        <key-map field-name="roleTypeId"/>
       </relation>
     </entity>
     <entity entity-name="ContentPurposeType"

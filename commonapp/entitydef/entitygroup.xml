@@ -221,7 +221,9 @@
     <entity-group group="org.ofbiz.commonapp" entity="ContentAssocType" />
     <entity-group group="org.ofbiz.commonapp" entity="ContentAttribute" />
     <entity-group group="org.ofbiz.commonapp" entity="ContentMetaData" />
+    <entity-group group="org.ofbiz.commonapp" entity="ContentOperation" />
     <entity-group group="org.ofbiz.commonapp" entity="ContentPurpose" />
+    <entity-group group="org.ofbiz.commonapp" entity="ContentPurposeOperation" />
     <entity-group group="org.ofbiz.commonapp" entity="ContentPurposeType" />
     <entity-group group="org.ofbiz.commonapp" entity="ContentRole" />
     <entity-group group="org.ofbiz.commonapp" entity="ContentType" />
