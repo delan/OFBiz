@@ -1,5 +1,5 @@
 /*
- * $Id: GenericEntity.java,v 1.25 2004/04/23 05:31:34 doogie Exp $
+ * $Id: GenericEntity.java,v 1.26 2004/04/23 14:49:17 doogie Exp $
  *
  *  Copyright (c) 2002 The Open For Business Project - www.ofbiz.org
  *
@@ -25,6 +25,7 @@ package org.ofbiz.entity;
 
 import java.io.PrintWriter;
 import java.io.Serializable;
+import java.text.NumberFormat;
 import java.util.Collection;
 import java.util.HashMap;
 import java.util.Iterator;
@@ -60,13 +61,19 @@ import org.w3c.dom.Element;
  *
  *@author     <a href="mailto:jonesde@ofbiz.org">David E. Jones</a>
  *@author     <a href="mailto:jaz@ofbiz.org">Andy Zeneski</a>
- *@version    $Revision: 1.25 $
+ *@version    $Revision: 1.26 $
  *@since      2.0
  */
 public class GenericEntity extends Observable implements Map, LocalizedMap, Serializable, Comparable, Cloneable {
 
     public static final String module = GenericEntity.class.getName();
 
+    public static NumberFormat nf = NumberFormat.getInstance();
+    static {
+        nf.setMaximumFractionDigits( 100 );
+        nf.setGroupingUsed( false );
+    }
+                
     /** Name of the GenericDelegator, used to reget the GenericDelegator when deserialized */
     protected String delegatorName = null;
 
@@ -419,6 +426,8 @@ public class GenericEntity extends Observable implements Map, LocalizedMap, Seri
         if (object == null) return null;
         if (object instanceof java.lang.String) {
             return (String) object;
+        } else if (object instanceof Number) {
+            return nf.format(object);
         } else {
             return object.toString();
         }
