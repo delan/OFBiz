@@ -1866,7 +1866,7 @@
         <key-map field-name="paymentServiceTypeEnumId" rel-field-name="enumId"/>
       </relation>
       <relation type="one" fk-name="PAYGATR_TXCODE" title="TranCode" rel-entity-name="Enumeration">
-        <key-map field-name="transCodeEnum" rel-field-name="enumId"/>
+        <key-map field-name="transCodeEnumId" rel-field-name="enumId"/>
       </relation>
       <relation type="one" fk-name="PAYGATR_ORDPMPRF" rel-entity-name="OrderPaymentPreference">
         <key-map field-name="orderPaymentPreferenceId"/>
