@@ -54,7 +54,7 @@
 <!ELEMENT response EMPTY>
 <!ATTLIST response
 	name CDATA #REQUIRED
-	type (none|view|request) #REQUIRED
+	type (none|view|request|url) #REQUIRED
 	value CDATA #IMPLIED
 >
 <!ELEMENT view-map (description?)>
