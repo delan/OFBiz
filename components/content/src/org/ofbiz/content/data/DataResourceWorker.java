@@ -1,5 +1,5 @@
 /*
- * $Id: DataResourceWorker.java,v 1.15 2003/12/23 18:51:21 jonesde Exp $
+ * $Id: DataResourceWorker.java,v 1.16 2003/12/30 05:41:43 byersa Exp $
  *
  *  Copyright (c) 2001, 2002 The Open For Business Project - www.ofbiz.org
  *
@@ -62,7 +62,7 @@ import freemarker.template.TemplateException;
  * 
  * @author <a href="mailto:byersa@automationgroups.com">Al Byers</a>
  * @author <a href="mailto:jonesde@ofbiz.org">David E. Jones</a>
- * @version $Revision: 1.15 $
+ * @version $Revision: 1.16 $
  * @since 3.0
  */
 public class DataResourceWorker {
@@ -70,30 +70,33 @@ public class DataResourceWorker {
     public static final String module = DataResourceWorker.class.getName();
 
     /**
-     * Traverses the DataCategory parent/child structure and puts it in categoryNode. Returns non-null error string if there is an error.
+     * Traverses the DataCategory parent/child structure and put it in categoryNode. Returns non-null error string if there is an error.
+     * @param depth The place on the categoryTypesIds to start collecting.
+     * @param getAll Indicates that all descendants are to be gotten. Used as "true" to populate an 
+     *     indented select list.
      */
     public static String getDataCategoryMap(GenericDelegator delegator, int depth, Map categoryNode, List categoryTypeIds, boolean getAll) throws GenericEntityException {
         String errorMsg = null;
-        String dataCategoryId = (String) categoryNode.get("id");
+        String parentCategoryId = (String) categoryNode.get("id");
         String currentDataCategoryId = null;
         int sz = categoryTypeIds.size();
+    
+        // The categoryTypeIds has the most senior types at the end, so it is necessary to 
+        // work backwards. As "depth" is incremented, that is the effect.
+        // The convention for the topmost type is "ROOT".
         if (depth >= 0 && (sz - depth) > 0) {
             currentDataCategoryId = (String) categoryTypeIds.get(sz - depth - 1);
         }
 
-        //EntityExpr expr = null;
+        // Find all the categoryTypes that are children of the categoryNode.
         String matchValue = null;
-        if (dataCategoryId != null) {
-            //expr = new EntityExpr("parentCategoryId", EntityOperator.EQUALS, dataCategoryId);
-            matchValue = dataCategoryId;
+        if (parentCategoryId != null) {
+            matchValue = parentCategoryId;
         } else {
-            //expr = new EntityExpr("parentCategoryId", EntityOperator.EQUALS, null);
             matchValue = null;
         }
-        //List categoryValues = delegator.findByConditionCache("DataCategory", expr, null, null );
         List categoryValues = delegator.findByAndCache("DataCategory", UtilMisc.toMap("parentCategoryId", matchValue));
         categoryNode.put("count", new Integer(categoryValues.size()));
-
         List subCategoryIds = new ArrayList();
         for (int i = 0; i < categoryValues.size(); i++) {
             GenericValue category = (GenericValue) categoryValues.get(i);
@@ -107,9 +110,16 @@ public class DataResourceWorker {
                 break;
             subCategoryIds.add(newNode);
         }
-        if (dataCategoryId == null
-            || dataCategoryId.equals("ROOT")
-            || (currentDataCategoryId != null && currentDataCategoryId.equals(dataCategoryId))
+
+        // The first two parentCategoryId test just make sure that the first level of children
+        // is gotten. This is a hack to make them available for display, but a more correct
+        // approach should be formulated.
+        // The "getAll" switch makes sure all descendants make it into the tree, if true.
+        // The other test is to only get all the children if the "leaf" node where all the
+        // children of the leaf are wanted for expansion.
+        if (parentCategoryId == null
+            || parentCategoryId.equals("ROOT")
+            || (currentDataCategoryId != null && currentDataCategoryId.equals(parentCategoryId))
             || getAll) {
             categoryNode.put("kids", subCategoryIds);
         }
@@ -329,8 +339,13 @@ public class DataResourceWorker {
             } else {
                 dataResource.setAllFields(view, true, "dr", null);
             }
+            //if (Debug.infoOn()) Debug.logInfo("in renderDAtaResource(work), view:" + view, "");
+            //if (Debug.infoOn()) Debug.logInfo("in renderDAtaResource(work), dataResource:" + dataResource, "");
             //if (Debug.infoOn()) Debug.logInfo("in renderDAtaResource(work), dataResourceMap:" + dataResourceMap, "");
             dataResourceId = dataResource.getString("dataResourceId");
+            if (UtilValidate.isEmpty(dataResourceId)) {
+                throw new GeneralException("The dataResourceId [" + dataResourceId + "] is empty.");
+            }
         }
 
         if (dataResource == null || dataResource.isEmpty()) {
@@ -398,7 +413,8 @@ public class DataResourceWorker {
         if (UtilValidate.isEmpty(dataResourceTypeId)) {
             dataResourceTypeId = "SHORT_TEXT";
         }
-        if (Debug.infoOn()) Debug.logInfo(" in renderDataResourceAsHtml, dataResourceTypeId:" + dataResourceTypeId, module);
+        if (Debug.infoOn()) Debug.logInfo(" in writeDataResourceAsHtml, dataResourceId:" + dataResourceId, module);
+        if (Debug.infoOn()) Debug.logInfo(" in writeDataResourceAsHtml, dataResourceTypeId:" + dataResourceTypeId, module);
         
         if (dataResourceTypeId.equals("SHORT_TEXT")) {
             String text = dataResource.getString("objectInfo");
@@ -406,6 +422,7 @@ public class DataResourceWorker {
         } else if (dataResourceTypeId.equals("ELECTRONIC_TEXT")) {
             GenericValue electronicText = delegator.findByPrimaryKey("ElectronicText", UtilMisc.toMap("dataResourceId", dataResourceId));
             String text = electronicText.getString("textData");
+            if (Debug.infoOn()) Debug.logInfo(" in writeDataResourceAsHtml, text:" + text, module);
             outWriter.write(text);
         } else if (dataResourceTypeId.equals("IMAGE_OBJECT")) {
             // TODO: Is this where the image (or any binary) object URL is created? looks like it is just returning 
