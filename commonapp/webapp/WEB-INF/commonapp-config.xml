@@ -45,6 +45,7 @@
 
     <request-map><uri>main</uri><secure>false</secure><auth>false</auth><success>view:main</success></request-map>
     <request-map><uri>sitemap</uri><secure>false</secure><auth>false</auth><success>view:sitemap</success></request-map>
+    <request-map><uri>install</uri><secure>true</secure><auth>true</auth><success>view:install</success></request-map>
     <request-map><uri>entitymaint</uri><secure>true</secure><auth>true</auth><success>view:entitymaint</success></request-map>
 
     <request-map><uri>FindGeneric</uri><secure>true</secure><auth>true</auth><success>view:FindGeneric</success></request-map>
@@ -86,6 +87,7 @@
     <view-map><view>error</view><mapped-page>/error/error.jsp</mapped-page></view-map>
     <view-map><view>main</view><mapped-page>/main.jsp</mapped-page></view-map>
     <view-map><view>sitemap</view><mapped-page>/sitemap.jsp</mapped-page></view-map>
+    <view-map><view>install</view><mapped-page>/install.jsp</mapped-page></view-map>
 
     <view-map><view>entitymaint</view><mapped-page>/entity/entitymaint.jsp</mapped-page></view-map>
     <view-map><view>entityref</view><mapped-page>/entity/entityref.jsp</mapped-page></view-map>
