@@ -1,8 +1,8 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <entity-engine-xml>
-  <Facility facilityId="WebStoreWarehouse" facilityTypeId="WAREHOUSE" facilityName="" description=""/>
+  <Facility facilityId="WebStoreWarehouse" facilityTypeId="WAREHOUSE" facilityName="Web Store Warehouse" description="Warehouse exclusively for the Web Store "/>
 
-  <WebSite webSiteId="WebStore"/>
+  <WebSite webSiteId="WebStore" siteName="eCommerce Web Site"/>
 
   <ProdCatalog prodCatalogId="DemoCatalog" catalogName="Demo Catalog" title="Open For Commerce" 
     subtitle="Part of the Open For Business Family of Open Source Software" inventoryFacilityId="WebStoreWarehouse" useQuickAdd="Y"/>
