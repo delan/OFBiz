@@ -371,10 +371,10 @@
                 <string-to-field string="-expireDate" field-name="orderByString"/>
             <else>
                 <if-compare value="INVRO_LIFO_REC" operator="equals" field-name="reserveOrderEnumId" map-name="parameters">
-                    <string-to-field string="+dateReceived" field-name="orderByString"/>
+                    <string-to-field string="+datetimeReceived" field-name="orderByString"/>
                 <else>
                     <!-- the default reserveOrderEnumId is INVRO_FIFO_REC, ie FIFO based on date received -->
-                    <string-to-field string="-dateReceived" field-name="orderByString"/>
+                    <string-to-field string="-datetimeReceived" field-name="orderByString"/>
                     <string-to-field string="INVRO_FIFO_REC" field-name="reserveOrderEnumId" map-name="parameters"/>
                 </else>
                 </if-compare>
