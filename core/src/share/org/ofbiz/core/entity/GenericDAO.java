@@ -177,7 +177,7 @@ public class GenericDAO {
   }
   
   private void singleUpdate(GenericEntity entity, ModelEntity modelEntity, Vector fieldsToSave, Connection connection) throws SQLException, GenericEntityException {
-    String sql = "UPDATE " + modelEntity.tableName + " SET " + modelEntity.colNameString(fieldsToSave, "=?, ", "=?") + " WHERE " + modelEntity.colNameString(modelEntity.pks, "=? AND ", "=?") + "";
+    String sql = "UPDATE " + modelEntity.tableName + " SET " + modelEntity.colNameString(fieldsToSave, "=?, ", "=?") + " WHERE " + makeWhereStringAnd(modelEntity.pks, entity);
     PreparedStatement ps = null;
     ps = connection.prepareStatement(sql);
     
@@ -188,7 +188,10 @@ public class GenericDAO {
     }
     for(int j=0;j<modelEntity.pks.size();j++) {
       ModelField curField=(ModelField)modelEntity.pks.elementAt(j);
-      setValue(ps, i+j+1, curField, entity);
+      //for where clause variables only setValue if not null...
+      if(entity.get(curField.name) != null) {
+        setValue(ps, i+j+1, curField, entity);
+      }
     }
     
     ps.executeUpdate();
@@ -207,6 +210,7 @@ public class GenericDAO {
     }
   }
   
+  /** Store the passed entity - insert if does not exist, otherwise update; then call storeAllOther to do a deep store */
   private void singleStore(GenericEntity entity, Connection connection) throws SQLException, GenericEntityException {
     GenericPK tempPK = entity.getPrimaryKey();
     try { 
@@ -215,10 +219,12 @@ public class GenericDAO {
     catch(GenericEntityNotFoundException e) {
       //select failed, does not exist, insert
       singleInsert(entity, entity.getModelEntity(), entity.getModelEntity().fields, connection);
+      storeAllOther(entity, connection);
       return;
     }
     //select did not fail, so exists, update
     singleUpdate(entity, entity.getModelEntity(), entity.getModelEntity().nopks, connection);
+    storeAllOther(entity, connection);
   }
   
 /* ====================================================================== */
@@ -286,15 +292,18 @@ public class GenericDAO {
     String sql = "SELECT ";
     if(modelEntity.nopks.size() > 0) sql += modelEntity.colNameString(modelEntity.nopks, ", ", "");
     else sql += "*";
-    sql += " FROM " + modelEntity.tableName + " WHERE " + modelEntity.colNameString(modelEntity.pks, "=? AND ", "=?") + "";
+    sql += " FROM " + modelEntity.tableName + " WHERE " + makeWhereStringAnd(modelEntity.pks, entity);
     //Debug.logInfo(" select: sql=" + sql);
     try {
       ps = connection.prepareStatement(sql);
       
       for(int i=0;i<modelEntity.pks.size();i++) {
         ModelField curField=(ModelField)modelEntity.pks.elementAt(i);
-        //Debug.logInfo(" setting field " + curField.name + " to " + (i+1) + " entity: " + entity.toString());
-        setValue(ps, i+1, curField, entity);
+        //for where clause variables only setValue if not null...
+        if(entity.get(curField.name) != null) {
+          //Debug.logInfo(" setting field " + curField.name + " to " + (i+1) + " entity: " + entity.toString());
+          setValue(ps, i+1, curField, entity);
+        }
       }
       
       rs = ps.executeQuery();
@@ -352,14 +361,17 @@ public class GenericDAO {
     String sql = "SELECT ";
     if(partialFields.size() > 0) sql += modelEntity.colNameString(partialFields, ", ", "");
     else sql += "*";
-    sql += " FROM " + modelEntity.tableName + " WHERE " + modelEntity.colNameString(modelEntity.pks, "=? AND ", "=?") + "";
+    sql += " FROM " + modelEntity.tableName + " WHERE " + makeWhereStringAnd(modelEntity.pks, entity);
     
     try {
       ps = connection.prepareStatement(sql);
       
       for(int i=0;i<modelEntity.pks.size();i++) {
         ModelField curField=(ModelField)modelEntity.pks.elementAt(i);
-        setValue(ps, i+1, curField, entity);
+        //for where clause variables only setValue if not null...
+        if(entity.get(curField.name) != null) {
+          setValue(ps, i+1, curField, entity);
+        }
       }
       
       rs = ps.executeQuery();
@@ -413,11 +425,15 @@ public class GenericDAO {
     }
     else { selectFields = modelEntity.fields; }
     
+    GenericValue dummyValue;
+    if(fields != null && fields.size() > 0) dummyValue = new GenericValue(modelEntity, fields);
+    else dummyValue = new GenericValue(modelEntity);
+
     String sql = "SELECT ";
     if(selectFields.size() > 0) sql = sql + modelEntity.colNameString(selectFields, ", ", "");
     else sql = sql + "*";
     sql += " FROM " + modelEntity.tableName;
-    if(fields != null && fields.size() > 0) sql = sql + " WHERE " + modelEntity.colNameString(whereFields, "=? AND ", "=?");
+    if(fields != null && fields.size() > 0) sql = sql + " WHERE " + makeWhereStringAnd(whereFields, dummyValue);
     
     if(orderBy != null && orderBy.size() > 0) {
       Vector orderByStrings = new Vector();
@@ -449,15 +465,15 @@ public class GenericDAO {
     try {
       ps = connection.prepareStatement(sql);
       
-      GenericValue dummyValue;
       if(fields != null && fields.size() > 0) {
-        dummyValue = new GenericValue(modelEntity, fields);
         for(int i=0;i<whereFields.size();i++) {
           ModelField curField=(ModelField)whereFields.elementAt(i);
-          setValue(ps, i+1, curField, dummyValue);
+          //for where clause variables only setValue if not null...
+          if(dummyValue.get(curField.name) != null) {
+            setValue(ps, i+1, curField, dummyValue);
+          }
         }
       }
-      else dummyValue = new GenericValue(modelEntity);
       //Debug.logInfo("[GenericDAO.selectByAnd] ps=" + ps.toString());
       rs = ps.executeQuery();
       
@@ -507,14 +523,17 @@ public class GenericDAO {
       throw new GenericDataSourceException("Unable to esablish a connection with the database.", sqle);
     }
     
-    String sql = "DELETE FROM " + modelEntity.tableName + " WHERE " + modelEntity.colNameString(modelEntity.pks, "=? AND ", "=?");
+    String sql = "DELETE FROM " + modelEntity.tableName + " WHERE " + makeWhereStringAnd(modelEntity.pks, entity);
     try {
       connection.setAutoCommit(true);
       ps = connection.prepareStatement(sql);
       
       for(int i=0;i<modelEntity.pks.size();i++) {
         ModelField curField=(ModelField)modelEntity.pks.elementAt(i);
-        setValue(ps, i+1, curField, entity);
+        //for where clause variables only setValue if not null...
+        if(entity.get(curField.name) != null) {
+          setValue(ps, i+1, curField, entity);
+        }
       }
       
       ps.executeUpdate();
@@ -551,18 +570,21 @@ public class GenericDAO {
       }
     }
     
+    GenericValue dummyValue = new GenericValue(modelEntity, fields);
     String sql = "DELETE FROM " + modelEntity.tableName;
-    if(fields != null || fields.size() > 0) sql = sql + " WHERE " + modelEntity.colNameString(whereFields, "=? AND ", "=?");
+    if(fields != null || fields.size() > 0) sql = sql + " WHERE " + makeWhereStringAnd(whereFields, dummyValue);
     
     try {
       connection.setAutoCommit(true);
       ps = connection.prepareStatement(sql);
       
       if(fields != null || fields.size() > 0) {
-        GenericValue dummyValue = new GenericValue(modelEntity, fields);
         for(int i=0;i<whereFields.size();i++) {
           ModelField curField=(ModelField)whereFields.elementAt(i);
-          setValue(ps, i+1, curField, dummyValue);
+          //for where clause variables only setValue if not null...
+          if(dummyValue.get(curField.name) != null) {
+            setValue(ps, i+1, curField, dummyValue);
+          }
         }
       }
       ps.executeUpdate();
@@ -580,6 +602,25 @@ public class GenericDAO {
   
 /* ====================================================================== */
 /* ====================================================================== */
+
+  /** Makes a WHERE clause String with "<col name>=?" if not null or "<col name> IS null" if null, all AND separated */
+  public String makeWhereStringAnd(Vector modelFields, GenericEntity entity) {
+    StringBuffer returnString = new StringBuffer("");
+    if(modelFields.size() < 1) { return ""; }
+    
+    int i = 0;
+    for(; i < modelFields.size() - 1; i++) {
+      ModelField modelField = (ModelField)modelFields.elementAt(i);
+      returnString.append(modelField.colName);
+      if(entity.get(modelField.name) != null) returnString.append("=? AND ");
+      else returnString.append(" IS NULL AND ");
+    }
+    ModelField modelField2 = (ModelField)modelFields.elementAt(i);
+    returnString.append(modelField2.colName);
+    if(entity.get(modelField2.name) != null) returnString.append("=?");
+    else returnString.append(" IS NULL");
+    return returnString.toString();
+  }
   
   public void getValue(ResultSet rs, ModelField curField, GenericEntity entity) throws SQLException, GenericEntityException {
     ModelFieldType mft = modelFieldTypeReader.getModelFieldType(curField.type);
@@ -616,45 +657,54 @@ public class GenericDAO {
   
   public void setValue(PreparedStatement ps, int ind, ModelField curField, GenericEntity entity) throws SQLException, GenericEntityException {
     Object field = entity.get(curField.name);
-    if(field == null) {
-      ps.setNull(ind, Types.NULL);
-      return;
-    }
+    //there should be no parameter for null fields, so we can just return and do nothing
     
-    Class fieldClass = field.getClass();
-    String fieldType = fieldClass.getName();
     ModelFieldType mft = modelFieldTypeReader.getModelFieldType(curField.type);
     if(mft == null) {
       throw new GenericModelException("GenericDAO.getValue: definition fieldType " + curField.type + " not found, cannot setValue for field " + entity.getEntityName() + "." + curField.name + ".");
     }
 
-    if(!fieldType.equals(mft.javaType) && fieldType.indexOf(mft.javaType) < 0) {
-      Debug.logWarning("GenericDAO.setValue: type of field " + entity.getEntityName() + "." + curField.name + " is " + fieldType + ", was expecting " + mft.javaType + "; this may indicate an error in the configuration or in the class, and may result in an SQL-Java data conversion error. Will use the real field type: " + fieldType + ", not the definition.");
+    String fieldType = mft.javaType;
+    if(field != null) {
+      Class fieldClass = field.getClass();
+      String fieldClassName = fieldClass.getName();
+      if(!fieldClassName.equals(mft.javaType) && fieldClassName.indexOf(mft.javaType) < 0) {
+        Debug.logWarning("GenericDAO.setValue: type of field " + entity.getEntityName() + "." + curField.name + " is " + fieldClassName + ", was expecting " + mft.javaType + "; this may indicate an error in the configuration or in the class, and may result in an SQL-Java data conversion error. Will use the real field type: " + fieldClassName + ", not the definition.");
+        fieldType = fieldClassName;
+      }
     }
     
-    if(fieldType.equals("java.lang.String") || fieldType.equals("String"))
-      ps.setString(ind, (String)field);
-    else if(fieldType.equals("java.sql.Timestamp") || fieldType.equals("Timestamp"))
-      ps.setTimestamp(ind, (java.sql.Timestamp)field);
-    else if(fieldType.equals("java.sql.Time") || fieldType.equals("Time"))
-      ps.setTime(ind, (java.sql.Time)field);
-    else if(fieldType.equals("java.sql.Date") || fieldType.equals("Date"))
-      ps.setDate(ind, (java.sql.Date)field);
+    if(fieldType.equals("java.lang.String") || fieldType.equals("String")) {
+      if(field != null) ps.setString(ind, (String)field);
+      else ps.setNull(ind, Types.VARCHAR);
+    }
+    else if(fieldType.equals("java.sql.Timestamp") || fieldType.equals("Timestamp")) {
+      if(field != null) ps.setTimestamp(ind, (java.sql.Timestamp)field);
+      else ps.setNull(ind, Types.TIMESTAMP);
+    }
+    else if(fieldType.equals("java.sql.Time") || fieldType.equals("Time")) {
+      if(field != null) ps.setTime(ind, (java.sql.Time)field);
+      else ps.setNull(ind, Types.TIME);
+    }
+    else if(fieldType.equals("java.sql.Date") || fieldType.equals("Date")) {
+      if(field != null) ps.setDate(ind, (java.sql.Date)field);
+      else ps.setNull(ind, Types.DATE);
+    }
     else if(fieldType.equals("java.lang.Integer") || fieldType.equals("Integer")) {
       if(field != null) ps.setInt(ind, ((java.lang.Integer)field).intValue());
-      else ps.setNull(ind, Types.NULL);
+      else ps.setNull(ind, Types.NUMERIC);
     }
     else if(fieldType.equals("java.lang.Long") || fieldType.equals("Long")) {
       if(field != null) ps.setLong(ind, ((java.lang.Long)field).longValue());
-      else ps.setNull(ind, Types.NULL);
+      else ps.setNull(ind, Types.NUMERIC);
     }
     else if(fieldType.equals("java.lang.Float") || fieldType.equals("Float")) {
       if(field != null) ps.setFloat(ind, ((java.lang.Float)field).floatValue());
-      else ps.setNull(ind, Types.NULL);
+      else ps.setNull(ind, Types.NUMERIC);
     }
     else if(fieldType.equals("java.lang.Double") || fieldType.equals("Double")) {
       if(field != null) ps.setDouble(ind, ((java.lang.Double)field).doubleValue());
-      else ps.setNull(ind, Types.NULL);
+      else ps.setNull(ind, Types.NUMERIC);
     }
     else ps.setNull(ind, Types.NULL);
   }
