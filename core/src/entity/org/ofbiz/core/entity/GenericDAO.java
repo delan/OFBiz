@@ -2315,7 +2315,7 @@ public class GenericDAO {
                     }
                 }
             } else {
-                String message = "Entity \"" + entity.getEntityName() + "\" with tableName \"" + entity.getTableName() + "\" has no corresponding table in the database";
+                String message = "Entity \"" + entity.getEntityName() + "\" has no table in the database";
                 Debug.logWarning(message, module);
                 if (messages != null)
                     messages.add(message);
