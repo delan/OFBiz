@@ -1,5 +1,5 @@
 /*
- * $Id: ComponentConfig.java,v 1.3 2003/08/16 23:22:03 jonesde Exp $
+ * $Id: ComponentConfig.java,v 1.4 2003/08/17 03:43:46 jonesde Exp $
  *
  * Copyright (c) 2003 The Open For Business Project - www.ofbiz.org
  *
@@ -51,7 +51,7 @@ import org.xml.sax.SAXException;
  *
  * @author     <a href="mailto:jonesde@ofbiz.org">David E. Jones</a>
  * @author     <a href="mailto:jaz@ofbiz.org">Andy Zeneski</a>
- * @version    $Revision: 1.3 $
+ * @version    $Revision: 1.4 $
  * @since      2.2
  */
 public class ComponentConfig {
@@ -282,8 +282,48 @@ public class ComponentConfig {
         if (resourceLoaderInfo == null) {
             throw new ComponentException("Could not find resource-loader named: " + resourceLoaderName);
         }
-        //TODO: implement this
-        return null;
+        
+        if ("component".equals(resourceLoaderInfo.type) || "file".equals(resourceLoaderInfo.type)) {
+            String fullLocation = getFullLocation(resourceLoaderName, location);
+            URL fileUrl = UtilURL.fromFilename(fullLocation);
+            if (fileUrl == null) {
+                throw new ComponentException("File Resource not found: " + fullLocation);
+            }
+            try {
+                return fileUrl.openStream();
+            } catch (java.io.IOException e) {
+                throw new ComponentException("Error opening file at location [" + fileUrl.toExternalForm() + "]", e);
+            }
+        } else if ("classpath".equals(resourceLoaderInfo.type)) {
+            String fullLocation = getFullLocation(resourceLoaderName, location);
+            URL url = UtilURL.fromResource(fullLocation);
+            if (url == null) {
+                throw new ComponentException("Classpath Resource not found: " + fullLocation);
+            }
+            try {
+                return url.openStream();
+            } catch (java.io.IOException e) {
+                throw new ComponentException("Error opening classpath resource at location [" + url.toExternalForm() + "]", e);
+            }
+        } else if ("url".equals(resourceLoaderInfo.type)) {
+            String fullLocation = getFullLocation(resourceLoaderName, location);
+            URL url = null;
+            try {
+                url = new URL(fullLocation);
+            } catch (java.net.MalformedURLException e) {
+                throw new ComponentException("Error with malformed URL while trying to load URL resource at location [" + fullLocation + "]", e);
+            }
+            if (url == null) {
+                throw new ComponentException("URL Resource not found: " + fullLocation);
+            }
+            try {
+                return url.openStream();
+            } catch (java.io.IOException e) {
+                throw new ComponentException("Error opening URL resource at location [" + url.toExternalForm() + "]", e);
+            }
+        } else {
+            throw new ComponentException("The resource-loader type is not recognized: " + resourceLoaderInfo.type);
+        }
     }
        
     public String getFullLocation(String resourceLoaderName, String location) throws ComponentException {
@@ -291,8 +331,28 @@ public class ComponentConfig {
         if (resourceLoaderInfo == null) {
             throw new ComponentException("Could not find resource-loader named: " + resourceLoaderName);
         }
-        //TODO: implement this
-        return null;
+        
+        StringBuffer buf = new StringBuffer();
+
+        // pre-pend component root location if this is a type component resource-loader
+        if ("component".equals(resourceLoaderInfo.type)) {
+            buf.append(rootLocation);
+        }
+
+        if (resourceLoaderInfo.prependEnv != null && resourceLoaderInfo.prependEnv.length() > 0) {
+            String propValue = System.getProperty(resourceLoaderInfo.prependEnv);
+            if (propValue == null) {
+                String errMsg = "The Java environment (-Dxxx=yyy) variable with name " + resourceLoaderInfo.prependEnv + " is not set, cannot load resource.";
+                Debug.logError(errMsg, module);
+                throw new IllegalArgumentException(errMsg);
+            }
+            buf.append(propValue);
+        }
+        if (resourceLoaderInfo.prefix != null && resourceLoaderInfo.prefix.length() > 0) {
+            buf.append(resourceLoaderInfo.prefix);
+        }
+        buf.append(location);
+        return buf.toString();
     }
        
     public List getClasspathInfos() {
