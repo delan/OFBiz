@@ -1,5 +1,5 @@
 /*
- * $Id: RenderSubContentCacheTransform.java,v 1.8 2004/04/11 08:28:16 jonesde Exp $
+ * $Id: RenderSubContentCacheTransform.java,v 1.9 2004/04/13 04:56:14 byersa Exp $
  * 
  * Copyright (c) 2001-2003 The Open For Business Project - www.ofbiz.org
  * 
@@ -44,7 +44,7 @@ import freemarker.template.TemplateTransformModel;
  * RenderSubContentCacheTransform - Freemarker Transform for Content rendering
  * 
  * @author <a href="mailto:byersa@automationgroups.com">Al Byers</a>
- * @version $Revision: 1.8 $
+ * @version $Revision: 1.9 $
  * @since 3.0
  * 
  * This transform cannot be called recursively (at this time).
@@ -98,10 +98,12 @@ public class RenderSubContentCacheTransform implements TemplateTransformModel {
         if (Debug.verboseOn()) Debug.logVerbose("renderEditSubContentCache, view:" + view, "");
 
         String dataResourceId = null;
-        try {
-            dataResourceId = (String) view.get("drDataResourceId");
-        } catch (Exception e) {
-            dataResourceId = (String) view.get("dataResourceId");
+        if (view != null) {
+            try {
+                dataResourceId = (String) view.get("drDataResourceId");
+            } catch (Exception e) {
+                dataResourceId = (String) view.get("dataResourceId");
+            }
         }
         if (Debug.verboseOn()) Debug.logVerbose("in renderSubContentCache(0), dataResourceId ." + dataResourceId, module);
         String subContentIdSub = (String) view.get("contentId");

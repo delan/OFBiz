@@ -1,5 +1,5 @@
 /*
- * $Id: ModelMenuItem.java,v 1.6 2004/04/11 08:28:19 jonesde Exp $
+ * $Id: ModelMenuItem.java,v 1.7 2004/04/13 04:56:16 byersa Exp $
  *
  * Copyright (c) 2003 The Open For Business Project - www.ofbiz.org
  *
@@ -42,7 +42,7 @@ import org.w3c.dom.Element;
  *
  * @author     <a href="mailto:jonesde@ofbiz.org">David E. Jones</a>
  * @author     <a href="mailto:byersa@automationgroups.com">Al Byers</a>
- * @version    $Revision: 1.6 $
+ * @version    $Revision: 1.7 $
  * @since      2.2
  */
 public class ModelMenuItem {
@@ -353,9 +353,11 @@ public class ModelMenuItem {
      */
     public void setCurrentMenuTargetName(String target) {
         this.currentMenuTargetName = target;
+        if (Debug.infoOn()) Debug.logInfo("in ModelMenuItem, setCurrentMenuTargetItem:" + currentMenuTargetName, module);
     }
 
     public String getCurrentMenuTargetName() {
+        if (Debug.infoOn()) Debug.logInfo("in ModelMenuItem, getCurrentMenuTargetItem:" + currentMenuTargetName, module);
         return this.currentMenuTargetName;
     }
 

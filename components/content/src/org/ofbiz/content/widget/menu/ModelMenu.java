@@ -1,5 +1,5 @@
 /*
- * $Id: ModelMenu.java,v 1.5 2004/04/11 08:28:18 jonesde Exp $
+ * $Id: ModelMenu.java,v 1.6 2004/04/13 04:56:16 byersa Exp $
  *
  * Copyright (c) 2003 The Open For Business Project - www.ofbiz.org
  *
@@ -48,7 +48,7 @@ import bsh.Interpreter;
  *
  * @author     <a href="mailto:jonesde@ofbiz.org">David E. Jones</a>
  * @author     <a href="mailto:byersa@automationgroups.com">Al Byers</a>
- * @version    $Revision: 1.5 $
+ * @version    $Revision: 1.6 $
  * @since      2.2
  */
 public class ModelMenu {
@@ -678,6 +678,7 @@ public class ModelMenu {
         while (iter.hasNext()) {
             ModelMenuItem menuItem = (ModelMenuItem)iter.next();
             menuItem.setCurrentMenuTargetName(null);
+            if (Debug.infoOn()) Debug.logInfo("in clearCurrentMenuTargets, menuItem:" + menuItem.getName(), module);
         }
     }
 }

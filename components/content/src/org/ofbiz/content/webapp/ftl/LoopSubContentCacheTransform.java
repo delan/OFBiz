@@ -1,5 +1,5 @@
 /*
- * $Id: LoopSubContentCacheTransform.java,v 1.6 2004/04/11 08:28:15 jonesde Exp $
+ * $Id: LoopSubContentCacheTransform.java,v 1.7 2004/04/13 04:56:14 byersa Exp $
  * 
  * Copyright (c) 2001-2003 The Open For Business Project - www.ofbiz.org
  * 
@@ -49,7 +49,7 @@ import freemarker.template.TransformControl;
  * LoopSubContentCacheTransform - Freemarker Transform for URLs (links)
  * 
  * @author <a href="mailto:byersa@automationgroups.com">Al Byers</a>
- * @version $Revision: 1.6 $
+ * @version $Revision: 1.7 $
  * @since 3.0
  */
 public class LoopSubContentCacheTransform implements TemplateTransformModel {
@@ -80,17 +80,11 @@ public class LoopSubContentCacheTransform implements TemplateTransformModel {
         //String mimeTypeId = (String)ctx.get("mimeTypeId");
         List lst = (List) ctx.get("entityList");
         int entityIndex = ((Integer)ctx.get("entityIndex")).intValue();
-        if (Debug.verboseOn()) Debug.logVerbose("in LoopSubContentCache, prepCtx, entityIndex :" + entityIndex, module);
+        if (Debug.infoOn()) Debug.logInfo("in LoopSubContentCache, prepCtx, entityIndex :" + entityIndex, module);
         if (entityIndex >= lst.size()) {
             return false;
         }
         GenericValue view = (GenericValue) lst.get(entityIndex);
-        GenericValue electronicText = null;
-        try {
-            electronicText = view.getRelatedOne("ElectronicText");
-        } catch (GenericEntityException e) {
-            throw new GeneralException(e.getMessage());
-        }
         if (Debug.verboseOn()) Debug.logVerbose("in LoopSubContentCache, subContentDataResourceView contentId/drDataResourceId:" + view.get("contentId")  + " / " + view.get("drDataResourceId"), module);
 
         String dataResourceId = (String) view.get("drDataResourceId");
@@ -146,13 +140,20 @@ public class LoopSubContentCacheTransform implements TemplateTransformModel {
             ctx.put("globalNodeTrail", trail);
                 //if (Debug.infoOn()) Debug.logInfo("prepCtx, trail(2):" + trail, "");
                 //if (Debug.infoOn()) Debug.logInfo("prepCtx, globalNodeTrail csv:" + FreeMarkerWorker.nodeTrailToCsv((List)trail), "");
-            if (electronicText != null)
-                ctx.put("textData", electronicText.get("textData"));
-            else
-                ctx.put("textData", null);
+//            GenericValue electronicText = null;
+//            try {
+//                electronicText = view.getRelatedOneCache("ElectronicText");
+//            } catch (GenericEntityException e) {
+//                throw new GeneralException(e.getMessage());
+//            }
+//            if (electronicText != null)
+//                ctx.put("textData", electronicText.get("textData"));
+//            else
+//                ctx.put("textData", null);
             ctx.put("subDataResourceTypeId", subDataResourceTypeId);
             ctx.put("mimeTypeId", mimeTypeId);
             ctx.put("subContentId", subContentIdSub);
+            ctx.put("content", view);
 //            ctx.put("drDataResourceId", dataResourceId);
 //            ctx.put("dataResourceId", dataResourceId);
 //            ctx.put("subContentIdSub", subContentIdSub);
@@ -170,25 +171,28 @@ public class LoopSubContentCacheTransform implements TemplateTransformModel {
                 int outputIndex = ((Integer)templateCtx.get("outputIndex")).intValue(); 
                 int listSize = ((Integer)templateCtx.get("listSize")).intValue(); 
                 if (Debug.verboseOn()) Debug.logVerbose("in LoopSubContentCache, getNext...", module);
-                boolean inProgress = false;
+                boolean matchFound = false;
  
-                while (!inProgress && entityIndex < listSize) {
+                while (!matchFound && entityIndex < listSize) {
                     try {
-                        inProgress = prepCtx(delegator, templateCtx);
+                        matchFound = prepCtx(delegator, templateCtx);
                     } catch(GeneralException e) {
                         throw new IOException(e.getMessage());
                     }
                     entityIndex++;
                     templateCtx.put("entityIndex", new Integer(entityIndex));
-                    if (inProgress) {
+                    if (matchFound) {
                         outputIndex++;
                         if (outputIndex >= lowIndex) {
                             break;
+                        } else {
+                            matchFound = false;
                         }
                     }
                 }
+        if (Debug.infoOn()) Debug.logInfo("in LoopSubContentCache, getNextMatchingEntity, outputIndex :" + outputIndex, module);
                 templateCtx.put("outputIndex", new Integer(outputIndex));
-                return inProgress;
+                return matchFound;
     }
 
     public Writer getWriter(final Writer out, Map args) {
@@ -286,7 +290,7 @@ public class LoopSubContentCacheTransform implements TemplateTransformModel {
         int viewSize = Integer.parseInt(viewSizeStr); 
         if (Debug.verboseOn()) Debug.logVerbose("viewSize:" + viewSize, "");
         String viewIndexStr = (String)templateCtx.get("viewIndex");
-        if (Debug.verboseOn()) Debug.logVerbose("viewIndexStr:" + viewIndexStr, "");
+        if (Debug.infoOn()) Debug.logInfo("viewIndexStr:" + viewIndexStr, "");
         if (UtilValidate.isEmpty(viewIndexStr))
             viewIndexStr = "0";
         int viewIndex = Integer.parseInt(viewIndexStr); 
@@ -333,7 +337,7 @@ public class LoopSubContentCacheTransform implements TemplateTransformModel {
                 if (highIndex > listSize)
                     highIndex = listSize;
                 if (Debug.verboseOn()) Debug.logVerbose("highIndex:" + highIndex, "");
-                int outputIndex = lowIndex;
+                int outputIndex = 0;
                 templateCtx.put("lowIndex", new Integer(lowIndex));
                 templateCtx.put("highIndex", new Integer(highIndex));
                 templateCtx.put("outputIndex", new Integer(outputIndex));
