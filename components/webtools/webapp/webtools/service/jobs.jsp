@@ -21,7 +21,7 @@
  *  THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  *
  *@author     Andy Zeneski
- *@version    $Revision: 1.6 $
+ *@version    $Revision: 1.7 $
  *@since      2.0
 --%>
 
@@ -41,6 +41,8 @@
 	if (jobs != null) pageContext.setAttribute("jobs", jobs);
 %>
 <div class="head2">Scheduled Jobs</div>
+<a href="<ofbiz:url>/jobList</ofbiz:url>" class="buttontext">[Refresh]</a>
+<br>
 
 <br>
 <table cellpadding="2" cellspacing="0" border="1" width="100%">
