@@ -24,15 +24,24 @@
 	/>
 
 	<data-source
-		class="com.evermind.sql.OrionCMTDataSource"
-		name="PostgresDataSource"
-		location="jdbc/PostgresDataSource"
-		xa-location="jdbc/xa/PostgresDataSource"
-		ejb-location="jdbc/PostgresDataSource"
+		class="com.evermind.sql.DriverManagerDataSource"
+		name="RawPostgresDataSource"
+		location="jdbc/raw/PostgresDataSource"
+		xa-location="jdbc/xa/raw/PostgresDataSource"
 		connection-driver="org.postgresql.Driver"
 		username="ofbiz"
 		password="ofbiz"
 		url="jdbc:postgresql://127.0.0.1/ofbiz"
 		inactivity-timeout="30"
 	/>
+	<data-source
+		class="com.evermind.sql.OrionCMTDataSource"
+        source-location="jdbc/raw/PostgresDataSource"
+        xa-source-location="jdbc/xa/raw/PostgresDataSource"
+		name="PostgresDataSource"
+		location="jdbc/PostgresDataSource"
+		xa-location="jdbc/xa/PostgresDataSource"
+		inactivity-timeout="30"
+	/>
+
 </data-sources>

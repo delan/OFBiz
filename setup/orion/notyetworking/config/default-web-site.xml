@@ -1,0 +1,21 @@
+<?xml version="1.0"?>
+<!DOCTYPE web-site PUBLIC "Orion Web-site" "http://www.orionserver.com/dtds/web-site.dtd">
+
+<web-site host="[ALL]" port="8080" display-name="Default Orion WebSite">
+	<!-- The default web-app for this site, bound to the root -->
+	<default-web-app application="default" name="defaultWebApp" />
+
+	<!-- Uncomment this to activate the news app -->
+	<!-- <web-app application="news" name="news-web" root="/news" /> -->
+    <web-app load-on-startup="true" application="default" name="commonapp" root="/commonapp" /> 
+    <web-app load-on-startup="true" application="default" name="webtools" root="/webtools" /> 
+    <web-app load-on-startup="true" application="default" name="ecommerce" root="/ecommerce" /> 
+    <web-app load-on-startup="true" application="default" name="images" root="/images" />
+    <web-app load-on-startup="true" application="default" name="catalog" root="/catalog" /> 
+    <web-app load-on-startup="true" application="default" name="ordermgr" root="/ordermgr" /> 
+    <web-app load-on-startup="true" application="default" name="partymgr" root="/partymgr" /> 
+    <web-app load-on-startup="true" application="default" name="workeffort" root="/workeffort" /> 
+
+	<!-- Access Log, where requests are logged to -->
+	<access-log path="../log/default-web-access.log" />
+</web-site>
