@@ -62,7 +62,7 @@
           <a href="<ofbiz:url><%="/keywordsearch?" + prevStr%></ofbiz:url>" class="buttontext">[Previous]</a> |
         <%}%>
         <%if(listSize.intValue() > 0){%>
-          <%=lowIndex%> - <%=highIndex%> of <%=listSize%>
+          <div class="tabletext"><%=lowIndex%> - <%=highIndex%> of <%=listSize%></div>
         <%}%>
         <%if(listSize.intValue() > highIndex.intValue()){%>
           | <a href="<ofbiz:url><%="/keywordsearch?" + nextStr%></ofbiz:url>" class="buttontext">[Next]</a>
@@ -98,7 +98,7 @@
           <a href="<ofbiz:url><%="/keywordsearch?" + prevStr%></ofbiz:url>" class="buttontext">[Previous]</a> |
         <%}%>
         <%if(listSize.intValue() > 0){%>
-          <%=lowIndex%> - <%=highIndex%> of <%=listSize%>
+          <div class="tabletext"><%=lowIndex%> - <%=highIndex%> of <%=listSize%></div>
         <%}%>
         <%if(listSize.intValue() > highIndex.intValue()){%>
           | <a href="<ofbiz:url><%="/keywordsearch?" + nextStr%></ofbiz:url>" class="buttontext">[Next]</a>
