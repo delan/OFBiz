@@ -1,5 +1,5 @@
 /*
- * $Id: CheckOutEvents.java,v 1.28 2004/03/08 19:57:56 ajzeneski Exp $
+ * $Id: CheckOutEvents.java,v 1.29 2004/05/11 12:40:14 jonesde Exp $
  *
  *  Copyright (c) 2001, 2002 The Open For Business Project - www.ofbiz.org
  *
@@ -62,7 +62,7 @@ import org.ofbiz.service.ServiceUtil;
  * @author     <a href="mailto:cnelson@einnovation.com">Chris Nelson</a>
  * @author     <a href="mailto:jonesde@ofbiz.org">David E. Jones</a>
  * @author     <a href="mailto:tristana@twibble.org">Tristan Austin</a>
- * @version    $Revision: 1.28 $
+ * @version    $Revision: 1.29 $
  * @since      2.0
  */
 public class CheckOutEvents {
@@ -480,12 +480,13 @@ public class CheckOutEvents {
         String visitId = VisitHandler.getVisitId(session);
         String webSiteId = CatalogWorker.getWebSiteId(request);
 
-        callResult = checkOutHelper.createOrder(userLogin, distributorId, affiliateId, trackingCodeOrders, areOrderItemsExploded,
-            visitId, webSiteId);
-
+        callResult = checkOutHelper.createOrder(userLogin, distributorId, affiliateId, trackingCodeOrders, areOrderItemsExploded, visitId, webSiteId);
         if (callResult != null) {
             ServiceUtil.getMessages(request, callResult, null, "<li>", "</li>", "<ul>", "</ul>", null, null);
-
+            if (ServiceUtil.isError(callResult)) {
+                // messages already setup with the getMessages call, just return the error response code
+                return "error";
+            }
             if (callResult.get(ModelService.RESPONSE_MESSAGE).equals(ModelService.RESPOND_SUCCESS)) {
                 // set the orderId for use by chained events
                 String orderId = cart.getOrderId();
