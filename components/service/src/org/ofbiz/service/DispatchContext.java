@@ -39,6 +39,7 @@ import org.ofbiz.base.config.ResourceHandler;
 import org.ofbiz.entity.GenericDelegator;
 import org.ofbiz.security.Security;
 import org.ofbiz.service.config.ServiceConfigUtil;
+import org.ofbiz.service.eca.ServiceEcaUtil;
 import org.ofbiz.base.util.Debug;
 import org.ofbiz.base.util.UtilCache;
 import org.ofbiz.base.util.UtilXml;
@@ -49,7 +50,7 @@ import org.w3c.dom.Element;
  *
  * @author     <a href="mailto:jaz@ofbiz.org">Andy Zeneski</a>
  * @author     <a href="mailto:jonesde@ofbiz.org">David E. Jones</a>
- * @version    $Rev:$
+ * @version    $Rev$
  * @since      2.0
  */
 public class DispatchContext implements Serializable {
@@ -210,8 +211,10 @@ public class DispatchContext implements Serializable {
                 serviceMap = (Map) modelService.get(name);
                 if (serviceMap == null) {
                     serviceMap = addReaders(readers);
-                    if (serviceMap != null)
+                    if (serviceMap != null) {
                         modelService.put(name, serviceMap);
+                    }
+                    ServiceEcaUtil.reloadConfig();
                 }
             }
         }
@@ -234,8 +237,10 @@ public class DispatchContext implements Serializable {
                 serviceMap = (Map) modelService.get(GLOBAL_KEY);
                 if (serviceMap == null) {
                     serviceMap = addGlobal();
-                    if (serviceMap != null)
+                    if (serviceMap != null) {
                         modelService.put(GLOBAL_KEY, serviceMap);
+                    }
+                    ServiceEcaUtil.reloadConfig();
                 }
             }
         }
