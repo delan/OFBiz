@@ -394,12 +394,14 @@ Error messages go on the error list and are handled with the check-errors tag.
     map-name CDATA #IMPLIED
     field-name CDATA #REQUIRED
     arg-list-name CDATA #IMPLIED
+    message-field-name CDATA #IMPLIED
 >
 <!ELEMENT string-to-list EMPTY>
 <!ATTLIST string-to-list
     string CDATA #REQUIRED
     list-name CDATA #REQUIRED
     arg-list-name CDATA #IMPLIED
+    message-field-name CDATA #IMPLIED
 >
 <!ELEMENT to-string EMPTY>
 <!ATTLIST to-string

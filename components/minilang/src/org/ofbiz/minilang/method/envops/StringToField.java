@@ -1,5 +1,5 @@
 /*
- * $Id: StringToField.java,v 1.1 2003/08/17 06:06:12 ajzeneski Exp $
+ * $Id: StringToField.java,v 1.2 2004/05/15 23:06:01 jonesde Exp $
  *
  *  Copyright (c) 2001, 2002 The Open For Business Project - www.ofbiz.org
  *
@@ -36,7 +36,7 @@ import org.ofbiz.minilang.method.*;
  * Copies the specified String to a field
  *
  * @author     <a href="mailto:jonesde@ofbiz.org">David E. Jones</a>
- * @version    $Revision: 1.1 $
+ * @version    $Revision: 1.2 $
  * @since      2.0
  */
 public class StringToField extends MethodOperation {
@@ -47,6 +47,7 @@ public class StringToField extends MethodOperation {
     ContextAccessor mapAcsr;
     ContextAccessor fieldAcsr;
     ContextAccessor argListAcsr;
+    String messageFieldName;
 
     public StringToField(Element element, SimpleMethod simpleMethod) {
         super(element, simpleMethod);
@@ -54,18 +55,26 @@ public class StringToField extends MethodOperation {
         mapAcsr = new ContextAccessor(element.getAttribute("map-name"));
         fieldAcsr = new ContextAccessor(element.getAttribute("field-name"));
         argListAcsr = new ContextAccessor(element.getAttribute("arg-list-name"));
+        messageFieldName = element.getAttribute("message-field-name");
     }
 
     public boolean exec(MethodContext methodContext) {
-        String value = methodContext.expandString(string);
+        String valueStr = methodContext.expandString(string);
         
         if (!argListAcsr.isEmpty()) {
             List argList = (List) argListAcsr.get(methodContext);
             if (argList != null && argList.size() > 0) {
-                value = MessageFormat.format(value, argList.toArray());
+                valueStr = MessageFormat.format(valueStr, argList.toArray());
             }
         }
 
+        Object value;
+        if (this.messageFieldName != null && this.messageFieldName.length() > 0) {
+            value = new MessageString(valueStr, this.messageFieldName, true);
+        } else {
+            value = valueStr;
+        }
+        
         if (!mapAcsr.isEmpty()) {
             Map toMap = (Map) mapAcsr.get(methodContext);
 
