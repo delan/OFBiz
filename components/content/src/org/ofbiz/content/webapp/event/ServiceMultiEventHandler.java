@@ -254,7 +254,15 @@ public class ServiceMultiEventHandler implements EventHandler {
             } catch (ServiceValidationException e) {
                 // not logging since the service engine already did
                 request.setAttribute("serviceValidationException", e);
-                errorMessages.add(messagePrefixStr + "Service invocation error on row (" + i +"): " + e.getNonNestedMessage());
+                List errors = e.getMessageList();
+                if (errors != null) {
+                    Iterator erri = errors.iterator();
+                    while (erri.hasNext()) {
+                        errorMessages.add("Service invocation error on row (" + i + "): " + erri.next());
+                    }
+                } else {
+                    errorMessages.add(messagePrefixStr + "Service invocation error on row (" + i +"): " + e.getNonNestedMessage());
+                }
             } catch (GenericServiceException e) {
                 Debug.logError(e, "Service invocation error", module);
                 errorMessages.add(messagePrefixStr + "Service invocation error on row (" + i +"): " + e.getNested() + messageSuffixStr);                             
@@ -264,8 +272,7 @@ public class ServiceMultiEventHandler implements EventHandler {
             String errorMessage = ServiceUtil.makeErrorMessage(result, messagePrefixStr, messageSuffixStr, "", "");
             if (UtilValidate.isNotEmpty(errorMessage)) {
                 errorMessages.add(errorMessage);           
-            }
-       
+            }       
         }
              
         if (errorMessages.size() > 0) {

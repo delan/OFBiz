@@ -25,13 +25,16 @@
 package org.ofbiz.service;
 
 import java.util.List;
+import java.util.Locale;
+
+import org.ofbiz.base.util.UtilProperties;
 
 /**
  * Generic Service Model Parameter
  *
  * @author     <a href="mailto:jaz@ofbiz.org">Andy Zeneski</a>
  * @author     <a href="mailto:jonesde@ofbiz.org">David E. Jon</a>
- * @version    $Rev:$
+ * @version    $Rev$
  * @since      2.0
  */
 public class ModelParam {
@@ -92,7 +95,23 @@ public class ModelParam {
         this.overrideFormDisplay = param.overrideFormDisplay;
         this.internal = param.internal;
     }
-        
+
+    public void addValidator(String className, String methodName, String failMessage) {
+        validators.add(new ModelParamValidator(className, methodName, failMessage, null, null));
+    }
+
+    public void addValidator(String className, String methodName, String failResource, String failProperty) {
+        validators.add(new ModelParamValidator(className, methodName, null, failResource, failProperty));
+    }
+
+    public String getPrimaryFailMessage(Locale locale) {
+        if (validators != null && validators.size() > 0) {
+            return ((ModelParamValidator) validators.get(0)).getFailMessage(locale);
+        } else {
+            return null;
+        }
+    }
+
     public String toString() {
         StringBuffer buf = new StringBuffer();
         buf.append(name + "::");
@@ -118,14 +137,20 @@ public class ModelParam {
         return false;
     }
 
-    class ModelParamValidator {
+    static class ModelParamValidator {
 
         protected String className;
         protected String methodName;
+        protected String failMessage;
+        protected String failResource;
+        protected String failProperty;
 
-        public ModelParamValidator(String className, String methodName) {
+        public ModelParamValidator(String className, String methodName, String failMessage, String failResource, String failProperty) {
             this.className = className;
             this.methodName = methodName;
+            this.failMessage = failMessage;
+            this.failResource = failResource;
+            this.failProperty = failProperty;
         }
 
         public String getClassName() {
@@ -136,8 +161,19 @@ public class ModelParam {
             return methodName;
         }
 
+        public String getFailMessage(Locale locale) {
+            if (failMessage != null) {
+                return this.failMessage;
+            } else {
+                if (failResource != null && failProperty != null) {
+                    return UtilProperties.getMessage(failResource, failProperty, locale);
+                }
+            }
+            return null;
+        }
+
         public String toString() {
-            return className + "::" + methodName;
+            return className + "::" + methodName + "::" + failMessage + "::" + failResource + "::" + failProperty;
         }
     }
 }

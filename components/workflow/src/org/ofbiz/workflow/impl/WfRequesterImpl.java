@@ -29,6 +29,7 @@ import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
+import java.util.Locale;
 
 import org.ofbiz.base.util.Debug;
 import org.ofbiz.entity.GenericEntityException;
@@ -79,7 +80,7 @@ public class WfRequesterImpl implements WfRequester {
         // Validate the process context w/ what was passed.
         try {
             if (Debug.verboseOn()) Debug.logVerbose("Validating w/ signature: " + mgr.contextSignature(), module);
-            ModelService.validate(mgr.contextSignature(), context, true, null, ModelService.IN_PARAM);
+            ModelService.validate(mgr.contextSignature(), context, true, null, ModelService.IN_PARAM, Locale.getDefault());
         } catch (GenericServiceException e) {
             throw new WfException("Context passed does not validate against defined signature: ", e);
         }

@@ -231,7 +231,7 @@ public class ServiceDispatcher {
         boolean isError = false;
 
         // check the locale
-        this.checkLocale(context);
+        Locale locale = this.checkLocale(context);
 
         // for isolated transactions
         TransactionManager tm = TransactionFactory.getTransactionManager();
@@ -308,7 +308,7 @@ public class ServiceDispatcher {
             // validate the context
             if (modelService.validate && !isError && !isFailure) {
                 try {
-                    modelService.validate(context, ModelService.IN_PARAM);
+                    modelService.validate(context, ModelService.IN_PARAM, locale);
                 } catch (ServiceValidationException e) {
                     Debug.logError(e, "Incoming context (in runSync : " + modelService.name + ") does not match expected requirements", module);
                     throw e;
@@ -347,7 +347,7 @@ public class ServiceDispatcher {
                 // pre-out-validate ECA
                 if (eventMap != null) ServiceEcaUtil.evalRules(modelService.name, eventMap, "out-validate", ctx, ecaContext, result, isError, isFailure);
                 try {
-                    modelService.validate(result, ModelService.OUT_PARAM);
+                    modelService.validate(result, ModelService.OUT_PARAM, locale);
                 } catch (ServiceValidationException e) {
                     Debug.logError(e, "Outgoing result (in runSync : " + modelService.name + ") does not match expected requirements", module);
                     throw e;
@@ -447,7 +447,7 @@ public class ServiceDispatcher {
         boolean isError = false;
 
         // check the locale
-        this.checkLocale(context);
+        Locale locale = this.checkLocale(context);
 
         // for isolated transactions
         TransactionManager tm = TransactionFactory.getTransactionManager();
@@ -519,7 +519,7 @@ public class ServiceDispatcher {
             // validate the context
             if (service.validate && !isError && !isFailure) {
                 try {
-                    service.validate(context, ModelService.IN_PARAM);
+                    service.validate(context, ModelService.IN_PARAM, locale);
                 } catch (ServiceValidationException e) {
                     Debug.logError(e, "Incoming service context (in runAsync: " + service.name + ") does not match expected requirements", module);
                     throw e;
@@ -739,13 +739,13 @@ public class ServiceDispatcher {
     }
 
     // checks the locale object in the context
-    private void checkLocale(Map context) {
+    private Locale checkLocale(Map context) {
         Object locale = context.get("locale");
         Locale newLocale = null;
 
         if (locale != null) {
             if (locale instanceof Locale) {
-                return;
+                return (Locale) locale;
             } else if (locale instanceof String) {
                 // en_US = lang_COUNTRY
                 newLocale = UtilMisc.parseLocale((String) locale);
@@ -756,6 +756,7 @@ public class ServiceDispatcher {
             newLocale = Locale.getDefault();
         }
         context.put("locale", newLocale);
+        return newLocale;
     }
 
     // mode 1 = beginning (turn on) mode 0 = end (turn off)

@@ -32,6 +32,7 @@ import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
+import java.util.LinkedList;
 import javax.xml.parsers.ParserConfigurationException;
 
 import org.ofbiz.base.config.GenericConfigException;
@@ -533,7 +534,9 @@ public class ModelServiceReader {
             if (param.fieldName.length() == 0 && param.entityName.length() > 0) {
                 param.fieldName = param.name;         
             }
-            
+
+            // set the validators
+            this.addValidators(attribute, param);
             service.addParam(param);
         }
 
@@ -644,7 +647,10 @@ public class ModelServiceReader {
                     param.formDisplay = !"false".equalsIgnoreCase(attribute.getAttribute("form-display")); // default to false
                     param.overrideFormDisplay = true;
                 }
-                
+
+                // override validators
+                this.addValidators(attribute, param);
+
                 if (directToParams) {
                     service.addParam(param);
                 } else {                  
@@ -652,6 +658,32 @@ public class ModelServiceReader {
                 }
             }                                                                                      
         }        
+    }
+
+    protected void addValidators(Element attribute, ModelParam param) {
+        List validateElements = UtilXml.childElementList(attribute, "type-validate");
+        if (validateElements != null && validateElements.size() > 0) {
+            // always clear out old ones; never append
+            param.validators = new LinkedList();
+
+            Iterator i = validateElements.iterator();
+            Element validate = (Element) i.next();
+            String methodName = validate.getAttribute("method");
+            String className = validate.getAttribute("class");
+
+            Element fail = UtilXml.firstChildElement(validate, "fail-message");
+            if (fail != null) {
+                String message = fail.getAttribute("fail-message");
+                param.addValidator(className, methodName, message);
+            } else {
+                fail = UtilXml.firstChildElement(validate, "fail-property");
+                if (fail != null) {
+                    String resource = fail.getAttribute("resource");
+                    String property = fail.getAttribute("property");
+                    param.addValidator(className, methodName, resource, property);
+                }
+            }
+        }
     }
 
     protected Document getDocument(URL url) {

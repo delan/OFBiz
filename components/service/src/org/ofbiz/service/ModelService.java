@@ -24,19 +24,13 @@
  */
 package org.ofbiz.service;
 
-import java.util.ArrayList;
-import java.util.Collection;
-import java.util.HashMap;
-import java.util.Iterator;
-import java.util.LinkedList;
-import java.util.List;
-import java.util.Map;
-import java.util.Set;
-import java.util.TreeSet;
+import java.util.*;
+import java.lang.reflect.Method;
 
 import org.ofbiz.base.util.Debug;
 import org.ofbiz.base.util.GeneralException;
 import org.ofbiz.base.util.ObjectType;
+import org.ofbiz.base.util.UtilValidate;
 import org.ofbiz.entity.GenericValue;
 import org.ofbiz.security.Security;
 import org.ofbiz.service.group.GroupModel;
@@ -290,7 +284,7 @@ public class ModelService {
      * @param test The Map object to test
      * @param mode Test either mode IN or mode OUT
      */
-    public void validate(Map test, String mode) throws ServiceValidationException {        
+    public void validate(Map test, String mode, Locale locale) throws ServiceValidationException {
         Map requiredInfo = new HashMap();
         Map optionalInfo = new HashMap();
         boolean verboseOn = Debug.verboseOn();
@@ -347,16 +341,17 @@ public class ModelService {
         
         // check for requiredButNull fields and return an error since null values are not allowed for required fields
         if (requiredButNull.size() > 0) {
-            String missing = "";
+            List missingMsg = new ArrayList();
             Iterator rbni = requiredButNull.iterator();
             while (rbni.hasNext()) {
                 String missingKey = (String) rbni.next();
-                missing = missing + missingKey;
-                if (rbni.hasNext()) {
-                    missing = missing + ", ";
-                }               
+                String message = this.getParam(missingKey).getPrimaryFailMessage(locale);
+                if (message == null) {
+                    message = "The following required parameter is missing: " + missingKey;
+                }
+                missingMsg.add(message);
             }
-            throw new ServiceValidationException("The following required parameters are missing: " + missing, this, requiredButNull, null, mode);
+            throw new ServiceValidationException(missingMsg, this, requiredButNull, null, mode);
         }
 
         if (verboseOn) {
@@ -377,8 +372,8 @@ public class ModelService {
         }
 
         try {
-            validate(requiredInfo, requiredTest, true, this, mode);
-            validate(optionalInfo, optionalTest, false, this, mode);
+            validate(requiredInfo, requiredTest, true, this, mode, locale);
+            validate(optionalInfo, optionalTest, false, this, mode, locale);
         } catch (ServiceValidationException e) {
             Debug.logError("[ModelService.validate] : {" + name + "} : (" + mode + ") Required test error: " + e.toString(), module);
             throw e;
@@ -391,14 +386,9 @@ public class ModelService {
      * @param test The map to test its value types.
      * @param reverse Test the maps in reverse.
      */
-    public static void validate(Map info, Map test, boolean reverse, ModelService model, String mode) throws ServiceValidationException {
+    public static void validate(Map info, Map test, boolean reverse, ModelService model, String mode, Locale locale) throws ServiceValidationException {
         if (info == null || test == null) {
-            throw new ServiceValidationException("Cannot validate NULL maps");
-        }
-        
-        String serviceNameMessage = "";
-        if (model!= null && model.name != null) {
-            serviceNameMessage = "For service [" + model.name + "] ";
+            throw new ServiceValidationException("Cannot validate NULL maps", model);
         }
 
         // * Validate keys first
@@ -412,49 +402,154 @@ public class ModelService {
             Set missing = new TreeSet(keySet);
 
             missing.removeAll(testSet);
-            String missingStr = "";
+            List missingMsgs = new ArrayList();
+
             Iterator iter = missing.iterator();
-
             while (iter.hasNext()) {
-                missingStr += (String) iter.next();
-                if (iter.hasNext()) {
-                    missingStr += ", ";
+                String key = (String) iter.next();
+                String msg = model.getParam(key).getPrimaryFailMessage(locale);
+                if (msg == null) {
+                    msg = "The following required parameter is missing: " + key;
                 }
+                missingMsgs.add(msg);
             }
-
-            throw new ServiceValidationException(serviceNameMessage + "the following required parameters are missing: " + missingStr, model, new ArrayList(missing), null, mode);
+            throw new ServiceValidationException(missingMsgs, model, new ArrayList(missing), null, mode);
         }
+
         // This is to see if the info set contains all from the test set
         if (!keySet.containsAll(testSet)) {
             Set extra = new TreeSet(testSet);
 
             extra.removeAll(keySet);
-            String extraStr = "";
-            Iterator iter = extra.iterator();
+            List extraMsgs = new ArrayList();
 
+            Iterator iter = extra.iterator();
             while (iter.hasNext()) {
-                extraStr += (String) iter.next();
-                if (iter.hasNext()) {
-                    extraStr += ", ";
+                String key = (String) iter.next();
+                String msg = model.getParam(key).getPrimaryFailMessage(locale);
+                if (msg == null) {
+                    msg = "Unknown parameter found: " + key;
                 }
+                extraMsgs.add(msg);
             }
-            throw new ServiceValidationException(serviceNameMessage + "unknown parameters found: " + extraStr, model, null, new ArrayList(extra), mode);
+            throw new ServiceValidationException(extraMsgs, model, null, new ArrayList(extra), mode);
         }
 
         // * Validate types next
+        List typeFailMsgs = new ArrayList();
         Iterator i = testSet.iterator();
-
         while (i.hasNext()) {
-            Object key = i.next();
+            String key = (String) i.next();
+            ModelParam param = model.getParam(key);
+
             Object testObject = test.get(key);
             String infoType = (String) info.get(key);
 
-            if (!ObjectType.instanceOf(testObject, infoType, null)) {
-                String testType = testObject == null ? "null" : testObject.getClass().getName();
-                throw new ServiceValidationException(serviceNameMessage + "type check failed for field [" + key + "]; expected type is [" +
-                        infoType + "]; actual type is [" + testType + "]");
+            if (param.validators != null && param.validators.size() > 0) {
+                Iterator vali = param.validators.iterator();
+                while (vali.hasNext()) {
+                    ModelParam.ModelParamValidator val = (ModelParam.ModelParamValidator) vali.next();
+                    if (UtilValidate.isNotEmpty(val.getMethodName())) {
+                        try {
+                            if (!typeValidate(val, testObject)) {
+                                String msg = val.getFailMessage(locale);
+                                if (msg == null) {
+                                    msg = "The following parameter failed validation: " + key;
+                                }
+                                typeFailMsgs.add(msg);
+                            }
+                        } catch (GeneralException e) {
+                            Debug.logError(e, module);
+                            String msg = param.getPrimaryFailMessage(locale);
+                            if (msg == null) {
+                                msg = "The following parameter failed validation: " + key;
+                            }
+                            typeFailMsgs.add(msg);
+                        }
+                    } else {
+                        if (!ObjectType.instanceOf(testObject, infoType, null)) {
+                            String msg = val.getFailMessage(locale);
+                            if (msg == null) {
+                                msg = "The following parameter failed validation: " + key;
+                            }
+                            typeFailMsgs.add(msg);
+                        }
+                    }
+                }
+            } else {
+                if (!ObjectType.instanceOf(testObject, infoType, null)) {
+                    String testType = testObject == null ? "null" : testObject.getClass().getName();
+                    String msg = "Type check failed for field [" + key + "]; expected type is [" +
+                            infoType + "]; actual type is [" + testType + "]";
+                    typeFailMsgs.add(msg);
+                }
             }
         }
+        
+        if (typeFailMsgs.size() > 0) {
+            throw new ServiceValidationException(typeFailMsgs, model, mode);
+        }
+    }
+
+    public static boolean typeValidate(ModelParam.ModelParamValidator vali, Object testValue) throws GeneralException {
+        // find the validator class
+        Class validatorClass = null;
+        try {
+            validatorClass = ObjectType.loadClass(vali.getClassName());
+        } catch (ClassNotFoundException e) {
+        }
+
+        if (validatorClass == null) {
+            throw new GeneralException("Unable to load validation class [" + vali.getClassName() + "]");
+        }
+
+        boolean foundObjectParam = true;
+        Class[] stringParam = new Class[] { String.class };
+        Class[] objectParam = new Class[] { Object.class };
+
+        Method validatorMethod = null;
+        try {
+            // try object type first
+            validatorMethod = validatorClass.getMethod(vali.getMethodName(), objectParam);
+        } catch (NoSuchMethodException e) {
+            foundObjectParam = false;
+            // next try string type
+            try {
+                validatorMethod = validatorClass.getMethod(vali.getMethodName(), stringParam);
+            } catch (NoSuchMethodException e2) {
+            }
+        }
+
+        if (validatorMethod == null) {
+            throw new GeneralException("Unable to find validation method [" + vali.getMethodName() + "] in class [" + vali.getClassName() + "]");
+        }
+
+        Object[] params;
+        if (!foundObjectParam) {
+            // convert to string
+            String converted = null;
+            try {
+                converted = (String) ObjectType.simpleTypeConvert(testValue, "String", null, null);
+            } catch (GeneralException e) {
+                throw new GeneralException("Unable to convert parameter to String");
+            }
+            params = new Object[] { converted };
+        } else {
+            // use plain object
+            params = new Object[] { testValue };
+        }
+
+        // run the validator
+        Boolean resultBool = Boolean.FALSE;
+        try {
+            resultBool = (Boolean) validatorMethod.invoke(null, params);
+        } catch (ClassCastException e) {
+            throw new GeneralException("Validation method [" + vali.getMethodName() + "] in class [" + vali.getClassName() + "] did not return expected Boolean");
+        } catch (Exception e) {
+            throw new GeneralException("Unable to run validation method [" + vali.getMethodName() + "] in class [" + vali.getClassName() + "]");
+        }
+
+        return resultBool.booleanValue();
     }
 
     /**
