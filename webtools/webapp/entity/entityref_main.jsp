@@ -158,15 +158,17 @@ if(security.hasPermission("ENTITY_MAINT", session)) {
     javaName = field.getIsPk() ? "<div style=\"color: red;\">" + field.getName() + "</div>" : field.getName();
 
     if(checkWarnings) {
-      if(ufields.contains(field.getName()))
+      if(ufields.contains(field.getName())) {
         warningString += "<li><div style=\"color: red;\">[FieldNotUnique]</div> Field <b>" + field.getName() + "</b> of entity <A href=\"#" + entity.getEntityName() + "\">" + entity.getEntityName() + "</A> is not unique for that entity.</li>";
-      else
+      } else {
         ufields.add(field.getName());
+      }
       if(field.getColName().length() > 30 && !(entity instanceof ModelViewEntity)) {
         warningString += "<li><div style=\"color: red;\">[FieldNameGT30]</div> Column name <b>" + field.getColName() + "</b> of entity <A href=\"#" + entity.getEntityName() + "\">" + entity.getEntityName() + "</A> is longer than 30 characters.</li>";
       }
-      if(field.getColName().length() == 0)
+      if(field.getColName().length() == 0) {
         warningString += "<li><div style=\"color: red;\">[FieldNameEQ0]</div> Column name for field name <b>\"" + field.getName() + "\"</b> of entity <A href=\"#" + entity.getEntityName() + "\">" + entity.getEntityName() + "</A> is empty (zero length).</li>";
+      }
       if(reservedWords.contains(field.getColName().toUpperCase()))
         warningString += "<li><div style=\"color: red;\">[FieldNameRW]</div> Column name <b>" + field.getColName() + "</b> of entity <A href=\"#" + entity.getEntityName() + "\">" + entity.getEntityName() + "</A> is a reserved word.</li>";
     }
@@ -259,13 +261,17 @@ if(security.hasPermission("ENTITY_MAINT", session)) {
         if(relatedEntity != null) {
           rfield = relatedEntity.getField(keyMap.getRelFieldName());
         }
-        if(rfield == null)
+        if(rfield == null) {
           warningString = warningString + "<li><div style=\"color: red;\">[RelationRelatedFieldNotFound]</div> The field \"<b>" + keyMap.getRelFieldName() + "</b>\" of related entity <b>" + relation.getRelEntityName() + "</b> was specified in the keymaps but is not found for relation <b>" +  relation.getTitle() + relation.getRelEntityName() + "</b> of entity <A href=\"#" + entity.getEntityName() + "\">" + entity.getEntityName() + "</A>.</li>";
-        if(field == null)
+        }
+        if(field == null) {
           warningString = warningString + "<li><div style=\"color: red;\">[RelationFieldNotFound]</div> The field <b>" + keyMap.getFieldName() + "</b> was specified in the keymaps but is not found for relation <b>" +  relation.getTitle() + relation.getRelEntityName() + "</b> of entity <A href=\"#" + entity.getEntityName() + "\">" + entity.getEntityName() + "</A>.</li>";
+        }
         if(field != null && rfield != null) {
-          if(!field.getType().equals(rfield.getType()) && !field.getType().startsWith(rfield.getType()) && !rfield.getType().startsWith(field.getType()))
+          //this was the old check, now more constrained to keep things cleaner: if(!field.getType().equals(rfield.getType()) && !field.getType().startsWith(rfield.getType()) && !rfield.getType().startsWith(field.getType())) {
+          if(!field.getType().equals(rfield.getType()) && !field.getType().equals(rfield.getType() + "-ne") && !rfield.getType().equals(field.getType() + "-ne")) {
             warningString = warningString + "<li><div style=\"color: red;\">[RelationFieldTypesDifferent]</div> The field type (" + field.getType() + ") of <b>" + field.getName() + "</b> of entity <A href=\"#" + entity.getEntityName() + "\">" + entity.getEntityName() + "</A> is not the same as field type (" + rfield.getType() + ") of <b>" + rfield.getName() + "</b> of entity <A href=\"#" + relation.getRelEntityName() + "\">" + relation.getRelEntityName() + "</A> for relation <b>" +  relation.getTitle() + relation.getRelEntityName() + "</b>.</li>";
+          }
         }
       }
     }
