@@ -33,7 +33,9 @@
     <container name="classloader-container" class="org.ofbiz.base.container.ClassLoaderContainer"/>
 
     <!-- load JNDI/JOTM -->
-    <container name="jotm-container" class="org.ofbiz.jotm.container.JotmContainer"/>
+    <container name="jotm-container" class="org.ofbiz.jotm.container.JotmContainer">
+        <property name="jndi-config" value="iiop.properties"/>
+    </container>
 
     <!-- load Shark Workflow Engine -->
     <container name="shark-container" class="org.ofbiz.shark.container.SharkContainer">

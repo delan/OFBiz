@@ -33,7 +33,9 @@
     <container name="classloader-container" class="org.ofbiz.base.container.ClassLoaderContainer"/>
 
     <!-- load JNDI/JOTM -->
-    <container name="jotm-container" class="org.ofbiz.jotm.container.JotmContainer"/>
+    <container name="jotm-container" class="org.ofbiz.jotm.container.JotmContainer">
+        <property name="jndi-config" value="jrmp.properties"/>
+    </container>
         
     <!-- load the data load container, runs the entity data load stuff -->
     <container name="dataload-container" class="org.ofbiz.entityext.data.EntityDataLoadContainer">
