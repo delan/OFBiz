@@ -308,7 +308,7 @@
             location="org/ofbiz/shipment/issuance/IssuanceServices.xml" invoke="issueOrderItemToShipment" auth="true">
         <description>Issue an OrderItem to a Shipment - only for non-sales orders</description>
         <auto-attributes entity-name="Shipment" include="pk" mode="IN" optional="false"/>
-        <auto-attributes entity-name="OrderItem" include="pk" mode="IN" optional="false"/>
+        <auto-attributes entity-name="OrderItemShipGroupAssoc" include="pk" mode="IN" optional="false"/>
         <attribute name="quantity" type="Double" mode="IN" optional="false"/>
         <attribute name="shipmentItemSeqId" type="String" mode="OUT" optional="false"/>
         <attribute name="itemIssuanceId" type="String" mode="OUT" optional="false"/>
