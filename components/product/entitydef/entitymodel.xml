@@ -26,7 +26,7 @@
  *
  * @author     David E. Jones (jonesde@ofbiz.org)
  * @author     Andy Zeneski (jaz@ofbiz.org)
- * @version    $Revision: 1.67 $
+ * @version    $Revision: 1.68 $
  */
 -->
 
@@ -1543,7 +1543,7 @@
       <field name="supportDiscontinuationDate" type="date-time"></field>
       <field name="salesDiscontinuationDate" type="date-time"></field>
       <field name="salesDiscWhenNotAvail" type="indicator"></field>
-      <field name="internalName" type="name"></field>
+      <field name="internalName" type="description"></field>
       <field name="brandName" type="name"></field>
       <field name="comments" type="comment"></field>
       <field name="inventoryMessage" type="description"></field>
