@@ -190,7 +190,7 @@ public class StringUtil {
             cppBuff.insert(0, '/');
         }
         if (cppBuff.charAt(cppBuff.length()-1) == '/') {
-            cppBuff.deleteCharAt(cppBuff.length());
+            cppBuff.deleteCharAt(cppBuff.length()-1);
         }
         return cppBuff.toString();
     }
