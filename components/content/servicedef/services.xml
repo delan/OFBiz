@@ -1218,6 +1218,8 @@
             <exclude field-name="fromDate"/>
             <exclude field-name="contentAssocTypeId"/>
         </auto-attributes>
+        <auto-attributes entity-name="ContentAssocDataResourceViewFrom" include="all" mode="IN" optional="true">
+        </auto-attributes>
         <attribute mode="INOUT" entity-name="Content" name="contentId" optional="true" type="String"/>
         <attribute mode="INOUT" entity-name="DataResource" name="dataResourceId" optional="true" type="String"/>
         <attribute mode="INOUT" entity-name="ContentAssoc" name="contentIdTo" optional="true" type="String"/>

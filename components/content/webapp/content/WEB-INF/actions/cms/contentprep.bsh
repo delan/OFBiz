@@ -1,5 +1,5 @@
 /*
- * $Id: contentprep.bsh,v 1.3 2004/06/19 19:52:49 byersa Exp $
+ * $Id: contentprep.bsh,v 1.4 2004/07/02 15:48:28 byersa Exp $
  *
  * Copyright (c) 2003 The Open For Business Project - www.ofbiz.org
  *
@@ -26,7 +26,7 @@
 /**
  *
  * @author     <a href="mailto:byersa@automationgroups.com">Al Byers</a>
- * @version    $Revision: 1.3 $
+ * @version    $Revision: 1.4 $
  * @since      3.0
 
  */
@@ -99,8 +99,8 @@ if (UtilValidate.isEmpty(contentId) && currentValue != null) {
 if (UtilValidate.isNotEmpty(contentId) && currentValue == null) {
     currentValue = delegator.findByPrimaryKeyCache("Content", UtilMisc.toMap("contentId", contentId));
 }
-//Debug.logInfo("in contentprep, currentValue(1):" + currentValue, "");
-//Debug.logInfo("in contentprep, contentId(4):" + contentId, "");
+context.put("currentValue", currentValue);
+Debug.logInfo("in contentprep, currentValue(1):" + currentValue, "");
 Locale locale = Locale.getDefault();
  
 
@@ -110,7 +110,8 @@ if (currentValue != null) {
     context.put("contentName", currentValue.get("contentName"));
     context.put("description", currentValue.get("description"));
     context.put("statusId", currentValue.get("statusId"));
-    context.put("dataResourceId", currentValue.get("dataResourceId"));
+    dataResourceId = currentValue.get("dataResourceId");
+    context.put("dataResourceId", dataResourceId);
 
         mimeTypeId =  (String)currentValue.get("mimeTypeId");
         rootDir = request.getSession().getServletContext().getRealPath("/");
@@ -119,61 +120,43 @@ if (currentValue != null) {
         //templateRoot = new SimpleHash(wrapper);
         templateRoot = new HashMap();
         FreeMarkerViewHandler.prepOfbizRoot(templateRoot, request, response);
-        ctx = new HashMap();
-        ctx.put("rootDir", rootDir);
+        templateRoot.put("rootDir", rootDir);
         // webSiteId and https need to go here, too
-        templateRoot.put("context", ctx);
         fromDate = UtilDateTime.nowTimestamp();
         assocTypes = null;
         //assocTypes = UtilMisc.toList("SUB_CONTENT");
-        subContentDataResourceView = ContentWorker.getSubContent(delegator, contentId, "ARTICLE", null, userLogin, assocTypes, fromDate);
-        if ( subContentDataResourceView != null) {
-            out = new StringWriter();
-            ContentWorker.renderContentAsText(delegator, null, out, templateRoot, subContentDataResourceView, locale, mimeTypeId);
-            textData = out.toString();
-            context.put("txtContentId", subContentDataResourceView.get("contentId"));
-            context.put("txtDataResourceId", subContentDataResourceView.get("dataResourceId"));
+        if ( currentValue != null) {
+            Debug.logInfo("in contentprep, contentId(4):" + contentId, "");
+            Debug.logInfo("in contentprep, dataResourceId(4):" + dataResourceId, "");
+            currentView = delegator.findByPrimaryKey("ContentDataResourceView", UtilMisc.toMap("contentId", contentId, "drDataResourceId", dataResourceId));
+            Debug.logInfo("in contentprep, currentView:" + currentView, "");
+            textData = ContentWorker.renderContentAsTextCache(delegator, null, templateRoot, currentView, locale, mimeTypeId);
+            Debug.logInfo("in contentprep, textData:" + textData, "");
             context.put("textData", textData);
-            //Debug.logInfo("textId:" + txtContentId, "");
-            //Debug.logInfo("textData:" + textData, "");
-            if (singleWrapper != null) {
-               Debug.logInfo("textData:" + textData, "");
-               singleWrapper.putInContext("textData", textData);
+            context.put("currentView", currentView);
+            assocList = ContentWorker.getContentAssocViewList(delegator, contentId, null, "SUB_CONTENT", null, null);
+            textList = new ArrayList();
+            iter = assocList.iterator();
+            while (iter.hasNext()) {
+                contentAssocDataResourceView = iter.next();
+                Debug.logInfo("in contentprep, contentAssocDataResourceView:" + contentAssocDataResourceView, "");
+                localeString = contentAssocDataResourceView.getString("drLocaleString");
+                thisLocale = locale;
+                if (UtilValidate.isNotEmpty(localeString)) {
+                    thisLocale = UtilMisc.parseLocale(localeString);
+                }
+                thisMimeTypeId =  (String)contentAssocDataResourceView.get("drMimeTypeId");
+                if (UtilValidate.isEmpty(thisMimeTypeId)) {
+                    thisMimeTypeId = mimeTypeId;
+                }
+                childText = ContentWorker.renderContentAsTextCache(delegator, null, templateRoot, contentAssocDataResourceView, locale, mimeTypeId);
+                Debug.logInfo("in contentprep, childText:" + childText, "");
+                map = new HashMap();
+                map.put("entity", contentAssocDataResourceView);
+                map.put("text", childText);
+                textList.add(map);
             }
-        }
-
-        subContentDataResourceView = ContentWorker.getSubContent(delegator, contentId, "SUMMARY", null, userLogin, assocTypes, fromDate);
-        if ( subContentDataResourceView != null) {
-            out = new StringWriter();
-            ContentWorker.renderContentAsText(delegator, null, out, templateRoot, subContentDataResourceView, locale, mimeTypeId);
-            summaryData = out.toString();
-            context.put("sumContentId", subContentDataResourceView.get("contentId"));
-            context.put("sumDataResourceId", subContentDataResourceView.get("dataResourceId"));
-            context.put("summaryData", summaryData);
-            //Debug.logInfo("sumId:" + sumContentId, "");
-            //Debug.logInfo("summaryData:" + summaryData, "");
-            if (singleWrapper != null) {
-                Debug.logInfo("summaryData:" + summaryData, "");
-                singleWrapper.putInContext("summaryData", summaryData);
-            }
-        }
-
-        subContentDataResourceView = ContentWorker.getSubContent(delegator, contentId, "IMAGE", null, userLogin, assocTypes, fromDate);
-        if ( subContentDataResourceView != null) {
-            out = new StringWriter();
-            ContentWorker.renderContentAsText(delegator, null, out, templateRoot, subContentDataResourceView, locale, mimeTypeId);
-            imageData = out.toString();
-            context.put("imgContentId", subContentDataResourceView.get("contentId"));
-            context.put("imgDataResourceId", subContentDataResourceView.get("dataResourceId"));
-            context.put("imageData", imageData);
+            context.put("textList", textList);
         }
 }
 
-/*
-if (UtilValidate.isNotEmpty(contentId)) {
-    publishedLinkList = ContentManagementWorker.getPublishedLinks(delegator, contentId, rootPubPt, userLogin, security, null, "CONTENT_PUBLISH", "_OWNER_");
-    //Debug.logInfo("publishedLinkList:" + publishedLinkList, "");
-    //context.put("pubPtList", publishedLinkList);
-    context.put("pubPtList", publishedLinkList);
-}
-*/

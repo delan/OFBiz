@@ -1,5 +1,5 @@
 /*
- * $Id: ContentServicesComplex.java,v 1.15 2004/06/17 22:12:15 byersa Exp $
+ * $Id: ContentServicesComplex.java,v 1.16 2004/07/02 15:48:25 byersa Exp $
  *
  * Copyright (c) 2001, 2002 The Open For Business Project - www.ofbiz.org
  *
@@ -54,7 +54,7 @@ import org.ofbiz.service.ServiceUtil;
  * ContentServicesComplex Class
  *
  * @author     <a href="mailto:byersa@automationgroups.com">Al Byers</a>
- * @version    $Revision: 1.15 $
+ * @version    $Revision: 1.16 $
  * @since      2.2
  *
  * 
@@ -114,8 +114,7 @@ public class ContentServicesComplex {
             Iterator it = assocTypes.iterator();
             while (it.hasNext()) {
                 String assocType = (String)it.next();
-                expr = new EntityExpr("caContentAssocTypeId", 
-                                  EntityOperator.EQUALS, assocType);
+                expr = new EntityExpr("caContentAssocTypeId", EntityOperator.EQUALS, assocType);
                 exprListOr.add(expr);
             }
             EntityConditionList assocExprList = new EntityConditionList(exprListOr, EntityOperator.OR);
@@ -349,4 +348,44 @@ public class ContentServicesComplex {
         return results;
     }
 
+/*
+    public static Map getSubContentAndDataResource(GenericDelegator delegator, String contentId, String direction, Timestamp fromDate,  String assocType, String contentType, String orderBy) throws GenericEntityException {
+
+        List exprList = new ArrayList();
+        EntityExpr joinExpr = null;
+        EntityExpr expr = null;
+        String viewName = null;
+        GenericValue contentAssoc = null;
+        String contentFieldName = null;
+        if (direction != null && direction.equalsIgnoreCase("From") ) {
+            viewName = "ContentAssocDataResourceViewFrom";
+            contentFieldName = "contentIdTo";
+            joinExpr = new EntityExpr("caContentIdTo", EntityOperator.EQUALS, contentId);
+        } else {
+            viewName = "ContentAssocDataResourceViewTo";
+            contentFieldName = "contentId";
+            joinExpr = new EntityExpr("caContentId", EntityOperator.EQUALS, contentId);
+        }
+        exprList.add(joinExpr);
+
+        if (UtilValidate.isNotEmpty(assocType)) {
+            expr = new EntityExpr("caContentAssocTypeId", EntityOperator.EQUALS, assocType);
+            exprList.add(expr);
+        }
+
+        if (UtilValidate.isNotEmpty(contentType)) {
+            expr = new EntityExpr("caContentTypeId", EntityOperator.EQUALS, contentType);
+            exprList.add(expr);
+        }
+
+        List orderByList = null;
+        if (UtilValidate.isNotEmpty(orderBy)) {
+           orderByList = StringUtil.split(orderBy, "|");
+           contentAssocDataResourceList = EntityUtil.orderBy(contentAssocDataResourceList, orderByList);
+        }
+        HashMap results = new HashMap();
+        results.put("entityList", contentAssocDataResourceList);
+        return results;
+    }
+*/
 }

@@ -1,5 +1,5 @@
 /*
- * $Id: ContentDocument.java,v 1.3 2004/06/17 22:12:16 byersa Exp $
+ * $Id: ContentDocument.java,v 1.4 2004/07/02 15:48:26 byersa Exp $
  *
  *  Copyright (c) 2001, 2002 The Open For Business Project - www.ofbiz.org
  *
@@ -45,12 +45,13 @@ import java.sql.Timestamp;
 import java.io.IOException;
 import java.io.StringWriter;
 import java.util.Locale;
+import java.util.Iterator;
 
 /**
  * ContentDocument Class
  * 
  * @author <a href="mailto:byersa@automationgroups.com">Al Byers</a>
- * @version $Revision: 1.3 $
+ * @version $Revision: 1.4 $
  * @since 3.1
  * 
  *  
@@ -151,8 +152,10 @@ public class ContentDocument {
 	  	    DataResourceWorker.writeDataResourceTextCache(dataResource, mimeTypeId, locale, context, delegator, outWriter);
 	    } catch(GeneralException e) {
 	  	Debug.logError(e, module);
+                return;
 	    } catch(IOException e) {
 	  	Debug.logError(e, module);
+                return;
 	    }
 	    String text = outWriter.toString();
 	    Debug.logInfo("in DataResourceDocument, text:" + text, module);
@@ -160,6 +163,27 @@ public class ContentDocument {
               Field field = Field.UnStored("content", text);
 	      Debug.logInfo("in ContentDocument, field:" + field.stringValue(), module);
 	      doc.add(field);
+            }
+
+            List featureDataResourceList = null;
+            try {
+                featureDataResourceList = content.getRelatedCache("ProductFeatureDataResource");
+	    } catch(GenericEntityException e) {
+	  	Debug.logError(e, module);
+                return;
+	    }
+            List featureList = new ArrayList();
+            Iterator iter = featureDataResourceList.iterator(); 
+            while (iter.hasNext()) {
+                GenericValue productFeatureDataResource = (GenericValue)iter.next();
+                String feature = productFeatureDataResource.getString("productFeatureId");
+                featureList.add(feature); 
+            }
+            String featureString = StringUtil.join(featureList, " ");
+            Debug.logInfo("in ContentDocument, featureString:" + featureString, module);
+            if (UtilValidate.isNotEmpty(featureString) ) {
+                Field field = Field.UnStored("feature", featureString);
+	  	doc.add(field);
             }
 	    
 	    return;

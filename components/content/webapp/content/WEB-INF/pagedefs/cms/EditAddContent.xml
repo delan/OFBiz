@@ -3,10 +3,10 @@
     <template>main</template> 
     <property name="title">Edit/Add Content</property>
     <property name="formDefFile">/cms/CMSForms.xml</property>    
-    <property name="singleFormName">EditAddContent</property>    
+    <property name="singleFormName">EditAddContentStuff</property>    
     <property name="subMenu">/cms/cms_menu.ftl</property>    
     <property name="headerItem">Admin</property>    
-    <property name="entityName">Content</property>    
+    <property name="entityName">ContentAssocDataResourceViewFrom</property>    
     <property name="permission">CONTENTMGR</property>    
     <property name="primaryHTMLField">textData</property>    
     <property name="secondaryHTMLField"></property>    
@@ -30,7 +30,6 @@
     <page-action name="/menu/menuinit.bsh"/>
     <page-action name="/menu/storecurrentmenuval.bsh"/>
     <content-action name="/includes/formprep.bsh"/>
-    <content-action name="/cms/editaddprep.bsh"/>
-    <content-action name="/cms/contentprep.bsh"/>
+    <content-action name="/cms/cmseditaddprep.bsh"/>
 
 </page>

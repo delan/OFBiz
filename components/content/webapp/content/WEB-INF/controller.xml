@@ -1293,6 +1293,12 @@
         <response name="success" type="view" value="CMSContentEdit"/>
         <response name="error" type="view" value="EditAddImage"/>
     </request-map>
+    <request-map uri="persistContentStuff">
+        <security auth="true" https="true"/>
+        <event invoke="uploadContentStuff" path="org.ofbiz.content.content.UploadContentAndImage" type="java"/>
+        <response name="success" type="view" value="CMSContentEdit"/>
+        <response name="error" type="view" value="EditAddContent"/>
+    </request-map>
     <request-map uri="AdminSearch">
         <security https="true" auth="true"/>
         <response name="success" type="view" value="AdminSearch"/>

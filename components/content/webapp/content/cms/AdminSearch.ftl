@@ -25,6 +25,104 @@ ${menuWrapper.renderMenuString()}
 </select>
 </td>
 </tr>
+
+
+<!-- category form -->
+<tr>
+  <table border="0" wdith="100%">
+    <tr>
+      <td align="right" valign="middle">
+        <div class="tabletext">Features:</div>
+      </td>
+      <td align="right" valign="middle">
+        <div class="tabletext">
+          All <input type="RADIO" name="any_or_all" value="all" checked>
+          Any <input type="RADIO" name="any_or_all" value="any">
+        </div>
+      </td>
+    </tr>
+    <tr>
+      <td align="right" valign="middle">
+        <div class="tabletext">Feature IDs:</div>
+      </td>
+      <td valign="middle">
+        <div class="tabletext">
+          <input type="text" class="inputBox" name="SEARCH_FEAT" size="15" value="${requestParameters.SEARCH_FEAT?if_exists}">&nbsp;
+          <input type="text" class="inputBox" name="SEARCH_FEAT2" size="15" value="${requestParameters.SEARCH_FEAT?if_exists}">&nbsp;
+          <input type="text" class="inputBox" name="SEARCH_FEAT3" size="15" value="${requestParameters.SEARCH_FEAT?if_exists}">&nbsp;
+        </div>
+      </td>
+    </tr>
+    <#list productFeatureTypeIdsOrdered as productFeatureTypeId>
+      <#assign findPftMap = Static["org.ofbiz.base.util.UtilMisc"].toMap("productFeatureTypeId", productFeatureTypeId)>
+      <#assign productFeatureType = delegator.findByPrimaryKeyCache("ProductFeatureType", findPftMap)>
+      <#assign productFeatures = productFeaturesByTypeMap[productFeatureTypeId]>
+      <tr>
+        <td align="right" valign="middle">
+          <div class="tabletext">${(productFeatureType.description)?if_exists}:</div>
+        </td>
+        <td valign="middle">
+          <div class="tabletext">
+            <select class="selectBox" name="pft_${productFeatureTypeId}">
+              <option value="">- ${uiLabelMap.CommonAny} -</option>
+              <#list productFeatures as productFeature>
+              <option value="${productFeature.productFeatureId}">${productFeature.description?default("No Description")} [${productFeature.productFeatureId}]</option>
+              </#list>
+            </select>
+          </div>
+        </td>
+      </tr>
+    </#list>
+    <tr>
+      <td align="right" valign="middle">
+        <div class="tabletext">Sort Order:</div>
+      </td>
+      <td valign="middle">
+        <div class="tabletext">
+          <select name="sortOrder" class="selectBox">
+            <option value="SortKeywordRelevancy">${uiLabelMap.ProductKeywordRelevency}</option>
+            <option value="SortProductField:productName">${uiLabelMap.ProductProductName}</option>
+            <option value="SortProductField:internalName">Internal Name</option>
+            <option value="SortProductField:totalQuantityOrdered">Popularity by Orders</option>
+            <option value="SortProductField:totalTimesViewed">Popularity by Views</option>
+            <option value="SortProductField:averageCustomerRating">Customer Rating</option>
+            <option value="SortProductPrice:LIST_PRICE">List Price</option>
+            <option value="SortProductPrice:DEFAULT_PRICE">Default Price</option>
+            <option value="SortProductPrice:AVERAGE_COST">Average Cost</option>
+            <option value="SortProductPrice:MINIMUM_PRICE">Minimum Price</option>
+            <option value="SortProductPrice:MAXIMUM_PRICE">Maximum Price</option>
+          </select>
+          Low to High<input type="RADIO" name="sortAscending" value="Y" checked>
+          High to Low<input type="RADIO" name="sortAscending" value="N">
+        </div>
+      </td>
+    </tr>
+    <#if searchConstraintStrings?has_content>
+      <tr>
+        <td align="right" valign="top">
+          <div class="tabletext">Last Search:</div>
+        </td>
+        <td valign="top">
+            <#list searchConstraintStrings as searchConstraintString>
+                <div class="tabletext">&nbsp;-&nbsp;${searchConstraintString}</div>
+            </#list>
+            <div class="tabletext">Sorted by: ${searchSortOrderString}</div>
+            <div class="tabletext">
+              New Search<input type="RADIO" name="clearSearch" value="Y" checked>
+              Refine Search<input type="RADIO" name="clearSearch" value="N">
+            </div>
+        </td>
+      </tr>
+    </#if>
+    <tr>
+      <td>
+        <div class="tabletext">
+          <a href="javascript:document.advtokeywordsearchform.submit()" class="buttontext">${uiLabelMap.CommonFind}</a>
+        </div>
+      </td>
+    </tr>
+  </table>
+</tr>
 <tr>
 <td width="20%" align="right">
 &nbsp;</td>

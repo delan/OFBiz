@@ -39,8 +39,13 @@ HtmlFormWrapper listWrapper = new HtmlFormWrapper(formDefFile, listFormName, req
 context.put("listWrapper", listWrapper);
 siteId = paramMap.get("lcSiteId");
             Debug.logInfo("in search, siteId:" + siteId, "");
+searchFeature1 = paramMap.get("SEARCH_FEAT");
+searchFeature2 = paramMap.get("SEARCH_FEAT2");
+searchFeature3 = paramMap.get("SEARCH_FEAT3");
+Map featureIdByType = ParametricSearch.makeFeatureIdByTypeMap(paramMap);
 
-        if (UtilValidate.isNotEmpty(queryLine) || UtilValidate.isNotEmpty(siteId)) {
+
+        if (UtilValidate.isNotEmpty(queryLine) || UtilValidate.isNotEmpty(siteId) ) {
           try {
             indexPath = SearchWorker.getIndexPath(null);
             Searcher searcher = new IndexSearcher(indexPath);
@@ -65,6 +70,44 @@ siteId = paramMap.get("lcSiteId");
                 termQuery = new TermQuery(new Term("site", siteId));
                 combQuery.add(termQuery, true, false);
                 Debug.logInfo("in search, termQuery:" + termQuery.toString(), "");
+            }
+
+            if ( UtilValidate.isNotEmpty(searchFeature1) || UtilValidate.isNotEmpty(searchFeature2) || UtilValidate.isNotEmpty(searchFeature3) || !featureIdByType.isEmpty() ) {
+                featureQuery = new BooleanQuery();
+                anyOrAll = paramMap.get("any_or_all");
+                boolean featuresRequired = true;
+                if (anyOrAll != null && anyOrAll.equals("any")) 
+                    featuresRequired = false;
+    
+                if (UtilValidate.isNotEmpty(searchFeature1) ) {
+                    termQuery = new TermQuery(new Term("feature", searchFeature1));
+                    featureQuery.add(termQuery, featuresRequired, false);
+                    Debug.logInfo("in search searchFeature1, termQuery:" + termQuery.toString(), "");
+                }
+    
+                if (UtilValidate.isNotEmpty(searchFeature2) ) {
+                    termQuery = new TermQuery(new Term("feature", searchFeature2));
+                    featureQuery.add(termQuery, featuresRequired, false);
+                    Debug.logInfo("in search searchFeature2, termQuery:" + termQuery.toString(), "");
+                }
+    
+                if (UtilValidate.isNotEmpty(searchFeature3) ) {
+                    termQuery = new TermQuery(new Term("feature", searchFeature3));
+                    featureQuery.add(termQuery, featuresRequired, false);
+                    Debug.logInfo("in search searchFeature3, termQuery:" + termQuery.toString(), "");
+                }
+
+                if (!featureIdByType.isEmpty()) {
+                    List values = featureIdByType.values();
+                    iter = values.iterator();
+                    while (iter.hasNext()) {
+                        val = iter.next();
+                        termQuery = new TermQuery(new Term("feature", val));
+                        featureQuery.add(termQuery, featuresRequired, false);
+                        Debug.logInfo("in search searchFeature3, termQuery:" + termQuery.toString(), "");
+                    }
+                }
+                combQuery.add(featureQuery, featuresRequired, false);
             }
 
             Hits hits = searcher.search(combQuery);

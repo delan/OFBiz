@@ -1,5 +1,5 @@
 /*
- * $Id: DataResourceWorker.java,v 1.31 2004/06/16 02:36:27 byersa Exp $
+ * $Id: DataResourceWorker.java,v 1.32 2004/07/02 15:48:25 byersa Exp $
  *
  *  Copyright (c) 2001, 2002 The Open For Business Project - www.ofbiz.org
  *
@@ -64,7 +64,7 @@ import freemarker.template.TemplateException;
  * 
  * @author <a href="mailto:byersa@automationgroups.com">Al Byers</a>
  * @author <a href="mailto:jonesde@ofbiz.org">David E. Jones</a>
- * @version $Revision: 1.31 $
+ * @version $Revision: 1.32 $
  * @since 3.0
  */
 public class DataResourceWorker {
@@ -700,8 +700,7 @@ public class DataResourceWorker {
         } else if (dataResourceTypeId.equals("LINK")) {
             String text = dataResource.getString("objectInfo");
             outWriter.write(text);
-        } else if (dataResourceTypeId.equals("URL_RESOURCE")) {
-            String text = null;
+        } else if (dataResourceTypeId.equals("URL_RESOURCE")) { String text = null;
             URL url = new URL(dataResource.getString("objectInfo"));
             if (url.getHost() != null) { // is absolute
                 InputStream in = url.openStream();
@@ -836,7 +835,7 @@ public class DataResourceWorker {
         
         String mimeType = null;
         if (view != null)
-            mimeType = view.getString("mimeTypeId");
+            mimeType = view.getString("drMimeTypeId");
             //if (Debug.infoOn()) Debug.logInfo("getDataResourceMimeType, mimeType(2):" + mimeType, "");
         if (UtilValidate.isEmpty(mimeType) && UtilValidate.isNotEmpty(dataResourceId)) {
                 GenericValue dataResource = delegator.findByPrimaryKeyCache("DataResource", UtilMisc.toMap("dataResourceId", dataResourceId));
