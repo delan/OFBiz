@@ -36,6 +36,8 @@
 
 <%
     String userLoginId = request.getParameter("userlogin_id");
+    if (userLoginId == null) userLoginId = (String) request.getSession().getAttribute("userLoginId");
+    else request.getSession().setAttribute("userLoginId", userLoginId);
    
     boolean tryEntity = true;
     if(request.getAttribute(SiteDefs.ERROR_MESSAGE) != null) tryEntity = false;
@@ -52,12 +54,6 @@
   <form method="post" action="<ofbiz:url>/updatePassword/<%=donePage%></ofbiz:url>" name="changepasswordform">
   <input type="hidden" name="userLoginId" value="<%=userLoginId%>"> 
   <table width="90%" border="0" cellpadding="2" cellspacing="0">
-    <tr>
-      <td width="26%" align=right><div class="tabletext">Current (Old) Password</div></td>
-      <td width="74%">
-        <input type="password" name="currentPassword" size="20" maxlength="20">
-      *</td>
-    </tr>
     <tr>
       <td width="26%" align=right><div class="tabletext">New Password</div></td>
       <td width="74%">
