@@ -110,6 +110,11 @@ public class EntitySaxReader implements org.xml.sax.ContentHandler, ErrorHandler
             Debug.logImportant("Transaction Timeout set to " + transactionTimeout/3600 + " hours (" + transactionTimeout + " seconds)");
             try {
                 reader.parse(new InputSource(is));
+                //make sure all of the values to write got written...
+                if (valuesToWrite.size() > 0) {
+                    delegator.storeAll(valuesToWrite);
+                    valuesToWrite.clear();
+                }
                 TransactionUtil.commit(beganTransaction);
             } catch (Exception e) {
                 Debug.logError(e, "An error occured saving the data, rolling back transaction");
