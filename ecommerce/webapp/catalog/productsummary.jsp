@@ -6,22 +6,24 @@
         <%String smallImageUrl = localProduct.getString("smallImageUrl");%>
         <%if(smallImageUrl == null || smallImageUrl.length() <= 0) smallImageUrl = "/images/defaultImage.jpg";%>
           <a href='<ofbiz:url>/product?product_id=<%EntityField.run("product", "productId", pageContext);%></ofbiz:url>'>
-            <img src="<%=smallImageUrl%>" align="left" height="50" class='imageborder' border='0'>
+            <img src="<%=smallImageUrl%>" align="left" height="70" class='imageborder' border='0'>
           </a>
       </td>
-      <td align="left" valign="top" width="100%">
-          <div class="tabletext">
+    </tr>
+    <tr>
+      <td align="left" valign="top">
+          <%--<div class="tabletext">
             <a href='<ofbiz:url>/product?product_id=<%EntityField.run("product", "productId", pageContext);%></ofbiz:url>' class='buttontext'><%EntityField.run("product", "productName", pageContext);%></a>
-          </div>
-          <div class="tabletext"><%EntityField.run("product", "description", pageContext);%></div>
-          <div class="tabletext">
+          </div>--%>
+          <%--<div class="tabletext">
             <nobr>
               <b><%EntityField.run("product", "productId", pageContext);%></b>,
-              <b><font color="#006633"><%EntityField.run("product", "defaultPrice", pageContext);%></font>,</b>
+              <b><font color="#006633"><%EntityField.run("product", "defaultPrice", pageContext);%></font></b>
               Reg. <%EntityField.run("product", "listPrice", pageContext);%>
             </nobr>
-          </div>
+          </div>--%>
       </td>
+<%--
       <%if (!"VIRTUAL_PRODUCT".equals(localProduct.getString("productTypeId"))) {%>
           <td valign=top align=right>
             <form method="POST" action="<ofbiz:url>/additem<%=UtilFormatOut.ifNotEmpty((String)request.getAttribute(SiteDefs.CURRENT_VIEW), "/", "")%></ofbiz:url>" name="the<%=UtilFormatOut.formatQuantity(listIndex)%>form" style='margin: 0;'>
@@ -51,6 +53,7 @@
             </ofbiz:if>
           </td>
       <%}%>
+--%>
     </tr>
   </table>
 </ofbiz:if>
