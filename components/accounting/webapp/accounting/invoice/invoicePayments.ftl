@@ -21,7 +21,7 @@
  *
  *@author     Andy Zeneski (jaz@ofbiz.org)
  *@author     Eric.Barbier@nereide.biz (migration to uiLabelMap)
- *@version    $Revision: 1.6 $
+ *@version    $Rev:$
  *@since      2.2
 -->
 <#assign uiLabelMap = requestAttributes.uiLabelMap>

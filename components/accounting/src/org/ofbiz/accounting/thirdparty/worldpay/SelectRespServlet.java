@@ -1,5 +1,5 @@
 /*
- * $Id: SelectRespServlet.java,v 1.1 2003/08/18 19:37:43 jonesde Exp $
+ * $Id$
  *
  * Copyright (c) 2003 The Open For Business Project - www.ofbiz.org
  *
@@ -62,7 +62,7 @@ import com.worldpay.select.merchant.SelectServletResponse;
  * WorldPay Select Pro Response Servlet
  *
  * @author     <a href="mailto:jaz@ofbiz.org">Andy Zeneski</a>
- * @version    $Revision: 1.1 $
+ * @version    $Rev:$
  * @since      2.0
  */
 public class SelectRespServlet extends SelectServlet implements SelectDefs {

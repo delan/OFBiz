@@ -1,5 +1,5 @@
 /*
- * $Id: IcsPaymentServices.java,v 1.10 2004/06/25 23:23:33 ajzeneski Exp $
+ * $Id$
  *
  * Copyright (c) 2003 The Open For Business Project - www.ofbiz.org
  *
@@ -42,7 +42,7 @@ import com.cybersource.ws.client.FaultException;
  * CyberSource WS Integration Services
  *
  * @author     <a href="mailto:jaz@ofbiz.org">Andy Zeneski</a>
- * @version    $Revision: 1.10 $
+ * @version    $Rev:$
  * @since      3.0
  */
 public class IcsPaymentServices {
