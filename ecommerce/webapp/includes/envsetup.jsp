@@ -1,5 +1,6 @@
 <%@ page import="java.util.*, java.net.*" %>
 <%@ page import="org.ofbiz.core.security.*, org.ofbiz.core.entity.*, org.ofbiz.core.util.*" %>
+<%@ page import="org.ofbiz.ecommerce.catalog.*" %>
 
 <%@ taglib uri="ofbizTags" prefix="ofbiz" %>
 
