@@ -1,7 +1,7 @@
 /*
  * $Id$
  *
- * Copyright (c) 2004 The Open For Business Project - www.ofbiz.org
+ * Copyright (c) 2004-2005 The Open For Business Project - www.ofbiz.org
  *
  * Permission is hereby granted, free of charge, to any person obtaining a
  * copy of this software and associated documentation files (the "Software"),
@@ -28,30 +28,28 @@ import java.security.NoSuchAlgorithmException;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Random;
+
 import javax.crypto.SecretKey;
-import javax.transaction.InvalidTransactionException;
-import javax.transaction.SystemException;
 import javax.transaction.Transaction;
-import javax.transaction.TransactionManager;
 
 import org.ofbiz.base.crypto.DesCrypt;
 import org.ofbiz.base.crypto.HashCrypt;
+import org.ofbiz.base.util.Debug;
 import org.ofbiz.base.util.GeneralException;
 import org.ofbiz.base.util.StringUtil;
 import org.ofbiz.base.util.UtilMisc;
 import org.ofbiz.base.util.UtilObject;
-import org.ofbiz.base.util.Debug;
 import org.ofbiz.entity.EntityCryptoException;
 import org.ofbiz.entity.GenericDelegator;
 import org.ofbiz.entity.GenericEntityException;
 import org.ofbiz.entity.GenericValue;
 import org.ofbiz.entity.transaction.GenericTransactionException;
-import org.ofbiz.entity.transaction.TransactionFactory;
 import org.ofbiz.entity.transaction.TransactionUtil;
 
 /**
  * 
  * @author     <a href="mailto:jaz@ofbiz.org">Andy Zeneski</a>
+ * @author     <a href="mailto:jonesde@ofbiz.org">David E. Jones</a>
  * @version    $Rev$
  * @since      3.2
  */
@@ -132,7 +130,6 @@ public class EntityCrypto {
             newValue.set("keyText", StringUtil.toHexString(key.getEncoded()));
             newValue.set("keyName", keyName);
 
-            TransactionManager tm = TransactionFactory.getTransactionManager();
             Transaction parentTransaction = null;
             boolean beganTrans = false;
             try {
@@ -143,8 +140,8 @@ public class EntityCrypto {
 
             if (!beganTrans) {
                 try {
-                    parentTransaction = tm.suspend();
-                } catch (SystemException e) {
+                    parentTransaction = TransactionUtil.suspend();
+                } catch (GenericTransactionException e) {
                     throw new EntityCryptoException(e);
                 }
 
@@ -159,27 +156,28 @@ public class EntityCrypto {
             try {
                 delegator.create(newValue);
             } catch (GenericEntityException e) {
-                throw new EntityCryptoException(e);
-            }
-
-            try {
-                TransactionUtil.commit(beganTrans);
-            } catch (GenericTransactionException e) {
-                throw new EntityCryptoException(e);
-            }
-
-
-            // resume the parent transaction
-            if (parentTransaction != null) {
                 try {
-                    tm.resume(parentTransaction);
-                } catch (InvalidTransactionException e) {
-                } catch (IllegalStateException e) {
-                    throw new EntityCryptoException(e);
-                } catch (SystemException e) {
+                    TransactionUtil.rollback(beganTrans);
+                } catch (GenericTransactionException e1) {
+                    Debug.logError(e1, "Could not rollback transaction", module);
+                }
+                throw new EntityCryptoException(e);
+            } finally {
+                try {
+                    TransactionUtil.commit(beganTrans);
+                } catch (GenericTransactionException e) {
                     throw new EntityCryptoException(e);
                 }
+                // resume the parent transaction
+                if (parentTransaction != null) {
+                    try {
+                        TransactionUtil.resume(parentTransaction);
+                    } catch (GenericTransactionException e) {
+                        throw new EntityCryptoException(e);
+                    }
+                }
             }
+
 
             return key;
         } else {
