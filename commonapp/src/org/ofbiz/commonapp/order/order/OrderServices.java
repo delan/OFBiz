@@ -1929,18 +1929,21 @@ public class OrderServices {
                     daysTillCancel = 30;
                 }
                 
-                Calendar cal = Calendar.getInstance();
-                cal.setTimeInMillis(orderDate.getTime());
-                cal.add(Calendar.DAY_OF_YEAR, daysTillCancel);
-                Date cancelDate = cal.getTime();
-                Date nowDate = new Date();
-                if (cancelDate.equals(nowDate) || cancelDate.after(nowDate)) {
-                    // cancel the order item(s)
-                    Map svcCtx = UtilMisc.toMap("orderId", orderId, "statusId", "ITEM_CANCELLED", "userLogin", userLogin);
-                    try {                        
-                        Map ores = dispatcher.runSync("changeOrderItemStatus", svcCtx);                        
-                    } catch (GenericServiceException e) {
-                        Debug.logError(e, "Problem calling change item status service : " + svcCtx, module);                        
+                if (daysTillCancel > 0) {
+                    // 0 days means do not auto-cancel
+                    Calendar cal = Calendar.getInstance();
+                    cal.setTimeInMillis(orderDate.getTime());
+                    cal.add(Calendar.DAY_OF_YEAR, daysTillCancel);
+                    Date cancelDate = cal.getTime();
+                    Date nowDate = new Date();
+                    if (cancelDate.equals(nowDate) || cancelDate.after(nowDate)) {
+                        // cancel the order item(s)
+                        Map svcCtx = UtilMisc.toMap("orderId", orderId, "statusId", "ITEM_CANCELLED", "userLogin", userLogin);
+                        try {                        
+                            Map ores = dispatcher.runSync("changeOrderItemStatus", svcCtx);                        
+                        } catch (GenericServiceException e) {
+                            Debug.logError(e, "Problem calling change item status service : " + svcCtx, module);                        
+                        }
                     }
                 }                               
             } else {
