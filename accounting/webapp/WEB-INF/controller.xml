@@ -143,6 +143,11 @@
         <response name="success" type="view" value="billingAccountInvoices"/>
     </request-map>  
     
+    <!-- invoice requests -->
+    <request-map uri="findInvoices">
+        <security https="true" auth="true"/>
+        <response name="success" type="view" value="findInvoices"/>
+    </request-map>
     <request-map uri="viewInvoice">
         <security https="true" auth="true"/>
         <response name="success" type="view" value="editInvoice"/>
@@ -173,6 +178,7 @@
     <view-map name="billingAccountInvoices" type="jpublish" page="/billingaccount/BillingAccountInvoices.ftl"/>
     <view-map name="billingAccountPayments" type="jpublish" page="/billingaccount/BillingAccountPayments.ftl"/>    
     
+    <view-map name="findInvoices" type="jpublish" page="/invoice/findInvoices.ftl"/>
     <view-map name="editInvoice" type="jpublish" page="/invoice/EditInvoice.ftl"/>
     <!-- end of view mappings -->
 </site-conf>
