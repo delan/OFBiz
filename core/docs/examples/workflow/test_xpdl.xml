@@ -59,8 +59,8 @@
 -->
   <WorkflowProcesses>
     <WorkflowProcess Id="ProcessOrder" Name="Processes incoming orders">
-      
-      <ProcessHeader DurationUnit="h">
+
+      <ProcessHeader DurationUnit="s">
         <Created>2001-12-01 12:00:00</Created>
         <Description>Sample process to test the workflow engine</Description>
         <Priority>2</Priority>
@@ -73,7 +73,7 @@
           <Duration>3</Duration>
         </TimeEstimation>
       </ProcessHeader>
-      
+
       <RedefinableHeader PublicationStatus="UNDER_REVISION">
         <Author>OFBiz</Author>
         <Version>0.9</Version>
@@ -81,7 +81,7 @@
           <Responsible>admin</Responsible>
         </Responsibles>
       </RedefinableHeader>
-          
+
       <FormalParameters>
         <FormalParameter Id="orderId" Index="1" Mode="IN">
           <DataType><BasicType Type="STRING"/></DataType>
@@ -92,7 +92,7 @@
           <Description></Description>
         </FormalParameter>
       </FormalParameters>
-      
+
       <BasicType Type="STRING"/> <!-- how is this used? -->
 
       <!--
@@ -176,9 +176,9 @@
         </Activity>
         <Activity Id="assign_approver" Name="Assign Approver">
           <Description>Assigns a participant to approve the order.</Description>
-          <Limit>1</Limit>
+          <Limit>30</Limit>
 		  <Implementation>
-		    <Tool Id="assignApprover" Type="PROCEDURE"/>
+		    <Tool Id="testScv" Type="PROCEDURE"/>
 		  </Implementation>
           <Performer>admin</Performer>
 		  <StartMode>
@@ -218,13 +218,16 @@
             </TransitionRestriction>
           </TransitionRestrictions>
           <ExtendedAttributes>
-            <ExtendedAttribute Name="acceptAllAssignments" Value="N"/> <!-- must always be Y or N -->
-            <ExtendedAttribute Name="completeAllAssignments" Value="N"/> <!-- must always be Y or N -->
-            <ExtendedAttribute Name="canStart" Value="N"/> <!-- must always be Y or N -->
+            <ExtendedAttribute Name="acceptAllAssignments" Value="N"/>
+            <ExtendedAttribute Name="completeAllAssignments" Value="N"/>
+            <ExtendedAttribute Name="limitAfterStart" Value="N"/>
+            <ExtendedAttribute Name="limitService" Value="testScv"/>
+            <ExtendedAttribute Name="inheritPriority" Value="Y"/>
+            <ExtendedAttribute Name="canStart" Value="N"/>
           </ExtendedAttributes>
         </Activity>
       </Activities>
-      
+
       <Transitions>
         <Transition Id="trans1" From="receive_order" To="assign_approver" Loop="NOLOOP" Name="Go to Assign Approver">
           <Condition Type="CONDITION">true</Condition>

@@ -142,10 +142,10 @@ public abstract class WfExecutionObjectImpl implements WfExecutionObject {
      * @param newValue
      * @throws WfException General workflow exception
      */
-    public void setPriority(int newValue) throws WfException {
+    public void setPriority(long newValue) throws WfException {
         GenericValue dataObject = getRuntimeObject();
         try {
-            dataObject.set("priority", new Integer(newValue));
+            dataObject.set("priority", new Long(newValue));
             dataObject.store();
         } catch (GenericEntityException e) {
             throw new WfException(e.getMessage(), e);
@@ -157,9 +157,9 @@ public abstract class WfExecutionObjectImpl implements WfExecutionObject {
      * @throws WfException General workflow exception.
      * @return Getter Priority of
      */
-    public int priority() throws WfException {
+    public long priority() throws WfException {
         if (getRuntimeObject().get("priority") != null)
-            return getRuntimeObject().getInteger("priority").intValue();
+            return getRuntimeObject().getLong("priority").longValue();
         return 0; // change to default priority value
     }
 

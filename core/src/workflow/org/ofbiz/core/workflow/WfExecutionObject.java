@@ -169,14 +169,14 @@ public interface WfExecutionObject {
      * @throws WfException General workflow exception.
      * @return Getter Priority of
      */
-    public int priority() throws WfException;
+    public long priority() throws WfException;
 
     /**
      * Setter for attribute 'priority'.
      * @param newValue
      * @throws WfException General workflow exception
      */
-    public void setPriority(int newValue) throws WfException;
+    public void setPriority(long newValue) throws WfException;
 
     /**
      * Resume this process or activity.

@@ -563,7 +563,7 @@ public class XpdlReader {
         activityValue.set("completeAllAssignments", getExtendedAttributeValue(activityElement, "completeAllAssignments", "N"));
         activityValue.set("limitService", getExtendedAttributeValue(activityElement, "limitService", null), false);
         activityValue.set("limitAfterStart", getExtendedAttributeValue(activityElement, "limitAfterStart", "Y"));
-        //by default set the canStart to always be true
+        activityValue.set("inheritPriority", getExtendedAttributeValue(activityElement, "inheritPriority", "N"));
         activityValue.set("canStart", getExtendedAttributeValue(activityElement, "canStart", "Y"));
     }
 

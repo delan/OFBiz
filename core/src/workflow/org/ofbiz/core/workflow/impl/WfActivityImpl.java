@@ -91,11 +91,32 @@ public class WfActivityImpl extends WfExecutionObjectImpl implements WfActivity 
         // set the activity context
         this.setProcessContext(container().contextKey());
 
-        boolean limitAfterStart =
-                valueObject.getBoolean("limitAfterStart").booleanValue();
-        if (limitAfterStart && valueObject.get("limitService") != null &&
-                !valueObject.getString("limitService").equals(""))
+        // check for inheritPriority attribute
+        boolean inheritPriority = valueObject.getBoolean("inheritPriority").booleanValue() || false;
+        if (inheritPriority) {
+            GenericValue runTime = getRuntimeObject();
+            Map context = processContext();
+            if (context.containsKey("previousActivity")) {
+                String previousActivity = (String) context.get("previousActivity");
+                WfActivity pAct = WfFactory.getWfActivity(getDelegator(), previousActivity);
+                if (pAct != null) {
+                    try {
+                        runTime.set("priority", new Long(pAct.priority()));
+                        runTime.store();
+                    } catch (GenericEntityException e) {
+                        throw new WfException(e.getMessage(), e);
+                    }
+                }
+            }
+        }
+
+        boolean limitAfterStart = valueObject.getBoolean("limitAfterStart").booleanValue();
+        Debug.logInfo("[WfActivity.init]: limitAfterStart - " + limitAfterStart, module);
+        if (!limitAfterStart && valueObject.get("limitService") != null &&
+                !valueObject.getString("limitService").equals("")) {
+            Debug.logInfo("[WfActivity.init]: limit service is not after start, setting up now.", module);
             setLimitService();
+        }
     }
 
     private void createAssignments(GenericValue performer) throws WfException {
@@ -413,7 +434,7 @@ public class WfActivityImpl extends WfExecutionObjectImpl implements WfActivity 
         if ((type == 2 && completeAll) || (type == 1 && acceptAll)) {
             return true;
         } else {
-            Debug.logInfo("[checkAssignStatus] : need only one assignment to finish", module);
+            Debug.logInfo("[checkAssignStatus] : need only one assignment to pass", module);
             if (foundOne)
                 return true;
             Debug.logInfo("[checkAssignStatus] : found no assignment(s)", module);
@@ -431,9 +452,17 @@ public class WfActivityImpl extends WfExecutionObjectImpl implements WfActivity 
             throw new CannotStart(tna.getMessage(), tna);
         }
         // check the limit service
-        if (getDefinitionObject().get("limitService") != null &&
-                !getDefinitionObject().getString("limitService").equals(""))
+        boolean limitAfterStart = getDefinitionObject().getBoolean("limitAfterStart").booleanValue();
+        if (limitAfterStart && getDefinitionObject().get("limitService") != null &&
+                !getDefinitionObject().getString("limitService").equals("")) {
+            Debug.logInfo("[WfActivity.init]: limit service is after start, setting up now.", module);
             setLimitService();
+        }
+
+        // set the new previousActivity
+        Map context = processContext();
+        context.put("previousActivity", workEffortId);
+        this.setProcessContext(context);
 
         // get the type of this activity
         String type = getDefinitionObject().getString("activityTypeEnumId");
@@ -575,22 +604,45 @@ public class WfActivityImpl extends WfExecutionObjectImpl implements WfActivity 
         if (durationUOM == null)
             return;
 
+        char durChar = durationUOM.charAt(0);
+        Calendar cal = Calendar.getInstance();
+        cal.setTime(new Date());
+        switch (durChar) {
+            case 'Y':
+                cal.add(Calendar.YEAR, timeLimit.intValue());
+                break;
+            case 'M':
+                cal.add(Calendar.MONTH, timeLimit.intValue());
+                break;
+            case 'D':
+                cal.add(Calendar.DATE, timeLimit.intValue());
+                break;
+            case 'H':
+                cal.add(Calendar.HOUR, timeLimit.intValue());
+                break;
+            case 'm':
+                cal.add(Calendar.MINUTE, timeLimit.intValue());
+                break;
+            case 's':
+                cal.add(Calendar.SECOND, timeLimit.intValue());
+                break;
+            default:
+                throw new WfException("Invalid duration unit");
+        }
+
+        long startTime = cal.getTime().getTime();
+
         Map context = new HashMap();
         context.put("serviceName", limitService);
         context.put("serviceContext", serviceContext);
         context.put("workEffortId", runtimeKey());
-
-        long startTime = -1;
-
-        // todo fix duration uom to support other methods besides HOUR
-        startTime = (new Date()).getTime() + (timeLimit.longValue() * 60 * 1000);
-        // fixme
 
         try {
             dctx.getDispatcher().schedule("wfLimitInvoker", context, startTime); // yes we are hard coded!
         } catch (GenericServiceException e) {
             throw new WfException(e.getMessage(), e);
         }
+        Debug.logInfo("[WfActivity.setLimitService]: Set limit service (" + limitService + " ) to run at " + startTime, module);
     }
 
     // Invoke the procedure (service) -- This will include sub-workflows
@@ -637,12 +689,26 @@ public class WfActivityImpl extends WfExecutionObjectImpl implements WfActivity 
                     actualContext.put(key, context.get(key));
                 else if (((String) key).equals("workEffortId"))
                     actualContext.put(key, runtimeKey());
+                else if (((String) key).equals("userLogin"))
+                    actualContext.put(key, getUserLogin((String)key));
                 else if (!actualContext.containsKey(key))
                     throw new WfException("Context does not contain the key: '" +
                                           (String) key + "'");
             }
         }
         return actualContext;
+    }
+
+    // Gets a UserLogin object for service invocation
+    // This allows a workflow to invoke a service as a specific user
+    private GenericValue getUserLogin(String userId) throws WfException {
+        GenericValue userLogin = null;
+        try {
+            userLogin = getDelegator().findByPrimaryKey("UserLogin", UtilMisc.toMap("userLoginId", userId));
+        } catch (GenericEntityException e) {
+            throw new WfException(e.getMessage(), e);
+        }
+        return userLogin;
     }
 
 }

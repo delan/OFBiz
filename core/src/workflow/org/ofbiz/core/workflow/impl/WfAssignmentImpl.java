@@ -120,8 +120,10 @@ public class WfAssignmentImpl implements WfAssignment {
         changeStatus("CAL_ACCEPTED");
         try {
             activity.activate();
-        } catch (CannotStart e) {
-            throw new WfException(e.getMessage(), e);
+        } catch (CannotStart cs) {
+            throw new WfException("Assignment was accepted, but activity cannot start yet.", cs);
+        } catch (AlreadyRunning ar) {
+            throw new WfException("Cannot accept assignment; activity has already started.", ar);
         }
         try {
             GenericValue v = activity.getRuntimeObject();
