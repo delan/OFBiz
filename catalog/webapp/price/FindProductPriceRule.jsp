@@ -1,5 +1,4 @@
-<%
-/**
+<%--
  *  Copyright (c) 2002 The Open For Business Project - www.ofbiz.org
  *
  *  Permission is hereby granted, free of charge, to any person obtaining a
@@ -24,8 +23,7 @@
  * @author     Andy Zeneski
  * @created    June 18, 2002
  * @version    1.0
- */
-%>
+--%>
 
 <%@ page import="java.util.*, java.io.*" %>
 <%@ page import="org.ofbiz.core.util.*, org.ofbiz.core.entity.*" %>
@@ -36,14 +34,25 @@
 
 <%if (security.hasEntityPermission("CATALOG", "_VIEW", session)) {%>
 <%
+    boolean activeOnly = true;
+    if ("false".equals(request.getParameter("activeOnly"))) activeOnly = false;
+
     Collection productPriceRules = delegator.findAll("ProductPriceRule");
+    if (activeOnly) productPriceRules = EntityUtil.filterByDate(productPriceRules);
     if (productPriceRules != null && productPriceRules.size() > 0) pageContext.setAttribute("productPriceRules", productPriceRules);
 %>
 
 <br>
+<div class="head1">Find Price Rule</div>
 
 <a href="<ofbiz:url>/EditProductPriceRules</ofbiz:url>" class="buttontext">[Create Rule]</a>
-
+<br>
+<br>
+<%if (activeOnly) {%>
+    <a href="<ofbiz:url>/FindProductPriceRules?activeOnly=false</ofbiz:url>" class="buttontext">[Active and Inactive]</a>
+<%} else {%>
+    <a href="<ofbiz:url>/FindProductPriceRules</ofbiz:url>" class="buttontext">[Active Only]</a>
+<%}%>
 <ofbiz:if name="productPriceRules">
   <table border="1" cellpadding='2' cellspacing='0'>
     <tr>
@@ -59,10 +68,22 @@
       <td><div class="tabletext">&nbsp;<ofbiz:entityfield attribute="rule" field="productPriceRuleId"/></div></td>
       <td><div class="tabletext">&nbsp;<ofbiz:entityfield attribute="rule" field="ruleName"/></div></td>
       <td><div class="tabletext">&nbsp;<ofbiz:entityfield attribute="rule" field="isSale"/></div></td>
-      <td><div class="tabletext">&nbsp;<ofbiz:entityfield attribute="rule" field="fromDate"/></div></td>
-      <td><div class="tabletext">&nbsp;<ofbiz:entityfield attribute="rule" field="thruDate"/></div></td>
+      <td>
+        <%boolean hasntStarted = false;%>
+        <%if (rule.getTimestamp("fromDate") != null && UtilDateTime.nowTimestamp().before(rule.getTimestamp("fromDate"))) { hasntStarted = true; }%>
+        <div class="tabletext"<%if (hasntStarted) {%> style='color: red;'<%}%>>
+            &nbsp;<ofbiz:inputvalue entityAttr="rule" field="fromDate"/>
+        </div>
+      </td>
+      <td>
+        <%boolean hasExpired = false;%>
+        <%if (rule.getTimestamp("thruDate") != null && UtilDateTime.nowTimestamp().after(rule.getTimestamp("thruDate"))) { hasExpired = true; }%>
+        <div class="tabletext"<%if (hasExpired) {%> style='color: red;'<%}%>>
+            &nbsp;<ofbiz:inputvalue entityAttr="rule" field="thruDate"/>
+        </div>
+      </td>
       <td align="center">
-        <a href="<ofbiz:url>/EditProductPriceRules?productPriceRuleId=<ofbiz:entityfield attribute="rule" field="productPriceRuleId"/></ofbiz:url>" class="buttontext">[Edit]</a>
+        <a href='<ofbiz:url>/EditProductPriceRules?productPriceRuleId=<ofbiz:entityfield attribute="rule" field="productPriceRuleId"/></ofbiz:url>' class="buttontext">[Edit]</a>
       </td>
     </tr>
     </ofbiz:iterator>

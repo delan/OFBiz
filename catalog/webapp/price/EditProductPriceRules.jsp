@@ -54,6 +54,7 @@
 <br>
 
 <div class="head1">Price Rules</div>
+<a href="<ofbiz:url>/FindProductPriceRules</ofbiz:url>" class="buttontext">[Find Rule]</a>
 
 <br>
 <br>
@@ -75,9 +76,9 @@
     <td align="left">
         <FORM method=POST action='<ofbiz:url>/updateProductPriceRule</ofbiz:url>'>
             <input type=hidden <ofbiz:inputvalue entityAttr="productPriceRule" field="productPriceRuleId" fullattrs="true"/>>
-            <input type=text size='30' <ofbiz:inputvalue entityAttr="productPriceRule" field="ruleName" fullattrs="true"/>>
-            <input type=text size='20' <ofbiz:inputvalue entityAttr="productPriceRule" field="fromDate" fullattrs="true"/>>
-            <input type=text size='20' <ofbiz:inputvalue entityAttr="productPriceRule" field="thruDate" fullattrs="true"/>>
+            <input type=text size='25' <ofbiz:inputvalue entityAttr="productPriceRule" field="ruleName" fullattrs="true"/>>
+            <input type=text size='22' <ofbiz:inputvalue entityAttr="productPriceRule" field="fromDate" fullattrs="true"/>>
+            <input type=text size='22' <ofbiz:inputvalue entityAttr="productPriceRule" field="thruDate" fullattrs="true"/>>
             &nbsp;&nbsp;
             <%boolean saleRule = ((productPriceRule.get("isSale") != null && productPriceRule.getString("isSale").equalsIgnoreCase("Y")) ? true : false);%>
             <span class="tabletext"><b>Sale Price:</b>&nbsp;<input type="checkbox" name="isSale" value="Y" <%=saleRule ? "CHECKED" : ""%>></span>

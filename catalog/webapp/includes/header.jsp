@@ -33,7 +33,7 @@
           <ofbiz:if name="userLogin">
             <td class="headerButtonLeft"><a href="<ofbiz:url>/logout/main</ofbiz:url>" class="buttontext">Logout</a></td>
           </ofbiz:if>
-          <td class="headerButtonLeft"><a href="<ofbiz:url>/main</ofbiz:url>" class="buttontext">Main</a></td>
+          <%-- <td class="headerButtonLeft"><a href="<ofbiz:url>/main</ofbiz:url>" class="buttontext">Main</a></td> --%>
           <ofbiz:unless name="person">
             <TD width="90%" align=center class='headerCenter'>Welcome!</TD>
           </ofbiz:unless>
@@ -43,10 +43,10 @@
           <%-- <td class="headerButtonRight"><a href="#" class="buttontext">WebSites</a></td> --%>
           <td class="headerButtonRight"><a href="<ofbiz:url>/FindProdCatalog</ofbiz:url>" class="buttontext">Catalogs</a></td>
           <td class="headerButtonRight"><a href="<ofbiz:url>/main</ofbiz:url>" class="buttontext">Products</a></td>
-          <td class="headerButtonRight"><a href="<ofbiz:url>/EditFeatureCategories</ofbiz:url>" class="buttontext">Features</a></td>
+          <td class="headerButtonRight"><a href="<ofbiz:url>/EditFeatureCategories</ofbiz:url>" class="buttontext">FeatureCats</a></td>
           <td class="headerButtonRight"><a href="<ofbiz:url>/FindFacility</ofbiz:url>" class="buttontext">Facilities</a></td>
           <td class="headerButtonRight"><a href="<ofbiz:url>/FindProductPromo</ofbiz:url>" class="buttontext">Promos</a></td>
-          <td class="headerButtonRight"><a href="<ofbiz:url>/FindProductPriceRules</ofbiz:url>" class="buttontext">Prices</a></td>
+          <td class="headerButtonRight"><a href="<ofbiz:url>/FindProductPriceRules</ofbiz:url>" class="buttontext">PriceRules</a></td>
         </TR>
       </TABLE>
     </TD>

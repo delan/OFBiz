@@ -206,12 +206,39 @@ function insertImageName(size,ext) {
   <tr>
     <td width="26%" align=right><div class="tabletext">Description</div></td>
     <td>&nbsp;</td>
-    <td width="74%" colspan='5'><textarea cols="60" rows="2" name="description" maxlength="255"><ofbiz:inputvalue entityAttr='product' field='description' tryEntityAttr="tryEntity"/></textarea></td>
+    <td width="74%" colspan='5'><textarea cols="60" rows="2" name="description" maxlength="250"><ofbiz:inputvalue entityAttr='product' field='description' tryEntityAttr="tryEntity"/></textarea></td>
   </tr>
   <tr>
     <td width="26%" align=right valign=top><div class="tabletext">Long Description</div></td>
     <td>&nbsp;</td>
     <td width="74%" colspan='5'><textarea cols="60" rows="5" name="longDescription" maxlength="2000"><ofbiz:inputvalue entityAttr='product' field='longDescription' tryEntityAttr="tryEntity"/></textarea></td>
+  </tr>
+
+  <tr>
+    <td width="26%" align=right valign=top><div class="tabletext">Inventory Message</div></td>
+    <td>&nbsp;</td>
+    <td width="74%" colspan='5'><input type="text" size="30" maxlength="250" <ofbiz:inputvalue entityAttr='product' field='inventoryMessage' tryEntityAttr="tryEntity" fullattrs="true"/>></td>
+  </tr>
+  <tr>
+    <td width="26%" align=right><div class="tabletext">Require Inventory?</div></td>
+    <td>&nbsp;</td>
+    <td width="74%" colspan='5'>
+        <SELECT name='requireInventory'>
+            <%
+                String reqInvLabel = "Use Catalog Default";
+                if ("Y".equals(product.getString("requireInventory"))) {
+                    reqInvLabel = "Yes";
+                } else if ("N".equals(product.getString("requireInventory"))) {
+                    reqInvLabel = "No";
+                }
+            %>
+            <OPTION value='<ofbiz:inputvalue entityAttr="product" field="requireInventory" tryEntityAttr="tryEntity"/>'><%=reqInvLabel%></OPTION>
+            <OPTION value='<ofbiz:inputvalue entityAttr="product" field="requireInventory" tryEntityAttr="tryEntity"/>'>----</OPTION>
+            <OPTION value=''>Use Catalog Default</OPTION>
+            <OPTION value='Y'>Yes</OPTION>
+            <OPTION value='N'>No</OPTION>
+        </SELECT>
+    </td>
   </tr>
 
   <tr>
