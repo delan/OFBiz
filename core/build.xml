@@ -64,6 +64,7 @@
     <target name="clean" depends="init">
         <delete dir="${lib.dir}" />
         <delete dir="${build.dir}" />
+        <delete file="${deploy.dir}/${name}.jar" />
     </target>
 
 

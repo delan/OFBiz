@@ -45,12 +45,13 @@
         <delete dir="${build.dir}" />
         <delete dir="${walib.dir}" />
         <delete dir="${waclasses.dir}" />
+        <delete file="${deploy.dir}/${name}.war" />
     </target>
 
-	<target name="prepare-docs" depends="init">
-		<mkdir dir="${doc.dir}" />
-		<mkdir dir="${doc.dir}/api" />
-	</target>	
+    <target name="prepare-docs" depends="init">
+            <mkdir dir="${doc.dir}" />
+            <mkdir dir="${doc.dir}/api" />
+    </target>	
 
 
     <!-- ================================================================== -->
@@ -99,7 +100,7 @@
               tofile="${waclasses.dir}/servers.properties" />
     </target>
     
-    <target name="war" depends="prepare,jar,conf">
+    <target name="war" depends="prepare,conf">
         <copy file="${build.dir}/${name}.jar"
               tofile="${walib.dir}/${name}.jar" />
         <copy file="${core.jar}"
