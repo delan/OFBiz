@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="ISO-8859-1" ?>
+<!DOCTYPE taglib
+        PUBLIC "-//Sun Microsystems, Inc.//DTD JSP Tag Library 1.1//EN"
+        "http://java.sun.com/j2ee/dtds/web-jsptaglibrary_1_1.dtd">
+<taglib>
+    <tlibversion>1.0</tlibversion>
+    <jspversion>1.1</jspversion>
+    <shortname>ofbiz</shortname>
+    <info>
+	Open For Business Catalog Tag Libraries
+    </info>
+    <tag>
+	<name>iterate</name>
+	<tagclass>org.ofbiz.ecommerce.catalog.taglib.IteratorTag</tagclass>
+	<teiclass>org.ofbiz.ecommerce.catalog.taglib.IteratorTEI</teiclass>
+	<bodycontent>JSP</bodycontent>
+	<info>
+	    Iterate through an embedded collection.
+	</info>
+	<attribute><name>name</name><required>true</required></attribute>	
+	<attribute><name>type</name><required>true</required></attribute>
+	<attribute><name>property</name><required>false</required></attribute>
+	<attribute><name>class</name><required>false</required></attribute>
+    </tag>
+</taglib>

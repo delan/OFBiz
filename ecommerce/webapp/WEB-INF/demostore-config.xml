@@ -1,0 +1,100 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+
+<site-conf>
+    <description>DemoStore Site Configuration File</description>
+    
+    <owner>unused</owner>
+    <datasource>unused</datasource>
+    <errorpage>/error/error.jsp</errorpage>
+
+    <!-- Security Mappings -->
+    <request-map>
+        <uri>checkLogin</uri><secure>false</secure><auth>false</auth>
+        <event-type>java</event-type><event-path>org.ofbiz.core.security.WebEventSecurity</event-path><event-invoke>checkLogin</event-invoke>
+        <success>view:main</success><error>view:login</error>
+    </request-map>
+    <request-map>
+        <uri>login</uri><secure>true</secure><auth>false</auth>
+        <event-type>java</event-type><event-path>org.ofbiz.core.security.WebEventSecurity</event-path><event-invoke>login</event-invoke>
+        <success>view:main</success><error>view:login</error>
+    </request-map>
+    <request-map>
+        <uri>logout</uri><secure>true</secure><auth>true</auth>
+        <event-type>java</event-type><event-path>org.ofbiz.core.security.WebEventSecurity</event-path><event-invoke>logout</event-invoke>
+        <success>view:main</success><error>view:main</error>
+    </request-map>
+    <view-map><view>login</view><mapped-page>/login.jsp</mapped-page></view-map>
+    <!-- End of Security Mappings -->
+
+    <!-- Request Mappings -->
+    <request-map>
+        <uri>view</uri>
+        <secure>false</secure>
+        <auth>false</auth>
+        <success>view:main</success>
+        <error>view:error</error>
+    </request-map>
+    <request-map>
+        <uri>chain</uri>
+        <event-type>java</event-type>
+        <event-path>org.ofbiz.core.event.TestEvent</event-path>
+        <event-invoke>test</event-invoke>
+        <success>request:/view</success>
+        <error>view:error</error>
+    </request-map>
+	<request-map>
+		<uri>additem</uri>
+		<event-type>java</event-type>
+		<event-path>org.ofbiz.ecommerce.shoppingcart.ShoppingCartEvents</event-path>
+		<event-invoke>addToCart</event-invoke>
+		<success>view:showcart</success>
+		<error>view:error</error>
+	</request-map>
+	<request-map>
+		<uri>modifycart</uri>
+		<event-type>java</event-type>
+		<event-path>org.ofbiz.ecommerce.shoppingcart.ShoppingCartEvents</event-path>
+		<event-invoke>modifyCart</event-invoke>
+		<success>view:showcart</success>
+		<error>view:error</error>
+	</request-map>		
+	<request-map>
+		<uri>catalog</uri>
+		<success>view:catalog</success>
+	</request-map>
+	<request-map>
+		<uri>category</uri>
+		<success>view:category</success>
+	</request-map>
+	<request-map>
+		<uri>product</uri>
+		<success>view:product</success>
+	</request-map>	
+	<request-map>
+		<uri>shippingAddress</uri>
+		<success>view:shippingAddress</success>
+	</request-map>
+	<request-map>
+		<uri>setShippingAddress</uri>
+		<event-type>java</event-type>
+		<event-path>org.ofbiz.ecommerce.checkout.CheckOutEvents</event-path>
+		<event-invoke>setAddressInfo</event-invoke>
+		<success>view:main</success>
+		<error>view:shippingAddress</error>
+	</request-map>
+
+    <request-map><uri>main</uri><secure>false</secure><auth>false</auth><success>view:main</success></request-map>
+
+    <!-- end of request mappings -->
+
+    <!-- View Mappings -->
+    <view-map><view>error</view><mapped-page>/error/error.jsp</mapped-page></view-map>
+    <view-map><view>main</view><mapped-page>/main.jsp</mapped-page></view-map>
+	<view-map><view>showcart</view><mapped-page>/cart/showcart.jsp</mapped-page></view-map>
+	<view-map><view>catalog</view><mapped-page>/catalog/catalog.jsp</mapped-page></view-map>	
+	<view-map><view>category</view><mapped-page>/catalog/category.jsp</mapped-page></view-map>		
+	<view-map><view>product</view><mapped-page>/catalog/product.jsp</mapped-page></view-map>			
+	<view-map><view>shippingAddress</view><mapped-page>/shipping/shipping.jsp</mapped-page></view-map>
+    <!-- end of view mappings -->
+
+</site-conf>
