@@ -230,7 +230,7 @@
       <field name="shipmentMethodTypeId" type="id-ne"></field>
       <field name="partyId" type="id-ne"></field>
       <field name="roleTypeId" type="id-ne"></field>
-      <field name="display" type="indicator"></field>
+      <field name="isDisplayable" type="indicator"></field>
       <field name="sequenceNumber" type="numeric"></field>
       <prim-key field="shipmentMethodTypeId"/>
       <prim-key field="partyId"/>
