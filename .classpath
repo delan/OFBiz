@@ -82,5 +82,6 @@
     <classpathentry kind="lib" path="base/lib/servlet.jar"/>
     <classpathentry kind="lib" path="components/entity/lib/commons-dbcp.jar"/>
     <classpathentry kind="var" path="JCE_LIB"/>
+    <classpathentry kind="var" path="JCOMM_LIB"/>
     <classpathentry kind="output" path="bin"/>
 </classpath>
