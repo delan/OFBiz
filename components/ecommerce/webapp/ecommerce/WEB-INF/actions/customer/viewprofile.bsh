@@ -28,10 +28,12 @@ import java.util.*;
 import org.ofbiz.base.util.*;
 import org.ofbiz.entity.*;
 import org.ofbiz.party.contact.ContactMechWorker;
+import org.ofbiz.product.store.ProductStoreWorker;
 import org.ofbiz.accounting.payment.PaymentWorker;
 
 dispatcher = request.getAttribute("dispatcher");
 delegator = request.getAttribute("delegator");
+productStoreId = ProductStoreWorker.getProductStoreId(request);
 
 userLogin = session.getAttribute("userLogin");
 if (userLogin != null) {
@@ -55,5 +57,8 @@ if (userLogin != null) {
     
     context.put("partyContactMechValueMaps", partyContactMechValueMaps);
     context.put("paymentMethodValueMaps", paymentMethodValueMaps);
+
+    profileSurveys = ProductStoreWorker.getProductSurveys(delegator, productStoreId, null, "CUSTOMER_PROFILE");
+    context.put("surveys", profileSurveys);
 }
 

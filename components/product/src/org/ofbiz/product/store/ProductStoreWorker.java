@@ -1,5 +1,5 @@
 /*
- * $Id: ProductStoreWorker.java,v 1.14 2003/11/28 18:59:19 ajzeneski Exp $
+ * $Id: ProductStoreWorker.java,v 1.15 2003/12/05 21:05:59 ajzeneski Exp $
  *
  *  Copyright (c) 2001, 2002 The Open For Business Project - www.ofbiz.org
  *
@@ -47,7 +47,7 @@ import org.ofbiz.party.contact.ContactMechWorker;
  * ProductStoreWorker - Worker class for store related functionality
  *
  * @author     <a href="mailto:jaz@ofbiz.org">Andy Zeneski</a>
- * @version    $Revision: 1.14 $
+ * @version    $Revision: 1.15 $
  * @since      2.0
  */
 public class ProductStoreWorker {
@@ -324,6 +324,12 @@ public class ProductStoreWorker {
             Debug.logError(e, "Unable to get ProductStoreSurveyAppl for store : " + productStoreId, module);
         }
         storeSurveys = EntityUtil.filterByDate(storeSurveys);
+
+        // null productId means get all of this trigger (appl) type
+        if (productId == null) {
+            return storeSurveys;
+        }
+
         if (storeSurveys != null && storeSurveys.size() > 0) {
             Iterator ssi = storeSurveys.iterator();
             while (ssi.hasNext()) {
@@ -352,6 +358,39 @@ public class ProductStoreWorker {
         }
 
         return surveys;
+    }
+
+    /** Returns the number of responses for this survey by party */
+    public static int checkSurveyResponse(HttpServletRequest request, String surveyId) {
+        GenericDelegator delegator = (GenericDelegator) request.getAttribute("delegator");
+        GenericValue userLogin = (GenericValue) request.getSession().getAttribute("userLogin");
+        String productStoreId = getProductStoreId(request);
+        if (userLogin == null) {
+            return -1;
+        }
+
+        return checkSurveyResponse(delegator, userLogin.getString("partyId"), productStoreId, surveyId);
+    }
+
+    /** Returns the number of responses for this survey by party */
+    public static int checkSurveyResponse(GenericDelegator delegator, String partyId, String productStoreId, String surveyId) {
+        if (delegator == null || partyId == null || productStoreId == null) {
+            return -1;
+        }
+
+        List surveyResponse = null;
+        try {
+            surveyResponse = delegator.findByAnd("SurveyResponse", UtilMisc.toMap("surveyId", surveyId, "partyId", partyId));
+        } catch (GenericEntityException e) {
+            Debug.logError(e, module);
+            return -1;
+        }
+
+        if (surveyResponse == null || surveyResponse.size() == 0) {
+            return 0;
+        } else {
+            return surveyResponse.size();
+        }
     }
 
     public static boolean isStoreInventoryRequired(String productStoreId, String productId, GenericDelegator delegator) {
