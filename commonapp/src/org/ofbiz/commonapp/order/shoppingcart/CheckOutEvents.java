@@ -25,6 +25,7 @@ package org.ofbiz.commonapp.order.shoppingcart;
 
 import java.net.MalformedURLException;
 import java.net.URL;
+import java.text.DecimalFormat;
 import java.text.NumberFormat;
 import java.util.ArrayList;
 import java.util.Collection;
@@ -212,7 +213,11 @@ public class CheckOutEvents {
         session.removeAttribute("_QUICK_REORDER_PRODUCTS_");
 
         String orderId = cart.getOrderId();
-        Double grandTotal = new Double(cart.getGrandTotal());
+        
+        // format the grandTotal
+        DecimalFormat formatter = new DecimalFormat("###.##");
+        String grandTotalString = formatter.format(cart.getGrandTotal());               
+        Double grandTotal = new Double(grandTotalString);
 
         // store the order - build the context
         Map context = cart.makeCartMap(dispatcher, explodeOrderItems(request));
