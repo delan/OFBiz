@@ -250,10 +250,7 @@
       <field name="noteId" type="id-ne"></field>	
       <prim-key field="orderId" />	
       <prim-key field="noteId" />
-      <relation type="many" rel-entity-name="OrderHeader">
-        <key-map field-name="orderId" />
-      </relation>
-      <relation type="many" rel-entity-name="NoteData">
+      <relation type="one" rel-entity-name="NoteData">
         <key-map field-name="noteId" />
       </relation>
     </entity>
