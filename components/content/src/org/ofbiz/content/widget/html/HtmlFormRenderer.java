@@ -1469,6 +1469,7 @@ public class HtmlFormRenderer implements FormStringRenderer {
             listSize = -1;
         }
 
+/*
         int highIndex = -1;
         try {
             highIndex = modelForm.getHighIndex();
@@ -1482,10 +1483,13 @@ public class HtmlFormRenderer implements FormStringRenderer {
         } catch (Exception e) {
             lowIndex = 0;
         }
+*/        
         
+        int lowIndex = viewIndex * viewSize;
+        int highIndex = (viewIndex + 1) * viewSize;
         int actualPageSize = modelForm.getActualPageSize();
         // if this is all there seems to be (if listSize < 0, then size is unknown)
-        if (actualPageSize >= listSize && listSize >= 0)
+        if (actualPageSize >= listSize && listSize > 0)
             return;
 
         String str = (String) context.get("queryString");
