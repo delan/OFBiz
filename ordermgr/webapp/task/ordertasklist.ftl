@@ -62,7 +62,69 @@
     <td width='100%'>
       <table width='100%' border='0' cellspacing='0' cellpadding='0' class='boxbottom'>
         <tr>        
-          <td width='100%'>          
+          <td width='100%'>  
+            <#if poList?has_content>
+              <table width='100%' border='0' cellpadding='0' cellspacing='0' class='boxbottom'>
+                <tr>
+                  <td>
+                    <div class='head3'>Purchase Orders To Be Scheduled</div>
+                    <table width='100%' cellpadding='2' cellspacing='0' border='0'>
+                      <tr>
+                        <td><div class="tableheadtext">Order&nbsp;Number</div></td>
+                        <td><div class="tableheadtext">Vendor&nbsp;Name</div></td>
+                        <td><div class="tableheadtext">Order&nbsp;Date</div></td>
+                        <td><div class="tableheadtext">Status</div></td>
+                        <td width="1" align="right"><div class="tableheadtext">Items</div></td>
+                        <td width="1" align="right"><div class="tableheadtext">Total</div></td>
+                        <td width="1">&nbsp;&nbsp;</td>
+                        <td width="1">&nbsp;&nbsp;</td>
+                      </tr>
+                      <tr><td colspan='8'><hr class='sepbar'></td></tr>
+                      <#list poList as orderHeader>
+                        <#assign orh = Static["org.ofbiz.commonapp.order.order.OrderReadHelper"].getHelper(orderHeader)>
+                        <#assign statusItem = orderHeader.getRelatedOneCache("StatusItem")>
+                        <#assign placingParty = orh.getPlacingParty()?if_exists>
+                        <tr>
+                          <td><a href="<@ofbizUrl>/orderview?order_id=${orderHeader.orderId}</@ofbizUrl>" class='buttontext'>${orderHeader.orderId}</a></td>                          
+                          <td>
+                            <div class='tabletext'>
+                              <#assign partyId = "_NA_">
+                              <#if placingParty?has_content>
+                                <#assign partyId = placingParty.partyId>
+                                <#if placingParty.getEntityName() == "Person">
+                                  <#if placingParty.lastName?exists>
+                                    ${placingParty.lastName}<#if placingParty.firstName?exists>, ${placingParty.firstName}</#if>
+                                  <#else>
+                                    N/A
+                                  </#if>
+                                <#else>
+                                  <#if placingParty.groupName?exists>
+                                    ${placingParty.groupName}
+                                  <#else>
+                                    N/A
+                                  </#if>
+                                </#if>
+                              <#else>
+                                N/A
+                              </#if>
+                            </div>
+                          </td>
+                          <td><div class="tabletext"><nobr>${orderHeader.getString("orderDate")}</nobr></div></td>
+                          <td><div class="tabletext">${statusItem.description?default(statusItem.statusId?default("N/A"))}</div></td>
+                          <td align="right"><div class="tabletext">${orh.getTotalOrderItemsQuantity()?string.number}</div></td>
+                          <td align="right"><div class="tabletext">${orh.getOrderGrandTotal()?string.currency}</div></td>
+                          <td width="1">&nbsp;&nbsp;</td>
+                          <td align='right'>
+                            <a href="<@ofbizUrl>/schedulepo?order_id=${orderHeader.orderId}</@ofbizUrl>" class='buttontext'>Schedule&nbsp;Delivery</a>
+                          </td>                       
+                        </tr>
+                      </#list>
+                    </table>
+                  </td>
+                </tr>
+              </table>
+            </#if>
+                              
             <#if partyTasks?has_content>
               <table width='100%' border='0' cellpadding='0' cellspacing='0' class='boxbottom'>
                 <tr>
