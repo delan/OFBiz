@@ -23,7 +23,7 @@
  * @author     David E. Jones
  * @author     Andy Zeneski
  * @created    May 26 2003
- *@author     Olivier Heintz (olivier.heintz@nereide.biz) 
+ *@author     Olivier Heintz (olivier.heintz@nereide.biz)
  * @version    1.0
  */
 -->
@@ -64,19 +64,19 @@
     </td>
   </tr>
   <tr>
-    <td colspan="2" align="right" nowrap>     
+    <td colspan="2" align="right" nowrap>
       <#if showOld>
         <a href="<@ofbizUrl>/viewprofile?partyId=${party.partyId}</@ofbizUrl>" class="buttontext">[${uiLabelMap.PartyHideOld}]</a>
-      <#else>      
+      <#else>
         <a href="<@ofbizUrl>/viewprofile?partyId=${party.partyId}&SHOW_OLD=true</@ofbizUrl>" class="buttontext">[${uiLabelMap.PartyShowOld}]</a>
       </#if>
       <a href="/accounting/control/findBillingAccount?partyId=${partyId}${externalKeyParam}" class="buttontext">[${uiLabelMap.AccountingBillingAccount}]</a>
       <#if security.hasRolePermission("ORDERMGR", "_VIEW", "", "", session)>
-        <a href="/ordermgr/control/findorders?lookupFlag=Y&partyId=${partyId}${externalKeyParam}" class="buttontext">[${uiLabelMap.OrderOrders}]</a>
+        <a href="/ordermgr/control/findorders?lookupFlag=Y&hideFields=Y&partyId=${partyId}${externalKeyParam}" class="buttontext">[${uiLabelMap.OrderOrders}]</a>
       </#if>
       <#if security.hasEntityPermission("ORDERMGR", "_CREATE", session)>
         <a href="/ordermgr/control/orderentry?mode=SALES_ORDER&partyId=${partyId}${externalKeyParam}" class="buttontext">[${uiLabelMap.OrderNewOrder}]</a>
-      </#if>      
+      </#if>
     </td>
   </tr>
 </table>
@@ -96,10 +96,10 @@
               <a href="<@ofbizUrl>/editperson?partyId=${party.partyId}</@ofbizUrl>" class="submenutextright">
               <#if lookupPerson?has_content>${uiLabelMap.CommonUpdate}</#if></a>
             </td>
-            </#if>            
+            </#if>
           </#if>
           <#if lookupGroup?has_content>
-            <#assign lookupPartyType = party.getRelatedOneCache("PartyType")>            
+            <#assign lookupPartyType = party.getRelatedOneCache("PartyType")>
             <td valign="middle" align="left">
               <div class="boxhead">&nbsp;${uiLabelMap.PartyPartyGroupInformation}</div>
             </td>
@@ -240,7 +240,7 @@
               </#list>
               <#if "POSTAL_ADDRESS" = contactMech.contactMechTypeId>
                   <#assign postalAddress = contactMechMap.postalAddress>
-                  <div class="tabletext">                    
+                  <div class="tabletext">
                     <#if postalAddress.toName?has_content><b>${uiLabelMap.PartyAddrToName}:</b> ${postalAddress.toName}<br></#if>
                     <#if postalAddress.attnName?has_content><b>${uiLabelMap.PartyAddrAttnName}:</b> ${postalAddress.attnName}<br></#if>
                     ${postalAddress.address1?if_exists}<br>
@@ -352,7 +352,7 @@
                                   <td width="90%" valign="top">
                                     <div class="tabletext">
                                       <b>
-                                        ${uiLabelMap.AccountingCreditCard}: ${creditCard.nameOnCard} - 
+                                        ${uiLabelMap.AccountingCreditCard}: ${creditCard.nameOnCard} -
                                         <#if security.hasEntityPermission("PAY_INFO", "_VIEW", session)>
                                             ${creditCard.cardType}
                                             ${creditCard.cardNumber}
@@ -438,7 +438,7 @@
           <#if security.hasEntityPermission("PARTYMGR", "_UPDATE", session)>
           <td align="right" valign="top" width="1%">
             <a href="<@ofbizUrl>/editAvsOverride?partyId=${party.partyId}</@ofbizUrl>" class="buttontext">[${uiLabelMap.CommonEdit}]</a>
-          </td>          
+          </td>
           <#if avsOverride?exists>
             <td align="right" valign="top" width="1%">
               <a href="<@ofbizUrl>/resetAvsOverride?partyId=${party.partyId}</@ofbizUrl>" class="buttontext">[${uiLabelMap.CommonReset}]</a>
@@ -526,7 +526,7 @@
         <tr>
           <td valign="middle" align="left">
             <div class="boxhead">&nbsp;${uiLabelMap.PartyLastVisit}</div>
-          </td>   
+          </td>
           <td valign="middle" align="right">
             <a href="<@ofbizUrl>/showvisits?party_id=${partyId}</@ofbizUrl>" class="submenutextright">${uiLabelMap.CommonListAll}</a>
           </td>
@@ -552,7 +552,7 @@
               </tr>
               <tr>
                 <td colspan="7"><hr class="sepbar"></td>
-              </tr>            
+              </tr>
               <#list visits as visitObj>
               <#if (visitObj_index > 4)><#break></#if>
               <tr>
@@ -562,11 +562,11 @@
                 <td><div class="tabletext">${visitObj.webappName?if_exists}</div></td>
                 <td><div class="tabletext">${visitObj.clientIpAddress?if_exists}</div></td>
                 <td><div class="tabletext">${(visitObj.fromDate.toString())?if_exists}</div></td>
-                <td><div class="tabletext">${(visitObj.thruDate.toString())?if_exists}</div></td>                
+                <td><div class="tabletext">${(visitObj.thruDate.toString())?if_exists}</div></td>
               </tr>
-              </#list>                                         
+              </#list>
             </table>
-            <#else>            
+            <#else>
               <div class="tabletext">${uiLabelMap.PartyNoVisitFound}</div>
             </#if>
           </td>
