@@ -35,12 +35,16 @@
 <%
 	String custRequestId = request.getParameter("custRequestId");
 	String custRequestItemSeqId = request.getParameter("custRequestItemSeqId");
+	String showAll = request.getParameter("showAll");
+	if (showAll == null) showAll = "false";
 	GenericValue custRequestItem = null;
    	if (custRequestId != null && custRequestItemSeqId != null) {
    		custRequestItem = delegator.findByPrimaryKey("CustRequestItem", UtilMisc.toMap("custRequestId", custRequestId, "custRequestItemSeqId", custRequestItemSeqId));
    		if (custRequestItem != null) pageContext.setAttribute("custRequestItem", custRequestItem);
    	}	
-	List notes = delegator.findByAnd("CustRequestItemNoteView", UtilMisc.toMap("custRequestId", custRequestId, "custRequestItemSeqId", custRequestItemSeqId), UtilMisc.toList("-noteDateTime"));
+   	Map fields = UtilMisc.toMap("custRequestId", custRequestId);
+   	if (showAll.equals("false")) fields.put("custRequestItemSeqId", custRequestItemSeqId);
+	List notes = delegator.findByAnd("CustRequestItemNoteView", fields, UtilMisc.toList("-noteDateTime"));
     if (notes != null && notes.size() > 0) pageContext.setAttribute("notes", notes);	
 %>
 
@@ -59,9 +63,16 @@
     <TD width='100%'>
       <table width='100%' border='0' cellspacing='0' cellpadding='0' class='boxtop'>
         <tr>
-          <TD align=left width='40%' >
+          <TD>
             <div class='boxhead'>&nbsp;Notes For Request Item: <%=UtilFormatOut.checkNull(custRequestItem.getString("description"))%></div>
           </TD>
+          <td align="right">
+            <% if (showAll.equals("false")) { %>
+            <a href="<ofbiz:url>/requestitemnotes?custRequestId=<%=custRequestId%>&custRequestItemSeqId=<%=custRequestItemSeqId%>&showAll=true</ofbiz:url>" class="lightbuttontext">[Show All Notes]</a>
+            <% } else { %>
+            <a href="<ofbiz:url>/requestitemnotes?custRequestId=<%=custRequestId%>&custRequestItemSeqId=<%=custRequestItemSeqId%>&showAll=true</ofbiz:url>" class="lightbuttontext">[Show This Item's Notes]</a>
+            <% } %>
+          </td>
         </tr>
       </table>
     </TD>
@@ -78,6 +89,9 @@
                   <td align="left" valign="top" width="35%">
                     <div class="tabletext">&nbsp;<b>By: </b><ofbiz:entityfield attribute="noteRef" field="firstName"/>&nbsp;<ofbiz:entityfield attribute="noteRef" field="lastName"/></div>
                     <div class="tabletext">&nbsp;<b>At: </b><ofbiz:entityfield attribute="noteRef" field="noteDateTime"/></div>
+                    <% if (showAll.equals("true")) { %>
+                    <div class="tabletext">&nbsp;<b>Item: </b><ofbiz:entityfield attribute="noteRef" field="custRequestItemSeqId"/></div>
+                    <% } %>
                   </td>
                   <td align="left" valign="top" width="65%">
                     <div class="tabletext"><ofbiz:entityfield attribute="noteRef" field="noteInfo"/></div>
