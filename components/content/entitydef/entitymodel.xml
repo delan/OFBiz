@@ -26,7 +26,7 @@
  *
  * @author     David E. Jones (jonesde@ofbiz.org)
  * @author     Andy Zeneski (jaz@ofbiz.org)
- * @version    $Revision: 1.45 $
+ * @version    $Revision: 1.46 $
  */
 -->
 
@@ -173,7 +173,7 @@
       </relation>
     </entity>
     <view-entity entity-name="ContentAssocDataResourceViewFrom"
-                package-name="org.ofbiz.commonapp.content"
+                package-name="org.ofbiz.content.content"
                 title="Main Assoc To and DataResource">
       <member-entity entity-alias="CO" entity-name="Content"/>
       <member-entity entity-alias="CA" entity-name="ContentAssoc"/>
@@ -216,7 +216,7 @@
       </relation>
     </view-entity>
     <view-entity entity-name="ContentAssocDataResourceViewTo"
-                package-name="org.ofbiz.commonapp.content"
+                package-name="org.ofbiz.content.content"
                 title="Main Assoc To and DataResource">
       <member-entity entity-alias="CO" entity-name="Content"/>
       <member-entity entity-alias="CA" entity-name="ContentAssoc"/>
@@ -274,7 +274,7 @@
       <prim-key field="contentAssocTypeId"/>
     </entity>
     <view-entity entity-name="ContentAssocViewFrom"
-                package-name="org.ofbiz.commonapp.content"
+                package-name="org.ofbiz.content.content"
                 title="Main Assoc To">
       <member-entity entity-alias="CO" entity-name="Content"/>
       <member-entity entity-alias="CA" entity-name="ContentAssoc"/>
@@ -286,7 +286,7 @@
       </view-link>
     </view-entity>
     <view-entity entity-name="ContentAssocViewTo"
-                package-name="org.ofbiz.commonapp.content"
+                package-name="org.ofbiz.content.content"
                 title="Main Assoc To">
       <member-entity entity-alias="CO" entity-name="Content"/>
       <member-entity entity-alias="CA" entity-name="ContentAssoc"/>
@@ -313,7 +313,7 @@
       </relation>
     </entity>
     <view-entity entity-name="ContentDataResourceView"
-                package-name="org.ofbiz.commonapp.content"
+                package-name="org.ofbiz.content.content"
                 title="Content and DataResource">
       <member-entity entity-alias="CO" entity-name="Content"/>
       <member-entity entity-alias="DR" entity-name="DataResource"/>
@@ -479,7 +479,7 @@
       </relation>
     </entity>
     <view-entity entity-name="SubContentDataResourceView"
-                package-name="org.ofbiz.commonapp.content"
+                package-name="org.ofbiz.content.content"
                 title="Content and DataResource for SubContent">
       <member-entity entity-alias="CO" entity-name="Content"/>
       <member-entity entity-alias="DR" entity-name="DataResource"/>
@@ -608,7 +608,7 @@
       </relation>
     </entity>
     <view-entity entity-name="DataResourceContentView"
-                package-name="org.ofbiz.commonapp.content"
+                package-name="org.ofbiz.content.content"
                 title="DataResource and Content View">
       <member-entity entity-alias="DR" entity-name="DataResource"/>
       <member-entity entity-alias="CO" entity-name="Content"/>
