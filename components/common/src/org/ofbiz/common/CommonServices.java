@@ -1,5 +1,5 @@
 /*
- * $Id: CommonServices.java,v 1.3 2003/11/13 21:21:00 ajzeneski Exp $
+ * $Id: CommonServices.java,v 1.4 2003/11/26 11:52:44 jonesde Exp $
  *
  * Copyright (c) 2001, 2002 The Open For Business Project - www.ofbiz.org
  *
@@ -24,28 +24,16 @@
  */
 package org.ofbiz.common;
 
-import java.net.MalformedURLException;
-import java.net.URL;
 import java.sql.Timestamp;
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.Map;
-import java.util.Properties;
 
-import javax.mail.Message;
-import javax.mail.Session;
-import javax.mail.Transport;
-import javax.mail.internet.InternetAddress;
-import javax.mail.internet.MimeMessage;
 import javax.transaction.xa.XAException;
 
 import org.ofbiz.base.util.Debug;
-import org.ofbiz.base.util.HttpClient;
-import org.ofbiz.base.util.HttpClientException;
 import org.ofbiz.base.util.UtilDateTime;
 import org.ofbiz.base.util.UtilMisc;
-import org.ofbiz.base.util.UtilProperties;
-import org.ofbiz.base.util.UtilValidate;
 import org.ofbiz.entity.GenericDelegator;
 import org.ofbiz.entity.GenericEntityException;
 import org.ofbiz.entity.GenericValue;
@@ -58,7 +46,7 @@ import org.ofbiz.service.ServiceXaWrapper;
  * Common Services
  *
  * @author     <a href="mailto:jaz@ofbiz.org">Andy Zeneski</a>
- * @version    $Revision: 1.3 $
+ * @version    $Revision: 1.4 $
  * @since      2.0
  */
 public class CommonServices {
@@ -124,139 +112,13 @@ public class CommonServices {
     }
 
     /**
-     * JavaMail Service that gets body content from a URL
-     *@param ctx The DispatchContext that this service is operating in
-     *@param context Map containing the input parameters
-     *@return Map with the result of the service, the output parameters
-     */
-    public static Map sendMailFromUrl(DispatchContext ctx, Map context) {
-        // pretty simple, get the content and then call the sendMail method below
-        String bodyUrl = (String) context.remove("bodyUrl");
-        Map bodyUrlParameters = (Map) context.remove("bodyUrlParameters");
-
-        URL url = null;
-
-        try {
-            url = new URL(bodyUrl);
-        } catch (MalformedURLException e) {
-            Debug.logWarning(e, module);
-            return ServiceUtil.returnError("Malformed URL: " + bodyUrl + "; error was: " + e.toString());
-        }
-
-        HttpClient httpClient = new HttpClient(url, bodyUrlParameters);
-        String body = null;
-
-        try {
-            body = httpClient.post();
-        } catch (HttpClientException e) {
-            Debug.logWarning(e, module);
-            return ServiceUtil.returnError("Error getting content: " + e.toString());
-        }
-
-        context.put("body", body);
-        Map result = sendMail(ctx, context);
-
-        result.put("body", body);
-        return result;
-    }
-
-    /**
-     * Basic JavaMail Service
-     *@param ctx The DispatchContext that this service is operating in
-     *@param context Map containing the input parameters
-     *@return Map with the result of the service, the output parameters
-     */
-    public static Map sendMail(DispatchContext ctx, Map context) {
-        // first check to see if sending mail is enabled
-        String mailEnabled = UtilProperties.getPropertyValue("general.properties", "mail.notifications.enabled", "N");
-        if (!"Y".equalsIgnoreCase(mailEnabled)) {
-            // no error; just return as if we already processed
-            Debug.logImportant("Mail notifications disabled in general.properties", module);
-            return ServiceUtil.returnSuccess();
-        }      
-        String sendTo = (String) context.get("sendTo");
-        String sendCc = (String) context.get("sendCc");
-        String sendBcc = (String) context.get("sendBcc");
-        String sendFrom = (String) context.get("sendFrom");
-        String subject = (String) context.get("subject");
-        String body = (String) context.get("body");
-        String sendType = (String) context.get("sendType");
-        String sendVia = (String) context.get("sendVia");
-        String authUser = (String) context.get("authUser");
-        String authPass = (String) context.get("authPass");
-        String contentType = (String) context.get("contentType");
-        boolean useSmtpAuth = false;      
-          
-        // define some default       
-        if (sendType == null || sendType.equals("mail.smtp.host")) {
-            sendType = "mail.smtp.host";
-            if (sendVia == null || sendVia.length() == 0) {            
-                sendVia = UtilProperties.getPropertyValue("general.properties", "mail.smtp.relay.host", "localhost");
-            }
-            if (authUser == null || authUser.length() == 0) {
-                authUser = UtilProperties.getPropertyValue("general.properties", "mail.smtp.auth.user");
-            }
-            if (authPass == null || authPass.length() == 0) {
-                authPass = UtilProperties.getPropertyValue("general.properties", "mail.smtp.auth.password");
-            }
-            if (authUser != null && authUser.length() > 0) {
-                useSmtpAuth = true;
-            }
-        } else if (sendVia == null) {
-            return ServiceUtil.returnError("Parameter sendVia is required when sendType is not mail.smtp.host");
-        }
-                       
-        if (contentType == null) {
-            contentType = "text/html";
-        }
-                     
-        try {
-            Properties props = System.getProperties();
-            props.put(sendType, sendVia);
-            if (useSmtpAuth) {
-                props.put("mail.smtp.auth", "true");
-            }
-            
-            Session session = Session.getInstance(props);
-
-            MimeMessage mail = new MimeMessage(session);
-            mail.setFrom(new InternetAddress(sendFrom));
-            mail.setSubject(subject);
-            mail.addRecipients(Message.RecipientType.TO, sendTo);
-
-            if (UtilValidate.isNotEmpty(sendCc)) {
-                mail.addRecipients(Message.RecipientType.CC, sendCc);
-            }
-            if (UtilValidate.isNotEmpty(sendBcc)) {
-                mail.addRecipients(Message.RecipientType.BCC, sendBcc);
-            }
-
-            mail.setContent(body, contentType);
-            mail.saveChanges();
-
-            Transport trans = session.getTransport("smtp");
-            if (!useSmtpAuth) {
-                trans.connect();
-            } else {
-                trans.connect(sendVia, authUser, authPass);
-            }
-            trans.sendMessage(mail, mail.getAllRecipients()); 
-            trans.close();                  
-        } catch (Exception e) {
-            Debug.logError(e, "Cannot send mail message", module);
-            return ServiceUtil.returnError("Cannot send mail; see logs");
-        }
-        return ServiceUtil.returnSuccess();
-    }
-
-    /**
      * Create Note Record
      *@param ctx The DispatchContext that this service is operating in
      *@param context Map containing the input parameters
      *@return Map with the result of the service, the output parameters
      */
     public static Map createNote(DispatchContext ctx, Map context) {
-        GenericDelegator delegator = (GenericDelegator) ctx.getDelegator();
+        GenericDelegator delegator = ctx.getDelegator();
         GenericValue userLogin = (GenericValue) context.get("userLogin");
         Timestamp now = UtilDateTime.nowTimestamp();
         String partyId = (String) context.get("partyId");

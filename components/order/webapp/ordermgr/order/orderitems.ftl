@@ -20,7 +20,7 @@
  *  THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  *
  *@author     Andy Zeneski (jaz@ofbiz.org)
- *@version    $Revision: 1.5 $
+ *@version    $Revision: 1.6 $
  *@since      2.2
 -->
 
@@ -111,13 +111,13 @@
                         <div class="tabletext" nowrap>${orderItem.quantity?string.number}&nbsp;</div>
                       </td>
                       <td align="right" valign="top" nowrap>
-                        <div class="tabletext" nowrap>${orderItem.unitPrice?string.currency} / ${orderItem.unitListPrice?string.currency}</div>
+                        <div class="tabletext" nowrap><@ofbizCurrency amount=orderItem.unitPrice isoCode=currencyUomId/> / <@ofbizCurrency amount=orderItem.unitListPrice isoCode=currencyUomId/></div>
                       </td>
                       <td align="right" valign="top" nowrap>
-                        <div class="tabletext" nowrap>${Static["org.ofbiz.order.order.OrderReadHelper"].getOrderItemAdjustmentsTotal(orderItem, orderAdjustments, true, false, false)?string.currency}</div>
+                        <div class="tabletext" nowrap><@ofbizCurrency amount=Static["org.ofbiz.order.order.OrderReadHelper"].getOrderItemAdjustmentsTotal(orderItem, orderAdjustments, true, false, false) isoCode=currencyUomId/></div>
                       </td>
                       <td align="right" valign="top" nowrap>
-                        <div class="tabletext" nowrap>${Static["org.ofbiz.order.order.OrderReadHelper"].getOrderItemSubTotal(orderItem, orderAdjustments)?string.currency}</div>
+                        <div class="tabletext" nowrap><@ofbizCurrency amount=Static["org.ofbiz.order.order.OrderReadHelper"].getOrderItemSubTotal(orderItem, orderAdjustments) isoCode=currencyUomId/></div>
                       </td>
                       <td>&nbsp;</td>                      
                       <td align="right" valign="top" nowrap>
@@ -143,7 +143,7 @@
                         <td>&nbsp;</td>
                         <td align="right">
                           <div class="tabletext" style="font-size: xx-small;">
-                            ${Static["org.ofbiz.order.order.OrderReadHelper"].calcItemAdjustment(orderItemAdjustment, orderItem)?string.currency}
+                            <@ofbizCurrency amount=Static["org.ofbiz.order.order.OrderReadHelper"].calcItemAdjustment(orderItemAdjustment, orderItem) isoCode=currencyUomId/>
                           </div>
                          </td>
                         <td>&nbsp;</td>
@@ -163,7 +163,7 @@
                         <td>&nbsp;</td>
                         <td align="right">
                           <div class="tabletext" style="font-size: xx-small;">
-                            ${orderItemPriceInfo.modifyAmount?string.currency}
+                            <@ofbizCurrency amount=orderItemPriceInfo.modifyAmount isoCode=currencyUomId/>
                           </div>
                         </td>
                         <td>&nbsp;</td>
@@ -223,7 +223,7 @@
                     <div class="tabletext"><b>${adjustmentType.description}</b> : ${orderHeaderAdjustment.comments?if_exists}</div>
                   </td>                       
                   <td align="right" nowrap>
-                    <div class="tabletext">${Static["org.ofbiz.order.order.OrderReadHelper"].calcOrderAdjustment(orderHeaderAdjustment, orderSubTotal)?string.currency}</div>
+                    <div class="tabletext"><@ofbizCurrency amount=Static["org.ofbiz.order.order.OrderReadHelper"].calcOrderAdjustment(orderHeaderAdjustment, orderSubTotal) isoCode=currencyUomId/></div>
                   </td>
                   <td>&nbsp;</td>                        
                 </tr>
@@ -256,32 +256,32 @@
               <tr><td colspan=1></td><td colspan="8"><hr class="sepbar"></td></tr>
               <tr>
                 <td align="right" colspan="5"><div class="tabletext"><b>Items Subtotal</b></div></td>
-                <td align="right" nowrap><div class="tabletext">${orderSubTotal?string.currency}</div></td>
+                <td align="right" nowrap><div class="tabletext"><@ofbizCurrency amount=orderSubTotal isoCode=currencyUomId/></div></td>
               </tr>
               
               <#-- other adjustments -->
               <tr>
                 <td align="right" colspan="5"><div class="tabletext"><b>Total Other Order Adjustments</b></div></td>
-                <td align="right" nowrap><div class="tabletext">${otherAdjAmount?string.currency}</div></td>
+                <td align="right" nowrap><div class="tabletext"><@ofbizCurrency amount=otherAdjAmount isoCode=currencyUomId/></div></td>
               </tr>
               
               <#-- shipping adjustments -->
               <tr>
                 <td align="right" colspan="5"><div class="tabletext"><b>Total Shipping and Handling</b></div></td>
-                <td align="right" nowrap><div class="tabletext">${shippingAmount?string.currency}</div></td>
+                <td align="right" nowrap><div class="tabletext"><@ofbizCurrency amount=shippingAmount isoCode=currencyUomId/></div></td>
               </tr>  
               
               <#-- tax adjustments -->
               <tr>
                 <td align="right" colspan="5"><div class="tabletext"><b>Total Sales Tax</b></div></td>                    
-                <td align="right" nowrap><div class="tabletext">${taxAmount?string.currency}</div></td>
+                <td align="right" nowrap><div class="tabletext"><@ofbizCurrency amount=taxAmount isoCode=currencyUomId/></div></td>
               </tr>   
               
               <#-- grand total -->
               <tr>
                 <td align="right" colspan="5"><div class="tabletext"><b>Total Due</b></div></td>
                 <td align="right" nowrap>
-                  <div class="tabletext">${grandTotal?string.currency}</div>
+                  <div class="tabletext"><@ofbizCurrency amount=grandTotal isoCode=currencyUomId/></div>
                 </td>
               </tr>                       
             </table>

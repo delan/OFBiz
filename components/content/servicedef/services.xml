@@ -6,6 +6,60 @@
     <vendor>OFBiz</vendor>
     <version>1.0</version>
 
+    <!-- Email Related Services -->
+    <service name="sendMailInterface" engine="interface" location="" invoke="">
+    	<description>Interface service for mail services</description>
+        <attribute name="sendTo" type="String" mode="IN" optional="false"/>
+        <attribute name="sendCc" type="String" mode="IN" optional="true"/>
+        <attribute name="sendBcc" type="String" mode="IN" optional="true"/>
+        <attribute name="sendFrom" type="String" mode="IN" optional="false"/>
+        <attribute name="subject" type="String" mode="IN" optional="false"/>
+        <attribute name="authUser" type="String" mode="IN" optional="true"/>
+        <attribute name="authPass" type="String" mode="IN" optional="true"/>
+        <attribute name="sendVia" type="String" mode="IN" optional="true"/>
+        <attribute name="sendType" type="String" mode="IN" optional="true"/>
+        <attribute name="contentType" type="String" mode="IN" optional="true"/>
+    </service>
+    <service name="sendMail" engine="java"
+            location="org.ofbiz.content.email.EmailServices" invoke="sendMail">
+        <description>Send E-Mail Service</description>
+        <implements service="sendMailInterface"/>
+        <attribute name="body" type="String" mode="IN" optional="false"/>
+    </service>
+    <service name="sendMailFromUrl" engine="java"
+            location="org.ofbiz.content.email.EmailServices" invoke="sendMailFromUrl">
+        <description>Send E-Mail From URL Service</description>
+        <implements service="sendMailInterface"/>
+        <attribute name="bodyUrl" type="String" mode="IN" optional="false"/>
+        <attribute name="bodyUrlParameters" type="java.util.Map" mode="IN" optional="true"/>
+        <attribute name="body" type="String" mode="OUT" optional="false"/>
+    </service>
+
+    <service name="prepareNotificationInterface" engine="interface"
+            location="" invoke="">
+        <description>Send Template Based Notification Service</description>
+        <implements service="sendMailInterface"/>
+        <attribute name="body" type="String" mode="INOUT" optional="true"/>
+    	<attribute name="baseUrl" type="String" mode="IN" optional="true"/>
+        <attribute name="templateName" type="String" mode="IN" optional="false"/>
+        <attribute name="templateData" type="Map" mode="IN" optional="true"/>
+        <attribute name="webSiteId" type="String" mode="IN" optional="true"/>
+    </service>
+    <service name="sendNotificationInterface" engine="interface"
+            location="" invoke="">
+        <description>Send Template Based Notification Service</description>
+        <implements service="prepareNotificationInterface"/>
+        <attribute name="body" type="String" mode="IN" optional="true"/>
+        <attribute name="templateName" type="String" mode="IN" optional="false"/>
+        <attribute name="templateData" type="Map" mode="IN" optional="true"/>
+        <attribute name="webSiteId" type="String" mode="IN" optional="true"/>
+    </service>
+    <service name="sendGenericNotificationEmail" engine="java"
+            location="org.ofbiz.content.email.NotificationServices" invoke="sendNotification">
+        <description>Generic Template Based Notification Service</description>
+        <implements service="sendNotificationInterface"/>
+    </service>
+    
     <!-- WebSite Services -->
     <service name="webSiteInterface" engine="interface" default-entity-name="WebSite" location="" invoke="">
         <description>WebSite Interface</description>

@@ -20,7 +20,7 @@
  *  THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  *
  *@author     Andy Zeneski (jaz@ofbiz.org)
- *@version    $Revision: 1.4 $
+ *@version    $Revision: 1.5 $
  *@since      2.2
 -->
 
@@ -114,7 +114,7 @@
                           <td><div class="tabletext"><nobr>${orderHeaderAndRole.getString("orderDate")}</nobr></div></td>
                           <td><div class="tabletext">${statusItem.description?default(statusItem.statusId?default("N/A"))}</div></td>
                           <td align="right"><div class="tabletext">${orh.getTotalOrderItemsQuantity()?string.number}</div></td>
-                          <td align="right"><div class="tabletext">${orh.getOrderGrandTotal()?string.currency}</div></td>
+                          <td align="right"><div class="tabletext"><@ofbizCurrency amount=orh.getOrderGrandTotal() isoCode=orderHeaderAndRole.orderId/></div></td>
                           <td width="1">&nbsp;&nbsp;</td>
                           <td align='right'>
                             <a href="<@ofbizUrl>/OrderDeliveryScheduleInfo?orderId=${orderHeaderAndRole.orderId}</@ofbizUrl>" class='buttontext'>Schedule&nbsp;Delivery</a>
@@ -167,7 +167,7 @@
                               ${task.get("orderDate").toString()}
                             </div>
                           </td>  
-                          <td width="1" align="right"><div class='tabletext'>${task.grandTotal?string.currency}</div></td>
+                          <td width="1" align="right"><div class='tabletext'><@ofbizCurrency amount=task.grandTotal isoCode=orderCurrencyMap.get(task.orderId)/></div></td>
                           <td width="1">&nbsp;&nbsp;</td>
                           <td>
                             <#if task.actualStartDate?exists>
@@ -251,7 +251,7 @@
                                 ${task.get("orderDate").toString()}
                               </div>
                             </td> 
-                            <td width="1" align="right"><div class='tabletext'>${task.grandTotal?string.currency}</div></td>
+                            <td width="1" align="right"><div class='tabletext'><@ofbizCurrency amount=task.grandTotal isoCode=orderCurrencyMap.get(task.orderId)/></div></td>
                             <td width="1">&nbsp;&nbsp;</td>
                             <td>
                               <#if task.actualStartDate?exists>
