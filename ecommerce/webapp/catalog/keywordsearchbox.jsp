@@ -72,7 +72,7 @@
 				if (!"AND".equalsIgnoreCase(searchOperator) && !"OR".equalsIgnoreCase(searchOperator)) { searchOperator = "OR"; }%>
                 Any<input type=RADIO name='SEARCH_OPERATOR' value='OR' <%if("OR".equalsIgnoreCase(searchOperator)){%>checked<%}%>>
                 All<input type=RADIO name='SEARCH_OPERATOR' value='AND' <%if("AND".equalsIgnoreCase(searchOperator)){%>checked<%}%>>
-                <a href="javascript:document.keywordsearchform.submit()" class="buttontext">&nbsp;Find</a>
+                &nbsp;<a href="javascript:document.keywordsearchform.submit()" class="buttontext">Find</a>
               </div>
             </form>
           </td>
