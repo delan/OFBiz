@@ -376,7 +376,7 @@
                    
                     shippingAmount = OrderReadHelper.getAllOrderItemsAdjustmentsTotal(orderItems, orderAdjustments, false, false, true);
                     shippingAmount += OrderReadHelper.calcOrderAdjustments(orderHeaderAdjustments, orderSubTotal, false, false, true);
-                    org.ofbiz.core.util.Debug.logInfo("shippingAmmount=" + shippingAmount);
+                    //org.ofbiz.core.util.Debug.log("shippingAmmount=" + shippingAmount);
                     shipment.put("estimatedShipCost", shippingAmount);
             ]]></call-bsh>
         </if-empty>
