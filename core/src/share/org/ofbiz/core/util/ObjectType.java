@@ -147,17 +147,11 @@ public class ObjectType {
      * @param typeClass Class to test against
      */    
     public static boolean instanceOf(Object obj, Class typeClass) {
+        if (obj == null) return true;
         Class objectClass = obj.getClass();
         if ( typeClass.isInterface() )
             return interfaceOf(obj,typeClass);
         else
             return isOrSubOf(obj,typeClass);
     }
-    
-    
 }
-
-
-
-
-
