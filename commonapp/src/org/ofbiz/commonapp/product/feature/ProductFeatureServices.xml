@@ -194,18 +194,21 @@
                 <check-errors/>
             </else>
         </if-has-permission>
+        <check-errors/>
         
         <field-to-field field-name="productId" map-name="parameters" to-map-name="productFeatureApplPKMap"/>
         <field-to-field field-name="productFeatureId" map-name="parameters" to-map-name="productFeatureApplPKMap"/>
         <field-to-field field-name="fromDate" map-name="parameters" to-map-name="productFeatureApplPKMap"/>
         <find-by-primary-key entity-name="ProductFeatureAppl" map-name="productFeatureApplPKMap" value-name="productFeatureAppl"/>
+        <!-- This is old code that just sets the thru date; the current codes actually removes the db row
         <if-empty field-name="thruDate" map-name="parameters">
             <now-timestamp-to-env env-name="nowStamp"/>
             <env-to-field env-name="nowStamp" field-name="thruDate" map-name="parameters"/>
         </if-empty>
         <field-to-field field-name="thruDate" map-name="parameters" to-map-name="productFeatureAppl"/>
-        <check-errors/>
         <store-value value-name="productFeatureAppl"/>
+        -->
+        <remove-value value-name="productFeatureAppl"/>
 
         <!-- what caches need to be cleared? hopefully just this one... -->
         <field-to-field field-name="productId" map-name="parameters" to-map-name="clearCacheByProductIdMap"/>
