@@ -20,7 +20,7 @@
  *  THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  *
  *@author     Jacopo Cappellato (tiz@sastau.it)
- *@version    $Rev:$
+ *@version    $Rev$
  *@since      3.0
 -->
 <#assign uiLabelMap = requestAttributes.uiLabelMap>
@@ -29,24 +29,18 @@
 <#if hasPermission>
 ${pages.get("/bom/BomTabBar.ftl")}
 
-	<div class="head1">${uiLabelMap.PageTitleEditProductManufacturingRules}&nbsp; 
-	</div>
-	<br>
-	<#if productManufacturingRule?has_content>
-			${updateManufacturingRuleWrapper.renderFormString()}
-			<br>
-			<hr class="sepbar">
-	</#if>
-	<#if allManufacturingRules?has_content>
-		${listManufacturingRulesWrapper.renderFormString()}
-		<br>
-		<hr class="sepbar">
-	</#if>
-	${addProductManufacturingRuleWrapper.renderFormString()} 
-	<br>
-
+<div class="head1">${uiLabelMap.PageTitleEditProductManufacturingRules}&nbsp;</div>
+    <br>
+    <#if productManufacturingRule?has_content>
+        ${updateManufacturingRuleWrapper.renderFormString()}
+        <br>
+        <hr class="sepbar">
+    </#if>
+    ${listManufacturingRulesWrapper.renderFormString()}
+    <br>
+    <hr class="sepbar">
+    ${addProductManufacturingRuleWrapper.renderFormString()} 
+    <br>
 <#else>
- 	<h3>${uiLabelMap.ManufacturingViewPermissionError}</h3>
+    <h3>${uiLabelMap.ManufacturingViewPermissionError}</h3>
 </#if>
-
-	

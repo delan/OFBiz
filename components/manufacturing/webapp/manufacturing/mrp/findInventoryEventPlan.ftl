@@ -68,15 +68,16 @@ ${pages.get("/mrp/MrpTabBar.ftl")}
           <td align='center' width='100%'>
             <table border='0' cellspacing='0' cellpadding='2'>
               <tr>
-                <td width='20%' align='right'><div class='tableheadtext'>${uiLabelMap.ManufacturingPartId}:</div></td>
+                <td width='20%' align='right'><div class='tableheadtext'>${uiLabelMap.ManufacturingProductId}:</div></td>
                 <td width='5%'>&nbsp;</td>
                 <td>
                     <input type='text' size='25' class='inputBox' name='productId' value='${requestParameters.productId?if_exists}'>
                     <span class='tabletext'>
-                      <a href="javascript:call_fieldlookup(document.lookupinventory.productId,'<@ofbizUrl>/LookupProduct</@ofbizUrl>', 'none',640,460);">
+                      <a href="javascript:call_fieldlookup3(document.lookupinventory.productId,document.lookupinventory.productId_description,'LookupProduct');">
                         <img src='/images/fieldlookup.gif' width='15' height='14' border='0' alt='Click here For Field Lookup'>
                       </a> 
                     </span>
+                    <input type='text' size='25' readonly class='inputBox' name='productId_description' value=''>
                  </td>
               </tr>
               <tr>
