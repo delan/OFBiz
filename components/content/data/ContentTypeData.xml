@@ -108,7 +108,17 @@
 
     <Content contentId="TEMPLATE_MASTER" contentTypeId="TREE_ROOT" description="Template Master"/>
 
+    <EnumerationType enumTypeId="CONTENT_PRIVILEGE" description="Content Privilege"/>
+    <Enumeration enumId="CNT_PRV_NA_" enumTypeId="CONTENT_PRIVILEGE" enumCode="_NA_" sequenceId="00" description="Not Applicable"/>
+    <Enumeration enumId="CNT_PRV_BRONZE" enumTypeId="CONTENT_PRIVILEGE" enumCode="BRONZE" sequenceId="10" description="Bronze Level"/>
+    <Enumeration enumId="CNT_PRV_SILVER" enumTypeId="CONTENT_PRIVILEGE" enumCode="SILVER" sequenceId="20" description="Silver Level"/>
+    <Enumeration enumId="CNT_PRV_GOLD" enumTypeId="CONTENT_PRIVILEGE" enumCode="GOLD" sequenceId="30" description="Gold Level"/>
 
+    <EnumerationType enumTypeId="SUBSCRIPTION_TYPE" description="Subscription Level"/>
+    <Enumeration enumId="SUBSCRIBE_BRONZE" enumTypeId="SUBSCRIPTION_TYPE" enumCode="BRONZE" sequenceId="10" description="Bronze Level"/>
+    <Enumeration enumId="SUBSCRIBE_GOLD" enumTypeId="SUBSCRIPTION_TYPE" enumCode="GOLD" sequenceId="30" description="Gold Level"/>
+    <Enumeration enumId="SUBSCRIBE_SILVER" enumTypeId="SUBSCRIPTION_TYPE" enumCode="SILVER" sequenceId="20" description="Silver Level"/>
+    
     <DataResourceType dataResourceTypeId="LOCAL_FILE" description="Local File" hasTable="N" parentTypeId=""/>
     <DataResourceType dataResourceTypeId="OFBIZ_FILE" description="File (rel to OFBIZ_HOME)" hasTable="N" parentTypeId=""/>
     <DataResourceType dataResourceTypeId="CONTEXT_FILE" description="File (rel to webapp root)" hasTable="N" parentTypeId=""/>
