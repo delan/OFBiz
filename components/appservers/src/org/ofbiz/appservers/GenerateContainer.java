@@ -1,5 +1,5 @@
 /*
- * $Id: GenerateContainer.java,v 1.7 2004/07/31 20:10:13 ajzeneski Exp $
+ * $Id$
  *
  */
 package org.ofbiz.appservers;
@@ -24,7 +24,7 @@ import org.ofbiz.content.webapp.ftl.FreeMarkerWorker;
  * ** This container requires the ComponentContainer to be loaded first.
  * 
  * @author     <a href="mailto:jaz@ofbiz.org">Andy Zeneski</a>
- * @version    $Revision: 1.7 $
+ * @version    $Rev:$
  * @since      3.1
  */
 public class GenerateContainer implements Container {
