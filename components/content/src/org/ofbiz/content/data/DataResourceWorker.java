@@ -36,6 +36,8 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Locale;
 import java.util.Map;
+import java.util.TreeMap;
+import java.util.Comparator;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpSession;
@@ -74,10 +76,11 @@ import freemarker.template.TemplateException;
 /**
  * DataResourceWorker Class
  * 
- * @author <a href="mailto:byersa@automationgroups.com">Al Byers</a>
- * @author <a href="mailto:jonesde@ofbiz.org">David E. Jones</a>
- * @version $Rev:$
- * @since 3.0
+ * @author      <a href="mailto:byersa@automationgroups.com">Al Byers</a>
+ * @author      <a href="mailto:jonesde@ofbiz.org">David E. Jones</a>
+ * @author      <a href="mailto:jaz@ofbiz.org">Andy Zeneski</a>
+ * @version     $Rev$
+ * @since       3.0
  */
 public class DataResourceWorker {
 
@@ -928,7 +931,7 @@ public class DataResourceWorker {
 
 
     public static String getDataResourceMimeType(GenericDelegator delegator, String dataResourceId, GenericValue view) throws GenericEntityException {
-        
+
         String mimeType = null;
         if (view != null)
             mimeType = view.getString("drMimeTypeId");
@@ -940,5 +943,73 @@ public class DataResourceWorker {
                 
         }
         return mimeType;
+    }
+
+    public static String getDataResourceContentUploadPath() {
+        String initialPath = UtilProperties.getPropertyValue("content.properties", "content.upload.path.prefix");
+        double maxFiles = UtilProperties.getPropertyNumber("content.properties", "content.upload.max.files");
+        if (maxFiles < 1) {
+            maxFiles = 250;
+        }
+        String ofbizHome = System.getProperty("ofbiz.home");
+
+        if (!initialPath.startsWith("/")) {
+            initialPath = "/" + initialPath;
+        }
+
+        // descending comparator
+        Comparator desc = new Comparator() {
+            public int compare(Object o1, Object o2) {
+                if (((Integer) o1).intValue() > ((Integer) o2).intValue()) {
+                    return -1;
+                } else if (((Integer) o1).intValue() < ((Integer) o2).intValue()) {
+                    return 1;
+                }
+                return 0;
+            }
+        };
+
+        // check for the latest subdirectory
+        String parentDir = ofbizHome + initialPath;
+        File parent = new File(parentDir);
+        TreeMap dirMap = new TreeMap(desc);
+        if (parent.exists()) {
+            File[] subs = parent.listFiles();
+            for (int i = 0; i < subs.length; i++) {
+                if (subs[i].isDirectory()) {
+                    dirMap.put(new Long(subs[0].lastModified()), subs[i]);
+                }
+            }
+        }
+
+        // first item in map is the most current directory
+        File latestDir = null;
+        if (dirMap != null && dirMap.size() > 0) {
+            latestDir = (File) dirMap.values().iterator().next();
+            if (latestDir != null) {
+                File[] dirList = latestDir.listFiles();
+                if (dirList.length >= maxFiles) {
+                    latestDir = makeNewDirectory(parent);
+                }
+            }
+        } else {
+            latestDir = makeNewDirectory(parent);
+        }
+
+        Debug.log("Directory Name : " + latestDir.getName(), module);
+        return latestDir.getAbsolutePath();
+    }
+
+    private static File makeNewDirectory(File parent) {
+        File latestDir = null;
+        boolean newDir = false;
+        while (!newDir) {
+            latestDir = new File(parent, "" + System.currentTimeMillis());
+            if (!latestDir.exists()) {
+                latestDir.mkdir();
+                newDir = true;
+            }
+        }
+        return latestDir;
     }
 }
