@@ -1,7 +1,7 @@
 /*
  * $Id$
  *
- * Copyright (c) 2001 The Open For Business Project - www.ofbiz.org
+ * Copyright (c) 2001, 2002 The Open For Business Project - www.ofbiz.org
  *
  * Permission is hereby granted, free of charge, to any person obtaining a
  * copy of this software and associated documentation files (the "Software"),
@@ -20,32 +20,29 @@
  * CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT
  * OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR
  * THE USE OR OTHER DEALINGS IN THE SOFTWARE.
+ *
  */
-
 package org.ofbiz.core.entity;
 
-
-import java.lang.reflect.*;
 import java.sql.*;
 import java.util.*;
-import org.w3c.dom.Element;
+
 import org.ofbiz.core.util.*;
 import org.ofbiz.core.entity.config.*;
 import org.ofbiz.core.entity.model.*;
 import org.ofbiz.core.entity.jdbc.*;
 
-
 /**
  * Generic Entity Data Access Object - Handles persisntence for any defined entity.
  *
- *@author     <a href="mailto:jonesde@ofbiz.org">David E. Jones</a>
- *@author     <a href="mailto:jaz@zsolv.com">Andy Zeneski</a>
- *@author     <a href="mailto:chris_maurer@altavista.com">Chris Maurer</a>
- *@author     <a href="mailto:jdonnerstag@eds.de">Juergen Donnerstag</a>
- *@author     <a href="mailto:gielen@aixcept.de">Rene Gielen</a>
- *@author     <a href="mailto:john_nutting@telluridetechnologies.com">John Nutting</a>
- *@created    Wed Aug 08 2001
- *@version    1.0
+ * @author     <a href="mailto:jonesde@ofbiz.org">David E. Jones</a>
+ * @author     <a href="mailto:jaz@jflow.net">Andy Zeneski</a>
+ * @author     <a href="mailto:chris_maurer@altavista.com">Chris Maurer</a>
+ * @author     <a href="mailto:jdonnerstag@eds.de">Juergen Donnerstag</a>
+ * @author     <a href="mailto:gielen@aixcept.de">Rene Gielen</a>
+ * @author     <a href="mailto:john_nutting@telluridetechnologies.com">John Nutting</a>
+ * @version    $Revision$
+ * @since      2.0
  */
 public class GenericDAO {
 
