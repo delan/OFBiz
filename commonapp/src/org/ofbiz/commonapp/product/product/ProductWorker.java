@@ -1,6 +1,9 @@
 /*
  * $Id$
  * $Log$
+ * Revision 1.5  2002/02/01 12:18:47  jonesde
+ * Small speedup to not relead session item list caches on the first page for all loads
+ *
  * Revision 1.4  2002/01/30 06:11:25  jonesde
  * Formatting changes only, in preparation for other changes
  *
@@ -60,7 +63,7 @@ public class ProductWorker {
     }
 
     public static void getProduct(PageContext pageContext, String attributeName, String productId) {
-        GenericDelegator delegator = (GenericDelegator) pageContext.getServletContext().getAttribute("delegator");
+        GenericDelegator delegator = (GenericDelegator) pageContext.getRequest().getAttribute("delegator");
         ServletRequest request = pageContext.getRequest();
 
         if (productId == null)
@@ -102,7 +105,7 @@ public class ProductWorker {
      *@param categoryId The keyword search group name for this search
      */
     public static void getKeywordSearchProducts(PageContext pageContext, String attributePrefix, String categoryId) {
-        GenericDelegator delegator = (GenericDelegator) pageContext.getServletContext().getAttribute("delegator");
+        GenericDelegator delegator = (GenericDelegator) pageContext.getRequest().getAttribute("delegator");
 
         int viewIndex = 0;
         try {
@@ -174,7 +177,7 @@ public class ProductWorker {
     }
 
     public static void getAssociatedProducts(PageContext pageContext, String productAttributeName, String assocPrefix) {
-        GenericDelegator delegator = (GenericDelegator) pageContext.getServletContext().getAttribute("delegator");
+        GenericDelegator delegator = (GenericDelegator) pageContext.getRequest().getAttribute("delegator");
         GenericValue product = (GenericValue) pageContext.getAttribute(productAttributeName);
         if (product == null)
             return;

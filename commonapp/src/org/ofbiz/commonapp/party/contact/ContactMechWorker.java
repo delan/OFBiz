@@ -1,6 +1,9 @@
 /*
  * $Id$
  * $Log$
+ * Revision 1.5  2002/01/25 12:15:35  jonesde
+ * A few changes to handle create postal address and purpose at the same time, small cleanups
+ *
  * Revision 1.4  2002/01/24 11:53:37  jonesde
  * Moved party specific worker from party/contact to party/party
  *
@@ -52,7 +55,7 @@ import org.ofbiz.core.util.*;
  */
 public class ContactMechWorker {
     public static void getPartyCreditCardInfos(PageContext pageContext, String partyId, boolean showOld, String creditCardInfosAttr) {
-        GenericDelegator delegator = (GenericDelegator) pageContext.getServletContext().getAttribute("delegator");
+        GenericDelegator delegator = (GenericDelegator) pageContext.getRequest().getAttribute("delegator");
         try {
             Collection creditCardInfos = delegator.findByAnd("CreditCardInfo", UtilMisc.toMap("partyId", partyId));
             if (!showOld) creditCardInfos = EntityUtil.filterByDate(creditCardInfos);
@@ -64,7 +67,7 @@ public class ContactMechWorker {
     }
     
     public static void getPartyContactMechValueMaps(PageContext pageContext, String partyId, boolean showOld, String partyContactMechValueMapsAttr) {
-        GenericDelegator delegator = (GenericDelegator) pageContext.getServletContext().getAttribute("delegator");
+        GenericDelegator delegator = (GenericDelegator) pageContext.getRequest().getAttribute("delegator");
         Collection partyContactMechValueMaps = new LinkedList();
         
         Iterator allPartyContactMechs = null;
@@ -126,7 +129,7 @@ public class ContactMechWorker {
             String postalAddressAttr, String telecomNumberAttr, String requestNameAttr, String donePageAttr, String tryEntityAttr, String contactMechTypesAttr) {
 
         ServletRequest request = pageContext.getRequest();
-        GenericDelegator delegator = (GenericDelegator) pageContext.getServletContext().getAttribute("delegator");
+        GenericDelegator delegator = (GenericDelegator) pageContext.getRequest().getAttribute("delegator");
         
         boolean tryEntity = true;
         if (request.getAttribute(SiteDefs.ERROR_MESSAGE) != null) tryEntity = false;
@@ -285,7 +288,7 @@ public class ContactMechWorker {
             String curPartyContactMechPurposesAttr, String donePageAttr, String tryEntityAttr) {
 
         ServletRequest request = pageContext.getRequest();
-        GenericDelegator delegator = (GenericDelegator) pageContext.getServletContext().getAttribute("delegator");
+        GenericDelegator delegator = (GenericDelegator) pageContext.getRequest().getAttribute("delegator");
 
         boolean tryEntity = true;
         if(request.getAttribute(SiteDefs.ERROR_MESSAGE) != null)
@@ -367,7 +370,7 @@ public class ContactMechWorker {
     }
     
     public static void getPartyPostalAddresses(PageContext pageContext, String partyId, String curContactMechId, String postalAddressInfosAttr) {
-        GenericDelegator delegator = (GenericDelegator) pageContext.getServletContext().getAttribute("delegator");
+        GenericDelegator delegator = (GenericDelegator) pageContext.getRequest().getAttribute("delegator");
         Collection postalAddressInfos = new LinkedList();
         
         Iterator allPartyContactMechs = null;

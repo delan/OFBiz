@@ -1,6 +1,9 @@
 /*
  * $Id$
  * $Log$
+ * Revision 1.5  2002/01/31 21:22:34  jonesde
+ * Fixed NPE when password is null in the database
+ *
  * Revision 1.4  2002/01/27 08:33:13  jonesde
  * Changed update password to use new service, also added createUserLogin service
  *
@@ -231,8 +234,7 @@ public class LoginEvents {
     public static String emailPassword(HttpServletRequest request, HttpServletResponse response) {
         GenericDelegator delegator = (GenericDelegator)request.getAttribute("delegator");
         String contextRoot=(String)request.getAttribute(SiteDefs.CONTEXT_ROOT);
-        //getServletContext appears to be new on the session object for Servlet 2.3
-        ServletContext application = request.getSession().getServletContext();
+        ServletContext application = ((ServletContext) request.getAttribute("servletContext"));
         URL ecommercePropertiesUrl = null;
         try {
             ecommercePropertiesUrl = application.getResource("/WEB-INF/ecommerce.properties");

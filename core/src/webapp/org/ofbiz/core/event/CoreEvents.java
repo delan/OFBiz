@@ -46,7 +46,7 @@ import org.ofbiz.core.util.*;
 public class CoreEvents {
     
     public static String changeDelegator(HttpServletRequest request, HttpServletResponse response) {
-        ServletContext application = request.getSession().getServletContext();
+        ServletContext application = ((ServletContext) request.getAttribute("servletContext"));
         String delegatorName = request.getParameter("delegator");
         Security security = (Security)request.getAttribute("security");
          if( !security.hasPermission("ENTITY_MAINT", request.getSession()) ) {
@@ -92,7 +92,7 @@ public class CoreEvents {
     }
     
     public static String changeDispatcher(HttpServletRequest request, HttpServletResponse response) {
-        ServletContext application = request.getSession().getServletContext();        
+        ServletContext application = ((ServletContext) request.getAttribute("servletContext"));        
         String dispatcherName = request.getParameter("dispatcher");
         Security security = (Security)request.getAttribute("security");
          if( !security.hasPermission("ENTITY_MAINT", request.getSession()) ) {

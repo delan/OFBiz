@@ -111,16 +111,23 @@ public class ControlServlet extends HttpServlet {
         }
         
         // for convenience, and necessity with event handlers, make security and delegator available in the request:
-        GenericDelegator delegator = (GenericDelegator)getServletContext().getAttribute("delegator");
+        GenericDelegator delegator = (GenericDelegator) getServletContext().getAttribute("delegator");
         if (delegator == null) Debug.logError("[ControlServlet] ERROR: delegator not found in ServletContext", module);
         request.setAttribute("delegator", delegator);
         
-        Security security = (Security)getServletContext().getAttribute("security");
+        LocalDispatcher dispatcher = (LocalDispatcher) getServletContext().getAttribute("dispatcher");
+        if (dispatcher == null) Debug.logError("[ControlServlet] ERROR: dispatcher not found in ServletContext", module);
+        request.setAttribute("dispatcher", dispatcher);
+        
+        Security security = (Security) getServletContext().getAttribute("security");
         if (security == null) Debug.logError("[ControlServlet] ERROR: security not found in ServletContext", module);
         request.setAttribute("security", security);
         
         // for use in Events the filesystem path of context root.
-        request.setAttribute(SiteDefs.CONTEXT_ROOT,getServletContext().getRealPath("/"));
+        request.setAttribute(SiteDefs.CONTEXT_ROOT, getServletContext().getRealPath("/"));
+        //Because certain app servers are lame and don't support the HttpSession.getServletContext method, put it in the request here
+        ServletContext servletContext = getServletContext();
+        request.setAttribute("servletContext", servletContext);
         
         if (Debug.timingOn()) timer.timerString("[" + rname + "] Setup done, doing Event(s)", module);
         

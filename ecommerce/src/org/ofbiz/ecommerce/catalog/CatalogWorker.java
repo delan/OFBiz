@@ -1,6 +1,9 @@
 /*
  * $Id$
  * $Log$
+ * Revision 1.4  2001/10/26 04:41:54  jonesde
+ * Changed associated products methods to filter by date so only ProductAssoc entities with dates surrounding now will be shown
+ *
  * Revision 1.3  2001/10/23 20:06:51  jonesde
  * Added quick add functionality
  *
@@ -260,7 +263,7 @@ public class CatalogWorker {
   }
   
   public static void getRandomCartProductAssoc(PageContext pageContext, String assocsAttrName) {
-    GenericDelegator delegator = (GenericDelegator)pageContext.getServletContext().getAttribute("delegator");
+    GenericDelegator delegator = (GenericDelegator)pageContext.getRequest().getAttribute("delegator");
     ShoppingCart cart = (ShoppingCart)pageContext.getSession().getAttribute("_SHOPPING_CART_");
     if(cart == null || cart.size() <= 0) return;
     
@@ -307,7 +310,7 @@ public class CatalogWorker {
   }
 
   public static void getQuickReorderProducts(PageContext pageContext, String productsAttrName, String quantitiesAttrName) {
-    GenericDelegator delegator = (GenericDelegator)pageContext.getServletContext().getAttribute("delegator");
+    GenericDelegator delegator = (GenericDelegator)pageContext.getRequest().getAttribute("delegator");
     GenericValue userLogin = (GenericValue)pageContext.getSession().getAttribute(SiteDefs.USER_LOGIN);
     if(userLogin == null) return;
     

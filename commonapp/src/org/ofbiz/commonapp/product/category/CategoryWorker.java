@@ -1,6 +1,9 @@
 /*
  * $Id$
  * $Log$
+ * Revision 1.8  2002/02/01 12:18:47  jonesde
+ * Small speedup to not relead session item list caches on the first page for all loads
+ *
  * Revision 1.7  2002/01/30 22:41:26  jonesde
  * Added order by for new sequenceNum
  *
@@ -82,7 +85,7 @@ public class CategoryWorker {
      *@param parentId The ID of the parent category
      */
     public static void getRelatedProducts(PageContext pageContext, String attributePrefix, String parentId, boolean limitView) {
-        GenericDelegator delegator = (GenericDelegator) pageContext.getServletContext().getAttribute("delegator");
+        GenericDelegator delegator = (GenericDelegator) pageContext.getRequest().getAttribute("delegator");
         ServletRequest request = pageContext.getRequest();
         if (attributePrefix == null)
             attributePrefix = "";
@@ -213,7 +216,7 @@ public class CategoryWorker {
     }
 
     public static void getCategoriesWithNoParent(PageContext pageContext, String attributeName) {
-        GenericDelegator delegator = (GenericDelegator) pageContext.getServletContext().getAttribute("delegator");
+        GenericDelegator delegator = (GenericDelegator) pageContext.getRequest().getAttribute("delegator");
         Collection results = new LinkedList();
         try {
             Collection allCategories = delegator.findAll("ProductCategory");
@@ -249,7 +252,7 @@ public class CategoryWorker {
 
         Debug.logInfo("[CatalogHelper.getRelatedCategories] ParentID: " + parentId);
 
-        GenericDelegator delegator = (GenericDelegator) pageContext.getServletContext().getAttribute("delegator");
+        GenericDelegator delegator = (GenericDelegator) pageContext.getRequest().getAttribute("delegator");
         Collection rollups = null;
         try {
             rollups = delegator.findByAndCache("ProductCategoryRollup", UtilMisc.toMap("parentProductCategoryId",parentId), UtilMisc.toList("sequenceNum"));

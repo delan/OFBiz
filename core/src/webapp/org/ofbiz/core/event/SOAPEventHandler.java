@@ -67,8 +67,7 @@ public class SOAPEventHandler implements EventHandler {
      */
     public String invoke(HttpServletRequest request, HttpServletResponse response) throws EventHandlerException {
         HttpSession session = request.getSession();
-        ServletContext context = session.getServletContext();
-        LocalDispatcher dispatcher = (LocalDispatcher) context.getAttribute("dispatcher");
+        LocalDispatcher dispatcher = (LocalDispatcher) request.getAttribute("dispatcher");
         AxisServer axisServer;
         try {
             axisServer = AxisServer.getServer(UtilMisc.toMap("name","OFBiz/Axis Server","provider",null));

@@ -1,6 +1,9 @@
 /*
  * $Id$
  * $Log$
+ * Revision 1.2  2001/12/22 03:55:14  jonesde
+ * Refactored status stuff to be more general
+ *
  * Revision 1.1  2001/12/21 16:26:18  jonesde
  * Added simple worker to get status change to details
  *
@@ -43,7 +46,7 @@ import java.util.*;
  */
 public class StatusWorker {
     public static void getStatusItems(PageContext pageContext, String attributeName, String statusTypeId) {
-        GenericDelegator delegator = (GenericDelegator) pageContext.getServletContext().getAttribute("delegator");
+        GenericDelegator delegator = (GenericDelegator) pageContext.getRequest().getAttribute("delegator");
         try {
             Collection statusItems = delegator.findByAndCache("StatusItem", UtilMisc.toMap("statusTypeId", statusTypeId), UtilMisc.toList("sequenceId"));
             if (statusItems != null)
@@ -54,7 +57,7 @@ public class StatusWorker {
     }
 
     public static void getStatusItems(PageContext pageContext, String attributeName, String statusTypeIdOne, String statusTypeIdTwo) {
-        GenericDelegator delegator = (GenericDelegator) pageContext.getServletContext().getAttribute("delegator");
+        GenericDelegator delegator = (GenericDelegator) pageContext.getRequest().getAttribute("delegator");
         List statusItems = new LinkedList();
         try {
             Collection calItems = delegator.findByAndCache("StatusItem", UtilMisc.toMap("statusTypeId", statusTypeIdOne), UtilMisc.toList("sequenceId"));
@@ -76,7 +79,7 @@ public class StatusWorker {
     }
 
     public static void getStatusValidChangeToDetails(PageContext pageContext, String attributeName, String statusId) {
-        GenericDelegator delegator = (GenericDelegator) pageContext.getServletContext().getAttribute("delegator");
+        GenericDelegator delegator = (GenericDelegator) pageContext.getRequest().getAttribute("delegator");
         Collection statusValidChangeToDetails = null;
         try {
             statusValidChangeToDetails = delegator.findByAndCache("StatusValidChangeToDetail", UtilMisc.toMap("statusId", statusId), UtilMisc.toList("sequenceId"));

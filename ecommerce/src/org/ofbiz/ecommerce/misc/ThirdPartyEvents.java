@@ -73,13 +73,13 @@ public class ThirdPartyEvents {
      *@return String specifying the exit status of this event
      */
     public static String updateAssociatedDistributor(HttpServletRequest request, HttpServletResponse response) {
-        GenericDelegator delegator = (GenericDelegator) request.getSession().getServletContext().getAttribute("delegator");
+        GenericDelegator delegator = (GenericDelegator) request.getAttribute("delegator");
         GenericValue userLogin = (GenericValue)request.getSession().getAttribute(SiteDefs.USER_LOGIN);
         GenericValue party = null;
 
         java.net.URL ecommercePropertiesUrl = null;
         try { 
-            ecommercePropertiesUrl = request.getSession().getServletContext().getResource("/WEB-INF/ecommerce.properties");
+            ecommercePropertiesUrl = ((ServletContext) request.getAttribute("servletContext")).getResource("/WEB-INF/ecommerce.properties");
         }
         catch ( java.net.MalformedURLException e ) {
             Debug.logWarning(e);
@@ -150,15 +150,14 @@ public class ThirdPartyEvents {
      *@return String specifying the exit status of this event
      */
     public static String updateAssociatedAffiliate(HttpServletRequest request, HttpServletResponse response) {
-        GenericDelegator delegator = (GenericDelegator) request.getSession().getServletContext().getAttribute("delegator");
+        GenericDelegator delegator = (GenericDelegator) request.getAttribute("delegator");
         GenericValue userLogin = (GenericValue)request.getSession().getAttribute(SiteDefs.USER_LOGIN);
         GenericValue party = null;
         
         java.net.URL ecommercePropertiesUrl = null;
         try { 
-            ecommercePropertiesUrl = request.getSession().getServletContext().getResource("/WEB-INF/ecommerce.properties");
-        }
-        catch ( java.net.MalformedURLException e ) {
+            ecommercePropertiesUrl = ((ServletContext) request.getAttribute("servletContext")).getResource("/WEB-INF/ecommerce.properties");
+        } catch ( java.net.MalformedURLException e ) {
             Debug.logWarning(e);
         }
         
@@ -171,8 +170,7 @@ public class ThirdPartyEvents {
             
         try {
             party = userLogin == null ? null : userLogin.getRelatedOne("Party");
-        }
-        catch (GenericEntityException gee) {
+        } catch (GenericEntityException gee) {
             Debug.logWarning(gee);
         }
         

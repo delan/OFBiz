@@ -122,7 +122,7 @@ public class CheckOutEvents {
     // Create order event - uses createOrder service for processing
     public static String createOrder(HttpServletRequest request, HttpServletResponse response) {
         ShoppingCart cart = (ShoppingCart)request.getSession().getAttribute(SiteDefs.SHOPPING_CART);
-        LocalDispatcher dispatcher = (LocalDispatcher) request.getSession().getServletContext().getAttribute("dispatcher");
+        LocalDispatcher dispatcher = (LocalDispatcher) request.getAttribute("dispatcher");
         GenericValue userLogin = (GenericValue)request.getSession().getAttribute(SiteDefs.USER_LOGIN);
         
         //remove this whenever creating an order so quick reorder cache will refresh/recalc
@@ -163,7 +163,7 @@ public class CheckOutEvents {
     public static String renderConfirmOrder(HttpServletRequest request, HttpServletResponse response) {
         String contextRoot=(String)request.getAttribute(SiteDefs.CONTEXT_ROOT);
         //getServletContext appears to be new on the session object for Servlet 2.3
-        ServletContext application = request.getSession().getServletContext();
+        ServletContext application = ((ServletContext) request.getAttribute("servletContext"));
         URL ecommercePropertiesUrl = null;
         try { ecommercePropertiesUrl = application.getResource("/WEB-INF/ecommerce.properties"); }
         catch(java.net.MalformedURLException e) { Debug.logWarning(e); }
@@ -199,7 +199,7 @@ public class CheckOutEvents {
     public static String emailOrder(HttpServletRequest request, HttpServletResponse response) {
         String contextRoot=(String)request.getAttribute(SiteDefs.CONTEXT_ROOT);
         //getServletContext appears to be new on the session object for Servlet 2.3
-        ServletContext application = request.getSession().getServletContext();
+        ServletContext application = ((ServletContext) request.getAttribute("servletContext"));
         URL ecommercePropertiesUrl = null;
         try { ecommercePropertiesUrl = application.getResource("/WEB-INF/ecommerce.properties"); }
         catch(java.net.MalformedURLException e) { Debug.logWarning(e); }

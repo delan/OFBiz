@@ -1,6 +1,9 @@
 /*
  * $Id$
  * $Log$
+ * Revision 1.40  2002/02/01 01:03:07  jonesde
+ * Fixed no password bug, caused because of replacement of password checking method with a method that doesn't also copy over the password
+ *
  * Revision 1.39  2002/01/27 08:35:33  jonesde
  * Small change to use new checkPassword method in LoginServices
  *
@@ -71,7 +74,7 @@ public class CustomerEvents {
 
         String contextRoot = (String) request.getAttribute(SiteDefs.CONTEXT_ROOT);
         //getServletContext appears to be new on the session object for Servlet 2.3
-        ServletContext application = request.getSession().getServletContext();
+        ServletContext application = ((ServletContext) request.getAttribute("servletContext"));
         URL ecommercePropertiesUrl = null;
         try {
             ecommercePropertiesUrl = application.getResource("/WEB-INF/ecommerce.properties");

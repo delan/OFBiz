@@ -57,8 +57,7 @@ public class ServiceEventHandler implements EventHandler {
      */
     public String invoke(HttpServletRequest request, HttpServletResponse response) throws EventHandlerException {
         HttpSession session = request.getSession();
-        ServletContext context = session.getServletContext();
-        LocalDispatcher dispatcher = (LocalDispatcher) context.getAttribute("dispatcher");        
+        LocalDispatcher dispatcher = (LocalDispatcher) request.getAttribute("dispatcher");        
         if ( dispatcher == null ) 
             throw new EventHandlerException("The local service dispatcher is null");
         

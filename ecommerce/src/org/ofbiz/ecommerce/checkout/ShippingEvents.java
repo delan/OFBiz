@@ -45,8 +45,9 @@ public class ShippingEvents {
         
     public static String getShipEstimate(HttpServletRequest request, HttpServletResponse response) {
         ShoppingCart cart = (ShoppingCart)request.getSession().getAttribute(SiteDefs.SHOPPING_CART);        
-        //getServletContext appears to be new on the session object for Servlet 2.3
-        ServletContext application = request.getSession().getServletContext();
+        GenericDelegator delegator = (GenericDelegator)request.getAttribute("delegator");
+        
+        ServletContext application = ((ServletContext) request.getAttribute("servletContext"));
         URL ecommercePropertiesUrl = null;
         try { 
             ecommercePropertiesUrl = application.getResource("/WEB-INF/ecommerce.properties"); 
@@ -67,8 +68,6 @@ public class ShippingEvents {
             request.setAttribute(SiteDefs.ERROR_MESSAGE,"<li>Please Select a Shipping Method");
             return "error";
         }
-        
-        GenericDelegator delegator = (GenericDelegator)request.getAttribute("delegator");
         
         // Get the ShipmentCostEstimate(s)
         Collection estimates = null;

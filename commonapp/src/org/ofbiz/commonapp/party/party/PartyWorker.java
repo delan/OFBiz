@@ -1,6 +1,9 @@
 /*
  * $Id$
  * $Log$
+ * Revision 1.1  2002/01/24 11:53:03  jonesde
+ * Moved party specific worker here from party/contact
+ *
  *
  */
 package org.ofbiz.commonapp.party.party;
@@ -40,7 +43,7 @@ import org.ofbiz.core.util.*;
  */
 public class PartyWorker {
     public static void getPartyOtherValues(PageContext pageContext, String partyId, String partyAttr, String personAttr, String partyGroupAttr) {
-        GenericDelegator delegator = (GenericDelegator) pageContext.getServletContext().getAttribute("delegator");
+        GenericDelegator delegator = (GenericDelegator) pageContext.getRequest().getAttribute("delegator");
 
         try {
             GenericValue party = delegator.findByPrimaryKey("Party", UtilMisc.toMap("partyId", partyId));

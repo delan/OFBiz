@@ -1,6 +1,9 @@
 /*
  * $Id$
  * $Log$
+ * Revision 1.16  2002/01/16 05:51:12  jonesde
+ * Added workers to get work effort party assignments by group and role
+ *
  * Revision 1.15  2002/01/02 04:23:24  jonesde
  * Changed parameter names from SQL style to Java field style
  *
@@ -85,8 +88,8 @@ import java.util.*;
 public class WorkEffortWorker {
     public static void getWorkEffort(PageContext pageContext, String workEffortIdAttrName, String workEffortAttrName, String partyAssignsAttrName,
             String canViewAttrName, String tryEntityAttrName, String currentStatusAttrName) {
-        GenericDelegator delegator = (GenericDelegator) pageContext.getServletContext().getAttribute("delegator");
-        Security security = (Security) pageContext.getServletContext().getAttribute("security");
+        GenericDelegator delegator = (GenericDelegator) pageContext.getRequest().getAttribute("delegator");
+        Security security = (Security) pageContext.getRequest().getAttribute("security");
         GenericValue userLogin = (GenericValue) pageContext.getSession().getAttribute(SiteDefs.USER_LOGIN);
 
         String workEffortId = pageContext.getRequest().getParameter("workEffortId");
@@ -166,7 +169,7 @@ public class WorkEffortWorker {
     }
 
     public static void getWorkEffortEventsByDays(PageContext pageContext, String daysAttrName, Timestamp startDay, int numDays) {
-        GenericDelegator delegator = (GenericDelegator) pageContext.getServletContext().getAttribute("delegator");
+        GenericDelegator delegator = (GenericDelegator) pageContext.getRequest().getAttribute("delegator");
         GenericValue userLogin = (GenericValue) pageContext.getSession().getAttribute(SiteDefs.USER_LOGIN);
 
         //get a timestamp (date) for the beginning of today and for beginning of numDays+1 days from now
@@ -273,7 +276,7 @@ public class WorkEffortWorker {
     }
 
     public static void getWorkEffortAssignedActivities(PageContext pageContext, String activitiesAttrName) {
-        GenericDelegator delegator = (GenericDelegator) pageContext.getServletContext().getAttribute("delegator");
+        GenericDelegator delegator = (GenericDelegator) pageContext.getRequest().getAttribute("delegator");
         GenericValue userLogin = (GenericValue) pageContext.getSession().getAttribute(SiteDefs.USER_LOGIN);
 
         Collection validWorkEfforts = null;
@@ -301,7 +304,7 @@ public class WorkEffortWorker {
     }
 
     public static void getWorkEffortAssignedActivitiesByRole(PageContext pageContext, String roleActivitiesAttrName) {
-        GenericDelegator delegator = (GenericDelegator) pageContext.getServletContext().getAttribute("delegator");
+        GenericDelegator delegator = (GenericDelegator) pageContext.getRequest().getAttribute("delegator");
         GenericValue userLogin = (GenericValue) pageContext.getSession().getAttribute(SiteDefs.USER_LOGIN);
 
         Collection roleWorkEfforts = null;
@@ -329,7 +332,7 @@ public class WorkEffortWorker {
     }
 
     public static void getWorkEffortAssignedActivitiesByGroup(PageContext pageContext, String groupActivitiesAttrName) {
-        GenericDelegator delegator = (GenericDelegator) pageContext.getServletContext().getAttribute("delegator");
+        GenericDelegator delegator = (GenericDelegator) pageContext.getRequest().getAttribute("delegator");
         GenericValue userLogin = (GenericValue) pageContext.getSession().getAttribute(SiteDefs.USER_LOGIN);
 
         Collection groupWorkEfforts = null;
@@ -357,7 +360,7 @@ public class WorkEffortWorker {
     }
 
     public static void getWorkEffortAssignedTasks(PageContext pageContext, String tasksAttrName) {
-        GenericDelegator delegator = (GenericDelegator) pageContext.getServletContext().getAttribute("delegator");
+        GenericDelegator delegator = (GenericDelegator) pageContext.getRequest().getAttribute("delegator");
         GenericValue userLogin = (GenericValue) pageContext.getSession().getAttribute(SiteDefs.USER_LOGIN);
 
         Collection validWorkEfforts = null;

@@ -477,7 +477,7 @@ public class SimpleEvent {
         }
         
         public boolean exec(Map env, HttpServletRequest request, ClassLoader loader) {
-            LocalDispatcher dispatcher = (LocalDispatcher) request.getSession().getServletContext().getAttribute("dispatcher");
+            LocalDispatcher dispatcher = (LocalDispatcher) request.getAttribute("dispatcher");
             
             Map inMap = (Map) env.get(inMapName);
             if (inMap == null) {
