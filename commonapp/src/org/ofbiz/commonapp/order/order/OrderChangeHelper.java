@@ -50,7 +50,8 @@ public class OrderChangeHelper {
         final String ITEM_STATUS = UtilProperties.getPropertyValue(orderPropertiesUrl, "order.item.payment.approved.status", "ITEM_APPROVED");
         
         try {
-            OrderChangeHelper.orderStatusChanges(dispatcher, userLogin, orderId, HEADER_STATUS, "ITEM_CREATED", ITEM_STATUS);                                                                                                                                       
+            OrderChangeHelper.orderStatusChanges(dispatcher, userLogin, orderId, HEADER_STATUS, "ITEM_CREATED", ITEM_STATUS);
+            OrderChangeHelper.releaseInitialOrderHold(dispatcher, orderId);                                                                                                                                       
         } catch (GenericServiceException e) {
             Debug.logError(e, "Service invocation error, status changes were not updated for order #" + orderId, module);
             return false;
@@ -65,7 +66,8 @@ public class OrderChangeHelper {
         
         try {
             OrderChangeHelper.orderStatusChanges(dispatcher, userLogin, orderId, HEADER_STATUS, null, ITEM_STATUS);
-            OrderChangeHelper.cancelInventoryReservations(dispatcher, userLogin, orderId);                                                                                                                    
+            OrderChangeHelper.cancelInventoryReservations(dispatcher, userLogin, orderId);
+            OrderChangeHelper.releaseInitialOrderHold(dispatcher, orderId);                                                                                                                    
         } catch (GenericServiceException e) {
             Debug.logError(e, "Service invocation error, status changes were not updated for order #" + orderId, module);
             return false;
@@ -80,7 +82,8 @@ public class OrderChangeHelper {
         
         try {
             OrderChangeHelper.orderStatusChanges(dispatcher, userLogin, orderId, HEADER_STATUS, null, ITEM_STATUS);
-            OrderChangeHelper.cancelInventoryReservations(dispatcher, userLogin, orderId);                                                                                                                    
+            OrderChangeHelper.cancelInventoryReservations(dispatcher, userLogin, orderId);
+            OrderChangeHelper.releaseInitialOrderHold(dispatcher, orderId);                                                                                                                    
         } catch (GenericServiceException e) {
             Debug.logError(e, "Service invocation error, status changes were not updated for order #" + orderId, module);
             return false;
@@ -191,7 +194,24 @@ public class OrderChangeHelper {
             Debug.logError(e, "Problems getting WorkEffort with order ref number: " + orderId, module);
             return false;
         }        
-                
+         
+        boolean justSet = false;
+               
+        if (workEffort == null) {
+            // may not have happened yet; so we'll just set the new status in the context
+            justSet = true;            
+            try {
+                List workEfforts = delegator.findByAnd("WorkEffort", UtilMisc.toMap("sourceReferenceId", orderId));                
+                workEffort = EntityUtil.getFirst(workEfforts);
+                if (workEffort.get("workEffortParentId") != null) {
+                    workEffort = workEffort.getRelatedOne("ParentWorkEffort");
+                }
+            } catch (GenericEntityException e) {
+                Debug.logError(e, "Problems getting WorkEffort with order ref number: " + orderId, module);
+                return false;
+            }                     
+        }
+        
         if (workEffort != null) {
             // get the order header
             String currentStatusId = null;
@@ -214,9 +234,11 @@ public class OrderChangeHelper {
             try {            
                 WorkflowClient client = new WorkflowClient(dispatcher.getDispatchContext());
                 // first send the new order status to the workflow
-                client.appendContext(workEffortId, UtilMisc.toMap("orderStatusId", currentStatusId));
+                client.appendContext(workEffortId, UtilMisc.toMap("statusId", currentStatusId));
                 // next resume the activity
-                client.resume(workEffortId);                 
+                if (!justSet) {                
+                    client.resume(workEffortId);
+                }                 
             } catch (WfException e) {
                 Debug.logError(e, "Problem resuming workflow", module);      
                 return false;                 
