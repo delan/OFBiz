@@ -30,9 +30,7 @@
  -->
 
 <simple-methods>
-    <simple-method method-name="createCustomer" short-description="Create Customer" login-required="false">
-        <webapp-property-to-field resource="/WEB-INF/ecommerce.properties" property="require.email" default="true" field-name="require_email"/>
-        <webapp-property-to-field resource="/WEB-INF/ecommerce.properties" property="require.phone" default="false" field-name="require_phone"/>
+    <simple-method method-name="createCustomer" short-description="Create Customer" login-required="false">    	       
         <webapp-property-to-field resource="/WEB-INF/ecommerce.properties" property="create.allow.password" default="true" field-name="create_allow_password"/>
         <webapp-property-to-field resource="/WEB-INF/ecommerce.properties" property="default.customer.password" default="ungssblepsswd" field-name="default_customer_password"/>
 
@@ -204,7 +202,7 @@
         </if-not-empty>
 
         <!-- Check for required Phone -->
-        <if-compare field-name="require_phone" operator="equals" value="true">
+        <if-compare field-name="REQUIRE_PHONE" map-name="parameters" operator="equals" value="true">
             <if-empty field-name="CUSTOMER_HOME_CONTACT" map-name="parameters">
                 <if-empty field-name="CUSTOMER_WORK_CONTACT" map-name="parameters">
                     <if-empty field-name="CUSTOMER_MOBILE_CONTACT" map-name="parameters">
@@ -230,7 +228,7 @@
         </call-map-processor>
 
         <!-- Check for required E-Mail -->
-        <if-compare field-name="require_email" operator="equals" value="true">
+        <if-compare field-name="REQUIRE_EMAIL" map-name="parameters" operator="not-equals" value="false">
             <if-empty field-name="emailAddress" map-name="emailContext">
                 <call-map-processor in-map-name="emailContext" out-map-name="dummymap">
                     <simple-map-processor name="checkRequiredEmail">
