@@ -1,5 +1,5 @@
 /*
- * $Id: currentvalprep.bsh,v 1.5 2003/12/05 21:55:34 byersa Exp $
+ * $Id: currentvalprep.bsh,v 1.6 2003/12/15 12:10:58 byersa Exp $
  *
  * Copyright (c) 2003 The Open For Business Project - www.ofbiz.org
  *
@@ -26,7 +26,7 @@
 /**
  *
  * @author     <a href="mailto:byersa@automationgroups.com">Al Byers</a>
- * @version    $Revision: 1.5 $
+ * @version    $Revision: 1.6 $
  * @since      3.0
 
  * A commonly called script to find the "current" entity (either Content or DataResource
@@ -64,6 +64,7 @@ if (currentEntityPropertyName == null) {
     currentEntityName = page.getProperty(currentEntityPropertyName);
 }
 
+Debug.logInfo("in currentvalprep, currentEntityName:" + currentEntityName,"");
 cachedPK = currentEntityMap.get(currentEntityName);
 Debug.logInfo("in currentvalprep, cachedPK:" + cachedPK,"");
 

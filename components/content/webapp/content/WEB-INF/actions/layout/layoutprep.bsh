@@ -1,5 +1,5 @@
 /*
- * $Id: layoutprep.bsh,v 1.1 2003/12/05 21:51:57 byersa Exp $
+ * $Id: layoutprep.bsh,v 1.2 2003/12/15 12:10:58 byersa Exp $
  *
  * Copyright (c) 2003 The Open For Business Project - www.ofbiz.org
  *
@@ -26,7 +26,7 @@
 /**
  *
  * @author     <a href="mailto:byersa@automationgroups.com">Al Byers</a>
- * @version    $Revision: 1.1 $
+ * @version    $Revision: 1.2 $
  * @since      3.0
 
  */
@@ -42,9 +42,58 @@ import org.ofbiz.content.widget.form.*;
 import javax.servlet.*;
 import javax.servlet.http.*;
 
+delegator = (GenericDelegator) request.getAttribute("delegator");
+context.put("editTemplate", "true");
+context.put("wrapTemplate", "/wrap");
 currentValue = (GenericValue)request.getAttribute("currentValue");
-if (currentValue != null) {
-    contentId = (String)currentValue.get("contentId");
-    request.setAttribute("subContentId", contentId);
+drDataResourceId = "";
+contentId = "";
+if (currentValue == void || currentValue == null ) {
+    contentId = (String)request.getAttribute("contentId");
+    if (contentId == null) 
+        contentId = request.getParameter("contentId");
+ 
+    if (contentId != null) {
+        content = delegator.findByPrimaryKey("Content", UtilMisc.toMap("contentId", contentId));
+        if (content != null) {
+            dataResource = content.getRelatedOne("DataResource");
+            if (dataResource != null) {
+                drDataResourceId = (String)dataResource.get("dataResourceId");
+                request.setAttribute("drDataResourceId", drDataResourceId);
+                /*
+                currentValue = delegator.findByPrimaryKey("SubContentDataResourceView",
+                         UtilMisc.toMap("contentId", contentId, "drDataResourceId", drDataResourceId));
+                currentEntityMap = session.getAttribute("currentEntityMap");
+                if(currentEntityMap == null){
+                    currentEntityMap     = new HashMap();
+                    session.setAttribute("currentEntityMap", currentEntityMap);
+                }
+                currentEntityMap.put("SubContentDataResourceView", currentValue.getPrimaryKey());
+                request.setAttribute("currentValue", currentValue);
+                */
+            }
+        }
+    }
+Debug.logInfo("in layoutprep, contentId:" + contentId,"");
+    
 }
-request.setAttribute("edit_template", "true");
+
+/*
+context.put("subContentId", null);
+request.setAttribute("subContentId", null);
+context.put("subContentId", contentId);
+request.setAttribute("contentId", null);
+context.put("drDataResourceId", drDataResourceId);
+request.setAttribute("drDataResourceId", null);
+
+//Locale locale = null;
+//wrapTemplateId = UtilProperties.getMessage("content", "wrapTemplateId", locale);
+wrapTemplateId = "11970";
+Debug.logInfo("in layoutprep, wrapTemplateId:" + wrapTemplateId,"");
+context.put("wrapTemplateId", wrapTemplateId);
+request.setAttribute("drDataResourceId", null);
+singleWrapper = (HtmlFormWrapper)context.get("singleWrapper");
+singleWrapper.putInContext("mapKey", null);
+singleWrapper.putInContext("contentIdTo", "TEMPLATE_MASTER");
+singleWrapper.putInContext("currentValue", currentValue);
+*/
