@@ -316,7 +316,6 @@ public class GenericDelegator {
         value = helper.create(value);
         if (value != null)
             value.setDelegator(this);
-        value.otherToStore = null;
         return value;
     }
 
