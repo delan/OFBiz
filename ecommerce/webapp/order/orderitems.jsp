@@ -1,8 +1,7 @@
 
-<%
-// NOTE: This page is meant to be included, not called independently
+<%--
+NOTE: This page is meant to be included, not called independently
 
-/**
  *  Copyright (c) 2001 The Open For Business Project - www.ofbiz.org
  *
  *  Permission is hereby granted, free of charge, to any person obtaining a 
@@ -27,8 +26,7 @@
  *@author     David E. Jones
  *@created    May 22 2001
  *@version    1.0
- */
-%>
+--%>
 
 <TABLE border=0 width='100%' cellspacing='0' cellpadding='0' class='boxoutside'>
   <TR>
@@ -98,6 +96,20 @@
                   </ofbiz:if>
                   </ofbiz:unless>
                 </tr>
+                <%-- now show adjustment details per line item --%>
+                <%Collection orderItemAdjustments = OrderReadHelper.getOrderItemAdjustmentList(orderItem, orderAdjustments);%>
+                <%if (orderItemAdjustments != null) pageContext.setAttribute("orderItemAdjustments", orderItemAdjustments);%>
+                <ofbiz:iterator name="orderItemAdjustment" property="orderItemAdjustments">
+                    <%GenericValue adjustmentType = orderItemAdjustment.getRelatedOneCache("OrderAdjustmentType");%>
+                    <tr>
+                        <td align="right"><div class="tabletext" style='font-size: xx-small;'><b><i>Adjustment</i>:</b> <b><%=adjustmentType.getString("description")%></b> <%=UtilFormatOut.ifNotEmpty(orderItemAdjustment.getString("description"), ": ", "")%></div></td>
+                        <td>&nbsp;</td>
+                        <td>&nbsp;</td>
+                        <td align="right"><div class="tabletext" style='font-size: xx-small;'><%=UtilFormatOut.formatPrice(OrderReadHelper.calcItemAdjustment(orderItemAdjustment, orderItem))%></div></td>
+                        <td>&nbsp;</td>
+                        <ofbiz:if name="maySelectItems"><td>&nbsp;</td></ofbiz:if>
+                    </tr>
+                </ofbiz:iterator>
               </ofbiz:iterator>
               <ofbiz:unless name="orderItems" size="0">
               <tr><td><font color="red">ERROR: Sales Order Lines lookup failed.</font></td></tr>

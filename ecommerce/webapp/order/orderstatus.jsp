@@ -1,7 +1,4 @@
-<%
-/**
- *  Title: Order Status Page
- *  Description: None
+<%--
  *  Copyright (c) 2001 The Open For Business Project - www.ofbiz.org
  *
  *  Permission is hereby granted, free of charge, to any person obtaining a 
@@ -26,15 +23,12 @@
  *@author     David E. Jones
  *@created    May 22 2001
  *@version    1.0
- */
-%>
-<%-- FIXME add status history --%>
+--%>
+
 <%@ page import="java.util.*" %>
 <%@ page import="java.text.*" %>
-
 <%@ page import="org.ofbiz.core.entity.*" %>
 <%@ page import="org.ofbiz.core.util.*, org.ofbiz.core.pseudotag.*" %>
-
 <%@ page import="org.ofbiz.ecommerce.misc.*" %>
 <%@ page import="org.ofbiz.commonapp.party.party.*" %>
 <%@ page import="org.ofbiz.commonapp.party.contact.*" %>

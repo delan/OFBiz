@@ -1,7 +1,4 @@
-<%
-/**
- *  Title: Checkout Page
- *  Description: None
+<%--
  *  Copyright (c) 2001 The Open For Business Project - www.ofbiz.org
  *
  *  Permission is hereby granted, free of charge, to any person obtaining a 
@@ -23,15 +20,13 @@
  *  THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  *
  *@author     Eric Pabst
+ *@author     David E. Jones
  *@created    May 22 2001
  *@version    1.0
- */
-%>
+--%>
+
 <%@ taglib uri="ofbizTags" prefix="ofbiz" %>
-
-<%@ page import="java.util.*,
-                 org.ofbiz.commonapp.order.shoppingcart.ShoppingCart" %>
-
+<%@ page import="java.util.*, org.ofbiz.commonapp.order.shoppingcart.ShoppingCart" %>
 <%@ page import="org.ofbiz.core.util.*, org.ofbiz.core.pseudotag.*" %>
 <%@ page import="org.ofbiz.core.entity.*" %>
 <%@ page import="org.ofbiz.ecommerce.misc.*" %>
