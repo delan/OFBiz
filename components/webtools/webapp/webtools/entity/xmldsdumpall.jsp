@@ -96,12 +96,12 @@
                 
                 //Don't bother writing the file if there's nothing
                 //to put into it
-                if (values.hasNext()) {
+                GenericValue value = (GenericValue) values.next();
+                if (value != null) {
                     PrintWriter writer = new PrintWriter(new BufferedWriter(new OutputStreamWriter(new FileOutputStream(new File(outdir, curEntityName +".xml")), "UTF-8")));
                     writer.println("<?xml version=\"1.0\" encoding=\"UTF-8\"?>");
                     writer.println("<entity-engine-xml>");
 
-                    GenericValue value = null;
                     while ((value = (GenericValue) values.next()) != null) {
                         value.writeXmlText(writer, "");
                         numberWritten++;
