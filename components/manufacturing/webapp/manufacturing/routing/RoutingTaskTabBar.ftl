@@ -30,17 +30,9 @@
 <#assign unselectedClassName = "tabButton">
 <#assign selectedClassMap = {page.tabButtonItem?default("void") : "tabButtonSelected"}>
 
+<#if routingTask?exists>
 <div class='tabContainer'>
-    <a href="<@ofbizUrl>/FindRouting</@ofbizUrl>" class="${selectedClassMap.findRouting?default(unselectedClassName)}">${uiLabelMap.ManufacturingFindRouting}</a>
-    <a href="<@ofbizUrl>/FindRoutingTask</@ofbizUrl>" class="${selectedClassMap.routingTask?default(unselectedClassName)}">${uiLabelMap.ManufacturingRoutingTask}</a>
-    &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
-    <#if routingId?has_content>
-        <a href="<@ofbizUrl>/FindRouting?workEffortId=${routingId}&hideFields=Y&lookupFlag=Y</@ofbizUrl>" class="${selectedClassMap.routing?default(unselectedClassName)}">${uiLabelMap.ManufacturingEditRouting}</a>
-    </#if>
-    <#if routingId?has_content>
-        <a href="<@ofbizUrl>/EditRoutingProductLink?<#if routingId?has_content>workEffortId=${routingId}&</#if><#if byProduct?has_content>byProduct=${byProduct}</#if></@ofbizUrl>" class="${selectedClassMap.routingProductLink?default(unselectedClassName)}">${uiLabelMap.ManufacturingEditRoutingProductLink}</a>
-    </#if>
-    <#if routingId?has_content>
-        <a href="<@ofbizUrl>/EditRoutingTaskAssoc?workEffortIdFrom=${routingId}</@ofbizUrl>" class="${selectedClassMap.routingTaskAssoc?default(unselectedClassName)}">${uiLabelMap.ManufacturingEditRoutingTaskAssoc}</a>
-    </#if>
+    <a href="<@ofbizUrl>/EditRoutingTask?workEffortId=${routingTask.workEffortId}</@ofbizUrl>" class="${selectedClassMap.editRoutingTask?default(unselectedClassName)}">${uiLabelMap.ManufacturingEditRoutingTask}</a>
+    <a href="<@ofbizUrl>/ListRoutingTaskRoutings?workEffortId=${routingTask.workEffortId}</@ofbizUrl>" class="${selectedClassMap.listRoutingTaskRoutings?default(unselectedClassName)}">${uiLabelMap.ManufacturingListRoutingTaskRoutings}</a>
 </div>
+</#if>
