@@ -522,8 +522,7 @@
     <view-map name="showcart" type="region"/>
 
     <view-map name="quickadd" type="region"/>
-    <view-map name="category" type="region"/>
-    <!-- Uncomment this for WSP: <view-map name="category" type="wsp" page="/catalog/category.jsp"/> -->
+    <view-map name="category" type="wsp" page="/catalog/category.ftl"/>  
     <view-map name="product" type="wsp" page="/catalog/product.ftl"/>
     <view-map name="keywordsearch" type="region"/>
 

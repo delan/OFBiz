@@ -25,35 +25,31 @@
 -->
 
 <#-- variable setup and worker calls -->
-<#assign currentCatalogId = Static["org.ofbiz.commonapp.product.catalog.CatalogWorker"].getCurrentCatalogId(request)>
-<#assign topLevelList = Static["org.ofbiz.commonapp.product.catalog.CatalogWorker"].getCatalogTopCategoryId(request, currentCatalogId, true)>
-<#if requestParameters.category_id?exists>
-  <#assign curCategoryId = requestParameters.category_id>
-<#elseif requestParameters.CATEGORY_ID?exists>
-  <#assign curCategoryId = requestParameters.CATEGORY_ID>
-</#if>
-<#if curCategoryId?exists>
-  <#assign trail = Static["org.ofbiz.commonapp.product.category.CategoryWorker"].setTrail(request, curCategoryId)>
-</#if>
+<#assign topLevelList = requestAttributes.topLevelList>
+<#assign curCategoryId = requestAttributes.curCategoryId>
 
 <#-- looping macro -->
-<#macro categoryList parentCategory category, currentCategoryId>
+<#macro categoryList parentCategory category>
+  <#if parentCategory.productCategoryId != category.productCategoryId>
+    <#local pStr = "&pcategory=" + parentCategory.productCategoryId>  
+  </#if>
   <#if curCategoryId?exists && curCategoryId == category.productCategoryId>
     <div class="browsecategorytext">
-      -&nbsp;<a href="<@ofbizUrl>/category?category_id=${category.productCategoryId}</@ofbizUrl>" class="browsecategorybuttondisabled">${category.description?if_exists}</a>
+      -&nbsp;<a href="<@ofbizUrl>/category?category_id=${category.productCategoryId}${pStr?if_exists}</@ofbizUrl>" class="browsecategorybuttondisabled">${category.description?if_exists}</a>
     </div>
   <#else>
     <div class="browsecategorytext">
-      -&nbsp;<a href="<@ofbizUrl>/category?category)id=${category.productCategoryId}</@ofbizUrl>" class="browsecategorybutton">${category.description?if_exists}</a>
+      -&nbsp;<a href="<@ofbizUrl>/category?category_id=${category.productCategoryId}${pStr?if_exists}</@ofbizUrl>" class="browsecategorybutton">${category.description?if_exists}</a>
     </div>
   </#if>
   
-  <#if (Static["org.ofbiz.commonapp.product.category.CategoryWorker"].checkTrailItem(request, category.getString("productCategoryId"))) || (curCategoryId?exists && curCategoryId == category.produtCategoryId)>
+  <#if (Static["org.ofbiz.commonapp.product.category.CategoryWorker"].checkTrailItem(request, category.getString("productCategoryId"))) || (curCategoryId?exists && curCategoryId == category.productCategoryId)>
     <#local subCatList = Static["org.ofbiz.commonapp.product.category.CategoryWorker"].getRelatedCategoriesRet(request, "subCatList", category.getString("productCategoryId"), true)>
-    <#if subCatList?exists && 0 < subCatList.size>
+    <#if subCatList?exists>
       <#list subCatList as subCat>
         <div style="margin-left: 10px">
-        <@categoryList parentCategory=category category=subCat/>
+          <@categoryList parentCategory=category category=subCat/>
+        </div>
       </#list>
     </#if>
   </#if>
@@ -78,7 +74,7 @@
           <td>
             <div style='margin-left: 10px;'>
               <#list topLevelList as category>
-                <@categoryList parentCategory=null category=category/>
+                <@categoryList parentCategory=category category=category/>
               </#list>
             </div>
           </td>
