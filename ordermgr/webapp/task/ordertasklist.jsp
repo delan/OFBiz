@@ -40,8 +40,8 @@
 	String sort = request.getParameter("sort");
 	List sortOrder = null;
 	
-	// get user level tasks
-	sortOrder = UtilMisc.toList("-priority", "orderDate");
+	// create the sort order
+	sortOrder = UtilMisc.toList("currentStatusId", "-priority", "orderDate");
 	if (sort != null) {
 		if (sort.equals("name")) {
 			sortOrder.add(0, "firstName");
@@ -55,23 +55,41 @@
 	if (partyTasks != null) pageContext.setAttribute("partyTasks", partyTasks);
 
 	// get this user's roles
-	List partyRoles = delegator.findByAnd("PartyRole", UtilMisc.toMap("partyId", userLogin.getString("partyId")));
-	if (partyRoles != null) partyTasks = EntityUtil.filterByDate(partyTasks);
-	if (partyRoles != null) pageContext.setAttribute("partyRoles", partyRoles);		
-
-	// get role level tasks
-	sortOrder = UtilMisc.toList("currentStatusId", "-priority", "orderDate");
-	if (sort != null) {
-		if (sort.equals("name")) {
-			sortOrder.add(0, "firstName");
-			sortOrder.add(0, "lastName");
-		} else {
-			sortOrder.add(0, sort);
-		}
-	}	
-	List roleTasks = delegator.findByAnd("OrderTaskList", UtilMisc.toMap("orderRoleTypeId", "PLACING_CUSTOMER", "roleTypeId", "ORDER_CLERK"), sortOrder);
+	List partyRoles = delegator.findByAnd("PartyRole", UtilMisc.toMap("partyId", userLogin.getString("partyId")));	
+	
+	// build the role list
+	Iterator pri = partyRoles.iterator();
+	List pRolesList = new ArrayList();
+	while (pri.hasNext()) {
+		GenericValue partyRole = (GenericValue) pri.next();
+		pRolesList.add(new EntityExpr("roleTypeId", EntityOperator.EQUALS, partyRole.getString("roleTypeId")));
+	}
+	
+	/* This does not work -- need to find out why
+	// constant values for getting single orders (by customer)
+	List customerRoles = UtilMisc.toList(new EntityExpr("orderRoleTypeId", EntityOperator.EQUALS, "PLACING_CUSTOMER"));
+	
+	// get all activities, not finished or delegated
+	List taskStatuses = UtilMisc.toList(new EntityExpr("statusId", EntityOperator.EQUALS, "CAL_SENT"), new EntityExpr("statusId", EntityOperator.EQUALS, "CAL_ACCEPTED"));
+	
+	// build the expressions into a single list
+	List expressions = UtilMisc.toList(new EntityExprList(pRolesList, EntityOperator.OR), new EntityExprList(taskStatuses, EntityOperator.OR), new EntityExprList(customerRoles, EntityOperator.OR));	
+	EntityCondition conditions = new EntityConditionList(expressions, EntityOperator.AND);
+	*/
+	
+	List baseList = UtilMisc.toList(new EntityExpr("orderRoleTypeId", EntityOperator.EQUALS, "PLACING_CUSTOMER"), new EntityExpr("statusId", EntityOperator.NOT_EQUAL, "CAL_COMPLETED"), new EntityExpr("statusId", EntityOperator.NOT_EQUAL, "CAL_DELEGATED"));
+	List expressions = UtilMisc.toList(new EntityExprList(pRolesList, EntityOperator.OR), new EntityExprList(baseList, EntityOperator.AND));
+	EntityCondition conditions = new EntityConditionList(expressions, EntityOperator.AND);
+	
+	// invoke the query
+	List roleTasks = delegator.findByCondition("OrderTaskList", conditions, null, sortOrder);
 	if (roleTasks != null) roleTasks = EntityUtil.filterByDate(roleTasks);	
-	if (roleTasks != null) pageContext.setAttribute("roleTasks", roleTasks);				
+	if (roleTasks != null) pageContext.setAttribute("roleTasks", roleTasks);	
+	Iterator i = roleTasks.iterator();
+	while (i.hasNext()) {
+		Debug.logError("Entity ----> : " + i.next());
+	}
+
 %>
 
 <script language="JavaScript">
