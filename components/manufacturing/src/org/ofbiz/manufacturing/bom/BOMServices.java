@@ -1,5 +1,5 @@
 /*
- * $Id: BOMServices.java,v 1.8 2004/05/14 16:35:11 jacopo Exp $
+ * $Id: BOMServices.java,v 1.9 2004/06/04 14:00:46 jacopo Exp $
  *
  * Copyright (c) 2001, 2002 The Open For Business Project - www.ofbiz.org
  *
@@ -98,7 +98,7 @@ public class BOMServices {
         } else {
             bomTypes.add(bomType);
         }
-        
+
         int depth = 0;
         int maxDepth = 0;
         Iterator bomTypesIt = bomTypes.iterator();
@@ -380,6 +380,52 @@ public class BOMServices {
             return ServiceUtil.returnError("Error creating bill of materials tree: " + gee.getMessage());
         }
         result.put("productionRuns" , productionRuns);
+        return result;
+    }
+
+    public static Map getNotAssembledComponents(DispatchContext dctx, Map context) {
+
+        Map result = new HashMap();
+        Security security = dctx.getSecurity();
+        GenericDelegator delegator = dctx.getDelegator();
+        LocalDispatcher dispatcher = dctx.getDispatcher();
+        String productId = (String) context.get("productId");
+        Double quantity = (Double) context.get("quantity");
+        String fromDateStr = (String) context.get("fromDate");
+        GenericValue userLogin = (GenericValue)context.get("userLogin");
+        
+        if (quantity == null) {
+            quantity = new Double(1);
+        }
+        Date fromDate = null;
+        if (UtilValidate.isNotEmpty(fromDateStr)) {
+            try {
+                fromDate = Timestamp.valueOf(fromDateStr);
+            } catch (Exception e) {
+            }
+        }
+        if (fromDate == null) {
+            fromDate = new Date();
+        }
+        
+        ItemConfigurationTree tree = null;
+        ArrayList components = new ArrayList();
+        ArrayList notAssembledComponents = new ArrayList();
+        try {
+            tree = new ItemConfigurationTree(productId, "MANUF_COMPONENT", fromDate, ItemConfigurationTree.EXPLOSION_MANUFACTURING, delegator, dispatcher);
+            tree.setRootQuantity(quantity.doubleValue());
+            tree.print(components);
+        } catch(GenericEntityException gee) {
+            return ServiceUtil.returnError("Error creating bill of materials tree: " + gee.getMessage());
+        }
+        Iterator componentsIt = components.iterator();
+        while (componentsIt.hasNext()) {
+            ItemConfigurationNode oneComponent = (ItemConfigurationNode)componentsIt.next();
+            if (!oneComponent.isManufactured()) {
+                notAssembledComponents.add(oneComponent);
+            }
+        }
+        result.put("notAssembledComponents" , notAssembledComponents);
         return result;
     }
 

@@ -417,4 +417,13 @@
         <attribute mode="OUT" name="productionRuns" type="java.util.List"/>
     </service>
 
+    <service name="getNotAssembledComponents" engine="java"
+            location="org.ofbiz.manufacturing.bom.BOMServices" invoke="getNotAssembledComponents" auth="true">
+        <description>Explodes a product id and returns all the components that are not manufactured on customer order: these components will be taken from warehouse.</description>
+        <attribute mode="IN" name="productId" optional="false" type="String"/>
+        <attribute mode="IN" name="quantity" optional="true" type="Double"/>
+        <attribute mode="IN" name="fromDate" optional="true" type="String"/>
+        <attribute mode="OUT" name="notAssembledComponents" type="java.util.List"/>
+    </service>
+
 </services>
