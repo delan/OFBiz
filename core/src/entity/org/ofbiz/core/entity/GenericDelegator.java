@@ -45,9 +45,9 @@ import org.w3c.dom.Node;
  * @author     <a href="mailto:chris_maurer@altavista.com">Chris Maurer</a>
  * @author     <a href="mailto:jaz@jflow.net">Andy Zeneski</a
  * @version    $Revision$
- * @since      2.0
+ * @since      1.0
  */
-public class GenericDelegator {
+public class GenericDelegator implements DelegatorInterface {
 
     public static final String module = GenericDelegator.class.getName();
 
