@@ -1,0 +1,6 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<page>
+    <template>main_right</template>
+    <property name="title">Login</property>
+    <property name="headerItem">contactus</property>
+</page>
