@@ -21,7 +21,7 @@
  *
  *@author     David E. Jones (jonesde@ofbiz.org)
  *@author     Andy Zeneski (jaz@ofbiz.org)
- *@version    $Revision: 1.2 $
+ *@version    $Revision: 1.3 $
  *@since      2.1
 -->
 
@@ -92,7 +92,7 @@ function addToList() {
             <form method="POST" action="<@ofbizUrl>/additem<#if requestAttributes._CURRENT_VIEW_?has_content>/${requestAttributes._CURRENT_VIEW_}</#if></@ofbizUrl>" name="quickaddform" style='margin: 0;'>
               <input type='text' class='inputBox' name="add_product_id" value="${requestParameters.add_product_id?if_exists}">
               <input type='text' class='inputBox' size="5" name="quantity" value="${requestParameters.quantity?default("1")}">
-              <input type='submit' value="Add To Cart">
+              <input type='submit' class='smallSubmit' value="Add To Cart">
               <#-- <a href="javascript:document.quickaddform.submit()" class="buttontext"><nobr>[Add to Cart]</nobr></a> -->
             </form>
           </td>

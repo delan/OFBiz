@@ -25,7 +25,8 @@
 
 import org.ofbiz.base.util.UtilMisc;
 import org.ofbiz.product.catalog.CatalogWorker;
-import org.ofbiz.product.promo.ProductPromoWorker;
+import org.ofbiz.order.shoppingcart.product.ProductDisplayWorker;
+import org.ofbiz.order.shoppingcart.product.ProductPromoWorker;
 
 delegator = request.getAttribute("delegator");
 userLogin = session.getAttribute("userLogin");
@@ -46,7 +47,7 @@ if (userLogin != null) {
 }
 
 // Get Cart Associated Products Data
-associatedProducts = CatalogWorker.getRandomCartProductAssoc(request, true);
+associatedProducts = ProductDisplayWorker.getRandomCartProductAssoc(request, true);
 if (associatedProducts != null) 
     context.put("associatedProducts", associatedProducts);
 

@@ -512,14 +512,14 @@
     </request-map>
     <request-map uri="createCreditCard">
         <security https="true" auth="true"/>
-        <event type="simple" path="org/ofbiz/commonapp/accounting/payment/PaymentSimpleMethods.xml" invoke="createCreditCard"/>
+        <event type="simple" path="org/ofbiz/accounting/payment/PaymentSimpleMethods.xml" invoke="createCreditCard"/>
         <response name="success" type="view" value="editcreditcard"/>
         <response name="address" type="view" value="editcontactmech"/>
         <response name="error" type="view" value="editcreditcard"/>
     </request-map>
     <request-map uri="updateCreditCard">
         <security https="true" auth="true"/>
-        <event type="simple" path="org/ofbiz/commonapp/accounting/payment/PaymentSimpleMethods.xml" invoke="updateCreditCard"/>
+        <event type="simple" path="org/ofbiz/accounting/payment/PaymentSimpleMethods.xml" invoke="updateCreditCard"/>
         <response name="success" type="view" value="editcreditcard"/>
         <response name="address" type="view" value="editcontactmech"/>
         <response name="error" type="view" value="editcreditcard"/>
@@ -531,20 +531,20 @@
     </request-map>
     <request-map uri="createEftAccount">
         <security https="true" auth="true"/>
-        <event type="simple" path="org/ofbiz/commonapp/accounting/payment/PaymentSimpleMethods.xml" invoke="createEftAccount"/>
+        <event type="simple" path="org/ofbiz/accounting/payment/PaymentSimpleMethods.xml" invoke="createEftAccount"/>
         <response name="success" type="view" value="editeftaccount"/>
         <response name="error" type="view" value="editeftaccount"/>
     </request-map>
     <request-map uri="updateEftAccount">
         <security https="true" auth="true"/>
-        <event type="simple" path="org/ofbiz/commonapp/accounting/payment/PaymentSimpleMethods.xml" invoke="updateEftAccount"/>
+        <event type="simple" path="org/ofbiz/accounting/payment/PaymentSimpleMethods.xml" invoke="updateEftAccount"/>
         <response name="success" type="view" value="editeftaccount"/>
         <response name="error" type="view" value="editeftaccount"/>
     </request-map>
 
     <request-map uri="deletePaymentMethod">
         <security https="true" auth="true"/>
-        <event type="simple" path="org/ofbiz/commonapp/accounting/payment/PaymentSimpleMethods.xml" invoke="deletePaymentMethod"/>
+        <event type="simple" path="org/ofbiz/accounting/payment/PaymentSimpleMethods.xml" invoke="deletePaymentMethod"/>
         <response name="success" type="view" value="viewprofile"/>
         <response name="error" type="view" value="viewprofile"/>
     </request-map>
@@ -556,14 +556,14 @@
 
     <request-map uri="createPerson">
         <security https="true" auth="true"/>
-        <event type="simple" path="org/ofbiz/commonapp/party/party/PartySimpleEvents.xml" invoke="createPerson"/>
+        <event type="simple" path="org/ofbiz/party/party/PartySimpleEvents.xml" invoke="createPerson"/>
         <response name="success" type="view" value="editperson"/>
         <response name="error" type="view" value="editperson"/>
     </request-map>
 
     <request-map uri="updatePerson">
         <security https="true" auth="true"/>
-        <event type="simple" path="org/ofbiz/commonapp/party/party/PartySimpleEvents.xml" invoke="updatePerson"/>
+        <event type="simple" path="org/ofbiz/party/party/PartySimpleEvents.xml" invoke="updatePerson"/>
         <response name="success" type="view" value="editperson"/>
         <response name="error" type="view" value="editperson"/>
     </request-map>
@@ -575,7 +575,7 @@
 
     <request-map uri="updatePassword">
         <security https="true" auth="true"/>
-        <event type="simple" path="org/ofbiz/commonapp/security/login/LoginSimpleEvents.xml" invoke="updatePassword"/>
+        <event type="simple" path="org/ofbiz/securityext/login/LoginSimpleEvents.xml" invoke="updatePassword"/>
         <response name="success" type="view" value="changepassword"/>
         <response name="error" type="view" value="changepassword"/>
     </request-map>
