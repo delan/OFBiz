@@ -79,13 +79,6 @@
             </target>
         </menu-item>
 
-       <menu-item name="permissions" title="Permissions" default-target-name="EditContentPurposeOperation"
-                permission-operation="HAS_EDITOR_ROLE|HAS_ADMIN_ROLE"
-                permission-entity-action="_ADMIN">
-            <target name="EditContentPurposeOperation" request-name="CMSEditContentPurposeOperation">
-            </target>
-        </menu-item>
-
 
     </menu>
 
