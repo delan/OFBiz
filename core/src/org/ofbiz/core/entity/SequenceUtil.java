@@ -56,6 +56,8 @@ public class SequenceUtil
   {
     public static final long bankSize = 10;
     public static final long startSeqId = 10000;
+    public static final int minWaitNanos = 500000;   // 1/2 ms
+    public static final int maxWaitNanos = 1000000;  // 1 ms
   
     long curSeqId;
     long maxSeqId;
@@ -71,7 +73,7 @@ public class SequenceUtil
       fillBank();
     }
 
-    public Long getNextSeqId()
+    public synchronized Long getNextSeqId()
     {
       if(curSeqId < maxSeqId)
       {
@@ -148,6 +150,14 @@ public class SequenceUtil
             return;
           }
           try { if (rs != null) rs.close(); } catch (SQLException sqle) { }
+          
+          if(val1+bankSize != val2)
+          {
+            //collision happened, wait a bounded random amount of time then continue
+            int waitTime = (new Double(Math.random()*(maxWaitNanos - minWaitNanos))).intValue() + minWaitNanos;
+            try { this.wait(0, waitTime); }
+            catch(Exception e) { }
+          }
         }
         
         curSeqId = val1;
