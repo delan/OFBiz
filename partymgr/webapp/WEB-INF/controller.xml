@@ -60,78 +60,67 @@
         <response name="error" type="view" value="error"/>
     </request-map>
 
-    <request-map uri="main"><security https="false" auth="false"/>
+    <request-map uri="main"><security https="true" auth="true"/>
     	<response name="success" type="view" value="main"/>
     </request-map>
 
-    <request-map uri="viewprofile">
-        <security https="true" auth="true"/>
+    <request-map uri="viewprofile"><security https="true" auth="true"/>
         <response name="success" type="view" value="viewprofile"/>
     </request-map>
 
-    <request-map uri="editcontactmech">
-        <security https="true" auth="true"/>
+    <request-map uri="editcontactmech"><security https="true" auth="true"/>
         <response name="success" type="view" value="editcontactmech"/>
     </request-map>
 
-    <request-map uri="createContactMech">
-        <security https="true" auth="true"/>
+    <request-map uri="createContactMech"><security https="true" auth="true"/>
         <event type="simple" path="org/ofbiz/commonapp/party/contact/ContactMechSimpleEvents.xml" invoke="createContactMech"/>
         <response name="success" type="view" value="viewprofile"/>
         <response name="error" type="view" value="editcontactmech"/>
     </request-map>
 
-    <request-map uri="updateContactMech">
-        <security https="true" auth="true"/>
+    <request-map uri="updateContactMech"><security https="true" auth="true"/>
         <event type="simple" path="org/ofbiz/commonapp/party/contact/ContactMechSimpleEvents.xml" invoke="updateContactMech"/>
         <response name="success" type="view" value="viewprofile"/>
         <response name="error" type="view" value="editcontactmech"/>
     </request-map>
 
-    <request-map uri="deleteContactMech">
-        <security https="true" auth="true"/>
+    <request-map uri="deleteContactMech"><security https="true" auth="true"/>
         <event type="simple" path="org/ofbiz/commonapp/party/contact/ContactMechSimpleEvents.xml" invoke="deleteContactMech"/>
         <response name="success" type="view" value="viewprofile"/>
         <response name="error" type="view" value="editcontactmech"/>
     </request-map>
 
-    <request-map uri="createPostalAddressAndPurpose">
-        <security https="true" auth="true"/>
+    <request-map uri="createPostalAddressAndPurpose"><security https="true" auth="true"/>
         <event type="simple" path="org/ofbiz/commonapp/party/contact/ContactMechSimpleEvents.xml" invoke="createPostalAddressAndPurpose"/>
         <response name="success" type="view" value="viewprofile"/>
         <response name="error" type="view" value="editcontactmech"/>
     </request-map>
 
-    <request-map uri="createPostalAddress">
-        <security https="true" auth="true"/>
+    <request-map uri="createPostalAddress"><security https="true" auth="true"/>
         <event type="simple" path="org/ofbiz/commonapp/party/contact/ContactMechSimpleEvents.xml" invoke="createPostalAddress"/>
         <response name="success" type="view" value="viewprofile"/>
         <response name="error" type="view" value="editcontactmech"/>
     </request-map>
 
-    <request-map uri="updatePostalAddress">
-        <security https="true" auth="true"/>
+    <request-map uri="updatePostalAddress"><security https="true" auth="true"/>
         <event type="simple" path="org/ofbiz/commonapp/party/contact/ContactMechSimpleEvents.xml" invoke="updatePostalAddress"/>
         <response name="success" type="view" value="viewprofile"/>
         <response name="error" type="view" value="editcontactmech"/>
     </request-map>
 
-    <request-map uri="createTelecomNumber">
-        <security https="true" auth="true"/>
+    <request-map uri="createTelecomNumber"><security https="true" auth="true"/>
         <event type="simple" path="org/ofbiz/commonapp/party/contact/ContactMechSimpleEvents.xml" invoke="createTelecomNumber"/>
         <response name="success" type="view" value="viewprofile"/>
         <response name="error" type="view" value="editcontactmech"/>
     </request-map>
 
-    <request-map uri="updateTelecomNumber">
-        <security https="true" auth="true"/>
+    <request-map uri="updateTelecomNumber"><security https="true" auth="true"/>
         <event type="simple" path="org/ofbiz/commonapp/party/contact/ContactMechSimpleEvents.xml" invoke="updateTelecomNumber"/>
         <response name="success" type="view" value="viewprofile"/>
         <response name="error" type="view" value="editcontactmech"/>
     </request-map>
 
-    <request-map uri="createEmailAddress">
-        <security https="true" auth="true"/>
+    <request-map uri="createEmailAddress"><security https="true" auth="true"/>
         <event type="simple" path="org/ofbiz/commonapp/party/contact/ContactMechSimpleEvents.xml" invoke="createEmailAddress"/>
         <response name="success" type="view" value="viewprofile"/>
         <response name="error" type="view" value="editcontactmech"/>
@@ -240,32 +229,27 @@
         <response name="error" type="view" value="editlogin"/>
     </request-map>
 
-    <request-map uri="createnewlogin">
-        <security https="true" auth="true"/>
+    <request-map uri="createnewlogin"><security https="true" auth="true"/>
         <response name="success" type="view" value="createnewlogin"/>
     </request-map>
 
-    <request-map uri="createuserlogin">
-        <security https="true" auth="true"/>
+    <request-map uri="createuserlogin"><security https="true" auth="true"/>
         <event type="service" path="" invoke="createUserLogin"/>
         <response name="success" type="view" value="viewprofile"/>
         <response name="error" type="view" value="createnewlogin"/>
     </request-map>
 
-    <request-map uri="findparty">
-        <security https="true" auth="true"/>
+    <request-map uri="findparty"><security https="true" auth="true"/>
         <response name="success" type="view" value="findparty"/>
     </request-map>
 
-    <request-map uri="addrole">
-        <security https="true" auth="true"/>
+    <request-map uri="addrole"><security https="true" auth="true"/>
         <event type="service" path="org.ofbiz.commonapp.party.party.PartyRoleServices" invoke="createPartyRole"/>
         <response name="success" type="view" value="viewprofile"/>
         <response name="error" type="view" value="viewprofile"/>
     </request-map>
 
-    <request-map uri="deleterole">
-        <security https="true" auth="true"/>
+    <request-map uri="deleterole"><security https="true" auth="true"/>
         <event type="service" path="org.ofbiz.commonapp.party.party.PartyRoleServices" invoke="deletePartyRole"/>
         <response name="success" type="view" value="viewprofile"/>
         <response name="error" type="view" value="viewprofile"/>
