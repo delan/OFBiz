@@ -21,7 +21,7 @@
  *
  *@author     Andy Zeneski
  *@author     David E. Jones
- *@version    $Revision: 1.31 $
+ *@version    $Revision: 1.32 $
  *@since      2.1
  */
 
@@ -44,8 +44,11 @@ import org.ofbiz.entity.util.*;
 import org.ofbiz.service.*;
 import org.ofbiz.content.webapp.taglib.*;
 import org.ofbiz.product.product.ProductContentWrapper;
+import org.ofbiz.product.product.ProductSearch;
+import org.ofbiz.product.product.ProductSearchSession;
 import org.ofbiz.product.catalog.*;
 import org.ofbiz.product.store.*;
+import org.ofbiz.content.stats.VisitHandler;
 
 String buildNext(Map map, List order, String current, String prefix, Map featureTypes) {
     keySet = map.keySet();
@@ -168,8 +171,8 @@ if (product != null) {
 
     // get the product price
     catalogId = CatalogWorker.getCurrentCatalogId(request);
+    currentCatalogId = catalogId;
     webSiteId = CatalogWorker.getWebSiteId(request);
-    currentCatalogId = CatalogWorker.getCurrentCatalogId(request);
     autoUserLogin = request.getSession().getAttribute("autoUserLogin");
     fieldMap = UtilMisc.toMap("product", product, "prodCatalogId", catalogId, "webSiteId", webSiteId,
         "currencyUomId", UtilHttp.getCurrencyUom(session), "autoUserLogin", autoUserLogin);
@@ -379,11 +382,53 @@ if (product != null) {
 
     // get product associations
     obsoleteProducts = dispatcher.runSync("getAssociatedProducts", UtilMisc.toMap("productId", productId, "type", "PRODUCT_OBSOLESCENCE", "checkViewAllow", Boolean.TRUE, "prodCatalogId", currentCatalogId));
-    request.setAttribute("obsoleteProducts", obsoleteProducts.get("assocProducts"));
+    context.put("obsoleteProducts", obsoleteProducts.get("assocProducts"));
+    
     crossSellProducts = dispatcher.runSync("getAssociatedProducts", UtilMisc.toMap("productId", productId, "type", "PRODUCT_COMPLEMENT", "checkViewAllow", Boolean.TRUE, "prodCatalogId", currentCatalogId));
-    request.setAttribute("crossSellProducts", crossSellProducts.get("assocProducts"));
+    context.put("crossSellProducts", crossSellProducts.get("assocProducts"));
+    
     upSellProducts = dispatcher.runSync("getAssociatedProducts", UtilMisc.toMap("productId", productId, "type", "PRODUCT_UPGRADE", "checkViewAllow", Boolean.TRUE, "prodCatalogId", currentCatalogId));
-    request.setAttribute("upSellProducts", upSellProducts.get("assocProducts"));
+    context.put("upSellProducts", upSellProducts.get("assocProducts"));
+    
     obsolenscenseProducts = dispatcher.runSync("getAssociatedProducts", UtilMisc.toMap("productIdTo", productId, "type", "PRODUCT_OBSOLESCENCE", "checkViewAllow", Boolean.TRUE, "prodCatalogId", currentCatalogId));
-    request.setAttribute("obsolenscenseProducts", obsolenscenseProducts.get("assocProducts"));
+    context.put("obsolenscenseProducts", obsolenscenseProducts.get("assocProducts"));
+    
+    // get other cross-sell information: product with a common feature
+    commonProductFeatureId = "SYMPTOM";
+    // does this product have that feature?
+    commonProductFeatureAndAppls = delegator.findByAnd("ProductFeatureAndAppl", UtilMisc.toMap("productId", productId, "productFeatureTypeId", commonProductFeatureId), UtilMisc.toList("sequenceNum", "defaultSequenceNum"));
+    if (commonProductFeatureAndAppls.size() > 0) {
+        commonProductFeatureIds = EntityUtil.getFieldListFromEntityList(commonProductFeatureAndAppls, "productFeatureId", true);
+        
+        // now search for other products that have this feature
+        visitId = VisitHandler.getVisitId(session);
+        
+        productSearchConstraintList = new LinkedList();
+        productSearchConstraintList.add(new ProductSearch.FeatureSetConstraint(commonProductFeatureIds));
+        // make sure the view allow category is included
+        productSearchConstraintList = ProductSearchSession.ensureViewAllowConstraint(productSearchConstraintList, currentCatalogId, delegator);
+
+        // don't care about the sort on this one
+        resultSortOrder = null;
+
+        commonFeatureResultIdsOrig = ProductSearch.searchProducts(productSearchConstraintList, resultSortOrder, delegator, visitId);
+        commonFeatureResultIds = new LinkedList();
+        commonFeatureResultIdIter = commonFeatureResultIdsOrig.iterator();
+        while (commonFeatureResultIdIter.hasNext()) {
+            commonFeatureResultId = commonFeatureResultIdIter.next();
+            // filter out the current product
+            if (commonFeatureResultId.equals(productId)) {
+                continue;
+            }
+            // filter out all variants
+            commonProduct = delegator.findByPrimaryKeyCache("Product", UtilMisc.toMap("productId", commonFeatureResultId));
+            if (commonProduct == null || ("Y".equals(commonProduct.getString("isVariant")))) {
+                continue;
+            }
+            commonFeatureResultIds.add(commonFeatureResultId);
+        }
+        if (commonFeatureResultIds.size() > 0) {
+            context.put("commonFeatureResultIds", commonFeatureResultIds);
+        }
+    }
 }
