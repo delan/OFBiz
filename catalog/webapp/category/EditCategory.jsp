@@ -39,6 +39,7 @@
     if(request.getAttribute(SiteDefs.ERROR_MESSAGE) != null) useValues = false;
 
     String productCategoryId = request.getParameter("productCategoryId");
+    if (productCategoryId == null || productCategoryId.length() == 0) productCategoryId = (String) request.getAttribute("productCategoryId");
     GenericValue productCategory = delegator.findByPrimaryKey("ProductCategory", UtilMisc.toMap("productCategoryId", productCategoryId));
     GenericValue productCategoryType = null;
     if(productCategory == null) {

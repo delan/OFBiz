@@ -46,6 +46,7 @@
                 location="org/ofbiz/commonapp/product/product/ProductServices.xml" invoke="createProduct" auth="true">
         <description>Create a Product</description>
         <implements service="interfaceProduct"/>
+        <attribute name="productId" type="String" mode="INOUT" optional="true"/>
     </service>
     <service name="updateProduct" engine="simple"
                 location="org/ofbiz/commonapp/product/product/ProductServices.xml" invoke="updateProduct" auth="true">
@@ -310,7 +311,7 @@
     <service name="createProductCategory" engine="simple"
                 location="org/ofbiz/commonapp/product/category/CategoryServices.xml" invoke="createProductCategory" auth="true">
         <description>Create an ProductCategory</description>
-        <attribute name="productCategoryId" type="String" mode="IN" optional="false"/>
+        <attribute name="productCategoryId" type="String" mode="INOUT" optional="true"/>
         <attribute name="productCategoryTypeId" type="String" mode="IN" optional="false"/>
         <attribute name="primaryParentCategoryId" type="String" mode="IN" optional="true"/>
         <attribute name="description" type="String" mode="IN" optional="true"/>

@@ -42,6 +42,7 @@
     boolean isCreate = "true".equals(request.getParameter("isCreate"));
 
     String productId = request.getParameter("productId");
+    if (productId == null || productId.length() == 0) productId = (String) request.getAttribute("productId");
     GenericValue product = delegator.findByPrimaryKey("Product", UtilMisc.toMap("productId", productId));
     if (product == null) tryEntity = false;
     if (isCreate && !tryEntity) product = null;

@@ -31,12 +31,22 @@
             <alt-permission permission="CATALOG_ROLE" action="_CREATE"/>
             <fail-message message="Security Error: to run createProduct you must have the CATALOG_CREATE or CATALOG_ADMIN permission, or the limited CATALOG_ROLE_CREATE permission"/>
         </check-permission>
-        <check-id field-name="productId" map-name="parameters"/>
         <check-errors/>
 
         <make-value value-name="newEntity" entity-name="Product"/>
         <set-nonpk-fields map-name="parameters" value-name="newEntity"/>
-        <set-pk-fields map-name="parameters" value-name="newEntity"/>
+        
+        <field-to-field field-name="productId" map-name="parameters" to-map-name="newEntity"/>
+        <if-empty field-name="productId" map-name="newEntity">
+            <sequenced-id-to-env sequence-name="Product" env-name="productId"/>
+            <to-string field-name="productId"/>
+            <env-to-field env-name="productId" map-name="newEntity"/>
+            <field-to-result field-name="productId" result-name="productId"/>
+        <else>
+            <check-id field-name="productId" map-name="newEntity"/>
+            <check-errors/>
+        </else>
+        </if-empty>
         
         <now-timestamp-to-env env-name="nowTimestamp"/>
         <env-to-field env-name="nowTimestamp" field-name="lastModifiedDate" map-name="newEntity"/>
