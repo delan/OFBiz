@@ -179,26 +179,24 @@ public class CategoryEvents {
 
         if (updateMode.equals("CREATE")) {
             Debug.logInfo("Create mode was found.");
-            GenericValue dummyValue = null;
-            try {
-                Collection dummyCol = EntityUtil.filterByDate(
-                        delegator.findByAnd("ProductCategoryMember", UtilMisc.toMap("productId", productId, "productCategoryId", productCategoryId), null));
-                dummyValue = EntityUtil.getFirst(dummyCol);
-            } catch (GenericEntityException e) {
-                Debug.logWarning(e.getMessage());
-                dummyValue = null;
-            }
-            if (dummyValue != null) {
-                request.setAttribute(SiteDefs.ERROR_MESSAGE, "Could not create product-category entry (already exists)");
-                return "error";
-            }
 
-            Debug.logInfo("Didn't find any existing adding new.");
+            String fromDateStr = request.getParameter("FROM_DATE");
+            Timestamp fromDate = null;
+            if (fromDateStr != null && fromDateStr.length() > 0) {
+                try {
+                    fromDate = Timestamp.valueOf(fromDateStr);
+                } catch (Exception e) {
+                    request.setAttribute(SiteDefs.ERROR_MESSAGE, "<li>ERROR: Could not create product-category entry, from date \"" + fromDateStr + "\" was not valid.");
+                    return "error";
+                }
+            } else {
+                fromDate = UtilDateTime.nowTimestamp();
+            }
 
             GenericValue productCategoryMember = null;
             try {
                 productCategoryMember = delegator.create("ProductCategoryMember",
-                        UtilMisc.toMap("productId", productId, "productCategoryId", productCategoryId, "fromDate", UtilDateTime.nowTimestamp()));
+                        UtilMisc.toMap("productId", productId, "productCategoryId", productCategoryId, "fromDate", fromDate));
                 delegator.clearCacheLine("ProductCategoryMember", UtilMisc.toMap("productCategoryId", productCategoryMember.get("productCategoryId")));
             } catch (GenericEntityException e) {
                 Debug.logWarning(e.getMessage());
@@ -355,17 +353,20 @@ public class CategoryEvents {
         if (updateMode.equals("CREATE")) {
             GenericValue productCategoryRollup = delegator.makeValue("ProductCategoryRollup",
                     UtilMisc.toMap("productCategoryId", productCategoryId, "parentProductCategoryId", parentProductCategoryId));
-            GenericValue dummyValue = null;
-            try {
-                dummyValue = delegator.findByPrimaryKey(productCategoryRollup.getPrimaryKey());
-            } catch (GenericEntityException e) {
-                Debug.logWarning(e.getMessage());
-                dummyValue = null;
+
+            String fromDateStr = request.getParameter("FROM_DATE");
+            Timestamp fromDate = null;
+            if (fromDateStr != null && fromDateStr.length() > 0) {
+                try {
+                    fromDate = Timestamp.valueOf(fromDateStr);
+                } catch (Exception e) {
+                    request.setAttribute(SiteDefs.ERROR_MESSAGE, "<li>ERROR: Could not create product-category entry, from date \"" + fromDateStr + "\" was not valid.");
+                    return "error";
+                }
+            } else {
+                fromDate = UtilDateTime.nowTimestamp();
             }
-            if (dummyValue != null) {
-                request.setAttribute(SiteDefs.ERROR_MESSAGE, "Could not create product-category entry (already exists)");
-                return "error";
-            }
+            
             try {
                 productCategoryRollup = productCategoryRollup.create();
                 delegator.clearCacheLine("ProductCategoryRollup", UtilMisc.toMap("parentProductCategoryId", productCategoryRollup.get("parentProductCategoryId")));
