@@ -1,5 +1,5 @@
 /*
- * $Id: ContentServices.java,v 1.23 2004/06/06 07:43:02 byersa Exp $
+ * $Id: ContentServices.java,v 1.24 2004/06/07 18:54:55 byersa Exp $
  *
  *  Copyright (c) 2001, 2002 The Open For Business Project - www.ofbiz.org
  *
@@ -38,6 +38,7 @@ import org.ofbiz.base.util.GeneralException;
 import org.ofbiz.base.util.UtilDateTime;
 import org.ofbiz.base.util.UtilMisc;
 import org.ofbiz.base.util.UtilValidate;
+import org.ofbiz.entity.util.EntityUtil;
 import org.ofbiz.entity.GenericDelegator;
 import org.ofbiz.entity.GenericEntityException;
 import org.ofbiz.entity.GenericValue;
@@ -53,7 +54,7 @@ import org.ofbiz.service.ServiceUtil;
  * ContentServices Class
  * 
  * @author <a href="mailto:byersa@automationgroups.com">Al Byers</a>
- * @version $Revision: 1.23 $
+ * @version $Revision: 1.24 $
  * @since 2.2
  * 
  *  
@@ -574,6 +575,7 @@ public class ContentServices {
         String mapKey = (String) context.get("mapKey");
         String contentAssocTypeId = (String) context.get("contentAssocTypeId");
         String activeContentId = (String) context.get("activeContentId");
+        String contentId = (String) context.get("contentId");
         Timestamp fromDate = (Timestamp) context.get("fromDate");
         Timestamp nowTimestamp = UtilDateTime.nowTimestamp();
         String sequenceNum = null;
@@ -597,16 +599,23 @@ public class ContentServices {
             exprList.add(new EntityExpr("thruDate", EntityOperator.EQUALS, null));
             exprList.add(new EntityExpr("contentIdTo", EntityOperator.EQUALS, contentIdTo));
             exprList.add(new EntityExpr("contentAssocTypeId", EntityOperator.EQUALS, contentAssocTypeId));
-            exprList.add(new EntityExpr("contentId", EntityOperator.NOT_EQUAL, activeContentId));
+            if (UtilValidate.isNotEmpty(activeContentId))
+                exprList.add(new EntityExpr("contentId", EntityOperator.NOT_EQUAL, activeContentId));
+            if (UtilValidate.isNotEmpty(contentId))
+                exprList.add(new EntityExpr("contentId", EntityOperator.EQUALS, contentId));
             EntityConditionList assocExprList = new EntityConditionList(exprList, EntityOperator.AND);
             List relatedAssocs = delegator.findByCondition("ContentAssoc", assocExprList, new ArrayList(), UtilMisc.toList("fromDate"));
-            Iterator it = relatedAssocs.iterator();
+            //if (Debug.infoOn()) Debug.logInfo("in deactivateAssocs, relatedAssocs:" + relatedAssocs, module);
+            List filteredAssocs = EntityUtil.filterByDate(relatedAssocs);
+            //if (Debug.infoOn()) Debug.logInfo("in deactivateAssocs, filteredAssocs:" + filteredAssocs, module);
+            Iterator it = filteredAssocs.iterator();
             while (it.hasNext()) {
                 GenericValue val = (GenericValue) it.next();
-                val.set("thruDate", fromDate);
+                val.set("thruDate", nowTimestamp);
                 val.store();
+                //if (Debug.infoOn()) Debug.logInfo("in deactivateAssocs, val:" + val, module);
             }
-            results.put("deactivatedList", relatedAssocs);
+            results.put("deactivatedList", filteredAssocs);
         } catch (GenericEntityException e) {
             return ServiceUtil.returnError(e.getMessage());
         }
