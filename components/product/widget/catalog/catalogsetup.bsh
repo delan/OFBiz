@@ -20,7 +20,7 @@
  *  THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  *
  *@author     David E. Jones (jonesde@ofbiz.org)
- *@version    $Revision: 1.1 $
+ *@version    $Revision: 1.2 $
  *@since      3.1
  */
 
@@ -29,6 +29,7 @@ import org.ofbiz.base.util.*;
 import org.ofbiz.base.util.collections.*;
 
 uiLabelMap = UtilProperties.getResourceBundleMap("ProductUiLabels", locale);
-Debug.log("here is global: " + global.toString(), "test");
-global.put("uiLabelMap", uiLabelMap);
+Debug.log("here is globalContext: " + globalContext.toString(), "test");
+globalContext.put("uiLabelMap", uiLabelMap);
+request.setAttribute("uiLabelMap", uiLabelMap);
 
