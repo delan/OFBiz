@@ -24,12 +24,13 @@
  *@since      3.0
 -->
 
-<#assign uiLabelMap = requestAttributes.uiLabelMap>
+<#if (requestAttributes.uiLabelMap)?exists>
+    <#assign uiLabelMap = requestAttributes.uiLabelMap>
+</#if>
 <#assign unselectedClassName = "tabButton">
 <#assign selectedClassMap = {page.tabButtonItem?default("void") : "tabButtonSelected"}>
 
 <div class='tabContainer'>
-    <!--<a href="<@ofbizUrl>/FindInventoryEventPlan</@ofbizUrl>" class="${selectedClassMap.initInventoryEventPlan?default(unselectedClassName)}">${uiLabelMap.ManufacturingMrpInitialisation}</a>-->
     <a href="<@ofbizUrl>/RunningMrp</@ofbizUrl>" class="${selectedClassMap.RunningMrp?default(unselectedClassName)}">${uiLabelMap.ManufacturingRunningMrp}</a>
     <a href="<@ofbizUrl>/FindInventoryEventPlan</@ofbizUrl>" class="${selectedClassMap.findInventoryEventPlan?default(unselectedClassName)}">${uiLabelMap.ManufacturingInventoryEventPlanned}</a>
     <a href="<@ofbizUrl>/FindProposedOrder</@ofbizUrl>" class="${selectedClassMap.findProposedOrder?default(unselectedClassName)}">${uiLabelMap.ManufacturingProposedOrder}</a>
