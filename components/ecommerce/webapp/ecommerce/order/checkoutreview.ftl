@@ -24,8 +24,6 @@
  *@since      2.1
 -->
 
-<#assign uiLabelMap = requestAttributes.uiLabelMap>
-
 <script language="JavaScript">
 <!--
     var clicked = 0;
@@ -47,9 +45,9 @@
 <#if !isDemoStore?exists || isDemoStore><p>${uiLabelMap.OrderDemoFrontNote}.</p></#if>
 
 <#if cart?exists && 0 < cart.size()>
-  ${pages.get("/order/orderheader.ftl")}
+  ${screens.render("component://ecommerce/widget/OrderScreens.xml#orderheader")}
   <br>
-  ${pages.get("/order/orderitems.ftl")}
+  ${screens.render("component://ecommerce/widget/OrderScreens.xml#orderitems")}
   <table border="0" cellpadding="1" width="100%">
    <tr>
       <td colspan="4" align="left">

@@ -1,5 +1,5 @@
 <#--
- *  Copyright (c) 2003 The Open For Business Project - www.ofbiz.org
+ *  Copyright (c) 2003-2005 The Open For Business Project - www.ofbiz.org
  *
  *  Permission is hereby granted, free of charge, to any person obtaining a
  *  copy of this software and associated documentation files (the "Software"),
@@ -52,8 +52,7 @@ function submitForm(form, mode, value) {
 // -->
 </script>
 
-<#assign uiLabelMap = requestAttributes.uiLabelMap>
-<table border="0" width="100%" cellspacing="0" cellpadding="0" class="boxoutside">
+<table border="0" cellspacing="0" cellpadding="0" class="boxoutside">
   <tr>
     <td width="100%">
       <table width="100%" border="0" cellspacing="0" cellpadding="0" class="boxtop">
@@ -178,7 +177,7 @@ function submitForm(form, mode, value) {
 </table>
 
 <br>
-<table border="0" width="100%" cellspacing="0" cellpadding="0" class="boxoutside">
+<table border="0" cellspacing="0" cellpadding="0" class="boxoutside">
   <tr>
     <td width="100%">
       <table width="100%" border="0" cellspacing="0" cellpadding="0" class="boxtop">
@@ -218,7 +217,7 @@ function submitForm(form, mode, value) {
                         <#if cartLine.getProductId()?exists>
                           <#-- product item -->
                           <#-- start code to display a small image of the product -->
-                          <#assign smallImageUrl = Static["org.ofbiz.product.product.ProductContentWrapper"].getProductContentAsText(cartLine.getProduct(), "SMALL_IMAGE_URL", requestAttributes.locale)?if_exists>
+                          <#assign smallImageUrl = Static["org.ofbiz.product.product.ProductContentWrapper"].getProductContentAsText(cartLine.getProduct(), "SMALL_IMAGE_URL", locale)?if_exists>
                           <#if !smallImageUrl?has_content><#assign smallImageUrl = "/images/defaultImage.jpg"></#if>
                           <#if smallImageUrl?has_content>
                             <a href="<@ofbizUrl>/product?product_id=${cartLine.getProductId()}</@ofbizUrl>">
@@ -297,7 +296,7 @@ function submitForm(form, mode, value) {
   </tr>
 </table>
 
-<table width="100%">
+<table>
   <tr valign="top">
     <td align="left">
       &nbsp;<a href="<@ofbizUrl>/view/showcart</@ofbizUrl>" class="buttontextbig">[${uiLabelMap.OrderBacktoShoppingCart}]</a>

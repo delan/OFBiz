@@ -1,5 +1,5 @@
 <#--
- *  Copyright (c) 2001-2004 The Open For Business Project - www.ofbiz.org
+ *  Copyright (c) 2001-2005 The Open For Business Project - www.ofbiz.org
  *
  *  Permission is hereby granted, free of charge, to any person obtaining a 
  *  copy of this software and associated documentation files (the "Software"), 
@@ -23,7 +23,7 @@
  *@version    $Rev$
  *@since      2.1
 -->
-<#if (requestAttributes.uiLabelMap)?exists><#assign uiLabelMap = requestAttributes.uiLabelMap></#if>
+
 <table border="0" cellpadding="0" cellspacing="0">
   <tr>
     <#-- left side -->
@@ -35,11 +35,11 @@
             <table width='100%' border='0' cellspacing='0' cellpadding='0' class='boxtop'>
               <tr>
                 <td valign="middle" align="left">
-                  <div class="boxhead">&nbsp;${requestAttributes.uiLabelMap.OrderOrder}&nbsp;<#if orderHeader?has_content>#<a href="<@ofbizUrl>/orderstatus?order_id=${orderHeader.orderId}</@ofbizUrl>" class="lightbuttontext">${orderHeader.orderId}</a>&nbsp;</#if>${requestAttributes.uiLabelMap.CommonInformation}</div>
+                  <div class="boxhead">&nbsp;${uiLabelMap.OrderOrder}&nbsp;<#if orderHeader?has_content>#<a href="<@ofbizUrl>/orderstatus?order_id=${orderHeader.orderId}</@ofbizUrl>" class="lightbuttontext">${orderHeader.orderId}</a>&nbsp;</#if>${uiLabelMap.CommonInformation}</div>
                 </td>
-                <#if maySelectItems?default(false) && returnLink?default("N") == "Y">
+                <#if maySelectItems?default("N") == "Y" && returnLink?default("N") == "Y">
                   <td valign="middle" align="right" nowrap>
-                    <a href="<@ofbizUrl>/makeReturn?order_id=${orderHeader.orderId}</@ofbizUrl>" class="submenutextright">${requestAttributes.uiLabelMap.OrderRequestReturn}</a>
+                    <a href="<@ofbizUrl>/makeReturn?order_id=${orderHeader.orderId}</@ofbizUrl>" class="submenutextright">${uiLabelMap.OrderRequestReturn}</a>
                   </td>
                 </#if>
               </tr>
@@ -56,7 +56,7 @@
                     <#if placingCustomerPerson?has_content>
                       <tr>
                         <td align="right" valign="top" width="15%">
-                          <div class="tabletext">&nbsp;<b>${requestAttributes.uiLabelMap.PartyName}</b></div>
+                          <div class="tabletext">&nbsp;<b>${uiLabelMap.PartyName}</b></div>
                         </td>
                         <td width="5">&nbsp;</td>
                         <td align="left" valign="top" width="80%">
@@ -72,14 +72,14 @@
                     <#-- order status information -->
                     <tr>
                       <td align="right" valign="top" width="15%">
-                        <div class="tabletext">&nbsp;<b>${requestAttributes.uiLabelMap.CommonStatus}</b></div>
+                        <div class="tabletext">&nbsp;<b>${uiLabelMap.CommonStatus}</b></div>
                       </td>
                       <td width="5">&nbsp;</td>
                       <td align="left" valign="top" width="80%">
                         <#if orderHeader?has_content>                                                
                           <div class="tabletext">${localOrderReadHelper.getStatusString()}</div>
                         <#else>
-                          <div class="tabletext"><b>${requestAttributes.uiLabelMap.OrderNotYetOrdered}</b></div>
+                          <div class="tabletext"><b>${uiLabelMap.OrderNotYetOrdered}</b></div>
                         </#if>
                       </td>
                     </tr>
@@ -88,7 +88,7 @@
                       <tr><td colspan="7"><hr class='sepbar'></td></tr>
                       <tr>
                         <td align="right" valign="top" width="15%">
-                          <div class="tabletext">&nbsp;<b>${requestAttributes.uiLabelMap.CommonDate}</b></div>
+                          <div class="tabletext">&nbsp;<b>${uiLabelMap.CommonDate}</b></div>
                         </td>
                         <td width="5">&nbsp;</td>
                         <td align="left" valign="top" width="80%">
@@ -100,7 +100,7 @@
                       <tr><td colspan="7"><hr class='sepbar'></td></tr>
                       <tr>
                         <td align="right" valign="top" width="15%">
-                          <div class="tabletext">&nbsp;<b>${requestAttributes.uiLabelMap.OrderDistributor}</b></div>
+                          <div class="tabletext">&nbsp;<b>${uiLabelMap.OrderDistributor}</b></div>
                         </td>
                         <td width="5">&nbsp;</td>
                         <td align="left" valign="top" width="80%">
@@ -125,7 +125,7 @@
             <table width='100%' border='0' cellspacing='0' cellpadding='0' class='boxtop'>
               <tr>
                 <td valign="middle" align="left">
-                  <div class="boxhead">&nbsp;${requestAttributes.uiLabelMap.AccountingPaymentInformation}</div>
+                  <div class="boxhead">&nbsp;${uiLabelMap.AccountingPaymentInformation}</div>
                 </td>
               </tr>
             </table>
@@ -142,24 +142,24 @@
                       <tr>
                         <#if paymentMethodType.paymentMethodTypeId == "EXT_OFFLINE">
                           <td colspan="3" valign="top">
-                            <div class="tabletext" align="center"><b>${requestAttributes.uiLabelMap.AccountingOfflinePayment}</b></div>                            
+                            <div class="tabletext" align="center"><b>${uiLabelMap.AccountingOfflinePayment}</b></div>                            
                             <#if orderHeader?has_content && paymentAddress?has_content> 
                               <div class="tabletext" align="center"><hr class="sepbar"></div>
-                              <div class="tabletext" align="center"><b>${requestAttributes.uiLabelMap.OrderSendPaymentTo}:</b></div>
+                              <div class="tabletext" align="center"><b>${uiLabelMap.OrderSendPaymentTo}:</b></div>
                               <#if paymentAddress.toName?has_content><div class="tabletext" align="center">${paymentAddress.toName}</div></#if>
-                              <#if paymentAddress.attnName?has_content><div class="tabletext" align="center"><b>${requestAttributes.uiLabelMap.PartyAddrAttnName}:</b> ${paymentAddress.attnName}</div></#if>
+                              <#if paymentAddress.attnName?has_content><div class="tabletext" align="center"><b>${uiLabelMap.PartyAddrAttnName}:</b> ${paymentAddress.attnName}</div></#if>
                               <div class="tabletext" align="center">${paymentAddress.address1}</div>
                               <#if paymentAddress.address2?has_content><div class="tabletext" align="center">${paymentAddress.address2}</div></#if>                            
                               <div class="tabletext" align="center">${paymentAddress.city}<#if paymentAddress.stateProvinceGeoId?has_content>, ${paymentAddress.stateProvinceGeoId}</#if> ${paymentAddress.postalCode?if_exists}
                               <div class="tabletext" align="center">${paymentAddress.countryGeoId}</div>                                                                                                                
                               <div class="tabletext" align="center"><hr class="sepbar"></div>
-                              <div class="tabletext" align="center"><b>${requestAttributes.uiLabelMap.OrderBesureIncludeOrder} #</b></div>
+                              <div class="tabletext" align="center"><b>${uiLabelMap.OrderBesureIncludeOrder} #</b></div>
                             </#if>                         
                           </td>                  
                         <#else>
                           <#assign outputted = true>
                           <td colspan="3" valign="top">
-                            <div class="tabletext" align="center"><b>${requestAttributes.uiLabelMap.AccountingPaymentVia} ${paymentMethodType.description}</b></div>
+                            <div class="tabletext" align="center"><b>${uiLabelMap.AccountingPaymentVia} ${paymentMethodType.description}</b></div>
                           </td>
                         </#if>
                       </tr>
@@ -183,7 +183,7 @@
                           <#assign pmBillingAddress = creditCard.getRelatedOne("PostalAddress")>
                           <tr>
                             <td align="right" valign="top" width="15%">
-                              <div class="tabletext">&nbsp;<b>${requestAttributes.uiLabelMap.AccountingCreditCard}</b></div>
+                              <div class="tabletext">&nbsp;<b>${uiLabelMap.AccountingCreditCard}</b></div>
                             </td>
                             <td width="5">&nbsp;</td>
                             <td align="left" valign="top" width="80%">
@@ -239,15 +239,15 @@
                           <#assign pmBillingAddress = eftAccount.getRelatedOne("PostalAddress")>
                           <tr>
                             <td align="right" valign="top" width="15%">
-                              <div class="tabletext">&nbsp;<b>${requestAttributes.uiLabelMap.AccountingEftAccount}</b></div>
+                              <div class="tabletext">&nbsp;<b>${uiLabelMap.AccountingEftAccount}</b></div>
                             </td>
                             <td width="5">&nbsp;</td>
                             <td align="left" valign="top" width="80%">
                               <div class="tabletext">
                                 ${eftAccount.nameOnAccount?if_exists}<br>
                                 <#if eftAccount.companyNameOnAccount?has_content>${eftAccount.companyNameOnAccount}<br></#if>
-                                ${requestAttributes.uiLabelMap.AccountingBank}: ${eftAccount.bankName}, ${eftAccount.routingNumber}<br>
-                                ${requestAttributes.uiLabelMap.AccountingAccount} #: ${eftAccount.accountNumber}
+                                ${uiLabelMap.AccountingBank}: ${eftAccount.bankName}, ${eftAccount.routingNumber}<br>
+                                ${uiLabelMap.AccountingAccount} #: ${eftAccount.accountNumber}
                               </div>
                             </td>
                           </tr>
@@ -283,7 +283,7 @@
                       <#assign outputted = true>
                       <tr>
                         <td align="right" valign="top" width="15%">
-                          <div class="tabletext">&nbsp;<b>${requestAttributes.uiLabelMap.AccountingBillingAccount}</b></div>
+                          <div class="tabletext">&nbsp;<b>${uiLabelMap.AccountingBillingAccount}</b></div>
                         </td>
                         <td width="5">&nbsp;</td>
                         <td align="left" valign="top" width="80%">
@@ -295,7 +295,7 @@
                       <tr><td colspan="7"><hr class='sepbar'></td></tr>
                       <tr>
                         <td align="right" valign="top" width="15%">
-                          <div class="tabletext">&nbsp;<b>${requestAttributes.uiLabelMap.OrderPurchaseOrderNumber}</b></div>
+                          <div class="tabletext">&nbsp;<b>${uiLabelMap.OrderPurchaseOrderNumber}</b></div>
                         </td>
                         <td width="5">&nbsp;</td>
                         <td align="left" valign="top" width="80%">
@@ -323,7 +323,7 @@
             <table width='100%' border='0' cellspacing='0' cellpadding='0' class='boxtop'>
               <tr>
                 <td valign="middle" align="left">
-                  <div class="boxhead">&nbsp;${requestAttributes.uiLabelMap.OrderShippingInformation}</div>
+                  <div class="boxhead">&nbsp;${uiLabelMap.OrderShippingInformation}</div>
                 </td>                              
               </tr>
             </table>
@@ -349,13 +349,13 @@
                     <#if shippingAddress?has_content>
                       <tr>
                         <td align="right" valign="top" width="15%">
-                          <div class="tabletext">&nbsp;<b>${requestAttributes.uiLabelMap.OrderDestination}</b> [${groupNumber}]</div>
+                          <div class="tabletext">&nbsp;<b>${uiLabelMap.OrderDestination}</b> [${groupNumber}]</div>
                         </td>
                         <td width="5">&nbsp;</td>
                         <td align="left" valign="top" width="80%">
                           <div class="tabletext">
-                            <#if shippingAddress.toName?has_content><b>${requestAttributes.uiLabelMap.CommonTo}:</b> ${shippingAddress.toName}<br></#if>
-                            <#if shippingAddress.attnName?has_content><b>${requestAttributes.uiLabelMap.PartyAddrAttnName}:</b> ${shippingAddress.attnName}<br></#if>
+                            <#if shippingAddress.toName?has_content><b>${uiLabelMap.CommonTo}:</b> ${shippingAddress.toName}<br></#if>
+                            <#if shippingAddress.attnName?has_content><b>${uiLabelMap.PartyAddrAttnName}:</b> ${shippingAddress.attnName}<br></#if>
                             ${shippingAddress.address1}<br>
                             <#if shippingAddress.address2?has_content>${shippingAddress.address2}<br></#if>                            
                             ${shippingAddress.city}<#if shippingAddress.stateProvinceGeoId?has_content>, ${shippingAddress.stateProvinceGeoId} </#if>
@@ -368,7 +368,7 @@
                     </#if>
                     <tr>
                       <td align="right" valign="top" width="15%">
-                        <div class="tabletext">&nbsp;<b>${requestAttributes.uiLabelMap.OrderMethod}</b></div>
+                        <div class="tabletext">&nbsp;<b>${uiLabelMap.OrderMethod}</b></div>
                       </td>
                       <td width="5">&nbsp;</td>
                       <td align="left" valign="top" width="80%">
@@ -383,7 +383,7 @@
 
                           <#if carrierPartyId?exists && carrierPartyId != "_NA_">${carrierPartyId?if_exists}</#if>
                           ${(shipmentMethodType.description)?if_exists}
-                          <#if shippingAccount?exists><br>${requestAttributes.uiLabelMap.AccountingUseAccount}: ${shippingAccount}</#if>
+                          <#if shippingAccount?exists><br>${uiLabelMap.AccountingUseAccount}: ${shippingAccount}</#if>
                         </div>
                       </td>
                     </tr>
@@ -392,7 +392,7 @@
                       <tr><td colspan="7"><hr class='sepbar'></td></tr>
                       <tr>
                         <td align="right" valign="top" width="15%">
-                          <div class="tabletext">&nbsp;<b>${requestAttributes.uiLabelMap.OrderTrackingNumber}</b></div>
+                          <div class="tabletext">&nbsp;<b>${uiLabelMap.OrderTrackingNumber}</b></div>
                         </td>
                         <td width="5">&nbsp;</td>
                         <td align="left" valign="top" width="80%">
@@ -422,13 +422,13 @@
                     </#if>
                     <tr>
                       <td align="right" valign="top" width="15%">
-                        <div class="tabletext">&nbsp;<b>${requestAttributes.uiLabelMap.OrderSplittingPreference}</b></div>
+                        <div class="tabletext">&nbsp;<b>${uiLabelMap.OrderSplittingPreference}</b></div>
                       </td>
                       <td width="5">&nbsp;</td>
                       <td align="left" valign="top" width="80%">
                         <div class="tabletext">
-                          <#if maySplit?default("N") == "N">${requestAttributes.uiLabelMap.OrderPleaseWaitUntilBeforeShipping}.</#if>
-                          <#if maySplit?default("N") == "Y">${requestAttributes.uiLabelMap.OrderPleaseShipItemsBecomeAvailable}.</#if>
+                          <#if maySplit?default("N") == "N">${uiLabelMap.OrderPleaseWaitUntilBeforeShipping}.</#if>
+                          <#if maySplit?default("N") == "Y">${uiLabelMap.OrderPleaseShipItemsBecomeAvailable}.</#if>
                         </div>
                       </td>
                     </tr>
@@ -443,7 +443,7 @@
                       <tr><td colspan="7"><hr class='sepbar'></td></tr>
                       <tr>
                         <td align="right" valign="top" width="15%">
-                          <div class="tabletext">&nbsp;<b>${requestAttributes.uiLabelMap.OrderIntructions}</b></div>
+                          <div class="tabletext">&nbsp;<b>${uiLabelMap.OrderIntructions}</b></div>
                         </td>
                         <td width="5">&nbsp;</td>
                         <td align="left" valign="top" width="80%">
@@ -463,13 +463,13 @@
 
                     <tr>
                       <td align="right" valign="top" width="15%">
-                        <div class="tabletext">&nbsp;<b>${requestAttributes.uiLabelMap.OrderGift}?</b></div>
+                        <div class="tabletext">&nbsp;<b>${uiLabelMap.OrderGift}?</b></div>
                       </td>
                       <td width="5">&nbsp;</td>
                       <td align="left" valign="top" width="80%">
                         <div class="tabletext">
-                          <#if isGift?default("N") == "N">${requestAttributes.uiLabelMap.OrderThisIsNotGift}.</#if>
-                          <#if isGift?default("N") == "Y">${requestAttributes.uiLabelMap.OrderThisIsGift}.</#if>
+                          <#if isGift?default("N") == "N">${uiLabelMap.OrderThisIsNotGift}.</#if>
+                          <#if isGift?default("N") == "Y">${uiLabelMap.OrderThisIsGift}.</#if>
                         </div>
                       </td>
                     </tr>
@@ -477,7 +477,7 @@
                       <tr><td colspan="7"><hr class='sepbar'></td></tr>
                       <tr>
                         <td align="right" valign="top" width="15%">
-                          <div class="tabletext">&nbsp;<b>${requestAttributes.uiLabelMap.OrderGiftMessage}</b></div>
+                          <div class="tabletext">&nbsp;<b>${uiLabelMap.OrderGiftMessage}</b></div>
                         </td>
                         <td width="5">&nbsp;</td>
                         <td align="left" valign="top" width="80%">

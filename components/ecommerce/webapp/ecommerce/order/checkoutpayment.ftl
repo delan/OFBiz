@@ -81,9 +81,7 @@ function toggleBillingAccount(box) {
 // -->
 </script>
 
-<#assign uiLabelMap = requestAttributes.uiLabelMap>
-
-<#assign cart = context.shoppingCart?if_exists>
+<#assign cart = shoppingCart?if_exists>
 
 <form method="post" name="checkoutInfoForm" style='margin:0;'>
   <input type="hidden" name="checkoutpage" value="payment">
@@ -121,7 +119,7 @@ function toggleBillingAccount(box) {
                       <tr><td colspan="3"><hr class='sepbar'></td></tr>
                       <tr>
                         <td width="1" nowrap>
-                          <input type="radio" name="checkOutPaymentId" value="EXT_OFFLINE" <#if "EXT_OFFLINE" == context.checkOutPaymentId>checked</#if>>
+                          <input type="radio" name="checkOutPaymentId" value="EXT_OFFLINE" <#if "EXT_OFFLINE" == checkOutPaymentId>checked</#if>>
                         </td>
                         <td width="1" nowrap>
                           <span class="tabletext">${uiLabelMap.OrderMoneyOrder}</span>
@@ -130,7 +128,7 @@ function toggleBillingAccount(box) {
                       </tr>
                       <tr>
                         <td width="1" nowrap>
-                          <input type="radio" name="checkOutPaymentId" value="EXT_COD" <#if "EXT_COD" == context.checkOutPaymentId>checked</#if>>
+                          <input type="radio" name="checkOutPaymentId" value="EXT_COD" <#if "EXT_COD" == checkOutPaymentId>checked</#if>>
                         </td>
                         <td width="1" nowrap>
                           <span class="tabletext">${uiLabelMap.OrderCOD}</span>
@@ -139,7 +137,7 @@ function toggleBillingAccount(box) {
                       </tr>
                       <tr>
                         <td width="1" nowrap>
-                          <input type="radio" name="checkOutPaymentId" value="EXT_WORLDPAY" <#if "EXT_WORLDPAY" == context.checkOutPaymentId>checked</#if>>
+                          <input type="radio" name="checkOutPaymentId" value="EXT_WORLDPAY" <#if "EXT_WORLDPAY" == checkOutPaymentId>checked</#if>>
                         </td>
                         <td width="1" nowrap>
                           <span class="tabletext">${uiLabelMap.AccountingPayWithWorldPay}</span>
@@ -148,7 +146,7 @@ function toggleBillingAccount(box) {
                       </tr>
                       <tr>
                         <td width="1" nowrap>
-                          <input type="radio" name="checkOutPaymentId" value="EXT_PAYPAL" <#if "EXT_PAYPAL" == context.checkOutPaymentId>checked</#if>>
+                          <input type="radio" name="checkOutPaymentId" value="EXT_PAYPAL" <#if "EXT_PAYPAL" == checkOutPaymentId>checked</#if>>
                         </td>
                         <td width="1" nowrap>
                           <span class="tabletext">${uiLabelMap.AccountingPayWithPayPal}</span>
@@ -156,7 +154,7 @@ function toggleBillingAccount(box) {
                         <td width="1" nowrap>&nbsp;</td>
                       </tr>
                       <tr><td colspan="3"><hr class='sepbar'></td></tr>
-                      <#list context.paymentMethodList as paymentMethod>
+                      <#list paymentMethodList as paymentMethod>
                         <#if paymentMethod.paymentMethodTypeId == "GIFT_CARD">
                           <#assign giftCard = paymentMethod.getRelatedOne("GiftCard")>
 

@@ -1,5 +1,5 @@
 <#--
- *  Copyright (c) 2001-2004 The Open For Business Project - www.ofbiz.org
+ *  Copyright (c) 2001-2005 The Open For Business Project - www.ofbiz.org
  *
  *  Permission is hereby granted, free of charge, to any person obtaining a
  *  copy of this software and associated documentation files (the "Software"),
@@ -76,8 +76,7 @@ function toggleBillingAccount(box) {
 
 // -->
 </script>
-<#assign uiLabelMap = requestAttributes.uiLabelMap>
-<#assign cart = context.shoppingCart?if_exists>
+<#assign cart = shoppingCart?if_exists>
 
 <form method="post" name="checkoutInfoForm" style='margin:0;'>
   <input type="hidden" name="checkoutpage" value="shippingoptions">
@@ -102,11 +101,11 @@ function toggleBillingAccount(box) {
                 <tr>
                   <td>
                     <table width='100%' cellpadding='1' border='0' cellpadding='0' cellspacing='0'>
-                      <#list context.carrierShipmentMethodList as carrierShipmentMethod>
+                      <#list carrierShipmentMethodList as carrierShipmentMethod>
                         <#assign shippingMethod = carrierShipmentMethod.shipmentMethodTypeId + "@" + carrierShipmentMethod.partyId>
                         <tr>
                           <td width='1%' valign="top" >
-                            <input type='radio' name='shipping_method' value='${shippingMethod}' <#if shippingMethod == context.chosenShippingMethod?default("N@A")>checked</#if>>
+                            <input type='radio' name='shipping_method' value='${shippingMethod}' <#if shippingMethod == chosenShippingMethod?default("N@A")>checked</#if>>
                           </td>
                           <td valign="top">
                             <div class='tabletext'>
@@ -204,7 +203,7 @@ function toggleBillingAccount(box) {
                           <div class="tabletext">${uiLabelMap. OrderEmailSentToFollowingAddresses}:</div>
                           <div class="tabletext">
                             <b>
-                              <#list context.emailList as email>
+                              <#list emailList as email>
                                 ${email.infoString?if_exists}<#if email_has_next>,</#if>
                               </#list>
                             </b>

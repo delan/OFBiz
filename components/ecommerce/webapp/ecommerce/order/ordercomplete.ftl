@@ -23,14 +23,13 @@
  *@version    $Rev$
  *@since      2.1
 -->
-<#assign uiLabelMap = requestAttributes.uiLabelMap>
 <p class="head1">${uiLabelMap.OrderConfirmation}</p>
 <#if !isDemoStore?exists || isDemoStore><p>${uiLabelMap.OrderDemoFrontNote}.</p></#if>
 
 <#if orderHeader?has_content>
-  <#include "orderheader.ftl">
+  ${screens.render("component://ecommerce/widget/OrderScreens.xml#orderheader")}
   <br>
-  <#include "orderitems.ftl">
+  ${screens.render("component://ecommerce/widget/OrderScreens.xml#orderitems")}
   <table border="0" cellpadding="1" width="100%">
    <tr>
       <td colspan="4" align="left">

@@ -76,8 +76,7 @@ function toggleBillingAccount(box) {
 
 // -->
 </script>
-<#assign uiLabelMap = requestAttributes.uiLabelMap>
-<#assign cart = context.shoppingCart?if_exists>
+<#assign cart = shoppingCart?if_exists>
 
 <form method="post" name="checkoutInfoForm" style='margin:0;'>
   <input type="hidden" name="checkoutpage" value="shippingaddress">
@@ -111,9 +110,9 @@ function toggleBillingAccount(box) {
                           </#if>
                         </td>
                       </tr>
-                       <#if context.shippingContactMechList?has_content>
+                       <#if shippingContactMechList?has_content>
                          <tr><td colspan="2"><hr class='sepbar'></td></tr>
-                         <#list context.shippingContactMechList as shippingContactMech>
+                         <#list shippingContactMechList as shippingContactMech>
                            <#assign shippingAddress = shippingContactMech.getRelatedOne("PostalAddress")>
                            <tr>
                              <td align="left" valign="top" width="1%" nowrap>
