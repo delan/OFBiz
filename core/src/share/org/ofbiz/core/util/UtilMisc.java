@@ -269,58 +269,61 @@ public class UtilMisc {
     protected static class SimpleMap implements Map, java.io.Serializable {
         protected Map realMapIfNeeded = null;
 
-        int sizeValue;
-        String name1 = null;
-        String name2 = null;
-        String name3 = null;
-        String name4 = null;
-        Object value1 = null;
-        Object value2 = null;
-        Object value3 = null;
-        Object value4 = null;
+        String[] names;
+        Object[] values;
+        
+        public SimpleMap() {
+            names = new String[0];
+            values = new Object[0];
+        }
 
         public SimpleMap(String name1, Object value1) {
-            sizeValue = 1;
-            this.name1 = name1;
-            this.value1 = value1;
+            names = new String[1];
+            values = new Object[1];
+            this.names[0] = name1;
+            this.values[0] = value1;
         }
 
         public SimpleMap(String name1, Object value1, String name2, Object value2) {
-            sizeValue = 2;
-            this.name1 = name1;
-            this.value1 = value1;
-            this.name2 = name2;
-            this.value2 = value2;
+            names = new String[2];
+            values = new Object[2];
+            this.names[0] = name1;
+            this.values[0] = value1;
+            this.names[1] = name2;
+            this.values[1] = value2;
         }
 
         public SimpleMap(String name1, Object value1, String name2, Object value2, String name3, Object value3) {
-            sizeValue = 3;
-            this.name1 = name1;
-            this.value1 = value1;
-            this.name2 = name2;
-            this.value2 = value2;
-            this.name3 = name3;
-            this.value3 = value3;
+            names = new String[3];
+            values = new Object[3];
+            this.names[0] = name1;
+            this.values[0] = value1;
+            this.names[1] = name2;
+            this.values[1] = value2;
+            this.names[2] = name3;
+            this.values[2] = value3;
         }
 
         public SimpleMap(String name1, Object value1, String name2, Object value2, String name3, Object value3, String name4, Object value4) {
-            sizeValue = 4;
-            this.name1 = name1;
-            this.value1 = value1;
-            this.name2 = name2;
-            this.value2 = value2;
-            this.name3 = name3;
-            this.value3 = value3;
-            this.name4 = name4;
-            this.value4 = value4;
+            names = new String[4];
+            values = new Object[4];
+            this.names[0] = name1;
+            this.values[0] = value1;
+            this.names[1] = name2;
+            this.values[1] = value2;
+            this.names[2] = name3;
+            this.values[2] = value3;
+            this.names[3] = name4;
+            this.values[3] = value4;
         }
 
         protected void makeRealMap() {
             realMapIfNeeded = new HashMap();
-            if (name1 != null) realMapIfNeeded.put(name1, value1);
-            if (name2 != null) realMapIfNeeded.put(name2, value2);
-            if (name3 != null) realMapIfNeeded.put(name3, value3);
-            if (name4 != null) realMapIfNeeded.put(name4, value4);
+            for (int i = 0; i < names.length; i++) {
+                realMapIfNeeded.put(names[i], values[i]);
+            }
+            this.names = null;
+            this.values = null;
         }
 
         public void clear() {
@@ -328,14 +331,8 @@ public class UtilMisc {
                 realMapIfNeeded.clear();
             } else {
                 realMapIfNeeded = new HashMap();
-                name1 = null;
-                name2 = null;
-                name3 = null;
-                name4 = null;
-                value1 = null;
-                value2 = null;
-                value3 = null;
-                value4 = null;
+                names = null;
+                values = null;
             }
         }
 
@@ -343,10 +340,10 @@ public class UtilMisc {
             if (realMapIfNeeded != null) {
                 return realMapIfNeeded.containsKey(obj);
             } else {
-                if (name1 != null && name1.equals(obj)) return true;
-                if (name2 != null && name2.equals(obj)) return true;
-                if (name3 != null && name3.equals(obj)) return true;
-                if (name4 != null && name4.equals(obj)) return true;
+                for (int i = 0; i < names.length; i++) {
+                    if (obj == null && names[i] == null) return true;
+                    if (names[i] != null && names[i].equals(obj)) return true;
+                }
                 return false;
             }
         }
@@ -355,10 +352,10 @@ public class UtilMisc {
             if (realMapIfNeeded != null) {
                 return realMapIfNeeded.containsValue(obj);
             } else {
-                if (value1 != null && value1.equals(obj)) return true;
-                if (value2 != null && value2.equals(obj)) return true;
-                if (value3 != null && value3.equals(obj)) return true;
-                if (value4 != null && value4.equals(obj)) return true;
+                for (int i = 0; i < names.length; i++) {
+                    if (obj == null && values[i] == null) return true;
+                    if (values[i] != null && values[i].equals(obj)) return true;
+                }
                 return false;
             }
         }
@@ -376,10 +373,10 @@ public class UtilMisc {
             if (realMapIfNeeded != null) {
                 return realMapIfNeeded.get(obj);
             } else {
-                if (name1 != null && name1.equals(obj)) return value1;
-                if (name2 != null && name2.equals(obj)) return value2;
-                if (name3 != null && name3.equals(obj)) return value3;
-                if (name4 != null && name4.equals(obj)) return value4;
+                for (int i = 0; i < names.length; i++) {
+                    if (obj == null && names[i] == null) return values[i];
+                    if (names[i] != null && names[i].equals(obj)) return values[i];
+                }
                 return null;
             }
         }
@@ -388,7 +385,7 @@ public class UtilMisc {
             if (realMapIfNeeded != null) {
                 return realMapIfNeeded.isEmpty();
             } else {
-                if (this.sizeValue == 0) return true;
+                if (this.names.length == 0) return true;
                 return false;
             }
         }
@@ -433,7 +430,7 @@ public class UtilMisc {
             if (realMapIfNeeded != null) {
                 return realMapIfNeeded.size();
             } else {
-                return this.sizeValue;
+                return this.names.length;
             }
         }
 
@@ -451,40 +448,58 @@ public class UtilMisc {
                 return realMapIfNeeded.toString();
             } else {
                 StringBuffer outString = new StringBuffer("{");
-
-                if (name1 != null) {
+                for (int i = 0; i < names.length; i++) {
+                    if (i > 0) outString.append(',');
                     outString.append('{');
-                    outString.append(name1);
+                    outString.append(names[i]);
                     outString.append(',');
-                    outString.append(value1);
-                    outString.append('}');
-                }
-                if (name2 != null) {
-                    if (outString.length() > 1) outString.append(',');
-                    outString.append('{');
-                    outString.append(name2);
-                    outString.append(',');
-                    outString.append(value2);
-                    outString.append('}');
-                }
-                if (name3 != null) {
-                    if (outString.length() > 1) outString.append(',');
-                    outString.append('{');
-                    outString.append(name3);
-                    outString.append(',');
-                    outString.append(value3);
-                    outString.append('}');
-                }
-                if (name4 != null) {
-                    if (outString.length() > 1) outString.append(',');
-                    outString.append('{');
-                    outString.append(name4);
-                    outString.append(',');
-                    outString.append(value4);
+                    outString.append(values[i]);
                     outString.append('}');
                 }
                 outString.append('}');
                 return outString.toString();
+            }
+        }
+        
+        public int hashCode() {
+            if (realMapIfNeeded != null) {
+                return realMapIfNeeded.hashCode();
+            } else {
+                int hashCode = 0;
+                for (int i = 0; i < names.length; i++) {
+                    //note that this calculation is done based on the calc specified in the Java java.util.Map interface
+                    int tempNum = (names[i] == null   ? 0 : names[i].hashCode()) ^
+                            (values[i] == null ? 0 : values[i].hashCode());
+                    hashCode += tempNum;
+                }
+                return hashCode;
+            }
+        }
+        
+        public boolean equals(Object obj) {
+            if (realMapIfNeeded != null) {
+                return realMapIfNeeded.equals(obj);
+            } else {
+                Map mapObj = (Map) obj;
+                
+                //first check the size
+                if (mapObj.size() != names.length) return false;
+                
+                //okay, same size, now check each entry
+                for (int i = 0; i < names.length; i++) {
+                    //first check the name
+                    if (!mapObj.containsKey(names[i])) return false;
+                    
+                    //if that passes, check the value
+                    Object mapValue = mapObj.get(names[i]);
+                    if (mapValue == null) {
+                        if (values[i] != null) return false;
+                    } else {
+                        if (!mapValue.equals(values[i])) return false;
+                    }
+                }
+                
+                return true;
             }
         }
     }
