@@ -57,6 +57,9 @@ public class ModelService {
     /** The name of the engine from engine.properties */
     public String engineName;
     
+    /** The namespace of this service */
+    public String nameSpace;
+     
     /** The package name or location of this service */
     public String location;
     
@@ -285,4 +288,5 @@ public class ModelService {
         }
         return target;
     }
+       
 }

@@ -157,17 +157,34 @@ public class ModelServiceReader {
     protected ModelService createModelService(Element serviceElement) {
         ModelService service = new ModelService();
         
-        service.name = UtilXml.checkEmpty(serviceElement.getAttribute("name"));
+        service.name = UtilXml.checkEmpty(serviceElement.getAttribute("name"));        
         service.engineName = UtilXml.checkEmpty(serviceElement.getAttribute("engine"));
         service.location = UtilXml.checkEmpty(serviceElement.getAttribute("location"));
         service.invoke = UtilXml.checkEmpty(serviceElement.getAttribute("invoke"));
         service.auth = checkBoolean(serviceElement.getAttribute("auth"));
         service.export = checkBoolean(serviceElement.getAttribute("export"));
         service.validate = checkBoolean(serviceElement.getAttribute("validate"));
+        service.description = getCDATADef(serviceElement,"description");
+        service.nameSpace = getCDATADef(serviceElement,"namespace");
         service.contextInfo = new HashMap();
-        
+                
         createAttrDefs(serviceElement, "attribute", service.contextInfo);
         return service;
+    }
+    
+    protected String getCDATADef(Element baseElement, String tagName) {
+        String value = "";
+        NodeList nl = baseElement.getElementsByTagName(tagName);
+        // if there are more then one decriptions we will use only the first one
+        if ( nl.getLength() > 0 ) {
+            Node n = nl.item(0);
+            NodeList childNodes = n.getChildNodes();
+            if ( childNodes.getLength() > 0 ) {
+                Node cdata = childNodes.item(0);
+                value = UtilXml.checkEmpty(cdata.getNodeValue());
+            }
+        }
+        return value;
     }
     
     protected void createAttrDefs(Element baseElement, String parentNodeName, Map contextMap) {
@@ -179,6 +196,7 @@ public class ModelServiceReader {
         def.type = "String";
         def.mode = "OUT";
         def.optional = true;
+        def.order = -1;
         contextMap.put(def.name,def);
         // errorMessage
         def = new ModelParam();
@@ -186,6 +204,7 @@ public class ModelServiceReader {
         def.type = "String";
         def.mode = "OUT";
         def.optional = true;
+        def.order = -1;
         contextMap.put(def.name,def);
         // errorMessageList
         def = new ModelParam();
@@ -193,6 +212,7 @@ public class ModelServiceReader {
         def.type = "java.util.List";
         def.mode = "OUT";
         def.optional = true;
+        def.order = -1;
         contextMap.put(def.name,def);
         // successMessage
         def = new ModelParam();
@@ -200,6 +220,7 @@ public class ModelServiceReader {
         def.type = "String";
         def.mode = "OUT";
         def.optional = true;
+        def.order = -1;
         contextMap.put(def.name,def);
         // successMessageList
         def = new ModelParam();
@@ -207,6 +228,7 @@ public class ModelServiceReader {
         def.type = "java.util.List";
         def.mode = "OUT";
         def.optional = true;
+        def.order = -1;
         contextMap.put(def.name,def);
         // userLogin
         def = new ModelParam();
@@ -214,17 +236,23 @@ public class ModelServiceReader {
         def.type= "org.ofbiz.core.entity.GenericValue";
         def.mode = "IN";
         def.optional = true;
+        def.order = -1;
         contextMap.put(def.name,def);
         
         // Add in the defined attributes (override the above defaults if specified)
         NodeList attrList = baseElement.getElementsByTagName(parentNodeName);
+        int orderCount = 0;
         for ( int i = 0; i < attrList.getLength(); i++ ) {
             Element attribute = (Element) attrList.item(i);
             ModelParam param = new ModelParam();
             param.name = UtilXml.checkEmpty(attribute.getAttribute("name"));
             param.type = UtilXml.checkEmpty(attribute.getAttribute("type"));
             param.mode = UtilXml.checkEmpty(attribute.getAttribute("mode"));
-            param.optional = checkBoolean(attribute.getAttribute("optional"));
+            param.optional = checkBoolean(attribute.getAttribute("optional"));            
+            if ( (param.mode.equals("IN") || param.mode.equals("INOUT")) && !param.optional )
+                param.order = orderCount++;
+            else 
+                param.order = -1;
             contextMap.put(param.name,param);
         }
     }

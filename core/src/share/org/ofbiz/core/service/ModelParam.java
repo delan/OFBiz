@@ -45,6 +45,9 @@ public class ModelParam {
     public String mode;     
     
     /** Parameter required */
-    boolean optional;            
+    public boolean optional;   
+    
+    /** Parameter order (for IN modes only) */
+    public int order;
 }
 
