@@ -81,5 +81,10 @@
     <ContentPurposeOperation contentPurposeTypeId="_NA_" contentOperationId="CONTENT_LINK_FROM" roleTypeId="OWNER" statusId="_NA_" privilegeEnumId="CNT_PRV_NA_"/>
     <ContentPurposeOperation contentPurposeTypeId="_NA_" contentOperationId="CONTENT_LINK_TO" roleTypeId="BLOG_ADMIN" statusId="_NA_" privilegeEnumId="CNT_PRV_NA_"/>
     <ContentPurposeOperation contentPurposeTypeId="_NA_" contentOperationId="CONTENT_LINK_FROM" roleTypeId="BLOG_ADMIN" statusId="_NA_" privilegeEnumId="CNT_PRV_NA_"/>
+    <ContentPurposeOperation contentPurposeTypeId="ARTICLE" contentOperationId="CONTENT_LINK_TO" roleTypeId="LOGGEDIN" statusId="_NA_" privilegeEnumId="CNT_PRV_NA_"/>
+    <ContentPurposeOperation contentPurposeTypeId="RESPONSE" contentOperationId="CONTENT_LINK_TO" roleTypeId="LOGGEDIN" statusId="_NA_" privilegeEnumId="CNT_PRV_NA_"/>
+    <ContentPurposeOperation contentPurposeTypeId="RESPONSE" contentOperationId="CONTENT_LINK_FROM" roleTypeId="LOGGEDIN" statusId="_NA_" privilegeEnumId="CNT_PRV_NA_"/>
     
+    <ContentPurposeOperation contentPurposeTypeId="RESPONSE" contentOperationId="CONTENT_UPDATE" roleTypeId="LOGGEDIN" statusId="_NA_" privilegeEnumId="_NA_"/>
+    <ContentPurposeOperation contentPurposeTypeId="RESPONSE" contentOperationId="CONTENT_CREATE" roleTypeId="LOGGEDIN" statusId="_NA_" privilegeEnumId="_NA_"/>
 </entity-engine-xml>

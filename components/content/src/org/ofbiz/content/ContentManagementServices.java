@@ -457,7 +457,7 @@ public class ContentManagementServices {
                     contentContext.put("skipPermissionCheck", context.get("skipPermissionCheck"));
                     Map thisResult = dispatcher.runSync("updateContent", contentContext);
                     String errMsg = ServiceUtil.getErrorMessage(thisResult);
-                    if (UtilValidate.isNotEmpty(errMsg)) {
+                    if (ServiceUtil.isError(thisResult) || ServiceUtil.isFailure(thisResult) || UtilValidate.isNotEmpty(errMsg)) {
                         return ServiceUtil.returnError(errMsg);
                     }
                 //Map thisResult = ContentServices.updateContentMethod(dctx, context);
@@ -475,7 +475,7 @@ public class ContentManagementServices {
                     contentContext.put("skipPermissionCheck", context.get("skipPermissionCheck"));
                     Map thisResult = dispatcher.runSync("createContent", contentContext);
                     String errMsg = ServiceUtil.getErrorMessage(thisResult);
-                    if (UtilValidate.isNotEmpty(errMsg)) {
+                    if (ServiceUtil.isError(thisResult) || ServiceUtil.isFailure(thisResult) || UtilValidate.isNotEmpty(errMsg)) {
                         return ServiceUtil.returnError(errMsg);
                     }
                 //Map thisResult = ContentServices.createContentMethod(dctx, context);
@@ -553,6 +553,10 @@ public class ContentManagementServices {
                     Map ctx = contentAssocModel.makeValid(contentAssoc, "IN");
                     contentAssocContext.putAll(ctx);
                     thisResult = dispatcher.runSync("createContentAssoc", contentAssocContext);
+                    String errMsg = ServiceUtil.getErrorMessage(thisResult);
+                    if (ServiceUtil.isError(thisResult) || ServiceUtil.isFailure(thisResult) || UtilValidate.isNotEmpty(errMsg)) {
+                        return ServiceUtil.returnError(errMsg);
+                    }
                     result.put("contentIdTo", thisResult.get("contentIdTo"));
                     result.put("contentIdFrom", thisResult.get("contentIdFrom"));
                     //result.put("contentId", thisResult.get("contentIdFrom"));
@@ -570,6 +574,10 @@ public class ContentManagementServices {
                     Map ctx = contentAssocModel.makeValid(contentAssoc, "IN");
                     contentAssocContext.putAll(ctx);
                     thisResult = dispatcher.runSync("updateContentAssoc", contentAssocContext);
+                    String errMsg = ServiceUtil.getErrorMessage(thisResult);
+                    if (ServiceUtil.isError(thisResult) || ServiceUtil.isFailure(thisResult) || UtilValidate.isNotEmpty(errMsg)) {
+                        return ServiceUtil.returnError(errMsg);
+                    }
                 }
             } catch (GenericEntityException e) {
                 throw new GenericServiceException(e.getMessage());

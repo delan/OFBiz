@@ -215,7 +215,7 @@ public class ContentPermissionServices {
             } 
                 
         } else {
-            if (displayFailCond || displayPassCond) {
+            if (displayFailCond) {
                  errBuf.append("\n    hasEntityPermission(" + entityAction + "): FAILED" );
             } 
 
@@ -237,6 +237,8 @@ public class ContentPermissionServices {
                 ServiceUtil.returnError(e.getMessage());   
             }
             permissionStatus = (String)results.get("permissionStatus");
+            errBuf.append("\n    permissionStatus:" );
+            errBuf.append(permissionStatus);
         }
             
         if ((permissionStatus.equals("granted") && displayPassCond)
@@ -244,8 +246,6 @@ public class ContentPermissionServices {
             // Don't show this if passed on 'hasEntityPermission'
             if (displayFailCond || displayPassCond) {
               if (!passed) {
-                 errBuf.append("\n    permissionStatus:" );
-                 errBuf.append(permissionStatus);
                  errBuf.append("\n    targetOperations:" );
                  errBuf.append(targetOperations);
 
@@ -268,10 +268,10 @@ public class ContentPermissionServices {
                  }
               }
                  
-                 Debug.logInfo("displayPass/FailCond(0), errBuf:" + errBuf.toString(), "");
-                 results.put(ModelService.ERROR_MESSAGE, errBuf.toString());
             }
         }
+                 Debug.logInfo("displayPass/FailCond(0), errBuf:" + errBuf.toString(), "");
+                 results.put(ModelService.ERROR_MESSAGE, errBuf.toString());
         return results;
     }
 
@@ -664,6 +664,12 @@ public class ContentPermissionServices {
         }
         ModelEntity modelEntity = delegator.getModelEntity(entityName);
         
+        if (relatedRoleGetter != null) {
+            if (UtilValidate.isNotEmpty(partyId)) {
+                relatedRoleGetter.setList(UtilMisc.toList("LOGGEDIN"));   
+            }
+        }
+        
         // check permission for each id in passed list until success.
         // Note that "quickCheck" id come first in the list
         // Check with no roles or purposes on the chance that the permission fields contain _NA_ s.
@@ -691,7 +697,7 @@ public class ContentPermissionServices {
             GenericValue entity = getNextEntity(delegator, entityName, pkFieldName, iter.next(), entities);
             if (entity == null) continue;
             checkAncestors = false;
-            passed = hasMatch(entity, permissionConditionGetter, null, null, partyId, checkAncestors);
+            passed = hasMatch(entity, permissionConditionGetter, relatedRoleGetter, null, partyId, checkAncestors);
             if (passed) {
                 break;
             }
@@ -709,7 +715,7 @@ public class ContentPermissionServices {
                 GenericValue entity = getNextEntity(delegator, entityName, pkFieldName, iter.next(), entities);
                 if (entity == null) continue;
                 checkAncestors = false;
-                passed = hasMatch(entity, permissionConditionGetter, null, auxiliaryValueGetter, partyId, checkAncestors);
+                passed = hasMatch(entity, permissionConditionGetter, relatedRoleGetter, auxiliaryValueGetter, partyId, checkAncestors);
                  
                 if (passed){
                     break;
@@ -941,7 +947,7 @@ public class ContentPermissionServices {
         if(entity == null) return passedPurposes;
 
         List purposeIds = null;
-        if (purposeIds == null) {
+        if (passedPurposes == null) {
             purposeIds = new ArrayList( );
         } else {
             purposeIds = new ArrayList( passedPurposes );
@@ -1133,11 +1139,13 @@ public class ContentPermissionServices {
         if (skipPermissionCheck == null
             || skipPermissionCheck.length() == 0
             || (!skipPermissionCheck.equalsIgnoreCase("true") && !skipPermissionCheck.equalsIgnoreCase("granted"))) {
+            // Use the purposes from the from entity for both cases.
             List relatedPurposes = getRelatedPurposes(contentFrom, null);
+            List relatedPurposesTo = getRelatedPurposes(contentTo, relatedPurposes);
             Map serviceInMap = new HashMap();
             serviceInMap.put("userLogin", userLogin);
             serviceInMap.put("targetOperationList", UtilMisc.toList("CONTENT_LINK_TO"));
-            serviceInMap.put("contentPurposeList", relatedPurposes);
+            serviceInMap.put("contentPurposeList", relatedPurposesTo);
             serviceInMap.put("currentContent", contentTo);
             serviceInMap.put("displayFailCond", bDisplayFailCond);
 
@@ -1156,6 +1164,7 @@ public class ContentPermissionServices {
             }
             serviceInMap.put("currentContent", contentFrom);
             serviceInMap.put("targetOperationList", UtilMisc.toList("CONTENT_LINK_FROM"));
+            serviceInMap.put("contentPurposeList", relatedPurposes);
             try {
                 permResults = dispatcher.runSync("checkContentPermission", serviceInMap);
             } catch (GenericServiceException e) {

@@ -1,5 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <entity-engine-xml>
+    <RoleType description="Logged In" hasTable="N"  parentTypeId="" roleTypeId="LOGGEDIN"/>
+
     <ContentAssocType contentAssocTypeId="TEMPLATE_MEMBER" description="Template Member"/>
     <ContentAssocType contentAssocTypeId="STRUCTURE_DEF" description="Document Structure Definition"/>
     <ContentAssocType contentAssocTypeId="TXFORM_DEF" description="Transformation Definition"/>
