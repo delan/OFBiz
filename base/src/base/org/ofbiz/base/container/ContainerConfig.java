@@ -31,13 +31,13 @@ import java.util.Iterator;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
-
 import javax.xml.parsers.ParserConfigurationException;
 
 import org.ofbiz.base.util.UtilURL;
 import org.ofbiz.base.util.UtilValidate;
 import org.ofbiz.base.util.UtilXml;
-import org.ofbiz.base.util.collections.OrderedMap;
+
+import org.apache.commons.collections.map.LinkedMap;
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
 import org.xml.sax.SAXException;
@@ -46,14 +46,14 @@ import org.xml.sax.SAXException;
  * ContainerConfig - Container configuration for ofbiz.xml
  *
  * @author     <a href="mailto:jaz@ofbiz.org">Andy Zeneski</a>
- * @version    $Rev:$
+ * @version    $Rev$
  * @since      3.0
  */
 public class ContainerConfig {
     
     public static final String module = ContainerConfig.class.getName();
     
-    protected static Map containers = new OrderedMap();    
+    protected static Map containers = new LinkedMap();
     
     public static Container getContainer(String containerName, String configFile) throws ContainerException {
         Container container = (Container) containers.get(containerName);
@@ -200,7 +200,7 @@ public class ContainerConfig {
             this.name = element.getAttribute("name");
             this.className = element.getAttribute("class");
             
-            properties = new OrderedMap();
+            properties = new LinkedMap();
             Iterator elementIter = UtilXml.childElementList(element, "property").iterator();
             while (elementIter.hasNext()) {
                 Element curElement = (Element) elementIter.next();
@@ -240,7 +240,7 @@ public class ContainerConfig {
                     this.value = UtilXml.childElementValue(element, "property-value");                    
                 }
 
-                properties = new OrderedMap();
+                properties = new LinkedMap();
                 Iterator elementIter = UtilXml.childElementList(element, "property").iterator();
                 while (elementIter.hasNext()) {
                     Element curElement = (Element) elementIter.next();

@@ -35,14 +35,14 @@ import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
 import java.util.TreeMap;
-
 import javax.xml.parsers.ParserConfigurationException;
 
 import org.ofbiz.base.util.Debug;
 import org.ofbiz.base.util.UtilURL;
 import org.ofbiz.base.util.UtilValidate;
 import org.ofbiz.base.util.UtilXml;
-import org.ofbiz.base.util.collections.OrderedMap;
+
+import org.apache.commons.collections.map.LinkedMap;
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
 import org.xml.sax.SAXException;
@@ -52,7 +52,7 @@ import org.xml.sax.SAXException;
  *
  * @author     <a href="mailto:jonesde@ofbiz.org">David E. Jones</a>
  * @author     <a href="mailto:jaz@ofbiz.org">Andy Zeneski</a>
- * @version    $Rev:$
+ * @version    $Rev$
  * @since      3.0
  */
 public class ComponentConfig {
@@ -61,7 +61,7 @@ public class ComponentConfig {
     public static final String OFBIZ_COMPONENT_XML_FILENAME = "ofbiz-component.xml";
 
     // this is not a UtilCache because reloading may cause problems
-    protected static Map componentConfigs = new OrderedMap();
+    protected static Map componentConfigs = new LinkedMap();
     protected static Map serverWebApps = new HashMap();
 
     public static ComponentConfig getComponentConfig(String globalName) throws ComponentException {
