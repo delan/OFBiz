@@ -77,39 +77,44 @@ function removeSelected() {
 </script>
 
 <div class='tabContainer'>
-    <a href="<@ofbizUrl>/returnMain?returnId=${requestParameters.returnId?if_exists}</@ofbizUrl>" class="tabButton">Return</a>  
-    <a href="<@ofbizUrl>/returnItems?returnId=${requestParameters.returnId?if_exists}</@ofbizUrl>" class="tabButtonSelected">Items</a>
-    <a href="<@ofbizUrl>/returnRefund?returnId=${requestParameters.returnId?if_exists}</@ofbizUrl>" class="tabButton">Refund</a>
+    <a href="<@ofbizUrl>/returnMain?returnId=${requestParameters.returnId?if_exists}</@ofbizUrl>" class="tabButton">Return Header</a>  
+    <a href="<@ofbizUrl>/returnItems?returnId=${requestParameters.returnId?if_exists}</@ofbizUrl>" class="tabButtonSelected">Return Items</a>  
 </div>
 
 <#if !requestParameters.orderId?exists>
 <table width="100%" border='0' cellpadding='2' cellspacing='0'>
-  <tr><td colspan="6"><div class="head3">Item(s) In Return #${requestParameters.returnId}</div></td></tr>
-  <tr><td colspan="6"><hr class="sepbar"></td></tr>
+  <tr><td colspan="8"><div class="head3">Item(s) In Return #${requestParameters.returnId}</div></td></tr>
+  <tr><td colspan="8"><hr class="sepbar"></td></tr>
   <tr>
     <td><div class="tableheadtext">Order #</div></td>
-    <td><div class="tableheadtext">Order Item #</div></td>
+    <td><div class="tableheadtext">Item #</div></td>
+    <td><div class="tableheadtext">Description</div></td>
     <td><div class="tableheadtext">Return Qty</div></td>
     <td><div class="tableheadtext">Return Price</div></td>
-    <td><div class="tableheadtext">Reason</div></td> 
+    <td><div class="tableheadtext">Reason</div></td>
+    <td><div class="tableheadtext">Type</div></td> 
     <td>&nbsp;</td>
   </tr>
-  <tr><td colspan="6"><hr class="sepbar"></td></tr> 
+  <tr><td colspan="8"><hr class="sepbar"></td></tr> 
   <#if returnItems?has_content>
     <#list returnItems as item>
+      <#assign orderItem = item.getRelatedOne("OrderItem")>
       <#assign returnReason = item.getRelatedOne("ReturnReason")>
+      <#assign returnType = item.getRelatedOne("ReturnType")>
       <tr>
         <td><a href="<@ofbizUrl>/orderview?order_id=${item.orderId}</@ofbizUrl>" class="buttontext">${item.orderId}</a></td>
         <td><div class="tabletext">${item.orderItemSeqId}</div></td>
+        <td><div class="tabletext">${orderItem.itemDescription}</div></td>
         <td><div class="tabletext">${item.returnQuantity?string.number}</div></td>
         <td><div class="tabletext">${item.returnPrice?string.currency}</div></td>
         <td><div class="tabletext">${returnReason.description}</div></td>
-        <td><a href="<@ofbizUrl>/removeReturnItem?returnId=${item.returnId}&returnItemSeqId=${item.returnItemSeqId}</@ofbizUrl>" class="buttontext">Remove</a>
+        <td><div class="tabletext">${returnType.description}</div></td>
+        <td align='right'><a href="<@ofbizUrl>/removeReturnItem?returnId=${item.returnId}&returnItemSeqId=${item.returnItemSeqId}</@ofbizUrl>" class="buttontext">Remove</a>
       </tr>
     </#list>
   <#else>
     <tr>
-      <td colspan="6"><div class="tabletext">No item(s) in return.</div>
+      <td colspan="8"><div class="tabletext">No item(s) in return.</div>
     </tr>
   </#if>
 </table>
@@ -139,7 +144,7 @@ function removeSelected() {
   <input type="hidden" name="returnId" value="${requestParameters.returnId}">
   <table border='0' width='100%' cellpadding='2' cellspacing='0'>
     <tr>
-      <td colspan="6"><div class="head3">Return Item(s) From Order #${requestParameters.orderId}</div></td>
+      <td colspan="8"><div class="head3">Return Item(s) From Order #${requestParameters.orderId}</div></td>
       <td align="right">
         <span class="tableheadtext">Select All</span>&nbsp;
         <input type="checkbox" name="selectAll" value="Y" onclick="javascript:toggleAll(this);">
@@ -152,9 +157,10 @@ function removeSelected() {
       <td><div class="tableheadtext">Order Price</div></td>
       <td><div class="tableheadtext">Return Price*</div></td>
       <td><div class="tableheadtext">Return Reason</div></td>
+      <td><div class="tableheadtext">Return Type</div></td>
       <td>&nbsp;</td>  
     </tr>
-    <tr><td colspan="7"><hr class="sepbar"></td></tr>
+    <tr><td colspan="8"><hr class="sepbar"></td></tr>
     <#if orderItems?has_content>
       <#assign rowCount = 0>
       <#list orderItems as orderItem>
@@ -198,11 +204,18 @@ function removeSelected() {
             </#list>
           </select>
         </td>
+        <td>
+          <select name="returnTypeId_o_${rowCount}" class="selectBox">
+            <#list returnTypes as type>
+            <option value="${type.returnTypeId}">${type.description?default(type.returnTypeId)}</option>
+            </#list>
+          </select>
+        </td>        
         <td align="right">              
           <input type="checkbox" name="_rowSubmit_o_${rowCount}" value="Y" onclick="javascript:checkToggle(this);">
         </td>        
       </tr>     
-      <tr><td colspan="7"><hr class="sepbar"></td></tr>  
+      <tr><td colspan="8"><hr class="sepbar"></td></tr>  
       <#assign rowCount = rowCount + 1>        
       </#list>
       <input type="hidden" name="_rowCount" value="${rowCount}">

@@ -34,14 +34,14 @@ paramMap = UtilHttp.getParameterMap(request);
 orderId = request.getParameter("orderId");
 returnId = request.getParameter("returnId");
 if (returnId == null)
-    returnId = request.getAttribute("returnId");
+    returnId = (String) request.getAttribute("returnId");
     
 returnHeader = null;
 if (returnId != null) {
     returnHeader = delegator.findByPrimaryKey("ReturnHeader", UtilMisc.toMap("returnId", returnId));
     if (returnHeader != null) {    
         currentStatus = returnHeader.getRelatedOne("StatusItem");
-        context.put("currentStatus", currentStatus);
+        context.put("currentStatus", currentStatus);        
     }
 }
 context.put("returnHeader", returnHeader);

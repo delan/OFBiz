@@ -32,7 +32,10 @@ returnId = request.getParameter("returnId");
 returnItems = delegator.findByAnd("ReturnItem", UtilMisc.toMap("returnId", returnId));
 context.put("returnItems", returnItems);
 
-returnReasons = delegator.findAll("ReturnReason", UtilMisc.toList("description"));
+returnTypes = delegator.findAll("ReturnType", UtilMisc.toList("sequenceId"));
+context.put("returnTypes", returnTypes);
+
+returnReasons = delegator.findAll("ReturnReason", UtilMisc.toList("sequenceId"));
 context.put("returnReasons", returnReasons);
 
 orderId = request.getParameter("orderId");

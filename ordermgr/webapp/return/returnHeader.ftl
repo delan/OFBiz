@@ -26,9 +26,8 @@
 
 <#if returnHeader?exists>
 <div class='tabContainer'>
-    <a href="<@ofbizUrl>/returnMain?returnId=${returnId?if_exists}</@ofbizUrl>" class="tabButtonSelected">Return</a>  
-    <a href="<@ofbizUrl>/returnItems?returnId=${returnId?if_exists}<#if requestParameters.orderId?exists>&orderId=${requestParameters.orderId}</#if></@ofbizUrl>" class="tabButton">Items</a>
-    <a href="<@ofbizUrl>/returnRefund?returnId=${returnId?if_exists}</@ofbizUrl>" class="tabButton">Refund</a>
+    <a href="<@ofbizUrl>/returnMain?returnId=${returnId?if_exists}</@ofbizUrl>" class="tabButtonSelected">Return Header</a>  
+    <a href="<@ofbizUrl>/returnItems?returnId=${returnId?if_exists}<#if requestParameters.orderId?exists>&orderId=${requestParameters.orderId}</#if></@ofbizUrl>" class="tabButton">Return Items</a>
 </div>
 </#if>
 
@@ -63,7 +62,15 @@
     <td width='74%'>
       <input type='text' class='inputBox' size='20' name='fromPartyId' value='${returnInfo.fromPartyId?if_exists}'>
     </td>                
-  </tr>  
+  </tr>
+  <tr>
+    <td width='14%'>&nbsp;</td>
+    <td width='6%' align='right' nowrap><div class="tabletext">Billing Account:</div></td>
+    <td width='6%'>&nbsp;</td>
+    <td width='74%'>
+      <input type='text' class='inputBox' size='20' name='billingAccountId' value='${returnInfo.billingAccountId?if_exists}'>
+    </td>                
+  </tr>     
   <tr>
     <td width='14%'>&nbsp;</td>
     <td width='6%' align='right' nowrap><div class="tabletext">Return Status:</div></td>
