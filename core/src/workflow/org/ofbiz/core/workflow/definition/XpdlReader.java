@@ -229,7 +229,7 @@ public class XpdlReader {
         Element responsiblesElement = UtilXml.firstChildElement(redefinableHeaderElement, "Responsibles");
         List responsibles = UtilXml.childElementList(responsiblesElement, "Responsible");
 
-        readResponsibles(responsibles, valueObject);
+        readResponsibles(responsibles, valueObject, prefix);
         return true;
     }
 
@@ -278,7 +278,7 @@ public class XpdlReader {
         return true;
     }
 
-    protected void readResponsibles(List responsibles, GenericValue valueObject) throws DefinitionParserException {
+    protected void readResponsibles(List responsibles, GenericValue valueObject, String prefix) throws DefinitionParserException {
         if (responsibles == null || responsibles.size() == 0)
             return;
 
@@ -298,10 +298,19 @@ public class XpdlReader {
             String responsibleId = UtilXml.elementValue(responsibleElement);
             GenericValue participantListValue = delegator.makeValue("WorkflowParticipantList", null);
 
+            participantListValue.set("packageId", valueObject.getString("packageId"));
+            participantListValue.set("packageVersion", valueObject.getString("packageVersion"));
             participantListValue.set("participantListId", responsibleListId);
             participantListValue.set("participantId", responsibleId);
             participantListValue.set("participantIndex", new Long(responsibleIndex));
-            values.add(participantListValue);
+            if (prefix.equals("process")) {
+                participantListValue.set("processId", valueObject.getString("processId"));
+                participantListValue.set("processVersion", valueObject.getString("processVersion"));
+            } else {
+                participantListValue.set("processId", "_NA_");
+                participantListValue.set("processVersion", "_NA_");
+            }
+            values.add(participantListValue);                      
             responsibleIndex++;
         }
     }
