@@ -156,7 +156,7 @@ public class ServiceDispatcher {
         engine.setLoader(localName);
 
         // pre-validate ECA
-        ECAUtil.evalConditions(service.name, "validate", (DispatchContext) localContext.get(localName), context);
+        ECAUtil.evalConditions(service.name, "in-validate", (DispatchContext) localContext.get(localName), context);
 
         // validate the context
         if (service.validate) {
@@ -185,6 +185,7 @@ public class ServiceDispatcher {
 
         // validate the result
         if (service.validate) {
+            ECAUtil.evalConditions(service.name, "out-validate", (DispatchContext) localContext.get(localName), context);
             try {
                 service.validate(result, ModelService.OUT_PARAM);
             } catch (ServiceValidationException e) {
@@ -249,7 +250,7 @@ public class ServiceDispatcher {
         engine.setLoader(localName);
 
         // pre-validate ECA
-        ECAUtil.evalConditions(service.name, "validate", (DispatchContext) localContext.get(localName), context);
+        ECAUtil.evalConditions(service.name, "in-validate", (DispatchContext) localContext.get(localName), context);
 
         // validate the context
         if (service.validate) {
@@ -327,7 +328,7 @@ public class ServiceDispatcher {
         engine.setLoader(localName);
 
         // pre-validate ECA
-        ECAUtil.evalConditions(service.name, "validate", (DispatchContext) localContext.get(localName), context);
+        ECAUtil.evalConditions(service.name, "in-validate", (DispatchContext) localContext.get(localName), context);
 
         // validate the context
         if (service.validate) {
@@ -404,7 +405,7 @@ public class ServiceDispatcher {
         engine.setLoader(localName);
 
         // pre-validate ECA
-        ECAUtil.evalConditions(service.name, "validate", (DispatchContext) localContext.get(localName), context);
+        ECAUtil.evalConditions(service.name, "in-validate", (DispatchContext) localContext.get(localName), context);
 
         // validate the context
         if (service.validate) {

@@ -33,7 +33,7 @@
 <!ELEMENT eca ( (condition | condition-field)*, action+ )>
 <!ATTLIST eca
 	service CDATA #REQUIRED
-	event ( auth | validate | invoke | commit | return ) #REQUIRED
+	event ( auth | in-validate | out-validate | invoke | commit | return ) #REQUIRED
 >
 
 <!ELEMENT condition EMPTY>
