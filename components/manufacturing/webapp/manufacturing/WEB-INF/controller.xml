@@ -414,6 +414,18 @@
         <response name="success" type="view" value="CreateProductionRun"/>
         <response name="error" type="view" value="CreateProductionRun"/>
     </request-map>
+    <request-map uri="FindProductionRun">
+        <security https="true" auth="true"/>
+        <response name="success" type="view" value="FindProductionRun"/>
+    </request-map>
+    <request-map uri="EditProductionRun">
+        <security https="true" auth="true"/>
+        <response name="success" type="view" value="EditProductionRun"/>
+    </request-map>
+    <request-map uri="ProductionRunDeclaration">
+        <security https="true" auth="true"/>
+        <response name="success" type="view" value="ProductionRunDeclaration"/>
+    </request-map>
 
     
     <!-- end of request mappings -->
@@ -450,6 +462,9 @@
     <view-map name="RunningMrp" type="jpublish" page="/mrp/RunningMrp.ftl"/>
      <!-- JobShop Management request mappings -->
     <view-map name="CreateProductionRun" type="jpublish" page="/jobshopmgt/CreateProductionRun.ftl"/>
+    <view-map name="FindProductionRun" type="jpublish" page="/jobshopmgt/FindProductionRun.ftl"/>
+    <view-map name="EditProductionRun" type="jpublish" page="/jobshopmgt/EditProductionRun.ftl"/>
+    <view-map name="ProductionRunDeclaration" type="jpublish" page="/jobshopmgt/ProductionRunDeclaration.ftl"/>
 
     <!-- end of view mappings -->
 </site-conf>
