@@ -34,8 +34,7 @@
             <div class='boxhead'>&nbsp;My Current Task List</div>
           </td>
           <td align=right width='60%'>
-            <A href='<@ofbizUrl>/mytasks</@ofbizUrl>' class='lightbuttontextdisabled'>[Task&nbsp;List]</A>
-            <A href='<@ofbizUrl>/task</@ofbizUrl>' class='lightbuttontext'>[New&nbsp;Task]</A>
+            <a href='<@ofbizUrl>/mytasks</@ofbizUrl>' class='submenutext'>Task List</a><a href='<@ofbizUrl>/task</@ofbizUrl>' class='submenutextright'>New Task</a>
           </td>
         </tr>
       </table>
