@@ -27,13 +27,13 @@
 <simple-methods>
     <simple-method method-name="getPicklistData" short-description="Get Picklist Data">
     	<!-- 
-    		Expects parameter:
+    		Parameters:
     			orderHeaderList: List of OrderHeaders to create a picklist for
     		Returns:
     			inventoryItemInfoList: List of Maps with inventoryItem, facilityLocation, orderItems, quantity
+    			orderHeaderInfoList: List of Maps with orderHeader and orderItemInfo which is a Map with orderItem and orderItemInventoryResList
     			wrongQuantityReservedList: List of Maps with reservedQuantity and orderItem
     			insufficientQohList: List of Maps with inventoryItem and quantityNeeded
-    			orderHeaderInfoList: List of Maps with orderHeader and orderItemInfo which is a Map with orderItem and orderItemInventoryResList
     	-->
     	
         <check-permission permission="ORDERMGR" action="_VIEW">
