@@ -24,6 +24,7 @@
  */
 package org.ofbiz.core.event;
 
+import java.sql.Timestamp;
 import java.util.*;
 import javax.servlet.http.*;
 
@@ -165,7 +166,6 @@ public class CoreEvents {
      *  SERVICE_TIME      - First time the service will occur
      *  SERVICE_FREQUENCY - The type of recurrence (SECONDLY,MINUTELY,DAILY,etc)
      *  SERVICE_INTERVAL  - The interval of the frequency (every 5 minutes, etc)
-     *  SERVICE_COUNT     - The number of time the service should run (-1 for ever)
      *
      * @param request HttpServletRequest
      * @param response HttpServletResponse
@@ -179,6 +179,7 @@ public class CoreEvents {
         // get the schedule parameters
         String serviceName = (String) params.remove("SERVICE_NAME");
         String serviceTime = (String) params.remove("SERVICE_TIME");
+        String serviceEndTime = (String) params.remove("SERVICE_END_TIME");
         String serviceFreq = (String) params.remove("SERVICE_FREQUENCY");
         String serviceIntr = (String) params.remove("SERVICE_INTERVAL");
         String serviceCnt = (String) params.remove("SERVICE_COUNT");
@@ -198,6 +199,7 @@ public class CoreEvents {
 
         // some defaults
         long startTime = (new Date()).getTime();
+        long endTime = 0;
         int count = 1;
         int interval = 1;
         int frequency = RecurrenceRule.DAILY;
@@ -210,6 +212,8 @@ public class CoreEvents {
             return "error";
         }
 
+        Timestamp ts = null;
+        
         // now do a security check
         
         //lookup the service definition to see if this service is externally available, if not require the SERVICE_INVOKE_ANY permission
@@ -232,31 +236,51 @@ public class CoreEvents {
         }
         
         // some conversions
-        if (serviceTime != null) {
-            try {
-                startTime = Long.parseLong(serviceTime);
-            } catch (NumberFormatException nfe) {
-                errorBuf.append("<li>Invalid format for SERVICE_TIME");
+        if (serviceTime != null && serviceTime.length() > 0) {            
+            try {        
+                Timestamp ts1 = Timestamp.valueOf(serviceTime);
+                startTime = ts1.getTime();
+            } catch (IllegalArgumentException e) {
+                try {                        
+                    startTime = Long.parseLong(serviceTime);                    
+                } catch (NumberFormatException nfe) {
+                    errorBuf.append("<li>Invalid format for SERVICE_TIME");
+                }
             }
             if (startTime < (new Date()).getTime()) {
                 errorBuf.append("<li>SERVICE_TIME has already passed");
             }
         }
-        if (serviceIntr != null) {
+        if (serviceEndTime != null && serviceEndTime.length() > 0) {            
+            try {        
+                Timestamp ts1 = Timestamp.valueOf(serviceEndTime);
+                endTime = ts1.getTime();
+            } catch (IllegalArgumentException e) {
+                try {                        
+                    endTime = Long.parseLong(serviceTime);
+                } catch (NumberFormatException nfe) {
+                    errorBuf.append("<li>Invalid format for SERVICE_TIME");
+                }
+            }
+            if (endTime < (new Date()).getTime()) {
+                errorBuf.append("<li>SERVICE_TIME has already passed");
+            }
+        }
+        if (serviceIntr != null && serviceIntr.length() > 0) {
             try {
                 interval = Integer.parseInt(serviceIntr);
             } catch (NumberFormatException nfe) {
                 errorBuf.append("<li>Invalid format for SERVICE_INTERVAL");
             }
         }
-        if (serviceCnt != null) {
+        if (serviceCnt != null && serviceCnt.length() > 0) {
             try {
                 count = Integer.parseInt(serviceCnt);
             } catch (NumberFormatException nfe) {
                 errorBuf.append("<li>Invalid format for SERVICE_COUNT");
             }
         }
-        if (serviceFreq != null) {
+        if (serviceFreq != null && serviceFreq.length() > 0) {
             int parsedValue = 0;
 
             try {
@@ -283,7 +307,7 @@ public class CoreEvents {
 
         // schedule service
         try {
-            dispatcher.schedule(serviceName, context, startTime, frequency, interval, count);
+            dispatcher.schedule(serviceName, context, startTime, frequency, interval, count, endTime);
         } catch (GenericServiceException e) {
             request.setAttribute(SiteDefs.ERROR_MESSAGE, "<li>Service dispatcher threw an exception: " + e.getMessage());
             return "error";
