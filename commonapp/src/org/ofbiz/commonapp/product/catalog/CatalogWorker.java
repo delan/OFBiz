@@ -709,7 +709,7 @@ public class CatalogWorker {
             }
 
             // remove all products that are already in the cart
-            ShoppingCart cart = (ShoppingCart) pageContext.getSession().getAttribute("_SHOPPING_CART_");
+            ShoppingCart cart = (ShoppingCart) pageContext.getSession().getAttribute(SiteDefs.SHOPPING_CART);
 
             if (cart != null && cart.size() > 0) {
                 Iterator cartiter = cart.iterator();
