@@ -43,6 +43,8 @@ ${pages.get("/shipment/ShipmentTabBar.ftl")}
 	<#assign itemIssuances = shipmentItemData.itemIssuances>
 	<#assign shipmentPackageContents = shipmentItemData.shipmentPackageContents>
 	<#assign product = shipmentItemData.product>
+	<#assign totalQuantityPackaged = shipmentItemData.totalQuantityPackaged>
+	<#assign totalQuantityToPackage = shipmentItemData.totalQuantityToPackage>
 	<tr>
 		<td><div class="tabletext">${shipmentItem.shipmentItemSeqId}</div></td>
 		<td colspan="2"><div class="tabletext">${(product.productName)?if_exists} [<a href="<@ofbizUrl>/EditProduct?productId=${shipmentItem.productId?if_exists}</@ofbizUrl>" class="buttontext">${shipmentItem.productId?if_exists}</a>]</div></td>
@@ -70,26 +72,33 @@ ${pages.get("/shipment/ShipmentTabBar.ftl")}
 			<td><div class="tabletext"><a href="<@ofbizUrl>/deleteShipmentItemPackageContent?shipmentId=${shipmentId}&shipmentItemSeqId=${shipmentPackageContent.shipmentItemSeqId}&shipmentPackageSeqId=${shipmentPackageContent.shipmentPackageSeqId}</@ofbizUrl>" class="buttontext">Delete</a></div></td>
 		</tr>
 	</#list>
-	<tr>
-		<form action="<@ofbizUrl>/createShipmentItemPackageContent</@ofbizUrl>" name="createShipmentPackageContentForm${shipmentItemData_index}">
-		<input type="hidden" name="shipmentId" value="${shipmentId}"/>
-		<input type="hidden" name="shipmentItemSeqId" value="${shipmentItem.shipmentItemSeqId}"/>
-		<td><div class="tabletext">&nbsp;</div></td>
-		<td colspan="2">
-			<div class="tabletext">Add to Package:
-			<select name="shipmentPackageSeqId" class="selectBox">
-				<#list shipmentPackages as shipmentPackage>
-					<option>${shipmentPackage.shipmentPackageSeqId}</option>
-				</#list>
-				<option>New</option>
-			</select>
-			</div>
-		</td>
-		<td><div class="tabletext"><input name="quantity" size="5" value="0" class="inputBox"/></div></td>
-		<td colspan="2"><div class="tabletext">&nbsp;</div></td>
-		<td><a href="javascript:document.createShipmentPackageContentForm${shipmentItemData_index}.submit()" class="buttontext">Add</a></td>
-		</form>
-	</tr>
+    <#if (totalQuantityToPackage > 0)>
+        <tr>
+            <form action="<@ofbizUrl>/createShipmentItemPackageContent</@ofbizUrl>" name="createShipmentPackageContentForm${shipmentItemData_index}">
+            <input type="hidden" name="shipmentId" value="${shipmentId}"/>
+            <input type="hidden" name="shipmentItemSeqId" value="${shipmentItem.shipmentItemSeqId}"/>
+            <td><div class="tabletext">&nbsp;</div></td>
+            <td colspan="2">
+                <div class="tabletext">Add to Package:
+                <select name="shipmentPackageSeqId" class="selectBox">
+                    <#list shipmentPackages as shipmentPackage>
+                        <option>${shipmentPackage.shipmentPackageSeqId}</option>
+                    </#list>
+                    <option>New</option>
+                </select>
+                </div>
+            </td>
+            <td>
+                <div class="tabletext">
+                    <input name="quantity" size="5" value="${totalQuantityToPackage}" class="inputBox"/>
+                    <a href="javascript:document.createShipmentPackageContentForm${shipmentItemData_index}.submit()" class="buttontext">Add</a>
+                </div>
+            </td>
+            <td colspan="2"><div class="tabletext">&nbsp;</div></td>
+            <td>&nbsp;</td>
+            </form>
+        </tr>
+    </#if>
 </#list>
 <tr>
 	<form action="<@ofbizUrl>/createShipmentItem</@ofbizUrl>" name="createShipmentItemForm">
