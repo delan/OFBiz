@@ -113,6 +113,12 @@ public class WebEventSecurity
         if(password.compareTo(userLogin.getString("currentPassword")) == 0)
         {
           request.getSession().setAttribute(SiteDefs.USER_LOGIN, userLogin);
+          helper.create("UserLoginHistory", UtilMisc.toMap("userLoginId", username, 
+                                                           "fromDate", UtilDateTime.nowTimestamp(), 
+                                                           "password", password, 
+                                                           "partyId", userLogin.get("partyId"), 
+                                                           "userId", userLogin.get("currentUserId"), 
+                                                           "referrerUrl", "NotYetImplemented"));
         }
         else
         {
