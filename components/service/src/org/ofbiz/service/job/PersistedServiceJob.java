@@ -1,5 +1,5 @@
 /*
- * $Id: PersistedServiceJob.java,v 1.8 2004/06/17 00:52:15 ajzeneski Exp $
+ * $Id: PersistedServiceJob.java,v 1.9 2004/06/17 06:13:58 ajzeneski Exp $
  *
  * Copyright (c) 2001, 2002 The Open For Business Project - www.ofbiz.org
  *
@@ -38,6 +38,7 @@ import org.ofbiz.base.util.Debug;
 import org.ofbiz.base.util.UtilDateTime;
 import org.ofbiz.base.util.UtilMisc;
 import org.ofbiz.base.util.UtilProperties;
+import org.ofbiz.base.util.UtilValidate;
 import org.ofbiz.entity.GenericDelegator;
 import org.ofbiz.entity.GenericEntityException;
 import org.ofbiz.entity.GenericValue;
@@ -53,7 +54,7 @@ import org.xml.sax.SAXException;
  * Entity Service Job - Store => Schedule => Run
  *
  * @author     <a href="mailto:jaz@ofbiz.org">Andy Zeneski</a>
- * @version    $Revision: 1.8 $
+ * @version    $Revision: 1.9 $
  * @since      2.0
  */
 public class PersistedServiceJob extends GenericServiceJob {
@@ -221,9 +222,11 @@ public class PersistedServiceJob extends GenericServiceJob {
             }
 
             // check the runAsUser
-            GenericValue runAsUser = jobObj.getRelatedOne("RunAsUserLogin");
-            if (runAsUser != null) {
-                context.put("userLogin", runAsUser);
+            if (!UtilValidate.isEmpty(jobObj.getString("runAsUser"))) {
+                GenericValue runAsUser = jobObj.getRelatedOne("RunAsUserLogin");
+                if (runAsUser != null) {
+                    context.put("userLogin", runAsUser);
+                }
             }
         } catch (GenericEntityException e) {
             Debug.logError(e, "PersistedServiceJob.getContext(): Entity Exception", module);
