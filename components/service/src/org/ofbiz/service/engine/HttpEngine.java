@@ -1,5 +1,5 @@
 /*
- * $Id: HttpEngine.java,v 1.2 2003/12/02 17:12:55 ajzeneski Exp $
+ * $Id: HttpEngine.java,v 1.3 2003/12/08 20:13:42 ajzeneski Exp $
  *
  *  Copyright (c) 2001, 2002 The Open For Business Project - www.ofbiz.org
  *
@@ -46,13 +46,14 @@ import org.ofbiz.service.ServiceDispatcher;
  * HttpEngine.java
  * 
  * @author     <a href="mailto:jaz@ofbiz.org">Andy Zeneski</a>
- * @version    $Revision: 1.2 $
+ * @version    $Revision: 1.3 $
  * @since      2.0
  */
 public class HttpEngine extends GenericAsyncEngine {
     
     public static final String module = HttpEngine.class.getName();
-    
+    private static final boolean exportAll = false;
+
     public HttpEngine(ServiceDispatcher dispatcher) {
         super(dispatcher);
     }
@@ -150,7 +151,7 @@ public class HttpEngine extends GenericAsyncEngine {
         if (!result.containsKey(ModelService.ERROR_MESSAGE)) {            
             try {
                 ModelService model = dispatcher.getDispatchContext().getModelService(serviceName);
-                if (model.export) {
+                if (model.export || exportAll) {
                     if (serviceMode.equals("ASYNC")) {
                         dispatcher.runAsync(serviceName, context);
                     } else {

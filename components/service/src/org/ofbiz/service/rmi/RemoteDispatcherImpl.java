@@ -1,5 +1,5 @@
 /*
- * $Id: RemoteDispatcherImpl.java,v 1.3 2003/12/06 23:10:14 ajzeneski Exp $
+ * $Id: RemoteDispatcherImpl.java,v 1.4 2003/12/08 20:13:42 ajzeneski Exp $
  *
  * Copyright (c) 2003 The Open For Business Project - www.ofbiz.org
  *
@@ -37,12 +37,13 @@ import java.util.Map;
  * Generic Services Remote Dispatcher Implementation
  *
  * @author     <a href="mailto:jaz@ofbiz.org">Andy Zeneski</a>
- * @version    $Revision: 1.3 $
+ * @version    $Revision: 1.4 $
  * @since      3.0
  */
 public class RemoteDispatcherImpl extends UnicastRemoteObject implements RemoteDispatcher {
 
     public static final String module = RemoteDispatcherImpl.class.getName();
+    private static final boolean exportAll = false;
 
     protected LocalDispatcher dispatcher = null;
 
@@ -134,7 +135,7 @@ public class RemoteDispatcherImpl extends UnicastRemoteObject implements RemoteD
 
     protected void checkExportFlag(String serviceName) throws GenericServiceException {
         ModelService model = dispatcher.getDispatchContext().getModelService(serviceName);
-        if (!model.export) {
+        if (!model.export && !exportAll) {
             Debug.logWarning("Attempt to invoke a non-exported service: " + serviceName, module);
             throw new GenericServiceException("Cannot find requested service");
         }
