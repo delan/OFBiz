@@ -79,30 +79,39 @@ public class PaymentWorker {
         return paymentMethodValueMaps;
     }
 
+    /** TO BE REMOVED (DEJ 20030301): This is the OLD style and should be removed when the eCommerce and party mgr JSPs are */
     public static void getPaymentMethodAndRelated(PageContext pageContext, String partyId,
-        String paymentMethodAttr, String creditCardAttr, String eftAccountAttr, String paymentMethodIdAttr, String curContactMechIdAttr,
-        String donePageAttr, String tryEntityAttr) {
+            String paymentMethodAttr, String creditCardAttr, String eftAccountAttr, String paymentMethodIdAttr, String curContactMechIdAttr,
+            String donePageAttr, String tryEntityAttr) {
 
         ServletRequest request = pageContext.getRequest();
-        GenericDelegator delegator = (GenericDelegator) pageContext.getRequest().getAttribute("delegator");
-
+        Map results = getPaymentMethodAndRelated(request, partyId);
+        
+        if (results.get("paymentMethod") != null) pageContext.setAttribute(paymentMethodAttr, results.get("paymentMethod"));
+        if (results.get("creditCard") != null) pageContext.setAttribute(creditCardAttr, results.get("creditCard"));
+        if (results.get("eftAccount") != null) pageContext.setAttribute(eftAccountAttr, results.get("eftAccount"));
+        if (results.get("paymentMethodId") != null) pageContext.setAttribute(paymentMethodIdAttr, results.get("paymentMethodId"));
+        if (results.get("curContactMechId") != null) pageContext.setAttribute(curContactMechIdAttr, results.get("curContactMechId"));
+        if (results.get("donePage") != null) pageContext.setAttribute(donePageAttr, results.get("donePage"));
+        if (results.get("tryEntity") != null) pageContext.setAttribute(tryEntityAttr, results.get("tryEntity"));
+    }
+    
+    public static Map getPaymentMethodAndRelated(ServletRequest request, String partyId) {
+        GenericDelegator delegator = (GenericDelegator) request.getAttribute("delegator");
+        Map results = new HashMap();
+        
         boolean tryEntity = true;
-
-        if (request.getAttribute(SiteDefs.ERROR_MESSAGE) != null)
-            tryEntity = false;
+        if (request.getAttribute(SiteDefs.ERROR_MESSAGE) != null) tryEntity = false;
 
         String donePage = request.getParameter("DONE_PAGE");
-
         if (donePage == null || donePage.length() <= 0)
             donePage = "viewprofile";
-        pageContext.setAttribute(donePageAttr, donePage);
+        results.put("donePage", donePage);
 
         String paymentMethodId = request.getParameter("paymentMethodId");
 
-        if (request.getAttribute("paymentMethodId") != null)
-            paymentMethodId = (String) request.getAttribute("paymentMethodId");
-        if (paymentMethodId != null)
-            pageContext.setAttribute(paymentMethodIdAttr, paymentMethodId);
+        if (request.getAttribute("paymentMethodId") != null) paymentMethodId = (String) request.getAttribute("paymentMethodId");
+        results.put("paymentMethodId", paymentMethodId);
 
         GenericValue paymentMethod = null;
         GenericValue creditCard = null;
@@ -118,16 +127,16 @@ public class PaymentWorker {
             }
         }
         if (paymentMethod != null) {
-            pageContext.setAttribute(paymentMethodAttr, paymentMethod);
+            results.put("paymentMethod", paymentMethod);
         } else {
             tryEntity = false;
         }
 
         if (creditCard != null) {
-            pageContext.setAttribute(creditCardAttr, creditCard);
+            results.put("creditCard", creditCard);
         }
         if (eftAccount != null) {
-            pageContext.setAttribute(eftAccountAttr, eftAccount);
+            results.put("eftAccount", eftAccount);
         }
 
         String curContactMechId = null;
@@ -138,10 +147,12 @@ public class PaymentWorker {
             curContactMechId = UtilFormatOut.checkNull(tryEntity ? eftAccount.getString("contactMechId") : request.getParameter("contactMechId"));
         }
         if (curContactMechId != null) {
-            pageContext.setAttribute(curContactMechIdAttr, curContactMechId);
+            results.put("curContactMechId", curContactMechId);
         }
 
-        pageContext.setAttribute(tryEntityAttr, new Boolean(tryEntity));
+        results.put("tryEntity", new Boolean(tryEntity));
+        
+        return results;
     }
     
     public static GenericValue getPaymentSetting(GenericDelegator delegator, String webSiteId, String paymentMethodTypeId) {

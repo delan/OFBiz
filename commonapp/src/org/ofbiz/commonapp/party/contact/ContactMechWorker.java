@@ -167,7 +167,7 @@ public class ContactMechWorker {
         }
     }
 
-    /** TO BE REMOVED (DEJ 20030221): This method was for use in a JSP and when they are removed this can be removed as well rather than being maintained */
+    /** TO BE REMOVED (DEJ 20030221): This method was for use in a JSP and when they are removed this can be removed as well rather than being maintained, should be removed when eCommerce and party mgr and possible other places are converted to FTL */
     public static void getContactMechAndRelated(PageContext pageContext, String partyId, String contactMechAttr, String contactMechIdAttr,
         String partyContactMechAttr, String partyContactMechPurposesAttr, String contactMechTypeIdAttr, String contactMechTypeAttr, String purposeTypesAttr,
         String postalAddressAttr, String telecomNumberAttr, String requestNameAttr, String donePageAttr, String tryEntityAttr, String contactMechTypesAttr) {
@@ -508,9 +508,18 @@ public class ContactMechWorker {
         }
     }
 
+    /** TO BE REMOVED (DEJ 20030221): This method was for use in a JSP and when they are removed this can be removed as well rather than being maintained, should be removed when eCommerce and party mgr and possible other places are converted to FTL */
     public static void getPartyPostalAddresses(PageContext pageContext, String partyId, String curContactMechId, String postalAddressInfosAttr) {
-        GenericDelegator delegator = (GenericDelegator) pageContext.getRequest().getAttribute("delegator");
-        Collection postalAddressInfos = new LinkedList();
+        ServletRequest request = pageContext.getRequest();
+        List postalAddressInfos = getPartyPostalAddresses(request, partyId, curContactMechId);
+        if (postalAddressInfos.size() > 0) {
+            pageContext.setAttribute(postalAddressInfosAttr, postalAddressInfos);
+        }
+    }
+    
+    public static List getPartyPostalAddresses(ServletRequest request, String partyId, String curContactMechId) {
+        GenericDelegator delegator = (GenericDelegator) request.getAttribute("delegator");
+        List postalAddressInfos = new LinkedList();
 
         Iterator allPartyContactMechs = null;
 
@@ -537,15 +546,13 @@ public class ContactMechWorker {
 
                 try {
                     GenericValue postalAddress = contactMech.getRelatedOne("PostalAddress");
-
                     postalAddressInfo.put("postalAddress", postalAddress);
                 } catch (GenericEntityException e) {
                     Debug.logWarning(e);
                 }
 
                 try {
-                    Collection partyContactMechPurposes = EntityUtil.filterByDate(partyContactMech.getRelated("PartyContactMechPurpose"), true);
-
+                    List partyContactMechPurposes = EntityUtil.filterByDate(partyContactMech.getRelated("PartyContactMechPurpose"), true);
                     postalAddressInfo.put("partyContactMechPurposes", partyContactMechPurposes);
                 } catch (GenericEntityException e) {
                     Debug.logWarning(e);
@@ -553,19 +560,23 @@ public class ContactMechWorker {
             }
         }
 
-        if (postalAddressInfos.size() > 0) {
-            pageContext.setAttribute(postalAddressInfosAttr, postalAddressInfos);
-        }
+        return postalAddressInfos;
     }
 
-    public static void getCurrentPostalAddress(PageContext pageContext, String partyId,
-        String curContactMechId,
-        String curPartyContactMechAttr, String curContactMechAttr, String curPostalAddressAttr,
-        String curPartyContactMechPurposesAttr) {
-
+    /** TO BE REMOVED (DEJ 20030221): This method was for use in a JSP and when they are removed this can be removed as well rather than being maintained, should be removed when eCommerce and party mgr and possible other places are converted to FTL */
+    public static void getCurrentPostalAddress(PageContext pageContext, String partyId, String curContactMechId,
+            String curPartyContactMechAttr, String curContactMechAttr, String curPostalAddressAttr, String curPartyContactMechPurposesAttr) {
         ServletRequest request = pageContext.getRequest();
-        GenericDelegator delegator = (GenericDelegator) pageContext.getRequest().getAttribute("delegator");
-
+        Map results = getCurrentPostalAddress(request, partyId, curContactMechId);
+        if (results.get("curPartyContactMech") != null) pageContext.setAttribute(curPartyContactMechAttr, results.get("curPartyContactMech"));
+        if (results.get("curContactMech") != null) pageContext.setAttribute(curContactMechAttr, results.get("curContactMech"));
+        if (results.get("curPostalAddress") != null) pageContext.setAttribute(curPostalAddressAttr, results.get("curPostalAddress"));
+        if (results.get("curPartyContactMechPurposes") != null) pageContext.setAttribute(curPartyContactMechPurposesAttr, results.get("curPartyContactMechPurposes"));
+    }
+    public static Map getCurrentPostalAddress(ServletRequest request, String partyId, String curContactMechId) {
+        GenericDelegator delegator = (GenericDelegator) request.getAttribute("delegator");
+        Map results = new HashMap();
+        
         if (curContactMechId != null) {
             List partyContactMechs = null;
 
@@ -575,11 +586,10 @@ public class ContactMechWorker {
                 Debug.logWarning(e);
             }
             GenericValue curPartyContactMech = EntityUtil.getFirst(partyContactMechs);
+            results.put("curPartyContactMech", curPartyContactMech);
 
             GenericValue curContactMech = null;
-
             if (curPartyContactMech != null) {
-                pageContext.setAttribute(curPartyContactMechAttr, curPartyContactMech);
                 try {
                     curContactMech = curPartyContactMech.getRelatedOne("ContactMech");
                 } catch (GenericEntityException e) {
@@ -587,21 +597,17 @@ public class ContactMechWorker {
                 }
 
                 Collection curPartyContactMechPurposes = null;
-
                 try {
                     curPartyContactMechPurposes = EntityUtil.filterByDate(curPartyContactMech.getRelated("PartyContactMechPurpose"), true);
                 } catch (GenericEntityException e) {
                     Debug.logWarning(e);
                 }
-                if (curPartyContactMechPurposes != null && curPartyContactMechPurposes.size() > 0) {
-                    pageContext.setAttribute(curPartyContactMechPurposesAttr, curPartyContactMechPurposes);
-                }
+                results.put("curPartyContactMechPurposes", curPartyContactMechPurposes);
             }
+            results.put("curContactMech", curContactMech);
 
             GenericValue curPostalAddress = null;
-
             if (curContactMech != null) {
-                pageContext.setAttribute(curContactMechAttr, curContactMech);
                 try {
                     curPostalAddress = curContactMech.getRelatedOne("PostalAddress");
                 } catch (GenericEntityException e) {
@@ -609,9 +615,8 @@ public class ContactMechWorker {
                 }
             }
 
-            if (curPostalAddress != null) {
-                pageContext.setAttribute(curPostalAddressAttr, curPostalAddress);
-            }
+            results.put("curPostalAddress", curPostalAddress);
         }
+        return results;
     }
 }
