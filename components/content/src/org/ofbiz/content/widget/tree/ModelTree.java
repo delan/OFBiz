@@ -223,7 +223,14 @@ public class ModelTree {
      */
     public void renderTreeString(StringBuffer buf, Map context, TreeStringRenderer treeStringRenderer) {
         ModelNode node = (ModelNode)nodeMap.get(rootNodeName);
-        currentNodeTrail = new ArrayList();
+        /*
+        List parentNodeTrail = (List)context.get("currentNodeTrail");
+        if (parentNodeTrail != null)
+            currentNodeTrail = new ArrayList(parentNodeTrail);
+        else
+        */
+            currentNodeTrail = new ArrayList();
+            
         //Map requestParameters = (Map)context.get("requestParameters");
         //String treeString = (String)requestParameters.get("trail");
         String trailName = trailNameExdr.expandString(context);
@@ -329,6 +336,7 @@ public class ModelTree {
         //protected List subNodeValues;
         protected String expandCollapseStyle;
         protected FlexibleStringExpander wrapStyleExdr;
+        protected ModelTreeCondition condition;
 
         public ModelNode() {}
 
@@ -381,6 +389,10 @@ public class ModelTree {
                 throw new IllegalArgumentException("Neither 'screen' nor 'label' nor 'link' found for the node definition with name: " + this.name);
             }
             */
+        Element conditionElement = UtilXml.firstChildElement(nodeElement, "condition");
+        if (conditionElement != null) {
+            this.condition = new ModelTreeCondition(modelTree, conditionElement);
+        }
 
             List subNodeElements = UtilXml.childElementList(nodeElement, "sub-node");
             Iterator subNodeElementIter = subNodeElements.iterator();
@@ -393,82 +405,102 @@ public class ModelTree {
             
         }
     
-        public void renderNodeString(Writer writer, Map context, TreeStringRenderer treeStringRenderer, int depth, boolean isLast) throws IOException {
-
-        	List subNodeValues = new ArrayList();
-            //context.put("subNodeValues",  new ArrayList());
-            if (Debug.infoOn()) Debug.logInfo(" renderNodeString, " + modelTree.getPkName() + " :" + context.get(modelTree.getPkName()), module);
-            context.put("processChildren", new Boolean(true));
-            // this action will usually obtain the "current" entity
-            ModelTreeAction.runSubActions(this.actions, context);
-            String id = (String)context.get(modelTree.getPkName());
-            modelTree.currentNodeTrail.add(id);
-            String currentNodeTrailPiped = StringUtil.join(modelTree.currentNodeTrail,"|");
-            context.put("currentNodeTrailPiped", currentNodeTrailPiped);
-            treeStringRenderer.renderNodeBegin( writer, context, this, depth, isLast, subNodeValues);
-                    //if (Debug.infoOn()) Debug.logInfo(" context:" + context.entrySet(), module);
-         
-            try {
-                if ( screenName != null && screenLocation != null) {
-                    ScreenStringRenderer screenStringRenderer = treeStringRenderer.getScreenStringRenderer(context);
-                    ModelScreen modelScreen = ScreenFactory.getScreenFromLocation(screenLocation, screenName);
-                    modelScreen.renderScreenString(writer, context, screenStringRenderer);
-
-                }
-                if ( label != null) {
-                    label.renderLabelString(writer, context, treeStringRenderer);
-                }
-                if ( link != null) {
-                    link.renderLinkString(writer, context, treeStringRenderer);
-                }
-                Boolean processChildren = (Boolean)context.get("processChildren");
-                    if (Debug.infoOn()) Debug.logInfo(" processChildren:" + processChildren, module);
-                if (processChildren.booleanValue()) {
-                    getChildren(context, subNodeValues);
-                    Iterator nodeIter = subNodeValues.iterator();
-                    int nodeIndex = -1;
-                    int newDepth = depth + 1;
-                    while (nodeIter.hasNext()) {
-                        nodeIndex++;	
-                    	modelTree.setNodeIndexAtDepth(newDepth, nodeIndex);
-                        Object [] arr = (Object [])nodeIter.next();
-                        ModelNode node = (ModelNode)arr[0];
-                        Map val = (Map)arr[1];
-                        //GenericPK pk = val.getPrimaryKey();
-                        //if (Debug.infoOn()) Debug.logInfo(" pk:" + pk, module);
-                        String pkName = this.modelTree.getPkName();
-                        String thisEntityId = (String)val.get(pkName);
-                        Map newContext = ((MapStack) context).standAloneChildStack();
-                        newContext.putAll(val);
-                        String targetEntityId = null;
-            			List targetNodeTrail = this.modelTree.getTrailList();
-                        if (newDepth < targetNodeTrail.size()) {
-                            targetEntityId = (String)targetNodeTrail.get(newDepth);
-                        }
-                        if ((targetEntityId != null && targetEntityId.equals(thisEntityId)) || this.modelTree.showPeers(newDepth)) {
-                        	boolean lastNode = !nodeIter.hasNext(); 
-                        	node.renderNodeString(writer, newContext, treeStringRenderer, newDepth, lastNode);
-                        }
-                    }
-                }
-            } catch(SAXException e) {
-                String errMsg = "Error rendering included label with name [" + name + "] : " + e.toString();
-                Debug.logError(e, errMsg, module);
-                throw new RuntimeException(errMsg);
-            } catch(ParserConfigurationException e3) {
-                String errMsg = "Error rendering included label with name [" + name + "] : " + e3.toString();
-                Debug.logError(e3, errMsg, module);
-                throw new RuntimeException(errMsg);
-            } catch(IOException e2) {
-                String errMsg = "Error rendering included label with name [" + name + "] : " + e2.toString();
-                Debug.logError(e2, errMsg, module);
-                throw new RuntimeException(errMsg);
-            }
-
-
-            treeStringRenderer.renderNodeEnd(writer, context,  this);
-            modelTree.currentNodeTrail.remove(modelTree.currentNodeTrail.size() - 1);
-        }
+        public void renderNodeString(Writer writer, Map context,
+				TreeStringRenderer treeStringRenderer, int depth, boolean isLast)
+				throws IOException {
+			boolean passed = true;
+			if (this.condition != null) {
+				if (!this.condition.eval(context)) {
+					passed = false;
+				}
+			}
+			Debug.logInfo("in ModelMenu, name:" + this.getName(), module);
+			if (passed) {
+				List subNodeValues = new ArrayList();
+				//context.put("subNodeValues", new ArrayList());
+				if (Debug.infoOn())
+					Debug
+							.logInfo(" renderNodeString, "
+									+ modelTree.getPkName() + " :"
+									+ context.get(modelTree.getPkName()),
+									module);
+				context.put("processChildren", new Boolean(true));
+				// this action will usually obtain the "current" entity
+				ModelTreeAction.runSubActions(this.actions, context);
+				String id = (String) context.get(modelTree.getPkName());
+				modelTree.currentNodeTrail.add(id);
+				context.put("currentNodeTrail", modelTree.currentNodeTrail);
+				String currentNodeTrailPiped = StringUtil.join( modelTree.currentNodeTrail, "|");
+				context.put("currentNodeTrailPiped", currentNodeTrailPiped);
+				treeStringRenderer.renderNodeBegin(writer, context, this, depth, isLast, subNodeValues);
+				//if (Debug.infoOn()) Debug.logInfo(" context:" +
+				// context.entrySet(), module);
+				try {
+					if (screenName != null && screenLocation != null) {
+						ScreenStringRenderer screenStringRenderer = treeStringRenderer .getScreenStringRenderer(context);
+						ModelScreen modelScreen = ScreenFactory .getScreenFromLocation(screenLocation, screenName);
+						modelScreen.renderScreenString(writer, context, screenStringRenderer);
+					}
+					if (label != null) {
+						label.renderLabelString(writer, context, treeStringRenderer);
+					}
+					if (link != null) {
+						link.renderLinkString(writer, context, treeStringRenderer);
+					}
+					Boolean processChildren = (Boolean) context .get("processChildren");
+					if (Debug.infoOn())
+						Debug.logInfo(" processChildren:" + processChildren, module);
+					if (processChildren.booleanValue()) {
+						getChildren(context, subNodeValues);
+						Iterator nodeIter = subNodeValues.iterator();
+						int nodeIndex = -1;
+						int newDepth = depth + 1;
+						while (nodeIter.hasNext()) {
+							nodeIndex++;
+							modelTree.setNodeIndexAtDepth(newDepth, nodeIndex);
+							Object[] arr = (Object[]) nodeIter.next();
+							ModelNode node = (ModelNode) arr[0];
+							Map val = (Map) arr[1];
+							//GenericPK pk = val.getPrimaryKey();
+							//if (Debug.infoOn()) Debug.logInfo(" pk:" + pk,
+							// module);
+							String pkName = this.modelTree.getPkName();
+							String thisEntityId = (String) val.get(pkName);
+							Map newContext = ((MapStack) context) .standAloneChildStack();
+							newContext.putAll(val);
+							newContext.put("currentNodeIndex", new Integer(nodeIndex));
+							String targetEntityId = null;
+							List targetNodeTrail = this.modelTree .getTrailList();
+							if (newDepth < targetNodeTrail.size()) {
+								targetEntityId = (String) targetNodeTrail .get(newDepth);
+							}
+							if ((targetEntityId != null && targetEntityId .equals(thisEntityId))
+									|| this.modelTree.showPeers(newDepth)) {
+								boolean lastNode = !nodeIter.hasNext();
+								node.renderNodeString(writer, newContext, treeStringRenderer, newDepth, lastNode);
+							}
+						}
+					}
+				} catch (SAXException e) {
+					String errMsg = "Error rendering included label with name ["
+							+ name + "] : " + e.toString();
+					Debug.logError(e, errMsg, module);
+					throw new RuntimeException(errMsg);
+				} catch (ParserConfigurationException e3) {
+					String errMsg = "Error rendering included label with name ["
+							+ name + "] : " + e3.toString();
+					Debug.logError(e3, errMsg, module);
+					throw new RuntimeException(errMsg);
+				} catch (IOException e2) {
+					String errMsg = "Error rendering included label with name ["
+							+ name + "] : " + e2.toString();
+					Debug.logError(e2, errMsg, module);
+					throw new RuntimeException(errMsg);
+				}
+				treeStringRenderer.renderNodeEnd(writer, context, this);
+				modelTree.currentNodeTrail.remove(modelTree.currentNodeTrail .size() - 1);
+			}
+		}
 
         public boolean hasChildren(Map context, List subNodeValues) {
 
