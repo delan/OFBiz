@@ -1,5 +1,5 @@
 /*
- * $Id: ProductContentWrapper.java,v 1.3 2003/12/20 08:27:43 jonesde Exp $
+ * $Id: ProductContentWrapper.java,v 1.4 2003/12/21 03:02:57 jonesde Exp $
  *
  *  Copyright (c) 2001, 2002 The Open For Business Project - www.ofbiz.org
  *
@@ -47,7 +47,7 @@ import org.ofbiz.entity.util.EntityUtil;
  * Product Content Worker: gets product content to display
  *
  * @author     <a href="mailto:jonesde@ofbiz.org">David E. Jones</a>
- * @version    $Revision: 1.3 $
+ * @version    $Revision: 1.4 $
  * @since      3.0
  */
 public class ProductContentWrapper {
@@ -87,7 +87,12 @@ public class ProductContentWrapper {
         try {
             Writer outWriter = new StringWriter();
             getProductContentAsText(null, product, productContentTypeId, locale, mimeTypeId, delegator, outWriter);
-            return outWriter.toString();
+            String outString = outWriter.toString();
+            if (outString.length() > 0) {
+                return outString;
+            } else {
+                return null;
+            }
         } catch (GenericEntityException e) {
             Debug.logError(e, "Error rendering ProductContent, inserting empty String", module);
             return product.getString(candidateFieldName);
