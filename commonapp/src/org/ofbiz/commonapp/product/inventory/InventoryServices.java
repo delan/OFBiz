@@ -419,7 +419,7 @@ public class InventoryServices {
             Map backOrderedItems = (Map) ordersToNotify.get(orderId);                       
                        
             try {
-                dispatcher.runSync("sendOrderNotification", UtilMisc.toMap("orderId", orderId));
+                dispatcher.runAsync("sendOrderNotification", UtilMisc.toMap("orderId", orderId));
             } catch (GenericServiceException e) {
                 Debug.logError(e, "Problems sending off the notification", module);
                 continue;
