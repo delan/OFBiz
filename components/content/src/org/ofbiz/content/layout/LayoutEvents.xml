@@ -93,7 +93,7 @@
       <string-to-field string="ELECTRONIC_TEXT" map-name="context" field-name="dataResourceTypeId" />
       <string-to-field string="text/plain" map-name="context" field-name="mimeTypeId" />
       <string-to-field string="SUB_CONTENT" map-name="context" field-name="contentAssocTypeId" />
-      <string-to-field string="IMAGE" map-name="context" field-name="contentTypeId" />
+      <string-to-field string="DOCUMENT" map-name="context" field-name="contentTypeId" />
       <call-service in-map-name="context" service-name="persistContentAndAssoc">
         <result-to-field map-name="context2" field-name="activeContentId" result-name="contentId"/>
         <result-to-field field-name="dataResourceId" result-name="dataResourceId"/>
@@ -188,7 +188,7 @@
       <string-to-field string="IMAGE_OBJECT" map-name="context" field-name="dataResourceTypeId" />
       <string-to-field string="text/plain" map-name="context" field-name="mimeTypeId" />
       <string-to-field string="SUB_CONTENT" map-name="context" field-name="contentAssocTypeId" />
-      <string-to-field string="IMAGE" map-name="context" field-name="contentTypeId" />
+      <string-to-field string="DOCUMENT" map-name="context" field-name="contentTypeId" />
       <call-service in-map-name="context" service-name="persistContentAndAssoc">
         <result-to-field map-name="context2" field-name="activeContentId" result-name="contentId"/>
         <result-to-field field-name="dataResourceId" result-name="dataResourceId"/>
