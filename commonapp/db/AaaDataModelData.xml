@@ -204,7 +204,7 @@
   <Enumeration description="Category ID Product Added Is In" enumCode="CATEGORY_ID" enumId="PPIP_CATEGORY_ID" sequenceId="03" enumTypeId="PROD_PROMO_IN_PARAM"/>
   <Enumeration description="Quantity Added" enumCode="QUANTITY_ADDED" enumId="PPIP_QUANTITY_ADDED" sequenceId="04" enumTypeId="PROD_PROMO_IN_PARAM"/>
   <Enumeration description="New Product Quantity" enumCode="NEW_PROD_QUANT" enumId="PPIP_NEW_PROD_QUANT" sequenceId="05" enumTypeId="PROD_PROMO_IN_PARAM"/>
-  
+
   <Enumeration description="==" enumCode="EQ" enumId="PPC_EQ" sequenceId="01" enumTypeId="PROD_PROMO_COND"/>
   <Enumeration description="!=" enumCode="NEQ" enumId="PPC_NEQ" sequenceId="02" enumTypeId="PROD_PROMO_COND"/>
   <Enumeration description="&lt;" enumCode="LT" enumId="PPC_LT" sequenceId="03" enumTypeId="PROD_PROMO_COND"/>
@@ -668,4 +668,6 @@
   <WorkEffortTypeAttr attrName="QUANTITY_PRODUCED" workEffortTypeId="PRODUCTION_RUN"/>
   <WorkEffortTypeAttr attrName="QUANTITY_REJECTED" workEffortTypeId="PRODUCTION_RUN"/>
   <WorkEffortTypeAttr attrName="QUANTITY_TO_PRODUCE" workEffortTypeId="PRODUCTION_RUN"/>
+
+  <WorkflowSpecification specificationId="XPDL" currentVersion="0.03"/>
 </entity-engine-xml>

@@ -332,7 +332,7 @@
         <key-map field-name="packageId"/>
         <key-map field-name="processId"/>
       </relation>
-      <relation type="one" fk-name="WFLW_FPRM_APPL" rel-entity-name="WorkflowApplication">
+      <relation type="one-nofk" rel-entity-name="WorkflowApplication">
         <key-map field-name="packageId"/>
         <key-map field-name="processId"/>
         <key-map field-name="applicationId"/>
@@ -379,7 +379,7 @@
       <relation type="one" fk-name="WFLW_FPRM_GC_ENUM" title="GraphConformance" rel-entity-name="Enumeration">
         <key-map field-name="graphConformanceEnumId" rel-field-name="enumId"/>
       </relation>
-      <relation type="one" fk-name="WFLW_FPRM_PR_UOM" title="Priority" rel-entity-name="Uom">
+      <relation type="one-nofk" title="Priority" rel-entity-name="Uom">
         <key-map field-name="priorityUomId" rel-field-name="uomId"/>
       </relation>
       <relation type="one" fk-name="WFLW_FPRM_CST_UOM" title="Cost" rel-entity-name="Uom">
@@ -575,7 +575,7 @@
         <key-map field-name="packageId"/>
         <key-map field-name="processId"/>
       </relation>
-      <relation type="one" fk-name="WFLW_PROC_DS_ACT" title="DefaultStart" rel-entity-name="WorkflowActivity">
+      <relation type="one-nofk" title="DefaultStart" rel-entity-name="WorkflowActivity">
         <key-map field-name="packageId"/>
         <key-map field-name="processId"/>
         <key-map field-name="defaultStartActivityId" rel-field-name="activityId"/>
@@ -596,7 +596,7 @@
       <relation type="many" title="Responsible" rel-entity-name="WorkflowParticipantsView">
         <key-map field-name="responsibleListId" rel-field-name="participantListId"/>
       </relation>
-      <relation type="one" fk-name="WFLW_PROC_DUR_UOM" title="Duration" rel-entity-name="Uom">
+      <relation type="one-nofk" title="Duration" rel-entity-name="Uom">
         <key-map field-name="durationUomId" rel-field-name="uomId"/>
       </relation>
       <relation type="many" rel-entity-name="WorkflowParticipantList">
