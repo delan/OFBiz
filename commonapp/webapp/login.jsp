@@ -31,7 +31,6 @@
 <%@ page import="org.ofbiz.core.util.*" %>
 
 <% pageContext.setAttribute("PageName", "login"); %>
-<%String controlPath=(String)request.getAttribute(SiteDefs.CONTROL_PATH);%>
 <%String previousParams=(String)session.getAttribute(SiteDefs.PREVIOUS_PARAMS);%>
 
 <%@ include file="/includes/header.jsp" %>
