@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE security-config PUBLIC "-//OFBiz//DTD Security Config//EN" "http://www.ofbiz.org/dtds/security-config.dtd">
+
+<security-config>
+
+	<!-- This is the default implementation and uses the OFBizSecurity implementation as its default -->
+	<security
+		name="default"
+	/>
+
+	<!-- This is an example custom implementation and uses the class name specified as security implementation -->
+	<!--
+	<security
+		name="myCustom"
+		class="org.ofbiz.core.security.MyCustomSecurity"
+	/>
+	-->
+
+</security-config>
