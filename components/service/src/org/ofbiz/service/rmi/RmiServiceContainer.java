@@ -117,7 +117,7 @@ public class RmiServiceContainer implements Container {
         }
 
         // set the client auth flag on our custom SSL socket factory
-        if (ssf instanceof org.ofbiz.service.rmi.socket.ssl.SSLServerSocketFactory) {
+        if (ssf != null && ssf instanceof org.ofbiz.service.rmi.socket.ssl.SSLServerSocketFactory) {
             ((org.ofbiz.service.rmi.socket.ssl.SSLServerSocketFactory) ssf).setNeedClientAuth(clientAuth);
         }
 
