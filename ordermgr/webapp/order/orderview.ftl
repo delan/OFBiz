@@ -24,10 +24,18 @@
  *@since      2.2
 -->
 
-${pages.get("/order/orderheader.ftl")}
-<br>
-${pages.get("/order/orderitems.ftl")}
-<br>
-${pages.get("/order/ordernotes.ftl")}
-<br>
-${pages.get("/order/transitions.ftl")}
+<#if orderHeader?exists>
+    <#if hasPermission>
+        ${pages.get("/order/orderheader.ftl")}
+        <br>
+        ${pages.get("/order/orderitems.ftl")}
+        <br>
+        ${pages.get("/order/ordernotes.ftl")}
+        <br>
+        ${pages.get("/order/transitions.ftl")}
+    <#else>
+        <div class="head3">ERROR: You do not have permission to view the Order with ID [${orderId?if_exists}]</div>
+    </#if>
+<#else>
+    <div class="head3">ERROR: Could not find Order with ID [${orderId?if_exists}]</div>
+</#if>

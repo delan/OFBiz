@@ -32,6 +32,10 @@ import org.ofbiz.commonapp.order.order.*;
 import org.ofbiz.commonapp.party.contact.*;
 
 delegator = request.getAttribute("delegator");
+security = request.getAttribute("security");
+
+userLogin = session.getAttribute("userLogin");
+
 orderId = request.getParameter("orderId");
 if (orderId == null) {
     orderId = request.getParameter("order_id");
@@ -59,7 +63,7 @@ if (orderId != null && orderId.length() > 0) {
 }
 
 if (orderHeader != null) {
-    orderRoles = delegator.findByAnd("OrderRole",UtilMisc.toMap("orderId", orderId, "roleTypeId", "PLACING_CUSTOMER"));
+    orderRoles = orderHeader.getRelated("OrderRole", UtilMisc.toMap("roleTypeId", "PLACING_CUSTOMER"), null);
     orderRole = EntityUtil.getFirst(orderRoles);
 }
 
@@ -75,7 +79,30 @@ if (partyId != null) {
 }
 context.put("userPerson", userPerson);
     
-if (orderHeader != null) {    
+if (orderHeader != null) {
+    // set hasPermission, must always exist if the orderHeader != null
+    // hasPermission if: has ORDERMGR_VIEW, ORDERMGR_ROLE_VIEW & associated with order, or is associated in the SUPPLIER_AGENT role
+    hasPermission = false;
+    canViewInternalDetails = false;
+    if (security.hasEntityPermission("ORDERMGR", "_VIEW", session)) {
+        hasPermission = true;
+        canViewInternalDetails = true;
+    } else if (security.hasEntityPermission("ORDERMGR_ROLE", "_VIEW", session)) {
+        currentUserOrderRoles = orderHeader.getRelated("OrderRole", UtilMisc.toMap("partyId", userLogin.get("partyId")), null);
+        if (currentUserOrderRoles != null && currentUserOrderRoles.size() > 0) {
+            hasPermission = true;
+            canViewInternalDetails = true;
+        }
+    } else {
+        // regardless of permission, allow if this is the supplier
+        currentUserSupplierOrderRoles = orderHeader.getRelated("OrderRole", UtilMisc.toMap("partyId", userLogin.get("partyId"), "roleTypeId", "SUPPLIER_AGENT"), null);
+        if (currentUserSupplierOrderRoles != null && currentUserSupplierOrderRoles.size() > 0) {
+            hasPermission = true;
+        }
+    }
+    context.put("hasPermission", hasPermission);
+    context.put("canViewInternalDetails", canViewInternalDetails);
+    
     orderReadHelper = new OrderReadHelper(orderHeader);
     orderItems = orderReadHelper.getValidOrderItems();
     orderAdjustments = orderReadHelper.getAdjustments();
@@ -240,6 +267,3 @@ if (workEffortId != null && assignPartyId != null && assignRoleTypeId != null &&
         }
     }
 }
-
-    
-
