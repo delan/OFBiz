@@ -48,6 +48,7 @@ import org.ofbiz.entity.finder.EntityFinderUtil.UseIterator;
 import org.ofbiz.entity.util.EntityFindOptions;
 import org.ofbiz.entity.util.EntityListIterator;
 import org.w3c.dom.Element;
+import java.sql.ResultSet;
 
 /**
  * Uses the delegator to find entity values by a condition
@@ -66,6 +67,7 @@ public class ByConditionFinder {
     protected FlexibleStringExpander distinctStrExdr;
     protected FlexibleStringExpander delegatorNameExdr;
     protected FlexibleMapAccessor listAcsr;
+    protected FlexibleStringExpander resultSetTypeExdr;
     
     protected Condition whereCondition;
     protected Condition havingCondition;
@@ -80,6 +82,7 @@ public class ByConditionFinder {
         this.distinctStrExdr = new FlexibleStringExpander(element.getAttribute("distinct"));
         this.delegatorNameExdr = new FlexibleStringExpander(element.getAttribute("delegator-name"));
         this.listAcsr = new FlexibleMapAccessor(element.getAttribute("list-name"));
+        this.resultSetTypeExdr = new FlexibleStringExpander(element.getAttribute("result-set-type"));
         
         // process condition-expr | condition-list
         Element conditionExprElement = UtilXml.firstChildElement(element, "condition-expr");
@@ -138,10 +141,14 @@ public class ByConditionFinder {
         String filterByDateStr = this.filterByDateStrExdr.expandString(context);
         String distinctStr = this.distinctStrExdr.expandString(context);
         String delegatorName = this.delegatorNameExdr.expandString(context);
+        String resultSetTypeString = this.resultSetTypeExdr.expandString(context);
         
         boolean useCache = "true".equals(useCacheStr);
         boolean filterByDate = "true".equals(filterByDateStr);
         boolean distinct = "true".equals(distinctStr);
+        int resultSetType = ResultSet.TYPE_SCROLL_INSENSITIVE;
+        if ("forward".equals(resultSetTypeString))
+            resultSetType = ResultSet.TYPE_FORWARD_ONLY;
         
         if (delegatorName != null && delegatorName.length() > 0) {
             delegator = GenericDelegator.getGenericDelegator(delegatorName);
@@ -195,6 +202,7 @@ public class ByConditionFinder {
             } else {
                 EntityFindOptions options = new EntityFindOptions();
                 options.setDistinct(distinct);
+                options.setResultSetType(resultSetType);
                 EntityListIterator eli = delegator.findListIteratorByCondition(entityName, whereEntityCondition, havingEntityCondition, fieldsToSelect, orderByFields, options);
                 this.outputHandler.handleOutput(eli, context, listAcsr);
             }
