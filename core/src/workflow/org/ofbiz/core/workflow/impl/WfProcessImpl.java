@@ -205,7 +205,7 @@ public class WfProcessImpl extends WfExecutionObjectImpl implements WfProcess {
      * @param results Map of the results.
      * @throws WfException
      */
-    public void receiveResults(WfActivity activity, Map results) throws WfException, InvalidData {
+    public synchronized void receiveResults(WfActivity activity, Map results) throws WfException, InvalidData {
         context.putAll(results);  // Add the result to the existing result or update existing keys
         setSerializedData(context);
     }
@@ -215,7 +215,7 @@ public class WfProcessImpl extends WfExecutionObjectImpl implements WfProcess {
      * @param activity WfActivity which has completed.
      * @throws WfException
      */
-    public void activityComplete(WfActivity activity) throws WfException {
+    public synchronized void activityComplete(WfActivity activity) throws WfException {
         if ( !activity.state().equals("closed.completed") )
             throw new WfException("Activity state is not completed");
         Debug.logInfo("Activity: " + activity.name() + " is complete");
@@ -318,7 +318,7 @@ public class WfProcessImpl extends WfExecutionObjectImpl implements WfProcess {
         activity.setProcessContext(context);
         activeSteps.add(activity); // add to list of active steps
         try {
-            activity.activate();
+            activity.activate(false);
         }
         catch ( AlreadyRunning e ) {
             throw new WfException(e.getMessage(),e);

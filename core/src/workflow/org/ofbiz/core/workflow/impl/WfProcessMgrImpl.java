@@ -119,6 +119,7 @@ public class WfProcessMgrImpl implements WfProcessMgr {
         catch (CannotChangeRequester ccr) {
             throw new WfException(ccr.getMessage(),ccr);
         }
+        processList.add(process);
         return process;
     }
     

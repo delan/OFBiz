@@ -155,6 +155,7 @@ public class WfFactory {
     }
 
     /** Creates a new {@link WfResource} instance.
+     * @param delegator The GenericDelegator for this instance
      * @param key The key for the resource
      * @param name The name of the resource
      * @param party The partyId of the resource
@@ -162,8 +163,8 @@ public class WfFactory {
      * @throws WfException
      * @return An instance of the WfResource Interface.
      */
-    public static WfResource getWfResource(String key, String name, String party, String role) throws WfException {        
-        return new WfResourceImpl(key,name,party,role);
+    public static WfResource getWfResource(GenericDelegator delegator, String key, String name, String party, String role) throws WfException {        
+        return new WfResourceImpl(delegator,key,name,party,role);
     }    
     
     /** Creates a new {@link WfEventAudit} instance.

@@ -94,7 +94,7 @@ public abstract class WfExecutionObjectImpl implements WfExecutionObject {
                 dataObject = getDelegator().makeValue("WorkEffort",dataMap);
                 if ( dataObject != null )
                     getDelegator().create(dataObject);
-                Debug.logInfo("Created new runtime object (Workeffort)");
+                Debug.logInfo("Created new runtime object (Workeffort: "+runtimeKey()+")");
             }
             catch ( GenericEntityException e ) {
                 throw new WfException(e.getMessage(),e);

@@ -142,10 +142,11 @@ public class WfRequesterImpl implements WfRequester {
         if ( !performers.containsKey(process) )
             throw new InvalidPerformer("Performer not assigned to this requester");
         
-        GenericRequester req = (GenericRequester) performers.get(process);
-        req.receiveResult(process.result());
-        // Implement me
-        // call back to GenericRequester when complete. (unless NULL)
+        GenericRequester req = null;
+        if ( performers.containsKey(process) )
+            req = (GenericRequester) performers.get(process);
+        if ( req != null )
+            req.receiveResult(process.result());                
     }
         
 }

@@ -6,6 +6,7 @@ package org.ofbiz.core.workflow.impl;
 
 import java.util.*;
 import org.ofbiz.core.entity.*;
+import org.ofbiz.core.util.*;
 import org.ofbiz.core.workflow.*;
 
 /**
@@ -37,42 +38,45 @@ import org.ofbiz.core.workflow.*;
  */
 
 public class WfResourceImpl implements WfResource {
-                
+    
+    protected GenericDelegator delegator;
     protected String resourceKey;
     protected String resourceName;
     protected String description;
     protected String partyId;
     protected String roleTypeId;
-    protected String type;  
-
-        
+    protected String type;
+    
+    
     /** Creates a new WfResource
      * @param resourceKey Uniquely identifies the resource
      * @param resourceName The name of the resource
      * @param partyId The partyID of this resource
-     * @param roleTypeId The roleTypeId of this resource     
+     * @param roleTypeId The roleTypeId of this resource
      */
-    public WfResourceImpl(String resourceKey, String resourceName, String partyId, String roleTypeId) {
+    public WfResourceImpl(GenericDelegator delegator, String resourceKey, String resourceName, String partyId, String roleTypeId) {
+        this.delegator = delegator;
         this.resourceKey = resourceKey;
         this.resourceName = resourceName;
         this.description = null;
         this.partyId = partyId;
         this.roleTypeId = roleTypeId;
-        this.type = "HUMAN";       
+        this.type = "HUMAN";
     }
     
     /** Creates a new WfResource
-     * @param valueObject The GenericValue object of the WorkflowParticipant     
+     * @param valueObject The GenericValue object of the WorkflowParticipant
      */
     public WfResourceImpl(GenericValue valueObject) {
+        this.delegator = valueObject.getDelegator();
         this.resourceKey = valueObject.getString("participantId");
         this.resourceName = valueObject.getString("participantName");
-        this.description = valueObject.getString("description");                
+        this.description = valueObject.getString("description");
         this.partyId = valueObject.getString("partyId");
         this.roleTypeId = valueObject.getString("roleTypeId");
-        this.type = valueObject.getString("participantTypeId");                
+        this.type = valueObject.getString("participantTypeId");
     }
-                    
+    
     /** Gets the number of work items
      * @throws WfException
      * @return Count of work items
@@ -106,7 +110,7 @@ public class WfResourceImpl implements WfResource {
      * @return true if assignment is part of the work list
      */
     public boolean isMemberOfWorkItems(WfAssignment member) throws WfException {
-        return workItems().contains(member);            
+        return workItems().contains(member);
     }
     
     /** Gets the resource key.
@@ -129,7 +133,7 @@ public class WfResourceImpl implements WfResource {
      * @throws WfException
      * @return String role id of this participant or null if none
      */
-    public String resourceRoleId() throws WfException {        
+    public String resourceRoleId() throws WfException {
         return roleTypeId;
     }
     
@@ -137,7 +141,7 @@ public class WfResourceImpl implements WfResource {
      * @throws WfException
      * @return String party id of this participant or null if none
      */
-    public String resourcePartyId() throws WfException {        
+    public String resourcePartyId() throws WfException {
         return partyId;
     }
     
@@ -155,8 +159,34 @@ public class WfResourceImpl implements WfResource {
     }
     
     private List workItems() throws WfException {
-        return new ArrayList();
+        List workList = new ArrayList();
+        Collection c = null;
+        try {
+            Map fields = UtilMisc.toMap("partyId",partyId,"roleTypeId",roleTypeId);
+            c = delegator.findByAnd("WorkEffortPartyAssignment",fields);
+        }
+        catch ( GenericEntityException e ) {
+            throw new WfException(e.getMessage(),e);
+        }
+        
+        if ( c != null ) {
+            Iterator i = c.iterator();
+            while ( i.hasNext() ) {
+                GenericValue v = (GenericValue) i.next();
+                WfActivity a = null;
+                try {
+                    a = WorkflowClient.getActivity(delegator,v.getString("workEffortId"));
+                }
+                catch ( RuntimeException e ) {
+                    throw new WfException(e.getMessage(),e);
+                }
+                if ( a != null )
+                    workList.add(a);
+            }
+        }
+        return workList;        
     }
+    
 }
 
 

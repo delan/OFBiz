@@ -92,11 +92,12 @@ public interface WfActivity extends WfExecutionObject {
     
     /**
      * Activates this activity.
+     * @param manual flag to specify this is a manual attempt
      * @throws WfException
      * @throws CannotStart
      * @throws AlreadyRunning
      */
-    public void activate() throws WfException, CannotStart, AlreadyRunning;
+    public void activate(boolean manual) throws WfException, CannotStart, AlreadyRunning;
     
     /** 
      * Assign this activity to a resource

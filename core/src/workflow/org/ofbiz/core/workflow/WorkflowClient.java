@@ -81,6 +81,24 @@ public class WorkflowClient {
         return result;
     }
     
+    /** Manually activate an activity */
+    public static Map activateActivity(DispatchContext ctx, Map context) {
+        Map result = new HashMap();
+        GenericDelegator delegator = ctx.getDelegator();
+        
+        String workEffortId = (String) context.get("workEffortId");  
+        WfActivity activity = getActivity(delegator,workEffortId);
+        try {
+            activity.activate(true);
+        }
+        catch ( WfException e ) {
+            result.put("responseMessage","error");
+            result.put("errorMessage",e.getMessage());
+        }
+        
+        return result;
+    }
+    
     /** Assign activity to a new or additional party */
     public static Map assignTask(DispatchContext ctx, Map context) {
         Map result = new HashMap();
@@ -92,7 +110,7 @@ public class WorkflowClient {
         
         WfActivity activity = getActivity(delegator,workEffortId);
         try {
-            WfResource resource = WfFactory.getWfResource(null,null,partyId,null);
+            WfResource resource = WfFactory.getWfResource(delegator,null,null,partyId,null);
             activity.assign(resource,removeOldAssign ? false : true);
         }
         catch ( WfException e ) {

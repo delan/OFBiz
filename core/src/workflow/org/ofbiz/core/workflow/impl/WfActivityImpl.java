@@ -72,11 +72,12 @@ public class WfActivityImpl extends WfExecutionObjectImpl implements WfActivity 
     
     /**
      * Activates this activity.
+     * @param manual flag to specify this is a manual attempt
      * @throws WfException
      * @throws CannotStart
      * @throws AlreadyRunning
      */
-    public void activate() throws WfException, CannotStart, AlreadyRunning {
+    public void activate(boolean manual) throws WfException, CannotStart, AlreadyRunning {
         if ( this.state().equals("open.running") )
             throw new AlreadyRunning();
         
@@ -86,10 +87,8 @@ public class WfActivityImpl extends WfExecutionObjectImpl implements WfActivity 
             throw new CannotStart("Start mode cannot be null");
         
         // Default mode is MANUAL -- only start if we are automatic
-        if ( mode.equals("WAM_AUTOMATIC") )
-            this.startActivity();
-        else
-            this.assignActivity();
+        if ( mode.equals("WAM_AUTOMATIC") || manual )
+            this.startActivity();        
     }
     
     /** 
@@ -228,12 +227,7 @@ public class WfActivityImpl extends WfExecutionObjectImpl implements WfActivity 
         if ( mode.equals("WAM_AUTOMATIC") )
             this.complete();                
     }
-    
-    // Assigns the activity to a task list
-    private void assignActivity() throws WfException {
-        // implement me
-    }
-    
+        
     // Starts or activates this automatic activity
     private void startActivity() throws WfException, CannotStart {
         try {
