@@ -221,6 +221,7 @@
       <field name="roleTypeId" type="id-ne"></field>
       <field name="isDisplayable" type="indicator"></field>
       <field name="sequenceNumber" type="numeric"></field>
+      <field name="carrierServiceCode" type="very-short"></field>
       <prim-key field="shipmentMethodTypeId"/>
       <prim-key field="partyId"/>
       <prim-key field="roleTypeId"/>
