@@ -50,6 +50,7 @@ import org.ofbiz.security.Security;
 import org.ofbiz.service.DispatchContext;
 import org.ofbiz.service.LocalDispatcher;
 import org.ofbiz.service.ServiceUtil;
+import org.ofbiz.service.ModelService;
 import org.ofbiz.service.GenericServiceException;
 import org.w3c.dom.Element;
 
@@ -119,6 +120,7 @@ public class ContentPermissionServices {
         if (bDisplayFailCond != null && bDisplayFailCond.booleanValue()) {
              displayFailCond = true;   
         }
+                Debug.logInfo("displayFailCond(0):" + displayFailCond, "");
         Map results  = new HashMap();
         String contentId = null;
         if (content != null)
@@ -196,12 +198,28 @@ public class ContentPermissionServices {
                 results.put("permissionStatus", "granted");
             } else {
                 results.put("permissionStatus", "rejected");
-                Debug.logInfo("displayFailCond(0):" + displayFailCond, "");
+                Debug.logInfo("displayFailCond(1):" + displayFailCond, "");
                 if (displayFailCond) {
+                     StringBuffer errBuf = new StringBuffer();
                      String errMsg = permCondGetter.dumpAsText();
+                     errBuf.append(errMsg);
+                     errBuf.append("\n    partyId:" );
+                     errBuf.append(partyId);
+                     errBuf.append("\n    entityIds:" );
+                     errBuf.append(entityIds);
+                     
+                     if (auxGetter != null) {
+                     	 errBuf.append("\n    auxList:" );
+                         errBuf.append(auxGetter.getList());
+                     }
+                     
+                     if (roleGetter != null) {
+                     	 errBuf.append("\n    roleList:" );
+                         errBuf.append(roleGetter.getList());
+                     }
+                     
                      Debug.logInfo("displayFailCond(0), errMsg:" + errMsg, "");
-                     results.put("permissionStatus", errMsg);
-                     ServiceUtil.returnError("Permission is denied. \nThese are the conditions of which one must be met:\n" + errMsg);   
+                     results.put(ModelService.ERROR_MESSAGE, errMsg);
                 }
             }
         } catch (GenericEntityException e) {
