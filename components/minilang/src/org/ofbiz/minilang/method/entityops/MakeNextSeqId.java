@@ -1,5 +1,5 @@
 /*
- * $Id: MakeNextSeqId.java,v 1.1 2003/08/17 06:06:11 ajzeneski Exp $
+ * $Id: MakeNextSeqId.java,v 1.2 2003/11/01 10:03:35 jonesde Exp $
  *
  *  Copyright (c) 2001, 2002 The Open For Business Project - www.ofbiz.org
  *
@@ -24,6 +24,7 @@
 package org.ofbiz.minilang.method.entityops;
 
 import java.util.List;
+import java.util.Iterator;
 
 import org.ofbiz.base.util.Debug;
 import org.ofbiz.base.util.UtilMisc;
@@ -40,13 +41,13 @@ import org.w3c.dom.Element;
  * Gets a sequenced ID from the delegator and puts it in the env
  *
  * @author     <a href="mailto:jonesde@ofbiz.org">David E. Jones</a>
- * @version    $Revision: 1.1 $
+ * @version    $Revision: 1.2 $
  * @since      2.0
  */
 public class MakeNextSeqId extends MethodOperation {
-    
+
     public static final String module = MakeNextSeqId.class.getName();
-    
+
     String seqFieldName;
     ContextAccessor valueAcsr;
     String numericPaddingStr;
@@ -56,7 +57,7 @@ public class MakeNextSeqId extends MethodOperation {
         super(element, simpleMethod);
         seqFieldName = element.getAttribute("seq-field-name");
         valueAcsr = new ContextAccessor(element.getAttribute("value-name"));
-        
+
         numericPaddingStr = element.getAttribute("numeric-padding");
         incrementByStr = element.getAttribute("increment-by");
     }
@@ -91,29 +92,43 @@ public class MakeNextSeqId extends MethodOperation {
                 // get values in reverse order
                 List allValues = methodContext.getDelegator().findByAnd(value.getEntityName(), lookupValue, UtilMisc.toList("-" + seqFieldName));
                 //Debug.logInfo("Get existing values from entity " + value.getEntityName() + " with lookupValue: " + lookupValue + ", and the seqFieldName: " + seqFieldName + ", and the results are: " + allValues, module);
-                GenericValue first = EntityUtil.getFirst(allValues);
+                Iterator allValueIter = allValues.iterator();
+                Integer seqVal = null;
+                while (seqVal == null && allValueIter.hasNext()) {
+                    GenericValue first = (GenericValue) allValueIter.next();
+                    String currentSeqId = null;
+                    if (first != null) {
+                        currentSeqId = first.getString(seqFieldName);
+                    }
+                    try {
+                        if (currentSeqId != null) {
+                            seqVal = Integer.valueOf(currentSeqId);
+                        }
+                    } catch (Exception e) {
+                        seqVal = null;
+                        Debug.logWarning("Error converting last SeqId to a number: " + e.toString(), module);
+                    }
+                }
+
                 String newSeqId = null;
-                if (first != null) {
-                    String currentSeqId = first.getString(seqFieldName);
-                    int seqVal = Integer.parseInt(currentSeqId);
-                    seqVal += incrementBy;
-                    newSeqId = Integer.toString(seqVal);
+                if (seqVal != null) {
+                    newSeqId = Integer.toString(seqVal.intValue() + incrementBy);
                 } else {
                     newSeqId = "1";
                 }
-                StringBuffer outStrBfr = new StringBuffer(newSeqId); 
+                StringBuffer outStrBfr = new StringBuffer(newSeqId);
                 while (numericPadding > outStrBfr.length()) {
                     outStrBfr.insert(0, '0');
                 }
                 newSeqId = outStrBfr.toString();
-                    
+
                 value.set(seqFieldName, newSeqId);
             } catch (Exception e) {
                 Debug.logError(e, "Error making next seqId", module);
                 return true;
            }
         }
-        
+
         return true;
     }
 }
