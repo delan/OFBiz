@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="us-ascii"?>
+
+<!ELEMENT services (description, vendor, version, created, service+)>
+<!ELEMENT description ANY>
+<!ELEMENT vendor (#PCDATA)>
+<!ELEMENT created (#PCDATA)>
+<!ELEMENT service (attribute*)>
+<!ATTLIST service
+	name CDATA #REQUIRED
+	engine CDATA #REQUIRED
+	location CDATA #REQUIRED
+	invoke CDATA #REQUIRED
+	export (true|false) #IMPLIED
+>
+<!ELEMENT attribute EMPTY>
+<!ATTLIST attribute
+	name CDATA #REQUIRED
+	type CDATA #REQUIRED
+	mode (IN|OUT|INOUT) #REQUIRED
+>
+	

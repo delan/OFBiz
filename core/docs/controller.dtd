@@ -1,0 +1,40 @@
+<?xml version="1.0" encoding="us-ascii"?>
+
+<!ELEMENT site-conf (description?, owner?, errorpage, handler+, preprocessor?, postprocessor?, request-map+, view-map+)>
+<!ELEMENT description ANY>
+<!ELEMENT owner (#PCDATA)>
+<!ELEMENT errorpage (#PCDATA)>
+<!ELEMENT handler EMPTY>
+<!ATTLIST handler
+	name CDATA #REQUIRED
+	class CDATA #REQUIRED
+>
+<!ELEMENT preprocessor (event+)>
+<!ELEMENT request-map (description, security, event, response+)>
+<!ATTLIST request-map
+	uri CDATA #REQUIRED
+	edit (true|false) #IMPLIED
+>
+<!ELEMENT security EMPTY>
+<!ATTLIST security
+	https (true|false) #IMPLIED
+	auth (true|false) #IMPLIED
+>
+<!ELEMENT event EMPTY>
+<!ATTLIST event
+	type CDATA #REQUIRED
+	path CDATA #IMPLIED
+	invoke CDATA #IMPLIED
+>
+<!ELEMENT response EMPTY>
+<!ATTLIST response
+	name CDATA #REQUIRED
+	type (none|view|request) #REQUIRED
+	value CDATA #IMPLIED
+>
+<!ELEMENT view-map EMPTY>
+<!ATTLIST view-map
+	name CDATA #REQUIRED
+	page CDATA #REQUIRED
+	type CDATA #IMPLIED
+>
