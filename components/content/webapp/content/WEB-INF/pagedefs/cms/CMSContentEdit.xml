@@ -20,6 +20,7 @@
     <property name="menuName">cms</property>
     <property name="menuItemName">content</property>
     <property name="rootForumId">WebStoreFORUM</property>
+    <property name="rootForumId2">WebStoreCONTENT</property>
 
 
     <page-action name="/includes/currentvalprep.bsh"/>
@@ -34,5 +35,6 @@
     <content-action name="/cms/ownercontentprep.bsh"/>
     <content-action name="/cms/contentaddprep.bsh"/>
     <content-action name="/cms/contentprep.bsh"/>
+    <content-action name="/cms/featureprep.bsh"/>
 
 </page>

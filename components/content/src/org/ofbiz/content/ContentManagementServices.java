@@ -34,7 +34,7 @@ import org.ofbiz.service.ServiceUtil;
  * ContentManagementServices Class
  *
  * @author     <a href="mailto:byersa@automationgroups.com">Al Byers</a>
- * @version    $Revision: 1.16 $
+ * @version    $Revision: 1.17 $
  * @since      3.0
  *
  * 
@@ -520,4 +520,43 @@ Debug.logInfo("updateSiteRoles, serviceContext(2):" + serviceContext, module);
       return results;
   }
 
+    public static Map updateOrRemove(DispatchContext dctx, Map context) {
+
+        Map results = new HashMap();
+        GenericDelegator delegator = dctx.getDelegator();
+        String entityName = (String)context.get("entityName");
+        String action = (String)context.get("action");
+        String pkFieldCount = (String)context.get("pkFieldCount");
+        Map pkFields = new HashMap();
+        int fieldCount = Integer.parseInt(pkFieldCount);
+        for (int i=0; i<fieldCount; i++) {
+            String fieldName = (String)context.get("fieldName" + i);
+            String fieldValue = (String)context.get("fieldValue" + i);
+            pkFields.put(fieldName, fieldValue);
+        }
+        boolean doLink = (action != null && action.equalsIgnoreCase("Y")) ? true : false;
+        if (Debug.infoOn()) Debug.logInfo("in updateOrRemove, context:" + context, module);
+        try {
+            GenericValue entityValuePK = delegator.makeValue(entityName, pkFields);
+            if (Debug.infoOn()) Debug.logInfo("in updateOrRemove, entityValuePK:" + entityValuePK, module);
+            GenericValue entityValueExisting = delegator.findByPrimaryKeyCache(entityName, entityValuePK);
+            if (Debug.infoOn()) Debug.logInfo("in updateOrRemove, entityValueExisting:" + entityValueExisting, module);
+            if (entityValueExisting == null) {
+                if (doLink) {
+                    entityValuePK.create();
+                    if (Debug.infoOn()) Debug.logInfo("in updateOrRemove, entityValuePK: CREATED", module);
+                }
+            } else {
+                if (!doLink) {
+                    entityValueExisting.remove();
+                    if (Debug.infoOn()) Debug.logInfo("in updateOrRemove, entityValueExisting: REMOVED", module);
+                }
+            }
+            
+        } catch (GenericEntityException e) {
+            Debug.logError(e, module);
+            return ServiceUtil.returnError(e.getMessage());
+        }
+        return results; 
+    }
 }

@@ -1,5 +1,5 @@
 /*
- * $Id: contentprep.bsh,v 1.2 2004/06/07 21:50:06 byersa Exp $
+ * $Id: contentprep.bsh,v 1.3 2004/06/19 19:52:49 byersa Exp $
  *
  * Copyright (c) 2003 The Open For Business Project - www.ofbiz.org
  *
@@ -26,7 +26,7 @@
 /**
  *
  * @author     <a href="mailto:byersa@automationgroups.com">Al Byers</a>
- * @version    $Revision: 1.2 $
+ * @version    $Revision: 1.3 $
  * @since      3.0
 
  */
@@ -110,6 +110,7 @@ if (currentValue != null) {
     context.put("contentName", currentValue.get("contentName"));
     context.put("description", currentValue.get("description"));
     context.put("statusId", currentValue.get("statusId"));
+    context.put("dataResourceId", currentValue.get("dataResourceId"));
 
         mimeTypeId =  (String)currentValue.get("mimeTypeId");
         rootDir = request.getSession().getServletContext().getRealPath("/");

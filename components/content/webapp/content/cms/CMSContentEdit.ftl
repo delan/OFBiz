@@ -20,7 +20,7 @@
  *  THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  *
  *@author     Al Byers (byersa@automationgroups.com)
- *@version    $Revision: 1.5 $
+ *@version    $Revision: 1.6 $
  *@since      2.1
 -->
 
@@ -150,7 +150,7 @@ ${textData?if_exists}
       <table width='100%' border='0' cellspacing='0' cellpadding='0' class='boxtop'>
         <tr>
           <td valign="middle" align="left">
-            <div class="boxhead">&nbsp; Roles </div>
+            <div class="boxhead">&nbsp; Links </div>
           </td>
         </tr>
       </table>
@@ -167,9 +167,69 @@ ${textData?if_exists}
                     <#assign rowCount = 0 />
                     <#assign rootForumId=page.getProperty("rootForumId") />
                     <@publishContent forumId=rootForumId contentId=contentId />
+                    <#assign rootForumId2=page.getProperty("rootForumId2") />
+                    <@publishContent forumId=rootForumId2 contentId=contentId />
                     <tr>
                       <td colspan="1">
                           <input type="submit" name="submitBtn" value="Publish"/>
+                      </td>
+                    </tr>
+              </table>
+              <input type="hidden" name="_rowCount" value="${rowCount}"/>
+            </form>
+          </td>
+        </tr>
+
+      </table>
+    </TD>
+  </TR>
+</TABLE>
+
+<br>
+<TABLE border=0 width='100%' cellspacing='0' cellpadding='0' class='boxoutside'>
+  <TR>
+    <TD width='100%'>
+      <table width='100%' border='0' cellspacing='0' cellpadding='0' class='boxtop'>
+        <tr>
+          <td valign="middle" align="left">
+            <div class="boxhead">&nbsp; Features </div>
+          </td>
+        </tr>
+      </table>
+    </TD>
+  </TR>
+  <TR>
+    <TD width='100%'>
+      <table width='100%' border='0' cellspacing='0' cellpadding='0' class='boxbottom'>
+        <tr>
+          <td>
+            <form mode="POST" name="updatefeatures" action="<@ofbizUrl>/updateFeatures</@ofbizUrl>">
+              <input type="hidden" name="contentId" value="${contentId}"/>
+              <table width="100%" border="0" cellpadding="1">
+                       <tr>
+                          <td class="">Product Feature</td>
+                          <td class="">Has Feature</td>
+                    <#assign rowCount = 0 />
+                    <#list featureList as feature>
+                       <#assign checked=""/>
+                       <#if feature.action?has_content && feature.action == "Y">
+                           <#assign checked="checked"/>
+                       </#if>
+                       <tr>
+                          <td class="">[${feature.productFeatureId}] - ${feature.description}</td>
+                          <td class=""><input type="checkbox" name="action_o_${rowCount}" value="Y" ${checked}/></td>
+                          <input type="hidden" name="fieldName0_o_${rowCount}" value="productFeatureId"/>
+                          <input type="hidden" name="fieldValue0_o_${rowCount}" value="${feature.productFeatureId}"/>
+                          <input type="hidden" name="fieldName1_o_${rowCount}" value="dataResourceId"/>
+                          <input type="hidden" name="fieldValue1_o_${rowCount}" value="${feature.dataResourceId}"/>
+                          <input type="hidden" name="entityName_o_${rowCount}" value="ProductFeatureDataResource"/>
+                          <input type="hidden" name="pkFieldCount_o_${rowCount}" value="2"/>
+                       </tr>
+                       <#assign rowCount=rowCount + 1/>
+                    </#list>
+                    <tr>
+                      <td colspan="1">
+                          <input type="submit" name="submitBtn" value="Update"/>
                       </td>
                     </tr>
               </table>
