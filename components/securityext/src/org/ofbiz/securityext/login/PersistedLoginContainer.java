@@ -1,5 +1,5 @@
 /*
- * $Id: PersistedLoginContainer.java,v 1.1 2004/07/04 14:50:25 ajzeneski Exp $
+ * $Id: PersistedLoginContainer.java,v 1.2 2004/07/05 04:42:37 ajzeneski Exp $
  *
  */
 package org.ofbiz.securityext.login;
@@ -31,7 +31,7 @@ import org.ofbiz.entity.transaction.GenericTransactionException;
 /**
  * 
  * @author     <a href="mailto:jaz@ofbiz.org">Andy Zeneski</a>
- * @version    $Revision: 1.1 $
+ * @version    $Revision: 1.2 $
  * @since      Jul 4, 2004
  */
 public class PersistedLoginContainer implements Container {
@@ -40,9 +40,9 @@ public class PersistedLoginContainer implements Container {
     public static final String entityName = "PersistedLogin";
     private static PersistedLoginContainer plc = null;
 
+    protected Map externalLoginKeys = new HashMap();
+    protected Map loggedInSessions = new HashMap();
     protected GenericDelegator delegator = null;
-    protected Map externalLoginKeys = null;
-    protected Map loggedInSessions = null;
     protected Timer mgr = null;
 
     public void init(String[] args) throws ContainerException {
@@ -127,10 +127,6 @@ public class PersistedLoginContainer implements Container {
     }
 
     private void updateSessionInfo(GenericValue loginInfo) {
-        if (plc.loggedInSessions == null) {
-            plc.loggedInSessions = new HashMap();
-        }
-
         if (loginInfo != null) {
             // deserialize the info into a Map
             byte[] bytes = loginInfo.getBytes("sessionLoginInfo");
@@ -152,11 +148,7 @@ public class PersistedLoginContainer implements Container {
         }
     }
 
-    private void updateExternalKeyInfo(GenericValue keyInfo) {
-        if (plc.externalLoginKeys == null) {
-            plc.externalLoginKeys = new HashMap();
-        }
-
+    private void updateExternalKeyInfo(GenericValue keyInfo) {        
         if (keyInfo != null) {
             // deserialize the info into a Map
             byte[] bytes = keyInfo.getBytes("externalKeyInfo");
