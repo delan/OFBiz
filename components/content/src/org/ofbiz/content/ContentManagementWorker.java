@@ -18,7 +18,6 @@ import javax.servlet.http.HttpSession;
 import org.ofbiz.base.util.Debug;
 import org.ofbiz.base.util.GeneralException;
 import org.ofbiz.base.util.StringUtil;
-import org.ofbiz.base.util.UtilCache;
 import org.ofbiz.base.util.UtilHttp;
 import org.ofbiz.base.util.UtilMisc;
 import org.ofbiz.base.util.UtilValidate;
@@ -38,7 +37,7 @@ import org.ofbiz.base.util.collections.LifoSet;
  * ContentManagementWorker Class
  *
  * @author     <a href="mailto:byersa@automationgroups.com">Al Byers</a>
- * @version    $Revision: 1.16 $
+ * @version    $Revision: 1.17 $
  * @since      3.0
  *
  * 
@@ -92,6 +91,7 @@ public class ContentManagementWorker {
         }    
         
         lkupCache.add(pk.getPrimaryKey());
+        if (Debug.infoOn()) Debug.logInfo("in mruAddByEntityName, entityName:" + entityName + " lifoSet.size()" + lkupCache.size(), module);
         return;
     }
 

@@ -34,7 +34,7 @@ import org.ofbiz.service.ServiceUtil;
  * ContentManagementServices Class
  *
  * @author     <a href="mailto:byersa@automationgroups.com">Al Byers</a>
- * @version    $Revision: 1.19 $
+ * @version    $Revision: 1.20 $
  * @since      3.0
  *
  * 
@@ -73,6 +73,30 @@ public class ContentManagementServices {
         results.put("view", view);
         results.put("content", content);
    
+
+        return results;
+
+    }
+
+    /**
+     * getContent
+     * This service calls a same-named method in ContentWorker to do the work.
+     */
+    public static Map getContent(DispatchContext dctx, Map context) {
+
+        Map results = new HashMap();
+        Security security = dctx.getSecurity();
+        GenericDelegator delegator = dctx.getDelegator();
+        String contentId = (String) context.get("contentId"); 
+        GenericValue userLogin = (GenericValue)context.get("userLogin");
+        GenericValue view = null;
+
+        try {
+            view = ContentWorker.getContentCache( delegator, contentId);
+        } catch(GenericEntityException e) {
+            return ServiceUtil.returnError(e.getMessage());
+        }
+        results.put("view", view);
 
         return results;
 
