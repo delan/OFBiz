@@ -91,8 +91,11 @@ public class <%=entity.ejbName%>Bean implements EntityBean
 <%if(entity.fields.size() != entity.pks.size()){%>
     try
     {
-<%for(i=0;i<entity.fields.size();i++){%>
-  <%if(!((Field)entity.fields.elementAt(i)).isPk){%>    this.<%=((Field)entity.fields.elementAt(i)).fieldName%> = valueObject.get<%=GenUtil.upperFirstChar(((Field)entity.fields.elementAt(i)).fieldName)%>();<%}%><%}%>
+      //check for null and if null do not set; this is the method for not setting certain fields while setting the rest quickly
+      // to set a field to null, use the individual setters
+    <%for(i=0;i<entity.fields.size();i++){%><%if(!((Field)entity.fields.elementAt(i)).isPk){%>
+      if(valueObject.get<%=GenUtil.upperFirstChar(((Field)entity.fields.elementAt(i)).fieldName)%>() != null)
+        this.<%=((Field)entity.fields.elementAt(i)).fieldName%> = valueObject.get<%=GenUtil.upperFirstChar(((Field)entity.fields.elementAt(i)).fieldName)%>();<%}%><%}%>
     }
     catch(java.rmi.RemoteException re)
     {

@@ -214,7 +214,8 @@ Note: you may use the '%' character as a wildcard, to replace any other letters.
   <%for(i=0;i<entity.fields.size();i++){%>
       <td>
         <div class="tabletext">
-    <%if(((Field)entity.fields.elementAt(i)).javaType.indexOf("Timestamp") >= 0){%>
+    <%if(((Field)entity.fields.elementAt(i)).javaType.equals("Timestamp") || 
+         ((Field)entity.fields.elementAt(i)).javaType.equals("java.sql.Timestamp")){%>
       [ltp]{
         String dateString = null;
         String timeString = null;
@@ -230,7 +231,27 @@ Note: you may use the '%' character as a wildcard, to replace any other letters.
       %>
       [ltp]=UtilFormatOut.checkNull(dateString)%>&nbsp;[ltp]=UtilFormatOut.checkNull(timeString)%>
       [ltp]}%>
-    <%}else if(((Field)entity.fields.elementAt(i)).javaType.indexOf("Integer") >= 0 || ((Field)entity.fields.elementAt(i)).javaType.indexOf("Double") >= 0 || ((Field)entity.fields.elementAt(i)).javaType.indexOf("Float") >= 0){%>
+    <%} else if(((Field)entity.fields.elementAt(i)).javaType.equals("Date") || 
+                ((Field)entity.fields.elementAt(i)).javaType.equals("java.util.Date")){%>
+      [ltp]{
+        String dateString = null;
+        String timeString = null;
+        if(<%=GenUtil.lowerFirstChar(entity.ejbName)%> != null)
+        {
+          java.util.Date date = <%=GenUtil.lowerFirstChar(entity.ejbName)%>.get<%=GenUtil.upperFirstChar(((Field)entity.fields.elementAt(i)).fieldName)%>();
+          if(date  != null)
+          {
+            dateString = UtilDateTime.toDateString(date);
+            timeString = UtilDateTime.toTimeString(date);
+          }
+        }
+      %>
+      [ltp]=UtilFormatOut.checkNull(dateString)%>&nbsp;[ltp]=UtilFormatOut.checkNull(timeString)%>
+      [ltp]}%>
+    <%}else if(((Field)entity.fields.elementAt(i)).javaType.indexOf("Integer") >= 0 || 
+               ((Field)entity.fields.elementAt(i)).javaType.indexOf("Long") >= 0 || 
+               ((Field)entity.fields.elementAt(i)).javaType.indexOf("Double") >= 0 || 
+               ((Field)entity.fields.elementAt(i)).javaType.indexOf("Float") >= 0){%>
       [ltp]=UtilFormatOut.formatQuantity(<%=GenUtil.lowerFirstChar(entity.ejbName)%>.get<%=GenUtil.upperFirstChar(((Field)entity.fields.elementAt(i)).fieldName)%>())%>
     <%}else{%>
       [ltp]=UtilFormatOut.checkNull(<%=GenUtil.lowerFirstChar(entity.ejbName)%>.get<%=GenUtil.upperFirstChar(((Field)entity.fields.elementAt(i)).fieldName)%>())%>

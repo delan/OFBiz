@@ -18,6 +18,8 @@ import org.w3c.dom.Element;
 import org.w3c.dom.Node;
 import org.w3c.dom.NodeList;
 
+import org.ofbiz.commonapp.common.UtilCache;
+
 /**
  * <p><b>Title:</b> Entity Generator - Entity Definition Reader
  * <p><b>Description:</b> Describes an Entity and acts as the base for all entity description data used in the code templates.
@@ -48,6 +50,9 @@ import org.w3c.dom.NodeList;
 
 public class DefReader
 {
+  public static UtilCache documentCache = new UtilCache("entitygen-document-cache");
+  public static UtilCache entityCache = new UtilCache("entitygen-entity-cache");
+
   /** Creates an Entity object based on a definition from the specified XML Entity descriptor file.
    * @param defFileName The full path and file name of the XML Entity descriptor file.
    * @param ejbName The ejbName of the Entity definition to use.
@@ -55,13 +60,25 @@ public class DefReader
    */    
   public static Entity getEntity(String defFileName, String ejbName)
   {
-    Document document = getDocument(defFileName);
-    if(document == null) return null;
-    
-    Element docElement = document.getDocumentElement();
-    if(docElement == null) return null;
-    docElement.normalize();
-    return createEntity(findEntity(docElement, ejbName), docElement);
+    Entity entity = null;
+    if(entityCache.containsKey(defFileName + "::" + ejbName))
+    {
+      entity = (Entity)entityCache.get(defFileName + "::" + ejbName);
+    }
+    else
+    {
+      Document document = getDocument(defFileName);
+      if(document == null) return null;
+
+      Element docElement = document.getDocumentElement();
+      if(docElement == null) return null;
+      docElement.normalize();
+
+      entity = createEntity(findEntity(docElement, ejbName), docElement);
+      if(entity != null) entityCache.put(defFileName + "::" + ejbName, entity);
+      else System.out.println("-- -- ENTITYGEN ERROR:getEntity: Related Table not found for ejbName: " + ejbName);
+    }
+    return entity;
   }
 
   /** Creates a Iterator with the ejbName of each Entity defined in the specified XML Entity Descriptor file.
@@ -83,6 +100,7 @@ public class DefReader
   {
     Document document = getDocument(defFileName);
     if(document == null) return null;
+
     Vector ejbNames = new Vector();
     Element docElement = document.getDocumentElement();
     if(docElement == null) return null;
@@ -171,16 +189,21 @@ public class DefReader
     NodeList relationList = entityElement.getElementsByTagName("relation");
     for(int i=0; i<relationList.getLength(); i++)
     {
-      Relation relation = createRelation((Element)relationList.item(i));
-      if(relation != null) entity.relations.add(relation);
+      Element relationElement = (Element)relationList.item(i);
+      if(relationElement.getParentNode() == entityElement)
+      {
+        Relation relation = createRelation(entity, relationElement, null);
+        if(relation != null) entity.relations.add(relation);
+      }
     }
 
     return entity;
   }
   
-  static Relation createRelation(Element relationElement)
+  static Relation createRelation(Entity entity, Element relationElement, Relation parent)
   {
-    Relation relation = new Relation();
+    Relation relation = new Relation(parent);
+    relation.mainEntity = entity;
 
     relation.relationType = checkNull(childElementValue(relationElement, "relation-type"));
     relation.relatedTableName = checkNull(childElementValue(relationElement, "related-table-name"));
@@ -189,16 +212,24 @@ public class DefReader
     NodeList keyMapList = relationElement.getElementsByTagName("key-map");
     for(int i=0; i<keyMapList.getLength(); i++)
     {
-      KeyMap keyMap = createKeyMap((Element)keyMapList.item(i));
-      if(keyMap != null) relation.keyMaps.add(keyMap);
+      Element keyMapElement = (Element)keyMapList.item(i);
+      if(keyMapElement.getParentNode() == relationElement)
+      {
+        KeyMap keyMap = createKeyMap(keyMapElement);
+        if(keyMap != null) relation.keyMaps.add(keyMap);
+      }
     }
 
     //recursively add relations...
     NodeList relationList = relationElement.getElementsByTagName("relation");
     for(int i=0; i<relationList.getLength(); i++)
     {
-      Relation relationNested = createRelation((Element)relationList.item(i));
-      if(relationNested != null) relation.relations.add(relationNested);
+      Element relationSubElement = (Element)relationList.item(i);
+      if(relationSubElement.getParentNode() == relationElement)
+      {
+        Relation relationNested = createRelation(entity, relationSubElement, relation);
+        if(relationNested != null) relation.relations.add(relationNested);
+      }
     }
     return relation;
   }
@@ -295,38 +326,6 @@ public class DefReader
     return null;
   }
   
-  static Document getDocument(String filename)
-  {
-    Document document = null;
-    DocumentBuilderFactory factory = DocumentBuilderFactory.newInstance();
-    //factory.setValidating(true);   
-    //factory.setNamespaceAware(true);
-    try 
-    {
-      DocumentBuilder builder = factory.newDocumentBuilder();
-      document = builder.parse(new File(filename));
-    } 
-    catch (SAXException sxe) 
-    {
-      // Error generated during parsing)
-      Exception  x = sxe;
-      if(sxe.getException() != null) x = sxe.getException();
-      x.printStackTrace();
-    } 
-    catch(ParserConfigurationException pce) 
-    {
-      // Parser with specified options can't be built
-      pce.printStackTrace();
-    } 
-    catch(IOException ioe) 
-    {
-      // I/O error
-      ioe.printStackTrace();
-    }
-    
-    return document;
-  }
-  
   static String childElementValue(Element element, String childElementName)
   {
     if(element == null || childElementName == null) return null;
@@ -367,6 +366,7 @@ public class DefReader
     if(string != null) return string;
     else return "";
   }
+  
   static String checkNull(String string1, String string2)
   {
     if(string1 != null) return string1;
@@ -380,4 +380,44 @@ public class DefReader
     else if(string3 != null) return string3;
     else return "";
   }
+  
+  static Document getDocument(String filename)
+  {
+    Document document = null;
+    DocumentBuilderFactory factory = DocumentBuilderFactory.newInstance();
+    //factory.setValidating(true);   
+    //factory.setNamespaceAware(true);
+    try 
+    {
+      if(documentCache.containsKey(filename))
+      {
+        document = (Document)documentCache.get(filename);
+      }
+      else
+      {
+        DocumentBuilder builder = factory.newDocumentBuilder();
+        document = builder.parse(new File(filename));
+        documentCache.put(filename, document);
+      }
+    } 
+    catch (SAXException sxe) 
+    {
+      // Error generated during parsing)
+      Exception  x = sxe;
+      if(sxe.getException() != null) x = sxe.getException();
+      x.printStackTrace();
+    } 
+    catch(ParserConfigurationException pce) 
+    {
+      // Parser with specified options can't be built
+      pce.printStackTrace();
+    } 
+    catch(IOException ioe) 
+    {
+      // I/O error
+      ioe.printStackTrace();
+    }
+    
+    return document;
+  }  
 }

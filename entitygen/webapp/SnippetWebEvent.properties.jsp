@@ -6,4 +6,4 @@
   else if(defFileName != null) classNamesIterator = DefReader.getEjbNamesIterator(defFileName);
   while(classNamesIterator != null && classNamesIterator.hasNext()) { Entity entity=DefReader.getEntity(defFileName,(String)classNamesIterator.next());
 %>
-UPDATE_<%=entity.tableName%>=java:<%=entity.packageName%>.WebEvent<%=entity.ejbName%>.update<%=entity.ejbName%><%}%>
+UPDATE_<%=entity.tableName%>=java:<%=entity.packageName%>.<%=entity.ejbName%>WebEvent.update<%=entity.ejbName%><%}%>

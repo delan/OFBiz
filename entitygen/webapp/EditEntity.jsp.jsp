@@ -53,21 +53,25 @@
   String rowColor1 = "99CCFF";
   String rowColor2 = "CCFFFF";
   String rowColor = "";
-<%for(i=0;i<entity.pks.size();i++){%>
-  <%if(((Field)entity.pks.elementAt(i)).javaType.compareTo("java.lang.String") == 0 || ((Field)entity.pks.elementAt(i)).javaType.compareTo("String") == 0){%>String <%=((Field)entity.pks.elementAt(i)).fieldName%> = request.getParameter("<%=entity.tableName%>_<%=((Field)entity.pks.elementAt(i)).columnName%>");<%}else{%>String <%=((Field)entity.pks.elementAt(i)).fieldName%>String = request.getParameter("<%=entity.tableName%>_<%=((Field)entity.pks.elementAt(i)).columnName%>");<%}%><%}%>
-<%for(i=0;i<entity.pks.size();i++){%>
-  <%if(((Field)entity.pks.elementAt(i)).javaType.compareTo("java.lang.String") != 0 && ((Field)entity.pks.elementAt(i)).javaType.compareTo("String") != 0){%>
-    <%=((Field)entity.pks.elementAt(i)).javaType%> <%=((Field)entity.pks.elementAt(i)).fieldName%> = null;
-    try
+<%for(i=0;i<entity.pks.size();i++){Field curField=(Field)entity.pks.elementAt(i);%><%if(curField.javaType.compareTo("java.lang.String") == 0 || curField.javaType.compareTo("String") == 0){%>
+  String <%=curField.fieldName%> = request.getParameter("<%=entity.tableName%>_<%=curField.columnName%>");  <%}else if(curField.javaType.indexOf("Timestamp") >= 0 || curField.javaType.equals("java.util.Date") || curField.javaType.equals("Date")){%>
+  String <%=curField.fieldName%>Date = request.getParameter("<%=entity.tableName%>_<%=curField.columnName%>_DATE");
+  String <%=curField.fieldName%>Time = request.getParameter("<%=entity.tableName%>_<%=curField.columnName%>_TIME");  <%}else{%>
+  String <%=curField.fieldName%>String = request.getParameter("<%=entity.tableName%>_<%=curField.columnName%>");  <%}%><%}%>
+<%for(i=0;i<entity.pks.size();i++){Field curField=(Field)entity.pks.elementAt(i);%><%if(!curField.javaType.equals("java.lang.String") && !curField.javaType.equals("String")){%><%if(curField.javaType.indexOf("Timestamp") >= 0){%>
+  java.sql.Timestamp <%=curField.fieldName%> = UtilDateTime.toTimestamp(<%=curField.fieldName%>Date, <%=curField.fieldName%>Time);<%}else if(curField.javaType.equals("java.util.Date") || curField.javaType.equals("Date")){%>
+  java.util.Date <%=curField.fieldName%> = UtilDateTime.toDate(<%=curField.fieldName%>Date, <%=curField.fieldName%>Time);<%}else{%>
+  <%=curField.javaType%> <%=curField.fieldName%> = null;
+  try
+  {
+    if(<%=curField.fieldName%>String != null && <%=curField.fieldName%>String.length() > 0)
     {
-      if(<%=((Field)entity.pks.elementAt(i)).fieldName%>String != null)
-      {
-        <%=((Field)entity.pks.elementAt(i)).fieldName%> = new <%=((Field)entity.pks.elementAt(i)).javaType%>(<%=((Field)entity.pks.elementAt(i)).fieldName%>String);
-      }
+      <%=curField.fieldName%> = <%=curField.javaType%>.valueOf(<%=curField.fieldName%>String);
     }
-    catch(Exception e)
-    {
-    }<%}%><%}%>
+  }
+  catch(Exception e)
+  {
+  }<%}%><%}%><%}%>
 
   <%=entity.ejbName%> <%=GenUtil.lowerFirstChar(entity.ejbName)%> = <%=entity.ejbName%>Helper.findByPrimaryKey(<%=entity.pkNameString()%>);
 %>
@@ -112,6 +116,59 @@
     [ltp]rowColor=(rowColor==rowColor1?rowColor2:rowColor1);%><tr bgcolor="[ltp]=rowColor%>">
       <td><%=((Field)entity.pks.elementAt(i)).columnName%></td>
       <td>
+      <%if(((Field)entity.pks.elementAt(i)).javaType.equals("Timestamp") || 
+           ((Field)entity.pks.elementAt(i)).javaType.equals("java.sql.Timestamp")){%>
+        [ltp]{
+          String dateString = null;
+          String timeString = null;
+          if(<%=((Field)entity.pks.elementAt(i)).fieldName%> != null)
+          {
+            dateString = UtilDateTime.toDateString(<%=((Field)entity.pks.elementAt(i)).fieldName%>);
+            timeString = UtilDateTime.toTimeString(<%=((Field)entity.pks.elementAt(i)).fieldName%>);
+          }
+          else
+          {
+            dateString = request.getParameter("<%=entity.tableName%>_<%=((Field)entity.pks.elementAt(i)).columnName%>_DATE");
+            timeString = request.getParameter("<%=entity.tableName%>_<%=((Field)entity.pks.elementAt(i)).columnName%>_TIME");
+          }
+        %>
+        Date(MM/DD/YYYY):<input type="text" name="<%=entity.tableName%>_<%=((Field)entity.pks.elementAt(i)).columnName%>_DATE" size="11" value="[ltp]=UtilFormatOut.checkNull(dateString)%>">
+        <a href="javascript:show_calendar('updateForm.<%=entity.tableName%>_<%=((Field)entity.pks.elementAt(i)).columnName%>_DATE');" onmouseover="window.status='Date Picker';return true;" onmouseout="window.status='';return true;"><img src="/images/show-calendar.gif" border=0 width="24" height="22"></a>
+        Time(HH:MM):<input type="text" size="6" maxlength="10" name="<%=entity.tableName%>_<%=((Field)entity.pks.elementAt(i)).columnName%>_TIME" value="[ltp]=UtilFormatOut.checkNull(timeString)%>">
+        [ltp]}%>
+      <%}else if(((Field)entity.pks.elementAt(i)).javaType.equals("Date") || 
+                 ((Field)entity.pks.elementAt(i)).javaType.equals("java.util.Date")){%>
+        [ltp]{
+          String dateString = null;
+          String timeString = null;
+          if(<%=((Field)entity.pks.elementAt(i)).fieldName%> != null)
+          {
+            dateString = UtilDateTime.toDateString(<%=((Field)entity.pks.elementAt(i)).fieldName%>);
+            timeString = UtilDateTime.toTimeString(<%=((Field)entity.pks.elementAt(i)).fieldName%>);
+          }
+          else
+          {
+            dateString = request.getParameter("<%=entity.tableName%>_<%=((Field)entity.pks.elementAt(i)).columnName%>_DATE");
+            timeString = request.getParameter("<%=entity.tableName%>_<%=((Field)entity.pks.elementAt(i)).columnName%>_TIME");
+          }
+        %>
+        Date(MM/DD/YYYY):<input type="text" name="<%=entity.tableName%>_<%=((Field)entity.pks.elementAt(i)).columnName%>_DATE" size="11" value="[ltp]=UtilFormatOut.checkNull(dateString)%>">
+        <a href="javascript:show_calendar('updateForm.<%=entity.tableName%>_<%=((Field)entity.pks.elementAt(i)).columnName%>_DATE');" onmouseover="window.status='Date Picker';return true;" onmouseout="window.status='';return true;"><img src="/images/show-calendar.gif" border=0 width="24" height="22"></a>
+        Time(HH:MM):<input type="text" size="6" maxlength="10" name="<%=entity.tableName%>_<%=((Field)entity.pks.elementAt(i)).columnName%>_TIME" value="[ltp]=UtilFormatOut.checkNull(timeString)%>">
+        [ltp]}%>
+      <%} else if(((Field)entity.pks.elementAt(i)).javaType.indexOf("Integer") >= 0 || 
+                  ((Field)entity.pks.elementAt(i)).javaType.indexOf("Long") >= 0 || 
+                  ((Field)entity.pks.elementAt(i)).javaType.indexOf("Double") >= 0 || 
+                  ((Field)entity.pks.elementAt(i)).javaType.indexOf("Float") >= 0){%>
+        <input type="text" size="<%=((Field)entity.pks.elementAt(i)).stringLength()%>" maxlength="<%=((Field)entity.pks.elementAt(i)).stringLength()%>" name="<%=entity.tableName%>_<%=((Field)entity.pks.elementAt(i)).columnName%>" value="[ltp]=UtilFormatOut.formatQuantity(<%=((Field)entity.pks.elementAt(i)).fieldName%>)%>">
+      <%} else if(((Field)entity.pks.elementAt(i)).stringLength() <= 80){%>
+        <input type="text" size="<%=((Field)entity.pks.elementAt(i)).stringLength()%>" maxlength="<%=((Field)entity.pks.elementAt(i)).stringLength()%>" name="<%=entity.tableName%>_<%=((Field)entity.pks.elementAt(i)).columnName%>" value="[ltp]=UtilFormatOut.checkNull(<%=((Field)entity.pks.elementAt(i)).fieldName%>)%>">
+      <%} else if(((Field)entity.pks.elementAt(i)).stringLength() <= 255){%>
+        <input type="text" size="80" maxlength="<%=((Field)entity.pks.elementAt(i)).stringLength()%>" name="<%=entity.tableName%>_<%=((Field)entity.pks.elementAt(i)).columnName%>" value="[ltp]=UtilFormatOut.checkNull(<%=((Field)entity.pks.elementAt(i)).fieldName%>)%>">
+      <%} else {%>
+        <textarea cols="60" rows="3" maxlength="<%=((Field)entity.pks.elementAt(i)).stringLength()%>" name="<%=entity.tableName%>_<%=((Field)entity.pks.elementAt(i)).columnName%>">[ltp]=UtilFormatOut.checkNull(<%=((Field)entity.pks.elementAt(i)).fieldName%>)%></textarea>
+      <%}%>
+<%--
       <%if(((Field)entity.fields.elementAt(i)).javaType.indexOf("Integer") >= 0 || ((Field)entity.fields.elementAt(i)).javaType.indexOf("Double") >= 0 || ((Field)entity.fields.elementAt(i)).javaType.indexOf("Float") >= 0){%>
         <input type="text" size="<%=((Field)entity.fields.elementAt(i)).stringLength()%>" maxlength="<%=((Field)entity.fields.elementAt(i)).stringLength()%>" name="<%=entity.tableName%>_<%=((Field)entity.fields.elementAt(i)).columnName%>" value="[ltp]=UtilFormatOut.formatQuantity(<%=((Field)entity.pks.elementAt(i)).fieldName%>)%>">
       <%} else if(((Field)entity.fields.elementAt(i)).stringLength() <= 80){%>
@@ -121,6 +178,7 @@
       <%} else {%>
         <textarea cols="70" rows="3" maxlength="<%=((Field)entity.fields.elementAt(i)).stringLength()%>" name="<%=entity.tableName%>_<%=((Field)entity.pks.elementAt(i)).columnName%>">[ltp]=UtilFormatOut.checkNull(<%=((Field)entity.pks.elementAt(i)).fieldName%>)%></textarea>
       <%}%>
+--%>
       </td>
     </tr><%}%>
   [ltp]}else{%>
@@ -130,8 +188,10 @@
 [ltp]}else{%>
   [ltp]if(hasUpdatePermission){%>
     <input type="hidden" name="UPDATE_MODE" value="UPDATE">
-  <%for(i=0;i<entity.pks.size();i++){%>
-    <input type="hidden" name="<%=entity.tableName%>_<%=((Field)entity.pks.elementAt(i)).columnName%>" value="[ltp]=<%=((Field)entity.pks.elementAt(i)).fieldName%>%>">
+  <%for(i=0;i<entity.pks.size();i++){%><%if(((Field)entity.pks.elementAt(i)).javaType.indexOf("Timestamp") >= 0 || ((Field)entity.pks.elementAt(i)).javaType.equals("java.util.Date") || ((Field)entity.pks.elementAt(i)).javaType.equals("Date")){%>
+      <input type="hidden" name="<%=entity.tableName%>_<%=((Field)entity.pks.elementAt(i)).columnName%>_DATE" value="[ltp]=<%=((Field)entity.pks.elementAt(i)).fieldName%>Date%>">
+      <input type="hidden" name="<%=entity.tableName%>_<%=((Field)entity.pks.elementAt(i)).columnName%>_TIME" value="[ltp]=<%=((Field)entity.pks.elementAt(i)).fieldName%>Time%>"><%}else{%>
+      <input type="hidden" name="<%=entity.tableName%>_<%=((Field)entity.pks.elementAt(i)).columnName%>" value="[ltp]=<%=((Field)entity.pks.elementAt(i)).fieldName%>%>"><%}%>
     [ltp]rowColor=(rowColor==rowColor1?rowColor2:rowColor1);%><tr bgcolor="[ltp]=rowColor%>">
       <td><%=((Field)entity.pks.elementAt(i)).columnName%></td>
       <td>
@@ -150,7 +210,8 @@
   [ltp]rowColor=(rowColor==rowColor1?rowColor2:rowColor1);%><tr bgcolor="[ltp]=rowColor%>">
     <td><%=((Field)entity.fields.elementAt(i)).columnName%></td>
     <td>
-    <%if(((Field)entity.fields.elementAt(i)).javaType.indexOf("Timestamp") >= 0){%>
+    <%if(((Field)entity.fields.elementAt(i)).javaType.equals("Timestamp") || 
+         ((Field)entity.fields.elementAt(i)).javaType.equals("java.sql.Timestamp")){%>
       [ltp]{
         String dateString = null;
         String timeString = null;
@@ -173,7 +234,34 @@
       <a href="javascript:show_calendar('updateForm.<%=entity.tableName%>_<%=((Field)entity.fields.elementAt(i)).columnName%>_DATE');" onmouseover="window.status='Date Picker';return true;" onmouseout="window.status='';return true;"><img src="/images/show-calendar.gif" border=0 width="24" height="22"></a>
       Time(HH:MM):<input type="text" size="6" maxlength="10" name="<%=entity.tableName%>_<%=((Field)entity.fields.elementAt(i)).columnName%>_TIME" value="[ltp]=UtilFormatOut.checkNull(timeString)%>">
       [ltp]}%>
-    <%} else if(((Field)entity.fields.elementAt(i)).javaType.indexOf("Integer") >= 0 || ((Field)entity.fields.elementAt(i)).javaType.indexOf("Double") >= 0 || ((Field)entity.fields.elementAt(i)).javaType.indexOf("Float") >= 0){%>
+    <%}else if(((Field)entity.fields.elementAt(i)).javaType.equals("Date") || 
+               ((Field)entity.fields.elementAt(i)).javaType.equals("java.util.Date")){%>
+      [ltp]{
+        String dateString = null;
+        String timeString = null;
+        if(<%=GenUtil.lowerFirstChar(entity.ejbName)%> != null)
+        {
+          java.util.Date date = <%=GenUtil.lowerFirstChar(entity.ejbName)%>.get<%=GenUtil.upperFirstChar(((Field)entity.fields.elementAt(i)).fieldName)%>();
+          if(date  != null)
+          {
+            dateString = UtilDateTime.toDateString(date);
+            timeString = UtilDateTime.toTimeString(date);
+          }
+        }
+        else
+        {
+          dateString = request.getParameter("<%=entity.tableName%>_<%=((Field)entity.fields.elementAt(i)).columnName%>_DATE");
+          timeString = request.getParameter("<%=entity.tableName%>_<%=((Field)entity.fields.elementAt(i)).columnName%>_TIME");
+        }
+      %>
+      Date(MM/DD/YYYY):<input type="text" name="<%=entity.tableName%>_<%=((Field)entity.fields.elementAt(i)).columnName%>_DATE" size="11" value="[ltp]=UtilFormatOut.checkNull(dateString)%>">
+      <a href="javascript:show_calendar('updateForm.<%=entity.tableName%>_<%=((Field)entity.fields.elementAt(i)).columnName%>_DATE');" onmouseover="window.status='Date Picker';return true;" onmouseout="window.status='';return true;"><img src="/images/show-calendar.gif" border=0 width="24" height="22"></a>
+      Time(HH:MM):<input type="text" size="6" maxlength="10" name="<%=entity.tableName%>_<%=((Field)entity.fields.elementAt(i)).columnName%>_TIME" value="[ltp]=UtilFormatOut.checkNull(timeString)%>">
+      [ltp]}%>
+    <%} else if(((Field)entity.fields.elementAt(i)).javaType.indexOf("Integer") >= 0 || 
+                ((Field)entity.fields.elementAt(i)).javaType.indexOf("Long") >= 0 || 
+                ((Field)entity.fields.elementAt(i)).javaType.indexOf("Double") >= 0 || 
+                ((Field)entity.fields.elementAt(i)).javaType.indexOf("Float") >= 0){%>
       <input type="text" size="<%=((Field)entity.fields.elementAt(i)).stringLength()%>" maxlength="<%=((Field)entity.fields.elementAt(i)).stringLength()%>" name="<%=entity.tableName%>_<%=((Field)entity.fields.elementAt(i)).columnName%>" value="[ltp]if(<%=GenUtil.lowerFirstChar(entity.ejbName)%>!=null){%>[ltp]=UtilFormatOut.formatQuantity(<%=GenUtil.lowerFirstChar(entity.ejbName)%>.get<%=GenUtil.upperFirstChar(((Field)entity.fields.elementAt(i)).fieldName)%>())%>[ltp]}else{%>[ltp]=UtilFormatOut.checkNull(request.getParameter("<%=entity.tableName%>_<%=((Field)entity.fields.elementAt(i)).columnName%>"))%>[ltp]}%>">
     <%} else if(((Field)entity.fields.elementAt(i)).stringLength() <= 80){%>
       <input type="text" size="<%=((Field)entity.fields.elementAt(i)).stringLength()%>" maxlength="<%=((Field)entity.fields.elementAt(i)).stringLength()%>" name="<%=entity.tableName%>_<%=((Field)entity.fields.elementAt(i)).columnName%>" value="[ltp]if(<%=GenUtil.lowerFirstChar(entity.ejbName)%>!=null){%>[ltp]=UtilFormatOut.checkNull(<%=GenUtil.lowerFirstChar(entity.ejbName)%>.get<%=GenUtil.upperFirstChar(((Field)entity.fields.elementAt(i)).fieldName)%>())%>[ltp]}else{%>[ltp]=UtilFormatOut.checkNull(request.getParameter("<%=entity.tableName%>_<%=((Field)entity.fields.elementAt(i)).columnName%>"))%>[ltp]}%>">

@@ -1,11 +1,43 @@
-<%@ page import="org.ofbiz.entitygen.*" %>
-<%@ page import="java.util.*" %>
-<%String ejbName=request.getParameter("ejbName"); String defFileName=request.getParameter("defFileName"); int i;%>
-<%Iterator classNamesIterator = null;
-  if(ejbName != null && ejbName.length() > 0) { Vector cnVec = new Vector(); cnVec.add(ejbName); classNamesIterator = cnVec.iterator(); }
-  else if(defFileName != null) classNamesIterator = DefReader.getEjbNamesIterator(defFileName);
-  while(classNamesIterator != null && classNamesIterator.hasNext()) { Entity entity=DefReader.getEntity(defFileName,(String)classNamesIterator.next());
-%>
+<%@ include file="EntitySetup.jsp" %>
+package <%=entity.packageName%>;
+
+import java.rmi.*;
+import javax.servlet.*;
+import javax.servlet.http.*;
+import java.math.*;
+import org.ofbiz.commonapp.security.*;
+import org.ofbiz.commonapp.common.*;
+
+/**
+ * <p><b>Title:</b> <%=entity.title%>
+ * <p><b>Description:</b> <%=entity.description%>
+ * <p><%=entity.copyright%>
+ *
+ * <p>Permission is hereby granted, free of charge, to any person obtaining a 
+ *  copy of this software and associated documentation files (the "Software"), 
+ *  to deal in the Software without restriction, including without limitation 
+ *  the rights to use, copy, modify, merge, publish, distribute, sublicense, 
+ *  and/or sell copies of the Software, and to permit persons to whom the 
+ *  Software is furnished to do so, subject to the following conditions:
+ *
+ * <p>The above copyright notice and this permission notice shall be included 
+ *  in all copies or substantial portions of the Software.
+ *
+ * <p>THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS 
+ *  OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF 
+ *  MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. 
+ *  IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY 
+ *  CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT 
+ *  OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR 
+ *  THE USE OR OTHER DEALINGS IN THE SOFTWARE.
+ *
+ *@author     <%=entity.author%>
+ *@created    <%=(new java.util.Date()).toString()%>
+ *@version    <%=entity.version%>
+ */
+
+public class <%=entity.ejbName%>WebEvent
+{
   /**
    *  An HTTP WebEvent handler that updates a <%=entity.ejbName%> entity
    *
@@ -42,7 +74,7 @@
 
     //get the primary key parameters...
   <%for(i=0;i<entity.pks.size();i++){Field curField=(Field)entity.pks.elementAt(i);%><%if(curField.javaType.compareTo("java.lang.String") == 0 || curField.javaType.compareTo("String") == 0){%>
-    String <%=curField.fieldName%> = request.getParameter("<%=entity.tableName%>_<%=curField.columnName%>");  <%}else if(curField.javaType.indexOf("Timestamp") >= 0){%>
+    String <%=curField.fieldName%> = request.getParameter("<%=entity.tableName%>_<%=curField.columnName%>");  <%}else if(curField.javaType.indexOf("Timestamp") >= 0 || curField.javaType.equals("java.util.Date") || curField.javaType.equals("Date")){%>
     String <%=curField.fieldName%>Date = request.getParameter("<%=entity.tableName%>_<%=curField.columnName%>_DATE");
     String <%=curField.fieldName%>Time = request.getParameter("<%=entity.tableName%>_<%=curField.columnName%>_TIME");  <%}else{%>
     String <%=curField.fieldName%>String = request.getParameter("<%=entity.tableName%>_<%=curField.columnName%>");  <%}%><%}%>
@@ -78,7 +110,7 @@
 
     //get the non-primary key parameters
   <%for(i=0;i<entity.fields.size();i++){Field curField=(Field)entity.fields.elementAt(i);%><%if(!curField.isPk){%><%if(curField.javaType.equals("java.lang.String") || curField.javaType.equals("String")){%>
-    String <%=curField.fieldName%> = request.getParameter("<%=entity.tableName%>_<%=curField.columnName%>");  <%}else if(curField.javaType.indexOf("Timestamp") >= 0){%>
+    String <%=curField.fieldName%> = request.getParameter("<%=entity.tableName%>_<%=curField.columnName%>");  <%}else if(curField.javaType.indexOf("Timestamp") >= 0 || curField.javaType.equals("java.util.Date") || curField.javaType.equals("Date")){%>
     String <%=curField.fieldName%>Date = request.getParameter("<%=entity.tableName%>_<%=curField.columnName%>_DATE");
     String <%=curField.fieldName%>Time = request.getParameter("<%=entity.tableName%>_<%=curField.columnName%>_TIME");  <%}else{%>
     String <%=curField.fieldName%>String = request.getParameter("<%=entity.tableName%>_<%=curField.columnName%>");  <%}%><%}%><%}%>
@@ -94,13 +126,14 @@
     try
     {
       if(<%=curField.fieldName%>String != null && <%=curField.fieldName%>String.length() > 0)
-      {
-        <%=curField.fieldName%> = <%=curField.javaType%>.valueOf(<%=curField.fieldName%>String);
+      { <%if(curField.javaType.equals("java.lang.Object") || curField.javaType.equals("Object")){%>
+        <%=curField.fieldName%> = <%=curField.fieldName%>String;<%}else{%>
+        <%=curField.fieldName%> = <%=curField.javaType%>.valueOf(<%=curField.fieldName%>String);<%}%>
       }
     }
     catch(Exception e)
     {
-      errMsg = errMsg + "<li><%=curField.columnName%> conversion failed: \"" + <%=curField.fieldName%>String + "\" is not a valid <%=curField.javaType%>;
+      errMsg = errMsg + "<li><%=curField.columnName%> conversion failed: \"" + <%=curField.fieldName%>String + "\" is not a valid <%=curField.javaType%>";
     }<%}%><%}%><%}%><%}%>
 
     //if the updateMode is CREATE, check to see if an entity with the specified primary key already exists
@@ -108,7 +141,7 @@
       if(<%=entity.ejbName%>Helper.findByPrimaryKey(<%=entity.pkNameString()%>) != null) errMsg = errMsg + "<li><%=entity.ejbName%> already exists with <%=entity.colNameString(entity.pks)%>:" + <%=entity.pkNameString(" + \", \" + ", "")%> + "; please change.";
 
     //Validate parameters...
-  <%for(i=0;i<entity.fields.size();i++){Field curField=(Field)entity.fields.elementAt(i);%><%for(int j=0;j<curField.validators.size();j++){String curValidate=(String)curField.validators.elementAt(j);%><%if(!curField.javaType.equals("java.lang.String") && !curField.javaType.equals("String")){%>%>
+  <%for(i=0;i<entity.fields.size();i++){Field curField=(Field)entity.fields.elementAt(i);%><%for(int j=0;j<curField.validators.size();j++){String curValidate=(String)curField.validators.elementAt(j);%><%if(!curField.javaType.equals("java.lang.String") && !curField.javaType.equals("String")){%>
     if(!UtilValidate.<%=curValidate%>(<%=curField.fieldName%>String)) errMsg = errMsg + "<li><%=curField.columnName%> <%=curValidate%> failed: " + UtilValidate.<%=curValidate%>Msg;<%}else{%>
     if(!UtilValidate.<%=curValidate%>(<%=curField.fieldName%>)) errMsg = errMsg + "<li><%=curField.columnName%> <%=curValidate%> failed: " + UtilValidate.<%=curValidate%>Msg;<%}%><%}%><%}%>
 
@@ -120,7 +153,12 @@
       RequestDispatcher rd;
       String onErrorPage = request.getParameter("ON_ERROR_PAGE");
       if(onErrorPage != null) rd = request.getRequestDispatcher(onErrorPage);
-      else rd = request.getRequestDispatcher("/______InsertEditEntityPathNameHERE______/Edit<%=entity.ejbName%>.jsp");
+      <%
+        String packagePath = entity.packageName.replace('.','/');
+        //remove the first two folders (usually org/ and ofbiz/)
+        packagePath = packagePath.substring(packagePath.indexOf("/")+1);
+        packagePath = packagePath.substring(packagePath.indexOf("/")+1);
+      %>else rd = request.getRequestDispatcher("/<%=packagePath%>/Edit<%=entity.ejbName%>.jsp");
       rd.forward(request, response);
       return false;
     }
@@ -154,4 +192,4 @@
 
     return true;
   }
-<%}%>
+}

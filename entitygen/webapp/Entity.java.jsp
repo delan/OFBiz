@@ -38,9 +38,9 @@ public interface <%=entity.ejbName%> extends EJBObject
 <%for(i=0;i<entity.fields.size();i++){%>
   <%if(((Field)entity.fields.elementAt(i)).isPk){%>
   /**
-   *  Get the primary key of the <%=((Field)entity.pks.elementAt(i)).columnName%> column of the <%=entity.tableName%> table.
+   *  Get the primary key of the <%=((Field)entity.fields.elementAt(i)).columnName%> column of the <%=entity.tableName%> table.
    */
-  public <%=((Field)entity.pks.elementAt(i)).javaType%> get<%=GenUtil.upperFirstChar(((Field)entity.pks.elementAt(i)).fieldName)%>() throws RemoteException;
+  public <%=((Field)entity.fields.elementAt(i)).javaType%> get<%=GenUtil.upperFirstChar(((Field)entity.fields.elementAt(i)).fieldName)%>() throws RemoteException;
   <%}else{%>
   /**
    *  Get the value of the <%=((Field)entity.fields.elementAt(i)).columnName%> column of the <%=entity.tableName%> table.

@@ -51,6 +51,11 @@ The generated text is meant to be saved as is, and includes no HTML tags.
   if(defFileName!=null) classNamesIterator = DefReader.getEjbNamesIterator(defFileName);
 %>
 
+<%
+  String clearCache = request.getParameter("clearCache");
+  if(clearCache != null && clearCache.equalsIgnoreCase("yes")) { DefReader.documentCache.clear();  DefReader.entityCache.clear(); }
+%>
+
 <hr>
 <B><U>Definition XML File (enter the path of the file on the SERVER):</U></B>
 <br>Current:  <b><%=(defFileName!=null?defFileName:"None")%></b>
@@ -59,11 +64,25 @@ The generated text is meant to be saved as is, and includes no HTML tags.
   <a href="javascript:document.location='entitygen.jsp?defFileName=' + document.defFileNameForm.defFileName.value">Use</a>
 </FORM>
 <hr>
+NOTE: Document and Entity objects are cached for performance. You can use the commonapp <a href="/commonapp/common/FindUtilCache.jsp">cache admin tool</a> with this cache.
+<br>You can also click here to clear the both caches:
+<a href="entitygen.jsp?defFileName=<%=(defFileName!=null?defFileName:"None")%>&clearCache=yes">Clear Document & Entity Caches</a>
+<hr>
 <%if(classNamesIterator != null){%>
+<B><U>Generate all Java files in this directory (enter the path on the SERVER):</U></B>
+<FORM method="POST" action="genalljavafiles.jsp?defFileName=<%=defFileName%>">
+  <input type="text" size="50" name="outPathName">
+  <input type="submit" value="Go!">
+</FORM>
+<B><U>Generate all JSP files in this directory (enter the path on the SERVER):</U></B>
+<FORM method="POST" action="genalljspfiles.jsp?defFileName=<%=defFileName%>">
+  <input type="text" size="50" name="outPathName">
+  <input type="submit" value="Go!">
+</FORM>
+<hr>
 <ul>
   <li>Combined Entity Snippets for all Entities in the XML definition file
   <ul>
-    <li><a href="SnippetWebUpdateEvent.jsp?defFileName=<%=defFileName%>">WebUpdateEvents</a>
     <li><a href="SnippetWebEvent.properties.jsp?defFileName=<%=defFileName%>">webevent.properties</a>
     <li><a href="SnippetMySql.sql.jsp?defFileName=<%=defFileName%>">mysql.sql</a>
     <li><a href="SnippetDataMySql.sql.jsp?defFileName=<%=defFileName%>">data-mysql.sql</a>
@@ -90,6 +109,16 @@ Select Entity for Entity specific code:
 <%}%>
 <hr>
 <%if(ejbName != null && ejbName.length() > 0){%>
+<B><U>Generate <%=ejbName%> Java files in this directory (enter the path on the SERVER):</U></B>
+<FORM method="POST" action="genalljavafiles.jsp?defFileName=<%=defFileName%>&ejbName=<%=ejbName%>">
+  <input type="text" size="50" name="outPathName">
+  <input type="submit" value="Go!">
+</FORM>
+<B><U>Generate <%=ejbName%> JSP files in this directory (enter the path on the SERVER):</U></B>
+<FORM method="POST" action="genalljspfiles.jsp?defFileName=<%=defFileName%>&ejbName=<%=ejbName%>">
+  <input type="text" size="50" name="outPathName">
+  <input type="submit" value="Go!">
+</FORM>
 <b><u><%=ejbName%></u></b>
 <ul>
   <li>Entity EJB Java Code
@@ -100,6 +129,7 @@ Select Entity for Entity specific code:
     <li><a href="EntityPK.java.jsp?defFileName=<%=defFileName%>&ejbName=<%=ejbName%>"><%=ejbName%>PK.java</a> NOTE: This is only needed if you have multiple primary keys.
     <li><a href="EntityValue.java.jsp?defFileName=<%=defFileName%>&ejbName=<%=ejbName%>"><%=ejbName%>Value.java</a>
     <li><a href="EntityHelper.java.jsp?defFileName=<%=defFileName%>&ejbName=<%=ejbName%>"><%=ejbName%>Helper.java</a>
+    <li><a href="EntityWebEvent.java.jsp?defFileName=<%=defFileName%>&ejbName=<%=ejbName%>"><%=ejbName%>WebEvent.java</a>
   </ul>
   <li>Entity JSPs
   <ul>
@@ -109,7 +139,6 @@ Select Entity for Entity specific code:
   </ul>
   <li>Entity Snippets
   <ul>
-    <li><a href="SnippetWebUpdateEvent.jsp?defFileName=<%=defFileName%>&ejbName=<%=ejbName%>"><%=ejbName%> WebUpdateEvent</a>
     <li><a href="SnippetWebEvent.properties.jsp?defFileName=<%=defFileName%>&ejbName=<%=ejbName%>"><%=ejbName%> WebEvent Properties</a>
     <li><a href="SnippetMySql.sql.jsp?defFileName=<%=defFileName%>&ejbName=<%=ejbName%>"><%=ejbName%> SQL</a>
     <li><a href="SnippetDataMySql.sql.jsp?defFileName=<%=defFileName%>&ejbName=<%=ejbName%>">SQL Data - permissions</a>

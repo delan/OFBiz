@@ -73,7 +73,7 @@ public class Field
     }
     else if(sqlType.indexOf("NUMERIC") >= 0)
     {
-      return 10;
+      return 25;
     }
     return 0;
   }

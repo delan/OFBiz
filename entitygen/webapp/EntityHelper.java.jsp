@@ -306,10 +306,6 @@ public class <%=entity.ejbName%>Helper
     //Do not pass the value object to set on creation, we only want to populate it not attach it to the passed object
     <%=entity.ejbName%> <%=GenUtil.lowerFirstChar(entity.ejbName)%>Value = new <%=entity.ejbName%>Value();
 
-    //When doing a setValueObject, everything gets copied over.  So, for all
-    //null fieldeters, we will just let it default to the original value.
-    <%=GenUtil.lowerFirstChar(entity.ejbName)%>Value.setValueObject(<%=GenUtil.lowerFirstChar(entity.ejbName)%>);
-
 <%for(i=0;i<entity.fields.size();i++){%>
   <%if(!((Field)entity.fields.elementAt(i)).isPk){%>
     if(<%=((Field)entity.fields.elementAt(i)).fieldName%> != null)

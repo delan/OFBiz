@@ -32,19 +32,107 @@ import java.util.*;
 
 public class Relation
 {
-  /** the relation-type: either "one" or "many" */  
+  /** the relation-type: either "one" or "many" */
   public String relationType = "";
-  /** the name of the related table */  
+  /** the name of the related table */
   public String relatedTableName = "";
-  /** the name of the related EJB/entity */  
+  /** the name of the related EJB/entity */
   public String relatedEjbName = "";
-  /** keyMaps defining how to lookup the relatedTable using columns from this table */  
+  /** keyMaps defining how to lookup the relatedTable using columns from this table */
   public Vector keyMaps = new Vector();
-  /** relations nested under this relation */  
+  /** relations nested under this relation */
   public Vector relations = new Vector();
+  /** the parent relation of this relation */
+  public Relation parent = null;
+  /** the main entity of this relation */
+  public Entity mainEntity = null;
   
   /** Default Constructor */  
   public Relation()
   {
+  }
+
+  /** Alternate Constructor which sets the parent Relation */  
+  public Relation(Relation parent)
+  {
+    this.parent = parent;
+  }
+  
+  /** Find a KeyMap with the specified fieldName */  
+  public KeyMap findKeyMap(String fieldName)
+  {
+    for(int i=0; i<keyMaps.size(); i++)
+    {
+      KeyMap keyMap = (KeyMap)keyMaps.elementAt(i);
+      if(keyMap.fieldName.equals(fieldName)) return keyMap;
+    }
+    return null;
+  }
+
+  /** Find a KeyMap with the specified relatedFieldName */  
+  public KeyMap findKeyMapByRelated(String relatedFieldName)
+  {
+    for(int i=0; i<keyMaps.size(); i++)
+    {
+      KeyMap keyMap = (KeyMap)keyMaps.elementAt(i);
+      if(keyMap.relatedFieldName.equals(relatedFieldName)) return keyMap;
+    }
+    return null;
+  }
+
+  public String keyMapUpperString(String separator, String afterLast)
+  {
+    String returnString = "";
+    if(keyMaps.size() < 1) { return ""; }
+
+    int i = 0;
+    for(; i < keyMaps.size() - 1; i++)
+    {
+      returnString = returnString + GenUtil.upperFirstChar(((KeyMap)keyMaps.elementAt(i)).fieldName) + separator;
+    }
+    returnString = returnString + GenUtil.upperFirstChar(((KeyMap)keyMaps.elementAt(i)).fieldName) + afterLast;
+    return returnString;
+  }
+
+  public String keyMapRelatedUpperString(String separator, String afterLast)
+  {
+    String returnString = "";
+    if(keyMaps.size() < 1) { return ""; }
+
+    int i = 0;
+    for(; i < keyMaps.size() - 1; i++)
+    {
+      returnString = returnString + GenUtil.upperFirstChar(((KeyMap)keyMaps.elementAt(i)).relatedFieldName) + separator;
+    }
+    returnString = returnString + GenUtil.upperFirstChar(((KeyMap)keyMaps.elementAt(i)).relatedFieldName) + afterLast;
+    return returnString;
+  }
+
+  public String keyMapColumnString(String separator, String afterLast)
+  {
+    String returnString = "";
+    if(keyMaps.size() < 1) { return ""; }
+
+    int i = 0;
+    for(; i < keyMaps.size() - 1; i++)
+    {
+      returnString = returnString + ((KeyMap)keyMaps.elementAt(i)).columnName + separator;
+    }
+    returnString = returnString + ((KeyMap)keyMaps.elementAt(i)).columnName + afterLast;
+    return returnString;
+  }
+
+  public String keyMapRelatedColumnString(String separator, String afterLast)
+  {
+    String returnString = "";
+    if(keyMaps.size() < 1) { return ""; }
+
+    int i = 0;
+    for(; i < keyMaps.size() - 1; i++)
+    {
+      returnString = returnString + ((KeyMap)keyMaps.elementAt(i)).relatedColumnName + separator;
+    }
+    returnString = returnString + ((KeyMap)keyMaps.elementAt(i)).relatedColumnName + afterLast;
+    return returnString;
   }
 }

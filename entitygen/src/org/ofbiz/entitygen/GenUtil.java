@@ -1,5 +1,8 @@
 package org.ofbiz.entitygen;
 
+import net.matuschek.http.*;
+import java.io.*;
+
 /**
  * <p><b>Title:</b> Entity Generator - General Generator Utilities
  * <p><b>Description:</b> None
@@ -27,7 +30,6 @@ package org.ofbiz.entitygen;
  *@created    May 15, 2001
  *@version    1.0
  */
-
 public class GenUtil
 {
     /** Changes the first letter of the passed String to upper case.
@@ -51,6 +53,7 @@ public class GenUtil
     if(string.length() <= 1) return string.toLowerCase();
     return string.substring(0, 1).toLowerCase() + string.substring(1);
   }
+
   /** Converts a database name to a Java class name.
    * The naming conventions used to allow for this are as follows: a database name (table or column) is in all capital letters, and the words are separated by an underscore (for example: NEAT_ENTITY_NAME or RANDOM_FIELD_NAME); a Java name (ejb or field) is in all lower case letters, except the letter at the beginning of each word (for example: NeatEntityName or RandomFieldName). The convention of using a capital letter at the beginning of a class name in Java, or a lower-case letter for the beginning of a variable name in Java is also used along with the Java name convention above.
    * @param columnName The database name
@@ -60,6 +63,7 @@ public class GenUtil
   {
     return upperFirstChar(dbNameToVarName(columnName));
   }
+
   /** Converts a database name to a Java variable name.
    * The naming conventions used to allow for this are as follows: a database name (table or column) is in all capital letters, and the words are separated by an underscore (for example: NEAT_ENTITY_NAME or RANDOM_FIELD_NAME); a Java name (ejb or field) is in all lower case letters, except the letter at the beginning of each word (for example: NeatEntityName or RandomFieldName). The convention of using a capital letter at the beginning of a class name in Java, or a lower-case letter for the beginning of a variable name in Java is also used along with the Java name convention above.
    * @param columnName The database name
@@ -88,5 +92,87 @@ public class GenUtil
       fieldName = columnName.toLowerCase();
     }
     return fieldName;
+  }
+
+  /** Converts a package name to a path by replacing all '.' characters with the File.separatorChar character. Is therefore platform independent.
+   * @param The package name.
+   * @return The path name corresponding to the specified package name.
+   */
+  public static String packageToPath(String packageName)
+  {
+    //just replace all of the '.' characters with the folder separater character
+    return packageName.replace('.', File.separatorChar);
+  }
+  
+  /** Retrieves a web page, and returns the content of the page in a String.
+   * @param url The URL of the page to get.
+   * @param params Any parameters (optional) to pass to the page.
+   * @return The content of the page in a String
+   */
+  public static String getCodeFromUrl(java.net.URL url, String params)
+  {
+    try
+    {
+      HttpTool httpTool = new HttpTool();
+      HttpDoc httpDoc = httpTool.retrieveDocument(url, HttpConstants.GET, params);
+      return new String(httpDoc.getContent());
+    }
+    catch(Exception e) {e.printStackTrace();}
+    return null;
+  }
+  
+  /** Writes the passed String to the specified fileName in the filePath directory.
+   * @param filePath The path or folder name where the file will be written
+   * @param fileName The name of the file to create
+   * @param content The content to write to the file
+   * @return Returns <code>true</code> if file write succeeds, <code>false</code> otherwise
+   */
+  public static boolean writeFile(String filePath, String fileName, String content)
+  {
+    //create directory(ies) if do(es) not exist...
+    File testDir = new File(filePath);
+    if(!testDir.exists())
+    {
+      if(testDir.mkdirs()) System.out.println("Created directory: " + filePath);
+      else 
+      {
+        System.out.println("Directory creation failed for: " + filePath);
+        return false;
+      }
+    }
+
+    try
+    {
+      File newFile = new File(filePath, fileName);
+      FileWriter newFileWriter = new FileWriter(newFile);
+      newFileWriter.write(content);
+      newFileWriter.close();
+      return true;
+    }
+    catch(Exception e) {e.printStackTrace();}
+    return false;
+  }
+
+  /** Replaces all occurances of oldString in mainString with newString
+   * @param mainString The original string
+   * @param oldString The string to replace
+   * @param newString The string to insert in place of the old
+   * @return mainString with all occurances of oldString replaced by newString
+   */  
+  public static String replaceString(String mainString, String oldString, String newString)
+  {
+    String retString = new String(mainString);
+    int loc=0;
+    int i=retString.indexOf(oldString,loc);
+    while(i >= 0)
+    {
+      StringBuffer querySb = new StringBuffer(retString);
+      querySb.replace(i, i+oldString.length(), newString);
+      retString = querySb.toString();
+
+      loc=i+newString.length();
+      i=retString.indexOf(oldString,loc);
+    }
+    return retString;
   }
 }

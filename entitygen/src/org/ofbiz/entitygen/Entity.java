@@ -217,5 +217,40 @@ public class Entity
     returnString = returnString + "\"" + tableName + "_" + ((Field)flds.elementAt(i)).columnName + "=\" + " + GenUtil.lowerFirstChar(ejbName) + ".get" + GenUtil.upperFirstChar(((Field)flds.elementAt(i)).fieldName) + "()";
     return returnString;
   }
+
+  public String httpRelationArgList(Vector flds, Relation relation)
+  {
+    String returnString = "";
+    if(flds.size() < 1) { return ""; }
+
+    int i = 0;
+    for(; i < flds.size() - 1; i++)
+    {
+      KeyMap keyMap = relation.findKeyMapByRelated(((Field)flds.elementAt(i)).fieldName);
+      if(keyMap != null) returnString = returnString + "\"" + tableName + "_" + ((Field)flds.elementAt(i)).columnName + "=\" + " + GenUtil.lowerFirstChar(relation.mainEntity.ejbName) + ".get" + GenUtil.upperFirstChar(keyMap.fieldName) + "() + \"&\" + ";
+      else System.out.println("-- -- ENTITYGEN ERROR:httpRelationArgList: Related Key in Key Map not found for fieldName: " + ((Field)flds.elementAt(i)).fieldName + " related entity: " + relation.relatedEjbName + " main entity: " + relation.mainEntity.ejbName + " type: " + relation.relationType);
+    }
+    KeyMap keyMap = relation.findKeyMapByRelated(((Field)flds.elementAt(i)).fieldName);
+    if(keyMap != null) returnString = returnString + "\"" + tableName + "_" + ((Field)flds.elementAt(i)).columnName + "=\" + " + GenUtil.lowerFirstChar(relation.mainEntity.ejbName) + ".get" + GenUtil.upperFirstChar(keyMap.fieldName) + "()";
+    else System.out.println("-- -- ENTITYGEN ERROR:httpRelationArgList: Related Key in Key Map not found for fieldName: " + ((Field)flds.elementAt(i)).fieldName + " related entity: " + relation.relatedEjbName + " main entity: " + relation.mainEntity.ejbName + " type: " + relation.relationType);
+    return returnString;
+  }
+
+  public String httpRelationArgList(Relation relation)
+  {
+    String returnString = "";
+    if(relation.keyMaps.size() < 1) { return ""; }
+
+    int i = 0;
+    for(; i < relation.keyMaps.size() - 1; i++)
+    {
+      KeyMap keyMap = (KeyMap)relation.keyMaps.elementAt(i);
+      if(keyMap != null)
+        returnString = returnString + "\"" + tableName + "_" + keyMap.relatedColumnName + "=\" + " + GenUtil.lowerFirstChar(relation.mainEntity.ejbName) + ".get" + GenUtil.upperFirstChar(keyMap.fieldName) + "() + \"&\" + ";
+    }
+    KeyMap keyMap = (KeyMap)relation.keyMaps.elementAt(i);
+    returnString = returnString + "\"" + tableName + "_" + keyMap.relatedColumnName + "=\" + " + GenUtil.lowerFirstChar(relation.mainEntity.ejbName) + ".get" + GenUtil.upperFirstChar(keyMap.fieldName) + "()";
+    return returnString;
+  }
 }
 
