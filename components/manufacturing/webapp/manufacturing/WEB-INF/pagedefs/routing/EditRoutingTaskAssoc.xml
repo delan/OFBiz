@@ -3,6 +3,6 @@
     <template>main</template>
     <property name="titleProperty">PageTitleEditRoutingTaskAssoc</property>
     <property name="headerItem">routing</property>   
-    <property name="tabButtonItem">routing</property>
+    <property name="tabButtonItem">routingTaskAssoc</property>
     <content-action name="/routing/EditRoutingTaskAssoc.bsh"/> 
 </page>

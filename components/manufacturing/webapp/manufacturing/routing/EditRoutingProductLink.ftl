@@ -26,7 +26,7 @@
 <#assign uiLabelMap = requestAttributes.uiLabelMap>
 
 <#if hasPermission>
-${pages.get("/routing/RoutingTabBar.ftl")}
+${pages.get("/routing/RoutingDetailTabBar.ftl")}
 
 	<div class="head1">${uiLabelMap.ManufacturingEditRoutingProductLink}&nbsp; 
 	</div>

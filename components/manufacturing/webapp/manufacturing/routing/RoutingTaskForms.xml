@@ -22,7 +22,7 @@
  *  THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  *
  *@author     Olivier.Heintz@nereide.biz
- *@version    $Revision: 1.3 $
+ *@version    $Revision: 1.4 $
  *@since      3.0
 -->
 
@@ -119,7 +119,7 @@
     </form>
 
     <form name="ListRoutingProductLink" type="list" 
-            target="EditWorkEffortGoodStandard" title="" list-name="allRoutingProductLinks"
+            target="EditRoutingProductLink" title="" list-name="allRoutingProductLinks"
             default-title-style="tableheadtext" default-widget-style="tabletext" default-tooltip-style="tabletext">
         <auto-fields-service service-name="updateWorkEffortGoodStandard" map-name="routingProductLink"/>
         <field name="byProduct"><hidden/></field>

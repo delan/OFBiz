@@ -295,27 +295,27 @@
         <response name="success" type="view" value="EditRoutingTaskAssoc"/>
         <response name="error" type="view" value="EditRoutingTaskAssoc"/>
     </request-map>
-    <request-map uri="EditWorkEffortGoodStandard">
+    <request-map uri="EditRoutingProductLink">
         <security https="true" auth="true"/>
-        <response name="success" type="view" value="EditWorkEffortGoodStandard"/>
+        <response name="success" type="view" value="EditRoutingProductLink"/>
     </request-map>
     <request-map uri="AddRoutingProductLink">
         <security https="true" auth="true"/>
         <event type="service" invoke="createWorkEffortGoodStandard"/>
-        <response name="success" type="view" value="EditWorkEffortGoodStandard"/>
-        <response name="error" type="view" value="EditWorkEffortGoodStandard"/>
+        <response name="success" type="view" value="EditRoutingProductLink"/>
+        <response name="error" type="view" value="EditRoutingProductLink"/>
     </request-map>
     <request-map uri="UpdateRoutingProductLink">
         <security https="true" auth="true"/>
         <event type="service" invoke="updateWorkEffortGoodStandard"/>
-        <response name="success" type="view" value="EditWorkEffortGoodStandard"/>
-        <response name="error" type="view" value="EditWorkEffortGoodStandard"/>
+        <response name="success" type="view" value="EditRoutingProductLink"/>
+        <response name="error" type="view" value="EditRoutingProductLink"/>
     </request-map>
     <request-map uri="RemoveWorkEffortGoodStandard">
         <security https="true" auth="true"/>
         <event type="service" invoke="removeWorkEffortGoodStandard"/>
-        <response name="success" type="view" value="EditWorkEffortGoodStandard"/>
-        <response name="error" type="view" value="EditWorkEffortGoodStandard"/>
+        <response name="success" type="view" value="EditRoutingProductLink"/>
+        <response name="error" type="view" value="EditRoutingProductLink"/>
     </request-map>
 
     <!-- BOM request mappings -->
@@ -433,7 +433,7 @@
     <view-map name="FindRoutingTask" type="jpublish" page="/routing/FindRoutingTask.ftl"/>
     <view-map name="FindRouting" type="jpublish" page="/routing/FindRouting.ftl"/>
     <view-map name="EditRoutingTaskAssoc" type="jpublish" page="/routing/EditRoutingTaskAssoc.ftl"/>
-    <view-map name="EditWorkEffortGoodStandard" type="jpublish" page="/routing/EditWorkEffortGoodStandard.ftl"/>
+    <view-map name="EditRoutingProductLink" type="jpublish" page="/routing/EditRoutingProductLink.ftl"/>
     <!-- BOM view mappings -->
     <view-map name="findParts" type="jpublish" page="/bom/findParts.ftl"/>
     <view-map name="findBom" type="jpublish" page="/bom/findBom.ftl"/>
