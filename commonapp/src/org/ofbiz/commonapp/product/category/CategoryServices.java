@@ -103,7 +103,7 @@ public class CategoryServices {
         String previous = null;
         String next = null;
 
-        if (index.intValue() - 1 > 0 && index.intValue() -1 < memberList.size())  {
+        if (index.intValue() - 1 >= 0 && index.intValue() -1 < memberList.size())  {
             previous = ((GenericValue) memberList.get(index.intValue() - 1)).getString("productId");
             result.put("previousProductId", previous);
         }
