@@ -1015,6 +1015,13 @@
       <relation type="one" fk-name="PROD_PRICE_LMBUL" title="LastModifiedBy" rel-entity-name="UserLogin">
         <key-map field-name="lastModifiedByUserLogin" rel-field-name="userLoginId"/>
       </relation>
+      <relation type="many" rel-entity-name="ProductPriceChange">
+        <key-map field-name="productId"/>
+        <key-map field-name="productPriceTypeId"/>
+        <key-map field-name="currencyUomId"/>
+        <key-map field-name="facilityGroupId"/>
+        <key-map field-name="fromDate"/>
+      </relation>
     </entity>
     <entity entity-name="ProductPriceAction"
             package-name="org.ofbiz.commonapp.product.price"
@@ -1040,6 +1047,31 @@
       <prim-key field="productPriceActionTypeId"/>
       <relation type="many" rel-entity-name="ProductPriceAction">
         <key-map field-name="productPriceActionTypeId"/>
+      </relation>
+    </entity>
+    <entity entity-name="ProductPriceChange"
+            package-name="org.ofbiz.commonapp.product.price"
+            title="Product Price Change History Entity">
+      <field name="productPriceChangeId" type="id-ne"></field>
+      <field name="productId" type="id-ne"></field>
+      <field name="productPriceTypeId" type="id-ne"></field>
+      <field name="currencyUomId" type="id"></field>
+      <field name="facilityGroupId" type="id"></field>
+      <field name="fromDate" type="date-time"></field>
+      <field name="price" type="currency-amount"></field>
+      <field name="oldPrice" type="currency-amount"></field>
+      <field name="changedDate" type="date-time"></field>
+      <field name="changedByUserLogin" type="id-vlong"></field>
+      <prim-key field="productPriceChangeId"/>
+      <relation type="one" fk-name="PROD_PRCHNG_RULE" rel-entity-name="ProductPrice">
+        <key-map field-name="productId"/>
+        <key-map field-name="productPriceTypeId"/>
+        <key-map field-name="currencyUomId"/>
+        <key-map field-name="facilityGroupId"/>
+        <key-map field-name="fromDate"/>
+      </relation>
+      <relation type="one" fk-name="PROD_PRCHNG_CHUL" title="ChangedBy" rel-entity-name="UserLogin">
+        <key-map field-name="changedByUserLogin" rel-field-name="userLoginId"/>
       </relation>
     </entity>
     <entity entity-name="ProductPriceCond"
