@@ -1,5 +1,5 @@
 /*
- * $Id: CompressionOutputStream.java,v 1.1 2003/12/02 06:39:32 ajzeneski Exp $
+ * $Id: CompressionOutputStream.java 1043 2003-12-02 06:40:07Z ajzeneski $
  *
  * Copyright (c) 1998, 1999 Sun Microsystems, Inc. All Rights Reserved.
  *
@@ -28,13 +28,13 @@
  * redistribute the Software for such purposes.
  */
 
-package org.ofbiz.service.rmi.socket;
+package org.ofbiz.service.rmi.socket.zip;
 
 import java.io.FilterOutputStream;
 import java.io.IOException;
 import java.io.OutputStream;
 
-class CompressionOutputStream extends FilterOutputStream implements CompressionConstants {
+public class CompressionOutputStream extends FilterOutputStream implements CompressionConstants {
 
     /*
      * Constructor calls constructor of superclass.

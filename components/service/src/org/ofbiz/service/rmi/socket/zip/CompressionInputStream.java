@@ -1,5 +1,5 @@
 /*
- * $Id: CompressionInputStream.java,v 1.1 2003/12/02 06:39:32 ajzeneski Exp $
+ * $Id: CompressionInputStream.java 1043 2003-12-02 06:40:07Z ajzeneski $
  *
  * Copyright (c) 1998, 1999 Sun Microsystems, Inc. All Rights Reserved.
  *
@@ -28,14 +28,14 @@
  * redistribute the Software for such purposes.
  */
 
-package org.ofbiz.service.rmi.socket;
+package org.ofbiz.service.rmi.socket.zip;
 
 import java.io.EOFException;
 import java.io.FilterInputStream;
 import java.io.IOException;
 import java.io.InputStream;
 
-class CompressionInputStream extends FilterInputStream implements CompressionConstants {
+public class CompressionInputStream extends FilterInputStream implements CompressionConstants {
     /*
      * Constructor calls constructor of superclass
      */

@@ -1,5 +1,5 @@
 /*
- * $Id: CompressionServerSocketFactory.java,v 1.2 2004/01/23 15:16:51 ajzeneski Exp $
+ * $Id: CompressionClientSocketFactory.java 2069 2004-04-11 08:28:24Z jonesde $
  *
  * Copyright (c) 1998, 1999 Sun Microsystems, Inc. All Rights Reserved.
  *
@@ -28,19 +28,20 @@
  * redistribute the Software for such purposes.
  */
 
-package org.ofbiz.service.rmi.socket;
+package org.ofbiz.service.rmi.socket.zip;
 
 import java.io.IOException;
 import java.io.Serializable;
-import java.net.ServerSocket;
-import java.rmi.server.RMIServerSocketFactory;
+import java.net.Socket;
+import java.rmi.server.RMIClientSocketFactory;
 
-public class CompressionServerSocketFactory implements RMIServerSocketFactory, Serializable {
+public class CompressionClientSocketFactory implements RMIClientSocketFactory, Serializable {
 
-    public static final String module = CompressionServerSocketFactory.class.getName();
+    public static final String module = CompressionClientSocketFactory.class.getName();
 
-    public ServerSocket createServerSocket(int port) throws IOException {
-        ServerSocket socket = new CompressionServerSocket(port);
+    public Socket createSocket(String host, int port) throws IOException {
+        CompressionSocket socket = new CompressionSocket(host, port);
+        //Debug.log("Client Socket Timeout : " + socket.getSoTimeout(), module);
         return socket;
     }
 
