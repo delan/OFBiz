@@ -26,7 +26,7 @@
  *
  *@author     David E. Jones (jonesde@ofbiz.org)
  *@author     Andy Zeneski (jaz@ofbiz.org)
- *@version    $Revision: 1.25 $
+ *@version    $Revision: 1.26 $
  */
 -->
 
@@ -141,7 +141,6 @@
     <entity-group group="org.ofbiz" entity="ProductKeyword" />
     <entity-group group="org.ofbiz" entity="ProductKeywordResult" />
     <entity-group group="org.ofbiz" entity="ProductReview" />
-    <entity-group group="org.ofbiz" entity="ProductReviewAvgCalc" />
     <entity-group group="org.ofbiz" entity="ProductSearchConstraint" />
     <entity-group group="org.ofbiz" entity="ProductSearchResult" />
     <entity-group group="org.ofbiz" entity="ProductType" />

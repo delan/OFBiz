@@ -26,7 +26,7 @@
  *
  * @author     David E. Jones (jonesde@ofbiz.org)
  * @author     Andy Zeneski (jaz@ofbiz.org)
- * @version    $Revision: 1.85 $
+ * @version    $Revision: 1.86 $
  */
 -->
 
@@ -1955,14 +1955,6 @@
           <key-map field-name="statusId"/>
         </relation>
     </entity>
-    <view-entity entity-name="ProductReviewAvgCalc"
-            package-name="org.ofbiz.product.product"
-            title="ProductReview Average Rating Calculation View Entity">
-      <member-entity entity-alias="PROD_REV" entity-name="ProductReview"/>
-      <alias entity-alias="PROD_REV" name="productId" group-by="true"/>
-      <alias entity-alias="PROD_REV" name="productRatingAvg" field="productRating" function="avg"/>
-      <alias entity-alias="PROD_REV" name="productRatingCount" field="productRating" function="count"/>
-    </view-entity>
     <entity entity-name="ProductSearchConstraint"
             package-name="org.ofbiz.product.product"
             never-cache="true"
@@ -3339,9 +3331,11 @@
       <field name="availableThruDate" type="date-time"></field>
       <field name="supplierPrefOrderId" type="id"></field>
       <field name="supplierRatingTypeId" type="id"></field>
-      <field name="standardLeadTime" type="date-time"></field>
+      <field name="standardLeadTimeDays" type="floating-point"></field>
       <field name="minimumOrderQuantity" type="floating-point"></field>
       <field name="quantityUomId" type="id"></field>
+      <field name="lastPrice" type="currency-amount"></field>
+      <field name="supplierProductId" type="id"></field>
       <field name="comments" type="comment"></field>
       <prim-key field="productId"/>
       <prim-key field="partyId"/>
