@@ -1,5 +1,5 @@
 /*
- * $Id: StartupLoader.java,v 1.1 2003/08/15 20:23:20 ajzeneski Exp $
+ * $Id: StartupLoader.java,v 1.2 2004/03/30 22:35:10 ajzeneski Exp $
  *
  * Copyright (c) 2003 The Open For Business Project - www.ofbiz.org
  *
@@ -28,7 +28,7 @@ package org.ofbiz.base.start;
  * StartupLoader - Interface for loading server startup classes
  *
  * @author     <a href="mailto:jaz@ofbiz.org">Andy Zeneski</a> 
-  *@version    $Revision: 1.1 $
+  *@version    $Revision: 1.2 $
  * @since      2.2
  */
 public interface StartupLoader {
@@ -36,10 +36,11 @@ public interface StartupLoader {
     /**
      * Load a startup class
      * 
-     * @param args Startup arguments    
+     * @param config Startup config
+     * @param args Input arguments
      * @throws StartupException
      */
-    public void load(Start.Config config) throws StartupException;
+    public void load(Start.Config config, String args[]) throws StartupException;
 
     /**
      * Stop the container
