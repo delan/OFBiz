@@ -51,7 +51,7 @@ public class EventConditionAction {
     }
 
     public EventConditionAction(Element eca) {
-        this.serviceName = eca.getAttribute("serviceName");
+        this.serviceName = eca.getAttribute("service");
         this.eventName = eca.getAttribute("event");
         List condList = UtilXml.childElementList(eca, "condition");
         Iterator ci = condList.iterator();
