@@ -96,8 +96,8 @@
                       <tr>
                         <td><div class='tabletext'>${(workEffort.estimatedStartDate.toString())?if_exists}</div></td>
                         <td><div class='tabletext'>${workEffort.priority?if_exists}</div></td>
-                        <td><div class='tabletext'>${(delegator.findByPrimaryKeyCache("StatusItem", UtilMisc.toMap("statusId", workEffort.getString("currentStatusId"))).description)?if_exists}</div></td>
-                        <td><div class='tabletext'>${(delegator.findByPrimaryKeyCache("StatusItem", UtilMisc.toMap("statusId", workEffort.getString("statusId"))).description)?if_exists}</div></td>
+                        <td><div class='tabletext'>${(delegator.findByPrimaryKeyCache("StatusItem", Static["org.ofbiz.base.util.UtilMisc"].toMap("statusId", workEffort.getString("currentStatusId"))).description)?if_exists}</div></td>
+                        <td><div class='tabletext'>${(delegator.findByPrimaryKeyCache("StatusItem", Static["org.ofbiz.base.util.UtilMisc"].toMap("statusId", workEffort.getString("statusId"))).description)?if_exists}</div></td>
                         <#-- <td><div class='tabletext'>${workEffort.partyId}</div></td> -->
                         <td><div class='tabletext'>${workEffort.roleTypeId}</div></td>
                         <td><A class='buttontext' href='<@ofbizUrl>/activity?workEffortId=${workEffort.workEffortId}</@ofbizUrl>'>
@@ -136,8 +136,8 @@
                       <tr>
                         <td><div class='tabletext'>${(workEffort.estimatedStartDate.toString())?if_exists}</div></td>
                         <td><div class='tabletext'>${workEffort.priority?if_exists}</div></td>
-                        <td><div class='tabletext'>${(delegator.findByPrimaryKeyCache("StatusItem", UtilMisc.toMap("statusId", workEffort.getString("currentStatusId"))).description)?if_exists}</div></td>
-                        <td><div class='tabletext'>${(delegator.findByPrimaryKeyCache("StatusItem", UtilMisc.toMap("statusId", workEffort.getString("statusId"))).description)?if_exists}</div></td>
+                        <td><div class='tabletext'>${(delegator.findByPrimaryKeyCache("StatusItem", Static["org.ofbiz.base.util.UtilMisc"].toMap("statusId", workEffort.getString("currentStatusId"))).description)?if_exists}</div></td>
+                        <td><div class='tabletext'>${(delegator.findByPrimaryKeyCache("StatusItem", Static["org.ofbiz.base.util.UtilMisc"].toMap("statusId", workEffort.getString("statusId"))).description)?if_exists}</div></td>
                         <#-- <td><div class='tabletext'>${workEffort.partyId}</div></td> -->
                         <td><div class='tabletext'>${workEffort.roleTypeId}</div></td>
                         <td><A class='buttontext' href='<@ofbizUrl>/activity?workEffortId=${workEffort.workEffortId}</@ofbizUrl>'>
@@ -176,8 +176,8 @@
                       <tr>
                         <td><div class='tabletext'>${(workEffort.estimatedStartDate.toString())?if_exists}</div></td>
                         <td><div class='tabletext'>${workEffort.priority?if_exists}</div></td>
-                        <td><div class='tabletext'>${(delegator.findByPrimaryKeyCache("StatusItem", UtilMisc.toMap("statusId", workEffort.getString("currentStatusId"))).description)?if_exists}</div></td>
-                        <td><div class='tabletext'>${(delegator.findByPrimaryKeyCache("StatusItem", UtilMisc.toMap("statusId", workEffort.getString("statusId"))).description)?if_exists}</div></td>
+                        <td><div class='tabletext'>${(delegator.findByPrimaryKeyCache("StatusItem", Static["org.ofbiz.base.util.UtilMisc"].toMap("statusId", workEffort.getString("currentStatusId"))).description)?if_exists}</div></td>
+                        <td><div class='tabletext'>${(delegator.findByPrimaryKeyCache("StatusItem", Static["org.ofbiz.base.util.UtilMisc"].toMap("statusId", workEffort.getString("statusId"))).description)?if_exists}</div></td>
                         <td><div class='tabletext'>${workEffort.groupPartyId}</div></td>
                         <#-- <td><div class='tabletext'>${workEffort.roleTypeId}</div></td> -->
                         <td><A class='buttontext' href='<@ofbizUrl>/activity?workEffortId=${workEffort.workEffortId}</@ofbizUrl>'>
