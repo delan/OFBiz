@@ -882,6 +882,7 @@
         <attribute name="limitView" type="Boolean" mode="IN" optional="false"/>
         <attribute name="viewIndexString" type="String" mode="IN" optional="true"/>
         <attribute name="viewSizeString" type="String" mode="IN" optional="true"/>
+        <attribute name="useCacheForMembers" type="Boolean" mode="IN" optional="true"/>
         <attribute name="productCategory" type="org.ofbiz.core.entity.GenericValue" mode="OUT" optional="true"/>
         <attribute name="productCategoryMembers" type="java.util.Collection" mode="OUT" optional="true"/>
         <attribute name="viewIndex" type="Integer" mode="OUT" optional="false"/>

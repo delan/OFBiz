@@ -133,6 +133,11 @@ public class CategoryServices {
         boolean limitView = ((Boolean) context.get("limitView")).booleanValue();
         int defaultViewSize = ((Integer) context.get("defaultViewSize")).intValue();
 
+        boolean useCacheForMembers = true;
+        if (context.get("useCacheForMembers") != null) {
+            useCacheForMembers = ((Boolean) context.get("useCacheForMembers")).booleanValue();
+        }
+        
         int viewIndex = 0;
         try {
             viewIndex = Integer.valueOf((String) context.get("viewIndexString")).intValue();
@@ -157,7 +162,12 @@ public class CategoryServices {
         Collection productCategoryMembers = null;
         if (productCategory != null) {
             try {
-                productCategoryMembers = EntityUtil.filterByDate(productCategory.getRelatedCache("ProductCategoryMember", null, UtilMisc.toList("sequenceNum")), true);
+                if (useCacheForMembers) {
+                    productCategoryMembers = productCategory.getRelatedCache("ProductCategoryMember", null, UtilMisc.toList("sequenceNum"));
+                } else {
+                    productCategoryMembers = productCategory.getRelated("ProductCategoryMember", null, UtilMisc.toList("sequenceNum"));
+                }
+                productCategoryMembers = EntityUtil.filterByDate(productCategoryMembers, true);
             } catch (GenericEntityException e) {
                 Debug.logError(e);
             }
