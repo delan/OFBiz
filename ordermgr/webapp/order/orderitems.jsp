@@ -120,8 +120,10 @@
                 <ofbiz:iterator name="orderItemAdjustment" property="orderItemAdjustments">
                     <%GenericValue adjustmentType = orderItemAdjustment.getRelatedOneCache("OrderAdjustmentType");%>
                     <tr>
-                        <td align="right" colspan="4"><div class="tabletext"><b><i>Adjustment</i>:</b> <b><%=adjustmentType.getString("description")%></b> <%=UtilFormatOut.ifNotEmpty(orderItemAdjustment.getString("comments"), ": ", "")%></div></td>
-                        <td align="right"><div class="tabletext"><%=UtilFormatOut.formatPrice(OrderReadHelper.calcItemAdjustment(orderItemAdjustment, orderItem))%></div></td>
+                        <td align="right" colspan="2"><div class="tabletext" style='font-size: xx-small;'><b><i>Adjustment</i>:</b> <b><%=adjustmentType.getString("description")%></b> <%=UtilFormatOut.ifNotEmpty(orderItemAdjustment.getString("comments"), ": ", "")%></div></td>
+                        <td>&nbsp;</td>
+                        <td>&nbsp;</td>
+                        <td align="right"><div class="tabletext" style='font-size: xx-small;'><%=UtilFormatOut.formatPrice(OrderReadHelper.calcItemAdjustment(orderItemAdjustment, orderItem))%></div></td>
                         <td>&nbsp;</td>
                     </tr>
                 </ofbiz:iterator>
@@ -138,6 +140,26 @@
                         <td>&nbsp;</td>
                     </tr>
                 </ofbiz:iterator>
+
+                <%-- now show inventory reservation info per line item --%>
+                <%Collection orderItemInventoryReses = orderReadHelper.getOrderItemInventoryReses(orderItem);%>
+                <%if (orderItemInventoryReses != null) pageContext.setAttribute("orderItemInventoryReses", orderItemInventoryReses);%>
+                <ofbiz:if name="orderItemInventoryReses" size="0">
+                    <ofbiz:iterator name="orderItemInventoryRes" property="orderItemInventoryReses">
+                        <tr>
+                            <td align="right" colspan="2">
+                                <div class="tabletext" style='font-size: xx-small;'>
+                                    <b><i>Inventory</i>:</b>
+                                    <a target='_blank' href='/catalog/control/EditInventoryItem?inventoryItemId=<%=UtilFormatOut.checkNull(orderItemInventoryRes.getString("inventoryItemId"))%>' class='buttontext' style='font-size: xx-small;'><%=UtilFormatOut.checkNull(orderItemInventoryRes.getString("inventoryItemId"))%></a>
+                                </div>
+                            </td>
+                            <td align="center"><div class="tabletext" style='font-size: xx-small;'><%=UtilFormatOut.formatQuantity(orderItemInventoryRes.getDouble("quantity"))%>&nbsp;</div></td>
+                            <td>&nbsp;</td>
+                            <td>&nbsp;</td>
+                            <td>&nbsp;</td>
+                        </tr>
+                    </ofbiz:iterator>
+                </ofbiz:if>
               </ofbiz:iterator>
               <ofbiz:unless name="orderItemList" size="0">
                 <tr><td><font color="red">ERROR: Sales Order Lines lookup failed.</font></td></tr>

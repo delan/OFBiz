@@ -47,6 +47,7 @@ public class OrderReadHelper {
     protected Collection paymentPrefs = null;
     protected Collection orderStatuses = null;
     protected Collection orderItemPriceInfos = null;
+    protected Collection orderItemInventoryReses = null;
     protected Double totalPrice = null;
 
     protected OrderReadHelper() {
@@ -79,6 +80,20 @@ public class OrderReadHelper {
         }
         String orderItemSeqId = orderItem.getString("orderItemSeqId");
         return EntityUtil.filterByAnd(this.orderItemPriceInfos, UtilMisc.toMap("orderItemSeqId", orderItemSeqId));
+    }
+    
+    public Collection getOrderItemInventoryReses(GenericValue orderItem) {
+        if (orderItem == null) return null;
+        if (this.orderItemInventoryReses == null) {
+            GenericDelegator delegator = orderHeader.getDelegator();
+            try {
+                orderItemInventoryReses = delegator.findByAnd("OrderItemInventoryRes", UtilMisc.toMap("orderId", orderHeader.get("orderId")));
+            } catch (GenericEntityException e) {
+                Debug.logWarning(e);
+            }
+        }
+        String orderItemSeqId = orderItem.getString("orderItemSeqId");
+        return EntityUtil.filterByAnd(this.orderItemInventoryReses, UtilMisc.toMap("orderItemSeqId", orderItemSeqId));
     }
     
     public List getAdjustments() {
