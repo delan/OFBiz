@@ -26,7 +26,7 @@
  *
  * @author     David E. Jones (jonesde@ofbiz.org)
  * @author     Andy Zeneski (jaz@ofbiz.org)
- * @version    $Revision: 1.14 $
+ * @version    $Revision: 1.15 $
  */
 -->
 
@@ -1022,6 +1022,7 @@
       <alias entity-alias="SA" name="surveyId"/>
       <alias entity-alias="SA" name="fromDate"/>
       <alias entity-alias="SA" name="thruDate"/>
+      <alias entity-alias="SA" name="requiredField"/>
       <alias entity-alias="SA" name="sequenceNum"/>
       <view-link entity-alias="SQ" rel-entity-alias="SA">
         <key-map field-name="surveyQuestionId"/>
@@ -1043,6 +1044,7 @@
       <field name="surveyQuestionId" type="id-ne"/>
       <field name="fromDate" type="date-time"/>
       <field name="thruDate" type="date-time"/>
+      <field name="requiredField" type="indicator"/>
       <field name="sequenceNum" type="numeric"/>
       <prim-key field="surveyId"/>
       <prim-key field="surveyQuestionId"/>
