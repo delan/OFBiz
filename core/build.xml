@@ -50,9 +50,13 @@
         <property name="servlet.jar"   value="${servlet1.jar}:${servlet2.jar}" />
 
         <property name="jdbc1.jar"     value="${env.CATALINA_HOME}/common/lib/jdbc2_0-stdext.jar" />
-        <property name="jdbc2.jar"     value="${env.JBOSS_HOME}/lib/jboss-jdbc_ext.jar.jar" />
+        <property name="jdbc2.jar"     value="${env.JBOSS_HOME}/lib/jboss-jdbc_ext.jar" />
         <property name="jdbc3.jar"     value="${env.JBOSS_HOME}/lib/jdbc2_0-stdext.jar" />
         <property name="jdbc.jar"      value="${jdbc1.jar}:${jdbc2.jar}:${jdbc3.jar}" />
+
+        <property name="jta1.jar"     value="${env.CATALINA_HOME}/common/lib/jta.jar" />
+        <property name="jta2.jar"     value="${env.JBOSS_HOME}/lib/jboss-j2ee.jar" /> <!-- ??? -->
+        <property name="jta.jar"      value="${jta1.jar}:${jta2.jar}" />
 
         <property name="mail1.jar"     value="${env.CATALINA_HOME}/common/lib/mail.jar" />
         <property name="mail2.jar"     value="${env.JBOSS_HOME}/lib/ext/mail.jar" />
@@ -63,6 +67,8 @@
         <property name="jaxp.jar"      value="${jaxp1.jar}:${jaxp2.jar}" />
 
         <property name="xerces.jar"    value="${env.CATALINA_HOME}/lib/xerces.jar:${env.CATALINA_HOME}/common/lib/xerces.jar" />
+        
+        <property name="tyrex.jar"    value="${env.CATALINA_HOME}/common/lib/tyrex-0.9.7.0.jar" />
 
         <property name="log4j.jar"     value="../lib/log4j.jar"/>
 		<property name="bsh.jar"       value="../lib/bsh-1.2b3.jar"/>
@@ -71,7 +77,7 @@
         <property name="wsdl4j.jar"    value="../lib/wsdl4j.jar" />
 
         <property name="api-jars1"     value="${servlet.jar}:${jdbc.jar}:${mail.jar}:${log4j.jar}" />
-        <property name="api-jars2"     value="${jaxp.jar}:${xerces.jar}:${bsh.jar}" />
+        <property name="api-jars2"     value="${jaxp.jar}:${jta.jar}:${xerces.jar}:${tyrex.jar}:${bsh.jar}" />
         <property name="api-jars3"     value="${axis.jar}:${clutil.jar}:${wsdl4j.jar}" />
 		<property name="api-jars"      value="${api-jars1}:${api-jars2}:${api-jars3}" />
         <property name="classpath"     value="${env.CLASSPATH}:${lib.dir}:${api-jars}" />
