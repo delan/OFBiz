@@ -1,5 +1,5 @@
 /*
- * $Id: ServiceEcaCondition.java,v 1.1 2003/08/17 05:12:39 ajzeneski Exp $
+ * $Id: ServiceEcaCondition.java,v 1.2 2003/09/25 21:23:10 ajzeneski Exp $
  *
  * Copyright (c) 2002 The Open For Business Project - www.ofbiz.org
  *
@@ -39,7 +39,7 @@ import org.w3c.dom.Element;
  * ServiceEcaCondition
  *
  * @author     <a href="mailto:jaz@ofbiz.org">Andy Zeneski</a>
- * @version    $Revision: 1.1 $
+ * @version    $Revision: 1.2 $
  * @since      2.0
  */
 public class ServiceEcaCondition {
@@ -102,7 +102,7 @@ public class ServiceEcaCondition {
             if (context.containsKey(lhsValueName)) {
                 lhsValue = context.get(lhsValueName);
             } else {
-                Debug.logInfo("From Field (" + lhsValueName + ") is not found in context, defaulting to null.", module);
+                Debug.logInfo("From Field (" + lhsValueName + ") is not found in context for " + serviceName + ", defaulting to null.", module);
             }
         }
 
@@ -114,7 +114,7 @@ public class ServiceEcaCondition {
                     Map envMap = (Map) context.get(rhsMapName);
                     rhsValue = envMap.get(rhsValueName);
                 } else {
-                    Debug.logWarning("To Map (" + rhsMapName + ") not found in context, defaulting to null.", module);
+                    Debug.logWarning("To Map (" + rhsMapName + ") not found in context for " + serviceName + ", defaulting to null.", module);
                 }
             } catch (ClassCastException e) {
                 throw new GenericServiceException("To Map field [" + rhsMapName + "] is not a Map.", e);
@@ -123,7 +123,7 @@ public class ServiceEcaCondition {
             if (context.containsKey(rhsValueName)) {
                 rhsValue = context.get(rhsValueName);
             } else {
-                Debug.logInfo("To Field (" + rhsValueName + ") is not found in context, defaulting to null.", module);
+                Debug.logInfo("To Field (" + rhsValueName + ") is not found in context for " + serviceName + ", defaulting to null.", module);
             }
         }
 
