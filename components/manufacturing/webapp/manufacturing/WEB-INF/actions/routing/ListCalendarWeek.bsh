@@ -19,16 +19,29 @@
  *  OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR 
  *  THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  *
- *@author     Olivier Heintz (olivier.heintz@nereide.biz)
- *@version    $Revision: 1.2 $
+ *@author     Olivier.Heintz@nereide.biz
+ *@version    $Revision: 1.1 $
  *@since      3.0
  */
- 
-import java.util.*;
-import org.ofbiz.entity.*;
-import org.ofbiz.base.util.*;
 
-requestParams = UtilHttp.getParameterMap(request);
+
+import java.util.*;
+import org.ofbiz.base.util.*;
+import org.ofbiz.entity.*;
+import org.ofbiz.content.widget.html.*;
+
+security = request.getAttribute("security");
 delegator = request.getAttribute("delegator");
-List allCalendar = delegator.findAll("TechDataCalendar");
-context.put("techDataCalendars", allCalendar);
+
+if(security.hasEntityPermission("MANUFACTURING", "_VIEW", session)) {
+    context.put("hasPermission", Boolean.TRUE);
+} else {
+    context.put("hasPermission", Boolean.FALSE);
+}
+List allCalendarWeek = delegator.findAll("TechDataCalendarWeek");
+context.put("allCalendarWeek",allCalendarWeek);
+HtmlFormWrapper listCalendarWeekWrapper = new HtmlFormWrapper("/routing/CalendarForms.xml", "ListCalendarWeek", request, response);
+listCalendarWeekWrapper.putInContext("calendarWeeks", allCalendarWeek);
+listCalendarWeekWrapper.putInContext("uiLabelMap", request.getAttribute("uiLabelMap"));
+context.put("listCalendarWeekWrapper",listCalendarWeekWrapper);
+

@@ -89,10 +89,29 @@
     </request-map>
 
     <!-- Routing requests -->
-    <request-map uri="FindMachineGroup">
+    <request-map uri="EditMachine">
         <security https="true" auth="true"/>
-        <response name="success" type="view" value="FindMachineGroup"/>
+        <response name="success" type="view" value="EditMachine"/>
     </request-map>
+    <request-map uri="CreateMachine">
+        <security https="true" auth="true"/>
+        <event type="service" invoke="createMachine"/>
+        <response name="success" type="view" value="EditMachine"/>
+        <response name="error" type="view" value="EditMachine"/>
+    </request-map>
+    <request-map uri="UpdateMachine">
+        <security https="true" auth="true"/>
+        <event type="service" invoke="updateMachine"/>
+        <response name="success" type="view" value="EditMachine"/>
+        <response name="error" type="view" value="EditMachine"/>
+    </request-map>
+    <request-map uri="RemoveMachine">
+        <security https="true" auth="true"/>
+        <event type="service" invoke="removeMachine"/>
+        <response name="success" type="view" value="EditMachine"/>
+        <response name="error" type="view" value="EditMachine"/>
+    </request-map>
+
     <request-map uri="EditMachineGroup">
         <security https="true" auth="true"/>
         <response name="success" type="view" value="EditMachineGroup"/>
@@ -130,11 +149,40 @@
         <response name="success" type="view" value="EditCalendar"/>
         <response name="error" type="view" value="EditCalendar"/>
     </request-map>
-
-    <request-map uri="SelectCalendarExceptionDay">
+    <request-map uri="RemoveCalendar">
         <security https="true" auth="true"/>
-        <response name="success" type="view" value="EditCalendarExceptionDay"/>
+        <event type="service" invoke="removeCalendar"/>
+        <response name="success" type="view" value="FindCalendar"/>
+        <response name="error" type="view" value="FindCalendar"/>
     </request-map>
+
+    <request-map uri="EditCalendarWeek">
+        <security https="true" auth="true"/>
+        <response name="success" type="view" value="EditCalendarWeek"/>
+    </request-map>
+    <request-map uri="ListCalendarWeek">
+        <security https="true" auth="true"/>
+        <response name="success" type="view" value="ListCalendarWeek"/>
+    </request-map>
+    <request-map uri="CreateCalendarWeek">
+        <security https="true" auth="true"/>
+        <event type="service" invoke="createCalendarWeek"/>
+        <response name="success" type="view" value="EditCalendarWeek"/>
+        <response name="error" type="view" value="EditCalendarWeek"/>
+    </request-map>
+    <request-map uri="UpdateCalendarWeek">
+        <security https="true" auth="true"/>
+        <event type="service" invoke="updateCalendarWeek"/>
+        <response name="success" type="view" value="EditCalendarWeek"/>
+        <response name="error" type="view" value="EditCalendarWeek"/>
+    </request-map>
+    <request-map uri="RemoveCalendarWeek">
+        <security https="true" auth="true"/>
+        <event type="service" invoke="removeCalendarWeek"/>
+        <response name="success" type="view" value="ListCalendarWeek"/>
+        <response name="error" type="view" value="ListCalendarWeek"/>
+    </request-map>
+
     <request-map uri="EditCalendarExceptionDay">
         <security https="true" auth="true"/>
         <response name="success" type="view" value="EditCalendarExceptionDay"/>
@@ -159,10 +207,6 @@
     </request-map>
 
     <request-map uri="EditCalendarExceptionWeek">
-        <security https="true" auth="true"/>
-        <response name="success" type="view" value="EditCalendarExceptionWeek"/>
-    </request-map>
-    <request-map uri="SelectCalendarExceptionWeek">
         <security https="true" auth="true"/>
         <response name="success" type="view" value="EditCalendarExceptionWeek"/>
     </request-map>
@@ -205,9 +249,11 @@
 
     <view-map name="FindCalendar" type="jpublish" page="/routing/FindCalendar.ftl"/>
     <view-map name="EditCalendar" type="jpublish" page="/routing/EditCalendar.ftl"/>
+    <view-map name="EditCalendarWeek" type="jpublish" page="/routing/EditCalendarWeek.ftl"/>
+    <view-map name="ListCalendarWeek" type="jpublish" page="/routing/ListCalendarWeek.ftl"/>
     <view-map name="EditCalendarExceptionDay" type="jpublish" page="/routing/EditCalendarExceptionDay.ftl"/>
     <view-map name="EditCalendarExceptionWeek" type="jpublish" page="/routing/EditCalendarExceptionWeek.ftl"/>
-    <view-map name="FindMachineGroup" type="jpublish" page="/routing/FindMachineGroup.ftl"/>
+    <view-map name="EditMachine" type="jpublish" page="/routing/EditMachine.ftl"/>
     <view-map name="EditMachineGroup" type="jpublish" page="/routing/EditMachineGroup.ftl"/>
     <!-- BOM view mappings -->
     <view-map name="findParts" type="jpublish" page="/bom/findParts.ftl"/>

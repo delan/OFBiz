@@ -20,7 +20,7 @@
  *  THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  *
  *@author     Olivier.Heintz@nereide.biz
- *@version    $Revision: 1.2 $
+ *@version    $Revision: 1.1 $
  *@since      3.0
 -->
 <#assign uiLabelMap = requestAttributes.uiLabelMap>
@@ -28,24 +28,24 @@
 
 <#if hasPermission>
 <div class='tabContainer'>
-        <a href="<@ofbizUrl>/EditMachine</@ofbizUrl>" class="tabButton">${uiLabelMap.ManufacturingMachine}</a>
-        <a href="<@ofbizUrl>/FindMachineGroup</@ofbizUrl>" class="tabButtonSelected">${uiLabelMap.ManufacturingMachineGroup}</a>
+        <a href="<@ofbizUrl>/EditMachine</@ofbizUrl>" class="tabButtonSelected">${uiLabelMap.ManufacturingMachine}</a>
+        <a href="<@ofbizUrl>/EditMachineGroup</@ofbizUrl>" class="tabButton">${uiLabelMap.ManufacturingMachineGroup}</a>
 </div>
 
-	<div class="head1">${uiLabelMap.ManufacturingEditMachineGroup}&nbsp; 
+	<div class="head1">${uiLabelMap.ManufacturingEditMachine}&nbsp; 
 	</div>
 	<br>
-	<#if machineGroup?has_content>
-			${updateMachineGroupWrapper.renderFormString()}
+	<#if machine?has_content>
+			${updateMachineWrapper.renderFormString()}
 			<br>
 			<hr class="sepbar">
 	</#if>
-	<#if allMachineGroups?has_content>
-		${listMachineGroupWrapper.renderFormString()}
+	<#if allMachines?has_content>
+		${listMachineWrapper.renderFormString()}
 		<br>
 		<hr class="sepbar">
 	</#if>
-	${addMachineGroupWrapper.renderFormString()} 
+	${addMachineWrapper.renderFormString()} 
 	<br>
 
 <#else>

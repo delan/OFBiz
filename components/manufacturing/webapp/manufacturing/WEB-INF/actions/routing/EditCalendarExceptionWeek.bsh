@@ -20,7 +20,7 @@
  *  THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  *
  *@author     Olivier.Heintz@nereide.biz
- *@version    $Revision: 1.1 $
+ *@version    $Revision: 1.2 $
  *@since      3.0
  */
 
@@ -47,9 +47,16 @@ if (calendarId != null)
 	techDataCalendar = delegator.findByPrimaryKey("TechDataCalendar", UtilMisc.toMap("calendarId", calendarId));
 if (techDataCalendar != null) 
     calendarExceptionWeeks = techDataCalendar.getRelated("TechDataCalendarExceptionWeek");
+List calendarExceptionWeeksDatas = new LinkedList();
+Iterator calendarExceptionWeeksIter = calendarExceptionWeeks.iterator();
+while (calendarExceptionWeeksIter.hasNext()) {
+    GenericValue calendarExceptionWeek = (GenericValue) calendarExceptionWeeksIter.next();
+    GenericValue calendarWeek = calendarExceptionWeek.getRelatedOne("TechDataCalendarWeek");
+    calendarExceptionWeeksDatas.add(UtilMisc.toMap("calendarExceptionWeek", calendarExceptionWeek, "calendarWeek", calendarWeek));
+}
 
 HtmlFormWrapper listCalendarExceptionWeekWrapper = new HtmlFormWrapper("/routing/CalendarForms.xml", "ListCalendarExceptionWeek", request, response);
-listCalendarExceptionWeekWrapper.putInContext("calendarExceptionWeeks", calendarExceptionWeeks);
+listCalendarExceptionWeekWrapper.putInContext("calendarExceptionWeeksDatas", calendarExceptionWeeksDatas);
 listCalendarExceptionWeekWrapper.putInContext("uiLabelMap", request.getAttribute("uiLabelMap"));
 
 HtmlFormWrapper addCalendarExceptionWeekWrapper = new HtmlFormWrapper("/routing/CalendarForms.xml", "AddCalendarExceptionWeek", request, response);

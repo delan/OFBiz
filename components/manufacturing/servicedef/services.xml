@@ -34,7 +34,58 @@
         <attribute name="description" type="String" mode="IN" optional="true"/>
         <attribute name="calendarWeekId" type="String" mode="IN" optional="true"/>
     </service>
+    <service name="removeCalendar" engine="simple"
+            location="org/ofbiz/manufacturing/techdata/RoutingSimpleMethods.xml" invoke="removeCalendar">
+        <description>Remove a calendar</description>
+        <attribute name="calendarId" type="String" mode="IN" optional="false"/>
+    </service>
     
+    <service name="createCalendarWeek" engine="simple"
+            location="org/ofbiz/manufacturing/techdata/RoutingSimpleMethods.xml" invoke="createCalendarWeek">
+        <description>Create a Calendar Week</description>
+        <attribute name="calendarWeekId" type="String" mode="IN" optional="false"/>
+        	<attribute name="description" type="String" mode="IN" optional="true"/>
+           <attribute name="mondayStartTime" type="java.sql.Time" mode="IN" optional="true"/>
+           <attribute name="mondayCapacity" type="Double" mode="IN" optional="true"/>
+           <attribute name="tuesdayStartTime" type="java.sql.Time" mode="IN" optional="true"/>
+           <attribute name="tuesdayCapacity" type="Double" mode="IN" optional="true"/>
+           <attribute name="wednesdayStartTime" type="java.sql.Time" mode="IN" optional="true"/>
+           <attribute name="wednesdayCapacity" type="Double" mode="IN" optional="true"/>
+           <attribute name="thursdayStartTime" type="java.sql.Time" mode="IN" optional="true"/>
+           <attribute name="thursdayCapacity" type="Double" mode="IN" optional="true"/>
+           <attribute name="fridayStartTime" type="java.sql.Time" mode="IN" optional="true"/>
+           <attribute name="fridayCapacity" type="Double" mode="IN" optional="true"/>
+           <attribute name="saturdayStartTime" type="java.sql.Time" mode="IN" optional="true"/>
+           <attribute name="saturdayCapacity" type="Double" mode="IN" optional="true"/>
+           <attribute name="sundayStartTime" type="java.sql.Time" mode="IN" optional="true"/>
+           <attribute name="sundayCapacity" type="Double" mode="IN" optional="true"/>
+    </service>
+    <service name="updateCalendarWeek" engine="simple"
+            location="org/ofbiz/manufacturing/techdata/RoutingSimpleMethods.xml" invoke="updateCalendarWeek">
+        <description>Update a Calendar Week</description>
+        <attribute name="calendarWeekId" type="String" mode="IN" optional="false"/>
+        	<attribute name="description" type="String" mode="IN" optional="true"/>
+           <attribute name="mondayStartTime" type="java.sql.Time" mode="IN" optional="true"/>
+           <attribute name="mondayCapacity" type="Double" mode="IN" optional="true"/>
+           <attribute name="tuesdayStartTime" type="java.sql.Time" mode="IN" optional="true"/>
+           <attribute name="tuesdayCapacity" type="Double" mode="IN" optional="true"/>
+           <attribute name="wednesdayStartTime" type="java.sql.Time" mode="IN" optional="true"/>
+           <attribute name="wednesdayCapacity" type="Double" mode="IN" optional="true"/>
+           <attribute name="thursdayStartTime" type="java.sql.Time" mode="IN" optional="true"/>
+           <attribute name="thursdayCapacity" type="Double" mode="IN" optional="true"/>
+           <attribute name="fridayStartTime" type="java.sql.Time" mode="IN" optional="true"/>
+           <attribute name="fridayCapacity" type="Double" mode="IN" optional="true"/>
+           <attribute name="saturdayStartTime" type="java.sql.Time" mode="IN" optional="true"/>
+           <attribute name="saturdayCapacity" type="Double" mode="IN" optional="true"/>
+           <attribute name="sundayStartTime" type="java.sql.Time" mode="IN" optional="true"/>
+           <attribute name="sundayCapacity" type="Double" mode="IN" optional="true"/>
+    </service>
+    <service name="removeCalendarWeek" engine="simple"
+            location="org/ofbiz/manufacturing/techdata/RoutingSimpleMethods.xml" invoke="removeCalendarWeek">
+        <description>Remove a Calendar Week</description>
+        <attribute name="calendarWeekId" type="String" mode="IN" optional="false"/>
+    </service>
+
     <service name="createCalendarExceptionDay" engine="simple"
             location="org/ofbiz/manufacturing/techdata/RoutingSimpleMethods.xml" invoke="createCalendarExceptionDay">
         <description>Create a calendar ExceptionDay</description>
@@ -81,4 +132,26 @@
         <attribute name="exceptionDateStart" type="java.sql.Date" mode="IN" optional="false"/>
     </service>
     
+    <service name="createMachine" engine="simple"
+            location="org/ofbiz/manufacturing/techdata/RoutingSimpleMethods.xml" invoke="createMachine">
+        <description>Create a Machine</description>
+        <attribute name="machineId" type="String" mode="IN" optional="false"/>
+        <attribute name="description" type="String" mode="IN" optional="true"/>
+        <attribute name="machineGroupId" type="String" mode="IN" optional="true"/>
+        <attribute name="calendarId" type="String" mode="IN" optional="true"/>
+    </service>
+    <service name="updateMachine" engine="simple"
+            location="org/ofbiz/manufacturing/techdata/RoutingSimpleMethods.xml" invoke="updateMachine">
+        <description>Update a Machine</description>
+        <attribute name="machineId" type="String" mode="IN" optional="false"/>
+        <attribute name="description" type="String" mode="IN" optional="true"/>
+        <attribute name="machineGroupId" type="String" mode="IN" optional="true"/>
+        <attribute name="calendarId" type="String" mode="IN" optional="true"/>
+    </service>
+    <service name="removeMachine" engine="simple"
+            location="org/ofbiz/manufacturing/techdata/RoutingSimpleMethods.xml" invoke="removeMachine">
+        <description>Remove a Machine</description>
+        <attribute name="machineId" type="String" mode="IN" optional="false"/>
+    </service>
+
 </services>

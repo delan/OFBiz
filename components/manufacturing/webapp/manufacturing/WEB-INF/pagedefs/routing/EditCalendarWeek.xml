@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <page>
     <template>main</template>
-    <property name="titleProperty">PageTitleFindCalendar</property>
+    <property name="titleProperty">PageTitleEditCalendarWeek</property>
     <property name="headerItem">calendar</property>   
-    <page-action name="/routing/FindCalendar.bsh"/> 
+    <content-action name="/routing/EditCalendarWeek.bsh"/> 
 </page>

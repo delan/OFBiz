@@ -19,34 +19,51 @@
  *  OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR 
  *  THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  *
- *@author     Andy Zeneski (jaz@ofbiz.org)
- *@author      Olivier.Heintz@nereide.biz
- *@version    $Revision: 1.1 $
+ *@author     Olivier.Heintz@nereide.biz
+ *@version    $Revision: 1.2 $
  *@since      3.0
  */
 
+
 import java.util.*;
-import org.ofbiz.entity.*;
 import org.ofbiz.base.util.*;
+import org.ofbiz.entity.*;
+import org.ofbiz.content.widget.html.*;
 
-requestParams = UtilHttp.getParameterMap(request);
+security = request.getAttribute("security");
 delegator = request.getAttribute("delegator");
-machineGroupId = requestParams.get("machineGroupId");
-if (machineGroupId == null) {
-    machineGroupId = request.getAttribute("machineGroupId");
+
+if(security.hasEntityPermission("MANUFACTURING", "_VIEW", session)) {
+    context.put("hasPermission", Boolean.TRUE);
+} else {
+    context.put("hasPermission", Boolean.FALSE);
 }
+GenericValue techDataMachineGroup = null;
+
+List allMachineGroups = delegator.findAll("TechDataMachineGroup");
+
+HtmlFormWrapper listMachineGroupWrapper = new HtmlFormWrapper("/routing/MachineForms.xml", "ListMachineGroup", request, response);
+listMachineGroupWrapper.putInContext("machineGroups", allMachineGroups);
+listMachineGroupWrapper.putInContext("uiLabelMap", request.getAttribute("uiLabelMap"));
+context.put("listMachineGroupWrapper",listMachineGroupWrapper);
+context.put("allMachineGroups",allMachineGroups);
+
+String machineGroupId = request.getParameter("machineGroupId");
+if (machineGroupId == null)  machineGroupId = request.getAttribute("machineGroupId");
 if (machineGroupId != null) {
-    machineGroup = delegator.findByPrimaryKey("TechDataMachineGroup", UtilMisc.toMap("machineGroupId", machineGroupId));
-    context.put("machineGroup", machineGroup);
+	techDataMachineGroup = delegator.findByPrimaryKey("TechDataMachineGroup", UtilMisc.toMap("machineGroupId", machineGroupId));
+	if (techDataMachineGroup != null) { 
+		HtmlFormWrapper updateMachineGroupWrapper = new HtmlFormWrapper("/routing/MachineForms.xml", "UpdateMachineGroup", request, response);
+		updateMachineGroupWrapper.putInContext("machineGroup", techDataMachineGroup);
+		updateMachineGroupWrapper.putInContext("uiLabelMap", request.getAttribute("uiLabelMap"));
+		context.put("machineGroup", techDataMachineGroup);
+		context.put("updateMachineGroupWrapper", updateMachineGroupWrapper);
+	}
 }
 
-tryEntity = true;
-errorMessage = request.getAttribute("_ERROR_MESSAGE_");
-if (errorMessage != null && errorMessage.length() > 0) {
-    tryEntity = false;    
-}
+HtmlFormWrapper addMachineGroupWrapper = new HtmlFormWrapper("/routing/MachineForms.xml", "AddMachineGroup", request, response);
+addMachineGroupWrapper.putInContext("uiLabelMap", request.getAttribute("uiLabelMap"));
+context.put("addMachineGroupWrapper", addMachineGroupWrapper);
 
-machineGroupData = context.get("machineGroup");
-if (!tryEntity) machineGroupData = requestParams;
-if (machineGroupData == null) machineGroupData = new HashMap();
-context.put("machineGroupData", machineGroupData);
+
+

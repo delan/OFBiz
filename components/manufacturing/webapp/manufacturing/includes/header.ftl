@@ -22,7 +22,7 @@
  *@author     Andy Zeneski (jaz@ofbiz.org)
  *@author     Jacopo Cappellato (tiz@sastau.it)
  *@author     Olivier.Heintz@nereide.biz
- *@version    $Revision: 1.1 $
+ *@version    $Revision: 1.2 $
  *@since      3.0
 -->
 
@@ -37,7 +37,7 @@
 <div class="row">
   <div class="col"><a href="<@ofbizUrl>/main</@ofbizUrl>" class="${selectedLeftClassMap.main?default(unselectedLeftClassName)}">${uiLabelMap.CommonMain}</a></div>
   <#if security.hasEntityPermission("MANUFACTURING", "_CREATE", session)>
-    <div class="col"><a href="<@ofbizUrl>/FindMachineGroup</@ofbizUrl>" class="${selectedLeftClassMap.machineGroup?default(unselectedLeftClassName)}">${uiLabelMap.ManufacturingMachineGroup}</a></div>
+    <div class="col"><a href="<@ofbizUrl>/EditMachine</@ofbizUrl>" class="${selectedLeftClassMap.machine?default(unselectedLeftClassName)}">${uiLabelMap.ManufacturingMachine}</a></div>
     <div class="col"><a href="<@ofbizUrl>/FindCalendar</@ofbizUrl>" class="${selectedLeftClassMap.calendar?default(unselectedLeftClassName)}">${uiLabelMap.ManufacturingCalendar}</a></div>
     <div class="col"><a href="<@ofbizUrl>/findParts</@ofbizUrl>" class="${selectedLeftClassMap.parts?default(unselectedLeftClassName)}">${uiLabelMap.ManufacturingParts}</a></div>
     <div class="col"><a href="<@ofbizUrl>/findBom</@ofbizUrl>" class="${selectedLeftClassMap.bom?default(unselectedLeftClassName)}">${uiLabelMap.ManufacturingBillOfMaterials}</a></div>

@@ -20,10 +20,15 @@
  *  THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  *
  *@author     Olivier Heintz (olivier.heintz@nereide.biz)
- *@version    $Revision: 1.1 $
+ *@version    $Revision: 1.2 $
  *@since      3.0
 -->
 <#assign uiLabelMap = requestAttributes.uiLabelMap>
+
+<div class='tabContainer'>
+        <a href="<@ofbizUrl>/FindCalendar</@ofbizUrl>" class="tabButtonSelected">${uiLabelMap.ManufacturingCalendar}</a>
+        <a href="<@ofbizUrl>/ListCalendarWeek</@ofbizUrl>" class="tabButton">${uiLabelMap.ManufacturingCalendarWeek}</a>
+</div>
 
 <div class="head1">${uiLabelMap.ManufacturingCalendar}</div>
 <div><a href="<@ofbizUrl>/EditCalendar</@ofbizUrl>" class="buttontext">[${uiLabelMap.ManufacturingNewCalendar}]</a></div>
@@ -45,6 +50,7 @@
         <td><div class="tabletext">${techDataCalendar.calendarWeekId?if_exists}</div></td>
         <td align="right">
           <a href="<@ofbizUrl>/EditCalendar?calendarId=${techDataCalendar.calendarId}</@ofbizUrl>" class="buttontext">[${uiLabelMap.CommonEdit}]</a>
+          <a href="<@ofbizUrl>/RemoveCalendar?calendarId=${techDataCalendar.calendarId}</@ofbizUrl>" class="buttontext">[${uiLabelMap.CommonDelete}]</a>
         </td>        
       </tr>
     </#list>

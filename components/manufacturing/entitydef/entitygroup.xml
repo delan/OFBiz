@@ -26,7 +26,7 @@
  *
  *@author     Jacopo Cappellato (tiz@sastau.it)
  *@author     Olivier.Heintz@nereide.biz
- *@version    $Revision: 1.1 $
+ *@version    $Revision: 1.2 $
  */
 -->
 
@@ -46,5 +46,6 @@
     <entity-group group="org.ofbiz" entity="TechDataCalendar" />
     <entity-group group="org.ofbiz" entity="TechDataCalendarExceptionDay" />
     <entity-group group="org.ofbiz" entity="TechDataCalendarExceptionWeek" />
+    <entity-group group="org.ofbiz" entity="TechDataMachine" />
 </entitygroup>
 
