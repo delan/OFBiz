@@ -61,8 +61,8 @@ public class OfbizContentTransform implements TemplateTransformModel {
                 public void close() throws IOException {  
                     try {                              
                         Environment env = Environment.getCurrentEnvironment();
-                        BeanModel req = (BeanModel)env.getVariable("requestBean");
-                        BeanModel res = (BeanModel) env.getVariable("responseBean");
+                        BeanModel req = (BeanModel)env.getVariable("request");
+                        BeanModel res = (BeanModel) env.getVariable("response");
                         HttpServletRequest request = (HttpServletRequest) req.getWrappedObject();
                         HttpServletResponse response = (HttpServletResponse) res.getWrappedObject();
                         ServletContext ctx = (ServletContext) request.getAttribute("servletContext");
