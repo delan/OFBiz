@@ -12,109 +12,35 @@
         <attribute name="orderId" type="String" mode="IN" optional="false"/>
     </service>
 
-    <service name="prepareOrderEmailData" engine="java"
-            location="org.ofbiz.order.order.OrderServices" invoke="prepareOrderEmailData">
-        <description>Prepares the data for a order notification email</description>
-        <attribute name="orderId" type="String" mode="INOUT" optional="false"/>
-        <attribute name="orderItemSeqId" type="String" mode="INOUT" optional="true"/>
-        <attribute name="orderHeader" type="Map" mode="OUT" optional="false"/>
-        <attribute name="orderItems" type="List" mode="OUT" optional="false"/>
-        <attribute name="orderAdjustments" type="List" mode="OUT" optional="false"/>
-        <attribute name="orderHeaderAdjustments" type="List" mode="OUT" optional="false"/>
-        <attribute name="orderSubTotal" type="Double" mode="OUT" optional="false"/>
-        <attribute name="statusString" type="String" mode="OUT" optional="false"/>
-        <attribute name="headerAdjustmentsToShow" type="List" mode="OUT" optional="false"/>
-        <attribute name="orderShippingTotal" type="Double" mode="OUT" optional="false"/>
-        <attribute name="orderTaxTotal" type="Double" mode="OUT" optional="false"/>
-        <attribute name="orderGrandTotal" type="Double" mode="OUT" optional="false"/>
-        <attribute name="placingCustomerPerson" type="GenericValue" mode="OUT" optional="true"/>
-        <attribute name="billingAccount" type="GenericValue" mode="OUT" optional="true"/>
-        <attribute name="orderPaymentPreferences" type="List" mode="OUT" optional="true"/>
-        <attribute name="orderShipmentInfoSummaryList" type="List" mode="OUT" optional="true"/>
-        <attribute name="orderItemShipGroups" type="List" mode="OUT" optional="true"/>
-        <attribute name="customerPoNumber" type="String" mode="OUT" optional="true"/>
-    </service>
-    <service name="prepareOrderEmail" engine="java"
-            location="org.ofbiz.order.order.OrderServices" invoke="prepareOrderEmail">
-        <description>Service to prepare (template, addresses, etc) the order notification</description>
+    <service name="orderNotificationInterface" engine="interface" location="" invoke="">
         <attribute name="orderId" type="String" mode="IN" optional="false"/>
-        <attribute name="emailType" type="String" mode="INOUT" optional="false"/>
-        <attribute name="templateName" type="String" mode="OUT" optional="false"/>
-        <attribute name="subject" type="String" mode="OUT" optional="false"/>
-        <attribute name="sendTo" type="String" mode="OUT" optional="false"/>
-        <attribute name="sendFrom" type="String" mode="OUT" optional="false"/>
-        <attribute name="sendCc" type="String" mode="OUT" optional="true"/>
-        <attribute name="sendBcc" type="String" mode="OUT" optional="true"/>
-        <attribute name="contentType" type="String" mode="OUT" optional="true"/>
-    </service>
-    <service name="prepareOrderConfirmation" engine="java"
-            location="org.ofbiz.order.order.OrderServices" invoke="prepareOrderConfirmation">
-        <description>Service to prepare (template, addresses, etc) the order confirmation</description>
-        <implements service="prepareOrderEmail"/>
-        <override name="emailType" mode="OUT"/>
-    </service>
-    <service name="prepareOrderComplete" engine="java"
-            location="org.ofbiz.order.order.OrderServices" invoke="prepareOrderComplete">
-        <description>Service to prepare (template, addresses, etc) the order notification</description>
-        <implements service="prepareOrderEmail"/>
-        <override name="emailType" mode="OUT"/>
-    </service>
-    <service name="prepareOrderBackorder" engine="java"
-            location="org.ofbiz.order.order.OrderServices" invoke="prepareOrderBackorder">
-        <description>Service to prepare (template, addresses, etc) the order notification</description>
-        <implements service="prepareOrderEmail"/>
-        <override name="emailType" mode="OUT"/>
-    </service>
-    <service name="prepareOrderChange" engine="java"
-            location="org.ofbiz.order.order.OrderServices" invoke="prepareOrderChange">
-        <description>Service to prepare (template, addresses, etc) the order notification</description>
-        <implements service="prepareOrderEmail"/>
-        <override name="emailType" mode="OUT"/>
-    </service>
-    <service name="prepareOrderPayRetry" engine="java"
-            location="org.ofbiz.order.order.OrderServices" invoke="prepareOrderPayRetry">
-        <description>Service to prepare (template, addresses, etc) the order notification</description>
-        <implements service="prepareOrderEmail"/>
-        <override name="emailType" mode="OUT"/>
+        <attribute name="orderItemSeqId" type="String" mode="IN" optional="true"/>
+        <attribute name="emailType" type="String" mode="OUT" optional="false"/>
     </service>
     <service name="sendOrderConfirmation" engine="java" require-new-transaction="true" max-retry="3"
-            location="org.ofbiz.content.email.NotificationServices" invoke="sendNotification">
+            location="org.ofbiz.order.order.OrderServices" invoke="sendOrderConfirmNotification">
         <description>Send a order confirmation</description>
-        <implements service="sendNotificationInterface"/>
-        <attribute name="orderId" type="String" mode="IN" optional="false"/>
-        <attribute name="emailType" type="String" mode="IN" optional="false"/>
+        <implements service="orderNotificationInterface"/>
     </service>
     <service name="sendOrderChangeNotification" engine="java" require-new-transaction="true" max-retry="3"
-            location="org.ofbiz.content.email.NotificationServices" invoke="sendNotification">
+            location="org.ofbiz.order.order.OrderServices" invoke="sendOrderChangeNotification">
         <description>Send a order notification</description>
-        <implements service="sendNotificationInterface"/>
-        <attribute name="orderId" type="String" mode="IN" optional="false"/>
-        <attribute name="orderItemSeqId" type="String" mode="IN" optional="true"/>
-        <attribute name="emailType" type="String" mode="IN" optional="false"/>
+        <implements service="orderNotificationInterface"/>
     </service>
     <service name="sendOrderCompleteNotification" engine="java" require-new-transaction="true" max-retry="3"
-            location="org.ofbiz.content.email.NotificationServices" invoke="sendNotification">
+            location="org.ofbiz.order.order.OrderServices" invoke="sendOrderCompleteNotification">
         <description>Send a order notification</description>
-        <implements service="sendNotificationInterface"/>
-        <attribute name="orderId" type="String" mode="IN" optional="false"/>
-        <attribute name="orderItemSeqId" type="String" mode="IN" optional="true"/>
-        <attribute name="emailType" type="String" mode="IN" optional="false"/>
+        <implements service="orderNotificationInterface"/>
     </service>
     <service name="sendOrderBackorderNotification" engine="java" require-new-transaction="true" max-retry="3"
-            location="org.ofbiz.content.email.NotificationServices" invoke="sendNotification">
+            location="org.ofbiz.order.order.OrderServices" invoke="sendOrderBackorderNotification">
         <description>Send a order notification</description>
-        <implements service="sendNotificationInterface"/>
-        <attribute name="orderId" type="String" mode="IN" optional="false"/>
-        <attribute name="orderItemSeqId" type="String" mode="IN" optional="true"/>
-        <attribute name="emailType" type="String" mode="IN" optional="false"/>
+        <implements service="orderNotificationInterface"/>
     </service>
     <service name="sendOrderPayRetryNotification" engine="java" require-new-transaction="true" max-retry="3"
-            location="org.ofbiz.content.email.NotificationServices" invoke="sendNotification">
+            location="org.ofbiz.order.order.OrderServices" invoke="sendOrderPayRetryNotification">
         <description>Send a order notification</description>
-        <implements service="sendNotificationInterface"/>
-        <attribute name="orderId" type="String" mode="IN" optional="false"/>
-        <attribute name="orderItemSeqId" type="String" mode="IN" optional="true"/>
-        <attribute name="emailType" type="String" mode="IN" optional="false"/>
+        <implements service="orderNotificationInterface"/>
     </service>
 
     <service name="sendProcessNotification" engine="java" require-new-transaction="true" max-retry="3"

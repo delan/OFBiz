@@ -1497,11 +1497,111 @@ public class OrderServices {
         return result;
     }
 
-    /** Service to prepare notification data */
-    public static Map prepareOrderEmailData(DispatchContext ctx, Map context) {
-        Map result = new HashMap();
-        GenericDelegator delegator = ctx.getDelegator();
+    /** Service to email a customer with initial order confirmation */
+    public static Map sendOrderConfirmNotification(DispatchContext ctx, Map context) {
+        return sendOrderNotification(ctx, context, "PRDS_ODR_CONFIRM");
+    }
+
+    /** Service to email a customer with order changes */
+    public static Map sendOrderCompleteNotification(DispatchContext ctx, Map context) {
+        return sendOrderNotification(ctx, context, "PRDS_ODR_COMPLETE");
+    }
+
+    /** Service to email a customer with order changes */
+    public static Map sendOrderBackorderNotification(DispatchContext ctx, Map context) {
+        return sendOrderNotification(ctx, context, "PRDS_ODR_BACKORDER");
+    }
+
+    /** Service to email a customer with order changes */
+    public static Map sendOrderChangeNotification(DispatchContext ctx, Map context) {
+        return sendOrderNotification(ctx, context, "PRDS_ODR_CHANGE");
+    }
+
+    /** Service to email a customer with order payment retry results */
+    public static Map sendOrderPayRetryNotification(DispatchContext ctx, Map context) {
+        return sendOrderNotification(ctx, context, "PRDS_ODR_PAYRETRY");
+    }
+
+    protected static Map sendOrderNotification(DispatchContext dctx, Map context, String emailType) {
+        LocalDispatcher dispatcher = dctx.getDispatcher();
+        GenericDelegator delegator = dctx.getDelegator();
         String orderId = (String) context.get("orderId");
+        String orderItemSeqId = (String) context.get("orderItemSeqId");
+
+        // prepare the order information
+        Map sendMap = prepareOrderEmail(delegator, orderId, orderItemSeqId, emailType);
+        if (sendMap != null && ServiceUtil.isError(sendMap)) {
+            return sendMap;
+        }
+
+        // send the notification
+        Map sendResp = null;
+        try {
+            sendResp = dispatcher.runSync("sendGenericNotificationEmail", sendMap);
+        } catch (GenericServiceException e) {
+            Debug.logError(e, module);
+            return ServiceUtil.returnError("Service exception; see logs");
+        }
+
+        // check for errors
+        if (sendResp != null && !ServiceUtil.isError(sendResp)) {
+            sendResp.put("emailType", emailType);
+        }
+        return sendResp;
+    }
+
+    protected static Map prepareOrderEmail(GenericDelegator delegator, String orderId, String orderItemSeqId, String emailType) {
+        Map result = new HashMap();
+        String ofbizHome = System.getProperty("ofbiz.home");
+
+        // get the order header and store
+        GenericValue orderHeader = null;
+        try {
+            orderHeader = delegator.findByPrimaryKey("OrderHeader", UtilMisc.toMap("orderId", orderId));
+        } catch (GenericEntityException e) {
+            Debug.logError(e, "Problem getting OrderHeader", module);
+        }
+
+        GenericValue productStoreEmail = null;
+        if (orderHeader != null) {
+            try {
+                productStoreEmail = delegator.findByPrimaryKey("ProductStoreEmailSetting", UtilMisc.toMap("productStoreId", orderHeader.get("productStoreId"), "emailType", emailType));
+            } catch (GenericEntityException e) {
+                Debug.logError(e, "Problem getting the ProductStoreEmailSetting", module);
+            }
+        }
+
+        if (productStoreEmail == null) {
+            return ServiceUtil.returnFailure("No valid email setting for store");
+        }
+
+        OrderReadHelper orh = new OrderReadHelper(orderHeader);
+        String emailString = orh.getOrderEmailString();
+        if (UtilValidate.isEmpty(emailString)) {
+            Debug.logInfo("Customer is not setup to receive emails; no address(s) found [" + orderId + "]", module);
+            return ServiceUtil.returnError("No sendTo email address found");
+        }
+
+        // prepare the parsed subject
+        Map orderEmailData = prepareOrderEmailData(delegator, orderId, orderItemSeqId);
+        String subjectString = productStoreEmail.getString("subject");
+        subjectString = FlexibleStringExpander.expandString(subjectString, orderEmailData);
+
+        result.put("templateName", ofbizHome + productStoreEmail.get("templatePath"));
+        result.put("templateData", orderEmailData);
+        result.put("subject", subjectString);
+        result.put("contentType", productStoreEmail.get("contentType"));
+        result.put("sendFrom", productStoreEmail.get("fromAddress"));
+        result.put("sendCc", productStoreEmail.get("ccAddress"));
+        result.put("sendBcc", productStoreEmail.get("bccAddress"));
+        result.put("sendTo", emailString);
+
+        return result;
+    }
+
+    /** Service to prepare notification data */
+    protected static Map prepareOrderEmailData(GenericDelegator delegator, String orderId, String orderItemSeqId) {
+        Map result = new HashMap();
 
         try {
             GenericValue orderHeader = delegator.findByPrimaryKey("OrderHeader", UtilMisc.toMap("orderId", orderId));
@@ -1514,7 +1614,7 @@ public class OrderServices {
 
             //templateContext.put("localOrderReadHelper", orh);
             result.put("orderId", orderId);
-            result.put("orderItemSeqId", context.get("orderItemSeqId"));
+            result.put("orderItemSeqId", orderItemSeqId);
             result.put("orderHeader", orderHeader);
             result.put("orderItems", orh.getOrderItems());
             result.put("statusString", orh.getStatusString());
@@ -1541,8 +1641,8 @@ public class OrderServices {
             result.put("billingAccount", billingAccount);
 
             List orderPaymentPrefs = orderHeader.getRelated("OrderPaymentPreference");
-            result.put("orderPaymentPreferences", orderPaymentPrefs);                        
-           
+            result.put("orderPaymentPreferences", orderPaymentPrefs);
+
             List orderItemShipGroups = orderHeader.getRelated("OrderItemShipGroup");
             result.put("orderItemShipGroups", orderItemShipGroups);
 
@@ -1575,89 +1675,6 @@ public class OrderServices {
             Debug.logError(e, "Entity read error", module);
             return ServiceUtil.returnError("Problem with entity lookup, see error log");
         }
-        return result;
-    }
-
-    /** Service to email a customer with initial order confirmation */
-    public static Map prepareOrderConfirmation(DispatchContext ctx, Map context) {
-        context.put("emailType", "PRDS_ODR_CONFIRM");
-        return prepareOrderEmail(ctx, context);
-    }
-
-    /** Service to email a customer with order changes */
-    public static Map prepareOrderComplete(DispatchContext ctx, Map context) {
-        context.put("emailType", "PRDS_ODR_COMPLETE");
-        return prepareOrderEmail(ctx, context);
-    }
-
-    /** Service to email a customer with order changes */
-    public static Map prepareOrderBackorder(DispatchContext ctx, Map context) {
-        context.put("emailType", "PRDS_ODR_BACKORDER");
-        return prepareOrderEmail(ctx, context);
-    }
-
-    /** Service to email a customer with order changes */
-    public static Map prepareOrderChange(DispatchContext ctx, Map context) {
-        context.put("emailType", "PRDS_ODR_CHANGE");
-        return prepareOrderEmail(ctx, context);
-    }
-
-    /** Service to email a customer with order payment retry results */
-    public static Map prepareOrderPayRetry(DispatchContext ctx, Map context) {
-        context.put("emailType", "PRDS_ODR_PAYRETRY");
-        return prepareOrderEmail(ctx, context);
-    }
-
-    public static Map prepareOrderEmail(DispatchContext ctx, Map context) {
-        Map result = new HashMap();
-        GenericDelegator delegator = ctx.getDelegator();
-        String orderId = (String) context.get("orderId");
-        String emailType = (String) context.get("emailType");
-        String ofbizHome = System.getProperty("ofbiz.home");
-
-        // get the order header and store
-        GenericValue orderHeader = null;
-        try {
-            orderHeader = delegator.findByPrimaryKey("OrderHeader", UtilMisc.toMap("orderId", orderId));
-        } catch (GenericEntityException e) {
-            Debug.logError(e, "Problem getting OrderHeader", module);
-        }
-
-        GenericValue productStoreEmail = null;
-        if (orderHeader != null) {
-            try {
-                productStoreEmail = delegator.findByPrimaryKey("ProductStoreEmailSetting", UtilMisc.toMap("productStoreId", orderHeader.get("productStoreId"), "emailType", emailType));
-            } catch (GenericEntityException e) {
-                Debug.logError(e, "Problem getting the ProductStoreEmailSetting", module);
-            }
-        }
-
-        if (productStoreEmail == null) {
-            return ServiceUtil.returnFailure("No valid email setting for store");
-        }
-
-        OrderReadHelper orh = new OrderReadHelper(orderHeader);
-        String emailString = orh.getOrderEmailString();
-        if (UtilValidate.isEmpty(emailString)) {
-            Debug.logInfo("Customer is not setup to receive emails; no address(s) found [" + orderId + "]", module);
-            return ServiceUtil.returnError("No sendTo email address found");
-        }
-
-        // prepare the parsed subject
-        Map orderEmailData = prepareOrderEmailData(ctx, UtilMisc.toMap("orderId", orderId));
-        String subjectString = productStoreEmail.getString("subject");
-        subjectString = FlexibleStringExpander.expandString(subjectString, orderEmailData);
-
-        result.put("templateName", ofbizHome + productStoreEmail.get("templatePath"));
-        result.put("emailType", emailType);
-        result.put("subject", subjectString);
-        result.put("contentType", productStoreEmail.get("contentType"));
-        result.put("sendFrom", productStoreEmail.get("fromAddress"));
-        result.put("sendCc", productStoreEmail.get("ccAddress"));
-        result.put("sendBcc", productStoreEmail.get("bccAddress"));
-        result.put("sendTo", emailString);
-        result.put(ModelService.RESPONSE_MESSAGE, ModelService.RESPOND_SUCCESS);
-
         return result;
     }
 
