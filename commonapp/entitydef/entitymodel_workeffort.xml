@@ -1017,17 +1017,17 @@
       <relation type="one" fk-name="WKEFF_PA_WE" rel-entity-name="WorkEffort">
         <key-map field-name="workEffortId"/>
       </relation>
-      <relation type="one" fk-name="WKEFF_PA_PARTY" rel-entity-name="Party">
+      <relation type="one-nofk" rel-entity-name="Party">
         <key-map field-name="partyId"/>
       </relation>
       <relation type="one-nofk" rel-entity-name="Person">
         <key-map field-name="partyId"/>
       </relation>
-      <relation type="one" fk-name="WKEFF_PA_PROLE" rel-entity-name="PartyRole">
+      <relation type="one-nofk" rel-entity-name="PartyRole">
         <key-map field-name="partyId"/>
         <key-map field-name="roleTypeId"/>
       </relation>
-      <relation type="one" fk-name="WKEFF_PA_ROLE" rel-entity-name="RoleType">
+      <relation type="one-nofk" rel-entity-name="RoleType">
         <key-map field-name="roleTypeId"/>
       </relation>
       <relation type="one" fk-name="WKEFF_PA_FACILITY" rel-entity-name="Facility">
