@@ -44,10 +44,7 @@
     <process field="nameOnCard"><copy/><not-empty><fail-message message="Name on Card is missing"/></not-empty></process>
     <process field="companyNameOnCard"><copy/></process>
     <process field="cardType"><copy/><not-empty><fail-message message="Card Type is missing"/></not-empty></process>
-    <process field="cardNumber">
-        <copy/>
-        <not-empty><fail-message message="Card Number is missing"/></not-empty>
-        <validate-method method="isAnyCard"><fail-message message="Card Number is not a valid credit card number for any type of card known"/></validate-method></process>
+    <process field="cardNumber"><copy/></process>
     <process field="cardSecurityCode"><copy/></process>
     <process field="contactMechId"><copy/></process>
     <process field="expMonth"><not-empty><fail-message message="Expiration Month is missing"/></not-empty></process>
