@@ -1,5 +1,5 @@
 /*
- * $Id: currentvalprep.bsh,v 1.2 2004/07/24 20:33:06 ajzeneski Exp $
+ * $Id$
  *
  * Copyright (c) 2003 The Open For Business Project - www.ofbiz.org
  *
@@ -22,7 +22,7 @@
  * THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  *
  * @author     <a href="mailto:byersa@automationgroups.com">Al Byers</a>
- * @version    $Revision: 1.2 $
+ * @version    $Rev:$
  * @since      3.0
 
  * A commonly called script to find the "current" entity (either Content or DataResource

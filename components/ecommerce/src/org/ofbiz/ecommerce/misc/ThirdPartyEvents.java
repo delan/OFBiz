@@ -1,5 +1,5 @@
 /*
- * $Id: ThirdPartyEvents.java,v 1.1 2003/08/18 19:44:45 ajzeneski Exp $
+ * $Id$
  *
  *  Copyright (c) 2001, 2002 The Open For Business Project - www.ofbiz.org
  *
@@ -47,7 +47,7 @@ import org.ofbiz.entity.util.EntityUtil;
  * Third Party Events (Affiliate/Distributor)
  *
  * @author     <a href="mailto:jaz@ofbiz.org">Andy Zeneski</a>
- * @version    $Revision: 1.1 $
+ * @version    $Rev:$
  * @since      2.0
  */
 public class ThirdPartyEvents {
