@@ -1,5 +1,5 @@
 /*
- * $Id: UtilCache.java,v 1.4 2004/04/30 00:46:07 jonesde Exp $
+ * $Id: UtilCache.java,v 1.5 2004/05/01 11:26:06 jonesde Exp $
  *
  *  Copyright (c) 2001-2004 The Open For Business Project - www.ofbiz.org
  *
@@ -43,7 +43,7 @@ import java.util.Set;
  * </ul>
  *
  * @author     <a href="mailto:jonesde@ofbiz.org">David E. Jones</a>
- * @version    $Revision: 1.4 $
+ * @version    $Revision: 1.5 $
  * @since      2.0
  */
 public class UtilCache {
@@ -123,6 +123,19 @@ public class UtilCache {
         String name = "specified" + this.getNextDefaultIndex("specified");
 
         setPropertiesParams(name);
+        utilCacheTable.put(name, this);
+    }
+
+    /** This constructor takes a name for the cache, puts itself in the utilCacheTable.
+     * It also uses the cacheName to lookup the initialization parameters from cache.properties.
+     * @param cacheName The name of the cache.
+     */
+    public UtilCache(String cacheName, boolean useSoftReference) {
+        setPropertiesParams("default");
+        setPropertiesParams(cacheName);
+
+        name = cacheName + this.getNextDefaultIndex(cacheName);
+        this.useSoftReference = useSoftReference;
         utilCacheTable.put(name, this);
     }
 
@@ -556,6 +569,28 @@ public class UtilCache {
         return false;
     }
     
+    public static void clearCachesThatStartWith(String startsWith) {
+        synchronized (utilCacheTable) {
+            Iterator it = utilCacheTable.entrySet().iterator();
+            while (it.hasNext()) {    
+                Map.Entry entry = (Map.Entry) it.next();    
+                String name = (String) entry.getKey();    
+                if (name.startsWith(startsWith)) {    
+                    UtilCache cache = (UtilCache) entry.getValue();    
+                    cache.clear();    
+                }
+            }
+        }
+    }
+
+    public static void clearCache(String cacheName) {
+        synchronized (UtilCache.utilCacheTable) {
+            UtilCache cache = (UtilCache) UtilCache.utilCacheTable.get(cacheName);
+            if (cache == null) return;
+            cache.clear();
+        }
+    }
+
     public static class CacheLine {
         public UtilCache utilCache;
         public Object valueRef = null;
