@@ -41,6 +41,7 @@
   <#if security.hasEntityPermission("MANUFACTURING", "_CREATE", session)>
     <div class="col"><a href="<@ofbizUrl>/FindProductionRun</@ofbizUrl>" class="${selectedLeftClassMap.jobshop?default(unselectedLeftClassName)}">${uiLabelMap.ManufacturingJobShop}</a></div>
     <div class="col"><a href="<@ofbizUrl>/FindRouting</@ofbizUrl>" class="${selectedLeftClassMap.routing?default(unselectedLeftClassName)}">${uiLabelMap.ManufacturingRouting}</a></div>
+    <div class="col"><a href="<@ofbizUrl>/FindRoutingTask</@ofbizUrl>" class="${selectedLeftClassMap.routingTask?default(unselectedLeftClassName)}">${uiLabelMap.ManufacturingRoutingTask}</a></div>
     <div class="col"><a href="<@ofbizUrl>/FindCalendar</@ofbizUrl>" class="${selectedLeftClassMap.calendar?default(unselectedLeftClassName)}">${uiLabelMap.ManufacturingCalendar}</a></div>
     <div class="col"><a href="<@ofbizUrl>/BomSimulation</@ofbizUrl>" class="${selectedLeftClassMap.bom?default(unselectedLeftClassName)}">${uiLabelMap.ManufacturingBillOfMaterials}</a></div>
     <div class="col"><a href="<@ofbizUrl>/FindInventoryEventPlan</@ofbizUrl>" class="${selectedLeftClassMap.mrp?default(unselectedLeftClassName)}">${uiLabelMap.ManufacturingMrp}</a></div>
