@@ -1,6 +1,7 @@
 /*
  * $Id$
  * $Log$
+ *
  * Revision 1.1  2001/10/19 16:44:42  azeneski
  * Moved Party/ContactMech/Login events to more appropiate packages.
  *
@@ -39,8 +40,9 @@ import org.ofbiz.commonapp.party.contact.ContactHelper;
  *  OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR
  *  THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  *
- * @author Andy Zeneski (jaz@zsolv.com)
- * @author David E. Jones (jonesde@ofbiz.org) 
+ * @author <a href="mailto:jaz@zsolv.com">Andy Zeneski</a> 
+ * @author <a href="mailto:jonesde@ofbiz.org">David E. Jones</a>
+ * @author Dustin Caldwell
  * @version 1.0
  * Created on October 19, 2001, 8:34 AM
  */
@@ -146,11 +148,16 @@ public class LoginEvents {
         Security sec = (Security)request.getAttribute("security");
         if(sec != null && userLogin != null) sec.userLoginSecurityGroupByUserLoginId.remove(userLogin.getString("userLoginId"));
         
+        //this is a setting we don't want to lose, although it would be good to have a more general solution here...
+        String currCatalog = (String) request.getSession().getAttribute("CURRENT_CATALOG_ID");
         request.getSession().invalidate();
         request.getSession(true);
+        if(currCatalog != null) 
+            request.getSession().setAttribute("CURRENT_CATALOG_ID", currCatalog);
         
         return "success";
     }
+    
     
     /** Change the password for the current UserLogin in the session to the
      *  password specified in the request object.
