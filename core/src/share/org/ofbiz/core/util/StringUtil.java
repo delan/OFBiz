@@ -37,6 +37,35 @@ import java.util.*;
  */
 public class StringUtil {
 
+    /** Replaces all occurances of oldString in mainString with newString
+     * @param mainString The original string
+     * @param oldString The string to replace
+     * @param newString The string to insert in place of the old
+     * @return mainString with all occurances of oldString replaced by newString
+     */
+    public static String replaceString(String mainString, String oldString, String newString) {
+        if (mainString == null) {
+            return null;
+        }
+        if (oldString == null || oldString.length() == 0) {
+            return mainString;
+        }
+        if (newString == null) {
+            newString = "";
+        }
+
+        int i = mainString.lastIndexOf(oldString);
+        if (i < 0) return mainString;
+
+        StringBuffer mainSb = new StringBuffer(mainString);
+
+        while (i >= 0) {
+            mainSb.replace(i, i + oldString.length(), newString);
+            i = mainString.lastIndexOf(oldString, i - 1);
+        }
+        return mainSb.toString();
+    }
+    
     /**
      * Creates a single string from a List of strings seperated by a delimiter.
      * @param list a list of strings to join

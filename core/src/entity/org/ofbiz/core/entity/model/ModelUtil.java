@@ -159,20 +159,7 @@ public class ModelUtil {
      * @return mainString with all occurances of oldString replaced by newString
      */
     public static String replaceString(String mainString, String oldString, String newString) {
-        String retString = new String(mainString);
-        int loc = 0;
-        int i = retString.indexOf(oldString, loc);
-
-        while (i >= 0) {
-            StringBuffer querySb = new StringBuffer(retString);
-
-            querySb.replace(i, i + oldString.length(), newString);
-            retString = querySb.toString();
-
-            loc = i + newString.length();
-            i = retString.indexOf(oldString, loc);
-        }
-        return retString;
+        return StringUtil.replaceString(mainString, oldString, newString);
     }
 
     public static String induceFieldType(String sqlTypeName, int length, int precision, ModelFieldTypeReader fieldTypeReader) {
