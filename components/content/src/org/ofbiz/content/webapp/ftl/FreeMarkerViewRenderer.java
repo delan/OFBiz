@@ -1,5 +1,5 @@
 /*
- * $Id: FreeMarkerViewRenderer.java,v 1.9 2004/06/23 15:20:07 jonesde Exp $
+ * $Id: FreeMarkerViewRenderer.java,v 1.10 2004/07/22 04:43:13 ajzeneski Exp $
  *
  * Copyright (c) 2003 The Open For Business Project - www.ofbiz.org
  *
@@ -51,7 +51,7 @@ import freemarker.template.WrappingTemplateModel;
  *
  * @author     <a href="mailto:jaz@ofbiz.org">Andy Zeneski</a>
  * @author     <a href="mailto:jonesde@ofbiz.org">David E. Jones</a>
- * @version    $Revision: 1.9 $
+ * @version    $Revision: 1.10 $
  * @since      2.1
  */
 public class FreeMarkerViewRenderer extends org.jpublish.view.freemarker.FreeMarkerViewRenderer {
@@ -103,17 +103,22 @@ public class FreeMarkerViewRenderer extends org.jpublish.view.freemarker.FreeMar
             Template template = fmConfig.getTemplate(path, page.getLocale());
             template.setObjectWrapper(BeansWrapper.getDefaultInstance());
 
+            /* NEVER add content to the beginning of templates; this effects XML processing which requires the
+               first line remain intact.                 
             boolean showTemplateId = UtilProperties.propertyValueEquals("content", "freemarker.showTemplateId", "Y");
             String templateIdPrefix = UtilProperties.getPropertyValue("content", "freemarker.templateIdPrefix", "[system]");
             if (showTemplateId) {
                 out.write("\n<!-- " + templateIdPrefix + " begin: " + template.getName() + " -->\n");
             }
+            */
 
             template.process(viewContext, out);
 
+            /*
             if (showTemplateId) {
                 out.write("\n<!-- " + templateIdPrefix + " end: " + template.getName() + " -->\n");
             }
+            */
         } catch(IOException e) {
             throw e;
         } catch(Exception e) {
