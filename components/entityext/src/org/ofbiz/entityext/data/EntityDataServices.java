@@ -1,5 +1,5 @@
 /*
- * $Id: EntityDataServices.java,v 1.9 2004/01/30 21:16:14 ajzeneski Exp $
+ * $Id: EntityDataServices.java,v 1.10 2004/02/06 19:14:55 ajzeneski Exp $
  *
  * Copyright (c) 2001-2003 The Open For Business Project - www.ofbiz.org
  *
@@ -48,7 +48,7 @@ import java.net.URISyntaxException;
  * Entity Data Import/Export Services
  *
  * @author     <a href="mailto:jaz@ofbiz.org">Andy Zeneski</a>
- * @version    $Revision: 1.9 $
+ * @version    $Revision: 1.10 $
  * @since      2.1
  */
 public class EntityDataServices {
@@ -241,6 +241,7 @@ public class EntityDataServices {
         BufferedReader reader = new BufferedReader(new FileReader(file));
         String[] header = readEntityHeader(file, delimiter, reader);
 
+        Debug.log("Opened data file [" + file.getName() + "] now running...", module);
         GeneralException exception = null;
         String line = null;
         int lineNumber = 1;
