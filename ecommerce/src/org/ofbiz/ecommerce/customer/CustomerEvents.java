@@ -1,6 +1,9 @@
 /*
  * $Id$
  * $Log$
+ * Revision 1.6  2001/08/31 00:39:48  jonesde
+ * First pass of editcontactmech and CustomerEvents.updateContactMech finished.
+ *
  * Revision 1.5  2001/08/30 21:02:18  jonesde
  * Fixed little throws clause bug stopping it from compiling.
  *
@@ -240,14 +243,56 @@ public class CustomerEvents
       
       Long newCMId = helper.getNextSeqId("ContactMech"); if(newCMId == null) { errMsg = "<li>ERROR: Could not create new contact info (id generation failure). Please contact customer service."; request.setAttribute("ERROR_MESSAGE", errMsg); return "error"; }
       GenericValue tempContactMech = helper.makeValue("ContactMech", UtilMisc.toMap("contactMechId", newCMId.toString(), "contactMechTypeId", contactMechTypeId));
-      tempContactMech.preStoreOther(helper.makeValue("PartyContactMech", UtilMisc.toMap("partyId", userLogin.get("partyId"), "contactMechId", newCMId.toString(), "fromDate", UtilDateTime.nowTimestamp(), "roleTypeId", "CUSTOMER", "allowSolicitation", "N")));      
+
+      String allowSolicitation = request.getParameter("CM_ALLOW_SOL");
+      String extension = request.getParameter("CM_EXTENSION");
+      tempContactMech.preStoreOther(helper.makeValue("PartyContactMech", UtilMisc.toMap("partyId", userLogin.get("partyId"), "contactMechId", newCMId.toString(), "fromDate", UtilDateTime.nowTimestamp(), "roleTypeId", "CUSTOMER", "allowSolicitation", allowSolicitation, "extension", extension)));
       
-      if("POSTAL_ADDRESS".equals(contactMechTypeId))        
-        tempContactMech.preStoreOther(helper.makeValue("PostalAddress", UtilMisc.toMap("contactMechId", newCMId.toString())));
+      if("POSTAL_ADDRESS".equals(contactMechTypeId))
+      {
+        String toName = request.getParameter("CM_TO_NAME");
+        String attnName = request.getParameter("CM_ATTN_NAME");
+        String address1 = request.getParameter("CM_ADDRESS1");
+        String address2 = request.getParameter("CM_ADDRESS2");
+        String city = request.getParameter("CM_CITY");
+        String state = request.getParameter("CM_STATE");
+        String postalCode = request.getParameter("CM_POSTAL_CODE");
+        String country = request.getParameter("CM_COUNTRY");
+        String directions = "";
+
+        Map addrFields = new HashMap();
+        addrFields.put("contactMechId", newCMId.toString());
+        addrFields.put("toName", toName);
+        addrFields.put("attnName", attnName);
+        addrFields.put("address1", address1);
+        addrFields.put("address2", address2);
+        addrFields.put("directions", directions);
+        addrFields.put("city", city);
+        addrFields.put("postalCode", postalCode);
+        addrFields.put("stateProvinceGeoId", state);
+        addrFields.put("countryGeoId", country);
+        //addrFields.put("postalCodeGeoId", postalCodeGeoId);
+        tempContactMech.preStoreOther(helper.makeValue("PostalAddress", addrFields));
+      }
       else if("TELECOM_NUMBER".equals(contactMechTypeId))
-        tempContactMech.preStoreOther(helper.makeValue("TelecomNumber", UtilMisc.toMap("contactMechId", newCMId.toString())));
-      
-      helper.create(tempContactMech);
+      {
+        String countryCode = request.getParameter("CM_COUNTRY_CODE");
+        String areaCode = request.getParameter("CM_AREA_CODE");
+        String contactNumber = request.getParameter("CM_CONTACT_NUMBER");
+        tempContactMech.preStoreOther(helper.makeValue("TelecomNumber", UtilMisc.toMap("contactMechId", newCMId.toString(), "countryCode", countryCode, "areaCode", areaCode, "contactNumber", contactNumber)));
+      }
+      else
+      {        
+        String infoString = request.getParameter("CM_INFO_STRING");
+        tempContactMech.set("infoString", infoString);
+      }
+            
+      if(helper.create(tempContactMech) == null)
+      { 
+        errMsg = "<li>ERROR: Could not change contact info (write failure) . Please contact customer service.";
+        request.setAttribute("ERROR_MESSAGE", errMsg);
+        return "error"; 
+      }
       request.setAttribute("CONTACT_MECH_ID", newCMId.toString());
     }
     else if("DELETE".equals(updateMode))
@@ -256,7 +301,8 @@ public class CustomerEvents
       String contactMechId = request.getParameter("CONTACT_MECH_ID");      
       GenericValue partyContactMech = helper.findByPrimaryKey("PartyContactMech", UtilMisc.toMap("partyId", userLogin.get("partyId"), "contactMechId", contactMechId));
       partyContactMech.set("thruDate", UtilDateTime.nowTimestamp());
-      partyContactMech.store();
+      try { partyContactMech.store(); }
+      catch(Exception e) { errMsg = "<li>ERROR: Could not delete contact info (write failure) . Please contact customer service."; request.setAttribute("ERROR_MESSAGE", errMsg); return "error"; }
     }
     else if("UPDATE".equals(updateMode))
     {

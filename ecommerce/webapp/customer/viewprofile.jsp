@@ -35,16 +35,13 @@
 <%@ include file="/includes/header.jsp" %>
 <%@ include file="/includes/onecolumn.jsp" %>
 <%
+  boolean showOld = "true".equals(request.getParameter("SHOW_OLD"))?true:false;
   GenericValue party = userLogin.getRelatedOne("Party");
-  
   if(party != null)
   {
     GenericValue person = party.getRelatedOne("Person");
-
-    Collection partyContactMechs = party.getRelated("PartyContactMech");
-    Iterator partyContactMechIterator = partyContactMechs.iterator();
-    Collection creditCards = party.getRelated("CreditCardInfo");
-    Iterator creditCardInfoIterator = creditCards.iterator();
+    Iterator partyContactMechIterator = UtilMisc.toIterator(party.getRelated("PartyContactMech"));
+    Iterator creditCardInfoIterator = UtilMisc.toIterator(party.getRelated("CreditCardInfo"));
 %>
 
 <%-- Main Heading --%>
@@ -86,22 +83,31 @@
         <div class="tabletext">
           <a href="<%=response.encodeURL(controlPath + "/editcontactmech")%>" class="buttontext">
           [Add Contact Information]&nbsp;&nbsp;</a>
+          <br>
+          <%if(showOld){%>
+            <a href="<%=response.encodeURL(controlPath + "/viewprofile")%>" class="buttontext">
+            [Hide Old Contact Info]&nbsp;&nbsp;</a>
+          <%}else{%>
+            <a href="<%=response.encodeURL(controlPath + "/viewprofile?SHOW_OLD=true")%>" class="buttontext">
+            [Show Old Contact Info]&nbsp;&nbsp;</a>
+          <%}%>
         </div>
       </td>
       <td width="5">&nbsp;</td>
       <td align="left">
         <%if(partyContactMechIterator != null && partyContactMechIterator.hasNext()){%>
           <table width="100%" border="0" cellpadding="1">
-            <%
-              while(partyContactMechIterator.hasNext())
+            <%boolean isFirst = true;%>
+            <%while(partyContactMechIterator.hasNext())
               {
                 GenericValue partyContactMech = (GenericValue)partyContactMechIterator.next();
                 GenericValue contactMech = partyContactMech.getRelatedOne("ContactMech");
-                Collection partyContactMechPurposes = partyContactMech.getRelated("PartyContactMechPurpose");
-                Iterator partyContactMechPurposesIter = UtilMisc.toIterator(partyContactMechPurposes);
-                if(partyContactMech.getTimestamp("thruDate") == null)
-                {
-%>
+                Iterator partyContactMechPurposesIter = UtilMisc.toIterator(partyContactMech.getRelated("PartyContactMechPurpose"));
+                if(showOld || partyContactMech.get("thruDate") == null || partyContactMech.getTimestamp("thruDate").after(new java.util.Date()))
+                {%>
+                <%if(!isFirst){%>
+                  <tr><td colspan="5" height="1" bgcolor="#899ABC"></td></tr>
+                <%}%>
                 <tr>
                   <td align="left" valign="top" width="90%">
                     <%while(partyContactMechPurposesIter != null && partyContactMechPurposesIter.hasNext()){%>
@@ -145,11 +151,9 @@
                     [Delete]</a></div>
                   </td>
                 </tr>
-                <%if(partyContactMechIterator.hasNext()){%>
-                  <tr><td colspan="5" height="1" bgcolor="#899ABC"></td></tr>
-                  <%}%>
-                <%}%>
+                <%isFirst = false;%>
               <%}%>
+            <%}%>
           </table>
         <%}else{%>
           <p>No contact information on file.</p><br>

@@ -46,40 +46,56 @@
 
   GenericValue partyContactMech = helper.findByPrimaryKey("PartyContactMech", UtilMisc.toMap("partyId", userLogin.get("partyId"), "contactMechId", contactMechId));
   GenericValue contactMech = helper.findByPrimaryKey("ContactMech", UtilMisc.toMap("contactMechId", contactMechId));
+  String contactMechTypeId = null;
+  if(contactMech != null )contactMechTypeId = contactMech.getString("contactMechTypeId");
 %>
 
 <%if(contactMech == null){%>
-<p class="head1">Create New Contact Information</p>
-
-<form method="post" action="<%=response.encodeURL(controlPath + "/updatecontactmech?UPDATE_MODE=CREATE&DONE_PAGE=" + donePage)%>" name="createcontactmechform">
-  <table width="90%" border="0" cellpadding="2" cellspacing="0">
-    <tr>
-      <td width="26%"><div class="tabletext">Select Contact Type:</div></td>
-      <td width="74%">
-        <select name="CONTACT_MECH_TYPE_ID">
-          <%Iterator contactMechTypes = UtilMisc.toIterator(helper.findByAnd("ContactMechType", null, null));%>
-          <%while(contactMechTypes != null && contactMechTypes.hasNext()){%>
-            <%GenericValue contactMechType = (GenericValue)contactMechTypes.next();%>
-            <option value='<%=contactMechType.getString("contactMechTypeId")%>'><%=contactMechType.getString("description")%></option>
-          <%}%>
-        </select>&nbsp;<a href="javascript:document.createcontactmechform.submit()" class="buttontext">[Create]</a>
-      </td>
-    </tr>
-  </table>
-</form>
-<%-- <p><h3>ERROR: Contact information with ID "<%=UtilFormatOut.checkNull(contactMechId)%>" not found!</h3></p> --%>
-<%}else{%>
-<p class="head1">Edit Contact Information</p>
-  <%if(!security.hasPermission("USER_ADMIN", session) && partyContactMech == null){%>
-  <p><h3>The contact information specified does not belong to you, you may not view or edit it.</h3></p>
+  <%if(request.getParameter("CONTACT_MECH_TYPE_ID") == null){%>
+  <p class="head1">Create New Contact Information</p>
+  <form method="post" action="<%=response.encodeURL(controlPath + "/editcontactmech?DONE_PAGE=" + donePage)%>" name="createcontactmechform">
+    <table width="90%" border="0" cellpadding="2" cellspacing="0">
+      <tr>
+        <td width="26%"><div class="tabletext">Select Contact Type:</div></td>
+        <td width="74%">
+          <select name="CONTACT_MECH_TYPE_ID">
+            <%Iterator contactMechTypes = UtilMisc.toIterator(helper.findByAnd("ContactMechType", null, null));%>
+            <%while(contactMechTypes != null && contactMechTypes.hasNext()){%>
+              <%GenericValue contactMechType = (GenericValue)contactMechTypes.next();%>
+              <option value='<%=contactMechType.getString("contactMechTypeId")%>'><%=contactMechType.getString("description")%></option>
+            <%}%>
+          </select>&nbsp;<a href="javascript:document.createcontactmechform.submit()" class="buttontext">[Create]</a>
+        </td>
+      </tr>
+    </table>
+  </form>
+  <%-- <p><h3>ERROR: Contact information with ID "<%=UtilFormatOut.checkNull(contactMechId)%>" not found!</h3></p> --%>
   <%}else{%>
-  <form method="post" action="<%=response.encodeURL(controlPath + "/updatecontactmech/" + donePage)%>" name="editcontactmechform">
-  <input type=hidden name="CONTACT_MECH_ID" value="<%=contactMechId%>">
-  <input type=hidden name="UPDATE_MODE" value="UPDATE">
+    <%contactMechTypeId = request.getParameter("CONTACT_MECH_TYPE_ID");%>
+    <%useValues = false;%>
+  <%}%>
+<%}%>
+
+<%if(!security.hasPermission("USER_ADMIN", session) && partyContactMech == null && contactMech != null){%>
+  <p><h3>The contact information specified does not belong to you, you may not view or edit it.</h3></p>
+<%}else{%>
+  <%if(contactMechTypeId != null){%>
+    <%if(contactMech == null){%>
+      <p class="head1">Create New Contact Information</p>
+      <form method="post" action="<%=response.encodeURL(controlPath + "/updatecontactmech/" + donePage)%>" name="editcontactmechform">
+      <input type=hidden name="CONTACT_MECH_TYPE_ID" value="<%=contactMechTypeId%>">
+      <input type=hidden name="UPDATE_MODE" value="CREATE">
+    <%}else{%>  
+      <p class="head1">Edit Contact Information</p>
+      <form method="post" action="<%=response.encodeURL(controlPath + "/updatecontactmech/" + donePage)%>" name="editcontactmechform">
+      <input type=hidden name="CONTACT_MECH_ID" value="<%=contactMechId%>">
+      <input type=hidden name="UPDATE_MODE" value="UPDATE">
+    <%}%>
 
   <table width="90%" border="0" cellpadding="2" cellspacing="0">
-  <%if("POSTAL_ADDRESS".equals(contactMech.getString("contactMechTypeId"))){%>
-    <%GenericValue postalAddress = contactMech.getRelatedOne("PostalAddress");%>
+  <%if("POSTAL_ADDRESS".equals(contactMechTypeId)){%>
+    <%GenericValue postalAddress = null;%>
+    <%if(contactMech != null) postalAddress = contactMech.getRelatedOne("PostalAddress");%>
     <tr>
       <td width="26%"><div class="tabletext">To Name</div></td>
       <td width="74%">
@@ -136,8 +152,9 @@
         </select>
       *</td>
     </tr>
-  <%}else if("TELECOM_NUMBER".equals(contactMech.getString("contactMechTypeId"))){%>
-    <%GenericValue telecomNumber = contactMech.getRelatedOne("TelecomNumber");%>
+  <%}else if("TELECOM_NUMBER".equals(contactMechTypeId)){%>
+    <%GenericValue telecomNumber = null;%>
+    <%if(contactMech != null) telecomNumber = contactMech.getRelatedOne("TelecomNumber");%>
     <tr>
       <td colspan='2'>All phone numbers: [Country Code] [Area Code] [Contact Number] [Extension]</td>
     </tr>
@@ -150,7 +167,7 @@
           &nbsp;ext&nbsp;<input type="text" name="CM_EXTENSION" value="<%=UtilFormatOut.checkNull(useValues?telecomNumber.getString("extension"):request.getParameter("CM_EXTENSION"))%>" size="6" maxlength="10">
       </td>
     </tr>
-  <%}else if("EMAIL_ADDRESS".equals(contactMech.getString("contactMechTypeId"))){%>
+  <%}else if("EMAIL_ADDRESS".equals(contactMechTypeId)){%>
     <tr>
       <td width="26%"><div class="tabletext">Email address</div></td>
       <td width="74%">
