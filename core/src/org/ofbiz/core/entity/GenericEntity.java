@@ -37,7 +37,7 @@ public class GenericEntity implements Serializable
   /** Contains the fields for this entity */
   protected Map fields;
   /** Map to store related entities that will be updated if modified when this entity is stored; populated with preStoreRelated(String, Collection). This is here so that it can be implicitly stored in the same transaction context. */
-  public Map relatedToStore = new HashMap();
+  public Collection otherToStore = new LinkedList();
 
   /** Contains the entityName of this entity, necessary for efficiency when creating EJBs */
   public String entityName = null;
@@ -67,7 +67,7 @@ public class GenericEntity implements Serializable
       throw new IllegalArgumentException("[GenericEntity.get] \"" + name + "\" is not a field of " + entityName);
       //Debug.logWarning("[GenericEntity.get] \"" + name + "\" is not a field of " + entityName + ", but getting anyway...");
     }
-    return fields.get(name); 
+    return fields.get(name);
   }
   public synchronized void set(String name, Object value) 
   { 

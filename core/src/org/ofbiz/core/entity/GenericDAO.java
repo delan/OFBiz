@@ -97,7 +97,7 @@ public class GenericDAO
     try 
     {
       singleInsert(entity, modelEntity, modelEntity.fields, connection);
-      storeAllRelated(entity, connection);
+      storeAllOther(entity, connection);
       if(useTX) connection.commit();
     } 
     catch (SQLException sqle) 
@@ -183,7 +183,7 @@ public class GenericDAO
     try 
     {
       singleUpdate(entity, modelEntity, fieldsToSave, connection);
-      storeAllRelated(entity, connection);
+      storeAllOther(entity, connection);
       if(useTX) connection.commit();
     } 
     catch (SQLException sqle) 
@@ -225,39 +225,21 @@ public class GenericDAO
     try { if (ps != null) ps.close(); } catch (SQLException sqle) { }
   }
   
-  private void storeAllRelated(GenericEntity entity, Connection connection) throws SQLException
+  private void storeAllOther(GenericEntity entity, Connection connection) throws SQLException
   {
     //also store valueObject.relatedToStore related entities
-    if(entity.relatedToStore != null && entity.relatedToStore.size() > 0)
+    if(entity.otherToStore != null && entity.otherToStore.size() > 0)
     {
-      Iterator entries = entity.relatedToStore.entrySet().iterator();
-      Map.Entry anEntry = null;
-      while(entries != null && entries.hasNext())
+      Iterator entities = entity.otherToStore.iterator();
+      while(entities != null && entities.hasNext())
       {
-        anEntry = (Map.Entry)entries.next();
-        String relationName = (String)anEntry.getKey();
-        Collection entities = (Collection)anEntry.getValue();
-        storeRelated(relationName, entity, entities, connection);
+        GenericEntity curEntity = (GenericEntity)entities.next();
+        if(select(curEntity)) singleUpdate(curEntity, curEntity.getModelEntity(), curEntity.getModelEntity().nopks, connection);
+        else singleInsert(curEntity, curEntity.getModelEntity(), curEntity.getModelEntity().fields, connection);
       }
     }
   }
   
-  private void storeRelated(String relationName, GenericEntity value, Collection entities, Connection connection) throws SQLException
-  {
-    ModelEntity entity = value.getModelEntity();
-    ModelRelation relation = entity.getRelation(relationName);
-    ModelEntity relatedEntity = modelReader.getModelEntity(relation.relEntityName);
-
-    //if entity exists, update, else insert
-    Iterator entIter = UtilMisc.toIterator(entities);
-    while(entIter != null && entIter.hasNext())
-    {
-      GenericEntity curEntity = (GenericEntity)entIter.next();
-      if(select(curEntity)) singleUpdate(curEntity, relatedEntity, relatedEntity.nopks, connection);
-      else singleInsert(curEntity, relatedEntity, relatedEntity.fields, connection);
-    }    
-  }  
-
 /* ====================================================================== */
 /* ====================================================================== */
   
