@@ -1,5 +1,5 @@
 /*
- * $Id: ProductSearch.java,v 1.13 2003/10/24 10:45:39 jonesde Exp $
+ * $Id: ProductSearch.java,v 1.14 2003/10/24 11:15:20 jonesde Exp $
  *
  *  Copyright (c) 2001 The Open For Business Project (www.ofbiz.org)
  *  Permission is hereby granted, free of charge, to any person obtaining a
@@ -66,7 +66,7 @@ import org.ofbiz.product.product.KeywordSearch;
  *  Utilities for product search based on various constraints including categories, features and keywords.
  *
  * @author <a href="mailto:jonesde@ofbiz.org">David E. Jones</a>
- * @version    $Revision: 1.13 $
+ * @version    $Revision: 1.14 $
  * @since      3.0
  */
 public class ProductSearch {
@@ -111,6 +111,8 @@ public class ProductSearch {
             String constraintString = productSearchConstraint.prettyPrintConstraint(delegator, detailed);
             if (UtilValidate.isNotEmpty(constraintString)) {
                 constraintStrings.add(constraintString);
+            } else {
+                constraintStrings.add("Description not available");
             }
         }
         return constraintStrings;
