@@ -156,7 +156,8 @@
                         return;
                     if (currentOrderIndex < (OPT.length - 1) || OPT.length == 1) {                        
                         if (IMG[value] != null) {
-                            document.images['mainImage'].src = IMG[value];
+                            if (document.images['mainImage'] != null)
+                                document.images['mainImage'].src = IMG[value];
                             document.addform.<%=topLevelName%>.selectedIndex = (value*1)+1;
                         }
                         if (OPT.length != 1) {
