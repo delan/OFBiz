@@ -304,5 +304,26 @@ public class ModelService {
         return target;
     }
 
+    /**
+     * Gets a list of required IN parameters in sequence.
+     * @return A list of required IN parameters in the order which they were defined.
+     */
+     public List getParameterSequence(Map source) {
+        List target = new ArrayList();
+        if (source == null)
+            return target;
+        if (contextInfo == null || contextInfo.size() == 0)
+            return target;
+        List names = getParameterNames(IN_PARAM, false);
+        target = new ArrayList(names.size());
+        Iterator i = names.iterator();
+        while (i.hasNext()) {
+            String name = (String) i.next();
+            ModelParam p = getParam(name);
+            if (p.order > -1)
+                target.add(p.order, source.get(name));
+        }
+        return target;
+    }
 }
 
