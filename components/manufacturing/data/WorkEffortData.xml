@@ -14,4 +14,6 @@
   <WorkEffortType description="Manufacturing Routing" hasTable="N" parentTypeId="TEMPLATE" workEffortTypeId="ROUTING"/>
   <WorkEffortType description="Task for Manufacturing routing" hasTable="N" parentTypeId="TEMPLATE" workEffortTypeId="ROU_TASK"/>
 
+  <WorkEffortAssocType description="Routing is composed with routingTask" hasTable="N" parentTypeId="" workEffortAssocTypeId="ROUTING_COMPONENT"/>
+
 </entity-engine-xml>
