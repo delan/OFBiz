@@ -310,6 +310,22 @@
 	    <attribute name="captureRefNum" type="String" mode="OUT" optional="true"/>	    	    
 	</service>
 	
+	<service name="ccRefundInterface" engine="interface" location="" invoke="">
+	    <description>Credit Card Refund (Credit) Inteface</description>
+	    <attribute name="refundAmount" type="Double" mode="INOUT" optional="false"/>
+	    <attribute name="contactPerson" type="GenericValue" mode="IN" optional="false"/>
+	    <attribute name="contactEmail" type="GenericValue" mode="IN" optional="false"/>
+	    <attribute name="billingAddress" type="GenericValue" mode="IN" optional="false"/>
+	    <attribute name="creditCard" type="GenericValue" mode="IN" optional="false"/>
+	    <attribute name="cardSecurityCode" type="String" mode="IN" optional="true"/>
+	    <attribute name="currency" type="String" mode="IN" optional="true"/>
+	    <attribute name="paymentConfig" type="String" mode="IN" optional="true"/>
+	    <attribute name="refundCode" type="String" mode="OUT" optional="true"/>
+	    <attribute name="refundRefNum" type="String" mode="OUT" optional="false"/>
+	    <attribute name="refundFlag" type="String" mode="OUT" optional="false"/>
+	    <attribute name="refundMessage" type="String" mode="OUT" optional="false"/>	    
+	</service>
+	
     <service name="eftProcessInterface" engine="interface" location="" invoke="">
         <description>EFT Account Processing Interface</description>
         <attribute name="orderId" type="String" mode="IN" optional="false"/>
