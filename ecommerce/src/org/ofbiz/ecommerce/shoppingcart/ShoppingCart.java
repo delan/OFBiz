@@ -1,6 +1,9 @@
 /*
  * $Id$
  * $Log$
+ * Revision 1.9  2001/09/14 19:13:41  epabst
+ * added method to ShoppingCart to make the order items
+ *
  * Revision 1.8  2001/09/13 15:12:25  epabst
  * cleaned up a little
  * separated shippingMethod into carrierPartyId and shipmentMethodTypeId
@@ -192,7 +195,7 @@ public class ShoppingCart {
                         "productId", item.getProductId(),
                         "quantity", new Double(item.getQuantity()), 
                         "unitPrice", new Double(item.getPrice())));
-                orderItem.set("itemDescription", item.getDescription());
+                orderItem.set("itemDescription", item.getName());
                 orderItem.set("comment", item.getItemComment());
                 orderItem.set("correspondingPoId", this.getPoNumber());
                 orderItem.set("statusId", "Ordered");
