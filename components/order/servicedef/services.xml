@@ -7,7 +7,7 @@
     <version>1.0</version>
 
     <!-- Order processing services -->
-    <service name="processOrder" engine="workflow" location="org.ofbiz.order.order" invoke="ProcessOrder">
+    <service name="processOrder" engine="workflow" location="org.ofbiz.order" invoke="ProcessOrder">
         <description>Service for testing the workflow engine</description>
         <attribute name="orderId" type="String" mode="IN" optional="false"/>        
     </service>
