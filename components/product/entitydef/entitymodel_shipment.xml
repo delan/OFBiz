@@ -281,6 +281,7 @@
       <member-entity entity-alias="SPRS" entity-name="ShipmentPackageRouteSeg"/>
       <alias entity-alias="II" name="orderId"/>
       <alias entity-alias="II" name="shipmentId"/>
+      <alias entity-alias="II" name="shipGroupSeqId"/>
       <alias entity-alias="SRS" name="shipmentRouteSegmentId"/>
       <alias entity-alias="SRS" name="carrierPartyId"/>
       <alias entity-alias="SRS" name="shipmentMethodTypeId"/>
