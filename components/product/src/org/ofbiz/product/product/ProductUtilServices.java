@@ -1,5 +1,5 @@
 /*
- * $Id: ProductUtilServices.java,v 1.23 2004/01/28 04:12:59 jonesde Exp $
+ * $Id: ProductUtilServices.java,v 1.24 2004/01/28 05:08:39 jonesde Exp $
  *
  *  Copyright (c) 2002 The Open For Business Project (www.ofbiz.org)
  *  Permission is hereby granted, free of charge, to any person obtaining a
@@ -60,7 +60,7 @@ import org.ofbiz.service.ServiceUtil;
  *
  * @author     <a href="mailto:jaz@ofbiz.org">Andy Zeneski</a>
  * @author     <a href="mailto:jonesde@ofbiz.org">David E. Jones</a>
- * @version    $Revision: 1.23 $
+ * @version    $Revision: 1.24 $
  * @since      2.0
  */
 public class ProductUtilServices {
@@ -358,6 +358,7 @@ public class ProductUtilServices {
             // start with the values from the virtual product, override from the variant...
             GenericValue newVariantProduct = delegator.makeValue("Product", product);
             newVariantProduct.setAllFields(variantProduct, false, "", null);
+            newVariantProduct.set("isVariant", "N");
             newVariantProduct.store();
             
             // ProductCategoryMember - always remove these to pull the virtual from any categories it might have been in
