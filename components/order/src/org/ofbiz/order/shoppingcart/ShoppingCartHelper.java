@@ -178,7 +178,7 @@ public class ShoppingCartHelper {
             }
         }
 
-        // Retrieve the catalog ID
+        // add or increase the item to the cart        
         try {
             int itemId = -1;
             if (productId != null) {

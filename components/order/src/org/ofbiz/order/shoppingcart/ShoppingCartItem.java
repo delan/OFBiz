@@ -416,11 +416,15 @@ public class ShoppingCartItem implements java.io.Serializable {
 
     /** Sets the quantity for the item and validates the change in quantity, etc */
     public void setQuantity(double quantity, LocalDispatcher dispatcher, ShoppingCart cart) throws CartItemModifyException {
-        setQuantity(quantity, dispatcher, cart, true);
+        this.setQuantity(quantity, dispatcher, cart, true);
     }
 
     /** Sets the quantity for the item and validates the change in quantity, etc */
     public void setQuantity(double quantity, LocalDispatcher dispatcher, ShoppingCart cart, boolean doPromotions) throws CartItemModifyException {
+        this.setQuantity((int) quantity, dispatcher, cart, doPromotions);
+    }
+
+    protected void setQuantity(int quantity, LocalDispatcher dispatcher, ShoppingCart cart, boolean doPromotions) throws CartItemModifyException {
         if (this.quantity == quantity) {
             return;
         }
