@@ -20,7 +20,7 @@
  *  THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  *
  *@author     Andy Zeneski (jaz@ofbiz.org)
- *@version    $Revision: 1.9 $
+ *@version    $Revision: 1.10 $
  *@since      3.0
 -->
 
@@ -65,7 +65,7 @@ function refreshInfo() {
                     <a href="<@ofbizUrl>/findparty?hideFields=N${paramList}</@ofbizUrl>" class="submenutextright">Show Lookup Fields</a>
                   <#else>
                     <#if partyList?exists><a href="<@ofbizUrl>/findparty?hideFields=Y${paramList}</@ofbizUrl>" class="submenutext">Hide Fields</a></#if>
-                    <a href="javascript:void();" onclick="javascript:lookupParty(true);" class="submenutextright">Lookup Party(s)</a>
+                    <a href="javascript:lookupParty(true);" class="submenutextright">Lookup Party(s)</a>
                   </#if>
                 </div>
               </td>
@@ -212,12 +212,13 @@ function refreshInfo() {
     </table>
     <input type="image" src="/images/spacer.gif" onClick="javascript:document.lookupparty.submit();">
   </form>
+<#if requestParameters.hideFields?default("N") != "Y">
   <script language="JavaScript">
     <!--//
       document.lookupparty.partyId.focus();
     //-->
   </script>
-
+</#if>
   <#if partyList?exists>
     <br>
     <table border=0 width='100%' cellspacing='0' cellpadding='0' class='boxoutside'>
