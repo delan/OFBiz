@@ -63,7 +63,12 @@ public class ServiceDispatcher {
         this.delegator = delegator;
         this.localContext = new HashMap();
         if (delegator != null) {
-            this.security = new Security(delegator);
+
+            try {
+                this.security = SecurityFactory.getInstance(delegator);
+            } catch (SecurityConfigurationException e) {
+                Debug.logError(e, "[ServiceDispatcher.init] : No instance of security imeplemtation found.", module);
+            }
             this.jm = new JobManager(this, this.delegator);
             this.jlf = new JMSListenerFactory(this);
         }
@@ -84,7 +89,7 @@ public class ServiceDispatcher {
     /**
      * Returns an instance of the ServiceDispatcher associated with this delegator and registers the loader.
      * @param name the local dispatcher
-     * @param loader classloader of the local dispatcher
+     * @param context the context of the local dispatcher
      * @param delegator the local delegator
      * @return A reference to this global ServiceDispatcher
      */
@@ -109,12 +114,10 @@ public class ServiceDispatcher {
     /**
      * Registers the loader with this ServiceDispatcher
      * @param name the local dispatcher
-     * @param loader the classloader of the local dispatcher
+     * @param context the context of the local dispatcher
      */
     public void register(String name, DispatchContext context) {
-        if (Debug.infoOn())
-            Debug.logInfo("[ServiceDispatcher.register] : Registered dispatcher: " +
-                    context.getName(), module);
+        if (Debug.infoOn()) Debug.logInfo("[ServiceDispatcher.register] : Registered dispatcher: " + context.getName(), module);
         this.localContext.put(name, context);
     }
 
@@ -431,7 +434,7 @@ public class ServiceDispatcher {
 
     /**
      * Gets the local dispatcher from a name
-     * @param String name of the loader to find.
+     * @param name of the context to find.
      */
     public DispatchContext getLocalContext(String name) {
         if (localContext.containsKey(name))
@@ -441,8 +444,8 @@ public class ServiceDispatcher {
 
     /**
      * Test if this dispatcher instance contains the local context.
-     * @param String name of the local context
-     * @returns True if the local context is found in this dispatcher.
+     * @param name of the local context
+     * @return true if the local context is found in this dispatcher.
      */
     public boolean containsContext(String name) {
         return localContext.containsKey(name);

@@ -299,8 +299,13 @@ public class ControlServlet extends HttpServlet {
         Security security = (Security) getServletContext().getAttribute("security");
         if (security == null) {
             GenericDelegator delegator = (GenericDelegator) getServletContext().getAttribute("delegator");
-            if (delegator != null)
-                security = new Security(delegator);
+            if (delegator != null) {
+                try {
+                    security = SecurityFactory.getInstance(delegator);
+                } catch (SecurityConfigurationException e) {
+                    Debug.logError(e, "[ServiceDispatcher.init] : No instance of security imeplemtation found.", module);
+                }
+            }
             getServletContext().setAttribute("security", security);
             if (security == null)
                 Debug.logError("[ControlServlet.init] ERROR: security create failed.", module);
