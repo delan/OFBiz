@@ -81,7 +81,8 @@ public class Section extends Content {
     }
     
     public void render(HttpServletRequest request, HttpServletResponse response) throws java.io.IOException, ServletException {
-        Debug.logInfo("Rendering " + this.toString());
+        boolean verboseOn = Debug.verboseOn();
+        if (verboseOn) Debug.logVerbose("Rendering " + this.toString());
         
         //long viewStartTime = System.currentTimeMillis();
         if (content != null) {
@@ -112,14 +113,14 @@ public class Section extends Content {
                 viewHandlerRender(type, request, response);
             }
         }
-        Debug.logVerbose("DONE Rendering " + this.toString());
+        if (verboseOn) Debug.logVerbose("DONE Rendering " + this.toString());
     }
     
     protected void viewHandlerRender(String typeToUse, HttpServletRequest request, HttpServletResponse response) throws ServletException {
         ServletContext context = (ServletContext) request.getAttribute("servletContext");
         //see if the type is defined in the controller.xml file
         try {
-            Debug.logVerbose("Rendering view [" + content + "] of type [" + typeToUse + "]");
+            if (Debug.verboseOn()) Debug.logVerbose("Rendering view [" + content + "] of type [" + typeToUse + "]");
             ViewHandler vh = ViewFactory.getViewHandler(context, typeToUse);
             vh.render(name, content, info, request, response);
         } catch (ViewHandlerException e) {

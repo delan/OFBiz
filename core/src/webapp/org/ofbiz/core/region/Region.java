@@ -84,7 +84,7 @@ public class Region extends Content {
     }
 
     public void render(PageContext pageContext) throws JspException {
-        Debug.logInfo("Rendering " + this.toString());
+        if (Debug.verboseOn()) Debug.logVerbose("Rendering " + this.toString());
 
         try {
             this.render((HttpServletRequest) pageContext.getRequest(), (HttpServletResponse) pageContext.getResponse());
@@ -99,7 +99,7 @@ public class Region extends Content {
     }
 
     public void render(HttpServletRequest request, HttpServletResponse response) throws java.io.IOException, ServletException {
-        Debug.logInfo("Rendering " + this.toString());
+        if (Debug.verboseOn()) Debug.logVerbose("Rendering " + this.toString());
 
         RequestDispatcher rd = request.getRequestDispatcher(content);
         if (rd == null) {
