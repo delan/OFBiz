@@ -21,7 +21,7 @@
  *
  *@author     David E. Jones
  *@author     Brad Steiner
- *@version    $Revision: 1.4 $
+ *@version    $Revision: 1.5 $
  *@since      2.2
  */
 
@@ -60,7 +60,7 @@ if (product == null) {
     context.put("product", product);
 }
     
-productPrices = product.getRelated("ProductPrice", null, UtilMisc.toList("facilityGroupId", "productPriceTypeId", "currencyUomId", "fromDate"));
+productPrices = product.getRelated("ProductPrice", null, UtilMisc.toList("productStoreGroupId", "productPriceTypeId", "currencyUomId", "fromDate"));
 context.put("productPrices", productPrices);
 
 productPriceTypes = delegator.findAllCache("ProductPriceType", UtilMisc.toList("description"));
