@@ -156,7 +156,7 @@ public class DispatchContext {
     /** Gets the LocalDispatcher used to create this context
      *@return LocalDispatcher that was used to create this context
      */
-    public LocalDispatcher getLocalDispatcher() {
+    public LocalDispatcher getDispatcher() {
         return this.dispatcher;
     }
     
