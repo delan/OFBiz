@@ -1,7 +1,7 @@
 /*
  * $Id$
  *
- * Copyright (c) 2001-2004 The Open For Business Project - www.ofbiz.org
+ * Copyright (c) 2001-2005 The Open For Business Project - www.ofbiz.org
  *
  * Permission is hereby granted, free of charge, to any person obtaining a
  * copy of this software and associated documentation files (the "Software"),
@@ -95,6 +95,14 @@ public class GenericDelegator implements DelegatorInterface {
 
     public static final String module = GenericDelegator.class.getName();
 
+    /** set this to true for better performance; set to false to be able to reload definitions at runtime throught the cache manager */
+    public static final boolean keepLocalReaders = true;
+    protected ModelReader modelReader = null;
+    protected ModelGroupReader modelGroupReader = null;
+    
+    /** This flag is only here for lower level technical testing, it shouldn't be user configurable (or at least I don't think so yet); when true all operations without a transaction will be wrapped in one; seems to be necessary for some (all?) XA aware connection pools, and should improve overall stability and consistency */
+    public static final boolean alwaysUseTransaction = true;
+
     /** the delegatorCache will now be a HashMap, allowing reload of definitions,
      * but the delegator will always be the same object for the given name */
     protected static Map delegatorCache = new HashMap();
@@ -102,11 +110,6 @@ public class GenericDelegator implements DelegatorInterface {
     protected DelegatorInfo delegatorInfo = null;
 
     protected Cache cache = null;
-
-    /** set this to true for better performance; set to false to be able to reload definitions at runtime throught the cache manager */
-    public static final boolean keepLocalReaders = true;
-    protected ModelReader modelReader = null;
-    protected ModelGroupReader modelGroupReader = null;
 
     // keeps a list of field key sets used in the by and cache, a Set (of Sets of fieldNames) for each entityName
     protected Map andCacheFieldSets = new HashMap();
@@ -500,6 +503,27 @@ public class GenericDelegator implements DelegatorInterface {
         return pk;
     }
 
+    /** Creates a Entity in the form of a GenericValue and write it to the datasource
+     *@param primaryKey The GenericPK to create a value in the datasource from
+     *@return GenericValue instance containing the new instance
+     */
+    public GenericValue create(GenericPK primaryKey) throws GenericEntityException {
+        return this.create(primaryKey, true);
+    }
+
+    /** Creates a Entity in the form of a GenericValue and write it to the datasource
+     *@param primaryKey The GenericPK to create a value in the datasource from
+     *@param doCacheClear boolean that specifies whether to clear related cache entries for this primaryKey to be created
+     *@return GenericValue instance containing the new instance
+     */
+    public GenericValue create(GenericPK primaryKey, boolean doCacheClear) throws GenericEntityException {
+        if (primaryKey == null) {
+            throw new GenericEntityException("Cannot create from a null primaryKey");
+        }
+
+        return this.create(new GenericValue(primaryKey), doCacheClear);
+    }
+
     /** Creates a Entity in the form of a GenericValue and write it to the database
      *@return GenericValue instance containing the new instance
      */
@@ -527,54 +551,53 @@ public class GenericDelegator implements DelegatorInterface {
      *@return GenericValue instance containing the new instance
      */
     public GenericValue create(GenericValue value, boolean doCacheClear) throws GenericEntityException {
-        Map ecaEventMap = this.getEcaEntityEventMap(value.getEntityName());
-        this.evalEcaRules(EntityEcaHandler.EV_VALIDATE, EntityEcaHandler.OP_CREATE, value, ecaEventMap, (ecaEventMap == null), false);
+        boolean beganTransaction = false;
+        try {
+            if (alwaysUseTransaction) {
+                beganTransaction = TransactionUtil.begin();
+            }
 
-        if (value == null) {
-            throw new GenericEntityException("Cannot create a null value");
-        }
-        GenericHelper helper = getEntityHelper(value.getEntityName());
-
-        this.evalEcaRules(EntityEcaHandler.EV_RUN, EntityEcaHandler.OP_CREATE, value, ecaEventMap, (ecaEventMap == null), false);
-
-        value.setDelegator(this);
-        this.encryptFields(value);
-        value = helper.create(value);
-
-        if (value != null) {
+            Map ecaEventMap = this.getEcaEntityEventMap(value.getEntityName());
+            this.evalEcaRules(EntityEcaHandler.EV_VALIDATE, EntityEcaHandler.OP_CREATE, value, ecaEventMap, (ecaEventMap == null), false);
+    
+            if (value == null) {
+                throw new GenericEntityException("Cannot create a null value");
+            }
+            GenericHelper helper = getEntityHelper(value.getEntityName());
+    
+            this.evalEcaRules(EntityEcaHandler.EV_RUN, EntityEcaHandler.OP_CREATE, value, ecaEventMap, (ecaEventMap == null), false);
+    
             value.setDelegator(this);
-            if (value.lockEnabled()) {
-                refresh(value, doCacheClear);
-            } else {
-                if (doCacheClear) {
-                    this.evalEcaRules(EntityEcaHandler.EV_CACHE_CLEAR, EntityEcaHandler.OP_CREATE, value, ecaEventMap, (ecaEventMap == null), false);
-                    this.clearCacheLine(value);
+            this.encryptFields(value);
+            value = helper.create(value);
+    
+            if (value != null) {
+                value.setDelegator(this);
+                if (value.lockEnabled()) {
+                    refresh(value, doCacheClear);
+                } else {
+                    if (doCacheClear) {
+                        this.evalEcaRules(EntityEcaHandler.EV_CACHE_CLEAR, EntityEcaHandler.OP_CREATE, value, ecaEventMap, (ecaEventMap == null), false);
+                        this.clearCacheLine(value);
+                    }
                 }
             }
+            
+            // only commit the transaction if we started one...
+            TransactionUtil.commit(beganTransaction);
+
+            this.evalEcaRules(EntityEcaHandler.EV_RETURN, EntityEcaHandler.OP_CREATE, value, ecaEventMap, (ecaEventMap == null), false);
+            return value;
+        } catch (GenericEntityException e) {
+            try {
+                // only rollback the transaction if we started one...
+                TransactionUtil.rollback(beganTransaction);
+            } catch (GenericEntityException e2) {
+                Debug.logError(e2, "[GenericDelegator] Could not rollback transaction: " + e2.toString(), module);
+            }
+            // after rolling back, rethrow the exception
+            throw e;
         }
-        this.evalEcaRules(EntityEcaHandler.EV_RETURN, EntityEcaHandler.OP_CREATE, value, ecaEventMap, (ecaEventMap == null), false);
-        return value;
-    }
-
-    /** Creates a Entity in the form of a GenericValue and write it to the datasource
-     *@param primaryKey The GenericPK to create a value in the datasource from
-     *@return GenericValue instance containing the new instance
-     */
-    public GenericValue create(GenericPK primaryKey) throws GenericEntityException {
-        return this.create(primaryKey, true);
-    }
-
-    /** Creates a Entity in the form of a GenericValue and write it to the datasource
-     *@param primaryKey The GenericPK to create a value in the datasource from
-     *@param doCacheClear boolean that specifies whether to clear related cache entries for this primaryKey to be created
-     *@return GenericValue instance containing the new instance
-     */
-    public GenericValue create(GenericPK primaryKey, boolean doCacheClear) throws GenericEntityException {
-        if (primaryKey == null) {
-            throw new GenericEntityException("Cannot create from a null primaryKey");
-        }
-
-        return this.create(new GenericValue(primaryKey), doCacheClear);
     }
 
     /** Creates or stores an Entity
@@ -583,15 +606,35 @@ public class GenericDelegator implements DelegatorInterface {
      *@return GenericValue instance containing the new or updated instance
      */
     public GenericValue createOrStore(GenericValue value, boolean doCacheClear) throws GenericEntityException {
-        GenericValue checkValue = this.findByPrimaryKey(value.getPrimaryKey());
-        if (checkValue != null) {
-            this.store(value, doCacheClear);
-        } else {
-            this.create(value, doCacheClear);
+        boolean beganTransaction = false;
+        try {
+            if (alwaysUseTransaction) {
+                beganTransaction = TransactionUtil.begin();
+            }
+
+            GenericValue checkValue = this.findByPrimaryKey(value.getPrimaryKey());
+            if (checkValue != null) {
+                this.store(value, doCacheClear);
+            } else {
+                this.create(value, doCacheClear);
+            }
+            if (value.lockEnabled()) {
+                this.refresh(value);
+            }
+            
+            // only commit the transaction if we started one...
+            TransactionUtil.commit(beganTransaction);
+        } catch (GenericEntityException e) {
+            try {
+                // only rollback the transaction if we started one...
+                TransactionUtil.rollback(beganTransaction);
+            } catch (GenericEntityException e2) {
+                Debug.logError(e2, "[GenericDelegator] Could not rollback transaction: " + e2.toString(), module);
+            }
+            // after rolling back, rethrow the exception
+            throw e;
         }
-        if (value.lockEnabled()) {
-            this.refresh(value);
-        }
+
         return value;
     }
 
@@ -1194,23 +1237,42 @@ public class GenericDelegator implements DelegatorInterface {
      *@return int representing number of rows effected by this operation
      */
     public int removeByPrimaryKey(GenericPK primaryKey, boolean doCacheClear) throws GenericEntityException {
-        Map ecaEventMap = this.getEcaEntityEventMap(primaryKey.getEntityName());
-        this.evalEcaRules(EntityEcaHandler.EV_VALIDATE, EntityEcaHandler.OP_REMOVE, primaryKey, ecaEventMap, (ecaEventMap == null), false);
+        boolean beganTransaction = false;
+        try {
+            if (alwaysUseTransaction) {
+                beganTransaction = TransactionUtil.begin();
+            }
 
-        GenericHelper helper = getEntityHelper(primaryKey.getEntityName());
-
-        if (doCacheClear) {
-            // always clear cache before the operation
-            this.evalEcaRules(EntityEcaHandler.EV_CACHE_CLEAR, EntityEcaHandler.OP_REMOVE, primaryKey, ecaEventMap, (ecaEventMap == null), false);
-            this.clearCacheLine(primaryKey);
+            Map ecaEventMap = this.getEcaEntityEventMap(primaryKey.getEntityName());
+            this.evalEcaRules(EntityEcaHandler.EV_VALIDATE, EntityEcaHandler.OP_REMOVE, primaryKey, ecaEventMap, (ecaEventMap == null), false);
+    
+            GenericHelper helper = getEntityHelper(primaryKey.getEntityName());
+    
+            if (doCacheClear) {
+                // always clear cache before the operation
+                this.evalEcaRules(EntityEcaHandler.EV_CACHE_CLEAR, EntityEcaHandler.OP_REMOVE, primaryKey, ecaEventMap, (ecaEventMap == null), false);
+                this.clearCacheLine(primaryKey);
+            }
+    
+            this.evalEcaRules(EntityEcaHandler.EV_RUN, EntityEcaHandler.OP_REMOVE, primaryKey, ecaEventMap, (ecaEventMap == null), false);
+            int num = helper.removeByPrimaryKey(primaryKey);
+            this.saveEntitySyncRemoveInfo(primaryKey);
+            
+            // only commit the transaction if we started one...
+            TransactionUtil.commit(beganTransaction);
+            
+            this.evalEcaRules(EntityEcaHandler.EV_RETURN, EntityEcaHandler.OP_REMOVE, primaryKey, ecaEventMap, (ecaEventMap == null), false);
+            return num;
+        } catch (GenericEntityException e) {
+            try {
+                // only rollback the transaction if we started one...
+                TransactionUtil.rollback(beganTransaction);
+            } catch (GenericEntityException e2) {
+                Debug.logError(e2, "[GenericDelegator] Could not rollback transaction: " + e2.toString(), module);
+            }
+            // after rolling back, rethrow the exception
+            throw e;
         }
-
-        this.evalEcaRules(EntityEcaHandler.EV_RUN, EntityEcaHandler.OP_REMOVE, primaryKey, ecaEventMap, (ecaEventMap == null), false);
-        int num = helper.removeByPrimaryKey(primaryKey);
-        this.saveEntitySyncRemoveInfo(primaryKey);
-
-        this.evalEcaRules(EntityEcaHandler.EV_RETURN, EntityEcaHandler.OP_REMOVE, primaryKey, ecaEventMap, (ecaEventMap == null), false);
-        return num;
     }
 
     /** Remove a Generic Value from the database
@@ -1227,22 +1289,42 @@ public class GenericDelegator implements DelegatorInterface {
      *@return int representing number of rows effected by this operation
      */
     public int removeValue(GenericValue value, boolean doCacheClear) throws GenericEntityException {
-        Map ecaEventMap = this.getEcaEntityEventMap(value.getEntityName());
-        this.evalEcaRules(EntityEcaHandler.EV_VALIDATE, EntityEcaHandler.OP_REMOVE, value, ecaEventMap, (ecaEventMap == null), false);
+        // NOTE: this does not call the GenericDelegator.removeByPrimaryKey method because it has more information to pass to the ECA rule hander 
+        boolean beganTransaction = false;
+        try {
+            if (alwaysUseTransaction) {
+                beganTransaction = TransactionUtil.begin();
+            }
 
-        GenericHelper helper = getEntityHelper(value.getEntityName());
-
-        if (doCacheClear) {
-            this.evalEcaRules(EntityEcaHandler.EV_CACHE_CLEAR, EntityEcaHandler.OP_REMOVE, value, ecaEventMap, (ecaEventMap == null), false);
-            this.clearCacheLine(value);
+            Map ecaEventMap = this.getEcaEntityEventMap(value.getEntityName());
+            this.evalEcaRules(EntityEcaHandler.EV_VALIDATE, EntityEcaHandler.OP_REMOVE, value, ecaEventMap, (ecaEventMap == null), false);
+    
+            GenericHelper helper = getEntityHelper(value.getEntityName());
+    
+            if (doCacheClear) {
+                this.evalEcaRules(EntityEcaHandler.EV_CACHE_CLEAR, EntityEcaHandler.OP_REMOVE, value, ecaEventMap, (ecaEventMap == null), false);
+                this.clearCacheLine(value);
+            }
+    
+            this.evalEcaRules(EntityEcaHandler.EV_RUN, EntityEcaHandler.OP_REMOVE, value, ecaEventMap, (ecaEventMap == null), false);
+            int num = helper.removeByPrimaryKey(value.getPrimaryKey());
+            this.saveEntitySyncRemoveInfo(value.getPrimaryKey());
+            
+            // only commit the transaction if we started one...
+            TransactionUtil.commit(beganTransaction);
+            
+            this.evalEcaRules(EntityEcaHandler.EV_RETURN, EntityEcaHandler.OP_REMOVE, value, ecaEventMap, (ecaEventMap == null), false);
+            return num;
+        } catch (GenericEntityException e) {
+            try {
+                // only rollback the transaction if we started one...
+                TransactionUtil.rollback(beganTransaction);
+            } catch (GenericEntityException e2) {
+                Debug.logError(e2, "[GenericDelegator] Could not rollback transaction: " + e2.toString(), module);
+            }
+            // after rolling back, rethrow the exception
+            throw e;
         }
-
-        this.evalEcaRules(EntityEcaHandler.EV_RUN, EntityEcaHandler.OP_REMOVE, value, ecaEventMap, (ecaEventMap == null), false);
-        int num = helper.removeByPrimaryKey(value.getPrimaryKey());
-        this.saveEntitySyncRemoveInfo(value.getPrimaryKey());
-
-        this.evalEcaRules(EntityEcaHandler.EV_RETURN, EntityEcaHandler.OP_REMOVE, value, ecaEventMap, (ecaEventMap == null), false);
-        return num;
     }
 
     /** Removes/deletes Generic Entity records found by all of the specified fields (ie: combined using AND)
@@ -1261,27 +1343,46 @@ public class GenericDelegator implements DelegatorInterface {
      *@return int representing number of rows effected by this operation
      */
     public int removeByAnd(String entityName, Map fields, boolean doCacheClear) throws GenericEntityException {
-        GenericValue dummyPK = makeValue(entityName, null);
-        dummyPK.setFields(fields);
+        boolean beganTransaction = false;
+        try {
+            if (alwaysUseTransaction) {
+                beganTransaction = TransactionUtil.begin();
+            }
 
-        Map ecaEventMap = this.getEcaEntityEventMap(entityName);
-        this.evalEcaRules(EntityEcaHandler.EV_VALIDATE, EntityEcaHandler.OP_REMOVE, dummyPK, ecaEventMap, (ecaEventMap == null), false);
-
-        ModelEntity modelEntity = getModelReader().getModelEntity(entityName);
-        GenericHelper helper = getEntityHelper(entityName);
-
-        if (doCacheClear) {
-            // always clear cache before the operation
-            this.evalEcaRules(EntityEcaHandler.EV_CACHE_CLEAR, EntityEcaHandler.OP_REMOVE, dummyPK, ecaEventMap, (ecaEventMap == null), false);
-            this.clearCacheLine(entityName, fields);
+            GenericValue dummyPK = makeValue(entityName, null);
+            dummyPK.setFields(fields);
+    
+            Map ecaEventMap = this.getEcaEntityEventMap(entityName);
+            this.evalEcaRules(EntityEcaHandler.EV_VALIDATE, EntityEcaHandler.OP_REMOVE, dummyPK, ecaEventMap, (ecaEventMap == null), false);
+    
+            ModelEntity modelEntity = getModelReader().getModelEntity(entityName);
+            GenericHelper helper = getEntityHelper(entityName);
+    
+            if (doCacheClear) {
+                // always clear cache before the operation
+                this.evalEcaRules(EntityEcaHandler.EV_CACHE_CLEAR, EntityEcaHandler.OP_REMOVE, dummyPK, ecaEventMap, (ecaEventMap == null), false);
+                this.clearCacheLine(entityName, fields);
+            }
+    
+            this.evalEcaRules(EntityEcaHandler.EV_RUN, EntityEcaHandler.OP_REMOVE, dummyPK, ecaEventMap, (ecaEventMap == null), false);
+            int num = helper.removeByAnd(modelEntity, dummyPK.getAllFields());
+            this.saveEntitySyncRemoveInfo(dummyPK);
+            
+            // only commit the transaction if we started one...
+            TransactionUtil.commit(beganTransaction);
+            
+            this.evalEcaRules(EntityEcaHandler.EV_RETURN, EntityEcaHandler.OP_REMOVE, dummyPK, ecaEventMap, (ecaEventMap == null), false);
+            return num;
+        } catch (GenericEntityException e) {
+            try {
+                // only rollback the transaction if we started one...
+                TransactionUtil.rollback(beganTransaction);
+            } catch (GenericEntityException e2) {
+                Debug.logError(e2, "[GenericDelegator] Could not rollback transaction: " + e2.toString(), module);
+            }
+            // after rolling back, rethrow the exception
+            throw e;
         }
-
-        this.evalEcaRules(EntityEcaHandler.EV_RUN, EntityEcaHandler.OP_REMOVE, dummyPK, ecaEventMap, (ecaEventMap == null), false);
-        int num = helper.removeByAnd(modelEntity, dummyPK.getAllFields());
-        this.saveEntitySyncRemoveInfo(dummyPK);
-
-        this.evalEcaRules(EntityEcaHandler.EV_RETURN, EntityEcaHandler.OP_REMOVE, dummyPK, ecaEventMap, (ecaEventMap == null), false);
-        return num;
     }
 
     /** Removes/deletes Generic Entity records found by the condition
@@ -1300,14 +1401,33 @@ public class GenericDelegator implements DelegatorInterface {
      *@return int representing number of rows effected by this operation
      */
     public int removeByCondition(String entityName, EntityCondition condition, boolean doCacheClear) throws GenericEntityException {
-        if (doCacheClear) {
-            // always clear cache before the operation
-            this.clearCacheLineByCondition(entityName, condition);
-        }
-        ModelEntity modelEntity = getModelReader().getModelEntity(entityName);
-        GenericHelper helper = getEntityHelper(entityName);
+        boolean beganTransaction = false;
+        try {
+            if (alwaysUseTransaction) {
+                beganTransaction = TransactionUtil.begin();
+            }
 
-        return helper.removeByCondition(modelEntity, condition);
+            if (doCacheClear) {
+                // always clear cache before the operation
+                this.clearCacheLineByCondition(entityName, condition);
+            }
+            ModelEntity modelEntity = getModelReader().getModelEntity(entityName);
+            GenericHelper helper = getEntityHelper(entityName);
+            
+            // only commit the transaction if we started one...
+            TransactionUtil.commit(beganTransaction);
+            
+            return helper.removeByCondition(modelEntity, condition);
+        } catch (GenericEntityException e) {
+            try {
+                // only rollback the transaction if we started one...
+                TransactionUtil.rollback(beganTransaction);
+            } catch (GenericEntityException e2) {
+                Debug.logError(e2, "[GenericDelegator] Could not rollback transaction: " + e2.toString(), module);
+            }
+            // after rolling back, rethrow the exception
+            throw e;
+        }
     }
 
     /**
@@ -1594,27 +1714,46 @@ public class GenericDelegator implements DelegatorInterface {
      *@return int representing number of rows effected by this operation
      */
     public int store(GenericValue value, boolean doCacheClear) throws GenericEntityException {
-        Map ecaEventMap = this.getEcaEntityEventMap(value.getEntityName());
-        this.evalEcaRules(EntityEcaHandler.EV_VALIDATE, EntityEcaHandler.OP_STORE, value, ecaEventMap, (ecaEventMap == null), false);
-        GenericHelper helper = getEntityHelper(value.getEntityName());
+        boolean beganTransaction = false;
+        try {
+            if (alwaysUseTransaction) {
+                beganTransaction = TransactionUtil.begin();
+            }
 
-        if (doCacheClear) {
-            // always clear cache before the operation
-            this.evalEcaRules(EntityEcaHandler.EV_CACHE_CLEAR, EntityEcaHandler.OP_STORE, value, ecaEventMap, (ecaEventMap == null), false);
-            this.clearCacheLine(value);
+            Map ecaEventMap = this.getEcaEntityEventMap(value.getEntityName());
+            this.evalEcaRules(EntityEcaHandler.EV_VALIDATE, EntityEcaHandler.OP_STORE, value, ecaEventMap, (ecaEventMap == null), false);
+            GenericHelper helper = getEntityHelper(value.getEntityName());
+    
+            if (doCacheClear) {
+                // always clear cache before the operation
+                this.evalEcaRules(EntityEcaHandler.EV_CACHE_CLEAR, EntityEcaHandler.OP_STORE, value, ecaEventMap, (ecaEventMap == null), false);
+                this.clearCacheLine(value);
+            }
+    
+            this.evalEcaRules(EntityEcaHandler.EV_RUN, EntityEcaHandler.OP_STORE, value, ecaEventMap, (ecaEventMap == null), false);
+            this.encryptFields(value);
+            int retVal = helper.store(value);
+    
+            // refresh the valueObject to get the new version
+            if (value.lockEnabled()) {
+                refresh(value, doCacheClear);
+            }
+            
+            // only commit the transaction if we started one...
+            TransactionUtil.commit(beganTransaction);
+            
+            this.evalEcaRules(EntityEcaHandler.EV_RETURN, EntityEcaHandler.OP_STORE, value, ecaEventMap, (ecaEventMap == null), false);
+            return retVal;
+        } catch (GenericEntityException e) {
+            try {
+                // only rollback the transaction if we started one...
+                TransactionUtil.rollback(beganTransaction);
+            } catch (GenericEntityException e2) {
+                Debug.logError(e2, "[GenericDelegator] Could not rollback transaction: " + e2.toString(), module);
+            }
+            // after rolling back, rethrow the exception
+            throw e;
         }
-
-        this.evalEcaRules(EntityEcaHandler.EV_RUN, EntityEcaHandler.OP_STORE, value, ecaEventMap, (ecaEventMap == null), false);
-        this.encryptFields(value);
-        int retVal = helper.store(value);
-
-        // refresh the valueObject to get the new version
-        if (value.lockEnabled()) {
-            refresh(value, doCacheClear);
-        }
-
-        this.evalEcaRules(EntityEcaHandler.EV_RETURN, EntityEcaHandler.OP_STORE, value, ecaEventMap, (ecaEventMap == null), false);
-        return retVal;
     }
 
     /** Store the Entities from the List GenericValue instances to the persistent store.
@@ -1663,9 +1802,9 @@ public class GenericDelegator implements DelegatorInterface {
             return 0;
         }
 
-        boolean beganTransaction = false;
         int numberChanged = 0;
 
+        boolean beganTransaction = false;
         try {
             beganTransaction = TransactionUtil.begin();
 
@@ -1732,8 +1871,7 @@ public class GenericDelegator implements DelegatorInterface {
                 // only rollback the transaction if we started one...
                 TransactionUtil.rollback(beganTransaction);
             } catch (GenericEntityException e2) {
-                Debug.logError("[GenericDelegator.storeAll] Could not rollback transaction: ", module);
-                Debug.logError(e2, module);
+                Debug.logError(e2, "[GenericDelegator] Could not rollback transaction: " + e2.toString(), module);
             }
             // after rolling back, rethrow the exception
             throw e;
@@ -1795,8 +1933,7 @@ public class GenericDelegator implements DelegatorInterface {
                 // only rollback the transaction if we started one...
                 TransactionUtil.rollback(beganTransaction);
             } catch (GenericEntityException e2) {
-                Debug.logError("[GenericDelegator.removeAll] Could not rollback transaction: ", module);
-                Debug.logError(e2, module);
+                Debug.logError(e2, "[GenericDelegator] Could not rollback transaction: " + e2.toString(), module);
             }
             // after rolling back, rethrow the exception
             throw e;
