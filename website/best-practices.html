@@ -33,6 +33,7 @@
   <li class='contenttext'><a href="#Logic">Logic Layer</a>
   <li class='contenttext'><a href="#Presentation">Presentation Layer</a>
   <li class='contenttext'><a href="#Before">Before Starting - Methodology Recommendations</a>
+  <li class='contenttext'><a href="#Differences">Managing Your Source Differences</a>
 </ul>
 
 <p class='contenttext'><b><u><a name="Introduction">Introduction</a></u></b></p>
@@ -137,7 +138,7 @@ important for the effective use of special purpose languages.</p>
 
 <p class='contenttext'>Always implement your service using the easiest and most appropriate
 language or tool. You can implement services with many different languages
-including Java, BeanShell, any BSF compliant scripting language (Jython, Jacl, 
+including Java, BeanShell or any BSF compliant scripting language (Jython, Jacl, 
 JavaScript, etc), OFBiz Workflow Engine processes, OFBiz MiniLang simple-methods,
 and various others. Additional languages can be supported by writing simple 
 adapters.</p>
@@ -180,7 +181,9 @@ cannot be implemented as a service. There are various other types of event
 handlers for logic associated with requests that give you more to the
 request context and are not environment agnostic like services are. One example 
 is receiving uploaded data. Another good example is doing special pre-processing 
-and validation on parameters before passing them to a service for processing.</p>
+and validation on parameters before passing them to a service for processing.
+Note that you can always call services from these custom events and wherever
+possible generic logic should be implemented in services.</p>
 
 <p class='contenttext'>Always let the Control Servlet configuration handle decisions 
 about the appropriate response to take for a request given the result string from
@@ -439,6 +442,72 @@ obviously be desired. When modifying the process keep in mind the basic principl
 presented and be especially careful about leaving out communication steps, espcially
 the communication verification steps.</p>
 
+<!-- ================================================================ -->
+<hr class='sepbar'>
+
+<p class='contenttext'><b><u><a name="Differences">Managing Your Source Differences</a></u></b></p>
+
+<p class='contenttext'>When customizing OFBiz components for your
+specific business requirements you will most likely come across situations where
+small changes to files are needed and it doesn't make sense to replace a
+component completely or attach logic to it through Service ECA rules or other
+means. So, how should you manage the differences between your code and the OFBiz
+baseline code so that updating from the OFBiz base will be as painless as
+possible?</p>
+
+<p class='contenttext'>The first thing you should always do is isolate your
+chagnes and comment them so that it is easy to distringuish what you changed
+from the OFBiz baseline code. The final goal is to make it easy to merge your
+changes with future changes in the OFBiz baseline.</p>
+
+<p class='contenttext'>There are various ways to structure your company internal
+CVS or other code repository. The most flexible, but laborious, way is to create
+a complete copy of the OFBiz CVS tree in a module in your own CVS repository.
+This could perhaps be called "ofbizbase".
+This should containt the code that you are currently working with and allows you
+to selectively incorporate specific changes from the OFBiz baseline. These files
+should be direct copies from a revision in the OFBiz CVS repository. If you make
+changes in this module that are not part from the main OFBiz CVS tree they
+should be temporary changes that are meant to be overwritten and replaced with
+future versions from the main OFBiz CVS repository.</p>
+
+<p class='contenttext'>Once you baseline snapshot module as described above is
+in place you should create another module, maybe called "ofbizdiff". This will
+contain ONLY the files that you have changed relative to the OFBiz baseline.
+When updating the version of this file in your ofbizbase repository from the
+main OFBiz CVS repository you should do a three way diff/merge to make sure the
+changes in the OFBiz baseline make it into the version of the file in your ofbizdiff
+module as well as the file in your ofbizbase module.</p>
+
+<p class='contenttext'>The three way diff will be
+done with the following three files: the old file from your ofbizbase module as
+the base, your changed file in your ofbizdiff module as the merge target, and
+the new file from the main OFBiz CVS repository as the merge source.</p>
+
+<p class='contenttext'>So, that is how you can setup your source repositories.
+The build process for this sort of a structure is very simple. Create a
+temporary build directory. Copy the entire ofbizbase tree into the directory.
+Copy the entire ofbizdiff tree into that directory, replacing files as
+needed. Then in the root of the temporary build directory run the Ant build
+file. What could be more simple?</p>
+
+<p class='contenttext'>When editing files in your ofbizdiff module you should
+ALWAYS edit them in place in the ofbizdiff directory tree and copy them to the
+temporary build directory for testing. Doing this you will be able to always do
+a CVS update to see which files you have modified as you are working.</p>
+
+<p class='contenttext'>Many variations on this base technique can be effectively
+used. If you don't plan to make temporary changes to ofbizbase files or update
+individual ofbizbase files selectively, you may do just fine with an archive
+(like a zip or tar.gz file) instead of a CVS module for your ofbizbase tree.</p>
+
+<p class='contenttext'>We have heard a lot of questions about using simple merge
+scripts to apply differences to source in the ofbizdiff tree so that full files
+to not have to be stored or maintained. This is fine, but it is a LOT harder to
+perform the diff/merge code synchronization when you don't have the complete
+files to make a three way diff merge easy. So, we don't recommend using minimal
+diff files that can be applied as part of the build process. Just copy the file
+from ofbizbase to ofbizdiff and make the changes you need as recommended above.</p>
 
 <hr class='sepbar'>
 <p class='contenttext'>For information about Open For Business contact David E. Jones at <a href="mailto:jonesde@ofbiz.org">jonesde@ofbiz.org</a>
