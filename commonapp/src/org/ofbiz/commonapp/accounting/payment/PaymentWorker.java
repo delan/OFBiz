@@ -187,14 +187,14 @@ public class PaymentWorker {
     
     public static String getPaymentPartyId(GenericDelegator delegator, String productStoreId, String paymentMethodTypeId) {
         GenericValue paymentSettings = PaymentWorker.getPaymentSetting(delegator, productStoreId, paymentMethodTypeId, null);
-        String paymentConfig = paymentSettings != null && paymentSettings.get("paymentPropertiesPath") != null ? paymentSettings.getString("paymentConfiguration") : null;
+        String paymentConfig = paymentSettings != null && paymentSettings.get("paymentPropertiesPath") != null ? paymentSettings.getString("paymentPropertiesPath") : null;
         if (paymentConfig == null) paymentConfig = "payment.properties";    
         return UtilProperties.getPropertyValue(paymentConfig, "payment.general.payTo", "Company");
     }
     
     public static GenericValue getPaymentAddress(GenericDelegator delegator, String productStoreId, String paymentMethodTypeId) {
         GenericValue paymentSettings = PaymentWorker.getPaymentSetting(delegator, productStoreId, paymentMethodTypeId, null);
-        String paymentConfig = paymentSettings != null && paymentSettings.get("paymentPropertiesPath") != null ? paymentSettings.getString("paymentConfiguration") : null;
+        String paymentConfig = paymentSettings != null && paymentSettings.get("paymentPropertiesPath") != null ? paymentSettings.getString("paymentPropertiesPath") : null;
         if (paymentConfig == null) paymentConfig = "payment.properties";
         String payToPartyId = UtilProperties.getPropertyValue(paymentConfig, "payment.general.payTo", "Company");      
         
