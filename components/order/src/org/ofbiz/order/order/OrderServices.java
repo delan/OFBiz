@@ -735,6 +735,19 @@ public class OrderServices {
             }
         }
 
+       // store the OrderTerm entities
+
+       List orderTerms = (List) context.get("orderTerms");
+       if (orderTerms != null && orderTerms.size() > 0) {
+           Iterator orderTermIter = orderTerms.iterator();
+           while (orderTermIter.hasNext()) {
+               GenericValue orderTerm = (GenericValue) orderTermIter.next();
+               orderTerm.set("orderId", orderId);
+               orderTerm.set("orderItemSeqId","_NA_");
+               toBeStored.add(orderTerm);
+           }
+       }
+
         try {
             // store line items, etc so that they will be there for the foreign key checks
             delegator.storeAll(toBeStored);

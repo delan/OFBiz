@@ -42,6 +42,7 @@ import org.ofbiz.service.GenericServiceException;
 import org.ofbiz.service.LocalDispatcher;
 import org.ofbiz.service.ModelService;
 import org.ofbiz.service.ServiceUtil;
+import org.ofbiz.base.util.UtilMisc;
 
 /**
  * ShippingEvents - Events used for processing shipping fees
@@ -105,6 +106,10 @@ public class ShippingEvents {
         String carrierPartyId = shipGroup.getString("carrierPartyId");
 
         GenericValue shipAddr = orh.getShippingAddress(shipGroupSeqId);
+        if (shipAddr == null) {
+            return UtilMisc.toMap("shippingTotal", new Double(0));
+        }
+
         String contactMechId = shipAddr.getString("contactMechId");
         return getShipGroupEstimate(dispatcher, delegator, orh.getOrderTypeId(), shipmentMethodTypeId, carrierPartyId, carrierRoleTypeId,
                 contactMechId, orh.getProductStoreId(), orh.getShippableItemInfo(shipGroupSeqId), orh.getShippableWeight(shipGroupSeqId),

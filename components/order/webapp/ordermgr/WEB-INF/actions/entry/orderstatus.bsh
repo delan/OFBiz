@@ -50,6 +50,16 @@ if (orderHeader != null) {
     orderHeaderAdjustments = orderReadHelper.getOrderHeaderAdjustments();
     orderSubTotal = orderReadHelper.getOrderItemsSubTotal();
     headerAdjustmentsToShow = orderReadHelper.getOrderHeaderAdjustmentsToShow();
+    orderTerms = orderHeader.getRelated("OrderTerm");
+
+    partyObject = orderReadHelper.getSupplierAgent();
+    if (partyObject != null) {
+       if (partyObject.getEntityName().equals("Person")) {
+         context.put("person",partyObject);
+       } else {
+         context.put("partyGroup",partyObject);
+       }
+    }
 
     context.put("orderHeader", orderHeader);
     context.put("currencyUomId", orderHeader.get("currencyUom"));
@@ -59,6 +69,7 @@ if (orderHeader != null) {
     context.put("orderHeaderAdjustments", orderHeaderAdjustments);
     context.put("orderSubTotal", orderSubTotal);
     context.put("headerAdjustmentsToShow", headerAdjustmentsToShow);
+    context.put("orderTerms",orderTerms);
     
     shippingAmount = OrderReadHelper.getAllOrderItemsAdjustmentsTotal(orderItems, orderAdjustments, false, false, true);
     shippingAmount += OrderReadHelper.calcOrderAdjustments(orderHeaderAdjustments, orderSubTotal, false, false, true);
@@ -74,7 +85,7 @@ if (orderHeader != null) {
     placingCustomerPerson = placingCustomerOrderRole == null ? null : delegator.findByPrimaryKey("Person",UtilMisc.toMap("partyId", placingCustomerOrderRole.getString("partyId")));
     context.put("placingCustomerPerson", placingCustomerPerson);
 
-    shippingAddress = orderReadHelper.getShippingAddress("0001");
+    shippingAddress = orderReadHelper.getShippingAddress("00001");
     context.put("shippingAddress", shippingAddress);
     billingAccount = orderHeader.getRelatedOne("BillingAccount");
     if (billingAccount != null)
@@ -122,6 +133,8 @@ if (orderHeader != null) {
         context.put("giftMessage", shipGroup.getString("giftMessage"));
         context.put("isGift", shipGroup.getString("isGift"));
         context.put("trackingNumber", shipGroup.getString("trackingNumber"));
+        context.put("shipBeforeDate", shipGroup.get("shipByDate"));
+        context.put("shipAfterDate", shipGroup.get("shipAfterDate"));
     }
 
     customerPoNumber = null;
@@ -130,4 +143,7 @@ if (orderHeader != null) {
         orderItemPo = orderItemPOIter.next();
         context.put("customerPoNumber", orderItemPo.getString("correspondingPoId"));
     }
+    orderType = orderReadHelper.getOrderTypeId();
+    context.put("orderType", orderType);
+
 }

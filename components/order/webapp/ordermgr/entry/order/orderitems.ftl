@@ -60,7 +60,7 @@
               </tr>
               <#list orderItems?if_exists as orderItem>
                 <#assign itemType = orderItem.getRelatedOne("OrderItemType")>
-                <tr><td colspan="7"><hr class='sepbar'></td></tr>
+                <tr><td colspan="6"><hr class='sepbar'></td></tr>
                 <tr>     
                   <#if orderItem.productId?exists && orderItem.productId == "_?_">           
                     <td colspan="1" valign="top">    
@@ -118,6 +118,7 @@
                         <#if orderItemAdjustment.description?has_content>: ${orderItemAdjustment.description}</#if>
                       </div>
                     </td>
+                    <td>&nbsp;</td>
                     <td>&nbsp;</td>
                     <td>&nbsp;</td>
                     <td align="right">

@@ -53,6 +53,7 @@
             <form method="post" action="<@ofbizUrl>/finalizeOrder</@ofbizUrl>" name="optsetupform">
               <input type="hidden" name="finalizeMode" value="options">              
               <table width="100%" cellpadding="1" border="0" cellpadding="0" cellspacing="0">
+               <#if cart.getOrderType() != "PURCHASE_ORDER">
                 <#assign shipEstimateWrapper = Static["org.ofbiz.order.shoppingcart.shipping.ShippingEstimateWrapper"].getWrapper(dispatcher, cart, 0)>
                 <#assign carrierShipmentMethods = shipEstimateWrapper.getShippingMethods()>
                 <#list carrierShipmentMethods as carrierShipmentMethod>
@@ -90,6 +91,9 @@
                 </tr>
                 </#if>
                 <tr><td colspan='2'><hr class='sepbar'></td></tr>                      
+               <#else>
+                   <input type='hidden' name='shipping_method' value="NO_SHIPPING@_NA_">
+               </#if>
                 <tr>
                   <td colspan='2'>
                     <div class="head2"><b>${uiLabelMap.FacilityShipOnceOrAvailable}</b></div>
@@ -122,6 +126,7 @@
                     <textarea class='textAreaBox' cols="30" rows="3" name="shipping_instructions">${cart.getShippingInstructions()?if_exists}</textarea>
                   </td>
                 </tr>
+                <#if cart.getOrderType() != "PURCHASE_ORDER">
                 <tr><td colspan="2"><hr class='sepbar'></td></tr>       
                 <tr>
                   <td colspan="2">
@@ -130,15 +135,21 @@
                   </td>
                 </tr>                                                           
                 <tr><td colspan="2"><hr class='sepbar'></td></tr>                      
+                </#if>
                 <tr>
                   <td colspan="2">
+                    <#if cart.getOrderType() = "PURCHASE_ORDER">
+                       <input type='hidden' name='is_gift' value='false'>
+                    <#else>
                     <div>
                       <span class="head2"><b>${uiLabelMap.OrderIsThisGift}</b></span>
                       <input type='radio' <#if cart.getIsGift()?default("Y") == "Y">checked</#if> name='is_gift' value='true'><span class='tabletext'>${uiLabelMap.CommonYes}</span>
                       <input type='radio' <#if cart.getIsGift()?default("N") == "N">checked</#if> name='is_gift' value='false'><span class='tabletext'>${uiLabelMap.CommonNo}</span>
                     </div>
+                    </#if>
                   </td>
                 </tr>
+                <#if cart.getOrderType() != "PURCHASE_ORDER">
                 <tr><td colspan="2"><hr class='sepbar'></td></tr>
                 <tr>
                   <td colspan="2">
@@ -150,6 +161,43 @@
                     <textarea class='textAreaBox' cols="30" rows="3" name="gift_message">${cart.getGiftMessage()?if_exists}</textarea>
                   </td>
                 </tr>
+                 </#if>
+                 <tr><td colspan="2"><hr class='sepbar'></td></tr>
+                   <tr>
+                      <td nowrap colspan="2">
+                         <table>
+                            <tr>
+                              <td width="26%" align=right valign=top>
+                                <div class="head2"><b>${uiLabelMap.OrderShipBeforeDate} :</b></div>
+                              </td>
+                              <td width="5">&nbsp;</td>
+                              <td width="74%">
+                                <input type='text' size='25' class='inputBox' name='shipBeforeDate' value='${requestParameters.shipBeforeDate?if_exists}'>
+                                <a href="javascript:call_cal(document.optsetupform.shipBeforeDate,'${beforeDateStr}');"><img src='/images/cal.gif' width='16' height='16' border='0' alt='Calendar'></a>
+                              </td>
+                            </tr>
+                         </table>
+                      </td>
+                   </tr>
+                   <tr>
+                      <td nowrap colspan="2">
+                         <table>
+                            <tr>
+                              <td width="26%" align=right valign=top>
+                                <div class="head2"><b>${uiLabelMap.OrderShipAfterDate} :</b></div>
+                              </td>
+                              <td width="5">&nbsp;</td>
+                              <td width="74%">
+                                <input type='text' size='25' class='inputBox' name='shipAfterDate' value='${requestParameters.shipAfterDate?if_exists}'>
+                                <a href="javascript:call_cal(document.optsetupform.shipAfterDate,'${afterDateStr}');"><img src='/images/cal.gif' width='16' height='16' border='0' alt='Calendar'></a>
+                              </td>
+                            </tr>
+                         </table>
+                      </td>
+                   </tr>
+                   <tr>
+                      <td colspan="2"></td>
+                   </tr>
               </table>
             </form>
           </td>

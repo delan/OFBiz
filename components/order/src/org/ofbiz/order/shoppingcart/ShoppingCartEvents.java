@@ -53,6 +53,7 @@ import org.ofbiz.product.config.ProductConfigWrapper;
 import org.ofbiz.security.Security;
 import org.ofbiz.service.LocalDispatcher;
 import org.ofbiz.service.ModelService;
+import org.ofbiz.service.ServiceUtil;
 
 /**
  * Shopping cart events.
@@ -477,6 +478,7 @@ public class ShoppingCartEvents {
         session.removeAttribute("shoppingCart");
         session.removeAttribute("orderPartyId");
         session.removeAttribute("orderMode");
+        session.removeAttribute("agreementsMode");
         return "success";
     }
 
@@ -715,4 +717,100 @@ public class ShoppingCartEvents {
             return NO_ERROR;
         }
     }
+
+    /** Assign agreement **/
+    public static String selectAgreement(HttpServletRequest request, HttpServletResponse response) {
+        GenericDelegator delegator = (GenericDelegator) request.getAttribute("delegator");
+        LocalDispatcher dispatcher = (LocalDispatcher) request.getAttribute("dispatcher");
+        ShoppingCart cart = getCartObject(request);
+        ShoppingCartHelper cartHelper = new ShoppingCartHelper(delegator, dispatcher, cart);
+        String agreementId = request.getParameter("agreementId");
+        Map result = cartHelper.selectAgreement(agreementId);
+        if (ServiceUtil.isError(result)) {
+           request.setAttribute("_ERROR_MESSAGE_", ServiceUtil.getErrorMessage(result));
+           return "error";
+        }
+        return "success";
+    }
+
+    /** Assign currency **/
+    public static String setCurrency(HttpServletRequest request, HttpServletResponse response) {
+        GenericDelegator delegator = (GenericDelegator) request.getAttribute("delegator");
+        LocalDispatcher dispatcher = (LocalDispatcher) request.getAttribute("dispatcher");
+        ShoppingCart cart = getCartObject(request);
+        ShoppingCartHelper cartHelper = new ShoppingCartHelper(delegator, dispatcher, cart);
+        String currencyUomId = request.getParameter("currencyUomId");
+        Map result = cartHelper.setCurrency(currencyUomId);
+        if (ServiceUtil.isError(result)) {
+           request.setAttribute("_ERROR_MESSAGE_", ServiceUtil.getErrorMessage(result));
+           return "error";
+        }
+        return "success";
+    }
+
+    /** Add order term **/
+   public static String addOrderTerm(HttpServletRequest request, HttpServletResponse response) {
+       GenericDelegator delegator = (GenericDelegator) request.getAttribute("delegator");
+       LocalDispatcher dispatcher = (LocalDispatcher) request.getAttribute("dispatcher");
+       ShoppingCart cart = getCartObject(request);
+       ShoppingCartHelper cartHelper = new ShoppingCartHelper(delegator, dispatcher, cart);
+       String termTypeId = request.getParameter("termTypeId");
+       String termValue = request.getParameter("termValue");
+       String termDays = request.getParameter("termDays");
+       String termIndex = request.getParameter("termIndex");
+
+       Double dTermValue = null;
+       Long lTermDays = null;
+
+       if (termValue.trim().equals("")) {
+           termValue = null;
+       }
+       if (termDays.trim().equals("")) {
+           termDays = null;
+       }
+       if (UtilValidate.isEmpty(termTypeId)) {
+           request.setAttribute("_ERROR_MESSAGE_", "Order Term Type is required.");
+           return "error";
+       }
+       if (!UtilValidate.isSignedDouble(termValue)) {
+          request.setAttribute("_ERROR_MESSAGE_", "Order Term Value: "+UtilValidate.isSignedFloatMsg);
+          return "error";
+       }
+       if (termValue != null) {
+          dTermValue =new Double(termValue);
+       }
+       if (!UtilValidate.isInteger(termDays)) {
+          request.setAttribute("_ERROR_MESSAGE_", "Order Term Days: "+UtilValidate.isLongMsg);
+          return "error";
+       }
+       if (termDays != null) {
+          lTermDays = new Long(termDays);
+       }
+       if ((termIndex != null) && (termIndex != "-1") && (UtilValidate.isInteger(termIndex))) {
+          cartHelper.removeOrderTerm(Integer.parseInt(termIndex));
+       }
+
+       Map result = cartHelper.addOrderTerm(termTypeId, dTermValue, lTermDays);
+       if (ServiceUtil.isError(result)) {
+          request.setAttribute("_ERROR_MESSAGE_", ServiceUtil.getErrorMessage(result));
+          return "error";
+       }
+       return "success";
+   }
+
+   /** Add order term **/
+  public static String removeOrderTerm(HttpServletRequest request, HttpServletResponse response) {
+      GenericDelegator delegator = (GenericDelegator) request.getAttribute("delegator");
+      LocalDispatcher dispatcher = (LocalDispatcher) request.getAttribute("dispatcher");
+      ShoppingCart cart = getCartObject(request);
+      ShoppingCartHelper cartHelper = new ShoppingCartHelper(delegator, dispatcher, cart);
+      String index = request.getParameter("termIndex");
+      Map result = cartHelper.removeOrderTerm(Integer.parseInt(index));
+      if (ServiceUtil.isError(result)) {
+         request.setAttribute("_ERROR_MESSAGE_", ServiceUtil.getErrorMessage(result));
+         return "error";
+      }
+      return "success";
+  }
+
 }

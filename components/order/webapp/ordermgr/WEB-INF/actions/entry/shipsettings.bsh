@@ -38,6 +38,7 @@ context.put("cart", cart);
 // nuke the event messages
 request.removeAttribute("_EVENT_MESSAGE_");
 
+if ("SALES_ORDER".equals(cart.getOrderType())) {
 if (partyId != null && !partyId.equals("_NA_")) {
     party = delegator.findByPrimaryKey("Party", UtilMisc.toMap("partyId", partyId));
     if (party != null) {                
@@ -48,3 +49,19 @@ if (partyId != null && !partyId.equals("_NA_")) {
         context.put("shippingContactMechList", shippingContactMechList);
     }
 }
+} else {
+    // Purchase order
+    if (partyId != null && !partyId.equals("_NA_")) {
+        party = delegator.findByPrimaryKey("Party", UtilMisc.toMap("partyId", partyId));
+        if (party != null) {
+           person = party.getRelatedOne("Person");
+           context.put("party", party);
+           context.put("person", person);
+         }
+    }
+     String storeId = cart.getProductStoreId();
+     GenericValue store = delegator.findByPrimaryKey("ProductStore", UtilMisc.toMap("productStoreId", storeId));
+     List facilityContactMechValueMaps = ContactMechWorker.getFacilityContactMechValueMaps(delegator, store.getString("inventoryFacilityId"), false, null);
+     context.put("shippingContactMechListF", facilityContactMechValueMaps);
+}
+

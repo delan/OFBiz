@@ -33,6 +33,7 @@ import org.ofbiz.party.contact.*;
 import org.ofbiz.product.catalog.*;
 import org.ofbiz.order.shoppingcart.*;
 import org.ofbiz.product.store.*;
+import org.ofbiz.party.party.PartyWorker;
 
 delegator = request.getAttribute("delegator");
 userLogin = session.getAttribute("userLogin");
@@ -115,6 +116,8 @@ context.put("shippingInstructions", cart.getShippingInstructions());
 context.put("maySplit", cart.getMaySplit());
 context.put("giftMessage", cart.getGiftMessage());
 context.put("isGift", cart.getIsGift());
+context.put("shipBeforeDate", cart.getShipBeforeDate());
+context.put("shipAfterDate", cart.getShipAfterDate());
 
 shipmentMethodType = delegator.findByPrimaryKey("ShipmentMethodType", UtilMisc.toMap("shipmentMethodTypeId", cart.getShipmentMethodTypeId()));
 if (shipmentMethodType != null) context.put("shipMethDescription", shipmentMethodType.getString("description"));
@@ -131,3 +134,24 @@ taxAmount += OrderReadHelper.calcOrderAdjustments(orderHeaderAdjustments, orderS
 context.put("orderTaxTotal", taxAmount);   
 context.put("orderGrandTotal", OrderReadHelper.getOrderGrandTotal(orderItems, orderAdjustments));
               
+partyId = cart.getPartyId();
+if (partyId != null) {
+    partyMap = PartyWorker.getPartyOtherValues(request, partyId, "party", "person", "partyGroup");
+    if (partyMap != null) {
+        iter = partyMap.entrySet().iterator();
+        while (iter.hasNext()) {
+            entry = iter.next();
+            context.put(entry.getKey(), entry.getValue());
+        }
+    }
+}
+
+orderTerms = cart.getOrderTerms();
+if (orderTerms != null) {
+   context.put("orderTerms",orderTerms);
+}
+
+orderType = cart.getOrderType();
+context.put("orderType", orderType);
+
+

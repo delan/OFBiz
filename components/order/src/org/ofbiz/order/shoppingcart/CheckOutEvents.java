@@ -148,8 +148,10 @@ public class CheckOutEvents {
             String maySplit = request.getParameter("may_split");
             String giftMessage = request.getParameter("gift_message");
             String isGift = request.getParameter("is_gift");
+            String shipBeforeDate = request.getParameter("shipBeforeDate");
+            String shipAfterDate = request.getParameter("shipAfterDate");
             callResult = checkOutHelper.setCheckOutShippingOptions(shippingMethod, correspondingPoId,
-                    shippingInstructions, orderAdditionalEmails, maySplit, giftMessage, isGift);
+                    shippingInstructions, orderAdditionalEmails, maySplit, giftMessage, isGift, shipBeforeDate, shipAfterDate);
 
             ServiceUtil.getMessages(request, callResult, null);
 
@@ -300,6 +302,8 @@ public class CheckOutEvents {
         String maySplit = request.getParameter("may_split");
         String giftMessage = request.getParameter("gift_message");
         String isGift = request.getParameter("is_gift");
+        String shipBeforeDate = request.getParameter("shipBeforeDate");
+        String shipAfterDate = request.getParameter("shipAfterDate");
         List singleUsePayments = new ArrayList();
 
         // get the billing account and amount
@@ -341,7 +345,7 @@ public class CheckOutEvents {
 
         Map optResult = checkOutHelper.setCheckOutOptions(shippingMethod, shippingContactMechId, selectedPaymentMethods,
                 singleUsePayments, billingAccountId, billingAccountAmt, correspondingPoId, shippingInstructions,
-                orderAdditionalEmails, maySplit, giftMessage, isGift);
+                orderAdditionalEmails, maySplit, giftMessage, isGift, shipBeforeDate, shipAfterDate);
 
         ServiceUtil.getMessages(request, optResult, null);
         if (optResult.get(ModelService.RESPONSE_MESSAGE).equals(ModelService.RESPOND_ERROR)) {
@@ -561,6 +565,8 @@ public class CheckOutEvents {
         String checkOutPaymentId = null;
         String singleUsePayment = null;
         String appendPayment = null;
+        String shipBeforeDate = null;
+        String shipAfterDate = null;
 
         String mode = request.getParameter("finalizeMode");
         Debug.logInfo("FinalizeMode: " + mode, module);
@@ -607,6 +613,10 @@ public class CheckOutEvents {
             }
         }
 
+        if (mode != null && mode.equals("term")) {
+           cart.setOrderTermSet(true);
+        }
+
         // flag anoymous checkout to bypass additional party settings
         boolean isAnonymousCheckout = false;
         if (userLogin != null && "anonymous".equals(userLogin.getString("userLoginId"))) {
@@ -625,6 +635,8 @@ public class CheckOutEvents {
         maySplit = request.getParameter("may_split");
         giftMessage = request.getParameter("gift_message");
         isGift = request.getParameter("is_gift");
+        shipBeforeDate = request.getParameter("shipBeforeDate");
+        shipAfterDate = request.getParameter("shipAfterDate");
 
         // payment option; if offline we skip the payment screen
         methodType = request.getParameter("paymentMethodType");
@@ -672,7 +684,7 @@ public class CheckOutEvents {
         }
 
         Map callResult = checkOutHelper.finalizeOrderEntry(mode, shippingContactMechId, shippingMethod, shippingInstructions,
-                maySplit, giftMessage, isGift, methodType, checkOutPaymentId, isSingleUsePayment, doAppendPayment, paramMap);
+                maySplit, giftMessage, isGift, methodType, checkOutPaymentId, isSingleUsePayment, doAppendPayment, paramMap, shipBeforeDate, shipAfterDate);
 
         // generate any messages required
         ServiceUtil.getMessages(request, callResult, null);
@@ -693,6 +705,7 @@ public class CheckOutEvents {
         String requireShipping = null;
         String requireOptions = null;
         String requirePayment = null;
+        String requireTerm = null;
         String requireAdditionalParty = null;
 	
         // these options are not available to anonymous shoppers (security)
@@ -701,6 +714,7 @@ public class CheckOutEvents {
             requireShipping = request.getParameter("finalizeReqShipInfo");
             requireOptions = request.getParameter("finalizeReqOptions");
             requirePayment = request.getParameter("finalizeReqPayInfo");
+            requireTerm = request.getParameter("finalizeReqTermInfo");
             requireAdditionalParty = request.getParameter("finalizeReqAdditionalParty");
         }
 
@@ -711,8 +725,14 @@ public class CheckOutEvents {
             requireShipping = "true";
         if (requireOptions == null)
             requireOptions = "true";
+        if (cart.getOrderType().equals("PURCHASE_ORDER")) {
+           if (requireTerm == null) {
+              requireTerm = "true";
+           }
+        } else {
         if (requirePayment == null)
             requirePayment = "true";
+        }
         if (requireAdditionalParty == null)
             requireAdditionalParty = isAnonymousCheckout ? "false" : "true";
 
@@ -734,12 +754,19 @@ public class CheckOutEvents {
             return "options";
         }
 
+        if (cart.getOrderType().equals("PURCHASE_ORDER")) {
+          if (requireTerm.equalsIgnoreCase("true")) {
+            if (!cart.isOrderTermSet())
+               return "term";
+          }
+        } else {
         if (requirePayment.equalsIgnoreCase("true")) {
             if (paymentMethodIds == null || paymentMethodIds.size() == 0) {
                 if (paymentMethodTypeIds == null || paymentMethodTypeIds.size() == 0) {
                     return "payment";
                 }
             }
+          }
         }
 
         if (requireAdditionalParty.equalsIgnoreCase("true") && cart.getAdditionalPartyRoleMap().size() == 0) {

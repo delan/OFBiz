@@ -93,6 +93,8 @@ if (orderHeader != null) {
     orderAdjustments = orderReadHelper.getAdjustments();
     orderHeaderAdjustments = orderReadHelper.getOrderHeaderAdjustments();
     orderSubTotal = orderReadHelper.getOrderItemsSubTotal();
+    orderTerms = orderHeader.getRelated("OrderTerm");
+
     context.put("orderHeader", orderHeader);
     context.put("orderReadHelper", orderReadHelper);
     context.put("orderItems", orderItems);
@@ -100,6 +102,7 @@ if (orderHeader != null) {
     context.put("orderHeaderAdjustments", orderHeaderAdjustments);
     context.put("orderSubTotal", orderSubTotal);
     context.put("currencyUomId", orderReadHelper.getCurrency());
+    context.put("orderTerms",orderTerms);
 
     // get the order type
     orderType = orderHeader.getString("orderTypeId");
