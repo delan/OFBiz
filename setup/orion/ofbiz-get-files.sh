@@ -16,7 +16,7 @@ cp -i $OFBIZ_HOME/commonapp/lib/commonapp.jar $ORION_HOME/lib
 
 # get all of the ofbiz config files
 cp -i $OFBIZ_HOME/commonapp/etc/cache.properties $OFBIZ_HOME/commonapp/etc/debug.properties $OFBIZ_HOME/commonapp/etc/security.properties $ORION_HOME/lib
-cp -i $OFBIZ_HOME/commonapp/etc/entityengine.properties $OFBIZ_HOME/commonapp/etc/servicesengine.properties $OFBIZ_HOME/commonapp/etc/controlservlet.properties $ORION_HOME/lib
+cp -i $OFBIZ_HOME/commonapp/etc/entityengine.properties $OFBIZ_HOME/commonapp/etc/servicesengine.properties $OFBIZ_HOME/commonapp/etc/serverstats.properties $ORION_HOME/lib
 cp -i $OFBIZ_HOME/commonapp/etc/localdtds.properties $OFBIZ_HOME/commonapp/etc/tyrexdomain.xml $ORION_HOME/lib
 
 # get all of the third party jars

@@ -94,7 +94,7 @@
     </target>
 
     <target name="catalina-clean" depends="catalina-init,sub-clean">
-        <delete file="${classes.dir}/controlservlet.properties" />
+        <delete file="${classes.dir}/serverstats.properties" />
         <delete file="${classes.dir}/entityengine.properties" />
         <delete file="${classes.dir}/security.properties" />
         <delete file="${classes.dir}/debug.properties" />
@@ -266,7 +266,7 @@
 
     <!-- Copy all files necessary for running IN PLACE (ie: OFBIZ_HOME == .) -->
     <target name="int-deploy" depends="build">
-        <copy file="commonapp/etc/controlservlet.properties" toFile="${classes.dir}/controlservlet.properties" />
+        <copy file="commonapp/etc/serverstats.properties" toFile="${classes.dir}/serverstats.properties" />
         <copy file="commonapp/etc/entityengine.properties" toFile="${classes.dir}/entityengine.properties" />
         <copy file="commonapp/etc/security.properties" toFile="${classes.dir}/security.properties" />
         <copy file="commonapp/etc/debug.properties" toFile="${classes.dir}/debug.properties" />

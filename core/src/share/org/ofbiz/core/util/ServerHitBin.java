@@ -35,7 +35,7 @@ import org.ofbiz.core.util.*;
 /**
  * <p>Counts server hits and tracks statistics for request, events and views
  * <p>Handles total stats since the server started and binned 
- *  stats according to settings in the controlservlet.properties file.
+ *  stats according to settings in the serverstats.properties file.
  *
  *@author     <a href="mailto:jonesde@ofbiz.org">David E. Jones</a>
  *@created    February 4, 2002
@@ -235,7 +235,7 @@ public class ServerHitBin {
     }
     
     static long getNewBinLength() {
-        long binLength = (long) UtilProperties.getPropertyNumber("controlservlet", "stats.bin.length.millis");
+        long binLength = (long) UtilProperties.getPropertyNumber("serverstats", "stats.bin.length.millis");
         //if no or 0 binLength specified, set to 30 minutes
         if (binLength <= 0) binLength = 1800000;
         //if binLength is more than an hour, set it to one hour
@@ -353,7 +353,7 @@ public class ServerHitBin {
                 binList.addFirst(new ServerHitBin(this));
 
                 //persist each bin when time ends if option turned on
-                if (UtilProperties.propertyValueEqualsIgnoreCase("controlservlet", "stats.persist." + ServerHitBin.typeIds[type] + ".bin", "true")) {
+                if (UtilProperties.propertyValueEqualsIgnoreCase("serverstats", "stats.persist." + ServerHitBin.typeIds[type] + ".bin", "true")) {
                     Map binData = new HashMap();
                     binData.put("contentId", this.id);
                     binData.put("hitTypeId", ServerHitBin.typeIds[this.type]);
@@ -377,7 +377,7 @@ public class ServerHitBin {
     
     void saveHit(String visitId, long startTime, long runningTime, GenericValue userLogin) {
         //persist record of hit in ServerHit entity if option turned on
-        if (UtilProperties.propertyValueEqualsIgnoreCase("controlservlet", "stats.persist." + ServerHitBin.typeIds[type] + ".hit", "true")) {
+        if (UtilProperties.propertyValueEqualsIgnoreCase("serverstats", "stats.persist." + ServerHitBin.typeIds[type] + ".hit", "true")) {
             Map hitData = new HashMap();
             hitData.put("visitId", visitId);
             hitData.put("hitStartDateTime", new java.sql.Timestamp(startTime));
