@@ -49,6 +49,7 @@ public class PayPalEvents {
     
     public static final String module = PayPalEvents.class.getName();
     
+    /** Initiate PayPal Request */
     public static String callPayPal(HttpServletRequest request, HttpServletResponse response) {
         ServletContext application = ((ServletContext) request.getAttribute("servletContext"));
         GenericDelegator delegator = (GenericDelegator) request.getAttribute("delegator");
@@ -123,7 +124,10 @@ public class PayPalEvents {
         
         HttpClient hclient = new HttpClient();
         String encodedParameters = hclient.encodeArgs(parameters);
-        String redirectString = redirectUrl + "?" + encodedParameters;     
+        String redirectString = redirectUrl + "?" + encodedParameters;   
+        
+        // set the order in the session for cancelled orders
+        request.getSession().setAttribute("PAYPAL_ORDER", orderId); 
         
         // redirect to paypal
         try {
@@ -137,6 +141,7 @@ public class PayPalEvents {
         return "success";   
     }
     
+    /** PayPal Call-Back Event */
     public static String payPalIPN(HttpServletRequest request, HttpServletResponse response) {
         ServletContext application = ((ServletContext) request.getAttribute("servletContext"));
         GenericDelegator delegator = (GenericDelegator) request.getAttribute("delegator");
@@ -289,6 +294,52 @@ public class PayPalEvents {
         }
         return false;
     }  
+    
+    /** Event called when customer cancels a paypal order */
+    public static String cancelPayPalOrder(HttpServletRequest request, HttpServletResponse response) {
+        ServletContext application = ((ServletContext) request.getAttribute("servletContext"));
+        GenericDelegator delegator = (GenericDelegator) request.getAttribute("delegator");
+        LocalDispatcher dispatcher = (LocalDispatcher) request.getAttribute("dispatcher");
+        GenericValue userLogin = (GenericValue) request.getSession().getAttribute(SiteDefs.USER_LOGIN); 
+        
+        // get the stored order id from the session
+        String orderId = (String) request.getSession().getAttribute("PAYPAL_ORDER");
+                
+        // attempt to start a transaction
+        boolean beganTransaction = false;
+        try {
+            beganTransaction = TransactionUtil.begin();
+        } catch (GenericTransactionException gte) {
+            Debug.logError(gte, "Unable to begin transaction", module);
+        }   
+        
+        // get order.properties        
+        URL orderPropertiesUrl = CheckOutEvents.getOrderProperties(request);   
+                
+        // cancel the order
+        boolean okay = OrderChangeHelper.cancelOrder(dispatcher, userLogin, orderId, orderPropertiesUrl);
+        
+        if (okay) {                
+            try {
+                TransactionUtil.commit(beganTransaction);
+            } catch (GenericTransactionException gte) {
+                Debug.logError(gte, "Unable to commit transaction", module);
+            }
+        } else {
+            try {
+                TransactionUtil.rollback(beganTransaction);
+            } catch (GenericTransactionException gte) {
+                Debug.logError(gte, "Unable to rollback transaction", module);
+            }
+        }  
+        
+        // attempt to release the offline hold on the order (workflow)
+        if (okay) 
+            OrderChangeHelper.relaeaseOfflineOrderHold(dispatcher, orderId, orderPropertiesUrl);  
+            
+        request.setAttribute(SiteDefs.EVENT_MESSAGE, "<li>Previous PayPal order has been cancelled.");                                            
+        return "success";        
+    }    
     
     private static boolean setPaymentPreference(GenericValue paymentPreference, ServletRequest request) {
         String paymentDate = request.getParameter("payment_date");  

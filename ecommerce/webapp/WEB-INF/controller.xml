@@ -263,7 +263,14 @@
     	<event type="java" path="org.ofbiz.commonapp.thirdparty.paypal.PayPalEvents" invoke="payPalIPN"/>
     	<response name="success" type="none"/>
     	<response name="error" type="view" value="checkout"/>
-    </request-map>            
+    </request-map>      
+    
+    <request-map uri="payPalCancel">
+    	<security https="true" auth="true"/>
+    	<event type="java" path="org.ofbiz.commonapp.thirdparty.paypal.PayPalEvents" invoke="cancelPayPalOrder"/>
+    	<response name="success" type="main"/>
+    	<response name="error" type="view" value="main"/>
+    </request-map>                      
     
     <request-map uri="confirmorder">
         <response name="success" type="view" value="confirmorder"/>
