@@ -76,32 +76,8 @@ public class CompareFieldCondition implements Conditional {
         String type = methodContext.expandString(this.type);
         String format = methodContext.expandString(this.format);
 
-        Object fieldVal1 = null;
-        Object fieldVal2 = null;
-
-        if (!mapAcsr.isEmpty()) {
-            Map fromMap = (Map) mapAcsr.get(methodContext);
-            if (fromMap == null) {
-                if (Debug.infoOn()) Debug.logInfo("Map not found with name " + mapAcsr + ", using null for comparison", module);
-            } else {
-                fieldVal1 = fieldAcsr.get(fromMap, methodContext);
-            }
-        } else {
-            // no map name, try the env
-            fieldVal1 = fieldAcsr.get(methodContext);
-        }
-
-        if (!toMapAcsr.isEmpty()) {
-            Map toMap = (Map) toMapAcsr.get(methodContext);
-            if (toMap == null) {
-                if (Debug.infoOn()) Debug.logInfo("To Map not found with name " + toMapAcsr + ", using null for comparison", module);
-            } else {
-                fieldVal2 = toFieldAcsr.get(toMap, methodContext);
-            }
-        } else {
-            // no map name, try the env
-            fieldVal2 = toFieldAcsr.get(methodContext);
-        }
+        Object fieldVal1 = getFieldVal1(methodContext);
+        Object fieldVal2 = getFieldVal2(methodContext);
 
         List messages = new LinkedList();
         Boolean resultBool = BaseCompare.doRealCompare(fieldVal1, fieldVal2, operator, type, format, messages, null, methodContext.getLoader());
@@ -129,5 +105,75 @@ public class CompareFieldCondition implements Conditional {
         if (resultBool != null) return resultBool.booleanValue();
         
         return false;
+    }
+    
+    protected Object getFieldVal1(MethodContext methodContext) {
+        Object fieldVal1 = null;
+        if (!mapAcsr.isEmpty()) {
+            Map fromMap = (Map) mapAcsr.get(methodContext);
+            if (fromMap == null) {
+                if (Debug.infoOn()) Debug.logInfo("Map not found with name " + mapAcsr + ", using null for comparison", module);
+            } else {
+                fieldVal1 = fieldAcsr.get(fromMap, methodContext);
+            }
+        } else {
+            // no map name, try the env
+            fieldVal1 = fieldAcsr.get(methodContext);
+        }
+        return fieldVal1;
+    }
+
+    protected Object getFieldVal2(MethodContext methodContext) {
+        Object fieldVal2 = null;
+        if (!toMapAcsr.isEmpty()) {
+            Map toMap = (Map) toMapAcsr.get(methodContext);
+            if (toMap == null) {
+                if (Debug.infoOn()) Debug.logInfo("To Map not found with name " + toMapAcsr + ", using null for comparison", module);
+            } else {
+                fieldVal2 = toFieldAcsr.get(toMap, methodContext);
+            }
+        } else {
+            // no map name, try the env
+            fieldVal2 = toFieldAcsr.get(methodContext);
+        }
+        return fieldVal2;
+    }
+    
+    public void prettyPrint(StringBuffer messageBuffer, MethodContext methodContext) {
+        String operator = methodContext.expandString(this.operator);
+        String type = methodContext.expandString(this.type);
+        String format = methodContext.expandString(this.format);
+
+        Object fieldVal1 = getFieldVal1(methodContext);
+        Object fieldVal2 = getFieldVal2(methodContext);
+        
+        messageBuffer.append("[");
+        if (!this.mapAcsr.isEmpty()) {
+            messageBuffer.append(this.mapAcsr);
+            messageBuffer.append(".");
+        }
+        messageBuffer.append(this.fieldAcsr);
+        messageBuffer.append("=");
+        messageBuffer.append(fieldVal1);
+        messageBuffer.append("] ");
+
+        messageBuffer.append(operator);
+
+        messageBuffer.append(" [");
+        if (!this.toMapAcsr.isEmpty()) {
+            messageBuffer.append(this.toMapAcsr);
+            messageBuffer.append(".");
+        }
+        messageBuffer.append(this.toFieldAcsr);
+        messageBuffer.append("=");
+        messageBuffer.append(fieldVal2);
+        messageBuffer.append("] ");
+
+        messageBuffer.append(" as ");
+        messageBuffer.append(type);
+        if (UtilValidate.isNotEmpty(format)) {
+            messageBuffer.append(":");
+            messageBuffer.append(format);
+        }
     }
 }

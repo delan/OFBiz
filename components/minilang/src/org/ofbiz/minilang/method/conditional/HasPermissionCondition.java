@@ -23,6 +23,7 @@
  */
 package org.ofbiz.minilang.method.conditional;
 
+import org.ofbiz.base.util.UtilValidate;
 import org.ofbiz.entity.GenericValue;
 import org.ofbiz.minilang.SimpleMethod;
 import org.ofbiz.minilang.method.MethodContext;
@@ -75,5 +76,15 @@ public class HasPermissionCondition implements Conditional {
         }
         
         return runSubOps;
+    }
+
+    public void prettyPrint(StringBuffer messageBuffer, MethodContext methodContext) {
+        messageBuffer.append("has-permission[");
+        messageBuffer.append(this.permission);
+        if (UtilValidate.isNotEmpty(this.action)) {
+            messageBuffer.append(":");
+            messageBuffer.append(this.action);
+        }
+        messageBuffer.append("]");
     }
 }

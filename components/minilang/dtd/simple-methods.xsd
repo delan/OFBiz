@@ -1360,6 +1360,23 @@
         <xs:attribute type="xs:string" name="response-code" default="success"/>
     </xs:attributeGroup>
 
+    <xs:element name="assert" substitutionGroup="IfOtherOperations">
+        <xs:annotation>
+            <xs:documentation>
+                Each condition under the assert element will be checked and if it fails an error will be added to the given error list.
+                Note that while the definitions for the if-* operations are used, the tags should be empty because of the differing semantics.
+            </xs:documentation>
+        </xs:annotation>
+        <xs:complexType>
+            <xs:group maxOccurs="unbounded" ref="IfConditions"/>
+            <xs:attributeGroup ref="attlist.assert"/>
+        </xs:complexType>
+    </xs:element>
+    <xs:attributeGroup name="attlist.assert">
+        <xs:attribute type="xs:string" name="title"/>
+        <xs:attribute type="xs:string" name="error-list-name" default="error_list"/>
+    </xs:attributeGroup>
+
     <!--
         Operations that conditionally execute blocks within them; they mimic the
         simple-map-processor process operations that validate incoming data
@@ -1372,7 +1389,7 @@
     </xs:group>
     <xs:element name="IfCombineConditions" abstract="true"/>
     <xs:element name="if" substitutionGroup="IfOtherOperations">
-        <xs:annotation><xs:documentation>note that while the definitions for the if-* operations are used, the tags should be empty because of the differing semantics</xs:documentation></xs:annotation>
+        <xs:annotation><xs:documentation>Note that while the definitions for the if-* operations are used, the tags should be empty because of the differing semantics.</xs:documentation></xs:annotation>
         <xs:complexType>
             <xs:sequence>
                 <xs:element ref="condition"/>

@@ -100,4 +100,31 @@ public class CombinedCondition implements Conditional {
         }
     }
 
+    public void prettyPrint(StringBuffer messageBuffer, MethodContext methodContext) {
+        messageBuffer.append("(");
+        Iterator subCondIter = subConditions.iterator();
+        while (subCondIter.hasNext()) {
+            Conditional subCond = (Conditional) subCondIter.next();
+            subCond.prettyPrint(messageBuffer, methodContext);
+            if (subCondIter.hasNext()) {
+                switch (this.conditionType) {
+                case OR:
+                    messageBuffer.append(" OR ");
+                    break;
+                case XOR:
+                    messageBuffer.append(" XOR ");
+                    break;
+                case AND:
+                    messageBuffer.append(" AND ");
+                    break;
+                case NOT:
+                    messageBuffer.append(" NOT ");
+                    break;
+                default:
+                    messageBuffer.append("?");
+                }
+            }
+        }
+        messageBuffer.append(")");
+    }
 }

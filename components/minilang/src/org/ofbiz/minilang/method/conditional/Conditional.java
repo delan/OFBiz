@@ -35,4 +35,5 @@ import org.ofbiz.minilang.method.*;
  */
 public interface Conditional {
     public boolean checkCondition(MethodContext methodContext);
+    public void prettyPrint(StringBuffer messageBuffer, MethodContext methodContext);
 }
