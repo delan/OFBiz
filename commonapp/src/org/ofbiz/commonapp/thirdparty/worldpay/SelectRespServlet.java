@@ -73,7 +73,14 @@ public class SelectRespServlet extends SelectServlet implements SelectDefs {
         // get the dispatcher
         ServiceDispatcher serviceDisp = ServiceDispatcher.getInstance(dispatchName, delegator);
         DispatchContext dctx = serviceDisp.getLocalContext(dispatchName);
-        dispatcher = dctx.getDispatcher();        
+        dispatcher = dctx.getDispatcher();  
+        
+        // get the admin userLogin
+        try {
+            userLogin = delegator.findByPrimaryKey("UserLogin", UtilMisc.toMap("userLoginId", "admin"));      
+        } catch (GenericEntityException e) {
+            Debug.logError(e, "Cannot get admin UserLogin entity", module);
+        }
                 
         // get the properties file
         //String webSiteId = sctx.getInitParameter("webSiteId");
@@ -106,6 +113,14 @@ public class SelectRespServlet extends SelectServlet implements SelectDefs {
             Debug.logWarning(e, "Problems loading order.properties", module);
         }    
         
+        // attempt to start a transaction
+        boolean beganTransaction = false;
+        try {
+            beganTransaction = TransactionUtil.begin();
+        } catch (GenericTransactionException gte) {
+            Debug.logError(gte, "Unable to begin transaction", module);
+        }                
+        
         if (transStatus.equalsIgnoreCase("Y")) {
             // order was approved
             Debug.logInfo("Order #" + orderId + " approved", module);
@@ -118,6 +133,12 @@ public class SelectRespServlet extends SelectServlet implements SelectDefs {
         
         // set the payment preference
         setPaymentPreferences(orderId, request);
+        
+        try {
+            TransactionUtil.commit(beganTransaction);
+        } catch (GenericTransactionException gte) {
+            Debug.logError(gte, "Unable to commit transaction", module);
+        }
         
         // call the existing confirm order events (calling direct)
         String confirm = CheckOutEvents.renderConfirmOrder(request, response);
