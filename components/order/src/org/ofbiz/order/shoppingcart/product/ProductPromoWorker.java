@@ -1,5 +1,5 @@
 /*
- * $Id: ProductPromoWorker.java,v 1.30 2003/12/03 15:28:59 jonesde Exp $
+ * $Id: ProductPromoWorker.java,v 1.31 2003/12/31 01:25:29 jonesde Exp $
  *
  *  Copyright (c) 2001, 2002 The Open For Business Project - www.ofbiz.org
  *
@@ -54,7 +54,7 @@ import org.ofbiz.service.LocalDispatcher;
  *
  * @author     <a href="mailto:jonesde@ofbiz.org">David E. Jones</a>
  * @author     <a href="mailto:jaz@ofbiz.org">Andy Zeneski</a>
- * @version    $Revision: 1.30 $
+ * @version    $Revision: 1.31 $
  * @since      2.0
  */
 public class ProductPromoWorker {
@@ -175,16 +175,27 @@ public class ProductPromoWorker {
             // NOTE: after that first pass we could remove any that have a 0 totalDiscountAmount from the run list, but we won't because by the time they are run the cart may have changed enough to get them to go; also, certain actions like free shipping should always be run even though we won't know what the totalDiscountAmount is at the time the promotion is run
             // each ProductPromoUseInfo on the shopping cart will contain it's total value, so add up all totals for each promoId and put them in a List of Maps
             // create a List of Maps with productPromo and totalDiscountAmount, use the Map sorter to sort them descending by totalDiscountAmount
+            
+            // before sorting split into two lists and sort each list; one list for promos that have a order total condition, and the other list for all promos that don't; then we'll always run the ones that have no condition on the order total first
             List productPromoDiscountMapList = new LinkedList();
+            List productPromoDiscountMapListOrderTotal = new LinkedList();
             Iterator productPromoIter = productPromoList.iterator();
             while (productPromoIter.hasNext()) {
                 GenericValue productPromo = (GenericValue) productPromoIter.next();
                 Map productPromoDiscountMap = UtilMisc.toMap("productPromo", productPromo, "totalDiscountAmount", new Double(cart.getProductPromoUseTotalDiscount(productPromo.getString("productPromoId"))));
-                productPromoDiscountMapList.add(productPromoDiscountMap);
+                if (hasOrderTotalCondition(productPromo, delegator)) {
+                    productPromoDiscountMapListOrderTotal.add(productPromoDiscountMap);
+                } else {
+                    productPromoDiscountMapList.add(productPromoDiscountMap);
+                }
             }
+            
             
             // sort the Map List, do it ascending because the discount amounts will be negative, so the lowest number is really the highest discount
             productPromoDiscountMapList = UtilMisc.sortMaps(productPromoDiscountMapList, UtilMisc.toList("+totalDiscountAmount"));
+            productPromoDiscountMapListOrderTotal = UtilMisc.sortMaps(productPromoDiscountMapListOrderTotal, UtilMisc.toList("+totalDiscountAmount"));
+
+            productPromoDiscountMapList.addAll(productPromoDiscountMapListOrderTotal);
             
             List sortedProductPromoList = new ArrayList(productPromoDiscountMapList.size());
             Iterator productPromoDiscountMapIter = productPromoDiscountMapList.iterator();
@@ -203,6 +214,21 @@ public class ProductPromoWorker {
         } catch (GenericEntityException e) {
             Debug.logError(e, "Error looking up promotion data while doing promotions", module);
         }
+    }
+    
+    protected static boolean hasOrderTotalCondition(GenericValue productPromo, GenericDelegator delegator) throws GenericEntityException {
+        boolean hasOtCond = false;
+        List productPromoConds = delegator.findByAndCache("ProductPromoCond", UtilMisc.toMap("productPromoId", productPromo.get("productPromoId")), UtilMisc.toList("productPromoCondSeqId"));
+        Iterator productPromoCondIter = productPromoConds.iterator();
+        while (productPromoCondIter.hasNext()) {
+            GenericValue productPromoCond = (GenericValue) productPromoCondIter.next();
+            String inputParamEnumId = productPromoCond.getString("inputParamEnumId");
+            if ("PPIP_ORDER_TOTAL".equals(inputParamEnumId)) {
+                hasOtCond = true;
+                break;
+            }
+        }
+        return hasOtCond;
     }
     
     protected static void runProductPromos(List productPromoList, ShoppingCart cart, GenericDelegator delegator, LocalDispatcher dispatcher, Timestamp nowTimestamp, boolean isolatedTestRun) throws GenericEntityException {
@@ -426,7 +452,9 @@ public class ProductPromoWorker {
                 boolean performActions = true;
 
                 // loop through conditions for rule, if any false, set allConditionsTrue to false
-                List productPromoConds = productPromoRule.getRelatedCache("ProductPromoCond", null, UtilMisc.toList("productPromoCondSeqId"));
+                List productPromoConds = delegator.findByAndCache("ProductPromoCond", UtilMisc.toMap("productPromoId", productPromo.get("productPromoId")), UtilMisc.toList("productPromoCondSeqId"));
+                productPromoConds = EntityUtil.filterByAnd(productPromoConds, UtilMisc.toMap("productPromoRuleId", productPromoRule.get("productPromoRuleId")));
+                // using the other method to consolodate cache entries: List productPromoConds = productPromoRule.getRelatedCache("ProductPromoCond", null, UtilMisc.toList("productPromoCondSeqId"));
                 if (Debug.verboseOn()) Debug.logVerbose("Checking " + productPromoConds.size() + " conditions for rule " + productPromoRule, module);
 
                 Iterator productPromoCondIter = UtilMisc.toIterator(productPromoConds);
