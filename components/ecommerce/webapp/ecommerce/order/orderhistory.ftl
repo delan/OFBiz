@@ -20,7 +20,7 @@
  *  THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  *
  *@author     Andy Zeneski (jaz@ofbiz.org)
- *@version    $Revision: 1.3 $
+ *@version    $Revision: 1.4 $
  *@since      2.1
 -->
 
@@ -69,7 +69,7 @@
                     <div class="tabletext">${orderHeader.orderId}</div>
                   </td>
                   <td>
-                    <div class="tabletext">${orderHeader.grandTotal?string.currency}</div>
+                    <div class="tabletext"><@ofbizCurrency amount=orderHeader.grandTotal isoCode=orderHeader.currencyUom/></div>
                   </td>
                   <td>
                     <div class="tabletext">${status.description}</div>

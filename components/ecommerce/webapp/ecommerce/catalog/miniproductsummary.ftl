@@ -20,14 +20,14 @@
  *  THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  *
  *@author     David E. Jones (jonesde@ofbiz.org)
- *@version    $Revision: 1.4 $
+ *@version    $Revision: 1.5 $
  *@since      2.1
 -->
 <#assign uiLabelMap = requestAttributes.uiLabelMap>
 <#if miniProduct?exists>
     <a href="<@ofbizUrl>/product/~product_id=${miniProduct.productId}</@ofbizUrl>" class="buttontext">${miniProduct.productName}</a>
     <div class="tabletext"><b>${miniProduct.productId}, 
-        <span class="<#if priceResult.isSale>salePrice<#else>normalPrice</#if>">${priceResult.price?string.currency}</span></b></div>
+        <span class="<#if priceResult.isSale>salePrice<#else>normalPrice</#if>"><@ofbizCurrency amount=priceResult.price isoCode=priceResult.currencyUsed/></span></b></div>
         
     <#if (miniProduct.introductionDate?exists) && (nowTimeLong < miniProduct.introductionDate.getTime())>
         <#-- check to see if introductionDate hasn't passed yet -->

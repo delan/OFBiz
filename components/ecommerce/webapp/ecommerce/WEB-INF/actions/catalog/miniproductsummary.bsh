@@ -20,7 +20,7 @@
  *  THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  *
  *@author     David E. Jones (jonesde@ofbiz.org)
- *@version    $Revision: 1.3 $
+ *@version    $Revision: 1.4 $
  *@since      2.1
  */
 
@@ -47,7 +47,8 @@ if (miniProduct != null && productStoreId != null && prodCatalogId != null) {
     
     // calculate the "your" price
     priceParams = UtilMisc.toMap("product", miniProduct, 
-        "prodCatalogId", prodCatalogId, "webSiteId", webSiteId,
+        "prodCatalogId", prodCatalogId, "webSiteId", webSiteId, 
+        "currencyUomId", UtilHttp.getCurrencyUom(session),
         "autoUserLogin", session.getAttribute("autoUserLogin"));
     if (userLogin != null) priceParams.put("partyId", userLogin.get("partyId"));
     priceResult = dispatcher.runSync("calculateProductPrice", priceParams);

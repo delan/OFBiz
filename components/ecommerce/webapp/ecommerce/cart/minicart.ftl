@@ -21,7 +21,7 @@
  *
  *@author     David E. Jones (jonesde@ofbiz.org)
  *@author     Andy Zeneski (jaz@ofbiz.org)
- *@version    $Revision: 1.5 $
+ *@version    $Revision: 1.6 $
  *@since      2.1
 -->
 <#assign uiLabelMap = requestAttributes.uiLabelMap>
@@ -71,12 +71,12 @@
                         <div class="tabletext"><b>${cartLine.getItemTypeDescription()?if_exists}</b></div>
                       </#if>
                     </td>
-                    <td align="right" valign="top"><div class="tabletext" nowrap>${cartLine.getItemSubTotal()?string.currency}</div></td>
+                    <td align="right" valign="top"><div class="tabletext" nowrap><@ofbizCurrency amount=cartLine.getItemSubTotal() isoCode=shoppingCart.getCurrency()/></div></td>
                   </tr>
                 </#list>
                 <tr>
                   <td colspan="3" align="right">
-                    <div class="tabletext"><b>${uiLabelMap.EcommerceTotal}: ${shoppingCart.getGrandTotal()?string.currency}</b></div>
+                    <div class="tabletext"><b>${uiLabelMap.EcommerceTotal}: <@ofbizCurrency amount=shoppingCart.getGrandTotal() isoCode=shoppingCart.getCurrency()/></b></div>
                   </td>
                 </tr>
                 <tr>

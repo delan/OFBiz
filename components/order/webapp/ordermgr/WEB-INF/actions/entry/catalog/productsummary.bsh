@@ -20,7 +20,7 @@
  *  THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  *
  *@author     Andy Zeneski
- *@version    $Revision: 1.4 $
+ *@version    $Revision: 1.5 $
  *@since      2.1
 */
 
@@ -80,7 +80,8 @@ if (product != null) {
     // get the product price
     priceMap = dispatcher.runSync("calculateProductPrice", 
             UtilMisc.toMap("product", product, "prodCatalogId", catalogId, 
-            "webSiteId", webSiteId, "autoUserLogin", autoUserLogin, "userLogin", userLogin));
+            "webSiteId", webSiteId, "currencyUomId", UtilHttp.getCurrencyUom(session), 
+            "autoUserLogin", autoUserLogin, "userLogin", userLogin));
             
     request.setAttribute("priceMap", priceMap);
 }

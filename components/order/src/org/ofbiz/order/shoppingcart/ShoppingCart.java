@@ -1,5 +1,5 @@
 /*
- * $Id: ShoppingCart.java,v 1.12 2003/11/04 23:08:33 ajzeneski Exp $
+ * $Id: ShoppingCart.java,v 1.13 2003/11/08 20:54:17 ajzeneski Exp $
  *
  *  Copyright (c) 2001, 2002 The Open For Business Project - www.ofbiz.org
  *
@@ -45,7 +45,7 @@ import org.ofbiz.service.LocalDispatcher;
  * @author     <a href="mailto:jaz@ofbiz.org">Andy Zeneski</a>
  * @author     <a href="mailto:cnelson@einnovation.com">Chris Nelson</a>
  * @author     <a href="mailto:jonesde@ofbiz.org">David E. Jones</a>
- * @version    $Revision: 1.12 $
+ * @version    $Revision: 1.13 $
  * @since      2.0
  */
 public class ShoppingCart implements java.io.Serializable {
@@ -104,6 +104,7 @@ public class ShoppingCart implements java.io.Serializable {
         this.contactMechIdsMap = new HashMap(cart.getOrderContactMechIds());
         this.freeShippingProductPromoActions = new ArrayList(cart.getFreeShippingProductPromoActions());
         this.locale = cart.getLocale();
+        this.currencyUom = cart.getCurrency();
 
         // clone the items
         List items = cart.items();
@@ -114,11 +115,12 @@ public class ShoppingCart implements java.io.Serializable {
     }
 
     /** Creates new empty ShoppingCart object. */
-    public ShoppingCart(GenericDelegator delegator, String productStoreId, String webSiteId) {
+    public ShoppingCart(GenericDelegator delegator, String productStoreId, String webSiteId, String currencyUom) {
         this.delegator = delegator;
         this.delegatorName = delegator.getDelegatorName();
         this.productStoreId = productStoreId;
         this.webSiteId = webSiteId;
+        this.currencyUom = currencyUom;
         this.orderShipmentPreference = delegator.makeValue("OrderShipmentPreference", null);
         // make sure locale is initialized if nothing other than from jvm
         // for a web shopping cart this would be set later by the webShoppingCart methods

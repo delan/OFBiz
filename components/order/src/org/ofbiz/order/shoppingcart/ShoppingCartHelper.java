@@ -1,5 +1,5 @@
 /*
- * $Id: ShoppingCartHelper.java,v 1.3 2003/10/30 19:29:41 ajzeneski Exp $
+ * $Id: ShoppingCartHelper.java,v 1.4 2003/11/08 20:54:17 ajzeneski Exp $
  *
  *  Copyright (c) 2001, 2002 The Open For Business Project - www.ofbiz.org
  *
@@ -52,7 +52,7 @@ import org.ofbiz.service.ServiceUtil;
  *
  * @author     <a href="mailto:tristana@twibble.org">Tristan Austin</a>
  * @author     <a href="mailto:jaz@ofbiz.org">Andy Zeneski</a>
- * @version    $Revision: 1.3 $
+ * @version    $Revision: 1.4 $
  * @since      2.0
  */
 public class ShoppingCartHelper {
@@ -60,28 +60,14 @@ public class ShoppingCartHelper {
     public static final String resource = "OrderUiLabels";
     public static String module = ShoppingCartHelper.class.getName();
 
-    /**
-     * The shopping cart to manipulate
-     */
-    private ShoppingCart cart;
+    // The shopping cart to manipulate
+    private ShoppingCart cart = null;
 
-    /**
-     * The entity engine delegator
-     */
-    private GenericDelegator delegator;
+    // The entity engine delegator
+    private GenericDelegator delegator = null;
 
-    /**
-     * The service invoker
-     */
-    private LocalDispatcher dispatcher;
-
-    /**
-     * This will create a default, non-interface specific, 
-     * <code>ShoppingCart</code> to manipulate. 
-     */
-    public ShoppingCartHelper(GenericDelegator delegator, LocalDispatcher dispatcher, String productStoreId, String webSiteId) {
-        this(delegator, dispatcher, new ShoppingCart(delegator, productStoreId, webSiteId));
-    }
+    // The service invoker
+    private LocalDispatcher dispatcher = null;
 
     /**
      * Changes will be made to the cart directly, as opposed
@@ -90,9 +76,19 @@ public class ShoppingCartHelper {
      * @param cart The cart to manipulate
      */
     public ShoppingCartHelper(GenericDelegator delegator, LocalDispatcher dispatcher, ShoppingCart cart) {
-        this.delegator = delegator;
         this.dispatcher = dispatcher;
+        this.delegator = delegator;
         this.cart = cart;
+
+        if (delegator == null) {
+            this.delegator = dispatcher.getDelegator();
+        }
+        if (dispatcher == null) {
+            throw new IllegalArgumentException("Dispatcher argument is null");
+        }
+        if (cart == null) {
+            throw new IllegalArgumentException("ShoppingCart argument is null");
+        }
     }
 
     /** Event to add an item to the shopping cart. */
