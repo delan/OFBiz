@@ -126,7 +126,7 @@ public class CatalogWorker {
         if ("N".equals(prodCatalog.getString("reserveInventory"))) {
             //note: if not set, defaults to yes, reserve inventory
             Debug.logInfo("Catalog with id " + prodCatalogId + ", is set to NOT reserve inventory, not reserving inventory");
-            return new Double(0.0);
+            return null;
         }
         
         if ("Y".equals(prodCatalog.getString("oneInventoryFacility"))) {
