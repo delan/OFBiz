@@ -1,5 +1,5 @@
 /*
- * $Id: ModelMenuItem.java,v 1.9 2004/04/25 05:34:57 byersa Exp $
+ * $Id: ModelMenuItem.java,v 1.10 2004/05/11 12:56:45 jonesde Exp $
  *
  * Copyright (c) 2003 The Open For Business Project - www.ofbiz.org
  *
@@ -31,10 +31,8 @@ import java.util.Map;
 
 import org.ofbiz.base.util.Debug;
 import org.ofbiz.base.util.FlexibleStringExpander;
-import org.ofbiz.base.util.UtilHttp;
 import org.ofbiz.base.util.UtilValidate;
 import org.ofbiz.base.util.UtilXml;
-//import org.ofbiz.content.widget.menu.ModelMenuItem.MenuParamInfo;
 import org.w3c.dom.Element;
 
 /**
@@ -42,7 +40,7 @@ import org.w3c.dom.Element;
  *
  * @author     <a href="mailto:jonesde@ofbiz.org">David E. Jones</a>
  * @author     <a href="mailto:byersa@automationgroups.com">Al Byers</a>
- * @version    $Revision: 1.9 $
+ * @version    $Revision: 1.10 $
  * @since      2.2
  */
 public class ModelMenuItem {
