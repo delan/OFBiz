@@ -96,11 +96,11 @@ public class ModelFieldTypeReader {
           fieldTypeCache = new HashMap();
           
           UtilTimer utilTimer = new UtilTimer();
-          utilTimer.timerString("Before getDocument");
+          //utilTimer.timerString("Before getDocument");
           Document document = getDocument(fieldTypeFileName);
           if(document == null) { fieldTypeCache = null; return null; }
           
-          utilTimer.timerString("Before getDocumentElement");
+          //utilTimer.timerString("Before getDocumentElement");
           Element docElement = document.getDocumentElement();
           if(docElement == null) { fieldTypeCache = null; return null; }
           docElement.normalize();

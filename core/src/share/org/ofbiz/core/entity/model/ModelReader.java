@@ -133,14 +133,14 @@ public class ModelReader {
           while(fnIter.hasNext()) {
             String entityFileName = (String)fnIter.next();
             
-            utilTimer.timerString("Before getDocument in file " + entityFileName);
+            //utilTimer.timerString("Before getDocument in file " + entityFileName);
             Document document = getDocument(entityFileName);
             if(document == null) { entityCache = null; return null; }
 
             Hashtable docElementValues = null;
             docElementValues = new Hashtable();
 
-            utilTimer.timerString("Before getDocumentElement in file " + entityFileName);
+            //utilTimer.timerString("Before getDocumentElement in file " + entityFileName);
             Element docElement = document.getDocumentElement();
             if(docElement == null) { entityCache = null; return null; }
             docElement.normalize();
@@ -208,7 +208,7 @@ public class ModelReader {
             curViewEntity.populateFields(entityCache);
           }
           
-          Debug.logInfo("FINISHED LOADING ENTITIES - ALL FILES; #Entites=" + numEntities + " #ViewEntites=" + numViewEntities + " #fields=" + numFields + " #relations=" + numRelations);
+          Debug.log("FINISHED LOADING ENTITIES - ALL FILES; #Entites=" + numEntities + " #ViewEntites=" + numViewEntities + " #fields=" + numFields + " #relations=" + numRelations);
         }
       }
     }

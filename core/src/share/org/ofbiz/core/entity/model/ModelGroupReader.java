@@ -93,14 +93,14 @@ public class ModelGroupReader {
           groupNames = new TreeSet();
           
           UtilTimer utilTimer = new UtilTimer();
-          utilTimer.timerString("[ModelGroupReader.getGroupCache] Before getDocument");
+          //utilTimer.timerString("[ModelGroupReader.getGroupCache] Before getDocument");
           Document document = getDocument(entityGroupFileName);
           if(document == null) { groupCache = null; return null; }
           
           Hashtable docElementValues = null;
           docElementValues = new Hashtable();
           
-          utilTimer.timerString("[ModelGroupReader.getGroupCache] Before getDocumentElement");
+          //utilTimer.timerString("[ModelGroupReader.getGroupCache] Before getDocumentElement");
           Element docElement = document.getDocumentElement();
           if(docElement == null) { groupCache = null; return null; }
           docElement.normalize();
