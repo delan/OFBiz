@@ -1,15 +1,13 @@
-
-
+<!doctype HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN">
 <%@ include file="/includes/envsetup.jsp" %>
 <%@ taglib uri='ofbizTags' prefix='ofbiz' %>
 <%@ taglib uri='regions' prefix='region' %>
-
 <html>
 <head>
     <%@page contentType='text/html; charset=UTF-8'%>
     <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
     <title><%EntityField.run("layoutSettings", "companyName", pageContext);%>: <region:render section='title'/></title>
-    <script language='javascript' src='<ofbiz:contenturl>/images/calendar1.js</ofbiz:contenturl>'></script>
+    <script language='javascript' src='<ofbiz:contenturl>/images/calendar1.js</ofbiz:contenturl>' type='text/javascript'></script>
     <link rel='stylesheet' href='<ofbiz:contenturl>/images/maincss.css</ofbiz:contenturl>' type='text/css'>
     <link rel='stylesheet' href='<ofbiz:contenturl>/images/tabstyles.css</ofbiz:contenturl>' type='text/css'>    
 </head>
@@ -20,7 +18,7 @@
       <table width='100%' border='0' cellspacing='0' cellpadding='0' class='headerboxtop'>
         <tr>
           <%if (UtilValidate.isNotEmpty((String) layoutSettings.get("headerImageUrl"))) {%>
-            <TD align=left width='1%'><IMG src='<ofbiz:contenturl><%=(String) layoutSettings.get("headerImageUrl")%></ofbiz:contenturl>'></TD>
+            <TD align=left width='1%'><IMG alt="<%EntityField.run("layoutSettings", "companyName", pageContext);%>" src='<ofbiz:contenturl><%=(String) layoutSettings.get("headerImageUrl")%></ofbiz:contenturl>'></TD>
           <%}%>         
           <TD align=right width='1%' nowrap <%EntityField.run("layoutSettings", "headerRightBackgroundUrl", "background='", "'", pageContext);%>>
               <ofbiz:if name="person">
