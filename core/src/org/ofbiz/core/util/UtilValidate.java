@@ -1,6 +1,9 @@
 /*
  * $Id$
  * $Log$
+ * Revision 1.9  2001/09/18 22:30:58  jonesde
+ * Fixed credit card number format exception bug
+ *
  * Revision 1.8  2001/09/14 21:15:52  epabst
  * cleaned up
  *
@@ -179,6 +182,12 @@ public class UtilValidate
     return ((s == null) || (s.length() == 0));
   }
 
+  /** Check whether collection c is empty. */
+  public static boolean isEmpty(Collection c)
+  {   
+    return ((c == null) || (c.size() == 0));
+  }
+  
   /** Check whether string s is NOT empty. */
   public static boolean isNotEmpty(String s)
   {   
