@@ -1,5 +1,5 @@
 /* 
- * $Id: ModelServiceReader.java,v 1.1 2003/08/17 05:12:41 ajzeneski Exp $
+ * $Id: ModelServiceReader.java,v 1.2 2003/08/17 08:42:35 jonesde Exp $
  *
  * Copyright (c) 2001, 2002 The Open For Business Project - www.ofbiz.org
  *
@@ -55,7 +55,7 @@ import org.xml.sax.SAXException;
  *
  * @author     <a href="mailto:jaz@ofbiz.org">Andy Zeneski</a>
  * @author     <a href="mailto:jonesde@ofbiz.org">David E. Jones</a>
- * @version    $Revision: 1.1 $
+ * @version    $Revision: 1.2 $
  * @since      2.0
  */
 
@@ -160,17 +160,17 @@ public class ModelServiceReader {
                     if (this.isFromURL) {// utilTimer.timerString("Before getDocumentElement in file " + readerURL);
                     } else {// utilTimer.timerString("Before getDocumentElement in " + handler);
                     }
-                    Element docElement = document.getDocumentElement();
 
+                    Element docElement = document.getDocumentElement();
                     if (docElement == null) {
                         modelServices = null;
                         return null;
                     }
+
                     docElement.normalize();
-                    Node curChild = docElement.getFirstChild();
 
                     int i = 0;
-
+                    Node curChild = docElement.getFirstChild();
                     if (curChild != null) {
                         if (this.isFromURL) {
                             utilTimer.timerString("Before start of service loop in file " + readerURL);

@@ -1,5 +1,5 @@
 /*
- * $Id: DispatchContext.java,v 1.1 2003/08/17 05:12:42 ajzeneski Exp $
+ * $Id: DispatchContext.java,v 1.2 2003/08/17 08:42:35 jonesde Exp $
  *
  * Copyright (c) 2001, 2002 The Open For Business Project - www.ofbiz.org
  *
@@ -32,6 +32,7 @@ import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 
+import org.ofbiz.base.component.ComponentConfig;
 import org.ofbiz.base.config.GenericConfigException;
 import org.ofbiz.base.config.MainResourceHandler;
 import org.ofbiz.base.config.ResourceHandler;
@@ -48,7 +49,7 @@ import org.w3c.dom.Element;
  *
  * @author     <a href="mailto:jaz@ofbiz.org">Andy Zeneski</a>
  * @author     <a href="mailto:jonesde@ofbiz.org">David E. Jones</a>
- * @version    $Revision: 1.1 $
+ * @version    $Revision: 1.2 $
  * @since      2.0
  */
 public class DispatchContext implements Serializable {
@@ -342,14 +343,23 @@ public class DispatchContext implements Serializable {
 
         List globalServicesElements = UtilXml.childElementList(rootElement, "global-services");
         Iterator gseIter = globalServicesElements.iterator();
-
         while (gseIter.hasNext()) {
             Element globalServicesElement = (Element) gseIter.next();
             ResourceHandler handler = new MainResourceHandler(
                     ServiceConfigUtil.SERVICE_ENGINE_XML_FILENAME, globalServicesElement);
 
             Map servicesMap = addReader(handler);
-
+            if (servicesMap != null) {
+                globalMap.putAll(servicesMap);
+            }
+        }
+        
+        // get all of the component resource model stuff, ie specified in each ofbiz-component.xml file
+        List componentResourceInfos = ComponentConfig.getAllServiceResourceInfos("model");
+        Iterator componentResourceInfoIter = componentResourceInfos.iterator();
+        while (componentResourceInfoIter.hasNext()) {
+            ComponentConfig.ServiceResourceInfo componentResourceInfo = (ComponentConfig.ServiceResourceInfo) componentResourceInfoIter.next();
+            Map servicesMap = addReader(componentResourceInfo.createResourceHandler());
             if (servicesMap != null) {
                 globalMap.putAll(servicesMap);
             }
