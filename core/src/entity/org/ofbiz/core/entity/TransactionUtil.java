@@ -62,6 +62,7 @@ public class TransactionUtil implements javax.transaction.Status {
         if (ut != null) {
             try {
                 int currentStatus = ut.getStatus();
+                Debug.logVerbose("[TransactionUtil.begin] current status code : " + currentStatus, module);
                 if (currentStatus == TransactionUtil.STATUS_ACTIVE) {
                     Debug.logVerbose("[TransactionUtil.begin] active transaction in place, so no transaction begun", module);
                     return false;
@@ -72,8 +73,9 @@ public class TransactionUtil implements javax.transaction.Status {
                 }
                 
                 // set the timeout for THIS transaction
-                if (timeout > 0) {
-                    ut.setTransactionTimeout(timeout);    
+                if (timeout > 0) {                    
+                    ut.setTransactionTimeout(timeout);
+                    Debug.logVerbose("[TransactionUtil.begin] set transaction timeout to : " + timeout + " seconds", module);    
                 }
                 
                 // begin the transaction
@@ -124,7 +126,8 @@ public class TransactionUtil implements javax.transaction.Status {
         if (ut != null) {
             try {
                 int status = ut.getStatus();
-
+                Debug.logVerbose("[TransactionUtil.commit] current status code : " + status, module);
+                
                 if (status != STATUS_NO_TRANSACTION) {
                     ut.commit();
                     Debug.logVerbose("[TransactionUtil.commit] transaction committed", module);
@@ -169,9 +172,14 @@ public class TransactionUtil implements javax.transaction.Status {
         if (ut != null) {
             try {
                 int status = ut.getStatus();
+                Debug.logVerbose("[TransactionUtil.rollback] current status code : " + status, module);
 
                 if (status != STATUS_NO_TRANSACTION) {
-                    if (Debug.infoOn()) Thread.dumpStack();
+                    //if (Debug.infoOn()) Thread.dumpStack();
+                    if (Debug.infoOn()) {
+                        Exception newE = new Exception("Stack Trace");
+                        Debug.logError(newE, "[TransactionUtil.rollback]", module);
+                    }
                     ut.rollback();
                     Debug.logInfo("[TransactionUtil.rollback] transaction rolled back", module);
                 } else {
@@ -193,6 +201,7 @@ public class TransactionUtil implements javax.transaction.Status {
         if (ut != null) {
             try {
                 int status = ut.getStatus();
+                Debug.logVerbose("[TransactionUtil.setRollbackOnly] current status code : " + status, module);
 
                 if (status != STATUS_NO_TRANSACTION) {
                     if (Debug.infoOn()) Thread.dumpStack();
