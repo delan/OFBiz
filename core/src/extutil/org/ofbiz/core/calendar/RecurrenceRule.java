@@ -272,7 +272,7 @@ public class RecurrenceRule {
             fromTime = startTime;
                       
         // Test the end time of the recurrence.
-        if (getEndTime() <= RecurrenceUtil.now())
+        if (getEndTime() != 0 && getEndTime() <= RecurrenceUtil.now())
             return 0;
         Debug.logVerbose("Rule NOT expired by end time.", module);
         
