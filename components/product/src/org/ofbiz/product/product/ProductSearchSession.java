@@ -1,5 +1,5 @@
 /*
- * $Id: ProductSearchSession.java,v 1.12 2004/05/11 05:14:35 jonesde Exp $
+ * $Id: ProductSearchSession.java,v 1.13 2004/05/11 08:26:28 jonesde Exp $
  *
  *  Copyright (c) 2001 The Open For Business Project (www.ofbiz.org)
  *  Permission is hereby granted, free of charge, to any person obtaining a
@@ -63,7 +63,7 @@ import org.ofbiz.product.store.ProductStoreWorker;
  *  Utility class with methods to prepare and perform ProductSearch operations in the content of an HttpSession
  *
  * @author <a href="mailto:jonesde@ofbiz.org">David E. Jones</a>
- * @version    $Revision: 1.12 $
+ * @version    $Revision: 1.13 $
  * @since      3.0
  */
 public class ProductSearchSession {
@@ -498,8 +498,9 @@ public class ProductSearchSession {
             } else if (sortOrder.startsWith("SortProductField:")) {
                 String fieldName = sortOrder.substring("SortProductField:".length());
                 searchSetSortOrder(new ProductSearch.SortProductField(fieldName, ascending), session);
-            } else if (sortOrder.equals("SortListPrice")) {
-                searchSetSortOrder(new ProductSearch.SortProductPrice("LIST_PRICE", ascending), session);
+            } else if (sortOrder.startsWith("SortProductPrice:")) {
+                String priceTypeId = sortOrder.substring("SortProductPrice:".length());
+                searchSetSortOrder(new ProductSearch.SortProductPrice(priceTypeId, ascending), session);
             }
         }
         
