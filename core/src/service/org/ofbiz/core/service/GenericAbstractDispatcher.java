@@ -177,6 +177,13 @@ public abstract class GenericAbstractDispatcher implements LocalDispatcher {
     public DispatchContext getDispatchContext() {
         return ctx;
     }
+    
+    /**
+     * @see org.ofbiz.core.service.LocalDispatcher#deregister()
+     */
+    public void deregister() {
+        dispatcher.deregister(this);
+    }
 
 }
 

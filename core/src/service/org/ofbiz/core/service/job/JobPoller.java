@@ -47,8 +47,7 @@ public class JobPoller implements Runnable {
     public static final int POLL_WAIT = 20000;
     public static final long MAX_TTL = 18000000;
 
-    protected boolean isRunning = false;    
-    protected boolean threadStopped = false;
+    protected boolean isRunning = false;      
     
     protected Thread thread = null;
     protected LinkedList pool = null;
@@ -99,8 +98,7 @@ public class JobPoller implements Runnable {
                 Debug.logError(e, module);
                 stop();
             }
-        }
-        threadStopped = true;
+        }        
         if (Debug.infoOn()) Debug.logInfo("JobPoller: (" + thread.getName() + ") Thread ending...", module);
     }
 
@@ -115,19 +113,9 @@ public class JobPoller implements Runnable {
      * Stops the JobPoller
      */
     public void stop() {
-        isRunning = false;
-        Debug.logInfo("JobPoller: Shutting down...", module);
-        while (!threadStopped) {
-            Debug.logInfo("Waiting for thread to stop.");
-            try {
-                Thread.sleep(500);
-            } catch(Exception e) {
-                Debug.logError(e, "Error putting job poller thread to sleep");
-            }
-        }
+        isRunning = false;           
         destroyThreadPool();
     }
-
 
     /**
      * Stops all threads in the threadPool and clears

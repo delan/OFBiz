@@ -185,6 +185,20 @@ public class JmsListenerFactory implements Runnable {
             throw new GenericServiceException("No listener found with that serverKey.");
         loadListener(serverKey, server);
     }
+        
+    /**
+     * Close all the JMS message listeners.
+     * @throws GenericServiceException
+     */
+    public void closeListeners() throws GenericServiceException {
+        loadable = 0;
+        Set listenerKeys = listeners.keySet();
+        Iterator listenerIterator = listenerKeys.iterator();
+        while (listenerIterator.hasNext()) {
+            String serverKey = (String) listenerIterator.next();
+            closeListener(serverKey);
+        }
+    }
 
     /**
      * Close a JMS message listener.

@@ -122,6 +122,22 @@ public class ServiceDispatcher {
         if (Debug.infoOn()) Debug.logInfo("[ServiceDispatcher.register] : Registered dispatcher: " + context.getName(), module);
         this.localContext.put(name, context);
     }
+        
+    /**
+     * De-Registers the loader with this ServiceDispatcher
+     * @param local the LocalDispatcher to de-register
+     */
+    public void deregister(LocalDispatcher local) {
+        if (Debug.infoOn()) Debug.logInfo("[ServiceDispatcher.deregister] : De-Registering dispatcher: " + local.getName(), module);
+        localContext.remove(local.getName());
+         if (localContext.size() == 1) { // 1 == the JMSDispatcher
+             try {
+                 this.shutdown();
+             } catch (GenericServiceException e) {
+                 Debug.logError(e, "Trouble shutting down ServiceDispatcher!", module);
+             }
+         }                    
+    }
 
     /**
      * Run the service synchronously and return the result.
@@ -479,6 +495,14 @@ public class ServiceDispatcher {
      */
     public boolean containsContext(String name) {
         return localContext.containsKey(name);
+    }
+    
+    public void shutdown() throws GenericServiceException {
+        Debug.logInfo("Shutting down the service engine...", module);
+        // shutdown JMS listeners
+        jlf.closeListeners();
+        // shutdown the job scheduler
+        jm.finalize();
     }
 
     // checks if parameters were passed for authentication

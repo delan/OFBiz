@@ -355,4 +355,10 @@ public class ControlServlet extends HttpServlet {
         }
         return security;
     }
+    
+    public void destroy() {
+        super.destroy();
+        getDispatcher().deregister();        
+    }
+    
 }

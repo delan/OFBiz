@@ -158,7 +158,7 @@ public interface LocalDispatcher {
      * @throws GenericServiceException
      */
     public void schedule(String serviceName, Map context, long startTime) throws GenericServiceException;
-           
+
     /**
      * Gets the JobManager associated with this dispatcher
      * @return JobManager that is associated with this dispatcher
@@ -194,5 +194,10 @@ public interface LocalDispatcher {
      * @return DispatchContext created by this dispatcher
      */
     public DispatchContext getDispatchContext();  
+    
+    /**
+     * De-Registers this LocalDispatcher with the ServiceDispatcher
+     */
+    public void deregister();
 }
 
