@@ -335,8 +335,10 @@ public class ProductEvents {
         String reason = request.getParameter("REASON");
         String instruction = request.getParameter("INSTRUCTION");
         String quantityStr = request.getParameter("QUANTITY");
+        String sequenceNumStr = request.getParameter("SEQUENCE_NUM");
         Timestamp thruDate = null;
         Double quantity = null;
+        Long sequenceNum = null;
 
         if (UtilValidate.isNotEmpty(thruDateStr)) {
             try {
@@ -352,6 +354,13 @@ public class ProductEvents {
                 errMsg += "<li>Quantity not formatted correctly.";
             }
         }
+        if (UtilValidate.isNotEmpty(sequenceNumStr)) {
+            try {
+                sequenceNum = Long.valueOf(sequenceNumStr);
+            } catch (Exception e) {
+                errMsg += "<li>SequenceNum not formatted correctly.";
+            }
+        }
         if (errMsg.length() > 0) {
             errMsg = "<b>The following errors occured:</b><br><ul>" + errMsg + "</ul>";
             request.setAttribute(SiteDefs.ERROR_MESSAGE, errMsg);
@@ -362,6 +371,7 @@ public class ProductEvents {
         tempProductAssoc.set("reason", reason);
         tempProductAssoc.set("instruction", instruction);
         tempProductAssoc.set("quantity", quantity);
+        tempProductAssoc.set("sequenceNum", sequenceNum);
 
         if (updateMode.equals("CREATE")) {
             //if no from date specified, set to now

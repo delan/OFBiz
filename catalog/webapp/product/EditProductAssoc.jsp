@@ -190,8 +190,14 @@ try {
     <td width="26%" align=right><div class="tabletext">Thru Date</div></td>
     <td>&nbsp;</td>
     <td width="74%">
-      <div class='tabletext'><input type="text" name="<%=paramName%>" value="<%=UtilFormatOut.checkNull(useValues?UtilFormatOut.makeString(productAssoc.getTimestamp(fieldName)):request.getParameter(paramName))%>" size="30" maxlength="30">(YYYY-MM-DD HH:mm:SS.sss)</div>
+      <div class='tabletext'><input type="text" name="<%=paramName%>" value="<%=UtilFormatOut.checkNull(useValues?UtilFormatOut.makeString(productAssoc.getTimestamp(fieldName)):request.getParameter(paramName))%>" size="30" maxlength="30">(yyyy-MM-dd hh:mm:ss.SSS)</div>
     </td>
+  </tr>
+  <tr>
+    <%fieldName = "sequenceNum";%><%paramName = "SEQUENCE_NUM";%>    
+    <td width="26%" align=right><div class="tabletext">SequenceNum</div></td>
+    <td>&nbsp;</td>
+    <td width="74%"><input type="text" name="<%=paramName%>" value="<%=UtilFormatOut.checkNull(useValues?UtilFormatOut.formatQuantity(productAssoc.getLong(fieldName)):request.getParameter(paramName))%>" size="5" maxlength="10"></td>
   </tr>
   <tr>
     <%fieldName = "reason";%><%paramName = "REASON";%>    
@@ -231,11 +237,12 @@ try {
       <td><div class="tabletext"><b>Name</b></div></td>
       <td><div class="tabletext"><b>From&nbsp;Date&nbsp;&amp;&nbsp;Time</b></div></td>
       <td><div class="tabletext"><b>Thru&nbsp;Date&nbsp;&amp;&nbsp;Time</b></div></td>
+      <td><div class="tabletext"><b>SeqNum</b></div></td>
       <td><div class="tabletext"><b>Association&nbsp;Type</b></div></td>
       <td><div class="tabletext"><b>&nbsp;</b></div></td>
       <td><div class="tabletext"><b>&nbsp;</b></div></td>
     </tr>
-    <%Iterator pcIterator = UtilMisc.toIterator(product.getRelated("MainProductAssoc"));%>
+    <%Iterator pcIterator = UtilMisc.toIterator(product.getRelated("MainProductAssoc", null, UtilMisc.toList("sequenceNum")));%>
     <%while(pcIterator != null && pcIterator.hasNext()) {%>
       <%GenericValue listProductAssoc = (GenericValue)pcIterator.next();%>
       <%GenericValue listToProduct = listProductAssoc.getRelatedOneCache("AssocProduct");%>
@@ -246,6 +253,7 @@ try {
           <%=UtilFormatOut.makeString(listProductAssoc.getTimestamp("fromDate"))%>&nbsp;</div></td>
         <td><div class='tabletext' <%=(listProductAssoc.getTimestamp("thruDate") != null && nowDate.after(listProductAssoc.getTimestamp("thruDate")))?"style='color: red;'":""%>>
           <%=UtilFormatOut.makeString(listProductAssoc.getTimestamp("thruDate"))%>&nbsp;</div></td>
+        <td><div class='tabletext'>&nbsp;<%=UtilFormatOut.formatQuantity(listProductAssoc.getLong("sequenceNum"))%></div></td>
         <td><div class='tabletext'><%=listProductAssoc.getString("productAssocTypeId")%></div></td>
         <td>
           <a href="<ofbiz:url>/UpdateProductAssoc?UPDATE_MODE=DELETE&PRODUCT_ID=<%=productId%>&PRODUCT_ID_TO=<%=listProductAssoc.getString("productIdTo")%>&PRODUCT_ASSOC_TYPE_ID=<%=listProductAssoc.getString("productAssocTypeId")%>&FROM_DATE=<%=UtilFormatOut.encodeQueryValue(listProductAssoc.getTimestamp("fromDate").toString())%>&useValues=true</ofbiz:url>" class="buttontext">

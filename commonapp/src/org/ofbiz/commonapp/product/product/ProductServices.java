@@ -324,9 +324,9 @@ public class ProductServices {
         try {
             Collection c = null;
             if (productIdTo == null) {
-                c = product.getRelatedByAndCache("MainProductAssoc", UtilMisc.toMap("productAssocTypeId", type));
+                c = product.getRelatedCache("MainProductAssoc", UtilMisc.toMap("productAssocTypeId", type), UtilMisc.toList("sequenceNum"));
             } else {
-                c = product.getRelatedByAndCache("AssocProductAssoc", UtilMisc.toMap("productAssocTypeId", type));
+                c = product.getRelatedCache("AssocProductAssoc", UtilMisc.toMap("productAssocTypeId", type), UtilMisc.toList("sequenceNum"));
             }
             c = EntityUtil.filterByDate(c);
             result.put("assocProducts", c);

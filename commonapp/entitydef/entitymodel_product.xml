@@ -1162,6 +1162,7 @@
       <field name="productAssocTypeId" type="id-ne"></field>
       <field name="fromDate" type="date-time"></field>
       <field name="thruDate" type="date-time"></field>
+      <field name="sequenceNum" type="numeric"></field>
       <field name="reason" type="long-varchar"></field>
       <field name="quantity" type="floating-point"></field>
       <field name="instruction" type="long-varchar"></field>
