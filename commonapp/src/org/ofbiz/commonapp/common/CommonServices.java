@@ -215,18 +215,33 @@ public class CommonServices {
         Boolean fatal = (Boolean) context.get("fatal");
         if (verbose != null)
             Debug.set(Debug.VERBOSE, verbose.booleanValue());
+        else
+            Debug.set(Debug.VERBOSE, false);
         if (timing != null)
             Debug.set(Debug.TIMING, timing.booleanValue());
+        else
+            Debug.set(Debug.TIMING, false);
         if (info != null)
             Debug.set(Debug.INFO, info.booleanValue());
+        else
+            Debug.set(Debug.INFO, false);
         if (important != null)
             Debug.set(Debug.IMPORTANT, important.booleanValue());
+        else
+            Debug.set(Debug.IMPORTANT, false);
         if (warning != null)
             Debug.set(Debug.WARNING, warning.booleanValue());
+        else
+            Debug.set(Debug.WARNING, false);
         if (error != null)
             Debug.set(Debug.ERROR, error.booleanValue());
+        else
+            Debug.set(Debug.ERROR, false);
         if (fatal != null)
             Debug.set(Debug.FATAL, fatal.booleanValue());
+        else
+            Debug.set(Debug.FATAL, false);
+
         return ServiceUtil.returnSuccess();
     }
 }
