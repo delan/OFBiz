@@ -94,7 +94,7 @@ public class CheckOutEvents {
             } else {
                 errorMessage.append("<li>Please Select a Splitting Preference");
             }
-            
+
             cart.setGiftMessage(giftMessage);
             if (UtilValidate.isNotEmpty(isGift)) {
                 cart.setIsGift(Boolean.valueOf(isGift));
@@ -141,10 +141,24 @@ public class CheckOutEvents {
 
     // Create order event - uses createOrder service for processing
     public static String createOrder(HttpServletRequest request, HttpServletResponse response) {
+        ServletContext application = ((ServletContext) request.getAttribute("servletContext"));
         ShoppingCart cart = (ShoppingCart) request.getSession().getAttribute(SiteDefs.SHOPPING_CART);
         LocalDispatcher dispatcher = (LocalDispatcher) request.getAttribute("dispatcher");
         GenericDelegator delegator = (GenericDelegator) request.getAttribute("delegator");
         GenericValue userLogin = (GenericValue) request.getSession().getAttribute(SiteDefs.USER_LOGIN);
+
+        URL ecommercePropertiesUrl = null;
+        try {
+            ecommercePropertiesUrl = application.getResource("/WEB-INF/ecommerce.properties");
+        } catch (java.net.MalformedURLException e) {
+            Debug.logWarning(e);
+        }
+
+        // Default Payment Info.
+        final String PAYMENT_SERVICE = UtilProperties.getPropertyValue(ecommercePropertiesUrl, "order.payment.service", "NONE");
+        final String HEADER_STATUS = UtilProperties.getPropertyValue(ecommercePropertiesUrl, "order.header.payment.status", "ORDER_APPROVED");
+        final String ITEM_STATUS = UtilProperties.getPropertyValue(ecommercePropertiesUrl, "order.item.payment.status", "ORDER_APPROVED");
+        final String DECLINE_MESSAGE = UtilProperties.getPropertyValue(ecommercePropertiesUrl, "order.payment.declined", "Error!");
 
         // remove this whenever creating an order so quick reorder cache will refresh/recalc
         request.getSession().removeAttribute("_QUICK_REORDER_PRODUCTS_");
@@ -178,22 +192,74 @@ public class CheckOutEvents {
             }
 
             // check for error message(s)
-            if (ModelService.RESPOND_ERROR.equals(result.get(ModelService.RESPONSE_MESSAGE)) || 
-                    result.containsKey(ModelService.ERROR_MESSAGE) || 
+            if (ModelService.RESPOND_ERROR.equals(result.get(ModelService.RESPONSE_MESSAGE)) ||
+                    result.containsKey(ModelService.ERROR_MESSAGE) ||
                     result.containsKey(ModelService.ERROR_MESSAGE)) {
-                
+
                 request.setAttribute(SiteDefs.ERROR_MESSAGE, ServiceUtil.makeErrorMessage(result, "<li>", "</li>", "Did not complete the order, the following occurred: <ul>", "</ul>"));
                 return "error";
             }
         }
-        
-        cart.clear();
 
         // set the orderId for future use
         request.setAttribute("order_id", orderId);
         request.setAttribute("orderAdditionalEmails", cart.getOrderAdditionalEmails());
 
-        // TODO: we should do, or invoke, the payment processing here...
+        // Invoke payment processing
+        if (PAYMENT_SERVICE != null && !PAYMENT_SERVICE.equalsIgnoreCase("NONE") && !PAYMENT_SERVICE.equalsIgnoreCase("")) {
+            Map paymentResult = null;
+            try {
+                paymentResult = dispatcher.runSync(PAYMENT_SERVICE, UtilMisc.toMap("orderId", orderId));
+            } catch (GenericServiceException e) {
+                Debug.logWarning(e);
+            }
+            Debug.logVerbose("Finsished w/ Payment Service");
+            if (paymentResult != null && paymentResult.containsKey("authResponse")) {
+                String authResp = (String) paymentResult.get("authResponse");
+                if (!authResp.equals("SUCCESS")) {
+                    Debug.logVerbose("Payment auth was NOT a success!");
+                    request.setAttribute(SiteDefs.ERROR_MESSAGE, "<li>" + DECLINE_MESSAGE);
+                    return "error";
+                } else {
+                    // order is now approved
+                    Debug.logVerbose("Payment auth was a success!");
+                    Map statusRes = null;
+                    try {
+                        statusRes = dispatcher.runSync("changeOrderStatus",
+                                UtilMisc.toMap("orderId", orderId, "statusId", HEADER_STATUS));
+                        if (statusRes.containsKey("errorMessage")) {
+                            request.setAttribute(SiteDefs.ERROR_MESSAGE, "<li>Problems adjusting order status please contact customer service: " + statusRes.get("errorMessage"));
+                            return "error";
+                        }
+                        GenericValue orderHeader = delegator.findByPrimaryKey("OrderHeader", UtilMisc.toMap("orderId", orderId));
+                        if (orderHeader != null) {
+                            Collection orderItems = orderHeader.getRelated("OrderItem");
+                            if (orderItems != null && orderItems.size() > 0) {
+                                Iterator i = orderItems.iterator();
+                                while (i.hasNext()) {
+                                    GenericValue v = (GenericValue) i.next();
+                                    v.set("statusId", ITEM_STATUS);
+                                    v.store();
+                                }
+                            }
+                        }
+                    } catch (GenericEntityException ee) {
+                        request.setAttribute(SiteDefs.ERROR_MESSAGE, "<li>Problems adjusting order status, please contact customer service: " + ee.getMessage());
+                        return "error";
+                    } catch (GenericServiceException e) {
+                        request.setAttribute(SiteDefs.ERROR_MESSAGE, "<li>Problems adjusting order status, please contact customer service: " + e.getMessage());
+                        return "error";
+                    }
+                }
+            } else {
+                // result returned null or service failed
+                request.setAttribute(SiteDefs.EVENT_MESSAGE, "<li>Problems with payment authorization. Your order has been saved and will be processed.");
+            }
+        }
+
+        // only clear the cart if we are finished w/ the customer
+        cart.clear();
+
         return "success";
 
     }
