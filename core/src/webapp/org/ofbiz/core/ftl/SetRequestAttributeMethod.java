@@ -69,9 +69,9 @@ public class SetRequestAttributeMethod implements TemplateMethodModelEx {
         Object value = null;
         if (args.get(1) instanceof TemplateScalarModel)
             value = ((TemplateScalarModel) args.get(1)).getAsString();
-        else if (args.get(1) instanceof TemplateNumberModel)
+        if (args.get(1) instanceof TemplateNumberModel)
             value = ((TemplateNumberModel) args.get(1)).getAsNumber();
-        else
+        if (args.get(1) instanceof BeanModel)
             value = ((BeanModel) args.get(1)).getWrappedObject();        
                        
         request.setAttribute(name, value);               
