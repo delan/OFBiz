@@ -79,29 +79,36 @@ public class CSPaymentServices {
         if (configString == null)
             configString = "payment.properties";
 
-        // Some default values
-        Properties properties = null;
-        String defCur = null;
-        String timeout = null;
-        String retryWait = null;
-        String avsDeclineCodes = null;
-        boolean disableAvs = false;
-        boolean enableRetry = true;
-               
-        properties = UtilProperties.getProperties(configString);
-        defCur = UtilProperties.getPropertyValue(configString, "payment.general.defaultCurrency", "USD");
-        timeout = UtilProperties.getPropertyValue(configString, "payment.cybersource.timeout", "90");
-        retryWait = UtilProperties.getPropertyValue(configString, "payment.cybersource.retryWait", "90");
-        avsDeclineCodes = UtilProperties.getPropertyValue(configString, "payment.cybersource.avsDeclineCodes", "");
-        disableAvs = UtilProperties.propertyValueEqualsIgnoreCase(configString, "payment.cybersource.disableAuthAvs", "Y");
-        enableRetry = UtilProperties.propertyValueEqualsIgnoreCase(configString, "payment.cybersource.enableRetry", "Y");            
-        
+        // Some default values  
+        String merchantId = UtilProperties.getPropertyValue(configString, "payment.cybersource.merchantID", "_NA_");
+        String serverName = UtilProperties.getPropertyValue(configString, "payment.cybersource.serverName", "CyberSource_SJC_US");
+        String serverUrl = UtilProperties.getPropertyValue(configString, "payment.cybersource.serverURL", "http://ics2test.ic3.com:80/");
+        String keysPath = UtilProperties.getPropertyValue(configString, "payment.cybersource.keysPath", "");
+        String debugLevel = UtilProperties.getPropertyValue(configString, "payment.cybersource.debugLevel", "0");
+        String debugFile = UtilProperties.getPropertyValue(configString, "payment.cybersource.debugFile", "debug.log");
+              
+        String defCur = UtilProperties.getPropertyValue(configString, "payment.general.defaultCurrency", "USD");
+        String timeout = UtilProperties.getPropertyValue(configString, "payment.cybersource.timeout", "90");
+        String retryWait = UtilProperties.getPropertyValue(configString, "payment.cybersource.retryWait", "90");
+        String avsDeclineCodes = UtilProperties.getPropertyValue(configString, "payment.cybersource.avsDeclineCodes", "");
+        boolean disableAvs = UtilProperties.propertyValueEqualsIgnoreCase(configString, "payment.cybersource.disableAuthAvs", "Y");
+        boolean enableRetry = UtilProperties.propertyValueEqualsIgnoreCase(configString, "payment.cybersource.enableRetry", "Y");
+                                                   
+        // create some properties for ICSClient
+        Properties props = new Properties();
+        props.put("merchantID", merchantId);
+        props.put("serverName", serverName);
+        props.put("serverURL", serverUrl);
+        props.put("ics.keysPath", keysPath);
+        props.put("debugLevel", debugLevel);
+        props.put("debugFile", debugFile);
+                        
         ICSClientRequest request = null;
         ICSClient client = null;
         ICSReply reply = null;
 
         try {
-            client = new ICSClient(properties);
+            client = new ICSClient(props);
             request = buildRequest(client, context);
             if (client == null)
                 throw new GeneralException("ICS returned a null client.");
@@ -125,8 +132,7 @@ public class CSPaymentServices {
         // some parameters
         GenericValue person = (GenericValue) context.get("contactPerson");
 
-        // basic info
-        request.setMerchantID(client.getMerchantID());
+        // basic info        
         request.setCurrency((currency == null ? defCur : currency));
         request.addApplication(appString);
         request.setMerchantRefNo(orderId);
@@ -172,7 +178,7 @@ public class CSPaymentServices {
         throws GenericEntityException, GeneralException, ICSException {
 
         // Create a new ICSClientRequest Object.
-        ICSClientRequest request = new ICSClientRequest(client);
+        ICSClientRequest request = new ICSClientRequest();
 
         // Person Info
         GenericValue person = (GenericValue) context.get("contactPerson");
