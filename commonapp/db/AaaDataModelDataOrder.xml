@@ -104,6 +104,21 @@
   <StatusValidChange condition="" statusId="ITEM_BACKORDERED" statusIdTo="ITEM_APPROVED" transitionName="Approve Item Back Order"/>
   <StatusValidChange condition="" statusId="ITEM_BACKORDERED" statusIdTo="ITEM_CANCELLED" transitionName="Cancel Item Back Order"/>
 
+  <!-- order delivery schedule status -->
+  <StatusType description="Order Delivery Schedule" hasTable="N" parentTypeId="" statusTypeId="ORDER_DEL_SCH"/>
+  <StatusItem description="Supplier Submitted" sequenceId="01" statusCode="SUBMITTED" statusId="ODS_SUBMITTED" statusTypeId="ORDER_DEL_SCH"/>
+  <StatusItem description="Accepted" sequenceId="02" statusCode="ACCEPTED" statusId="ODS_ACCEPTED" statusTypeId="ORDER_DEL_SCH"/>
+  <StatusItem description="Schedule Approved" sequenceId="03" statusCode="APPROVED" statusId="ODS_APPROVED" statusTypeId="ORDER_DEL_SCH"/>
+  <StatusItem description="Delivery Arranged" sequenceId="04" statusCode="ARRANGED" statusId="ODS_ARRANGED" statusTypeId="ORDER_DEL_SCH"/>
+  <StatusItem description="Delivery Cancelled" sequenceId="99" statusCode="CANCELLED" statusId="ODS_CANCELLED" statusTypeId="ORDER_DEL_SCH"/>
+  <StatusValidChange condition="" statusId="ODS_SUBMITTED" statusIdTo="ODS_ACCEPTED" transitionName="Accept Delivery Information"/>
+  <StatusValidChange condition="" statusId="ODS_ACCEPTED" statusIdTo="ODS_APPROVED" transitionName="Approve Delivery Schedule"/>
+  <StatusValidChange condition="" statusId="ODS_APPROVED" statusIdTo="ODS_ARRANGED" transitionName="Arrange Delivery"/>
+  <StatusValidChange condition="" statusId="ODS_SUBMITTED" statusIdTo="ODS_CANCELLED" transitionName="Cancel Delivery"/>
+  <StatusValidChange condition="" statusId="ODS_ACCEPTED" statusIdTo="ODS_CANCELLED" transitionName="Cancel Delivery"/>
+  <StatusValidChange condition="" statusId="ODS_APPROVED" statusIdTo="ODS_CANCELLED" transitionName="Cancel Delivery"/>
+  <StatusValidChange condition="" statusId="ODS_ARRANGED" statusIdTo="ODS_CANCELLED" transitionName="Cancel Delivery"/>
+
   <!-- CustRequest statuses -->
   <StatusType description="Custom Request Status" hasTable="N" parentTypeId="" statusTypeId="CUSTREQ_STTS"/>
   <StatusItem description="Submitted" sequenceId="01" statusCode="SUBMITTED" statusId="CRQ_SUBMITTED" statusTypeId="CUSTREQ_STTS"/>

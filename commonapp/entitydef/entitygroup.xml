@@ -382,6 +382,7 @@
     <entity-group group="org.ofbiz.commonapp" entity="OrderBlacklist" />
     <entity-group group="org.ofbiz.commonapp" entity="OrderBlacklistType" />
     <entity-group group="org.ofbiz.commonapp" entity="OrderContactMech" />
+    <entity-group group="org.ofbiz.commonapp" entity="OrderDeliverySchedule" />
     <entity-group group="org.ofbiz.commonapp" entity="OrderHeader" />
     <entity-group group="org.ofbiz.commonapp" entity="OrderHeaderAndItems" />
     <entity-group group="org.ofbiz.commonapp" entity="OrderHeaderAndPaymentPref" />
