@@ -190,7 +190,7 @@
                   <#assign telecomNumber = partyContactMechValueMap.telecomNumber?if_exists>
                   <div class="tabletext">
                   <#if telecomNumber?exists>
-                    ${telecomNumber.countryCode}
+                    ${telecomNumber.countryCode?if_exists}
                     <#if telecomNumber.areaCode?has_content>${telecomNumber.areaCode}-</#if>${telecomNumber.contactNumber}
                     <#if partyContactMech.extension?has_content>ext&nbsp;${partyContactMech.extension}</#if>
                     <#if (!telecomNumber.countryCode?has_content || telecomNumber.countryCode = "011")>
