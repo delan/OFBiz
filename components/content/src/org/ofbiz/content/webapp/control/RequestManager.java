@@ -1,5 +1,5 @@
 /*
- * $Id: RequestManager.java,v 1.3 2003/09/18 16:01:22 jonesde Exp $
+ * $Id: RequestManager.java,v 1.4 2004/02/05 23:13:13 ajzeneski Exp $
  *
  * Copyright (c) 2001-2003 The Open For Business Project - www.ofbiz.org
  *
@@ -37,7 +37,7 @@ import org.ofbiz.base.util.Debug;
  * RequestManager - Manages request, config and view mappings.
  *
  * @author     <a href="mailto:jaz@ofbiz.org">Andy Zeneski</a>
- * @version    $Revision: 1.3 $
+ * @version    $Revision: 1.4 $
  * @since      2.0
  */
 public class RequestManager implements Serializable {
@@ -249,7 +249,7 @@ public class RequestManager implements Serializable {
         if (uri != null) {
             String value = (String) uri.get(ConfigXMLReader.SECURITY_AUTH);
 
-            if (Debug.verboseOn()) Debug.logVerbose("Require Auth: " + value, module);
+            //if (Debug.verboseOn()) Debug.logVerbose("Require Auth: " + value, module);
             if ("true".equalsIgnoreCase(value))
                 return true;
             else
@@ -264,7 +264,7 @@ public class RequestManager implements Serializable {
         if (uri != null) {
             String value = (String) uri.get(ConfigXMLReader.SECURITY_HTTPS);
 
-            if (Debug.verboseOn()) Debug.logVerbose("Requires HTTPS: " + value, module);
+            //if (Debug.verboseOn()) Debug.logVerbose("Requires HTTPS: " + value, module);
             if ("true".equalsIgnoreCase(value))
                 return true;
             else
@@ -279,7 +279,7 @@ public class RequestManager implements Serializable {
         if (uri != null) {
             String value = (String) uri.get(ConfigXMLReader.SECURITY_EXTVIEW);
 
-            if (Debug.verboseOn()) Debug.logVerbose("Allow External View: " + value, module);
+            //if (Debug.verboseOn()) Debug.logVerbose("Allow External View: " + value, module);
             if ("false".equalsIgnoreCase(value))
                 return false;
             else
@@ -294,7 +294,7 @@ public class RequestManager implements Serializable {
         if (uri != null) {
             String value = (String) uri.get(ConfigXMLReader.SECURITY_DIRECT);
 
-            if (Debug.verboseOn()) Debug.logVerbose("Allow Direct Request: " + value, module);
+            //if (Debug.verboseOn()) Debug.logVerbose("Allow Direct Request: " + value, module);
             if ("false".equalsIgnoreCase(value))
                 return false;
             else
