@@ -104,16 +104,16 @@ public class OrderServices {
         order.preStoreOther(orderShipmentPreference);
         
         // set the order items
-        // productId|productName|price|quantity|comment|poNumber        
+        // productId|productName|price|quantity|comment|poNumber
         Iterator oi = orderItems.iterator();
         int seqId = 1;
         while ( oi.hasNext() ) {
             List element = StringUtil.split((String)oi.next(),"|");
-            String orderItemSeqId = String.valueOf(seqId++);            
+            String orderItemSeqId = String.valueOf(seqId++);
             GenericValue orderItem = delegator.makeValue("OrderItem",
             UtilMisc.toMap("orderId", orderId,
             "orderItemSeqId", orderItemSeqId,
-            "orderItemTypeId", "SALES_ORDER_ITEM",            
+            "orderItemTypeId", "SALES_ORDER_ITEM",
             "productId", element.get(0),
             "quantity", new Double((String)element.get(3)),
             "unitPrice", new Double((String)element.get(2))));
@@ -123,7 +123,7 @@ public class OrderServices {
             orderItem.set("statusId", "Ordered");
             order.preStoreOther(orderItem);
         }
-                        
+        
         // set the roles
         String partyId = (String) context.get("partyId");
         final String[] USER_ORDER_ROLE_TYPES = {"END_USER_CUSTOMER", "SHIP_TO_CUSTOMER",
@@ -175,5 +175,33 @@ public class OrderServices {
         }
         return result;
     }
+    
+    /** Service for changing the status on an order */
+    public static Map setOrderStatus(DispatchContext ctx, Map context) {
+        Map result = new HashMap();
+        GenericDelegator delegator = ctx.getDelegator();
+        // Lets consider an entity to log state changes for orders
+        // implement me
+        return result;
+    }
+    
+    /** Service to add a role type to an order */
+    public static Map addRoleType(DispatchContext ctx, Map context) {
+        Map result = new HashMap();
+        GenericDelegator delegator = ctx.getDelegator();
+        // This would be for adding a party/role to an order after it has been created
+        // implement me
+        return result;
+    }
+    
+    /** Service to email a customer with order status */    
+    public static Map emailOrder(DispatchContext ctx, Map context) {
+        Map result = new HashMap();
+        GenericDelegator delegator = ctx.getDelegator();
+        // This may be moved to a different place - email is a common task code this generic
+        // implement me
+        return result;
+    }
+    
     
 }
