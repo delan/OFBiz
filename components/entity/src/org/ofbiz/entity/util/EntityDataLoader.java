@@ -1,7 +1,7 @@
 /*
- * $Id: EntityDataLoader.java,v 1.2 2004/06/16 11:57:00 jonesde Exp $
+ * $Id: EntityDataLoader.java,v 1.3 2004/06/24 02:16:31 jonesde Exp $
  *
- * Copyright (c) 2001, 2002 The Open For Business Project - www.ofbiz.org
+ * Copyright (c) 2001-2004 The Open For Business Project - www.ofbiz.org
  *
  * Permission is hereby granted, free of charge, to any person obtaining a
  * copy of this software and associated documentation files (the "Software"),
@@ -52,7 +52,7 @@ import org.w3c.dom.Element;
  * Some utility routines for loading seed data.
  *
  * @author     <a href="mailto:jonesde@ofbiz.org">David E. Jones</a>
- * @version    $Revision: 1.2 $
+ * @version    $Revision: 1.3 $
  * @since      3.0
  */
 public class EntityDataLoader {
@@ -182,7 +182,7 @@ public class EntityDataLoader {
             return 0;
         }
 
-        Debug.logInfo("[install.loadData] Loading XML Resource: \"" + dataUrl.toExternalForm() + "\"", module);
+        Debug.logVerbose("[install.loadData] Loading XML Resource: \"" + dataUrl.toExternalForm() + "\"", module);
 
         try {
             /* The OLD way
