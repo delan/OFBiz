@@ -1,5 +1,5 @@
 /*
- * $Id: EntityFunction.java,v 1.3 2004/07/06 22:50:35 doogie Exp $
+ * $Id: EntityFunction.java,v 1.4 2004/07/06 23:40:42 doogie Exp $
  *
  *  Copyright (c) 2002 The Open For Business Project - www.ofbiz.org
  *
@@ -25,9 +25,11 @@
 package org.ofbiz.entity.condition;
 
 import java.util.List;
+import java.util.Map;
 
 import org.ofbiz.entity.GenericEntity;
 import org.ofbiz.entity.GenericModelException;
+import org.ofbiz.entity.config.EntityConfigUtil;
 import org.ofbiz.entity.model.ModelEntity;
 import org.ofbiz.entity.model.ModelField;
 
@@ -40,7 +42,10 @@ import org.ofbiz.entity.model.ModelField;
  *@created    Nov 5, 2001
  *@version    1.0
  */
-public abstract class EntityFunction extends EntityCondition {
+public abstract class EntityFunction extends EntityConditionValue {
+    public static interface Fetcher {
+        Object getValue(Object value);
+    }
 
     public static final int ID_LENGTH = 1;
     public static final int ID_TRIM = 2;
@@ -48,43 +53,56 @@ public abstract class EntityFunction extends EntityCondition {
     public static final int ID_LOWER = 4;
 
     public static class LENGTH extends EntityFunction {
-        public LENGTH(EntityFunction nested) { super(ID_LENGTH, "LENGTH", nested); }
-        public LENGTH(Object value, boolean asEntity) { super(ID_LENGTH, "LENGTH", value, asEntity); }
-        public Object doEval(Object value) { return new Integer(value.toString().length()); }
+        public static Fetcher FETCHER = new Fetcher() {
+            public Object getValue(Object value) { return new Integer(value.toString().length()); }
+        };
+        public LENGTH(EntityConditionValue nested) { super(FETCHER, ID_LENGTH, "LENGTH", nested); }
+        public LENGTH(Object value) { super(FETCHER, ID_LENGTH, "LENGTH", value); }
     };
     public static class TRIM extends EntityFunction {
-        public TRIM(EntityFunction nested) { super(ID_TRIM, "TRIM", nested); }
-        public TRIM(Object value, boolean asEntity) { super(ID_TRIM, "TRIM", value, asEntity); }
-        public Object doEval(Object value) { return value.toString().trim(); }
+        public static Fetcher FETCHER = new Fetcher() {
+            public Object getValue(Object value) { return value.toString().trim(); }
+        };
+        public TRIM(EntityConditionValue nested) { super(FETCHER, ID_TRIM, "TRIM", nested); }
+        public TRIM(Object value) { super(FETCHER, ID_TRIM, "TRIM", value); }
     };
     public static class UPPER extends EntityFunction {
-        public UPPER(EntityFunction nested) { super(ID_UPPER, "UPPER", nested); }
-        public UPPER(Object value, boolean asEntity) { super(ID_UPPER, "UPPER", value, asEntity); }
-        public Object doEval(Object value) { return value.toString().toUpperCase(); }
+        public static Fetcher FETCHER = new Fetcher() {
+            public Object getValue(Object value) { return value.toString().toUpperCase(); }
+        };
+        public UPPER(EntityConditionValue nested) { super(FETCHER, ID_UPPER, "UPPER", nested); }
+        public UPPER(Object value) { super(FETCHER, ID_UPPER, "UPPER", value); }
     };
     public static class LOWER extends EntityFunction {
-        public LOWER(EntityFunction nested) { super(ID_LOWER, "LOWER", nested); }
-        public LOWER(Object value, boolean asEntity) { super(ID_LOWER, "LOWER", value, asEntity); }
-        public Object doEval(Object value) { return value.toString().toLowerCase(); }
+        public static Fetcher FETCHER = new Fetcher() {
+            public Object getValue(Object value) { return value.toString().toLowerCase(); }
+        };
+        public LOWER(EntityConditionValue nested) { super(FETCHER, ID_LOWER, "LOWER", nested); }
+        public LOWER(Object value) { super(FETCHER, ID_LOWER, "LOWER", value); }
     };
 
     protected int idInt;
     protected String codeString;
-    protected EntityFunction nested;
+    protected EntityConditionValue nested;
     protected Object value;
-    protected boolean asEntity;
+    protected Fetcher fetcher;
 
-    protected EntityFunction(int id, String code, EntityFunction nested) {
+    protected EntityFunction(Fetcher fetcher, int id, String code, EntityConditionValue nested) {
+        this.fetcher = fetcher;
         idInt = id;
         codeString = code;
         this.nested = nested;
     }
 
-    protected EntityFunction(int id, String code, Object value, boolean asEntity) {
+    protected EntityFunction(Fetcher fetcher, int id, String code, Object value) {
+        this.fetcher = fetcher;
         idInt = id;
         codeString = code;
-        this.value = value;
-	this.asEntity = asEntity;
+        if (value instanceof EntityConditionValue) {
+            this.nested = (EntityConditionValue) value;
+        } else {
+            this.value = value;
+        }
     }
 
     public String getCode() {
@@ -103,69 +121,40 @@ public abstract class EntityFunction extends EntityCondition {
     }
 
     public boolean equals(Object obj) {
+        if (!(obj instanceof EntityFunction)) return false;
         EntityFunction otherFunc = (EntityFunction) obj;
         return
             this.idInt == otherFunc.idInt
             && ( this.nested != null ? nested.equals( otherFunc.nested ) : otherFunc.nested != null )
-            && ( this.value != null ? value.equals( otherFunc.value ) : otherFunc.value != null )
-            && this.asEntity == otherFunc.asEntity;
+            && ( this.value != null ? value.equals( otherFunc.value ) : otherFunc.value != null );
     }
 
-    protected abstract Object doEval(Object value);
-
-    public String makeWhereString(ModelEntity modelEntity, List entityConditionParams) {
-        StringBuffer sb = new StringBuffer();
-        sb.append(codeString).append('(');
+    public void addSqlValue(StringBuffer sql, Map tableAliases, ModelEntity modelEntity, List entityConditionParams, boolean includeTableNamePrefix, EntityConfigUtil.DatasourceInfo datasourceinfo) {
+        sql.append(codeString).append('(');
         if (nested != null) {
-            sb.append(nested.makeWhereString(modelEntity, entityConditionParams));
+            nested.addSqlValue(sql, tableAliases, modelEntity, entityConditionParams, includeTableNamePrefix, datasourceinfo);
         } else {
-            if (asEntity) {
-                ModelField field = getField(modelEntity, (String) value);
-                String colName = getColName(field, (String) value);
-                sb.append(colName);
-            } else {
-                addValue(sb, null, value, entityConditionParams);
-            }
+            addValue(sql, null, value, entityConditionParams);
         }
-        sb.append(')');
-        return sb.toString();
+        sql.append(')');
     }
 
-    public void checkCondition(ModelEntity modelEntity) throws GenericModelException {
+    public ModelField getModelField(ModelEntity modelEntity) {
         if (nested != null) {
-            nested.checkCondition(modelEntity);
+            return nested.getModelField(modelEntity);
         }
+        return null;
     }
 
-    public Object eval(GenericEntity entity)
+    public void validateSql(ModelEntity modelEntity) throws GenericModelException 
     {
         if (nested != null) {
-            return doEval(nested.eval(entity));
-        } else {
-            if (asEntity) {
-                return doEval(entity.get(value.toString()));
-            } else {
-                return doEval(value);
-            }
+            nested.validateSql(modelEntity);
         }
     }
 
-    public Object eval(Object value)
-    {
-        if (nested != null) {
-            return doEval(nested.eval(value));
-        } else if (value != null) {
-            return doEval(value);
-        } else {
-            return null;
-        }
-    }
-
-    public boolean entityMatches(GenericEntity entity)
-    {
-        Object result = eval(entity);
-        if (result == null ) return false;
-        if (result instanceof Boolean ) return ( (Boolean) result).booleanValue();
-        return result.toString().length() > 0;
+    public Object getValue(Map map) {
+        Object value = nested != null ? nested.getValue(map) : this.value;
+        return value != null ? fetcher.getValue(value) : null;
     }
 }

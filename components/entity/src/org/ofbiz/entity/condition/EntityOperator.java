@@ -1,5 +1,5 @@
 /*
- * $Id: EntityOperator.java,v 1.3 2004/01/14 00:08:11 ajzeneski Exp $
+ * $Id: EntityOperator.java,v 1.4 2004/07/06 23:40:42 doogie Exp $
  *
  *  Copyright (c) 2002 The Open For Business Project - www.ofbiz.org
  *
@@ -24,7 +24,15 @@
 
 package org.ofbiz.entity.condition;
 
+import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.Iterator;
+import java.util.List;
+
+import org.ofbiz.entity.GenericEntity;
+import org.ofbiz.entity.GenericModelException;
+import org.ofbiz.entity.model.ModelEntity;
+import org.ofbiz.entity.model.ModelField;
 
 /**
  * Encapsulates operations between entities and entity fields. This is a immutable class.
@@ -32,10 +40,10 @@ import java.util.HashMap;
  *@author     <a href='mailto:chris_maurer@altavista.com'>Chris Maurer</a>
  *@author     <a href="mailto:jonesde@ofbiz.org">David E. Jones</a>
  *@author     <a href="mailto:jaz@ofbiz.org">Andy Zeneski</a>
- *@version    $Revision: 1.3 $
+ *@version    $Revision: 1.4 $
  *@since      2.0
  */
-public class EntityOperator implements java.io.Serializable {
+public abstract class EntityOperator extends EntityConditionBase {
 
     public static final int ID_EQUALS = 1;
     public static final int ID_NOT_EQUAL = 2;
@@ -77,10 +85,24 @@ public class EntityOperator implements java.io.Serializable {
 
     public static final EntityComparisonOperator EQUALS = new EntityComparisonOperator(ID_EQUALS, "=") {
         public boolean compare(Object lhs, Object rhs) { return EntityComparisonOperator.compareEqual(lhs, rhs); }
+        protected void makeRHSWhereString(ModelEntity entity, List entityConditionParams, StringBuffer sb, ModelField field, Object rhs) {
+            if (rhs == null) {
+                sb.append(" IS NULL");
+            } else {
+                super.makeRHSWhereString(entity, entityConditionParams, sb, field, rhs);
+            }
+        }
     };
     static { register( "equals", EQUALS ); }
     public static final EntityComparisonOperator NOT_EQUAL = new EntityComparisonOperator(ID_NOT_EQUAL, "<>") {
         public boolean compare(Object lhs, Object rhs) { return EntityComparisonOperator.compareNotEqual(lhs, rhs); }
+        protected void makeRHSWhereString(ModelEntity entity, List entityConditionParams, StringBuffer sb, ModelField field, Object rhs) {
+            if (rhs == null) {
+                sb.append(" IS NOT NULL");
+            } else {
+                super.makeRHSWhereString(entity, entityConditionParams, sb, field, rhs);
+            }
+        }
     };
     static { register( "notEqual", NOT_EQUAL ); }
     public static final EntityComparisonOperator LESS_THAN = new EntityComparisonOperator(ID_LESS_THAN, "<") {
@@ -101,6 +123,7 @@ public class EntityOperator implements java.io.Serializable {
     static { register( "greaterThanEqualTo", GREATER_THAN_EQUAL_TO ); }
     public static final EntityComparisonOperator IN = new EntityComparisonOperator(ID_IN, "IN") {
         public boolean compare(Object lhs, Object rhs) { return EntityComparisonOperator.compareIn(lhs, rhs); }
+        protected void makeRHSWhereStringValue(ModelEntity entity, List entityConditionParams, StringBuffer sb, ModelField field, Object rhs) { appendRHSList(entityConditionParams, sb, field, rhs); }
     };
     static { register( "in", IN ); }
     public static final EntityComparisonOperator BETWEEN = new EntityComparisonOperator(ID_BETWEEN, "BETWEEN");
@@ -115,7 +138,10 @@ public class EntityOperator implements java.io.Serializable {
         public boolean compare(Object lhs, Object rhs) { return EntityComparisonOperator.compareLike(lhs, rhs); }
     };
     static { register( "like", LIKE ); }
-    public static final EntityComparisonOperator NOT_IN = new EntityComparisonOperator(ID_NOT_IN, "NOT IN");
+    public static final EntityComparisonOperator NOT_IN = new EntityComparisonOperator(ID_NOT_IN, "NOT IN") {
+        public boolean compare(Object lhs, Object rhs) { return !EntityComparisonOperator.compareIn(lhs, rhs); }
+        protected void makeRHSWhereStringValue(ModelEntity entity, List entityConditionParams, StringBuffer sb, ModelField field, Object rhs) { appendRHSList(entityConditionParams, sb, field, rhs); }
+    };
     static { register( "not-in", NOT_IN ); }
 
     protected int idInt;
@@ -150,8 +176,28 @@ public class EntityOperator implements java.io.Serializable {
         return this.idInt == otherOper.idInt;
     }
 
-    public class MatchResult {
-        public boolean shortCircuit = false;
-        public boolean matches = false;
+
+    protected void appendRHSList(List entityConditionParams, StringBuffer whereStringBuffer, ModelField field, Object rhs) {
+        whereStringBuffer.append('(');
+
+        if (rhs instanceof List) {
+            Iterator rhsIter = ((List) rhs).iterator();
+
+            while (rhsIter.hasNext()) {
+                Object inObj = rhsIter.next();
+
+                addValue(whereStringBuffer, field, inObj, entityConditionParams);
+                if (rhsIter.hasNext()) {
+                    whereStringBuffer.append(", ");
+                }
+            }
+        } else {
+            addValue(whereStringBuffer, field, rhs, entityConditionParams);
+        }
+        whereStringBuffer.append(')');
     }
+
+    public abstract boolean entityMatches(GenericEntity entity, Object lhs, Object rhs);
+    public abstract void validateSql(ModelEntity entity, Object lhs, Object rhs) throws GenericModelException;
+    public abstract void addSqlValue(StringBuffer sql, ModelEntity entity, List entityConditionParams, Object rhs, Object lhs);
 }
