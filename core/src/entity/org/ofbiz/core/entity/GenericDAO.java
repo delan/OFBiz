@@ -27,7 +27,9 @@ package org.ofbiz.core.entity;
 import java.lang.reflect.*;
 import java.sql.*;
 import java.util.*;
+import org.w3c.dom.Element;
 import org.ofbiz.core.util.*;
+import org.ofbiz.core.entity.config.*;
 import org.ofbiz.core.entity.model.*;
 
 /**
@@ -154,15 +156,16 @@ public class GenericDAO {
         } catch (SQLException sqle) {
             //Debug.logWarning("[GenericDAO]: SQL Exception while executing the following:\n" + sql + "\nError was:");
             //Debug.logWarning(sqle.getMessage());
-            throw new GenericDataSourceException("SQL Exception while executing the following:" + sql, sqle);
+            throw new GenericDataSourceException("SQL Exception while executing the following:\n" + sql + "\nOn the following entity:\n" + entity.toString(), sqle);
+        } finally {
+            try {
+                if (ps != null)
+                    ps.close();
+            } catch (SQLException sqle) {
+                Debug.logWarning(sqle.getMessage(), module);
+            }
         }
-        finally { try {
-            if (ps != null)
-                ps.close();
-        } catch (SQLException sqle) {
-            Debug.logWarning(sqle.getMessage(), module);
-        }
-        } }
+    }
     
     public void updateAll(GenericEntity entity) throws GenericEntityException {
         ModelEntity modelEntity = entity.getModelEntity();
@@ -233,14 +236,15 @@ public class GenericDAO {
                 Debug.logWarning(sqle2, module);
             }
             throw new GenericDataSourceException("Exception occured in update", e);
+        } finally {
+            try {
+                if (connection != null)
+                    connection.close();
+            } catch (SQLException sqle) {
+                Debug.logWarning(sqle.getMessage(), module);
+            }
         }
-        finally { try {
-            if (connection != null)
-                connection.close();
-        } catch (SQLException sqle) {
-            Debug.logWarning(sqle.getMessage(), module);
-        }
-        } }
+    }
     
     private void singleUpdate(GenericEntity entity, ModelEntity modelEntity, Vector fieldsToSave, Connection connection) throws GenericEntityException {
         if (modelEntity instanceof ModelViewEntity) {
@@ -289,15 +293,16 @@ public class GenericDAO {
         } catch (SQLException sqle) {
             //Debug.logWarning("[GenericDAO]: SQL Exception while executing the following:\n" + sql + "\nError was:");
             //Debug.logWarning(sqle.getMessage());
-            throw new GenericDataSourceException("SQL Exception while executing the following:" + sql, sqle);
+            throw new GenericDataSourceException("SQL Exception while executing the following:\n" + sql + "\nOn the following entity:\n" + entity.toString(), sqle);
+        } finally {
+            try {
+                if (ps != null)
+                    ps.close();
+            } catch (SQLException sqle) {
+                Debug.logWarning(sqle.getMessage(), module);
+            }
         }
-        finally { try {
-            if (ps != null)
-                ps.close();
-        } catch (SQLException sqle) {
-            Debug.logWarning(sqle.getMessage(), module);
-        }
-        } }
+    }
     
     /** Store the passed entity - insert if does not exist, otherwise update */
     private void singleStore(GenericEntity entity, Connection connection) throws GenericEntityException {
@@ -369,14 +374,15 @@ public class GenericDAO {
                 Debug.logWarning(sqle2, module);
             }
             throw new GenericDataSourceException("Exception occured in storeAll", e);
+        } finally {
+            try {
+                if (connection != null)
+                    connection.close();
+            } catch (SQLException sqle) {
+                Debug.logWarning(sqle.getMessage(), module);
+            }
         }
-        finally { try {
-            if (connection != null)
-                connection.close();
-        } catch (SQLException sqle) {
-            Debug.logWarning(sqle.getMessage(), module);
-        }
-        } }
+    }
     
     /* ====================================================================== */
     /* ====================================================================== */
@@ -391,14 +397,15 @@ public class GenericDAO {
         
         try {
             select(entity, connection);
+        } finally {
+            try {
+                if (connection != null)
+                    connection.close();
+            } catch (SQLException sqle) {
+                Debug.logWarning(sqle.getMessage(), module);
+            }
         }
-        finally { try {
-            if (connection != null)
-                connection.close();
-        } catch (SQLException sqle) {
-            Debug.logWarning(sqle.getMessage(), module);
-        }
-        } }
+    }
     
     public void select(GenericEntity entity, Connection connection) throws GenericEntityException {
         ModelEntity modelEntity = entity.getModelEntity();
@@ -451,18 +458,19 @@ public class GenericDAO {
             //Debug.logWarning("[GenericDAO]: SQL Exception while executing the following:\n" + sql + "\nError was:");
             //Debug.logWarning(sqle.getMessage());
             throw new GenericDataSourceException("SQL Exception while executing the following:" + sql, sqle);
-        } finally { try {
-            if (rs != null)
-                rs.close();
-        } catch (SQLException sqle) {
-            Debug.logWarning(sqle.getMessage(), module);
-        }
-        try {
-            if (ps != null)
-                ps.close();
-        } catch (SQLException sqle) {
-            Debug.logWarning(sqle.getMessage(), module);
-        }
+        } finally { 
+            try {
+                if (rs != null)
+                    rs.close();
+            } catch (SQLException sqle) {
+                Debug.logWarning(sqle.getMessage(), module);
+            }
+            try {
+                if (ps != null)
+                    ps.close();
+            } catch (SQLException sqle) {
+                Debug.logWarning(sqle.getMessage(), module);
+            }
         }
     }
     
@@ -535,26 +543,27 @@ public class GenericDAO {
             //Debug.logWarning("[GenericDAO]: SQL Exception while executing the following:\n" + sql + "\nError was:");
             //Debug.logWarning(sqle.getMessage());
             throw new GenericDataSourceException("SQL Exception while executing the following:" + sql, sqle);
+        } finally {
+            try {
+                if (rs != null)
+                    rs.close();
+            } catch (SQLException sqle) {
+                Debug.logWarning(sqle.getMessage(), module);
+            }
+            try {
+                if (ps != null)
+                    ps.close();
+            } catch (SQLException sqle) {
+                Debug.logWarning(sqle.getMessage(), module);
+            }
+            try {
+                if (connection != null)
+                    connection.close();
+            } catch (SQLException sqle) {
+                Debug.logWarning(sqle.getMessage(), module);
+            }
         }
-        finally { try {
-            if (rs != null)
-                rs.close();
-        } catch (SQLException sqle) {
-            Debug.logWarning(sqle.getMessage(), module);
-        }
-        try {
-            if (ps != null)
-                ps.close();
-        } catch (SQLException sqle) {
-            Debug.logWarning(sqle.getMessage(), module);
-        }
-        try {
-            if (connection != null)
-                connection.close();
-        } catch (SQLException sqle) {
-            Debug.logWarning(sqle.getMessage(), module);
-        }
-        } }
+    }
     
     public Collection selectByAnd(ModelEntity modelEntity, Map fields, List orderBy) throws GenericEntityException {
         if (modelEntity == null)
@@ -595,9 +604,9 @@ public class GenericDAO {
         
         String sql = "SELECT ";
         if (selectFields.size() > 0)
-            sql = sql + modelEntity.colNameString(selectFields, ", ", "");
+            sql += modelEntity.colNameString(selectFields, ", ", "");
         else
-            sql = sql + "*";
+            sql += "*";
         
         sql += makeFromClause(modelEntity);
         sql += makeWhereClauseAnd(modelEntity, whereFields, dummyValue);
@@ -630,31 +639,31 @@ public class GenericDAO {
                 value.modified = false;
                 collection.add(value);
             }
-        }
-        catch (SQLException sqle) {
+        } catch (SQLException sqle) {
             //Debug.logWarning("[GenericDAO.selectByAnd]: SQL Exception while executing the following:\n" + sql + "\nError was:");
             //sqle.printStackTrace();
             throw new GenericDataSourceException("SQL Exception while executing the following:" + sql, sqle);
+        } finally {
+            try {
+                if (rs != null)
+                    rs.close();
+            } catch (SQLException sqle) {
+                Debug.logWarning(sqle.getMessage(), module);
+            }
+            try {
+                if (ps != null)
+                    ps.close();
+            } catch (SQLException sqle) {
+                Debug.logWarning(sqle.getMessage(), module);
+            }
+            try {
+                if (connection != null)
+                    connection.close();
+            } catch (SQLException sqle) {
+                Debug.logWarning(sqle.getMessage(), module);
+            }
         }
-        finally { try {
-            if (rs != null)
-                rs.close();
-        } catch (SQLException sqle) {
-            Debug.logWarning(sqle.getMessage(), module);
-        }
-        try {
-            if (ps != null)
-                ps.close();
-        } catch (SQLException sqle) {
-            Debug.logWarning(sqle.getMessage(), module);
-        }
-        try {
-            if (connection != null)
-                connection.close();
-        } catch (SQLException sqle) {
-            Debug.logWarning(sqle.getMessage(), module);
-        }
-        } return collection;
+        return collection;
     }
     
     public Collection selectByOr(ModelEntity modelEntity, Map fields, List orderBy) throws GenericEntityException {
@@ -696,9 +705,9 @@ public class GenericDAO {
         
         String sql = "SELECT ";
         if (selectFields.size() > 0)
-            sql = sql + modelEntity.colNameString(selectFields, ", ", "");
+            sql += modelEntity.colNameString(selectFields, ", ", "");
         else
-            sql = sql + "*";
+            sql += "*";
         
         sql += makeFromClause(modelEntity);
         sql += makeWhereClauseOr(modelEntity, whereFields, dummyValue);
@@ -1060,12 +1069,12 @@ public class GenericDAO {
         
         String sql = "SELECT ";
         if (selectFields.size() > 0)
-            sql = sql + modelEntity.colNameString(selectFields, ", ", "");
+            sql += modelEntity.colNameString(selectFields, ", ", "");
         else
-            sql = sql + "*";
+            sql += "*";
         sql += " FROM " + modelEntity.getTableName();
         if (fields != null && fields.size() > 0)
-            sql = sql + " WHERE " + modelEntity.colNameString(whereFields, " LIKE ? AND ", " LIKE ?");
+            sql += " WHERE " + modelEntity.colNameString(whereFields, " LIKE ? AND ", " LIKE ?");
         
         sql += makeOrderByClause(modelEntity, orderBy);
         Debug.logVerbose("[GenericDAO.selectByLike] sql=" + sql, module);
@@ -1437,7 +1446,7 @@ public class GenericDAO {
         GenericValue dummyValue = new GenericValue(modelEntity, fields);
         String sql = "DELETE FROM " + modelEntity.getTableName();
         if (fields != null || fields.size() > 0)
-            sql = sql + " WHERE " + makeWhereStringAnd(whereFields, dummyValue);
+            sql += " WHERE " + makeWhereStringAnd(whereFields, dummyValue);
         
         try {
             ps = connection.prepareStatement(sql);
@@ -1840,7 +1849,7 @@ public class GenericDAO {
     
     /* ====================================================================== */
     /* ====================================================================== */
-    public String createTable(ModelEntity entity) {
+    public String createTable(ModelEntity entity, Map modelEntities, boolean addFks) {
         if (entity == null) {
             return "ModelEntity was null and is required to create a table";
         }
@@ -1854,12 +1863,13 @@ public class GenericDAO {
             connection = getConnection();
         } catch (SQLException sqle) {
             return "Unable to esablish a connection with the database... Error was: " + sqle.toString();
-        }
-        catch (GenericEntityException e) {
+        } catch (GenericEntityException e) {
             return "Unable to esablish a connection with the database... Error was: " + e.toString();
         }
         
-        String sql = "CREATE TABLE " + entity.getTableName() + " (";
+        StringBuffer sqlBuf = new StringBuffer("CREATE TABLE ");
+        sqlBuf.append(entity.getTableName());
+        sqlBuf.append(" (");
         for (int i = 0; i < entity.getFieldsSize(); i++) {
             ModelField field = entity.getField(i);
             ModelFieldType type = modelFieldTypeReader.getModelFieldType(field.getType());
@@ -1867,23 +1877,55 @@ public class GenericDAO {
                 return "Field type [" + type + "] not found for field [" + field.getName() + "] of entity [" + entity.getEntityName() + "], not creating table.";
             }
             
-            sql = sql + field.getColName() + " " + type.getSqlType();
-            if (field.getIsPk())
-                sql = sql + " NOT NULL, ";
-            else
-                sql = sql + ", ";
+            sqlBuf.append(field.getColName());
+            sqlBuf.append(" ");
+            sqlBuf.append(type.getSqlType());
+            if (field.getIsPk()) {
+                sqlBuf.append(" NOT NULL, ");
+            } else {
+                sqlBuf.append(", ");
+            }
         }
         String pkName = "PK_" + entity.getTableName();
-        if (pkName.length() > 30)
+        if (pkName.length() > 30) {
             pkName = pkName.substring(0, 30);
-        sql = sql + "CONSTRAINT " + pkName + " PRIMARY KEY (" + entity.colNameString(entity.getPksCopy()) + "))";
+        }
+        sqlBuf.append("CONSTRAINT ");
+        sqlBuf.append(pkName);
+        sqlBuf.append(" PRIMARY KEY (");
+        sqlBuf.append(entity.colNameString(entity.getPksCopy()));
+        sqlBuf.append(")");
         
-        //Debug.logInfo(" create: sql=" + sql);
+        if (addFks) {
+            //go through the relationships to see if any foreign keys need to be added
+            Iterator relationsIter = entity.getRelationsIterator();
+            while (relationsIter.hasNext()) {
+                ModelRelation modelRelation = (ModelRelation) relationsIter.next();
+
+                if ("one".equals(modelRelation.getType())) {
+                    ModelEntity relModelEntity = (ModelEntity) modelEntities.get(modelRelation.getRelEntityName());
+                    if (relModelEntity == null) {
+                        Debug.logError("Error adding foreign key: ModelEntity was null for related entity name " + modelRelation.getRelEntityName());
+                        continue;
+                    }
+                    if (relModelEntity instanceof ModelViewEntity) {
+                        Debug.logError("Error adding foreign key: related entity is a view entity for related entity name " + modelRelation.getRelEntityName());
+                        continue;
+                    }
+
+                    sqlBuf.append(", ");
+                    sqlBuf.append(makeFkConstraintClause(entity, modelRelation, relModelEntity));
+                }
+            }
+        }
+
+        sqlBuf.append(")");
+        Debug.logVerbose("[createTable] sql=" + sqlBuf.toString());
         try {
             stmt = connection.createStatement();
-            stmt.executeUpdate(sql);
+            stmt.executeUpdate(sqlBuf.toString());
         } catch (SQLException sqle) {
-            return "SQL Exception while executing the following:\n" + sql + "\nError was: " + sqle.toString();
+            return "SQL Exception while executing the following:\n" + sqlBuf.toString() + "\nError was: " + sqle.toString();
         } finally {
             try {
                 if (stmt != null)
@@ -1895,6 +1937,115 @@ public class GenericDAO {
             } catch (SQLException sqle) { }
         }
         return null;
+    }
+    
+    public String createForeignKeys(ModelEntity entity, Map modelEntities) {
+        if (entity == null) {
+            return "ModelEntity was null and is required to create foreign keys for a table";
+        }
+        if (entity instanceof ModelViewEntity) {
+            return "ERROR: Cannot create foreign keys for a view entity";
+        }
+        
+        //go through the relationships to see if any foreign keys need to be added
+        Iterator relationsIter = entity.getRelationsIterator();
+        while (relationsIter.hasNext()) {
+            ModelRelation modelRelation = (ModelRelation) relationsIter.next();
+            
+            if ("one".equals(modelRelation.getType())) {
+                ModelEntity relModelEntity = (ModelEntity) modelEntities.get(modelRelation.getRelEntityName());
+                if (relModelEntity == null) {
+                    Debug.logError("Error adding foreign key: ModelEntity was null for related entity name " + modelRelation.getRelEntityName());
+                    continue;
+                }
+                if (relModelEntity instanceof ModelViewEntity) {
+                    Debug.logError("Error adding foreign key: related entity is a view entity for related entity name " + modelRelation.getRelEntityName());
+                    continue;
+                }
+                
+                String retMsg = createForeignKey(entity, modelRelation, relModelEntity);
+                if (retMsg != null) {
+                    return retMsg;
+                }
+            }
+        }
+        return null;
+    }
+        
+    public String createForeignKey(ModelEntity entity, ModelRelation modelRelation, ModelEntity relModelEntity) {
+        Connection connection = null;
+        Statement stmt = null;
+        try {
+            connection = getConnection();
+        } catch (SQLException sqle) {
+            return "Unable to esablish a connection with the database... Error was: " + sqle.toString();
+        } catch (GenericEntityException e) {
+            return "Unable to esablish a connection with the database... Error was: " + e.toString();
+        }
+
+        //now add constraint clause
+        StringBuffer sqlBuf = new StringBuffer("ALTER TABLE ");
+        sqlBuf.append(entity.getTableName());
+        sqlBuf.append(" ADD ");
+        sqlBuf.append(makeFkConstraintClause(entity, modelRelation, relModelEntity));
+        //TODO: change table create order satisfy these dependencies? Or can these be added in a separate pass?
+    
+        Debug.logVerbose("[createTable] sql=" + sqlBuf.toString());
+        try {
+            stmt = connection.createStatement();
+            stmt.executeUpdate(sqlBuf.toString());
+        } catch (SQLException sqle) {
+            return "SQL Exception while executing the following:\n" + sqlBuf.toString() + "\nError was: " + sqle.toString();
+        } finally {
+            try {
+                if (stmt != null)
+                    stmt.close();
+            } catch (SQLException sqle) { }
+            try {
+                if (connection != null)
+                    connection.close();
+            } catch (SQLException sqle) { }
+        }
+        return null;
+    }
+
+    public String makeFkConstraintClause(ModelEntity entity, ModelRelation modelRelation, ModelEntity relModelEntity) {
+        //make the two column lists
+        Iterator keyMapsIter = modelRelation.getKeyMapsIterator();
+        StringBuffer mainCols = new StringBuffer();
+        StringBuffer relCols = new StringBuffer();
+        while (keyMapsIter.hasNext()) {
+            ModelKeyMap keyMap = (ModelKeyMap) keyMapsIter.next();
+
+            ModelField mainField = entity.getField(keyMap.getFieldName());
+            if (mainCols.length() > 0) {
+                mainCols.append(", ");
+            }
+            mainCols.append(mainField.getColName());
+
+            ModelField relField = relModelEntity.getField(keyMap.getRelFieldName());
+            if (relCols.length() > 0) {
+                relCols.append(", ");
+            }
+            relCols.append(relField.getColName());
+        }
+
+        //make constraint name
+        String relConstraintName = modelRelation.getTitle() + modelRelation.getRelEntityName();
+        if (relConstraintName.length() > 30)
+            relConstraintName = relConstraintName.substring(0, 30);
+
+        StringBuffer sqlBuf = new StringBuffer("CONSTRAINT ");
+        sqlBuf.append(relConstraintName);
+        sqlBuf.append(" FOREIGN KEY (");
+        sqlBuf.append(mainCols.toString());
+        sqlBuf.append(") REFERENCES ");
+        sqlBuf.append(relModelEntity.getTableName());
+        sqlBuf.append(" (");
+        sqlBuf.append(relCols.toString());
+        sqlBuf.append(")");
+        
+        return sqlBuf.toString();
     }
     
     public String addColumn(ModelEntity entity, ModelField field) {
@@ -1921,7 +2072,7 @@ public class GenericDAO {
         
         String sql = "ALTER TABLE " + entity.getTableName() + " ADD " + field.getColName() + " " + type.getSqlType();
         
-        //Debug.logInfo(" create: sql=" + sql);
+        Debug.logInfo("[addColumn] sql=" + sql);
         try {
             stmt = connection.createStatement();
             stmt.executeUpdate(sql);
@@ -1944,6 +2095,22 @@ public class GenericDAO {
     /* ====================================================================== */
     
     public void checkDb(Map modelEntities, Collection messages, boolean addMissing) {
+        Element rootElement = null;
+        Element datasourceElement = null;
+        try {
+            rootElement = EntityConfigUtil.getXmlRootElement();
+            datasourceElement = UtilXml.firstChildElement(rootElement, "datasource", "name", helperName);
+        } catch (GenericEntityConfException e) {
+            Debug.logError(e, "Error loading entity config XML file");
+        }
+        boolean useFks = true;
+        if (datasourceElement == null) {
+            Debug.logWarning("datasource def not found with name " + helperName + ", using defaults for use-foreign-keys (true)");
+        } else {
+            //anything but false is true
+            useFks = !"false".equals(datasourceElement.getAttribute("use-foreign-keys"));
+        }
+        
         UtilTimer timer = new UtilTimer();
         timer.timerString("Start - Before Get Database Meta Data");
         
@@ -1978,14 +2145,18 @@ public class GenericDAO {
         
         timer.timerString("Before Individual Table/Column Check");
         
-        TreeSet namesSet = new TreeSet(modelEntities.keySet());
-        Iterator namesIter = namesSet.iterator();
+        ArrayList modelEntityList = new ArrayList(modelEntities.values());
+        //sort using compareTo method on ModelEntity
+        Collections.sort(modelEntityList);
+
+        Iterator modelEntityIter = modelEntityList.iterator();
         int curEnt = 0;
-        int totalEnt = namesSet.size();
-        while (namesIter != null && namesIter.hasNext()) {
+        int totalEnt = modelEntityList.size();
+        List entitiesAdded = new LinkedList();
+        while (modelEntityIter.hasNext()) {
             curEnt++;
-            String entityName = (String) namesIter.next();
-            ModelEntity entity = (ModelEntity) modelEntities.get(entityName);
+            ModelEntity entity = (ModelEntity) modelEntityIter.next();
+            String entityName = entity.getEntityName();
             
             //if this is a view entity, do not check it...
             if (entity instanceof ModelViewEntity) {
@@ -2117,7 +2288,7 @@ public class GenericDAO {
                         ModelField field = (ModelField) fieldColNames.get(colName);
                         String message =
                         "Field \"" + field.getName() + "\" of entity \"" + entity.getEntityName() + "\" is missing its corresponding column \"" + field.getColName() + "\"";
-                        Debug.logError(message, module);
+                        Debug.logWarning(message, module);
                         if (messages != null)
                             messages.add(message);
                         
@@ -2132,7 +2303,7 @@ public class GenericDAO {
                                 if (messages != null) messages.add(errMsg);
                             } else {
                                 message = "Added column \"" + field.getColName() + "\" to table \"" + entity.getTableName() + "\"";
-                                Debug.logError(message, module);
+                                Debug.logImportant(message, module);
                                 if (messages != null) messages.add(message);
                             }
                         }
@@ -2140,13 +2311,13 @@ public class GenericDAO {
                 }
             } else {
                 String message = "Entity \"" + entity.getEntityName() + "\" with tableName \"" + entity.getTableName() + "\" has no corresponding table in the database";
-                Debug.logError(message, module);
+                Debug.logWarning(message, module);
                 if (messages != null)
                     messages.add(message);
                 
                 if (addMissing) {
                     //create the table
-                    String errMsg = createTable(entity);
+                    String errMsg = createTable(entity, modelEntities, false);
                     if (errMsg != null && errMsg.length() > 0) {
                         message = "Could not create table \"" + entity.getTableName() + "\"";
                         Debug.logError(message, module);
@@ -2154,8 +2325,9 @@ public class GenericDAO {
                         Debug.logError(errMsg, module);
                         if (messages != null) messages.add(errMsg);
                     } else {
+                        entitiesAdded.add(entity);
                         message = "Created table \"" + entity.getTableName() + "\"";
-                        Debug.logError(message, module);
+                        Debug.logImportant(message, module);
                         if (messages != null) messages.add(message);
                     }
                 }
@@ -2172,6 +2344,30 @@ public class GenericDAO {
             Debug.logWarning(message, module);
             if (messages != null)
                 messages.add(message);
+        }
+
+        // for each newly added table, add fks
+        if (useFks) {
+            Iterator eaIter = entitiesAdded.iterator();
+            while (eaIter.hasNext()) {
+                ModelEntity curEntity = (ModelEntity) eaIter.next();
+                String errMsg = this.createForeignKeys(curEntity, modelEntities);
+                if (errMsg != null && errMsg.length() > 0) {
+                    String message = "Could not create foreign keys for entity \"" + curEntity.getEntityName() + "\"";
+                    Debug.logError(message, module);
+                    if (messages != null) messages.add(message);
+                    Debug.logError(errMsg, module);
+                    if (messages != null) messages.add(errMsg);
+                } else {
+                    String message = "Created foreign keys for entity \"" + curEntity.getEntityName() + "\"";
+                    Debug.logImportant(message, module);
+                    if (messages != null) messages.add(message);
+                }
+            }
+        }
+        
+        if (useFks) {
+            //TODO: get all fks from database and make sure that one exists for each relationship
         }
         
         timer.timerString("Finished Checking Entity Database");

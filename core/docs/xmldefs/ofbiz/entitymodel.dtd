@@ -93,7 +93,7 @@
     <!-- ==================== Children of relation ====================== -->
     <!-- specifies whether or not the relation is a dependent one; ie if the related entity can exist without the main entity -->
     <!ATTLIST relation
-	type ( one | many ) #REQUIRED
+	type ( one | many | one-nofk ) #REQUIRED
 	title CDATA #IMPLIED
 	rel-entity-name CDATA #REQUIRED >
     <!ELEMENT key-map EMPTY>

@@ -46,9 +46,9 @@ public class ModelRelation {
 
     /** the title, gives a name/description to the relation */
     protected String title = "";
-    /** the type: either "one" or "many" */
+    /** the type: either "one" or "many" or "one-nofk" */
     protected String type = "";
-    /** the name of the related EJB/entity */
+    /** the name of the related entity */
     protected String relEntityName = "";
     /** keyMaps defining how to lookup the relatedTable using columns from this table */
     protected Vector keyMaps = new Vector();
@@ -82,7 +82,7 @@ public class ModelRelation {
     /** the title, gives a name/description to the relation */
     public String getTitle() { return this.title; }
     public void setTitle(String title) { this.title = title; }
-    /** the type: either "one" or "many" */
+    /** the type: either "one" or "many" or "one-nofk" */
     public String getType() { return this.type; }
     public void setType(String type) { this.type = type; }
     /** the name of the related EJB/entity */
@@ -93,6 +93,7 @@ public class ModelRelation {
     public void setMainEntity(ModelEntity mainEntity) { this.mainEntity = mainEntity; }
 
     /** keyMaps defining how to lookup the relatedTable using columns from this table */
+    public Iterator getKeyMapsIterator() { return this.keyMaps.iterator(); }
     public int getKeyMapsSize() { return this.keyMaps.size(); }
     public ModelKeyMap getKeyMap(int index) { return (ModelKeyMap) this.keyMaps.get(index); }
     public void addKeyMap(ModelKeyMap keyMap) { this.keyMaps.add(keyMap); }

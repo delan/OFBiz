@@ -44,7 +44,7 @@ import org.ofbiz.core.entity.*;
  *@version    1.0
  */
 
-public class ModelEntity {
+public class ModelEntity implements Comparable {
     public static final String module = ModelEntity.class.getName();
 
     /** The name of the time stamp field for locking/syncronization */
@@ -614,6 +614,44 @@ public class ModelEntity {
         else
             returnString = returnString + ((ModelField) flds.elementAt(i)).name;
         return returnString;
+    }
+    
+    public int compareTo(Object obj) {
+        ModelEntity otherModelEntity = (ModelEntity) obj;
+
+        /* This DOESN'T WORK, so forget it... using two passes
+        //sort list by fk dependencies
+        
+        if (this.getEntityName().equals(otherModelEntity.getEntityName())) {
+            return 0;
+        }
+
+        //look through relations for dependencies from this entity to the other
+        Iterator relationsIter = this.getRelationsIterator();
+        while (relationsIter.hasNext()) {
+            ModelRelation modelRelation = (ModelRelation) relationsIter.next();
+
+            if ("one".equals(modelRelation.getType()) && modelRelation.getRelEntityName().equals(otherModelEntity.getEntityName())) {
+                //this entity is dependent on the other entity, so put that entity earlier in the list
+                return -1;
+            }
+        }
+        
+        //look through relations for dependencies from the other to this entity
+        Iterator otherRelationsIter = otherModelEntity.getRelationsIterator();
+        while (otherRelationsIter.hasNext()) {
+            ModelRelation modelRelation = (ModelRelation) otherRelationsIter.next();
+
+            if ("one".equals(modelRelation.getType()) && modelRelation.getRelEntityName().equals(this.getEntityName())) {
+                //the other entity is dependent on this entity, so put that entity later in the list
+                return 1;
+            }
+        }
+        
+        return 0;
+         */
+        
+        return this.getEntityName().compareTo(otherModelEntity.getEntityName());
     }
 }
 

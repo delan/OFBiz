@@ -108,6 +108,7 @@
     field-type-name CDATA #REQUIRED
     check-on-start ( true | false ) "true"
     add-missing-on-start ( true | false ) "false"
+    use-foreign-keys ( true | false ) "true"
 >
     <!ELEMENT sql-load-path EMPTY>
     <!ATTLIST sql-load-path
