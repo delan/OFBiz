@@ -93,46 +93,48 @@ public class EntityDataLoadContainer implements Container {
            $ java -jar ofbiz.jar -install -readers=seed,demo,ext -timeout=7200 -delegator=default -group=org.ofbiz
            $ java -jar ofbiz.jar -install -file=/tmp/dataload.xml
         */
-        for (int i = 0; i < args.length; i++) {
-            String argument = args[i];
-            // arguments can prefix w/ a '-'. Just strip them off
-            if (argument.startsWith("-")) {
-                int subIdx = 1;
-                if (argument.startsWith("--")) {
-                    subIdx = 2;
-                }
-                argument = argument.substring(subIdx);
-            }
-
-            // parse the arguments
-            if (argument.indexOf("=") != -1) {
-                String argumentName = argument.substring(0, argument.indexOf("="));
-                String argumentVal = argument.substring(argument.indexOf("=") + 1);
-                Debug.log("Install Argument - " + argumentName + " = " + argumentVal, module);
-                if ("readers".equalsIgnoreCase(argumentName)) {
-                    this.readers = argumentVal;
-                } else if ("timeout".equalsIgnoreCase(argumentName)) {
-                    try {
-                        this.txTimeout = Integer.parseInt(argumentVal);
-                    } catch (Exception e) {
-                        this.txTimeout = -1;
+        if (args != null) {
+            for (int i = 0; i < args.length; i++) {
+                String argument = args[i];
+                // arguments can prefix w/ a '-'. Just strip them off
+                if (argument.startsWith("-")) {
+                    int subIdx = 1;
+                    if (argument.startsWith("--")) {
+                        subIdx = 2;
                     }
-                } else if ("delegator".equalsIgnoreCase(argumentName)) {
-                    this.overrideDelegator = argumentVal;
-                } else if ("group".equalsIgnoreCase(argumentName)) {
-                    this.overrideGroup = argumentVal;
-                } else if ("file".equalsIgnoreCase(argumentName)) {
-                    this.file = argumentVal;
-                } else if ("dir".equalsIgnoreCase(argumentName)) {
-                    this.directory = argumentVal;
-                } else if ("createfks".equalsIgnoreCase(argumentName)) {
-                    this.useDummyFks = "true".equalsIgnoreCase(argumentVal);
+                    argument = argument.substring(subIdx);
                 }
-            }
-
-            // special case
-            if (this.readers == null && (this.file != null || this.directory != null)) {
-                this.readers = "none";
+    
+                // parse the arguments
+                if (argument.indexOf("=") != -1) {
+                    String argumentName = argument.substring(0, argument.indexOf("="));
+                    String argumentVal = argument.substring(argument.indexOf("=") + 1);
+                    Debug.log("Install Argument - " + argumentName + " = " + argumentVal, module);
+                    if ("readers".equalsIgnoreCase(argumentName)) {
+                        this.readers = argumentVal;
+                    } else if ("timeout".equalsIgnoreCase(argumentName)) {
+                        try {
+                            this.txTimeout = Integer.parseInt(argumentVal);
+                        } catch (Exception e) {
+                            this.txTimeout = -1;
+                        }
+                    } else if ("delegator".equalsIgnoreCase(argumentName)) {
+                        this.overrideDelegator = argumentVal;
+                    } else if ("group".equalsIgnoreCase(argumentName)) {
+                        this.overrideGroup = argumentVal;
+                    } else if ("file".equalsIgnoreCase(argumentName)) {
+                        this.file = argumentVal;
+                    } else if ("dir".equalsIgnoreCase(argumentName)) {
+                        this.directory = argumentVal;
+                    } else if ("createfks".equalsIgnoreCase(argumentName)) {
+                        this.useDummyFks = "true".equalsIgnoreCase(argumentVal);
+                    }
+                }
+    
+                // special case
+                if (this.readers == null && (this.file != null || this.directory != null)) {
+                    this.readers = "none";
+                }
             }
         }
     }
