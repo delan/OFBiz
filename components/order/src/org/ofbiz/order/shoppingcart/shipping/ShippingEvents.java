@@ -1,5 +1,5 @@
 /*
- * $Id: ShippingEvents.java,v 1.4 2003/10/26 05:44:02 ajzeneski Exp $
+ * $Id: ShippingEvents.java,v 1.5 2003/11/17 03:17:12 ajzeneski Exp $
  *
  *  Copyright (c) 2001, 2002 The Open For Business Project - www.ofbiz.org
  *
@@ -23,12 +23,7 @@
  */
 package org.ofbiz.order.shoppingcart.shipping;
 
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.Collection;
-import java.util.Iterator;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
@@ -39,6 +34,7 @@ import org.ofbiz.base.util.UtilValidate;
 import org.ofbiz.entity.GenericDelegator;
 import org.ofbiz.entity.GenericEntityException;
 import org.ofbiz.entity.GenericValue;
+import org.ofbiz.entity.util.EntityUtil;
 import org.ofbiz.order.order.OrderReadHelper;
 import org.ofbiz.order.shoppingcart.ShoppingCart;
 import org.ofbiz.service.ModelService;
@@ -48,7 +44,7 @@ import org.ofbiz.service.ServiceUtil;
  * ShippingEvents - Events used for processing shipping fees
  *
  * @author     <a href="mailto:jaz@ofbiz.org">Andy Zeneski</a>
- * @version    $Revision: 1.4 $
+ * @version    $Revision: 1.5 $
  * @since      2.0
  */
 public class ShippingEvents {
@@ -92,7 +88,7 @@ public class ShippingEvents {
             shipmentMethodTypeId = cart.getShipmentMethodTypeId();
             carrierPartyId = cart.getCarrierPartyId();            
         }         
-        return getShipEstimate(delegator, cart.getOrderType(), shipmentMethodTypeId, carrierPartyId, cart.getShippingContactMechId(), cart.getProductStoreId(), cart.getShippableWeight(), cart.getShippableQuantity(), cart.getShippableTotal());                               
+        return getShipEstimate(delegator, cart.getOrderType(), shipmentMethodTypeId, carrierPartyId, cart.getShippingContactMechId(), cart.getProductStoreId(), cart.getFeatureIdQtyMap(), cart.getShippableWeight(), cart.getShippableQuantity(), cart.getShippableTotal());
     }
     
     public static Map getShipEstimate(GenericDelegator delegator, OrderReadHelper orh) {
@@ -108,10 +104,10 @@ public class ShippingEvents {
         }
         GenericValue shipAddr = orh.getShippingAddress();
         String contactMechId = shipAddr.getString("contactMechId");    
-        return getShipEstimate(delegator, orh.getOrderTypeId(), shipmentMethodTypeId, carrierPartyId, contactMechId, orh.getProductStoreId(), orh.getShippableWeight(), orh.getShippableQuantity(), orh.getShippableTotal());    
+        return getShipEstimate(delegator, orh.getOrderTypeId(), shipmentMethodTypeId, carrierPartyId, contactMechId, orh.getProductStoreId(), orh.getFeatureIdQtyMap(), orh.getShippableWeight(), orh.getShippableQuantity(), orh.getShippableTotal());
     }
     
-    public static Map getShipEstimate(GenericDelegator delegator, String orderTypeId, String shipmentMethodTypeId, String carrierPartyId, String shippingContactMechId, String productStoreId, double shippableWeight, double shippableQuantity, double shippableTotal) {
+    public static Map getShipEstimate(GenericDelegator delegator, String orderTypeId, String shipmentMethodTypeId, String carrierPartyId, String shippingContactMechId, String productStoreId, Map featureMap, double shippableWeight, double shippableQuantity, double shippableTotal) {
         String standardMessage = "A problem occurred calculating shipping. Fees will be calculated offline.";
         List errorMessageList = new ArrayList();                             
         StringBuffer errorMessage = new StringBuffer();
@@ -330,7 +326,39 @@ public class ShippingEvents {
         double itemFlatAmount = shippableQuantity * orderItemFlat;
         double orderPercentage = shippableTotal * (orderPercent / 100);
 
-        double shippingTotal = weightAmount + quantityAmount + priceAmount + orderFlat + itemFlatAmount + orderPercentage;
+        double featureSurcharge = 0.00;
+        String featureGroupId = estimate.getString("productFeatureGroupId");
+        Double featurePercent = estimate.getDouble("featurePercent");
+        Double featurePrice = estimate.getDouble("featurePrice");
+        if (featurePercent == null) {
+            featurePercent = new Double(0);
+        }
+        if (featurePrice == null) {
+            featurePrice = new Double(0.00);
+        }
+
+        if (featureGroupId != null && featureGroupId.length() > 0 && featureMap != null ) {
+            Iterator fii = featureMap.keySet().iterator();
+            while (fii.hasNext()) {
+                String featureId = (String) fii.next();
+                Double quantity = (Double) featureMap.get(featureId);
+                GenericValue appl = null;
+                Map fields = UtilMisc.toMap("productFeatureGroupId", featureGroupId, "productFeatureId", featureId);
+                try {
+                    List appls = delegator.findByAndCache("ProductFeatureGroupAppl", fields);
+                    appls = EntityUtil.filterByDate(appls);
+                    appl = EntityUtil.getFirst(appls);
+                } catch (GenericEntityException e) {
+                    Debug.logError(e, "Unable to lookup feature/group" + fields, module);
+                }
+                if (appl != null) {
+                    featureSurcharge += (shippableTotal * (featurePercent.doubleValue() / 100) * quantity.doubleValue());
+                    featureSurcharge += featurePrice.doubleValue() * quantity.doubleValue();
+                }
+            }
+        }
+
+        double shippingTotal = weightAmount + quantityAmount + priceAmount + orderFlat + itemFlatAmount + orderPercentage + featureSurcharge;
 
         if (Debug.verboseOn()) Debug.logVerbose("[ShippingEvents.getShipEstimate] Setting shipping amount : " + shippingTotal, module);
         
