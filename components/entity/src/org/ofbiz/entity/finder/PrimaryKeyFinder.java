@@ -87,6 +87,11 @@ public class PrimaryKeyFinder {
             GenericValue tempVal = delegator.makeValue(entityName, null);
             // just get the primary keys, and hopefully will get all of them, if not they must be manually filled in below in the field-maps
             tempVal.setAllFields(context, true, null, Boolean.TRUE);
+            // if we don't get a full PK, try a map called "parameters"
+            Object parametersObj = context.get("parameters");
+            if (!tempVal.containsPrimaryKey() && parametersObj != null && parametersObj instanceof Map) {
+                tempVal.setAllFields((Map) parametersObj, true, null, Boolean.TRUE);
+            }
             entityContext.putAll(tempVal);
         }
         EntityFinderUtil.expandFieldMapToContext(this.fieldMap, context, entityContext);

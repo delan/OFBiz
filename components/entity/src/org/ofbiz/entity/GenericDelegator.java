@@ -1613,46 +1613,59 @@ public class GenericDelegator implements DelegatorInterface {
      *@return int representing number of rows effected by this operation
      */
     public int storeAll(List values, boolean doCacheClear) throws GenericEntityException {
-        //TODO: add eca eval calls
         if (values == null) {
             return 0;
-        }
-
-        // from the delegator level this is complicated because different GenericValue
-        // objects in the list may correspond to different helpers
-        HashMap valuesPerHelper = new HashMap();
-        Iterator viter = values.iterator();
-
-        while (viter.hasNext()) {
-            GenericValue value = (GenericValue) viter.next();
-            String helperName = this.getEntityHelperName(value.getEntityName());
-            List helperValues = (List) valuesPerHelper.get(helperName);
-            if (helperValues == null) {
-                helperValues = new LinkedList();
-                valuesPerHelper.put(helperName, helperValues);
-            }
-            helperValues.add(value);
         }
 
         boolean beganTransaction = false;
         int numberChanged = 0;
 
         try {
-            // if there are multiple helpers and no transaction is active, begin one
-            if (valuesPerHelper.size() > 1) {
-                beganTransaction = TransactionUtil.begin();
-            }
+            beganTransaction = TransactionUtil.begin();
 
-            Iterator helperIter = valuesPerHelper.entrySet().iterator();
-            while (helperIter.hasNext()) {
-                Map.Entry curEntry = (Map.Entry) helperIter.next();
-                String helperName = (String) curEntry.getKey();
-                GenericHelper helper = GenericHelperFactory.getHelper(helperName);
+            Iterator viter = values.iterator();
+            while (viter.hasNext()) {
+                GenericValue value = (GenericValue) viter.next();
+                String entityName = value.getEntityName();
+                GenericPK primaryKey = value.getPrimaryKey();
+                Map ecaEventMap = this.getEcaEntityEventMap(entityName);
+                GenericHelper helper = getEntityHelper(entityName);
 
-                if (doCacheClear) {
-                    this.clearAllCacheLinesByValue((List) curEntry.getValue());
+                // exists?
+                // NOTE: don't use findByPrimaryKey because we don't want to the ECA events to fire and such
+                if (!primaryKey.isPrimaryKey()) {
+                    throw new GenericModelException("[GenericDelegator.storeAll] One of the passed primary keys is not a valid primary key: " + primaryKey);
                 }
-                numberChanged += helper.storeAll((List) curEntry.getValue());
+                GenericValue existing = null;
+                try {
+                    existing = helper.findByPrimaryKey(primaryKey);
+                } catch (GenericEntityNotFoundException e) {
+                    existing = null;
+                }
+                
+                if (existing == null) {
+                    this.create(value, doCacheClear);
+                    numberChanged++;
+                } else {
+                    // don't send fields that are the same, and if no fields have changed, update nothing
+                    ModelEntity modelEntity = value.getModelEntity();
+                    GenericValue toStore = new GenericValue(modelEntity, value.getPrimaryKey());
+                    boolean atLeastOneField = false;
+                    Iterator nonPksIter = modelEntity.getNopksIterator();
+                    while (nonPksIter.hasNext()) {
+                        ModelField modelField = (ModelField) nonPksIter.next();
+                        String fieldName = modelField.getName();
+                        Object fieldValue = value.get(fieldName);
+                        Object oldValue = existing.get(fieldName);
+                        if ((fieldValue == null && oldValue != null) || (fieldValue != null && !fieldValue.equals(oldValue))) {
+                            toStore.put(fieldName, fieldValue);
+                            atLeastOneField = true;
+                        }
+                        if (atLeastOneField) {
+                            numberChanged += this.store(toStore, doCacheClear);
+                        }
+                    }
+                }
             }
 
             // only commit the transaction if we started one...
@@ -1669,18 +1682,9 @@ public class GenericDelegator implements DelegatorInterface {
             throw e;
         }
 
-        // Refresh the valueObjects to get the new version
-        viter = values.iterator();
-        while (viter.hasNext()) {
-            GenericValue value = (GenericValue) viter.next();
-            if (value.lockEnabled()) {
-                refresh(value);
-            }
-        }
-
         return numberChanged;
     }
-
+    
     /** Remove the Entities from the List from the persistent store.
      *  <br>The List contains GenericEntity objects, can be either GenericPK or GenericValue.
      *  <br>If a certain entity contains a complete primary key, the entity in the datasource corresponding
@@ -1709,55 +1713,21 @@ public class GenericDelegator implements DelegatorInterface {
      *@return int representing number of rows effected by this operation
      */
     public int removeAll(List dummyPKs, boolean doCacheClear) throws GenericEntityException {
-        //TODO: add eca eval calls
         if (dummyPKs == null) {
             return 0;
-        }
-
-        // from the delegator level this is complicated because different GenericValue
-        // objects in the list may correspond to different helpers
-        HashMap valuesPerHelper = new HashMap();
-        Iterator viter = dummyPKs.iterator();
-
-        while (viter.hasNext()) {
-            GenericEntity entity = (GenericEntity) viter.next();
-            String helperName = this.getEntityHelperName(entity.getEntityName());
-            Collection helperValues = (Collection) valuesPerHelper.get(helperName);
-
-            if (helperValues == null) {
-                helperValues = new LinkedList();
-                valuesPerHelper.put(helperName, helperValues);
-            }
-            helperValues.add(entity);
         }
 
         boolean beganTransaction = false;
         int numRemoved = 0;
 
         try {
-            // if there are multiple helpers and no transaction is active, begin one
-            if (valuesPerHelper.size() > 1) {
-                beganTransaction = TransactionUtil.begin();
-            }
-
-            Iterator helperIter = valuesPerHelper.entrySet().iterator();
-            while (helperIter.hasNext()) {
-                Map.Entry curEntry = (Map.Entry) helperIter.next();
-                String helperName = (String) curEntry.getKey();
-                GenericHelper helper = GenericHelperFactory.getHelper(helperName);
-
-                if (doCacheClear) {
-                    this.clearAllCacheLinesByDummyPK((List) curEntry.getValue());
-                }
-
-                List helperDummyPKs = (List) curEntry.getValue();
-                numRemoved += helper.removeAll(helperDummyPKs);
-
-                // TODO: iterate through and store fact that it was removed
-                Iterator helperDummyPKIter = helperDummyPKs.iterator();
-                while (helperDummyPKIter.hasNext()) {
-                    GenericEntity dummyPK = (GenericEntity) helperDummyPKIter.next();
-                    this.saveEntitySyncRemoveInfo(dummyPK);
+            Iterator viter = dummyPKs.iterator();
+            while (viter.hasNext()) {
+                GenericValue value = (GenericValue) viter.next();
+                if (value.containsPrimaryKey()) {
+                    numRemoved += this.removeValue(value, doCacheClear);
+                } else {
+                    numRemoved += this.removeByAnd(value.getEntityName(), value.getAllFields(), doCacheClear);
                 }
             }
 

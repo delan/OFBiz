@@ -279,67 +279,6 @@ public class GenericDAO {
         return retVal;
     }
 
-    /** Store the passed entity - insert if does not exist, otherwise update */
-    private int singleStore(GenericEntity entity, SQLProcessor sqlP) throws GenericEntityException {
-        GenericPK tempPK = entity.getPrimaryKey();
-        ModelEntity modelEntity = entity.getModelEntity();
-
-        try {
-            // must use same connection for select or it won't be in the same transaction...
-            select(tempPK, sqlP);
-        } catch (GenericEntityNotFoundException e) {
-            // Debug.logInfo(e, module);
-            // select failed, does not exist, insert
-            return singleInsert(entity, modelEntity, modelEntity.getFieldsCopy(), sqlP);
-        }
-        // select did not fail, so exists, update
-
-        List partialFields = new ArrayList();
-        Collection keys = entity.getAllKeys();
-
-        for (int fi = 0; fi < modelEntity.getNopksSize(); fi++) {
-            ModelField curField = modelEntity.getNopk(fi);
-
-            // we don't want to update ALL fields, just the nonpk fields that are in the passed GenericEntity
-            if (keys.contains(curField.getName())) {
-                //also, only update the fields that have changed, since we have the selected values in tempPK we can compare
-                if (entity.get(curField.getName()) == null) {
-                    if (tempPK.get(curField.getName()) != null) {
-                        //entity field is null, tempPK is not so are different
-                        partialFields.add(curField);
-                    }
-                } else if (!entity.get(curField.getName()).equals(tempPK.get(curField.getName()))) {
-                    //entity field is not null, and compared to tempPK field is different
-                    partialFields.add(curField);
-                }
-            }
-        }
-
-        return singleUpdate(entity, modelEntity, partialFields, sqlP);
-    }
-
-    public int storeAll(List entities) throws GenericEntityException {
-        if (entities == null || entities.size() <= 0) {
-            return 0;
-        }
-
-        SQLProcessor sqlP = new SQLProcessor(helperName);
-        int totalStored = 0;
-        try {
-            Iterator entityIter = entities.iterator();
-            while (entityIter != null && entityIter.hasNext()) {
-                GenericEntity curEntity = (GenericEntity) entityIter.next();
-                totalStored += singleStore(curEntity, sqlP);
-            }
-        } catch (GenericEntityException e) {
-            sqlP.rollback();
-            throw new GenericEntityException("Exception occurred in storeAll", e);
-        } finally {
-            sqlP.close();
-        }
-        return totalStored;
-    }
-
     /* ====================================================================== */
 
     /* ====================================================================== */
@@ -1181,37 +1120,6 @@ public class GenericDAO {
             sqlP.prepareStatement(sql);
 
             return sqlP.executeUpdate();
-        } finally {
-            sqlP.close();
-        }
-    }
-
-    /** Called dummyPKs because they can be invalid PKs, doing a deleteByAnd instead of a normal delete */
-    public int deleteAll(List dummyPKs) throws GenericEntityException {
-        if (dummyPKs == null || dummyPKs.size() == 0) {
-            return 0;
-        }
-
-        SQLProcessor sqlP = new SQLProcessor(helperName);
-        try {
-            Iterator iter = dummyPKs.iterator();
-
-            int numDeleted = 0;
-
-            while (iter.hasNext()) {
-                GenericEntity entity = (GenericEntity) iter.next();
-
-                // if it contains a complete primary key, delete the one, otherwise deleteByAnd
-                if (entity.containsPrimaryKey()) {
-                    numDeleted += delete(entity, sqlP);
-                } else {
-                    numDeleted += deleteByAnd(entity.getModelEntity(), entity.getAllFields(), sqlP);
-                }
-            }
-            return numDeleted;
-        } catch (GenericDataSourceException e) {
-            sqlP.rollback();
-            throw new GenericDataSourceException("Generic Entity Exception occurred in deleteAll", e);
         } finally {
             sqlP.close();
         }

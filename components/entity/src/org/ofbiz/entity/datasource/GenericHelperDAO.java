@@ -230,35 +230,6 @@ public class GenericHelperDAO implements GenericHelper {
         return genericDAO.update(value);
     }
 
-    /** Store the Entities from the List GenericValue instances to the persistent store.
-     *  This is different than the normal store method in that the store method only does
-     *  an update, while the storeAll method checks to see if each entity exists, then
-     *  either does an insert or an update as appropriate.
-     *  These updates all happen in one transaction, so they will either all succeed or all fail,
-     *  if the data source supports transactions. This is just like to othersToStore feature
-     *  of the GenericEntity on a create or store.
-     *@param values List of GenericValue instances containing the entities to store
-     *@return int representing number of rows effected by this operation
-     */
-    public int storeAll(List values) throws GenericEntityException {
-        return genericDAO.storeAll(values);
-    }
-
-    /** Remove the Entities from the List from the persistent store.
-     *  <br>The List contains GenericEntity objects, can be either GenericPK or GenericValue.
-     *  <br>If a certain entity contains a complete primary key, the entity in the datasource corresponding
-     *  to that primary key will be removed, this is like a removeByPrimary Key.
-     *  <br>On the other hand, if a certain entity is an incomplete or non primary key,
-     *  if will behave like the removeByAnd method.
-     *  <br>These updates all happen in one transaction, so they will either all succeed or all fail,
-     *  if the data source supports transactions.
-     *@param dummyPKs List of GenericEntity instances containing the entities or by and fields to remove
-     *@return int representing number of rows effected by this operation
-     */
-    public int removeAll(List dummyPKs) throws GenericEntityException {
-        return genericDAO.deleteAll(dummyPKs);
-    }
-
     /** Check the datasource to make sure the entity definitions are correct, optionally adding missing entities or fields on the server
      *@param modelEntities Map of entityName names and ModelEntity values
      *@param messages List to put any result messages in
