@@ -78,6 +78,17 @@ public class ModelEntity
     return null;
   }
   
+  public void removeField(String fieldName)
+  {
+    if(fieldName == null) return;
+    for(int i=0; i<fields.size(); i++)
+    {
+      ModelField field = (ModelField)fields.get(i);
+      if(field.name.equals(fieldName)) fields.removeElementAt(i);
+    }
+    return;
+  }
+  
   public ModelRelation getRelation(String relationName)
   {
     if(relationName == null) return null;

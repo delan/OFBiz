@@ -200,6 +200,24 @@ public class ModelReader
     return entityCache;
   }
   
+  /** Creates a Collection with all of the ModelFieldType names
+   * @return A Collection of ModelFieldType names
+   */  
+  public Collection getFieldTypeNames()
+  {
+    UtilCache ftc = getFieldTypeCache();
+    return ftc.valueTable.keySet();
+  }
+
+  /** Creates a Collection with all of the ModelFieldTypes
+   * @return A Collection of ModelFieldTypes
+   */  
+  public Collection getFieldTypes()
+  {
+    UtilCache ftc = getFieldTypeCache();
+    return ftc.valueTable.values();
+  }
+
   /** Gets an FieldType object based on a definition from the specified XML FieldType descriptor file.
    * @param fieldTypeName The fieldTypeName of the FieldType definition to use.
    * @return An FieldType object describing the specified fieldType of the specified descriptor file.
