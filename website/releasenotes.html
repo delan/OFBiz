@@ -1,7 +1,7 @@
 <h2 align="center">The Open For Business Project - Release Notes</h2>
 
-<br>Written By: David E. Jones
-<br>Email: <a href="mailto:jonesde@ofbiz.org">jonesde@ofbiz.org</a>
+<br>Written By: David E. Jones, Andy Zeneski
+<br>Email: <a href="mailto:jonesde@ofbiz.org">jonesde@ofbiz.org</a>, <a href="mailto:jaz@zsolv.com">jaz@zsolv.com</a>
 <br>Open For Business Site: <a href="http://www.ofbiz.org/">http://www.ofbiz.org</a>
 <br>
 <A href="http://sf.net/projects/ofbiz"> <IMG src="http://sourceforge.net/sflogo.php?group_id=27173" width="88" height="31" border="0" alt="SourceForge Logo"></A> 
@@ -31,45 +31,54 @@ there are so many new pieces that have not been extensively tested, and in some
 cases are missing some functionality. Other pieces are beta quality or stable,
 like the Entity Engine and the eCommerce application.</p>
 
-<h4>Service Engine Introduction</h4>
+<h4>Web Controller Improvements</h4> 
+<p>The Web Controller includes the controller servlet, the request processing classes as
+  well as the event handling classes. The request mappings XML DTD has been revised,
+  supporting improved response handling, the event handling has been re-designed 
+  to allow for different types of event handlers. New event handlers have been implemented
+  to support features such as SOAP front end to the Services Framework (see below) and the 
+  new Mini-Languages (see below). <i>(stable)</i></p>
+ 
+<h4>Service Engine Introduction</h4> 
 <p>The Service Engine is the tool that allows us to
   organize our applications around internal services that can seamlessly be exposed
   as web services, or can be implemented using remote web services. It provides a
   simple interface so that the caller does not have to know what language the service
-  is implemented in or where that service is located. Service definitions are done in XML.</p>
+  is implemented in or where that service is located. Service definitions are done in XML. 
+  <i>(stable)</i></p>
 
-<h4>Entity Engine Improvements</h4>
+<h4>Entity Engine Improvements</h4> 
 <p>The Entity Engine now support JTA transactions. The default implementation
 is done with Tyrex from Exolab, but can easily be adapted to run with J2EE
 application servers like JBoss, Weblogic, etc. The Entity Engine now also provides
 an easy way to do joins with View Entities and has more flexible find methods,
 especially the findByAnd that accepts a List of EntityExpr objects to constrain
-the query.</p>
+the query. <i>(stable)</i></p>
 
-<h4>Workflow Engine Introduction</h4>
+<h4>Workflow Engine Introduction</h4> 
 <p>The Workflow Engine makes it easy to layout and
 execute business processes as part of a J2EE application. It is based in the XPDL and other
 specifications from WfMC and the Workflow Management Facility Specification from OMG. It takes
 advantage of and is well integrated with the OFBiz Service and Entity Engines. Workflows can be
 invoked synchronously or asynchronously and locally or remotely through the Service Engine, and
-any activity in a process can be implemented as a service.</p>
+any activity in a process can be implemented as a service. <i>(alpha)</i></p>
 
-<h4>Mini-Languages Introduction</h4>
+<h4>Mini-Languages Introduction</h4> 
 <p>The Mini-Languages are XML files that describe simple
   processes making common operations fast and easy to write and maintain. At the moment
   the existing languages make it easy to create events to validate and convert form input
   and pass it on to a service. Future extensions will allow complete applications to be
   written using JSP, XML Mini-Languages, and Entity and Service definitions. This will be
-  anywhere from 5-10 times as efficient as coding these common components in Java.</p>
+  anywhere from 5-10 times as efficient as coding these common components in Java. <i>(beta)</i></p>
 
-<h4>Rule Engine Introduction</h4>
+<h4>Rule Engine Introduction</h4> 
 <p>The Rule Engine makes it easy to express and execute business
 rules and constraints. It is based on modern standards like RuleML and the mature language Prolog.
 It is written in Java and runs with an application in the same JVM, and can be invoked locally or 
 remotely through the Service or Entity Engines. It can also call back into Services as sensors or
 effectors and integrates seamlessly with the Entity Engine to expand your knowledgebase in a ruleset
 to all of the data in your relational database. The Rule Engine is only partially in place
-and certain features are still in planning.</p>
+and certain features are still in planning. <i>(alpha)</i></p>
 
 <h4>Tasks Completed</h4>
 <p>A number of tasks have been planned and completed for this release, in addition
@@ -96,7 +105,7 @@ to the many smaller refinements and changes that have been done. These tasks inc
   <li>43044 - Update Entity Engine BMP Entity Bean
   <li>43465 - BeanShell Script Service Engine
   <li>43464 - SOAP Interface to the Services Framework
-  <li>43524 - Event Processing Overhaul
+  <li>43524 - Event Processing Overhaul - Implement EventHandler as interface
   <li>43638 - SOAP Client Service Engine
   <li>44084 - removeAll method on delegator, etc
   <li>44085 - JTA Transaction support with XADataSources
