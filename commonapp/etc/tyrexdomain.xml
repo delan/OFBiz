@@ -6,8 +6,8 @@
     <timeout>120</timeout> <!-- 120 seconds is a long time for transaction timeouts, but necessary when remote authorizations and so forth are done as part of a transaction -->
     
     <resources>
-        <!-- NOTE: This configuration does not currently work because of this class; I can't figure out which one to use for Postgres, if there is one... -->
-        <dataSource>
+        <!-- NOTE: This mostly works, but seems to have occassional problems, try it out and you'll see soon enough -->
+        <!-- <dataSource>
             <name>localpostgres</name>
             <jar>../ofbiz/lib/common/postgresql.jar</jar>
             <class>org.postgresql.PostgresqlDataSource</class>
@@ -17,16 +17,16 @@
                 <user>ofbiz</user><password>ofbiz</password>
             </config>
             <limits>
-                <!-- Start with 5 connections, never go below 5, and never go above 50 -->
+                <!- - Start with 5 connections, never go below 5, and never go above 50 - ->
                 <maximum>50</maximum><minimum>5</minimum><initial>5</initial>
-                <!-- Discard connections idle for 5 minutes -->
+                <!- - Discard connections idle for 5 minutes - ->
                 <maxRetain>300</maxRetain>
-                <!-- If maximum reached, block for 5 seconds -->
+                <!- - If maximum reached, block for 5 seconds - ->
                 <timeout>5</timeout>
                 <trace>false</trace>
             </limits>
-        </dataSource>
-        <!-- disabling by default so no loading errors will occur when jar, etc not available -->
+        </dataSource> -->
+        <!-- disabling by default so no loading errors will occur when jar, etc not available; Oracle does seem to work well though -->
         <!-- <dataSource>
             <name>localoracle</name>
             <jar>lib/ojdbc14.jar</jar>
