@@ -25,7 +25,7 @@
  *@since      2.2
 -->
 
-<#assign uiLabelMap = requestAttributes.uiLabelMap>
+<#if (requestAttributes.uiLabelMap)?exists><#assign uiLabelMap = requestAttributes.uiLabelMap></#if>
 
 <table border="0" width="100%" cellspacing="0" cellpadding="0" class="boxoutside">
   <tr>
