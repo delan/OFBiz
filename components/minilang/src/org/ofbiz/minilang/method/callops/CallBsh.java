@@ -37,7 +37,7 @@ import bsh.*;
  * Simple class to wrap messages that come either from a straight string or a properties file
  *
  * @author     <a href="mailto:jonesde@ofbiz.org">David E. Jones</a>
- * @version    $Rev:$
+ * @version    $Rev$
  * @since      2.0
  */
 public class CallBsh extends MethodOperation {
@@ -127,5 +127,14 @@ public class CallBsh extends MethodOperation {
 
         // always return true, error messages just go on the error list
         return true;
+    }
+
+    public String rawString() {
+        // TODO: something more than the empty tag
+        return "<call-bsh/>";
+    }
+    public String expandedString(MethodContext methodContext) {
+        // TODO: something more than a stub/dummy
+        return this.rawString();
     }
 }

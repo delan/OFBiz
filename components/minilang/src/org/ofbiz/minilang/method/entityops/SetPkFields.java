@@ -37,7 +37,7 @@ import org.w3c.dom.Element;
  * Looks for each PK field in the named map and if it exists there it will copy it into the named value object.
  *
  * @author     <a href="mailto:jonesde@ofbiz.org">David E. Jones</a>
- * @version    $Rev:$
+ * @version    $Rev$
  * @since      2.0
  */
 public class SetPkFields extends MethodOperation {
@@ -81,5 +81,14 @@ public class SetPkFields extends MethodOperation {
             value.setPKFields(theMap, setIfNull);
         }
         return true;
+    }
+
+    public String rawString() {
+        // TODO: something more than the empty tag
+        return "<set-pk-fields/>";
+    }
+    public String expandedString(MethodContext methodContext) {
+        // TODO: something more than a stub/dummy
+        return this.rawString();
     }
 }

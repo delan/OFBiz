@@ -32,7 +32,7 @@ import org.ofbiz.minilang.method.*;
  * Creates a java.sql.Date with the current date and puts it in the env
  *
  * @author     <a href="mailto:jonesde@ofbiz.org">David E. Jones</a>
- * @version    $Rev:$
+ * @version    $Rev$
  * @since      2.0
  */
 public class NowDateToEnv extends MethodOperation {
@@ -47,5 +47,14 @@ public class NowDateToEnv extends MethodOperation {
     public boolean exec(MethodContext methodContext) {
         envAcsr.put(methodContext, new java.sql.Date(System.currentTimeMillis()));
         return true;
+    }
+
+    public String rawString() {
+        // TODO: something more than the empty tag
+        return "<now-date-to-env/>";
+    }
+    public String expandedString(MethodContext methodContext) {
+        // TODO: something more than a stub/dummy
+        return this.rawString();
     }
 }

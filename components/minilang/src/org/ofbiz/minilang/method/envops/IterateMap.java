@@ -39,7 +39,7 @@ import org.w3c.dom.Element;
  * Process sub-operations for each entry in the map
  *
  * @author     <a href="mailto:jonesde@ofbiz.org">David E. Jones</a>
- * @version    $Rev:$
+ * @version    $Rev$
  * @since      2.0
  */
 public class IterateMap extends MethodOperation {
@@ -97,5 +97,13 @@ public class IterateMap extends MethodOperation {
         keyAcsr.put(methodContext, oldKey);
         valueAcsr.put(methodContext, oldValue);
         return true;
+    }
+
+    public String rawString() {
+        return "<iterate-map map-name=\"" + this.mapAcsr + "\" key=\"" + this.keyAcsr + "\" value=\"" + this.valueAcsr + "\"/>";
+    }
+    public String expandedString(MethodContext methodContext) {
+        // TODO: something more than a stub/dummy
+        return this.rawString();
     }
 }

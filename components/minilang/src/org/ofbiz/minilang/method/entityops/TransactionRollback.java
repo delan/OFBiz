@@ -36,7 +36,7 @@ import org.w3c.dom.Element;
  * Rolls back a transaction if beganTransaction is true, otherwise tries to do a setRollbackOnly.
  *
  * @author     <a href="mailto:jonesde@ofbiz.org">David E. Jones</a>
- * @version    $Rev:$
+ * @version    $Rev$
  * @since      2.0
  */
 public class TransactionRollback extends MethodOperation {
@@ -70,5 +70,14 @@ public class TransactionRollback extends MethodOperation {
         
         beganTransactionAcsr.remove(methodContext);
         return true;
+    }
+
+    public String rawString() {
+        // TODO: something more than the empty tag
+        return "<transaction-rollback/>";
+    }
+    public String expandedString(MethodContext methodContext) {
+        // TODO: something more than a stub/dummy
+        return this.rawString();
     }
 }

@@ -35,7 +35,7 @@ import org.ofbiz.minilang.method.*;
  * Converts the specified field to a String, using toString()
  *
  * @author     <a href="mailto:jonesde@ofbiz.org">David E. Jones</a>
- * @version    $Rev:$
+ * @version    $Rev$
  * @since      2.0
  */
 public class ToString extends MethodOperation {
@@ -111,5 +111,14 @@ public class ToString extends MethodOperation {
         }
         
         return outStr;
+    }
+
+    public String rawString() {
+        // TODO: something more than the empty tag
+        return "<to-string field-name=\"" + this.fieldAcsr + "\" map-name=\"" + this.mapAcsr + "\"/>";
+    }
+    public String expandedString(MethodContext methodContext) {
+        // TODO: something more than a stub/dummy
+        return this.rawString();
     }
 }

@@ -34,7 +34,7 @@ import org.ofbiz.minilang.method.*;
  * Get the first entry from the list
  *
  * @author     <a href="mailto:jonesde@ofbiz.org">David E. Jones</a>
- * @version    $Rev:$
+ * @version    $Rev$
  * @since      2.0
  */
 public class FirstFromList extends MethodOperation {
@@ -71,5 +71,13 @@ public class FirstFromList extends MethodOperation {
 
         entryAcsr.put(methodContext, theList.get(0));
         return true;
+    }
+
+    public String rawString() {
+        return "<first-from-list list-name=\"" + this.listAcsr + "\" entry-name=\"" + this.entryAcsr + "\"/>";
+    }
+    public String expandedString(MethodContext methodContext) {
+        // TODO: something more than a stub/dummy
+        return this.rawString();
     }
 }

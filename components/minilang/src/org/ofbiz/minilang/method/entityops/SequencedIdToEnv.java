@@ -34,7 +34,7 @@ import org.w3c.dom.Element;
  * Gets a sequenced ID from the delegator and puts it in the env
  *
  * @author     <a href="mailto:jonesde@ofbiz.org">David E. Jones</a>
- * @version    $Rev:$
+ * @version    $Rev$
  * @since      2.0
  */
 public class SequencedIdToEnv extends MethodOperation {
@@ -71,5 +71,14 @@ public class SequencedIdToEnv extends MethodOperation {
             envAcsr.put(methodContext, methodContext.getDelegator().getNextSeqId(seqName, staggerMax));
         }
         return true;
+    }
+
+    public String rawString() {
+        // TODO: something more than the empty tag
+        return "<sequenced-id-to-env/>";
+    }
+    public String expandedString(MethodContext methodContext) {
+        // TODO: something more than a stub/dummy
+        return this.rawString();
     }
 }

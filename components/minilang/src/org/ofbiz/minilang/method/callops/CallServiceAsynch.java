@@ -41,7 +41,7 @@ import org.w3c.dom.Element;
  *
  * @author     <a href="mailto:jonesde@ofbiz.org">David E. Jones</a> 
  * @author     <a href="mailto:jaz@ofbiz.org">Andy Zeneski</a>
- * @version    $Rev:$
+ * @version    $Rev$
  * @since      2.0
  */
 public class CallServiceAsynch extends MethodOperation {
@@ -106,5 +106,14 @@ public class CallServiceAsynch extends MethodOperation {
         }
 
         return true;
+    }
+
+    public String rawString() {
+        // TODO: something more than the empty tag
+        return "<call-service-asynch/>";
+    }
+    public String expandedString(MethodContext methodContext) {
+        // TODO: something more than a stub/dummy
+        return this.rawString();
     }
 }

@@ -34,7 +34,7 @@ import org.ofbiz.minilang.method.*;
  * Represents the top-level element and only mounted operation for the more flexible if structure.
  *
  * @author     <a href="mailto:jonesde@ofbiz.org">David E. Jones</a>
- * @version    $Rev:$
+ * @version    $Rev$
  * @since      2.1
  */
 public class MasterIf extends MethodOperation {
@@ -102,5 +102,14 @@ public class MasterIf extends MethodOperation {
                 return true;
             }
         }
+    }
+
+    public String rawString() {
+        // TODO: something more than the empty tag
+        return "<if/>";
+    }
+    public String expandedString(MethodContext methodContext) {
+        // TODO: something more than a stub/dummy
+        return this.rawString();
     }
 }

@@ -34,7 +34,7 @@ import org.ofbiz.minilang.method.*;
  * Copies a map field to an environment field
  *
  * @author     <a href="mailto:jonesde@ofbiz.org">David E. Jones</a>
- * @version    $Rev:$
+ * @version    $Rev$
  * @since      2.0
  */
 public class FieldToEnv extends MethodOperation {
@@ -85,5 +85,13 @@ public class FieldToEnv extends MethodOperation {
 
         envAcsr.put(methodContext, fieldVal);
         return true;
+    }
+
+    public String rawString() {
+        return "<field-to-env env-name=\"" + this.envAcsr + "\" field-name=\"" + this.fieldAcsr + "\" map-name=\"" + this.mapAcsr + "\"/>";
+    }
+    public String expandedString(MethodContext methodContext) {
+        // TODO: something more than a stub/dummy
+        return this.rawString();
     }
 }

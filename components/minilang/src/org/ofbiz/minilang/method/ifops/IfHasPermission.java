@@ -40,7 +40,7 @@ import org.w3c.dom.Element;
  * process else operations if specified.
  *
  * @author     <a href="mailto:jonesde@ofbiz.org">David E. Jones</a>
- * @version    $Rev:$
+ * @version    $Rev$
  * @since      2.0
  */
 public class IfHasPermission extends MethodOperation {
@@ -102,5 +102,13 @@ public class IfHasPermission extends MethodOperation {
                 return true;
             }
         }
+    }
+
+    public String rawString() {
+        return "<if-has-permission permission=\"" + this.permissionExdr + "\" action=\"" + this.actionExdr + "\"/>";
+    }
+    public String expandedString(MethodContext methodContext) {
+        // TODO: something more than a stub/dummy
+        return this.rawString();
     }
 }

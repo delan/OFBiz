@@ -34,7 +34,7 @@ import org.ofbiz.minilang.method.*;
  * An operation that calls a simple method in the same, or from another, file
  *
  * @author     <a href="mailto:jonesde@ofbiz.org">David E. Jones</a>
- * @version    $Rev:$
+ * @version    $Rev$
  * @since      2.0
  */
 public class CallSimpleMethod extends MethodOperation {
@@ -113,5 +113,14 @@ public class CallSimpleMethod extends MethodOperation {
         }
 
         return true;
+    }
+
+    public String rawString() {
+        // TODO: something more than the empty tag
+        return "<call-simple-method/>";
+    }
+    public String expandedString(MethodContext methodContext) {
+        // TODO: something more than a stub/dummy
+        return this.rawString();
     }
 }

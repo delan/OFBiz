@@ -159,6 +159,15 @@ public class Calculate extends MethodOperation {
         return true;
     }
 
+    public String rawString() {
+        // TODO: add all attributes and other info
+        return "<calculate field-name=\"" + this.fieldAcsr + "\" map-name=\"" + this.mapAcsr + "\"/>";
+    }
+    public String expandedString(MethodContext methodContext) {
+        // TODO: something more than a stub/dummy
+        return this.rawString();
+    }
+
     protected static interface SubCalc {
         public double calcValue(MethodContext methodContext);
     }

@@ -33,7 +33,7 @@ import org.w3c.dom.Element;
  * Copies an environment field to a map field
  *
  * @author     <a href="mailto:jonesde@ofbiz.org">David E. Jones</a>
- * @version    $Rev:$
+ * @version    $Rev$
  * @since      2.0
  */
 public class EnvToEnv extends MethodOperation {
@@ -50,5 +50,13 @@ public class EnvToEnv extends MethodOperation {
     public boolean exec(MethodContext methodContext) {
         toEnvAcsr.put(methodContext, envAcsr.get(methodContext));
         return true;
+    }
+
+    public String rawString() {
+        return "<env-to-env env-name=\"" + this.envAcsr + "\" to-env-name=\"" + this.toEnvAcsr + "\"/>";
+    }
+    public String expandedString(MethodContext methodContext) {
+        // TODO: something more than a stub/dummy
+        return this.rawString();
     }
 }

@@ -42,7 +42,7 @@ import org.w3c.dom.Element;
  * or fail-property sub-elements are used to add a message to the error-list.
  *
  * @author     <a href="mailto:jonesde@ofbiz.org">David E. Jones</a>
- * @version    $Rev:$
+ * @version    $Rev$
  * @since      2.0
  */
 public class CheckPermission extends MethodOperation {
@@ -164,5 +164,14 @@ public class CheckPermission extends MethodOperation {
                 return security.hasPermission(permission, userLogin);
             }
         }
+    }
+
+    public String rawString() {
+        // TODO: add all attributes and other info
+        return "<check-permission/>";
+    }
+    public String expandedString(MethodContext methodContext) {
+        // TODO: something more than a stub/dummy
+        return this.rawString();
     }
 }

@@ -37,7 +37,7 @@ import org.w3c.dom.Element;
  * Copies a map field to a Servlet session attribute
  *
  * @author     <a href="mailto:jonesde@ofbiz.org">David E. Jones</a>
- * @version    $Rev:$
+ * @version    $Rev$
  * @since      2.0
  */
 public class FieldToSession extends MethodOperation {
@@ -79,5 +79,14 @@ public class FieldToSession extends MethodOperation {
             sessionAcsr.put(methodContext.getRequest().getSession(), fieldVal, methodContext.getEnvMap());
         }
         return true;
+    }
+
+    public String rawString() {
+        // TODO: add all attributes and other info
+        return "<field-to-session field-name=\"" + this.fieldAcsr + "\" map-name=\"" + this.mapAcsr + "\"/>";
+    }
+    public String expandedString(MethodContext methodContext) {
+        // TODO: something more than a stub/dummy
+        return this.rawString();
     }
 }

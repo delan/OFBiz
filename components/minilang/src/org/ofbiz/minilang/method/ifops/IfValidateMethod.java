@@ -35,7 +35,7 @@ import org.ofbiz.minilang.method.*;
  * Iff the validate method returns true with the specified field process sub-operations
  *
  * @author     <a href="mailto:jonesde@ofbiz.org">David E. Jones</a>
- * @version    $Rev:$
+ * @version    $Rev$
  * @since      2.0
  */
 public class IfValidateMethod extends MethodOperation {
@@ -134,5 +134,14 @@ public class IfValidateMethod extends MethodOperation {
                 return true;
             }
         }
+    }
+
+    public String rawString() {
+        // TODO: add all attributes and other info
+        return "<if-validate-method field-name=\"" + this.fieldAcsr + "\" map-name=\"" + this.mapAcsr + "\"/>";
+    }
+    public String expandedString(MethodContext methodContext) {
+        // TODO: something more than a stub/dummy
+        return this.rawString();
     }
 }

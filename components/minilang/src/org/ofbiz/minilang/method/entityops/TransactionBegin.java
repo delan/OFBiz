@@ -36,7 +36,7 @@ import org.w3c.dom.Element;
  * Begins a transaction if one is not already in place; if does begin one puts true in the began-transaction-name env variable, otherwise it returns false.
  *
  * @author     <a href="mailto:jonesde@ofbiz.org">David E. Jones</a>
- * @version    $Rev:$
+ * @version    $Rev$
  * @since      2.0
  */
 public class TransactionBegin extends MethodOperation {
@@ -64,5 +64,14 @@ public class TransactionBegin extends MethodOperation {
         
         beganTransactionAcsr.put(methodContext, new Boolean(beganTransaction));
         return true;
+    }
+
+    public String rawString() {
+        // TODO: something more than the empty tag
+        return "<transaction-begin/>";
+    }
+    public String expandedString(MethodContext methodContext) {
+        // TODO: something more than a stub/dummy
+        return this.rawString();
     }
 }

@@ -35,7 +35,7 @@ import org.ofbiz.minilang.method.*;
  *  the map passed to see if it is a byPrimaryKey, and byAnd, or an all.
  *
  * @author     <a href="mailto:jonesde@ofbiz.org">David E. Jones</a>
- * @version    $Rev:$
+ * @version    $Rev$
  * @since      2.0
  */
 public class ClearCacheLine extends MethodOperation {
@@ -65,5 +65,14 @@ public class ClearCacheLine extends MethodOperation {
             }
         }
         return true;
+    }
+
+    public String rawString() {
+        // TODO: something more than the empty tag
+        return "<clear-cache-line/>";
+    }
+    public String expandedString(MethodContext methodContext) {
+        // TODO: something more than a stub/dummy
+        return this.rawString();
     }
 }

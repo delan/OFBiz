@@ -36,7 +36,7 @@ import org.w3c.dom.Element;
  * Uses the delegator to remove entities related to the specified value object from the datasource
  *
  * @author     <a href="mailto:jonesde@ofbiz.org">David E. Jones</a>
- * @version    $Rev:$
+ * @version    $Rev$
  * @since      2.0
  */
 public class RemoveRelated extends MethodOperation {
@@ -89,5 +89,14 @@ public class RemoveRelated extends MethodOperation {
             return false;
         }
         return true;
+    }
+
+    public String rawString() {
+        // TODO: something more than the empty tag
+        return "<remove-related/>";
+    }
+    public String expandedString(MethodContext methodContext) {
+        // TODO: something more than a stub/dummy
+        return this.rawString();
     }
 }

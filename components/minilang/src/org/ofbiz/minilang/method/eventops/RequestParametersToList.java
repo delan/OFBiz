@@ -34,7 +34,7 @@ import org.ofbiz.minilang.method.*;
  * Copies a Servlet request parameter values to a list
  *
  * @author     <a href="mailto:quake.sh@ofbizchina.com">Quake Wang</a>
- * @version    $Rev:$
+ * @version    $Rev$
  * @since      3.0
  */
 public class RequestParametersToList extends MethodOperation {
@@ -77,5 +77,13 @@ public class RequestParametersToList extends MethodOperation {
 
 		toList.addAll((Collection) listVal);
         return true;
+    }
+
+    public String rawString() {
+        return "<request-parameters-to-list request-name=\"" + this.requestName + "\" list-name=\"" + this.listAcsr + "\"/>";
+    }
+    public String expandedString(MethodContext methodContext) {
+        // TODO: something more than a stub/dummy
+        return this.rawString();
     }
 }

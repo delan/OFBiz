@@ -42,7 +42,7 @@ import org.w3c.dom.Element;
  * Uses the delegator to find an entity value by its primary key
  *
  * @author     <a href="mailto:jonesde@ofbiz.org">David E. Jones</a>
- * @version    $Rev:$
+ * @version    $Rev$
  * @since      2.0
  */
 public class FindByPrimaryKey extends MethodOperation {
@@ -106,5 +106,14 @@ public class FindByPrimaryKey extends MethodOperation {
             return false;
         }
         return true;
+    }
+
+    public String rawString() {
+        // TODO: something more than the empty tag
+        return "<find-by-primary-key/>";
+    }
+    public String expandedString(MethodContext methodContext) {
+        // TODO: something more than a stub/dummy
+        return this.rawString();
     }
 }

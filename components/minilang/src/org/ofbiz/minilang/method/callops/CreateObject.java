@@ -36,7 +36,7 @@ import org.ofbiz.minilang.method.*;
  * Creates a Java object using the given fields as parameters
  *
  * @author     <a href="mailto:jonesde@ofbiz.org">David E. Jones</a>
- * @version    $Rev:$
+ * @version    $Rev$
  * @since      2.0
  */
 public class CreateObject extends MethodOperation {
@@ -178,5 +178,14 @@ public class CreateObject extends MethodOperation {
         }
         
         return true;
+    }
+
+    public String rawString() {
+        // TODO: something more than the empty tag
+        return "<create-object/>";
+    }
+    public String expandedString(MethodContext methodContext) {
+        // TODO: something more than a stub/dummy
+        return this.rawString();
     }
 }

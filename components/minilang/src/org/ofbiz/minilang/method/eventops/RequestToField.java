@@ -38,7 +38,7 @@ import org.w3c.dom.Element;
  * Copies a Servlet request attribute to a map field
  *
  * @author     <a href="mailto:jonesde@ofbiz.org">David E. Jones</a>
- * @version    $Rev:$
+ * @version    $Rev$
  * @since      2.0
  */
 public class RequestToField extends MethodOperation {
@@ -95,5 +95,14 @@ public class RequestToField extends MethodOperation {
             fieldAcsr.put(methodContext, fieldVal);
         }
         return true;
+    }
+
+    public String rawString() {
+        // TODO: add all attributes and other info
+        return "<request-to-field request-name=\"" + this.requestAcsr + "\" field-name=\"" + this.fieldAcsr + "\" map-name=\"" + this.mapAcsr + "\"/>";
+    }
+    public String expandedString(MethodContext methodContext) {
+        // TODO: something more than a stub/dummy
+        return this.rawString();
     }
 }

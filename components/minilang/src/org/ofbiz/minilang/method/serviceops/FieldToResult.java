@@ -34,7 +34,7 @@ import org.ofbiz.minilang.method.*;
  * Copies a map field to a Service result entry
  *
  * @author     <a href="mailto:jonesde@ofbiz.org">David E. Jones</a>
- * @version    $Rev:$
+ * @version    $Rev$
  * @since      2.0
  */
 public class FieldToResult extends MethodOperation {
@@ -79,5 +79,14 @@ public class FieldToResult extends MethodOperation {
             resultAcsr.put(methodContext.getResults(), fieldVal, methodContext);
         }
         return true;
+    }
+
+    public String rawString() {
+        // TODO: add all attributes and other info
+        return "<field-to-result field-name=\"" + this.fieldAcsr + "\" map-name=\"" + this.mapAcsr + "\"/>";
+    }
+    public String expandedString(MethodContext methodContext) {
+        // TODO: something more than a stub/dummy
+        return this.rawString();
     }
 }

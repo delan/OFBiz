@@ -123,5 +123,14 @@ public class EntityCount extends MethodOperation {
         }
         return true;
     }
+
+    public String rawString() {
+        // TODO: something more than the empty tag
+        return "<entity-count/>";
+    }
+    public String expandedString(MethodContext methodContext) {
+        // TODO: something more than a stub/dummy
+        return this.rawString();
+    }
 }
 

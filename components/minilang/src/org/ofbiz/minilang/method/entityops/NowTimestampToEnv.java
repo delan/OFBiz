@@ -32,7 +32,7 @@ import org.ofbiz.minilang.method.*;
  * Creates a java.sql.Timestamp with the current date/time in it and puts it in the env
  *
  * @author     <a href="mailto:jonesde@ofbiz.org">David E. Jones</a>
- * @version    $Rev:$
+ * @version    $Rev$
  * @since      2.0
  */
 public class NowTimestampToEnv extends MethodOperation {
@@ -47,5 +47,14 @@ public class NowTimestampToEnv extends MethodOperation {
     public boolean exec(MethodContext methodContext) {
         envAcsr.put(methodContext, new java.sql.Timestamp(System.currentTimeMillis()));
         return true;
+    }
+
+    public String rawString() {
+        // TODO: something more than the empty tag
+        return "<now-timestamp-to-env/>";
+    }
+    public String expandedString(MethodContext methodContext) {
+        // TODO: something more than a stub/dummy
+        return this.rawString();
     }
 }

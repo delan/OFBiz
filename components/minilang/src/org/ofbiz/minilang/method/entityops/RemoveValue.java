@@ -36,7 +36,7 @@ import org.w3c.dom.Element;
  * Uses the delegator to remove the specified value object entity from the datasource
  *
  * @author     <a href="mailto:jonesde@ofbiz.org">David E. Jones</a>
- * @version    $Rev:$
+ * @version    $Rev$
  * @since      2.0
  */
 public class RemoveValue extends MethodOperation {
@@ -72,5 +72,14 @@ public class RemoveValue extends MethodOperation {
             return false;
         }
         return true;
+    }
+
+    public String rawString() {
+        // TODO: something more than the empty tag
+        return "<remove-value/>";
+    }
+    public String expandedString(MethodContext methodContext) {
+        // TODO: something more than a stub/dummy
+        return this.rawString();
     }
 }

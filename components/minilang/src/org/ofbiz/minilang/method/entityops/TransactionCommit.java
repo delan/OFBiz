@@ -36,7 +36,7 @@ import org.w3c.dom.Element;
  * Commits a transaction if beganTransaction is true, otherwise does nothing.
  *
  * @author     <a href="mailto:jonesde@ofbiz.org">David E. Jones</a>
- * @version    $Rev:$
+ * @version    $Rev$
  * @since      2.0
  */
 public class TransactionCommit extends MethodOperation {
@@ -70,5 +70,14 @@ public class TransactionCommit extends MethodOperation {
         
         beganTransactionAcsr.remove(methodContext);
         return true;
+    }
+
+    public String rawString() {
+        // TODO: something more than the empty tag
+        return "<transaction-commit/>";
+    }
+    public String expandedString(MethodContext methodContext) {
+        // TODO: something more than a stub/dummy
+        return this.rawString();
     }
 }

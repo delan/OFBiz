@@ -42,7 +42,7 @@ import org.w3c.dom.Element;
  * Process sub-operations for each entry in the list
  *
  * @author     <a href="mailto:jonesde@ofbiz.org">David E. Jones</a>
- * @version    $Rev:$
+ * @version    $Rev$
  * @since      2.0
  */
 public class Iterate extends MethodOperation {
@@ -127,5 +127,14 @@ public class Iterate extends MethodOperation {
         }
         entryAcsr.put(methodContext, oldEntryValue);
         return true;
+    }
+
+    public String rawString() {
+        // TODO: something more than the empty tag
+        return "<iterate list-name=\"" + this.listAcsr + "\" entry-name=\"" + this.entryAcsr + "\"/>";
+    }
+    public String expandedString(MethodContext methodContext) {
+        // TODO: something more than a stub/dummy
+        return this.rawString();
     }
 }

@@ -1,5 +1,5 @@
 /*
- * $Id$
+ * $Id: $
  *
  * Copyright (c) 2004 The Open For Business Project - www.ofbiz.org
  *
@@ -41,7 +41,7 @@ import org.w3c.dom.Element;
 /**
  * 
  * @author     <a href="mailto:jaz@ofbiz.org">Andy Zeneski</a>
- * @version    $Rev:$
+ * @version    $Rev$
  * @since      3.2
  */
 public class IfInstanceOf extends MethodOperation {
@@ -98,5 +98,14 @@ public class IfInstanceOf extends MethodOperation {
                 return true;
             }
         }
+    }
+
+    public String rawString() {
+        // TODO: add all attributes and other info
+        return "<if-instance-of field-name=\"" + this.fieldAcsr + "\" map-name=\"" + this.mapAcsr + "\"/>";
+    }
+    public String expandedString(MethodContext methodContext) {
+        // TODO: something more than a stub/dummy
+        return this.rawString();
     }
 }

@@ -31,7 +31,7 @@ import org.ofbiz.minilang.*;
  * A single operation, does the specified operation on the given field
  *
  * @author     <a href="mailto:jonesde@ofbiz.org">David E. Jones</a>
- * @version    $Rev:$
+ * @version    $Rev$
  * @since      2.0
  */
 public abstract class MethodOperation {
@@ -44,4 +44,9 @@ public abstract class MethodOperation {
 
     /** Execute the operation; if false is returned then no further operations will be executed */
     public abstract boolean exec(MethodContext methodContext);
+
+    /** Create a raw string representation of the operation, would be similar to original XML */
+    public abstract String rawString();
+    /** Create an expanded string representation of the operation, is for the current context */
+    public abstract String expandedString(MethodContext methodContext);
 }
