@@ -22,30 +22,43 @@
  *  OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR
  *  THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  *@author     Olivier.Heintz@nereide.biz
- *@version    $Revision: 1.3 $
+ *@version    $Revision: 1.1 $
  *@since      3.0
 -->
 
 <forms>
-	<form name="lookupRoutingTask" type="single" 
-		target="fieldLookup" title="" default-map-name="lookup"
-		default-title-style="tableheadtext" default-widget-style="inputBox" default-tooltip-style="tabletext">
-		<auto-fields-service service-name="lookupRoutingTask" map-name="parameters"/>
+    <form name="lookupRoutingTask" 
+        default-title-style="tableheadtext" default-tooltip-style="tabletext" default-widget-style="inputBox"
+        target="LookupRoutingTask" title="" type="single">
+		<auto-fields-service service-name="lookupRoutingTask" default-field-type="find"/>
+        <field name="workEffortTypeId"><hidden value="ROU_TASK"/></field>
         <field name="fixedAssetId" >
-			<drop-down>
-				<list-options list-name="allMachineGroups" list-entry-name="machineGroup" 
-								key-name="machineGroup.fixedAssetId" description="${machineGroup.fixedAssetName}"/>
-			</drop-down>
+            <drop-down>
+                <option key="" description=""/>
+                <entity-options entity-name="FixedAsset" description="${fixedAssetName}">
+                    <entity-constraint name="fixedAssetTypeId" value="GROUP_EQUIPMENT"/>
+                </entity-options>
+             </drop-down>
         </field>
-		<field name="submitButton" title="${uiLabelMap.CommonLookup}" widget-style="smallSubmit"><submit button-type="button"/></field>
-		<field name="lookupService"><hidden value="lookupRoutingTask"/></field>
-		<field name="formName" ><hidden value="lookupRoutingTask"/></field>
-		<field name="id" ><hidden/></field>
-	</form>
-    <form
-        name="lookupProduct" 
-        default-title-style="tableheadtext"
-        default-tooltip-style="tabletext" default-widget-style="inputBox"
+        <field name="fixedAssetId_op"><hidden value="equals"/></field>
+        <field name="submitButton" title="${uiLabelMap.CommonLookup}" widget-style="standardSubmit">
+            <submit button-type="button"/>
+        </field>
+    </form>
+    <form name="listLookupRoutingTask" 
+        default-title-style="tableheadtext" default-tooltip-style="tabletext" default-widget-style="display"
+        list-name="entityList" paginate-target="/GenericLookup" 
+        title="" type="list">
+        <field name="workEffortId" title="&amp;nbsp;" widget-style="buttontext">
+            <hyperlink also-hidden="false" target-type="plain" description="${workEffortId}" target="javascript:set_value('${workEffortId}')"/>
+        </field>
+        <field name="workEffortName" title="${uiLabelMap.ManufacturingTaskName}"><display/></field>
+        <field name="description" title="${uiLabelMap.CommonDescription}"><display/></field>
+        <field name="estimatedSetupMillis" title="${uiLabelMap.ManufacturingTaskEstimatedSetupMillis}"><display/></field>
+        <field name="estimatedMilliSeconds" title="${uiLabelMap.ManufacturingTaskEstimatedMilliSeconds}"><display/></field>
+    </form>
+    <form name="lookupProduct" 
+        default-title-style="tableheadtext" default-tooltip-style="tabletext" default-widget-style="inputBox"
         target="LookupProduct" title="" type="single">
         <auto-fields-entity entity-name="Product" default-field-type="find" />
         <field name="productId" title="${uiLabelMap.ProductProductId}"></field>
@@ -110,30 +123,14 @@
             <submit button-type="button"/>
         </field>
     </form>
-    <form
-        name="listLookupProduct" 
-        default-title-style="tableheadtext"
-        default-tooltip-style="tabletext" default-widget-style="display"
-        list-name="entityList" paginate-target="/LookupProduct" 
+    <form name="listLookupProduct" 
+        default-title-style="tableheadtext"  default-tooltip-style="tabletext" default-widget-style="display"
+        list-name="entityList" paginate-target="/GenericLookup" 
 	    title="" type="list">
         <field name="productId" title="&amp;nbsp;" widget-style="buttontext">
             <hyperlink also-hidden="false" target-type="plain" description="${productId}" target="javascript:set_value('${productId}')"/>
         </field>
         <field name="productName" title="${uiLabelMap.ProductProductName}"><display/></field>
         <field name="productTypeId" title="${uiLabelMap.ProductType}"><display/></field>
-    </form>
-    <form 
-        name="lruLookupProduct" 
-        default-entity-name="Product"
-        default-title-style="tableheadtext"
-        default-tooltip-style="tabletext" default-widget-style="display"
-        list-name="lruList" 
-        target="" title="" type="list">
-        <field name="productId" title="${uiLabelMap.CommonId}" widget-style="buttontext">
-            <hyperlink also-hidden="false" target-type="plain" description="${productId}" target="javascript:set_value('${productId}')"/>
-        </field>
-        <field name="productName" title="${uiLabelMap.ProductProductName}" widget-style="buttontext">
-                <display/>
-        </field>
     </form>
 </forms>

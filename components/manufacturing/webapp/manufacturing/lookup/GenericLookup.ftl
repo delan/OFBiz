@@ -1,5 +1,3 @@
-<!doctype HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN">
-<!-- Copyright (c) 2003 The Open For Business Project - www.ofbiz.org -->
 <#--
  *  Copyright (c) 2003 The Open For Business Project - www.ofbiz.org
  *
@@ -21,24 +19,20 @@
  *  OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR 
  *  THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  *
- *@author     Johan Isacsson
+ *@author     Al Byers
  *@version    $Revision: 1.1 $
- *@since      2.1
+ *@since      3.0
 -->
-
-<html>
-<head>
-    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
-    <title>${requestAttributes.uiLabelMap[page.titleProperty]}</title>
-    <link rel='stylesheet' href='<@ofbizContentUrl>/images/maincss.css</@ofbizContentUrl>' type='text/css'>
-    <link rel='stylesheet' href='<@ofbizContentUrl>/images/tabstyles.css</@ofbizContentUrl>' type='text/css'>    
-    <link rel='stylesheet' href='<@ofbizContentUrl>/images/calendarstyles.css</@ofbizContentUrl>' type='text/css'>    
-</head>
-
-<body>
-            ${pages.get("/includes/errormsg.ftl")}
-            ${pages.get(page.path)}
-
-
-</body>
-</html>
+<#-- copy from content component /content/LookupContent.ftl  1.1
+		modification: 
+			- uiLabel migration  first line
+			- comment the head1 and the IruWrapper line
+		-->
+<#-- <div class="head1">${requestAttributes.uiLabelMap.CommonFind}&nbsp;${requestAttributes.uiLabelMap[page.entityName]}</div>
+<br>
+${lruWrapper.renderFormString()} -->
+<br> 
+${queryWrapper.renderFormString()}
+<br>
+${listWrapper.renderFormString()}
+<br>

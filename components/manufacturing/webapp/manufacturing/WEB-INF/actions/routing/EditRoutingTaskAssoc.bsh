@@ -34,12 +34,12 @@ import org.ofbiz.content.widget.html.*;
 security = request.getAttribute("security");
 delegator = request.getAttribute("delegator");
 
-
 String workEffortIdFrom = request.getParameter("workEffortIdFrom");
 String sequenceNum = request.getParameter("sequenceNum");
 String workEffortIdTo = request.getParameter("workEffortIdTo");
 String fromDateSt = request.getParameter("fromDate");
 Timestamp fromDate = null;
+
 try {fromDate = Timestamp.valueOf(fromDateSt);}
 catch (IllegalArgumentException e){ fromDate=null; }
 if (workEffortIdFrom == null)  workEffortIdFrom = request.getAttribute("workEffortIdFrom");

@@ -51,7 +51,7 @@ ${pages.get("/routing/RoutingTabBar.ftl")}
        <tr>
            <td align="right"><div class="tableheadtext">${uiLabelMap.ManufacturingRoutingTaskId}</div></td>
            <td><input type="text" name="workEffortIdTo" class="inputBox" size="20">
-						<a href="javascript:call_fieldlookup(document.addtaskassocform.workEffortIdTo,'<@ofbizUrl>/fieldLookup</@ofbizUrl>', 'lookupRoutingTask',450,300);"><img src='/images/fieldlookup.gif' width='15' height='14' border='0' alt='Click here For Field Lookup'></a>                          
+								<a href="javascript:call_fieldlookup(document.addtaskassocform.workEffortIdTo,'<@ofbizUrl>/LookupRoutingTask</@ofbizUrl>', 'vide',540,450);"><img src='/images/fieldlookup.gif' width='15' height='14' border='0' alt='Click here For Field Lookup'></a>
            </td>
            <td align="right"><div class="tableheadtext">${uiLabelMap.CommonFromDate}</div></td>
            <td><input type="text" name="fromDate" class="inputBox" size="25">

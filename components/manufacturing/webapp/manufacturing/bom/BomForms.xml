@@ -22,7 +22,7 @@
  *  THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  *
  *@author     Jacopo Cappellato (tiz@sastau.it)
- *@version    $Revision: 1.2 $
+ *@version    $Revision: 1.3 $
  *@since      3.0
 -->
 
@@ -88,7 +88,7 @@
 
     <form
         name="lookupVirtualProduct" 
-        default-title-style="tableheadtext"
+        default-map-name= "inputFields" default-title-style="tableheadtext"
         default-tooltip-style="tabletext" default-widget-style="inputBox"
         target="LookupVirtualProduct" title="" type="single">
         <auto-fields-entity entity-name="Product" default-field-type="find" />
@@ -161,7 +161,7 @@
         name="listLookupVirtualProduct" 
         default-title-style="tableheadtext"
         default-tooltip-style="tabletext" default-widget-style="display"
-        list-name="entityList" paginate-target="/LookupVirtualProduct" 
+        list-name="entityList" paginate-target="/GenericLookup" 
 	title="" type="list">
         <field name="productId" title="&amp;nbsp;" widget-style="buttontext">
             <hyperlink also-hidden="false" target-type="plain" description="${productId}" target="javascript:set_value('${productId}')"/>
