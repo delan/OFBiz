@@ -1,0 +1,8 @@
+
+To generate configuration files from the templates in a sub-directory of the templates directory just run something like:
+
+java -jar ofbiz.jar -start components/appservers/configure test
+
+All template files in the given sub-directory, in case "test", will be processed and put in a corresponding sub-directory of ${ofbiz.home}/setup.
+
+
