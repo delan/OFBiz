@@ -3,7 +3,7 @@
 
 <!--
 /**
- *  $Id: fieldtypeadvantage.xml,v 1.3 2004/06/11 09:06:03 jonesde Exp $
+ *  $Id: fieldtypeadvantage.xml,v 1.4 2004/07/27 06:09:48 ajzeneski Exp $
  *  Title: Entity Generator Definitions for the General Data Model
  *  Copyright (c) 2002-2004 The Open For Business Project - www.ofbiz.org
  *
@@ -41,15 +41,15 @@
 
     <!-- For the DBF type tables -->    
   <!--
-    <field-type-def type="currency-amount" sql-type="Numeric(18,2)" java-type="Double"><validate name="isSignedDouble" /></field-type-def>
-    <field-type-def type="floating-point" sql-type="Numeric(18,6)" java-type="Double"><validate name="isSignedDouble" /></field-type-def>
-    <field-type-def type="numeric" sql-type="Numeric(18,0)" java-type="Long"><validate name="isSignedLong" /></field-type-def>
+    <field-type-def type="currency-amount" sql-type="Numeric(18,2)" java-type="Double"><validate method="isSignedDouble" /></field-type-def>
+    <field-type-def type="floating-point" sql-type="Numeric(18,6)" java-type="Double"><validate method="isSignedDouble" /></field-type-def>
+    <field-type-def type="numeric" sql-type="Numeric(18,0)" java-type="Long"><validate method="isSignedLong" /></field-type-def>
   -->
 
     <!-- For the ADT type tables (this is the only decent way to go for OFBiz -->
-    <field-type-def type="currency-amount" sql-type="Money" java-type="Double"><validate name="isSignedDouble" /></field-type-def>
-    <field-type-def type="floating-point" sql-type="Double" java-type="Double"><validate name="isSignedDouble" /></field-type-def>
-    <field-type-def type="numeric" sql-type="Integer" java-type="Long"><validate name="isSignedLong" /></field-type-def>
+    <field-type-def type="currency-amount" sql-type="Money" java-type="Double"><validate method="isSignedDouble" /></field-type-def>
+    <field-type-def type="floating-point" sql-type="Double" java-type="Double"><validate method="isSignedDouble" /></field-type-def>
+    <field-type-def type="numeric" sql-type="Integer" java-type="Long"><validate method="isSignedLong" /></field-type-def>
 
     <field-type-def type="id" sql-type="Char(20)" java-type="String"></field-type-def>
     <field-type-def type="id-long" sql-type="Char(60)" java-type="String"></field-type-def>
@@ -67,12 +67,12 @@
     <field-type-def type="value" sql-type="Char(255)" java-type="String"></field-type-def>
 
    <!-- Specialized Types -->
-    <field-type-def type="credit-card-number" sql-type="Char(40)" java-type="String"><validate name="isAnyCard" /></field-type-def>
-    <field-type-def type="credit-card-date" sql-type="Char(20)" java-type="String"><validate name="isDateAfterToday" /></field-type-def>
-    <field-type-def type="email" sql-type="Char(255)" java-type="String"><validate name="isEmail" /></field-type-def>
+    <field-type-def type="credit-card-number" sql-type="Char(40)" java-type="String"><validate method="isAnyCard" /></field-type-def>
+    <field-type-def type="credit-card-date" sql-type="Char(20)" java-type="String"><validate method="isDateAfterToday" /></field-type-def>
+    <field-type-def type="email" sql-type="Char(255)" java-type="String"><validate method="isEmail" /></field-type-def>
     <field-type-def type="url" sql-type="Char(255)" java-type="String"></field-type-def>
-    <field-type-def type="id-ne" sql-type="Char(20)" java-type="String"><validate name="isNotEmpty" /></field-type-def>
-    <field-type-def type="id-long-ne" sql-type="Char(60)" java-type="String"><validate name="isNotEmpty" /></field-type-def>
-    <field-type-def type="id-vlong-ne" sql-type="Char(255)" java-type="String"><validate name="isNotEmpty" /></field-type-def>
-    <field-type-def type="tel-number" sql-type="Char(60)" java-type="String"><validate name="isInternationalPhoneNumber" /></field-type-def>
+    <field-type-def type="id-ne" sql-type="Char(20)" java-type="String"><validate method="isNotEmpty" /></field-type-def>
+    <field-type-def type="id-long-ne" sql-type="Char(60)" java-type="String"><validate method="isNotEmpty" /></field-type-def>
+    <field-type-def type="id-vlong-ne" sql-type="Char(255)" java-type="String"><validate method="isNotEmpty" /></field-type-def>
+    <field-type-def type="tel-number" sql-type="Char(60)" java-type="String"><validate method="isInternationalPhoneNumber" /></field-type-def>
 </fieldtypemodel>

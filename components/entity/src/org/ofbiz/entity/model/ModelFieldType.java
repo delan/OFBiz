@@ -1,5 +1,5 @@
 /*
- * $Id: ModelFieldType.java,v 1.1 2003/08/16 22:05:48 ajzeneski Exp $
+ * $Id: ModelFieldType.java,v 1.2 2004/07/27 06:09:48 ajzeneski Exp $
  *
  *  Copyright (c) 2001, 2002 The Open For Business Project - www.ofbiz.org
  *
@@ -32,7 +32,7 @@ import org.ofbiz.base.util.*;
  * Generic Entity - FieldType model class
  *
  * @author     <a href="mailto:jonesde@ofbiz.org">David E. Jones</a> 
- * @version    $Revision: 1.1 $
+ * @version    $Revision: 1.2 $
  * @since      2.0
  */
 public class ModelFieldType {
@@ -63,11 +63,13 @@ public class ModelFieldType {
         this.sqlTypeAlias = UtilXml.checkEmpty(fieldTypeElement.getAttribute("sql-type-alias"));
 
         NodeList validateList = fieldTypeElement.getElementsByTagName("validate");
-
         for (int i = 0; i < validateList.getLength(); i++) {
             Element element = (Element) validateList.item(i);
-
-            this.validators.add(UtilXml.checkEmpty(element.getAttribute("name")));
+            String methodName = element.getAttribute("method");
+            String className = element.getAttribute("class");
+            if (methodName != null) {
+                this.validators.add(new ModelFieldValidator(className, methodName));
+            }            
         }
     }
 
@@ -120,5 +122,30 @@ public class ModelFieldType {
             return 5000;
         }
         return 20;
+    }
+
+    class ModelFieldValidator {
+
+        protected String validatorClass = null;
+        protected String validatorMethod = null;
+
+        public ModelFieldValidator(String className, String methodName) {
+            this.validatorClass = className;
+            this.validatorMethod = methodName;
+        }
+
+        public String getClassName() {
+            if (UtilValidate.isNotEmpty(validatorClass) && UtilValidate.isNotEmpty(validatorMethod)) {
+                return validatorClass;
+            }
+            return null;
+        }
+
+        public String getMethodName() {
+            if (UtilValidate.isNotEmpty(validatorClass) && UtilValidate.isNotEmpty(validatorMethod)) {
+                return validatorMethod;
+            }
+            return null;
+        }
     }
 }
