@@ -332,6 +332,7 @@ public class Receipt extends GenericDevice implements DialogCallback {
         Map expandMap = this.makeCodeExpandMap(trans, type);
         expandMap.putAll(payInfo);
         // adjust the padding
+        expandMap.put("authInfoString", padString((String) expandMap.get("authInfoString"), infoLength[type], false));
         expandMap.put("infoString", padString((String) expandMap.get("infoString"), infoLength[type], false));
         expandMap.put("amount", padString((String) expandMap.get("amount"), priceLength[type], false));
         String toPrint = FlexibleStringExpander.expandString(template, expandMap);
@@ -369,6 +370,9 @@ public class Receipt extends GenericDevice implements DialogCallback {
     }
 
     private String padString(String str, int setLen, boolean padEnd) {
+        if (str == null) {
+            return null;
+        }
         int stringLen = str.length();
         int diff = setLen - stringLen;
         if (diff < 0) {
