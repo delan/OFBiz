@@ -68,7 +68,7 @@
         <TD><%=UtilFormatOut.formatQuantity(utilCache.getMissCount())%></TD>
         <TD><%=UtilFormatOut.formatQuantity(utilCache.getMaxSize())%></TD>
         <TD><%=UtilFormatOut.formatQuantity(utilCache.getExpireTime())%></TD>
-        <TD><%=Boolean.toString(utilCache.getUseSoftReference())%></TD>
+        <TD><%=(new Boolean(utilCache.getUseSoftReference())).toString()%></TD>
         <TD align=center valign=middle>
           <a href='<ofbiz:url>/FindUtilCacheElements?UTIL_CACHE_NAME=<%=UtilFormatOut.checkNull(utilCache.getName())%></ofbiz:url>' class="buttontext">Elements</a>
         </TD>
