@@ -1,5 +1,5 @@
 /*
- * $Id: ContentServices.java,v 1.10 2003/12/21 04:12:06 jonesde Exp $
+ * $Id: ContentServices.java,v 1.11 2003/12/21 06:11:27 jonesde Exp $
  * 
  * Copyright (c) 2001, 2002 The Open For Business Project - www.ofbiz.org
  * 
@@ -48,7 +48,7 @@ import freemarker.template.SimpleHash;
  * ContentServices Class
  * 
  * @author <a href="mailto:byersa@automationgroups.com">Al Byers</a>
- * @version $Revision: 1.10 $
+ * @version $Revision: 1.11 $
  * @since 2.2
  * 
  *  
@@ -438,10 +438,7 @@ public class ContentServices {
 
         GenericValue contentAssoc = null;
         try {
-            contentAssoc =
-                delegator.findByPrimaryKey(
-                    "ContentAssoc",
-                    UtilMisc.toMap("contentId", contentId, "contentIdTo", contentIdTo, "contentAssocTypeId", contentAssocTypeId, "fromDate", fromDate));
+            contentAssoc = delegator.findByPrimaryKey("ContentAssoc", UtilMisc.toMap("contentId", contentId, "contentIdTo", contentIdTo, "contentAssocTypeId", contentAssocTypeId, "fromDate", fromDate));
         } catch (GenericEntityException e) {
             System.out.println("Entity Error:" + e.getMessage());
             return ServiceUtil.returnError("Error in retrieving Content. " + e.getMessage());
@@ -449,8 +446,7 @@ public class ContentServices {
         contentAssoc.put("contentAssocPredicateId", context.get("contentAssocPredicateIdFrom"));
         contentAssoc.put("dataSourceId", context.get("dataSourceId"));
         String thruDateStr = (String) context.get("thruDate");
-        if (UtilValidate.isEmpty(thruDateStr)) {
-        } else {
+        if (!UtilValidate.isEmpty(thruDateStr)) {
             contentAssoc.setString("thruDate", (String) context.get("thruDate"));
         }
         contentAssoc.set("sequenceNum", context.get("sequenceNum"));
@@ -512,7 +508,6 @@ public class ContentServices {
      * Deactivates any active ContentAssoc (except the current one) that is associated with the passed in template/layout contentId and mapKey.
      */
     public static Map deactivateAssocs(DispatchContext dctx, Map context) {
-
         GenericDelegator delegator = dctx.getDelegator();
         String contentIdTo = (String) context.get("contentIdTo");
         String mapKey = (String) context.get("mapKey");
@@ -522,19 +517,10 @@ public class ContentServices {
         Map results = new HashMap();
         try {
             GenericValue activeAssoc =
-                delegator.findByPrimaryKey(
-                    "ContentAssoc",
-                    UtilMisc.toMap("contentId", activeContentId, "contentIdTo", contentIdTo, "fromDate", fromDate, "contentAssocTypeId", contentAssocTypeId));
+                delegator.findByPrimaryKey("ContentAssoc", UtilMisc.toMap("contentId", activeContentId, "contentIdTo", contentIdTo, "fromDate", fromDate, "contentAssocTypeId", contentAssocTypeId));
             if (activeAssoc == null) {
-                return ServiceUtil.returnError(
-                    "No association found for contentId="
-                        + activeContentId
-                        + " and contentIdTo="
-                        + contentIdTo
-                        + " and contentAssocTypeId="
-                        + contentAssocTypeId
-                        + " and fromDate="
-                        + fromDate);
+                return ServiceUtil.returnError("No association found for contentId=" + activeContentId + " and contentIdTo=" + contentIdTo
+                        + " and contentAssocTypeId=" + contentAssocTypeId + " and fromDate=" + fromDate);
             }
             String sequenceNum = (String) activeAssoc.get("sequenceNum");
             List exprList = new ArrayList();
@@ -608,19 +594,8 @@ public class ContentServices {
         }
 
         try {
-            results =
-                ContentWorker.renderSubContentAsText(
-                    delegator,
-                    contentId,
-                    out,
-                    mapKey,
-                    subContentId,
-                    subContentDataResourceView,
-                    templateContext,
-                    locale,
-                    mimeTypeId,
-                    userLogin,
-                    fromDate);
+            results = ContentWorker.renderSubContentAsText(delegator, contentId, out, mapKey, subContentId, subContentDataResourceView,
+                    templateContext, locale, mimeTypeId, userLogin, fromDate);
         } catch (IOException e) {
             return ServiceUtil.returnError(e.toString());
         }

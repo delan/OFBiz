@@ -1,5 +1,5 @@
 /*
- * $Id: ContentWorker.java,v 1.5 2003/12/19 06:45:54 jonesde Exp $
+ * $Id: ContentWorker.java,v 1.6 2003/12/21 06:11:27 jonesde Exp $
  * 
  * Copyright (c) 2001, 2002 The Open For Business Project - www.ofbiz.org
  * 
@@ -52,7 +52,7 @@ import freemarker.template.SimpleHash;
  * ContentWorker Class
  * 
  * @author <a href="mailto:byersa@automationgroups.com">Al Byers</a>
- * @version $Revision: 1.5 $
+ * @version $Revision: 1.6 $
  * @since 2.2
  * 
  *  
@@ -63,135 +63,153 @@ public class ContentWorker {
 
     public static GenericValue findAlternateLocaleContent(GenericDelegator delegator, GenericValue view, Locale locale) throws IOException {
         GenericValue contentAssocDataResourceViewFrom = view;
-        int lastLen = 9999;
-        //String localeStr = (locale != null) ? locale.toString() : "";
+        if (locale == null) {
+            return contentAssocDataResourceViewFrom;
+        }
+        
+        String localeStr = locale.toString();
+        boolean isTwoLetterLocale = localeStr.length() == 2;
 
         List alternateViews = null;
         try {
-            alternateViews = view.getRelated("ContentAssocDataResourceViewFrom");
+            alternateViews = view.getRelated("ContentAssocDataResourceViewFrom", UtilMisc.toMap("caContentAssocTypeId", "ALTERNATE_LOCALE"), UtilMisc.toList("-caFromDate"));
         } catch (GenericEntityException e) {
             throw new IOException(e.getMessage());
         }
-        for (int i = 0; i < alternateViews.size(); i++) {
-            GenericValue thisView = (GenericValue) alternateViews.get(i);
-            String thisLocalString = (String) thisView.get("localeString");
-            if (UtilValidate.isEmpty(thisLocalString))
-                break;
-            //int pos = thisLocalString.indexOf(localeStr, 0);
-            int len = thisLocalString.length();
-            if (len < lastLen) {
-                contentAssocDataResourceViewFrom = thisView;
-                lastLen = len;
+        
+        Iterator alternateViewIter = alternateViews.iterator();
+        while (alternateViewIter.hasNext()) {
+            GenericValue thisView = (GenericValue) alternateViewIter.next();
+            String currentLocaleString = thisView.getString("localeString");
+            if (UtilValidate.isEmpty(currentLocaleString)) {
+                continue;
+            }
+            
+            int currentLocaleLength = currentLocaleString.length();
+            
+            // could be a 2 letter or 5 letter code
+            if (isTwoLetterLocale) {
+                if (currentLocaleLength == 2) {
+                    // if the currentLocaleString is only a two letter code and the current one is a two and it matches, we are done
+                    if (localeStr.equals(currentLocaleString)) {
+                        contentAssocDataResourceViewFrom = thisView;
+                        break;
+                    }
+                } else if (currentLocaleLength == 5) {
+                    // if the currentLocaleString is only a two letter code and the current one is a five, match up but keep going
+                    if (localeStr.equals(currentLocaleString.substring(0, 2))) {
+                        contentAssocDataResourceViewFrom = thisView;
+                    }
+                }
+            } else {
+                if (currentLocaleLength == 2) {
+                    // if the currentLocaleString is a five letter code and the current one is a two and it matches, keep going
+                    if (localeStr.substring(0, 2).equals(currentLocaleString)) {
+                        contentAssocDataResourceViewFrom = thisView;
+                    }
+                } else if (currentLocaleLength == 5) {
+                    // if the currentLocaleString is a five letter code and the current one is a five, if it matches we are done
+                    if (localeStr.equals(currentLocaleString)) {
+                        contentAssocDataResourceViewFrom = thisView;
+                        break;
+                    }
+                }
             }
         }
+        
         return contentAssocDataResourceViewFrom;
     }
 
-    public static void traverse(
-        GenericDelegator delegator,
-        GenericValue content,
-        Timestamp fromDate,
-        Timestamp thruDate,
-        Map whenMap,
-        int depthIdx,
-        Map masterNode,
-        String contentAssocTypeId,
-        List pickList,
-        String direction) {
-        //Debug.logInfo("contentId(traverse - 0):" + content.get("contentId") + " depth:" + depthIdx,null);
-        //Debug.logInfo("masterNode(traverse -0):" + masterNode,null);
-        //Debug.logInfo("traverse, fromDate:" + fromDate,null);
-        //Debug.logInfo("traverse, thruDate:" + thruDate,null);
+    public static void traverse(GenericDelegator delegator, GenericValue content, Timestamp fromDate, Timestamp thruDate, Map whenMap,
+            int depthIdx, Map masterNode, String contentAssocTypeId, List pickList, String direction) {
+        //if (Debug.infoOn()) Debug.logInfo("contentId(traverse - 0):" + content.get("contentId") + " depth:" + depthIdx,null);
+        //if (Debug.infoOn()) Debug.logInfo("masterNode(traverse -0):" + masterNode,null);
+        //if (Debug.infoOn()) Debug.logInfo("traverse, fromDate:" + fromDate,null);
+        //if (Debug.infoOn()) Debug.logInfo("traverse, thruDate:" + thruDate,null);
         
         //String startContentAssocTypeId = null;
         String contentTypeId = null;
         String contentId = null;
         try {
-            if (contentAssocTypeId == null)
+            if (contentAssocTypeId == null) {
                 contentAssocTypeId = "";
+            }
             contentId = (String) content.get("contentId");
             contentTypeId = (String) content.get("contentTypeId");
-            //Debug.logInfo("contentTypeId(traverse):" + contentTypeId,null);
+            //if (Debug.infoOn()) Debug.logInfo("contentTypeId(traverse):" + contentTypeId,null);
             List topicList = content.getRelatedByAnd("ToContentAssoc", UtilMisc.toMap("contentAssocTypeId", "TOPIC"));
             List topics = new ArrayList();
             for (int i = 0; i < topicList.size(); i++) {
                 GenericValue assoc = (GenericValue) topicList.get(i);
                 topics.add(assoc.get("contentId"));
             }
-            //Debug.logInfo("topics(traverse):" + topics,null);
+            //if (Debug.infoOn()) Debug.logInfo("topics(traverse):" + topics,null);
             List keywordList = content.getRelatedByAnd("ToContentAssoc", UtilMisc.toMap("contentAssocTypeId", "KEYWORD"));
             List keywords = new ArrayList();
             for (int i = 0; i < keywordList.size(); i++) {
                 GenericValue assoc = (GenericValue) keywordList.get(i);
                 keywords.add(assoc.get("contentId"));
             }
-            //Debug.logInfo("keywords(traverse):" + keywords,null);
+            //if (Debug.infoOn()) Debug.logInfo("keywords(traverse):" + keywords,null);
             List purposeValueList = content.getRelatedCache("ContentPurpose");
             List purposes = new ArrayList();
             for (int i = 0; i < purposeValueList.size(); i++) {
                 GenericValue purposeValue = (GenericValue) purposeValueList.get(i);
                 purposes.add(purposeValue.get("contentPurposeTypeId"));
             }
-            //Debug.logInfo("purposes(traverse):" + purposes,null);
+            //if (Debug.infoOn()) Debug.logInfo("purposes(traverse):" + purposes,null);
             List contentTypeAncestry = new ArrayList();
             getContentTypeAncestry(delegator, contentTypeId, contentTypeAncestry);
 
             Map context = new HashMap();
             context.put("content", content);
             context.put("contentAssocTypeId", contentAssocTypeId);
-            //Debug.logInfo("contentAssocTypeId(traverse):" + contentAssocTypeId,null);
+            //if (Debug.infoOn()) Debug.logInfo("contentAssocTypeId(traverse):" + contentAssocTypeId,null);
             //context.put("related", related);
             context.put("purposes", purposes);
             context.put("topics", topics);
             context.put("keywords", keywords);
             context.put("typeAncestry", contentTypeAncestry);
-            //Debug.logInfo("context(traverse):" + context,null);
+            //if (Debug.infoOn()) Debug.logInfo("context(traverse):" + context,null);
             boolean isPick = checkWhen(context, (String) whenMap.get("pickWhen"));
-            //Debug.logInfo("isPick(traverse):" + isPick,null);
+            //if (Debug.infoOn()) Debug.logInfo("isPick(traverse):" + isPick,null);
             boolean isReturnBefore = checkReturnWhen(context, (String) whenMap.get("returnBeforePickWhen"));
-            //Debug.logInfo("isReturnBefore:" + isReturnBefore,null);
+            //if (Debug.infoOn()) Debug.logInfo("isReturnBefore:" + isReturnBefore,null);
             Map thisNode = null;
             if (isPick || !isReturnBefore) {
-                //Debug.logInfo("masterNode(traverse -1):" + masterNode,null);
+                //if (Debug.infoOn()) Debug.logInfo("masterNode(traverse -1):" + masterNode,null);
                 thisNode = new HashMap();
                 thisNode.put("contentId", contentId);
                 thisNode.put("contentTypeId", contentTypeId);
                 thisNode.put("contentAssocTypeId", contentAssocTypeId);
-                //Debug.logInfo("thisNode(traverse):" + thisNode,null);
+                //if (Debug.infoOn()) Debug.logInfo("thisNode(traverse):" + thisNode,null);
                 List kids = (List) masterNode.get("kids");
                 if (kids == null) {
                     kids = new ArrayList();
                     masterNode.put("kids", kids);
                 }
                 kids.add(thisNode);
-                //Debug.logInfo("masterNode(traverse -2):" + masterNode,null);
+                //if (Debug.infoOn()) Debug.logInfo("masterNode(traverse -2):" + masterNode,null);
             }
             if (isPick) {
                 pickList.add(content);
                 thisNode.put("value", content);
-                //Debug.logInfo("thisNode2(traverse):" + thisNode,null);
-                //Debug.logInfo("masterNode(traverse -3):" + masterNode,null);
+                //if (Debug.infoOn()) Debug.logInfo("thisNode2(traverse):" + thisNode,null);
+                //if (Debug.infoOn()) Debug.logInfo("masterNode(traverse -3):" + masterNode,null);
             }
             boolean isReturnAfter = checkReturnWhen(context, (String) whenMap.get("returnAfterPickWhen"));
-            //Debug.logInfo("isReturnAfter:" + isReturnAfter,null);
+            //if (Debug.infoOn()) Debug.logInfo("isReturnAfter:" + isReturnAfter,null);
             if (!isReturnAfter) {
 
-                //Debug.logInfo("traverse, getContentAssocs, contentId:" + contentId,null);
+                //if (Debug.infoOn()) Debug.logInfo("traverse, getContentAssocs, contentId:" + contentId,null);
                 List relatedAssocs = getContentAssocsWithId(delegator, contentId, fromDate, thruDate, direction, new ArrayList());
-                //Debug.logInfo("traverse, relatedAssocs:" + relatedAssocs,null);
+                //if (Debug.infoOn()) Debug.logInfo("traverse, relatedAssocs:" + relatedAssocs,null);
                 Iterator it = relatedAssocs.iterator();
                 Map assocContext = new HashMap();
                 assocContext.put("related", relatedAssocs);
                 while (it.hasNext()) {
                     GenericValue assocValue = (GenericValue) it.next();
-                    Debug.logInfo(
-                        "assocValue, Id:"
-                            + assocValue.get("contentId")
-                            + " To:"
-                            + assocValue.get("contentIdTo")
-                            + " AssocTypeId:"
-                            + assocValue.get("contentAssocTypeId"),
-                        null);
+                    if (Debug.infoOn()) Debug.logInfo("assocValue, Id:" + assocValue.get("contentId") + " To:" + assocValue.get("contentIdTo") + " AssocTypeId:" + assocValue.get("contentAssocTypeId"), null);
                     contentAssocTypeId = (String) assocValue.get("contentAssocTypeId");
                     assocContext.put("contentAssocTypeId", contentAssocTypeId);
                     //assocContext.put("contentTypeId", assocValue.get("contentTypeId") );
@@ -209,14 +227,14 @@ public class ContentWorker {
                         relatedDirection = "To";
                     }
 
-                    //Debug.logInfo("assocContext(traverse - 2):" + assocContext,null);
+                    //if (Debug.infoOn()) Debug.logInfo("assocContext(traverse - 2):" + assocContext,null);
                     boolean isFollow = checkWhen(assocContext, (String) whenMap.get("followWhen"));
-                    //Debug.logInfo("isFollow:" + isFollow,null);
-                    //Debug.logInfo("assocRelation:" + assocRelation,null);
-                    //Debug.logInfo("relatedDirection:" + relatedDirection,null);
+                    //if (Debug.infoOn()) Debug.logInfo("isFollow:" + isFollow,null);
+                    //if (Debug.infoOn()) Debug.logInfo("assocRelation:" + assocRelation,null);
+                    //if (Debug.infoOn()) Debug.logInfo("relatedDirection:" + relatedDirection,null);
                     if (isFollow) {
                         GenericValue thisContent = assocValue.getRelatedOne(assocRelation);
-                        //Debug.logInfo("thisContent, id:" + thisContent.get("contentId"),null);
+                        //if (Debug.infoOn()) Debug.logInfo("thisContent, id:" + thisContent.get("contentId"),null);
                         traverse(delegator, thisContent, fromDate, thruDate, whenMap, depthIdx + 1, thisNode, contentAssocTypeId, pickList, relatedDirection);
                     }
                 }
@@ -228,7 +246,7 @@ public class ContentWorker {
     }
 
     public static boolean checkWhen(Map context, String whenStr) {
-        //Debug.logInfo("whenStr:" + whenStr,null);
+        //if (Debug.infoOn()) Debug.logInfo("whenStr:" + whenStr,null);
         boolean isWhen = true; //opposite default from checkReturnWhen
         if (whenStr != null && whenStr.length() > 0) {
             FlexibleStringExpander fse = new FlexibleStringExpander(whenStr);
@@ -244,7 +262,7 @@ public class ContentWorker {
     }
 
     public static boolean checkReturnWhen(Map context, String whenStr) {
-        //Debug.logInfo("checkReturnWhen:" + whenStr,null);
+        //if (Debug.infoOn()) Debug.logInfo("checkReturnWhen:" + whenStr,null);
         boolean isWhen = false; //opposite default from checkWhen
         if (whenStr != null && whenStr.length() > 0) {
             FlexibleStringExpander fse = new FlexibleStringExpander(whenStr);
@@ -292,15 +310,7 @@ public class ContentWorker {
 
     }
 
-    public static List getAssociatedContentView(
-        GenericValue currentContent,
-        String linkDir,
-        List assocTypes,
-        List contentTypes,
-        String fromDate,
-        String thruDate)
-        throws GenericEntityException {
-
+    public static List getAssociatedContentView(GenericValue currentContent, String linkDir, List assocTypes, List contentTypes, String fromDate, String thruDate) throws GenericEntityException {
         List contentList = new ArrayList();
         List exprListAnd = new ArrayList();
 
@@ -354,8 +364,7 @@ public class ContentWorker {
         return contentList;
     }
 
-    public static List getAssociations(GenericValue currentContent, String linkDir, List assocTypes, String strFromDate, String strThruDate)
-        throws GenericEntityException {
+    public static List getAssociations(GenericValue currentContent, String linkDir, List assocTypes, String strFromDate, String strThruDate) throws GenericEntityException {
         GenericDelegator delegator = currentContent.getDelegator();
         String origContentId = (String) currentContent.get("contentId");
         Timestamp fromDate = null;
@@ -370,15 +379,8 @@ public class ContentWorker {
         return assocs;
     }
 
-    public static List getContentAssocsWithId(
-        GenericDelegator delegator,
-        String contentId,
-        Timestamp fromDate,
-        Timestamp thruDate,
-        String direction,
-        List assocTypes)
-        throws GenericEntityException {
-        //Debug.logInfo("getContentAssocs, direction:" + direction,null);
+    public static List getContentAssocsWithId(GenericDelegator delegator, String contentId, Timestamp fromDate, Timestamp thruDate, String direction, List assocTypes) throws GenericEntityException {
+        //if (Debug.infoOn()) Debug.logInfo("getContentAssocs, direction:" + direction,null);
         List exprList = new ArrayList();
         EntityExpr joinExpr = null;
         EntityExpr expr = null;
@@ -425,10 +427,10 @@ public class ContentWorker {
         }
         EntityConditionList assocExprList = new EntityConditionList(exprList, EntityOperator.AND);
         List relatedAssocs = delegator.findByCondition("ContentAssoc", assocExprList, new ArrayList(), new ArrayList());
-        //Debug.logInfo("relatedAssocs:", null);
+        //if (Debug.infoOn()) Debug.logInfo("relatedAssocs:", null);
         for (int i = 0; i < relatedAssocs.size(); i++) {
             GenericValue a = (GenericValue) relatedAssocs.get(i);
-            Debug.logInfo(" contentId:" + a.get("contentId") + " To:" + a.get("contentIdTo") + " AssocTypeId:" + a.get("contentAssocTypeId"), null);
+            if (Debug.infoOn()) Debug.logInfo(" contentId:" + a.get("contentId") + " To:" + a.get("contentIdTo") + " AssocTypeId:" + a.get("contentAssocTypeId"), null);
 
         }
         return relatedAssocs;
@@ -527,7 +529,7 @@ public class ContentWorker {
             SimpleHash templateContext, Locale locale, String mimeTypeId, GenericValue userLogin, Timestamp fromDate) throws IOException {
 
         //Map context = (Map) FreeMarkerWorker.get(templateContext, "context");
-        //Debug.logInfo(" in renderSubContentAsText, mimeTypeId:" + mimeTypeId, module);
+        //if (Debug.infoOn()) Debug.logInfo(" in renderSubContentAsText, mimeTypeId:" + mimeTypeId, module);
         Map results = new HashMap();
         //GenericValue content = null;
         if (subContentDataResourceView == null) {
@@ -536,7 +538,7 @@ public class ContentWorker {
         results.put("view", subContentDataResourceView);
         if (subContentDataResourceView == null) {
             //throw new IOException("SubContentDataResourceView is null.");
-            Debug.logInfo(" in renderSubContentAsText, SubContentDataResourceView is null", module);
+            if (Debug.infoOn()) Debug.logInfo(" in renderSubContentAsText, SubContentDataResourceView is null", module);
             return results;
         }
 
@@ -555,7 +557,7 @@ public class ContentWorker {
 
     public static Map renderContentAsText(GenericDelegator delegator, String contentId, Writer out, SimpleHash templateContext, GenericValue view, Locale locale, String mimeTypeId) throws IOException {
         //Map context = (Map) FreeMarkerWorker.get(templateContext, "context");
-        //Debug.logInfo(" in renderContentAsText, mimeTypeId:" + mimeTypeId, module);
+        //if (Debug.infoOn()) Debug.logInfo(" in renderContentAsText, mimeTypeId:" + mimeTypeId, module);
         Map results = new HashMap();
         GenericValue content = null;
 
@@ -591,9 +593,8 @@ public class ContentWorker {
             String targetLocaleString = locale.toString();
             String thisLocaleString = (String) view.get("localeString");
             thisLocaleString = (thisLocaleString != null) ? thisLocaleString : "";
-            //Debug.logInfo("thisLocaleString" + thisLocaleString, "");
+            //if (Debug.infoOn()) Debug.logInfo("thisLocaleString" + thisLocaleString, "");
             if (targetLocaleString != null && !targetLocaleString.equalsIgnoreCase(thisLocaleString)) {
-
                 view = findAlternateLocaleContent(delegator, view, locale);
             }
         }
