@@ -1,6 +1,9 @@
 /*
  * $Id$
  * $Log$
+ * Revision 1.8  2001/12/23 13:47:12  jonesde
+ * Fixed a bug stopping a new workeffort from being handled correctly, caused in the refactoring our preStoreOther earlier
+ *
  * Revision 1.7  2001/12/23 06:29:42  jonesde
  * Replaced preStoreOther stuff with storeAll
  *
@@ -69,7 +72,8 @@ public class WorkEffortEvents {
      */
     public static String updateWorkEffort(HttpServletRequest request, HttpServletResponse response) {
         String errMsg = "";
-        GenericDelegator delegator = (GenericDelegator) request.getAttribute("delegator");
+        LocalDispatcher dispatcher = (LocalDispatcher) request.getSession().getServletContext().getAttribute("dispatcher");
+        //GenericDelegator delegator = (GenericDelegator) request.getAttribute("delegator");
         Security security = (Security) request.getAttribute("security");
 
         GenericValue userLogin = (GenericValue) request.getSession().getAttribute(SiteDefs.USER_LOGIN);
@@ -85,247 +89,124 @@ public class WorkEffortEvents {
             return "error";
         }
 
-        String workEffortId = null;
-        GenericValue workEffort = null;
-        if ("CREATE".equals(updateMode)) {
-            Long nextSeqId = delegator.getNextSeqId("WorkEffort");
-            if (nextSeqId == null) {
-                request.setAttribute("ERROR_MESSAGE", "Could not get an Id for a new WorkEffort (NextSeqIdError)");
-                return "error";
-            } else {
-                workEffortId = nextSeqId.toString();
-            }
-        } else {
-            //get, and validate, the primary keys
-            workEffortId = request.getParameter("WORK_EFFORT_ID");
-            if (!UtilValidate.isNotEmpty(workEffortId))
-                errMsg += "<li>Work Effort ID missing.";
-            if (errMsg.length() > 0) {
-                errMsg = "<b>The following errors occured:</b><br><ul>" + errMsg + "</ul>";
-                request.setAttribute("ERROR_MESSAGE", errMsg);
-                return "error";
-            }
-
-            //do a findByPrimary key to see if the entity exists, and other things later
-            try {
-                workEffort = delegator.findByPrimaryKey("WorkEffort", UtilMisc.toMap("workEffortId", workEffortId));
-            } catch (GenericEntityException e) {
-                Debug.logWarning(e);
-            }
-
-            //get a collection of workEffortPartyAssignments, if empty then this user CANNOT view the event, unless they have permission to view all
-            Collection workEffortPartyAssignments = null;
-            if (userLogin != null && userLogin.get("partyId") != null && workEffortId != null) {
-                try {
-                    workEffortPartyAssignments =
-                            delegator.findByAnd("WorkEffortPartyAssignment", UtilMisc.toMap("workEffortId", workEffortId, "partyId", userLogin.get("partyId")));
-                } catch (GenericEntityException e) {
-                    Debug.logWarning(e);
-                }
-            }
-
-            //check permissions before moving on:
-            // 1) if create, no permission necessary
-            // 2) if update or delete logged in user must be associated OR have the corresponding UPDATE or DELETE permissions
-            boolean associatedWith = (workEffortPartyAssignments != null && workEffortPartyAssignments.size() > 0) ? true : false;
-            if (!associatedWith && !security.hasEntityPermission("WORKEFFORTMGR", "_" + updateMode, request.getSession())) {
-                request.setAttribute("ERROR_MESSAGE", "You cannot update or delete this Work Effort, you must either be associated with it or have administration permission.");
-                return "error";
-            }
-        }
-
         //if this is a delete, do that before getting all of the non-pk parameters and validating them
         if (updateMode.equals("DELETE")) {
-            if (workEffort != null) {
-                //NOTE: this is pretty weak for handling removal in clean way; what we really need
-                // is the upcoming generic transaction token stuff in the Entity Engine
-
-                //Remove associated/dependent entries from other tables here
-                try {
-                    workEffort.removeRelated("WorkEffortAttribute");
-                } catch (GenericEntityException e) {
-                    errMsg += e.getMessage();
-                }
-                try {
-                    workEffort.removeRelated("WorkEffortCategoryMember");
-                } catch (GenericEntityException e) {
-                    errMsg += e.getMessage();
-                }
-                try {
-                    workEffort.removeRelated("WorkEffortPartyAssignment");
-                } catch (GenericEntityException e) {
-                    errMsg += e.getMessage();
-                }
-                try {
-                    workEffort.removeRelated("FromWorkEffortAssoc");
-                } catch (GenericEntityException e) {
-                    errMsg += e.getMessage();
-                }
-                try {
-                    workEffort.removeRelated("ToWorkEffortAssoc");
-                } catch (GenericEntityException e) {
-                    errMsg += e.getMessage();
-                }
-                try {
-                    workEffort.removeRelated("WorkEffortStatus");
-                } catch (GenericEntityException e) {
-                    errMsg += e.getMessage();
-                }
-                try {
-                    workEffort.removeRelated("ContextRuntimeData");
-                } catch (GenericEntityException e) {
-                    errMsg += e.getMessage();
-                }
-                try {
-                    workEffort.removeRelated("ResultRuntimeData");
-                } catch (GenericEntityException e) {
-                    errMsg += e.getMessage();
-                }
-                try {
-                    workEffort.removeRelated("NoteData");
-                } catch (GenericEntityException e) {
-                    errMsg += e.getMessage();
-                }
-                try {
-                    workEffort.removeRelated("RecurrenceInfo");
-                } catch (GenericEntityException e) {
-                    errMsg += e.getMessage();
-                }
-                //Delete actual main entity last, just in case database is set up to do a cascading delete, caches won't get cleared
-                try {
-                    workEffort.remove();
-                } catch (GenericEntityException e) {
-                    errMsg += e.getMessage();
-                }
-                if (errMsg.length() > 0) {
-                    errMsg = "<b>The following errors occured:</b><br><ul>" + errMsg + "</ul>";
-                    request.setAttribute("ERROR_MESSAGE", errMsg);
-                    return "error";
-                } else {
-                    return "success";
-                }
-            } else {
-                request.setAttribute("ERROR_MESSAGE", "Could not find Work Effort with ID" + workEffortId + ", workEffort not deleted.");
+            // invoke the service
+            Map result = null;
+            Map context = new HashMap();
+            context.put("workEffortId", request.getParameter("WORK_EFFORT_ID"));
+            context.put("userLogin", userLogin);
+            try {
+                result = dispatcher.runSync("deleteWorkEffort",context);
+            } catch (GenericServiceException e) {
+                request.setAttribute(SiteDefs.ERROR_MESSAGE,"ERROR: Could not delete WorkEffort (problem invoking the service: " + e.getMessage() + ")");
+                Debug.logError(e);
                 return "error";
             }
+
+            // check for error message(s)
+            String errorMessage = ServiceUtil.makeHtmlErrorMessage(result);
+            if (errorMessage != null)
+                request.setAttribute(SiteDefs.ERROR_MESSAGE, errorMessage);
+
+            // return the result
+            return result.containsKey(ModelService.RESPONSE_MESSAGE) ? (String)result.get(ModelService.RESPONSE_MESSAGE) : "success";
         }
 
-        String workEffortTypeId = request.getParameter("WORK_EFFORT_TYPE_ID");
-        String currentStatusId = request.getParameter("CURRENT_STATUS_ID");
-
-        String universalId = request.getParameter("UNIVERSAL_ID");
-        String scopeEnumId = request.getParameter("SCOPE_ENUM_ID");
-        String priorityStr = request.getParameter("PRIORITY");
         Long priority = null;
-        String workEffortName = request.getParameter("WORK_EFFORT_NAME");
-        String description = request.getParameter("DESCRIPTION");
-        String locationDesc = request.getParameter("LOCATION_DESC");
 
-        String estimatedStartDateStr = request.getParameter("ESTIMATED_START_DATE");
         java.sql.Timestamp estimatedStartDate = null;
-        String estimatedCompletionDateStr = request.getParameter("ESTIMATED_COMPLETION_DATE");
         java.sql.Timestamp estimatedCompletionDate = null;
 
-        String actualStartDateStr = request.getParameter("ACTUAL_START_DATE");
         java.sql.Timestamp actualStartDate = null;
-        String actualCompletionDateStr = request.getParameter("ACTUAL_COMPLETION_DATE");
         java.sql.Timestamp actualCompletionDate = null;
 
-        String estimatedMilliSecondsStr = request.getParameter("ESTIMATED_MILLI_SECONDS");
         Double estimatedMilliSeconds = null;
-        String actualMilliSecondsStr = request.getParameter("ACTUAL_MILLI_SECONDS");
         Double actualMilliSeconds = null;
-        String totalMilliSecondsAllowedStr = request.getParameter("TOTAL_MILLI_SECONDS_ALLOWED");
+
         Double totalMilliSecondsAllowed = null;
-
-        String totalMoneyAllowedStr = request.getParameter("TOTAL_MONEY_ALLOWED");
         Double totalMoneyAllowed = null;
-        String moneyUomId = request.getParameter("MONEY_UOM_ID");
-
-        String specialTerms = request.getParameter("SPECIAL_TERMS");
-        String timeTransparencyStr = request.getParameter("TIME_TRANSPARENCY");
         Long timeTransparency = null;
-        String infoUrl = request.getParameter("INFO_URL");
 
 
-        if (UtilValidate.isNotEmpty(priorityStr)) {
+        if (UtilValidate.isNotEmpty(request.getParameter("PRIORITY"))) {
             try {
-                priority = Long.valueOf(priorityStr);
+                priority = Long.valueOf(request.getParameter("PRIORITY"));
             } catch (Exception e) {
                 errMsg += "<li>Priority is not a valid whole number.";
             }
         }
 
-        if (UtilValidate.isNotEmpty(estimatedStartDateStr)) {
+        if (UtilValidate.isNotEmpty(request.getParameter("ESTIMATED_START_DATE"))) {
             try {
-                estimatedStartDate = Timestamp.valueOf(estimatedStartDateStr);
+                estimatedStartDate = Timestamp.valueOf(request.getParameter("ESTIMATED_START_DATE"));
             } catch (Exception e) {
                 errMsg += "<li>Estimated Start Date is not a valid Date-Time.";
             }
         }
-        if (UtilValidate.isNotEmpty(estimatedCompletionDateStr)) {
+        if (UtilValidate.isNotEmpty(request.getParameter("ESTIMATED_COMPLETION_DATE"))) {
             try {
-                estimatedCompletionDate = Timestamp.valueOf(estimatedCompletionDateStr);
+                estimatedCompletionDate = Timestamp.valueOf(request.getParameter("ESTIMATED_COMPLETION_DATE"));
             } catch (Exception e) {
                 errMsg += "<li>Estimated Completion Date is not a valid Date-Time.";
             }
         }
 
-        if (UtilValidate.isNotEmpty(actualStartDateStr)) {
+        if (UtilValidate.isNotEmpty(request.getParameter("ACTUAL_START_DATE"))) {
             try {
-                actualStartDate = Timestamp.valueOf(actualStartDateStr);
+                actualStartDate = Timestamp.valueOf(request.getParameter("ACTUAL_START_DATE"));
             } catch (Exception e) {
                 errMsg += "<li>Actual Start Date is not a valid Date-Time.";
             }
         }
-        if (UtilValidate.isNotEmpty(actualCompletionDateStr)) {
+        if (UtilValidate.isNotEmpty(request.getParameter("ACTUAL_COMPLETION_DATE"))) {
             try {
-                actualCompletionDate = Timestamp.valueOf(actualCompletionDateStr);
+                actualCompletionDate = Timestamp.valueOf(request.getParameter("ACTUAL_COMPLETION_DATE"));
             } catch (Exception e) {
                 errMsg += "<li>Actual Completion Date is not a valid Date-Time.";
             }
         }
 
-        if (UtilValidate.isNotEmpty(estimatedMilliSecondsStr)) {
+        if (UtilValidate.isNotEmpty(request.getParameter("ESTIMATED_MILLI_SECONDS"))) {
             try {
-                estimatedMilliSeconds = Double.valueOf(estimatedMilliSecondsStr);
+                estimatedMilliSeconds = Double.valueOf(request.getParameter("ESTIMATED_MILLI_SECONDS"));
             } catch (Exception e) {
                 errMsg += "<li>Estimated Milli-seconds is not a valid number.";
             }
         }
-        if (UtilValidate.isNotEmpty(actualMilliSecondsStr)) {
+        if (UtilValidate.isNotEmpty(request.getParameter("ACTUAL_MILLI_SECONDS"))) {
             try {
-                actualMilliSeconds = Double.valueOf(actualMilliSecondsStr);
+                actualMilliSeconds = Double.valueOf(request.getParameter("ACTUAL_MILLI_SECONDS"));
             } catch (Exception e) {
                 errMsg += "<li>Actual Milli-seconds is not a valid number.";
             }
         }
-        if (UtilValidate.isNotEmpty(totalMilliSecondsAllowedStr)) {
+        if (UtilValidate.isNotEmpty(request.getParameter("TOTAL_MILLI_SECONDS_ALLOWED"))) {
             try {
-                totalMilliSecondsAllowed = Double.valueOf(totalMilliSecondsAllowedStr);
+                totalMilliSecondsAllowed = Double.valueOf(request.getParameter("TOTAL_MILLI_SECONDS_ALLOWED"));
             } catch (Exception e) {
                 errMsg += "<li>Total Milli-seconds Allows is not a valid number.";
             }
         }
 
-        if (UtilValidate.isNotEmpty(totalMoneyAllowedStr)) {
+        if (UtilValidate.isNotEmpty(request.getParameter("TOTAL_MONEY_ALLOWED"))) {
             try {
-                totalMoneyAllowed = Double.valueOf(totalMoneyAllowedStr);
+                totalMoneyAllowed = Double.valueOf(request.getParameter("TOTAL_MONEY_ALLOWED"));
             } catch (Exception e) {
                 errMsg += "<li>Total Money Allowed is not a valid number.";
             }
         }
-        if (UtilValidate.isNotEmpty(timeTransparencyStr)) {
+        if (UtilValidate.isNotEmpty(request.getParameter("TIME_TRANSPARENCY"))) {
             try {
-                timeTransparency = Long.valueOf(timeTransparencyStr);
+                timeTransparency = Long.valueOf(request.getParameter("TIME_TRANSPARENCY"));
             } catch (Exception e) {
                 errMsg += "<li>Time Transparency is not a valid whole number.";
             }
         }
 
-        if (!UtilValidate.isNotEmpty(workEffortName))
+        if (!UtilValidate.isNotEmpty(request.getParameter("WORK_EFFORT_NAME")))
             errMsg += "<li>Name is missing.";
-        if (!UtilValidate.isNotEmpty(currentStatusId))
+        if (!UtilValidate.isNotEmpty(request.getParameter("CURRENT_STATUS_ID")))
             errMsg += "<li>Status is missing.";
         if (estimatedStartDate != null && estimatedCompletionDate != null && estimatedStartDate.after(estimatedCompletionDate)) {
             errMsg += "<li>Start date/time cannot be after end date/time.";
@@ -336,95 +217,73 @@ public class WorkEffortEvents {
             return "error";
         }
 
-        //done validating, now go about setting values and storing them...
-        GenericValue newWorkEffort = null;
-        if (workEffort != null)
-            newWorkEffort = (GenericValue) workEffort.clone();
-        else
-            newWorkEffort = delegator.makeValue("WorkEffort", null);
-        Collection toBeStored = new LinkedList();
-        toBeStored.add(newWorkEffort);
-        Timestamp nowStamp = UtilDateTime.nowTimestamp();
+        Map context = new HashMap();
+        context.put("workEffortTypeId", request.getParameter("WORK_EFFORT_TYPE_ID"));
+        context.put("currentStatusId", request.getParameter("CURRENT_STATUS_ID"));
+        context.put("universalId", request.getParameter("UNIVERSAL_ID"));
+        context.put("scopeEnumId", request.getParameter("SCOPE_ENUM_ID"));
+        context.put("priority", priority);
+        context.put("workEffortName", request.getParameter("WORK_EFFORT_NAME"));
+        context.put("description", request.getParameter("DESCRIPTION"));
+        context.put("locationDesc", request.getParameter("LOCATION_DESC"));
+        context.put("estimatedStartDate", estimatedStartDate);
+        context.put("estimatedCompletionDate", estimatedCompletionDate);
+        context.put("actualStartDate", actualStartDate);
+        context.put("actualCompletionDate", actualCompletionDate);
+        context.put("estimatedMilliSeconds", estimatedMilliSeconds);
+        context.put("actualMilliSeconds", actualMilliSeconds);
+        context.put("totalMilliSecondsAllowed", totalMilliSecondsAllowed);
+        context.put("totalMoneyAllowed", totalMoneyAllowed);
+        context.put("moneyUomId", request.getParameter("MONEY_UOM_ID"));
+        context.put("specialTerms", request.getParameter("SPECIAL_TERMS"));
+        context.put("timeTransparency", timeTransparency);
+        context.put("infoUrl", request.getParameter("INFO_URL"));
 
-        //if necessary create new status entry, and set lastStatusUpdate date
-        if (workEffort == null || (currentStatusId != null && !currentStatusId.equals(workEffort.getString("currentStatusId")))) {
-            toBeStored.add(delegator.makeValue("WorkEffortStatus",
-                    UtilMisc.toMap("workEffortId", workEffortId, "statusId", currentStatusId, "statusDatetime", nowStamp, "setByPartyId", userLogin.get("partyId"))));
-            newWorkEffort.set("currentStatusId", currentStatusId);
-            newWorkEffort.set("lastStatusUpdate", nowStamp);
-        }
-
-        newWorkEffort.set("workEffortId", workEffortId);
-        newWorkEffort.set("workEffortTypeId", workEffortTypeId, false);
-        newWorkEffort.set("universalId", universalId, false);
-        newWorkEffort.set("scopeEnumId", scopeEnumId, false);
-        newWorkEffort.set("priority", priority, false);
-        newWorkEffort.set("workEffortName", workEffortName, false);
-        newWorkEffort.set("description", description, false);
-        newWorkEffort.set("locationDesc", locationDesc, false);
-        newWorkEffort.set("estimatedStartDate", estimatedStartDate, false);
-        newWorkEffort.set("estimatedCompletionDate", estimatedCompletionDate, false);
-        newWorkEffort.set("actualStartDate", actualStartDate, false);
-        newWorkEffort.set("actualCompletionDate", actualCompletionDate, false);
-        newWorkEffort.set("estimatedMilliSeconds", estimatedMilliSeconds, false);
-        newWorkEffort.set("actualMilliSeconds", actualMilliSeconds, false);
-        newWorkEffort.set("totalMilliSecondsAllowed", totalMilliSecondsAllowed, false);
-        newWorkEffort.set("totalMoneyAllowed", totalMoneyAllowed, false);
-        newWorkEffort.set("moneyUomId", moneyUomId, false);
-        newWorkEffort.set("specialTerms", specialTerms, false);
-        newWorkEffort.set("timeTransparency", timeTransparency, false);
-        newWorkEffort.set("infoUrl", infoUrl, false);
-
-        //if nothing has changed and we are updating, return
-        if ("UPDATE".equals(updateMode) && workEffort != null && newWorkEffort.equals(workEffort)) {
-            request.setAttribute("EVENT_MESSAGE", "No changes made, not saving.");
-            return "success";
-        }
-
-        //only set lastModifiedDate after comparing new & old to see if anything has changed
-        newWorkEffort.set("lastModifiedDate", nowStamp);
-        if (userLogin.get("partyId") != null)
-            newWorkEffort.set("lastModifiedByPartyId", userLogin.get("partyId"));
-
-        Long currentRev = newWorkEffort.getLong("revisionNumber");
-        if (currentRev != null)
-            newWorkEffort.set("revisionNumber", new Long(currentRev.longValue() + 1));
-        else
-            newWorkEffort.set("revisionNumber", new Long(1));
+        context.put("userLogin", userLogin);
 
         if (updateMode.equals("CREATE")) {
-            newWorkEffort.set("createdDate", nowStamp);
-            if (userLogin.get("partyId") != null) {
-                newWorkEffort.set("createdByPartyId", userLogin.get("partyId"));
-                //add a party assignment for the creator of the event
-                toBeStored.add(delegator.makeValue("WorkEffortPartyAssignment",
-                        UtilMisc.toMap("workEffortId", workEffortId, "partyId", userLogin.get("partyId"), "roleTypeId", "CAL_OWNER", "fromDate", nowStamp, "statusId",
-                        "CAL_ASN_ACCEPTED")));
+            // invoke the service
+            Map result = null;
+            try {
+                result = dispatcher.runSync("createWorkEffort",context);
+            } catch (GenericServiceException e) {
+                request.setAttribute(SiteDefs.ERROR_MESSAGE,"ERROR: Could not delete WorkEffort (problem invoking the service: " + e.getMessage() + ")");
+                Debug.logError(e);
+                return "error";
             }
 
-            GenericValue createWorkEffort = null;
-            try {
-                delegator.storeAll(toBeStored);
-            } catch (GenericEntityException e) {
-                Debug.logWarning(e);
-                request.setAttribute("ERROR_MESSAGE", "Could not create new WorkEffort (write error)");
-                return "error";
-            }
-            request.setAttribute("WORK_EFFORT_ID", workEffortId);
+            // check for error message(s)
+            String errorMessage = ServiceUtil.makeHtmlErrorMessage(result);
+            if (errorMessage != null)
+                request.setAttribute(SiteDefs.ERROR_MESSAGE, errorMessage);
+
+            request.setAttribute("WORK_EFFORT_ID", result.get("workEffortId"));
+
+            // return the result
+            return result.containsKey(ModelService.RESPONSE_MESSAGE) ? (String)result.get(ModelService.RESPONSE_MESSAGE) : "success";
         } else if (updateMode.equals("UPDATE")) {
+            // invoke the service
+            Map result = null;
+            context.put("workEffortId", request.getParameter("WORK_EFFORT_ID"));
             try {
-                delegator.storeAll(toBeStored);
-            } catch (GenericEntityException e) {
-                request.setAttribute("ERROR_MESSAGE", "Could not update WorkEffort (write error)");
-                Debug.logWarning("[WorkEffortEvents.updateWorkEffort] Could not update WorkEffort (write error); message: " + e.getMessage());
+                result = dispatcher.runSync("updateWorkEffort",context);
+            } catch (GenericServiceException e) {
+                request.setAttribute(SiteDefs.ERROR_MESSAGE,"ERROR: Could not delete WorkEffort (problem invoking the service: " + e.getMessage() + ")");
+                Debug.logError(e);
                 return "error";
             }
+
+            // check for error message(s)
+            String errorMessage = ServiceUtil.makeHtmlErrorMessage(result);
+            if (errorMessage != null)
+                request.setAttribute(SiteDefs.ERROR_MESSAGE, errorMessage);
+
+            // return the result
+            return result.containsKey(ModelService.RESPONSE_MESSAGE) ? (String)result.get(ModelService.RESPONSE_MESSAGE) : "success";
         } else {
             request.setAttribute("ERROR_MESSAGE", "Specified update mode: \"" + updateMode + "\" is not supported.");
             return "error";
         }
-
-        return "success";
     }
 
     /** Updates WorkEffortPartyAssignment information according to UPDATE_MODE parameter
@@ -652,4 +511,3 @@ public class WorkEffortEvents {
         return "success";
     }
 }
-
