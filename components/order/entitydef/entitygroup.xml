@@ -26,7 +26,7 @@
  *
  *@author     David E. Jones (jonesde@ofbiz.org)
  *@author     Andy Zeneski (jaz@ofbiz.org)
- *@version    $Revision: 1.6 $
+ *@version    $Revision: 1.7 $
  */
 -->
 
@@ -146,6 +146,7 @@
 
     <entity-group group="org.ofbiz" entity="ShoppingList" />
     <entity-group group="org.ofbiz" entity="ShoppingListItem" />
+    <entity-group group="org.ofbiz" entity="ShoppingListItemSurvey" />
     <entity-group group="org.ofbiz" entity="ShoppingListType" />
 
 </entitygroup>

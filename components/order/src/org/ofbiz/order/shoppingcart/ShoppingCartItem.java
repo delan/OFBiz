@@ -1,5 +1,5 @@
 /*
- * $Id: ShoppingCartItem.java,v 1.30 2004/06/04 12:33:18 jonesde Exp $
+ * $Id: ShoppingCartItem.java,v 1.31 2004/06/29 19:03:47 ajzeneski Exp $
  *
  *  Copyright (c) 2001, 2002 The Open For Business Project - www.ofbiz.org
  *
@@ -37,6 +37,7 @@ import org.ofbiz.base.util.UtilFormatOut;
 import org.ofbiz.base.util.UtilMisc;
 import org.ofbiz.base.util.UtilProperties;
 import org.ofbiz.base.util.UtilValidate;
+import org.ofbiz.base.util.GeneralException;
 import org.ofbiz.entity.GenericDelegator;
 import org.ofbiz.entity.GenericEntityException;
 import org.ofbiz.entity.GenericPK;
@@ -59,7 +60,7 @@ import org.ofbiz.service.ModelService;
  *
  * @author     <a href="mailto:jaz@ofbiz.org.com">Andy Zeneski</a>
  * @author     <a href="mailto:jonesde@ofbiz.org">David E. Jones</a>
- * @version    $Revision: 1.30 $
+ * @version    $Revision: 1.31 $
  * @since      2.0
  */
 public class ShoppingCartItem implements java.io.Serializable {
@@ -365,9 +366,11 @@ public class ShoppingCartItem implements java.io.Serializable {
             throw new CartItemModifyException("Sorry, you can't change the quantity on the promotion item " + this.getName() + " (product ID: " + productId + "), not setting quantity.");
         }
 
+        // needed for inventory checking and auto-save
+        String productStoreId = cart.getProductStoreId();
+
         // check inventory if new quantity is greater than old quantity; don't worry about inventory getting pulled out from under, that will be handled at checkout time
         if (_product != null && quantity > this.quantity) {
-            String productStoreId = cart.getProductStoreId();
 
             if (org.ofbiz.product.store.ProductStoreWorker.isStoreInventoryRequired(productStoreId, this.getProduct(), this.getDelegator())) {
             	if (!org.ofbiz.product.store.ProductStoreWorker.isStoreInventoryAvailable(productStoreId, productId, quantity, this.getDelegator(), dispatcher)) {
@@ -386,6 +389,15 @@ public class ShoppingCartItem implements java.io.Serializable {
         // apply/unapply promotions - only for sales orders
         if (doPromotions && cart.getOrderType().equals("SALES_ORDER")) {
             org.ofbiz.order.shoppingcart.product.ProductPromoWorker.doPromotions(cart, dispatcher);
+        }
+
+        // store the auto-save cart
+        if (org.ofbiz.product.store.ProductStoreWorker.autoSaveCart(delegator, productStoreId)) {
+            try {
+                org.ofbiz.order.shoppinglist.ShoppingListEvents.fillAutoSaveList(cart, dispatcher);
+            } catch (GeneralException e) {
+                Debug.logWarning(e, "Unable to store auto-save cart", module);
+            }
         }
     }
 
