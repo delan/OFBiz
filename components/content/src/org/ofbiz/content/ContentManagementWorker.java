@@ -45,7 +45,7 @@ import org.ofbiz.content.content.ContentWorker;
  * ContentManagementWorker Class
  *
  * @author     <a href="mailto:byersa@automationgroups.com">Al Byers</a>
- * @version    $Revision: 1.3 $
+ * @version    $Revision: 1.4 $
  * @since      3.0
  *
  * 
@@ -77,16 +77,16 @@ public class ContentManagementWorker {
             lookupCaches = new HashMap();
             session.setAttribute("lookupCaches", lookupCaches);
         }    
-            //Debug.logInfo("in mruAdd, lookupCaches:" + lookupCaches, "");
+            //Debug.logVerbose("in mruAdd, lookupCaches:" + lookupCaches, "");
         String entityName = pk.getEntityName();
-            //Debug.logInfo("in mruAdd, entityName:" + entityName, "");
-            //Debug.logInfo("in mruAdd, suffix:" + suffix, "");
+            //Debug.logVerbose("in mruAdd, entityName:" + entityName, "");
+            //Debug.logVerbose("in mruAdd, suffix:" + suffix, "");
         if (entityName.indexOf("DataResource") >= 0) {
             GenericDelegator delegator = pk.getDelegator();
       
             // Force all view variations to DataResource
             GenericValue p = delegator.makeValue("DataResourceContentView", null);
-            //Debug.logInfo("in mruAdd, p:" + p, "");
+            //Debug.logVerbose("in mruAdd, p:" + p, "");
             String s = null;
             try {
                 s = (String)pk.get("dataResourceId");
@@ -102,7 +102,7 @@ public class ContentManagementWorker {
             } catch(IllegalArgumentException e) { 
                 // ignore 
             }
-            //Debug.logInfo("in mruAdd, s:" + s, "");
+            //Debug.logVerbose("in mruAdd, s:" + s, "");
             if (UtilValidate.isNotEmpty(s))  {
                 mruAddByEntityName( "DataResourceContentView", null, p, lookupCaches);
                 if (suffix != null && suffix.length() > 0) {
@@ -130,23 +130,23 @@ public class ContentManagementWorker {
     public static void mruAddByEntityName(String entityName, String suffix, 
                                           GenericEntity pk, Map lookupCaches) {
 
-            //Debug.logInfo("in mruAddByEntityName, pk:" + pk, "");
+            //Debug.logVerbose("in mruAddByEntityName, pk:" + pk, "");
         String cacheEntityName = entityName;
         if (UtilValidate.isNotEmpty(suffix)) {
             cacheEntityName = entityName + suffix;
         }
-            //Debug.logInfo("in mruAddByEntityName, cacheEntityName:" + cacheEntityName, "");
+            //Debug.logVerbose("in mruAddByEntityName, cacheEntityName:" + cacheEntityName, "");
         UtilCache lkupCache = (UtilCache)lookupCaches.get(cacheEntityName);
-            //Debug.logInfo("in mruAddByEntityName, lkupCache:" + lkupCache, "");
+            //Debug.logVerbose("in mruAddByEntityName, lkupCache:" + lkupCache, "");
         if(lkupCache == null){
             lkupCache	= new UtilCache(cacheEntityName,10,0);
             lookupCaches.put(cacheEntityName, lkupCache);
         }    
         
         String idSig = buildPKSig(pk, null);
-            //Debug.logInfo("in mruAddByEntityName, idSig:" + idSig, "");
+            //Debug.logVerbose("in mruAddByEntityName, idSig:" + idSig, "");
         GenericPK p = pk.getPrimaryKey();
-            //Debug.logInfo("in mruAddByEntityName, p:" + p, "");
+            //Debug.logVerbose("in mruAddByEntityName, p:" + p, "");
         lkupCache.put(idSig,p);
         return;
     }
@@ -168,7 +168,7 @@ public class ContentManagementWorker {
         while (it.hasNext()) {
             String ky = (String)it.next();
             String val = (String)pk.get(ky);
-            //Debug.logInfo("in buildPKSig, ky:" + ky + " val:" + val, "");
+            //Debug.logVerbose("in buildPKSig, ky:" + ky + " val:" + val, "");
             if (val != null && val.length() > 0) {
                 if (sig.length() > 0) sig += "_";
                 sig += val;
@@ -198,6 +198,6 @@ public class ContentManagementWorker {
         }
 
         currentEntityMap.put(entityName, ent);
-        //Debug.logInfo("in setCurrentEntityMap, ent:" + ent,"");
+        //Debug.logVerbose("in setCurrentEntityMap, ent:" + ent,"");
     }
 }
