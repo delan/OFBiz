@@ -43,18 +43,19 @@
           <td>
             <table width="100%" border="0" cellpadding="0" cellspacing='0'>
               <tr align=left valign=bottom>
-                <td width="35%" align="left"><div class="tableheadtext">Product</div></td>
+                <td width="30%" align="left"><div class="tableheadtext">Product</div></td>
                 <td width="30%" align="left"><div class="tableheadtext">Status</div></td>
                 <td width="5%" align="right"><div class="tableheadtext">Quantity</div></td>
                 <td width="10%" align="right"><div class="tableheadtext">Unit / List</div></td>
                 <td width="10%" align="right"><div class="tableheadtext">Adjustments</div></td>
                 <td width="10%" align="right"><div class="tableheadtext">Subtotal</div></td>
+                <td width="5%">&nbsp;</td>                
               </tr>
               <#if !orderItemList?has_content>                           
                 <tr><td><font color="red">ERROR: Sales Order Lines lookup failed.</font></td></tr>
               <#else>
                 <#list orderItemList as orderItem>
-                  <tr><td colspan="7"><hr class='sepbar'></td></tr>
+                  <tr><td colspan="8"><hr class='sepbar'></td></tr>
                   <tr>
                     <#assign orderItemType = orderItem.getRelatedOne("OrderItemType")>
                     <#assign productId = orderItem.productId?if_exists>
@@ -81,35 +82,15 @@
                       
                       <#-- now show status details per line item -->
                       <#assign currentItemStatus = orderItem.getRelatedOne("StatusItem")>                    
-                      <td align="left" colspan="1">                                            
-                        <#if security.hasEntityPermission("ORDERMGR", "_UPDATE", session)>
-                          <#assign statusId = orderItem.statusId>
-                          <#if statusId?exists && statusId != "ITEM_COMPLETED" && statusId != "ITEM_CANCELLED">
-                            <#assign itemStatusChange = orderItem.getRelated("StatusValidChange")>
-                            <form name="statusUpdate${orderItem.orderItemSeqId}" method="post" action="<@ofbizUrl>/changeOrderItemStatus?${paramString}</@ofbizUrl>">
-                              <input type="hidden" name="orderId" value="${orderId}"> 
-                               <input type="hidden" name="orderItemSeqId" value="${orderItem.orderItemSeqId}">     
-                               <select name="statusId" class="selectBox">
-                                 <option value="${statusId}">${currentItemStatus.description?default(statusId)}</option>
-                                 <option value="${statusId}">---</option>
-                                 <#list itemStatusChange as status>
-                                   <#assign changeStatusItem = status.getRelatedOne("ToStatusItem")>
-                                   <option value="${status.statusIdTo}">${changeStatusItem.description?default(status.statusIdTo)}</option>               
-                                 </#list>
-                               </select>
-                               <a href="javascript:document.statusUpdate${orderItem.orderItemSeqId}.submit();" class="buttontext">[Save]</a>
-                            </form>                                                                              					
-                          </#if>
-                        <#else>                                                                                  
-                          <div class='tabletext'>Current: <ofbiz:entityfield attribute="currentItemStatus" field="description"/><%-- [<ofbiz:entityfield attribute="orderItem" field="statusId"/>]--%></div>
-                        </#if>
-                       <#assign orderItemStatuses = orderReadHelper.getOrderItemStatuses(orderItem)>
-                       <#list orderItemStatuses as orderItemStatus>                     
-                         <#assign loopStatusItem = orderItemStatus.getRelatedOne("StatusItem")>                            
-                         <div class='tabletext'>
-                           ${orderItemStatus.statusDatetime.toString()} : ${loopStatusItem.description?default(orderItemStatus.statusId)}
-                         </div>
-                       </#list>
+                      <td align="left" colspan="1">                                                                                            
+                        <div class='tabletext'>Current: ${currentItemStatus.description?default(currentItemStatus.statusId)}</div>  
+                        <#assign orderItemStatuses = orderReadHelper.getOrderItemStatuses(orderItem)>
+                        <#list orderItemStatuses as orderItemStatus>                     
+                          <#assign loopStatusItem = orderItemStatus.getRelatedOne("StatusItem")>                            
+                          <div class='tabletext'>
+                            ${orderItemStatus.statusDatetime.toString()} : ${loopStatusItem.description?default(orderItemStatus.statusId)}
+                          </div>
+                        </#list>
                       </td>
                       <td align="center" valign="top" nowrap>
                         <div class="tabletext" nowrap>${orderItem.quantity?string.number}&nbsp;</div>
@@ -122,6 +103,14 @@
                       </td>
                       <td align="right" valign="top" nowrap>
                         <div class="tabletext" nowrap>${Static["org.ofbiz.commonapp.order.order.OrderReadHelper"].getOrderItemSubTotal(orderItem, orderAdjustments)?string.currency}</div>
+                      </td>
+                      <td>&nbsp;</td>                      
+                      <td align="right" valign="top" nowrap>
+                        <#if security.hasEntityPermission("ORDERMGR", "_UPDATE", session) && orderItem.statusId != "ITEM_CANCELLED" && orderItem.statusId != "ITEM_COMPLETED">
+                          <div class="tabletext"><a href="<@ofbizUrl>/changeOrderItemStatus?orderId=${orderId}&orderItemSeqId=${orderItem.orderItemSeqId}&statusId=ITEM_CANCELLED&${paramString}</@ofbizUrl>" class="buttontext">[Cancel]</a></div>
+                        <#else>
+                          &nbsp;
+                        </#if>
                       </td>                      
                     </#if>
                   </tr>
@@ -150,7 +139,8 @@
                   <#-- now show price info per line item -->
                   <#assign orderItemPriceInfos = orderReadHelper.getOrderItemPriceInfos(orderItem)>
                   <#if orderItemPriceInfos?exists && orderItemPriceInfos?has_content>
-                    <#list orderItemPriceInfos as orderItemPriceInfo>
+                    <tr><td>&nbsp;</td></tr>
+                    <#list orderItemPriceInfos as orderItemPriceInfo>                      
                       <tr>
                         <td align="right" colspan="2">
                           <div class="tabletext" style='font-size: xx-small;'><b><i>Price Rule</i>:</b> [${orderItemPriceInfo.productPriceRuleId}:${orderItemPriceInfo.productPriceActionSeqId}] ${orderItemPriceInfo.description?if_exists}</div>
@@ -189,11 +179,11 @@
                   </#if>
                 </#list>
               </#if>
-              <tr><td colspan="7"><hr class='sepbar'></td></tr>
+              <tr><td colspan="8"><hr class='sepbar'></td></tr>
               <#list orderHeaderAdjustments as orderHeaderAdjustment>
                 <#assign adjustmentType = orderHeaderAdjustment.getRelatedOne("OrderAdjustmentType")>
                 <tr>
-                  <td align="right" colspan="4">
+                  <td align="right" colspan="5">
                     <div class="tabletext"><b>${adjustmentType.description}</b> : ${orderHeaderAdjustment.comments?if_exists}</div>
                   </td>                       
                   <td align="right" nowrap>
@@ -209,7 +199,7 @@
                   <form name="addAdjustmentForm" method="post" action="<@ofbizUrl>/addOrderAdjustment?${paramString}</@ofbizUrl>">
                     <input type="hidden" name="orderId" value="${orderId}">
                     <input type="hidden" name="comments" value="Added manually by '${userLogin.userLoginId}'">
-                    <td align="right" colspan="4">
+                    <td align="right" colspan="5">
                       <select name="orderAdjustmentTypeId" class="selectBox">
                         <#list orderAdjustmentTypes as type>
                           <option value="${type.orderAdjustmentTypeId}">${type.description?default(type.orderAdjustmentTypeId)}</option>
@@ -219,7 +209,7 @@
                     <td align="right">
                       <input type="text" name="amount" size="6" value="0.00" class="inputBox">
                     </td>
-                    <td align="right">
+                    <td align="right" colspan="2">
                       <a href="javascript:document.addAdjustmentForm.submit();" class="buttontext">[Add]</a>
                     </td>
                   </form>
@@ -227,7 +217,7 @@
               </#if>
               
               <#-- subtotal -->
-              <tr><td colspan=1></td><td colspan="7"><hr class='sepbar'></td></tr>
+              <tr><td colspan=1></td><td colspan="8"><hr class='sepbar'></td></tr>
               <tr>
                 <td align="right" colspan="5"><div class="tabletext"><b>Items Subtotal</b></div></td>
                 <td align="right" nowrap><div class="tabletext">${orderSubTotal?string.currency}</div></td>
