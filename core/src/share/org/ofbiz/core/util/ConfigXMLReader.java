@@ -282,6 +282,11 @@ public class ConfigXMLReader {
                 String name = mapping.getAttribute(VIEW_NAME);
                 String page = mapping.getAttribute(VIEW_PAGE);
                 String type = mapping.getAttribute(VIEW_TYPE);
+                
+                if (page == null || page.length() == 0) {
+                    page = name;
+                }
+                
                 uriMap.put(VIEW_NAME, name);
                 uriMap.put(VIEW_PAGE, page);
                 uriMap.put(VIEW_TYPE, type);

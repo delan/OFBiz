@@ -35,38 +35,37 @@
 <!ELEMENT errorpage (#PCDATA)>
 <!ELEMENT handler EMPTY>
 <!ATTLIST handler
-	name CDATA #REQUIRED
+    name CDATA #REQUIRED
     type (view|request) "request"
-	class CDATA #REQUIRED
+    class CDATA #REQUIRED
 >
 <!ELEMENT preprocessor (event*)>
 <!ELEMENT postprocessor (event*)>
 <!ELEMENT request-map (description?, security?, event?, response+)>
 <!ATTLIST request-map
-	uri CDATA #REQUIRED
-	edit (true|false) #IMPLIED
+    uri CDATA #REQUIRED
+    edit (true|false) #IMPLIED
 >
 <!ELEMENT security EMPTY>
 <!ATTLIST security
-	https (true|false) #IMPLIED
-	auth (true|false) #IMPLIED
+    https (true|false) #IMPLIED
+    auth (true|false) #IMPLIED
 >
 <!ELEMENT event EMPTY>
 <!ATTLIST event
-	type CDATA #REQUIRED
-	path CDATA #IMPLIED
-	invoke CDATA #IMPLIED
+    type CDATA #REQUIRED
+    path CDATA #IMPLIED
+    invoke CDATA #IMPLIED
 >
 <!ELEMENT response EMPTY>
 <!ATTLIST response
-	name CDATA #REQUIRED
-	type (none|view|request|url) #REQUIRED
-	value CDATA #IMPLIED
+    name CDATA #REQUIRED
+    type (none|view|request|url) #REQUIRED
+    value CDATA #IMPLIED
 >
 <!ELEMENT view-map (description?)>
 <!ATTLIST view-map
-	name CDATA #REQUIRED
-	page CDATA #REQUIRED
-	type CDATA "default"
+    name CDATA #REQUIRED
+    page CDATA #IMPLIED
+    type CDATA "default"
 >
-
