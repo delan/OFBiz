@@ -1,7 +1,4 @@
-<%
-/**
- *  Title: View Profle Page
- *  Description: None
+<%--
  *  Copyright (c) 2002 The Open For Business Project - www.ofbiz.org
  *
  *  Permission is hereby granted, free of charge, to any person obtaining a
@@ -27,7 +24,7 @@
  * @created    May 22 2001
  * @version    1.0
  */
-%>
+--%>
 
 <%@ taglib uri="ofbizTags" prefix="ofbiz" %>
 
@@ -101,6 +98,12 @@
       </div>
     </td>
     <td align='right'>
+	  <div class='tabContainer'>
+      <a href="<ofbiz:url>/viewprofile</ofbiz:url>" class="tabButtonSelected">Profile</a>
+      <a href="<ofbiz:url>/viewroles</ofbiz:url>" class="tabButton">Roles</a>
+      <a href="<ofbiz:url>/viewrelationships</ofbiz:url>" class="tabButton">Relationships</a>
+      </div>
+
       <ofbiz:if name="showOld">
         <a href="<ofbiz:url>/viewprofile</ofbiz:url>" class="buttontext">[Hide Old]</a>&nbsp;&nbsp;
       </ofbiz:if>
@@ -108,8 +111,6 @@
         <a href="<ofbiz:url>/viewprofile?SHOW_OLD=true</ofbiz:url>" class="buttontext">[Show Old]</a>&nbsp;&nbsp;
       </ofbiz:unless>
       <a href="/ordermgr/control/orderlist?partyId=<%=partyId%>" class="buttontext">[Orders]</a>&nbsp;&nbsp;
-      <a href="<ofbiz:url>/viewroles</ofbiz:url>" class="buttontext">[Roles]</a>&nbsp;&nbsp;
-      <a href="<ofbiz:url>/viewrelationships</ofbiz:url>" class="buttontext">[Relationships]</a>&nbsp;&nbsp;
     </td>
   </tr>
 </table>

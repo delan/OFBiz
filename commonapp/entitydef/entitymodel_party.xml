@@ -1539,11 +1539,17 @@
       <prim-key field="roleTypeIdFrom"/>
       <prim-key field="roleTypeIdTo"/>
       <prim-key field="fromDate"/>
-      <relation type="one" fk-name="PARTY_REL_FPARTY" title="From" rel-entity-name="Party">
+      <relation type="one-nofk" title="From" rel-entity-name="Party">
         <key-map field-name="partyIdFrom" rel-field-name="partyId"/>
       </relation>
-      <relation type="one" fk-name="PARTY_REL_TPARTY" title="To" rel-entity-name="Party">
+      <relation type="one-nofk" title="To" rel-entity-name="Party">
         <key-map field-name="partyIdTo" rel-field-name="partyId"/>
+      </relation>
+      <relation type="one-nofk" title="From" rel-entity-name="RoleType">
+        <key-map field-name="roleTypeIdFrom" rel-field-name="roleTypeId"/>
+      </relation>
+      <relation type="one-nofk" title="To" rel-entity-name="RoleType">
+        <key-map field-name="roleTypeIdTo" rel-field-name="roleTypeId"/>
       </relation>
       <relation type="one" fk-name="PARTY_REL_FPROLE" title="From" rel-entity-name="PartyRole">
         <key-map field-name="partyIdFrom" rel-field-name="partyId"/>

@@ -59,6 +59,7 @@
   <ContactMechTypePurpose contactMechPurposeTypeId="PHONE_WORK" contactMechTypeId="TELECOM_NUMBER"/>
   <ContactMechTypePurpose contactMechPurposeTypeId="PHONE_WORK_SEC" contactMechTypeId="TELECOM_NUMBER"/>
 
+  <RoleType description="Not Applicable" hasTable="N" parentTypeId="" roleTypeId="_NA_"/>
   <RoleType description="Prospect" hasTable="N" parentTypeId="" roleTypeId="PROSPECT"/>
   <RoleType description="Shareholder" hasTable="N" parentTypeId="" roleTypeId="SHAREHOLDER"/>
   <RoleType description="Person" hasTable="N" parentTypeId="" roleTypeId="PERSON_ROLE"/>
@@ -127,17 +128,19 @@
   <PartyQualType description="Certification" hasTable="N" parentTypeId="" partyQualTypeId="CERTIFICATION"/>
   <PartyQualType description="Degree" hasTable="N" parentTypeId="" partyQualTypeId="DEGREE"/>
 
-  <PartyRelationshipType description="Distribution Channel" hasTable="N" parentTypeId="" partyRelationshipName="" partyRelationshipTypeId="DISTRIBUTION_CHANNEL" roleTypeIdValidFrom="" roleTypeIdValidTo=""/>
-  <PartyRelationshipType description="Employment" hasTable="Y" parentTypeId="" partyRelationshipName="" partyRelationshipTypeId="EMPLOYMENT" roleTypeIdValidFrom="" roleTypeIdValidTo=""/>
-  <PartyRelationshipType description="Contact" hasTable="N" parentTypeId="" partyRelationshipName="" partyRelationshipTypeId="CONTACT_REL" roleTypeIdValidFrom="" roleTypeIdValidTo=""/>
-  <PartyRelationshipType description="Group" hasTable="N" parentTypeId="" partyRelationshipName="" partyRelationshipTypeId="GROUP_ROLLUP" roleTypeIdValidFrom="" roleTypeIdValidTo=""/>
-  <PartyRelationshipType description="Partner" hasTable="N" parentTypeId="" partyRelationshipName="" partyRelationshipTypeId="PARTNERSHIP" roleTypeIdValidFrom="" roleTypeIdValidTo=""/>
-  <PartyRelationshipType description="Sales Affiliate" hasTable="N" parentTypeId="" partyRelationshipName="" partyRelationshipTypeId="SALES_AFFILIATE" roleTypeIdValidFrom="" roleTypeIdValidTo=""/>
-  <PartyRelationshipType description="Supplier" hasTable="N" parentTypeId="" partyRelationshipName="" partyRelationshipTypeId="SUPPLIER_REL" roleTypeIdValidFrom="" roleTypeIdValidTo=""/>
-  <PartyRelationshipType description="Customer" hasTable="N" parentTypeId="" partyRelationshipName="" partyRelationshipTypeId="CUSTOMER_REL" roleTypeIdValidFrom="CUSTOMER" roleTypeIdValidTo=""/>
-  <PartyRelationshipType description="Host Server Visitor" hasTable="N" parentTypeId="" partyRelationshipName="" partyRelationshipTypeId="HOST_SERVER_VISITOR" roleTypeIdValidFrom="" roleTypeIdValidTo=""/>
-  <PartyRelationshipType description="ISP Visitor" hasTable="N" parentTypeId="" partyRelationshipName="" partyRelationshipTypeId="VISITOR_ISP" roleTypeIdValidFrom="" roleTypeIdValidTo=""/>
-  <PartyRelationshipType description="Web Master" hasTable="N" parentTypeId="" partyRelationshipName="" partyRelationshipTypeId="WEB_MASTER_ASSIGNMEN" roleTypeIdValidFrom="" roleTypeIdValidTo=""/>
+  <!-- NOTE: The partyRelationShipName describes the TO party, ie A is a customer of B, so A is the partyTo and B is the partyFrom -->
+  <PartyRelationshipType description="" hasTable="N" parentTypeId="" partyRelationshipName="Distributor" partyRelationshipTypeId="DISTRIBUTION_CHANNEL" roleTypeIdValidFrom="" roleTypeIdValidTo=""/>
+  <PartyRelationshipType description="" hasTable="Y" parentTypeId="" partyRelationshipName="Employee" partyRelationshipTypeId="EMPLOYMENT" roleTypeIdValidFrom="" roleTypeIdValidTo=""/>
+  <PartyRelationshipType description="" hasTable="N" parentTypeId="" partyRelationshipName="Manager" partyRelationshipTypeId="MANAGER" roleTypeIdValidFrom="" roleTypeIdValidTo=""/>
+  <PartyRelationshipType description="" hasTable="N" parentTypeId="" partyRelationshipName="Contact" partyRelationshipTypeId="CONTACT_REL" roleTypeIdValidFrom="" roleTypeIdValidTo=""/>
+  <PartyRelationshipType description="" hasTable="N" parentTypeId="" partyRelationshipName="Group Member" partyRelationshipTypeId="GROUP_ROLLUP" roleTypeIdValidFrom="" roleTypeIdValidTo=""/>
+  <PartyRelationshipType description="" hasTable="N" parentTypeId="" partyRelationshipName="Partner" partyRelationshipTypeId="PARTNERSHIP" roleTypeIdValidFrom="" roleTypeIdValidTo=""/>
+  <PartyRelationshipType description="" hasTable="N" parentTypeId="" partyRelationshipName="Sales Affiliate" partyRelationshipTypeId="SALES_AFFILIATE" roleTypeIdValidFrom="" roleTypeIdValidTo=""/>
+  <PartyRelationshipType description="" hasTable="N" parentTypeId="" partyRelationshipName="Supplier" partyRelationshipTypeId="SUPPLIER_REL" roleTypeIdValidFrom="" roleTypeIdValidTo=""/>
+  <PartyRelationshipType description="" hasTable="N" parentTypeId="" partyRelationshipName="Customer" partyRelationshipTypeId="CUSTOMER_REL" roleTypeIdValidFrom="CUSTOMER" roleTypeIdValidTo=""/>
+  <PartyRelationshipType description="" hasTable="N" parentTypeId="" partyRelationshipName="Host Server Visitor" partyRelationshipTypeId="HOST_SERVER_VISITOR" roleTypeIdValidFrom="" roleTypeIdValidTo=""/>
+  <PartyRelationshipType description="" hasTable="N" parentTypeId="" partyRelationshipName="ISP Visitor" partyRelationshipTypeId="VISITOR_ISP" roleTypeIdValidFrom="" roleTypeIdValidTo=""/>
+  <PartyRelationshipType description="" hasTable="N" parentTypeId="" partyRelationshipName="Web Master" partyRelationshipTypeId="WEB_MASTER_ASSIGNMEN" roleTypeIdValidFrom="" roleTypeIdValidTo=""/>
 
   <PartyType description="Automated Agent" hasTable="N" parentTypeId="" partyTypeId="AUTOMATED_AGENT"/>
   <PartyType description="Person" hasTable="Y" parentTypeId="" partyTypeId="PERSON"/>

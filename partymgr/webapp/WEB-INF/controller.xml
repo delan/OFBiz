@@ -316,34 +316,6 @@
         <response name="success" type="view" value="findparty"/>
     </request-map>
 
-    <request-map uri="addrole">
-        <security https="true" auth="true"/>
-        <event type="service" path="" invoke="createPartyRole"/>
-        <response name="success" type="view" value="viewprofile"/>
-        <response name="error" type="view" value="viewprofile"/>
-    </request-map>
-
-    <request-map uri="addrelationshiptype">
-        <security https="true" auth="true"/>
-        <event type="service" path="" invoke="createPartyRelationshipType"/>
-        <response name="success" type="view" value="viewprofile"/>
-        <response name="error" type="view" value="viewprofile"/>
-    </request-map>
-
-    <request-map uri="createrelationship">
-        <security https="true" auth="true"/>
-        <event type="service" path="" invoke="createPartyRelationship"/>
-        <response name="success" type="view" value="viewprofile"/>
-        <response name="error" type="view" value="viewprofile"/>
-    </request-map>
-
-    <request-map uri="deleterole">
-        <security https="true" auth="true"/>
-        <event type="service" path="" invoke="deletePartyRole"/>
-        <response name="success" type="view" value="viewprofile"/>
-        <response name="error" type="view" value="viewprofile"/>
-    </request-map>
-
     <request-map uri="FindSecurityGroup">
         <security https="true" auth="true"/>
         <response name="success" type="view" value="FindSecurityGroup"/>
@@ -419,16 +391,57 @@
         <response name="error" type="view" value="createnewnote"/>
     </request-map>
 
+    <request-map uri="addrole">
+        <security https="true" auth="true"/>
+        <event type="service" path="" invoke="createPartyRole"/>
+        <response name="success" type="view" value="viewprofile"/>
+        <response name="error" type="view" value="viewprofile"/>
+    </request-map>
     <request-map uri="createnewrole">
         <security https="true" auth="true"/>
         <response name="success" type="view" value="createnewrole"/>
     </request-map>
+    <request-map uri="deleterole">
+        <security https="true" auth="true"/>
+        <event type="service" path="" invoke="deletePartyRole"/>
+        <response name="success" type="view" value="viewroles"/>
+        <response name="error" type="view" value="viewroles"/>
+    </request-map>
+
     <request-map uri="createroletype">
         <security https="true" auth="true"/>
         <event type="service" invoke="createRoleType"/>
-        <response name="success" type="view" value="viewprofile"/>
+        <response name="success" type="view" value="viewroles"/>
         <response name="error" type="view" value="createnewrole"/>
     </request-map>
+
+    <request-map uri="addrelationshiptype">
+        <security https="true" auth="true"/>
+        <event type="service" path="" invoke="createPartyRelationshipType"/>
+        <response name="success" type="view" value="viewrelationships"/>
+        <response name="error" type="view" value="viewrelationships"/>
+    </request-map>
+
+    <request-map uri="createPartyRelationship">
+        <security https="true" auth="true"/>
+        <event type="service" path="" invoke="createPartyRelationship"/>
+        <response name="success" type="view" value="viewrelationships"/>
+        <response name="error" type="view" value="viewrelationships"/>
+    </request-map>
+    <request-map uri="updatePartyRelationship">
+        <security https="true" auth="true"/>
+        <event type="service" path="" invoke="updatePartyRelationship"/>
+        <response name="success" type="view" value="viewrelationships"/>
+        <response name="error" type="view" value="viewrelationships"/>
+    </request-map>
+    <request-map uri="deletePartyRelationship">
+        <security https="true" auth="true"/>
+        <event type="service" path="" invoke="deletePartyRelationship"/>
+        <response name="success" type="view" value="viewrelationships"/>
+        <response name="error" type="view" value="viewrelationships"/>
+    </request-map>
+
+
     <!-- end of request mappings -->
 
     <!-- View Mappings -->

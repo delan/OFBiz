@@ -13,10 +13,7 @@
         <attribute name="partyId" type="String" mode="IN" optional="true"/>
     </service>
 
-    <service name="createPerson" engine="java"
-            location="org.ofbiz.commonapp.party.party.PartyServices" invoke="createPerson" auth="false">
-        <description>Create a Person</description>
-        <attribute name="partyId" type="String" mode="INOUT" optional="true"/>
+    <service name="interfacePerson" engine="interface" location="" invoke="">
         <attribute name="firstName" type="String" mode="IN" optional="false"/>
         <attribute name="middleName" type="String" mode="IN" optional="true"/>
         <attribute name="lastName" type="String" mode="IN" optional="false"/>
@@ -35,27 +32,17 @@
         <attribute name="totalYearsWorkExperience" type="Double" mode="IN" optional="true"/>
         <attribute name="comments" type="String" mode="IN" optional="true"/>
     </service>
+    <service name="createPerson" engine="java"
+            location="org.ofbiz.commonapp.party.party.PartyServices" invoke="createPerson" auth="false">
+        <description>Create a Person</description>
+        <attribute name="partyId" type="String" mode="INOUT" optional="true"/>
+        <implements service="interfacePerson"/>
+    </service>
     <service name="updatePerson" engine="java"
             location="org.ofbiz.commonapp.party.party.PartyServices" invoke="updatePerson" auth="true">
         <description>Update a Person</description>
         <attribute name="partyId" type="String" mode="IN" optional="true"/>
-        <attribute name="firstName" type="String" mode="IN" optional="false"/>
-        <attribute name="middleName" type="String" mode="IN" optional="true"/>
-        <attribute name="lastName" type="String" mode="IN" optional="false"/>
-        <attribute name="personalTitle" type="String" mode="IN" optional="true"/>
-        <attribute name="suffix" type="String" mode="IN" optional="true"/>
-        <attribute name="nickname" type="String" mode="IN" optional="true"/>
-        <attribute name="gender" type="String" mode="IN" optional="true"/>
-        <attribute name="birthDate" type="java.sql.Date" mode="IN" optional="true"/>
-        <attribute name="height" type="Double" mode="IN" optional="true"/>
-        <attribute name="weight" type="Double" mode="IN" optional="true"/>
-        <attribute name="mothersMaidenName" type="String" mode="IN" optional="true"/>
-        <attribute name="maritalStatus" type="String" mode="IN" optional="true"/>
-        <attribute name="socialSecurityNumber" type="String" mode="IN" optional="true"/>
-        <attribute name="passportNumber" type="String" mode="IN" optional="true"/>
-        <attribute name="passportExpireDate" type="java.sql.Date" mode="IN" optional="true"/>
-        <attribute name="totalYearsWorkExperience" type="Double" mode="IN" optional="true"/>
-        <attribute name="comments" type="String" mode="IN" optional="true"/>
+        <implements service="interfacePerson"/>
     </service>
 
     <service name="createPartyGroup" engine="java"
@@ -126,43 +113,38 @@
     </service>
 
     <!-- Party Relationship services -->
-    <service name="createPartyRelationship" engine="java"
-            location="org.ofbiz.commonapp.party.party.PartyRelationshipServices" invoke="createPartyRelationship" auth="true">
-        <description>Create a Relationship between two Parties; if partyIdFrom is not specified the partyId of the current userLogin will be used; if roleTypeIds are not specified they will default to "_NA_".</description>
+    <service name="interfacePartyRelationshipPK" engine="interface" location="" invoke="">
         <attribute name="partyIdFrom" type="String" mode="IN" optional="true"/>
         <attribute name="partyIdTo" type="String" mode="IN" optional="false"/>
         <attribute name="roleTypeIdFrom" type="String" mode="IN" optional="true"/>
         <attribute name="roleTypeIdTo" type="String" mode="IN" optional="true"/>
         <attribute name="fromDate" type="Timestamp" mode="IN" optional="true"/>
+    </service>
+    <service name="interfacePartyRelationship" engine="interface" location="" invoke="">
         <attribute name="thruDate" type="Timestamp" mode="IN" optional="true"/>
         <attribute name="statusId" type="String" mode="IN" optional="true"/>
         <attribute name="priorityTypeId" type="String" mode="IN" optional="true"/>
         <attribute name="partyRelationshipTypeId" type="String" mode="IN" optional="true"/>
         <attribute name="comments" type="String" mode="IN" optional="true"/>
+    </service>
+    <service name="createPartyRelationship" engine="java"
+            location="org.ofbiz.commonapp.party.party.PartyRelationshipServices" invoke="createPartyRelationship" auth="true">
+        <description>Create a Relationship between two Parties; if partyIdFrom is not specified the partyId of the current userLogin will be used; if roleTypeIds are not specified they will default to "_NA_".</description>
+        <implements service="interfacePartyRelationshipPK"/>
+        <implements service="interfacePartyRelationship"/>
     </service>
     <service name="updatePartyRelationship" engine="java"
             location="org.ofbiz.commonapp.party.party.PartyRelationshipServices" invoke="updatePartyRelationship" auth="true">
         <description>Update a Relationship between two Parties; if partyIdFrom is not specified the partyId of the current userLogin will be used; if roleTypeIds are not specified they will default to "_NA_".</description>
-        <attribute name="partyIdFrom" type="String" mode="IN" optional="true"/>
-        <attribute name="partyIdTo" type="String" mode="IN" optional="false"/>
-        <attribute name="roleTypeIdFrom" type="String" mode="IN" optional="true"/>
-        <attribute name="roleTypeIdTo" type="String" mode="IN" optional="true"/>
-        <attribute name="fromDate" type="Timestamp" mode="IN" optional="false"/>
-        <attribute name="thruDate" type="Timestamp" mode="IN" optional="true"/>
-        <attribute name="statusId" type="String" mode="IN" optional="true"/>
-        <attribute name="priorityTypeId" type="String" mode="IN" optional="true"/>
-        <attribute name="partyRelationshipTypeId" type="String" mode="IN" optional="true"/>
-        <attribute name="comments" type="String" mode="IN" optional="true"/>
+        <implements service="interfacePartyRelationshipPK"/>
+        <implements service="interfacePartyRelationship"/>
     </service>
     <service name="deletePartyRelationship" engine="java"
             location="org.ofbiz.commonapp.party.party.PartyRelationshipServices" invoke="deletePartyRelationship" auth="true">
         <description>Delete a Relationship between two Parties; if partyIdFrom is not specified the partyId of the current userLogin will be used; if roleTypeIds are not specified they will default to "_NA_".</description>
-        <attribute name="partyIdFrom" type="String" mode="IN" optional="true"/>
-        <attribute name="partyIdTo" type="String" mode="IN" optional="false"/>
-        <attribute name="roleTypeIdFrom" type="String" mode="IN" optional="true"/>
-        <attribute name="roleTypeIdTo" type="String" mode="IN" optional="true"/>
-        <attribute name="fromDate" type="Timestamp" mode="IN" optional="false"/>
+        <implements service="interfacePartyRelationshipPK"/>
     </service>
+    
     <service name="createPartyRelationshipType" engine="java"
             location="org.ofbiz.commonapp.party.party.PartyRelationshipServices" invoke="createPartyRelationshipType" auth="true">
         <description>Create a new Party Relationship type</description>

@@ -1,32 +1,28 @@
-<%
-    /**
-     *  Title: View Roles Page
-     *  Description: None
-     *  Copyright (c) 2002 The Open For Business Project - www.ofbiz.org
-     *
-     *  Permission is hereby granted, free of charge, to any person obtaining a
-     *  copy of this software and associated documentation files (the "Software"),
-     *  to deal in the Software without restriction, including without limitation
-     *  the rights to use, copy, modify, merge, publish, distribute, sublicense,
-     *  and/or sell copies of the Software, and to permit persons to whom the
-     *  Software is furnished to do so, subject to the following conditions:
-     *
-     *  The above copyright notice and this permission notice shall be included
-     *  in all copies or substantial portions of the Software.
-     *
-     *  THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS
-     *  OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF
-     *  MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT.
-     *  IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY
-     *  CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT
-     *  OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR
-     *  THE USE OR OTHER DEALINGS IN THE SOFTWARE.
-     *
-     * @author     Andy Zeneski
-     * @created    July 12, 2002
-     * @version    1.0
-     */
-%>
+<%--
+ *  Copyright (c) 2002 The Open For Business Project - www.ofbiz.org
+ *
+ *  Permission is hereby granted, free of charge, to any person obtaining a
+ *  copy of this software and associated documentation files (the "Software"),
+ *  to deal in the Software without restriction, including without limitation
+ *  the rights to use, copy, modify, merge, publish, distribute, sublicense,
+ *  and/or sell copies of the Software, and to permit persons to whom the
+ *  Software is furnished to do so, subject to the following conditions:
+ *
+ *  The above copyright notice and this permission notice shall be included
+ *  in all copies or substantial portions of the Software.
+ *
+ *  THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS
+ *  OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF
+ *  MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT.
+ *  IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY
+ *  CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT
+ *  OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR
+ *  THE USE OR OTHER DEALINGS IN THE SOFTWARE.
+ *
+ * @author     Andy Zeneski
+ * @created    July 12, 2002
+ * @version    1.0
+--%>
 
 <%@ taglib uri="ofbizTags" prefix="ofbiz" %>
 
@@ -78,8 +74,11 @@
       </div>
     </td>
     <td align='right'>
-      <a href="<ofbiz:url>/viewprofile</ofbiz:url>" class="buttontext">[Profile]</a>&nbsp;&nbsp;
-      <a href="<ofbiz:url>/viewrelationships</ofbiz:url>" class="buttontext">[Relationships]</a>&nbsp;&nbsp;
+	  <div class='tabContainer'>
+      <a href="<ofbiz:url>/viewprofile</ofbiz:url>" class="tabButton">Profile</a>
+      <a href="<ofbiz:url>/viewroles</ofbiz:url>" class="tabButtonSelected">Roles</a>
+      <a href="<ofbiz:url>/viewrelationships</ofbiz:url>" class="tabButton">Relationships</a>
+      </div>
     </td>
   </tr>
 </table>
@@ -139,7 +138,7 @@
           <td>
             <select name="roleTypeId" style="font-size: x-small;">
               <ofbiz:iterator name="role" property="roles">
-                <option value='<ofbiz:entityfield attribute="role" field="roleTypeId"/>'><ofbiz:entityfield attribute="role" field="description"/> [<ofbiz:entityfield attribute="role" field="roleTypeId"/>]</option>
+                <option value='<ofbiz:entityfield attribute="role" field="roleTypeId"/>'><ofbiz:entityfield attribute="role" field="description"/><%-- [<ofbiz:entityfield attribute="role" field="roleTypeId"/>]--%></option>
               </ofbiz:iterator>
             </select>
           </td>
@@ -175,12 +174,12 @@
         <tr>
           <td width="16%"><div class="tabletext">Role Type ID</div></td>
           <td width="84%">
-            <input type="text" name="roleTypeId" size="20" style="font-size: x-small;">
-          *</td>
+            <input type="text" name="roleTypeId" size="20" style="font-size: x-small;">*
+          </td>
         <tr>
           <td width="16%"><div class="tabletext">Description</div></td>
           <td width="84%">
-            <input type="text" name="description" size="30" style="font-size: x-small;">
+            <input type="text" name="description" size="30" style="font-size: x-small;">*
             &nbsp;&nbsp;<a href="javascript:document.createroleform.submit()" class="buttontext">[Save]</a>
           </td>
         </tr>
