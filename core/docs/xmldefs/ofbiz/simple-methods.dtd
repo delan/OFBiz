@@ -48,7 +48,7 @@
 <!ENTITY % EntityFindOperations "find-by-primary-key | find-by-and">
 <!ENTITY % EntityValueOperations "make-value | clone-value | create-value | store-value | remove-value | remove-by-and | clear-cache-line | set-pk-fields | set-nonpk-fields">
 <!ENTITY % EntityListOperations "store-list | remove-list">
-<!ENTITY % IfOperations "if-validate-method | if-compare | if-compare-field | if-regexp | if-empty | if-not-empty | if-has-permission">
+<!ENTITY % IfOperations "if-validate-method | if-compare | if-compare-field | if-regexp | if-empty | if-not-empty | if-has-permission | check-permission">
 
 <!ENTITY % SimpleMethodOperations "%CallOperations; | %EventOperations; | 
         %ServiceOperations; | %EnvOperations; | %EntityMiscOperations; | %EntityFindOperations; |
@@ -67,9 +67,7 @@
     The field-to-result elements will be ignored in an event context, ie only used in a service.
     
     The parameter-map-name env entry will contain the HttpRequest parameters for
-    running in an event context and and the input context when running in a service.
-    
-    
+    running in an event context and and the input context when running in a service.    
 -->
 <!ELEMENT simple-method ( (%SimpleMethodOperations;)* )>
 <!ATTLIST simple-method
@@ -467,6 +465,13 @@ simple-map-processor process operations that validate incoming data
 <!ATTLIST if-has-permission
     permission CDATA #REQUIRED
     action CDATA #IMPLIED
+>
+
+<!ELEMENT check-permission ( fail-message | fail-property )>
+<!ATTLIST check-permission
+    permission CDATA #REQUIRED
+    action CDATA #IMPLIED
+    error-list-name CDATA "error_list"
 >
 
 <!ELEMENT else ( (%SimpleMethodOperations;)* )>

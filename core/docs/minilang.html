@@ -1696,6 +1696,52 @@ operations, including the conditional/if operations.</p>
 if the user has the specified permission, and optionally the action. This tag can contain any of the simple-method
 operations, including the conditional/if operations.</p>
 
+<p><b><u>check-permission</u></b></p>
+<table cellpadding='2' cellspacing='0' border='1'>
+<tr>
+    <td><b>Attribute&nbsp;Name</b></td>
+    <td><b>Required?</b></td>
+    <td><b>Description</b></td>
+</tr>
+<tr>
+    <td>permission</td><td>Y</td>
+    <td>The name of the permission in the database. The user must belong to a
+    security group that has this permission.</td>
+</tr>
+<tr>
+    <td>action</td><td>N</td>
+    <td>If an action is specified the user can have one of two permissions:
+    the permission + "_ADMIN" or permission + action. Examples of actions
+    include "_CREATE", "_VIEW", etc.</td>
+</tr>
+<tr>
+    <td>error-list-name</td><td>N</td>
+    <td>The name of a list in the method environment that the error messages will
+    be added to. Will be created if does not exist. Defaults to "error_list".</td>
+</tr>
+</table>
+<br>
+<table cellpadding='2' cellspacing='0' border='1'>
+<tr>
+    <td><b>Sub-Element&nbsp;Name</b></td>
+    <td><b>How&nbsp;Many</b></td>
+    <td><b>Description</b></td>
+</tr>
+<tr>
+    <td>fail-message</td><td>one</td>
+    <td>An inline failure message.</td>
+</tr>
+<tr>
+    <td>fail-property</td><td>one</td>
+    <td>A failure message from a properties file.</td>
+</tr>
+</table>
+<p>The check-permission tag checks to see if the current user has the specified
+permission. The the user does not have the specified permission or there is no
+user associated with the context then the failure message from fail-message or
+file-property will be added to the specified error list.</p>
+
+
 <!-- ======================================================================= -->
 <!-- ======================================================================= -->
 <hr>
