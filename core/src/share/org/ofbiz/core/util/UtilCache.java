@@ -204,7 +204,6 @@ public class UtilCache {
         }
         if (maxSize > 0 && cacheLineTable.size() > maxSize) {
             Object lastKey = keyLRUList.getLast();
-
             remove(lastKey);
         }
     }
@@ -248,11 +247,14 @@ public class UtilCache {
      * @return The value of the removed element specified by the key
      */
     public synchronized Object remove(Object key) {
-        if (key != null && cacheLineTable.containsKey(key)) {
-            UtilCache.CacheLine line = (UtilCache.CacheLine) cacheLineTable.get(key);
-
-            cacheLineTable.remove(key);
-            keyLRUList.remove(key);
+        if (key == null) {
+            missCount++;
+            return null;
+        }
+        
+        UtilCache.CacheLine line = (UtilCache.CacheLine) cacheLineTable.remove(key);
+        if (line != null) {
+            if (maxSize > 0) keyLRUList.remove(key);
             return line.getValue();
         } else {
             missCount++;

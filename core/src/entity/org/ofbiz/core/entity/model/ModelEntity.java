@@ -519,7 +519,7 @@ public class ModelEntity implements Comparable {
     }
 
     public String nameString(List flds, String separator, String afterLast) {
-        String returnString = "";
+        StringBuffer returnString = new StringBuffer();
 
         if (flds.size() < 1) {
             return "";
@@ -528,14 +528,16 @@ public class ModelEntity implements Comparable {
         int i = 0;
 
         for (; i < flds.size() - 1; i++) {
-            returnString = returnString + ((ModelField) flds.get(i)).name + separator;
+            returnString.append(((ModelField) flds.get(i)).name);
+            returnString.append(separator);
         }
-        returnString = returnString + ((ModelField) flds.get(i)).name + afterLast;
-        return returnString;
+        returnString.append(((ModelField) flds.get(i)).name);
+        returnString.append(afterLast);
+        return returnString.toString();
     }
 
     public String typeNameString(List flds) {
-        String returnString = "";
+        StringBuffer returnString = new StringBuffer();
 
         if (flds.size() < 1) {
             return "";
@@ -544,10 +546,17 @@ public class ModelEntity implements Comparable {
         int i = 0;
 
         for (; i < flds.size() - 1; i++) {
-            returnString = returnString + ((ModelField) flds.get(i)).type + " " + ((ModelField) flds.get(i)).name + ", ";
+            ModelField curField = (ModelField) flds.get(i);
+            returnString.append(curField.type);
+            returnString.append(" ");
+            returnString.append(curField.name);
+            returnString.append(", ");
         }
-        returnString = returnString + ((ModelField) flds.get(i)).type + " " + ((ModelField) flds.get(i)).name;
-        return returnString;
+        ModelField curField = (ModelField) flds.get(i);
+        returnString.append(curField.type);
+        returnString.append(" ");
+        returnString.append(curField.name);
+        return returnString.toString();
     }
 
     public String fieldNameString() {
@@ -587,7 +596,7 @@ public class ModelEntity implements Comparable {
     }
 
     public String fieldsStringList(List flds, String eachString, String separator, boolean appendIndex, boolean onlyNonPK) {
-        String returnString = "";
+        StringBuffer returnString = new StringBuffer();
 
         if (flds.size() < 1) {
             return "";
@@ -597,11 +606,11 @@ public class ModelEntity implements Comparable {
 
         for (; i < flds.size(); i++) {
             if (onlyNonPK && ((ModelField) flds.get(i)).isPk) continue;
-            returnString = returnString + eachString;
-            if (appendIndex) returnString = returnString + (i + 1);
-            if (i < flds.size() - 1) returnString = returnString + separator;
+            returnString.append(eachString);
+            if (appendIndex) returnString.append(i + 1);
+            if (i < flds.size() - 1) returnString.append(separator);
         }
-        return returnString;
+        return returnString.toString();
     }
 
     public String colNameString(List flds) {
@@ -609,7 +618,7 @@ public class ModelEntity implements Comparable {
     }
 
     public String colNameString(List flds, String separator, String afterLast) {
-        String returnString = "";
+        StringBuffer returnString = new StringBuffer();
 
         if (flds.size() < 1) {
             return "";
@@ -618,10 +627,12 @@ public class ModelEntity implements Comparable {
         int i = 0;
 
         for (; i < flds.size() - 1; i++) {
-            returnString = returnString + ((ModelField) flds.get(i)).colName + separator;
+            returnString.append(((ModelField) flds.get(i)).colName);
+            returnString.append(separator);
         }
-        returnString = returnString + ((ModelField) flds.get(i)).colName + afterLast;
-        return returnString;
+        returnString.append(((ModelField) flds.get(i)).colName);
+        returnString.append(afterLast);
+        return returnString.toString();
     }
 
     public String classNameString(List flds) {
@@ -629,7 +640,7 @@ public class ModelEntity implements Comparable {
     }
 
     public String classNameString(List flds, String separator, String afterLast) {
-        String returnString = "";
+        StringBuffer returnString = new StringBuffer();
 
         if (flds.size() < 1) {
             return "";
@@ -638,14 +649,16 @@ public class ModelEntity implements Comparable {
         int i = 0;
 
         for (; i < flds.size() - 1; i++) {
-            returnString = returnString + ModelUtil.upperFirstChar(((ModelField) flds.get(i)).name) + separator;
+            returnString.append(ModelUtil.upperFirstChar(((ModelField) flds.get(i)).name));
+            returnString.append(separator);
         }
-        returnString = returnString + ModelUtil.upperFirstChar(((ModelField) flds.get(i)).name) + afterLast;
-        return returnString;
+        returnString.append(ModelUtil.upperFirstChar(((ModelField) flds.get(i)).name));
+        returnString.append(afterLast);
+        return returnString.toString();
     }
 
     public String finderQueryString(List flds) {
-        String returnString = "";
+        StringBuffer returnString = new StringBuffer();
 
         if (flds.size() < 1) {
             return "";
@@ -653,14 +666,20 @@ public class ModelEntity implements Comparable {
         int i = 0;
 
         for (; i < flds.size() - 1; i++) {
-            returnString = returnString + ((ModelField) flds.get(i)).colName + " like {" + i + "} AND ";
+            returnString.append(((ModelField) flds.get(i)).colName);
+            returnString.append(" like {");
+            returnString.append(i);
+            returnString.append("} AND ");
         }
-        returnString = returnString + ((ModelField) flds.get(i)).colName + " like {" + i + "}";
-        return returnString;
+        returnString.append(((ModelField) flds.get(i)).colName);
+        returnString.append(" like {");
+        returnString.append(i);
+        returnString.append("}");
+        return returnString.toString();
     }
 
     public String httpArgList(List flds) {
-        String returnString = "";
+        StringBuffer returnString = new StringBuffer();
 
         if (flds.size() < 1) {
             return "";
@@ -668,14 +687,25 @@ public class ModelEntity implements Comparable {
         int i = 0;
 
         for (; i < flds.size() - 1; i++) {
-            returnString = returnString + "\"" + tableName + "_" + ((ModelField) flds.get(i)).colName + "=\" + " + ((ModelField) flds.get(i)).name + " + \"&\" + ";
+            returnString.append("\"");
+            returnString.append(tableName);
+            returnString.append("_");
+            returnString.append(((ModelField) flds.get(i)).colName);
+            returnString.append("=\" + ");
+            returnString.append(((ModelField) flds.get(i)).name);
+            returnString.append(" + \"&\" + ");
         }
-        returnString = returnString + "\"" + tableName + "_" + ((ModelField) flds.get(i)).colName + "=\" + " + ((ModelField) flds.get(i)).name;
-        return returnString;
+        returnString.append("\"");
+        returnString.append(tableName);
+        returnString.append("_");
+        returnString.append(((ModelField) flds.get(i)).colName);
+        returnString.append("=\" + ");
+        returnString.append(((ModelField) flds.get(i)).name);
+        return returnString.toString();
     }
 
     public String httpArgListFromClass(List flds) {
-        String returnString = "";
+        StringBuffer returnString = new StringBuffer();
 
         if (flds.size() < 1) {
             return "";
@@ -684,14 +714,30 @@ public class ModelEntity implements Comparable {
         int i = 0;
 
         for (; i < flds.size() - 1; i++) {
-            returnString = returnString + "\"" + tableName + "_" + ((ModelField) flds.get(i)).colName + "=\" + " + ModelUtil.lowerFirstChar(entityName) + ".get" + ModelUtil.upperFirstChar(((ModelField) flds.get(i)).name) + "() + \"&\" + ";
+            returnString.append("\"");
+            returnString.append(tableName);
+            returnString.append("_");
+            returnString.append(((ModelField) flds.get(i)).colName);
+            returnString.append("=\" + ");
+            returnString.append(ModelUtil.lowerFirstChar(entityName));
+            returnString.append(".get");
+            returnString.append(ModelUtil.upperFirstChar(((ModelField) flds.get(i)).name));
+            returnString.append("() + \"&\" + ");
         }
-        returnString = returnString + "\"" + tableName + "_" + ((ModelField) flds.get(i)).colName + "=\" + " + ModelUtil.lowerFirstChar(entityName) + ".get" + ModelUtil.upperFirstChar(((ModelField) flds.get(i)).name) + "()";
-        return returnString;
+        returnString.append("\"");
+        returnString.append(tableName);
+        returnString.append("_");
+        returnString.append(((ModelField) flds.get(i)).colName);
+        returnString.append("=\" + ");
+        returnString.append(ModelUtil.lowerFirstChar(entityName));
+        returnString.append(".get");
+        returnString.append(ModelUtil.upperFirstChar(((ModelField) flds.get(i)).name));
+        returnString.append("()");
+        return returnString.toString();
     }
 
     public String httpArgListFromClass(List flds, String entityNameSuffix) {
-        String returnString = "";
+        StringBuffer returnString = new StringBuffer();
 
         if (flds.size() < 1) {
             return "";
@@ -700,14 +746,32 @@ public class ModelEntity implements Comparable {
         int i = 0;
 
         for (; i < flds.size() - 1; i++) {
-            returnString = returnString + "\"" + tableName + "_" + ((ModelField) flds.get(i)).colName + "=\" + " + ModelUtil.lowerFirstChar(entityName) + entityNameSuffix + ".get" + ModelUtil.upperFirstChar(((ModelField) flds.get(i)).name) + "() + \"&\" + ";
+            returnString.append("\"");
+            returnString.append(tableName);
+            returnString.append("_");
+            returnString.append(((ModelField) flds.get(i)).colName);
+            returnString.append("=\" + ");
+            returnString.append(ModelUtil.lowerFirstChar(entityName));
+            returnString.append(entityNameSuffix);
+            returnString.append(".get");
+            returnString.append(ModelUtil.upperFirstChar(((ModelField) flds.get(i)).name));
+            returnString.append("() + \"&\" + ");
         }
-        returnString = returnString + "\"" + tableName + "_" + ((ModelField) flds.get(i)).colName + "=\" + " + ModelUtil.lowerFirstChar(entityName) + entityNameSuffix + ".get" + ModelUtil.upperFirstChar(((ModelField) flds.get(i)).name) + "()";
-        return returnString;
+        returnString.append("\"");
+        returnString.append(tableName);
+        returnString.append("_");
+        returnString.append(((ModelField) flds.get(i)).colName);
+        returnString.append("=\" + ");
+        returnString.append(ModelUtil.lowerFirstChar(entityName));
+        returnString.append(entityNameSuffix);
+        returnString.append(".get");
+        returnString.append(ModelUtil.upperFirstChar(((ModelField) flds.get(i)).name));
+        returnString.append("()");
+        return returnString.toString();
     }
 
     public String httpRelationArgList(List flds, ModelRelation relation) {
-        String returnString = "";
+        StringBuffer returnString = new StringBuffer();
 
         if (flds.size() < 1) {
             return "";
@@ -718,18 +782,36 @@ public class ModelEntity implements Comparable {
         for (; i < flds.size() - 1; i++) {
             ModelKeyMap keyMap = relation.findKeyMapByRelated(((ModelField) flds.get(i)).name);
 
-            if (keyMap != null)
-                returnString = returnString + "\"" + tableName + "_" + ((ModelField) flds.get(i)).colName + "=\" + " + ModelUtil.lowerFirstChar(relation.mainEntity.entityName) + ".get" + ModelUtil.upperFirstChar(keyMap.fieldName) + "() + \"&\" + ";
-            else
+            if (keyMap != null) {
+                returnString.append("\"");
+                returnString.append(tableName);
+                returnString.append("_");
+                returnString.append(((ModelField) flds.get(i)).colName);
+                returnString.append("=\" + ");
+                returnString.append(ModelUtil.lowerFirstChar(relation.mainEntity.entityName));
+                returnString.append(".get");
+                returnString.append(ModelUtil.upperFirstChar(keyMap.fieldName));
+                returnString.append("() + \"&\" + ");
+            } else {
                 Debug.logWarning("-- -- ENTITYGEN ERROR:httpRelationArgList: Related Key in Key Map not found for name: " + ((ModelField) flds.get(i)).name + " related entity: " + relation.relEntityName + " main entity: " + relation.mainEntity.entityName + " type: " + relation.type);
+            }
         }
         ModelKeyMap keyMap = relation.findKeyMapByRelated(((ModelField) flds.get(i)).name);
 
-        if (keyMap != null)
-            returnString = returnString + "\"" + tableName + "_" + ((ModelField) flds.get(i)).colName + "=\" + " + ModelUtil.lowerFirstChar(relation.mainEntity.entityName) + ".get" + ModelUtil.upperFirstChar(keyMap.fieldName) + "()";
-        else
+        if (keyMap != null) {
+            returnString.append("\"");
+            returnString.append(tableName);
+            returnString.append("_");
+            returnString.append(((ModelField) flds.get(i)).colName);
+            returnString.append("=\" + ");
+            returnString.append(ModelUtil.lowerFirstChar(relation.mainEntity.entityName));
+            returnString.append(".get");
+            returnString.append(ModelUtil.upperFirstChar(keyMap.fieldName));
+            returnString.append("()");
+        } else {
             Debug.logWarning("-- -- ENTITYGEN ERROR:httpRelationArgList: Related Key in Key Map not found for name: " + ((ModelField) flds.get(i)).name + " related entity: " + relation.relEntityName + " main entity: " + relation.mainEntity.entityName + " type: " + relation.type);
-        return returnString;
+        }
+        return returnString.toString();
     }
 
     /*
@@ -749,7 +831,7 @@ public class ModelEntity implements Comparable {
      }
      */
     public String typeNameStringRelatedNoMapped(List flds, ModelRelation relation) {
-        String returnString = "";
+        StringBuffer returnString = new StringBuffer();
 
         if (flds.size() < 1) {
             return "";
@@ -757,20 +839,25 @@ public class ModelEntity implements Comparable {
 
         int i = 0;
 
-        if (relation.findKeyMapByRelated(((ModelField) flds.get(i)).name) == null)
-            returnString = returnString + ((ModelField) flds.get(i)).type + " " + ((ModelField) flds.get(i)).name;
+        if (relation.findKeyMapByRelated(((ModelField) flds.get(i)).name) == null) {
+            returnString.append(((ModelField) flds.get(i)).type);
+            returnString.append(" ");
+            returnString.append(((ModelField) flds.get(i)).name);
+        }
         i++;
         for (; i < flds.size(); i++) {
             if (relation.findKeyMapByRelated(((ModelField) flds.get(i)).name) == null) {
-                if (returnString.length() > 0) returnString = returnString + ", ";
-                returnString = returnString + ((ModelField) flds.get(i)).type + " " + ((ModelField) flds.get(i)).name;
+                if (returnString.length() > 0) returnString.append(", ");
+                returnString.append(((ModelField) flds.get(i)).type);
+                returnString.append(" ");
+                returnString.append(((ModelField) flds.get(i)).name);
             }
         }
-        return returnString;
+        return returnString.toString();
     }
 
     public String typeNameStringRelatedAndMain(List flds, ModelRelation relation) {
-        String returnString = "";
+        StringBuffer returnString = new StringBuffer();
 
         if (flds.size() < 1) {
             return "";
@@ -781,18 +868,19 @@ public class ModelEntity implements Comparable {
         for (; i < flds.size() - 1; i++) {
             ModelKeyMap keyMap = relation.findKeyMapByRelated(((ModelField) flds.get(i)).name);
 
-            if (keyMap != null)
-                returnString = returnString + keyMap.fieldName + ", ";
-            else
-                returnString = returnString + ((ModelField) flds.get(i)).name + ", ";
+            if (keyMap != null) {
+                returnString.append(keyMap.fieldName);
+                returnString.append(", ");
+            } else {
+                returnString.append(((ModelField) flds.get(i)).name);
+                returnString.append(", ");
+            }
         }
         ModelKeyMap keyMap = relation.findKeyMapByRelated(((ModelField) flds.get(i)).name);
 
-        if (keyMap != null)
-            returnString = returnString + keyMap.fieldName;
-        else
-            returnString = returnString + ((ModelField) flds.get(i)).name;
-        return returnString;
+        if (keyMap != null) returnString.append(keyMap.fieldName);
+        else returnString.append(((ModelField) flds.get(i)).name);
+        return returnString.toString();
     }
 
     public int compareTo(Object obj) {

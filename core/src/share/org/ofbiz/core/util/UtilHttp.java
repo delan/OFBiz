@@ -42,16 +42,20 @@ public class UtilHttp {
      */
     public static Map getParameterMap(HttpServletRequest request) {
         Map paramMap = new OrderedMap();        
-        // first add in all path info parameters /~name=value/        
-        List pathInfo = StringUtil.split(request.getPathInfo(), "/");
-        for (int i = 1; i < pathInfo.size(); i++) {
-            String element = (String) pathInfo.get(i);
+        // first add in all path info parameters /~name=value/
+        //Note: this is called a lot, so not using split for performance reasons: List pathInfo = StringUtil.split(request.getPathInfo(), "/"); for (int i = 1; i < pathInfo.size(); i++) {
+        String pathInfoStr = request.getPathInfo();
+        int current = pathInfoStr.indexOf('/');
+        int last = current;
+        while ((current = pathInfoStr.indexOf('/', last + 1)) != -1) {
+            String element = pathInfoStr.substring(last + 1, current);
+            last = current;
             if (element.indexOf('~') == 0 && element.indexOf('=') > -1) {
                 List elementList = StringUtil.split(element, "=");
-                String name = (String) elementList.get(0);
-                String value = (String) elementList.get(1);
+                String name = element.substring(1, element.indexOf('='));
+                String value = element.substring(element.indexOf('=') + 1);
                 // take off the ~ and add the parameters
-                paramMap.put(name.substring(1), value);
+                paramMap.put(name, value);
             }
         }
         
