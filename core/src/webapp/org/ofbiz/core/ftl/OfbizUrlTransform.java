@@ -35,6 +35,7 @@ import org.ofbiz.core.util.*;
 import freemarker.ext.beans.BeanModel;
 import freemarker.template.Environment;
 import freemarker.template.TemplateModelException;
+import freemarker.template.TemplateScalarModel;
 import freemarker.template.TemplateTransformModel;
 
 /**
@@ -62,13 +63,23 @@ public class OfbizUrlTransform implements TemplateTransformModel {
                     Environment env = Environment.getCurrentEnvironment();
                     BeanModel req = (BeanModel)env.getVariable("request");
                     BeanModel res = (BeanModel) env.getVariable("response");
-                    HttpServletRequest request = (HttpServletRequest) req.getWrappedObject();
-                    HttpServletResponse response = (HttpServletResponse) res.getWrappedObject();
-                    ServletContext ctx = (ServletContext) request.getAttribute("servletContext");
+                    Object prefix = env.getVariable("urlPrefix");
+                    if (req != null && res != null) {                    
+                        HttpServletRequest request = (HttpServletRequest) req.getWrappedObject();
+                        HttpServletResponse response = (HttpServletResponse) res.getWrappedObject();
+                        ServletContext ctx = (ServletContext) request.getAttribute("servletContext");
                     
-                    // make the link
-                    RequestHandler rh = (RequestHandler) ctx.getAttribute(SiteDefs.REQUEST_HANDLER);                                        
-                    out.write(rh.makeLink(request, response, buf.toString()));
+                        // make the link
+                        RequestHandler rh = (RequestHandler) ctx.getAttribute(SiteDefs.REQUEST_HANDLER);                                        
+                        out.write(rh.makeLink(request, response, buf.toString()));
+                    } else if (prefix != null) {
+                        if (prefix instanceof TemplateScalarModel) {
+                            TemplateScalarModel s = (TemplateScalarModel) prefix;
+                            out.write(s + buf.toString());
+                        }
+                    } else {
+                        out.write(buf.toString());
+                    }
                 } catch (TemplateModelException e) {
                     throw new IOException(e.getMessage());
                 }
