@@ -1726,9 +1726,9 @@ public class GenericDelegator implements DelegatorInterface {
         try {
             Iterator viter = dummyPKs.iterator();
             while (viter.hasNext()) {
-                GenericValue value = (GenericValue) viter.next();
+                GenericEntity value = (GenericEntity) viter.next();
                 if (value.containsPrimaryKey()) {
-                    numRemoved += this.removeValue(value, doCacheClear);
+                    numRemoved += this.removeByPrimaryKey(value.getPrimaryKey(), doCacheClear);
                 } else {
                     numRemoved += this.removeByAnd(value.getEntityName(), value.getAllFields(), doCacheClear);
                 }
